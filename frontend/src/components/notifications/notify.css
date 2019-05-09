@@ -1,0 +1,88 @@
+.notification-container {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    width: 100%;
+    height: auto;
+    box-sizing: border-box;
+    z-index: 1000;
+}
+
+.notification {
+    align-items: center;
+    background-color: hsl(0,0%,70%);
+    box-shadow: 0 .25rem .5rem hsla(0,0%,0%,.33);
+    color: hsl(0,0%,20%);
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    min-height: 2.25rem;
+    opacity: .1;
+    padding: 0 0 0 1.5rem;
+    position: absolute;
+    top: -5rem;
+    transition: all .5s;
+    width: 100%;
+}
+
+.notification.show {
+    opacity: 1;
+    top: 0;
+}
+
+.notification.success .msg::before,
+.notification.notification-error .msg::before {
+    display: inline-block;
+    font-size: 1.5em;
+    margin-right: 1rem;
+    content: '✔';
+}
+
+.notification.success {
+    background-color: green;
+    color: darken(green, 40%);
+}
+
+.notification.notification-error {
+    background-color: red;
+    color: darken(red, 40%);
+}
+
+.notification.notification-error .msg::before { 
+    content: '⚠'
+}
+
+.notification .remove-alert {
+    background-color: transparent;
+    padding: .75rem 1rem;
+    margin: 0;
+    border: none;
+}
+
+.notification .remove-alert::before {
+    content: '×';
+    display: block;
+    font-size: 2em;
+    line-height: 1;
+}
+
+.notification .remove-alert:hover,
+.notification .remove-alert:active {
+    background-color: hsla(0,100%,100%,.3);
+}
+
+@media screen and (min-width: 50rem) {
+
+    .notification {
+        width: auto;
+        min-width: 20rem;
+        max-width: 100%;
+        right: 0;
+    }
+
+    .notification.show {
+        top: 3.5rem;
+    }
+
+}
