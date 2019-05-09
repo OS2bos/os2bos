@@ -8,5 +8,5 @@ before_script:
 
 test:
   script:
-  - pip install -r backend/requirements/local.pip.txt
-  - tox -e lint,py37,coverage
+  - pip install tox
+  - tox
