@@ -117,48 +117,6 @@ const actions = {
         })
 
     },
-    confirmCreateUser: function({commit}, payload) {
-
-        axios({
-            method: 'post',
-            url: '/auth/register/confirm/',
-            data: {
-                uid: payload.uid,
-                token: payload.token
-            }
-        })
-        .then(res => {
-            notify('Din tilmelding er bekræftet. Du kan nu logge ind.', 'success')
-        })
-        .catch(err => {
-            notify('Din tilmelding kunne ikke bekræftes', 'error', err.response.data)
-        })
-
-    },
-    deleteGuest: function({state, dispatch}) {
-
-        axios({
-            method: 'delete',
-            url: `/auth/guest/${ state.user.id }/`,
-            headers: {
-                'Authorization': 'Token ' + state.sessionKey
-            }
-        })    
-        .then(res => {
-            notify('Din profil er blevet slettet', 'success')
-            dispatch('clearAuth')
-            router.replace('/search')
-        })
-        .catch(err => {
-            if (err.response.status === 204) {
-                // status 204 with no content is OK
-                return
-            } else {
-                notify('Din profil blev ikke slettet', 'error', err.response.data)
-            }
-        })
-
-    },
     clearAuth: function({commit}) {
         sessionStorage.removeItem('authkey')
         sessionStorage.removeItem('userid')
@@ -167,7 +125,7 @@ const actions = {
     },
     cleanPostLogout: function ({dispatch}) {
         dispatch('clearAuth')
-        router.replace('/search')
+        router.replace('/login')
     }
 }
 
