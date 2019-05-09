@@ -1,8 +1,8 @@
 <template>
 
-    <section>
+    <section class="mycases">
         <h1>Mine sager</h1>
-        <ul>
+        <ul class="list">
             <li>sag 1</li>
             <li>sag 2</li>
             <li>sag 3</li>
@@ -12,12 +12,17 @@
 </template>
 
 <script>
+
     export default {
         
     }
+    
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
+
+    .mycases {
+        margin: 1rem;
+    }
 
 </style>
