@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Cases from './components/cases/Cases.vue'
 import Case from './components/cases/Case.vue'
+import Appropriation from './components/appropriations/Appropriation.vue'
+import Activity from './components/activities/Activity.vue'
 import Login from './components/auth/Login.vue'
 
 Vue.use(Router)
@@ -17,6 +19,16 @@ export default new Router({
             path: '/case/:id',
             name: 'case',
             component: Case
+        },
+        {
+            path: '/appropriation/:id',
+            name: 'appropriation',
+            component: Appropriation
+        },
+        {
+            path: '/activity/:id',
+            name: 'activity',
+            component: Activity
         },
         {
             path: '/login',
