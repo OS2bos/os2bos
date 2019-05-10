@@ -1,0 +1,23 @@
+[
+    {
+        "pk": 76,
+        "parent_case_pk": 1,
+        "sbsys_id": "nvlnlinzlibli48h4go83hlihslefhselnfl8",
+        "law_ref": "§45, stk 5, Anbringelse af noget",
+        "status": "udarbejdes"
+    },
+    {
+        "pk": 15,
+        "parent_case_pk": 1,
+        "sbsys_id": "389023hflijdslefjselfih9",
+        "law_ref": "§1, stk 4, Noget med noget",
+        "status": "forventet"   
+    },
+    {
+        "pk": 97,
+        "parent_case_pk": 1,
+        "sbsys_id": "ggi8hw3l8hsoe8fos8fosefsef",
+        "law_ref": "§976, Noget andet, noget helt andet",
+        "status": "bevilget"   
+    }
+]
