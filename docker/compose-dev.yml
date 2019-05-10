@@ -1,0 +1,45 @@
+version: "2"
+
+services:
+  db:
+    image: postgres:10
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  django:
+    build:
+      context: ../backend
+      dockerfile: ../docker/Docker.django.dev
+    command: >
+      sh -c "python manage.py makemigrations &&
+             python manage.py migrate &&
+
+             python manage.py collectstatic --no-input &&
+             python manage.py runserver 0.0.0.0:8001"
+    environment: 
+      - DJANGO_SETTINGS_MODULE=bevillingsplatform.settings
+    volumes:
+      - ../backend:/code
+    depends_on:
+      - db
+  vue:
+    build: 
+      context: ../frontend
+      dockerfile: ../docker/Docker.vue.dev
+    command: >
+      sh -c "npm update &&
+             npm install &&
+             npm run serve"
+    volumes:
+      - ../frontend:/code
+  nginx:
+    image: nginx
+    ports:
+      - 8000:8000
+    volumes:
+      - ./nginx_config:/etc/nginx/conf.d
+    depends_on:
+      - django
+      - vue
+
+volumes:
+ postgres_data:
