@@ -11,19 +11,27 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import configparser
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+settings_path = os.path.join(BASE_DIR, "settings.ini")
 
+# define defaults for ConfigParser
+defaults = {"BASE_DIR": BASE_DIR}
+config = configparser.ConfigParser(defaults=defaults)
+# load settings.ini into the ConfigParser
+config.read(settings_path)
+# use settings section as default
+default_config = config["settings"]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "vbi*zme^b1d+%x7es*+%zv9-7sa*(%iwxaf26(vvp33m)yioa7"
+SECRET_KEY = default_config.get("SECRET_KEY")
 
 # SECURITY WARNING: don"t run with debug turned on in production!
-DEBUG = True
+DEBUG = default_config.getboolean("DEBUG")
 
 ALLOWED_HOSTS = []
 
@@ -77,8 +85,12 @@ WSGI_APPLICATION = "bevillingsplatform.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": default_config.get("DATABASE_NAME"),
+        "USER": default_config.get("DATABASE_USER"),
+        "PASSWORD": default_config.get("DATABASE_PASSWORD"),
+        "HOST": default_config.get("DATABASE_HOST"),
+        "PORT": default_config.get("DATABASE_PORT"),
     }
 }
 
@@ -114,3 +126,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = "/static/"
+STATIC_ROOT = default_config.get("STATIC_ROOT")

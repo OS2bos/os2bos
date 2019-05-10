@@ -46,8 +46,7 @@
     }
 
     .list > li {
-        padding: .5rem;
-        border-top: solid 1px hsla(0,0%,0%,.25);
+        padding: .75rem 0;
     }
 
 </style>

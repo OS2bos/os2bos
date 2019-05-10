@@ -1,0 +1,17 @@
+FROM python:3.7
+ENV PYTHONUNBUFFERED 1
+RUN mkdir /code
+RUN mkdir /code/requirements
+WORKDIR /code
+ADD requirements/base.pip.txt /code/requirements/
+ADD requirements/local.pip.txt /code/requirements/
+RUN pip install -r requirements/local.pip.txt
+ADD requirements/base.apt.txt /code/requirements/
+ADD requirements/local.apt.txt /code/requirements/
+RUN apt-get update
+RUN apt-get install -y $(grep -vE "^\s*#" requirements/base.apt.txt | tr "\n" " ")
+RUN apt-get install -y $(grep -vE "^\s*#" requirements/local.apt.txt | tr "\n" " ")
+ADD . /code/
+
+# Create directory for logging
+RUN mkdir /logs
