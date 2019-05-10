@@ -6,18 +6,7 @@ before_script:
   - virtualenv venv
   - source venv/bin/activate
 
-stages:
-  - test
-
 test:
-  stage: test
   script:
   - pip install tox
-  - tox -e lint, test
-
-coverage:
-  stage: test
-  script:
-  - pip install tox
-  - tox -e coverage
-  allow_failure: true
+  - tox
