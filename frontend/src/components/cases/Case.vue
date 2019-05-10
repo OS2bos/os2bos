@@ -1,11 +1,11 @@
 <template>
 
-    <section class="mycases">
-        <h1>Mine sager</h1>
+    <section class="case">
+        <h1>Sag XXX-XXX</h1>
         <ul class="list">
-            <li>sag 1</li>
-            <li>sag 2</li>
-            <li>sag 3</li>
+            <li>Bevilling 1</li>
+            <li>Bevilling 2</li>
+            <li>Bevilling 3</li>
         </ul>
     </section>
 
@@ -21,7 +21,7 @@
 
 <style>
 
-    .mycases {
+    .case {
         margin: 1rem;
     }
 

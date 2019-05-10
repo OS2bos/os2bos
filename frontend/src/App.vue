@@ -1,18 +1,43 @@
 <template>
     <div id="app">
-        <header>
 
-        </header>
+        <app-header />
+        
         <main>
             <router-view/>
         </main>
-        <footer>
 
-        </footer>
+        <app-footer />
+
     </div>
 </template>
 
+<script>
+
+    import AppHeader from './components/header/Header.vue'
+    import AppFooter from './components/footer/Footer.vue'
+
+    export default {
+        components: {
+            AppHeader,
+            AppFooter
+        }
+    }
+
+</script>
+
 <style>
+
+    #app {
+        display: flex;
+        flex-flow: column nowrap;
+        width: 100%;
+        height: 100%;
+    }
+
+    #app > main {
+        flex: 1 0 auto;
+    }
 
     .list {
         list-style: none;
@@ -21,8 +46,7 @@
     }
 
     .list > li {
-        padding: .5rem;
-        border-top: solid 1px hsla(0,0%,0%,.25);
+        padding: .75rem 0;
     }
 
 </style>
