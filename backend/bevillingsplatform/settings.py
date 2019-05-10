@@ -14,10 +14,14 @@ import os
 import configparser
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
 settings_path = os.path.join(BASE_DIR, "settings.ini")
-config = configparser.ConfigParser(defaults={"BASE_DIR": BASE_DIR})
+
+# define defaults for ConfigParser
+defaults = {"BASE_DIR": BASE_DIR}
+config = configparser.ConfigParser(defaults=defaults)
+# load settings.ini into the ConfigParser
 config.read(settings_path)
+# use settings section as default
 default_config = config["settings"]
 
 # Quick-start development settings - unsuitable for production
