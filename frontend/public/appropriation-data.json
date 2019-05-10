@@ -1,6 +1,15 @@
 {
     "pk": 1,
-    "parent_case_pk": 1,
+    "case": {
+        "pk": 1,
+        "sbsys_id": "seflihselfi837g39237g23o8h",
+        "case_worker": "Leif L. Lodahl",
+        "cpr_no": "000000-0000",
+        "name": "Per Jørgensen",
+        "municipality_payment": "Ballerup Kommune",
+        "municipality_action": "Ballerup Kommune",
+        "municipality_residence": "Ballerup Kommune"
+    },
     "sbsys_id": "389023hflijdslefjselfih9",
     "law_ref": "§45, stk 5, Anbringelse af noget",
     "status": "bevilget",
@@ -8,5 +17,19 @@
         "approval_date": "2019-05-07T09:57:35+02:00",
         "approval_auth_level": "Afsnitsleder",
         "approval_person": "William Shakespeare"
-    }
+    },
+    "activities": [
+        {
+            "pk": 421,
+            "activity": "Kørsel"
+        },
+        {
+            "pk": 763,
+            "activity": "Ledsager"
+        },
+        {
+            "pk": 764,
+            "activity": "Fredagsslik"
+        }
+    ]
 }
