@@ -9,4 +9,9 @@ before_script:
 test:
   script:
   - pip install tox
-  - tox
+  - tox -e lint, test
+
+coverage:
+  script:
+  - tox -e coverage
+  allow_failure: true
