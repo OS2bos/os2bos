@@ -1,6 +1,6 @@
 <template>
 
-    <nav class="breadcrumb">
+    <nav class="breadcrumb" v-if="bc.length > 0">
         <span v-for="b in bc" :key="b[0]" class="crumb">
             <router-link :to="b.link">
                 {{ b.title }}

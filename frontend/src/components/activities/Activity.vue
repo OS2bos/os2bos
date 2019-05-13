@@ -69,6 +69,20 @@
                 axios.get('../../activity-1-data.json')
                 .then(res => {
                     this.act = res.data
+                    this.$store.commit('setBreadcrumb', [
+                        {
+                            link: '/',
+                            title: 'Mine sager'
+                        },
+                        {
+                            link: `/case/${ this.act.appropriation.case.pk }`,
+                            title: `Sag ${ this.act.appropriation.sbsys_id }`
+                        },
+                        {
+                            link: `/appropriation/${ this.act.appropriation.pk }`,
+                            title: `Bevilling ${ this.act.appropriation.sbsys_id }`
+                        }
+                    ])
                 })
                 .catch(err => console.log(err))
             },

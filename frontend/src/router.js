@@ -6,10 +6,11 @@ import CaseCreate from './components/cases/CaseCreate.vue'
 import Appropriation from './components/appropriations/Appropriation.vue'
 import Activity from './components/activities/Activity.vue'
 import Login from './components/auth/Login.vue'
+import store from './store.js'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
     routes: [
         {
             path: '/',
@@ -47,3 +48,11 @@ export default new Router({
         }
     ]
 })
+
+router.afterEach((to, from) => {
+    console.log('this is after a routing')
+    console.log(Vue)
+    store.commit('setBreadcrumb', [])
+})
+
+export default router

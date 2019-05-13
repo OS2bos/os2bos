@@ -2,7 +2,6 @@
 
     <header>
         <nav class="globalheader">
-            <router-link to="/">Mine sager</router-link>
             <router-link to="/login">Log ud</router-link>
         </nav>
         <breadcrumb />
@@ -29,10 +28,10 @@
     .globalheader {
         display: flex;
         flex-flow: row nowrap;
-        justify-content: space-between;
+        justify-content: flex-end;
         align-items: center;
         padding: 1rem;
-        background-color: hsla(0,0%,0%,.1);
+        background-color: var(--grey1);
     }    
 
 </style>
