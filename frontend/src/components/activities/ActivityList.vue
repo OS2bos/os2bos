@@ -14,7 +14,7 @@
                 </tr>
             </thead>
             <tbody>
-                <li v-for="a in acts" :key="a[0]">
+                <tr v-for="a in acts" :key="a[0]">
                     <td><router-link :to="`/activity/${ a.pk }`">{{ a.activity }}</router-link></td>
                     <td>{{ new Date(a.startdate).toLocaleDateString() }}</td>
                     <td>{{ new Date(a.enddate).toLocaleDateString() }}</td>
