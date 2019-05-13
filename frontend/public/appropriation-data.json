@@ -1,35 +1,22 @@
 {
-    "pk": 1,
+    "pk": 78,
     "case": {
-        "pk": 1,
-        "sbsys_id": "seflihselfi837g39237g23o8h",
-        "case_worker": "Leif L. Lodahl",
-        "cpr_no": "000000-0000",
+        "pk": 786,
+        "sbsys_id": "27.27.27-GX-9999-17",
+        "case_worker": "Leif Lyngby Lodahl",
+        "case_worker_initials": "leil",
+        "cpr_no": "010101-0101",
         "name": "Per Jørgensen",
         "municipality_payment": "Ballerup Kommune",
         "municipality_action": "Ballerup Kommune",
         "municipality_residence": "Ballerup Kommune"
     },
-    "sbsys_id": "389023hflijdslefjselfih9",
-    "law_ref": "§45, stk 5, Anbringelse af noget",
+    "sbsys_id": "27.21.08-GX-9999-19",
+    "law_ref": "SEL §45 Ledsagerordning 12",
     "status": "bevilget",
     "approval": {
         "approval_date": "2019-05-07T09:57:35+02:00",
         "approval_auth_level": "Afsnitsleder",
         "approval_person": "William Shakespeare"
-    },
-    "activities": [
-        {
-            "pk": 421,
-            "activity": "Kørsel"
-        },
-        {
-            "pk": 763,
-            "activity": "Ledsager"
-        },
-        {
-            "pk": 764,
-            "activity": "Fredagsslik"
-        }
-    ]
+    }
 }

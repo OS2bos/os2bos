@@ -2,11 +2,28 @@
 
     <section class="activities">
         <h1>Aktiviteter</h1>
-        <ul class="list">
-            <li v-for="a in acts">
-                <router-link :to="`/activity/${ a.pk }`">{{ a.activity }}</router-link>
-            </li>
-        </ul>
+        <table>
+            <thead>
+                <tr>
+                    <th>Aktivitet</th>
+                    <th>Start</th>
+                    <th>Slut</th>
+                    <th>Navn</th>
+                    <th>Økonomi</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="a in acts">
+                    <td><router-link :to="`/activity/${ a.pk }`">{{ a.activity }}</router-link></td>
+                    <td>{{ new Date(a.startdate).toLocaleDateString() }}</td>
+                    <td>{{ new Date(a.enddate).toLocaleDateString() }}</td>
+                    <td>{{ a.payment.payee.name }}</td>
+                    <td>{{ a.payment.total_amount }}</td>
+                    <td>{{ a.status }}</td>
+                </tr>
+            </tbody>
+        </table>
     </section>
 
 </template>
@@ -27,7 +44,6 @@
         },
         methods: {
             fetchActivities: function(appropriation_id) {
-                console.log(appropriation_id)
                 axios.get('../../activity-list-data.json')
                 .then(res => {
                     this.acts = res.data
