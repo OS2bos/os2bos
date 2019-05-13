@@ -9,4 +9,4 @@ lint:
 
 test:
   script:
-  - tox -e test, coverage
+  - tox -e test,coverage
