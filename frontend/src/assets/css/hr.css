@@ -1,0 +1,6 @@
+hr {
+    border: none;
+    border-top: solid .1rem var(--grey2);
+    padding: 0;
+    margin: 2rem 0;
+}

@@ -23,7 +23,7 @@ export default new Router({
         },
         {
             path: '/case-create/',
-            name: 'case',
+            name: 'case-create',
             component: CaseCreate
         },
         {
