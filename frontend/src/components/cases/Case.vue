@@ -1,7 +1,7 @@
 <template>
 
     <section v-if="cas">
-        <h1 class="case">{{ cas.sbsys_id }}</h1>
+        <h1 class="case">{{ cas[0].sbsys_id }}</h1>
         <appropriations />
     </section>
 
@@ -28,7 +28,7 @@
                 this.fetch_case(this.$route.params.id)
             },
             fetch_case: function(id) {
-                axios.get('../../case.json')
+                axios.get('../../case-data.json')
                 .then(res => {
                     this.cas = res.data
                 })

@@ -3,7 +3,7 @@
     <section class="activities">
         <h1>Aktiviteter</h1>
         <ul class="list">
-            <li v-for="a in acts">
+            <li v-for="a in acts" :key="a[0]">
                 <router-link :to="`/activity/${ a.pk }`">{{ a.activity }}</router-link>
             </li>
         </ul>

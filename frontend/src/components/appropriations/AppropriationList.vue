@@ -3,7 +3,7 @@
     <section class="appropriations">
         <h1>Bevillinger</h1>
         <ul class="list">
-            <li v-for="a in apprs">
+            <li v-for="a in apprs" :key="a[0]">
                 <router-link :to="`/appropriation/${ a.pk }`">
                     {{ a.sbsys_id }} 
                 </router-link>
