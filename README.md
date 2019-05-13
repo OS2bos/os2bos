@@ -9,6 +9,6 @@ Running the local development setup (using docker and docker-compose)
 cd docker && ./clean_build_dev.sh
 ```
 
-[Backend README](backend/README)
+[Backend README](backend/README.md)
 
-[Frontend README](frontend/README)
+[Frontend README](frontend/README.md)
