@@ -18,7 +18,7 @@
 
     .globalfooter {
         padding: 1rem;
-        background-color: hsla(0,0%,0%,.1);
+        background-color: var(--grey1);
     }    
 
 </style>
