@@ -1,17 +1,17 @@
-### Tox can be used for various development related tasks
-Lint code
+## Tox can be used for various development related tasks
+### Lint code
 ```bash
 tox -e lint
 ```
-Run tests
+### Run tests
 ```bash
 tox -e test
 ```
-Show coverage
+### Show coverage
 ```bash
 tox -e coverage
 ```
-Generate documentation
+### Generate documentation
 ```bash
 tox -e docs
 ```

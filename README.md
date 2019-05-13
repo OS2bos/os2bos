@@ -5,9 +5,10 @@
 ### Getting started
 
 Running the local development setup (using docker and docker-compose)
-```bash
-cd docker && ./clean_build_dev.sh
-```
+
+1. `cd docker && ./clean_build_dev.sh`
+
+2. Open the browser at localhost:8000
 
 [Backend README](backend/README.md)
 
