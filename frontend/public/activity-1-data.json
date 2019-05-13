@@ -1,3 +1,31 @@
 {
-    "activity": "Kørsel"
+    "pk": 653,
+    "sbsys_id": "27.21.08-GX-9999-19",
+    "appropriation": {
+        "pk": 78,
+        "sbsys_id": "27.21.08-GX-9999-17-leil-19"
+    },
+    "law_ref": "SEL §52.3.7 Anbringelse udenfor hjemmet",
+    "activity": "Plejefamilier, vederlag",
+    "classifications": [
+        "hovedaktivitet",
+        "følgeudgift"
+    ],
+    "status": "bevilget",
+    "startdate": "2019-05-07T09:57:35+02:00",
+    "enddate": "2021-05-7T09:57:35+02:00",
+    "note": "Denne udgift skal dække noget fordi særlige omstændigheder byder det.",
+    "payment": {
+        "amount": 2000,
+        "payment_freq": "monthly",
+        "payee": {
+            "type": "person",
+            "id": "040404-0404",
+            "name": "Jens Andersen"   
+        },
+        "method": {
+            "type": "SD-løn",
+            "skattekort": "hovedkort"
+        }
+    }
 }
