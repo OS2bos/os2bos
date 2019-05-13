@@ -3,7 +3,10 @@
     "sbsys_id": "27.21.08-GX-9999-19",
     "appropriation": {
         "pk": 78,
-        "sbsys_id": "27.21.08-GX-9999-17-leil-19"
+        "sbsys_id": "27.21.08-GX-9999-17-leil-19",
+        "case": {
+            "pk": 675
+        }
     },
     "law_ref": "SEL §52.3.7 Anbringelse udenfor hjemmet",
     "activity": "Plejefamilier, vederlag",

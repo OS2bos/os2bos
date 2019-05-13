@@ -1,23 +1,50 @@
 [
     {
         "pk": 76,
-        "parent_case_pk": 1,
-        "sbsys_id": "nvlnlinzlibli48h4go83hlihslefhselnfl8",
-        "law_ref": "§45, stk 5, Anbringelse af noget",
-        "status": "udarbejdes"
+        "case": {
+            "pk": 2
+        },
+        "sbsys_id": "27.27.27-GX-9999-17-leil-19",
+        "activities": {
+            "main_law_ref": "§45 Ledsagerordning",
+            "main_activity_name": "Ledsager",
+            "activities_count": 3
+        },
+        "status": "ny",
+        "payment": {
+            "total_amount": 1400
+        }
     },
     {
         "pk": 15,
-        "parent_case_pk": 1,
-        "sbsys_id": "389023hflijdslefjselfih9",
-        "law_ref": "§1, stk 4, Noget med noget",
-        "status": "forventet"   
+        "case": {
+            "pk": 2
+        },
+        "sbsys_id": "27.27.27-GX-9999-17-leil-20",
+        "activities": {
+            "main_law_ref": "§45 Ledsagerordning",
+            "main_activity_name": "Ledsager",
+            "activities_count": 3
+        },
+        "status": "forventet",
+        "payment": {
+            "total_amount": 25000
+        }
     },
     {
         "pk": 97,
-        "parent_case_pk": 1,
-        "sbsys_id": "ggi8hw3l8hsoe8fos8fosefsef",
-        "law_ref": "§976, Noget andet, noget helt andet",
-        "status": "bevilget"   
+        "case": {
+            "pk": 2
+        },
+        "sbsys_id": "27.27.27-GX-9999-17-leil-32",
+        "activities": {
+            "main_law_ref": "§45 Ledsagerordning",
+            "main_activity_name": "Buskort",
+            "activities_count": 1
+        },
+        "status": "bevilget", 
+        "payment": {
+            "total_amount": 23695
+        }
     }
 ]
