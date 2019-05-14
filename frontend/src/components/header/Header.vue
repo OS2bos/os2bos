@@ -1,15 +1,23 @@
 <template>
 
-    <header class="globalheader">
-        <router-link to="/">Mine sager</router-link>
-        <router-link to="/login">Log ud</router-link>
-    </header>
+    <header>
+        <nav class="globalheader">
+            <router-link to="/login">Log ud</router-link>
+        </nav>
+        <breadcrumb />
+    </header> 
 
 </template>
 
 <script>
+
+    import Breadcrumb from './Breadcrumb.vue'
     
     export default {
+
+        components: {
+            Breadcrumb
+        }
 
     }
 
@@ -20,10 +28,10 @@
     .globalheader {
         display: flex;
         flex-flow: row nowrap;
-        justify-content: space-between;
+        justify-content: flex-end;
         align-items: center;
         padding: 1rem;
-        background-color: hsla(0,0%,0%,.1);
+        background-color: var(--grey1);
     }    
 
 </style>
