@@ -2,7 +2,7 @@
 
     <section class="appropriation" v-if="appr">
         <header>
-            <router-link :to="`/case/${ appr.case.pk }`">< Hovedsag {{ appr.case.sbsys_id }}</router-link>
+            <router-link :to="`/case/${ appr.case.pk }`"> Hovedsag {{ appr.case.sbsys_id }}</router-link>
             <dl>
                 <dt>Sagspart CPR-nr</dt>
                 <dd>{{ appr.case.cpr_no }}</dd>
