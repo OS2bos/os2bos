@@ -2,13 +2,15 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Cases from './components/cases/Cases.vue'
 import Case from './components/cases/Case.vue'
+import CaseCreate from './components/cases/CaseCreate.vue'
 import Appropriation from './components/appropriations/Appropriation.vue'
 import Activity from './components/activities/Activity.vue'
 import Login from './components/auth/Login.vue'
+import store from './store.js'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
     routes: [
         {
             path: '/',
@@ -19,6 +21,11 @@ export default new Router({
             path: '/case/:id',
             name: 'case',
             component: Case
+        },
+        {
+            path: '/case-create/',
+            name: 'case-create',
+            component: CaseCreate
         },
         {
             path: '/appropriation/:id',
@@ -41,3 +48,11 @@ export default new Router({
         }
     ]
 })
+
+router.afterEach((to, from) => {
+    console.log('this is after a routing')
+    console.log(Vue)
+    store.commit('setBreadcrumb', [])
+})
+
+export default router

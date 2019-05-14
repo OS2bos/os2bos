@@ -1,22 +1,45 @@
 <template>
 
     <section class="appropriation" v-if="appr">
-        <router-link to="/case/1">Sag XXX</router-link>
-        <h1>Bevillingsskrivelse {{ appr.sbsys_id }}</h1>
-        <dl>
-            <dt>Paragraf</dt>
-            <dd>{{ appr.law_ref }}</dd>
-            <dt>Status</dt>
-            <dd><span :class="`status-${ appr.status }`">{{ appr.status }}</span></dd>
-            <template v-if="appr.approval">
-                <dt>Bevilget af</dt>
-                <dd>
-                    {{ appr.approval.approval_person }}, 
-                    {{ appr.approval.approval_auth_level }} 
-                    - {{ new Date(appr.approval.approval_date).toLocaleDateString() }}
-                </dd>
-            </template>
-        </dl>
+        <h1>Bevillingsskrivelse</h1>
+        <div class="appr-header">
+            <div>
+                <dl>
+                    <dt>SBSYS-sag</dt>
+                    <dd><strong>{{ appr.sbsys_id}}</strong></dd>
+                    <dt>Bevilling efter §</dt>
+                    <dd>{{ appr.law_ref }}</dd>
+                    <dt>Status</dt>
+                    <dd>
+                        <span :class="`status-${ appr.status }`">{{ appr.status }}</span>
+                        <template v-if="appr.approval">
+                            af
+                            {{ appr.approval.approval_person }}, 
+                            {{ appr.approval.approval_auth_level }} 
+                            - {{ new Date(appr.approval.approval_date).toLocaleDateString() }}
+                        </template>
+                    </dd>        
+                </dl>
+            </div>
+            <div>
+                <dl>
+                    <dt>Sagspart CPR-nr</dt>
+                    <dd>{{ appr.case.cpr_no }}</dd>
+                    <dt>Sagspart navn</dt>
+                    <dd>{{ appr.case.name }}</dd>
+                    <dt>Sagsbehandler</dt>
+                    <dd>{{ appr.case.case_worker}} ({{ appr.case.case_worker_initials }})</dd>
+                </dl>
+                <dl>
+                    <dt>Betalingskommune</dt>
+                    <dd>{{ appr.case.municipality_payment}}</dd>
+                    <dt>Handlekommune</dt>
+                    <dd>{{ appr.case.municipality_action}}</dd>
+                    <dt>Bopælskommune</dt>
+                    <dd>{{ appr.case.municipality_residence}}</dd>
+                </dl>
+            </div>
+        </div>
         <activity-list :appr-id="appr.pk" />
     </section>
 
@@ -38,20 +61,27 @@
             }
         },
         methods: {
-            update: function() {
-                this.fetch_appr(this.$route.params.id)
-            },
             fetch_appr: function(id) {
                 axios
                 .get('../../appropriation-data.json')
                 .then(res => {
                     this.appr = res.data
+                    this.$store.commit('setBreadcrumb', [
+                        {
+                            link: '/',
+                            title: 'Mine sager'
+                        },
+                        {
+                            link: `/case/${ this.appr.case.pk }`,
+                            title: `Sag ${ this.appr.case.sbsys_id }`
+                        }
+                    ])
                 })
                 .catch(err => console.log(err))
             }
         },
         created: function() {
-            this.update()
+            this.fetch_appr(this.$route.params.id)
         }
     }
     
@@ -64,9 +94,19 @@
     }
 
     .appropriation .status-bevilget {
-        background-color: green;
+        background-color: var(--success);
         color: white;
         padding: .25rem;
+    }
+
+    @media screen and (min-width: 45rem) {
+        
+        .appropriation .appr-header {
+            display: grid;
+            grid-gap: 0 2rem;
+            grid-template-columns: 1fr 1fr;
+        }
+
     }
 
 </style>

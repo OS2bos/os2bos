@@ -1,14 +1,44 @@
 [
     {
         "pk": 421,
-        "activity": "Kørsel"
+        "activity": "Plejefamilier, vederlag",
+        "startdate": "2019-05-07T09:57:35+02:00",
+        "enddate": "2021-05-7T09:57:35+02:00",
+        "payment": {
+            "total_amount": 23000,
+            "payee": {
+                "name": "Jens Andersen"
+            }
+        },
+        "status": "bevilget",
+        "appropriation_pk": 78
     },
     {
-        "pk": 763,
-        "activity": "Ledsager"
+        "pk": 867,
+        "activity": "Plejefamilier, vederlag",
+        "startdate": "2019-05-07T09:57:35+02:00",
+        "enddate": "2021-05-7T09:57:35+02:00",
+        "payment": {
+            "total_amount": 23000,
+            "payee": {
+                "name": "Jens Andersen"
+            }
+        },
+        "status": "forventet",
+        "appropriation_pk": 78
     },
     {
-        "pk": 764,
-        "activity": "Fredagsslik"
+        "pk": 782,
+        "activity": "Kørsel",
+        "startdate": "2019-05-07T09:57:35+02:00",
+        "enddate": "2021-05-7T09:57:35+02:00",
+        "payment": {
+            "total_amount": 23000,
+            "payee": {
+                "name": "Jens Andersen"
+            }
+        },
+        "status": "bevilget",
+        "appropriation_pk": 78
     }
 ]
