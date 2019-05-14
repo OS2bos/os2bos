@@ -4,6 +4,7 @@ import Cases from './components/cases/Cases.vue'
 import Case from './components/cases/Case.vue'
 import CaseCreate from './components/cases/CaseCreate.vue'
 import Appropriation from './components/appropriations/Appropriation.vue'
+import AppropriationEdit from './components/appropriations/AppropriationEdit.vue'
 import Activity from './components/activities/Activity.vue'
 import Login from './components/auth/Login.vue'
 import store from './store.js'
@@ -23,7 +24,7 @@ const router = new Router({
             component: Case
         },
         {
-            path: '/case-create/',
+            path: '/case-create',
             name: 'case-create',
             component: CaseCreate
         },
@@ -50,8 +51,6 @@ const router = new Router({
 })
 
 router.afterEach((to, from) => {
-    console.log('this is after a routing')
-    console.log(Vue)
     store.commit('setBreadcrumb', [])
 })
 

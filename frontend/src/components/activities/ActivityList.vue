@@ -1,7 +1,10 @@
 <template>
 
     <section class="activities">
-        <h1>Aktiviteter</h1>
+        <header class="activities-header">
+            <h1>Aktiviteter</h1>
+            <button class="activities-create-btn" title="Ny aktivitet">+ Ny aktivitet</button>
+        </header>
         <table>
             <thead>
                 <tr>
@@ -64,6 +67,17 @@
 
     .activities {
         margin: 1rem;
+    }
+
+    .activities-header {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .activities-create-btn {
+        margin: 0 1rem;
     }
 
 </style>

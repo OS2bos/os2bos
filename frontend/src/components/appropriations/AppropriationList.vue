@@ -1,7 +1,10 @@
 <template>
 
     <section class="appropriations">
-        <h1>Bevillinger</h1>
+        <header class="appropriations-header">
+            <h1>Bevillinger</h1>
+            <button class="appropriation-create-btn" @click="createAppr()">+ Ny bevilling</button>
+        </header>
         <table>
             <thead>
             <tr>
@@ -48,31 +51,16 @@
         },
         methods: {
             fetchAppropriations: function(case_id) {
-                console.log(case_id)
                 axios.get('../../appropriation-list-data.json')
                 .then(res => {
                     this.apprs = res.data
-
-                    /*
-
-                    {
-        "pk": 15,
-        "case": {
-            "pk": 2
-        },
-        "sbsys_id": "27.27.27-GX-9999-17-leil-20",
-        "activities": {
-            "main_law_ref": "§45 Ledsagerordning",
-            "main_activity_name": "Ledsager",
-            "activities_count": 3
-        },
-        "status": "forventet",
-        "payment": {
-            "total_amount": 25000
-        }
-    }
-
-                    */
+                })
+                .catch(err => console.log(err))
+            },
+            createAppr: function() {
+                axios.post('/') // POST new empty appropriation
+                .then(res => {
+                    this.$router.push(`/appropriation/${ res.data.pk }`) // Navigate to new appropriation page
                 })
                 .catch(err => console.log(err))
             }
@@ -88,6 +76,17 @@
 
     .appropriations {
         margin: 1rem;
+    }
+
+    .appropriations-header {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .appropriation-create-btn {
+        margin: 0 1rem;
     }
 
     .appropriations .status {

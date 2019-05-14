@@ -6,11 +6,12 @@ input[type="reset"] {
     background-color: var(--primary);
     color: var(--grey0);
     border: none;
-    padding: .5rem 1rem;
+    padding: .33rem .66rem;
     cursor: pointer;
     margin-bottom: 0.33rem;
-    font-size: 1em;
+    font-size: .9rem;
     border: solid 1px var(--primary);
+    border-radius: .125rem;
 }
 
 button:hover,
