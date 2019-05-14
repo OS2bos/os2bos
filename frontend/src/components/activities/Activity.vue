@@ -1,13 +1,27 @@
 <template>
 
     <section class="activity" v-if="act">
-        <h1>Aktivitet</h1>
-        <dl>
+        <header class="activity-header">
+            <h1>Aktivitet</h1>
+            <button v-if="!show_edit" @click="show_edit = true" class="act-edit-btn">Redigér</button>
+        </header>
+
+        <div v-if="show_edit">
+            <activity-edit :activity-data="act" @cancelled="show_edit = false" @saved="show_edit = false" />
+        </div>
+
+        <dl v-if="!show_edit">
             <dt>Status</dt>
-            <dd>{{ act.status }}</dd>
+            <dd>
+                <div v-if="act.is_estimated_cost">Forventning</div>
+                <div v-if="!act.is_estimated_cost">Bevilling</div>
+            </dd>
             <dt>Type</dt>
             <dd>
-                <span v-for="c in act.classifications">{{ c }} </span>
+                <div v-if="act.is_main_act">Hovedaktivitet</div>
+                <div v-if="!act.is_main_act">Tillægsydelse</div>
+                <div v-if="act.is_single_payment">Enkeltydelse</div>
+                <div v-if="!act.is_single_payment">Følgeydelse </div>
             </dd>
             <dt>Bevilling efter </dt>
             <dd>{{ act.law_ref }}</dd>
@@ -56,12 +70,17 @@
 <script>
 
     import axios from '../http/Http.js'
+    import ActivityEdit from './ActivityEdit.vue'
 
     export default {
 
+        components: {
+            ActivityEdit
+        },
         data: function() {
             return {
-                act: null
+                act: null,
+                show_edit: false
             }
         },
         methods: {
@@ -84,14 +103,11 @@
                         },
                         {
                             link: false,
-                            title: `Aktivitet ${ this.act.sbsys_id }`
+                            title: `${ this.act.activity }`
                         }
                     ])
                 })
                 .catch(err => console.log(err))
-            },
-            setBreadCrumb: function() {
-
             }
         },
         created: function() {
@@ -105,6 +121,17 @@
 
     .activity {
         margin: 1rem;
+    }
+
+    .activity-header {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .activity .act-edit-btn {
+        margin: 0 1rem;
     }
 
 </style>
