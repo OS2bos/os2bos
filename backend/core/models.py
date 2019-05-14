@@ -42,6 +42,8 @@ class PaymentSchedule(models.Model):
         null=False, max_length=128, verbose_name=_("betalingsmåde")
     )
 
+    # TODO: Add actual scheduling information.
+
 
 class Payment(models.Model):
     """Represents an amount paid to a supplier - amount, recpient, date.
