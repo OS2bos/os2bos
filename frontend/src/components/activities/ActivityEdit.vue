@@ -19,17 +19,17 @@
             </fieldset>
             <fieldset>
                 <label for="field-lawref">Bevilling efter §</label>
-                <select :value="act_data.law_ref" id="field-lawref">
-                    <option val="SEL §45 Ledsagerordning 12">SEL §45 Ledsagerordning 12</option>
-                    <option vale="SEL §52.3.7 Anbringelse udenfor hjemmet">SEL §52.3.7 Anbringelse udenfor hjemmet</option>
+                <select v-model="act_data.law_ref" id="field-lawref">
+                    <option value="SEL §45 Ledsagerordning 12">SEL §45 Ledsagerordning 12</option>
+                    <option value="SEL §52.3.7 Anbringelse udenfor hjemmet">SEL §52.3.7 Anbringelse udenfor hjemmet</option>
                 </select>
             </fieldset>
             <fieldset>
                 <label>Aktivitet</label>
-                <select :val="act_data.activity">
-                    <option val="Plejefamilier eksl. vederlag">Plejefamilier eksl. vederlag</option>
-                    <option val="Kørsel">Kørsel</option>
-                    <option val="Kost- og efterskoler">Kost- og efterskoler</option>
+                <select v-model="act_data.activity">
+                    <option value="Plejefamilier eksl. vederlag">Plejefamilier eksl. vederlag</option>
+                    <option value="Kørsel">Kørsel</option>
+                    <option value="Kost- og efterskoler">Kost- og efterskoler</option>
                 </select>
             </fieldset>
             <fieldset>
@@ -40,6 +40,60 @@
                 <label for="field-enddate">Slutdato</label>
                 <input type="date" id="field-enddate">
             </fieldset>
+            <hr>
+            <fieldset>
+                <label for="field-cost">Bevilget beløb</label>
+                <input type="number" id="field-cost" v-model="act_data.payment.amount">
+            </fieldset>
+            <fieldset>
+                <legend>Udgiftstype</legend>
+                <input type="radio" id="field-cost-single" :value="false" v-model="act_data.is_single_payment">
+                <label for="field-cost-single">Følgeydelse</label>
+                <input type="radio" id="field-cost-recurring" :value="true" v-model="act_data.is_single_payment">
+                <label for="field-cost-recurring">Enkeltudgift</label>
+            </fieldset>
+            <fieldset>
+                <label for="field-note">Bemærkning</label>
+                <textarea v-model="act_data.payment.note" id="field-note"></textarea>
+            </fieldset>
+            <hr>
+            <fieldset>
+                <legend>Betalingsmodtager</legend>
+                <input type="radio" id="field-payment-type-inherit" value="inherit" v-model="act_data.payment.payee.type">
+                <label for="field-payment-type-inherit">Samme som hovedydelsen</label>
+                <input type="radio" id="field-payment-type-intern" value="intern" v-model="act_data.payment.payee.type">
+                <label for="field-payment-type-intern">Intern</label>
+                <input type="radio" id="field-payment-type-person" value="person" v-model="act_data.payment.payee.type">
+                <label for="field-payment-type-person">Person</label>
+                <input type="radio" id="field-payment-type-firm" value="firma" v-model="act_data.payment.payee.type">
+                <label for="field-payment-type-firm">Firma</label>
+            </fieldset>
+            <template v-if="act_data.payment.payee.type !== 'inherit'">
+                <fieldset>
+                    <label for="field-payment-id">
+                        <template v-if="act_data.payment.payee.type === 'person'">CPR-nr</template>
+                        <template v-if="act_data.payment.payee.type === 'firma'">CVR-nr</template>
+                        <template v-if="act_data.payment.payee.type === 'intern'">Reference</template>
+                    </label>
+                    <input type="text" id="field-payment-id" v-model="act_data.payment.payee.id">
+                </fieldset>
+                <fieldset>
+                    <label for="field-payment-name">Navn</label>
+                    <input type="text" id="field-payment-name" v-model="act_data.payment.payee.name">
+                </fieldset>
+                <fieldset>
+                    <legend>Betalingsmåde</legend>
+                    <input type="radio" id="field-payment-method-cash" value="kontant" v-model="act_data.payment.method.type">
+                    <label for="field-payment-method-cash">Kontant udbetaling</label>
+                    <input type="radio" id="field-payment-method-sd" value="SD-løn" v-model="act_data.payment.method.type">
+                    <label for="field-payment-method-sd">SD-løn</label>
+                    <input type="radio" id="field-payment-method-invoice" value="faktura" v-model="act_data.payment.method.type">
+                    <label for="field-payment-method-invoice">Faktura</label>
+                    <input type="radio" id="field-payment-method-internal" value="intern afregning" v-model="act_data.payment.method.type">
+                    <label for="field-payment-method-internal">Intern afregning</label>
+                </fieldset>
+            </template>
+            <hr>
             <fieldset>
                 <input type="submit" value="Gem">
                 <button class="cancel-btn" type="reset" @click="cancelEdit()">Annullér</button>
