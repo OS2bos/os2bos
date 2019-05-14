@@ -2,9 +2,12 @@
 
     <nav class="breadcrumb" v-if="bc.length > 0">
         <span v-for="b in bc" :key="b[0]" class="crumb">
-            <router-link :to="b.link">
+            <router-link :to="b.link" v-if="b.link">
                 {{ b.title }}
             </router-link>
+            <span v-if="!b.link">
+                {{ b.title }}
+            </span>
         </span>
     </nav>
 
@@ -27,20 +30,29 @@
 <style>
 
     .breadcrumb {
-        font-size: 0.85em;
-        padding: .25rem .5rem;
+        padding: .25rem 1rem;
         border-bottom: solid 1px var(--grey1);
     }
 
     .breadcrumb .crumb {
         display: inline-block;
+        padding: .25rem 0;
     }
 
     .breadcrumb .crumb::before {
         content: '>';
         display: inline-block;
-        margin: .5rem;
+        margin: 0 .5rem;
         opacity: .5;
+    }
+
+    .breadcrumb .crumb:first-child:before {
+        content: '';
+        margin: 0;
+    }
+
+    .breadcrumb .crumb > a  {
+        border: none;
     }
 
 </style>

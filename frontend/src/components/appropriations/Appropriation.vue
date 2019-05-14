@@ -83,6 +83,10 @@
                         {
                             link: `/case/${ this.appr.case.pk }`,
                             title: `Sag ${ this.appr.case.sbsys_id }`
+                        },
+                        {
+                            link: false,
+                            title: `Bevilling ${ this.appr.sbsys_id }`
                         }
                     ])
                 })

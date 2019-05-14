@@ -81,6 +81,10 @@
                         {
                             link: `/appropriation/${ this.act.appropriation.pk }`,
                             title: `Bevilling ${ this.act.appropriation.sbsys_id }`
+                        },
+                        {
+                            link: false,
+                            title: `Aktivitet ${ this.act.sbsys_id }`
                         }
                     ])
                 })

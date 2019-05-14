@@ -35,6 +35,10 @@
                         {
                             link: '/',
                             title: 'Mine sager'
+                        },
+                        {
+                            link: false,
+                            title: `Sag ${ this.cas[0].sbsys_id}`
                         }
                     ])
                 })
