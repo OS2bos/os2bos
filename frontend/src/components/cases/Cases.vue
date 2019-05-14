@@ -3,36 +3,40 @@
     <section class="cases" v-if="cas">
         <h1>Mine sager</h1>
         <table>
-            <tr>
-                <td>
-                    Sags-ID
-                </td> 
-                <td>
-                    Navn
-                </td>
-                <td>
-                    Status
-                </td>
-                <td>
-                    Ændret
-                </td>
-            </tr>
-            <tr v-for="c in cas" :key="c[0]">
-                <td>
-                    <router-link :to="`/case/${ c.pk }`">
-                        {{ c.sbsys_id }}
-                    </router-link>
-                </td>
-                <td>
-                    {{ c.name }}
-                </td>
-                <td>
-                    -
-                </td>
-                <td>
-                    {{ c.updated }}
-                </td>
-            </tr>
+            <thead>
+                <tr>
+                    <td>
+                        Sags-ID
+                    </td> 
+                    <td>
+                        Navn
+                    </td>
+                    <td>
+                        Status
+                    </td>
+                    <td>
+                        Ændret
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="c in cas" :key="c.pk">
+                    <td>
+                        <router-link :to="`/case/${ c.pk }`">
+                            {{ c.sbsys_id }}
+                        </router-link>
+                    </td>
+                    <td>
+                        {{ c.name }}
+                    </td>
+                    <td>
+                        -
+                    </td>
+                    <td>
+                        {{ c.updated }}
+                    </td>
+                </tr>
+            </tbody>
         </table>
 
         <button class="create" @click="$router.push('case-create')">Opret sag</button>

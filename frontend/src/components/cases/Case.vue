@@ -25,9 +25,9 @@
         },
         methods: {
             update: function() {
-                this.fetch_case(this.$route.params.id)
+                this.fetchCase(this.$route.params.id)
             },
-            fetch_case: function(id) {
+            fetchCase: function(id) {
                 axios.get('../../case-data.json')
                 .then(res => {
                     this.cas = res.data

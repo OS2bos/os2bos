@@ -4,69 +4,64 @@
         <form>
             <fieldset>
                 <label for="inputSearch">SBSYS Hovedsag:</label>
-                <input id="inputSearch" type="search">
-                <button class="case-button">Hent</button>
+                <input id="inputSearch" type="search" v-model="item">
+                <button class="case-button" v-on:click.prevent="fetchCase">Hent</button>
             </fieldset>
+        </form>
 
+        <form id="getForm" v-for="c in cas" :key="c.pk">
             <fieldset>
-                <label>Sagspart:</label>
+                <h3>Sagspart:</h3>
                 <dl>
                     <dt>CPR-nr:</dt>
-                    <dd>211212-1111</dd>
+                    <dd>{{ c.cpr_no }}</dd>
                     <dt>Navn:</dt>
-                    <dd>Ole Henriksen</dd>
+                    <dd>{{ c.name }}</dd>
                 </dl>
             </fieldset>
 
-            <label>Familie og relationer:</label>
             <fieldset>
-                <label>Forældre:</label>
+                <h3>Familie og relationer:</h3>
                 <dl>
                     <dt>Mor:</dt>
-                    <dd>Ole Henriksen</dd>
+                    <dd>{{ c.family_relations.parents.mother }}</dd>
                     <dt>Far:</dt>
-                    <dd>Ole Henriksen</dd>
+                    <dd>{{ c.family_relations.parents.father }}</dd>
                     <dt>Andre:</dt>
-                    <dd>Ole Henriksen</dd>
+                    <dd>{{ c.family_relations.other }}</dd>
                 </dl>
             </fieldset>
 
-            <label>Kommune:</label>
             <fieldset>
+                <h3>Kommune:</h3>
                 <label for="selectField1">Betalingskommune:</label>
                 <select id="selectField1">
-                    <option>Ballerup Kommune</option>
-                    <option>Herlev Kommune</option>
-                    <option>Solrød Kommune</option>
+                    <option>{{ c.municipality.payment_municipality}}</option>
                 </select>
             </fieldset>
             <fieldset>
                 <label for="selectField2">Handlekommune:</label>
                 <select id="selectField2">
-                    <option>Ballerup Kommune</option>
-                    <option>Herlev Kommune</option>
-                    <option>Solrød Kommune</option>
+                    <option>{{ c.municipality.payment_municipality}}</option>
                 </select>
             </fieldset>
             <fieldset>
                 <label for="selectField3">Bopælsskommune:</label>
                 <select id="selectField3">
-                    <option>Ballerup Kommune</option>
-                    <option>Herlev Kommune</option>
-                    <option>Solrød Kommune</option>
+                    <option>{{ c.municipality.payment_municipality}}</option>
                 </select>
             </fieldset>
 
             <fieldset>
-                <label>Målgruppe:</label>
+                <h3>Målgruppe:</h3>
                 <input id="inputRadio1" type="radio" name="radioButtonSet">
                 <label for="inputRadio1">Familieafdelingen</label>
                 <input id="inputRadio2" type="radio" name="radioButtonSet">
                 <label for="inputRadio2">Handicapafdelingen</label>
             </fieldset>
 
-            <label>Andet:</label>
             <fieldset>
+                <h3>Andet:</h3>
                 <input id="inputCheckbox1" type="checkbox" name="radioButtonSet">
                 <label for="inputCheckbox1">Integrationsindsatsen</label>
                 <input id="inputCheckbox2" type="checkbox" name="radioButtonSet">
@@ -75,34 +70,32 @@
             <fieldset>
                 <label for="selectField">Oprindeligt distrikt:</label>
                 <select id="selectField">
-                    <option>Skovvejen</option>
-                    <option>Ballerupvej</option>
-                    <option>Hestevejen</option>
+                    <option>{{ c.original_district}}</option>
                 </select>
             </fieldset>
             <fieldset>
                 <dt>Indsatstrappen:</dt>
-                <dd>4</dd>
+                <dd>{{ c.effort_stairs }}</dd>
                 <dt>Skaleringstrappe:</dt>
-                <dd>5</dd>
+                <dd>{{ c.scaling_staircase }}</dd>
+            </fieldset>
+            <fieldset>
                 <button>Vurdering</button>
             </fieldset>
 
-            <label>Sagsbehandling:</label>
             <fieldset>
+                <h3>Sagsbehandling:</h3>
                 <dt>Sagsbehander:</dt>
-                <dd>Leif Lyngby Lodahl (leil)</dd>
+                <dd>{{ c.case_management.case_worker }}</dd>
                 <dt>Team:</dt>
-                <dd>Familieteamet</dd>
+                <dd>{{ c.case_management.team }}</dd>
                 <label for="selectField">Distrikt:</label>
                 <select id="selectField">
-                    <option>Skovvejen</option>
-                    <option>Ballerupvej</option>
-                    <option>Hestevejen</option>
+                    <option>{{ c.original_district}}</option>
                 </select>
                 <fieldset>
                     <dt>Leder:</dt>
-                    <dd>Jens Kjellerup Hansen</dd>
+                    <dd>{{ c.case_management.manager }}</dd>
                 </fieldset>
             </fieldset>
             <fieldset>
@@ -115,6 +108,33 @@
 
 <script>
 
+    import axios from '../http/Http.js'
+
+    export default {
+
+        data: function() {
+            return {
+                item: null,
+                cas: null
+            }
+        },
+        methods: {
+            update: function() {
+                this.fetchCase(this.$route.params.id)
+            },
+            fetchCase: function(id) {
+                axios.get('../../case-data.json')
+                .then(res => {
+                    this.cas = res.data
+                })
+                .catch(err => console.log(err))
+            }
+        },
+        created: function() {
+            this.update()
+        }
+    }
+    
 </script>
 
 <style>
