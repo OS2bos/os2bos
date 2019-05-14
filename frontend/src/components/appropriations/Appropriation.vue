@@ -1,10 +1,13 @@
 <template>
 
     <section class="appropriation" v-if="appr">
-        <h1>Bevillingsskrivelse</h1>
+        <header class="appropriation-header">
+            <h1>Bevillingsskrivelse</h1>
+            <button v-if="!show_edit" @click="show_edit = true" class="appr-edit-btn">Redigér</button>
+        </header>
         <div class="appr-header">
             <div>
-                <dl>
+                <dl v-if="!show_edit">
                     <dt>SBSYS-sag</dt>
                     <dd><strong>{{ appr.sbsys_id}}</strong></dd>
                     <dt>Bevilling efter §</dt>
@@ -18,8 +21,11 @@
                             {{ appr.approval.approval_auth_level }} 
                             - {{ new Date(appr.approval.approval_date).toLocaleDateString() }}
                         </template>
-                    </dd>        
+                    </dd>
                 </dl>
+                <div v-if="show_edit">
+                    <appropriation-edit :appropriation-data="appr" @cancelled="show_edit = false" @saved="show_edit = false" />
+                </div>
             </div>
             <div>
                 <dl>
@@ -49,19 +55,22 @@
 
     import axios from '../http/Http.js'
     import ActivityList from '../activities/ActivityList.vue'
+    import AppropriationEdit from './AppropriationEdit.vue'
 
     export default {
 
         components: {
-            ActivityList
+            ActivityList,
+            AppropriationEdit
         },
         data: function() {
             return {
-                appr: null
+                appr: null,
+                show_edit: false
             }
         },
         methods: {
-            fetch_appr: function(id) {
+            fetchAppr: function(id) {
                 axios
                 .get('../../appropriation-data.json')
                 .then(res => {
@@ -81,7 +90,7 @@
             }
         },
         created: function() {
-            this.fetch_appr(this.$route.params.id)
+            this.fetchAppr(this.$route.params.id)
         }
     }
     
@@ -91,6 +100,17 @@
 
     .appropriation {
         margin: 1rem;
+    }
+
+    .appropriation-header {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .appropriation .appr-edit-btn {
+        margin: 0 1rem;
     }
 
     .appropriation .status-bevilget {
