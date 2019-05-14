@@ -3,7 +3,7 @@
     <section class="activities">
         <header class="activities-header">
             <h1>Aktiviteter</h1>
-            <button class="activities-create-btn" title="Ny aktivitet">+ Ny aktivitet</button>
+            <button class="activities-create-btn" title="Ny aktivitet" @click="createAct()">+ Ny aktivitet</button>
         </header>
         <table>
             <thead>
@@ -50,6 +50,13 @@
                 axios.get('../../activity-list-data.json')
                 .then(res => {
                     this.acts = res.data
+                })
+                .catch(err => console.log(err))
+            },
+            createAct: function() {
+                axios.post('/') // POST new empty activity
+                .then(res => {
+                    this.$router.push(`/activity/${ res.data.pk }`) // Navigate to new activity page
                 })
                 .catch(err => console.log(err))
             }

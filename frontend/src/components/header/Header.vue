@@ -1,9 +1,10 @@
 <template>
 
     <header>
-        <nav class="globalheader">
+        <div class="globalheader">
+            <h1>Bevillingssystemet</h1>
             <router-link to="/login">Log ud</router-link>
-        </nav>
+        </div>
         <breadcrumb />
     </header> 
 
@@ -28,10 +29,15 @@
     .globalheader {
         display: flex;
         flex-flow: row nowrap;
-        justify-content: flex-end;
+        justify-content: space-between;
         align-items: center;
         padding: 1rem;
         background-color: var(--grey1);
-    }    
+    }
+    .globalheader > h1 {
+        padding: 0;
+        opacity: .5;
+        font-size: 1.25rem;
+    }
 
 </style>

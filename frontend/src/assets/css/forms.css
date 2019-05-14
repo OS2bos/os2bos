@@ -4,6 +4,14 @@ fieldset {
     border: none;
 }
 
+legend {
+    margin: 0;
+    padding: 0;
+    position: static;
+    top: 0;
+    bottom: 0;
+}
+
 label {
     display: block;
 }
@@ -38,6 +46,12 @@ select:required:valid::after {
     content: '✔';
     display: block;
     color: var(--success);
+}
+
+textarea {
+    width: 100%;
+    max-width: 45rem;
+    min-height: 6rem;
 }
 
 
