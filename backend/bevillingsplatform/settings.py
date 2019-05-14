@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "django_extensions",
+    "core",
 ]
 
 MIDDLEWARE = [
@@ -85,12 +86,8 @@ WSGI_APPLICATION = "bevillingsplatform.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
+        "ENGINE": "django.db.backends.sqlite3",
         "NAME": default_config.get("DATABASE_NAME"),
-        "USER": default_config.get("DATABASE_USER"),
-        "PASSWORD": default_config.get("DATABASE_PASSWORD"),
-        "HOST": default_config.get("DATABASE_HOST"),
-        "PORT": default_config.get("DATABASE_PORT"),
     }
 }
 
@@ -103,8 +100,12 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
     },
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"
+    },
 ]
 
 
