@@ -1,9 +1,6 @@
 <template>
 
     <section class="activity" v-if="act">
-        <header>
-            <router-link :to="`/appropriation/${ act.appropriation.pk }`">< Bevilling {{ act.appropriation.sbsys_id }}</router-link>
-        </header>
         <h1>Aktivitet</h1>
         <dl>
             <dt>Status</dt>
@@ -68,19 +65,33 @@
             }
         },
         methods: {
-            update: function() {
-                this.fetch_appr(this.$route.params.id)
-            },
             fetch_appr: function(id) {
                 axios.get('../../activity-1-data.json')
                 .then(res => {
                     this.act = res.data
+                    this.$store.commit('setBreadcrumb', [
+                        {
+                            link: '/',
+                            title: 'Mine sager'
+                        },
+                        {
+                            link: `/case/${ this.act.appropriation.case.pk }`,
+                            title: `Sag ${ this.act.appropriation.sbsys_id }`
+                        },
+                        {
+                            link: `/appropriation/${ this.act.appropriation.pk }`,
+                            title: `Bevilling ${ this.act.appropriation.sbsys_id }`
+                        }
+                    ])
                 })
                 .catch(err => console.log(err))
+            },
+            setBreadCrumb: function() {
+
             }
         },
         created: function() {
-            this.update()
+            this.fetch_appr(this.$route.params.id)
         }
     }
     
