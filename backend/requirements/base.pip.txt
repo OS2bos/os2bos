@@ -2,4 +2,5 @@ Django==2.2.1
 psycopg2 --no-binary psycopg2
 djangorestframework==3.9.3
 django-extensions==2.1.6
+edc_utils==0.1.6
 django-audit-fields==0.1.3

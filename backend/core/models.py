@@ -27,19 +27,22 @@ class Case(AuditModelMixin, models.Model):
         max_length=128, verbose_name=_("skoledistrikt")
     )
     paying_municipality = models.ForeignKey(
-        Municipality, verbose_name=_("betalingskommune"),
+        Municipality,
+        verbose_name=_("betalingskommune"),
         related_name="pays_for",
-        on_delete=models.PROTECT
+        on_delete=models.PROTECT,
     )
     acting_municipality = models.ForeignKey(
-        Municipality, verbose_name=_("handlekommune"),
+        Municipality,
+        verbose_name=_("handlekommune"),
         related_name="acts_on",
-        on_delete=models.PROTECT
+        on_delete=models.PROTECT,
     )
     residence_municipality = models.ForeignKey(
-        Municipality, verbose_name=_("bopælskommune"),
+        Municipality,
+        verbose_name=_("bopælskommune"),
         related_name="resident_clients",
-        on_delete=models.PROTECT
+        on_delete=models.PROTECT,
     )
     target_group = models.CharField(
         max_length=128, verbose_name=_("målgruppe")
@@ -58,8 +61,9 @@ class Appropriation(AuditModelMixin, models.Model):
     sbsys_id = models.CharField(
         unique=True, null=False, max_length=128, verbose_name=_("SBSYS-ID")
     )
-    section = models.CharField(null=False, verbose_name=_("paragraf"),
-            max_length=128)
+    section = models.CharField(
+        null=False, verbose_name=_("paragraf"), max_length=128
+    )
     status = models.CharField(verbose_name=_("status"), max_length=128)
     approval_level = models.CharField(
         verbose_name=_("bevilling foretaget på niveau"), max_length=128
@@ -78,8 +82,9 @@ class Appropriation(AuditModelMixin, models.Model):
 class Activity(AuditModelMixin, models.Model):
     """An activity is a specific service provided within an appropriation."""
 
-    activity_type = models.ForeignKey(ActivityCatalog, null=False,
-            on_delete=models.PROTECT)
+    activity_type = models.ForeignKey(
+        ActivityCatalog, null=False, on_delete=models.PROTECT
+    )
     status = models.CharField(verbose_name=_("status"), max_length=128)
     start_date = models.DateField(verbose_name=_("start"))
     end_date = models.DateField(verbose_name=_("end"))
