@@ -192,10 +192,8 @@ class Appropriation(AuditModelMixin, models.Model):
 class Activity(AuditModelMixin, models.Model):
     """An activity is a specific service provided within an appropriation."""
 
-    # The activity type will contain the name, tolerance, etc.
-    activity_type = models.ForeignKey(
-        ActivityCatalog, on_delete=models.PROTECT
-    )
+    # The service contains the name, tolerance, etc.
+    service = models.ForeignKey(ActivityCatalog, on_delete=models.PROTECT)
 
     # Status - definitions and choice list.
     STATUS_EXPECTED = "EXPECTED"
