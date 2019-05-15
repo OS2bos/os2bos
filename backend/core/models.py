@@ -114,8 +114,17 @@ class Case(AuditModelMixin, models.Model):
         related_name="resident_clients",
         on_delete=models.PROTECT,
     )
+    # Target group - definitions and choice list.
+    FAMILY_DEPT = "FAMILY_DEPT"
+    DISABILITY_DEPT = "DISABILITY_DEPT"
+    target_group_choices = (
+        (FAMILY_DEPT, _("familieafdelingen")),
+        (DISABILITY_DEPT, _("handicapafdelingen")),
+    )
     target_group = models.CharField(
-        max_length=128, verbose_name=_("målgruppe")
+        max_length=128,
+        verbose_name=_("målgruppe"),
+        choices=target_group_choices,
     )
     refugee_integration = models.BooleanField(
         verbose_name=_("integrationsindsatsen"), default=False
@@ -229,6 +238,7 @@ class Activity(AuditModelMixin, models.Model):
     main_activity = models.ForeignKey(
         "self",
         null=True,
+        blank=True,
         related_name="supplementary_activities",
         on_delete=models.CASCADE,
         verbose_name=_("hovedaktivitet"),
@@ -236,7 +246,11 @@ class Activity(AuditModelMixin, models.Model):
     # An expected change modifies another actitvity and will eventually
     # be merged with it.
     modifies = models.ForeignKey(
-        "self", null=True, related_name="modified_by", on_delete=models.CASCADE
+        "self",
+        null=True,
+        blank=True,
+        related_name="modified_by",
+        on_delete=models.CASCADE,
     )
     # The appropriation that own this activity.
     # The appropriation will and must be set on the *main* activity
@@ -244,6 +258,7 @@ class Activity(AuditModelMixin, models.Model):
     appropriation = models.ForeignKey(
         Appropriation,
         null=True,
+        blank=True,
         related_name="activities",
         on_delete=models.CASCADE,
     )
@@ -255,10 +270,12 @@ class RelatedPerson(models.Model):
     relation_type = models.CharField(
         max_length=128, verbose_name=_("relation")
     )
-    cpr_number = models.CharField(max_length=12, verbose_name=_("cpr-nummer"))
+    cpr_number = models.CharField(
+        max_length=12, verbose_name=_("cpr-nummer"), blank=True
+    )
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     related_case = models.CharField(
-        max_length=128, verbose_name=_("SBSYS-sag")
+        max_length=128, verbose_name=_("SBSYS-sag"), blank=True
     )
 
     main_case = models.ForeignKey(
