@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "django_extensions",
+    "core",
 ]
 
 MIDDLEWARE = [
@@ -85,7 +86,7 @@ WSGI_APPLICATION = "bevillingsplatform.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
+        "ENGINE": default_config.get("DATABASE_ENGINE"),
         "NAME": default_config.get("DATABASE_NAME"),
         "USER": default_config.get("DATABASE_USER"),
         "PASSWORD": default_config.get("DATABASE_PASSWORD"),
