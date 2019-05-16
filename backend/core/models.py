@@ -8,6 +8,18 @@ class Municipality(models.Model):
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
 
+    def __str__(self):
+        return f"{self.name}"
+
+
+class SchoolDistrict(models.Model):
+    """Represents a Danish school district."""
+
+    name = models.CharField(max_length=128, verbose_name=_("navn"))
+
+    def __str__(self):
+        return f"{self.name}"
+
 
 class ActivityCatalog(models.Model):
     """Class containing all services offered by this municipality.
@@ -93,8 +105,11 @@ class Case(AuditModelMixin, models.Model):
     case_worker = models.CharField(
         max_length=128, verbose_name=_("sagsbehandler")
     )
-    district = models.CharField(
-        blank=True, max_length=128, verbose_name=_("skoledistrikt")
+    district = models.ForeignKey(
+        SchoolDistrict,
+        related_name="cases",
+        verbose_name=_("skoledistrikt"),
+        on_delete=models.PROTECT,
     )
     paying_municipality = models.ForeignKey(
         Municipality,

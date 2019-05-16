@@ -14,13 +14,20 @@ import os
 import configparser
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-settings_path = os.path.join(BASE_DIR, "settings.ini")
+base_settings_path = os.path.join(BASE_DIR, "base.ini")
 
 # define defaults for ConfigParser
 defaults = {"BASE_DIR": BASE_DIR}
 config = configparser.ConfigParser(defaults=defaults)
-# load settings.ini into the ConfigParser
-config.read(settings_path)
+# load base settings from base.ini into the ConfigParser
+config.read(base_settings_path)
+
+# If another settings ini is defined, load it
+settings_name = os.getenv("DJANGO_SETTINGS_INI", None)
+if settings_name:  # pragma: no branch
+    settings_path = os.path.join(BASE_DIR, settings_name)
+    config.read(settings_path)
+
 # use settings section as default
 default_config = config["settings"]
 
