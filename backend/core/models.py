@@ -8,6 +8,9 @@ class Municipality(models.Model):
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
 
+    def __str__(self):
+        return f"{self.name}"
+
 
 class ActivityCatalog(models.Model):
     """Class containing all services offered by this municipality.

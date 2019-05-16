@@ -13,6 +13,8 @@ services:
       sh -c "python manage.py makemigrations &&
              python manage.py migrate &&
 
+             echo 'from bevillingsplatform.initialize import initialize;initialize()' | python manage.py shell &&
+
              python manage.py collectstatic --no-input &&
              python manage.py runserver 0.0.0.0:8001"
     environment: 
