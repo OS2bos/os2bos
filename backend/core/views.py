@@ -8,18 +8,19 @@ from core.models import (
     Payment,
     Municipality,
     RelatedPerson,
+    SchoolDistrict,
 )
 
 from core.serializers import (
     CaseSerializer,
     AppropriationSerializer,
     ActivitySerializer,
-    MunicipalitySerializer,
     PaymentScheduleSerializer,
     PaymentSerializer,
     RelatedPersonSerializer,
+    MunicipalitySerializer,
+    SchoolDistrictSerializer,
 )
-
 
 # Working models, read/write
 
@@ -60,3 +61,8 @@ class RelatedPersonViewSet(viewsets.ModelViewSet):
 class MunicipalityViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Municipality.objects.all()
     serializer_class = MunicipalitySerializer
+
+
+class SchoolDistrictViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = SchoolDistrict.objects.all()
+    serializer_class = SchoolDistrictSerializer
