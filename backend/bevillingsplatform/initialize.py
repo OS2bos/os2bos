@@ -27,7 +27,5 @@ def initialize_sections():
         kle_number = section["kle_number"]
         text = section["text"]
         Sections.objects.get_or_create(
-            paragraph=paragraph,
-            kle_number=kle_number,
-            text=text
+            paragraph=paragraph, kle_number=kle_number, text=text
         )
