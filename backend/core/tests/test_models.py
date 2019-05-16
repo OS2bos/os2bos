@@ -13,6 +13,6 @@ class MunicipalityTestCase(TestCase):
 
 class SchoolDistrictTestCase(TestCase):
     def test_school_district_str(self):
-        school_district = SchoolDistrict.objects.create("Skovlunde Skole")
+        school_district = SchoolDistrict.objects.create(name="Skovlunde Skole")
 
         self.assertEqual(str(school_district), "Skovlunde Skole")
