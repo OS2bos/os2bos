@@ -23,7 +23,7 @@ class SectionsTestCase(TestCase):
         sections = Sections.objects.create(
             paragraph="ABL-105-2",
             kle_number="27.45.04",
-            text="Lov om almene boliger"
+            text="Lov om almene boliger",
         )
 
         self.assertEqual(str(sections), "ABL-105-2 - 27.45.04")
