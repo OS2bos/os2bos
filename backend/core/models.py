@@ -109,7 +109,7 @@ class Case(AuditModelMixin, models.Model):
         SchoolDistrict,
         related_name="cases",
         verbose_name=_("skoledistrikt"),
-        on_delete=models.PROTECT
+        on_delete=models.PROTECT,
     )
     paying_municipality = models.ForeignKey(
         Municipality,
