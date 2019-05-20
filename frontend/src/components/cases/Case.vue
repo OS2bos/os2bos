@@ -1,7 +1,7 @@
 <template>
 
     <section v-if="cas">
-        <h1 class="case">{{ cas[4].sbsys_id }}</h1>
+        <h1 class="case">Sag {{ cas[0].sbsys_id }}</h1>
         <appropriations />
     </section>
 

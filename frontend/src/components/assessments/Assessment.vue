@@ -4,33 +4,33 @@
         <form>
             <fieldset>
                 <label for="inputSearch">SBSYS Hovedsag:</label>
-                <input id="inputSearch" type="search" v-model="cas[0].sbsys_id">
+                <input id="inputSearch" type="search" v-model="cas.sbsys_id">
                 <button class="assessment-button">Hent</button>
             </fieldset>
         </form>
 
         <div>
-            <form id="getForm" v-for="c in cas" :key="c.pk">
+            <form id="getForm">
                 <fieldset>
                     <h3>Sagspart:</h3>
                     <dl>
                         <dt>CPR-nr:</dt>
-                        <dd>{{ c.cpr_no }}</dd>
+                        <dd>{{ cas.cpr_no }}</dd>
                         <dt>Navn:</dt>
-                        <dd>{{ c.name }}</dd>
+                        <dd>{{ cas.name }}</dd>
                     </dl>
                 </fieldset>
 
                 <fieldset>
                     <label for="selectField1">Indsatstrappen:</label>
                     <select id="selectField1">
-                        <option>{{ c.effort_stairs }}</option>
+                        <option>{{ cas.effort_stairs }}</option>
                     </select>
                 </fieldset>
                 <fieldset>
                     <label for="selectField2">Skaleringstrappe:</label>
                     <select id="selectField2">
-                        <option>{{ c.scaling_staircase }}</option>
+                        <option>{{ cas.scaling_staircase }}</option>
                     </select>
                 </fieldset>
 
@@ -73,7 +73,7 @@
             fetchCase: function(id) {
                 axios.get('../../case-data.json')
                 .then(res => {
-                    this.cas = res.data
+                    this.cas = res.data[0]
                     this.$store.commit('setBreadcrumb', [
                         {
                             link: '/',
