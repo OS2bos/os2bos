@@ -4,7 +4,7 @@
         <form>
             <fieldset>
                 <label for="inputSearch">SBSYS Hovedsag:</label>
-                <input id="inputSearch" type="search" v-model="cas.sbsys_id">
+                <input id="inputSearch" type="search" :value="cas.sbsys_id">
                 <button class="case-button">Hent</button>
             </fieldset>
         </form>
@@ -81,7 +81,7 @@
                     <dd>{{ cas.scaling_staircase }}</dd>
                 </fieldset>
                 <fieldset>
-                    <button @click="$router.push('assessment/${ cas.pk }')">Vurdering</button>
+                    <button @click="$router.push(`/assessment/${ cas.pk }`)">Vurdering</button>
                 </fieldset>
 
                 <fieldset>
