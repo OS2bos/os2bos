@@ -61,7 +61,7 @@
                         },
                         {
                             link: `/case-create/`,
-                            title: `Sag ${ this.cas[0].sbsys_id }`
+                            title: `Sag ${ this.cas.sbsys_id }`
                         }
                     ])
                 })
