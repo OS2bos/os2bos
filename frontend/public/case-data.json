@@ -38,7 +38,7 @@
         "interdisciplinary": false,
         "original_district": "Skovvejen",
         "effort_stairs": "6",
-        "scaling_staircase": "8",
+        "scaling_staircase": "4",
         "case_management": {
           "case_worker": "Monika Pedersen (monn)",
           "team": "Familieteamet",
