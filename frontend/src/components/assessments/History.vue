@@ -1,47 +1,41 @@
 <template>
-
-    <section class="cases" v-if="cas">
-        <h1>Mine sager</h1>
+    <section>
+        <h1>Historik</h1>
         <table>
             <thead>
                 <tr>
                     <td>
-                        Sags-ID
+                        Sagsbehandler
                     </td> 
                     <td>
-                        Navn
+                        Indsatstrappen
                     </td>
                     <td>
-                        Status
+                        Skaleringstrappe
                     </td>
                     <td>
-                        Ændret
+                        Dato
                     </td>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="c in cas" :key="c.pk">
+                <tr v-for="h in his" :key="h.pk">
                     <td>
-                        <router-link :to="`/case/${ c.pk }`">
-                            {{ c.sbsys_id }}
-                        </router-link>
+                        {{ h.case_management.case_worker }}
                     </td>
                     <td>
-                        {{ c.name }}
+                        {{ h.effort_stairs }}
                     </td>
                     <td>
-                        -
+                        {{ h.scaling_staircase }}
                     </td>
                     <td>
-                        {{ c.updated }}
+                        {{ h.updated }}
                     </td>
                 </tr>
             </tbody>
         </table>
-
-        <button class="create" @click="$router.push('case-create')">Opret sag</button>
     </section>
-
 </template>
 
 <script>
@@ -52,17 +46,17 @@
 
         data: function() {
             return {
-                cas: null
+                his: null
             }
         },
         methods: {
             update: function() {
-                this.fetchCases(this.$route.params.id)
+                this.fetchHistory(this.$route.params.id)
             },
-            fetchCases: function(id) {
+            fetchHistory: function(id) {
                 axios.get('../../case-data.json')
                 .then(res => {
-                    this.cas = res.data
+                    this.his = res.data
                 })
                 .catch(err => console.log(err))
             }
@@ -70,18 +64,10 @@
         created: function() {
             this.update()
         }
-        
     }
     
 </script>
 
 <style>
-
-    .cases {
-        margin: 1rem;
-    }
-    .create {
-        margin-top: 1rem;
-    }
 
 </style>
