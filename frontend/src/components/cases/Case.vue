@@ -1,7 +1,31 @@
 <template>
 
-    <section v-if="cas">
-        <h1 class="case">Sag {{ cas[0].sbsys_id }}</h1>
+    <section class="case" v-if="cas">
+        <h1>Sag {{ cas.sbsys_id }}</h1>
+            <dl>
+                <dt>Sagspart CPR-nr:</dt>
+                <dd>{{ cas.cpr_no }}</dd>
+                <dt>Sagspart navn:</dt>
+                <dd>{{ cas.name }}</dd>
+                <dt>Betalingskommune:</dt>
+                <dd>{{ cas.municipality.payment_municipality}}</dd>
+                <dt>Handlekommune:</dt>
+                <dd>{{ cas.municipality.payment_municipality}}</dd>
+                <dt>Bopælsskommune:</dt>
+                <dd>{{ cas.municipality.payment_municipality}}</dd>
+                <dt>Indsatstrappen:</dt>
+                <dd>{{ cas.effort_stairs }}</dd>
+                <dt>Skaleringstrappe:</dt>
+                <dd>{{ cas.scaling_staircase }}</dd>
+                <dt>Sagsbehander:</dt>
+                <dd>{{ cas.case_management.case_worker }}</dd>
+                <dt>Team:</dt>
+                <dd>{{ cas.case_management.team }}</dd>
+                <dt>Distrikt:</dt>
+                <dd>{{ cas.original_district}}</dd>
+                <dt>Leder:</dt>
+                <dd>{{ cas.case_management.manager }}</dd>
+            </dl>
         <appropriations />
     </section>
 
@@ -30,7 +54,7 @@
             fetchCase: function(id) {
                 axios.get('../../case-data.json')
                 .then(res => {
-                    this.cas = res.data
+                    this.cas = res.data[0]
                     this.$store.commit('setBreadcrumb', [
                         {
                             link: '/',
@@ -38,7 +62,7 @@
                         },
                         {
                             link: false,
-                            title: `Sag ${ this.cas[0].sbsys_id}`
+                            title: `Sag ${ this.cas.sbsys_id}`
                         }
                     ])
                 })
