@@ -26,9 +26,9 @@
            }
         ],
         "municipality": { 
-          "payment_municipality": "Ballerup Kommune (default)",
-          "act_municipality": "Ballerup Kommune (default)",
-          "municipality_of_residence": "Ballerup Kommune (default)"
+          "payment_municipality": "Ballerup Kommune",
+          "act_municipality": "Ballerup Kommune",
+          "municipality_of_residence": "Ballerup Kommune"
         },
         "target_group": {
           "family_department": false,

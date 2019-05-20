@@ -81,16 +81,6 @@
                 axios.get('../../case-data.json')
                 .then(res => {
                     this.cas = res.data[0]
-                    this.$store.commit('setBreadcrumb', [
-                        {
-                            link: '/',
-                            title: 'Mine sager'
-                        },
-                        {
-                            link: `/case-create/`,
-                            title: `Sag ${ this.cas.sbsys_id }`
-                        }
-                    ])
                 })
                 .catch(err => console.log(err))
             },
