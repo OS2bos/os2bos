@@ -4,20 +4,20 @@
         <form>
             <fieldset>
                 <label for="inputSearch">SBSYS Hovedsag:</label>
-                <input id="inputSearch" type="search" v-model="cas[0].sbsys_id">
+                <input id="inputSearch" type="search" v-model="cas.sbsys_id">
                 <button class="case-button">Hent</button>
             </fieldset>
         </form>
 
-        <div>
-            <form id="getForm" v-for="c in cas" :key="c.pk">
+        <div v-if="cas.sbsys_id">
+            <form id="getForm">
                 <fieldset>
                     <h3>Sagspart:</h3>
                     <dl>
                         <dt>CPR-nr:</dt>
-                        <dd>{{ c.cpr_no }}</dd>
+                        <dd>{{ cas.cpr_no }}</dd>
                         <dt>Navn:</dt>
-                        <dd>{{ c.name }}</dd>
+                        <dd>{{ cas.name }}</dd>
                     </dl>
                 </fieldset>
 
@@ -25,11 +25,11 @@
                     <h3>Familie og relationer:</h3>
                     <dl>
                         <dt>Mor:</dt>
-                        <dd>{{ c.family_relations[0].name }}</dd>
+                        <dd>{{ cas.family_relations[0].name }}</dd>
                         <dt>Far:</dt>
-                        <dd>{{ c.family_relations[1].name }}</dd>
+                        <dd>{{ cas.family_relations[1].name }}</dd>
                         <dt>Andre:</dt>
-                        <dd>{{ c.family_relations[2].name }}</dd>
+                        <dd>{{ cas.family_relations[2].name }}</dd>
                     </dl>
                 </fieldset>
 
@@ -37,19 +37,19 @@
                     <h3>Kommune:</h3>
                     <label for="selectField1">Betalingskommune:</label>
                     <select id="selectField1">
-                        <option>{{ c.municipality.payment_municipality}}</option>
+                        <option>{{ cas.municipality.payment_municipality}}</option>
                     </select>
                 </fieldset>
                 <fieldset>
                     <label for="selectField2">Handlekommune:</label>
                     <select id="selectField2">
-                        <option>{{ c.municipality.payment_municipality}}</option>
+                        <option>{{ cas.municipality.payment_municipality}}</option>
                     </select>
                 </fieldset>
                 <fieldset>
                     <label for="selectField3">Bopælsskommune:</label>
                     <select id="selectField3">
-                        <option>{{ c.municipality.payment_municipality}}</option>
+                        <option>{{ cas.municipality.payment_municipality}}</option>
                     </select>
                 </fieldset>
 
@@ -71,36 +71,36 @@
                 <fieldset>
                     <label for="selectField">Oprindeligt distrikt:</label>
                     <select id="selectField">
-                        <option>{{ c.original_district}}</option>
+                        <option>{{ cas.original_district}}</option>
                     </select>
                 </fieldset>
                 <fieldset>
                     <dt>Indsatstrappen:</dt>
-                    <dd>{{ c.effort_stairs }}</dd>
+                    <dd>{{ cas.effort_stairs }}</dd>
                     <dt>Skaleringstrappe:</dt>
-                    <dd>{{ c.scaling_staircase }}</dd>
+                    <dd>{{ cas.scaling_staircase }}</dd>
                 </fieldset>
                 <fieldset>
-                    <button @click="$router.push('assessment/${ this.c.pk }')">Vurdering</button>
+                    <button @click="$router.push('assessment/${ cas.pk }')">Vurdering</button>
                 </fieldset>
 
                 <fieldset>
                     <h3>Sagsbehandling:</h3>
                     <dl>
                         <dt>Sagsbehander:</dt>
-                        <dd>{{ c.case_management.case_worker }}</dd>
+                        <dd>{{ cas.case_management.case_worker }}</dd>
                         <dt>Team:</dt>
-                        <dd>{{ c.case_management.team }}</dd>
+                        <dd>{{ cas.case_management.team }}</dd>
                     </dl>
                     <fieldset>
                     <label for="selectField">Distrikt:</label>
                     <select id="selectField">
-                        <option>{{ c.original_district}}</option>
+                        <option>{{ cas.original_district}}</option>
                     </select>
                     </fieldset>
                     <fieldset>
                         <dt>Leder:</dt>
-                        <dd>{{ c.case_management.manager }}</dd>
+                        <dd>{{ cas.case_management.manager }}</dd>
                     </fieldset>
                 </fieldset>
                 <fieldset>
@@ -131,7 +131,7 @@
             fetchCase: function(id) {
                 axios.get('../../case-data.json')
                 .then(res => {
-                    this.cas = res.data
+                    this.cas = res.data[0]
                     this.$store.commit('setBreadcrumb', [
                         {
                             link: '/',
