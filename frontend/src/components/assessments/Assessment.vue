@@ -1,50 +1,27 @@
 <template>
     <section class="assessment">
-        <h1>Vurderinger</h1>
-        <form>
-            <fieldset>
-                <label for="inputSearch">SBSYS Hovedsag:</label>
-                <input id="inputSearch" type="search" v-model="cas.sbsys_id">
-                <button class="assessment-button">Hent</button>
-            </fieldset>
-        </form>
-
+        <header class="assessment-header">
+            <h1>Vurderinger</h1>
+            <button v-if="!show_edit" @click="show_edit = true" class="assessment-edit-btn">Redigér</button>
+        </header>
         <div>
-            <form id="getForm">
-                <fieldset>
-                    <h3>Sagspart:</h3>
-                    <dl>
-                        <dt>CPR-nr:</dt>
-                        <dd>{{ cas.cpr_no }}</dd>
-                        <dt>Navn:</dt>
-                        <dd>{{ cas.name }}</dd>
-                    </dl>
-                </fieldset>
+            <fieldset v-if="!show_edit">
+                <h3>Sagspart:</h3>
+                <dl>
+                    <dt>CPR-nr:</dt>
+                    <dd>{{ cas.cpr_no }}</dd>
+                    <dt>Navn:</dt>
+                    <dd>{{ cas.name }}</dd>
+                    <dt>Sag:</dt>
+                    <dd>{{ cas.sbsys_id }}</dd>
+                </dl>
+            </fieldset>
 
-                <fieldset>
-                    <label for="selectField1">Indsatstrappen:</label>
-                    <select id="selectField1">
-                        <option>{{ cas.effort_stairs }}</option>
-                    </select>
-                </fieldset>
-                <fieldset>
-                    <label for="selectField2">Skaleringstrappe:</label>
-                    <select id="selectField2">
-                        <option>{{ cas.scaling_staircase }}</option>
-                    </select>
-                </fieldset>
+             <div v-if="show_edit">
+                <assessment-edit :assessment-data="cas" @cancelled="show_edit = false" @saved="show_edit = false" />
+            </div>
 
-                <fieldset>
-                    <label for="textArea">Bemærkning:</label>
-                    <textarea id="textArea"></textarea>
-                </fieldset>
-            </form>
-
-                <history/>
-
-                <fieldset>
-                    <button>Opdater</button>
-                </fieldset>
+            <history/>
         </div>
     </section>
 
@@ -52,18 +29,21 @@
 
 <script>
 
+    import AssessmentEdit from './AssessmentEdit.vue'
     import History from './History.vue'
     import axios from '../http/Http.js'
 
     export default {
 
         components: {
-            History
+            History,
+            AssessmentEdit
         },
 
         data: function() {
             return {
-                cas: null
+                cas: null,
+                show_edit: false
             }
         },
         methods: {
@@ -100,8 +80,16 @@
     .assessment {
         margin: 1rem;
     }
-    .assessment-button {
-        margin-left: 1rem;
+
+    .assessment-header {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .assessment .assessment-edit-btn {
+        margin: 0 1rem;
     }
 
 </style>
