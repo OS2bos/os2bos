@@ -23,14 +23,13 @@ def initialize_municipalities():
 
 
 def initialize_sections():
-    """Initialize all the relevant law sections."""
+    """Initialize all the relevant law sections.
+
+    Data should be the output of manage.py dumpdata core.sections
+    """
     for section in sections:
-        paragraph = section["paragraph"]
-        kle_number = section["kle_number"]
-        text = section["text"]
-        Sections.objects.get_or_create(
-            paragraph=paragraph, kle_number=kle_number, text=text
-        )
+        fields = section["fields"]
+        Sections.objects.update_or_create(pk=section["pk"], **fields)
 
 
 def initialize_school_districts():
