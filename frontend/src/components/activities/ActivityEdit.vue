@@ -18,11 +18,8 @@
                 <label for="field-type-false">Tillægsudgift</label>
             </fieldset>
             <fieldset>
-                <label for="field-lawref">Bevilling efter §</label>
-                <select v-model="act_data.law_ref" id="field-lawref">
-                    <option value="SEL §45 Ledsagerordning 12">SEL §45 Ledsagerordning 12</option>
-                    <option value="SEL §52.3.7 Anbringelse udenfor hjemmet">SEL §52.3.7 Anbringelse udenfor hjemmet</option>
-                </select>
+                <strong>Bevilling efter §</strong>
+                <span>SEL §45 Ledsagerordning 12</span>
             </fieldset>
             <fieldset>
                 <label>Aktivitet</label>

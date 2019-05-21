@@ -3,40 +3,26 @@
     <section class="appropriation" v-if="appr">
         <header class="appropriation-header">
             <h1>Bevillingsskrivelse</h1>
-            <button v-if="!show_edit" @click="show_edit = true" class="appr-edit-btn">Redigér</button>
-        </header>
-        <div class="appr-header">
             <div>
-                <dl v-if="!show_edit">
-                    <dt>SBSYS-sag</dt>
-                    <dd><strong>{{ appr.sbsys_id}}</strong></dd>
-                    <dt>Bevilling efter §</dt>
-                    <dd>{{ appr.law_ref }}</dd>
-                    <dt>Status</dt>
-                    <dd>
-                        <span :class="`status-${ appr.status }`">{{ appr.status }}</span>
-                        <template v-if="appr.approval">
-                            af
-                            {{ appr.approval.approval_person }}, 
-                            {{ appr.approval.approval_auth_level }} 
-                            - {{ new Date(appr.approval.approval_date).toLocaleDateString() }}
-                        </template>
-                    </dd>
-                </dl>
-                <div v-if="show_edit">
-                    <appropriation-edit :appropriation-data="appr" @cancelled="show_edit = false" @saved="show_edit = false" />
-                </div>
+                <button v-if="!show_edit" @click="show_edit = true" class="appr-edit-btn">Redigér</button>
+                <router-link :to="`/appropriation/${ appr.pk }/print`">Print</router-link>
             </div>
-            <div>
+        </header>
+
+        <div class="appr-grid">
+            <div class="sagsbeh appr-grid-box">
                 <dl>
-                    <dt>Sagspart CPR-nr</dt>
-                    <dd>{{ appr.case.cpr_no }}</dd>
-                    <dt>Sagspart navn</dt>
-                    <dd>{{ appr.case.name }}</dd>
+                    <dt>Foranstaltningssag (SBSYS)</dt>
+                    <dd>{{ appr.sbsys_id}}</dd>
                     <dt>Sagsbehandler</dt>
                     <dd>{{ appr.case.case_worker}} ({{ appr.case.case_worker_initials }})</dd>
                 </dl>
+            </div>
+
+            <div class="sagspart appr-grid-box">
                 <dl>
+                    <dt>Sagspart</dt>
+                    <dd>{{ appr.case.cpr_no }}, {{ appr.case.name }}</dd>
                     <dt>Betalingskommune</dt>
                     <dd>{{ appr.case.municipality_payment}}</dd>
                     <dt>Handlekommune</dt>
@@ -45,8 +31,43 @@
                     <dd>{{ appr.case.municipality_residence}}</dd>
                 </dl>
             </div>
+            
+            <div class="sagslaw appr-grid-box">
+                <dl> 
+                    <dt>Bevilges efter §</dt>
+                    <dd>{{ appr.law_ref }}</dd>
+                </dl>
+            </div>
+
+            <div class="sagsbev appr-grid-box">
+                <h2>Der bevilges:</h2>
+                <activity-list :appr-id="appr.pk" />
+            </div>
+            <div class="sagsperiod appr-grid-box">Periode</div>
+            <div class="sagspayment appr-grid-box">Betaling</div>
+            
+            <div class="sagsgodkend appr-grid-box">
+                <span :class="`status-${ appr.status }`">{{ appr.status }}</span>
+                <template v-if="appr.approval"> af
+                    {{ appr.approval.approval_auth_level }} 
+                    - {{ new Date(appr.approval.approval_date).toLocaleDateString() }}
+                </template>
+            </div>
+            <div class="sagstilskriv appr-grid-box">Skal leverandør tilskrives?</div>
+            <div class="sagspayee appr-grid-box">Hvem skal der udbetales til?</div>
         </div>
-        <activity-list :appr-id="appr.pk" />
+
+        <div class="appr-header">
+            <div>
+                
+                <div v-if="show_edit">
+                    <appropriation-edit :appropriation-data="appr" @cancelled="show_edit = false" @saved="show_edit = false" />
+                </div>
+            </div>
+            <div>
+                
+            </div>
+        </div>
     </section>
 
 </template>
@@ -86,7 +107,7 @@
                         },
                         {
                             link: false,
-                            title: `Bevilling ${ this.appr.sbsys_id }`
+                            title: `Foranstaltning ${ this.appr.sbsys_id }`
                         }
                     ])
                 })
@@ -121,6 +142,54 @@
         background-color: var(--success);
         color: white;
         padding: .25rem;
+    }
+
+    .appr-grid {
+        display: grid;
+        grid-template-columns: repeat(6, auto);
+        grid-template-rows: repeat(7, auto);
+    }
+
+    .appr-grid-box {
+        border: solid 1px var(--grey1);
+        padding: .5rem 1rem;
+        margin: 1px;
+    }
+
+    .sagsbeh {
+        grid-area: 1 / 1 / 2 / 4;
+    }
+
+    .sagspart {
+        grid-area: 1 / 4 / 2 / 7;
+    }
+
+    .sagslaw {
+        grid-area: 2 / 1 / 3 / 7;
+    }
+
+    .sagsbev {
+        grid-area: 3 / 1 / 4 / 7;
+    }
+
+    .sagsperiod {
+        grid-area: 4 / 1 / 5 / 4;
+    }
+
+    .sagspayment {
+        grid-area: 4 / 4 / 5 / 7;
+    }
+
+    .sagsgodkend {
+        grid-area: 5 / 1 / 6 / 7;
+    }
+
+    .sagstilskriv {
+        grid-area: 6 / 1 / 7 / 7;
+    }
+
+    .sagspayee {
+        grid-area: 7 / 1 / 8 / 7;
     }
 
     @media screen and (min-width: 45rem) {

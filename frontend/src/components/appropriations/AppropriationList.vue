@@ -9,10 +9,10 @@
             <thead>
             <tr>
                 <th>Sags-ID</th>
-                <th>Hovedaktivitet</th>
+                <th>Foranstaltningsudgift</th>
                 <th>Aktivitet</th>
                 <th>Følgeudgift</th>
-                <th>Øknomi</th>
+                <th>Økonomi</th>
                 <th>Status</th>
             </tr>
             </thead>
