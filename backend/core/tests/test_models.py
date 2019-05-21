@@ -35,10 +35,10 @@ class ActivityCatalogTestCase(TestCase):
             name="Betaling til andre kommuner/region for specialtandpleje",
             activity_id="010001",
             max_tolerance_in_dkk=5000,
-            max_tolerance_in_percent=10
+            max_tolerance_in_percent=10,
         )
 
         self.assertEqual(
             str(catalog),
-            "010001 - Betaling til andre kommuner/region for specialtandpleje"
+            "010001 - Betaling til andre kommuner/region for specialtandpleje",
         )
