@@ -1,14 +1,11 @@
 <template>
 
     <section class="activities">
-        <header class="activities-header">
-            <h1>Aktiviteter</h1>
-            <button class="activities-create-btn" title="Ny aktivitet" @click="createAct()">+ Ny aktivitet</button>
-        </header>
+        <button class="activities-create-btn" title="Ny aktivitet" @click="createAct()">+ Tilføj ydelse</button>
         <table>
             <thead>
                 <tr>
-                    <th>Aktivitet</th>
+                    <th>Ydelse</th>
                     <th>Start</th>
                     <th>Slut</th>
                     <th>Navn</th>
@@ -84,7 +81,7 @@
     }
 
     .activities-create-btn {
-        margin: 0 1rem;
+        margin: 0 0 1rem;
     }
 
 </style>
