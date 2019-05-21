@@ -21,13 +21,6 @@ class SchoolDistrict(models.Model):
         return f"{self.name}"
 
 
-class ActivityCatalog(models.Model):
-    """Class containing all services offered by this municipality.
-
-    Each service is associated with the legal articles for which it is
-    allowed as well as a price range."""
-
-
 class PaymentSchedule(models.Model):
     """Schedule a payment for an Activity."""
 
@@ -204,6 +197,47 @@ class Appropriation(AuditModelMixin, models.Model):
         # TODO: Implement this.
 
 
+class Sections(models.Model):
+    """Law sections and the corresponding KLE codes."""
+
+    paragraph = models.CharField(max_length=128, verbose_name=_("paragraf"))
+    kle_number = models.CharField(max_length=128, verbose_name=_("KLE-nummer"))
+    text = models.TextField(verbose_name=_("forklarende tekst"))
+    law_text_name = models.CharField(
+        max_length=128, verbose_name=_("lov tekst navn")
+    )
+
+    def __str__(self):
+        return f"{self.paragraph} - {self.kle_number}"
+
+
+class ActivityCatalog(models.Model):
+    """Class containing all services offered by this municipality.
+
+    Each service is associated with the legal articles for which it is
+    allowed as well as a price range."""
+
+    name = models.CharField(max_length=128, verbose_name=_("Navn"))
+    activity_id = models.CharField(
+        max_length=128, verbose_name=_("Aktivitets ID")
+    )
+    max_tolerance_in_percent = models.PositiveSmallIntegerField(
+        verbose_name=_("Max tolerance i procent")
+    )
+    max_tolerance_in_dkk = models.PositiveIntegerField(
+        verbose_name=_("max tolerance i DKK")
+    )
+    allowed_as_main_activity_by_sections = models.ManyToManyField(
+        Sections, related_name="allows_activities_as_main_activity"
+    )
+    allowed_as_suppl_activity_by_sections = models.ManyToManyField(
+        Sections, related_name="allows_activities_as_suppl_activity"
+    )
+
+    def __str__(self):
+        return f"{self.activity_id} - {self.name}"
+
+
 class Activity(AuditModelMixin, models.Model):
     """An activity is a specific service provided within an appropriation."""
 
@@ -294,20 +328,6 @@ class RelatedPerson(models.Model):
     main_case = models.ForeignKey(
         Case, related_name="related_persons", on_delete=models.CASCADE
     )
-
-
-class Sections(models.Model):
-    """Law sections and the corresponding KLE codes."""
-
-    paragraph = models.CharField(max_length=128, verbose_name=_("paragraf"))
-    kle_number = models.CharField(max_length=128, verbose_name=_("KLE-nummer"))
-    text = models.TextField(verbose_name=_("forklarende tekst"))
-    law_text_name = models.CharField(
-        max_length=128, verbose_name=_("lov tekst navn")
-    )
-
-    def __str__(self):
-        return f"{self.paragraph} - {self.kle_number}"
 
 
 class ServiceRange(models.Model):
