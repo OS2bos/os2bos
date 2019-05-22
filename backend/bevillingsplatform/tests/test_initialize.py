@@ -2,7 +2,7 @@
 from django.test import TestCase
 
 from bevillingsplatform.initialize import initialize
-from core.models import Municipality, SchoolDistrict
+from core.models import Municipality, SchoolDistrict, Sections
 
 
 class InitializeTestCase(TestCase):
@@ -15,3 +15,8 @@ class InitializeTestCase(TestCase):
         initialize()
         school_district_count = SchoolDistrict.objects.count()
         self.assertEqual(school_district_count, 5)
+
+    def test_initialize_generates_sections(self):
+        initialize()
+        sections_count = Sections.objects.count()
+        self.assertEqual(sections_count, 225)

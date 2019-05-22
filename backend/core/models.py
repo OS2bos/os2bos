@@ -299,6 +299,16 @@ class RelatedPerson(models.Model):
 class Sections(models.Model):
     """Law sections and the corresponding KLE codes."""
 
+    paragraph = models.CharField(max_length=128, verbose_name=_("paragraf"))
+    kle_number = models.CharField(max_length=128, verbose_name=_("KLE-nummer"))
+    text = models.TextField(verbose_name=_("forklarende tekst"))
+    law_text_name = models.CharField(
+        max_length=128, verbose_name=_("lov tekst navn")
+    )
+
+    def __str__(self):
+        return f"{self.paragraph} - {self.kle_number}"
+
 
 class ServiceRange(models.Model):
     """Class containing all the service providers for each service.
