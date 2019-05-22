@@ -2,7 +2,10 @@
 
     <section class="activity" v-if="act">
         <header class="activity-header">
-            <h1>Aktivitet, {{ act.activity }}</h1>
+            <h1>
+                <i class="material-icons">style</i>
+                Aktivitet, {{ act.activity }}
+            </h1>
             <button v-if="!show_edit" @click="show_edit = true" class="act-edit-btn">Redigér</button>
         </header>
 

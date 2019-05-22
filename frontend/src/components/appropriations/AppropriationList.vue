@@ -3,7 +3,7 @@
     <section class="appropriations">
         <header class="appropriations-header">
             <h1>Foranstaltninger</h1>
-            <button class="appropriation-create-btn" @click="createAppr()">+ Tilføj foranstaltning</button>
+            <button class="appropriation-create-btn" @click="createAppr()">+ Tilknyt foranstaltningssag</button>
         </header>
         <table>
             <thead>
@@ -21,6 +21,7 @@
             <tbody>
                 <tr v-for="a in apprs" :key="a[0]">
                     <td>    
+                        <i class="material-icons">folder_open</i>
                         <router-link :to="`/appropriation/${ a.pk }`">
                             {{ a.sbsys_id }} 
                         </router-link>
@@ -35,14 +36,14 @@
                     <td style="text-align: right">{{ a.payment.total_amount }} kr</td>
                 </tr>
                 <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td style="text-align: right">Samlet</td>
-                    <td style="text-align: right"><strong>{{ total_amounts }}</strong> kr</td>
+                    <td style="border: none;"></td>
+                    <td style="border: none;"></td>
+                    <td style="border: none;"></td>
+                    <td style="border: none;"></td>
+                    <td style="border: none;"></td>
+                    <td style="border: none;"></td>
+                    <td style="text-align: right; border: none;">Samlet</td>
+                    <td style="text-align: right; border: none;">{{ total_amounts }} kr</td>
                 </tr>
             </tbody>
         </table>
@@ -106,7 +107,7 @@
 <style>
 
     .appropriations {
-        margin: 1rem;
+        margin: 1rem 0 2rem;
     }
 
     .appropriations-header {

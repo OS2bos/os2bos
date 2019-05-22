@@ -31,12 +31,12 @@
 
     .breadcrumb {
         padding: .25rem 1rem;
-        border-bottom: solid 1px var(--grey1);
+        background-color: var(--grey1);
     }
 
     .breadcrumb .crumb {
         display: inline-block;
-        padding: .25rem 0;
+        padding: .5rem 0;
     }
 
     .breadcrumb .crumb::before {
