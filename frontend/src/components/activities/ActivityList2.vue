@@ -2,40 +2,32 @@
 
     <section class="activities">
         <button class="activities-create-btn" title="Ny aktivitet" @click="createAct()">+ Tilføj ydelse</button>
-        <table>
-            <thead>
-                <tr>
-                    <th>Ydelse</th>
-                    <th>Status</th>
-                    <th>Udbetales til</th>
-                    <th>Økonomi</th>
-                    <th>Start</th>
-                    <th>Slut</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="a in acts" :key="a[0]">
-                    <td><router-link :to="`/activity/${ a.pk }`">{{ a.activity }}</router-link></td>
-                    <td>
-                        <span :class="`status-${ a.status }`">{{ a.status }}</span>
-                    </td>
-                    <td>{{ a.payment.payee.name }}</td>
-                    <td>{{ a.payment.total_amount }}</td>
-                    <td>{{ new Date(a.startdate).toLocaleDateString() }}</td>
-                    <td>{{ new Date(a.enddate).toLocaleDateString() }}</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        {{ total_amounts}}
-                    </td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="grid-container">
+          <div class="grid-box" v-for="a in acts" :key="a.pk">
+            <dl>
+              <dt>Status</dt>
+              <dd><span :class="`status-${ a.status }`">{{ a.status }}</span></dd>
+              <dt>Ydelse</dt>
+              <dd><router-link :to="`/activity/${ a.pk }`">{{ a.activity }}</router-link></dd>
+              <dt>Udbetales til</dt>
+              <dd>{{ a.payment.payee.name }}</dd>
+              <dt>CPR-nr</dt>
+              <dd>300178-1207</dd>
+              <dt>Økonomi</dt>
+              <dd>{{ a.payment.total_amount }}</dd>
+              <dt>Start</dt>
+              <dd>{{ new Date(a.startdate).toLocaleDateString() }}</dd>
+              <dt>Slut</dt>
+              <dd>{{ new Date(a.enddate).toLocaleDateString() }}</dd>
+            </dl>
+          </div>
+        </div>
+          <div class="box-sum">
+            <dl>
+              <dt>Samlet sum:</dt>
+              <dd><span class="total-sum">{{ total_amounts }} kr.</span></dd>
+            </dl>
+          </div>
     </section>
 
 </template>
@@ -116,6 +108,23 @@
 
     .activities .status-Forventet {
         background-color: var(--warning);
+        color: white;
+        padding: .25rem;
+    }
+
+    .activities .grid-container {
+        display: grid;
+        grid-template-columns: auto auto auto auto;
+    }
+
+    .grid-box {
+        border: solid 1px var(--grey1);
+        padding: .5rem 1rem;
+        margin: 1px;
+    }
+
+    .total-sum{
+        background-color: green;
         color: white;
         padding: .25rem;
     }

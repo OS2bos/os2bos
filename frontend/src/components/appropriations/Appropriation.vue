@@ -41,8 +41,10 @@
 
             <div class="sagsbev appr-grid-box">
                 <h2>Der bevilges:</h2>
-                <activity-list :appr-id="appr.pk" />
+                <!-- <activity-list :appr-id="appr.pk" /> -->
+                <activity-list2 :appr-id="appr.pk" />
             </div>
+
             <div class="sagsperiod appr-grid-box">Periode</div>
             <div class="sagspayment appr-grid-box">Betaling</div>
             
@@ -76,12 +78,14 @@
 
     import axios from '../http/Http.js'
     import ActivityList from '../activities/ActivityList.vue'
+    import ActivityList2 from '../activities/ActivityList2.vue'
     import AppropriationEdit from './AppropriationEdit.vue'
 
     export default {
 
         components: {
             ActivityList,
+            ActivityList2,
             AppropriationEdit
         },
         data: function() {
@@ -138,7 +142,7 @@
         margin: 0 1rem;
     }
 
-    .appropriation .status-bevilget {
+    .appropriation .status-Godkendt {
         background-color: var(--success);
         color: white;
         padding: .25rem;
@@ -172,24 +176,28 @@
         grid-area: 3 / 1 / 4 / 7;
     }
 
+    .sum {
+        grid-area: 4 / 1 / 6/ 7;
+    }
+
     .sagsperiod {
-        grid-area: 4 / 1 / 5 / 4;
+        grid-area: 5 / 1 / 5 / 4;
     }
 
     .sagspayment {
-        grid-area: 4 / 4 / 5 / 7;
+        grid-area: 5 / 4 / 5 / 7;
     }
 
     .sagsgodkend {
-        grid-area: 5 / 1 / 6 / 7;
+        grid-area: 6 / 1 / 6 / 7;
     }
 
     .sagstilskriv {
-        grid-area: 6 / 1 / 7 / 7;
+        grid-area: 7 / 1 / 7 / 7;
     }
 
     .sagspayee {
-        grid-area: 7 / 1 / 8 / 7;
+        grid-area: 8 / 1 / 8 / 7;
     }
 
     @media screen and (min-width: 45rem) {
