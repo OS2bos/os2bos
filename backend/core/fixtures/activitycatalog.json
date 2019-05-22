@@ -1,2222 +1,1818 @@
 [
-   {
-      "model":"core.activitycatalog",
-      "pk":1,
-      "fields":{
-         "name":"Betaling til andre kommuner/region for specialtandpleje",
-         "activity_id":"010001",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":2,
-      "fields":{
-         "name":"Personale",
-         "activity_id":"010002",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":3,
-      "fields":{
-         "name":"Inventar",
-         "activity_id":"010003",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":4,
-      "fields":{
-         "name":"Vedligeholdelse",
-         "activity_id":"010004",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":5,
-      "fields":{
-         "name":"Betaling til og fra kommuner",
-         "activity_id":"010005",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            131,
-            132,
-            85,
-            87,
-            88,
-            89,
-            90,
-            91,
-            92,
-            125
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":6,
-      "fields":{
-         "name":"Ledelse og administration",
-         "activity_id":"010006",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":7,
-      "fields":{
-         "name":"Overf\u00f8rsel mellem \u00e5r",
-         "activity_id":"010007",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":8,
-      "fields":{
-         "name":"Tilbagebetaling",
-         "activity_id":"010008",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":9,
-      "fields":{
-         "name":"K\u00f8rsel",
-         "activity_id":"010009",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            71,
-            72,
-            73,
-            74,
-            89,
-            90,
-            91,
-            92
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":10,
-      "fields":{
-         "name":"Reng\u00f8ring",
-         "activity_id":"010010",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":11,
-      "fields":{
-         "name":"Aktiviteter og materialer",
-         "activity_id":"010011",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            59
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":12,
-      "fields":{
-         "name":"B\u00f8t\u00f8",
-         "activity_id":"010012",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":13,
-      "fields":{
-         "name":"Overf\u00f8rt overskud",
-         "activity_id":"010013",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":14,
-      "fields":{
-         "name":"Kompetenceudvikling",
-         "activity_id":"010014",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":15,
-      "fields":{
-         "name":"Fripladser",
-         "activity_id":"010015",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":16,
-      "fields":{
-         "name":"Unger\u00e5dgivningen",
-         "activity_id":"010016",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":17,
-      "fields":{
-         "name":"Det Ops\u00f8gende Team (DOT)",
-         "activity_id":"010017",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":18,
-      "fields":{
-         "name":"Dagbehandlingstilbud",
-         "activity_id":"010018",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            49,
-            50,
-            51,
-            131,
-            132
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":19,
-      "fields":{
-         "name":"Refusion vedr. funktion 05.28.25",
-         "activity_id":"010019",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":20,
-      "fields":{
-         "name":"Refusion vedr. funktion 05.28.20",
-         "activity_id":"010020",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":21,
-      "fields":{
-         "name":"Refusion vedr. funktion 05.28.21",
-         "activity_id":"010021",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":22,
-      "fields":{
-         "name":"Refusion vedr. funktion 05.28.23",
-         "activity_id":"010022",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":23,
-      "fields":{
-         "name":"Refusion vedr. funktion 05.28.24",
-         "activity_id":"010023",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":24,
-      "fields":{
-         "name":"Familier\u00e5dgivning",
-         "activity_id":"010024",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":25,
-      "fields":{
-         "name":"Berigtigelser vedr. refusion",
-         "activity_id":"010025",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            84,
-            89,
-            90,
-            91,
-            92
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":26,
-      "fields":{
-         "name":"Ressourcep\u00e6dagoger",
-         "activity_id":"010026",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":27,
-      "fields":{
-         "name":"P\u00e6dagogiske vejledere",
-         "activity_id":"010027",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":28,
-      "fields":{
-         "name":"SI-midler (S\u00e6rlig Inklusion)",
-         "activity_id":"010028",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":29,
-      "fields":{
-         "name":"Over-/underskud p\u00e5 PPR",
-         "activity_id":"010029",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":30,
-      "fields":{
-         "name":"Egenbetaling vedr. \u00a7\u00a7 159 og 160",
-         "activity_id":"010030",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            212,
-            213
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":31,
-      "fields":{
-         "name":"R\u00e5dgivning",
-         "activity_id":"010031",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":32,
-      "fields":{
-         "name":"\u00d8vrige indt\u00e6gter vedr. \u00a7\u00a7 159 og 160",
-         "activity_id":"010032",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            212,
-            213
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":33,
-      "fields":{
-         "name":"Integration af flygtninge",
-         "activity_id":"010033",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            131,
-            132,
-            89,
-            90,
-            91,
-            92
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":34,
-      "fields":{
-         "name":"Plejehjemsforeninger mv.",
-         "activity_id":"010034",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            89,
-            90,
-            91,
-            92
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":35,
-      "fields":{
-         "name":"Kortvarigt efterv\u00e6rn, \u00a7 62a, 3, 6",
-         "activity_id":"010035",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            128,
-            131,
-            132
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":36,
-      "fields":{
-         "name":"K\u00f8rsel til ankestyrelse og for\u00e6ldres opholdskommune",
-         "activity_id":"010036",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":37,
-      "fields":{
-         "name":"Advokatbistand",
-         "activity_id":"010037",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            89,
-            90,
-            91,
-            92,
-            123
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":38,
-      "fields":{
-         "name":"Soc.p\u00e6d. opholdssteder",
-         "activity_id":"010038",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            131,
-            132,
-            122,
-            134,
-            84,
-            86,
-            89,
-            90,
-            91,
-            92,
-            125
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":39,
-      "fields":{
-         "name":"Kost- og efterskoler",
-         "activity_id":"010039",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            96,
-            97,
-            131,
-            132,
-            89,
-            90,
-            91,
-            92
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":40,
-      "fields":{
-         "name":"Eget v\u00e6relse",
-         "activity_id":"010040",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            131,
-            132,
-            87,
-            88,
-            89,
-            90,
-            91,
-            92,
-            125
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":41,
-      "fields":{
-         "name":"Socialtilsynet, obj. finansiering",
-         "activity_id":"010041",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            84
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":42,
-      "fields":{
-         "name":"Familiebehandling",
-         "activity_id":"010043",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            84
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":43,
-      "fields":{
-         "name":"D\u00f8gnophold for familien",
-         "activity_id":"010044",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            85
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":44,
-      "fields":{
-         "name":"Aflastning",
-         "activity_id":"010045",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            71,
-            72,
-            73,
-            74,
-            137,
-            144,
-            82,
-            84,
-            86,
-            89,
-            90,
-            91,
-            92
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":45,
-      "fields":{
-         "name":"Kontaktperson",
-         "activity_id":"010046",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            97,
-            133,
-            135,
-            136,
-            83,
-            84,
-            87,
-            88,
-            89,
-            90,
-            91,
-            92,
-            125
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":46,
-      "fields":{
-         "name":"Kontaktperson for hele familien",
-         "activity_id":"010047",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            87,
-            88,
-            135,
-            136
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":47,
-      "fields":{
-         "name":"St\u00f8tteperson",
-         "activity_id":"010048",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            99,
-            131,
-            132,
-            89,
-            90,
-            91,
-            92,
-            125
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":48,
-      "fields":{
-         "name":"Kommunikationscenteret",
-         "activity_id":"010050",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            44,
-            45
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":49,
-      "fields":{
-         "name":"Konsulentbistand efter \u00a7 11,3,1",
-         "activity_id":"010051",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            48,
-            41
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":50,
-      "fields":{
-         "name":"Pr\u00e6vention, \u00a7 11,4",
-         "activity_id":"010052",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            42
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":51,
-      "fields":{
-         "name":"St\u00f8tte til fritidstilbud",
-         "activity_id":"010053",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            43
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":52,
-      "fields":{
-         "name":"\u00a7 11,3,2 Netv\u00e6rks-/samtalegruppe",
-         "activity_id":"010054",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            41,
-            49
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":53,
-      "fields":{
-         "name":"Hjemmehos",
-         "activity_id":"010055",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            82,
-            83
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":54,
-      "fields":{
-         "name":"Behandling fysisk/psykiske b\u00f8rn",
-         "activity_id":"010056",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":55,
-      "fields":{
-         "name":"Udgifter til flygtninge (100 % ref.)",
-         "activity_id":"010059",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            89,
-            90,
-            91,
-            92
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":56,
-      "fields":{
-         "name":"Hjemmehos, intern",
-         "activity_id":"010061",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            71,
-            72,
-            73,
-            74,
-            144,
-            83
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":57,
-      "fields":{
-         "name":"D\u00f8gnophold for for\u00e6ldremyndighedsindehaveren, barnet, den un",
-         "activity_id":"010062",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            85
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":58,
-      "fields":{
-         "name":"Indt\u00e6gter fra regioner",
-         "activity_id":"010063",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":59,
-      "fields":{
-         "name":"St\u00f8tte til for\u00e6ldremyndighedsindehaveren efter \u00a7 52a og \u00a7 52",
-         "activity_id":"010068",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            96,
-            97,
-            98,
-            131,
-            132,
-            122
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":60,
-      "fields":{
-         "name":"Anden hj\u00e6lp efter \u00a7 52,3,9",
-         "activity_id":"010069",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            81,
-            94,
-            95,
-            135,
-            136
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":61,
-      "fields":{
-         "name":"Praktikophold",
-         "activity_id":"010070",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            71,
-            72,
-            73,
-            74,
-            89,
-            90,
-            91,
-            92,
-            93
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":62,
-      "fields":{
-         "name":"B\u00f8rnehuset, obj. finansiering",
-         "activity_id":"010072",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":63,
-      "fields":{
-         "name":"B\u00f8rnehuset, takst",
-         "activity_id":"010073",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            83,
-            76
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":64,
-      "fields":{
-         "name":"Piger med gr\u00e6nser",
-         "activity_id":"010075",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":65,
-      "fields":{
-         "name":"Pigeprojektet",
-         "activity_id":"010076",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":66,
-      "fields":{
-         "name":"St\u00f8tte til ophold p\u00e5 kost-/efterskole",
-         "activity_id":"010078",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":67,
-      "fields":{
-         "name":"Overv\u00e5get samv\u00e6r",
-         "activity_id":"010079",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            98,
-            122
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":68,
-      "fields":{
-         "name":"St\u00f8tte til forhindring af anbringelse",
-         "activity_id":"010081",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            44,
-            45
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":69,
-      "fields":{
-         "name":"Familier\u00e5dgivning, forebyggende",
-         "activity_id":"010082",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":70,
-      "fields":{
-         "name":"Ferieaktiviter",
-         "activity_id":"010083",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            43,
-            82,
-            96,
-            98
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":71,
-      "fields":{
-         "name":"Plejefamilier, eksl. vederlag",
-         "activity_id":"010084",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            131,
-            132,
-            122,
-            137,
-            85,
-            89,
-            90,
-            91,
-            92
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":72,
-      "fields":{
-         "name":"Plejefamilier, vederlag",
-         "activity_id":"010085",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            131,
-            132,
-            137,
-            89,
-            90,
-            91,
-            92
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":73,
-      "fields":{
-         "name":"Netv\u00e6rksplejefamilier",
-         "activity_id":"010086",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            89,
-            90,
-            91,
-            92
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":74,
-      "fields":{
-         "name":"D\u00f8gninstitutioner vedr. sociale adf\u00e6rdsproblemer",
-         "activity_id":"010087",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            89,
-            90,
-            91,
-            92
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":75,
-      "fields":{
-         "name":"D\u00f8gninstitutioner vedr. nedsat funktionsevne",
-         "activity_id":"010089",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            131,
-            132,
-            89,
-            90,
-            91,
-            92
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":76,
-      "fields":{
-         "name":"Sikrede institutioner, obj. finansiering",
-         "activity_id":"010090",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":77,
-      "fields":{
-         "name":"Sikrede institutioner, opholdsbetaling",
-         "activity_id":"010091",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            89,
-            90,
-            91,
-            92
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":78,
-      "fields":{
-         "name":"S\u00f8skendetilbud",
-         "activity_id":"010092",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":79,
-      "fields":{
-         "name":"For\u00e6ldrebetaling, inkl. tilskud",
-         "activity_id":"010093",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            212,
-            213
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":80,
-      "fields":{
-         "name":"Betaling til og fra regioner",
-         "activity_id":"010095",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            75
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":81,
-      "fields":{
-         "name":"Kvindekrisecentre",
-         "activity_id":"010096",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            194
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":82,
-      "fields":{
-         "name":"Egenbetaling, beboere",
-         "activity_id":"010097",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            194
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":83,
-      "fields":{
-         "name":"Ledsageordning for personer m/nedsat funktionsevne (\u00a7 45)",
-         "activity_id":"010099",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            75
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":84,
-      "fields":{
-         "name":"Udgifter vedr. samv\u00e6r",
-         "activity_id":"010100",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":85,
-      "fields":{
-         "name":"Merudgiftsydelse, jfr. SEL \u00a7 41",
-         "activity_id":"010101",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            67
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":86,
-      "fields":{
-         "name":"Tabt arbejdsfortjeneste, jfr. SEL \u00a7 42",
-         "activity_id":"010102",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            68
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":87,
-      "fields":{
-         "name":"K\u00f8b af tr\u00e6ningsredskaber til hjemmetr\u00e6ning",
-         "activity_id":"010103",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":88,
-      "fields":{
-         "name":"Ssp-samarbejdet",
-         "activity_id":"010105",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":89,
-      "fields":{
-         "name":"For\u00e6ldrenetv\u00e6rk",
-         "activity_id":"010106",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":90,
-      "fields":{
-         "name":"IT- og metodeimplementering",
-         "activity_id":"010107",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":91,
-      "fields":{
-         "name":"Reguleringskonto indenfor servicerammen",
-         "activity_id":"010108",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":92,
-      "fields":{
-         "name":"E-projektet",
-         "activity_id":"010109",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":93,
-      "fields":{
-         "name":"Ungeindsatsen",
-         "activity_id":"010110",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":94,
-      "fields":{
-         "name":"Supervision",
-         "activity_id":"010111",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            89,
-            90,
-            91,
-            92
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":95,
-      "fields":{
-         "name":"Task force socialstyrelsen",
-         "activity_id":"010112",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":96,
-      "fields":{
-         "name":"Renter af kortfristet g\u00e6ld personale",
-         "activity_id":"010113",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":97,
-      "fields":{
-         "name":"SD fejlkonto C-BUR",
-         "activity_id":"010116",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":98,
-      "fields":{
-         "name":"F\u00f8rste benyt. \u00e5r 2017",
-         "activity_id":"010117",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":99,
-      "fields":{
-         "name":"Restance IT",
-         "activity_id":"010118",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":100,
-      "fields":{
-         "name":"Skilsmissegruppe",
-         "activity_id":"010119",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":101,
-      "fields":{
-         "name":"Det specialiserede b\u00f8rneomr\u00e5de \u00f8vrige",
-         "activity_id":"010121",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":102,
-      "fields":{
-         "name":"Logop\u00e6d/Motorik",
-         "activity_id":"010122",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":103,
-      "fields":{
-         "name":"PPR-Psykologer",
-         "activity_id":"010128",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":104,
-      "fields":{
-         "name":"Praktikantvejledervederlag (PPR)",
-         "activity_id":"010129",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":105,
-      "fields":{
-         "name":"Testmaterialer",
-         "activity_id":"010130",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":106,
-      "fields":{
-         "name":"Repr\u00e6sentation",
-         "activity_id":"010131",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":107,
-      "fields":{
-         "name":"PPR-Lokaler",
-         "activity_id":"010133",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":108,
-      "fields":{
-         "name":"Kommunale plejefamilier",
-         "activity_id":"010134",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            89,
-            90,
-            91,
-            92
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":109,
-      "fields":{
-         "name":"Kommunale plejefamilier, vederlag",
-         "activity_id":"010135",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            89,
-            90,
-            91,
-            92
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":110,
-      "fields":{
-         "name":"Ekstraordin\u00e6r bevilling",
-         "activity_id":"010136",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":111,
-      "fields":{
-         "name":"Tolk",
-         "activity_id":"010137",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":112,
-      "fields":{
-         "name":"Kursus",
-         "activity_id":"010138",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":113,
-      "fields":{
-         "name":"Temadage, ture",
-         "activity_id":"010139",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":114,
-      "fields":{
-         "name":"Anskaffelser",
-         "activity_id":"010140",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":115,
-      "fields":{
-         "name":"Annoncer m.m",
-         "activity_id":"010141",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":116,
-      "fields":{
-         "name":"Behandling og pleje",
-         "activity_id":"010142",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":117,
-      "fields":{
-         "name":"K\u00f8ret\u00f8jer",
-         "activity_id":"010143",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":118,
-      "fields":{
-         "name":"Lommepenge",
-         "activity_id":"010144",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":119,
-      "fields":{
-         "name":"Bekl\u00e6dning",
-         "activity_id":"010145",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":120,
-      "fields":{
-         "name":"Lektiehj\u00e6lp",
-         "activity_id":"010146",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":121,
-      "fields":{
-         "name":"IT-udstyr",
-         "activity_id":"010147",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":122,
-      "fields":{
-         "name":"Telefoni",
-         "activity_id":"010148",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":123,
-      "fields":{
-         "name":"Motocross",
-         "activity_id":"010149",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":124,
-      "fields":{
-         "name":"Kriminalpr\u00e6ventiv indsats",
-         "activity_id":"010150",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":125,
-      "fields":{
-         "name":"Personalevelf\u00e6rd",
-         "activity_id":"010151",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":126,
-      "fields":{
-         "name":"Husets drift",
-         "activity_id":"010152",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":127,
-      "fields":{
-         "name":"Hj\u00e6lpemidler",
-         "activity_id":"010153",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitycatalog",
-      "pk":128,
-      "fields":{
-         "name":"Sm\u00e5 hj\u00e6lpemidler",
-         "activity_id":"010154",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "allowed_as_main_activity_by_sections":[
-
-         ],
-         "allowed_as_suppl_activity_by_sections":[
-            85
-         ]
-      }
-   }
+{
+  "model": "core.activitycatalog",
+  "pk": 1,
+  "fields": {
+    "name": "Betaling til andre kommuner/region for specialtandpleje",
+    "activity_id": "010001",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 2,
+  "fields": {
+    "name": "Personale",
+    "activity_id": "010002",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 3,
+  "fields": {
+    "name": "Inventar",
+    "activity_id": "010003",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 4,
+  "fields": {
+    "name": "Vedligeholdelse",
+    "activity_id": "010004",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 5,
+  "fields": {
+    "name": "Betaling til og fra kommuner",
+    "activity_id": "010005",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      131,
+      132,
+      85,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      125
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 6,
+  "fields": {
+    "name": "Ledelse og administration",
+    "activity_id": "010006",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 7,
+  "fields": {
+    "name": "Overf\u00f8rsel mellem \u00e5r",
+    "activity_id": "010007",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 8,
+  "fields": {
+    "name": "Tilbagebetaling",
+    "activity_id": "010008",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 9,
+  "fields": {
+    "name": "K\u00f8rsel",
+    "activity_id": "010009",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      71,
+      72,
+      73,
+      74,
+      89,
+      90,
+      91,
+      92
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 10,
+  "fields": {
+    "name": "Reng\u00f8ring",
+    "activity_id": "010010",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 11,
+  "fields": {
+    "name": "Aktiviteter og materialer",
+    "activity_id": "010011",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      59
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 12,
+  "fields": {
+    "name": "B\u00f8t\u00f8",
+    "activity_id": "010012",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 13,
+  "fields": {
+    "name": "Overf\u00f8rt overskud",
+    "activity_id": "010013",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 14,
+  "fields": {
+    "name": "Kompetenceudvikling",
+    "activity_id": "010014",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 15,
+  "fields": {
+    "name": "Fripladser",
+    "activity_id": "010015",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 16,
+  "fields": {
+    "name": "Unger\u00e5dgivningen",
+    "activity_id": "010016",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 17,
+  "fields": {
+    "name": "Det Ops\u00f8gende Team (DOT)",
+    "activity_id": "010017",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 18,
+  "fields": {
+    "name": "Dagbehandlingstilbud",
+    "activity_id": "010018",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      49,
+      50,
+      51,
+      131,
+      132
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 19,
+  "fields": {
+    "name": "Refusion vedr. funktion 05.28.25",
+    "activity_id": "010019",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 20,
+  "fields": {
+    "name": "Refusion vedr. funktion 05.28.20",
+    "activity_id": "010020",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 21,
+  "fields": {
+    "name": "Refusion vedr. funktion 05.28.21",
+    "activity_id": "010021",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 22,
+  "fields": {
+    "name": "Refusion vedr. funktion 05.28.23",
+    "activity_id": "010022",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 23,
+  "fields": {
+    "name": "Refusion vedr. funktion 05.28.24",
+    "activity_id": "010023",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 24,
+  "fields": {
+    "name": "Familier\u00e5dgivning",
+    "activity_id": "010024",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 25,
+  "fields": {
+    "name": "Berigtigelser vedr. refusion",
+    "activity_id": "010025",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      84,
+      89,
+      90,
+      91,
+      92
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 26,
+  "fields": {
+    "name": "Ressourcep\u00e6dagoger",
+    "activity_id": "010026",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 27,
+  "fields": {
+    "name": "P\u00e6dagogiske vejledere",
+    "activity_id": "010027",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 28,
+  "fields": {
+    "name": "SI-midler (S\u00e6rlig Inklusion)",
+    "activity_id": "010028",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 29,
+  "fields": {
+    "name": "Over-/underskud p\u00e5 PPR",
+    "activity_id": "010029",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 30,
+  "fields": {
+    "name": "Egenbetaling vedr. \u00a7\u00a7 159 og 160",
+    "activity_id": "010030",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      212,
+      213
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 31,
+  "fields": {
+    "name": "R\u00e5dgivning",
+    "activity_id": "010031",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 32,
+  "fields": {
+    "name": "\u00d8vrige indt\u00e6gter vedr. \u00a7\u00a7 159 og 160",
+    "activity_id": "010032",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      212,
+      213
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 33,
+  "fields": {
+    "name": "Integration af flygtninge",
+    "activity_id": "010033",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      131,
+      132,
+      89,
+      90,
+      91,
+      92
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 34,
+  "fields": {
+    "name": "Plejehjemsforeninger mv.",
+    "activity_id": "010034",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      89,
+      90,
+      91,
+      92
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 35,
+  "fields": {
+    "name": "Kortvarigt efterv\u00e6rn, \u00a7 62a, 3, 6",
+    "activity_id": "010035",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      128,
+      131,
+      132
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 36,
+  "fields": {
+    "name": "K\u00f8rsel til ankestyrelse og for\u00e6ldres opholdskommune",
+    "activity_id": "010036",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 37,
+  "fields": {
+    "name": "Advokatbistand",
+    "activity_id": "010037",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      89,
+      90,
+      91,
+      92,
+      123
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 38,
+  "fields": {
+    "name": "Soc.p\u00e6d. opholdssteder",
+    "activity_id": "010038",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      131,
+      132,
+      122,
+      134,
+      84,
+      86,
+      89,
+      90,
+      91,
+      92,
+      125
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 39,
+  "fields": {
+    "name": "Kost- og efterskoler",
+    "activity_id": "010039",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      96,
+      97,
+      131,
+      132,
+      89,
+      90,
+      91,
+      92
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 40,
+  "fields": {
+    "name": "Eget v\u00e6relse",
+    "activity_id": "010040",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      131,
+      132,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      125
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 41,
+  "fields": {
+    "name": "Socialtilsynet, obj. finansiering",
+    "activity_id": "010041",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      84
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 42,
+  "fields": {
+    "name": "Familiebehandling",
+    "activity_id": "010043",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      84
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 43,
+  "fields": {
+    "name": "D\u00f8gnophold for familien",
+    "activity_id": "010044",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      85
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 44,
+  "fields": {
+    "name": "Aflastning",
+    "activity_id": "010045",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      71,
+      72,
+      73,
+      74,
+      137,
+      144,
+      82,
+      84,
+      86,
+      89,
+      90,
+      91,
+      92
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 45,
+  "fields": {
+    "name": "Kontaktperson",
+    "activity_id": "010046",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      97,
+      133,
+      135,
+      136,
+      83,
+      84,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      125
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 46,
+  "fields": {
+    "name": "Kontaktperson for hele familien",
+    "activity_id": "010047",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      87,
+      88,
+      135,
+      136
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 47,
+  "fields": {
+    "name": "St\u00f8tteperson",
+    "activity_id": "010048",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      99,
+      131,
+      132,
+      89,
+      90,
+      91,
+      92,
+      125
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 48,
+  "fields": {
+    "name": "Kommunikationscenteret",
+    "activity_id": "010050",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      44,
+      45
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 49,
+  "fields": {
+    "name": "Konsulentbistand efter \u00a7 11,3,1",
+    "activity_id": "010051",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      48,
+      41
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 50,
+  "fields": {
+    "name": "Pr\u00e6vention, \u00a7 11,4",
+    "activity_id": "010052",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      42
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 51,
+  "fields": {
+    "name": "St\u00f8tte til fritidstilbud",
+    "activity_id": "010053",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      43
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 52,
+  "fields": {
+    "name": "\u00a7 11,3,2 Netv\u00e6rks-/samtalegruppe",
+    "activity_id": "010054",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      41,
+      49
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 53,
+  "fields": {
+    "name": "Hjemmehos",
+    "activity_id": "010055",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      82,
+      83
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 54,
+  "fields": {
+    "name": "Behandling fysisk/psykiske b\u00f8rn",
+    "activity_id": "010056",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 55,
+  "fields": {
+    "name": "Udgifter til flygtninge (100 % ref.)",
+    "activity_id": "010059",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      89,
+      90,
+      91,
+      92
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 56,
+  "fields": {
+    "name": "Hjemmehos, intern",
+    "activity_id": "010061",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      71,
+      72,
+      73,
+      74,
+      144,
+      83
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 57,
+  "fields": {
+    "name": "D\u00f8gnophold for for\u00e6ldremyndighedsindehaveren, barnet, den un",
+    "activity_id": "010062",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      85
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 58,
+  "fields": {
+    "name": "Indt\u00e6gter fra regioner",
+    "activity_id": "010063",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 59,
+  "fields": {
+    "name": "St\u00f8tte til for\u00e6ldremyndighedsindehaveren efter \u00a7 52a og \u00a7 52",
+    "activity_id": "010068",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      96,
+      97,
+      98,
+      131,
+      132,
+      122
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 60,
+  "fields": {
+    "name": "Anden hj\u00e6lp efter \u00a7 52,3,9",
+    "activity_id": "010069",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      81,
+      94,
+      95,
+      135,
+      136
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 61,
+  "fields": {
+    "name": "Praktikophold",
+    "activity_id": "010070",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      71,
+      72,
+      73,
+      74,
+      89,
+      90,
+      91,
+      92,
+      93
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 62,
+  "fields": {
+    "name": "B\u00f8rnehuset, obj. finansiering",
+    "activity_id": "010072",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 63,
+  "fields": {
+    "name": "B\u00f8rnehuset, takst",
+    "activity_id": "010073",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      83,
+      76
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 64,
+  "fields": {
+    "name": "Piger med gr\u00e6nser",
+    "activity_id": "010075",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 65,
+  "fields": {
+    "name": "Pigeprojektet",
+    "activity_id": "010076",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 66,
+  "fields": {
+    "name": "St\u00f8tte til ophold p\u00e5 kost-/efterskole",
+    "activity_id": "010078",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 67,
+  "fields": {
+    "name": "Overv\u00e5get samv\u00e6r",
+    "activity_id": "010079",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      98,
+      122
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 68,
+  "fields": {
+    "name": "St\u00f8tte til forhindring af anbringelse",
+    "activity_id": "010081",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      44,
+      45
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 69,
+  "fields": {
+    "name": "Familier\u00e5dgivning, forebyggende",
+    "activity_id": "010082",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 70,
+  "fields": {
+    "name": "Ferieaktiviter",
+    "activity_id": "010083",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      43,
+      82,
+      96,
+      98
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 71,
+  "fields": {
+    "name": "Plejefamilier, eksl. vederlag",
+    "activity_id": "010084",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      131,
+      132,
+      122,
+      137,
+      85,
+      89,
+      90,
+      91,
+      92
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 72,
+  "fields": {
+    "name": "Plejefamilier, vederlag",
+    "activity_id": "010085",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      131,
+      132,
+      137,
+      89,
+      90,
+      91,
+      92
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 73,
+  "fields": {
+    "name": "Netv\u00e6rksplejefamilier",
+    "activity_id": "010086",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      89,
+      90,
+      91,
+      92
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 74,
+  "fields": {
+    "name": "D\u00f8gninstitutioner vedr. sociale adf\u00e6rdsproblemer",
+    "activity_id": "010087",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      89,
+      90,
+      91,
+      92
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 75,
+  "fields": {
+    "name": "D\u00f8gninstitutioner vedr. nedsat funktionsevne",
+    "activity_id": "010089",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      131,
+      132,
+      89,
+      90,
+      91,
+      92
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 76,
+  "fields": {
+    "name": "Sikrede institutioner, obj. finansiering",
+    "activity_id": "010090",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 77,
+  "fields": {
+    "name": "Sikrede institutioner, opholdsbetaling",
+    "activity_id": "010091",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      89,
+      90,
+      91,
+      92
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 78,
+  "fields": {
+    "name": "S\u00f8skendetilbud",
+    "activity_id": "010092",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 79,
+  "fields": {
+    "name": "For\u00e6ldrebetaling, inkl. tilskud",
+    "activity_id": "010093",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      212,
+      213
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 80,
+  "fields": {
+    "name": "Betaling til og fra regioner",
+    "activity_id": "010095",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      75
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 81,
+  "fields": {
+    "name": "Kvindekrisecentre",
+    "activity_id": "010096",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      194
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 82,
+  "fields": {
+    "name": "Egenbetaling, beboere",
+    "activity_id": "010097",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      194
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 83,
+  "fields": {
+    "name": "Ledsageordning for personer m/nedsat funktionsevne (\u00a7 45)",
+    "activity_id": "010099",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      75
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 84,
+  "fields": {
+    "name": "Udgifter vedr. samv\u00e6r",
+    "activity_id": "010100",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 85,
+  "fields": {
+    "name": "Merudgiftsydelse, jfr. SEL \u00a7 41",
+    "activity_id": "010101",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      67
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 86,
+  "fields": {
+    "name": "Tabt arbejdsfortjeneste, jfr. SEL \u00a7 42",
+    "activity_id": "010102",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      68
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 87,
+  "fields": {
+    "name": "K\u00f8b af tr\u00e6ningsredskaber til hjemmetr\u00e6ning",
+    "activity_id": "010103",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 88,
+  "fields": {
+    "name": "Ssp-samarbejdet",
+    "activity_id": "010105",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 89,
+  "fields": {
+    "name": "For\u00e6ldrenetv\u00e6rk",
+    "activity_id": "010106",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 90,
+  "fields": {
+    "name": "IT- og metodeimplementering",
+    "activity_id": "010107",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 91,
+  "fields": {
+    "name": "Reguleringskonto indenfor servicerammen",
+    "activity_id": "010108",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 92,
+  "fields": {
+    "name": "E-projektet",
+    "activity_id": "010109",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 93,
+  "fields": {
+    "name": "Ungeindsatsen",
+    "activity_id": "010110",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 94,
+  "fields": {
+    "name": "Supervision",
+    "activity_id": "010111",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      89,
+      90,
+      91,
+      92
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 95,
+  "fields": {
+    "name": "Task force socialstyrelsen",
+    "activity_id": "010112",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 96,
+  "fields": {
+    "name": "Renter af kortfristet g\u00e6ld personale",
+    "activity_id": "010113",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 97,
+  "fields": {
+    "name": "SD fejlkonto C-BUR",
+    "activity_id": "010116",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 98,
+  "fields": {
+    "name": "F\u00f8rste benyt. \u00e5r 2017",
+    "activity_id": "010117",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 99,
+  "fields": {
+    "name": "Restance IT",
+    "activity_id": "010118",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 100,
+  "fields": {
+    "name": "Skilsmissegruppe",
+    "activity_id": "010119",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 101,
+  "fields": {
+    "name": "Det specialiserede b\u00f8rneomr\u00e5de \u00f8vrige",
+    "activity_id": "010121",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 102,
+  "fields": {
+    "name": "Logop\u00e6d/Motorik",
+    "activity_id": "010122",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 103,
+  "fields": {
+    "name": "PPR-Psykologer",
+    "activity_id": "010128",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 104,
+  "fields": {
+    "name": "Praktikantvejledervederlag (PPR)",
+    "activity_id": "010129",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 105,
+  "fields": {
+    "name": "Testmaterialer",
+    "activity_id": "010130",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 106,
+  "fields": {
+    "name": "Repr\u00e6sentation",
+    "activity_id": "010131",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 107,
+  "fields": {
+    "name": "PPR-Lokaler",
+    "activity_id": "010133",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 108,
+  "fields": {
+    "name": "Kommunale plejefamilier",
+    "activity_id": "010134",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      89,
+      90,
+      91,
+      92
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 109,
+  "fields": {
+    "name": "Kommunale plejefamilier, vederlag",
+    "activity_id": "010135",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      89,
+      90,
+      91,
+      92
+    ]
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 110,
+  "fields": {
+    "name": "Ekstraordin\u00e6r bevilling",
+    "activity_id": "010136",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 111,
+  "fields": {
+    "name": "Tolk",
+    "activity_id": "010137",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 112,
+  "fields": {
+    "name": "Kursus",
+    "activity_id": "010138",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 113,
+  "fields": {
+    "name": "Temadage, ture",
+    "activity_id": "010139",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 114,
+  "fields": {
+    "name": "Anskaffelser",
+    "activity_id": "010140",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 115,
+  "fields": {
+    "name": "Annoncer m.m",
+    "activity_id": "010141",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 116,
+  "fields": {
+    "name": "Behandling og pleje",
+    "activity_id": "010142",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 117,
+  "fields": {
+    "name": "K\u00f8ret\u00f8jer",
+    "activity_id": "010143",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 118,
+  "fields": {
+    "name": "Lommepenge",
+    "activity_id": "010144",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 119,
+  "fields": {
+    "name": "Bekl\u00e6dning",
+    "activity_id": "010145",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 120,
+  "fields": {
+    "name": "Lektiehj\u00e6lp",
+    "activity_id": "010146",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 121,
+  "fields": {
+    "name": "IT-udstyr",
+    "activity_id": "010147",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 122,
+  "fields": {
+    "name": "Telefoni",
+    "activity_id": "010148",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 123,
+  "fields": {
+    "name": "Motocross",
+    "activity_id": "010149",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 124,
+  "fields": {
+    "name": "Kriminalpr\u00e6ventiv indsats",
+    "activity_id": "010150",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 125,
+  "fields": {
+    "name": "Personalevelf\u00e6rd",
+    "activity_id": "010151",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 126,
+  "fields": {
+    "name": "Husets drift",
+    "activity_id": "010152",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 127,
+  "fields": {
+    "name": "Hj\u00e6lpemidler",
+    "activity_id": "010153",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": []
+  }
+},
+{
+  "model": "core.activitycatalog",
+  "pk": 128,
+  "fields": {
+    "name": "Sm\u00e5 hj\u00e6lpemidler",
+    "activity_id": "010154",
+    "max_tolerance_in_percent": 10,
+    "max_tolerance_in_dkk": 5000,
+    "allowed_as_main_activity_by_sections": [],
+    "allowed_as_suppl_activity_by_sections": [
+      85
+    ]
+  }
+}
 ]
