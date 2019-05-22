@@ -3,9 +3,9 @@
     <section class="appropriations">
         <header class="appropriations-header">
             <h1>Foranstaltninger</h1>
-            <button class="appropriation-create-btn" @click="createAppr()">+ Tilknyt foranstaltningssag</button>
+            <button class="appropriation-create-btn" @click="createAppr()">+ Opret bevillingsskrivelse</button>
         </header>
-        <table>
+        <table class="appropriation-list">
             <thead>
                 <tr>
                     <th>Foranstaltningssag</th>
@@ -107,7 +107,7 @@
 <style>
 
     .appropriations {
-        margin: 1rem 0 2rem;
+        margin: 2rem 0;
     }
 
     .appropriations-header {

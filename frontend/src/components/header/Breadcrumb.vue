@@ -1,14 +1,27 @@
 <template>
 
+    <!--
+            <i class="material-icons" style="margin-right: .5rem;">folder_shared</i>
+            <router-link :to="`/case/${ appr.case.pk }`">{{ appr.case.sbsys_id }}: {{ appr.case.name }}</router-link>
+            <br>
+            <i class="material-icons" style="margin-left: .75rem;">subdirectory_arrow_right</i>
+            <i class="material-icons">folder_open</i>
+            Foranstaltning {{ appr.sbsys_id }}
+        </p>
+    -->
+
     <nav class="breadcrumb" v-if="bc.length > 0">
-        <span v-for="b in bc" :key="b[0]" class="crumb">
+        <p v-for="(b, key) in bc" :class="`crumb crumb-${key}`" :key="b[0]">
+            <i v-if="key !== 0" class="material-icons">subdirectory_arrow_right</i>
+            <i v-if="key === 1" class="material-icons">folder_shared</i>
+            <i v-if="key === 2" class="material-icons">folder_open</i>
             <router-link :to="b.link" v-if="b.link">
                 {{ b.title }}
             </router-link>
             <span v-if="!b.link">
                 {{ b.title }}
             </span>
-        </span>
+        </p>
     </nav>
 
 </template>
@@ -30,25 +43,29 @@
 <style>
 
     .breadcrumb {
-        padding: .25rem 1rem;
+        padding: .5rem 1rem;
         background-color: var(--grey1);
     }
 
     .breadcrumb .crumb {
-        display: inline-block;
-        padding: .5rem 0;
-    }
-
-    .breadcrumb .crumb::before {
-        content: '>';
-        display: inline-block;
-        margin: 0 .5rem;
-        opacity: .5;
-    }
-
-    .breadcrumb .crumb:first-child:before {
-        content: '';
         margin: 0;
+        padding: 0;
+    }
+    
+    .breadcrumb .material-icons {
+        font-size: 2rem;
+    }
+
+    .breadcrumb .crumb-1 {
+        margin-left: 1rem;
+    }
+
+    .breadcrumb .crumb-2 {
+        margin-left: 3rem;
+    }
+
+    .breadcrumb .crumb-3 {
+        margin-left: 5rem;
     }
 
     .breadcrumb .crumb > a  {

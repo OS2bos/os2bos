@@ -3,7 +3,7 @@
     <section class="case" v-if="cas">
         <h1>
             <i class="material-icons">folder_shared</i>
-            Hovedsag {{ cas.sbsys_id }}: {{ cas.name }}
+            Hovedsag {{ cas.sbsys_id }}
         </h1>
         <dl>
             <dt>Sagspart (CPR, navn)</dt>
@@ -63,7 +63,7 @@
                         },
                         {
                             link: false,
-                            title: `Sag ${ this.cas.sbsys_id}`
+                            title: `${ this.cas.sbsys_id}, ${ this.cas.name}`
                         }
                     ])
                 })

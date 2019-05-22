@@ -2,10 +2,7 @@
 
     <section class="appropriation" v-if="appr">
         <header class="appropriation-header">
-            <h1>
-                <i class="material-icons">folder_open</i>
-                Bevillingsskrivelse
-            </h1>
+            <h1>Bevillingsskrivelse</h1>
             <div>
                 <button v-if="!show_edit" @click="show_edit = true" class="appr-edit-btn">Redigér</button>
                 <router-link :to="`/appropriation/${ appr.pk }/print`">Print</router-link>
@@ -104,7 +101,7 @@
                         },
                         {
                             link: `/case/${ this.appr.case.pk }`,
-                            title: `Sag ${ this.appr.case.sbsys_id }`
+                            title: `${ this.appr.case.sbsys_id }, ${ this.appr.case.name }`
                         },
                         {
                             link: false,
@@ -125,7 +122,7 @@
 <style>
 
     .appropriation {
-        margin: 1rem;
+        margin: 0 1rem 1rem;
     }
 
     .appropriation-header {
