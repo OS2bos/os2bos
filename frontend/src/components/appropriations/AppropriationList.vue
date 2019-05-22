@@ -30,8 +30,8 @@
                     <td>{{ a.activities.activities_count }}</td>
                     
                     <td><span class="status">{{ a.status }}</span></td>
-                    <td>{{ new Date(a.created_date).toLocaleDateString() }}</td>
-                    <td>{{ new Date(a.modified_date).toLocaleDateString() }}</td>
+                    <td>{{ displayDate(a.created_date) }}</td>
+                    <td>{{ displayDate(a.modified_date) }}</td>
                     <td style="text-align: right">{{ a.payment.total_amount }} kr</td>
                 </tr>
                 <tr>
@@ -53,6 +53,7 @@
 <script>
 
     import axios from '../http/Http.js'
+    import { json2js } from '../filters/Date.js'
 
     export default {
 
@@ -90,6 +91,9 @@
                     this.$router.push(`/appropriation/${ res.data.pk }`) // Navigate to new appropriation page
                 })
                 .catch(err => console.log(err))
+            },
+            displayDate: function(dt) {
+                return json2js(dt)
             }
         },
         created: function() {

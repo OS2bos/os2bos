@@ -36,7 +36,7 @@
                         {{ c.cpr_no }}
                     </td>
                     <td>
-                        {{ c.updated }}
+                        {{ displayDate(c.modified) }}
                     </td>
                 </tr>
             </tbody>
@@ -48,6 +48,7 @@
 <script>
 
     import axios from '../http/Http.js'
+    import { json2js } from '../filters/Date.js'
 
     export default {
 
@@ -66,6 +67,9 @@
                     this.cas = res.data
                 })
                 .catch(err => console.log(err))
+            },
+            displayDate: function(dt) {
+                return json2js(dt)
             }
         },
         created: function() {
