@@ -18,5 +18,9 @@
         "approval_date": "2019-05-07T09:57:35+02:00",
         "approval_auth_level": "Afsnitsleder",
         "approval_person": "William Shakespeare"
-    }
+    },
+    "created_date": "2019-05-07T09:57:35+02:00",
+    "created_by": "Leif Lyngby Lodahl",
+    "modified_date": "2019-05-07T09:57:35+02:00",
+    "modified_by": "Dr Watson"
 }

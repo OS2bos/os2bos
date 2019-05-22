@@ -3,19 +3,16 @@
     <section class="cases" v-if="cas">
         <header class="cases-header">
             <h1>Mine sager</h1>
-            <button class="create" @click="$router.push('case-create')">+ Tilføj SBSYS-reference</button>
+            <button class="create" @click="$router.push('case-create')">+ Tilknyt hovedsag</button>
         </header>
         <table>
             <thead>
                 <tr>
                     <th>
-                        SBSYS-reference
+                        SBSYS-hovedsag
                     </th> 
                     <th>
                         Borger
-                    </th>
-                    <th>
-                        CPR-nr
                     </th>
                     <th>
                         Ændret
@@ -25,18 +22,16 @@
             <tbody>
                 <tr v-for="c in cas" :key="c.pk">
                     <td>
+                        <i class="material-icons">folder_shared</i>
                         <router-link :to="`/case/${ c.pk }`">
                             {{ c.sbsys_id }}
                         </router-link>
                     </td>
                     <td>
-                        {{ c.name }}
+                        {{ c.cpr_no }} - {{ c.name }}
                     </td>
                     <td>
-                        {{ c.cpr_no }}
-                    </td>
-                    <td>
-                        {{ c.updated }}
+                        {{ displayDate(c.modified) }}
                     </td>
                 </tr>
             </tbody>
@@ -48,6 +43,7 @@
 <script>
 
     import axios from '../http/Http.js'
+    import { json2js } from '../filters/Date.js'
 
     export default {
 
@@ -66,6 +62,9 @@
                     this.cas = res.data
                 })
                 .catch(err => console.log(err))
+            },
+            displayDate: function(dt) {
+                return json2js(dt)
             }
         },
         created: function() {

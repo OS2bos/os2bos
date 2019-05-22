@@ -1,6 +1,6 @@
 <template>
     <section class="case">
-        <h1>Opret sag</h1>
+        <h1>Tilknyt hovedsag</h1>
         <form>
             <fieldset>
                 <label for="inputSearch">SBSYS Hovedsag:</label>
