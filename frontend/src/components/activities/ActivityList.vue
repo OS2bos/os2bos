@@ -22,6 +22,16 @@
                     <td>{{ a.payment.total_amount }}</td>
                     <td>{{ a.status }}</td>
                 </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        {{ total_amounts}}
+                    </td>
+                    <td></td>
+                </tr>
             </tbody>
         </table>
     </section>
@@ -40,6 +50,18 @@
         data: function() {
             return {
                 acts: null   
+            }
+        },
+        computed: {
+            total_amounts: function() {
+                function getTotal(total, act) {
+                    console.log(total)
+                    console.log(act.payment.total_amount)
+                    return total + act.payment.total_amount
+                }
+                if (this.acts) {
+                    return this.acts.reduce(getTotal, 0)
+                }
             }
         },
         methods: {
