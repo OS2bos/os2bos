@@ -2,7 +2,10 @@
 
     <section class="activity" v-if="act">
         <header class="activity-header">
-            <h1>Aktivitet, {{ act.activity }}</h1>
+            <h1>
+                <i class="material-icons">style</i>
+                Udgift til {{ act.activity }}
+            </h1>
             <button v-if="!show_edit" @click="show_edit = true" class="act-edit-btn">Redigér</button>
         </header>
 
@@ -100,11 +103,11 @@
                         },
                         {
                             link: `/case/${ this.act.appropriation.case.pk }`,
-                            title: `Sag ${ this.act.appropriation.sbsys_id }`
+                            title: `${ this.act.appropriation.case.sbsys_id }, ${ this.act.appropriation.case.name }`
                         },
                         {
                             link: `/appropriation/${ this.act.appropriation.pk }`,
-                            title: `Bevilling ${ this.act.appropriation.sbsys_id }`
+                            title: `Foranstaltning ${ this.act.appropriation.sbsys_id }`
                         },
                         {
                             link: false,

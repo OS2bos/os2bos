@@ -10,6 +10,7 @@
         </header>
 
         <div class="appr-grid">
+
             <div class="sagsbeh appr-grid-box">
                 <dl>
                     <dt>Foranstaltningssag (SBSYS)</dt>
@@ -43,8 +44,6 @@
                 <h2>Der bevilges:</h2>
                 <activity-list :appr-id="appr.pk" />
             </div>
-            <div class="sagsperiod appr-grid-box">Periode</div>
-            <div class="sagspayment appr-grid-box">Betaling</div>
             
             <div class="sagsgodkend appr-grid-box">
                 <span :class="`status-${ appr.status }`">{{ appr.status }}</span>
@@ -53,8 +52,7 @@
                     - {{ new Date(appr.approval.approval_date).toLocaleDateString() }}
                 </template>
             </div>
-            <div class="sagstilskriv appr-grid-box">Skal leverandør tilskrives?</div>
-            <div class="sagspayee appr-grid-box">Hvem skal der udbetales til?</div>
+
         </div>
 
         <div class="appr-header">
@@ -103,7 +101,7 @@
                         },
                         {
                             link: `/case/${ this.appr.case.pk }`,
-                            title: `Sag ${ this.appr.case.sbsys_id }`
+                            title: `${ this.appr.case.sbsys_id }, ${ this.appr.case.name }`
                         },
                         {
                             link: false,
@@ -124,7 +122,7 @@
 <style>
 
     .appropriation {
-        margin: 1rem;
+        margin: 0 1rem 1rem;
     }
 
     .appropriation-header {
@@ -147,7 +145,7 @@
     .appr-grid {
         display: grid;
         grid-template-columns: repeat(6, auto);
-        grid-template-rows: repeat(7, auto);
+        grid-template-rows: repeat(4, auto);
     }
 
     .appr-grid-box {
@@ -172,24 +170,9 @@
         grid-area: 3 / 1 / 4 / 7;
     }
 
-    .sagsperiod {
-        grid-area: 4 / 1 / 5 / 4;
-    }
-
-    .sagspayment {
-        grid-area: 4 / 4 / 5 / 7;
-    }
 
     .sagsgodkend {
-        grid-area: 5 / 1 / 6 / 7;
-    }
-
-    .sagstilskriv {
-        grid-area: 6 / 1 / 7 / 7;
-    }
-
-    .sagspayee {
-        grid-area: 7 / 1 / 8 / 7;
+        grid-area: 4 / 1 / 5 / 7;
     }
 
     @media screen and (min-width: 45rem) {

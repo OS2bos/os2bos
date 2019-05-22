@@ -28,6 +28,11 @@
 
 <style>
 
+    form {
+        background-color: var(--grey1);
+        padding: .5rem 1rem;
+    }
+
     #app {
         display: flex;
         flex-flow: column nowrap;
@@ -49,9 +54,9 @@
         padding: .75rem 0;
     }
 
-    form {
-        background-color: var(--grey1);
-        padding: .5rem 1rem;
+    .material-icons {
+        font-size: 3rem;
+        vertical-align: middle;
     }
 
 </style>
