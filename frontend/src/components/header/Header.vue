@@ -2,7 +2,7 @@
 
     <header>
         <div class="globalheader">
-            <h1>Bevillingssystemet</h1>
+            <h1>Bevillingsplatformen</h1>
             <router-link to="/login">Log ud</router-link>
         </div>
         <breadcrumb />

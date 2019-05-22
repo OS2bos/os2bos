@@ -1,22 +1,25 @@
 <template>
 
     <section class="cases" v-if="cas">
-        <h1>Mine sager</h1>
+        <header class="cases-header">
+            <h1>Mine sager</h1>
+            <button class="create" @click="$router.push('case-create')">+ Tilføj SBSYS-reference</button>
+        </header>
         <table>
             <thead>
                 <tr>
-                    <td>
-                        Sags-ID
-                    </td> 
-                    <td>
-                        Navn
-                    </td>
-                    <td>
-                        Status
-                    </td>
-                    <td>
+                    <th>
+                        SBSYS-reference
+                    </th> 
+                    <th>
+                        Borger
+                    </th>
+                    <th>
+                        CPR-nr
+                    </th>
+                    <th>
                         Ændret
-                    </td>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -30,7 +33,7 @@
                         {{ c.name }}
                     </td>
                     <td>
-                        -
+                        {{ c.cpr_no }}
                     </td>
                     <td>
                         {{ c.updated }}
@@ -38,8 +41,6 @@
                 </tr>
             </tbody>
         </table>
-
-        <button class="create" @click="$router.push('case-create')">Opret sag</button>
     </section>
 
 </template>
@@ -80,6 +81,14 @@
     .cases {
         margin: 1rem;
     }
+
+    .cases-header {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        align-items: center;
+    }
+
     .create {
         margin-top: 1rem;
     }
