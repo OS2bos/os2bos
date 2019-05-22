@@ -10,7 +10,7 @@
                 "name": "Jens Andersen"
             }
         },
-        "status": "bevilget",
+        "status": "Bevilget",
         "appropriation_pk": 78
     },
     {
@@ -24,7 +24,7 @@
                 "name": "Jens Andersen"
             }
         },
-        "status": "forventet",
+        "status": "Forventet",
         "appropriation_pk": 78
     },
     {
@@ -38,7 +38,7 @@
                 "name": "Jens Andersen"
             }
         },
-        "status": "bevilget",
+        "status": "Bevilget",
         "appropriation_pk": 78
     }
 ]
