@@ -22,18 +22,18 @@
 
                 <fieldset>
                     <label for="selectField1">Indsatstrappen:</label>
-                    <select id="selectField1" :value="cas.effort_stairs">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                        <option>{{ cas.effort_stairs }}</option>
+                    <select id="selectField1" v-model="cas.effort_stairs">
+                        <option value="Trin 1 - Tidlig indsats i almenområdet">Trin 1 - Tidlig indsats i almenområdet</option>
+                        <option value="Trin 2 - Forebyggelse">Trin 2 - Forebyggelse</option>
+                        <option value="Trin 3 - Hjemmebaserede indsatser">Trin 3 - Hjemmebaserede indsatser</option>
+                        <option value="Trin 4 - Anbringelse i slægt eller netværk">Trin 4 - Anbringelse i slægt eller netværk</option>
+                        <option value="Trin 5 - Anbringelse i forskellige typer af plejefamilier">Trin 5 - Anbringelse i forskellige typer af plejefamilier</option>
+                        <option value="Trin 6 - Anbringelse i institutionstilbud">Trin 6 - Anbringelse i institutionstilbud</option>
                     </select>
                 </fieldset>
                 <fieldset>
                     <label for="selectField2">Skaleringstrappe:</label>
-                    <select id="selectField2" :value="cas.scaling_staircase">
+                    <select id="selectField2" v-model="cas.scaling_staircase">
                         <option>1</option>
                         <option>2</option>
                         <option>3</option>
@@ -44,14 +44,14 @@
 
                 <fieldset>
                     <label for="textArea">Bemærkning:</label>
-                    <textarea id="textArea"></textarea>
+                    <textarea id="textArea" v-model="assessment_data.note"></textarea>
+                </fieldset>
+
+                <fieldset>
+                    <input type="submit" value="Opdater">
+                    <button class="cancel-btn" type="reset" @click="cancelEdit()">Annullér</button>
                 </fieldset>
             </form>
-
-            <fieldset>
-                <input type="submit" value="Opdater" @click="saveAssessment()">
-                <button class="cancel-btn" type="reset" @click="cancelEdit()">Annullér</button>
-            </fieldset>
         </div>
     </article>
 
@@ -68,9 +68,15 @@
             History
         },
 
+        props: [
+            'assessmentData'
+        ],
         data: function() {
             return {
-                cas: null
+                cas: null,
+                assessment_data: {
+                    note: ''
+                }
             }
         },
         methods: {

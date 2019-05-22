@@ -37,7 +37,7 @@
         "integration": true,
         "interdisciplinary": false,
         "original_district": "Skovvejen",
-        "effort_stairs": "6",
+        "effort_stairs": "Trin 6 - Anbringelse i institutionstilbud",
         "scaling_staircase": "4",
         "case_management": {
           "case_worker": "Monika Pedersen (monn)",
@@ -84,7 +84,7 @@
       "integration": true,
       "interdisciplinary": false,
       "original_district": "Skovvejen",
-      "effort_stairs": "4",
+      "effort_stairs": "Trin 4 - Anbringelse i slægt eller netværk",
       "scaling_staircase": "5",
       "case_management": {
         "case_worker": "Leif Lyngby Lodahl (leil)",
@@ -131,7 +131,7 @@
       "integration": true,
       "interdisciplinary": false,
       "original_district": "Skovvejen",
-      "effort_stairs": "2",
+      "effort_stairs": "Trin 2 - Forebyggelse",
       "scaling_staircase": "2",
       "case_management": {
         "case_worker": "Camilla Søgaard Hansen (camn)",
@@ -178,7 +178,7 @@
       "integration": true,
       "interdisciplinary": false,
       "original_district": "Skovvejen",
-      "effort_stairs": "2",
+      "effort_stairs": "Trin 2 - Forebyggelse",
       "scaling_staircase": "2",
       "case_management": {
         "case_worker": "Leif Lyngby Lodahl (leil)",
@@ -225,7 +225,7 @@
       "integration": true,
       "interdisciplinary": false,
       "original_district": "Skovvejen",
-      "effort_stairs": "2",
+      "effort_stairs": "Trin 2 - Forebyggelse",
       "scaling_staircase": "2",
       "case_management": {
         "case_worker": "Monika Pedersen (monn)",
