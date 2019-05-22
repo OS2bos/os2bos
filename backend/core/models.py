@@ -2,6 +2,14 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_audit_fields.models import AuditModelMixin
 
+# Target group - definitions and choice list.
+FAMILY_DEPT = "FAMILY_DEPT"
+DISABILITY_DEPT = "DISABILITY_DEPT"
+target_group_choices = (
+    (FAMILY_DEPT, _("familieafdelingen")),
+    (DISABILITY_DEPT, _("handicapafdelingen")),
+)
+
 
 class Municipality(models.Model):
     """Represents a Danish municipality."""
@@ -122,13 +130,6 @@ class Case(AuditModelMixin, models.Model):
         related_name="resident_clients",
         on_delete=models.PROTECT,
     )
-    # Target group - definitions and choice list.
-    FAMILY_DEPT = "FAMILY_DEPT"
-    DISABILITY_DEPT = "DISABILITY_DEPT"
-    target_group_choices = (
-        (FAMILY_DEPT, _("familieafdelingen")),
-        (DISABILITY_DEPT, _("handicapafdelingen")),
-    )
     target_group = models.CharField(
         max_length=128,
         verbose_name=_("målgruppe"),
@@ -198,11 +199,20 @@ class Appropriation(AuditModelMixin, models.Model):
 
 
 class Sections(models.Model):
-    """Law sections and the corresponding KLE codes."""
+    """Law sections and the corresponding KLE codes.
+
+    Each section is associated with the target group for which it is
+    allowed as well as the action steps allowed.
+    """
 
     paragraph = models.CharField(max_length=128, verbose_name=_("paragraf"))
     kle_number = models.CharField(max_length=128, verbose_name=_("KLE-nummer"))
     text = models.TextField(verbose_name=_("forklarende tekst"))
+    target_group = models.CharField(
+        max_length=128,
+        verbose_name=_("målgruppe"),
+        choices=target_group_choices,
+    )
     law_text_name = models.CharField(
         max_length=128, verbose_name=_("lov tekst navn")
     )
@@ -215,7 +225,8 @@ class ActivityCatalog(models.Model):
     """Class containing all services offered by this municipality.
 
     Each service is associated with the legal articles for which it is
-    allowed as well as a price range."""
+    allowed as well as a price range.
+    """
 
     name = models.CharField(max_length=128, verbose_name=_("Navn"))
     activity_id = models.CharField(
@@ -225,7 +236,7 @@ class ActivityCatalog(models.Model):
         verbose_name=_("Max tolerance i procent")
     )
     max_tolerance_in_dkk = models.PositiveIntegerField(
-        verbose_name=_("max tolerance i DKK")
+        verbose_name=_("Max tolerance i DKK")
     )
     allowed_as_main_activity_by_sections = models.ManyToManyField(
         Sections, related_name="allows_activities_as_main_activity"
