@@ -233,8 +233,7 @@ class Sections(models.Model):
         choices=target_group_choices,
     )
     allowed_for_steps = fields.ArrayField(
-        models.CharField(max_length=128, choices=effort_steps_choices),
-        size=6
+        models.CharField(max_length=128, choices=effort_steps_choices), size=6
     )
     law_text_name = models.CharField(
         max_length=128, verbose_name=_("lov tekst navn")
