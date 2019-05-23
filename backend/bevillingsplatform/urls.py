@@ -28,6 +28,8 @@ router.register(r"payments", views.PaymentViewSet)
 router.register(r"related_persons", views.RelatedPersonViewSet)
 router.register(r"municipalities", views.MunicipalityViewSet)
 router.register(r"school_districts", views.SchoolDistrictViewSet)
+router.register(r"sections", views.SectionsViewSet)
+router.register(r"activity_catalogs", views.ActivityCatalogViewSet)
 
 urlpatterns = [
     path("api/admin/", admin.site.urls),
