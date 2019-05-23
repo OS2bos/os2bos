@@ -1,7 +1,13 @@
 # -*- coding: utf-8 -*-
 from django.test import TestCase
 
-from core.models import Municipality, SchoolDistrict, Sections, ActivityCatalog, FAMILY_DEPT
+from core.models import (
+    Municipality,
+    SchoolDistrict,
+    Sections,
+    ActivityCatalog,
+    FAMILY_DEPT,
+)
 
 
 class MunicipalityTestCase(TestCase):
