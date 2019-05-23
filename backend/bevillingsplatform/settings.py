@@ -141,5 +141,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 FORCE_SCRIPT_NAME = "/api"
-STATIC_URL = FORCE_SCRIPT_NAME + '/static/'
+STATIC_URL = FORCE_SCRIPT_NAME + "/static/"
 STATIC_ROOT = default_config.get("STATIC_ROOT")
