@@ -4,7 +4,6 @@ services:
   - postgres:latest
 
 variables:
-  DJANGO_SETTINGS_INI: ci.ini
   POSTGRES_DB: test_postgres
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: postgres
@@ -18,4 +17,4 @@ lint:
 
 test:
   script:
-  - tox -e test,coverage
+  - tox -e ci,coverage
