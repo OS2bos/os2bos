@@ -260,11 +260,11 @@ class ActivityCatalog(models.Model):
     max_tolerance_in_dkk = models.PositiveIntegerField(
         verbose_name=_("Max tolerance i DKK")
     )
-    allowed_as_main_activity_by_sections = models.ManyToManyField(
-        Sections, related_name="allows_activities_as_main_activity"
+    main_activity_for = models.ManyToManyField(
+        Sections, related_name="main_activities"
     )
-    allowed_as_suppl_activity_by_sections = models.ManyToManyField(
-        Sections, related_name="allows_activities_as_suppl_activity"
+    supplementary_activity_for = models.ManyToManyField(
+        Sections, related_name="supplementary_activities"
     )
 
     def __str__(self):

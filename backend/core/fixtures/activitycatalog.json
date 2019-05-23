@@ -7,8 +7,8 @@
     "activity_id": "010001",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -19,8 +19,8 @@
     "activity_id": "010002",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -31,8 +31,8 @@
     "activity_id": "010003",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -43,8 +43,8 @@
     "activity_id": "010004",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -55,8 +55,8 @@
     "activity_id": "010005",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       131,
       132,
       85,
@@ -78,8 +78,8 @@
     "activity_id": "010006",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -90,8 +90,8 @@
     "activity_id": "010007",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -102,8 +102,8 @@
     "activity_id": "010008",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -114,8 +114,8 @@
     "activity_id": "010009",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       71,
       72,
       73,
@@ -135,8 +135,8 @@
     "activity_id": "010010",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -147,8 +147,8 @@
     "activity_id": "010011",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       59
     ]
   }
@@ -161,8 +161,8 @@
     "activity_id": "010012",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -173,8 +173,8 @@
     "activity_id": "010013",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -185,8 +185,8 @@
     "activity_id": "010014",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -197,8 +197,8 @@
     "activity_id": "010015",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -209,8 +209,8 @@
     "activity_id": "010016",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -221,8 +221,8 @@
     "activity_id": "010017",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -233,8 +233,8 @@
     "activity_id": "010018",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       49,
       50,
       51,
@@ -251,8 +251,8 @@
     "activity_id": "010019",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -263,8 +263,8 @@
     "activity_id": "010020",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -275,8 +275,8 @@
     "activity_id": "010021",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -287,8 +287,8 @@
     "activity_id": "010022",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -299,8 +299,8 @@
     "activity_id": "010023",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -311,8 +311,8 @@
     "activity_id": "010024",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -323,8 +323,8 @@
     "activity_id": "010025",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       84,
       89,
       90,
@@ -341,8 +341,8 @@
     "activity_id": "010026",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -353,8 +353,8 @@
     "activity_id": "010027",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -365,8 +365,8 @@
     "activity_id": "010028",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -377,8 +377,8 @@
     "activity_id": "010029",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -389,8 +389,8 @@
     "activity_id": "010030",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       212,
       213
     ]
@@ -404,8 +404,8 @@
     "activity_id": "010031",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -416,8 +416,8 @@
     "activity_id": "010032",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       212,
       213
     ]
@@ -431,8 +431,8 @@
     "activity_id": "010033",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       131,
       132,
       89,
@@ -450,8 +450,8 @@
     "activity_id": "010034",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       89,
       90,
       91,
@@ -467,8 +467,8 @@
     "activity_id": "010035",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       128,
       131,
       132
@@ -483,8 +483,8 @@
     "activity_id": "010036",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -495,8 +495,8 @@
     "activity_id": "010037",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       89,
       90,
       91,
@@ -513,8 +513,8 @@
     "activity_id": "010038",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       131,
       132,
       122,
@@ -537,8 +537,8 @@
     "activity_id": "010039",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       96,
       97,
       131,
@@ -558,8 +558,8 @@
     "activity_id": "010040",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       131,
       132,
       87,
@@ -580,8 +580,8 @@
     "activity_id": "010041",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       84
     ]
   }
@@ -594,8 +594,8 @@
     "activity_id": "010043",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       84
     ]
   }
@@ -608,8 +608,8 @@
     "activity_id": "010044",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       85
     ]
   }
@@ -622,8 +622,8 @@
     "activity_id": "010045",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       71,
       72,
       73,
@@ -648,8 +648,8 @@
     "activity_id": "010046",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       97,
       133,
       135,
@@ -674,8 +674,8 @@
     "activity_id": "010047",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       87,
       88,
       135,
@@ -691,8 +691,8 @@
     "activity_id": "010048",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       99,
       131,
       132,
@@ -712,8 +712,8 @@
     "activity_id": "010050",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       44,
       45
     ]
@@ -727,8 +727,8 @@
     "activity_id": "010051",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       48,
       41
     ]
@@ -742,8 +742,8 @@
     "activity_id": "010052",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       42
     ]
   }
@@ -756,8 +756,8 @@
     "activity_id": "010053",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       43
     ]
   }
@@ -770,8 +770,8 @@
     "activity_id": "010054",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       41,
       49
     ]
@@ -785,8 +785,8 @@
     "activity_id": "010055",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       82,
       83
     ]
@@ -800,8 +800,8 @@
     "activity_id": "010056",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -812,8 +812,8 @@
     "activity_id": "010059",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       89,
       90,
       91,
@@ -829,8 +829,8 @@
     "activity_id": "010061",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       71,
       72,
       73,
@@ -848,8 +848,8 @@
     "activity_id": "010062",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       85
     ]
   }
@@ -862,8 +862,8 @@
     "activity_id": "010063",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -874,8 +874,8 @@
     "activity_id": "010068",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       96,
       97,
       98,
@@ -893,8 +893,8 @@
     "activity_id": "010069",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       81,
       94,
       95,
@@ -911,8 +911,8 @@
     "activity_id": "010070",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       71,
       72,
       73,
@@ -933,8 +933,8 @@
     "activity_id": "010072",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -945,8 +945,8 @@
     "activity_id": "010073",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       83,
       76
     ]
@@ -960,8 +960,8 @@
     "activity_id": "010075",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -972,8 +972,8 @@
     "activity_id": "010076",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -984,8 +984,8 @@
     "activity_id": "010078",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -996,8 +996,8 @@
     "activity_id": "010079",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       98,
       122
     ]
@@ -1011,8 +1011,8 @@
     "activity_id": "010081",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       44,
       45
     ]
@@ -1026,8 +1026,8 @@
     "activity_id": "010082",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1038,8 +1038,8 @@
     "activity_id": "010083",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       43,
       82,
       96,
@@ -1055,8 +1055,8 @@
     "activity_id": "010084",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       131,
       132,
       122,
@@ -1077,8 +1077,8 @@
     "activity_id": "010085",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       131,
       132,
       137,
@@ -1097,8 +1097,8 @@
     "activity_id": "010086",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       89,
       90,
       91,
@@ -1114,8 +1114,8 @@
     "activity_id": "010087",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       89,
       90,
       91,
@@ -1131,8 +1131,8 @@
     "activity_id": "010089",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       131,
       132,
       89,
@@ -1150,8 +1150,8 @@
     "activity_id": "010090",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1162,8 +1162,8 @@
     "activity_id": "010091",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       89,
       90,
       91,
@@ -1179,8 +1179,8 @@
     "activity_id": "010092",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1191,8 +1191,8 @@
     "activity_id": "010093",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       212,
       213
     ]
@@ -1206,8 +1206,8 @@
     "activity_id": "010095",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       75
     ]
   }
@@ -1220,8 +1220,8 @@
     "activity_id": "010096",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       194
     ]
   }
@@ -1234,8 +1234,8 @@
     "activity_id": "010097",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       194
     ]
   }
@@ -1248,8 +1248,8 @@
     "activity_id": "010099",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       75
     ]
   }
@@ -1262,8 +1262,8 @@
     "activity_id": "010100",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1274,8 +1274,8 @@
     "activity_id": "010101",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       67
     ]
   }
@@ -1288,8 +1288,8 @@
     "activity_id": "010102",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       68
     ]
   }
@@ -1302,8 +1302,8 @@
     "activity_id": "010103",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1314,8 +1314,8 @@
     "activity_id": "010105",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1326,8 +1326,8 @@
     "activity_id": "010106",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1338,8 +1338,8 @@
     "activity_id": "010107",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1350,8 +1350,8 @@
     "activity_id": "010108",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1362,8 +1362,8 @@
     "activity_id": "010109",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1374,8 +1374,8 @@
     "activity_id": "010110",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1386,8 +1386,8 @@
     "activity_id": "010111",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       89,
       90,
       91,
@@ -1403,8 +1403,8 @@
     "activity_id": "010112",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1415,8 +1415,8 @@
     "activity_id": "010113",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1427,8 +1427,8 @@
     "activity_id": "010116",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1439,8 +1439,8 @@
     "activity_id": "010117",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1451,8 +1451,8 @@
     "activity_id": "010118",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1463,8 +1463,8 @@
     "activity_id": "010119",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1475,8 +1475,8 @@
     "activity_id": "010121",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1487,8 +1487,8 @@
     "activity_id": "010122",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1499,8 +1499,8 @@
     "activity_id": "010128",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1511,8 +1511,8 @@
     "activity_id": "010129",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1523,8 +1523,8 @@
     "activity_id": "010130",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1535,8 +1535,8 @@
     "activity_id": "010131",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1547,8 +1547,8 @@
     "activity_id": "010133",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1559,8 +1559,8 @@
     "activity_id": "010134",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       89,
       90,
       91,
@@ -1576,8 +1576,8 @@
     "activity_id": "010135",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       89,
       90,
       91,
@@ -1593,8 +1593,8 @@
     "activity_id": "010136",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1605,8 +1605,8 @@
     "activity_id": "010137",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1617,8 +1617,8 @@
     "activity_id": "010138",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1629,8 +1629,8 @@
     "activity_id": "010139",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1641,8 +1641,8 @@
     "activity_id": "010140",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1653,8 +1653,8 @@
     "activity_id": "010141",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1665,8 +1665,8 @@
     "activity_id": "010142",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1677,8 +1677,8 @@
     "activity_id": "010143",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1689,8 +1689,8 @@
     "activity_id": "010144",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1701,8 +1701,8 @@
     "activity_id": "010145",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1713,8 +1713,8 @@
     "activity_id": "010146",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1725,8 +1725,8 @@
     "activity_id": "010147",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1737,8 +1737,8 @@
     "activity_id": "010148",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1749,8 +1749,8 @@
     "activity_id": "010149",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1761,8 +1761,8 @@
     "activity_id": "010150",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1773,8 +1773,8 @@
     "activity_id": "010151",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1785,8 +1785,8 @@
     "activity_id": "010152",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1797,8 +1797,8 @@
     "activity_id": "010153",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": []
+    "main_activity_for": [],
+    "supplementary_activity_for": []
   }
 },
 {
@@ -1809,8 +1809,8 @@
     "activity_id": "010154",
     "max_tolerance_in_percent": 10,
     "max_tolerance_in_dkk": 5000,
-    "allowed_as_main_activity_by_sections": [],
-    "allowed_as_suppl_activity_by_sections": [
+    "main_activity_for": [],
+    "supplementary_activity_for": [
       85
     ]
   }
