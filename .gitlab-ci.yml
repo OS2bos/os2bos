@@ -4,10 +4,10 @@ services:
   - postgres:latest
 
 variables:
-  POSTGRES_DB: test_postgres
-  POSTGRES_USER: test_postgres
-  POSTGRES_PASSWORD: test_postgres
   DJANGO_SETTINGS_INI: ci.ini
+  POSTGRES_DB: test_postgres
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
 
 before_script:
   - pip install tox
