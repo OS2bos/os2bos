@@ -1,6 +1,15 @@
 from django.db import models
+from django.contrib.postgres import fields
 from django.utils.translation import gettext_lazy as _
 from django_audit_fields.models import AuditModelMixin
+
+# Target group - definitions and choice list.
+FAMILY_DEPT = "FAMILY_DEPT"
+DISABILITY_DEPT = "DISABILITY_DEPT"
+target_group_choices = (
+    (FAMILY_DEPT, _("familieafdelingen")),
+    (DISABILITY_DEPT, _("handicapafdelingen")),
+)
 
 
 class Municipality(models.Model):
@@ -19,13 +28,6 @@ class SchoolDistrict(models.Model):
 
     def __str__(self):
         return f"{self.name}"
-
-
-class ActivityCatalog(models.Model):
-    """Class containing all services offered by this municipality.
-
-    Each service is associated with the legal articles for which it is
-    allowed as well as a price range."""
 
 
 class PaymentSchedule(models.Model):
@@ -129,13 +131,6 @@ class Case(AuditModelMixin, models.Model):
         related_name="resident_clients",
         on_delete=models.PROTECT,
     )
-    # Target group - definitions and choice list.
-    FAMILY_DEPT = "FAMILY_DEPT"
-    DISABILITY_DEPT = "DISABILITY_DEPT"
-    target_group_choices = (
-        (FAMILY_DEPT, _("familieafdelingen")),
-        (DISABILITY_DEPT, _("handicapafdelingen")),
-    )
     target_group = models.CharField(
         max_length=128,
         verbose_name=_("målgruppe"),
@@ -204,6 +199,78 @@ class Appropriation(AuditModelMixin, models.Model):
         # TODO: Implement this.
 
 
+class Sections(models.Model):
+    """Law sections and the corresponding KLE codes.
+
+    Each section is associated with the target group for which it is
+    allowed as well as the action steps allowed.
+    """
+
+    STEP_ONE = "STEP_ONE"
+    STEP_TWO = "STEP_TWO"
+    STEP_THREE = "STEP_THREE"
+    STEP_FOUR = "STEP_FOUR"
+    STEP_FIVE = "STEP_FIVE"
+    STEP_SIX = "STEP_SIX"
+
+    effort_steps_choices = (
+        (STEP_ONE, _("Trin 1: Tidlig indsats i almenområdet")),
+        (STEP_TWO, _("Trin 2: Forebyggelse")),
+        (STEP_THREE, _("Trin 3: Hjemmebaserede indsatser")),
+        (STEP_FOUR, _("Trin 4: Anbringelse i slægt eller netværk")),
+        (
+            STEP_FIVE,
+            _("Trin 5: Anbringelse i forskellige typer af plejefamilier"),
+        ),
+        (STEP_SIX, _("Trin 6: Anbringelse i institutionstilbud")),
+    )
+    paragraph = models.CharField(max_length=128, verbose_name=_("paragraf"))
+    kle_number = models.CharField(max_length=128, verbose_name=_("KLE-nummer"))
+    text = models.TextField(verbose_name=_("forklarende tekst"))
+    target_group = models.CharField(
+        max_length=128,
+        verbose_name=_("målgruppe"),
+        choices=target_group_choices,
+    )
+    allowed_for_steps = fields.ArrayField(
+        models.CharField(max_length=128, choices=effort_steps_choices), size=6
+    )
+    law_text_name = models.CharField(
+        max_length=128, verbose_name=_("lov tekst navn")
+    )
+
+    def __str__(self):
+        return f"{self.paragraph} - {self.kle_number}"
+
+
+class ActivityCatalog(models.Model):
+    """Class containing all services offered by this municipality.
+
+    Each service is associated with the legal articles for which it is
+    allowed as well as a price range.
+    """
+
+    name = models.CharField(max_length=128, verbose_name=_("Navn"))
+    activity_id = models.CharField(
+        max_length=128, verbose_name=_("Aktivitets ID")
+    )
+    max_tolerance_in_percent = models.PositiveSmallIntegerField(
+        verbose_name=_("Max tolerance i procent")
+    )
+    max_tolerance_in_dkk = models.PositiveIntegerField(
+        verbose_name=_("Max tolerance i DKK")
+    )
+    main_activity_for = models.ManyToManyField(
+        Sections, related_name="main_activities"
+    )
+    supplementary_activity_for = models.ManyToManyField(
+        Sections, related_name="supplementary_activities"
+    )
+
+    def __str__(self):
+        return f"{self.activity_id} - {self.name}"
+
+
 class Activity(AuditModelMixin, models.Model):
     """An activity is a specific service provided within an appropriation."""
 
@@ -227,12 +294,10 @@ class Activity(AuditModelMixin, models.Model):
     # Activity types and choice list.
     MAIN_ACTIVITY = "MAIN_ACTIVITY"
     SUPPL_ACTIVITY = "SUPPL_ACTIVITY"
-    ONETIME_EXPENSE = "ONETIME_EXPENSE"
     EXPECTED_CHANGE = "EXPECTED_CHANGE"
     type_choices = (
         (MAIN_ACTIVITY, _("hovedaktivitet")),
         (SUPPL_ACTIVITY, _("følgeaktivitet")),
-        (ONETIME_EXPENSE, _("engangsudgift")),
         (EXPECTED_CHANGE, _("forventning")),
     )
 
@@ -246,8 +311,7 @@ class Activity(AuditModelMixin, models.Model):
 
     # Supplementary activities will point to their main activity.
     # Root activities may be a main activity and followed by any
-    # supplementary activity - one time payments must be followed by one
-    # time payments only.
+    # supplementary activity.
     main_activity = models.ForeignKey(
         "self",
         null=True,
@@ -294,20 +358,6 @@ class RelatedPerson(models.Model):
     main_case = models.ForeignKey(
         Case, related_name="related_persons", on_delete=models.CASCADE
     )
-
-
-class Sections(models.Model):
-    """Law sections and the corresponding KLE codes."""
-
-    paragraph = models.CharField(max_length=128, verbose_name=_("paragraf"))
-    kle_number = models.CharField(max_length=128, verbose_name=_("KLE-nummer"))
-    text = models.TextField(verbose_name=_("forklarende tekst"))
-    law_text_name = models.CharField(
-        max_length=128, verbose_name=_("lov tekst navn")
-    )
-
-    def __str__(self):
-        return f"{self.paragraph} - {self.kle_number}"
 
 
 class ServiceRange(models.Model):

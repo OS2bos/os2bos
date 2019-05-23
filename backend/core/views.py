@@ -9,6 +9,8 @@ from core.models import (
     Municipality,
     RelatedPerson,
     SchoolDistrict,
+    Sections,
+    ActivityCatalog,
 )
 
 from core.serializers import (
@@ -20,6 +22,8 @@ from core.serializers import (
     RelatedPersonSerializer,
     MunicipalitySerializer,
     SchoolDistrictSerializer,
+    SectionsSerializer,
+    ActivityCatalogSerializer,
 )
 
 # Working models, read/write
@@ -66,3 +70,13 @@ class MunicipalityViewSet(viewsets.ReadOnlyModelViewSet):
 class SchoolDistrictViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = SchoolDistrict.objects.all()
     serializer_class = SchoolDistrictSerializer
+
+
+class SectionsViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Sections.objects.all()
+    serializer_class = SectionsSerializer
+
+
+class ActivityCatalogViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = ActivityCatalog.objects.all()
+    serializer_class = ActivityCatalogSerializer
