@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.test import TestCase
 
-from core.models import Municipality, SchoolDistrict, Sections, ActivityCatalog
+from core.models import Municipality, SchoolDistrict, Sections, ActivityCatalog, FAMILY_DEPT
 
 
 class MunicipalityTestCase(TestCase):
@@ -24,6 +24,9 @@ class SectionsTestCase(TestCase):
             paragraph="ABL-105-2",
             kle_number="27.45.04",
             text="Lov om almene boliger",
+            allowed_for_steps=[],
+            target_group=FAMILY_DEPT,
+            law_text_name="Lov om almene boliger",
         )
 
         self.assertEqual(str(sections), "ABL-105-2 - 27.45.04")

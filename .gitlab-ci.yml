@@ -1,5 +1,14 @@
 image: python:latest
 
+services:
+  - postgres:latest
+
+variables:
+  POSTGRES_DB: test_postgres
+  POSTGRES_USER: test_postgres
+  POSTGRES_PASSWORD: test_postgres
+  DJANGO_SETTINGS_INI: ci.ini
+
 before_script:
   - pip install tox
 
