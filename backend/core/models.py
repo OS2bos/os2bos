@@ -294,12 +294,10 @@ class Activity(AuditModelMixin, models.Model):
     # Activity types and choice list.
     MAIN_ACTIVITY = "MAIN_ACTIVITY"
     SUPPL_ACTIVITY = "SUPPL_ACTIVITY"
-    ONETIME_EXPENSE = "ONETIME_EXPENSE"
     EXPECTED_CHANGE = "EXPECTED_CHANGE"
     type_choices = (
         (MAIN_ACTIVITY, _("hovedaktivitet")),
         (SUPPL_ACTIVITY, _("følgeaktivitet")),
-        (ONETIME_EXPENSE, _("engangsudgift")),
         (EXPECTED_CHANGE, _("forventning")),
     )
 
@@ -313,8 +311,7 @@ class Activity(AuditModelMixin, models.Model):
 
     # Supplementary activities will point to their main activity.
     # Root activities may be a main activity and followed by any
-    # supplementary activity - one time payments must be followed by one
-    # time payments only.
+    # supplementary activity.
     main_activity = models.ForeignKey(
         "self",
         null=True,
