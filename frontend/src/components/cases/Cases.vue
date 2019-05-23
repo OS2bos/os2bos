@@ -59,7 +59,6 @@
             fetchCases: function(id) {
                 axios.get('/cases/')
                 .then(res => {
-                    console.log('CASES!')
                     this.cas = res.data
                 })
                 .catch(err => console.log(err))
