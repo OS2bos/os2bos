@@ -20,15 +20,15 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="c in cas" :key="c.pk">
+                <tr v-for="c in cas" :key="c.id">
                     <td>
                         <i class="material-icons">folder_shared</i>
-                        <router-link :to="`/case/${ c.pk }`">
+                        <router-link :to="`/case/${ c.id }`">
                             {{ c.sbsys_id }}
                         </router-link>
                     </td>
                     <td>
-                        {{ c.cpr_no }} - {{ c.name }}
+                        {{ c.cpr_number }} - {{ c.name }}
                     </td>
                     <td>
                         {{ displayDate(c.modified) }}
@@ -57,8 +57,9 @@
                 this.fetchCases(this.$route.params.id)
             },
             fetchCases: function(id) {
-                axios.get('../../case-data.json')
+                axios.get('/cases/')
                 .then(res => {
+                    console.log('CASES!')
                     this.cas = res.data
                 })
                 .catch(err => console.log(err))
