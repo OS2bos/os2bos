@@ -30,7 +30,7 @@
                         {{ h.scaling_staircase }}
                     </td>
                     <td>
-                        {{ h.updated }}
+                        {{ h.modified }}
                     </td>
                 </tr>
             </tbody>

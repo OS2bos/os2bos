@@ -42,7 +42,10 @@
 
             <div class="sagsbev appr-grid-box">
                 <h2>Der bevilges:</h2>
-                <activity-list :appr-id="appr.id" />
+                <!-- <activity-list :appr-id="appr.id" /> -->
+                <!-- <activity-list2 :appr-id="appr.id" /> -->
+                <activity-list3 :appr-id="appr.id" />
+                <!-- <activity-list4 :appr-id="appr.id" /> -->
             </div>
             
             <div class="sagsgodkend appr-grid-box">
@@ -73,12 +76,18 @@
 
     import axios from '../http/Http.js'
     import ActivityList from '../activities/ActivityList.vue'
+    import ActivityList2 from '../activities/ActivityList2.vue'
+    import ActivityList3 from '../activities/ActivityList3.vue'
+    import ActivityList4 from '../activities/ActivityList4.vue'
     import AppropriationEdit from './AppropriationEdit.vue'
 
     export default {
 
         components: {
             ActivityList,
+            ActivityList2,
+            ActivityList3,
+            ActivityList4,
             AppropriationEdit
         },
         data: function() {
@@ -141,7 +150,7 @@
         margin: 0 1rem;
     }
 
-    .appropriation .status-bevilget {
+    .appropriation .status-Godkendt {
         background-color: var(--success);
         color: white;
         padding: .25rem;
@@ -174,7 +183,6 @@
     .sagsbev {
         grid-area: 3 / 1 / 4 / 7;
     }
-
 
     .sagsgodkend {
         grid-area: 4 / 1 / 5 / 7;

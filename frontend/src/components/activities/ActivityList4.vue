@@ -2,7 +2,7 @@
 
     <section class="activities">
         <button class="activities-create-btn" title="Ny aktivitet" @click="createAct()">+ Tilføj ydelse</button>
-        <table>
+          <table>
             <thead>
                 <tr>
                     <th>Status</th>
@@ -10,7 +10,6 @@
                     <th>Udbetales til</th>
                     <th>Start</th>
                     <th>Slut</th>
-                    <th>Økonomi</th>
                 </tr>
             </thead>
             <tbody>
@@ -22,27 +21,30 @@
                     <td>{{ a.payment.payee.name }}</td>
                     <td>{{ new Date(a.startdate).toLocaleDateString() }}</td>
                     <td>{{ new Date(a.enddate).toLocaleDateString() }}</td>
-                    <td>{{ a.payment.total_amount }}</td>
                 </tr>
+            </tbody>
+        </table>
+        <table class="sum-container">
+            <thead>
                 <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td style="text-align: right;">Pr. måned</td>
-                    <td>
-                        {{ total_amounts}} kr.
+                    <th>Ydelser 3</th>
+                    <th>Økonomi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="a in acts" :key="a[0]">
+                    <td><router-link :to="`/activity/${ a.pk }`">{{ a.activity }}</router-link></td>
+                     <td>
+                        <span>{{ a.payment.total_amount }} kr.</span>
                     </td>
                 </tr>
                 <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td style="text-align: right;">Samlet sum</td>
-                    <td>
-                        <u>{{ total_amounts}} kr.</u>
-                    </td>
+                    <td>Pr. måned</td>
+                    <td><u>{{ total_amounts}} kr.</u></td>
+                </tr>
+                <tr>
+                    <td>Total</td>
+                    <td><u>{{ total_amounts}} kr.</u></td>
                 </tr>
             </tbody>
         </table>
@@ -130,10 +132,13 @@
         padding: .25rem;
     }
 
-    .total-sum {
-        background-color: green;
-        color: white;
-        padding: .25rem;
+    .sum-container {
+        margin-top: 1rem;
+        background-color: #f2f2f2;
+        padding: 5px 20px 15px 20px;
+        border: 1px solid lightgrey;
+        border-radius: 3px;
+        width: 26rem;
     }
 
 </style>
