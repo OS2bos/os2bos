@@ -19,21 +19,21 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="a in apprs" :key="a[0]">
+                <tr v-for="a in apprs" :key="a.id">
                     <td>    
                         <i class="material-icons">folder_open</i>
-                        <router-link :to="`/appropriation/${ a.pk }`">
+                        <router-link :to="`/appropriation/${ a.id }`">
                             {{ a.sbsys_id }} 
                         </router-link>
                     </td>
-                    <td>{{ a.activities.main_law_ref }}</td>
-                    <td>{{ a.activities.main_activity_name }}</td>
-                    <td>{{ a.activities.activities_count }}</td>
+                    <td>{{ a.sbsys_id }}</td>
+                    <td>{{ a.sbsys_id }}</td>
+                    <td>{{ a.sbsys_id }}</td>
                     
                     <td><span class="status">{{ a.status }}</span></td>
                     <td>{{ displayDate(a.created_date) }}</td>
                     <td>{{ displayDate(a.modified_date) }}</td>
-                    <td style="text-align: right">{{ a.payment.total_amount }} kr</td>
+                    <td style="text-align: right">{{ a.sbsys_id }} kr</td>
                 </tr>
                 <tr>
                     <td style="border: none;"></td>
@@ -69,9 +69,7 @@
         computed: {
             total_amounts: function() {
                 function getTotal(total, a) {
-                    console.log(total)
-                    console.log(a.payment.total_amount)
-                    return total + a.payment.total_amount
+                    //return total + a.payment.total_amount
                 }
                 if (this.apprs) {
                     return this.apprs.reduce(getTotal, 0)
@@ -80,16 +78,18 @@
         },
         methods: {
             fetchAppropriations: function(case_id) {
-                axios.get('../../appropriation-list-data.json')
+                axios.get('/appropriations/')
                 .then(res => {
                     this.apprs = res.data
                 })
                 .catch(err => console.log(err))
             },
             createAppr: function() {
-                axios.post('/') // POST new empty appropriation
+                axios.post('/appropriations/', {
+                    
+                }) // POST new empty appropriation
                 .then(res => {
-                    this.$router.push(`/appropriation/${ res.data.pk }`) // Navigate to new appropriation page
+                    this.$router.push(`/appropriation/${ res.data.id }`) // Navigate to new appropriation page
                 })
                 .catch(err => console.log(err))
             },
