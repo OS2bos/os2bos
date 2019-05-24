@@ -185,9 +185,11 @@ class Appropriation(AuditModelMixin, models.Model):
         verbose_name=_("bevilling foretaget på niveau"),
         max_length=16,
         choices=approval_level_choices,
-        blank=True
+        blank=True,
     )
-    approval_note = models.TextField(verbose_name=_("evt. bemærkning"), blank=True)
+    approval_note = models.TextField(
+        verbose_name=_("evt. bemærkning"), blank=True
+    )
 
     case = models.ForeignKey(
         Case, on_delete=models.CASCADE, related_name="appropriations"
