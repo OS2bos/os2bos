@@ -5,7 +5,7 @@
             <h1>Mine sager</h1>
             <button class="create" @click="$router.push('case-create')">+ Tilknyt hovedsag</button>
         </header>
-        <table>
+        <table v-if="cas.length > 0">
             <thead>
                 <tr>
                     <th>
@@ -36,6 +36,9 @@
                 </tr>
             </tbody>
         </table>
+        <p v-if="cas.length < 1">
+            Der er ikke tilknyttet nogen sager
+        </p>
     </section>
 
 </template>
