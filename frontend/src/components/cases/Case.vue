@@ -39,20 +39,7 @@
             </dl>
         </div>
 
-        <form v-if="edit_mode" @submit.prevent="saveChanges()">
-            <fieldset>
-                <label for="field-name">Sagspart, navn</label>
-                <input id="field-name" type="text" v-model="cas.name">
-            </fieldset>
-            <fieldset>
-                <label for="field-cpr">Sagspart, CPR-nr</label>
-                <input id="field-cpr" type="text" v-model="cas.cpr_number">
-            </fieldset>
-            <fieldset>
-                <input type="submit" value="Gem">
-                <button type="cancel">Annullér</button>
-            </fieldset>
-        </form>
+        <case-edit :case-obj="cas" v-if="edit_mode" @save="reload()" />
 
         <appropriations :case-id="cas.id" />
 
@@ -62,12 +49,14 @@
 
 <script>
 
+    import CaseEdit from './CaseEdit.vue'
     import Appropriations from '../appropriations/AppropriationList.vue'
     import axios from '../http/Http.js'
 
     export default {
 
         components: {
+            CaseEdit,
             Appropriations
         },
         
@@ -98,16 +87,9 @@
                 })
                 .catch(err => console.log(err))
             },
-            saveChanges: function() {
-                axios.patch(`/cases/${ this.cas.id }/`, {
-                    name: this.cas.name,
-                    cpr_number: this.cas.cpr_number
-                })
-                .then(() => {
-                    this.edit_mode =  false
-                    this.update()
-                })
-                .catch(err => console.log(err))
+            reload: function() {
+                this.edit_mode =  false
+                this.update()
             }
         },
         created: function() {
