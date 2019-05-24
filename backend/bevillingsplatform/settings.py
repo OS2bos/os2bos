@@ -143,3 +143,17 @@ USE_TZ = True
 FORCE_SCRIPT_NAME = "/api"
 STATIC_URL = FORCE_SCRIPT_NAME + "/static/"
 STATIC_ROOT = default_config.get("STATIC_ROOT")
+
+# Serviceplatform service UUIDs
+SERVICEPLATFORM_UUIDS = {
+    "service_agreement": default_config.get(
+        "SERVICEPLATFORM_SERVICE_AGREEMENT"
+    ),
+    "user_system": default_config.get("SERVICEPLATFORM_USER_SYSTEM"),
+    "user": default_config.get("SERVICEPLATFORM_USER"),
+    "service": default_config.get("SERVICEPLATFORM_SERVICE")
+}
+
+# Serviceplatform Certificate
+
+SERVICEPLATFORM_CERTIFICATE_PATH = default_config.get("SERVICEPLATFORM_CERTIFICATE_PATH")
