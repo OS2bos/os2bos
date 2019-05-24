@@ -37,6 +37,7 @@ class CaseViewSet(viewsets.ModelViewSet):
 class AppropriationViewSet(viewsets.ModelViewSet):
     queryset = Appropriation.objects.all()
     serializer_class = AppropriationSerializer
+    filterset_fields = "__all__"
 
 
 class ActivityViewSet(viewsets.ModelViewSet):
