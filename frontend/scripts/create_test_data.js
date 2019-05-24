@@ -34,8 +34,8 @@ function submitTestData() {
             "sbsys_id": "77.25.25-72-nhis-0184",
             "section": "12 - hestpasning",
             "status": "DRAFT",
-            "approval_level": 'CASE_WORKER',
-            "approval_note": "nothing",
+            "approval_level": null,
+            "approval_note": "",
             "case": res.data.id
         })
         .then(res => { postSuccess(res) })
@@ -44,8 +44,8 @@ function submitTestData() {
             "sbsys_id": "34.34.95-15-xoiu-1",
             "section": "12 - hestpasning",
             "status": "DRAFT",
-            "approval_level": 'CASE_WORKER',
-            "approval_note": "nothing",
+            "approval_level": null,
+            "approval_note": "",
             "case": res.data.id
         })
         .then(res => { postSuccess(res) })
@@ -54,8 +54,8 @@ function submitTestData() {
             "sbsys_id": "89.89.72-1-abie-082",
             "section": "12 - Girafpasning",
             "status": "DRAFT",
-            "approval_level": 'CASE_WORKER',
-            "approval_note": "nothing",
+            "approval_level": null,
+            "approval_note": "",
             "case": res.data.id
         })
         .then(res => { postSuccess(res) })
@@ -84,8 +84,8 @@ function submitTestData() {
             "sbsys_id": "71.95.10-00-qygs-1",
             "section": "23 - tigre",
             "status": "DRAFT",
-            "approval_level": 'CASE_WORKER',
-            "approval_note": "nothing",
+            "approval_level": null,
+            "approval_note": "",
             "case": res.data.id
         })
         .then(res => { postSuccess(res) })
@@ -94,8 +94,8 @@ function submitTestData() {
             "sbsys_id": "85.82.12-2-xniw-28",
             "section": "853 - Geder",
             "status": "DRAFT",
-            "approval_level": 'CASE_WORKER',
-            "approval_note": "nothing",
+            "approval_level": null,
+            "approval_note": "",
             "case": res.data.id
         })
         .then(res => { postSuccess(res) })
@@ -124,8 +124,8 @@ function submitTestData() {
             "sbsys_id": "98.08.23-17-lokq-26",
             "section": "6 - Får og klipning af får",
             "status": "DRAFT",
-            "approval_level": 'CASE_WORKER',
-            "approval_note": "nothing",
+            "approval_level": null,
+            "approval_note": "",
             "case": res.data.id
         })
         .then(res => { postSuccess(res) })
