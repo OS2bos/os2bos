@@ -21,9 +21,6 @@ class CaseSerializer(serializers.ModelSerializer):
 
 
 class AppropriationSerializer(serializers.ModelSerializer):
-    approval_level = serializers.CharField(required=False)
-    approval_note = serializers.CharField(required=False)
-
     class Meta:
         model = Appropriation
         fields = "__all__"
