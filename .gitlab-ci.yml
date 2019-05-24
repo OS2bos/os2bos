@@ -1,5 +1,13 @@
 image: python:latest
 
+services:
+  - postgres:latest
+
+variables:
+  POSTGRES_DB: postgres
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+
 before_script:
   - pip install tox
 
@@ -9,4 +17,4 @@ lint:
 
 test:
   script:
-  - tox -e test,coverage
+  - tox -e ci,coverage

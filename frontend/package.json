@@ -5,7 +5,8 @@
   "description": "A frontend for bevillingsplatform project",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "testdata": "node ./scripts/create_test_data.js"
   },
   "repository": {
     "type": "git",
@@ -19,7 +20,7 @@
   "license": "MPL-2.0",
   "dependencies": {
     "axios": "^0.18.0",
-    "core-js": "^2.6.5",
+    "core-js": "^2.6.8",
     "vue": "^2.6.10",
     "vue-router": "^3.0.3",
     "vuex": "^3.0.1"

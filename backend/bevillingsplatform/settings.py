@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "django_extensions",
+    "django_filters",
     "core",
 ]
 
@@ -140,5 +141,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = "/static/"
+FORCE_SCRIPT_NAME = "/api"
+STATIC_URL = FORCE_SCRIPT_NAME + "/static/"
 STATIC_ROOT = default_config.get("STATIC_ROOT")
+
+REST_FRAMEWORK = {
+    "DEFAULT_FILTER_BACKENDS": (
+        "django_filters.rest_framework.DjangoFilterBackend",
+    )
+}

@@ -6,14 +6,6 @@
 
 </template>
 
-<script>
-    
-    export default {
-
-    }
-
-</script>
-
 <style>
 
     .globalfooter {

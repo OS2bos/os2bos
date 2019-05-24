@@ -2,7 +2,9 @@ Django==2.2.1
 psycopg2 --no-binary psycopg2
 djangorestframework==3.9.3
 django-extensions==2.1.6
+ipython==7.5.0
 edc_utils==0.1.6
 # ^ This is a requirement for "django-audit-fields"
 # | 
 django-audit-fields==0.1.3
+django-filter==2.1.0

@@ -5,54 +5,53 @@
             <h1>Bevillingsskrivelse</h1>
             <div>
                 <button v-if="!show_edit" @click="show_edit = true" class="appr-edit-btn">Redigér</button>
-                <router-link :to="`/appropriation/${ appr.pk }/print`">Print</router-link>
+                <router-link :to="`/appropriation/${ appr.id }/print`">Print</router-link>
             </div>
         </header>
 
-        <div class="appr-grid">
+        <div class="appr-grid" v-if="cas">
 
             <div class="sagsbeh appr-grid-box">
                 <dl>
                     <dt>Foranstaltningssag (SBSYS)</dt>
                     <dd>{{ appr.sbsys_id}}</dd>
                     <dt>Sagsbehandler</dt>
-                    <dd>{{ appr.case.case_worker}} ({{ appr.case.case_worker_initials }})</dd>
+                    <dd>{{ cas.case_worker}}</dd>
                 </dl>
             </div>
 
             <div class="sagspart appr-grid-box">
                 <dl>
                     <dt>Sagspart</dt>
-                    <dd>{{ appr.case.cpr_no }}, {{ appr.case.name }}</dd>
+                    <dd>{{ cas.cpr_number }}, {{ cas.name }}</dd>
                     <dt>Betalingskommune</dt>
-                    <dd>{{ appr.case.municipality_payment}}</dd>
+                    <dd>{{ cas.paying_municipality }}</dd>
                     <dt>Handlekommune</dt>
-                    <dd>{{ appr.case.municipality_action}}</dd>
+                    <dd>{{ cas.acting_municipality }}</dd>
                     <dt>Bopælskommune</dt>
-                    <dd>{{ appr.case.municipality_residence}}</dd>
+                    <dd>{{ cas.residence_municipality }}</dd>
                 </dl>
             </div>
             
             <div class="sagslaw appr-grid-box">
                 <dl> 
                     <dt>Bevilges efter §</dt>
-                    <dd>{{ appr.law_ref }}</dd>
+                    <dd>{{ appr.section }}</dd>
                 </dl>
             </div>
 
             <div class="sagsbev appr-grid-box">
                 <h2>Der bevilges:</h2>
-                <!-- <activity-list :appr-id="appr.pk" /> -->
-                <!-- <activity-list2 :appr-id="appr.pk" /> -->
-                <activity-list3 :appr-id="appr.pk" />
-                <!-- <activity-list4 :appr-id="appr.pk" /> -->
+                <!-- <activity-list :appr-id="appr.id" /> -->
+                <!-- <activity-list2 :appr-id="appr.id" /> -->
+                <activity-list3 :appr-id="appr.id" />
+                <!-- <activity-list4 :appr-id="appr.id" /> -->
             </div>
             
             <div class="sagsgodkend appr-grid-box">
                 <span :class="`status-${ appr.status }`">{{ appr.status }}</span>
-                <template v-if="appr.approval"> af
-                    {{ appr.approval.approval_auth_level }} 
-                    - {{ new Date(appr.approval.approval_date).toLocaleDateString() }}
+                <template v-if="appr.approval_level"> af
+                    {{ appr.approval_level }}
                 </template>
             </div>
 
@@ -94,29 +93,35 @@
         data: function() {
             return {
                 appr: null,
+                cas: null,
                 show_edit: false
             }
         },
         methods: {
             fetchAppr: function(id) {
-                axios
-                .get('../../appropriation-data.json')
+                axios.get(`/appropriations/${ id }`)
                 .then(res => {
                     this.appr = res.data
-                    this.$store.commit('setBreadcrumb', [
-                        {
-                            link: '/',
-                            title: 'Mine sager'
-                        },
-                        {
-                            link: `/case/${ this.appr.case.pk }`,
-                            title: `${ this.appr.case.sbsys_id }, ${ this.appr.case.name }`
-                        },
-                        {
-                            link: false,
-                            title: `Foranstaltning ${ this.appr.sbsys_id }`
-                        }
-                    ])
+
+                    axios.get(`/cases/${ res.data.case }`)
+                    .then(resp => {
+                        this.cas = resp.data
+                        this.$store.commit('setBreadcrumb', [
+                            {
+                                link: '/',
+                                title: 'Mine sager'
+                            },
+                            {
+                                link: `/case/${ this.appr.case }`,
+                                title: `${ this.cas.sbsys_id }, ${ this.cas.name }`
+                            },
+                            {
+                                link: false,
+                                title: `Foranstaltning ${ this.appr.sbsys_id }`
+                            }
+                        ])
+
+                    })
                 })
                 .catch(err => console.log(err))
             }
