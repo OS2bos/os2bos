@@ -5,7 +5,7 @@
         "startdate": "2019-05-07T09:57:35+02:00",
         "enddate": "2021-05-7T09:57:35+02:00",
         "payment": {
-            "total_amount": 23000,
+            "total_amount": 25000,
             "payee": {
                 "name": "Jens Andersen"
             }
@@ -33,7 +33,7 @@
         "startdate": "2019-05-07T09:57:35+02:00",
         "enddate": "2021-05-7T09:57:35+02:00",
         "payment": {
-            "total_amount": 23000,
+            "total_amount": 13000,
             "payee": {
                 "name": "Jens Andersen"
             }
