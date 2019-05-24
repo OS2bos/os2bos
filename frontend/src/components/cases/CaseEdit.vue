@@ -1,35 +1,34 @@
 <template>
     <section class="case">
-        <h1>Tilknyt hovedsag</h1>
-        <form>
+        <form @submit.prevent="saveChanges()">
+            <h1>Tilknyt/Redigér hovedsag</h1>
+            
             <fieldset>
                 <label for="inputSearch">SBSYS Hovedsag:</label>
                 <input id="inputSearch" type="search" :value="cas.sbsys_id">
                 <button class="case-button">Hent</button>
             </fieldset>
-        </form>
+        
+            <div>
 
-        <div v-if="cas.sbsys_id">
-            <form id="getForm">
                 <fieldset>
-                    <h3>Sagspart:</h3>
-                    <dl>
-                        <dt>CPR-nr:</dt>
-                        <dd>{{ cas.cpr_no }}</dd>
-                        <dt>Navn:</dt>
-                        <dd>{{ cas.name }}</dd>
-                    </dl>
+                    <label for="field-name">Sagspart, navn</label>
+                    <input id="field-name" type="text" v-model="cas.name">
+                </fieldset>
+                <fieldset>
+                    <label for="field-cpr">Sagspart, CPR-nr</label>
+                    <input id="field-cpr" type="text" v-model="cas.cpr_number">
                 </fieldset>
 
                 <fieldset>
                     <h3>Familie og relationer:</h3>
                     <dl>
                         <dt>Mor:</dt>
-                        <dd>{{ cas.family_relations[0].name }}</dd>
+                        <dd>ikke implementeret</dd>
                         <dt>Far:</dt>
-                        <dd>{{ cas.family_relations[1].name }}</dd>
+                        <dd>ikke implementeret</dd>
                         <dt>Andre:</dt>
-                        <dd>{{ cas.family_relations[2].name }}</dd>
+                        <dd>ikke implementeret</dd>
                     </dl>
                 </fieldset>
 
@@ -37,19 +36,19 @@
                     <h3>Kommune:</h3>
                     <label for="selectField1">Betalingskommune:</label>
                     <select id="selectField1">
-                        <option>{{ cas.municipality.payment_municipality}}</option>
+                        <option>{{ cas.paying_municipality }}</option>
                     </select>
                 </fieldset>
                 <fieldset>
                     <label for="selectField2">Handlekommune:</label>
                     <select id="selectField2">
-                        <option>{{ cas.municipality.payment_municipality}}</option>
+                        <option>{{ cas.acting_municipality }}</option>
                     </select>
                 </fieldset>
                 <fieldset>
                     <label for="selectField3">Bopælsskommune:</label>
                     <select id="selectField3">
-                        <option>{{ cas.municipality.payment_municipality}}</option>
+                        <option>{{ cas.residence_municipality }}</option>
                     </select>
                 </fieldset>
 
@@ -88,26 +87,27 @@
                     <h3>Sagsbehandling:</h3>
                     <dl>
                         <dt>Sagsbehander:</dt>
-                        <dd>{{ cas.case_management.case_worker }}</dd>
+                        <dd>{{ cas.case_worker }}</dd>
                         <dt>Team:</dt>
-                        <dd>{{ cas.case_management.team }}</dd>
+                        <dd>ikke implementeret</dd>
                     </dl>
                     <fieldset>
                     <label for="selectField">Distrikt:</label>
                     <select id="selectField">
-                        <option>{{ cas.original_district}}</option>
+                        <option>{{ cas.district }}</option>
                     </select>
                     </fieldset>
                     <fieldset>
                         <dt>Leder:</dt>
-                        <dd>{{ cas.case_management.manager }}</dd>
+                        <dd>ikke implementeret</dd>
                     </fieldset>
                 </fieldset>
                 <fieldset>
-                    <button>Gem</button>
+                    <input type="submit" value="Gem">
+                    <button type="cancel">Annullér</button>
                 </fieldset>
-            </form>
-        </div>
+            </div>        
+        </form>
     </section>
 
 </template>
@@ -118,32 +118,45 @@
 
     export default {
 
+        props: [
+            'caseObj'
+        ],
         data: function() {
             return {
                 item: null,
-                cas: null
+                cas: {},
+                create_mode: true
             }
         },
         methods: {
-            update: function() {
-                this.fetchCase(this.$route.params.id)
-            },
-            fetchCase: function(id) {
-                axios.get('../../case-data.json')
-                .then(res => {
-                    this.cas = res.data[0]
-                    this.$store.commit('setBreadcrumb', [
-                        {
-                            link: '/',
-                            title: 'Mine sager'
-                        }
-                    ])
-                })
-                .catch(err => console.log(err))
+            saveChanges: function() {
+                if (!this.create_mode) {
+                    axios.patch(`/cases/${ this.cas.id }/`, {
+                        name: this.cas.name,
+                        cpr_number: this.cas.cpr_number
+                    })
+                    .then(res => {
+                        this.$emit('save', res.data)
+                    })
+                    .catch(err => console.log(err))
+                } else {
+                    axios.post(`/cases/`, {
+                        sbsys_id: this.cas.sbsys_id,
+                        name: this.cas.name,
+                        cpr_number: this.cas.cpr_number
+                    })
+                    .then(res => {
+                        this.$router.push('/')
+                    })
+                    .catch(err => console.log(err))
+                }
             }
         },
         created: function() {
-            this.update()
+            if (this.caseObj) {
+                this.create_mode = false
+                this.cas = this.caseObj
+            }
         }
     }
     
