@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls.static import static
+from django.conf import settings
 
 from rest_framework import routers
 from core import views
@@ -28,9 +30,11 @@ router.register(r"payments", views.PaymentViewSet)
 router.register(r"related_persons", views.RelatedPersonViewSet)
 router.register(r"municipalities", views.MunicipalityViewSet)
 router.register(r"school_districts", views.SchoolDistrictViewSet)
+router.register(r"sections", views.SectionsViewSet)
+router.register(r"activity_catalogs", views.ActivityCatalogViewSet)
 
 urlpatterns = [
-    path("api/admin/", admin.site.urls),
-    path("api/auth", include("rest_framework.urls")),
-    path("api/", include(router.urls)),
-]
+    path("admin/", admin.site.urls),
+    path("auth/", include("rest_framework.urls")),
+    path("", include(router.urls)),
+] + static("/static/", document_root=settings.STATIC_ROOT)
