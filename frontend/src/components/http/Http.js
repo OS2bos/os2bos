@@ -2,7 +2,7 @@ import axios from 'axios'
 import spinner from '../spinner/Spinner.js'
 
 const ax = axios.create({
-    baseURL: '/api/api'
+    baseURL: '/api'
 })
 
 ax.interceptors.request.use(

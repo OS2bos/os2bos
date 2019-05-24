@@ -1,23 +1,23 @@
 <template>
 
     <section class="case" v-if="cas">
-        <h1>
-            <i class="material-icons">folder_shared</i>
-            Hovedsag {{ cas.sbsys_id }}
-        </h1>
-        <dl>
+        <header class="case-header">
+            <h1 style="padding: 0;">
+                <i class="material-icons">folder_shared</i>
+                Hovedsag {{ cas.sbsys_id }}
+            </h1>
+            <button>Redigér</button>
+        </header>
+        <div class="case-info">
+        <dl style="flex: 1 0 33%;">
             <dt>Sagspart (CPR, navn)</dt>
             <dd>{{ cas.cpr_number }}, {{ cas.name }}</dd>
-            <dt>Betalingskommune:</dt>
-            <dd>{{ cas.paying_municipality }}</dd>
-            <dt>Handlekommune:</dt>
-            <dd>{{ cas.acting_municipality }}</dd>
-            <dt>Bopælsskommune:</dt>
-            <dd>{{ cas.residence_municipality }}</dd>
             <dt>Indsatstrappen:</dt>
-            <dd>{{ cas.effort_stairs }}</dd>
+            <dd>ikke implementeret</dd>
             <dt>Skaleringstrappe:</dt>
-            <dd>{{ cas.scaling_staircase }}</dd>
+            <dd>ikke implementeret</dd>
+        </dl>
+        <dl style="flex: 1 0 33%;">
             <dt>Sagsbehander:</dt>
             <dd>{{ cas.case_worker }}</dd>
             <dt>Team:</dt>
@@ -27,6 +27,15 @@
             <dt>Leder:</dt>
             <dd>ikke implementeret</dd>
         </dl>
+        <dl style="flex: 1 0 33%;">
+            <dt>Betalingskommune:</dt>
+            <dd>{{ cas.paying_municipality }}</dd>
+            <dt>Handlekommune:</dt>
+            <dd>{{ cas.acting_municipality }}</dd>
+            <dt>Bopælsskommune:</dt>
+            <dd>{{ cas.residence_municipality }}</dd>
+        </dl>
+        </div>
         <appropriations />
     </section>
 
@@ -82,6 +91,23 @@
 
     .case {
         margin: 1rem;
+    }
+
+    .case-header {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+    }
+
+    .case-header > button {
+        margin: 1rem;
+    }
+
+    .case-info {
+        display: flex; 
+        flex-flow: row nowrap;
+        background-color: var(--grey1);
+        padding: 1rem 2rem;
     }
 
 </style>
