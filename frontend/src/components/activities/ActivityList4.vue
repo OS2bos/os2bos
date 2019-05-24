@@ -2,34 +2,52 @@
 
     <section class="activities">
         <button class="activities-create-btn" title="Ny aktivitet" @click="createAct()">+ Tilføj ydelse</button>
-        <div class="grid-container">
-          <div class="grid-box" v-for="a in acts" :key="a.pk">
-            <dl>
-              <dt>Status</dt>
-              <dd><span :class="`status-${ a.status }`">{{ a.status }}</span></dd>
-              <dt>Ydelse</dt>
-              <dd><router-link :to="`/activity/${ a.pk }`">{{ a.activity }}</router-link></dd>
-              <dt>Udbetales til</dt>
-              <dd>{{ a.payment.payee.name }}</dd>
-              <dt>CPR-nr</dt>
-              <dd>300178-1207</dd>
-              <dt>Økonomi</dt>
-              <dd>{{ a.payment.total_amount }}</dd>
-              <dt>Start</dt>
-              <dd>{{ new Date(a.startdate).toLocaleDateString() }}</dd>
-              <dt>Slut</dt>
-              <dd>{{ new Date(a.enddate).toLocaleDateString() }}</dd>
-            </dl>
-          </div>
-        </div>
-          <div class="box-sum">
-            <dl>
-              <dt>Pr. måned</dt>
-              <dd>{{ total_amounts }} kr.</dd>
-              <dt>Samlet sum</dt>
-              <dd>{{ total_amounts }} kr.</dd>
-            </dl>
-          </div>
+          <table>
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Ydelse</th>
+                    <th>Udbetales til</th>
+                    <th>Start</th>
+                    <th>Slut</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="a in acts" :key="a[0]">
+                    <td>
+                        <span :class="`status-${ a.status }`">{{ a.status }}</span>
+                    </td>
+                    <td><router-link :to="`/activity/${ a.pk }`">{{ a.activity }}</router-link></td>
+                    <td>{{ a.payment.payee.name }}</td>
+                    <td>{{ new Date(a.startdate).toLocaleDateString() }}</td>
+                    <td>{{ new Date(a.enddate).toLocaleDateString() }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="sum-container">
+            <thead>
+                <tr>
+                    <th>Ydelser 3</th>
+                    <th>Økonomi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="a in acts" :key="a[0]">
+                    <td><router-link :to="`/activity/${ a.pk }`">{{ a.activity }}</router-link></td>
+                     <td>
+                        <span>{{ a.payment.total_amount }} kr.</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Pr. måned</td>
+                    <td><u>{{ total_amounts}} kr.</u></td>
+                </tr>
+                <tr>
+                    <td>Total</td>
+                    <td><u>{{ total_amounts}} kr.</u></td>
+                </tr>
+            </tbody>
+        </table>
     </section>
 
 </template>
@@ -114,21 +132,13 @@
         padding: .25rem;
     }
 
-    .activities .grid-container {
-        display: grid;
-        grid-template-columns: auto auto auto auto;
-    }
-
-    .grid-box {
-        border: solid 1px var(--grey1);
-        padding: .5rem 1rem;
-        margin: 1px;
-    }
-
-    .total-sum{
-        background-color: green;
-        color: white;
-        padding: .25rem;
+    .sum-container {
+        margin-top: 1rem;
+        background-color: #f2f2f2;
+        padding: 5px 20px 15px 20px;
+        border: 1px solid lightgrey;
+        border-radius: 3px;
+        width: 26rem;
     }
 
 </style>
