@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "django_extensions",
+    "django_filters",
     "core",
 ]
 
@@ -151,9 +152,17 @@ SERVICEPLATFORM_UUIDS = {
     ),
     "user_system": default_config.get("SERVICEPLATFORM_USER_SYSTEM"),
     "user": default_config.get("SERVICEPLATFORM_USER"),
-    "service": default_config.get("SERVICEPLATFORM_SERVICE")
+    "service": default_config.get("SERVICEPLATFORM_SERVICE"),
 }
 
 # Serviceplatform Certificate
 
-SERVICEPLATFORM_CERTIFICATE_PATH = default_config.get("SERVICEPLATFORM_CERTIFICATE_PATH")
+SERVICEPLATFORM_CERTIFICATE_PATH = default_config.get(
+    "SERVICEPLATFORM_CERTIFICATE_PATH"
+)
+
+REST_FRAMEWORK = {
+    "DEFAULT_FILTER_BACKENDS": (
+        "django_filters.rest_framework.DjangoFilterBackend",
+    )
+}

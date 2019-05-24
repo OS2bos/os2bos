@@ -5,7 +5,7 @@
             <h1>Mine sager</h1>
             <button class="create" @click="$router.push('case-create')">+ Tilknyt hovedsag</button>
         </header>
-        <table>
+        <table v-if="cas.length > 0">
             <thead>
                 <tr>
                     <th>
@@ -20,15 +20,15 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="c in cas" :key="c.pk">
+                <tr v-for="c in cas" :key="c.id">
                     <td>
                         <i class="material-icons">folder_shared</i>
-                        <router-link :to="`/case/${ c.pk }`">
+                        <router-link :to="`/case/${ c.id }`">
                             {{ c.sbsys_id }}
                         </router-link>
                     </td>
                     <td>
-                        {{ c.cpr_no }} - {{ c.name }}
+                        {{ c.cpr_number }} - {{ c.name }}
                     </td>
                     <td>
                         {{ displayDate(c.modified) }}
@@ -36,6 +36,9 @@
                 </tr>
             </tbody>
         </table>
+        <p v-if="cas.length < 1">
+            Der er ikke tilknyttet nogen sager
+        </p>
     </section>
 
 </template>
@@ -57,7 +60,7 @@
                 this.fetchCases(this.$route.params.id)
             },
             fetchCases: function(id) {
-                axios.get('../../case-data.json')
+                axios.get('/cases/')
                 .then(res => {
                     this.cas = res.data
                 })
