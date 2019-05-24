@@ -43,7 +43,9 @@
             <div class="sagsbev appr-grid-box">
                 <h2>Der bevilges:</h2>
                 <!-- <activity-list :appr-id="appr.pk" /> -->
-                <activity-list2 :appr-id="appr.pk" />
+                <!-- <activity-list2 :appr-id="appr.pk" /> -->
+                <activity-list3 :appr-id="appr.pk" />
+                <!-- <activity-list4 :appr-id="appr.pk" /> -->
             </div>
             
             <div class="sagsgodkend appr-grid-box">
@@ -76,6 +78,8 @@
     import axios from '../http/Http.js'
     import ActivityList from '../activities/ActivityList.vue'
     import ActivityList2 from '../activities/ActivityList2.vue'
+    import ActivityList3 from '../activities/ActivityList3.vue'
+    import ActivityList4 from '../activities/ActivityList4.vue'
     import AppropriationEdit from './AppropriationEdit.vue'
 
     export default {
@@ -83,6 +87,8 @@
         components: {
             ActivityList,
             ActivityList2,
+            ActivityList3,
+            ActivityList4,
             AppropriationEdit
         },
         data: function() {
