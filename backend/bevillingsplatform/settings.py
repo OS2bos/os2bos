@@ -146,5 +146,7 @@ STATIC_URL = FORCE_SCRIPT_NAME + "/static/"
 STATIC_ROOT = default_config.get("STATIC_ROOT")
 
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
+    "DEFAULT_FILTER_BACKENDS": (
+        "django_filters.rest_framework.DjangoFilterBackend",
+    )
 }

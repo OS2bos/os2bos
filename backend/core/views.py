@@ -43,6 +43,7 @@ class AppropriationViewSet(viewsets.ModelViewSet):
 class ActivityViewSet(viewsets.ModelViewSet):
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
+    filterset_fields = "__all__"
 
 
 class PaymentScheduleViewSet(viewsets.ModelViewSet):
