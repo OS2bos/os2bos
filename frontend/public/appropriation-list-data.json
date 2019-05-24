@@ -28,7 +28,7 @@
             "main_activity_name": "Ledsager",
             "activities_count": 3
         },
-        "status": "forventet",
+        "status": "Forventet",
         "payment": {
             "total_amount": 25000
         },
@@ -46,7 +46,7 @@
             "main_activity_name": "Buskort",
             "activities_count": 1
         },
-        "status": "bevilget", 
+        "status": "Bevilget", 
         "payment": {
             "total_amount": 23695
         },

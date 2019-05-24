@@ -5,12 +5,12 @@
         "startdate": "2019-05-07T09:57:35+02:00",
         "enddate": "2021-05-7T09:57:35+02:00",
         "payment": {
-            "total_amount": 23000,
+            "total_amount": 25000,
             "payee": {
                 "name": "Jens Andersen"
             }
         },
-        "status": "bevilget",
+        "status": "Bevilget",
         "appropriation_pk": 78
     },
     {
@@ -24,7 +24,7 @@
                 "name": "Jens Andersen"
             }
         },
-        "status": "forventet",
+        "status": "Forventet",
         "appropriation_pk": 78
     },
     {
@@ -33,12 +33,12 @@
         "startdate": "2019-05-07T09:57:35+02:00",
         "enddate": "2021-05-7T09:57:35+02:00",
         "payment": {
-            "total_amount": 23000,
+            "total_amount": 13000,
             "payee": {
                 "name": "Jens Andersen"
             }
         },
-        "status": "bevilget",
+        "status": "Bevilget",
         "appropriation_pk": 78
     }
 ]
