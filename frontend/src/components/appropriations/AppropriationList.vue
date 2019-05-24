@@ -26,14 +26,14 @@
                             {{ a.sbsys_id }} 
                         </router-link>
                     </td>
-                    <td>{{ a.sbsys_id }}</td>
-                    <td>{{ a.sbsys_id }}</td>
-                    <td>{{ a.sbsys_id }}</td>
+                    <td>ikke implementeret</td>
+                    <td>ikke implementeret</td>
+                    <td>ikke implementeret</td>
                     
                     <td><span class="status">{{ a.status }}</span></td>
-                    <td>{{ displayDate(a.created_date) }}</td>
-                    <td>{{ displayDate(a.modified_date) }}</td>
-                    <td style="text-align: right">{{ a.sbsys_id }} kr</td>
+                    <td>{{ displayDate(a.created) }}</td>
+                    <td>{{ displayDate(a.modified) }}</td>
+                    <td style="text-align: right">ikke implementeret</td>
                 </tr>
                 <tr>
                     <td style="border: none;"></td>
@@ -77,8 +77,8 @@
             }
         },
         methods: {
-            fetchAppropriations: function(case_id) {
-                axios.get('/appropriations/')
+            fetchAppropriations: function() {
+                axios.get(`/appropriations/?case=${ this.caseId }`)
                 .then(res => {
                     this.apprs = res.data
                 })

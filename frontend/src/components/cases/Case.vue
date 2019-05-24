@@ -36,7 +36,7 @@
             <dd>{{ cas.residence_municipality }}</dd>
         </dl>
         </div>
-        <appropriations />
+        <appropriations :case-id="cas.id" />
     </section>
 
 </template>
