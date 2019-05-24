@@ -5,7 +5,8 @@
   "description": "A frontend for bevillingsplatform project",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "testdata": "node ./scripts/create_test_data.js"
   },
   "repository": {
     "type": "git",
