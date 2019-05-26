@@ -46,7 +46,8 @@
                 </tr>
             </tbody>
         </table>
-          <table>
+
+          <table class="table-top">
             <thead>
                 <tr>
                     <th>Status</th>
@@ -174,10 +175,8 @@
         padding: .25rem;
     }
 
-    .total-sum {
-        background-color: green;
-        color: white;
-        padding: .25rem;
+    .table-top {
+        margin-top: 2rem;
     }
 
 </style>

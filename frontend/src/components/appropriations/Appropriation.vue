@@ -9,6 +9,10 @@
             </div>
         </header>
 
+        <div v-if="show_edit">
+            <appropriation-edit :appropriation-data="appr" @cancelled="show_edit = false" @saved="show_edit = false" />
+        </div>
+
         <div class="appr-grid" v-if="cas">
 
             <div class="sagsbeh appr-grid-box">
@@ -55,18 +59,6 @@
                 </template>
             </div>
 
-        </div>
-
-        <div class="appr-header">
-            <div>
-                
-                <div v-if="show_edit">
-                    <appropriation-edit :appropriation-data="appr" @cancelled="show_edit = false" @saved="show_edit = false" />
-                </div>
-            </div>
-            <div>
-                
-            </div>
         </div>
     </section>
 
