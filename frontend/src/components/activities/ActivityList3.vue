@@ -15,7 +15,52 @@
             </thead>
             <tbody>
                 <tr v-for="a in acts" :key="a[0]">
+                    <td v-if="a.status = 'Bevilget'">
+                        <span :class="`status-${ a.status }`">{{ a.status }}</span>
+                    </td>
+                    <td><router-link :to="`/activity/${ a.pk }`">{{ a.activity }}</router-link></td>
+                    <td>{{ a.payment.payee.name }}</td>
+                    <td>{{ new Date(a.startdate).toLocaleDateString() }}</td>
+                    <td>{{ new Date(a.enddate).toLocaleDateString() }}</td>
+                    <td>{{ a.payment.total_amount }}</td>
+                </tr>
+                 <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td style="text-align: right;">Pr. måned</td>
                     <td>
+                        <span>{{ total_amounts}} kr.</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td style="text-align: right;">Samlet sum</td>
+                    <td>
+                        <span><u>{{ total_amounts}} kr.</u></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+          <table class="table-top">
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Ydelse</th>
+                    <th>Udbetales til</th>
+                    <th>Start</th>
+                    <th>Slut</th>
+                    <th>Økonomi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="a in acts" :key="a[0]">
+                    <td v-if="a.status = 'Forventet'">
                         <span :class="`status-${ a.status }`">{{ a.status }}</span>
                     </td>
                     <td><router-link :to="`/activity/${ a.pk }`">{{ a.activity }}</router-link></td>
@@ -31,7 +76,7 @@
                     <td></td>
                     <td style="text-align: right;">Pr. måned</td>
                     <td>
-                        {{ total_amounts}} kr.
+                        <span>{{ total_amounts}} kr.</span>
                     </td>
                 </tr>
                 <tr>
@@ -41,7 +86,7 @@
                     <td></td>
                     <td style="text-align: right;">Samlet sum</td>
                     <td>
-                        <u>{{ total_amounts}} kr.</u>
+                        <span><u>{{ total_amounts}} kr.</u></span>
                     </td>
                 </tr>
             </tbody>
@@ -130,10 +175,8 @@
         padding: .25rem;
     }
 
-    .total-sum {
-        background-color: green;
-        color: white;
-        padding: .25rem;
+    .table-top {
+        margin-top: 2rem;
     }
 
 </style>

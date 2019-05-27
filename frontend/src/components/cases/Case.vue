@@ -1,60 +1,69 @@
 <template>
 
     <section class="case" v-if="cas">
+
         <header class="case-header">
             <h1 style="padding: 0;">
                 <i class="material-icons">folder_shared</i>
                 Hovedsag {{ cas.sbsys_id }}
             </h1>
-            <button>Redigér</button>
+            <button @click="edit_mode = !edit_mode">Redigér</button>
         </header>
-        <div class="case-info">
-        <dl style="flex: 1 0 33%;">
-            <dt>Sagspart (CPR, navn)</dt>
-            <dd>{{ cas.cpr_number }}, {{ cas.name }}</dd>
-            <dt>Indsatstrappen:</dt>
-            <dd>ikke implementeret</dd>
-            <dt>Skaleringstrappe:</dt>
-            <dd>ikke implementeret</dd>
-        </dl>
-        <dl style="flex: 1 0 33%;">
-            <dt>Sagsbehander:</dt>
-            <dd>{{ cas.case_worker }}</dd>
-            <dt>Team:</dt>
-            <dd>ikke implementeret</dd>
-            <dt>Distrikt:</dt>
-            <dd>{{ cas.district}}</dd>
-            <dt>Leder:</dt>
-            <dd>ikke implementeret</dd>
-        </dl>
-        <dl style="flex: 1 0 33%;">
-            <dt>Betalingskommune:</dt>
-            <dd>{{ cas.paying_municipality }}</dd>
-            <dt>Handlekommune:</dt>
-            <dd>{{ cas.acting_municipality }}</dd>
-            <dt>Bopælsskommune:</dt>
-            <dd>{{ cas.residence_municipality }}</dd>
-        </dl>
+
+        <div class="case-info" v-if="!edit_mode">
+            <dl style="flex: 1 0 33%;">
+                <dt>Sagspart (CPR, navn)</dt>
+                <dd>{{ cas.cpr_number }}, {{ cas.name }}</dd>
+                <dt>Indsatstrappen:</dt>
+                <dd>ikke implementeret</dd>
+                <dt>Skaleringstrappe:</dt>
+                <dd>ikke implementeret</dd>
+            </dl>
+            <dl style="flex: 1 0 33%;">
+                <dt>Sagsbehander:</dt>
+                <dd>{{ cas.case_worker }}</dd>
+                <dt>Team:</dt>
+                <dd>ikke implementeret</dd>
+                <dt>Distrikt:</dt>
+                <dd>{{ cas.district}}</dd>
+                <dt>Leder:</dt>
+                <dd>ikke implementeret</dd>
+            </dl>
+            <dl style="flex: 1 0 33%;">
+                <dt>Betalingskommune:</dt>
+                <dd>{{ cas.paying_municipality }}</dd>
+                <dt>Handlekommune:</dt>
+                <dd>{{ cas.acting_municipality }}</dd>
+                <dt>Bopælsskommune:</dt>
+                <dd>{{ cas.residence_municipality }}</dd>
+            </dl>
         </div>
+
+        <case-edit :case-obj="cas" v-if="edit_mode" @save="reload()" />
+
         <appropriations :case-id="cas.id" />
+
     </section>
 
 </template>
 
 <script>
 
+    import CaseEdit from './CaseEdit.vue'
     import Appropriations from '../appropriations/AppropriationList.vue'
     import axios from '../http/Http.js'
 
     export default {
 
         components: {
+            CaseEdit,
             Appropriations
         },
         
         data: function() {
             return {
-                cas: null
+                cas: null,
+                edit_mode: false
             }
         },
         methods: {
@@ -77,6 +86,10 @@
                     ])
                 })
                 .catch(err => console.log(err))
+            },
+            reload: function() {
+                this.edit_mode =  false
+                this.update()
             }
         },
         created: function() {

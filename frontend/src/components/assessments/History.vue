@@ -4,33 +4,40 @@
         <table>
             <thead>
                 <tr>
-                    <td>
+                    <th>
                         Sagsbehandler
-                    </td> 
-                    <td>
+                    </th> 
+                    <th>
                         Indsatstrappen
-                    </td>
-                    <td>
+                    </th>
+                    <th>
                         Skaleringstrappe
-                    </td>
-                    <td>
+                    </th>
+                    <th>
+                        Bemærkning
+                    </th>
+                    <th>
                         Dato
-                    </td>
+                    </th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="h in his" :key="h.pk">
+                <tr v-for="h in his" :key="h.id">
                     <td>
-                        {{ h.case_management.case_worker }}
+                        <i class="material-icons">account_circle</i>
+                        {{ h.case_worker }}
                     </td>
                     <td>
-                        {{ h.effort_stairs }}
+                        ikke implementeret {{ h.effort_stairs }}
                     </td>
                     <td>
-                        {{ h.scaling_staircase }}
+                        ikke implementeret {{ h.scaling_staircase }}
                     </td>
                     <td>
-                        {{ h.updated }}
+                        ikke implementeret
+                    </td>
+                    <td>
+                        {{ displayDate(h.modified)}}
                     </td>
                 </tr>
             </tbody>
@@ -41,6 +48,7 @@
 <script>
 
     import axios from '../http/Http.js'
+    import { json2js } from '../filters/Date.js'
 
     export default {
 
@@ -54,11 +62,14 @@
                 this.fetchHistory(this.$route.params.id)
             },
             fetchHistory: function(id) {
-                axios.get('../../case-data.json')
+                axios.get('/cases/')
                 .then(res => {
                     this.his = res.data
                 })
                 .catch(err => console.log(err))
+            },
+            displayDate: function(dt) {
+                return json2js(dt)
             }
         },
         created: function() {
