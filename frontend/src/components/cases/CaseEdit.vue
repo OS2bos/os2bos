@@ -84,7 +84,7 @@
             </fieldset>
 
             <fieldset>
-                <button @click="$router.push(`/assessment/${ cas.pk }`)">Vurdering</button>
+                <button @click="$router.push(`/assessment/${ cas.id }`)">Vurdering</button>
             </fieldset>
 
             <fieldset>
@@ -109,7 +109,7 @@
             
             <fieldset>
                 <input type="submit" value="Gem">
-                <button type="cancel">Annullér</button>
+                <button class="cancel-btn" type="cancel">Annullér</button>
             </fieldset>
             
         </form>
@@ -172,8 +172,16 @@
     .case {
         margin: 1rem;
     }
+
     .case-button {
         margin-left: 1rem;
+    }
+
+    .case .cancel-btn {
+        margin-left: 0.5rem;
+        background-color: transparent;
+        color: var(--primary);
+        border-color: transparent;
     }
 
 </style>
