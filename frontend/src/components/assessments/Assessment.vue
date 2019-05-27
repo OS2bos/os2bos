@@ -2,14 +2,14 @@
     <section class="assessment">
         <header class="assessment-header">
             <h1>Vurderinger</h1>
-            <button v-if="!show_edit" @click="show_edit = true" class="assessment-edit-btn">Redigér</button>
+            <button @click="edit_mode = !edit_mode" class="assessment-edit-btn">Redigér</button>
         </header>
         <div>
-            <fieldset v-if="!show_edit">
+            <fieldset v-if="!edit_mode">
                 <h3>Sagspart:</h3>
                 <dl>
                     <dt>CPR-nr:</dt>
-                    <dd>{{ cas.cpr_no }}</dd>
+                    <dd>{{ cas.cpr_number }}</dd>
                     <dt>Navn:</dt>
                     <dd>{{ cas.name }}</dd>
                     <dt>Sag:</dt>
@@ -17,9 +17,7 @@
                 </dl>
             </fieldset>
 
-             <div v-if="show_edit">
-                <assessment-edit :assessment-data="cas" @cancelled="show_edit = false" @saved="show_edit = false" />
-            </div>
+                <assessment-edit :assessment-obj="cas" v-if="edit_mode" @save="reload()"/>
 
             <history/>
         </div>
@@ -43,7 +41,7 @@
         data: function() {
             return {
                 cas: null,
-                show_edit: false
+                edit_mode: false
             }
         },
         methods: {
@@ -51,7 +49,7 @@
                 this.fetchCase(this.$route.params.id)
             },
             fetchCase: function(id) {
-                axios.get('../../case-data.json')
+                axios.get(`/cases/`)
                 .then(res => {
                     this.cas = res.data[0]
                     this.$store.commit('setBreadcrumb', [
@@ -60,12 +58,16 @@
                             title: 'Mine sager'
                         },
                         {
-                            link: `/case-create/`,
+                            link: `/case-create/ }`,
                             title: `Sag ${ this.cas.sbsys_id }`
                         }
                     ])
                 })
                 .catch(err => console.log(err))
+            },
+            reload: function() {
+                this.edit_mode =  false
+                this.update()
             }
         },
         created: function() {

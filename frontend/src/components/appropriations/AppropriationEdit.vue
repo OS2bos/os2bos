@@ -69,6 +69,7 @@
     }
 
     .appropriation-edit .cancel-btn {
+        margin-left: 0.5rem;
         background-color: transparent;
         color: var(--primary);
         border-color: transparent;
