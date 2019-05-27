@@ -9,6 +9,7 @@ variables:
   POSTGRES_PASSWORD: postgres
 
 before_script:
+  - mkdir /logs/
   - pip install tox
 
 lint:
