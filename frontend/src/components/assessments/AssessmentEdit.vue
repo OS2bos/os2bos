@@ -4,17 +4,17 @@
             <fieldset>
                 <label for="inputSearch">SBSYS Hovedsag:</label>
                 <input id="inputSearch" type="search" v-model="cas.sbsys_id">
-                <button class="assessment-button">Hent</button>
+                <button class="assessment-button" disabled>Hent</button>
             </fieldset>
         </form>
 
         <div>
-            <form id="getForm" @submit.prevent="saveAssessment(assessment_data)">
+            <form id="getForm" @submit.prevent="saveChanges()">
                 <fieldset>
                     <h3>Sagspart:</h3>
                     <dl>
                         <dt>CPR-nr:</dt>
-                        <dd>{{ cas.cpr_no }}</dd>
+                        <dd>{{ cas.cpr_number }}</dd>
                         <dt>Navn:</dt>
                         <dd>{{ cas.name }}</dd>
                     </dl>
@@ -37,19 +37,20 @@
                         <option>1</option>
                         <option>2</option>
                         <option>3</option>
-                        <option>{{ cas.scaling_staircase }}</option>
+                        <option>4</option>
                         <option>5</option>
+                        <option>6</option>
                     </select>
                 </fieldset>
 
                 <fieldset>
                     <label for="textArea">Bemærkning:</label>
-                    <textarea id="textArea" v-model="assessment_data.note"></textarea>
+                    <textarea id="textArea" v-model="cas.note"></textarea>
                 </fieldset>
 
                 <fieldset>
                     <input type="submit" value="Opdater">
-                    <button class="cancel-btn" type="reset" @click="cancelEdit()">Annullér</button>
+                    <button class="cancel-btn" type="cancel">Annullér</button>
                 </fieldset>
             </form>
         </div>
@@ -69,41 +70,41 @@
         },
 
         props: [
-            'assessmentData'
+            'assessmentObj'
         ],
         data: function() {
             return {
                 cas: null,
-                assessment_data: {
-                    note: ''
-                }
+                create_mode: true
             }
         },
         methods: {
-            update: function() {
-                this.fetchCase(this.$route.params.id)
-            },
-            fetchCase: function(id) {
-                axios.get('../../case-data.json')
-                .then(res => {
-                    this.cas = res.data[0]
-                })
-                .catch(err => console.log(err))
-            },
-            saveAssessment: function(data) {
-                axios.patch('/', data)
-                .then(res => {
-                    this.$emit('saved', res.data)
-                })
-                .catch(err => console.log(err))
-                
-            },
-            cancelEdit: function() {
-                this.$emit('cancelled')
+           saveChanges: function() {
+                if (!this.create_mode) {
+                    axios.patch(`/cases/${ this.cas.id }/`, {
+                    })
+                    .then(res => {
+                        this.$emit('save', res.data)
+                    })
+                    .catch(err => console.log(err))
+                } else {
+                    axios.post(`/cases/`, {
+                        sbsys_id: this.cas.sbsys_id,
+                        name: this.cas.name,
+                        cpr_number: this.cas.cpr_number
+                    })
+                    .then(res => {
+                        this.$router.push('/')
+                    })
+                    .catch(err => console.log(err))
+                }
             }
         },
         created: function() {
-            this.update()
+            if (this.assessmentObj) {
+                this.create_mode = false
+                this.cas = this.assessmentObj
+            }
         }
     }
     
@@ -116,13 +117,14 @@
     }
 
     .assessment-button {
-        margin-left: 1rem;
+        margin-left: 0.5rem;
     }
 
     .assessment .cancel-btn {
-      background-color: transparent;
-      color: var(--primary);
-      border-color: transparent;
+        margin-left: 0.5rem;
+        background-color: transparent;
+        color: var(--primary);
+        border-color: transparent;
     }
 
 </style>
