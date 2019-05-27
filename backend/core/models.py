@@ -362,6 +362,18 @@ class RelatedPerson(models.Model):
         Case, related_name="related_persons", on_delete=models.CASCADE
     )
 
+    @staticmethod
+    def serviceplatformen_to_related_person(data):
+        """
+        Convert data from Serviceplatformen to our RelatedPerson model data.
+        """
+        converter_dict = {"cprnr": "cpr_number", "relation": "relation_type"}
+        return {
+            converter_dict[k]: v
+            for (k, v) in data.items()
+            if k in converter_dict
+        }
+
 
 class ServiceRange(models.Model):
     """Class containing all the service providers for each service.
