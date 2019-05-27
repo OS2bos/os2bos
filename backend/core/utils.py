@@ -20,7 +20,7 @@ def get_cpr_data(cpr):
         result = get_citizen(
             service_uuids=settings.SERVICEPLATFORM_UUIDS,
             certificate=settings.SERVICEPLATFORM_CERTIFICATE_PATH,
-            cprnr=cpr
+            cprnr=cpr,
         )
         return result
     except requests.exceptions.HTTPError:

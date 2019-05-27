@@ -55,7 +55,6 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_extensions",
     "django_filters",
-
     "core",
 ]
 
@@ -170,20 +169,16 @@ REST_FRAMEWORK = {
 
 # Logging
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'default': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': '/logs/debug.log',
-        },
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "default": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": "/logs/debug.log",
+        }
     },
-    'loggers': {
-        'django': {
-            'handlers': ['default'],
-            'level': 'INFO',
-            'propagate': True,
-        },
+    "loggers": {
+        "django": {"handlers": ["default"], "level": "INFO", "propagate": True}
     },
 }

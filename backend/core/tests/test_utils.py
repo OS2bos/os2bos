@@ -7,7 +7,6 @@ from core.utils import get_cpr_data
 
 
 class GetCPRDataTestCase(TestCase):
-
     def test_get_cpr_data_empty_certificate(self):
         with self.settings(SERVICEPLATFORM_CERTIFICATE_PATH=""):
             result = get_cpr_data("1234567890")
