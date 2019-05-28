@@ -310,6 +310,8 @@ class Activity(AuditModelMixin, models.Model):
         PaymentSchedule,
         on_delete=models.CASCADE,
         verbose_name=_("betalingsplan"),
+        null=True,
+        blank=True,
     )
 
     # Supplementary activities will point to their main activity.
