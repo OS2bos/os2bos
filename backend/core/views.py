@@ -30,8 +30,6 @@ from core.serializers import (
     ActivityCatalogSerializer,
 )
 
-from core.utils import get_cpr_data
-
 # Working models, read/write
 
 
