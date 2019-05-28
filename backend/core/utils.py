@@ -10,6 +10,9 @@ logger = logging.getLogger(__name__)
 
 
 def get_person_info(cpr):
+    """
+    Get CPR data on a person and his/her relations.
+    """
     # TODO: switch out these mock calls with the real ones.
     result = get_cpr_data_mock(cpr)
     if not result:
@@ -23,6 +26,9 @@ def get_person_info(cpr):
 
 
 def get_cpr_data(cpr):
+    """
+    Get CPR data from Serviceplatformen.
+    """
     if not os.path.isfile(settings.SERVICEPLATFORM_CERTIFICATE_PATH):
         logger.info(
             "serviceplatform certificate path: %s is not a file",
@@ -43,7 +49,7 @@ def get_cpr_data(cpr):
 
 def get_cpr_data_mock(cpr):
     """
-    Use test data for now.
+    Use test data in place of the real 'get_cpr_data_mock' for now.
     """
     result = {
         "statsborgerskab": "5100",
