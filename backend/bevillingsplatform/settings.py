@@ -182,3 +182,11 @@ LOGGING = {
         "django": {"handlers": ["default"], "level": "INFO", "propagate": True}
     },
 }
+
+# Email settings
+EMAIL_BACKEND = default_config.get("EMAIL_BACKEND")
+EMAIL_HOST_USER = default_config.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = default_config.get("EMAIL_HOST_PASSWORD")
+EMAIL_HOST = default_config.get("EMAIL_HOST")
+EMAIL_PORT = default_config.get("EMAIL_PORT")
+DEFAULT_FROM_EMAIL = default_config.get("DEFAULT_FROM_EMAIL")

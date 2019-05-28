@@ -3,7 +3,7 @@
     <section class="appropriations">
         <header class="appropriations-header">
             <h1>Foranstaltninger</h1>
-            <button class="appropriation-create-btn" @click="createAppr()">+ Opret bevillingsskrivelse</button>
+            <button class="appropriation-create-btn" @click="$router.push('approriation-create')">+ Opret bevillingsskrivelse</button>
         </header>
         <table class="appropriation-list">
             <thead>
@@ -27,7 +27,7 @@
                         </router-link>
                     </td>
                     <td>ikke implementeret</td>
-                    <td>ikke implementeret</td>
+                    <td>§ {{ a.section }}</td>
                     <td>ikke implementeret</td>
                     
                     <td><span class="status">{{ a.status }}</span></td>
@@ -84,15 +84,15 @@
                 })
                 .catch(err => console.log(err))
             },
-            createAppr: function() {
-                axios.post('/appropriations/', {
+            // createAppr: function() {
+            //     axios.post('/appropriations/', {
                     
-                }) // POST new empty appropriation
-                .then(res => {
-                    this.$router.push(`/appropriation/${ res.data.id }`) // Navigate to new appropriation page
-                })
-                .catch(err => console.log(err))
-            },
+            //     }) // POST new empty appropriation
+            //     .then(res => {
+            //         this.$router.push(`/appropriation-create/${ res.data.id }`) // Navigate to new appropriation page
+            //     })
+            //     .catch(err => console.log(err))
+            // },
             displayDate: function(dt) {
                 return json2js(dt)
             }

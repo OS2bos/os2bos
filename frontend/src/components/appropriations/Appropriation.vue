@@ -4,17 +4,18 @@
         <header class="appropriation-header">
             <h1>Bevillingsskrivelse</h1>
             <div>
-                <button v-if="!show_edit" @click="show_edit = true" class="appr-edit-btn">Redigér</button>
+                <button @click="show_edit = !show_edit" class="appr-edit-btn">Redigér</button>
                 <router-link :to="`/appropriation/${ appr.id }/print`">Print</router-link>
             </div>
         </header>
 
         <div v-if="show_edit">
-            <appropriation-edit :appropriation-data="appr" @cancelled="show_edit = false" @saved="show_edit = false" />
+            <appropriation-edit :appr-obj="appr" v-if="show_edit" @save="reload()" />
         </div>
 
         <div class="appr-grid" v-if="cas">
 
+        <template v-if="!show_edit">
             <div class="sagsbeh appr-grid-box">
                 <dl>
                     <dt>Foranstaltningssag (SBSYS)</dt>
@@ -43,6 +44,7 @@
                     <dd>{{ appr.section }}</dd>
                 </dl>
             </div>
+        </template>
 
             <div class="sagsbev appr-grid-box">
                 <h2>Der bevilges:</h2>
@@ -116,6 +118,9 @@
                     })
                 })
                 .catch(err => console.log(err))
+            },
+            reload: function() {
+                this.show_edit =  false
             }
         },
         created: function() {

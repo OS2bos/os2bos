@@ -42,6 +42,12 @@ services:
     depends_on:
       - django
       - vue
-
+  postfix:
+    image: catatnight/postfix
+    hostname: postfix
+    domainname: bevillingsplatform-test.magenta.dk
+    environment:
+      - maildomain=magenta.dk
+      - smtp_user=bevillingsplatform:bevillingsplatform
 volumes:
  postgres_data:
