@@ -113,8 +113,14 @@ AUTH_PASSWORD_VALIDATORS = [
         "UserAttributeSimilarityValidator"
     },
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
-    {"NAME": "django.contrib.auth.password_validation." "CommonPasswordValidator"},
-    {"NAME": "django.contrib.auth.password_validation." "NumericPasswordValidator"},
+    {
+        "NAME": "django.contrib.auth.password_validation."
+        "CommonPasswordValidator"
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation."
+        "NumericPasswordValidator"
+    },
 ]
 
 
@@ -141,7 +147,9 @@ STATIC_ROOT = default_config.get("STATIC_ROOT")
 
 # Serviceplatform service UUIDs
 SERVICEPLATFORM_UUIDS = {
-    "service_agreement": default_config.get("SERVICEPLATFORM_SERVICE_AGREEMENT"),
+    "service_agreement": default_config.get(
+        "SERVICEPLATFORM_SERVICE_AGREEMENT"
+    ),
     "user_system": default_config.get("SERVICEPLATFORM_USER_SYSTEM"),
     "user": default_config.get("SERVICEPLATFORM_USER"),
     "service": default_config.get("SERVICEPLATFORM_SERVICE"),
@@ -154,7 +162,9 @@ SERVICEPLATFORM_CERTIFICATE_PATH = default_config.get(
 )
 
 REST_FRAMEWORK = {
-    "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",)
+    "DEFAULT_FILTER_BACKENDS": (
+        "django_filters.rest_framework.DjangoFilterBackend",
+    )
 }
 
 # Logging
