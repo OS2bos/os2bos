@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.postgres import fields
+from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from django_audit_fields.models import AuditModelMixin
 
@@ -104,8 +105,11 @@ class Case(AuditModelMixin, models.Model):
     )
     cpr_number = models.CharField(max_length=12, verbose_name=_("cpr-nummer"))
     name = models.CharField(max_length=128, verbose_name=_("Navn"))
-    case_worker = models.CharField(
-        max_length=128, verbose_name=_("sagsbehandler")
+    case_worker = models.ForeignKey(
+        User,
+        verbose_name=_("sagsbehandler"),
+        related_name="cases",
+        on_delete=models.PROTECT,
     )
     district = models.ForeignKey(
         SchoolDistrict,

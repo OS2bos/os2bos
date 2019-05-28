@@ -1,3 +1,5 @@
+from django.contrib.auth.models import User
+
 from rest_framework import viewsets
 
 from core.models import (
@@ -24,6 +26,7 @@ from core.serializers import (
     SchoolDistrictSerializer,
     SectionsSerializer,
     ActivityCatalogSerializer,
+    UserSerializer,
 )
 
 # Working models, read/write
@@ -33,16 +36,21 @@ class CaseViewSet(viewsets.ModelViewSet):
     queryset = Case.objects.all()
     serializer_class = CaseSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
 
 class AppropriationViewSet(viewsets.ModelViewSet):
     queryset = Appropriation.objects.all()
     serializer_class = AppropriationSerializer
+
     filterset_fields = "__all__"
 
 
 class ActivityViewSet(viewsets.ModelViewSet):
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
+
     filterset_fields = "__all__"
 
 
@@ -82,3 +90,8 @@ class SectionsViewSet(viewsets.ReadOnlyModelViewSet):
 class ActivityCatalogViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ActivityCatalog.objects.all()
     serializer_class = ActivityCatalogSerializer
+
+
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
