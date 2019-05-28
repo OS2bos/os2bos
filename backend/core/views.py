@@ -67,9 +67,9 @@ class RelatedPersonViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"])
     def fetch_from_serviceplatformen(self, request):
         """
-        Fetch relations from a CPR number from Serviceplatformen.
+        Fetch relations for a person using the CPR from Serviceplatformen.
 
-        returns the data as RelatedPersons.
+        Returns the data as serialized RelatedPersons data.
         """
         cpr = request.query_params.get("cpr")
         if not cpr:
@@ -92,7 +92,11 @@ class RelatedPersonViewSet(viewsets.ModelViewSet):
         }
         if not cpr_data:
             return Response(
-                {"errors": [_("Fejl i forbindelse til Serviceplatformen")]},
+                {
+                    "errors": [
+                        _("Fejl i CPR eller forbindelse til Serviceplatformen")
+                    ]
+                },
                 status=status.HTTP_400_BAD_REQUEST,
             )
         relations = []
