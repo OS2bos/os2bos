@@ -3,7 +3,7 @@ from unittest import mock
 from django.test import TestCase
 import requests
 
-from core.utils import get_cpr_data
+from core.utils import get_cpr_data, get_person_info, get_cpr_data_mock
 
 
 class GetCPRDataTestCase(TestCase):
@@ -38,3 +38,28 @@ class GetCPRDataTestCase(TestCase):
         result = get_cpr_data("1234567890")
 
         self.assertEqual(result["fornavn"], "Jens Jensner")
+
+
+class GetPersonInfoTestCase(TestCase):
+    @mock.patch("core.utils.get_cpr_data_mock", lambda cpr: None)
+    def test_get_person_info_no_response(self):
+        result = get_person_info("nonexistant")
+        self.assertIsNone(result)
+
+    @mock.patch("core.utils.get_cpr_data_mock")
+    def test_get_person_info_relation_lookups_fail(
+        self, get_cpr_data_mock_mock
+    ):
+        # Make first call successful and subsequent calls return None.
+        get_cpr_data_mock_mock.side_effect = [
+            get_cpr_data_mock("1234567890")
+        ] + [None] * 10
+        result = get_person_info("1234567890")
+
+        self.assertNotIn("adresseringsnavn", result["relationer"][0])
+
+    def test_get_person_info_success(self):
+        result = get_person_info("1234567890")
+
+        self.assertIn("relationer", result)
+        self.assertIn("adresseringsnavn", result["relationer"][0])

@@ -369,7 +369,11 @@ class RelatedPerson(models.Model):
         """
         Convert data from Serviceplatformen to our RelatedPerson model data.
         """
-        converter_dict = {"cprnr": "cpr_number", "relation": "relation_type"}
+        converter_dict = {
+            "cprnr": "cpr_number",
+            "relation": "relation_type",
+            "adresseringsnavn": "name",
+        }
         return {
             converter_dict[k]: v
             for (k, v) in data.items()

@@ -30,6 +30,8 @@ from core.serializers import (
     ActivityCatalogSerializer,
 )
 
+from core.utils import get_person_info
+
 # Working models, read/write
 
 
@@ -78,18 +80,8 @@ class RelatedPersonViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # cpr_data = get_cpr_data(cpr)
-        # Use test data for now.
-        cpr_data = {
-            "relationer": [
-                {"cprnr": "0123456780", "relation": "aegtefaelle"},
-                {"cprnr": "1123456789", "relation": "barn"},
-                {"cprnr": "2123456789", "relation": "barn"},
-                {"cprnr": "3123456789", "relation": "barn"},
-                {"cprnr": "0000000000", "relation": "mor"},
-                {"cprnr": "0000000000", "relation": "far"},
-            ]
-        }
+        cpr_data = get_person_info(cpr)
+
         if not cpr_data:
             return Response(
                 {
