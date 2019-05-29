@@ -49,7 +49,7 @@ def get_cpr_data(cpr):
 
 def get_cpr_data_mock(cpr):
     """
-    Use test data in place of the real 'get_cpr_data_mock' for now.
+    Use test data in place of the real 'get_cpr_data' for now.
     """
     result = {
         "statsborgerskab": "5100",
