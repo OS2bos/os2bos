@@ -21,7 +21,6 @@ config["settings"] = {}
 # If a settings ini is defined, load it
 settings_name = os.getenv("DJANGO_SETTINGS_INI", None)
 if settings_name:  # pragma: no branch
-    settings_path = os.path.join(BASE_DIR, settings_name)
     config.read(settings_path)
 
 # use settings section as default
