@@ -14,31 +14,27 @@ import os
 import configparser
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-base_settings_path = os.path.join(BASE_DIR, "base.ini")
 
-# define defaults for ConfigParser
-defaults = {"BASE_DIR": BASE_DIR}
-config = configparser.ConfigParser(defaults=defaults)
-# load base settings from base.ini into the ConfigParser
-config.read(base_settings_path)
+config = configparser.ConfigParser()
+config["settings"] = {}
 
-# If another settings ini is defined, load it
+# If a settings ini is defined, load it
 settings_name = os.getenv("DJANGO_SETTINGS_INI", None)
 if settings_name:  # pragma: no branch
     settings_path = os.path.join(BASE_DIR, settings_name)
     config.read(settings_path)
 
 # use settings section as default
-default_config = config["settings"]
+settings = config["settings"]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = default_config.get("SECRET_KEY")
+SECRET_KEY = settings.get("SECRET_KEY", fallback="Not.a.secret")
 
 # SECURITY WARNING: don"t run with debug turned on in production!
-DEBUG = default_config.getboolean("DEBUG")
+DEBUG = settings.getboolean("DEBUG", fallback=False)
 
 ALLOWED_HOSTS = []
 
@@ -97,12 +93,14 @@ WSGI_APPLICATION = "bevillingsplatform.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": default_config.get("DATABASE_ENGINE"),
-        "NAME": default_config.get("DATABASE_NAME"),
-        "USER": default_config.get("DATABASE_USER"),
-        "PASSWORD": default_config.get("DATABASE_PASSWORD"),
-        "HOST": default_config.get("DATABASE_HOST"),
-        "PORT": default_config.get("DATABASE_PORT"),
+        "ENGINE": settings.get(
+            "DATABASE_ENGINE", fallback="django.db.backends.postgresql"
+        ),
+        "NAME": settings.get("DATABASE_NAME", fallback="bevillingsplatform"),
+        "USER": settings.get("DATABASE_USER", fallback=""),
+        "PASSWORD": settings.get("DATABASE_PASSWORD", fallback=""),
+        "HOST": settings.get("DATABASE_HOST", fallback=""),
+        "PORT": settings.getint("DATABASE_PORT", fallback=5432),
     }
 }
 
@@ -146,21 +144,21 @@ USE_TZ = True
 
 FORCE_SCRIPT_NAME = default_config.get("FORCE_SCRIPT_NAME")
 STATIC_URL = FORCE_SCRIPT_NAME + "/static/"
-STATIC_ROOT = default_config.get("STATIC_ROOT")
+STATIC_ROOT = settings.get(
+    "STATIC_ROOT", fallback=os.path.join(BASE_DIR, "/static")
+)
 
 # Serviceplatform service UUIDs
 SERVICEPLATFORM_UUIDS = {
-    "service_agreement": default_config.get(
-        "SERVICEPLATFORM_SERVICE_AGREEMENT"
-    ),
-    "user_system": default_config.get("SERVICEPLATFORM_USER_SYSTEM"),
-    "user": default_config.get("SERVICEPLATFORM_USER"),
-    "service": default_config.get("SERVICEPLATFORM_SERVICE"),
+    "service_agreement": settings.get("SERVICEPLATFORM_SERVICE_AGREEMENT"),
+    "user_system": settings.get("SERVICEPLATFORM_USER_SYSTEM"),
+    "user": settings.get("SERVICEPLATFORM_USER"),
+    "service": settings.get("SERVICEPLATFORM_SERVICE"),
 }
 
 # Serviceplatform Certificate
 
-SERVICEPLATFORM_CERTIFICATE_PATH = default_config.get(
+SERVICEPLATFORM_CERTIFICATE_PATH = settings.get(
     "SERVICEPLATFORM_CERTIFICATE_PATH"
 )
 
@@ -185,7 +183,9 @@ LOGGING = {
         "default": {
             "level": "DEBUG",
             "class": "logging.FileHandler",
-            "filename": "/logs/debug.log",
+            "filename": settings.get(
+                "LOG_FILE", fallback=os.path.join(BASE_DIR, "debug.log")
+            ),
         }
     },
     "loggers": {
@@ -194,9 +194,15 @@ LOGGING = {
 }
 
 # Email settings
-EMAIL_BACKEND = default_config.get("EMAIL_BACKEND")
-EMAIL_HOST_USER = default_config.get("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = default_config.get("EMAIL_HOST_PASSWORD")
-EMAIL_HOST = default_config.get("EMAIL_HOST")
-EMAIL_PORT = default_config.get("EMAIL_PORT")
-DEFAULT_FROM_EMAIL = default_config.get("DEFAULT_FROM_EMAIL")
+EMAIL_BACKEND = settings.get(
+    "EMAIL_BACKEND", fallback="django.core.mail.backends.smtp.EmailBackend"
+)
+EMAIL_HOST_USER = settings.get(
+    "EMAIL_HOST_USER", fallback="bevillingsplatform"
+)
+EMAIL_HOST_PASSWORD = settings.get("EMAIL_HOST_PASSWORD", fallback="")
+EMAIL_HOST = settings.get("EMAIL_HOST", fallback="")
+EMAIL_PORT = settings.getint("EMAIL_PORT", fallback=25)
+DEFAULT_FROM_EMAIL = settings.get(
+    "DEFAULT_FROM_EMAIL", fallback="admin@bevillingsplatform-test.magenta.dk"
+)
