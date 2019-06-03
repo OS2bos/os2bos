@@ -1,13 +1,14 @@
 from unittest import mock
 from django.urls import reverse
-from django.test import TestCase
+from .test_utils import AuthenticatedTestCase
 
 
-class TestRelatedPersonsViewSet(TestCase):
+class TestRelatedPersonsViewSet(AuthenticatedTestCase):
     def test_fetch_from_serviceplatformen_no_cpr(self):
         reverse_url = reverse("relatedperson-fetch-from-serviceplatformen")
-
+        self.client.login(username=self.username, password=self.password)
         response = self.client.get(reverse_url)
+
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(), {"errors": "Intet CPR nummer angivet"}
@@ -16,6 +17,7 @@ class TestRelatedPersonsViewSet(TestCase):
     @mock.patch("core.views.get_person_info", lambda cpr: None)
     def test_fetch_from_serviceplatformen_wrong_cpr(self):
         reverse_url = reverse("relatedperson-fetch-from-serviceplatformen")
+        self.client.login(username=self.username, password=self.password)
         response = self.client.get(reverse_url, data={"cpr": "1234567890"})
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
@@ -52,6 +54,7 @@ class TestRelatedPersonsViewSet(TestCase):
         }
         person_info_mock.return_value = person_info_data
         reverse_url = reverse("relatedperson-fetch-from-serviceplatformen")
+        self.client.login(username=self.username, password=self.password)
         response = self.client.get(reverse_url, data={"cpr": "1234567890"})
 
         self.assertEqual(response.status_code, 200)
