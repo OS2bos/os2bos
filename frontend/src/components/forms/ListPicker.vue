@@ -31,6 +31,7 @@
                     this.selection = this.selectedId
                 } else {
                     this.selection = this.default
+                    this.$emit('selection', this.default)
                 }
             },
             emitChange: function() {

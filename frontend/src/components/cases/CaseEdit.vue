@@ -64,17 +64,17 @@
 
             <fieldset>
                 <h3>Målgruppe:</h3>
-                <input id="inputRadio1" type="radio" name="radioButtonSet">
+                <input id="inputRadio1" type="radio" value="FAMILY_DEPT" v-model="cas.target_group" name="target-group" required>
                 <label for="inputRadio1">Familieafdelingen</label>
-                <input id="inputRadio2" type="radio" name="radioButtonSet">
+                <input id="inputRadio2" type="radio" value="DISABILITY_DEPT" v-model="cas.target_group" name="target-group" required>
                 <label for="inputRadio2">Handicapafdelingen</label>
             </fieldset>
 
             <fieldset>
                 <h3>Andet:</h3>
-                <input id="inputCheckbox1" type="checkbox" name="radioButtonSet">
+                <input id="inputCheckbox1" type="checkbox">
                 <label for="inputCheckbox1">Integrationsindsatsen</label>
-                <input id="inputCheckbox2" type="checkbox" name="radioButtonSet">
+                <input id="inputCheckbox2" type="checkbox">
                 <label for="inputCheckbox2">Tværgående ungeindsats</label>
             </fieldset>
 
@@ -160,7 +160,8 @@
                     acting_municipality: this.cas.acting_municipality,
                     residence_municipality: this.cas.residence_municipality,
                     district: this.cas.district,
-                    case_worker: this.cas.case_worker
+                    case_worker: this.cas.case_worker,
+                    target_group: this.cas.target_group
                 }
                 if (!this.create_mode) {
                     axios.patch(`/cases/${ this.cas.id }/`, data)
@@ -170,6 +171,7 @@
                     .catch(err => console.log(err))
                 } else {
                     data.sbsys_id = this.cas.sbsys_id
+                    data.case_worker = 'SAGSBEHANDLER NAVN TEST'
                     axios.post(`/cases/`, data)
                     .then(res => {
                         this.$router.push('/')
