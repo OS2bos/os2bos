@@ -25,6 +25,7 @@
         },
         created: function() {
             this.$store.dispatch('fetchMunis')
+            this.$store.dispatch('fetchDistricts')
         }
         
     }

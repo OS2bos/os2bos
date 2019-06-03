@@ -17,6 +17,9 @@ const getters = {
 const mutations = {
     setMunis (state, munis) {
         state.municipalities = munis
+    },
+    setDist (state, districts) {
+        state.districts = districts
     }
 }
 
@@ -27,7 +30,15 @@ const actions = {
             commit('setMunis', res.data)
         })
         .catch(err => console.log(err))
+    },
+    fetchDistricts: function({commit}) {
+        axios.get('/school_districts/')
+        .then(res => {
+            commit('setDist', res.data)
+        })
+        .catch(err => console.log(err))
     }
+
 }
 
 export default {

@@ -25,7 +25,7 @@
                 <dt>Team:</dt>
                 <dd>ikke implementeret</dd>
                 <dt>Distrikt:</dt>
-                <dd>{{ cas.district}}</dd>
+                <dd>{{ displayDistrictName(cas.district) }}</dd>
                 <dt>Leder:</dt>
                 <dd>ikke implementeret</dd>
             </dl>
@@ -52,7 +52,7 @@
     import CaseEdit from './CaseEdit.vue'
     import Appropriations from '../appropriations/AppropriationList.vue'
     import axios from '../http/Http.js'
-    import { id2name } from '../filters/Municipality.js'
+    import { municipalityId2name, districtId2name } from '../filters/Labels.js'
 
     export default {
 
@@ -93,7 +93,10 @@
                 this.update()
             },
             displayMuniName: function(id) {
-                return id2name(id)
+                return municipalityId2name(id)
+            },
+            displayDistrictName: function(id) {
+                return districtId2name(id)
             }
         },
         created: function() {
