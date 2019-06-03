@@ -109,7 +109,7 @@
             
             <fieldset>
                 <input type="submit" value="Gem">
-                <button class="cancel-btn" type="cancel">Annullér</button>
+                <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
             </fieldset>
             
         </form>
@@ -152,6 +152,13 @@
             changeDistrict: function(dist) {
                 this.cas.district = dist
             },
+            cancel: function() {
+                if (!this.create_mode) {
+                    this.$emit('close')
+                } else {
+                    this.$router.push('/')
+                }  
+            },
             saveChanges: function() {
                 let data = {
                     name: this.cas.name,
@@ -166,7 +173,7 @@
                 if (!this.create_mode) {
                     axios.patch(`/cases/${ this.cas.id }/`, data)
                     .then(res => {
-                        this.$emit('save', res.data)
+                        this.$emit('close', res.data)
                     })
                     .catch(err => console.log(err))
                 } else {

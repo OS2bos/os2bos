@@ -39,7 +39,7 @@
             </dl>
         </div>
 
-        <case-edit :case-obj="cas" v-if="edit_mode" @save="reload()" />
+        <case-edit :case-obj="cas" v-if="edit_mode" @close="reload()" />
 
         <appropriations :case-id="cas.id" />
 
