@@ -14,15 +14,15 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="a in acts" :key="a[0]">
+                <tr v-for="a in acts" :key="a.id">
                     <td>
                         <span :class="`status-${ a.status }`">{{ a.status }}</span>
                     </td>
-                    <td><router-link :to="`/activity/${ a.pk }`">{{ a.activity }}</router-link></td>
-                    <td>{{ a.payment.payee.name }}</td>
-                    <td>{{ new Date(a.startdate).toLocaleDateString() }}</td>
-                    <td>{{ new Date(a.enddate).toLocaleDateString() }}</td>
-                    <td>{{ a.payment.total_amount }}</td>
+                    <td><router-link :to="`/activity/${ a.id }`">{{ a.activity_type }}</router-link></td>
+                    <td>300578-2222 - ikke implementeret</td>
+                    <td>{{ displayDate(a.start_date) }}</td>
+                    <td>{{ displayDate(a.end_date) }}</td>
+                    <td>ikke implementeret</td>
                 </tr>
                 <tr>
                     <td></td>
@@ -31,7 +31,7 @@
                     <td></td>
                     <td style="text-align: right;">Pr. måned</td>
                     <td>
-                        {{ total_amounts}} kr.
+                        ikke implementeret kr.
                     </td>
                 </tr>
                 <tr>
@@ -41,7 +41,7 @@
                     <td></td>
                     <td style="text-align: right;">Samlet sum</td>
                     <td>
-                        <u>{{ total_amounts}} kr.</u>
+                        <u>ikke implementeret kr.</u>
                     </td>
                 </tr>
             </tbody>
@@ -53,6 +53,7 @@
 <script>
 
     import axios from '../http/Http.js'
+    import { json2js } from '../filters/Date.js'
 
     export default {
 
@@ -77,25 +78,29 @@
             }
         },
         methods: {
-            fetchActivities: function(appropriation_id) {
-                axios.get('../../activity-list-data.json')
+            update: function() {
+                this.fetchActivities(this.$route.params.id)
+            },
+            fetchActivities: function() {
+              axios.get(`/activities/?appropriations=${ this.apprId }`)
                 .then(res => {
                     this.acts = res.data
                 })
                 .catch(err => console.log(err))
             },
-            createAct: function() {
-                axios.post('/') // POST new empty activity
-                .then(res => {
-                    this.$router.push(`/activity/${ res.data.pk }`) // Navigate to new activity page
-                })
-                .catch(err => console.log(err))
+            displayDate: function(dt) {
+                return json2js(dt)
             }
+            // createAct: function() {
+            //     axios.post('/') // POST new empty activity
+            //     .then(res => {
+            //         this.$router.push(`/activity/${ res.data.pk }`) // Navigate to new activity page
+            //     })
+            //     .catch(err => console.log(err))
+            // }
         },
-        created: function() {
-            if (this.apprId) {
-                this.fetchActivities(this.apprId)
-            }
+       created: function() {
+            this.update()
         }
     }
     
@@ -118,13 +123,13 @@
         margin: 0 0 1rem;
     }
 
-    .activities .status-Bevilget {
+    .activities .status-GRANTED {
         background-color: var(--success);
         color: white;
         padding: .25rem;
     }
 
-    .activities .status-Forventet {
+    .activities .status-EXPECTED {
         background-color: var(--warning);
         color: white;
         padding: .25rem;
