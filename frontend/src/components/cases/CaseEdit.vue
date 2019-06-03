@@ -34,17 +34,32 @@
             <fieldset>
                 <h3>Kommune:</h3>
                 <label for="selectField1">Betalingskommune:</label>
-                <list-picker :dom-id="'selectField1'" :selected-id="cas.paying_municipality" @selection="changeMuni($event, 'paying_municipality')" :list="municipalities" />
+                <list-picker 
+                    :dom-id="'selectField1'" 
+                    :selected-id="cas.paying_municipality" 
+                    @selection="changeMuni($event, 'paying_municipality')" 
+                    :list="municipalities" 
+                    default="42" />
             </fieldset>
 
             <fieldset>
                 <label for="selectField2">Handlekommune:</label>
-                <list-picker :dom-id="'selectField2'" :selected-id="cas.acting_municipality" @selection="changeMuni($event, 'acting_municipality')" :list="municipalities" />
+                <list-picker 
+                    :dom-id="'selectField2'" 
+                    :selected-id="cas.acting_municipality" 
+                    @selection="changeMuni($event, 'acting_municipality')" 
+                    :list="municipalities" 
+                    default="42" />
             </fieldset>
 
             <fieldset>
                 <label for="selectField3">Bopælsskommune:</label>
-                <list-picker :dom-id="'selectField3'" :selected-id="cas.residence_municipality" @selection="changeMuni($event, 'residence_municipality')" :list="municipalities" />
+                <list-picker 
+                    :dom-id="'selectField3'" 
+                    :selected-id="cas.residence_municipality" 
+                    @selection="changeMuni($event, 'residence_municipality')" 
+                    :list="municipalities" 
+                    default="42" />
             </fieldset>
 
             <fieldset>
@@ -138,25 +153,24 @@
                 this.cas.district = dist
             },
             saveChanges: function() {
+                let data = {
+                    name: this.cas.name,
+                    cpr_number: this.cas.cpr_number,
+                    paying_municipality: this.cas.paying_municipality,
+                    acting_municipality: this.cas.acting_municipality,
+                    residence_municipality: this.cas.residence_municipality,
+                    district: this.cas.district,
+                    case_worker: this.cas.case_worker
+                }
                 if (!this.create_mode) {
-                    axios.patch(`/cases/${ this.cas.id }/`, {
-                        name: this.cas.name,
-                        cpr_number: this.cas.cpr_number,
-                        paying_municipality: this.cas.paying_municipality,
-                        acting_municipality: this.cas.acting_municipality,
-                        residence_municipality: this.cas.residence_municipality,
-                        district: this.cas.district
-                    })
+                    axios.patch(`/cases/${ this.cas.id }/`, data)
                     .then(res => {
                         this.$emit('save', res.data)
                     })
                     .catch(err => console.log(err))
                 } else {
-                    axios.post(`/cases/`, {
-                        sbsys_id: this.cas.sbsys_id,
-                        name: this.cas.name,
-                        cpr_number: this.cas.cpr_number
-                    })
+                    data.sbsys_id = this.cas.sbsys_id
+                    axios.post(`/cases/`, data)
                     .then(res => {
                         this.$router.push('/')
                     })

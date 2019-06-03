@@ -5,19 +5,20 @@
             {{ l.name }}
         </option>
     </select>
-    
+
 </template>
 
 <script>
 
     import axios from '../http/Http.js'
-    
+
     export default {
 
         props: [
             'domId',
             'selectedId',
-            'list'
+            'list',
+            'default'
         ],
         data: function(){
             return {
@@ -26,7 +27,11 @@
         },
         methods: {
             setSelected: function() {
-                this.selection = this.selectedId
+                if (this.selectedId) {
+                    this.selection = this.selectedId
+                } else {
+                    this.selection = this.default
+                }
             },
             emitChange: function() {
                 this.$emit('selection', this.selection)
