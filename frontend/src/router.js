@@ -5,6 +5,7 @@ import Case from './components/cases/Case.vue'
 import CaseEdit from './components/cases/CaseEdit.vue'
 import Assessment from './components/assessments/Assessment.vue'
 import Appropriation from './components/appropriations/Appropriation.vue'
+import AppropriationEdit from './components/appropriations/AppropriationEdit.vue'
 import Activity from './components/activities/Activity.vue'
 import Login from './components/auth/Login.vue'
 import store from './store.js'
@@ -37,6 +38,11 @@ const router = new Router({
             path: '/appropriation/:id',
             name: 'appropriation',
             component: Appropriation
+        },
+        {
+            path: '/appropriation-create/',
+            name: 'appropriation-create',
+            component: AppropriationEdit
         },
         {
             path: '/activity/:id',

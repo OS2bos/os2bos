@@ -141,9 +141,25 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-FORCE_SCRIPT_NAME = "/api"
+FORCE_SCRIPT_NAME = default_config.get("FORCE_SCRIPT_NAME")
 STATIC_URL = FORCE_SCRIPT_NAME + "/static/"
 STATIC_ROOT = default_config.get("STATIC_ROOT")
+
+# Serviceplatform service UUIDs
+SERVICEPLATFORM_UUIDS = {
+    "service_agreement": default_config.get(
+        "SERVICEPLATFORM_SERVICE_AGREEMENT"
+    ),
+    "user_system": default_config.get("SERVICEPLATFORM_USER_SYSTEM"),
+    "user": default_config.get("SERVICEPLATFORM_USER"),
+    "service": default_config.get("SERVICEPLATFORM_SERVICE"),
+}
+
+# Serviceplatform Certificate
+
+SERVICEPLATFORM_CERTIFICATE_PATH = default_config.get(
+    "SERVICEPLATFORM_CERTIFICATE_PATH"
+)
 
 REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": (
@@ -153,3 +169,27 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",
     ),
 }
+
+# Logging
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "default": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": "/logs/debug.log",
+        }
+    },
+    "loggers": {
+        "django": {"handlers": ["default"], "level": "INFO", "propagate": True}
+    },
+}
+
+# Email settings
+EMAIL_BACKEND = default_config.get("EMAIL_BACKEND")
+EMAIL_HOST_USER = default_config.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = default_config.get("EMAIL_HOST_PASSWORD")
+EMAIL_HOST = default_config.get("EMAIL_HOST")
+EMAIL_PORT = default_config.get("EMAIL_PORT")
+DEFAULT_FROM_EMAIL = default_config.get("DEFAULT_FROM_EMAIL")

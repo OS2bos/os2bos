@@ -119,6 +119,54 @@ function submitTestData() {
         .then(res => { postSuccess(res) })
         .catch(err => { postFail(err) })
 
+        axios.post('http://localhost:8000/api/activities/', {
+            "id": 3,
+            "revision": "",
+            "created": "2019-05-28T12:50:14.362135+02:00",
+            "modified": "2019-05-28T12:50:14.362135+02:00",
+            "user_created": "Morten Krog Jensen",
+            "user_modified": "Lilly Pardés",
+            "hostname_created": "",
+            "hostname_modified": "3569913b5d23",
+            "device_created": "",
+            "device_modified": "",
+            "status": "EXPECTED",
+            "start_date": "2019-05-28",
+            "end_date": "2019-11-08",
+            "activity_type": "Kørsel",
+            "service": 36,
+            "payment_plan": null,
+            "main_activity": null,
+            "modifies": null,
+            "appropriation": res.data.id
+        })
+        .then(res => { postSuccess(res) })
+        .catch(err => { postFail(err) })
+
+        axios.post('http://localhost:8000/api/activities/', {
+            "id": 2,
+            "revision": "",
+            "created": "2019-05-28T16:15:29.257103+02:00",
+            "modified": "2019-05-28T16:15:29.257103+02:00",
+            "user_created": "Ole Skipper",
+            "user_modified": "Mette Sørensen",
+            "hostname_created": "",
+            "hostname_modified": "635702a98058",
+            "device_created": "",
+            "device_modified": "",
+            "status": "GRANTED",
+            "start_date": "2019-05-27",
+            "end_date": "2019-10-22",
+            "activity_type": "Ungeindsatsen",
+            "service": 16,
+            "payment_plan": null,
+            "main_activity": null,
+            "modifies": null,
+            "appropriation": res.data.id
+        })
+        .then(res => { postSuccess(res) })
+        .catch(err => { postFail(err) })
+
     })
     .catch(err => { postFail(err) })
 
