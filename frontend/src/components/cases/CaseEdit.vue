@@ -64,13 +64,6 @@
             </fieldset>
 
             <fieldset>
-                <label for="selectField">Oprindeligt distrikt:</label>
-                <select id="selectField">
-                    <option>{{ cas.original_district}}</option>
-                </select>
-            </fieldset>
-
-            <fieldset>
                 <dt>Indsatstrappen:</dt>
                 <dd>{{ cas.effort_stairs }}</dd>
                 <dt>Skaleringstrappe:</dt>
@@ -81,7 +74,7 @@
                 <button @click="$router.push(`/assessment/${ cas.id }`)">Vurdering</button>
             </fieldset>
 
-            <fieldset>
+            <div>
                 <h3>Sagsbehandling:</h3>
                 <dl>
                     <dt>Sagsbehander:</dt>
@@ -90,16 +83,14 @@
                     <dd>ikke implementeret</dd>
                 </dl>
                 <fieldset>
-                <label for="selectField">Distrikt:</label>
-                <select id="selectField">
-                    <option>{{ cas.district }}</option>
-                </select>
+                    <label for="selectField4">Distrikt:</label>
+                    <list-picker :dom-id="'selectField4'" :selected-id="cas.district" @selection="changeDistrict" :list="districts" />
                 </fieldset>
                 <fieldset>
                     <dt>Leder:</dt>
                     <dd>ikke implementeret</dd>
                 </fieldset>
-            </fieldset>
+            </div>
             
             <fieldset>
                 <input type="submit" value="Gem">
@@ -134,11 +125,17 @@
         computed: {
             municipalities: function() {
                 return this.$store.getters.getMunis
+            },
+            districts: function() {
+                return this.$store.getters.getDistricts
             }
         },
         methods: {
             changeMuni: function(ev, type) {
                 this.cas[type] = ev
+            },
+            changeDistrict: function(dist) {
+                this.cas.district = dist
             },
             saveChanges: function() {
                 if (!this.create_mode) {
@@ -147,7 +144,8 @@
                         cpr_number: this.cas.cpr_number,
                         paying_municipality: this.cas.paying_municipality,
                         acting_municipality: this.cas.acting_municipality,
-                        residence_municipality: this.cas.residence_municipality
+                        residence_municipality: this.cas.residence_municipality,
+                        district: this.cas.district
                     })
                     .then(res => {
                         this.$emit('save', res.data)
