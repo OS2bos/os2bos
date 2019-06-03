@@ -31,11 +31,11 @@
             </dl>
             <dl style="flex: 1 0 33%;">
                 <dt>Betalingskommune:</dt>
-                <dd>{{ cas.paying_municipality }}</dd>
+                <dd>{{ displayMuniName(cas.paying_municipality) }}</dd>
                 <dt>Handlekommune:</dt>
-                <dd>{{ cas.acting_municipality }}</dd>
+                <dd>{{ displayMuniName(cas.acting_municipality) }}</dd>
                 <dt>Bopælsskommune:</dt>
-                <dd>{{ cas.residence_municipality }}</dd>
+                <dd>{{ displayMuniName(cas.residence_municipality) }}</dd>
             </dl>
         </div>
 
@@ -52,6 +52,7 @@
     import CaseEdit from './CaseEdit.vue'
     import Appropriations from '../appropriations/AppropriationList.vue'
     import axios from '../http/Http.js'
+    import { id2name } from '../filters/Municipality.js'
 
     export default {
 
@@ -90,6 +91,9 @@
             reload: function() {
                 this.edit_mode =  false
                 this.update()
+            },
+            displayMuniName: function(id) {
+                return id2name(id)
             }
         },
         created: function() {

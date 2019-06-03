@@ -23,9 +23,9 @@ function submitTestData() {
         "refugee_integration": true,
         "cross_department_measure": true,
         "district": "1",
-        "paying_municipality": "1",
-        "acting_municipality": "1",
-        "residence_municipality": "1"
+        "paying_municipality": "42",
+        "acting_municipality": "42",
+        "residence_municipality": "42"
     })
     .then(res => { 
 
@@ -67,9 +67,9 @@ function submitTestData() {
         "refugee_integration": false,
         "cross_department_measure": false,
         "district": "2",
-        "paying_municipality": "2",
-        "acting_municipality": "1",
-        "residence_municipality": "1"
+        "paying_municipality": "42",
+        "acting_municipality": "42",
+        "residence_municipality": "42"
     })
     .then(res => { 
 
@@ -103,9 +103,9 @@ function submitTestData() {
         "refugee_integration": false,
         "cross_department_measure": false,
         "district": "2",
-        "paying_municipality": "1",
-        "acting_municipality": "1",
-        "residence_municipality": "1"
+        "paying_municipality": "42",
+        "acting_municipality": "42",
+        "residence_municipality": "42"
     })
     .then(res => { 
         

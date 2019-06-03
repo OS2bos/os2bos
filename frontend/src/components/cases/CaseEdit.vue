@@ -34,23 +34,17 @@
             <fieldset>
                 <h3>Kommune:</h3>
                 <label for="selectField1">Betalingskommune:</label>
-                <select id="selectField1">
-                    <option>{{ cas.paying_municipality }}</option>
-                </select>
+                <list-picker :dom-id="'selectField1'" :selected-id="cas.paying_municipality" @selection="changeMuni($event, 'paying_municipality')" :list="municipalities" />
             </fieldset>
 
             <fieldset>
                 <label for="selectField2">Handlekommune:</label>
-                <select id="selectField2">
-                    <option>{{ cas.acting_municipality }}</option>
-                </select>
+                <list-picker :dom-id="'selectField2'" :selected-id="cas.acting_municipality" @selection="changeMuni($event, 'acting_municipality')" :list="municipalities" />
             </fieldset>
 
             <fieldset>
                 <label for="selectField3">Bopælsskommune:</label>
-                <select id="selectField3">
-                    <option>{{ cas.residence_municipality }}</option>
-                </select>
+                <list-picker :dom-id="'selectField3'" :selected-id="cas.residence_municipality" @selection="changeMuni($event, 'residence_municipality')" :list="municipalities" />
             </fieldset>
 
             <fieldset>
@@ -120,9 +114,13 @@
 <script>
 
     import axios from '../http/Http.js'
+    import ListPicker from '../forms/ListPicker.vue'
 
     export default {
 
+        components: {
+            ListPicker
+        },
         props: [
             'caseObj'
         ],
@@ -133,12 +131,23 @@
                 create_mode: true
             }
         },
+        computed: {
+            municipalities: function() {
+                return this.$store.getters.getMunis
+            }
+        },
         methods: {
+            changeMuni: function(ev, type) {
+                this.cas[type] = ev
+            },
             saveChanges: function() {
                 if (!this.create_mode) {
                     axios.patch(`/cases/${ this.cas.id }/`, {
                         name: this.cas.name,
-                        cpr_number: this.cas.cpr_number
+                        cpr_number: this.cas.cpr_number,
+                        paying_municipality: this.cas.paying_municipality,
+                        acting_municipality: this.cas.acting_municipality,
+                        residence_municipality: this.cas.residence_municipality
                     })
                     .then(res => {
                         this.$emit('save', res.data)
