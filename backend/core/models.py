@@ -304,7 +304,9 @@ class Activity(AuditModelMixin, models.Model):
         (EXPECTED_CHANGE, _("forventning")),
     )
 
-    activity_type = models.CharField(max_length=128, verbose_name=_("type"), choices=type_choices)
+    activity_type = models.CharField(
+        max_length=128, verbose_name=_("type"), choices=type_choices
+    )
 
     payment_plan = models.OneToOneField(
         PaymentSchedule,
