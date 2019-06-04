@@ -1,7 +1,9 @@
 <template>
     <section class="case">
         <form @submit.prevent="saveChanges()">
-            <h1>Tilknyt/Redigér hovedsag</h1>
+            
+            <h1 v-if="create_mode">Tilknyt hovedsag</h1>
+            <h1 v-else>Redigér hovedsag</h1>
             
             <fieldset>
                 <label for="field-sbsys-id">SBSYS Hovedsag:</label>
@@ -72,9 +74,9 @@
 
             <fieldset>
                 <h3>Andet:</h3>
-                <input id="inputCheckbox1" type="checkbox">
+                <input id="inputCheckbox1" type="checkbox" v-model="cas.refugee_integration">
                 <label for="inputCheckbox1">Integrationsindsatsen</label>
-                <input id="inputCheckbox2" type="checkbox">
+                <input id="inputCheckbox2" type="checkbox" v-model="cas.cross_department_measure">
                 <label for="inputCheckbox2">Tværgående ungeindsats</label>
             </fieldset>
 
@@ -168,7 +170,9 @@
                     residence_municipality: this.cas.residence_municipality,
                     district: this.cas.district,
                     case_worker: this.cas.case_worker,
-                    target_group: this.cas.target_group
+                    target_group: this.cas.target_group,
+                    refugee_integration: this.cas.refugee_integration,
+                    cross_department_measure: this.cas.cross_department_measure
                 }
                 if (!this.create_mode) {
                     axios.patch(`/cases/${ this.cas.id }/`, data)

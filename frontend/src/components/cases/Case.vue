@@ -18,6 +18,15 @@
                 <dd>ikke implementeret</dd>
                 <dt>Skaleringstrappe:</dt>
                 <dd>ikke implementeret</dd>
+                <dt>Målgruppe:</dt>
+                <dd>
+                    <span v-if="cas.target_group === 'DISABILITY_DEPT'">
+                        Handicapafdelingen
+                    </span>
+                    <span v-if="cas.target_group === 'FAMILY_DEPT'">
+                        Familieafdelingen
+                    </span>
+                </dd>
             </dl>
             <dl style="flex: 1 0 33%;">
                 <dt>Sagsbehander:</dt>
@@ -36,6 +45,17 @@
                 <dd>{{ displayMuniName(cas.acting_municipality) }}</dd>
                 <dt>Bopælsskommune:</dt>
                 <dd>{{ displayMuniName(cas.residence_municipality) }}</dd>
+                <template v-if="cas.cross_department_measure || cas.refugee_integration">
+                    <dt>Indsatser:</dt>
+                    <dd>
+                        <div v-if="cas.cross_department_measure">
+                            Tværgående ungeindsats
+                        </div>
+                        <div v-if="cas.refugee_integration">
+                            Integrationsindsatsen
+                        </div>
+                    </dd>
+                </template>
             </dl>
         </div>
 
