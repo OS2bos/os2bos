@@ -389,3 +389,22 @@ class ServiceRange(models.Model):
     """Class containing all the service providers for each service.
 
     Also contains price information etc."""
+
+
+class Account(models.Model):
+    number = models.CharField(max_length=128)
+    activity_catalog = models.ForeignKey(
+        ActivityCatalog, null=False, on_delete=models.CASCADE
+    )
+    section = models.ForeignKey(Sections, null=False, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.number} - {self.activity_catalog} - {self.section}"
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["activity_catalog", "section"],
+                name="unique_account_number",
+            )
+        ]
