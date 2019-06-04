@@ -25,21 +25,21 @@
                 <dt>Team:</dt>
                 <dd>ikke implementeret</dd>
                 <dt>Distrikt:</dt>
-                <dd>{{ cas.district}}</dd>
+                <dd>{{ displayDistrictName(cas.district) }}</dd>
                 <dt>Leder:</dt>
                 <dd>ikke implementeret</dd>
             </dl>
             <dl style="flex: 1 0 33%;">
                 <dt>Betalingskommune:</dt>
-                <dd>{{ cas.paying_municipality }}</dd>
+                <dd>{{ displayMuniName(cas.paying_municipality) }}</dd>
                 <dt>Handlekommune:</dt>
-                <dd>{{ cas.acting_municipality }}</dd>
+                <dd>{{ displayMuniName(cas.acting_municipality) }}</dd>
                 <dt>Bopælsskommune:</dt>
-                <dd>{{ cas.residence_municipality }}</dd>
+                <dd>{{ displayMuniName(cas.residence_municipality) }}</dd>
             </dl>
         </div>
 
-        <case-edit :case-obj="cas" v-if="edit_mode" @save="reload()" />
+        <case-edit :case-obj="cas" v-if="edit_mode" @close="reload()" />
 
         <appropriations :case-id="cas.id" />
 
@@ -52,6 +52,7 @@
     import CaseEdit from './CaseEdit.vue'
     import Appropriations from '../appropriations/AppropriationList.vue'
     import axios from '../http/Http.js'
+    import { municipalityId2name, districtId2name } from '../filters/Labels.js'
 
     export default {
 
@@ -90,6 +91,12 @@
             reload: function() {
                 this.edit_mode =  false
                 this.update()
+            },
+            displayMuniName: function(id) {
+                return municipalityId2name(id)
+            },
+            displayDistrictName: function(id) {
+                return districtId2name(id)
             }
         },
         created: function() {

@@ -18,10 +18,16 @@
     import AppFooter from './components/footer/Footer.vue'
 
     export default {
+
         components: {
             AppHeader,
             AppFooter
+        },
+        created: function() {
+            this.$store.dispatch('fetchMunis')
+            this.$store.dispatch('fetchDistricts')
         }
+        
     }
 
 </script>
