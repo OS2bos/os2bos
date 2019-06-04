@@ -26,6 +26,7 @@
         created: function() {
             this.$store.dispatch('fetchMunis')
             this.$store.dispatch('fetchDistricts')
+            this.$store.dispatch('fetchSections')
         }
         
     }

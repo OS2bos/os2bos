@@ -9,12 +9,10 @@
             </fieldset>
             <fieldset>
                 <label for="field-lawref">Bevilling efter §</label>
-                <select v-model="appr.section" id="field-lawref">
-                    <option>6 - Får og klipning af får</option>
-                    <option>853 - Geder</option>
-                    <option>12 - hestpasning</option>
-                    <option>12 - Girafpasning</option>
-                    <option>23 - tigre</option>
+                <select id="field-lawref" class="listpicker" v-model="appr.section">
+                    <option v-for="s in sections" :value="s.id" :key="s.id">
+                        {{ s.paragraph }} {{ s.kle_number }} {{ s.text }}
+                    </option>
                 </select>
             </fieldset>
             <fieldset>
@@ -41,7 +39,15 @@
                 create_mode: true
             }
         },
+        computed: {
+            sections: function() {
+                return this.$store.getters.getSections
+            }
+        },
         methods: {
+            changeSection: function(section_id) {
+                this.appr.section = section_id
+            },
             saveChanges: function() {
                 if (!this.create_mode) {
                     axios.patch(`/appropriations/${ this.appr.id }/`, {

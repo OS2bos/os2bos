@@ -41,7 +41,7 @@
             <div class="sagslaw appr-grid-box">
                 <dl> 
                     <dt>Bevilges efter §</dt>
-                    <dd>{{ appr.section }}</dd>
+                    <dd>{{ displaySection(appr.section) }}</dd>
                 </dl>
             </div>
         </template>
@@ -74,6 +74,7 @@
     import ActivityList3 from '../activities/ActivityList3.vue'
     import ActivityList4 from '../activities/ActivityList4.vue'
     import AppropriationEdit from './AppropriationEdit.vue'
+    import { sectionId2name } from '../filters/Labels.js'
 
     export default {
 
@@ -92,6 +93,9 @@
             }
         },
         methods: {
+            displaySection: function(id) {
+                return sectionId2name(id)
+            },
             fetchAppr: function(id) {
                 axios.get(`/appropriations/${ id }`)
                 .then(res => {
