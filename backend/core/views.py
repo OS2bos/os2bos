@@ -124,6 +124,7 @@ class ActivityCatalogViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ActivityCatalog.objects.all()
     serializer_class = ActivityCatalogSerializer
 
+
 class AccountViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
