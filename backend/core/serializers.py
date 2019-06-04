@@ -11,6 +11,7 @@ from core.models import (
     SchoolDistrict,
     Sections,
     ActivityCatalog,
+    HistoricalCase,
 )
 
 
@@ -18,6 +19,18 @@ class CaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Case
         fields = "__all__"
+
+
+class HistoricalCaseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HistoricalCase
+        fields = (
+            "case_worker",
+            "effort_step",
+            "scaling_step",
+            "history_date",
+            "history_user",
+        )
 
 
 class AppropriationSerializer(serializers.ModelSerializer):
