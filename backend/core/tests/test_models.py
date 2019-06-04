@@ -6,6 +6,7 @@ from core.models import (
     SchoolDistrict,
     Sections,
     ActivityCatalog,
+    Account,
     FAMILY_DEPT,
 )
 
@@ -51,3 +52,26 @@ class ActivityCatalogTestCase(TestCase):
             str(catalog),
             "010001 - Betaling til andre kommuner/region for specialtandpleje",
         )
+
+
+class AccountTestCase(TestCase):
+    def test_account_str(self):
+        sections = Sections.objects.create(
+            paragraph="ABL-105-2",
+            kle_number="27.45.04",
+            text="Lov om almene boliger",
+            allowed_for_steps=[],
+            target_group=FAMILY_DEPT,
+            law_text_name="Lov om almene boliger",
+        )
+        catalog = ActivityCatalog.objects.create(
+            name="Betaling til andre kommuner/region for specialtandpleje",
+            activity_id="010001",
+            max_tolerance_in_dkk=5000,
+            max_tolerance_in_percent=10,
+        )
+        account = Account.objects.create(
+            number="123456", section=sections, account_catalog=catalog
+        )
+
+        self.assertEqual(str(account), f"123456 - {catalog} - {sections}")
