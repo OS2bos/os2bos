@@ -2,7 +2,6 @@ from core.models import Case, Municipality, SchoolDistrict
 
 
 class CaseMixin:
-
     @staticmethod
     def create_case():
         municipality = Municipality.objects.create(name="København")
