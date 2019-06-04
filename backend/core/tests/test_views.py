@@ -1,6 +1,7 @@
 from unittest import mock
 from django.urls import reverse
 from django.test import TestCase
+from core.tests.testing_mixins import CaseMixin
 
 
 class TestRelatedPersonsViewSet(TestCase):
@@ -78,3 +79,31 @@ class TestRelatedPersonsViewSet(TestCase):
             },
         ]
         self.assertEqual(response.json(), expected_format)
+
+
+class TestCaseViewSet(TestCase, CaseMixin):
+    def test_history_action_no_history(self):
+        case = self.create_case()
+        reverse_url = reverse("case-history", kwargs={"pk": case.pk})
+
+        response = self.client.get(reverse_url)
+        self.assertEqual(len(response.json()), 1)
+        self.assertEqual(response.json()[0]["scaling_step"], 1)
+
+    def test_history_action_changed_scaling_steps(self):
+        case = self.create_case()
+        # Change scaling steps twice.
+        case.scaling_step = 5
+        case.save()
+        case.scaling_step = 2
+        case.save()
+
+        reverse_url = reverse("case-history", kwargs={"pk": case.pk})
+
+        response = self.client.get(reverse_url)
+
+        self.assertEqual(len(response.json()), 3)
+        # Assert history of scaling steps are preserved.
+        self.assertCountEqual(
+            [x["scaling_step"] for x in response.json()], [5, 2, 1]
+        )
