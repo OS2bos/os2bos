@@ -169,7 +169,9 @@ class Case(AuditModelMixin, models.Model):
     cross_department_measure = models.BooleanField(
         verbose_name=_("tværgående ungeindsats"), default=False
     )
-
+    # We only need to store historical records of
+    # effort_step, scaling_step, case_worker,
+    # thus we can exclude everything else.
     history = HistoricalRecords(
         excluded_fields=[
             "refugee_integration",
