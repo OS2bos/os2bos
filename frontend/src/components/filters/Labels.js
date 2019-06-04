@@ -36,8 +36,21 @@ function activityId2name(id) {
     }
 }
 
+function sectionId2name(id) {
+    const section_list = store.getters.getSections
+    if (section_list) {
+        let sec = section_list.find(function(element) {
+            return element.id === parseInt(id);
+        })
+        return `${ sec.paragraph } ${ sec.kle_number } ${ sec.text }`
+    } else {
+        return 'Ikke tilgængelig'
+    }
+}
+
 export {
     municipalityId2name, 
     districtId2name,
-    activityId2name
+    activityId2name,
+    sectionId2name
 }

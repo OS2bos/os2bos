@@ -3,7 +3,8 @@ import axios from '../components/http/Http.js'
 const state = {
     municipalities: null,
     districts: null,
-    activities: null
+    activities: null,
+    sections: null
 }
 
 const getters = {
@@ -15,6 +16,9 @@ const getters = {
     },
     getActivities (state) {
         return state.activities ? state.activities : false
+    },
+    getSections (state) {
+        return state.sections ? state.sections : false
     }
 }
 
@@ -27,6 +31,9 @@ const mutations = {
     },
     setAct (state, activities) {
         state.activities = activities
+    },
+    setSections (state, sections) {
+        state.sections = sections
     }
 }
 
@@ -49,6 +56,13 @@ const actions = {
         axios.get('/activity_catalogs/')
         .then(res => {
             commit('setAct', res.data)
+        })
+        .catch(err => console.log(err))
+    },
+    fetchSections: function({commit}) {
+        axios.get('/sections/')
+        .then(res => {
+            commit('setSections', res.data)
         })
         .catch(err => console.log(err))
     }

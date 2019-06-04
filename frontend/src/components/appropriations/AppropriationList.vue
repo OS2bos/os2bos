@@ -5,7 +5,7 @@
             <h1>Foranstaltninger</h1>
             <button class="appropriation-create-btn" @click="$router.push('approriation-create')">+ Opret bevillingsskrivelse</button>
         </header>
-        <table class="appropriation-list">
+        <table class="appropriation-list" v-if="apprs.length > 0">
             <thead>
                 <tr>
                     <th>Foranstaltningssag</th>
@@ -47,6 +47,7 @@
                 </tr>
             </tbody>
         </table>
+        <p v-if="apprs.length < 1">Der er endnu ingen bevillingsskrivelser</p>
     </section>
 
 </template>
