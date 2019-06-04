@@ -18,6 +18,15 @@
                 <dd>ikke implementeret</dd>
                 <dt>Skaleringstrappe:</dt>
                 <dd>ikke implementeret</dd>
+                <dt>Målgruppe:</dt>
+                <dd>
+                    <span v-if="cas.target_group === 'DISABILITY_DEPT'">
+                        Handicapafdelingen
+                    </span>
+                    <span v-if="cas.target_group === 'FAMILY_DEPT'">
+                        Familieafdelingen
+                    </span>
+                </dd>
             </dl>
             <dl style="flex: 1 0 33%;">
                 <dt>Sagsbehander:</dt>
