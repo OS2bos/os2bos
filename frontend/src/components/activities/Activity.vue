@@ -17,7 +17,7 @@
             <dl>
                 <dt>Status</dt>
                 <dd>
-                    <div :class="`status-${ act.status }`">{{ act.status }}</div>
+                    <span :class="`status-${ act.status }`">{{ act.status }}</span>
                 </dd>
                 <dt>Type</dt>
                 <dd>
@@ -27,7 +27,7 @@
                     <div v-if="!act.is_single_payment">Følgeydelse</div>
                 </dd>
                 <dt>Bevilling efter </dt>
-                <dd>ikke implementeret</dd>
+                <dd>{{ appr.section }}</dd>
                 <dt>Aktivitet</dt>
                 <dd>{{ act.activity_type }}</dd>
                 <dt>Startdato</dt>
@@ -87,6 +87,7 @@
         data: function() {
             return {
                 act: null,
+                appr: null,
                 show_edit: false
             }
         },
@@ -95,6 +96,10 @@
                 axios.get(`/activities/${ id }`)
                 .then(res => {
                     this.act = res.data
+
+                axios.get(`/appropriations/${ id }`)
+                .then(resp => {
+                    this.appr = resp.data
                     this.$store.commit('setBreadcrumb', [
                         {
                             link: '/',
@@ -113,6 +118,7 @@
                             title: `${ this.act.activity_type }`
                         }
                     ])
+                })
                 })
                 .catch(err => console.log(err))
             },
@@ -148,14 +154,12 @@
     }
 
     .activity .status-GRANTED {
-        max-width: 6rem;
         background-color: var(--success);
         color: white;
         padding: .25rem;
     }
 
     .activity .status-EXPECTED {
-        max-width: 6rem;
         background-color: var(--warning);
         color: white;
         padding: .25rem;

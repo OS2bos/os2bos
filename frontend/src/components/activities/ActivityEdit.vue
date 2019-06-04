@@ -1,14 +1,13 @@
 <template>
-
     <article class="activity-edit">
         <form @submit.prevent="saveChanges()">
         <h1>Opret/Redigér akvititet</h1>
             <fieldset>
                 <legend>Status</legend>
-                <input type="radio" id="field-status-true" :value="act.status === 'GRANTED'">
-                <label for="field-status-true">Bevilling</label>
-                <input type="radio" id="field-status-false" :value="act.status === 'EXPECTED'">
-                <label for="field-status-false">Forventning</label>
+                <input type="radio" id="field-status-granted" :value="act.status === 'GRANTED'">
+                <label for="field-status-granted">Bevilling</label>
+                <input type="radio" id="field-status-expected" :value="act.status === 'EXPECTED'">
+                <label for="field-status-expected">Forventning</label>
             </fieldset>
             <fieldset>
                 <legend>Type</legend>
@@ -19,7 +18,7 @@
             </fieldset>
             <fieldset>
                 <strong>Bevilling efter §</strong>
-                <span>{{ act.activity_type }}</span>
+                <span> ikke implementeret</span>
             </fieldset>
             <fieldset>
                 <label>Aktivitet</label>
@@ -113,6 +112,7 @@
             return {
                 act_data: {},
                 act: {},
+                appr: null,
                 create_mode: true
             }
         },
