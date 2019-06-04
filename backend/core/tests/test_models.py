@@ -71,7 +71,7 @@ class AccountTestCase(TestCase):
             max_tolerance_in_percent=10,
         )
         account = Account.objects.create(
-            number="123456", section=sections, catalog=catalog
+            number="123456", section=sections, activity_catalog=catalog
         )
 
         self.assertEqual(str(account), f"123456 - {catalog} - {sections}")
