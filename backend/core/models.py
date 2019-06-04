@@ -173,13 +173,15 @@ class Appropriation(AuditModelMixin, models.Model):
     SECTION_HEAD = "SECTION_HEAD"
     TEAM_MEETING = "TEAM_MEETING"
     SPECIALIST = "SPECIALIST"
+    YOUTH_CRIME_BOARD = "YOUTH_CRIME_BOARD"
 
     approval_level_choices = (
         (CASE_WORKER, _("egenkompetence")),
-        (TEAM_LEADER, _("teamleder")),
-        (SECTION_HEAD, _("afsnitsleder")),
         (TEAM_MEETING, _("teammøde")),
         (SECTION_HEAD, _("fagspecialist")),
+        (TEAM_LEADER, _("teamleder")),
+        (SECTION_HEAD, _("afsnitsleder")),
+        (YOUTH_CRIME_BOARD, _("ungdomskriminalitetsnævnet")),
     )
     approval_level = models.CharField(
         verbose_name=_("bevilling foretaget på niveau"),
