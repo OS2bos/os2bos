@@ -10,7 +10,7 @@ from core.models import (
     RelatedPerson,
     SchoolDistrict,
     Sections,
-    ActivityCatalog
+    ActivityCatalog,
 )
 
 for klass in (
