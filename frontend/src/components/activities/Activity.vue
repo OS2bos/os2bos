@@ -4,7 +4,7 @@
         <header class="activity-header">
             <h1>
                 <i class="material-icons">style</i>
-                Udgift til {{ act.activity_type }}
+                Udgift til {{ activityId2name(act.id) }}
             </h1>
             <button @click="show_edit = !show_edit" class="act-edit-btn">Redigér</button>
         </header>
@@ -29,7 +29,7 @@
                 <dt>Bevilling efter </dt>
                 <dd>{{ appr.section }}</dd>
                 <dt>Aktivitet</dt>
-                <dd>{{ act.activity_type }}</dd>
+                <dd>{{ activityId2name(act.id) }}</dd>
                 <dt>Startdato</dt>
                 <dd>{{ displayDate(act.start_date) }}</dd>
                 <dt>Slutdato</dt>
@@ -60,7 +60,7 @@
                 <dt>ID</dt>
                 <dd>ikke implementeret</dd>
                 <dt>Navn</dt>
-                <dd>{{ act.user_created }}</dd>
+                <dd>ikke implementeret</dd>
                 <dt>Betalingsmåde</dt>
                 <dd>
                     <span>
@@ -78,6 +78,7 @@
     import axios from '../http/Http.js'
     import ActivityEdit from './ActivityEdit.vue'
     import { json2js } from '../filters/Date.js'
+    import { activityId2name } from '../filters/Labels.js'
 
     export default {
 
@@ -115,7 +116,7 @@
                         },
                         {
                             link: false,
-                            title: `${ this.act.activity_type }`
+                            title: `${ activityId2name(this.act.id) }`
                         }
                     ])
                 })
@@ -127,6 +128,9 @@
             },
             displayDate: function(dt) {
                 return json2js(dt)
+            },
+            activityId2name: function(id) {
+                return activityId2name(id)
             }
         },
         created: function() {

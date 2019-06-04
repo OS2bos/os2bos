@@ -1,12 +1,12 @@
 <template>
     <article class="activity-edit">
         <form @submit.prevent="saveChanges()">
-        <h1>Opret/Redigér akvititet</h1>
+        <h1>Opret/Redigér Aktivitet</h1>
             <fieldset>
                 <legend>Status</legend>
-                <input type="radio" id="field-status-granted" :value="act.status === 'GRANTED'">
+                <input type="radio" id="field-status-granted" value="GRANTED" v-model="act.status">
                 <label for="field-status-granted">Bevilling</label>
-                <input type="radio" id="field-status-expected" :value="act.status === 'EXPECTED'">
+                <input type="radio" id="field-status-expected" value="EXPECTED" v-model="act.status">
                 <label for="field-status-expected">Forventning</label>
             </fieldset>
             <fieldset>
@@ -21,12 +21,8 @@
                 <span> ikke implementeret</span>
             </fieldset>
             <fieldset>
-                <label>Aktivitet</label>
-                <select v-model="act.activity_type">
-                    <option value="Plejefamilier eksl. vederlag">Plejefamilier eksl. vederlag</option>
-                    <option value="Kørsel">Kørsel</option>
-                    <option value="Ungeindsatsen">Ungeindsatsen</option>
-                </select>
+                <label for="selectField">Aktivitet</label>
+                <list-picker :dom-id="'selectField'" :selected-id="act.id" @selection="changeActivity" :list="activities" />
             </fieldset>
             <fieldset>
                 <label for="field-startdate">Startdato</label>
@@ -39,7 +35,7 @@
             <hr>
             <fieldset>
                 <label for="field-cost">Bevilget beløb</label>
-                <input type="number" id="field-cost">
+                <input type="number" id="field-cost" value="0">
             </fieldset>
             <fieldset>
                 <legend>Udgiftstype</legend>
@@ -71,11 +67,11 @@
                         <template>CVR-nr </template>
                         <template>Reference</template>
                     </label>
-                    <input type="text" id="field-payment-id">
+                    <input type="text" id="field-payment-id" value="Ukendt">
                 </fieldset>
                 <fieldset>
                     <label for="field-payment-name">Navn</label>
-                    <input type="text" id="field-payment-name" :value="act.user_created">
+                    <input type="text" id="field-payment-name" value="Ukendt">
                 </fieldset>
                 <fieldset>
                     <legend>Betalingsmåde</legend>
@@ -102,21 +98,31 @@
 <script>
 
     import axios from '../http/Http.js'
+    import ListPicker from '../forms/ListPicker.vue'
 
     export default {
 
+        components: {
+            ListPicker
+        },
         props: [
             'activityObj'
         ],
         data: function() {
             return {
-                act_data: {},
                 act: {},
-                appr: null,
                 create_mode: true
             }
         },
+        computed: {
+            activities: function() {
+                return this.$store.getters.getActivities
+            }
+        },
         methods: {
+            changeActivity: function(act) {
+                this.act.id = act
+            },
             saveChanges: function() {
                 if (!this.create_mode) {
                     axios.patch(`/activities/${ this.activityObj.id }/`, {

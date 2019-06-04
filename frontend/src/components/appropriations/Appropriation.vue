@@ -30,11 +30,11 @@
                     <dt>Sagspart</dt>
                     <dd>{{ cas.cpr_number }}, {{ cas.name }}</dd>
                     <dt>Betalingskommune</dt>
-                    <dd>{{ cas.paying_municipality }}</dd>
+                    <dd>{{ displayMuniName(cas.paying_municipality) }}</dd>
                     <dt>Handlekommune</dt>
-                    <dd>{{ cas.acting_municipality }}</dd>
+                    <dd>{{ displayMuniName(cas.acting_municipality) }}</dd>
                     <dt>Bopælskommune</dt>
-                    <dd>{{ cas.residence_municipality }}</dd>
+                    <dd>{{ displayMuniName(cas.residence_municipality) }}</dd>
                 </dl>
             </div>
             
@@ -74,6 +74,7 @@
     import ActivityList3 from '../activities/ActivityList3.vue'
     import ActivityList4 from '../activities/ActivityList4.vue'
     import AppropriationEdit from './AppropriationEdit.vue'
+    import { municipalityId2name, districtId2name } from '../filters/Labels.js'
 
     export default {
 
@@ -121,6 +122,12 @@
             },
             reload: function() {
                 this.show_edit =  false
+            },
+            displayMuniName: function(id) {
+                return municipalityId2name(id)
+            },
+            displayDistrictName: function(id) {
+                return districtId2name(id)
             }
         },
         created: function() {

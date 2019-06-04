@@ -18,8 +18,8 @@
                     <td>
                         <span :class="`status-${ a.status }`">{{ a.status }}</span>
                     </td>
-                    <td><router-link :to="`/activity/${ a.id }`">{{ a.activity_type }}</router-link></td>
-                    <td>300578-2222 - ikke implementeret</td>
+                    <td><router-link :to="`/activity/${ a.id }`">{{ activityId2name(a.id) }}</router-link></td>
+                    <td>300578-2222 - Ukendt</td>
                     <td>{{ displayDate(a.start_date) }}</td>
                     <td>{{ displayDate(a.end_date) }}</td>
                     <td>ikke implementeret</td>
@@ -54,6 +54,7 @@
 
     import axios from '../http/Http.js'
     import { json2js } from '../filters/Date.js'
+    import { activityId2name } from '../filters/Labels.js'
 
     export default {
 
@@ -65,24 +66,12 @@
                 acts: null   
             }
         },
-        computed: {
-            total_amounts: function() {
-                function getTotal(total, act) {
-                    console.log(total)
-                    console.log(act.payment.total_amount)
-                    return total + act.payment.total_amount
-                }
-                if (this.acts) {
-                    return this.acts.reduce(getTotal, 0)
-                }
-            }
-        },
         methods: {
             update: function() {
                 this.fetchActivities(this.$route.params.id)
             },
             fetchActivities: function() {
-              axios.get(`/activities/?appropriations=${ this.apprId }`)
+              axios.get(`/activities/?appropriation=${ this.apprId }`)
                 .then(res => {
                     this.acts = res.data
                 })
@@ -90,14 +79,10 @@
             },
             displayDate: function(dt) {
                 return json2js(dt)
+            },
+            activityId2name: function(id) {
+                return activityId2name(id)
             }
-            // createAct: function() {
-            //     axios.post('/') // POST new empty activity
-            //     .then(res => {
-            //         this.$router.push(`/activity/${ res.data.pk }`) // Navigate to new activity page
-            //     })
-            //     .catch(err => console.log(err))
-            // }
         },
        created: function() {
             this.update()
