@@ -147,18 +147,4 @@
         margin: 0 1rem;
     }
 
-    .activity .status-GRANTED {
-        max-width: 6rem;
-        background-color: var(--success);
-        color: white;
-        padding: .25rem;
-    }
-
-    .activity .status-EXPECTED {
-        max-width: 6rem;
-        background-color: var(--warning);
-        color: white;
-        padding: .25rem;
-    }
-
 </style>

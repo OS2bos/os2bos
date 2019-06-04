@@ -29,7 +29,7 @@
                     <td>ikke implementeret</td>
                     <td>§ {{ displaySection(a.section) }}</td>
                     <td>ikke implementeret</td>
-                    <td><span class="status">{{ a.status }}</span></td>
+                    <td><div v-html="statusLabel(a.status)"></div></td>
                     <td>{{ displayDate(a.created) }}</td>
                     <td>{{ displayDate(a.modified) }}</td>
                     <td style="text-align: right">ikke implementeret</td>
@@ -55,7 +55,7 @@
 
     import axios from '../http/Http.js'
     import { json2js } from '../filters/Date.js'
-    import { sectionId2name } from '../filters/Labels.js'
+    import { sectionId2name, displayStatus } from '../filters/Labels.js'
 
     export default {
 
@@ -90,6 +90,9 @@
             },
             displaySection: function(id) {
                 return sectionId2name(id)
+            },
+            statusLabel: function(status) {
+                return displayStatus(status)
             }
         },
         created: function() {
