@@ -10,7 +10,7 @@
         </header>
 
         <div v-if="show_edit">
-            <appropriation-edit :appr-obj="appr" v-if="show_edit" @save="reload()" />
+            <appropriation-edit :appr-obj="appr" v-if="show_edit" @close="update()" />
         </div>
 
         <div class="appr-grid" v-if="cas">
@@ -93,6 +93,10 @@
             }
         },
         methods: {
+            update: function() {
+                this.show_edit =  false
+                this.fetchAppr(this.$route.params.id)
+            },
             displaySection: function(id) {
                 return sectionId2name(id)
             },
@@ -122,13 +126,10 @@
                     })
                 })
                 .catch(err => console.log(err))
-            },
-            reload: function() {
-                this.show_edit =  false
             }
         },
         created: function() {
-            this.fetchAppr(this.$route.params.id)
+            this.update()
         }
     }
     
