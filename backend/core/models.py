@@ -170,7 +170,20 @@ class Case(AuditModelMixin, models.Model):
         verbose_name=_("tværgående ungeindsats"), default=False
     )
 
-    history = HistoricalRecords()
+    history = HistoricalRecords(
+        excluded_fields=[
+            "refugee_integration",
+            "cross_department_measure",
+            "target_group",
+            "residence_municipality",
+            "acting_municipality",
+            "paying_municipality",
+            "district",
+            "name",
+            "cpr_number",
+            "sbsys_id",
+        ]
+    )
 
 
 class Appropriation(AuditModelMixin, models.Model):
