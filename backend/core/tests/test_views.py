@@ -3,6 +3,15 @@ from django.urls import reverse
 from .test_utils import AuthenticatedTestCase
 
 
+class TestCaseViewSet(AuthenticatedTestCase):
+    def test_simple_post(self):
+        url = "/cases/"
+        json = {}
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.post(url, json)
+        self.assertEqual(response.status_code, 200)
+
+
 class TestRelatedPersonsViewSet(AuthenticatedTestCase):
     def test_fetch_from_serviceplatformen_no_cpr(self):
         reverse_url = reverse("relatedperson-fetch-from-serviceplatformen")
