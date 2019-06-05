@@ -8,11 +8,9 @@
         <table class="appropriation-list" v-if="apprs && apprs.length > 0">
             <thead>
                 <tr>
-                    <th>Foranstaltningssag</th>
-                    <th>Foranstaltningsudgift</th>
-                    <th>Aktivitet</th>
-                    <th>Følgeudgift</th>
                     <th>Status</th>
+                    <th>Foranstaltningssag nr.</th>
+                    <th>Bevillingsparagraf</th>
                     <th>Oprettet</th>
                     <th>Senest ændret</th>
                     <th style="text-align: right">Økonomi</th>
@@ -20,23 +18,19 @@
             </thead>
             <tbody>
                 <tr v-for="a in apprs" :key="a.id">
+                    <td><div v-html="statusLabel(a.status)"></div></td>
                     <td>    
                         <i class="material-icons">folder_open</i>
                         <router-link :to="`/appropriation/${ a.id }`">
                             {{ a.sbsys_id }} 
                         </router-link>
                     </td>
-                    <td>ikke implementeret</td>
                     <td>§ {{ displaySection(a.section) }}</td>
-                    <td>ikke implementeret</td>
-                    <td><div v-html="statusLabel(a.status)"></div></td>
                     <td>{{ displayDate(a.created) }}</td>
                     <td>{{ displayDate(a.modified) }}</td>
                     <td style="text-align: right">ikke implementeret</td>
                 </tr>
                 <tr>
-                    <td style="border: none;"></td>
-                    <td style="border: none;"></td>
                     <td style="border: none;"></td>
                     <td style="border: none;"></td>
                     <td style="border: none;"></td>
