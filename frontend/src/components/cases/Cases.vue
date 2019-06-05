@@ -9,7 +9,7 @@
             <thead>
                 <tr>
                     <th>
-                        SBSYS-hovedsag
+                        SBSYS-hovedsag nr.
                     </th> 
                     <th>
                         Borger
@@ -81,18 +81,17 @@
 <style>
 
     .cases {
-        margin: 1rem;
+        margin: 0 2rem 2rem;
     }
 
     .cases-header {
         display: flex;
         flex-flow: row nowrap;
-        justify-content: space-between;
         align-items: center;
     }
 
-    .create {
-        margin-top: 1rem;
+    .cases .create {
+        margin: 0 2rem;
     }
 
 </style>

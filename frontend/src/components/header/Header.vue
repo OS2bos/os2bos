@@ -36,7 +36,7 @@
         flex-flow: row nowrap;
         justify-content: space-between;
         align-items: center;
-        padding: .75rem 1rem;
+        padding: 2rem;
         background-color: var(--grey0);
     }
 
