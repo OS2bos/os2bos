@@ -66,4 +66,31 @@
         vertical-align: middle;
     }
 
+    .label {
+        padding: .25rem .5rem;
+        border-radius: .125rem;
+        display: inline-block;
+        text-transform: capitalize;
+    }
+
+    .label-DRAFT {
+        background-color: var(--grey7);
+        color: white;
+    }
+
+    .label-BUDGETED {
+        background-color: var(--warning);
+        color: white;
+    }
+
+    .label-GRANTED {
+        background-color: var(--success);
+        color: white;
+    }
+
+    .label-DISCONTINUED {
+        background-color: var(--danger);
+        color: white;
+    }
+
 </style>

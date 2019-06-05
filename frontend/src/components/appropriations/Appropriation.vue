@@ -10,7 +10,7 @@
         </header>
 
         <div v-if="show_edit">
-            <appropriation-edit :appr-obj="appr" v-if="show_edit" @save="reload()" />
+            <appropriation-edit :appr-obj="appr" v-if="show_edit" @close="update()" />
         </div>
 
         <div class="appr-grid" v-if="cas">
@@ -55,7 +55,7 @@
             </div>
             
             <div class="sagsgodkend appr-grid-box">
-                <span :class="`status-${ appr.status }`">{{ appr.status }}</span>
+                <div v-html="statusLabel(appr.status)"></div>
                 <template v-if="appr.approval_level"> af
                     {{ appr.approval_level }}
                 </template>
@@ -74,7 +74,7 @@
     import ActivityList3 from '../activities/ActivityList3.vue'
     import ActivityList4 from '../activities/ActivityList4.vue'
     import AppropriationEdit from './AppropriationEdit.vue'
-    import { sectionId2name } from '../filters/Labels.js'
+    import { sectionId2name, displayStatus } from '../filters/Labels.js'
 
     export default {
 
@@ -93,8 +93,15 @@
             }
         },
         methods: {
+            update: function() {
+                this.show_edit =  false
+                this.fetchAppr(this.$route.params.id)
+            },
             displaySection: function(id) {
                 return sectionId2name(id)
+            },
+            statusLabel: function(status) {
+                return displayStatus(status)
             },
             fetchAppr: function(id) {
                 axios.get(`/appropriations/${ id }`)
@@ -122,13 +129,10 @@
                     })
                 })
                 .catch(err => console.log(err))
-            },
-            reload: function() {
-                this.show_edit =  false
             }
         },
         created: function() {
-            this.fetchAppr(this.$route.params.id)
+            this.update()
         }
     }
     
