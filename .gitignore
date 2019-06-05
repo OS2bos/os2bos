@@ -1,5 +1,6 @@
 # Other
 *.DS_Store
+backend/bevillingsplatform/static/*
 
 
 # from https://github.com/github/gitignore/blob/master/Python.gitignore

@@ -62,7 +62,9 @@ SECRET_KEY = settings.get("SECRET_KEY", fallback="Not.a.secret")
 # SECURITY WARNING: don"t run with debug turned on in production!
 DEBUG = settings.getboolean("DEBUG", fallback=False)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    settings.get("ALLOWED_HOST", fallback=None)
+]  # Note the missing 'S'.
 
 
 # Application definition
