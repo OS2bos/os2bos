@@ -132,7 +132,7 @@
 <style>
 
     .case {
-        margin: 1rem;
+        margin: 1rem 2rem;
     }
 
     .case-header {
