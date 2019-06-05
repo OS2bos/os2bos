@@ -12,16 +12,43 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 import configparser
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 config = configparser.ConfigParser()
 config["settings"] = {}
 
-# If a settings ini is defined, load it
-settings_name = os.getenv("DJANGO_SETTINGS_INI", None)
-if settings_name:  # pragma: no branch
-    config.read(settings_path)
+
+# We support loading settings from two files. The fallback values in this
+# `settings.py` is first overwritten by the values defined in the file where
+# the env var `DJANGO_SETTINGS_INI_PRELOAD` points to. Finally the values are
+# overwritten by the values the env var `DJANGO_SETTINGS_INI` points to.
+#
+# The `DJANGO_SETTINGS_INI_PRELOAD` file is for an alternative set of default
+# values. It is useful in a specific envionment such as Docker. An example is
+# the setting for STATIC_ROOT. The default in `settings.py` is relative to the
+# current directory. In Docker it should be an absolute path that is easy to
+# mount a volume to.
+#
+# The `DJANGO_SETTINGS_INI` file is for normal settings and shoud generally be
+# unique to a instance deployment.
+
+for env in ["DJANGO_SETTINGS_INI_PRELOAD", "DJANGO_SETTINGS_INI"]:
+    path = os.getenv(env, None)
+    if path:
+        try:
+            with open(path) as fp:
+                config.read_file(fp)
+            logger.info("Loaded setting %s from %s" % (env, path))
+        except OSError as e:
+            logger.error(
+                "Loading setting %s from %s failed with %s." % (env, path, e)
+            )
+
 
 # use settings section as default
 settings = config["settings"]
@@ -95,7 +122,7 @@ DATABASES = {
         "ENGINE": settings.get(
             "DATABASE_ENGINE", fallback="django.db.backends.postgresql"
         ),
-        "NAME": settings.get("DATABASE_NAME", fallback="bevillingsplatform"),
+        "NAME": settings.get("DATABASE_NAME", fallback="bev"),
         "USER": settings.get("DATABASE_USER", fallback=""),
         "PASSWORD": settings.get("DATABASE_PASSWORD", fallback=""),
         "HOST": settings.get("DATABASE_HOST", fallback=""),
@@ -140,11 +167,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
-
-FORCE_SCRIPT_NAME = default_config.get("FORCE_SCRIPT_NAME")
-STATIC_URL = FORCE_SCRIPT_NAME + "/static/"
+STATIC_URL = "/static/"
 STATIC_ROOT = settings.get(
-    "STATIC_ROOT", fallback=os.path.join(BASE_DIR, "/static")
+    "STATIC_ROOT", fallback=os.path.join(BASE_DIR, "static")
 )
 
 # Serviceplatform service UUIDs
@@ -196,9 +221,7 @@ LOGGING = {
 EMAIL_BACKEND = settings.get(
     "EMAIL_BACKEND", fallback="django.core.mail.backends.smtp.EmailBackend"
 )
-EMAIL_HOST_USER = settings.get(
-    "EMAIL_HOST_USER", fallback="bevillingsplatform"
-)
+EMAIL_HOST_USER = settings.get("EMAIL_HOST_USER", fallback="")
 EMAIL_HOST_PASSWORD = settings.get("EMAIL_HOST_PASSWORD", fallback="")
 EMAIL_HOST = settings.get("EMAIL_HOST", fallback="")
 EMAIL_PORT = settings.getint("EMAIL_PORT", fallback=25)
