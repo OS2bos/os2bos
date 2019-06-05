@@ -3,6 +3,10 @@
     <section class="appropriation" v-if="appr">
         <header class="appropriation-header">
             <h1>Bevillingsskrivelse</h1>
+            <span v-html="statusLabel(appr.status)" style="margin: 0 1rem;"></span>
+            <template v-if="appr.approval_level"> af
+                {{ appr.approval_level }}
+            </template>
             <div>
                 <button @click="show_edit = !show_edit" class="appr-edit-btn">Redigér</button>
                 <router-link :to="`/appropriation/${ appr.id }/print`">Print</router-link>
@@ -15,36 +19,36 @@
 
         <div class="appr-grid" v-if="cas">
 
-        <template v-if="!show_edit">
-            <div class="sagsbeh appr-grid-box">
-                <dl>
-                    <dt>Foranstaltningssag (SBSYS)</dt>
-                    <dd>{{ appr.sbsys_id}}</dd>
-                    <dt>Sagsbehandler</dt>
-                    <dd>{{ cas.case_worker}}</dd>
-                </dl>
-            </div>
+            <template v-if="!show_edit">
+                <div class="sagsbeh appr-grid-box">
+                    <dl>
+                        <dt>Foranstaltningssag (SBSYS)</dt>
+                        <dd>{{ appr.sbsys_id}}</dd>
+                        <dt>Sagsbehandler</dt>
+                        <dd>{{ cas.case_worker}}</dd>
+                    </dl>
+                </div>
 
-            <div class="sagspart appr-grid-box">
-                <dl>
-                    <dt>Sagspart</dt>
-                    <dd>{{ cas.cpr_number }}, {{ cas.name }}</dd>
-                    <dt>Betalingskommune</dt>
-                    <dd>{{ cas.paying_municipality }}</dd>
-                    <dt>Handlekommune</dt>
-                    <dd>{{ cas.acting_municipality }}</dd>
-                    <dt>Bopælskommune</dt>
-                    <dd>{{ cas.residence_municipality }}</dd>
-                </dl>
-            </div>
-            
-            <div class="sagslaw appr-grid-box">
-                <dl> 
-                    <dt>Bevilges efter §</dt>
-                    <dd>{{ displaySection(appr.section) }}</dd>
-                </dl>
-            </div>
-        </template>
+                <div class="sagspart appr-grid-box">
+                    <dl>
+                        <dt>Sagspart</dt>
+                        <dd>{{ cas.cpr_number }}, {{ cas.name }}</dd>
+                        <dt>Betalingskommune</dt>
+                        <dd>{{ cas.paying_municipality }}</dd>
+                        <dt>Handlekommune</dt>
+                        <dd>{{ cas.acting_municipality }}</dd>
+                        <dt>Bopælskommune</dt>
+                        <dd>{{ cas.residence_municipality }}</dd>
+                    </dl>
+                </div>
+                
+                <div class="sagslaw appr-grid-box">
+                    <dl> 
+                        <dt>Bevilges efter §</dt>
+                        <dd>{{ displaySection(appr.section) }}</dd>
+                    </dl>
+                </div>
+            </template>
 
             <div class="sagsbev appr-grid-box">
                 <h2>Der bevilges:</h2>
@@ -52,13 +56,6 @@
                 <!-- <activity-list2 :appr-id="appr.id" /> -->
                 <activity-list3 :appr-id="appr.id" />
                 <!-- <activity-list4 :appr-id="appr.id" /> -->
-            </div>
-            
-            <div class="sagsgodkend appr-grid-box">
-                <div v-html="statusLabel(appr.status)"></div>
-                <template v-if="appr.approval_level"> af
-                    {{ appr.approval_level }}
-                </template>
             </div>
 
         </div>
@@ -164,7 +161,7 @@
     .appr-grid {
         display: grid;
         grid-template-columns: repeat(6, auto);
-        grid-template-rows: repeat(4, auto);
+        grid-template-rows: repeat(3, auto);
     }
 
     .appr-grid-box {
@@ -187,10 +184,6 @@
 
     .sagsbev {
         grid-area: 3 / 1 / 4 / 7;
-    }
-
-    .sagsgodkend {
-        grid-area: 4 / 1 / 5 / 7;
     }
 
     @media screen and (min-width: 45rem) {

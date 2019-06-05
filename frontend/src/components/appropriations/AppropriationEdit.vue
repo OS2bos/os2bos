@@ -68,7 +68,7 @@
                         case: cas_id
                     })
                     .then(res => {
-                        this.$router.push(`/case/${ cas_id }`)
+                        this.$router.push(`/appropriation/${ res.data.id }/`)
                     })
                     .catch(err => console.log(err))
                 }

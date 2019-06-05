@@ -3,8 +3,10 @@
     <header>
         <div class="globalheader">
             <h1 title="Ballerup Bevillingsplatformen">
-                <img class="global-logo" src="/logo.svg" alt="" />
-                <span>Ballerup <br>Bevillingsplatform</span>
+                <router-link to="/" class="header-link">
+                    <img class="global-logo" src="/logo.svg" alt="" />
+                    <span>Ballerup <br>Bevillingsplatform</span>
+                </router-link>
             </h1>
             <router-link to="/login">Log ud</router-link>
         </div>
@@ -41,11 +43,16 @@
     .globalheader > h1 {
         margin: 0;
         padding: 0;
+    }
+
+    .header-link {
+        margin: 0;
+        padding: 0;
         font-size: 1.125rem;
         color: #0b7ead;
         display: flex;
         flex-flow: row nowrap;
-
+        border: none !important;
     }
 
     .global-logo {
