@@ -136,7 +136,6 @@
             },
             saveChanges: function() {
                 let data = {
-                    appropriation: this.activityObj.appropriation,
                     status: this.act.status,
                     activity_type: this.act.activity_type,
                     id: this.act.id,
@@ -145,6 +144,7 @@
                     service: this.act.service
                 }
                 if (!this.create_mode) {
+                    data.appropriation = this.activityObj.appropriation
                     axios.patch(`/activities/${ this.act.id }/`, data)
                     .then(res => {
                         this.$emit('save', res.data)
