@@ -41,7 +41,7 @@ const router = new Router({
             component: Appropriation
         },
         {
-            path: '/appropriation-create/',
+            path: '/case/:caseid/appropriation-create/',
             name: 'appropriation-create',
             component: AppropriationEdit
         },

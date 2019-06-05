@@ -48,8 +48,15 @@ select:required:valid::after {
     color: var(--success);
 }
 
-textarea {
+input[type="text"],
+input[type="search"],
+textarea,
+select {
     width: 100%;
+    text-overflow: ellipsis;
+}
+
+textarea {
     max-width: 45rem;
     min-height: 6rem;
 }

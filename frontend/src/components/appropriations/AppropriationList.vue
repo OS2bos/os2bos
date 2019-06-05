@@ -3,9 +3,9 @@
     <section class="appropriations">
         <header class="appropriations-header">
             <h1>Foranstaltninger</h1>
-            <button class="appropriation-create-btn" @click="$router.push('approriation-create')">+ Opret bevillingsskrivelse</button>
+            <button class="appropriation-create-btn" @click="$router.push(`/case/${ caseId }/appropriation-create/`)">+ Opret bevillingsskrivelse</button>
         </header>
-        <table class="appropriation-list" v-if="apprs.length > 0">
+        <table class="appropriation-list" v-if="apprs && apprs.length > 0">
             <thead>
                 <tr>
                     <th>Foranstaltningssag</th>
@@ -27,10 +27,9 @@
                         </router-link>
                     </td>
                     <td>ikke implementeret</td>
-                    <td>§ {{ a.section }}</td>
+                    <td>§ {{ displaySection(a.section) }}</td>
                     <td>ikke implementeret</td>
-                    
-                    <td><span class="status">{{ a.status }}</span></td>
+                    <td><div v-html="statusLabel(a.status)"></div></td>
                     <td>{{ displayDate(a.created) }}</td>
                     <td>{{ displayDate(a.modified) }}</td>
                     <td style="text-align: right">ikke implementeret</td>
@@ -47,7 +46,7 @@
                 </tr>
             </tbody>
         </table>
-        <p v-if="apprs.length < 1">Der er endnu ingen bevillingsskrivelser</p>
+        <p v-if="!apprs || apprs.length < 1">Der er endnu ingen bevillingsskrivelser</p>
     </section>
 
 </template>
@@ -56,6 +55,7 @@
 
     import axios from '../http/Http.js'
     import { json2js } from '../filters/Date.js'
+    import { sectionId2name, displayStatus } from '../filters/Labels.js'
 
     export default {
 
@@ -85,17 +85,14 @@
                 })
                 .catch(err => console.log(err))
             },
-            // createAppr: function() {
-            //     axios.post('/appropriations/', {
-                    
-            //     }) // POST new empty appropriation
-            //     .then(res => {
-            //         this.$router.push(`/appropriation-create/${ res.data.id }`) // Navigate to new appropriation page
-            //     })
-            //     .catch(err => console.log(err))
-            // },
             displayDate: function(dt) {
                 return json2js(dt)
+            },
+            displaySection: function(id) {
+                return sectionId2name(id)
+            },
+            statusLabel: function(status) {
+                return displayStatus(status)
             }
         },
         created: function() {
