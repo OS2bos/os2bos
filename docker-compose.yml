@@ -1,0 +1,44 @@
+version: "3.4"
+
+services:
+  frontend:
+    build:
+      context: .
+      target: frontend
+    environment:
+      # `vue-cli-service serve` will proxy request to `/api` to this endpoint.
+      # Defined in `frontend/vue.config.js`.
+      - API_SERVER=http://bev:8000
+    depends_on:
+      - bev
+    ports:
+      - 8080:8080
+
+  bev:
+    build:
+      context: .
+      target: dist
+    # The `volumes` and `command` mounts the current directory in the docker
+    # container and overwrites the CMD from Dockerfile. With this gunicorn
+    # reloads on file changes. This is very useful when developing.
+    command: ["gunicorn", "-b", "0.0.0.0:8000", "--reload", "--access-logfile", "-", "bevillingsplatform.wsgi"]
+    volumes:
+      - ./backend:/code/backend
+      - ./dev-settings.ini:/code/settings.ini
+    depends_on:
+      - db
+      - postfix
+
+  db:
+    image: postgres:10
+    environment:
+      - POSTGRES_USER=bev
+      - POSTGRES_PASSWORD=bev
+
+  postfix:
+    image: catatnight/postfix
+    hostname: postfix
+    domainname: bevillingsplatform-test.magenta.dk
+    environment:
+      - maildomain=magenta.dk
+      - smtp_user=bev:bev

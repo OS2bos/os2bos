@@ -2,3 +2,4 @@
 black==19.3b0
 coverage==4.5.3
 sphinx==2.0.1
+ipython==7.5.0
