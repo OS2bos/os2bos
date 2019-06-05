@@ -1,7 +1,7 @@
 <template>
 
     <section class="activities">
-        <button class="activities-create-btn" title="Ny aktivitet" @click="createAct()">+ Tilføj ydelse</button>
+        <button class="activities-create-btn" title="Ny aktivitet" @click="$router.push('/activity-create')">+ Tilføj ydelse</button>
         <table>
             <thead>
                 <tr>
@@ -18,7 +18,7 @@
                     <td>
                         <span :class="`status-${ a.status }`">{{ a.status }}</span>
                     </td>
-                    <td><router-link :to="`/activity/${ a.id }`">{{ activityId2name(a.id) }}</router-link></td>
+                    <td><router-link :to="`/activity/${ a.id }`">{{ activityId2name(a.service) }}</router-link></td>
                     <td>300578-2222 - Ukendt</td>
                     <td>{{ displayDate(a.start_date) }}</td>
                     <td>{{ displayDate(a.end_date) }}</td>

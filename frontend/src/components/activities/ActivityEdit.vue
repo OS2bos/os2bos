@@ -1,7 +1,9 @@
 <template>
     <article class="activity-edit">
         <form @submit.prevent="saveChanges()">
-        <h1>Opret/Redigér Aktivitet</h1>
+        <h1 v-if="create_mode">Opret Aktivitet</h1>
+        <h1 v-else>Redigér Aktivitet</h1>
+
             <fieldset>
                 <legend>Status</legend>
                 <input type="radio" id="field-status-granted" value="GRANTED" v-model="act.status">
@@ -11,10 +13,12 @@
             </fieldset>
             <fieldset>
                 <legend>Type</legend>
-                <input type="radio" id="field-type-true" :value="true">
-                <label for="field-type-true">Hovedudgift</label>
-                <input type="radio" id="field-type-false" :value="false">
-                <label for="field-type-false">Tillægsudgift</label>
+                <input type="radio" id="field-type-main" value="MAIN_ACTIVITY" v-model="act.activity_type">
+                <label for="field-type-main">Hovedaktivitet</label>
+                <input type="radio" id="field-type-suppl" value="SUPPL_ACTIVITY" v-model="act.activity_type">
+                <label for="field-type-suppl">Følgeaktivitet</label>
+                <input type="radio" id="field-type-expected" value="EXPECTED_CHANGE" v-model="act.activity_type">
+                <label for="field-type-expected">Forventning</label>
             </fieldset>
             <fieldset>
                 <strong>Bevilling efter §</strong>
@@ -22,7 +26,7 @@
             </fieldset>
             <fieldset>
                 <label for="selectField">Aktivitet</label>
-                <list-picker :dom-id="'selectField'" :selected-id="act.id" @selection="changeActivity" :list="activities" />
+                <list-picker :dom-id="'selectField'" :selected-id="act.service" @selection="changeActivity" :list="activities" />
             </fieldset>
             <fieldset>
                 <label for="field-startdate">Startdato</label>
@@ -88,7 +92,7 @@
             <hr>
             <fieldset>
                 <input type="submit" value="Gem">
-                <button class="cancel-btn" type="cancel">Annullér</button>
+                <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
             </fieldset>
         </form>
     </article>
@@ -121,21 +125,33 @@
         },
         methods: {
             changeActivity: function(act) {
-                this.act.id = act
+                this.act.service = act
+            },
+            cancel: function() {
+                if (!this.create_mode) {
+                    this.$emit('close')
+                } else {
+                    this.$router.push('/')
+                }  
             },
             saveChanges: function() {
+                let data = {
+                    appropriation: this.activityObj.appropriation,
+                    status: this.act.status,
+                    activity_type: this.act.activity_type,
+                    id: this.act.id,
+                    start_date: this.act.start_date,
+                    end_date: this.act.end_date,
+                    service: this.act.service
+                }
                 if (!this.create_mode) {
-                    axios.patch(`/activities/${ this.activityObj.id }/`, {
-                        id: this.activityObj.id
-                    })
+                    axios.patch(`/activities/${ this.act.id }/`, data)
                     .then(res => {
                         this.$emit('save', res.data)
                     })
                     .catch(err => console.log(err))
                 } else {
-                    axios.post(`/activities/`, {
-                        id: this.activityObj.id
-                    })
+                    axios.post(`/activities/`, data)
                     .then(res => {
                         this.$router.push('/')
                     })

@@ -93,9 +93,6 @@
             }
         },
         methods: {
-            displaySection: function(id) {
-                return sectionId2name(id)
-            },
             fetchAppr: function(id) {
                 axios.get(`/appropriations/${ id }`)
                 .then(res => {
@@ -131,6 +128,9 @@
             },
             displayDistrictName: function(id) {
                 return districtId2name(id)
+            },
+            displaySection: function(id) {
+                return sectionId2name(id)
             }
         },
         created: function() {

@@ -4,7 +4,7 @@
         <header class="activity-header">
             <h1>
                 <i class="material-icons">style</i>
-                Udgift til {{ activityId2name(act.id) }}
+                Udgift til {{ activityId2name(act.service) }}
             </h1>
             <button @click="show_edit = !show_edit" class="act-edit-btn">Redigér</button>
         </header>
@@ -21,15 +21,12 @@
                 </dd>
                 <dt>Type</dt>
                 <dd>
-                    <div v-if="act.is_main_act">Hovedaktivitet</div>
-                    <div v-if="!act.is_main_act">Tillægsydelse</div>
-                    <div v-if="act.is_single_payment">Enkeltudgift</div>
-                    <div v-if="!act.is_single_payment">Følgeydelse</div>
+                    <div>{{ act.activity_type }}</div>
                 </dd>
                 <dt>Bevilling efter </dt>
-                <dd>{{ appr.section }}</dd>
+                <dd v-if="appr">{{ displaySection(appr.section) }}</dd>
                 <dt>Aktivitet</dt>
-                <dd>{{ activityId2name(act.id) }}</dd>
+                <dd>{{ activityId2name(act.service) }}</dd>
                 <dt>Startdato</dt>
                 <dd>{{ displayDate(act.start_date) }}</dd>
                 <dt>Slutdato</dt>
@@ -78,7 +75,7 @@
     import axios from '../http/Http.js'
     import ActivityEdit from './ActivityEdit.vue'
     import { json2js } from '../filters/Date.js'
-    import { activityId2name } from '../filters/Labels.js'
+    import { activityId2name, sectionId2name } from '../filters/Labels.js'
 
     export default {
 
@@ -116,7 +113,7 @@
                         },
                         {
                             link: false,
-                            title: `${ activityId2name(this.act.id) }`
+                            title: `${ activityId2name(this.act.service) }`
                         }
                     ])
                 })
@@ -131,6 +128,9 @@
             },
             activityId2name: function(id) {
                 return activityId2name(id)
+            },
+            displaySection: function(id) {
+                return sectionId2name(id)
             }
         },
         created: function() {
