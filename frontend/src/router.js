@@ -7,6 +7,7 @@ import Assessment from './components/assessments/Assessment.vue'
 import Appropriation from './components/appropriations/Appropriation.vue'
 import AppropriationEdit from './components/appropriations/AppropriationEdit.vue'
 import Activity from './components/activities/Activity.vue'
+import ActivityEdit from './components/activities/ActivityEdit.vue'
 import Login from './components/auth/Login.vue'
 import store from './store.js'
 
@@ -48,6 +49,11 @@ const router = new Router({
             path: '/activity/:id',
             name: 'activity',
             component: Activity
+        },
+        {
+            path: '/activity-create/',
+            name: 'activity-create',
+            component: ActivityEdit
         },
         {
             path: '/login',
