@@ -1,7 +1,7 @@
 <template>
 
     <section class="activities">
-        <button class="activities-create-btn" title="Ny aktivitet" @click="$router.push('/activity-create')">+ Tilføj ydelse</button>
+        <button class="activities-create-btn" title="Ny aktivitet" @click="$router.push(`/appropriation/${ apprId }/activity-create/`)">+ Tilføj ydelse</button>
         <table>
             <thead>
                 <tr>

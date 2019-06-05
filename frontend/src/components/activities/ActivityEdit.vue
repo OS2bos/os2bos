@@ -151,9 +151,18 @@
                     })
                     .catch(err => console.log(err))
                 } else {
-                    axios.post(`/activities/`, data)
+                    const appr_id = this.$route.params.apprid
+                    axios.post(`/activities/`, {
+                        appropriation: appr_id,
+                        status: this.act.status,
+                        activity_type: this.act.activity_type,
+                        id: this.act.id,
+                        start_date: this.act.start_date,
+                        end_date: this.act.end_date,
+                        service: this.act.service
+                    })
                     .then(res => {
-                        this.$router.push('/')
+                        this.$router.push(`/appropriation/${ appr_id }`)
                     })
                     .catch(err => console.log(err))
                 }

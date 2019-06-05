@@ -51,7 +51,7 @@ const router = new Router({
             component: Activity
         },
         {
-            path: '/activity-create/',
+            path: '/appropriation/:apprid/activity-create/',
             name: 'activity-create',
             component: ActivityEdit
         },
