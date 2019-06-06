@@ -21,10 +21,6 @@
                 <label for="field-type-expected">Forventning</label>
             </fieldset>
             <fieldset>
-                <strong>Bevilling efter §</strong>
-                <span> ikke implementeret</span>
-            </fieldset>
-            <fieldset>
                 <label for="selectField">Aktivitet</label>
                 <list-picker :dom-id="'selectField'" :selected-id="act.service" @selection="changeActivity" :list="activities" />
             </fieldset>

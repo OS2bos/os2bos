@@ -23,8 +23,6 @@
                 <dd>
                     <div>{{ act.activity_type }}</div>
                 </dd>
-                <dt>Bevilling efter </dt>
-                <dd v-if="appr">{{ displaySection(appr.section) }}</dd>
                 <dt>Aktivitet</dt>
                 <dd>{{ activityId2name(act.service) }}</dd>
                 <dt>Startdato</dt>
@@ -94,28 +92,24 @@
                 axios.get(`/activities/${ id }`)
                 .then(res => {
                     this.act = res.data
-
-                axios.get(`/appropriations/${ id }`)
-                .then(resp => {
-                    this.appr = resp.data
                     this.$store.commit('setBreadcrumb', [
                         {
                             link: '/',
                             title: 'Mine sager'
                         },
-                        // {
-                        //     link: `/case/${ this.act.appropriation.case.id }`,
-                        //     title: `${ this.act.appropriation.case.sbsys_id }, ${ this.act.appropriation.case.name }`
-                        // },
                         {
-                            link: `/appropriation/${ this.act.appropriation.id }`,
-                            title: `Foranstaltning ${ this.act.appropriation.id }`
+                            link: `/appropriation/${ this.act.appropriation }`,
+                            title: `Foranstaltning ${ this.act.appropriation }`
                         },
                         {
                             link: false,
                             title: `${ activityId2name(this.act.service) }`
                         }
                     ])
+
+                axios.get(`/appropriations/${ this.act.appropriation }`)
+                .then(resp => {
+                    this.appr = resp.data
                 })
                 })
                 .catch(err => console.log(err))
