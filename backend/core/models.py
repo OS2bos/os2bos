@@ -422,6 +422,7 @@ class Account(models.Model):
 
     Should be different for each (Activitycatalog, Sections) pair.
     """
+
     number = models.CharField(max_length=128)
     activity_catalog = models.ForeignKey(
         ActivityCatalog, null=False, on_delete=models.CASCADE
