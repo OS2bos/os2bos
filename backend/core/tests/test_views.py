@@ -92,6 +92,7 @@ class TestCaseViewSet(AuthenticatedTestCase, CaseMixin):
         case = self.create_case()
         reverse_url = reverse("case-history", kwargs={"pk": case.pk})
 
+        self.client.login(username=self.username, password=self.password)
         response = self.client.get(reverse_url)
         self.assertEqual(len(response.json()), 1)
         self.assertEqual(response.json()[0]["scaling_step"], 1)
@@ -106,6 +107,7 @@ class TestCaseViewSet(AuthenticatedTestCase, CaseMixin):
 
         reverse_url = reverse("case-history", kwargs={"pk": case.pk})
 
+        self.client.login(username=self.username, password=self.password)
         response = self.client.get(reverse_url)
 
         self.assertEqual(len(response.json()), 3)
@@ -124,6 +126,7 @@ class TestCaseViewSet(AuthenticatedTestCase, CaseMixin):
 
         reverse_url = reverse("case-history", kwargs={"pk": case.pk})
 
+        self.client.login(username=self.username, password=self.password)
         response = self.client.get(reverse_url)
 
         self.assertEqual(len(response.json()), 3)
@@ -136,18 +139,22 @@ class TestCaseViewSet(AuthenticatedTestCase, CaseMixin):
     def test_history_action_changed_case_worker(self):
         case = self.create_case()
         # Change to different effort steps.
-        case.case_worker = get_user_model().objects.create(username="Leif")
+        orla = case.case_worker
+        leif = get_user_model().objects.create(username="Leif")
+        case.case_worker = leif
         case.save()
-        case.case_worker = get_user_model().objects.create(username="Lone")
+        lone = get_user_model().objects.create(username="Lone")
+        case.case_worker = lone
         case.save()
 
         reverse_url = reverse("case-history", kwargs={"pk": case.pk})
 
+        self.client.login(username=self.username, password=self.password)
         response = self.client.get(reverse_url)
 
         self.assertEqual(len(response.json()), 3)
         # Assert history of scaling steps are preserved.
         self.assertCountEqual(
             [x["case_worker"] for x in response.json()],
-            ["Orla Frøsnapper", "Leif", "Lone"],
+            [orla.id, leif.id, lone.id],
         )

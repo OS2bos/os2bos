@@ -6,7 +6,9 @@ from core.models import Case, Municipality, SchoolDistrict
 class CaseMixin:
     @staticmethod
     def create_case():
-        case_worker = get_user_model().objects.create(username="Orla Frøsnapper")
+        case_worker = get_user_model().objects.create(
+            username="Orla Frøsnapper"
+        )
         municipality = Municipality.objects.create(name="København")
         district = SchoolDistrict.objects.create(name="Baltorpskolen")
         case = Case.objects.create(

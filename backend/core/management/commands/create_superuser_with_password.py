@@ -1,6 +1,7 @@
 # This code was created by Adam Charnock for the Swiftwind for Heroku project.
-# Copyright (C) 2016 Adam Charnock
-# MIT License, https://github.com/adamcharnock/swiftwind-heroku/blob/master/LICENSE.txt
+# Copyright (C) 2016 Adam Charnock, under an MIT License:
+# https://github.com/adamcharnock/swiftwind-heroku/blob/master/LICENSE.txt
+
 from django.contrib.auth.management.commands import createsuperuser
 from django.core.management import CommandError
 
