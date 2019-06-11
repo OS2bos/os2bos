@@ -36,7 +36,7 @@ LABEL org.opencontainers.image.title="Bevillingsplatform" \
 # https://docs.python.org/3/using/cmdline.html#cmdoption-u
 ENV PYTHONUNBUFFERED=1 \
   DJANGO_SETTINGS_INI=/code/settings.ini \
-  DJANGO_SETTINGS_INI_PRELOAD=/code/backend/bevillingsplatform/docker-settings.ini
+  DJANGO_SETTINGS_INI_PRELOAD=/code/docker-settings.ini
 
 
 WORKDIR /code/
@@ -67,7 +67,8 @@ RUN pip3 install -r backend/requirements.txt
 # Copy and install backend code.
 COPY README.md .
 COPY LICENSE .
-COPY docker-entrypoint.sh .
+COPY docker/docker-settings.ini .
+COPY docker/docker-entrypoint.sh .
 COPY backend ./backend
 
 
