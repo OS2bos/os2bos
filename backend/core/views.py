@@ -31,6 +31,7 @@ from core.serializers import (
     SectionsSerializer,
     ActivityCatalogSerializer,
     UserSerializer,
+    HistoricalCaseSerializer,
 )
 
 from core.utils import get_person_info
@@ -44,6 +45,15 @@ class CaseViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+    @action(detail=True, methods=["get"])
+    def history(self, request, pk=None):
+        """
+        Fetch history of HistoricalCases.
+        """
+        case = self.get_object()
+        serializer = HistoricalCaseSerializer(case.history.all(), many=True)
+        return Response(serializer.data)
 
 
 class AppropriationViewSet(viewsets.ModelViewSet):

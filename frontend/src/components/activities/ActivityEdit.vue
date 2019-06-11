@@ -1,33 +1,28 @@
 <template>
-
     <article class="activity-edit">
         <form @submit.prevent="saveChanges()">
-        <h1>Opret/Redigér akvititet</h1>
+        <h1 v-if="create_mode">Opret Aktivitet</h1>
+        <h1 v-else>Redigér Aktivitet</h1>
+
             <fieldset>
                 <legend>Status</legend>
-                <input type="radio" id="field-status-true" :value="act.status === 'GRANTED'">
-                <label for="field-status-true">Bevilling</label>
-                <input type="radio" id="field-status-false" :value="act.status === 'EXPECTED'">
-                <label for="field-status-false">Forventning</label>
+                <input type="radio" id="field-status-granted" value="GRANTED" v-model="act.status">
+                <label for="field-status-granted">Bevilling</label>
+                <input type="radio" id="field-status-expected" value="EXPECTED" v-model="act.status">
+                <label for="field-status-expected">Forventning</label>
             </fieldset>
             <fieldset>
                 <legend>Type</legend>
-                <input type="radio" id="field-type-true" :value="true">
-                <label for="field-type-true">Hovedudgift</label>
-                <input type="radio" id="field-type-false" :value="false">
-                <label for="field-type-false">Tillægsudgift</label>
+                <input type="radio" id="field-type-main" value="MAIN_ACTIVITY" v-model="act.activity_type">
+                <label for="field-type-main">Hovedaktivitet</label>
+                <input type="radio" id="field-type-suppl" value="SUPPL_ACTIVITY" v-model="act.activity_type">
+                <label for="field-type-suppl">Følgeaktivitet</label>
+                <input type="radio" id="field-type-expected" value="EXPECTED_CHANGE" v-model="act.activity_type">
+                <label for="field-type-expected">Forventning</label>
             </fieldset>
             <fieldset>
-                <strong>Bevilling efter §</strong>
-                <span>{{ act.activity_type }}</span>
-            </fieldset>
-            <fieldset>
-                <label>Aktivitet</label>
-                <select v-model="act.activity_type">
-                    <option value="Plejefamilier eksl. vederlag">Plejefamilier eksl. vederlag</option>
-                    <option value="Kørsel">Kørsel</option>
-                    <option value="Ungeindsatsen">Ungeindsatsen</option>
-                </select>
+                <label for="selectField">Aktivitet</label>
+                <list-picker :dom-id="'selectField'" :selected-id="act.service" @selection="changeActivity" :list="activities" />
             </fieldset>
             <fieldset>
                 <label for="field-startdate">Startdato</label>
@@ -40,7 +35,7 @@
             <hr>
             <fieldset>
                 <label for="field-cost">Bevilget beløb</label>
-                <input type="number" id="field-cost">
+                <input type="number" id="field-cost" value="0">
             </fieldset>
             <fieldset>
                 <legend>Udgiftstype</legend>
@@ -72,11 +67,11 @@
                         <template>CVR-nr </template>
                         <template>Reference</template>
                     </label>
-                    <input type="text" id="field-payment-id">
+                    <input type="text" id="field-payment-id" value="Ukendt">
                 </fieldset>
                 <fieldset>
                     <label for="field-payment-name">Navn</label>
-                    <input type="text" id="field-payment-name" :value="act.user_created">
+                    <input type="text" id="field-payment-name" value="Ukendt">
                 </fieldset>
                 <fieldset>
                     <legend>Betalingsmåde</legend>
@@ -93,7 +88,7 @@
             <hr>
             <fieldset>
                 <input type="submit" value="Gem">
-                <button class="cancel-btn" type="cancel">Annullér</button>
+                <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
             </fieldset>
         </form>
     </article>
@@ -103,35 +98,67 @@
 <script>
 
     import axios from '../http/Http.js'
+    import ListPicker from '../forms/ListPicker.vue'
 
     export default {
 
+        components: {
+            ListPicker
+        },
         props: [
             'activityObj'
         ],
         data: function() {
             return {
-                act_data: {},
                 act: {},
                 create_mode: true
             }
         },
+        computed: {
+            activities: function() {
+                return this.$store.getters.getActivities
+            }
+        },
         methods: {
-            saveChanges: function() {
+            changeActivity: function(act) {
+                this.act.service = act
+            },
+            cancel: function() {
                 if (!this.create_mode) {
-                    axios.patch(`/activities/${ this.activityObj.id }/`, {
-                        id: this.activityObj.id
-                    })
+                    this.$emit('close')
+                } else {
+                    this.$router.push('/')
+                }  
+            },
+            saveChanges: function() {
+                let data = {
+                    status: this.act.status,
+                    activity_type: this.act.activity_type,
+                    id: this.act.id,
+                    start_date: this.act.start_date,
+                    end_date: this.act.end_date,
+                    service: this.act.service
+                }
+                if (!this.create_mode) {
+                    data.appropriation = this.activityObj.appropriation
+                    axios.patch(`/activities/${ this.act.id }/`, data)
                     .then(res => {
                         this.$emit('save', res.data)
                     })
                     .catch(err => console.log(err))
                 } else {
+                    const appr_id = this.$route.params.apprid
                     axios.post(`/activities/`, {
-                        id: this.activityObj.id
+                        appropriation: appr_id,
+                        status: this.act.status,
+                        activity_type: this.act.activity_type,
+                        id: this.act.id,
+                        start_date: this.act.start_date,
+                        end_date: this.act.end_date,
+                        service: this.act.service
                     })
                     .then(res => {
-                        this.$router.push('/')
+                        this.$router.push(`/appropriation/${ appr_id }`)
                     })
                     .catch(err => console.log(err))
                 }

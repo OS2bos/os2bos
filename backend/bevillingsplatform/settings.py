@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_extensions",
     "django_filters",
+    "simple_history",
     "core",
 ]
 
@@ -66,6 +67,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # For tracking which user made the changes for a model.
+    "simple_history.middleware.HistoryRequestMiddleware",
 ]
 
 ROOT_URLCONF = "bevillingsplatform.urls"

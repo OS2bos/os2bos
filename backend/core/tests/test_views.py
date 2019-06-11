@@ -1,15 +1,8 @@
 from unittest import mock
 from django.urls import reverse
 from .test_utils import AuthenticatedTestCase
-
-
-class TestCaseViewSet(AuthenticatedTestCase):
-    def test_simple_post(self):
-        url = "/cases/"
-        json = {}
-        self.client.login(username=self.username, password=self.password)
-        response = self.client.post(url, json)
-        self.assertEqual(response.status_code, 200)
+from core.tests.testing_mixins import CaseMixin
+from core.models import STEP_ONE, STEP_THREE, STEP_FIVE
 
 
 class TestRelatedPersonsViewSet(AuthenticatedTestCase):
@@ -90,3 +83,69 @@ class TestRelatedPersonsViewSet(AuthenticatedTestCase):
             },
         ]
         self.assertEqual(response.json(), expected_format)
+
+
+class TestCaseViewSet(AuthenticatedTestCase, CaseMixin):
+    def test_history_action_no_history(self):
+        case = self.create_case()
+        reverse_url = reverse("case-history", kwargs={"pk": case.pk})
+
+        response = self.client.get(reverse_url)
+        self.assertEqual(len(response.json()), 1)
+        self.assertEqual(response.json()[0]["scaling_step"], 1)
+
+    def test_history_action_changed_scaling_steps(self):
+        case = self.create_case()
+        # Change to different scaling steps.
+        case.scaling_step = 5
+        case.save()
+        case.scaling_step = 2
+        case.save()
+
+        reverse_url = reverse("case-history", kwargs={"pk": case.pk})
+
+        response = self.client.get(reverse_url)
+
+        self.assertEqual(len(response.json()), 3)
+        # Assert history of scaling steps are preserved.
+        self.assertCountEqual(
+            [x["scaling_step"] for x in response.json()], [5, 2, 1]
+        )
+
+    def test_history_action_changed_effort_steps(self):
+        case = self.create_case()
+        # Change to different effort steps.
+        case.effort_step = STEP_THREE
+        case.save()
+        case.effort_step = STEP_FIVE
+        case.save()
+
+        reverse_url = reverse("case-history", kwargs={"pk": case.pk})
+
+        response = self.client.get(reverse_url)
+
+        self.assertEqual(len(response.json()), 3)
+        # Assert history of scaling steps are preserved.
+        self.assertCountEqual(
+            [x["effort_step"] for x in response.json()],
+            [STEP_ONE, STEP_THREE, STEP_FIVE],
+        )
+
+    def test_history_action_changed_case_worker(self):
+        case = self.create_case()
+        # Change to different effort steps.
+        case.case_worker = "Leif"
+        case.save()
+        case.case_worker = "Lone"
+        case.save()
+
+        reverse_url = reverse("case-history", kwargs={"pk": case.pk})
+
+        response = self.client.get(reverse_url)
+
+        self.assertEqual(len(response.json()), 3)
+        # Assert history of scaling steps are preserved.
+        self.assertCountEqual(
+            [x["case_worker"] for x in response.json()],
+            ["Orla Frøsnapper", "Leif", "Lone"],
+        )

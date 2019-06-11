@@ -13,6 +13,7 @@
     <nav class="breadcrumb" v-if="bc.length > 0">
         <p v-for="(b, key) in bc" :class="`crumb crumb-${key}`" :key="b[0]">
             <i v-if="key !== 0" class="material-icons">subdirectory_arrow_right</i>
+            <i v-if="key === 0" class="material-icons">home</i>
             <i v-if="key === 1" class="material-icons">folder_shared</i>
             <i v-if="key === 2" class="material-icons">folder_open</i>
             <router-link :to="b.link" v-if="b.link">
@@ -43,7 +44,7 @@
 <style>
 
     .breadcrumb {
-        padding: .5rem 1rem;
+        padding: 1rem 2rem;
         background-color: var(--grey1);
     }
 
@@ -57,15 +58,15 @@
     }
 
     .breadcrumb .crumb-1 {
-        margin-left: 1rem;
+        margin-left: .5rem;
     }
 
     .breadcrumb .crumb-2 {
-        margin-left: 3rem;
+        margin-left: 2.5rem;
     }
 
     .breadcrumb .crumb-3 {
-        margin-left: 5rem;
+        margin-left: 4.5rem;
     }
 
     .breadcrumb .crumb > a  {

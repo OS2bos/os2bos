@@ -11,7 +11,7 @@
         </header>
 
         <div class="case-info" v-if="!edit_mode">
-            <dl style="flex: 1 0 33%;">
+            <dl>
                 <dt>Sagspart (CPR, navn)</dt>
                 <dd>{{ cas.cpr_number }}, {{ cas.name }}</dd>
                 <dt>Indsatstrappen:</dt>
@@ -19,27 +19,49 @@
                 <dt>Skaleringstrappe:</dt>
                 <dd>ikke implementeret</dd>
             </dl>
-            <dl style="flex: 1 0 33%;">
-                <dt>Sagsbehander:</dt>
+            <dl>
+                <dt>Distrikt</dt>
+                <dd>{{ displayDistrictName(cas.district) }}</dd>
+                <dt>Målgruppe</dt>
+                <dd>
+                    <span v-if="cas.target_group === 'DISABILITY_DEPT'">
+                        Handicapafdelingen
+                    </span>
+                    <span v-if="cas.target_group === 'FAMILY_DEPT'">
+                        Familieafdelingen
+                    </span>
+                </dd>
+                <template v-if="cas.cross_department_measure || cas.refugee_integration">
+                    <dt>Indsatser</dt>
+                    <dd>
+                        <div v-if="cas.cross_department_measure">
+                            Tværgående ungeindsats
+                        </div>
+                        <div v-if="cas.refugee_integration">
+                            Integrationsindsatsen
+                        </div>
+                    </dd>
+                </template>
+            </dl>
+            <dl>
+                <dt>Sagsbehander</dt>
                 <dd>{{ cas.case_worker }}</dd>
-                <dt>Team:</dt>
+                <dt>Team</dt>
                 <dd>ikke implementeret</dd>
-                <dt>Distrikt:</dt>
-                <dd>{{ cas.district}}</dd>
-                <dt>Leder:</dt>
+                <dt>Leder</dt>
                 <dd>ikke implementeret</dd>
             </dl>
-            <dl style="flex: 1 0 33%;">
-                <dt>Betalingskommune:</dt>
-                <dd>{{ cas.paying_municipality }}</dd>
-                <dt>Handlekommune:</dt>
-                <dd>{{ cas.acting_municipality }}</dd>
-                <dt>Bopælsskommune:</dt>
-                <dd>{{ cas.residence_municipality }}</dd>
+            <dl>
+                <dt>Betalingskommune</dt>
+                <dd>{{ displayMuniName(cas.paying_municipality) }}</dd>
+                <dt>Handlekommune</dt>
+                <dd>{{ displayMuniName(cas.acting_municipality) }}</dd>
+                <dt>Bopælsskommune</dt>
+                <dd>{{ displayMuniName(cas.residence_municipality) }}</dd>
             </dl>
         </div>
 
-        <case-edit :case-obj="cas" v-if="edit_mode" @save="reload()" />
+        <case-edit :case-obj="cas" v-if="edit_mode" @close="reload()" />
 
         <appropriations :case-id="cas.id" />
 
@@ -52,6 +74,7 @@
     import CaseEdit from './CaseEdit.vue'
     import Appropriations from '../appropriations/AppropriationList.vue'
     import axios from '../http/Http.js'
+    import { municipalityId2name, districtId2name } from '../filters/Labels.js'
 
     export default {
 
@@ -90,6 +113,12 @@
             reload: function() {
                 this.edit_mode =  false
                 this.update()
+            },
+            displayMuniName: function(id) {
+                return municipalityId2name(id)
+            },
+            displayDistrictName: function(id) {
+                return districtId2name(id)
             }
         },
         created: function() {
@@ -103,7 +132,7 @@
 <style>
 
     .case {
-        margin: 1rem;
+        margin: 1rem 2rem;
     }
 
     .case-header {
@@ -117,10 +146,12 @@
     }
 
     .case-info {
-        display: flex; 
-        flex-flow: row nowrap;
+        display: grid; 
+        grid-template-columns: auto auto auto auto;
+        grid-gap: 3rem;
+        justify-content: start;
         background-color: var(--grey1);
-        padding: 1rem 2rem;
+        padding: 1.5rem 2rem 2rem;
     }
 
 </style>

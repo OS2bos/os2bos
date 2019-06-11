@@ -8,6 +8,9 @@ from core.models import (
     Appropriation,
     Activity,
     RelatedPerson,
+    SchoolDistrict,
+    Sections,
+    ActivityCatalog,
 )
 
 for klass in (
@@ -18,5 +21,8 @@ for klass in (
     Appropriation,
     Activity,
     RelatedPerson,
+    SchoolDistrict,
+    Sections,
+    ActivityCatalog,
 ):
     admin.site.register(klass, admin.ModelAdmin)

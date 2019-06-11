@@ -14,31 +14,3 @@ dd {
     margin: 0;
     padding: 0;
 }
-
-@media screen and (min-width: $media-medium) {
-
-    dl {
-        display: grid;
-        grid-template-columns: 8rem auto;
-        grid-gap: 1rem;
-        margin: 1rem 0;
-    }
-    
-    dt {
-        padding: 0;
-        float: left;
-        width: 10rem;
-    }
-
-    dd {
-        padding: 0;
-    }
-
-    dd::after {
-        content: '';
-        display: block;
-        clear: both;
-        width: 100%;
-    }
-    
-}

@@ -3,8 +3,10 @@
     <header>
         <div class="globalheader">
             <h1 title="Ballerup Bevillingsplatformen">
-                <img class="global-logo" src="/logo.svg" alt="" />
-                <span>Ballerup <br>Bevillingsplatform</span>
+                <router-link to="/" class="header-link">
+                    <img class="global-logo" src="/logo.svg" alt="" />
+                    <span>Ballerup <br>Bevillingsplatform</span>
+                </router-link>
             </h1>
             <router-link to="/login">Log ud</router-link>
         </div>
@@ -34,18 +36,23 @@
         flex-flow: row nowrap;
         justify-content: space-between;
         align-items: center;
-        padding: .75rem 1rem;
+        padding: 2rem;
         background-color: var(--grey0);
     }
 
     .globalheader > h1 {
         margin: 0;
         padding: 0;
+    }
+
+    .header-link {
+        margin: 0;
+        padding: 0;
         font-size: 1.125rem;
         color: #0b7ead;
         display: flex;
         flex-flow: row nowrap;
-
+        border: none !important;
     }
 
     .global-logo {

@@ -19,15 +19,15 @@
   "author": "Magenta ApS",
   "license": "MPL-2.0",
   "dependencies": {
-    "axios": "^0.18.0",
-    "core-js": "^2.6.8",
+    "axios": "^0.18.1",
+    "core-js": "^2.6.9",
     "vue": "^2.6.10",
     "vue-router": "^3.0.3",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.7.0",
-    "@vue/cli-service": "^3.7.0",
+    "@vue/cli-plugin-babel": "^3.8.0",
+    "@vue/cli-service": "^3.8.0",
     "postcss-import": "^12.0.1",
     "precss": "^4.0.0",
     "vue-template-compiler": "^2.5.21"

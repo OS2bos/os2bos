@@ -3,6 +3,7 @@ from django.contrib.postgres import fields
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from django_audit_fields.models import AuditModelMixin
+from simple_history.models import HistoricalRecords
 
 # Target group - definitions and choice list.
 FAMILY_DEPT = "FAMILY_DEPT"
@@ -10,6 +11,23 @@ DISABILITY_DEPT = "DISABILITY_DEPT"
 target_group_choices = (
     (FAMILY_DEPT, _("familieafdelingen")),
     (DISABILITY_DEPT, _("handicapafdelingen")),
+)
+
+# Effort steps - definitions and choice list.
+STEP_ONE = "STEP_ONE"
+STEP_TWO = "STEP_TWO"
+STEP_THREE = "STEP_THREE"
+STEP_FOUR = "STEP_FOUR"
+STEP_FIVE = "STEP_FIVE"
+STEP_SIX = "STEP_SIX"
+
+effort_steps_choices = (
+    (STEP_ONE, _("Trin 1: Tidlig indsats i almenområdet")),
+    (STEP_TWO, _("Trin 2: Forebyggelse")),
+    (STEP_THREE, _("Trin 3: Hjemmebaserede indsatser")),
+    (STEP_FOUR, _("Trin 4: Anbringelse i slægt eller netværk")),
+    (STEP_FIVE, _("Trin 5: Anbringelse i forskellige typer af plejefamilier")),
+    (STEP_SIX, _("Trin 6: Anbringelse i institutionstilbud")),
 )
 
 
@@ -140,11 +158,37 @@ class Case(AuditModelMixin, models.Model):
         verbose_name=_("målgruppe"),
         choices=target_group_choices,
     )
+    effort_step = models.CharField(
+        max_length=128,
+        choices=effort_steps_choices,
+        verbose_name=_("indsatstrappe"),
+    )
+    scaling_step = models.PositiveSmallIntegerField(
+        verbose_name=_("skaleringstrappe"),
+        choices=[(i, i) for i in range(1, 11)],
+    )
     refugee_integration = models.BooleanField(
         verbose_name=_("integrationsindsatsen"), default=False
     )
     cross_department_measure = models.BooleanField(
         verbose_name=_("tværgående ungeindsats"), default=False
+    )
+    # We only need to store historical records of
+    # effort_step, scaling_step, case_worker,
+    # thus we can exclude everything else.
+    history = HistoricalRecords(
+        excluded_fields=[
+            "refugee_integration",
+            "cross_department_measure",
+            "target_group",
+            "residence_municipality",
+            "acting_municipality",
+            "paying_municipality",
+            "district",
+            "name",
+            "cpr_number",
+            "sbsys_id",
+        ]
     )
 
 
@@ -177,13 +221,15 @@ class Appropriation(AuditModelMixin, models.Model):
     SECTION_HEAD = "SECTION_HEAD"
     TEAM_MEETING = "TEAM_MEETING"
     SPECIALIST = "SPECIALIST"
+    YOUTH_CRIME_BOARD = "YOUTH_CRIME_BOARD"
 
     approval_level_choices = (
         (CASE_WORKER, _("egenkompetence")),
-        (TEAM_LEADER, _("teamleder")),
-        (SECTION_HEAD, _("afsnitsleder")),
         (TEAM_MEETING, _("teammøde")),
         (SECTION_HEAD, _("fagspecialist")),
+        (TEAM_LEADER, _("teamleder")),
+        (SECTION_HEAD, _("afsnitsleder")),
+        (YOUTH_CRIME_BOARD, _("ungdomskriminalitetsnævnet")),
     )
     approval_level = models.CharField(
         verbose_name=_("bevilling foretaget på niveau"),
@@ -213,24 +259,6 @@ class Sections(models.Model):
     allowed as well as the action steps allowed.
     """
 
-    STEP_ONE = "STEP_ONE"
-    STEP_TWO = "STEP_TWO"
-    STEP_THREE = "STEP_THREE"
-    STEP_FOUR = "STEP_FOUR"
-    STEP_FIVE = "STEP_FIVE"
-    STEP_SIX = "STEP_SIX"
-
-    effort_steps_choices = (
-        (STEP_ONE, _("Trin 1: Tidlig indsats i almenområdet")),
-        (STEP_TWO, _("Trin 2: Forebyggelse")),
-        (STEP_THREE, _("Trin 3: Hjemmebaserede indsatser")),
-        (STEP_FOUR, _("Trin 4: Anbringelse i slægt eller netværk")),
-        (
-            STEP_FIVE,
-            _("Trin 5: Anbringelse i forskellige typer af plejefamilier"),
-        ),
-        (STEP_SIX, _("Trin 6: Anbringelse i institutionstilbud")),
-    )
     paragraph = models.CharField(max_length=128, verbose_name=_("paragraf"))
     kle_number = models.CharField(max_length=128, verbose_name=_("KLE-nummer"))
     text = models.TextField(verbose_name=_("forklarende tekst"))
@@ -308,7 +336,9 @@ class Activity(AuditModelMixin, models.Model):
         (EXPECTED_CHANGE, _("forventning")),
     )
 
-    activity_type = models.CharField(max_length=128, verbose_name=_("type"))
+    activity_type = models.CharField(
+        max_length=128, verbose_name=_("type"), choices=type_choices
+    )
 
     payment_plan = models.OneToOneField(
         PaymentSchedule,

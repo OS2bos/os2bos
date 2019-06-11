@@ -1,7 +1,9 @@
 <template>
     <section class="case">
         <form @submit.prevent="saveChanges()">
-            <h1>Tilknyt/Redigér hovedsag</h1>
+            
+            <h1 v-if="create_mode">Tilknyt hovedsag</h1>
+            <h1 v-else>Redigér hovedsag</h1>
             
             <fieldset>
                 <label for="field-sbsys-id">SBSYS Hovedsag:</label>
@@ -34,46 +36,48 @@
             <fieldset>
                 <h3>Kommune:</h3>
                 <label for="selectField1">Betalingskommune:</label>
-                <select id="selectField1">
-                    <option>{{ cas.paying_municipality }}</option>
-                </select>
+                <list-picker 
+                    :dom-id="'selectField1'" 
+                    :selected-id="cas.paying_municipality" 
+                    @selection="changeMuni($event, 'paying_municipality')" 
+                    :list="municipalities" 
+                    default="42" />
             </fieldset>
 
             <fieldset>
                 <label for="selectField2">Handlekommune:</label>
-                <select id="selectField2">
-                    <option>{{ cas.acting_municipality }}</option>
-                </select>
+                <list-picker 
+                    :dom-id="'selectField2'" 
+                    :selected-id="cas.acting_municipality" 
+                    @selection="changeMuni($event, 'acting_municipality')" 
+                    :list="municipalities" 
+                    default="42" />
             </fieldset>
 
             <fieldset>
                 <label for="selectField3">Bopælsskommune:</label>
-                <select id="selectField3">
-                    <option>{{ cas.residence_municipality }}</option>
-                </select>
+                <list-picker 
+                    :dom-id="'selectField3'" 
+                    :selected-id="cas.residence_municipality" 
+                    @selection="changeMuni($event, 'residence_municipality')" 
+                    :list="municipalities" 
+                    default="42" />
             </fieldset>
 
             <fieldset>
                 <h3>Målgruppe:</h3>
-                <input id="inputRadio1" type="radio" name="radioButtonSet">
+                <input id="inputRadio1" type="radio" value="FAMILY_DEPT" v-model="cas.target_group" name="target-group" required>
                 <label for="inputRadio1">Familieafdelingen</label>
-                <input id="inputRadio2" type="radio" name="radioButtonSet">
+                <input id="inputRadio2" type="radio" value="DISABILITY_DEPT" v-model="cas.target_group" name="target-group" required>
                 <label for="inputRadio2">Handicapafdelingen</label>
             </fieldset>
 
             <fieldset>
                 <h3>Andet:</h3>
-                <input id="inputCheckbox1" type="checkbox" name="radioButtonSet">
+                <input id="inputCheckbox1" type="checkbox" v-model="cas.refugee_integration">
                 <label for="inputCheckbox1">Integrationsindsatsen</label>
-                <input id="inputCheckbox2" type="checkbox" name="radioButtonSet">
+                <input id="inputCheckbox2" type="checkbox" v-model="cas.cross_department_measure">
                 <label for="inputCheckbox2">Tværgående ungeindsats</label>
-            </fieldset>
-
-            <fieldset>
-                <label for="selectField">Oprindeligt distrikt:</label>
-                <select id="selectField">
-                    <option>{{ cas.original_district}}</option>
-                </select>
             </fieldset>
 
             <fieldset>
@@ -87,7 +91,7 @@
                 <button @click="$router.push(`/assessment/${ cas.id }`)">Vurdering</button>
             </fieldset>
 
-            <fieldset>
+            <div>
                 <h3>Sagsbehandling:</h3>
                 <dl>
                     <dt>Sagsbehander:</dt>
@@ -96,20 +100,18 @@
                     <dd>ikke implementeret</dd>
                 </dl>
                 <fieldset>
-                <label for="selectField">Distrikt:</label>
-                <select id="selectField">
-                    <option>{{ cas.district }}</option>
-                </select>
+                    <label for="selectField4">Distrikt:</label>
+                    <list-picker :dom-id="'selectField4'" :selected-id="cas.district" @selection="changeDistrict" :list="districts" />
                 </fieldset>
                 <fieldset>
                     <dt>Leder:</dt>
                     <dd>ikke implementeret</dd>
                 </fieldset>
-            </fieldset>
+            </div>
             
             <fieldset>
                 <input type="submit" value="Gem">
-                <button class="cancel-btn" type="cancel">Annullér</button>
+                <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
             </fieldset>
             
         </form>
@@ -120,38 +122,69 @@
 <script>
 
     import axios from '../http/Http.js'
+    import ListPicker from '../forms/ListPicker.vue'
 
     export default {
 
+        components: {
+            ListPicker
+        },
         props: [
             'caseObj'
         ],
         data: function() {
             return {
-                item: null,
                 cas: {},
                 create_mode: true
             }
         },
+        computed: {
+            municipalities: function() {
+                return this.$store.getters.getMunis
+            },
+            districts: function() {
+                return this.$store.getters.getDistricts
+            }
+        },
         methods: {
-            saveChanges: function() {
+            changeMuni: function(ev, type) {
+                this.cas[type] = ev
+            },
+            changeDistrict: function(dist) {
+                this.cas.district = dist
+            },
+            cancel: function() {
                 if (!this.create_mode) {
-                    axios.patch(`/cases/${ this.cas.id }/`, {
-                        name: this.cas.name,
-                        cpr_number: this.cas.cpr_number
-                    })
+                    this.$emit('close')
+                } else {
+                    this.$router.push('/')
+                }  
+            },
+            saveChanges: function() {
+                let data = {
+                    name: this.cas.name,
+                    cpr_number: this.cas.cpr_number,
+                    paying_municipality: this.cas.paying_municipality,
+                    acting_municipality: this.cas.acting_municipality,
+                    residence_municipality: this.cas.residence_municipality,
+                    district: this.cas.district,
+                    case_worker: this.cas.case_worker,
+                    target_group: this.cas.target_group,
+                    refugee_integration: this.cas.refugee_integration,
+                    cross_department_measure: this.cas.cross_department_measure
+                }
+                if (!this.create_mode) {
+                    axios.patch(`/cases/${ this.cas.id }/`, data)
                     .then(res => {
-                        this.$emit('save', res.data)
+                        this.$emit('close', res.data)
                     })
                     .catch(err => console.log(err))
                 } else {
-                    axios.post(`/cases/`, {
-                        sbsys_id: this.cas.sbsys_id,
-                        name: this.cas.name,
-                        cpr_number: this.cas.cpr_number
-                    })
+                    data.sbsys_id = this.cas.sbsys_id
+                    data.case_worker = 'SAGSBEHANDLER NAVN TEST'
+                    axios.post(`/cases/`, data)
                     .then(res => {
-                        this.$router.push('/')
+                        this.$router.push(`/case/${ res.data.id }/`)
                     })
                     .catch(err => console.log(err))
                 }

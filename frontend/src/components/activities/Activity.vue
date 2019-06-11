@@ -4,7 +4,7 @@
         <header class="activity-header">
             <h1>
                 <i class="material-icons">style</i>
-                Udgift til {{ act.activity_type }}
+                Udgift til {{ activityId2name(act.service) }}
             </h1>
             <button @click="show_edit = !show_edit" class="act-edit-btn">Redigér</button>
         </header>
@@ -17,19 +17,14 @@
             <dl>
                 <dt>Status</dt>
                 <dd>
-                    <div :class="`status-${ act.status }`">{{ act.status }}</div>
+                    <span :class="`status-${ act.status }`">{{ act.status }}</span>
                 </dd>
                 <dt>Type</dt>
                 <dd>
-                    <div v-if="act.is_main_act">Hovedaktivitet</div>
-                    <div v-if="!act.is_main_act">Tillægsydelse</div>
-                    <div v-if="act.is_single_payment">Enkeltudgift</div>
-                    <div v-if="!act.is_single_payment">Følgeydelse</div>
+                    <div>{{ act.activity_type }}</div>
                 </dd>
-                <dt>Bevilling efter </dt>
-                <dd>ikke implementeret</dd>
                 <dt>Aktivitet</dt>
-                <dd>{{ act.activity_type }}</dd>
+                <dd>{{ activityId2name(act.service) }}</dd>
                 <dt>Startdato</dt>
                 <dd>{{ displayDate(act.start_date) }}</dd>
                 <dt>Slutdato</dt>
@@ -60,7 +55,7 @@
                 <dt>ID</dt>
                 <dd>ikke implementeret</dd>
                 <dt>Navn</dt>
-                <dd>{{ act.user_created }}</dd>
+                <dd>ikke implementeret</dd>
                 <dt>Betalingsmåde</dt>
                 <dd>
                     <span>
@@ -78,6 +73,7 @@
     import axios from '../http/Http.js'
     import ActivityEdit from './ActivityEdit.vue'
     import { json2js } from '../filters/Date.js'
+    import { activityId2name, sectionId2name } from '../filters/Labels.js'
 
     export default {
 
@@ -87,6 +83,7 @@
         data: function() {
             return {
                 act: null,
+                appr: null,
                 show_edit: false
             }
         },
@@ -100,19 +97,20 @@
                             link: '/',
                             title: 'Mine sager'
                         },
-                        // {
-                        //     link: `/case/${ this.act.appropriation.case.id }`,
-                        //     title: `${ this.act.appropriation.case.sbsys_id }, ${ this.act.appropriation.case.name }`
-                        // },
                         {
-                            link: `/appropriation/${ this.act.appropriation.id }`,
-                            title: `Foranstaltning ${ this.act.appropriation.id }`
+                            link: `/appropriation/${ this.act.appropriation }`,
+                            title: `Foranstaltning ${ this.act.appropriation }`
                         },
                         {
                             link: false,
-                            title: `${ this.act.activity_type }`
+                            title: `${ activityId2name(this.act.service) }`
                         }
                     ])
+
+                axios.get(`/appropriations/${ this.act.appropriation }`)
+                .then(resp => {
+                    this.appr = resp.data
+                })
                 })
                 .catch(err => console.log(err))
             },
@@ -121,6 +119,12 @@
             },
             displayDate: function(dt) {
                 return json2js(dt)
+            },
+            activityId2name: function(id) {
+                return activityId2name(id)
+            },
+            displaySection: function(id) {
+                return sectionId2name(id)
             }
         },
         created: function() {
@@ -148,14 +152,12 @@
     }
 
     .activity .status-GRANTED {
-        max-width: 6rem;
         background-color: var(--success);
         color: white;
         padding: .25rem;
     }
 
     .activity .status-EXPECTED {
-        max-width: 6rem;
         background-color: var(--warning);
         color: white;
         padding: .25rem;

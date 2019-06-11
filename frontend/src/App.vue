@@ -18,10 +18,18 @@
     import AppFooter from './components/footer/Footer.vue'
 
     export default {
+
         components: {
             AppHeader,
             AppFooter
+        },
+        created: function() {
+            this.$store.dispatch('fetchMunis')
+            this.$store.dispatch('fetchDistricts')
+            this.$store.dispatch('fetchActivities')
+            this.$store.dispatch('fetchSections')
         }
+        
     }
 
 </script>
@@ -57,6 +65,33 @@
     .material-icons {
         font-size: 3rem;
         vertical-align: middle;
+    }
+
+    .label {
+        padding: .25rem .5rem;
+        border-radius: .125rem;
+        display: inline-block;
+        text-transform: capitalize;
+    }
+
+    .label-DRAFT {
+        background-color: var(--grey7);
+        color: white;
+    }
+
+    .label-BUDGETED {
+        background-color: var(--warning);
+        color: white;
+    }
+
+    .label-GRANTED {
+        background-color: var(--success);
+        color: white;
+    }
+
+    .label-DISCONTINUED {
+        background-color: var(--danger);
+        color: white;
     }
 
 </style>
