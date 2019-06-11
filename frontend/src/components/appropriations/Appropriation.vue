@@ -3,6 +3,10 @@
     <section class="appropriation" v-if="appr">
         <header class="appropriation-header">
             <h1>Bevillingsskrivelse</h1>
+            <span v-html="statusLabel(appr.status)" style="margin: 0 1rem;"></span>
+            <template v-if="appr.approval_level"> af
+                {{ appr.approval_level }}
+            </template>
             <div>
                 <button @click="show_edit = !show_edit" class="appr-edit-btn">Redigér</button>
                 <router-link :to="`/appropriation/${ appr.id }/print`">Print</router-link>
@@ -10,7 +14,7 @@
         </header>
 
         <div v-if="show_edit">
-            <appropriation-edit :appr-obj="appr" v-if="show_edit" @save="reload()" />
+            <appropriation-edit :appr-obj="appr" v-if="show_edit" @close="update()" />
         </div>
 
         <div class="appr-grid" v-if="cas">
@@ -30,11 +34,11 @@
                     <dt>Sagspart</dt>
                     <dd>{{ cas.cpr_number }}, {{ cas.name }}</dd>
                     <dt>Betalingskommune</dt>
-                    <dd>{{ cas.paying_municipality }}</dd>
+                    <dd>{{ displayMuniName(cas.paying_municipality) }}</dd>
                     <dt>Handlekommune</dt>
-                    <dd>{{ cas.acting_municipality }}</dd>
+                    <dd>{{ displayMuniName(cas.acting_municipality) }}</dd>
                     <dt>Bopælskommune</dt>
-                    <dd>{{ cas.residence_municipality }}</dd>
+                    <dd>{{ displayMuniName(cas.residence_municipality) }}</dd>
                 </dl>
             </div>
             
@@ -48,17 +52,10 @@
 
             <div class="sagsbev appr-grid-box">
                 <h2>Der bevilges:</h2>
-                <!-- <activity-list :appr-id="appr.id" /> -->
+                <activity-list :appr-id="appr.id" />
                 <!-- <activity-list2 :appr-id="appr.id" /> -->
-                <activity-list3 :appr-id="appr.id" />
+                <!-- <activity-list3 :appr-id="appr.id" /> -->
                 <!-- <activity-list4 :appr-id="appr.id" /> -->
-            </div>
-            
-            <div class="sagsgodkend appr-grid-box">
-                <span :class="`status-${ appr.status }`">{{ appr.status }}</span>
-                <template v-if="appr.approval_level"> af
-                    {{ appr.approval_level }}
-                </template>
             </div>
 
         </div>
@@ -74,7 +71,7 @@
     import ActivityList3 from '../activities/ActivityList3.vue'
     import ActivityList4 from '../activities/ActivityList4.vue'
     import AppropriationEdit from './AppropriationEdit.vue'
-    import { sectionId2name } from '../filters/Labels.js'
+    import { municipalityId2name, districtId2name, sectionId2name, displayStatus } from '../filters/Labels.js'
 
     export default {
 
@@ -93,8 +90,9 @@
             }
         },
         methods: {
-            displaySection: function(id) {
-                return sectionId2name(id)
+            update: function() {
+                this.show_edit =  false
+                this.fetchAppr(this.$route.params.id)
             },
             fetchAppr: function(id) {
                 axios.get(`/appropriations/${ id }`)
@@ -125,10 +123,22 @@
             },
             reload: function() {
                 this.show_edit =  false
-            }
+            },
+            displayMuniName: function(id) {
+                return municipalityId2name(id)
+            },
+            displayDistrictName: function(id) {
+                return districtId2name(id)
+            },
+            displaySection: function(id) {
+                return sectionId2name(id)
+            },
+            statusLabel: function(status) {
+                return displayStatus(status)
+            },
         },
         created: function() {
-            this.fetchAppr(this.$route.params.id)
+            this.update()
         }
     }
     
@@ -160,7 +170,7 @@
     .appr-grid {
         display: grid;
         grid-template-columns: repeat(6, auto);
-        grid-template-rows: repeat(4, auto);
+        grid-template-rows: repeat(3, auto);
     }
 
     .appr-grid-box {
@@ -183,10 +193,6 @@
 
     .sagsbev {
         grid-area: 3 / 1 / 4 / 7;
-    }
-
-    .sagsgodkend {
-        grid-area: 4 / 1 / 5 / 7;
     }
 
     @media screen and (min-width: 45rem) {

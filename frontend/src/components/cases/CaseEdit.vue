@@ -134,7 +134,6 @@
         ],
         data: function() {
             return {
-                item: null,
                 cas: {},
                 create_mode: true
             }
@@ -185,7 +184,7 @@
                     data.case_worker = 'SAGSBEHANDLER NAVN TEST'
                     axios.post(`/cases/`, data)
                     .then(res => {
-                        this.$router.push('/')
+                        this.$router.push(`/case/${ res.data.id }/`)
                     })
                     .catch(err => console.log(err))
                 }

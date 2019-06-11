@@ -30,6 +30,7 @@ from core.serializers import (
     SectionsSerializer,
     ActivityCatalogSerializer,
     AccountSerializer,
+    HistoricalCaseSerializer,
 )
 
 from core.utils import get_person_info
@@ -40,6 +41,15 @@ from core.utils import get_person_info
 class CaseViewSet(viewsets.ModelViewSet):
     queryset = Case.objects.all()
     serializer_class = CaseSerializer
+
+    @action(detail=True, methods=["get"])
+    def history(self, request, pk=None):
+        """
+        Fetch history of HistoricalCases.
+        """
+        case = self.get_object()
+        serializer = HistoricalCaseSerializer(case.history.all(), many=True)
+        return Response(serializer.data)
 
 
 class AppropriationViewSet(viewsets.ModelViewSet):

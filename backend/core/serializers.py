@@ -12,6 +12,7 @@ from core.models import (
     Sections,
     ActivityCatalog,
     Account,
+    HistoricalCase,
 )
 
 
@@ -19,6 +20,20 @@ class CaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Case
         fields = "__all__"
+
+
+class HistoricalCaseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HistoricalCase
+        # include history_date (date saved)
+        # and history_user (user responsible for saving).
+        fields = (
+            "case_worker",
+            "effort_step",
+            "scaling_step",
+            "history_date",
+            "history_user",
+        )
 
 
 class AppropriationSerializer(serializers.ModelSerializer):

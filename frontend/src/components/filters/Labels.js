@@ -24,6 +24,18 @@ function districtId2name(id) {
     }
 }
 
+function activityId2name(id) {
+    const act_list = store.getters.getActivities
+    if (id) {
+        let act = act_list.find(function(element) {
+            return element.id === id;
+        })
+        return act.name
+    } else {
+        return 'Ikke tilgængelig'
+    }
+}
+
 function sectionId2name(id) {
     const section_list = store.getters.getSections
     if (section_list) {
@@ -36,8 +48,31 @@ function sectionId2name(id) {
     }
 }
 
+function displayStatus(status) {
+    let status_str = ''
+    switch(status) {
+        case 'DRAFT':
+            status_str = 'kladde'
+            break;
+        case 'BUDGETED':
+            status_str = 'forventet'
+            break;
+        case 'GRANTED':
+            status_str = 'bevilget'
+            break;
+        case 'DISCONTINUED':
+            status_str = 'udgået'
+            break;
+        default:
+            status_str = 'ukendt status'
+    }
+    return `<span class="label label-${ status }">${ status_str }</span>`
+}
+
 export {
     municipalityId2name, 
     districtId2name,
-    sectionId2name
+    activityId2name,
+    sectionId2name,
+    displayStatus
 }
