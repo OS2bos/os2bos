@@ -43,14 +43,9 @@
 
 <script>
 
-    import History from './History.vue'
     import axios from '../http/Http.js'
 
     export default {
-
-        components: {
-            History
-        },
 
         props: [
             'caseObj'
