@@ -13,11 +13,16 @@
         <div class="case-info" v-if="!edit_mode">
             <dl>
                 <dt>Sagspart (CPR, navn)</dt>
-                <dd>{{ cas.cpr_number }}, {{ cas.name }}</dd>
-                <dt>Indsatstrappen:</dt>
+                <dd>
+                    {{ cas.cpr_number }}, {{ cas.name }}
+                </dd>
+                <dt>Indsatstrappen</dt>
                 <dd>{{ displayEffortName(cas.effort_step) }}</dd>
-                <dt>Skaleringstrappe:</dt>
-                <dd>{{ cas.scaling_step }}</dd>
+                <dt>Skaleringstrappe</dt>
+                <dd style="display: flex; flex-flow: row nowrap; justify-content: space-between; align-items: center;">
+                    <span>{{ cas.scaling_step }}</span>
+                    <router-link :to="`/case/${ cas.id }/assessment`">Se vurderinger</router-link>
+                </dd>
             </dl>
             <dl>
                 <dt>Distrikt</dt>

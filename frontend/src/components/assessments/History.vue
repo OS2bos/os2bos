@@ -28,16 +28,16 @@
                         {{ h.case_worker }}
                     </td>
                     <td>
-                        ikke implementeret {{ h.effort_stairs }}
+                        {{ displayEffortName(h.effort_step) }}
                     </td>
                     <td>
-                        ikke implementeret {{ h.scaling_staircase }}
+                        {{ h.scaling_step }}
                     </td>
                     <td>
-                        ikke implementeret
+                        Ikke implementeret
                     </td>
                     <td>
-                        {{ displayDate(h.modified)}}
+                        {{ displayDate(h.history_date)}}
                     </td>
                 </tr>
             </tbody>
@@ -49,20 +49,29 @@
 
     import axios from '../http/Http.js'
     import { json2js } from '../filters/Date.js'
+    import { displayEffort } from '../filters/Labels.js'
 
     export default {
 
+        props: [
+            'caseObj'
+        ],
         data: function() {
             return {
                 his: null
             }
         },
+        watch: {
+            caseObj: {
+                handler() {
+                    this.fetchHistory(this.caseObj.id)
+                },
+                deep: true
+            }
+        },
         methods: {
-            update: function() {
-                this.fetchHistory(this.$route.params.id)
-            },
             fetchHistory: function(id) {
-                axios.get('/cases/')
+                axios.get(`/cases/${ id }/history`)
                 .then(res => {
                     this.his = res.data
                 })
@@ -70,10 +79,13 @@
             },
             displayDate: function(dt) {
                 return json2js(dt)
+            },
+            displayEffortName: function(str) {
+                return displayEffort(str)
             }
         },
         created: function() {
-            this.update()
+            this.fetchHistory(this.caseObj.id)
         }
     }
     

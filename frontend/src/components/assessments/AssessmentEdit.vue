@@ -2,48 +2,40 @@
 
     <div class="assessment">
     
-        <h1 v-if="!create_mode">Opdatér vurdering</h1>
-        <h1 v-else>Vurdering</h1>
-        <form @submit.prevent="submitAssessment()" class="assessment-form">
+        <h2 v-if="!create_mode">Opdatér vurdering</h2>
+        <h2 v-else>Vurdering</h2>
 
-            <fieldset>
-                <label for="selectField1">Indsatstrappen</label>
-                <select id="selectField1" v-model="cas.effort_step" required @change="updateEffort()">
-                    <option value="STEP_ONE">Trin 1 - Tidlig indsats i almenområdet</option>
-                    <option value="STEP_TWO">Trin 2 - Forebyggelse</option>
-                    <option value="STEP_THREE">Trin 3 - Hjemmebaserede indsatser</option>
-                    <option value="STEP_FOUR">Trin 4 - Anbringelse i slægt eller netværk</option>
-                    <option value="STEP_FIVE">Trin 5 - Anbringelse i forskellige typer af plejefamilier</option>
-                    <option value="STEP_SIX">Trin 6 - Anbringelse i institutionstilbud</option>
-                </select>
-            </fieldset>
+        <fieldset>
+            <label for="selectField1">Indsatstrappen</label>
+            <select id="selectField1" v-model="cas.effort_step" required @change="updateEffort()">
+                <option value="STEP_ONE">Trin 1 - Tidlig indsats i almenområdet</option>
+                <option value="STEP_TWO">Trin 2 - Forebyggelse</option>
+                <option value="STEP_THREE">Trin 3 - Hjemmebaserede indsatser</option>
+                <option value="STEP_FOUR">Trin 4 - Anbringelse i slægt eller netværk</option>
+                <option value="STEP_FIVE">Trin 5 - Anbringelse i forskellige typer af plejefamilier</option>
+                <option value="STEP_SIX">Trin 6 - Anbringelse i institutionstilbud</option>
+            </select>
+        </fieldset>
 
-            <fieldset>
-                <label for="selectField2">Skaleringstrappen</label>
-                <select id="selectField2" v-model="cas.scaling_step" required @change="updateScaling()">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                </select>
-            </fieldset>
+        <fieldset>
+            <label for="selectField2">Skaleringstrappen</label>
+            <select id="selectField2" v-model="cas.scaling_step" required @change="updateScaling()">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+            </select>
+        </fieldset>
 
-            <!--
-            #TODO: Add note to API backend. Does note attach to case or assessement history?
-            <fieldset>
-                <label for="textArea">Bemærkning til vurdering</label>
-                <textarea id="textArea" v-model="cas.note"></textarea>
-            </fieldset>
-            -->
-
-            <fieldset v-if="!create_mode">
-                <input type="submit" value="Opdater">
-                <button class="cancel-btn" type="cancel">Annullér</button>
-            </fieldset>
-
-        </form>
+        <!--
+        #TODO: Add note to API backend. Does note attach to case or assessement history?
+        <fieldset>
+            <label for="textArea">Bemærkning til vurdering</label>
+            <textarea id="textArea" v-model="cas.note"></textarea>
+        </fieldset>
+        -->
 
     </div>
 
@@ -80,12 +72,6 @@
             },
             updateScaling: function() {
                 this.$emit('assessment', {
-                    scaling_step: this.cas.scaling_step
-                })
-            },
-            submitAssessment: function() {
-                this.$emit('assessment', {
-                    effort_step: this.cas.effort_step,
                     scaling_step: this.cas.scaling_step
                 })
             }

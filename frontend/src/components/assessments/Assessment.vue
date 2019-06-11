@@ -1,27 +1,18 @@
 <template>
-    <section class="assessment">
+    <div class="assessment" v-if="cas">
         <header class="assessment-header">
-            <h1>Vurderinger</h1>
-            <button @click="edit_mode = !edit_mode" class="assessment-edit-btn">Redigér</button>
+            <h1>Vurderinger af {{ cas.cpr_number }}, {{ cas.name }}</h1>
         </header>
-        <div>
-            <fieldset v-if="!edit_mode">
-                <h3>Sagspart:</h3>
-                <dl>
-                    <dt>CPR-nr:</dt>
-                    <dd>{{ cas.cpr_number }}</dd>
-                    <dt>Navn:</dt>
-                    <dd>{{ cas.name }}</dd>
-                    <dt>Sag:</dt>
-                    <dd>{{ cas.sbsys_id }}</dd>
-                </dl>
+
+        <form class="assessment-form" @submit.prevent="saveAssessment()">
+            <assessment-edit :case-obj="cas" @assessment="updateAssessment" />
+            <fieldset style="margin: 0 1rem 1rem;">
+                <input type="submit" value="Opdatér">
             </fieldset>
+        </form>
 
-                <assessment-edit :assessment-obj="cas" v-if="edit_mode" @save="reload()"/>
-
-            <history/>
-        </div>
-    </section>
+        <history :case-obj="cas" />
+    </div>
 
 </template>
 
@@ -40,34 +31,52 @@
 
         data: function() {
             return {
-                cas: null,
-                edit_mode: false
+                cas_id: null,
+                cas: null
             }
         },
         methods: {
             update: function() {
-                this.fetchCase(this.$route.params.id)
+                this.cas_id = this.$route.params.id
+                this.fetchCase(this.cas_id)
             },
             fetchCase: function(id) {
-                axios.get(`/cases/`)
+                axios.get(`/cases/${ this.cas_id}/`)
                 .then(res => {
-                    this.cas = res.data[0]
+                    this.cas = res.data
                     this.$store.commit('setBreadcrumb', [
                         {
                             link: '/',
                             title: 'Mine sager'
                         },
                         {
-                            link: `/case-create/ }`,
+                            link: `/case/${ this.cas.id }/`,
                             title: `Sag ${ this.cas.sbsys_id }`
+                        },
+                        {
+                            title: `Vurderinger`
                         }
                     ])
                 })
                 .catch(err => console.log(err))
             },
-            reload: function() {
-                this.edit_mode =  false
-                this.update()
+            updateAssessment: function(assessment) {
+                if (assessment.scaling_step) {
+                    this.cas.scaling_step = assessment.scaling_step
+                }
+                if (assessment.effort_step) {
+                    this.cas.effort_step = assessment.effort_step
+                }
+            },
+            saveAssessment: function() {
+                axios.patch(`/cases/${ this.cas_id}/`, {
+                    scaling_step: this.cas.scaling_step,
+                    effort_step: this.cas.effort_step
+                })
+                .then(res => {
+                    this.update()
+                })
+                .catch(err => console.log(err))
             }
         },
         created: function() {
@@ -83,15 +92,8 @@
         margin: 1rem;
     }
 
-    .assessment-header {
-        display: flex;
-        flex-flow: row nowrap;
-        align-items: center;
-        justify-content: flex-start;
-    }
-
-    .assessment .assessment-edit-btn {
-        margin: 0 1rem;
+    .assessment-form {
+        margin-bottom: 2rem;
     }
 
 </style>
