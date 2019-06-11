@@ -24,6 +24,18 @@ function districtId2name(id) {
     }
 }
 
+function activityId2name(id) {
+    const act_list = store.getters.getActivities
+    if (id) {
+        let act = act_list.find(function(element) {
+            return element.id === id;
+        })
+        return act.name
+    } else {
+        return 'Ikke tilgængelig'
+    }
+}
+
 function sectionId2name(id) {
     const section_list = store.getters.getSections
     if (section_list) {
@@ -60,6 +72,7 @@ function displayStatus(status) {
 export {
     municipalityId2name, 
     districtId2name,
+    activityId2name,
     sectionId2name,
     displayStatus
 }

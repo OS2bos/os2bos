@@ -134,7 +134,6 @@
         ],
         data: function() {
             return {
-                item: null,
                 cas: {},
                 create_mode: true
             }
