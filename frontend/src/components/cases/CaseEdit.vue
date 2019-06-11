@@ -154,15 +154,11 @@
                 }  
             },
             updateAssessment: function(assessment) {
-                console.log('update')
-                console.log(assessment)
                 if (assessment.scaling_step) {
                     this.cas.scaling_step = assessment.scaling_step
-                    console.log(this.cas.scaling_step)
                 }
                 if (assessment.effort_step) {
                     this.cas.effort_step = assessment.effort_step
-                    console.log(this.cas.effort_step)
                 }
             },
             saveChanges: function() {
