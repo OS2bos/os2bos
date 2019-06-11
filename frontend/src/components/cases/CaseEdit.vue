@@ -80,16 +80,7 @@
                 <label for="inputCheckbox2">Tværgående ungeindsats</label>
             </fieldset>
 
-            <fieldset>
-                <dt>Indsatstrappen:</dt>
-                <dd>{{ cas.effort_stairs }}</dd>
-                <dt>Skaleringstrappe:</dt>
-                <dd>{{ cas.scaling_staircase }}</dd>
-            </fieldset>
-
-            <fieldset>
-                <button @click="$router.push(`/assessment/${ cas.id }`)">Vurdering</button>
-            </fieldset>
+            <assessment-edit :case-obj="cas" @assessment="updateAssessment" />
 
             <div>
                 <h3>Sagsbehandling:</h3>
@@ -123,11 +114,13 @@
 
     import axios from '../http/Http.js'
     import ListPicker from '../forms/ListPicker.vue'
+    import AssessmentEdit from '../assessments/AssessmentEdit.vue'
 
     export default {
 
         components: {
-            ListPicker
+            ListPicker,
+            AssessmentEdit
         },
         props: [
             'caseObj'
@@ -160,6 +153,18 @@
                     this.$router.push('/')
                 }  
             },
+            updateAssessment: function(assessment) {
+                console.log('update')
+                console.log(assessment)
+                if (assessment.scaling_step) {
+                    this.cas.scaling_step = assessment.scaling_step
+                    console.log(this.cas.scaling_step)
+                }
+                if (assessment.effort_step) {
+                    this.cas.effort_step = assessment.effort_step
+                    console.log(this.cas.effort_step)
+                }
+            },
             saveChanges: function() {
                 let data = {
                     name: this.cas.name,
@@ -171,7 +176,9 @@
                     case_worker: this.cas.case_worker,
                     target_group: this.cas.target_group,
                     refugee_integration: this.cas.refugee_integration,
-                    cross_department_measure: this.cas.cross_department_measure
+                    cross_department_measure: this.cas.cross_department_measure,
+                    scaling_step: this.cas.scaling_step,
+                    effort_step: this.cas.effort_step
                 }
                 if (!this.create_mode) {
                     axios.patch(`/cases/${ this.cas.id }/`, data)

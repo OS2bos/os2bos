@@ -15,9 +15,9 @@
                 <dt>Sagspart (CPR, navn)</dt>
                 <dd>{{ cas.cpr_number }}, {{ cas.name }}</dd>
                 <dt>Indsatstrappen:</dt>
-                <dd>ikke implementeret</dd>
+                <dd>{{ displayEffortName(cas.effort_step) }}</dd>
                 <dt>Skaleringstrappe:</dt>
-                <dd>ikke implementeret</dd>
+                <dd>{{ cas.scaling_step }}</dd>
             </dl>
             <dl>
                 <dt>Distrikt</dt>
@@ -74,7 +74,7 @@
     import CaseEdit from './CaseEdit.vue'
     import Appropriations from '../appropriations/AppropriationList.vue'
     import axios from '../http/Http.js'
-    import { municipalityId2name, districtId2name } from '../filters/Labels.js'
+    import { municipalityId2name, districtId2name, displayEffort } from '../filters/Labels.js'
 
     export default {
 
@@ -119,6 +119,9 @@
             },
             displayDistrictName: function(id) {
                 return districtId2name(id)
+            },
+            displayEffortName: function(str) {
+                return displayEffort(str)
             }
         },
         created: function() {
