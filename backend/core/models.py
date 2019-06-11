@@ -420,7 +420,7 @@ class ServiceRange(models.Model):
 class Account(models.Model):
     """Class containing account numbers.
 
-    Should be different for each (Activitycatalog, Sections) pair.
+    Should have a different number for each (ActivityCatalog, Sections) pair.
     """
 
     number = models.CharField(max_length=128)
