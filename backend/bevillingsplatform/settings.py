@@ -126,7 +126,7 @@ DATABASES = {
         "ENGINE": settings.get(
             "DATABASE_ENGINE", fallback="django.db.backends.postgresql"
         ),
-        "NAME": settings.get("DATABASE_NAME", fallback="bev"),
+        "NAME": settings.get("DATABASE_NAME", fallback=""),
         "USER": settings.get("DATABASE_USER", fallback=""),
         "PASSWORD": settings.get("DATABASE_PASSWORD", fallback=""),
         "HOST": settings.get("DATABASE_HOST", fallback=""),

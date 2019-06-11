@@ -42,9 +42,10 @@ services:
 
   db:
     image: postgres:10
-    environment:
-      - POSTGRES_USER=bev
-      - POSTGRES_PASSWORD=bev
+    env_file:
+      - docker/db.env
+    volumes:
+      - ./docker/init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh
 
   postfix:
     image: catatnight/postfix
