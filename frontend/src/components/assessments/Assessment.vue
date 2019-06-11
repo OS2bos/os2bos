@@ -11,7 +11,7 @@
             </fieldset>
         </form>
 
-        <history :case-obj="cas" />
+        <assessment-history :case-obj="cas" />
     </div>
 
 </template>
@@ -19,13 +19,13 @@
 <script>
 
     import AssessmentEdit from './AssessmentEdit.vue'
-    import History from './History.vue'
+    import AssessmentHistory from './AssessmentHistory.vue'
     import axios from '../http/Http.js'
 
     export default {
 
         components: {
-            History,
+            AssessmentHistory,
             AssessmentEdit
         },
 
