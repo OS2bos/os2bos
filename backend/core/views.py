@@ -44,7 +44,7 @@ class CaseViewSet(viewsets.ModelViewSet):
     serializer_class = CaseSerializer
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        serializer.save(case_worker=self.request.user)
 
     @action(detail=True, methods=["get"])
     def history(self, request, pk=None):

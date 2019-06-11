@@ -158,3 +158,10 @@ class TestCaseViewSet(AuthenticatedTestCase, CaseMixin):
             [x["case_worker"] for x in response.json()],
             [orla.id, leif.id, lone.id],
         )
+
+    def test_simple_post(self):
+        url = "/cases/"
+        json = self.create_case_as_json()
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.post(url, json)
+        self.assertEqual(response.status_code, 201)
