@@ -1,6 +1,12 @@
 version: "3.4"
 
 services:
+  # We use two images in development. One frontend that runs `vue-cli-service
+  # serve`, named `frontend` and one that runs django named `bev`. The frontend
+  # image proxies requests to django.
+
+  # In production only the django image is run. It will serve the production
+  # ready frontend code, but the files are only updated on docker build.
   frontend:
     build:
       context: .
@@ -28,6 +34,11 @@ services:
     depends_on:
       - db
       - postfix
+    # If you want to reach the django image directly (as opposed through the
+    # `vue-cli-service serve` proxy), expose it with:
+    # ports:
+    #  - 8000:8000
+
 
   db:
     image: postgres:10

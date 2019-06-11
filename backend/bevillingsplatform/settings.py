@@ -85,6 +85,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -112,6 +113,7 @@ TEMPLATES = [
         },
     }
 ]
+
 
 WSGI_APPLICATION = "bevillingsplatform.wsgi.application"
 
@@ -173,6 +175,14 @@ STATIC_URL = "/static/"
 STATIC_ROOT = settings.get(
     "STATIC_ROOT", fallback=os.path.join(BASE_DIR, "static")
 )
+
+STATICFILES_DIRS = [
+    # The vue frontend code is output to this directory. `./manage.py
+    # collectstatic` copies it to `STATIC_ROOT/frontend` where it it served by
+    # WhiteNoise via `bevillingsplatform/urls.py`.
+    ("frontend", "../frontend/dist")
+]
+
 
 # Serviceplatform service UUIDs
 SERVICEPLATFORM_UUIDS = {
