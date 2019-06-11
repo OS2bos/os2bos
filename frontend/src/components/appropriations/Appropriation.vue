@@ -3,6 +3,10 @@
     <section class="appropriation" v-if="appr">
         <header class="appropriation-header">
             <h1>Bevillingsskrivelse</h1>
+            <span v-html="statusLabel(appr.status)" style="margin: 0 1rem;"></span>
+            <template v-if="appr.approval_level"> af
+                {{ appr.approval_level }}
+            </template>
             <div>
                 <button @click="show_edit = !show_edit" class="appr-edit-btn">Redigér</button>
                 <router-link :to="`/appropriation/${ appr.id }/print`">Print</router-link>
@@ -52,13 +56,6 @@
                 <!-- <activity-list2 :appr-id="appr.id" /> -->
                 <!-- <activity-list3 :appr-id="appr.id" /> -->
                 <!-- <activity-list4 :appr-id="appr.id" /> -->
-            </div>
-            
-            <div class="sagsgodkend appr-grid-box">
-                <div v-html="statusLabel(appr.status)"></div>
-                <template v-if="appr.approval_level"> af
-                    {{ appr.approval_level }}
-                </template>
             </div>
 
         </div>
@@ -173,7 +170,7 @@
     .appr-grid {
         display: grid;
         grid-template-columns: repeat(6, auto);
-        grid-template-rows: repeat(4, auto);
+        grid-template-rows: repeat(3, auto);
     }
 
     .appr-grid-box {
@@ -196,10 +193,6 @@
 
     .sagsbev {
         grid-area: 3 / 1 / 4 / 7;
-    }
-
-    .sagsgodkend {
-        grid-area: 4 / 1 / 5 / 7;
     }
 
     @media screen and (min-width: 45rem) {

@@ -11,14 +11,18 @@
         </header>
 
         <div class="case-info" v-if="!edit_mode">
-            <dl style="flex: 1 0 33%;">
+            <dl>
                 <dt>Sagspart (CPR, navn)</dt>
                 <dd>{{ cas.cpr_number }}, {{ cas.name }}</dd>
                 <dt>Indsatstrappen:</dt>
                 <dd>ikke implementeret</dd>
                 <dt>Skaleringstrappe:</dt>
                 <dd>ikke implementeret</dd>
-                <dt>Målgruppe:</dt>
+            </dl>
+            <dl>
+                <dt>Distrikt</dt>
+                <dd>{{ displayDistrictName(cas.district) }}</dd>
+                <dt>Målgruppe</dt>
                 <dd>
                     <span v-if="cas.target_group === 'DISABILITY_DEPT'">
                         Handicapafdelingen
@@ -27,26 +31,8 @@
                         Familieafdelingen
                     </span>
                 </dd>
-            </dl>
-            <dl style="flex: 1 0 33%;">
-                <dt>Sagsbehander:</dt>
-                <dd>{{ cas.case_worker }}</dd>
-                <dt>Team:</dt>
-                <dd>ikke implementeret</dd>
-                <dt>Distrikt:</dt>
-                <dd>{{ displayDistrictName(cas.district) }}</dd>
-                <dt>Leder:</dt>
-                <dd>ikke implementeret</dd>
-            </dl>
-            <dl style="flex: 1 0 33%;">
-                <dt>Betalingskommune:</dt>
-                <dd>{{ displayMuniName(cas.paying_municipality) }}</dd>
-                <dt>Handlekommune:</dt>
-                <dd>{{ displayMuniName(cas.acting_municipality) }}</dd>
-                <dt>Bopælsskommune:</dt>
-                <dd>{{ displayMuniName(cas.residence_municipality) }}</dd>
                 <template v-if="cas.cross_department_measure || cas.refugee_integration">
-                    <dt>Indsatser:</dt>
+                    <dt>Indsatser</dt>
                     <dd>
                         <div v-if="cas.cross_department_measure">
                             Tværgående ungeindsats
@@ -56,6 +42,22 @@
                         </div>
                     </dd>
                 </template>
+            </dl>
+            <dl>
+                <dt>Sagsbehander</dt>
+                <dd>{{ cas.case_worker }}</dd>
+                <dt>Team</dt>
+                <dd>ikke implementeret</dd>
+                <dt>Leder</dt>
+                <dd>ikke implementeret</dd>
+            </dl>
+            <dl>
+                <dt>Betalingskommune</dt>
+                <dd>{{ displayMuniName(cas.paying_municipality) }}</dd>
+                <dt>Handlekommune</dt>
+                <dd>{{ displayMuniName(cas.acting_municipality) }}</dd>
+                <dt>Bopælsskommune</dt>
+                <dd>{{ displayMuniName(cas.residence_municipality) }}</dd>
             </dl>
         </div>
 
@@ -130,7 +132,7 @@
 <style>
 
     .case {
-        margin: 1rem;
+        margin: 1rem 2rem;
     }
 
     .case-header {
@@ -144,10 +146,12 @@
     }
 
     .case-info {
-        display: flex; 
-        flex-flow: row nowrap;
+        display: grid; 
+        grid-template-columns: auto auto auto auto;
+        grid-gap: 3rem;
+        justify-content: start;
         background-color: var(--grey1);
-        padding: 1rem 2rem;
+        padding: 1.5rem 2rem 2rem;
     }
 
 </style>
