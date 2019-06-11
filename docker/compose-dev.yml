@@ -14,7 +14,7 @@ services:
              python manage.py migrate &&
 
              echo 'from bevillingsplatform.initialize import initialize;initialize()' | python manage.py shell &&
-
+             python manage.py create_superuser_with_password --noinput --username sagsbehandler --email cbur@magenta.dk --password sagsbehandler &&
              python manage.py collectstatic --no-input &&
              python manage.py runserver 0.0.0.0:8001"
     environment: 
