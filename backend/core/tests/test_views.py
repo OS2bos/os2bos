@@ -160,7 +160,7 @@ class TestCaseViewSet(AuthenticatedTestCase, CaseMixin):
         )
 
     def test_simple_post(self):
-        url = "/cases/"
+        url = reverse("case-list")
         json = self.create_case_as_json()
         self.client.login(username=self.username, password=self.password)
         response = self.client.post(url, json)
