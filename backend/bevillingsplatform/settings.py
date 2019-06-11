@@ -167,7 +167,10 @@ SERVICEPLATFORM_CERTIFICATE_PATH = default_config.get(
 REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": (
         "django_filters.rest_framework.DjangoFilterBackend",
-    )
+    ),
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticated",
+    ),
 }
 
 # Logging
