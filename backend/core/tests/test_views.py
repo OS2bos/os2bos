@@ -1,5 +1,7 @@
 from unittest import mock
 from django.urls import reverse
+from django.contrib.auth import get_user_model
+
 from .test_utils import AuthenticatedTestCase
 from core.tests.testing_mixins import CaseMixin
 from core.models import STEP_ONE, STEP_THREE, STEP_FIVE
@@ -134,9 +136,9 @@ class TestCaseViewSet(AuthenticatedTestCase, CaseMixin):
     def test_history_action_changed_case_worker(self):
         case = self.create_case()
         # Change to different effort steps.
-        case.case_worker = "Leif"
+        case.case_worker = get_user_model().objects.create(username="Leif")
         case.save()
-        case.case_worker = "Lone"
+        case.case_worker = get_user_model().objects.create(username="Lone")
         case.save()
 
         reverse_url = reverse("case-history", kwargs={"pk": case.pk})
