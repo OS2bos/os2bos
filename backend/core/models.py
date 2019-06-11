@@ -134,11 +134,11 @@ class Payment(models.Model):
         of Internal->Internal or Person->SD.
         """
         if (
-            self.recipient_type == PaymentSchedule.INTERNAL and
-            self.payment_method == PaymentSchedule.INTERNAL
+            self.recipient_type == PaymentSchedule.INTERNAL
+            and self.payment_method == PaymentSchedule.INTERNAL
         ) or (
-            self.recipient_type == PaymentSchedule.PERSON and
-            self.payment_method == PaymentSchedule.SD
+            self.recipient_type == PaymentSchedule.PERSON
+            and self.payment_method == PaymentSchedule.SD
         ):
             return True
         return False
