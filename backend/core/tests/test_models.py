@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 from django.test import TestCase
+from django.utils import timezone
+from parameterized import parameterized
 
 from core.models import (
     Municipality,
     SchoolDistrict,
     Sections,
     ActivityCatalog,
+    Payment,
+    PaymentSchedule,
     FAMILY_DEPT,
 )
 
@@ -51,3 +55,52 @@ class ActivityCatalogTestCase(TestCase):
             str(catalog),
             "010001 - Betaling til andre kommuner/region for specialtandpleje",
         )
+
+
+class PaymentTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.payment_schedule = PaymentSchedule.objects.create()
+
+    @parameterized.expand(
+        [
+            (PaymentSchedule.PERSON, PaymentSchedule.SD),
+            (PaymentSchedule.PERSON, PaymentSchedule.CASH),
+            (PaymentSchedule.INTERNAL, PaymentSchedule.INTERNAL),
+            (PaymentSchedule.COMPANY, PaymentSchedule.INVOICE),
+        ]
+    )
+    def test_payment_and_recipient_allowed_save(
+        self, recipient_type, payment_method
+    ):
+        payment = Payment.objects.create(
+            payment_schedule=self.payment_schedule,
+            date=timezone.now(),
+            recipient_type=recipient_type,
+            payment_method=payment_method,
+        )
+        self.assertEqual(payment.recipient_type, recipient_type)
+        self.assertEqual(payment.payment_method, payment_method)
+
+    @parameterized.expand(
+        [
+            (PaymentSchedule.PERSON, PaymentSchedule.INTERNAL),
+            (PaymentSchedule.PERSON, PaymentSchedule.INVOICE),
+            (PaymentSchedule.INTERNAL, PaymentSchedule.CASH),
+            (PaymentSchedule.INTERNAL, PaymentSchedule.SD),
+            (PaymentSchedule.INTERNAL, PaymentSchedule.INVOICE),
+            (PaymentSchedule.COMPANY, PaymentSchedule.INTERNAL),
+            (PaymentSchedule.COMPANY, PaymentSchedule.SD),
+            (PaymentSchedule.COMPANY, PaymentSchedule.CASH),
+        ]
+    )
+    def test_payment_and_recipient_disallowed_save(
+        self, recipient_type, payment_method
+    ):
+        with self.assertRaises(ValueError):
+            Payment.objects.create(
+                payment_schedule=self.payment_schedule,
+                date=timezone.now(),
+                recipient_type=recipient_type,
+                payment_method=payment_method,
+            )

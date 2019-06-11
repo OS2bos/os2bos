@@ -97,32 +97,38 @@ def get_cpr_data_mock(cpr):
 
 def send_payment_created_email(payment):
     subject = _("Betaling oprettet")
-    message = render_to_string("payment_created.html", {"payment": payment})
+    message = render_to_string(
+        "emails/payment_created.html", {"payment": payment}
+    )
     send_mail(
         subject,
         message,
         settings.DEFAULT_FROM_EMAIL,
-        settings.TO_EMAIL_FOR_PAYMENTS,
+        [settings.TO_EMAIL_FOR_PAYMENTS],
     )
 
 
 def send_payment_changed_email(payment):
     subject = _("Betaling ændret")
-    message = render_to_string("payment_changed.html", {"payment": payment})
+    message = render_to_string(
+        "emails/payment_changed.html", {"payment": payment}
+    )
     send_mail(
         subject,
         message,
         settings.DEFAULT_FROM_EMAIL,
-        settings.TO_EMAIL_FOR_PAYMENTS,
+        [settings.TO_EMAIL_FOR_PAYMENTS],
     )
 
 
 def send_payment_deleted_email(payment):
     subject = _("Betaling slettet")
-    message = render_to_string("payment_deleted.html", {"payment": payment})
+    message = render_to_string(
+        "emails/payment_deleted.html", {"payment": payment}
+    )
     send_mail(
         subject,
         message,
         settings.DEFAULT_FROM_EMAIL,
-        settings.TO_EMAIL_FOR_PAYMENTS,
+        [settings.TO_EMAIL_FOR_PAYMENTS],
     )
