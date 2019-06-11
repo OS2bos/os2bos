@@ -2,6 +2,9 @@ import os
 import logging
 import requests
 from django.conf import settings
+from django.template.loader import render_to_string
+from django.core.mail import send_mail
+from django.utils.translation import gettext_lazy as _
 
 from service_person_stamdata_udvidet import get_citizen
 
@@ -90,3 +93,36 @@ def get_cpr_data_mock(cpr):
         "kommunekode": "370",
     }
     return result
+
+
+def send_payment_created_email(payment):
+    subject = _("Betaling oprettet")
+    message = render_to_string("payment_created.html", {"payment": payment})
+    send_mail(
+        subject,
+        message,
+        settings.DEFAULT_FROM_EMAIL,
+        settings.TO_EMAIL_FOR_PAYMENTS,
+    )
+
+
+def send_payment_changed_email(payment):
+    subject = _("Betaling ændret")
+    message = render_to_string("payment_changed.html", {"payment": payment})
+    send_mail(
+        subject,
+        message,
+        settings.DEFAULT_FROM_EMAIL,
+        settings.TO_EMAIL_FOR_PAYMENTS,
+    )
+
+
+def send_payment_deleted_email(payment):
+    subject = _("Betaling slettet")
+    message = render_to_string("payment_deleted.html", {"payment": payment})
+    send_mail(
+        subject,
+        message,
+        settings.DEFAULT_FROM_EMAIL,
+        settings.TO_EMAIL_FOR_PAYMENTS,
+    )

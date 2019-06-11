@@ -4,6 +4,12 @@ from django.utils.translation import gettext_lazy as _
 from django_audit_fields.models import AuditModelMixin
 from simple_history.models import HistoricalRecords
 
+from core.utils import (
+    send_payment_created_email,
+    send_payment_changed_email,
+    send_payment_deleted_email,
+)
+
 # Target group - definitions and choice list.
 FAMILY_DEPT = "FAMILY_DEPT"
 DISABILITY_DEPT = "DISABILITY_DEPT"
@@ -112,6 +118,48 @@ class Payment(models.Model):
     payment_schedule = models.ForeignKey(
         PaymentSchedule, on_delete=models.CASCADE, related_name="payments"
     )
+
+    def is_payment_method_and_recipient_allowed(self):
+        allowed = {
+            PaymentSchedule.INTERNAL: [PaymentSchedule.INTERNAL],
+            PaymentSchedule.PERSON: [PaymentSchedule.CASH, PaymentSchedule.SD],
+            PaymentSchedule.COMPANY: [PaymentSchedule.INVOICE],
+        }
+        return self.payment_method in allowed[self.recipient_type]
+
+    def send_email(self):
+        """
+        Send an email only in the (recipient_type->payment_method) case
+        of Internal->Internal or Person->SD.
+        """
+        if (
+            self.recipient_type == PaymentSchedule.INTERNAL and
+            self.payment_method == PaymentSchedule.INTERNAL
+        ) or (
+            self.recipient_type == PaymentSchedule.PERSON and
+            self.payment_method == PaymentSchedule.SD
+        ):
+            return True
+        return False
+
+    def save(self, *args, **kwargs):
+        if not self.is_payment_method_and_recipient_allowed():
+            raise ValueError(
+                _("ugyldig betalingsmetode for betalingsmodtager")
+            )
+        super().save(*args, **kwargs)
+
+        if self.send_email():
+            if not self.pk:
+                send_payment_created_email(self)
+            else:
+                send_payment_changed_email(self)
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+
+        if self.send_email():
+            send_payment_deleted_email(self)
 
 
 class Case(AuditModelMixin, models.Model):
