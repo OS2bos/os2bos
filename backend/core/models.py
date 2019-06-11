@@ -147,10 +147,11 @@ class Payment(models.Model):
             raise ValueError(
                 _("ugyldig betalingsmetode for betalingsmodtager")
             )
+        is_created = not self.pk
         super().save(*args, **kwargs)
 
         if self.send_email():
-            if not self.pk:
+            if is_created:
                 send_payment_created_email(self)
             else:
                 send_payment_changed_email(self)
