@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Cases from './components/cases/Cases.vue'
 import Case from './components/cases/Case.vue'
 import CaseEdit from './components/cases/CaseEdit.vue'
+import FamilyOverviewEdit from './components/familyoverview/FamilyOverviewEdit.vue'
 import Assessment from './components/assessments/Assessment.vue'
 import Appropriation from './components/appropriations/Appropriation.vue'
 import AppropriationEdit from './components/appropriations/AppropriationEdit.vue'
@@ -29,6 +30,11 @@ const router = new Router({
             path: '/case-create/',
             name: 'case-create',
             component: CaseEdit
+        },
+        {
+            path: '/case/:caseid/familyoverview-create/',
+            name: 'familyoverview-create',
+            component: FamilyOverviewEdit
         },
         {
             path: '/assessment/:id',
