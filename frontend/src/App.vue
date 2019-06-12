@@ -84,6 +84,11 @@
         color: white;
     }
 
+    .label-EXPECTED {
+        background-color: var(--warning);
+        color: white;
+    }
+
     .label-GRANTED {
         background-color: var(--success);
         color: white;

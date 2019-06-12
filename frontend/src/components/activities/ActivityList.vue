@@ -16,7 +16,7 @@
             <tbody>
                 <tr v-for="a in acts" :key="a.id">
                     <td>
-                        <span :class="`status-${ a.status }`">{{ a.status }}</span>
+                        <div v-html="statusLabel(a.status)"></div>
                     </td>
                     <td><router-link :to="`/activity/${ a.id }`">{{ activityId2name(a.service) }}</router-link></td>
                     <td>300578-2222 - Ukendt</td>
@@ -54,7 +54,7 @@
 
     import axios from '../http/Http.js'
     import { json2js } from '../filters/Date.js'
-    import { activityId2name } from '../filters/Labels.js'
+    import { activityId2name, displayStatus } from '../filters/Labels.js'
 
     export default {
 
@@ -82,6 +82,9 @@
             },
             activityId2name: function(id) {
                 return activityId2name(id)
+            },
+            statusLabel: function(status) {
+                return displayStatus(status)
             }
         },
        created: function() {
@@ -106,24 +109,6 @@
 
     .activities-create-btn {
         margin: 0 0 1rem;
-    }
-
-    .activities .status-GRANTED {
-        background-color: var(--success);
-        color: white;
-        padding: .25rem;
-    }
-
-    .activities .status-EXPECTED {
-        background-color: var(--warning);
-        color: white;
-        padding: .25rem;
-    }
-
-    .total-sum {
-        background-color: green;
-        color: white;
-        padding: .25rem;
     }
 
 </style>

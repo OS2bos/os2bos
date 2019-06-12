@@ -57,6 +57,9 @@ function displayStatus(status) {
         case 'BUDGETED':
             status_str = 'forventet'
             break;
+        case 'EXPECTED':
+            status_str = 'forventet'
+            break;
         case 'GRANTED':
             status_str = 'bevilget'
             break;
