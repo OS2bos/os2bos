@@ -82,16 +82,17 @@ const actions = {
         })
     },
     autoLogin: function({commit, dispatch}) {
-        // check for tokens and user id in session storage
-        const accesstoken = sessionStorage.getItem('accesstoken')
+        // check for tokens in session storage and refresh session
         const refreshtoken = sessionStorage.getItem('refreshtoken')
         if (refreshtoken) {
-            commit('setAccessToken', accesstoken)
             commit('setRefreshToken', refreshtoken)
             dispatch('refreshToken')
         } else {
             dispatch('clearAuth')
         }
+    },
+    logout: function({dispatch}) {
+        dispatch('clearAuth')
     },
     clearAuth: function ({commit}) {
         commit('setAccessToken', null)
