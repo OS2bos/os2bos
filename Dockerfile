@@ -56,7 +56,9 @@ RUN set -ex \
   && apt-get -y install --no-install-recommends $(grep -vE "^\s*#" sys-requirements.txt  | tr "\n" " ") \
   # clean up after apt-get and man-pages
   && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/man/?? /usr/share/man/??_* \
-  && install -o bev -g bev -d /static
+  # create folders at easily mountable paths for output from django
+  && install -o bev -g bev -d /static \
+  && install -o bev -g bev -d /log
 
 
 # Install requirements
@@ -86,6 +88,6 @@ CMD ["gunicorn", \
   "-b", "0.0.0.0:8000", \
   "--workers", "2", \
   "--threads", "4", \
-  "--access-logfile", "-", \
+  "--access-logfile", "/log/access.log", \
   "--worker-tmp-dir", "/dev/shm", \
   "bevillingsplatform.wsgi"]
