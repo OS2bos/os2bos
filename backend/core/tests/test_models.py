@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+from datetime import timedelta
 from django.test import TestCase
 from django.utils import timezone
+from django.core import mail
 from parameterized import parameterized
 
 from core.models import (
@@ -104,3 +106,39 @@ class PaymentTestCase(TestCase):
                 recipient_type=recipient_type,
                 payment_method=payment_method,
             )
+
+    def test_payment_create_email_sent(self):
+        # Should trigger a create email.
+        Payment.objects.create(
+            payment_schedule=self.payment_schedule,
+            date=timezone.now(),
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=PaymentSchedule.SD,
+        )
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, "Betaling oprettet")
+
+    def test_payment_update_email_sent(self):
+        payment = Payment.objects.create(
+            payment_schedule=self.payment_schedule,
+            date=timezone.now(),
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=PaymentSchedule.SD,
+        )
+        # Should trigger a update email.
+        payment.date = timezone.now() + timedelta(days=3)
+        payment.save()
+        self.assertEqual(len(mail.outbox), 2)
+        self.assertEqual(mail.outbox[1].subject, "Betaling ændret")
+
+    def test_payment_delete_email_sent(self):
+        payment = Payment.objects.create(
+            payment_schedule=self.payment_schedule,
+            date=timezone.now(),
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=PaymentSchedule.SD,
+        )
+        # Should trigger a delete mail.
+        payment.delete()
+        self.assertEqual(len(mail.outbox), 2)
+        self.assertEqual(mail.outbox[1].subject, "Betaling slettet")

@@ -158,9 +158,10 @@ class Payment(models.Model):
                 send_payment_changed_email(self)
 
     def delete(self, *args, **kwargs):
+        send_email = self.send_email()
         super().delete(*args, **kwargs)
 
-        if self.send_email():
+        if send_email:
             send_payment_deleted_email(self)
 
 
