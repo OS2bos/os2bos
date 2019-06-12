@@ -22,6 +22,9 @@
         components: {
             AppHeader,
             AppFooter
+        },
+        created: function() {
+            this.$store.dispatch('autoLogin')
         }
         
     }

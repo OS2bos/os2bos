@@ -36,29 +36,38 @@ const actions = {
         .then(res => {
             axios.defaults.headers.common['Authorization'] = `Bearer ${ res.data.access}`
             commit('setTokens', res.data)
+            sessionStorage.setItem('accesstoken', res.data.access)
+            sessionStorage.setItem('refreshtoken', res.data.refresh)
+            dispatch('setTimer')
             dispatch('fetchUser')
-
             dispatch('fetchMunis')
             dispatch('fetchDistricts')
             dispatch('fetchActivities')
             dispatch('fetchSections')
-
             router.push('/')
             notify('Du er logget ind', 'success')
         })
         .catch(err => {
             notify('Log ind fejlede', 'error', err)
+            dispatch('clearAuth')
         })
     },
-    refreshToken: function() {
+    setTimer: function({dispatch}) {
+        setTimeout(() => {
+            dispatch('refreshToken')
+        }, 25000);
+    },
+    refreshToken: function({commit, dispatch}) {
         axios.post('/token/refresh/', {
             refresh: state.tokens.refresh
         })
         .then(res => {
             commit('setTokens', res.data)
+            dispatch('setTimer')
         })
         .catch(err => {
             notify('Refresh login fejlede', 'error', err)
+            dispatch('clearAuth')
         })
     },
     fetchUser: function({commit}) {
@@ -70,28 +79,18 @@ const actions = {
             notify('Kunne ikke hente information om dig', 'error', err)
         })
     },
-    logout: function({dispatch}) {
-        axios.post('/auth/logout/', data)
-        .then(() => {
-            dispatch('clearAuth')
-            notify('Du er nu logget ud')
-        })
-        .catch(err => {
-            //dispatch('clearAuth')
-            notify('Der opstod en fejl ved logout', err)
-        })
-
-    },
     autoLogin: function({commit, dispatch}) {
-
-        // check for session key and user id in session storage
-        const authkey = sessionStorage.getItem('authkey')
+        // check for tokens and user id in session storage
+        const accesstoken = sessionStorage.getItem('accesstoken')
+        const refreshtoken = sessionStorage.getItem('refreshtoken')
         const userid = sessionStorage.getItem('userid')
-        if (authkey) {
-            commit('setAuthKey', authkey)
-            dispatch('fetchUser', userid)
+        if (refreshtoken) {
+            commit('setTokens', {
+                access: accesstoken,
+                refresh: refreshtoken
+            })
+            dispatch('refreshToken')
         }
-
     },
     clearAuth: function ({commit}) {
         commit('setUser', null)
