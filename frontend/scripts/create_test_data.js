@@ -116,6 +116,14 @@ function submitTestData() {
             "status": "DRAFT",
             "case": res.data.id
         })
+        axios.post('http://localhost:8000/api/related_persons/', {
+            "id": 1,
+            "relation_type": "Mor",
+            "cpr_number": "121290-1122",
+            "name": "Camilla Yanez Macron",
+            "related_case": "56.17.45-10-bnih-84",
+            "main_case": 3
+        })
         .then(apprres => { 
             postSuccess(apprres)
             axios.post('http://localhost:8000/api/activities/', {
