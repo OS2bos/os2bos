@@ -142,3 +142,24 @@ class PaymentTestCase(TestCase):
         payment.delete()
         self.assertEqual(len(mail.outbox), 2)
         self.assertEqual(mail.outbox[1].subject, "Betaling slettet")
+
+    def test_payment_create_email_shouldnt_send(self):
+        Payment.objects.create(
+            payment_schedule=self.payment_schedule,
+            date=timezone.now(),
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=PaymentSchedule.CASH,
+        )
+        # Shouldn't trigger an email.
+        self.assertEqual(len(mail.outbox), 0)
+
+    def test_payment_delete_email_shouldnt_send(self):
+        payment = Payment.objects.create(
+            payment_schedule=self.payment_schedule,
+            date=timezone.now(),
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=PaymentSchedule.CASH,
+        )
+        payment.delete()
+        # Shouldn't trigger an email.
+        self.assertEqual(len(mail.outbox), 0)
