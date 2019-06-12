@@ -32,6 +32,7 @@ router.register(r"municipalities", views.MunicipalityViewSet)
 router.register(r"school_districts", views.SchoolDistrictViewSet)
 router.register(r"sections", views.SectionsViewSet)
 router.register(r"activity_catalogs", views.ActivityCatalogViewSet)
+router.register(r"users", views.UserViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),

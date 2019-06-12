@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.postgres import fields
+from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from django_audit_fields.models import AuditModelMixin
+from simple_history.models import HistoricalRecords
 
 # Target group - definitions and choice list.
 FAMILY_DEPT = "FAMILY_DEPT"
@@ -9,6 +11,23 @@ DISABILITY_DEPT = "DISABILITY_DEPT"
 target_group_choices = (
     (FAMILY_DEPT, _("familieafdelingen")),
     (DISABILITY_DEPT, _("handicapafdelingen")),
+)
+
+# Effort steps - definitions and choice list.
+STEP_ONE = "STEP_ONE"
+STEP_TWO = "STEP_TWO"
+STEP_THREE = "STEP_THREE"
+STEP_FOUR = "STEP_FOUR"
+STEP_FIVE = "STEP_FIVE"
+STEP_SIX = "STEP_SIX"
+
+effort_steps_choices = (
+    (STEP_ONE, _("Trin 1: Tidlig indsats i almenområdet")),
+    (STEP_TWO, _("Trin 2: Forebyggelse")),
+    (STEP_THREE, _("Trin 3: Hjemmebaserede indsatser")),
+    (STEP_FOUR, _("Trin 4: Anbringelse i slægt eller netværk")),
+    (STEP_FIVE, _("Trin 5: Anbringelse i forskellige typer af plejefamilier")),
+    (STEP_SIX, _("Trin 6: Anbringelse i institutionstilbud")),
 )
 
 
@@ -104,8 +123,11 @@ class Case(AuditModelMixin, models.Model):
     )
     cpr_number = models.CharField(max_length=12, verbose_name=_("cpr-nummer"))
     name = models.CharField(max_length=128, verbose_name=_("Navn"))
-    case_worker = models.CharField(
-        max_length=128, verbose_name=_("sagsbehandler")
+    case_worker = models.ForeignKey(
+        User,
+        verbose_name=_("sagsbehandler"),
+        related_name="cases",
+        on_delete=models.PROTECT,
     )
     district = models.ForeignKey(
         SchoolDistrict,
@@ -136,11 +158,37 @@ class Case(AuditModelMixin, models.Model):
         verbose_name=_("målgruppe"),
         choices=target_group_choices,
     )
+    effort_step = models.CharField(
+        max_length=128,
+        choices=effort_steps_choices,
+        verbose_name=_("indsatstrappe"),
+    )
+    scaling_step = models.PositiveSmallIntegerField(
+        verbose_name=_("skaleringstrappe"),
+        choices=[(i, i) for i in range(1, 11)],
+    )
     refugee_integration = models.BooleanField(
         verbose_name=_("integrationsindsatsen"), default=False
     )
     cross_department_measure = models.BooleanField(
         verbose_name=_("tværgående ungeindsats"), default=False
+    )
+    # We only need to store historical records of
+    # effort_step, scaling_step, case_worker,
+    # thus we can exclude everything else.
+    history = HistoricalRecords(
+        excluded_fields=[
+            "refugee_integration",
+            "cross_department_measure",
+            "target_group",
+            "residence_municipality",
+            "acting_municipality",
+            "paying_municipality",
+            "district",
+            "name",
+            "cpr_number",
+            "sbsys_id",
+        ]
     )
 
 
@@ -211,24 +259,6 @@ class Sections(models.Model):
     allowed as well as the action steps allowed.
     """
 
-    STEP_ONE = "STEP_ONE"
-    STEP_TWO = "STEP_TWO"
-    STEP_THREE = "STEP_THREE"
-    STEP_FOUR = "STEP_FOUR"
-    STEP_FIVE = "STEP_FIVE"
-    STEP_SIX = "STEP_SIX"
-
-    effort_steps_choices = (
-        (STEP_ONE, _("Trin 1: Tidlig indsats i almenområdet")),
-        (STEP_TWO, _("Trin 2: Forebyggelse")),
-        (STEP_THREE, _("Trin 3: Hjemmebaserede indsatser")),
-        (STEP_FOUR, _("Trin 4: Anbringelse i slægt eller netværk")),
-        (
-            STEP_FIVE,
-            _("Trin 5: Anbringelse i forskellige typer af plejefamilier"),
-        ),
-        (STEP_SIX, _("Trin 6: Anbringelse i institutionstilbud")),
-    )
     paragraph = models.CharField(max_length=128, verbose_name=_("paragraf"))
     kle_number = models.CharField(max_length=128, verbose_name=_("KLE-nummer"))
     text = models.TextField(verbose_name=_("forklarende tekst"))

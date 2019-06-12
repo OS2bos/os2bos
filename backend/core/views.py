@@ -1,3 +1,5 @@
+from django.contrib.auth.models import User
+
 from django.utils.translation import gettext_lazy as _
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -28,6 +30,8 @@ from core.serializers import (
     SchoolDistrictSerializer,
     SectionsSerializer,
     ActivityCatalogSerializer,
+    UserSerializer,
+    HistoricalCaseSerializer,
 )
 
 from core.utils import get_person_info
@@ -39,16 +43,30 @@ class CaseViewSet(viewsets.ModelViewSet):
     queryset = Case.objects.all()
     serializer_class = CaseSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(case_worker=self.request.user)
+
+    @action(detail=True, methods=["get"])
+    def history(self, request, pk=None):
+        """
+        Fetch history of HistoricalCases.
+        """
+        case = self.get_object()
+        serializer = HistoricalCaseSerializer(case.history.all(), many=True)
+        return Response(serializer.data)
+
 
 class AppropriationViewSet(viewsets.ModelViewSet):
     queryset = Appropriation.objects.all()
     serializer_class = AppropriationSerializer
+
     filterset_fields = "__all__"
 
 
 class ActivityViewSet(viewsets.ModelViewSet):
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
+
     filterset_fields = "__all__"
 
 
@@ -65,6 +83,8 @@ class PaymentViewSet(viewsets.ModelViewSet):
 class RelatedPersonViewSet(viewsets.ModelViewSet):
     queryset = RelatedPerson.objects.all()
     serializer_class = RelatedPersonSerializer
+
+    filterset_fields = "__all__"
 
     @action(detail=False, methods=["get"])
     def fetch_from_serviceplatformen(self, request):
@@ -121,3 +141,8 @@ class SectionsViewSet(viewsets.ReadOnlyModelViewSet):
 class ActivityCatalogViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ActivityCatalog.objects.all()
     serializer_class = ActivityCatalogSerializer
+
+
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
