@@ -4,23 +4,26 @@ import notify from '../components/notifications/Notify.js'
 
 
 const state = {
-    tokens: null,
-    auth_header: null,
+    accesstoken: null,
+    refreshtoken: null,
     user: null
 }
 
 const getters = {
-    getTokens (state) {
-        return state.tokens
-    },
     getUser (state) {
         return state.user ? state.user : false
     }
 }
 
 const mutations = {
-    setTokens (state, tokens) {
-        state.tokens = tokens
+    setAccessToken (state, token) {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${ token }`
+        sessionStorage.setItem('accesstoken', token)
+        state.accesstoken = token
+    },
+    setRefreshToken (state, token) {
+        sessionStorage.setItem('refreshtoken', token)
+        state.refreshtoken = token
     },
     setUser (state, user) {
         state.user = user
@@ -34,10 +37,9 @@ const actions = {
             password: authData.password
         })
         .then(res => {
-            axios.defaults.headers.common['Authorization'] = `Bearer ${ res.data.access}`
-            commit('setTokens', res.data)
-            sessionStorage.setItem('accesstoken', res.data.access)
-            sessionStorage.setItem('refreshtoken', res.data.refresh)
+            commit('setAccessToken', res.data.access)
+            commit('setRefreshToken', res.data.refresh)
+            
             dispatch('setTimer')
             dispatch('fetchUser')
             dispatch('fetchMunis')
@@ -57,12 +59,12 @@ const actions = {
             dispatch('refreshToken')
         }, 25000);
     },
-    refreshToken: function({commit, dispatch}) {
+    refreshToken: function({commit, dispatch, state}) {
         axios.post('/token/refresh/', {
-            refresh: state.tokens.refresh
+            refresh: state.refreshtoken
         })
         .then(res => {
-            commit('setTokens', res.data)
+            commit('setAccessToken', res.data.access)
             dispatch('setTimer')
         })
         .catch(err => {
@@ -83,16 +85,17 @@ const actions = {
         // check for tokens and user id in session storage
         const accesstoken = sessionStorage.getItem('accesstoken')
         const refreshtoken = sessionStorage.getItem('refreshtoken')
-        const userid = sessionStorage.getItem('userid')
         if (refreshtoken) {
-            commit('setTokens', {
-                access: accesstoken,
-                refresh: refreshtoken
-            })
+            commit('setAccessToken', accesstoken)
+            commit('setRefreshToken', refreshtoken)
             dispatch('refreshToken')
+        } else {
+            dispatch('clearAuth')
         }
     },
     clearAuth: function ({commit}) {
+        commit('setAccessToken', null)
+        commit('setRefreshToken', null)
         commit('setUser', null)
         router.replace('/login')
     }

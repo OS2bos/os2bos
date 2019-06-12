@@ -72,7 +72,6 @@
             }
         },
         created: function() {
-            console.log(this.caseObj)
             if (this.caseObj.id) {
                 this.cas = this.caseObj
             } else {
