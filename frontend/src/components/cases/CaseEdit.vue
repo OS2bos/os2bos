@@ -144,6 +144,12 @@
             },
             districts: function() {
                 return this.$store.getters.getDistricts
+            },
+            csrftoken: function() {
+                return this.$store.getters.getCsrfToken
+            },
+            user: function() {
+                return this.$store.getters.getUser
             }
         },
         methods: {
@@ -161,28 +167,32 @@
                 }  
             },
             saveChanges: function() {
-                let data = {
-                    name: this.cas.name,
-                    cpr_number: this.cas.cpr_number,
-                    paying_municipality: this.cas.paying_municipality,
-                    acting_municipality: this.cas.acting_municipality,
-                    residence_municipality: this.cas.residence_municipality,
-                    district: this.cas.district,
-                    case_worker: this.cas.case_worker,
-                    target_group: this.cas.target_group,
-                    refugee_integration: this.cas.refugee_integration,
-                    cross_department_measure: this.cas.cross_department_measure
-                }
+
+                let formdata = new FormData()
+                    formdata.set('csrfmiddlewaretoken', this.csrftoken)
+                    formdata.set('sbsys_id', this.cas.sbsys_id)
+                    formdata.set('case_worker', this.user.id)
+                    formdata.set('district', this.cas.district)
+                    formdata.set('effort_step', 'STEP_ONE')
+                    formdata.set('scaling_step', 1)
+                    formdata.set('name', this.cas.name)
+                    formdata.set('cpr_number', this.cas.cpr_number)
+                    formdata.set('paying_municipality', this.cas.paying_municipality)
+                    formdata.set('acting_municipality', this.cas.acting_municipality)
+                    formdata.set('residence_municipality', this.cas.residence_municipality)
+                    formdata.set('target_group', this.cas.target_group)
+                    formdata.set('refugee_integration', this.cas.refugee_integration ? this.cas.refugee_integration : false,)
+                    formdata.set('cross_department_measure', this.cas.cross_department_measure ? this.cas.cross_department_measure : false)
+                
                 if (!this.create_mode) {
-                    axios.patch(`/cases/${ this.cas.id }/`, data)
+                    formdata.set('sbsys_id', this.cas.sbsys_id)
+                    axios.patch(`/cases/${ this.cas.id }/`, formdata)
                     .then(res => {
                         this.$emit('close', res.data)
                     })
                     .catch(err => console.log(err))
                 } else {
-                    data.sbsys_id = this.cas.sbsys_id
-                    data.case_worker = 'SAGSBEHANDLER NAVN TEST'
-                    axios.post(`/cases/`, data)
+                    axios.post('/cases/', formdata)
                     .then(res => {
                         this.$router.push(`/case/${ res.data.id }/`)
                     })

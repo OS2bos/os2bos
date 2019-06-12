@@ -3,13 +3,13 @@ import router from '../router.js'
 import notify from '../components/notifications/Notify.js'
 
 const state = {
-    sessionKey: null,
+    csrftoken: null,
     user: null
 }
 
 const getters = {
-    isAuthenticated (state) {
-        return state.sessionKey ? state.sessionKey : false
+    getCsrfToken (state) {
+        return state.csrftoken
     },
     getUser (state) {
         return state.user ? state.user : false
@@ -17,8 +17,8 @@ const getters = {
 }
 
 const mutations = {
-    setAuthKey (state, sid) {
-        state.sessionKey = sid
+    setCsrfToken (state, csrftoken) {
+        state.csrftoken = csrftoken
     },
     setUser (state, user) {
         state.user = user
@@ -26,35 +26,57 @@ const mutations = {
 }
 
 const actions = {
-    login: function({commit, dispatch}, authData) {
+    login: function({commit, dispatch, state}, authData) {
 
         let data = new FormData()
-        data.append("username", authData.username)
-        data.append("password", authData.password)
+        data.set('csrfmiddlewaretoken', state.csrftoken)
+        data.set('next', '/#/')
+        data.set('username', authData.username)
+        data.set('password', authData.password)
         return axios({
             method: 'post',
             url: '/auth/login/',
             data: data
         })
         .then(res => {
-            
-            commit('setAuthKey', res.data.key)
+            const new_csrf_token = document.cookie.replace(/(?:(?:^|.*;\s*)csrftoken\s*\=\s*([^;]*).*$)|^.*$/, "$1")
+            commit('setCsrfToken', new_csrf_token)
 
-            // Save session key and user id in session storage
-            sessionStorage.setItem('authkey', res.data.key)
-            sessionStorage.setItem('userid', res.data.user)
+            router.push('/')
             
-            dispatch('fetchUser', res.data.user)
+            dispatch('fetchUser')
+            dispatch('fetchMunis')
+            dispatch('fetchDistricts')
+            dispatch('fetchActivities')
+            dispatch('fetchSections')
+            
             notify('Du er logget ind', 'success')
-            return false
         })
         .catch(err => {
-            if (err.response.data.password || err.response.data.username) {
-                notify('Log ind fejlede', 'error')
-            } else {
-                notify('Log ind fejlede', 'error', err.response.data)
-            }
-            return err.response.data
+            notify('Log ind fejlede', 'error', err)
+        })
+
+    },
+    fetchUser: function({commit}) {
+        axios.get('/users/')
+        .then(res => {
+            commit('setUser', res.data[0])
+        })
+        .catch(err => {
+            notify('Kunne ikke hente information om dig', 'error', err)
+        })
+    },
+    logout: function({dispatch}) {
+        let data = new FormData()
+        data.set('csrfmiddlewaretoken', state.csrftoken)
+        axios.post('/auth/logout/', data)
+        .then(() => {
+            dispatch('clearAuth')
+            notify('Du er nu logget ud')
+        })
+        .catch(err => {
+            //dispatch('clearAuth')
+            notify('Der opstod en fejl ved logout', err)
         })
 
     },
@@ -69,62 +91,8 @@ const actions = {
         }
 
     },
-    fetchUser: function({commit, state, dispatch}, user_id) {
-        if (!state.sessionKey) {
-            return
-        }
-        axios({
-            method: 'get',
-            url: `/auth/user/${ user_id }/`,
-            headers: {
-                'Authorization': 'Token ' + state.sessionKey
-            }
-        })
-        .then(res => {
-            commit('setUser', res.data)
-            if (router.history.current.query.redirect) {
-                router.push(router.history.current.query.redirect)
-            } else {
-                if (state.user.is_staff) {
-                    router.push('/dashboard')
-                } else {
-                    router.push('/my-bookings')
-                }
-            }
-        })
-        .catch(err => {
-            console.log('could not fetch user')
-            dispatch('cleanPostLogout')
-        })
-
-    },
-    logout: function({dispatch}) {
-
-        axios({
-            method: 'post',
-            url: '/auth/logout/',
-            headers: {
-                'Authorization': 'Token ' + state.sessionKey
-            }
-        })
-        .then(res => {
-            dispatch('cleanPostLogout')
-            notify('Du er nu logget ud')
-        })
-        .catch(err => {
-            dispatch('cleanPostLogout')
-            notify('Der opstod en fejl. Du er nu logget ud', err)
-        })
-
-    },
-    clearAuth: function({commit}) {
-        sessionStorage.removeItem('authkey')
-        sessionStorage.removeItem('userid')
-        commit('setAuthKey', null)
+    clearAuth: function ({commit}) {
         commit('setUser', null)
-    },
-    cleanPostLogout: function ({dispatch}) {
-        dispatch('clearAuth')
         router.replace('/login')
     }
 }
