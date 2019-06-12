@@ -4,9 +4,9 @@
         <h1>Log ind</h1>
         <fieldset>
             <label for="username">Brugernavn</label>
-            <input type="text" id="username" placeholder="Brugernavn">
+            <input type="text" id="username" placeholder="Brugernavn" v-model="username" required>
             <label for="password">Kodeord</label>
-            <input type="password" id="password" placeholder="Kodeord">
+            <input type="password" id="password" placeholder="Kodeord" v-model="password" required>
         </fieldset>
         <fieldset>
             <input type="submit" value="Log ind">
@@ -16,12 +16,23 @@
 </template>
 
 <script>
+
+    import axios from '@/components/http/Http.js'
     
     export default {
 
+        data: function() {
+            return {
+                username: null,
+                password: null
+            }
+        },
         methods: {
             submitForm: function() {
-                this.$router.push('/')
+                this.$store.dispatch('login', {
+                    username: this.username,
+                    password: this.password
+                })
             }
         }
 
