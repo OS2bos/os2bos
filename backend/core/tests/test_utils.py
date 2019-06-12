@@ -1,9 +1,24 @@
 # -*- coding: utf-8 -*-
 from unittest import mock
 from django.test import TestCase
+
+from django.contrib.auth import get_user_model
+
 import requests
 
 from core.utils import get_cpr_data, get_person_info, get_cpr_data_mock
+
+
+class AuthenticatedTestCase(TestCase):
+    """Simple class for authenticating before accessing a view."""
+
+    def setUp(self):
+        User = get_user_model()
+        self.username = "user"
+        self.password = "s1kr3t"
+        User.objects.create_user(
+            self.username, f"{self.username}@company.com", self.password
+        )
 
 
 class GetCPRDataTestCase(TestCase):

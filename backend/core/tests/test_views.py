@@ -1,15 +1,18 @@
 from unittest import mock
 from django.urls import reverse
-from django.test import TestCase
+from django.contrib.auth import get_user_model
+
+from .test_utils import AuthenticatedTestCase
 from core.tests.testing_mixins import CaseMixin
 from core.models import STEP_ONE, STEP_THREE, STEP_FIVE
 
 
-class TestRelatedPersonsViewSet(TestCase):
+class TestRelatedPersonsViewSet(AuthenticatedTestCase):
     def test_fetch_from_serviceplatformen_no_cpr(self):
         reverse_url = reverse("relatedperson-fetch-from-serviceplatformen")
-
+        self.client.login(username=self.username, password=self.password)
         response = self.client.get(reverse_url)
+
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(), {"errors": "Intet CPR nummer angivet"}
@@ -18,6 +21,7 @@ class TestRelatedPersonsViewSet(TestCase):
     @mock.patch("core.views.get_person_info", lambda cpr: None)
     def test_fetch_from_serviceplatformen_wrong_cpr(self):
         reverse_url = reverse("relatedperson-fetch-from-serviceplatformen")
+        self.client.login(username=self.username, password=self.password)
         response = self.client.get(reverse_url, data={"cpr": "1234567890"})
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
@@ -54,6 +58,7 @@ class TestRelatedPersonsViewSet(TestCase):
         }
         person_info_mock.return_value = person_info_data
         reverse_url = reverse("relatedperson-fetch-from-serviceplatformen")
+        self.client.login(username=self.username, password=self.password)
         response = self.client.get(reverse_url, data={"cpr": "1234567890"})
 
         self.assertEqual(response.status_code, 200)
@@ -82,11 +87,12 @@ class TestRelatedPersonsViewSet(TestCase):
         self.assertEqual(response.json(), expected_format)
 
 
-class TestCaseViewSet(TestCase, CaseMixin):
+class TestCaseViewSet(AuthenticatedTestCase, CaseMixin):
     def test_history_action_no_history(self):
         case = self.create_case()
         reverse_url = reverse("case-history", kwargs={"pk": case.pk})
 
+        self.client.login(username=self.username, password=self.password)
         response = self.client.get(reverse_url)
         self.assertEqual(len(response.json()), 1)
         self.assertEqual(response.json()[0]["scaling_step"], 1)
@@ -101,6 +107,7 @@ class TestCaseViewSet(TestCase, CaseMixin):
 
         reverse_url = reverse("case-history", kwargs={"pk": case.pk})
 
+        self.client.login(username=self.username, password=self.password)
         response = self.client.get(reverse_url)
 
         self.assertEqual(len(response.json()), 3)
@@ -119,6 +126,7 @@ class TestCaseViewSet(TestCase, CaseMixin):
 
         reverse_url = reverse("case-history", kwargs={"pk": case.pk})
 
+        self.client.login(username=self.username, password=self.password)
         response = self.client.get(reverse_url)
 
         self.assertEqual(len(response.json()), 3)
@@ -131,18 +139,29 @@ class TestCaseViewSet(TestCase, CaseMixin):
     def test_history_action_changed_case_worker(self):
         case = self.create_case()
         # Change to different effort steps.
-        case.case_worker = "Leif"
+        orla = case.case_worker
+        leif = get_user_model().objects.create(username="Leif")
+        case.case_worker = leif
         case.save()
-        case.case_worker = "Lone"
+        lone = get_user_model().objects.create(username="Lone")
+        case.case_worker = lone
         case.save()
 
         reverse_url = reverse("case-history", kwargs={"pk": case.pk})
 
+        self.client.login(username=self.username, password=self.password)
         response = self.client.get(reverse_url)
 
         self.assertEqual(len(response.json()), 3)
         # Assert history of scaling steps are preserved.
         self.assertCountEqual(
             [x["case_worker"] for x in response.json()],
-            ["Orla Frøsnapper", "Leif", "Lone"],
+            [orla.id, leif.id, lone.id],
         )
+
+    def test_simple_post(self):
+        url = reverse("case-list")
+        json = self.create_case_as_json()
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.post(url, json)
+        self.assertEqual(response.status_code, 201)
