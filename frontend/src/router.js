@@ -31,7 +31,7 @@ const router = new Router({
             component: CaseEdit
         },
         {
-            path: '/assessment/:id',
+            path: '/case/:id/assessment',
             name: 'assessment',
             component: Assessment
         },
