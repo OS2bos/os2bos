@@ -84,6 +84,8 @@ class RelatedPersonViewSet(viewsets.ModelViewSet):
     queryset = RelatedPerson.objects.all()
     serializer_class = RelatedPersonSerializer
 
+    filterset_fields = "__all__"
+
     @action(detail=False, methods=["get"])
     def fetch_from_serviceplatformen(self, request):
         """
