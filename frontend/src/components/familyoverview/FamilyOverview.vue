@@ -4,12 +4,15 @@
             <h1>Familieoversigt</h1>
             <button class="familyoverview-create-btn" @click="$router.push(`/case/${ caseId }/familyoverview-create/`)">+ Opret familierelation</button>
         </header>
+        <!-- <div v-if="show_edit">
+            <family-overview-edit :fam-obj="fam" v-if="show_edit" @close="update()" />
+        </div> -->
         <table class="familyoverview-list">
             <thead>
                 <tr>
                     <th>Relation</th>
                     <th>Borger</th>
-                    <th>Sag</th> {{caseId}}
+                    <th>Sag</th>
                     <th></th>
                 </tr>
             </thead>
@@ -18,7 +21,12 @@
                     <td>{{ f.relation_type }}</td>
                     <td>{{ f.cpr_number }} - {{ f.name }}</td>
                     <td>{{ f.related_case }}</td>
-                    <td><i class="material-icons">edit</i></td>
+                    <td>
+                        <!-- <button @click="show_edit = !show_edit" class="familyoverview-create-btn"><i class="material-icons">edit</i></button> -->
+                        <router-link :to="`/case/${ caseId }/familyoverview-create/${ f.id }`">
+                            <i class="material-icons">edit</i>
+                        </router-link>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -29,15 +37,20 @@
 <script>
 
     import axios from '../http/Http.js'
+    import FamilyOverviewEdit from './FamilyOverviewEdit.vue'
 
     export default {
 
+         components: {
+             FamilyOverviewEdit
+        },
         props: [
             'caseId'
         ],
         data: function() {
             return {
-                fam: null
+                fam: null,
+                show_edit: false
             }
         },
         methods: {
@@ -74,7 +87,7 @@
     }
 
     .material-icons {
-        font-size: 1.2rem;
+        font-size: 1rem;
     }
 
 </style>
