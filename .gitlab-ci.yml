@@ -6,9 +6,8 @@
 # RELEASE_REGISTRY_IMAGE=index.docker.io/magentaaps/bevillingsplatform
 
 stages:
+  - lint-build
   - test
-  - build
-  - integration
   - release
   - deploy
 
@@ -35,66 +34,41 @@ variables:
 services:
    - docker:dind
 
+# Lint stage
+#############
 
-# Test stage
-############
+# For now we execute the lint and build stage as one stage to speed up the
+# pipeline. When it is possible to use a DAG for describing the relations
+# (https://gitlab.com/gitlab-org/gitlab-ce/issues/47063), the lint jobs can be
+# executed in its own stage where no further jobs depend on them.
+
+.lint-default: &lint-default
+  stage: lint-build
+  image: python:3.7
+  tags:
+    - docker
+  before_script:
+    - pip3 install -r backend/requirements-test.txt
 
 lint:
-  stage: test
-  image: python:3.7
-  tags:
-    - docker
+  <<: *lint-default
   script:
-    - pip3 install -r backend/requirements-test.txt
-    - cd backend
-    - black --check --diff .
-    - flake8 .
-
-
-unit-test:
-  stage: test
-  image: python:3.7
-  tags:
-    - docker
-  services:
-    - name: postgres:11
-      alias: db
-  variables:
-    POSTGRES_USER: bev
-    POSTGRES_PASSWORD: bev
-    DJANGO_SETTINGS_INI: ../dev-settings.ini
-  script:
-    - pip3 install -r backend/requirements.txt -r backend/requirements-test.txt
-    - cd backend
-    - ./manage.py makemigrations
-    - ./manage.py migrate
-    - coverage run manage.py test
-  coverage: '/TOTAL.*\s+(\d+%)$/'
-
-  artifacts:
-    paths:
-      - coverage
-
+    - tox -e lint
 
 docs:
-  stage: test
-  image: python:3.7
-  tags:
-    - docker
+  <<: *lint-default
   script:
-    - pip3 install -r backend/requirements-test.txt
-    - sphinx-build docs/source docs_out
-
+    - sphinx-build docs/source /doc-build
   artifacts:
     paths:
-      - docs_out
+      - doc-build
 
 
 # Build stage
 #############
 
 build:
-  stage: build
+  stage: lint-build
   image: docker:latest
   tags:
     - docker
@@ -108,11 +82,39 @@ build:
     - docker push ${IMAGE_SHA}
 
 
-# Integration stage
-###################
+# Test stage
+############
 
-.integration-default: &integration-default
-  stage: integration
+
+unit-test:
+  stage: test
+  image:
+    name: ${IMAGE_SHA}
+  tags:
+    - docker
+  services:
+    - name: postgres:11
+      alias: db
+  variables:
+    POSTGRES_USER: bev
+    POSTGRES_PASSWORD: bev
+    DJANGO_SETTINGS_INI: $CI_PROJECT_DIR/dev-settings.ini
+    COVERAGE_FILE: $CI_PROJECT_DIR/.coverage
+  script:
+    - cd /code/backend
+    # TODO In the future migrations should be committed to the repo and the
+    # following two line should be deleted.
+    - ./manage.py makemigrations
+    - ./manage.py migrate
+    - coverage run manage.py test
+    - coverage html -d $CI_PROJECT_DIR/coverage-html
+
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/coverage-html
+
+.integration-test:
+  stage: test
   image: docker:latest
   tags:
     - docker
@@ -120,10 +122,6 @@ build:
     # Login to GitLab registry
     - echo ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
     - docker pull ${IMAGE_SHA}
-
-
-.integration-prod:
-  <<: *integration-default
   script:
     - # TODO run tests
 
@@ -194,7 +192,7 @@ release-master:
 .deploy-dev:
   <<: *deploy-default
   only:
-    - development
+    - develop
   script:
     - echo Deploying ${IMAGE_DEV} to moradev.magneta.dk
     # TODO: push ${IMAGE_DEV} to moradev.magneta.dk

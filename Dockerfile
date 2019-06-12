@@ -63,7 +63,8 @@ RUN set -ex \
 
 # Install requirements
 COPY backend/requirements.txt /code/backend/requirements.txt
-RUN pip3 install -r backend/requirements.txt
+COPY backend/requirements-test.txt /code/backend/requirements-test.txt
+RUN pip3 install -r backend/requirements.txt -r backend/requirements-test.txt
 
 
 # Copy and install backend code.
@@ -71,6 +72,7 @@ COPY README.md .
 COPY LICENSE .
 COPY docker/docker-settings.ini .
 COPY docker/docker-entrypoint.sh .
+COPY tox.ini .
 COPY backend ./backend
 
 
