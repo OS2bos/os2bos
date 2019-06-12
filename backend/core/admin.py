@@ -11,6 +11,7 @@ from core.models import (
     SchoolDistrict,
     Sections,
     ActivityCatalog,
+    Account,
 )
 
 for klass in (
@@ -24,5 +25,6 @@ for klass in (
     SchoolDistrict,
     Sections,
     ActivityCatalog,
+    Account,
 ):
     admin.site.register(klass, admin.ModelAdmin)

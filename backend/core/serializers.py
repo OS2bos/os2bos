@@ -13,6 +13,7 @@ from core.models import (
     SchoolDistrict,
     Sections,
     ActivityCatalog,
+    Account,
     HistoricalCase,
 )
 
@@ -94,4 +95,10 @@ class SectionsSerializer(serializers.ModelSerializer):
 class ActivityCatalogSerializer(serializers.ModelSerializer):
     class Meta:
         model = ActivityCatalog
+        fields = "__all__"
+
+
+class AccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
         fields = "__all__"

@@ -17,6 +17,7 @@ from core.models import (
     SchoolDistrict,
     Sections,
     ActivityCatalog,
+    Account,
 )
 
 from core.serializers import (
@@ -30,6 +31,7 @@ from core.serializers import (
     SchoolDistrictSerializer,
     SectionsSerializer,
     ActivityCatalogSerializer,
+    AccountSerializer,
     UserSerializer,
     HistoricalCaseSerializer,
 )
@@ -83,6 +85,8 @@ class PaymentViewSet(viewsets.ModelViewSet):
 class RelatedPersonViewSet(viewsets.ModelViewSet):
     queryset = RelatedPerson.objects.all()
     serializer_class = RelatedPersonSerializer
+
+    filterset_fields = "__all__"
 
     @action(detail=False, methods=["get"])
     def fetch_from_serviceplatformen(self, request):
@@ -139,6 +143,11 @@ class SectionsViewSet(viewsets.ReadOnlyModelViewSet):
 class ActivityCatalogViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ActivityCatalog.objects.all()
     serializer_class = ActivityCatalogSerializer
+
+
+class AccountViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Account.objects.all()
+    serializer_class = AccountSerializer
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
