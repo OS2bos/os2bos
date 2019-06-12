@@ -2,14 +2,16 @@ import axios from '../components/http/Http.js'
 import router from '../router.js'
 import notify from '../components/notifications/Notify.js'
 
+
 const state = {
-    csrftoken: null,
+    tokens: null,
+    auth_header: null,
     user: null
 }
 
 const getters = {
-    getCsrfToken (state) {
-        return state.csrftoken
+    getTokens (state) {
+        return state.tokens
     },
     getUser (state) {
         return state.user ? state.user : false
@@ -17,8 +19,8 @@ const getters = {
 }
 
 const mutations = {
-    setCsrfToken (state, csrftoken) {
-        state.csrftoken = csrftoken
+    setTokens (state, tokens) {
+        state.tokens = tokens
     },
     setUser (state, user) {
         state.user = user
@@ -27,35 +29,37 @@ const mutations = {
 
 const actions = {
     login: function({commit, dispatch, state}, authData) {
-
-        let data = new FormData()
-        data.set('csrfmiddlewaretoken', state.csrftoken)
-        data.set('next', '/#/')
-        data.set('username', authData.username)
-        data.set('password', authData.password)
-        return axios({
-            method: 'post',
-            url: '/auth/login/',
-            data: data
+        axios.post('/token/', {
+            username: authData.username,
+            password: authData.password
         })
         .then(res => {
-            const new_csrf_token = document.cookie.replace(/(?:(?:^|.*;\s*)csrftoken\s*\=\s*([^;]*).*$)|^.*$/, "$1")
-            commit('setCsrfToken', new_csrf_token)
-
-            router.push('/')
-            
+            axios.defaults.headers.common['Authorization'] = `Bearer ${ res.data.access}`
+            commit('setTokens', res.data)
             dispatch('fetchUser')
+
             dispatch('fetchMunis')
             dispatch('fetchDistricts')
             dispatch('fetchActivities')
             dispatch('fetchSections')
-            
+
+            router.push('/')
             notify('Du er logget ind', 'success')
         })
         .catch(err => {
             notify('Log ind fejlede', 'error', err)
         })
-
+    },
+    refreshToken: function() {
+        axios.post('/token/refresh/', {
+            refresh: state.tokens.refresh
+        })
+        .then(res => {
+            commit('setTokens', res.data)
+        })
+        .catch(err => {
+            notify('Refresh login fejlede', 'error', err)
+        })
     },
     fetchUser: function({commit}) {
         axios.get('/users/')
@@ -67,8 +71,6 @@ const actions = {
         })
     },
     logout: function({dispatch}) {
-        let data = new FormData()
-        data.set('csrfmiddlewaretoken', state.csrftoken)
         axios.post('/auth/logout/', data)
         .then(() => {
             dispatch('clearAuth')

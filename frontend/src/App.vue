@@ -22,15 +22,6 @@
         components: {
             AppHeader,
             AppFooter
-        },
-        data: function() {
-            return {
-                csrftoken: null
-            }
-        },
-        created: function() {
-            this.csrftoken = document.cookie.replace(/(?:(?:^|.*;\s*)csrftoken\s*\=\s*([^;]*).*$)|^.*$/, "$1")
-            this.$store.commit('setCsrfToken', this.csrftoken)
         }
         
     }
