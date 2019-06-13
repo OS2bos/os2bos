@@ -10,6 +10,7 @@ services:
   frontend:
     build:
       context: .
+      dockerfile: docker/Dockerfile
       target: frontend
     environment:
       # `vue-cli-service serve` will proxy request to `/api` to this endpoint.
@@ -23,6 +24,7 @@ services:
   bev:
     build:
       context: .
+      dockerfile: docker/Dockerfile
       target: dist
     # The `volumes` and `command` mounts the current directory in the docker
     # container and overwrites the CMD from Dockerfile. With this gunicorn

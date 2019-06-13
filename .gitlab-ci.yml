@@ -78,7 +78,7 @@ build:
     - echo ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
     - docker pull ${IMAGE_DEV} || true
   script:
-    - docker build --pull --tag ${IMAGE_SHA} --cache-from ${IMAGE_DEV} .
+    - docker build -f docker/Dockerfile --pull --tag ${IMAGE_SHA} --cache-from ${IMAGE_DEV} .
     - docker push ${IMAGE_SHA}
 
 
