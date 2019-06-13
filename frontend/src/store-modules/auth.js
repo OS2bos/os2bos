@@ -10,6 +10,9 @@ const state = {
 }
 
 const getters = {
+    getAuth (state) {
+        return state.accesstoken ? true : false
+    },
     getUser (state) {
         return state.user ? state.user : false
     }
@@ -17,12 +20,20 @@ const getters = {
 
 const mutations = {
     setAccessToken (state, token) {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${ token }`
-        sessionStorage.setItem('accesstoken', token)
+        if (token === null) {
+            sessionStorage.removeItem('accesstoken')
+        } else {
+            axios.defaults.headers.common['Authorization'] = `Bearer ${ token }`
+            sessionStorage.setItem('accesstoken', token)
+        }
         state.accesstoken = token
     },
     setRefreshToken (state, token) {
-        sessionStorage.setItem('refreshtoken', token)
+        if (token === null) {
+            sessionStorage.removeItem('refreshtoken')
+        } else {
+            sessionStorage.setItem('refreshtoken', token)
+        }
         state.refreshtoken = token
     },
     setUser (state, user) {
@@ -31,7 +42,7 @@ const mutations = {
 }
 
 const actions = {
-    login: function({commit, dispatch, state}, authData) {
+    login: function({commit, dispatch}, authData) {
         axios.post('/token/', {
             username: authData.username,
             password: authData.password
@@ -41,11 +52,7 @@ const actions = {
             commit('setRefreshToken', res.data.refresh)
             
             dispatch('setTimer')
-            dispatch('fetchUser')
-            dispatch('fetchMunis')
-            dispatch('fetchDistricts')
-            dispatch('fetchActivities')
-            dispatch('fetchSections')
+            dispatch('fetchLists')
             router.push('/')
             notify('Du er logget ind', 'success')
         })
@@ -60,17 +67,20 @@ const actions = {
         }, 25000);
     },
     refreshToken: function({commit, dispatch, state}) {
-        axios.post('/token/refresh/', {
-            refresh: state.refreshtoken
-        })
-        .then(res => {
-            commit('setAccessToken', res.data.access)
-            dispatch('setTimer')
-        })
-        .catch(err => {
-            notify('Refresh login fejlede', 'error', err)
-            dispatch('clearAuth')
-        })
+        if (state.refreshtoken) {    
+            axios.post('/token/refresh/', {
+                refresh: state.refreshtoken
+            })
+            .then(res => {
+                commit('setAccessToken', res.data.access)
+                dispatch('fetchLists')
+                dispatch('setTimer')
+            })
+            .catch(err => {
+                notify('Refresh login fejlede', 'error', err)
+                dispatch('clearAuth')
+            })
+        }
     },
     fetchUser: function({commit}) {
         axios.get('/users/')
@@ -82,9 +92,18 @@ const actions = {
         })
     },
     autoLogin: function({commit, dispatch}) {
+        console.log('commencing autologin')
         // check for tokens in session storage and refresh session
-        const refreshtoken = sessionStorage.getItem('refreshtoken')
+        let refreshtoken = sessionStorage.getItem('refreshtoken')
+        let accesstoken = sessionStorage.getItem('accesstoken')
+        if (refreshtoken === 'null') {
+            refreshtoken = null // null should not be a string
+        }
+        if (accesstoken === 'null') {
+            accesstoken = null // null should not be a string
+        }
         if (refreshtoken) {
+            commit('setAccessToken', accesstoken)
             commit('setRefreshToken', refreshtoken)
             dispatch('refreshToken')
         } else {
@@ -93,6 +112,7 @@ const actions = {
     },
     logout: function({dispatch}) {
         dispatch('clearAuth')
+        notify('Du er logget ud')
     },
     clearAuth: function ({commit}) {
         commit('setAccessToken', null)
