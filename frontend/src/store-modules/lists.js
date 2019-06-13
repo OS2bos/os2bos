@@ -65,6 +65,13 @@ const actions = {
             commit('setSections', res.data)
         })
         .catch(err => console.log(err))
+    },
+    fetchLists: function({dispatch}) {
+        dispatch('fetchUser')
+        dispatch('fetchMunis')
+        dispatch('fetchDistricts')
+        dispatch('fetchActivities')
+        dispatch('fetchSections')
     }
 }
 
