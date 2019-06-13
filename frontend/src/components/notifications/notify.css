@@ -11,9 +11,9 @@
 
 .notification {
     align-items: center;
-    background-color: hsl(0,0%,70%);
+    background-color: var(--grey7);
     box-shadow: 0 .25rem .5rem hsla(0,0%,0%,.33);
-    color: hsl(0,0%,20%);
+    color: var(--grey0);
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
@@ -40,13 +40,13 @@
 }
 
 .notification.success {
-    background-color: green;
-    color: darken(green, 40%);
+    background-color: var(--success);
+    color: var(--grey0);
 }
 
 .notification.notification-error {
-    background-color: red;
-    color: darken(red, 40%);
+    background-color: var(--danger);
+    color: var(--grey0);
 }
 
 .notification.notification-error .msg::before { 
@@ -61,6 +61,7 @@
 }
 
 .notification .remove-alert::before {
+    color: var(--grey0);
     content: '×';
     display: block;
     font-size: 2em;
