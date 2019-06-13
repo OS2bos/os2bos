@@ -21,7 +21,24 @@ done;
 #./manage.py makemigrations
 ./manage.py migrate
 
+# See https://redmine.magenta-aps.dk/issues/30026 for changing this to a management command.
 echo 'from bevillingsplatform.initialize import initialize;initialize()' | python manage.py shell
+
+
+# See https://redmine.magenta-aps.dk/issues/30027 for moving this logic to python.
+if [ -n "$SUPERUSER_NAME" -o -n "$SUPERUSER_EMAIL" -o -n "$SUPERUSER_PASSWORD" ]; then
+    if [ -z "$SUPERUSER_NAME" -o -z "$SUPERUSER_EMAIL" -o -z "$SUPERUSER_PASSWORD" ]; then
+        (>&2 echo "All three SUPERUSER_* have to be set to create a Django superuser. Exiting.")
+        exit 1
+    fi
+    echo "Creating Django superuser."
+    ./manage.py create_superuser_with_password \
+                --noinput \
+                --username $SUPERUSER_NAME \
+                --email $SUPERUSER_EMAIL \
+                --password $SUPERUSER_PASSWORD
+fi
+
 
 ./manage.py collectstatic --no-input --clear
 

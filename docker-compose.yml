@@ -33,6 +33,10 @@ services:
     volumes:
       - .:/code/
       - ./dev-settings.ini:/settings.ini
+    environment:
+      - SUPERUSER_NAME=sagsbehandler
+      - SUPERUSER_EMAIL=cbur@magenta.dk
+      - SUPERUSER_PASSWORD=
     depends_on:
       - db
       - postfix
