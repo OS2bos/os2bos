@@ -20,6 +20,9 @@ done;
 #./manage.py flush --no-input
 #./manage.py makemigrations
 ./manage.py migrate
+
+echo 'from bevillingsplatform.initialize import initialize;initialize()' | python manage.py shell
+
 ./manage.py collectstatic --no-input --clear
 
 exec "$@"
