@@ -32,7 +32,7 @@ const router = new Router({
             component: CaseEdit
         },
         {
-            path: '/case/:caseid/familyoverview-create/',
+            path: '/case/:caseid/familyoverview-create/:id',
             name: 'familyoverview-create',
             component: FamilyOverviewEdit
         },

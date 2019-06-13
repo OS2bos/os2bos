@@ -24,7 +24,7 @@
                     <td>
                         <!-- <button @click="show_edit = !show_edit" class="familyoverview-create-btn"><i class="material-icons">edit</i></button> -->
                         <router-link :to="`/case/${ caseId }/familyoverview-create/${ f.id }`">
-                            <i class="material-icons">edit</i>
+                            <i class="material-icons edit-icon">edit</i>
                         </router-link>
                     </td>
                 </tr>
@@ -86,7 +86,7 @@
         margin: 0 1rem;
     }
 
-    .material-icons {
+    .edit-icon {
         font-size: 1rem;
     }
 
