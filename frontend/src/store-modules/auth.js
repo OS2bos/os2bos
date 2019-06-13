@@ -20,12 +20,20 @@ const getters = {
 
 const mutations = {
     setAccessToken (state, token) {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${ token }`
-        sessionStorage.setItem('accesstoken', token)
+        if (token === null) {
+            sessionStorage.removeItem('accesstoken')
+        } else {
+            axios.defaults.headers.common['Authorization'] = `Bearer ${ token }`
+            sessionStorage.setItem('accesstoken', token)
+        }
         state.accesstoken = token
     },
     setRefreshToken (state, token) {
-        sessionStorage.setItem('refreshtoken', token)
+        if (token === null) {
+            sessionStorage.removeItem('refreshtoken')
+        } else {
+            sessionStorage.setItem('refreshtoken', token)
+        }
         state.refreshtoken = token
     },
     setUser (state, user) {
@@ -56,7 +64,7 @@ const actions = {
     setTimer: function({dispatch}) {
         setTimeout(() => {
             dispatch('refreshToken')
-        }, 2500);
+        }, 25000);
     },
     refreshToken: function({commit, dispatch, state}) {
         if (state.refreshtoken) {    
@@ -84,6 +92,7 @@ const actions = {
         })
     },
     autoLogin: function({commit, dispatch}) {
+        console.log('commencing autologin')
         // check for tokens in session storage and refresh session
         let refreshtoken = sessionStorage.getItem('refreshtoken')
         let accesstoken = sessionStorage.getItem('accesstoken')
