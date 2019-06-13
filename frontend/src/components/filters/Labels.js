@@ -48,6 +48,18 @@ function sectionId2name(id) {
     }
 }
 
+function userId2name(id) {
+    const user_list = store.getters.getUsers
+    if (user_list) {
+        let user = user_list.find(function(u) {
+            return u.id === parseInt(id);
+        })
+        return user.username
+    } else {
+        return 'Ikke tilgængelig'
+    }
+}
+
 function displayStatus(status) {
     let status_str = ''
     switch(status) {
@@ -104,6 +116,7 @@ export {
     districtId2name,
     activityId2name,
     sectionId2name,
+    userId2name,
     displayStatus,
     displayEffort
 }

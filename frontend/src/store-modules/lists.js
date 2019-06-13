@@ -4,7 +4,8 @@ const state = {
     municipalities: null,
     districts: null,
     activities: null,
-    sections: null
+    sections: null,
+    users: null
 }
 
 const getters = {
@@ -19,6 +20,9 @@ const getters = {
     },
     getSections (state) {
         return state.sections ? state.sections : false
+    },
+    getUsers (state) {
+        return state.users ? state.users : false
     }
 }
 
@@ -34,6 +38,9 @@ const mutations = {
     },
     setSections (state, sections) {
         state.sections = sections
+    },
+    setUsers (state, users) {
+        state.users = users
     }
 }
 
@@ -66,12 +73,19 @@ const actions = {
         })
         .catch(err => console.log(err))
     },
+    fetchUsers: function({commit}) {
+        axios.get('/users/')
+        .then(res => {
+            commit('setUsers', res.data)
+        })
+        .catch(err => console.log(err))
+    },
     fetchLists: function({dispatch}) {
-        dispatch('fetchUser')
         dispatch('fetchMunis')
         dispatch('fetchDistricts')
         dispatch('fetchActivities')
         dispatch('fetchSections')
+        dispatch('fetchUsers')
     }
 }
 

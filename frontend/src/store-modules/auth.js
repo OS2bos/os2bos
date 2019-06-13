@@ -1,6 +1,7 @@
 import axios from '../components/http/Http.js'
 import router from '../router.js'
 import notify from '../components/notifications/Notify.js'
+import store from '../store.js';
 
 
 const state = {
@@ -55,9 +56,9 @@ const actions = {
         .then(res => {
             commit('setAccessToken', res.data.access)
             commit('setRefreshToken', res.data.refresh)
-            dispatch('fetchUser', authData.username)
             dispatch('setTimer')
             dispatch('fetchLists')
+            dispatch('fetchUser', authData.username)
             router.push('/')
             notify('Du er logget ind', 'success')
         })
@@ -87,26 +88,30 @@ const actions = {
             })
         }
     },
-    fetchUser: function({commit}, username) {
-        axios.get('/users/')
-        .then(res => {
-            const stored_username = sessionStorage.getItem('username')
-            let name = ''
-            if (username) {
-                name = username
-            } else if (stored_username) {
-                name = stored_username
-            } else {
-                return false
-            }
-            const user = res.data.find(u => {
-                return u.username === name
-            })
-            commit('setUser', user)
-        })
-        .catch(err => {
-            notify('Kunne ikke hente information om dig', 'error', err)
-        })
+    fetchUser: async function({commit, rootState}, username) {
+        function waitForUsers() {
+            setTimeout(function() {
+                if (rootState.lists.users) {
+                    console.log('we got users')
+                    const stored_username = sessionStorage.getItem('username')
+                    let name = ''
+                    if (username) {
+                        name = username
+                    } else if (stored_username) {
+                        name = stored_username
+                    } else {
+                        return false
+                    }
+                    const user = rootState.lists.users.find(u => {
+                        return u.username === name
+                    })
+                    commit('setUser', user)
+                } else {
+                    waitForUsers()
+                }
+            }, 500)
+        }
+        waitForUsers()
     },
     autoLogin: function({commit, dispatch}) {
         // check for tokens in session storage and refresh session
