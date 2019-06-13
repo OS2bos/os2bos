@@ -8,6 +8,7 @@
             <assessment-edit :case-obj="cas" @assessment="updateAssessment" />
             <fieldset style="margin: 0 1rem 1rem;">
                 <input type="submit" value="Opdatér">
+                <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
             </fieldset>
         </form>
 
@@ -77,6 +78,10 @@
                     this.update()
                 })
                 .catch(err => console.log(err))
+            },
+            cancel: function() {
+                this.$emit('close')
+                this.$router.push(`/case/${ this.$route.params.id }/`)
             }
         },
         created: function() {
