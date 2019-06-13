@@ -108,7 +108,13 @@ and set the same user as owner of the directory you bind.
 
 #### Test
 
-All the requirements for tests included in the docker image.
+All the requirements for tests included in the docker image. You can run the
+test from inside a container with `./manage.py test`.
+
+##### tox
+`tox` is also installed, but it tries to create a virtual environments inside
+the container. This is messy an will fail because the application user does not
+have permission to write files. Don't use `tox` inside the container.
 
 ### Docker-compose
 
