@@ -46,14 +46,14 @@
         },
         methods: {
             saveChanges: function() {
+                let data = {
+                    relation_type: this.fam.relation_type,
+                    cpr_number: this.fam.cpr_number,
+                    name: this.fam.name,
+                    related_case: this.fam.related_case
+                }
                 if (!this.create_mode) {
-                    axios.patch(`/related_persons/${ this.fam.id }/`, {
-                        id: this.fam.id,
-                        relation_type: this.fam.relation_type,
-                        cpr_number: this.fam.cpr_number,
-                        name: this.fam.name,
-                        related_case: this.fam.related_case
-                    })
+                    axios.get(`/related_persons/${ this.fam.id }/`, data)
                     .then(res => {
                         this.$emit('close')
                     })
