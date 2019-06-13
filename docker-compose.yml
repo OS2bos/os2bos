@@ -29,8 +29,8 @@ services:
     # reloads on file changes. This is very useful when developing.
     command: ["gunicorn", "-b", "0.0.0.0:8000", "--reload", "--access-logfile", "-", "bevillingsplatform.wsgi"]
     volumes:
-      - ./backend:/code/backend
-      - ./dev-settings.ini:/code/settings.ini
+      - .:/code/
+      - ./dev-settings.ini:/settings.ini
     depends_on:
       - db
       - postfix

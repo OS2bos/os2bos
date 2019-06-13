@@ -129,9 +129,9 @@ serve`](https://cli.vuejs.org/guide/cli-service.html). The frontend proxies
 requests to the backend. The exact list of proxied endpoints can be seen in
 `frontend/vue.config.js`.
 
-`docker-compose.yml` also mounts the `backend` directory in the container and
-automatically restarts the server on changes. This enables you to edit the
-backend files and the server will be reloaded automatically.
+`docker-compose.yml` also mounts the current directory in the container and
+automatically restarts the server on changes to the backend files. This enables
+you to edit the backend files and the server will be reloaded automatically.
 
 To pull the images and start the three service run:
 ```bash
