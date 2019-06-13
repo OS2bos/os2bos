@@ -17,7 +17,7 @@
             <dl>
                 <dt>Status</dt>
                 <dd>
-                    <span :class="`status-${ act.status }`">{{ act.status }}</span>
+                    <div v-html="statusLabel(act.status)"></div>
                 </dd>
                 <dt>Type</dt>
                 <dd>
@@ -73,7 +73,7 @@
     import axios from '../http/Http.js'
     import ActivityEdit from './ActivityEdit.vue'
     import { json2js } from '../filters/Date.js'
-    import { activityId2name, sectionId2name } from '../filters/Labels.js'
+    import { activityId2name, sectionId2name, displayStatus } from '../filters/Labels.js'
 
     export default {
 
@@ -125,6 +125,9 @@
             },
             displaySection: function(id) {
                 return sectionId2name(id)
+            },
+            statusLabel: function(status) {
+                return displayStatus(status)
             }
         },
         created: function() {
@@ -149,18 +152,6 @@
 
     .activity .act-edit-btn {
         margin: 0 1rem;
-    }
-
-    .activity .status-GRANTED {
-        background-color: var(--success);
-        color: white;
-        padding: .25rem;
-    }
-
-    .activity .status-EXPECTED {
-        background-color: var(--warning);
-        color: white;
-        padding: .25rem;
     }
 
 </style>

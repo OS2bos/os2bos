@@ -6,11 +6,24 @@ function postSuccess(res) {
 
 function postFail(err) {
     console.log('posting was a failure')
-
     console.log(err.response.data)   
 }
 
-function submitTestData() {
+function authLogin() {
+
+    //Auth Login
+    return axios.post('http://localhost:8000/api/token/', {
+        "username": "sagsbehandler",
+        "password": "sagsbehandler"
+    })
+    .then(res => {
+        postSuccess(res)
+        axios.defaults.headers.common['Authorization'] = `Bearer ${ res.data.access }`
+    })
+    .catch(err => { postFail(err) })
+}
+
+function testData() {
 
     // Create cases
     axios.post('http://localhost:8000/api/cases/', {
@@ -18,7 +31,7 @@ function submitTestData() {
         "sbsys_id": "46.46.24-64-ghis-872",
         "cpr_number": "000000-0000",
         "name": "Ejvind-Emil Hansen Persdatter",
-        "case_worker": "Inger Støjberg",
+        "case_worker": "1",
         "target_group": "FAMILY_DEPT",
         "refugee_integration": true,
         "cross_department_measure": true,
@@ -64,7 +77,7 @@ function submitTestData() {
         "sbsys_id": "63.14.75-17-XHhi-4",
         "cpr_number": "000000-0000",
         "name": "Mona Smith",
-        "case_worker": "Inger Støjberg",
+        "case_worker": "1",
         "target_group": "DISABILITY_DEPT",
         "refugee_integration": false,
         "cross_department_measure": false,
@@ -102,7 +115,7 @@ function submitTestData() {
         "sbsys_id": "56.17.45-10-bnih-84",
         "cpr_number": "000000-0000",
         "name": "Génevieve Macron",
-        "case_worker": "Leif L Lodahl",
+        "case_worker": "1",
         "target_group": "FAMILY_DEPT",
         "refugee_integration": false,
         "cross_department_measure": false,
@@ -121,6 +134,14 @@ function submitTestData() {
             "section": 6,
             "status": "DRAFT",
             "case": res.data.id
+        })
+        axios.post('http://localhost:8000/api/related_persons/', {
+            "id": 1,
+            "relation_type": "Mor",
+            "cpr_number": "121290-1122",
+            "name": "Camilla Yanez Macron",
+            "related_case": "56.17.45-10-bnih-84",
+            "main_case": 3
         })
         .then(apprres => { 
             postSuccess(apprres)
@@ -178,6 +199,11 @@ function submitTestData() {
     })
     .catch(err => { postFail(err) })
 
+}
+
+async function submitTestData() {
+   await authLogin()
+   testData()
 }
 
 submitTestData()

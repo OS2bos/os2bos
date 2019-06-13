@@ -64,7 +64,9 @@
                 <dt>Bopælsskommune</dt>
                 <dd>{{ displayMuniName(cas.residence_municipality) }}</dd>
             </dl>
+
         </div>
+        <family-overview :case-id="cas.id" />
 
         <case-edit :case-obj="cas" v-if="edit_mode" @close="reload()" />
 
@@ -78,6 +80,7 @@
 
     import CaseEdit from './CaseEdit.vue'
     import Appropriations from '../appropriations/AppropriationList.vue'
+    import FamilyOverview from '../familyoverview/FamilyOverview.vue'
     import axios from '../http/Http.js'
     import { municipalityId2name, districtId2name, displayEffort } from '../filters/Labels.js'
 
@@ -85,7 +88,8 @@
 
         components: {
             CaseEdit,
-            Appropriations
+            Appropriations,
+            FamilyOverview
         },
         
         data: function() {
