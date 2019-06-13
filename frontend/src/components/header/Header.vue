@@ -8,7 +8,7 @@
                     <span>Ballerup <br>Bevillingsplatform</span>
                 </router-link>
             </h1>
-            <button v-if="auth" @click="logout()">Log ud</button>
+            <user-actions />
         </div>
         <breadcrumb />
     </header> 
@@ -18,21 +18,13 @@
 <script>
 
     import Breadcrumb from './Breadcrumb.vue'
+    import UserActions from '../auth/UserActions.vue'
     
     export default {
 
         components: {
-            Breadcrumb
-        },
-        computed: {
-            auth: function() {
-                return this.$store.getters.getAuth
-            }
-        },
-        methods: {
-            logout: function() {
-                this.$store.dispatch('logout')
-            }
+            Breadcrumb,
+            UserActions
         }
 
     }

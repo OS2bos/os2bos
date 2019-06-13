@@ -25,7 +25,7 @@
                     <dt>Foranstaltningssag (SBSYS)</dt>
                     <dd>{{ appr.sbsys_id}}</dd>
                     <dt>Sagsbehandler</dt>
-                    <dd>{{ cas.case_worker}}</dd>
+                    <dd>{{ displayUserName(cas.case_worker) }}</dd>
                 </dl>
             </div>
 
@@ -68,7 +68,7 @@
     import ActivityList3 from '../activities/ActivityList3.vue'
     import ActivityList4 from '../activities/ActivityList4.vue'
     import AppropriationEdit from './AppropriationEdit.vue'
-    import { municipalityId2name, districtId2name, sectionId2name, displayStatus } from '../filters/Labels.js'
+    import { municipalityId2name, districtId2name, sectionId2name, displayStatus, userId2name } from '../filters/Labels.js'
 
     export default {
 
@@ -133,6 +133,9 @@
             statusLabel: function(status) {
                 return displayStatus(status)
             },
+            displayUserName: function(id) {
+                return userId2name(id)
+            }
         },
         created: function() {
             this.update()

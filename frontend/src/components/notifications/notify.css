@@ -82,8 +82,4 @@
         right: 0;
     }
 
-    .notification.show {
-        top: 3.5rem;
-    }
-
 }
