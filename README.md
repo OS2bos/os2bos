@@ -105,6 +105,14 @@ right permissions. It is recommended to only use
 [bind](https://docs.docker.com/storage/bind-mounts/) if you overwrite the user
 and set the same user as owner of the directory you bind.
 
+If some process inside the container needs to write files to locations other
+than `/static` or `/log`, you need to mount a volume with the right permissions.
+An example is `./manage.py makemigrations` trying to write to
+`/code/backend/core/migrations`. If you bind `/code` to your host system, make
+sure that the user with UID 72050 have write permissions to
+`backend/core/migrations`. This can be done with `chmod o+w migrations` on your
+host where you grant all user permission to write.
+
 
 #### Test
 
@@ -159,6 +167,11 @@ To run the backend test, execute: `docker-compose exec bev ./manage.py test`. It
 will connect to the running docker container and execute the tests.
 
 To get shell access to the backend run `docker-compose exec bev bash`.
+
+If you want to write files from inside the container, make sure the `bev` user
+have permission to do so. See [User permissions](#user-permissions).
+
+## Other Readmes
 
 [Backend README](backend/README.md)
 
