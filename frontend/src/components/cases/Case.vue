@@ -66,9 +66,10 @@
             </dl>
 
         </div>
-        <family-overview :case-id="cas.id" />
 
         <case-edit :case-obj="cas" v-if="edit_mode" @close="reload()" />
+
+        <family-overview :case-id="cas.id" />
 
         <appropriations :case-id="cas.id" />
 

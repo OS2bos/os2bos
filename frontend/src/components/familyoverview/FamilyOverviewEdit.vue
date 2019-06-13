@@ -22,7 +22,7 @@
             </fieldset>
             <fieldset>
                 <input type="submit" value="Gem">
-                <button v-if="!create_mode" class="cancel-btn" type="button" @click="cancel()">Annullér</button>
+                <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
             </fieldset>
         </form>
     </article>
@@ -32,6 +32,7 @@
 <script>
 
     import axios from '../http/Http.js'
+import router from '../../router.js';
 
     export default {
 
@@ -50,8 +51,6 @@
             fetchRelation: function(famid) {
                 axios.get(`/related_persons/${ famid }`)
                 .then(res => {
-                    console.log('got fam')
-                    console.log(res.data)
                     this.fam = res.data
                 })
                 .catch(err => {
@@ -86,12 +85,10 @@
             },
             cancel: function() {
                 this.$emit('close')
+                this.$router.push(`/case/${ this.casid }/`)
             }
         },
         created: function() {
-            console.log('created')
-            console.log(this.$route.params.famid)
-            
             if (this.$route.params.famid) {
                 this.fetchRelation(this.$route.params.famid)
             } else {
