@@ -37,6 +37,11 @@ const mutations = {
         state.refreshtoken = token
     },
     setUser (state, user) {
+        if (user === null) {
+            sessionStorage.removeItem('username')
+        } else {
+            sessionStorage.setItem('username', user.username)
+        }
         state.user = user
     }
 }
@@ -50,7 +55,7 @@ const actions = {
         .then(res => {
             commit('setAccessToken', res.data.access)
             commit('setRefreshToken', res.data.refresh)
-            
+            dispatch('fetchUser', authData.username)
             dispatch('setTimer')
             dispatch('fetchLists')
             router.push('/')
@@ -82,29 +87,35 @@ const actions = {
             })
         }
     },
-    fetchUser: function({commit}) {
+    fetchUser: function({commit}, username) {
         axios.get('/users/')
         .then(res => {
-            commit('setUser', res.data[0])
+            const stored_username = sessionStorage.getItem('username')
+            let name = ''
+            if (username) {
+                name = username
+            } else if (stored_username) {
+                name = stored_username
+            } else {
+                return false
+            }
+            const user = res.data.find(u => {
+                return u.username === name
+            })
+            commit('setUser', user)
         })
         .catch(err => {
             notify('Kunne ikke hente information om dig', 'error', err)
         })
     },
     autoLogin: function({commit, dispatch}) {
-        console.log('commencing autologin')
         // check for tokens in session storage and refresh session
-        let refreshtoken = sessionStorage.getItem('refreshtoken')
-        let accesstoken = sessionStorage.getItem('accesstoken')
-        if (refreshtoken === 'null') {
-            refreshtoken = null // null should not be a string
-        }
-        if (accesstoken === 'null') {
-            accesstoken = null // null should not be a string
-        }
+        const refreshtoken = sessionStorage.getItem('refreshtoken')
+        const accesstoken = sessionStorage.getItem('accesstoken')
         if (refreshtoken) {
             commit('setAccessToken', accesstoken)
             commit('setRefreshToken', refreshtoken)
+            dispatch('fetchUser')
             dispatch('refreshToken')
         } else {
             dispatch('clearAuth')
