@@ -92,24 +92,24 @@
                 axios.get(`/activities/${ id }`)
                 .then(res => {
                     this.act = res.data
+
+                axios.get(`/appropriations/${ this.act.appropriation }`)
+                .then(resp => {
+                    this.appr = resp.data
                     this.$store.commit('setBreadcrumb', [
                         {
                             link: '/',
                             title: 'Mine sager'
                         },
                         {
-                            link: `/appropriation/${ this.act.appropriation }`,
-                            title: `Foranstaltning ${ this.act.appropriation }`
+                            link: `/appropriation/${ this.appr.id }`,
+                            title: `Foranstaltning ${ this.appr.sbsys_id }`
                         },
                         {
                             link: false,
                             title: `${ activityId2name(this.act.service) }`
                         }
                     ])
-
-                axios.get(`/appropriations/${ this.act.appropriation }`)
-                .then(resp => {
-                    this.appr = resp.data
                 })
                 })
                 .catch(err => console.log(err))
