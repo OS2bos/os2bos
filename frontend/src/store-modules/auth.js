@@ -10,6 +10,9 @@ const state = {
 }
 
 const getters = {
+    getAuth (state) {
+        return state.accesstoken ? true : false
+    },
     getUser (state) {
         return state.user ? state.user : false
     }
@@ -88,11 +91,12 @@ const actions = {
             commit('setRefreshToken', refreshtoken)
             dispatch('refreshToken')
         } else {
-            dispatch('clearAuth')
+            dispatch('logout')
         }
     },
     logout: function({dispatch}) {
         dispatch('clearAuth')
+        notify('Du er logget ud')
     },
     clearAuth: function ({commit}) {
         commit('setAccessToken', null)

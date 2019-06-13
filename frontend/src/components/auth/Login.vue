@@ -4,7 +4,7 @@
         <h1>Log ind</h1>
         <fieldset>
             <label for="username">Brugernavn</label>
-            <input type="text" id="username" placeholder="Brugernavn" v-model="username" required>
+            <input type="text" id="username" placeholder="Brugernavn" v-model="username" required autofocus>
             <label for="password">Kodeord</label>
             <input type="password" id="password" placeholder="Kodeord" v-model="password" required>
         </fieldset>
@@ -43,7 +43,8 @@
 <style>
 
     .loginform {
-        margin: 1rem;
+        margin: 2rem auto;
+        max-width: 30rem;
     }
 
 </style>

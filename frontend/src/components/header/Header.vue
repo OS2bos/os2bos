@@ -8,7 +8,7 @@
                     <span>Ballerup <br>Bevillingsplatform</span>
                 </router-link>
             </h1>
-            <button @click="logout()">Log ud</button>
+            <button v-if="auth" @click="logout()">Log ud</button>
         </div>
         <breadcrumb />
     </header> 
@@ -23,6 +23,11 @@
 
         components: {
             Breadcrumb
+        },
+        computed: {
+            auth: function() {
+                return this.$store.getters.getAuth
+            }
         },
         methods: {
             logout: function() {
