@@ -53,9 +53,6 @@
             <div class="sagsbev appr-grid-box">
                 <h2>Der bevilges:</h2>
                 <activity-list :appr-id="appr.id" />
-                <!-- <activity-list2 :appr-id="appr.id" /> -->
-                <!-- <activity-list3 :appr-id="appr.id" /> -->
-                <!-- <activity-list4 :appr-id="appr.id" /> -->
             </div>
 
         </div>
