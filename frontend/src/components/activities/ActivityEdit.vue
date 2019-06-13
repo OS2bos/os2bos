@@ -123,13 +123,6 @@
             changeActivity: function(act) {
                 this.act.service = act
             },
-            cancel: function() {
-                if (!this.create_mode) {
-                    this.$emit('close')
-                } else {
-                    this.$router.push('/')
-                }  
-            },
             saveChanges: function() {
                 let data = {
                     status: this.act.status,
@@ -162,6 +155,13 @@
                     })
                     .catch(err => console.log(err))
                 }
+            },
+            cancel: function() {
+                if (!this.create_mode) {
+                    this.$emit('close')
+                } else {
+                    this.$router.push(`/appropriation/${ this.$route.params.apprid }`)
+                }  
             }
         },
          created: function() {

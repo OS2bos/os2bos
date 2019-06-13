@@ -26,7 +26,7 @@ function districtId2name(id) {
 
 function activityId2name(id) {
     const act_list = store.getters.getActivities
-    if (id) {
+    if (act_list) {
         let act = act_list.find(function(element) {
             return element.id === id;
         })
