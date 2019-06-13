@@ -24,10 +24,7 @@
             AppFooter
         },
         created: function() {
-            this.$store.dispatch('fetchMunis')
-            this.$store.dispatch('fetchDistricts')
-            this.$store.dispatch('fetchActivities')
-            this.$store.dispatch('fetchSections')
+            this.$store.dispatch('autoLogin')
         }
         
     }

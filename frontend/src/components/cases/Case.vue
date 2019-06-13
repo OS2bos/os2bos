@@ -13,11 +13,16 @@
         <div class="case-info" v-if="!edit_mode">
             <dl>
                 <dt>Sagspart (CPR, navn)</dt>
-                <dd>{{ cas.cpr_number }}, {{ cas.name }}</dd>
-                <dt>Indsatstrappen:</dt>
-                <dd>ikke implementeret</dd>
-                <dt>Skaleringstrappe:</dt>
-                <dd>ikke implementeret</dd>
+                <dd>
+                    {{ cas.cpr_number }}, {{ cas.name }}
+                </dd>
+                <dt>Indsatstrappen</dt>
+                <dd>{{ displayEffortName(cas.effort_step) }}</dd>
+                <dt>Skaleringstrappe</dt>
+                <dd style="display: flex; flex-flow: row nowrap; justify-content: space-between; align-items: center;">
+                    <span>{{ cas.scaling_step }}</span>
+                    <router-link :to="`/case/${ cas.id }/assessment`">Se vurderinger</router-link>
+                </dd>
             </dl>
             <dl>
                 <dt>Distrikt</dt>
@@ -77,7 +82,7 @@
     import Appropriations from '../appropriations/AppropriationList.vue'
     import FamilyOverview from '../familyoverview/FamilyOverview.vue'
     import axios from '../http/Http.js'
-    import { municipalityId2name, districtId2name } from '../filters/Labels.js'
+    import { municipalityId2name, districtId2name, displayEffort } from '../filters/Labels.js'
 
     export default {
 
@@ -123,6 +128,9 @@
             },
             displayDistrictName: function(id) {
                 return districtId2name(id)
+            },
+            displayEffortName: function(str) {
+                return displayEffort(str)
             }
         },
         created: function() {

@@ -38,6 +38,7 @@ const router = new Router({
         },
         {
             path: '/assessment/:id',
+            path: '/case/:id/assessment',
             name: 'assessment',
             component: Assessment
         },
@@ -71,6 +72,18 @@ const router = new Router({
             //component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
         }
     ]
+})
+
+router.beforeEach((to, from, next) => {
+    if (to.name === 'login') {
+        next()
+    } else if (store.state.auth.accesstoken) {
+        next()
+    } else {
+        next({
+            path: '/login'
+        })
+    }
 })
 
 router.afterEach((to, from) => {

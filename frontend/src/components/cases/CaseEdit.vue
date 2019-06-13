@@ -80,16 +80,7 @@
                 <label for="inputCheckbox2">Tværgående ungeindsats</label>
             </fieldset>
 
-            <fieldset>
-                <dt>Indsatstrappen:</dt>
-                <dd>{{ cas.effort_stairs }}</dd>
-                <dt>Skaleringstrappe:</dt>
-                <dd>{{ cas.scaling_staircase }}</dd>
-            </fieldset>
-
-            <fieldset>
-                <button @click="$router.push(`/assessment/${ cas.id }`)">Vurdering</button>
-            </fieldset>
+            <assessment-edit :case-obj="cas" @assessment="updateAssessment" />
 
             <div>
                 <h3>Sagsbehandling:</h3>
@@ -123,11 +114,13 @@
 
     import axios from '../http/Http.js'
     import ListPicker from '../forms/ListPicker.vue'
+    import AssessmentEdit from '../assessments/AssessmentEdit.vue'
 
     export default {
 
         components: {
-            ListPicker
+            ListPicker,
+            AssessmentEdit
         },
         props: [
             'caseObj'
@@ -144,6 +137,9 @@
             },
             districts: function() {
                 return this.$store.getters.getDistricts
+            },
+            user: function() {
+                return this.$store.getters.getUser
             }
         },
         methods: {
@@ -160,18 +156,31 @@
                     this.$router.push('/')
                 }  
             },
+            updateAssessment: function(assessment) {
+                if (assessment.scaling_step) {
+                    this.cas.scaling_step = assessment.scaling_step
+                }
+                if (assessment.effort_step) {
+                    this.cas.effort_step = assessment.effort_step
+                }
+            },
             saveChanges: function() {
                 let data = {
+                    sbsys_id: this.cas.sbsys_id,
+                    case_worker: this.user.id,
+                    district: this.cas.district,
+                    effort_step: this.cas.effort_step,
+                    scaling_step: this.cas.scaling_step,
                     name: this.cas.name,
                     cpr_number: this.cas.cpr_number,
                     paying_municipality: this.cas.paying_municipality,
                     acting_municipality: this.cas.acting_municipality,
                     residence_municipality: this.cas.residence_municipality,
-                    district: this.cas.district,
-                    case_worker: this.cas.case_worker,
                     target_group: this.cas.target_group,
                     refugee_integration: this.cas.refugee_integration,
-                    cross_department_measure: this.cas.cross_department_measure
+                    cross_department_measure: this.cas.cross_department_measure,
+                    scaling_step: this.cas.scaling_step,
+                    effort_step: this.cas.effort_step
                 }
                 if (!this.create_mode) {
                     axios.patch(`/cases/${ this.cas.id }/`, data)
@@ -180,9 +189,7 @@
                     })
                     .catch(err => console.log(err))
                 } else {
-                    data.sbsys_id = this.cas.sbsys_id
-                    data.case_worker = 'SAGSBEHANDLER NAVN TEST'
-                    axios.post(`/cases/`, data)
+                    axios.post('/cases/', data)
                     .then(res => {
                         this.$router.push(`/case/${ res.data.id }/`)
                     })

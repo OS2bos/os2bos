@@ -1,5 +1,6 @@
 import axios from 'axios'
 import spinner from '../spinner/Spinner.js'
+import store from '../../store.js'
 
 const ax = axios.create({
     baseURL: '/api'

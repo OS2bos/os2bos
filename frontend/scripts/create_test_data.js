@@ -25,7 +25,9 @@ function submitTestData() {
         "district": "1",
         "paying_municipality": "42",
         "acting_municipality": "42",
-        "residence_municipality": "42"
+        "residence_municipality": "42",
+        "scaling_step": 1,
+        "effort_step": "STEP_ONE"
     })
     .then(res => { 
 
@@ -69,7 +71,9 @@ function submitTestData() {
         "district": "2",
         "paying_municipality": 42,
         "acting_municipality": 42,
-        "residence_municipality": 42
+        "residence_municipality": 42,
+        "scaling_step": 2,
+        "effort_step": "STEP_TWO"
     })
     .then(res => { 
 
@@ -105,7 +109,9 @@ function submitTestData() {
         "district": "2",
         "paying_municipality": "42",
         "acting_municipality": "42",
-        "residence_municipality": "42"
+        "residence_municipality": "42",
+        "scaling_step": 3,
+        "effort_step": "STEP_THREE"
     })
     .then(res => { 
         
