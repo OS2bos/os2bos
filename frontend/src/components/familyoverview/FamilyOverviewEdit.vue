@@ -35,16 +35,29 @@
 
     export default {
 
-        props: [
-            'famObj'
-        ],
         data: function() {
             return {
-                fam: {},
-                create_mode: true
+                create_mode: false,
+                fam: {}
+            }
+        },
+        computed: {
+            casid: function() {
+                return this.$route.params.casid
             }
         },
         methods: {
+            fetchRelation: function(famid) {
+                axios.get(`/related_persons/${ famid }`)
+                .then(res => {
+                    console.log('got fam')
+                    console.log(res.data)
+                    this.fam = res.data
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+            },
             saveChanges: function() {
                 if (!this.create_mode) {
                     axios.patch(`/related_persons/${ this.fam.id }/`, {
@@ -54,20 +67,19 @@
                         related_case: this.fam.related_case
                     })
                     .then(res => {
-                        this.$emit('close')
+                        this.$router.push(`/case/${ this.casid }/`)
                     })
                     .catch(err => console.log(err))
                 } else {
-                    const cas_id = this.$route.params.caseid
                     axios.post(`/related_persons/`, {
                         relation_type: this.fam.relation_type,
                         cpr_number: this.fam.cpr_number,
                         name: this.fam.name,
                         related_case: this.fam.related_case,
-                        main_case: cas_id
+                        main_case: this.casid
                     })
                     .then(res => {
-                        this.$router.push(`/case/${ cas_id }/`)
+                        this.$router.push(`/case/${ this.casid }/`)
                     })
                     .catch(err => console.log(err))
                 }
@@ -77,9 +89,13 @@
             }
         },
         created: function() {
-            if (this.famObj) {
-                this.create_mode = false
-                this.fam = this.famObj
+            console.log('created')
+            console.log(this.$route.params.famid)
+            
+            if (this.$route.params.famid) {
+                this.fetchRelation(this.$route.params.famid)
+            } else {
+                this.create_mode = true
             }
         }
     }

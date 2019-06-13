@@ -23,7 +23,8 @@
                     <td>{{ f.related_case }}</td>
                     <td>
                         <!-- <button @click="show_edit = !show_edit" class="familyoverview-create-btn"><i class="material-icons">edit</i></button> -->
-                        <router-link :to="`/case/${ caseId }/familyoverview-create/${ f.id }`">
+                        {{ f.id }}
+                        <router-link :to="`/case/${ caseId }/familyoverview-edit/${ f.id }`">
                             <i class="material-icons edit-icon">edit</i>
                         </router-link>
                     </td>
