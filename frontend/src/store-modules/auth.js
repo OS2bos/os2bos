@@ -34,7 +34,7 @@ const mutations = {
 }
 
 const actions = {
-    login: function({commit, dispatch, state}, authData) {
+    login: function({commit, dispatch}, authData) {
         axios.post('/token/', {
             username: authData.username,
             password: authData.password
@@ -56,12 +56,10 @@ const actions = {
     setTimer: function({dispatch}) {
         setTimeout(() => {
             dispatch('refreshToken')
-        }, 25000);
+        }, 2500);
     },
     refreshToken: function({commit, dispatch, state}) {
-        console.log('trying to refresh ', state.refreshtoken)
-        if (state.refreshtoken) {
-            console.log('got refreshtoken ', state.refreshtoken)
+        if (state.refreshtoken) {    
             axios.post('/token/refresh/', {
                 refresh: state.refreshtoken
             })
@@ -88,11 +86,15 @@ const actions = {
     autoLogin: function({commit, dispatch}) {
         // check for tokens in session storage and refresh session
         let refreshtoken = sessionStorage.getItem('refreshtoken')
+        let accesstoken = sessionStorage.getItem('accesstoken')
         if (refreshtoken === 'null') {
             refreshtoken = null // null should not be a string
         }
-        console.log('trying to autologin ', refreshtoken)
+        if (accesstoken === 'null') {
+            accesstoken = null // null should not be a string
+        }
         if (refreshtoken) {
+            commit('setAccessToken', accesstoken)
             commit('setRefreshToken', refreshtoken)
             dispatch('refreshToken')
         } else {

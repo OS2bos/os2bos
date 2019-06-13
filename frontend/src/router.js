@@ -82,12 +82,12 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
     if (to.name === 'login') {
         next()
-    } else if (store.state.auth.accesstoken) {
-        next()
-    } else {
+    } else if (!store.getters.getAuth) {
         next({
             path: '/login'
-        })
+        }) 
+    } else {
+        next()
     }
 })
 
