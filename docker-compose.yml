@@ -1,0 +1,65 @@
+version: "3.4"
+
+services:
+  # We use two images in development. One frontend that runs `vue-cli-service
+  # serve`, named `frontend` and one that runs django named `bev`. The frontend
+  # image proxies requests to django.
+
+  # In production only the django image is run. It will serve the production
+  # ready frontend code, but the files are only updated on docker build.
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: frontend
+    environment:
+      # `vue-cli-service serve` will proxy request to `/api` to this endpoint.
+      # Defined in `frontend/vue.config.js`.
+      - API_SERVER=http://bev:8000
+    depends_on:
+      - bev
+    ports:
+      - 8080:8080
+
+  bev:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: dist
+    # The `volumes` and `command` mounts the current directory in the docker
+    # container and overwrites the CMD from Dockerfile. With this gunicorn
+    # reloads on file changes. This is very useful when developing.
+    command: ["gunicorn", "-b", "0.0.0.0:8000", "--reload", "--access-logfile", "-", "bevillingsplatform.wsgi"]
+    volumes:
+      - .:/code/
+      - ./dev-settings.ini:/settings.ini
+    environment:
+      - SUPERUSER_NAME=sagsbehandler
+      - SUPERUSER_EMAIL=cbur@magenta.dk
+      - SUPERUSER_PASSWORD=
+    depends_on:
+      - db
+      - postfix
+    # If you want to reach the django image directly (as opposed through the
+    # `vue-cli-service serve` proxy), expose it with:
+    ports:
+     - 8000:8000
+
+
+  db:
+    image: postgres:10
+    env_file:
+      - docker/db.env
+    volumes:
+      - ./docker/postgres-initdb.d/20-create-db-and-user.sh:/docker-entrypoint-initdb.d/20-create-db-and-user.sh
+      # The following file adds the CREATEDB clause to the db user to enable it
+      # to run django tests. This should not be used in production.
+      - ./docker/postgres-initdb.d/30-add-createdb-permission.sh:/docker-entrypoint-initdb.d/30-add-createdb-permission.sh
+
+  postfix:
+    image: catatnight/postfix
+    hostname: postfix
+    domainname: bevillingsplatform-test.magenta.dk
+    environment:
+      - maildomain=magenta.dk
+      - smtp_user=bev:bev
