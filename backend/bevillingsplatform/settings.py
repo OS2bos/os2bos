@@ -63,7 +63,7 @@ SECRET_KEY = settings.get("SECRET_KEY", fallback="Not.a.secret")
 DEBUG = settings.getboolean("DEBUG", fallback=False)
 
 ALLOWED_HOSTS = [
-    settings.get("ALLOWED_HOST", fallback=None)
+    settings.get("ALLOWED_HOST", fallback=None).split(",")
 ]  # Note the missing 'S'.
 
 

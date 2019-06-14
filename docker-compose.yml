@@ -42,8 +42,8 @@ services:
       - postfix
     # If you want to reach the django image directly (as opposed through the
     # `vue-cli-service serve` proxy), expose it with:
-    # ports:
-    #  - 8000:8000
+    ports:
+     - 8000:8000
 
 
   db:
