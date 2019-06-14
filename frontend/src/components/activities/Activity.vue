@@ -23,6 +23,8 @@
                 <dd>
                     <div>{{ act.activity_type }}</div>
                 </dd>
+                <dt>Bevilges efter §</dt>
+                <dd v-if="appr">{{ displaySection(appr.section) }}</dd>
                 <dt>Aktivitet</dt>
                 <dd>{{ activityId2name(act.service) }}</dd>
                 <dt>Startdato</dt>
