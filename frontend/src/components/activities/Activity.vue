@@ -98,9 +98,9 @@
                     axios.get(`/appropriations/${ this.act.appropriation }`)
                     .then(resp => {
                         this.appr = resp.data
-                        axios.get(`/cases/${ this.act.case }`)
+                        axios.get(`/cases/${ this.appr.case }`)
                         .then(response => {
-                            this.cas = response.data 
+                            this.cas = response.data
                             this.$store.commit('setBreadcrumb', [
                                 {
                                     link: '/',
@@ -116,7 +116,7 @@
                                 },
                                 {
                                     link: false,
-                                    title: `${ activityId2name(this.act.service) }`
+                                    title: `Udgift til ${ activityId2name(this.act.service) }`
                                 }
                             ])
                         })
