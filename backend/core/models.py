@@ -282,6 +282,7 @@ class ServiceProvider(models.Model):
     """
     Class containing information for a specific service provider.
     """
+
     cvr_number = models.CharField(max_length=8, blank=True)
     name = models.CharField(max_length=128, blank=False)
     vat_factor = models.DecimalField(max_digits=5, decimal_places=2)
