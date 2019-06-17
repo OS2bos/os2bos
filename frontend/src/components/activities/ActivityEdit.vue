@@ -1,5 +1,5 @@
 <template>
-    <article class="activity-edit">
+    <section class="activity">
         <form @submit.prevent="saveChanges()">
         <h1 v-if="create_mode">Opret Aktivitet</h1>
         <h1 v-else>Redigér Aktivitet</h1>
@@ -91,7 +91,7 @@
                 <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
             </fieldset>
         </form>
-    </article>
+    </section>
 
 </template>
 
@@ -176,11 +176,11 @@
 
 <style>
 
-    .activity-edit {
-        margin: 0;
+    .activity {
+        margin: 1rem;
     }
 
-    .activity-edit .cancel-btn {
+    .activity .cancel-btn {
         margin-left: 0.5rem;
         background-color: transparent;
         color: var(--primary);
