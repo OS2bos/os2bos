@@ -86,6 +86,7 @@
             return {
                 act: null,
                 appr: null,
+                cas: null,
                 show_edit: false
             }
         },
@@ -94,25 +95,32 @@
                 axios.get(`/activities/${ id }`)
                 .then(res => {
                     this.act = res.data
-
-                axios.get(`/appropriations/${ this.act.appropriation }`)
-                .then(resp => {
-                    this.appr = resp.data
-                    this.$store.commit('setBreadcrumb', [
-                        {
-                            link: '/',
-                            title: 'Mine sager'
-                        },
-                        {
-                            link: `/appropriation/${ this.appr.id }`,
-                            title: `Foranstaltning ${ this.appr.sbsys_id }`
-                        },
-                        {
-                            link: false,
-                            title: `${ activityId2name(this.act.service) }`
-                        }
-                    ])
-                })
+                    axios.get(`/appropriations/${ this.act.appropriation }`)
+                    .then(resp => {
+                        this.appr = resp.data
+                        axios.get(`/cases/${ this.act.case }`)
+                        .then(response => {
+                            this.cas = response.data 
+                            this.$store.commit('setBreadcrumb', [
+                                {
+                                    link: '/',
+                                    title: 'Mine sager'
+                                },
+                                {
+                                    link: `/case/${ this.cas.id }`,
+                                    title: `Hovedsag ${ this.cas.sbsys_id }`
+                                },
+                                {
+                                    link: `/appropriation/${ this.appr.id }`,
+                                    title: `Foranstaltning ${ this.appr.sbsys_id }`
+                                },
+                                {
+                                    link: false,
+                                    title: `${ activityId2name(this.act.service) }`
+                                }
+                            ])
+                        })
+                    })
                 })
                 .catch(err => console.log(err))
             },
