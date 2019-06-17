@@ -75,7 +75,7 @@
             },
             cancel: function() {
                 this.$emit('close')
-                this.$router.push(`/case/${ this.$route.params.caseid }/`)
+                this.$router.push(`/appropriation/${ this.appr.id }/`)
             }
         },
         created: function() {
