@@ -13,7 +13,7 @@
             <activity-edit :activity-obj="act" v-if="show_edit" @save="reload()" />
         </div>
 
-        <div v-if="!show_edit">
+        <div class="activity-info" v-if="!show_edit">
             <dl>
                 <dt>Status</dt>
                 <dd>
@@ -32,8 +32,8 @@
                 <dt>Slutdato</dt>
                 <dd>{{ displayDate(act.end_date) }}</dd>
             </dl>
-            <h2>Udgifter</h2>
             <dl>
+                <h3>Udgifter</h3>
                 <dt>Beløb</dt>
                 <dd>ikke implementeret</dd>
                 <dt>Afregningsenhed</dt>
@@ -50,8 +50,8 @@
                 <dt>Bemærkninger</dt>
                 <dd>ikke implementeret</dd>
             </dl>
-            <h3>Betalingsmodtager</h3>
             <dl>
+                <h3>Betalingsmodtager</h3>
                 <dt>Type</dt>
                 <dd>ikke implementeret</dd>
                 <dt>ID</dt>
@@ -154,6 +154,15 @@
 
     .activity .act-edit-btn {
         margin: 0 1rem;
+    }
+
+    .activity-info {
+        display: grid; 
+        grid-template-columns: auto auto auto auto;
+        grid-gap: 3rem;
+        justify-content: start;
+        background-color: var(--grey1);
+        padding: 1.5rem 2rem 2rem;
     }
 
 </style>
