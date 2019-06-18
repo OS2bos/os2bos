@@ -14,5 +14,6 @@ if (process.env.API_SERVER) {
 module.exports = {
     devServer: {
         proxy: proxySettings,
+        disableHostCheck: true,
     }
 };
