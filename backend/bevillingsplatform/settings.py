@@ -62,7 +62,7 @@ SECRET_KEY = settings.get("SECRET_KEY", fallback="Not.a.secret")
 # SECURITY WARNING: don"t run with debug turned on in production!
 DEBUG = settings.getboolean("DEBUG", fallback=False)
 
-ALLOWED_HOSTS = settings.get("ALLOWED_HOST", fallback=None).split(",")
+ALLOWED_HOSTS = settings.get("ALLOWED_HOSTS", fallback="").split(",")
 
 
 # Application definition
@@ -169,7 +169,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
-STATIC_URL = "/static/"
+STATIC_URL = "/api/static/"
 STATIC_ROOT = settings.get(
     "STATIC_ROOT", fallback=os.path.join(BASE_DIR, "static")
 )
