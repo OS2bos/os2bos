@@ -36,7 +36,7 @@ services:
     environment:
       - SUPERUSER_NAME=sagsbehandler
       - SUPERUSER_EMAIL=cbur@magenta.dk
-      - SUPERUSER_PASSWORD=
+      - SUPERUSER_PASSWORD=sagsbehandler
     depends_on:
       - db
       - postfix
