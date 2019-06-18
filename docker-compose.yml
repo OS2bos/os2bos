@@ -16,6 +16,12 @@ services:
       # `vue-cli-service serve` will proxy request to `/api` to this endpoint.
       # Defined in `frontend/vue.config.js`.
       - API_SERVER=http://bev:5000
+    # To relaod on file changes, we mount the current folder into `/code`.
+    # However we do not want node_modules on the host machine, so we create an
+    # additional volume for it.
+    volumes:
+      - .:/code/
+      - /code/frontend/node_modules
     depends_on:
       - bev
     ports:
