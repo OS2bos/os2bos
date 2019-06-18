@@ -1,4 +1,13 @@
+from datetime import date
+
+from dateutil.rrule import (
+    rrule,
+    DAILY,
+    WEEKLY as WEEKLY_rrule,
+    MONTHLY as MONTHLY_rrule,
+)
 from django.db import models
+from django.db.models import Sum, F
 from django.contrib.postgres import fields
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
@@ -85,7 +94,77 @@ class PaymentSchedule(models.Model):
         choices=payment_method_choices,
     )
 
-    # TODO: Add actual scheduling information.
+    ONE_TIME = "ONE_TIME"
+    WEEKLY = "WEEKLY"
+    MONTHLY = "MONTHLY"
+    payment_frequency_choices = (
+        (ONE_TIME, _("en gang")),
+        (WEEKLY, _("ugentlig")),
+        (MONTHLY, _("månedlig")),
+    )
+
+    payment_frequency = models.CharField(
+        max_length=128,
+        verbose_name=_("betalingsfrekvens"),
+        choices=payment_frequency_choices,
+    )
+
+    FIXED_AMOUNT = "FIXED_AMOUNT"
+    RATE = "RATE"
+    HOURLY_RATE = "HOURLY_RATE"
+    DAILY_RATE = "DAILY_RATE"
+    KILOMETER_RATE = "KILOMETER_RATE"
+    payment_unit_choices = (
+        ((FIXED_AMOUNT), _("Fast beløb")),
+        ((RATE), _("Takst")),
+        ((HOURLY_RATE), _("Antal timer * takst")),
+        ((DAILY_RATE), _("Antal døgn * takst")),
+        ((KILOMETER_RATE), _("Antal km * takst")),
+    )
+    payment_unit = models.CharField(
+        max_length=128,
+        verbose_name=_("betalingsenhed"),
+        choices=payment_unit_choices,
+    )
+
+    def create_rrule(self, start, end):
+        """
+        Create an dateutil.rrule based on payment_frequency, start and end.
+        """
+        if self.payment_frequency == self.ONE_TIME:
+            rrule_frequency = rrule(DAILY, count=1, dtstart=start, until=end)
+        elif self.payment_frequency == self.WEEKLY:
+            rrule_frequency = rrule(WEEKLY_rrule, dtstart=start, until=end)
+        elif self.payment_frequency == self.MONTHLY:
+            # If monthly, choose the last day of the month.
+            rrule_frequency = rrule(
+                MONTHLY_rrule,
+                interval=1,
+                dtstart=start,
+                until=end,
+                bymonthday=-1
+            )
+        return rrule_frequency
+
+    def generate_payments(self, start, end, amount):
+        """
+        Generates payments with a frequency and unit with start, end, amount.
+        """
+        # If no end is specified, choose end of the year.
+        if not end:
+            end = date.today().replace(month=date.max.month, day=date.max.day)
+        rrule_frequency = self.create_rrule(start, end)
+
+        dates = list(rrule_frequency)
+
+        for date_obj in dates:
+            Payment.objects.create(
+                date=date_obj,
+                recipient_type=self.recipient_type,
+                recipient_id=self.recipient_id,
+                amount=amount,
+                payment_schedule=self,
+            )
 
 
 class Payment(models.Model):
@@ -109,10 +188,20 @@ class Payment(models.Model):
         verbose_name=_("betalingsmåde"),
         choices=PaymentSchedule.payment_method_choices,
     )
+    amount = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        verbose_name="beløb",
+        null=True
+    )
+    paid = models.BooleanField(default=False, verbose_name="betalt")
 
     payment_schedule = models.ForeignKey(
         PaymentSchedule, on_delete=models.CASCADE, related_name="payments"
     )
+
+    def __str__(self):
+        return f"{self.date} - {self.amount}"
 
 
 class Case(AuditModelMixin, models.Model):
@@ -249,7 +338,14 @@ class Appropriation(AuditModelMixin, models.Model):
     def payment_plan(self):
         """Return the payment plan for this appropriation."""
 
-        # TODO: Implement this.
+        # We retrieve the total sum of the main activity
+        # and the supplementary activities.
+        main_activities = self.activities
+        main_activities.annotate(total_sum=Sum(
+            F("payment_plan__payments") +
+            F("supplementary_activities__payment_plan__payments"))
+        )
+        return main_activities
 
 
 class Sections(models.Model):
