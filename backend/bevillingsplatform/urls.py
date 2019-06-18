@@ -56,7 +56,7 @@ urlpatterns = [
 #
 # We serve the static file at two URLs. The first is the one normal to Django
 # where we serve everything in STATIC_ROOT at the STATIC_URL (default:
-# `/static/`).
+# `/api/static/`).
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

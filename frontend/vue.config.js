@@ -8,7 +8,6 @@ if (process.env.API_SERVER) {
 
     proxySettings = {
         "/api": server,
-        "/static": server,
     };
 }
 
