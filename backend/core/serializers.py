@@ -15,6 +15,7 @@ from core.models import (
     ActivityCatalog,
     Account,
     HistoricalCase,
+    ServiceProvider,
 )
 
 
@@ -101,4 +102,10 @@ class ActivityCatalogSerializer(serializers.ModelSerializer):
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
+        fields = "__all__"
+
+
+class ServiceProviderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceProvider
         fields = "__all__"

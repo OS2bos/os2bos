@@ -12,6 +12,7 @@ from core.models import (
     Sections,
     ActivityCatalog,
     Account,
+    ServiceProvider,
 )
 
 for klass in (
@@ -26,5 +27,6 @@ for klass in (
     Sections,
     ActivityCatalog,
     Account,
+    ServiceProvider,
 ):
     admin.site.register(klass, admin.ModelAdmin)

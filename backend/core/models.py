@@ -278,6 +278,16 @@ class Sections(models.Model):
         return f"{self.paragraph} - {self.kle_number}"
 
 
+class ServiceProvider(models.Model):
+    """
+    Class containing information for a specific service provider.
+    """
+
+    cvr_number = models.CharField(max_length=8, blank=True)
+    name = models.CharField(max_length=128, blank=False)
+    vat_factor = models.DecimalField(max_digits=5, decimal_places=2)
+
+
 class ActivityCatalog(models.Model):
     """Class containing all services offered by this municipality.
 
@@ -300,6 +310,9 @@ class ActivityCatalog(models.Model):
     )
     supplementary_activity_for = models.ManyToManyField(
         Sections, related_name="supplementary_activities"
+    )
+    providers = models.ManyToManyField(
+        ServiceProvider, related_name="activities"
     )
 
     def __str__(self):
@@ -413,12 +426,6 @@ class RelatedPerson(models.Model):
             for (k, v) in data.items()
             if k in converter_dict
         }
-
-
-class ServiceRange(models.Model):
-    """Class containing all the service providers for each service.
-
-    Also contains price information etc."""
 
 
 class Account(models.Model):
