@@ -93,7 +93,7 @@ USER bev:bev
 EXPOSE 5000
 ENTRYPOINT ["/code/docker/docker-entrypoint.sh"]
 CMD ["gunicorn", \
-  "-b", "0.0.0.0:8000", \
+  "-b", "0.0.0.0:5000", \
   "--workers", "2", \
   "--threads", "4", \
   "--access-logfile", "/log/access.log", \
