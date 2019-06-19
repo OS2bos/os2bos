@@ -118,4 +118,8 @@
         flex-flow: row nowrap;
     }
 
+    .payment-amount input[type="text"] {
+        width: 8rem;
+    }
+
 </style>
