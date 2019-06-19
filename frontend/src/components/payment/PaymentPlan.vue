@@ -4,8 +4,18 @@
         <h2>Betalingsplan</h2>
         {{ abstract }}
 
-        <h3>Årlig udgift</h3>
-        <strong>{{ yearly_cost }} kr</strong>
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        I alt pr år
+                    </td>
+                    <td style="text-align: right;">
+                        <strong>{{ yearly_cost }} kr</strong>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
 </template>
@@ -22,7 +32,22 @@
         ],
         data: function() {
             return {
-                freq_factor: 0
+                freq_factor: 0,
+                month_factor: 0,
+                months: [
+                    'januar',
+                    'februar',
+                    'marts',
+                    'april',
+                    'maj',
+                    'juni',
+                    'juli',
+                    'august',
+                    'september',
+                    'oktober',
+                    'november',
+                    'december'
+                ]
             }
         },
         computed: {
@@ -69,14 +94,17 @@
                 switch(this.frequency) {
                     case 'PAY-EVERY-MONTH':
                         this.freq_factor = 12
+                        this.month_factor = 1
                         return 'måned'
                         break
                     case 'PAY-EVERY-WEEK':
                         this.freq_factor = 52
+                        this.month_factor = 4
                         return 'uge'
                         break
                     case 'PAY-EVERY-DAY':
                         this.freq_factor = 365
+                        this.month_factor = 31
                         return 'dag'
                         break
                     default:
