@@ -15,7 +15,13 @@ services:
     environment:
       # `vue-cli-service serve` will proxy request to `/api` to this endpoint.
       # Defined in `frontend/vue.config.js`.
-      - API_SERVER=http://bev:8000
+      - API_SERVER=http://bev:5000
+    # To reload on file changes, we mount the current folder into `/code`.
+    # However we do not want node_modules on the host machine, so we create an
+    # additional volume for it.
+    volumes:
+      - .:/code/
+      - /code/frontend/node_modules
     depends_on:
       - bev
     ports:
@@ -29,21 +35,21 @@ services:
     # The `volumes` and `command` mounts the current directory in the docker
     # container and overwrites the CMD from Dockerfile. With this gunicorn
     # reloads on file changes. This is very useful when developing.
-    command: ["gunicorn", "-b", "0.0.0.0:8000", "--reload", "--access-logfile", "-", "bevillingsplatform.wsgi"]
+    command: ["gunicorn", "-b", "0.0.0.0:5000", "--reload", "--access-logfile", "-", "bevillingsplatform.wsgi"]
     volumes:
       - .:/code/
       - ./dev-settings.ini:/settings.ini
     environment:
       - SUPERUSER_NAME=sagsbehandler
       - SUPERUSER_EMAIL=cbur@magenta.dk
-      - SUPERUSER_PASSWORD=
+      - SUPERUSER_PASSWORD=sagsbehandler
     depends_on:
       - db
       - postfix
     # If you want to reach the django image directly (as opposed through the
     # `vue-cli-service serve` proxy), expose it with:
-    ports:
-     - 8000:8000
+    #ports:
+    # - 5000:5000
 
 
   db:

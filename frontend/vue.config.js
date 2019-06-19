@@ -7,15 +7,13 @@ if (process.env.API_SERVER) {
     };
 
     proxySettings = {
-        "/admin": server,
-        "/auth": server,
         "/api": server,
-        "/static": server,
     };
 }
 
 module.exports = {
     devServer: {
         proxy: proxySettings,
+        disableHostCheck: true,
     }
 };
