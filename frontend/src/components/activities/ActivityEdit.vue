@@ -31,6 +31,7 @@
 
             <payment-amount-edit />
             <payment-receiver-edit/>
+            <payment-edit/>
 
             <hr>
             <fieldset>
@@ -48,13 +49,15 @@
     import ListPicker from '../forms/ListPicker.vue'
     import PaymentAmountEdit from '../payment/PaymentAmountEdit.vue'
     import PaymentReceiverEdit from '../payment/PaymentReceiverEdit.vue'
+    import PaymentEdit from '../payment/PaymentEdit.vue'
 
     export default {
 
         components: {
             ListPicker,
             PaymentAmountEdit,
-            PaymentReceiverEdit
+            PaymentReceiverEdit,
+            PaymentEdit
         },
         props: [
             'activityObj'
