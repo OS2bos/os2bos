@@ -5,20 +5,15 @@
         <h1 v-else>Redigér Aktivitet</h1>
 
             <fieldset>
-                <legend>Status</legend>
-                <input type="radio" id="field-status-granted" value="GRANTED" v-model="act.status">
-                <label for="field-status-granted">Bevilling</label>
-                <input type="radio" id="field-status-expected" value="EXPECTED" v-model="act.status">
+                <input type="checkbox" id="field-status-expected" value="EXPECTED" v-model="act.status">
                 <label for="field-status-expected">Forventning</label>
             </fieldset>
             <fieldset>
                 <legend>Type</legend>
                 <input type="radio" id="field-type-main" value="MAIN_ACTIVITY" v-model="act.activity_type">
-                <label for="field-type-main">Hovedaktivitet</label>
+                <label for="field-type-main">Foranstaltningsydelse</label>
                 <input type="radio" id="field-type-suppl" value="SUPPL_ACTIVITY" v-model="act.activity_type">
-                <label for="field-type-suppl">Følgeaktivitet</label>
-                <input type="radio" id="field-type-expected" value="EXPECTED_CHANGE" v-model="act.activity_type">
-                <label for="field-type-expected">Forventning</label>
+                <label for="field-type-suppl">Følgeydelse</label>
             </fieldset>
             <fieldset>
                 <label for="selectField">Aktivitet</label>
@@ -66,7 +61,9 @@
         ],
         data: function() {
             return {
-                act: {},
+                act: {
+                    status: 'GRANTED'
+                },
                 create_mode: true
             }
         },
