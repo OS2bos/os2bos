@@ -10,7 +10,7 @@
                         {{ o.val }}
                     </option>
                 </select>
-                <select v-model="frequency">
+                <select v-model="frequency" v-if="type !== 'ONE-TIME-PAYMENT'">
                     <option v-for="o in frequency_options" :key="o.key" :value="o.key">
                         {{ o.val }}
                     </option>
