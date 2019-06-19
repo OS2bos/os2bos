@@ -3,6 +3,7 @@
     <div class="payment-amount rows">
 
         <div class="payment-amount-fields">
+            <h2>Beløb</h2>
             <label>Afregningshed</label>
             <div class="rows">
                 <select v-model="type" style="margin-right: 1rem; min-width: 13rem;">
