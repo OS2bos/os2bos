@@ -311,8 +311,8 @@ class ActivityCatalog(models.Model):
     supplementary_activity_for = models.ManyToManyField(
         Sections, related_name="supplementary_activities"
     )
-    providers = models.ManyToManyField(
-        ServiceProvider, related_name="activities"
+    service_providers = models.ManyToManyField(
+        ServiceProvider, related_name="activity_catalogs"
     )
 
     def __str__(self):
@@ -390,6 +390,14 @@ class Activity(AuditModelMixin, models.Model):
         blank=True,
         related_name="activities",
         on_delete=models.CASCADE,
+    )
+
+    service_provider = models.ForeignKey(
+        ServiceProvider,
+        null=True,
+        blank=True,
+        related_name="activities",
+        on_delete=models.SET_NULL
     )
 
 
