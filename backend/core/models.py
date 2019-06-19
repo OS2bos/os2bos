@@ -342,8 +342,8 @@ class Appropriation(AuditModelMixin, models.Model):
         # and the supplementary activities.
         main_activities = self.activities
         main_activities.annotate(total_sum=Sum(
-            F("payment_plan__payments") +
-            F("supplementary_activities__payment_plan__payments"))
+            F("payment_plan__payments__amount") +
+            F("supplementary_activities__payment_plan__payments__amount"))
         )
         return main_activities
 
