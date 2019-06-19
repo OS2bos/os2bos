@@ -27,6 +27,10 @@
                 <label for="field-enddate">Slutdato</label>
                 <input type="date" id="field-enddate" v-model="act.end_date">
             </fieldset>
+            <fieldset>
+                <label for="field-text">Bemærkning</label>
+                <textarea></textarea>
+            </fieldset>
             <hr>
 
             <payment-amount-edit />
