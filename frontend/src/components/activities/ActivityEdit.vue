@@ -140,4 +140,8 @@
         border-color: transparent;
     }
 
+    .activity.expectation {
+        border: solid 3px var(--danger);
+    }
+
 </style>
