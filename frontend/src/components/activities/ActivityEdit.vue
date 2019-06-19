@@ -33,6 +33,10 @@
                 <input type="date" id="field-enddate" v-model="act.end_date">
             </fieldset>
             <hr>
+
+            <payment-amount-edit />
+
+            <hr>
             <fieldset>
                 <input type="submit" value="Gem">
                 <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
@@ -46,11 +50,13 @@
 
     import axios from '../http/Http.js'
     import ListPicker from '../forms/ListPicker.vue'
+    import PaymentAmountEdit from '../payment/PaymentAmountEdit.vue'
 
     export default {
 
         components: {
-            ListPicker
+            ListPicker,
+            PaymentAmountEdit
         },
         props: [
             'activityObj'

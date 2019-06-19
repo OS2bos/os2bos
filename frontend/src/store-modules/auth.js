@@ -70,7 +70,7 @@ const actions = {
     setTimer: function({dispatch}) {
         setTimeout(() => {
             dispatch('refreshToken')
-        }, 25000);
+        }, 270000);
     },
     refreshToken: function({commit, dispatch, state}) {
         if (state.refreshtoken) {    
