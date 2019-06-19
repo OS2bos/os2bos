@@ -35,6 +35,7 @@
             <hr>
 
             <payment-amount-edit />
+            <payment-receiver-edit/>
 
             <hr>
             <fieldset>
@@ -51,12 +52,14 @@
     import axios from '../http/Http.js'
     import ListPicker from '../forms/ListPicker.vue'
     import PaymentAmountEdit from '../payment/PaymentAmountEdit.vue'
+    import PaymentReceiverEdit from '../payment/PaymentReceiverEdit.vue'
 
     export default {
 
         components: {
             ListPicker,
-            PaymentAmountEdit
+            PaymentAmountEdit,
+            PaymentReceiverEdit
         },
         props: [
             'activityObj'
