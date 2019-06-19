@@ -1,10 +1,10 @@
 <template>
 
-    <div class="payment-amount">
+    <div class="payment-amount rows">
 
-        <div>
+        <div class="payment-amount-fields">
             <label>Afregningshed</label>
-            <div style="display: flex; flex-flow: row nowrap;">
+            <div class="rows">
                 <select v-model="type" style="margin-right: 1rem; min-width: 13rem;">
                     <option v-for="o in type_options" :key="o.key" :value="o.key">
                         {{ o.val }}
@@ -16,12 +16,14 @@
                     </option>
                 </select>
             </div>
-            <fieldset v-if="type === 'PER-HOUR-PAYMENT' || type === 'PER-DAY-PAYMENT' || type === 'PER-KM-PAYMENT'">
-                <div>
+            <fieldset v-if="type === 'PER-HOUR-PAYMENT' || type === 'PER-DAY-PAYMENT' || type === 'PER-KM-PAYMENT'" class="rows">
+                <div style="margin-right: .5rem;">
                     <label v-if="type === 'PER-HOUR-PAYMENT'">Timer</label>
                     <label v-if="type === 'PER-DAY-PAYMENT'">Døgn</label>
                     <label v-if="type === 'PER-KM-PAYMENT'">Kilometer</label>
-                    <input v-model="units" type="number"> <span></span>
+                    <input v-model="units" type="number"> á
+                </div>
+                <div>
                     <label>Takst</label>
                     <input v-model="amount" type="number"> kr
                 </div>
@@ -87,8 +89,8 @@
                         val: 'Dagligt'
                     },
                 ],
-                units: null,
-                amount: null
+                units: 0,
+                amount: 0
             }
         },
         methods: {
@@ -104,13 +106,16 @@
 
 <style>
 
-    .payment-amount {
-        display: flex;
-        flex-flow: row nowrap;
-    }
-
     .payment-amount .payment-plan {
         margin: 0 0 0 2em;
+        background-color: var(--grey2);
+        padding: 1rem;
+    }
+
+    .payment-amount.rows,
+    .payment-amount .rows {
+        display: flex;
+        flex-flow: row nowrap;
     }
 
 </style>
