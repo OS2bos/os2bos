@@ -31,9 +31,6 @@ variables:
   # improved performance.
   DOCKER_DRIVER: overlay2
 
-services:
-   - docker:dind
-
 # Lint stage
 #############
 
@@ -69,6 +66,8 @@ docs:
 
 build:
   stage: lint-build
+  services:
+   - docker:dind
   image: docker:latest
   tags:
     - docker
@@ -116,6 +115,8 @@ unit-test:
 .integration-test:
   stage: test
   image: docker:latest
+  services:
+   - docker:dind
   tags:
     - docker
   before_script:
@@ -132,6 +133,8 @@ unit-test:
 .release-default: &release-default
   stage: release
   image: docker:latest
+  services:
+   - docker:dind
   variables:
     GIT_STRATEGY: none # We do not need the source code
   tags:
