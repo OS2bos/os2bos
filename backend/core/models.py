@@ -129,7 +129,7 @@ class PaymentSchedule(models.Model):
 
     def create_rrule(self, start, end):
         """
-        Create an dateutil.rrule based on payment_frequency, start and end.
+        Create a dateutil.rrule based on payment_frequency, start and end.
         """
         if self.payment_frequency == self.ONE_TIME:
             rrule_frequency = rrule(DAILY, count=1, dtstart=start, until=end)
