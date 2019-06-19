@@ -100,17 +100,23 @@ unit-test:
     DJANGO_SETTINGS_INI: $CI_PROJECT_DIR/dev-settings.ini
     COVERAGE_FILE: $CI_PROJECT_DIR/.coverage
   script:
-    - cd /code/backend
-    # TODO In the future migrations should be committed to the repo and the
-    # following two line should be deleted.
-    - ./manage.py makemigrations
-    - ./manage.py migrate
-    - coverage run manage.py test
-    - coverage html -d $CI_PROJECT_DIR/coverage-html
+    #- manage.py makemigrations --check &&
+    - cd /code/backend &&
+      pytest
+      --cov=core
+      --cov=bevillingsplatform
+      --junitxml $CI_PROJECT_DIR/junit.xml
+      --cov-report html:$CI_PROJECT_DIR/coverage-html
+      --cov-report term
+      -p no:cacheprovider
 
+  coverage: '/TOTAL.*\s+(\d+%)$/'
   artifacts:
     paths:
       - $CI_PROJECT_DIR/coverage-html
+    reports:
+      junit: $CI_PROJECT_DIR/junit.xml
+
 
 .integration-test:
   stage: test
