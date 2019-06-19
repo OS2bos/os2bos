@@ -397,7 +397,7 @@ class Activity(AuditModelMixin, models.Model):
         null=True,
         blank=True,
         related_name="activities",
-        on_delete=models.SET_NULL
+        on_delete=models.SET_NULL,
     )
 
 
