@@ -50,7 +50,9 @@ variables:
 lint:
   <<: *lint-default
   script:
-    - tox -e lint
+    - cd backend
+    - black --check --diff .
+    - flake8 .
 
 docs:
   <<: *lint-default
