@@ -16,6 +16,7 @@ from core.models import (
     Account,
     HistoricalCase,
     ServiceProvider,
+    ApprovalLevel,
 )
 
 
@@ -108,4 +109,10 @@ class AccountSerializer(serializers.ModelSerializer):
 class ServiceProviderSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServiceProvider
+        fields = "__all__"
+
+
+class ApprovalLevelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ApprovalLevel
         fields = "__all__"

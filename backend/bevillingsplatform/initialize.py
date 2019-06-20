@@ -18,12 +18,21 @@ def initialize():
     initialize_activity_catalogs()
     initialize_service_providers()
     initialize_teams()
+    initialize_approval_levels()
 
 
 def initialize_municipalities():
     """Initialize all the danish municipalities."""
     for name in municipalities:
         Municipality.objects.get_or_create(name=name)
+
+
+def initialize_approval_levels():
+    """Initialize all the initial approval levels.
+
+    Data should be the output of manage.py dumpdata core.approvallevels
+    """
+    call_command("loaddata", "approvallevels.json", app_label="core")
 
 
 def initialize_sections():
