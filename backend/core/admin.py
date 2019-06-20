@@ -40,9 +40,7 @@ for klass in (
 
 class CustomUserAdmin(BaseUserAdmin):
     add_fieldsets = BaseUserAdmin.add_fieldsets + (
-        (None, {
-            'fields': ('team', 'is_team_leader')
-        }),
+        (None, {"fields": ("team", "is_team_leader")}),
     )
 
 

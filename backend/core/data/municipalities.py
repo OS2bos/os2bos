@@ -1,4 +1,3 @@
-
 municipalities = [
     "København",
     "Aarhus",
