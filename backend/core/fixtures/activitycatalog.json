@@ -11,7 +11,7 @@
       "supplementary_activity_for": [
         274
       ],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -26,7 +26,7 @@
       "supplementary_activity_for": [
         348
       ],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -47,7 +47,7 @@
         314,
         362
       ],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -63,7 +63,7 @@
         284,
         300
       ],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -79,7 +79,7 @@
         306,
         360
       ],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -92,7 +92,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -105,7 +105,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -120,7 +120,7 @@
       "supplementary_activity_for": [
         418
       ],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -133,7 +133,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -146,7 +146,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -161,7 +161,7 @@
       "supplementary_activity_for": [
         309
       ],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -174,7 +174,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -191,7 +191,7 @@
         312,
         350
       ],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -206,7 +206,7 @@
       "supplementary_activity_for": [
         300
       ],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -219,7 +219,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -234,7 +234,7 @@
       "supplementary_activity_for": [
         301
       ],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -247,7 +247,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -266,7 +266,7 @@
         276,
         356
       ],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -279,7 +279,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -292,7 +292,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -309,7 +309,7 @@
       "supplementary_activity_for": [
         356
       ],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -325,7 +325,7 @@
         314
       ],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -340,7 +340,7 @@
         310
       ],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -353,7 +353,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -369,7 +369,7 @@
         437,
         438
       ],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -384,7 +384,7 @@
       "supplementary_activity_for": [
         419
       ],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -402,7 +402,7 @@
         312,
         356
       ],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -415,7 +415,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -428,7 +428,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -443,7 +443,7 @@
         309
       ],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -456,7 +456,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -472,7 +472,7 @@
         322
       ],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -492,7 +492,7 @@
         307,
         314
       ],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -508,7 +508,7 @@
         437,
         438
       ],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -521,7 +521,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -534,7 +534,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -547,7 +547,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -562,7 +562,7 @@
       "supplementary_activity_for": [
         307
       ],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -577,7 +577,7 @@
       "supplementary_activity_for": [
         308
       ],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -590,7 +590,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -603,7 +603,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -616,7 +616,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -631,7 +631,7 @@
       "supplementary_activity_for": [
         356
       ],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -644,7 +644,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -657,7 +657,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -670,7 +670,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -686,7 +686,7 @@
         310,
         311
       ],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -703,7 +703,7 @@
         314
       ],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -718,7 +718,7 @@
       "supplementary_activity_for": [
         269
       ],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -731,7 +731,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -746,7 +746,7 @@
         275
       ],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -768,7 +768,7 @@
         358,
         360
       ],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -783,7 +783,7 @@
         312
       ],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -799,7 +799,7 @@
         353,
         356
       ],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -817,7 +817,7 @@
         356
       ],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -830,7 +830,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -843,7 +843,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -856,7 +856,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -869,7 +869,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -882,7 +882,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -901,7 +901,7 @@
         318
       ],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -914,7 +914,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -927,7 +927,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -940,7 +940,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -953,7 +953,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -966,7 +966,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -981,7 +981,7 @@
         314
       ],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -996,7 +996,7 @@
         292
       ],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1009,7 +1009,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1024,7 +1024,7 @@
         310
       ],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1037,7 +1037,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1050,7 +1050,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1063,7 +1063,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1078,7 +1078,7 @@
         347
       ],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1091,7 +1091,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1104,7 +1104,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1117,7 +1117,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1130,7 +1130,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1149,7 +1149,7 @@
         362
       ],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1167,7 +1167,7 @@
         362
       ],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1184,7 +1184,7 @@
         314
       ],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1197,7 +1197,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1210,7 +1210,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1223,7 +1223,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1236,7 +1236,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1249,7 +1249,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1262,7 +1262,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1275,7 +1275,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1288,7 +1288,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1301,7 +1301,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1314,7 +1314,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1327,7 +1327,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1340,7 +1340,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1353,7 +1353,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1366,7 +1366,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1379,7 +1379,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1392,7 +1392,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1405,7 +1405,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1418,7 +1418,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1431,7 +1431,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1444,7 +1444,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1457,7 +1457,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1470,7 +1470,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1483,7 +1483,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1498,7 +1498,7 @@
         310
       ],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1519,7 +1519,7 @@
         359
       ],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1532,7 +1532,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1545,7 +1545,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1561,7 +1561,7 @@
         322
       ],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1581,7 +1581,7 @@
         347,
         356
       ],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1596,7 +1596,7 @@
       "supplementary_activity_for": [
         314
       ],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1609,7 +1609,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1625,7 +1625,7 @@
         350,
         356
       ],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1642,7 +1642,7 @@
         311,
         314
       ],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1655,7 +1655,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1670,7 +1670,7 @@
       "supplementary_activity_for": [
         293
       ],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1683,7 +1683,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1696,7 +1696,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1709,7 +1709,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1722,7 +1722,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1735,7 +1735,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1748,7 +1748,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1761,7 +1761,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1774,7 +1774,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1787,7 +1787,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1800,7 +1800,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1813,7 +1813,7 @@
       "max_tolerance_in_dkk": 5000,
       "main_activity_for": [],
       "supplementary_activity_for": [],
-      "providers": []
+      "service_providers": []
     }
   },
   {
@@ -1829,7 +1829,7 @@
         437,
         438
       ],
-      "providers": []
+      "service_providers": []
     }
   }
 ]
