@@ -13,11 +13,13 @@ from core.models import (
     ActivityCatalog,
     Account,
     ServiceProvider,
+    PaymentMethodDetails,
 )
 
 for klass in (
     Municipality,
     PaymentSchedule,
+    PaymentMethodDetails,
     Payment,
     Case,
     Appropriation,

@@ -19,6 +19,7 @@ from core.models import (
     ActivityCatalog,
     Account,
     ServiceProvider,
+    PaymentMethodDetails,
 )
 
 from core.serializers import (
@@ -36,6 +37,7 @@ from core.serializers import (
     UserSerializer,
     HistoricalCaseSerializer,
     ServiceProviderSerializer,
+    PaymentMethodDetailsSerializer,
 )
 
 from core.utils import get_person_info
@@ -72,6 +74,11 @@ class ActivityViewSet(viewsets.ModelViewSet):
     serializer_class = ActivitySerializer
 
     filterset_fields = "__all__"
+
+
+class PaymentMethodDetailsViewSet(viewsets.ModelViewSet):
+    queryset = PaymentMethodDetails.objects.all()
+    serializer_class = PaymentMethodDetailsSerializer
 
 
 class PaymentScheduleViewSet(viewsets.ModelViewSet):
