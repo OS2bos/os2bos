@@ -39,6 +39,7 @@ router.register(r"school_districts", views.SchoolDistrictViewSet)
 router.register(r"sections", views.SectionsViewSet)
 router.register(r"activity_catalogs", views.ActivityCatalogViewSet)
 router.register(r"service_providers", views.ServiceProviderViewSet)
+router.register(r"approval_levels", views.ApprovalLevelViewSet)
 router.register(r"users", views.UserViewSet)
 
 urlpatterns = [

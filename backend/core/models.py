@@ -192,6 +192,13 @@ class Case(AuditModelMixin, models.Model):
     )
 
 
+class ApprovalLevel(models.Model):
+    name = models.CharField(max_length=128, verbose_name=_("navn"))
+
+    def __str__(self):
+        return f"{self.name}"
+
+
 class Appropriation(AuditModelMixin, models.Model):
     """An appropriation of funds in a Case - corresponds to a Sag in SBSYS."""
 
@@ -215,27 +222,12 @@ class Appropriation(AuditModelMixin, models.Model):
         verbose_name=_("status"), max_length=16, choices=status_choices
     )
 
-    # Approval level - definitions and choice list.
-    CASE_WORKER = "CASE_WORKER"
-    TEAM_LEADER = "TEAM_LEADER"
-    SECTION_HEAD = "SECTION_HEAD"
-    TEAM_MEETING = "TEAM_MEETING"
-    SPECIALIST = "SPECIALIST"
-    YOUTH_CRIME_BOARD = "YOUTH_CRIME_BOARD"
-
-    approval_level_choices = (
-        (CASE_WORKER, _("egenkompetence")),
-        (TEAM_MEETING, _("teammøde")),
-        (SECTION_HEAD, _("fagspecialist")),
-        (TEAM_LEADER, _("teamleder")),
-        (SECTION_HEAD, _("afsnitsleder")),
-        (YOUTH_CRIME_BOARD, _("ungdomskriminalitetsnævnet")),
-    )
-    approval_level = models.CharField(
-        verbose_name=_("bevilling foretaget på niveau"),
-        max_length=16,
-        choices=approval_level_choices,
+    approval_level = models.ForeignKey(
+        ApprovalLevel,
+        related_name="appropriations",
+        null=True,
         blank=True,
+        on_delete=models.SET_NULL,
     )
     approval_note = models.TextField(
         verbose_name=_("evt. bemærkning"), blank=True
@@ -262,10 +254,13 @@ class Sections(models.Model):
     paragraph = models.CharField(max_length=128, verbose_name=_("paragraf"))
     kle_number = models.CharField(max_length=128, verbose_name=_("KLE-nummer"))
     text = models.TextField(verbose_name=_("forklarende tekst"))
-    target_group = models.CharField(
-        max_length=128,
-        verbose_name=_("målgruppe"),
-        choices=target_group_choices,
+    allowed_for_family_target_group = models.BooleanField(
+        verbose_name=_("tilladt for familieafdelingen"),
+        default=False
+    )
+    allowed_for_disability_target_group = models.BooleanField(
+        verbose_name=_("tilladt for handicapafdelingen"),
+        default=False
     )
     allowed_for_steps = fields.ArrayField(
         models.CharField(max_length=128, choices=effort_steps_choices), size=6
