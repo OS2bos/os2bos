@@ -7,7 +7,6 @@ from core.models import (
     Sections,
     ActivityCatalog,
     Account,
-    FAMILY_DEPT,
     ApprovalLevel,
 )
 
