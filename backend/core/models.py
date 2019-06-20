@@ -10,7 +10,7 @@ from dateutil.rrule import (
 from django.db import models
 from django.db.models import Sum, F
 from django.contrib.postgres import fields
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MinValueValidator
 from django_audit_fields.models import AuditModelMixin
@@ -68,6 +68,28 @@ class PaymentMethodDetails(models.Model):
 
     tax_card = models.CharField(
         max_length=128, verbose_name=("skattekort"), choices=tax_card_choices
+    )
+
+
+class Team(models.Model):
+    """Represents a team in the administration."""
+
+    name = models.CharField(max_length=128, verbose_name=_("navn"))
+
+    def __str__(self):
+        return f"{self.name}"
+
+
+class User(AbstractUser):
+    team = models.ForeignKey(
+        Team,
+        on_delete=models.PROTECT,
+        related_name="users",
+        null=True,
+        blank=True,
+    )
+    is_team_leader = models.BooleanField(
+        verbose_name=_("teamleder"), default=False
     )
 
 
