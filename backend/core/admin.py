@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 
 from core.models import (
     Municipality,
@@ -13,6 +14,8 @@ from core.models import (
     ActivityCatalog,
     Account,
     ServiceProvider,
+    Team,
+    User,
 )
 
 for klass in (
@@ -28,5 +31,8 @@ for klass in (
     ActivityCatalog,
     Account,
     ServiceProvider,
+    Team,
 ):
     admin.site.register(klass, admin.ModelAdmin)
+
+admin.site.register(User, UserAdmin)
