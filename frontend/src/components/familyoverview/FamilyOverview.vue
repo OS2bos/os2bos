@@ -7,7 +7,7 @@
         <!-- <div v-if="show_edit">
             <family-overview-edit :fam-obj="fam" v-if="show_edit" @close="update()" />
         </div> -->
-        <table class="familyoverview-list">
+        <table class="familyoverview-list" v-if="fam && fam.length > 0">
             <thead>
                 <tr>
                     <th>Relation</th>
@@ -30,6 +30,7 @@
                 </tr>
             </tbody>
         </table>
+        <p v-if="!fam || fam.length < 1">Der er endnu ingen relationer</p>
     </section>
 
 </template>
