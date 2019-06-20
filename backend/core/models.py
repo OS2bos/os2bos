@@ -167,22 +167,27 @@ class PaymentSchedule(models.Model):
         elif self.payment_frequency == self.MONTHLY:
             # If monthly, choose the last day of the month.
             rrule_frequency = rrule(
-                MONTHLY_rrule,
-                dtstart=start,
-                until=end,
-                bymonthday=-1,
+                MONTHLY_rrule, dtstart=start, until=end, bymonthday=-1
             )
         return rrule_frequency
 
     def calculate_per_payment_amount(self):
+        vat_factor = 100
+        if hasattr(self, "activity") and hasattr(
+            self.activity, "service_provider"
+        ):
+            vat_factor = self.activity.service_provider.vat_factor
+
         if self.payment_type in [self.ONE_TIME_PAYMENT, self.RUNNING_PAYMENT]:
-            return self.payment_amount
+            return self.payment_amount / 100 * vat_factor
         elif self.payment_type in [
             self.PER_HOUR_PAYMENT,
             self.PER_DAY_PAYMENT,
             self.PER_KM_PAYMENT,
         ]:
-            return self.payment_units * self.payment_amount
+            return (
+                (self.payment_units * self.payment_amount) / 100 * vat_factor
+            )
 
     def generate_payments(self, start, end):
         """
@@ -429,6 +434,7 @@ class ServiceProvider(models.Model):
     cvr_number = models.CharField(max_length=8, blank=True)
     name = models.CharField(max_length=128, blank=False)
     vat_factor = models.DecimalField(
+        default=100.0,
         max_digits=5,
         decimal_places=2,
         validators=[MinValueValidator(Decimal("0.01"))],
