@@ -59,8 +59,13 @@ class Team(models.Model):
 
 
 class User(AbstractUser):
-    team = models.ForeignKey(Team, on_delete=models.PROTECT,
-            related_name="users")
+    team = models.ForeignKey(
+        Team,
+        on_delete=models.PROTECT,
+        related_name="users",
+        null=True,
+        blank=True,
+    )
     is_team_leader = models.BooleanField(
         verbose_name=_("teamleder"), default=False
     )
