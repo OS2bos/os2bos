@@ -21,11 +21,14 @@ done;
 # the correct folder in Dockerfile. When the model have stabilized, the
 # migrations should be comitted to the repository and these lines should be
 # removed. See https://redmine.magenta-aps.dk/issues/30087
+echo "[docker-compose] manage.py makemigrations"
 ./manage.py makemigrations
 
+echo "[docker-compose] manage.py  migrate"
 ./manage.py migrate
 
 # See https://redmine.magenta-aps.dk/issues/30026 for changing this to a management command.
+echo "[docker-compose] manage.py initialize"
 echo 'from bevillingsplatform.initialize import initialize;initialize()' | python manage.py shell
 
 
@@ -35,7 +38,7 @@ if [ -n "$SUPERUSER_NAME" -o -n "$SUPERUSER_EMAIL" -o -n "$SUPERUSER_PASSWORD" ]
         (>&2 echo "All three SUPERUSER_* have to be set to create a Django superuser. Exiting.")
         exit 1
     fi
-    echo "Creating Django superuser."
+    echo "[docker-compose] manage.py create_superuser_with_password"
     ./manage.py create_superuser_with_password \
                 --noinput \
                 --username $SUPERUSER_NAME \
@@ -43,7 +46,7 @@ if [ -n "$SUPERUSER_NAME" -o -n "$SUPERUSER_EMAIL" -o -n "$SUPERUSER_PASSWORD" ]
                 --password $SUPERUSER_PASSWORD
 fi
 
-
+echo "[docker-compose] manage.py collectstatic"
 ./manage.py collectstatic --no-input --clear
 
 exec "$@"
