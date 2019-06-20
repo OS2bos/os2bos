@@ -110,6 +110,7 @@ unit-test:
       --junitxml $CI_PROJECT_DIR/junit.xml
       --cov-report html:$CI_PROJECT_DIR/coverage-html
       --cov-report term
+      --cov-fail-under=100
       -p no:cacheprovider
 
   coverage: '/TOTAL.*\s+(\d+%)$/'
