@@ -35,6 +35,11 @@ services:
     # The `volumes` and `command` mounts the current directory in the docker
     # container and overwrites the CMD from Dockerfile. With this gunicorn
     # reloads on file changes. This is very useful when developing.
+    #
+    # You'll properly want to make `backend/core/migrations` writable by the
+    # user running inside the docker container. Run `chmod o+w migrations` on it
+    # to make it writeable by everyone. See README.md#user-permissions for more
+    # info.
     command: ["gunicorn", "-b", "0.0.0.0:5000", "--reload", "--access-logfile", "-", "bevillingsplatform.wsgi"]
     volumes:
       - .:/code/
