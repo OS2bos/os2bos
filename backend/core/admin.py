@@ -14,6 +14,7 @@ from core.models import (
     Account,
     ServiceProvider,
     PaymentMethodDetails,
+    ApprovalLevel,
 )
 
 for klass in (
@@ -30,5 +31,6 @@ for klass in (
     ActivityCatalog,
     Account,
     ServiceProvider,
+    ApprovalLevel,
 ):
     admin.site.register(klass, admin.ModelAdmin)
