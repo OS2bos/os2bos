@@ -16,6 +16,7 @@
             <i v-if="key === 0" class="material-icons">home</i>
             <i v-if="key === 1" class="material-icons">folder_shared</i>
             <i v-if="key === 2" class="material-icons">folder_open</i>
+            <i v-if="key === 3" class="material-icons">style</i>
             <router-link :to="b.link" v-if="b.link">
                 {{ b.title }}
             </router-link>

@@ -13,7 +13,7 @@
             <activity-edit :activity-obj="act" v-if="show_edit" @save="reload()" />
         </div>
 
-        <div v-if="!show_edit">
+        <div class="activity-info" v-if="!show_edit">
             <dl>
                 <dt>Status</dt>
                 <dd>
@@ -32,8 +32,8 @@
                 <dt>Slutdato</dt>
                 <dd>{{ displayDate(act.end_date) }}</dd>
             </dl>
-            <h2>Udgifter</h2>
             <dl>
+                <h3>Udgifter</h3>
                 <dt>Beløb</dt>
                 <dd>ikke implementeret</dd>
                 <dt>Afregningsenhed</dt>
@@ -50,8 +50,8 @@
                 <dt>Bemærkninger</dt>
                 <dd>ikke implementeret</dd>
             </dl>
-            <h3>Betalingsmodtager</h3>
             <dl>
+                <h3>Betalingsmodtager</h3>
                 <dt>Type</dt>
                 <dd>ikke implementeret</dd>
                 <dt>ID</dt>
@@ -86,6 +86,7 @@
             return {
                 act: null,
                 appr: null,
+                cas: null,
                 show_edit: false
             }
         },
@@ -94,25 +95,32 @@
                 axios.get(`/activities/${ id }`)
                 .then(res => {
                     this.act = res.data
-
-                axios.get(`/appropriations/${ this.act.appropriation }`)
-                .then(resp => {
-                    this.appr = resp.data
-                    this.$store.commit('setBreadcrumb', [
-                        {
-                            link: '/',
-                            title: 'Mine sager'
-                        },
-                        {
-                            link: `/appropriation/${ this.appr.id }`,
-                            title: `Foranstaltning ${ this.appr.sbsys_id }`
-                        },
-                        {
-                            link: false,
-                            title: `${ activityId2name(this.act.service) }`
-                        }
-                    ])
-                })
+                    axios.get(`/appropriations/${ this.act.appropriation }`)
+                    .then(resp => {
+                        this.appr = resp.data
+                        axios.get(`/cases/${ this.appr.case }`)
+                        .then(response => {
+                            this.cas = response.data
+                            this.$store.commit('setBreadcrumb', [
+                                {
+                                    link: '/',
+                                    title: 'Mine sager'
+                                },
+                                {
+                                    link: `/case/${ this.cas.id }`,
+                                    title: `Hovedsag ${ this.cas.sbsys_id }`
+                                },
+                                {
+                                    link: `/appropriation/${ this.appr.id }`,
+                                    title: `Foranstaltning ${ this.appr.sbsys_id }`
+                                },
+                                {
+                                    link: false,
+                                    title: `Udgift til ${ activityId2name(this.act.service) }`
+                                }
+                            ])
+                        })
+                    })
                 })
                 .catch(err => console.log(err))
             },
@@ -154,6 +162,15 @@
 
     .activity .act-edit-btn {
         margin: 0 1rem;
+    }
+
+    .activity-info {
+        display: grid; 
+        grid-template-columns: auto auto auto auto;
+        grid-gap: 3rem;
+        justify-content: start;
+        background-color: var(--grey1);
+        padding: 1.5rem 2rem 2rem;
     }
 
 </style>

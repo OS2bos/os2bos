@@ -281,13 +281,45 @@ class Case(AuditModelMixin, models.Model):
     )
 
 
+class Sections(models.Model):
+    """Law sections and the corresponding KLE codes.
+
+    Each section is associated with the target group for which it is
+    allowed as well as the action steps allowed.
+    """
+
+    paragraph = models.CharField(max_length=128, verbose_name=_("paragraf"))
+    kle_number = models.CharField(max_length=128, verbose_name=_("KLE-nummer"))
+    text = models.TextField(verbose_name=_("forklarende tekst"))
+    target_group = models.CharField(
+        max_length=128,
+        verbose_name=_("målgruppe"),
+        choices=target_group_choices,
+    )
+    allowed_for_steps = fields.ArrayField(
+        models.CharField(max_length=128, choices=effort_steps_choices), size=6
+    )
+    law_text_name = models.CharField(
+        max_length=128, verbose_name=_("lov tekst navn")
+    )
+
+    def __str__(self):
+        return f"{self.paragraph} - {self.kle_number}"
+
+
 class Appropriation(AuditModelMixin, models.Model):
     """An appropriation of funds in a Case - corresponds to a Sag in SBSYS."""
 
     sbsys_id = models.CharField(
         unique=True, max_length=128, verbose_name=_("SBSYS-ID")
     )
-    section = models.CharField(verbose_name=_("paragraf"), max_length=128)
+    section = models.ForeignKey(
+        Sections,
+        related_name="appropriations",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+    )
 
     # Status - definitions and choice list.
     STATUS_DRAFT = "DRAFT"
@@ -348,30 +380,14 @@ class Appropriation(AuditModelMixin, models.Model):
         return main_activities
 
 
-class Sections(models.Model):
-    """Law sections and the corresponding KLE codes.
-
-    Each section is associated with the target group for which it is
-    allowed as well as the action steps allowed.
+class ServiceProvider(models.Model):
+    """
+    Class containing information for a specific service provider.
     """
 
-    paragraph = models.CharField(max_length=128, verbose_name=_("paragraf"))
-    kle_number = models.CharField(max_length=128, verbose_name=_("KLE-nummer"))
-    text = models.TextField(verbose_name=_("forklarende tekst"))
-    target_group = models.CharField(
-        max_length=128,
-        verbose_name=_("målgruppe"),
-        choices=target_group_choices,
-    )
-    allowed_for_steps = fields.ArrayField(
-        models.CharField(max_length=128, choices=effort_steps_choices), size=6
-    )
-    law_text_name = models.CharField(
-        max_length=128, verbose_name=_("lov tekst navn")
-    )
-
-    def __str__(self):
-        return f"{self.paragraph} - {self.kle_number}"
+    cvr_number = models.CharField(max_length=8, blank=True)
+    name = models.CharField(max_length=128, blank=False)
+    vat_factor = models.DecimalField(max_digits=5, decimal_places=2)
 
 
 class ActivityCatalog(models.Model):
@@ -396,6 +412,9 @@ class ActivityCatalog(models.Model):
     )
     supplementary_activity_for = models.ManyToManyField(
         Sections, related_name="supplementary_activities"
+    )
+    service_providers = models.ManyToManyField(
+        ServiceProvider, related_name="activity_catalogs"
     )
 
     def __str__(self):
@@ -475,6 +494,14 @@ class Activity(AuditModelMixin, models.Model):
         on_delete=models.CASCADE,
     )
 
+    service_provider = models.ForeignKey(
+        ServiceProvider,
+        null=True,
+        blank=True,
+        related_name="activities",
+        on_delete=models.SET_NULL,
+    )
+
 
 class RelatedPerson(models.Model):
     """A person related to a Case, e.g. as a parent or sibling."""
@@ -509,12 +536,6 @@ class RelatedPerson(models.Model):
             for (k, v) in data.items()
             if k in converter_dict
         }
-
-
-class ServiceRange(models.Model):
-    """Class containing all the service providers for each service.
-
-    Also contains price information etc."""
 
 
 class Account(models.Model):

@@ -18,6 +18,7 @@ from core.models import (
     Sections,
     ActivityCatalog,
     Account,
+    ServiceProvider,
 )
 
 from core.serializers import (
@@ -34,6 +35,7 @@ from core.serializers import (
     AccountSerializer,
     UserSerializer,
     HistoricalCaseSerializer,
+    ServiceProviderSerializer,
 )
 
 from core.utils import get_person_info
@@ -153,3 +155,8 @@ class AccountViewSet(viewsets.ReadOnlyModelViewSet):
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+class ServiceProviderViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = ServiceProvider.objects.all()
+    serializer_class = ServiceProviderSerializer

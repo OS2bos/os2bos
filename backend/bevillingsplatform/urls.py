@@ -38,6 +38,7 @@ router.register(r"municipalities", views.MunicipalityViewSet)
 router.register(r"school_districts", views.SchoolDistrictViewSet)
 router.register(r"sections", views.SectionsViewSet)
 router.register(r"activity_catalogs", views.ActivityCatalogViewSet)
+router.register(r"service_providers", views.ServiceProviderViewSet)
 router.register(r"users", views.UserViewSet)
 
 urlpatterns = [
@@ -56,7 +57,7 @@ urlpatterns = [
 #
 # We serve the static file at two URLs. The first is the one normal to Django
 # where we serve everything in STATIC_ROOT at the STATIC_URL (default:
-# `/static/`).
+# `/api/static/`).
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
