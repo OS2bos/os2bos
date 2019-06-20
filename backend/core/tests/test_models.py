@@ -8,6 +8,7 @@ from core.models import (
     ActivityCatalog,
     Account,
     FAMILY_DEPT,
+    ApprovalLevel,
 )
 
 
@@ -75,3 +76,10 @@ class AccountTestCase(TestCase):
         )
 
         self.assertEqual(str(account), f"123456 - {catalog} - {sections}")
+
+
+class ApprovalLevelTestCase(TestCase):
+    def test_approvallevel_str(self):
+        approval_level = ApprovalLevel.objects.create(name="egenkompetence")
+
+        self.assertEqual(str(approval_level), f"{approval_level.name}")
