@@ -57,15 +57,17 @@ class ActivitySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class PaymentScheduleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PaymentSchedule
-        fields = "__all__"
-
-
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
+        fields = "__all__"
+
+
+class PaymentScheduleSerializer(serializers.ModelSerializer):
+    payments = PaymentSerializer(many=True)
+
+    class Meta:
+        model = PaymentSchedule
         fields = "__all__"
 
 

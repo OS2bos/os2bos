@@ -3,7 +3,7 @@ from decimal import Decimal
 
 from dateutil.rrule import (
     rrule,
-    DAILY,
+    DAILY as DAILY_rrule,
     WEEKLY as WEEKLY_rrule,
     MONTHLY as MONTHLY_rrule,
 )
@@ -90,6 +90,7 @@ class PaymentSchedule(models.Model):
     )
     recipient_id = models.CharField(max_length=128, verbose_name=_("ID"))
     recipient_name = models.CharField(max_length=128, verbose_name=_("Navn"))
+
     # Payment methods and choice list.
     CASH = "CASH"
     SD = "SD"
@@ -142,9 +143,7 @@ class PaymentSchedule(models.Model):
     )
     # number of units to pay, ie. XX kilometres or hours
     payment_units = models.PositiveIntegerField(
-        verbose_name="betalingsenheder",
-        blank=True,
-        null=True,
+        verbose_name="betalingsenheder", blank=True, null=True
     )
     payment_amount = models.DecimalField(
         max_digits=14,
@@ -157,28 +156,42 @@ class PaymentSchedule(models.Model):
         """
         Create a dateutil.rrule based on payment_frequency, start and end.
         """
-        if self.payment_frequency == self.ONE_TIME:
-            rrule_frequency = rrule(DAILY, count=1, dtstart=start, until=end)
+        if self.payment_type == self.ONE_TIME_PAYMENT:
+            rrule_frequency = rrule(
+                DAILY_rrule, count=1, dtstart=start, until=end
+            )
+        elif self.payment_frequency == self.DAILY:
+            rrule_frequency = rrule(DAILY_rrule, dtstart=start, until=end)
         elif self.payment_frequency == self.WEEKLY:
             rrule_frequency = rrule(WEEKLY_rrule, dtstart=start, until=end)
         elif self.payment_frequency == self.MONTHLY:
             # If monthly, choose the last day of the month.
             rrule_frequency = rrule(
                 MONTHLY_rrule,
-                interval=1,
                 dtstart=start,
                 until=end,
                 bymonthday=-1,
             )
         return rrule_frequency
 
-    def generate_payments(self, start, end, amount):
+    def calculate_per_payment_amount(self):
+        if self.payment_type in [self.ONE_TIME_PAYMENT, self.RUNNING_PAYMENT]:
+            return self.payment_amount
+        elif self.payment_type in [
+            self.PER_HOUR_PAYMENT,
+            self.PER_DAY_PAYMENT,
+            self.PER_KM_PAYMENT,
+        ]:
+            return self.payment_units * self.payment_amount
+
+    def generate_payments(self, start, end):
         """
         Generates payments with a frequency and unit with start, end, amount.
         """
-        # If no end is specified, choose end of the year.
+        # If no end is specified, choose end of the current year.
         if not end:
             end = date.today().replace(month=date.max.month, day=date.max.day)
+
         rrule_frequency = self.create_rrule(start, end)
 
         dates = list(rrule_frequency)
@@ -188,7 +201,7 @@ class PaymentSchedule(models.Model):
                 date=date_obj,
                 recipient_type=self.recipient_type,
                 recipient_id=self.recipient_id,
-                amount=amount,
+                amount=self.calculate_per_payment_amount(),
                 payment_schedule=self,
             )
 
