@@ -19,6 +19,7 @@ from core.models import (
     ActivityCatalog,
     Account,
     ServiceProvider,
+    ApprovalLevel,
 )
 
 from core.serializers import (
@@ -36,6 +37,7 @@ from core.serializers import (
     UserSerializer,
     HistoricalCaseSerializer,
     ServiceProviderSerializer,
+    ApprovalLevelSerializer,
 )
 
 from core.utils import get_person_info
@@ -160,3 +162,8 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
 class ServiceProviderViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ServiceProvider.objects.all()
     serializer_class = ServiceProviderSerializer
+
+
+class ApprovalLevelViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = ApprovalLevel.objects.all()
+    serializer_class = ApprovalLevelSerializer
