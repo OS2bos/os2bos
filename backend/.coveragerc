@@ -8,4 +8,5 @@ omit =
     */settings/*
     */apps.py*
     *wsgi.py
+    */settings.py
     manage.py
