@@ -33,7 +33,6 @@ class SectionsTestCase(TestCase):
             kle_number="27.45.04",
             text="Lov om almene boliger",
             allowed_for_steps=[],
-            target_group=FAMILY_DEPT,
             law_text_name="Lov om almene boliger",
         )
 
@@ -62,7 +61,6 @@ class AccountTestCase(TestCase):
             kle_number="27.45.04",
             text="Lov om almene boliger",
             allowed_for_steps=[],
-            target_group=FAMILY_DEPT,
             law_text_name="Lov om almene boliger",
         )
         catalog = ActivityCatalog.objects.create(
