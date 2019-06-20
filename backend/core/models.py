@@ -1,4 +1,5 @@
 from datetime import date
+from decimal import Decimal
 
 from dateutil.rrule import (
     rrule,
@@ -11,6 +12,7 @@ from django.db.models import Sum, F
 from django.contrib.postgres import fields
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import MinValueValidator
 from django_audit_fields.models import AuditModelMixin
 from simple_history.models import HistoricalRecords
 
@@ -111,9 +113,9 @@ class PaymentSchedule(models.Model):
     WEEKLY = "WEEKLY"
     MONTHLY = "MONTHLY"
     payment_frequency_choices = (
-        (DAILY, _("dagligt")),
-        (WEEKLY, _("ugentligt")),
-        (MONTHLY, _("månedligt")),
+        (DAILY, _("Dagligt")),
+        (WEEKLY, _("Ugentligt")),
+        (MONTHLY, _("Månedligt")),
     )
     payment_frequency = models.CharField(
         max_length=128,
@@ -138,12 +140,14 @@ class PaymentSchedule(models.Model):
         verbose_name=_("betalingstype"),
         choices=payment_type_choices,
     )
+    # number of units to pay, ie. XX kilometres or hours
     payment_units = models.DecimalField(
         max_digits=14,
         decimal_places=2,
         verbose_name="betalingsenheder",
         blank=True,
         null=True,
+        validators=[MinValueValidator(Decimal("0.01"))],
     )
     payment_amount = models.DecimalField(
         max_digits=14,
@@ -151,6 +155,7 @@ class PaymentSchedule(models.Model):
         verbose_name="beløb",
         blank=True,
         null=True,
+        validators=[MinValueValidator(Decimal("0.01"))],
     )
 
     def create_rrule(self, start, end):
@@ -215,7 +220,10 @@ class Payment(models.Model):
         choices=PaymentSchedule.payment_method_choices,
     )
     amount = models.DecimalField(
-        max_digits=14, decimal_places=2, verbose_name="beløb"
+        max_digits=14,
+        decimal_places=2,
+        verbose_name="beløb",
+        validators=[MinValueValidator(Decimal("0.01"))],
     )
     paid = models.BooleanField(default=False, verbose_name="betalt")
 
@@ -412,7 +420,11 @@ class ServiceProvider(models.Model):
 
     cvr_number = models.CharField(max_length=8, blank=True)
     name = models.CharField(max_length=128, blank=False)
-    vat_factor = models.DecimalField(max_digits=5, decimal_places=2)
+    vat_factor = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        validators=[MinValueValidator(Decimal("0.01"))],
+    )
 
 
 class ActivityCatalog(models.Model):
@@ -526,6 +538,8 @@ class Activity(AuditModelMixin, models.Model):
         related_name="activities",
         on_delete=models.SET_NULL,
     )
+
+    note = models.TextField(null=True, blank=True, max_length=1000)
 
 
 class RelatedPerson(models.Model):
