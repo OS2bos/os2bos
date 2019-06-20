@@ -17,7 +17,7 @@ all request to the backend.
 
 Run backend tests with:
 ```
-docker-compose exec bev ./manage.py test
+docker-compose exec bev pytest
 ```
 
 
@@ -117,7 +117,7 @@ host where you grant all user permission to write.
 #### Test
 
 All the requirements for tests included in the docker image. You can run the
-test from inside a container with `./manage.py test`.
+test from inside a container with `pytest`.
 
 ##### tox
 `tox` is also installed, but it tries to create a virtual environments inside
