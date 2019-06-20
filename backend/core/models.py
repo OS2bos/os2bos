@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.postgres import fields
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from django_audit_fields.models import AuditModelMixin
 from simple_history.models import HistoricalRecords
@@ -47,6 +47,23 @@ class SchoolDistrict(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+
+class Team(models.Model):
+    """Represents a team in the administration."""
+
+    name = models.CharField(max_length=128, verbose_name=_("navn"))
+
+    def __str__(self):
+        return f"{self.name}"
+
+
+class User(AbstractUser):
+    team = models.ForeignKey(Team, on_delete=models.PROTECT,
+            related_name="users")
+    is_team_leader = models.BooleanField(
+        verbose_name=_("teamleder"), default=False
+    )
 
 
 class PaymentSchedule(models.Model):

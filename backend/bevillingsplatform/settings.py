@@ -23,6 +23,9 @@ config = configparser.ConfigParser()
 config["settings"] = {}
 
 
+# Our customized user model
+AUTH_USER_MODEL = 'core.User'
+
 # We support loading settings from two files. The fallback values in this
 # `settings.py` is first overwritten by the values defined in the file where
 # the env var `DJANGO_SETTINGS_INI_PRELOAD` points to. Finally the values are
