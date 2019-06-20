@@ -255,12 +255,10 @@ class Sections(models.Model):
     kle_number = models.CharField(max_length=128, verbose_name=_("KLE-nummer"))
     text = models.TextField(verbose_name=_("forklarende tekst"))
     allowed_for_family_target_group = models.BooleanField(
-        verbose_name=_("tilladt for familieafdelingen"),
-        default=False
+        verbose_name=_("tilladt for familieafdelingen"), default=False
     )
     allowed_for_disability_target_group = models.BooleanField(
-        verbose_name=_("tilladt for handicapafdelingen"),
-        default=False
+        verbose_name=_("tilladt for handicapafdelingen"), default=False
     )
     allowed_for_steps = fields.ArrayField(
         models.CharField(max_length=128, choices=effort_steps_choices), size=6
