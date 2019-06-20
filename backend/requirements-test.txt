@@ -1,5 +1,7 @@
 tox==3.12.1
 black==19.3b0
-coverage==4.5.3
+pytest==4.6.3
+pytest-django==3.5.0
+pytest-cov==2.7.1
 sphinx==2.0.1
 flake8==3.7.7

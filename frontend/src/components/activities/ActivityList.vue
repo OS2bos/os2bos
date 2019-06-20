@@ -2,7 +2,7 @@
 
     <section class="activities">
         <button class="activities-create-btn" title="Ny aktivitet" @click="$router.push(`/appropriation/${ apprId }/activity-create/`)">+ Tilføj ydelse</button>
-        <table>
+        <table v-if="acts && acts.length > 0">
             <thead>
                 <tr>
                     <th>Status</th>
@@ -46,6 +46,7 @@
                 </tr>
             </tbody>
         </table>
+        <p v-if="!acts || acts.length < 1">Der er endnu ingen ydelser</p>
     </section>
 
 </template>

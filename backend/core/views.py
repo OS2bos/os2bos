@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 from django.utils.translation import gettext_lazy as _
 from rest_framework import viewsets
@@ -19,6 +19,7 @@ from core.models import (
     ActivityCatalog,
     Account,
     ServiceProvider,
+    ApprovalLevel,
 )
 
 from core.serializers import (
@@ -36,6 +37,7 @@ from core.serializers import (
     UserSerializer,
     HistoricalCaseSerializer,
     ServiceProviderSerializer,
+    ApprovalLevelSerializer,
 )
 
 from core.utils import get_person_info
@@ -153,10 +155,15 @@ class AccountViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = User.objects.all()
+    queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
 
 
 class ServiceProviderViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ServiceProvider.objects.all()
     serializer_class = ServiceProviderSerializer
+
+
+class ApprovalLevelViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = ApprovalLevel.objects.all()
+    serializer_class = ApprovalLevelSerializer

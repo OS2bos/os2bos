@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.postgres import fields
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from django_audit_fields.models import AuditModelMixin
 from simple_history.models import HistoricalRecords
@@ -47,6 +47,28 @@ class SchoolDistrict(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+
+class Team(models.Model):
+    """Represents a team in the administration."""
+
+    name = models.CharField(max_length=128, verbose_name=_("navn"))
+
+    def __str__(self):
+        return f"{self.name}"
+
+
+class User(AbstractUser):
+    team = models.ForeignKey(
+        Team,
+        on_delete=models.PROTECT,
+        related_name="users",
+        null=True,
+        blank=True,
+    )
+    is_team_leader = models.BooleanField(
+        verbose_name=_("teamleder"), default=False
+    )
 
 
 class PaymentSchedule(models.Model):
@@ -192,13 +214,53 @@ class Case(AuditModelMixin, models.Model):
     )
 
 
+class ApprovalLevel(models.Model):
+    name = models.CharField(max_length=128, verbose_name=_("navn"))
+
+    def __str__(self):
+        return f"{self.name}"
+
+
+class Sections(models.Model):
+    """Law sections and the corresponding KLE codes.
+
+    Each section is associated with the target group for which it is
+    allowed as well as the action steps allowed.
+    """
+
+    paragraph = models.CharField(max_length=128, verbose_name=_("paragraf"))
+    kle_number = models.CharField(max_length=128, verbose_name=_("KLE-nummer"))
+    text = models.TextField(verbose_name=_("forklarende tekst"))
+    allowed_for_family_target_group = models.BooleanField(
+        verbose_name=_("tilladt for familieafdelingen"), default=False
+    )
+    allowed_for_disability_target_group = models.BooleanField(
+        verbose_name=_("tilladt for handicapafdelingen"), default=False
+    )
+    allowed_for_steps = fields.ArrayField(
+        models.CharField(max_length=128, choices=effort_steps_choices), size=6
+    )
+    law_text_name = models.CharField(
+        max_length=128, verbose_name=_("lov tekst navn")
+    )
+
+    def __str__(self):
+        return f"{self.paragraph} - {self.kle_number}"
+
+
 class Appropriation(AuditModelMixin, models.Model):
     """An appropriation of funds in a Case - corresponds to a Sag in SBSYS."""
 
     sbsys_id = models.CharField(
         unique=True, max_length=128, verbose_name=_("SBSYS-ID")
     )
-    section = models.CharField(verbose_name=_("paragraf"), max_length=128)
+    section = models.ForeignKey(
+        Sections,
+        related_name="appropriations",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+    )
 
     # Status - definitions and choice list.
     STATUS_DRAFT = "DRAFT"
@@ -215,27 +277,12 @@ class Appropriation(AuditModelMixin, models.Model):
         verbose_name=_("status"), max_length=16, choices=status_choices
     )
 
-    # Approval level - definitions and choice list.
-    CASE_WORKER = "CASE_WORKER"
-    TEAM_LEADER = "TEAM_LEADER"
-    SECTION_HEAD = "SECTION_HEAD"
-    TEAM_MEETING = "TEAM_MEETING"
-    SPECIALIST = "SPECIALIST"
-    YOUTH_CRIME_BOARD = "YOUTH_CRIME_BOARD"
-
-    approval_level_choices = (
-        (CASE_WORKER, _("egenkompetence")),
-        (TEAM_MEETING, _("teammøde")),
-        (SECTION_HEAD, _("fagspecialist")),
-        (TEAM_LEADER, _("teamleder")),
-        (SECTION_HEAD, _("afsnitsleder")),
-        (YOUTH_CRIME_BOARD, _("ungdomskriminalitetsnævnet")),
-    )
-    approval_level = models.CharField(
-        verbose_name=_("bevilling foretaget på niveau"),
-        max_length=16,
-        choices=approval_level_choices,
+    approval_level = models.ForeignKey(
+        ApprovalLevel,
+        related_name="appropriations",
+        null=True,
         blank=True,
+        on_delete=models.SET_NULL,
     )
     approval_note = models.TextField(
         verbose_name=_("evt. bemærkning"), blank=True
@@ -250,32 +297,6 @@ class Appropriation(AuditModelMixin, models.Model):
         """Return the payment plan for this appropriation."""
 
         # TODO: Implement this.
-
-
-class Sections(models.Model):
-    """Law sections and the corresponding KLE codes.
-
-    Each section is associated with the target group for which it is
-    allowed as well as the action steps allowed.
-    """
-
-    paragraph = models.CharField(max_length=128, verbose_name=_("paragraf"))
-    kle_number = models.CharField(max_length=128, verbose_name=_("KLE-nummer"))
-    text = models.TextField(verbose_name=_("forklarende tekst"))
-    target_group = models.CharField(
-        max_length=128,
-        verbose_name=_("målgruppe"),
-        choices=target_group_choices,
-    )
-    allowed_for_steps = fields.ArrayField(
-        models.CharField(max_length=128, choices=effort_steps_choices), size=6
-    )
-    law_text_name = models.CharField(
-        max_length=128, verbose_name=_("lov tekst navn")
-    )
-
-    def __str__(self):
-        return f"{self.paragraph} - {self.kle_number}"
 
 
 class ServiceProvider(models.Model):
@@ -311,8 +332,8 @@ class ActivityCatalog(models.Model):
     supplementary_activity_for = models.ManyToManyField(
         Sections, related_name="supplementary_activities"
     )
-    providers = models.ManyToManyField(
-        ServiceProvider, related_name="activities"
+    service_providers = models.ManyToManyField(
+        ServiceProvider, related_name="activity_catalogs"
     )
 
     def __str__(self):
@@ -390,6 +411,14 @@ class Activity(AuditModelMixin, models.Model):
         blank=True,
         related_name="activities",
         on_delete=models.CASCADE,
+    )
+
+    service_provider = models.ForeignKey(
+        ServiceProvider,
+        null=True,
+        blank=True,
+        related_name="activities",
+        on_delete=models.SET_NULL,
     )
 
 

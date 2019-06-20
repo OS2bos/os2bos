@@ -1,6 +1,7 @@
 # Other
 *.DS_Store
 backend/bevillingsplatform/static/*
+*junit.xml
 
 
 # from https://github.com/github/gitignore/blob/master/Python.gitignore

@@ -7,7 +7,7 @@ from core.models import (
     Sections,
     ActivityCatalog,
     Account,
-    FAMILY_DEPT,
+    ApprovalLevel,
 )
 
 
@@ -32,7 +32,6 @@ class SectionsTestCase(TestCase):
             kle_number="27.45.04",
             text="Lov om almene boliger",
             allowed_for_steps=[],
-            target_group=FAMILY_DEPT,
             law_text_name="Lov om almene boliger",
         )
 
@@ -61,7 +60,6 @@ class AccountTestCase(TestCase):
             kle_number="27.45.04",
             text="Lov om almene boliger",
             allowed_for_steps=[],
-            target_group=FAMILY_DEPT,
             law_text_name="Lov om almene boliger",
         )
         catalog = ActivityCatalog.objects.create(
@@ -75,3 +73,10 @@ class AccountTestCase(TestCase):
         )
 
         self.assertEqual(str(account), f"123456 - {catalog} - {sections}")
+
+
+class ApprovalLevelTestCase(TestCase):
+    def test_approvallevel_str(self):
+        approval_level = ApprovalLevel.objects.create(name="egenkompetence")
+
+        self.assertEqual(str(approval_level), f"{approval_level.name}")

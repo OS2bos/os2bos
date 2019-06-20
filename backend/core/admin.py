@@ -13,6 +13,7 @@ from core.models import (
     ActivityCatalog,
     Account,
     ServiceProvider,
+    ApprovalLevel,
 )
 
 for klass in (
@@ -28,5 +29,6 @@ for klass in (
     ActivityCatalog,
     Account,
     ServiceProvider,
+    ApprovalLevel,
 ):
     admin.site.register(klass, admin.ModelAdmin)
