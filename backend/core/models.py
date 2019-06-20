@@ -58,6 +58,17 @@ class SchoolDistrict(models.Model):
         return f"{self.name}"
 
 
+class PaymentMethodDetails(models.Model):
+    tax_card_choices = (
+        ("MAIN_CARD", _("Hovedkort")),
+        ("SECONDARY_CARD", _("Bikort")),
+    )
+
+    tax_card = models.CharField(
+        max_length=128, verbose_name=("skattekort"), choices=tax_card_choices
+    )
+
+
 class PaymentSchedule(models.Model):
     """Schedule a payment for an Activity."""
 
@@ -93,38 +104,53 @@ class PaymentSchedule(models.Model):
         verbose_name=_("betalingsmåde"),
         choices=payment_method_choices,
     )
-
-    ONE_TIME = "ONE_TIME"
+    payment_method_details = models.ForeignKey(
+        PaymentMethodDetails, null=True, blank=True, on_delete=models.SET_NULL
+    )
+    DAILY = "DAILY"
     WEEKLY = "WEEKLY"
     MONTHLY = "MONTHLY"
     payment_frequency_choices = (
-        (ONE_TIME, _("en gang")),
-        (WEEKLY, _("ugentlig")),
-        (MONTHLY, _("månedlig")),
+        (DAILY, _("dagligt")),
+        (WEEKLY, _("ugentligt")),
+        (MONTHLY, _("månedligt")),
     )
-
     payment_frequency = models.CharField(
         max_length=128,
         verbose_name=_("betalingsfrekvens"),
         choices=payment_frequency_choices,
     )
 
-    FIXED_AMOUNT = "FIXED_AMOUNT"
-    RATE = "RATE"
-    HOURLY_RATE = "HOURLY_RATE"
-    DAILY_RATE = "DAILY_RATE"
-    KILOMETER_RATE = "KILOMETER_RATE"
-    payment_unit_choices = (
-        ((FIXED_AMOUNT), _("Fast beløb")),
-        ((RATE), _("Takst")),
-        ((HOURLY_RATE), _("Antal timer * takst")),
-        ((DAILY_RATE), _("Antal døgn * takst")),
-        ((KILOMETER_RATE), _("Antal km * takst")),
+    ONE_TIME_PAYMENT = "ONE_TIME_PAYMENT"
+    RUNNING_PAYMENT = "RUNNING_PAYMENT"
+    PER_HOUR_PAYMENT = "PER_HOUR_PAYMENT"
+    PER_DAY_PAYMENT = "PER_DAY_PAYMENT"
+    PER_KM_PAYMENT = "PER_KM_PAYMENT"
+    payment_type_choices = (
+        ((ONE_TIME_PAYMENT), _("Engangsudgift")),
+        ((RUNNING_PAYMENT), _("Fast beløb, løbende")),
+        ((PER_HOUR_PAYMENT), _("Takst pr. time")),
+        ((PER_DAY_PAYMENT), _("Takst pr. døgn")),
+        ((PER_KM_PAYMENT), _("Takst pr. kilometer")),
     )
-    payment_unit = models.CharField(
+    payment_type = models.CharField(
         max_length=128,
-        verbose_name=_("betalingsenhed"),
-        choices=payment_unit_choices,
+        verbose_name=_("betalingstype"),
+        choices=payment_type_choices,
+    )
+    payment_units = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        verbose_name="betalingsenheder",
+        blank=True,
+        null=True,
+    )
+    payment_amount = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        verbose_name="beløb",
+        blank=True,
+        null=True,
     )
 
     def create_rrule(self, start, end):
@@ -142,7 +168,7 @@ class PaymentSchedule(models.Model):
                 interval=1,
                 dtstart=start,
                 until=end,
-                bymonthday=-1
+                bymonthday=-1,
             )
         return rrule_frequency
 
@@ -189,10 +215,7 @@ class Payment(models.Model):
         choices=PaymentSchedule.payment_method_choices,
     )
     amount = models.DecimalField(
-        max_digits=14,
-        decimal_places=2,
-        verbose_name="beløb",
-        null=True
+        max_digits=14, decimal_places=2, verbose_name="beløb"
     )
     paid = models.BooleanField(default=False, verbose_name="betalt")
 
@@ -373,9 +396,11 @@ class Appropriation(AuditModelMixin, models.Model):
         # We retrieve the total sum of the main activity
         # and the supplementary activities.
         main_activities = self.activities
-        main_activities.annotate(total_sum=Sum(
-            F("payment_plan__payments__amount") +
-            F("supplementary_activities__payment_plan__payments__amount"))
+        main_activities.annotate(
+            total_sum=Sum(
+                F("payment_plan__payments__amount")
+                + F("supplementary_activities__payment_plan__payments__amount")
+            )
         )
         return main_activities
 
