@@ -115,6 +115,7 @@ unit-test:
 
   coverage: '/TOTAL.*\s+(\d+%)$/'
   artifacts:
+    when: always
     paths:
       - $CI_PROJECT_DIR/coverage-html
     reports:
