@@ -4,44 +4,49 @@
         <h1 v-if="create_mode">Opret Aktivitet</h1>
         <h1 v-else>Redigér Aktivitet</h1>
 
-            <fieldset>
-                <input type="checkbox" id="field-status-expected" value="EXPECTED" v-model="act.status">
-                <label for="field-status-expected">Forventning</label>
-            </fieldset>
-            <fieldset>
-                <legend>Type</legend>
-                <input type="radio" id="field-type-main" value="MAIN_ACTIVITY" v-model="act.activity_type">
-                <label for="field-type-main">Foranstaltningsydelse</label>
-                <input type="radio" id="field-type-suppl" value="SUPPL_ACTIVITY" v-model="act.activity_type">
-                <label for="field-type-suppl">Følgeydelse</label>
-            </fieldset>
-            <fieldset>
-                <label for="selectField">Aktivitet</label>
-                <list-picker :dom-id="'selectField'" :selected-id="act.service" @selection="changeActivity" :list="activities" />
-            </fieldset>
-            <fieldset>
-                <label for="field-startdate">Startdato</label>
-                <input type="date" id="field-startdate" v-model="act.start_date">
-            </fieldset>
-            <fieldset>
-                <label for="field-enddate">Slutdato</label>
-                <input type="date" id="field-enddate" v-model="act.end_date">
-            </fieldset>
-            <fieldset>
-                <label for="field-text">Bemærkning</label>
-                <textarea></textarea>
-            </fieldset>
-            <hr>
+        <div class="row">
+            <div class="column">
+                <fieldset>
+                    <input type="checkbox" id="field-status-expected" value="EXPECTED" v-model="act.status">
+                    <label for="field-status-expected">Forventning</label>
+                </fieldset>
+                <fieldset>
+                    <legend>Type</legend>
+                    <input type="radio" id="field-type-main" value="MAIN_ACTIVITY" v-model="act.activity_type">
+                    <label for="field-type-main">Foranstaltningsudgift</label>
+                    <input type="radio" id="field-type-suppl" value="SUPPL_ACTIVITY" v-model="act.activity_type">
+                    <label for="field-type-suppl">Følgeudgift</label>
+                </fieldset>
+                <fieldset>
+                    <label for="selectField">Aktivitet</label>
+                    <list-picker :dom-id="'selectField'" :selected-id="act.service" @selection="changeActivity" :list="activities" />
+                </fieldset>
+                <fieldset>
+                    <label for="field-startdate">Startdato</label>
+                    <input type="date" id="field-startdate" v-model="act.start_date">
+                </fieldset>
+                <fieldset>
+                    <label for="field-enddate">Slutdato</label>
+                    <input type="date" id="field-enddate" v-model="act.end_date">
+                </fieldset>
+                <fieldset>
+                    <label for="field-text">Bemærkning</label>
+                    <textarea></textarea>
+                </fieldset>
+                <hr>
+                <payment-amount-edit />
+                <payment-receiver-edit/>
+                <payment-edit/>
 
-            <payment-amount-edit />
-            <payment-receiver-edit/>
-            <payment-edit/>
+                <hr>
+                <fieldset>
+                    <input type="submit" value="Gem">
+                    <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
+                </fieldset>
+            </div>
 
-            <hr>
-            <fieldset>
-                <input type="submit" value="Gem">
-                <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
-            </fieldset>
+            <div class="column"></div>
+        </div>
         </form>
     </section>
 
