@@ -9,6 +9,7 @@ import Appropriation from './components/appropriations/Appropriation.vue'
 import AppropriationEdit from './components/appropriations/AppropriationEdit.vue'
 import Activity from './components/activities/Activity.vue'
 import ActivityEdit from './components/activities/ActivityEdit.vue'
+import PaymentSchedule from './components/payment/PaymentSchedule.vue'
 import Login from './components/auth/Login.vue'
 import store from './store.js'
 
@@ -66,6 +67,11 @@ const router = new Router({
             path: '/appropriation/:apprid/activity-create/',
             name: 'activity-create',
             component: ActivityEdit
+        },
+        {
+            path: '/paymentschedule/',
+            name: 'paymentschedule',
+            component: PaymentSchedule
         },
         {
             path: '/login',
