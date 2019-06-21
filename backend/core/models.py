@@ -55,7 +55,8 @@ class User(AbstractUser):
         on_delete=models.PROTECT,
         related_name="users",
         null=True,
-        blank=True,
+        # Don't allow creation of users with no team through user interface.
+        blank=False,
     )
 
 
@@ -148,6 +149,12 @@ class Case(AuditModelMixin, models.Model):
     case_worker = models.ForeignKey(
         User,
         verbose_name=_("sagsbehandler"),
+        related_name="cases",
+        on_delete=models.PROTECT,
+    )
+    team = models.ForeignKey(
+        Team,
+        verbose_name=_("team"),
         related_name="cases",
         on_delete=models.PROTECT,
     )

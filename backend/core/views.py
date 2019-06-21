@@ -15,6 +15,7 @@ from core.models import (
     Municipality,
     RelatedPerson,
     SchoolDistrict,
+    Team,
     Sections,
     ActivityCatalog,
     Account,
@@ -31,6 +32,7 @@ from core.serializers import (
     RelatedPersonSerializer,
     MunicipalitySerializer,
     SchoolDistrictSerializer,
+    TeamSerializer,
     SectionsSerializer,
     ActivityCatalogSerializer,
     AccountSerializer,
@@ -139,6 +141,11 @@ class MunicipalityViewSet(viewsets.ReadOnlyModelViewSet):
 class SchoolDistrictViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = SchoolDistrict.objects.all()
     serializer_class = SchoolDistrictSerializer
+
+
+class TeamViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Team.objects.all()
+    serializer_class = TeamSerializer
 
 
 class SectionsViewSet(viewsets.ReadOnlyModelViewSet):

@@ -8,7 +8,7 @@ from core.models import (
     ActivityCatalog,
     Account,
     ApprovalLevel,
-    Team
+    Team,
 )
 
 
