@@ -19,9 +19,12 @@
                 <dd>
                     <div v-html="statusLabel(act.status)"></div>
                 </dd>
-                <dt>Type</dt>
+                <dt>
+                    Type
+                </dt>
                 <dd>
-                    <div>{{ act.activity_type }}</div>
+                    <div v-if="act.activity_type === 'MAIN_ACTIVITY'">Foranstaltningsudgift</div>
+                    <div v-if="act.activity_type === 'SUPPL_ACTIVITY'">Følgeudgift</div>
                 </dd>
                 <dt>Bevilges efter §</dt>
                 <dd v-if="appr">{{ displaySection(appr.section) }}</dd>
@@ -31,39 +34,29 @@
                 <dd>{{ displayDate(act.start_date) }}</dd>
                 <dt>Slutdato</dt>
                 <dd>{{ displayDate(act.end_date) }}</dd>
+                <dt>Bemærkning</dt>
+                <dd>ikke implementeret</dd>
             </dl>
             <dl>
-                <h3>Udgifter</h3>
+                <h3>Beløb</h3>
+                <dt>Afregningsenhed</dt>
+                <dd>ikke implementeret</dd>
                 <dt>Beløb</dt>
                 <dd>ikke implementeret</dd>
-                <dt>Afregningsenhed</dt>
-                <dd>
-                    <template>
-                        <p>Kroner pr. måned ikke implementeret</p>
-                        <p>Første år ikke implementeret</p>
-                        <p>Årligt ikke implementeret</p>
-                    </template>
-                    <template>
-                        <p>Enkeltudgift ikke implementeret</p>
-                    </template>
-                </dd>
-                <dt>Bemærkninger</dt>
-                <dd>ikke implementeret</dd>
             </dl>
             <dl>
-                <h3>Betalingsmodtager</h3>
-                <dt>Type</dt>
+                <h3>Betales til</h3>
+                <dt>Betalingsmodtager</dt>
                 <dd>ikke implementeret</dd>
                 <dt>ID</dt>
                 <dd>ikke implementeret</dd>
                 <dt>Navn</dt>
                 <dd>ikke implementeret</dd>
+            </dl>
+            <dl>
+                <h3>Betaling</h3>
                 <dt>Betalingsmåde</dt>
-                <dd>
-                    <span>
-                        ikke implementeret
-                    </span>
-                </dd>
+                <dd>ikke implementeret</dd>
             </dl>
         </div>
     </section>
