@@ -1,7 +1,18 @@
+from datetime import date
+from decimal import Decimal
+
+from dateutil.rrule import (
+    rrule,
+    DAILY as DAILY_rrule,
+    WEEKLY as WEEKLY_rrule,
+    MONTHLY as MONTHLY_rrule,
+)
 from django.db import models
+from django.db.models import Sum, F
 from django.contrib.postgres import fields
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import MinValueValidator
 from django_audit_fields.models import AuditModelMixin
 from simple_history.models import HistoricalRecords
 
@@ -49,6 +60,17 @@ class SchoolDistrict(models.Model):
         return f"{self.name}"
 
 
+class PaymentMethodDetails(models.Model):
+    tax_card_choices = (
+        ("MAIN_CARD", _("Hovedkort")),
+        ("SECONDARY_CARD", _("Bikort")),
+    )
+
+    tax_card = models.CharField(
+        max_length=128, verbose_name=("skattekort"), choices=tax_card_choices
+    )
+
+
 class Team(models.Model):
     """Represents a team in the administration."""
 
@@ -90,6 +112,7 @@ class PaymentSchedule(models.Model):
     )
     recipient_id = models.CharField(max_length=128, verbose_name=_("ID"))
     recipient_name = models.CharField(max_length=128, verbose_name=_("Navn"))
+
     # Payment methods and choice list.
     CASH = "CASH"
     SD = "SD"
@@ -106,8 +129,108 @@ class PaymentSchedule(models.Model):
         verbose_name=_("betalingsmåde"),
         choices=payment_method_choices,
     )
+    payment_method_details = models.ForeignKey(
+        PaymentMethodDetails, null=True, blank=True, on_delete=models.SET_NULL
+    )
+    DAILY = "DAILY"
+    WEEKLY = "WEEKLY"
+    MONTHLY = "MONTHLY"
+    payment_frequency_choices = (
+        (DAILY, _("Dagligt")),
+        (WEEKLY, _("Ugentligt")),
+        (MONTHLY, _("Månedligt")),
+    )
+    payment_frequency = models.CharField(
+        max_length=128,
+        verbose_name=_("betalingsfrekvens"),
+        choices=payment_frequency_choices,
+    )
 
-    # TODO: Add actual scheduling information.
+    ONE_TIME_PAYMENT = "ONE_TIME_PAYMENT"
+    RUNNING_PAYMENT = "RUNNING_PAYMENT"
+    PER_HOUR_PAYMENT = "PER_HOUR_PAYMENT"
+    PER_DAY_PAYMENT = "PER_DAY_PAYMENT"
+    PER_KM_PAYMENT = "PER_KM_PAYMENT"
+    payment_type_choices = (
+        ((ONE_TIME_PAYMENT), _("Engangsudgift")),
+        ((RUNNING_PAYMENT), _("Fast beløb, løbende")),
+        ((PER_HOUR_PAYMENT), _("Takst pr. time")),
+        ((PER_DAY_PAYMENT), _("Takst pr. døgn")),
+        ((PER_KM_PAYMENT), _("Takst pr. kilometer")),
+    )
+    payment_type = models.CharField(
+        max_length=128,
+        verbose_name=_("betalingstype"),
+        choices=payment_type_choices,
+    )
+    # number of units to pay, ie. XX kilometres or hours
+    payment_units = models.PositiveIntegerField(
+        verbose_name="betalingsenheder", blank=True, null=True
+    )
+    payment_amount = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        verbose_name="beløb",
+        validators=[MinValueValidator(Decimal("0.01"))],
+    )
+
+    def create_rrule(self, start, end):
+        """
+        Create a dateutil.rrule based on payment_frequency, start and end.
+        """
+        if self.payment_type == self.ONE_TIME_PAYMENT:
+            rrule_frequency = rrule(
+                DAILY_rrule, count=1, dtstart=start, until=end
+            )
+        elif self.payment_frequency == self.DAILY:
+            rrule_frequency = rrule(DAILY_rrule, dtstart=start, until=end)
+        elif self.payment_frequency == self.WEEKLY:
+            rrule_frequency = rrule(WEEKLY_rrule, dtstart=start, until=end)
+        elif self.payment_frequency == self.MONTHLY:
+            # If monthly, choose the last day of the month.
+            rrule_frequency = rrule(
+                MONTHLY_rrule, dtstart=start, until=end, bymonthday=-1
+            )
+        return rrule_frequency
+
+    def calculate_per_payment_amount(self):
+        vat_factor = 100
+        if hasattr(self, "activity") and hasattr(
+            self.activity, "service_provider"
+        ):
+            vat_factor = self.activity.service_provider.vat_factor
+
+        if self.payment_type in [self.ONE_TIME_PAYMENT, self.RUNNING_PAYMENT]:
+            return self.payment_amount / 100 * vat_factor
+        elif self.payment_type in [
+            self.PER_HOUR_PAYMENT,
+            self.PER_DAY_PAYMENT,
+            self.PER_KM_PAYMENT,
+        ]:
+            return (
+                (self.payment_units * self.payment_amount) / 100 * vat_factor
+            )
+
+    def generate_payments(self, start, end):
+        """
+        Generates payments with a frequency and unit with start, end, amount.
+        """
+        # If no end is specified, choose end of the current year.
+        if not end:
+            end = date.today().replace(month=date.max.month, day=date.max.day)
+
+        rrule_frequency = self.create_rrule(start, end)
+
+        dates = list(rrule_frequency)
+
+        for date_obj in dates:
+            Payment.objects.create(
+                date=date_obj,
+                recipient_type=self.recipient_type,
+                recipient_id=self.recipient_id,
+                amount=self.calculate_per_payment_amount(),
+                payment_schedule=self,
+            )
 
 
 class Payment(models.Model):
@@ -131,10 +254,20 @@ class Payment(models.Model):
         verbose_name=_("betalingsmåde"),
         choices=PaymentSchedule.payment_method_choices,
     )
+    amount = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        verbose_name="beløb",
+        validators=[MinValueValidator(Decimal("0.01"))],
+    )
+    paid = models.BooleanField(default=False, verbose_name="betalt")
 
     payment_schedule = models.ForeignKey(
         PaymentSchedule, on_delete=models.CASCADE, related_name="payments"
     )
+
+    def __str__(self):
+        return f"{self.date} - {self.amount}"
 
 
 class Case(AuditModelMixin, models.Model):
@@ -296,7 +429,16 @@ class Appropriation(AuditModelMixin, models.Model):
     def payment_plan(self):
         """Return the payment plan for this appropriation."""
 
-        # TODO: Implement this.
+        # We retrieve the total sum of the main activity
+        # and the supplementary activities.
+        main_activities = self.activities
+        main_activities.annotate(
+            total_sum=Sum(
+                F("payment_plan__payments__amount")
+                + F("supplementary_activities__payment_plan__payments__amount")
+            )
+        )
+        return main_activities
 
 
 class ServiceProvider(models.Model):
@@ -306,7 +448,12 @@ class ServiceProvider(models.Model):
 
     cvr_number = models.CharField(max_length=8, blank=True)
     name = models.CharField(max_length=128, blank=False)
-    vat_factor = models.DecimalField(max_digits=5, decimal_places=2)
+    vat_factor = models.DecimalField(
+        default=100.0,
+        max_digits=5,
+        decimal_places=2,
+        validators=[MinValueValidator(Decimal("0.01"))],
+    )
 
 
 class ActivityCatalog(models.Model):
@@ -420,6 +567,8 @@ class Activity(AuditModelMixin, models.Model):
         related_name="activities",
         on_delete=models.SET_NULL,
     )
+
+    note = models.TextField(null=True, blank=True, max_length=1000)
 
 
 class RelatedPerson(models.Model):

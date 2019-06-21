@@ -9,6 +9,7 @@ from core.models import (
     RelatedPerson,
     Municipality,
     PaymentSchedule,
+    PaymentMethodDetails,
     Payment,
     SchoolDistrict,
     Sections,
@@ -58,15 +59,24 @@ class ActivitySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class PaymentScheduleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PaymentSchedule
-        fields = "__all__"
-
-
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
+        fields = "__all__"
+
+
+class PaymentMethodDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PaymentMethodDetails
+        fields = "__all__"
+
+
+class PaymentScheduleSerializer(serializers.ModelSerializer):
+    payments = PaymentSerializer(many=True)
+    payment_method_details = PaymentMethodDetailsSerializer()
+
+    class Meta:
+        model = PaymentSchedule
         fields = "__all__"
 
 
