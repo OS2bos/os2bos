@@ -72,8 +72,7 @@ class PaymentMethodDetailsSerializer(serializers.ModelSerializer):
 
 
 class PaymentScheduleSerializer(serializers.ModelSerializer):
-    payments = PaymentSerializer(many=True)
-    payment_method_details = PaymentMethodDetailsSerializer()
+    payments = PaymentSerializer(many=True, read_only=True)
 
     class Meta:
         model = PaymentSchedule
