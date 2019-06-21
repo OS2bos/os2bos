@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.test import TestCase
 
+from django.contrib.auth import get_user_model
+
 from core.models import (
     Municipality,
     SchoolDistrict,
@@ -28,7 +30,8 @@ class SchoolDistrictTestCase(TestCase):
 
 class TeamTestCase(TestCase):
     def test_team_str(self):
-        team = Team.objects.create(name="C-BUR")
+        user = get_user_model().objects.create(username="Anders And")
+        team = Team.objects.create(name="C-BUR", leader=user)
 
         self.assertEqual(str(team), "C-BUR")
 
