@@ -9,6 +9,7 @@ from dateutil.rrule import (
 )
 from django.db import models
 from django.db.models import Sum, F
+from django.db.models.functions import Coalesce
 from django.contrib.postgres import fields
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
@@ -579,6 +580,15 @@ class Activity(AuditModelMixin, models.Model):
     )
 
     note = models.TextField(null=True, blank=True, max_length=1000)
+
+    def total_amount(self):
+        payment_amount = self.payment_plan.payments.aggregate(
+            amount_sum=Coalesce(Sum("amount"), 0)
+        )["amount_sum"]
+        supplementary_amount = self.supplementary_activities.aggregate(
+            amount_sum=Coalesce(Sum("payment_plan__payments__amount"), 0)
+        )["amount_sum"]
+        return payment_amount + supplementary_amount
 
 
 class RelatedPerson(models.Model):
