@@ -174,6 +174,15 @@ class PaymentSchedule(models.Model):
         validators=[MinValueValidator(Decimal("0.01"))],
     )
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if not self.payments.exists():
+            if hasattr(self, "activity"):
+                self.generate_payments(
+                    self.activity.start_date,
+                    self.activity.end_date
+                )
+
     def create_rrule(self, start, end):
         """
         Create a dateutil.rrule based on payment_frequency, start and end.
@@ -195,9 +204,7 @@ class PaymentSchedule(models.Model):
 
     def calculate_per_payment_amount(self):
         vat_factor = 100
-        if hasattr(self, "activity") and hasattr(
-            self.activity, "service_provider"
-        ):
+        if hasattr(self, "activity") and self.activity.service_provider:
             vat_factor = self.activity.service_provider.vat_factor
 
         if self.payment_type in [self.ONE_TIME_PAYMENT, self.RUNNING_PAYMENT]:
