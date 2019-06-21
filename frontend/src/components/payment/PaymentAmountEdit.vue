@@ -36,7 +36,9 @@
         </div>
 
         <payment-plan :amount="amount" :units="units" :type="type" :frequency="frequency" />
-
+        <div>
+            <button class="payment-schedule-btn" type="button" @click="paymentSchedule()">Betalingsplan</button>
+        </div>
     </div>
 
 </template>
@@ -95,9 +97,11 @@
             }
         },
         methods: {
-
             saveChanges: function() {
                 this.$emit('payment-amount')
+            },
+            paymentSchedule: function() {
+                this.$router.push(`/paymentschedule/`)
             }
         }
 
@@ -121,6 +125,10 @@
 
     .payment-amount input[type="text"] {
         width: 8rem;
+    }
+
+    .payment-schedule-btn {
+        margin-left: 1rem;
     }
 
 </style>
