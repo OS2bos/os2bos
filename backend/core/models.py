@@ -41,6 +41,18 @@ effort_steps_choices = (
     (STEP_SIX, _("Trin 6: Anbringelse i institutionstilbud")),
 )
 
+# Payment methods and choice list.
+CASH = "CASH"
+SD = "SD"
+INVOICE = "INVOICE"
+INTERNAL = "INTERNAL"
+payment_method_choices = (
+    (CASH, _("Udbetaling")),
+    (SD, _("SD-LØN")),
+    (INVOICE, _("Faktura")),
+    (INTERNAL, _("Intern afregning")),
+)
+
 
 class Municipality(models.Model):
     """Represents a Danish municipality."""
@@ -113,17 +125,6 @@ class PaymentSchedule(models.Model):
     recipient_id = models.CharField(max_length=128, verbose_name=_("ID"))
     recipient_name = models.CharField(max_length=128, verbose_name=_("Navn"))
 
-    # Payment methods and choice list.
-    CASH = "CASH"
-    SD = "SD"
-    INVOICE = "INVOICE"
-    INTERNAL = "INTERNAL"
-    payment_method_choices = (
-        (CASH, _("Udbetaling")),
-        (SD, _("SD-LØN")),
-        (INVOICE, _("Faktura")),
-        (INTERNAL, _("Intern afregning")),
-    )
     payment_method = models.CharField(
         max_length=128,
         verbose_name=_("betalingsmåde"),
@@ -235,6 +236,8 @@ class PaymentSchedule(models.Model):
                 date=date_obj,
                 recipient_type=self.recipient_type,
                 recipient_id=self.recipient_id,
+                recipient_name=self.recipient_name,
+                payment_method=self.payment_method,
                 amount=self.calculate_per_payment_amount(),
                 payment_schedule=self,
             )
@@ -259,7 +262,7 @@ class Payment(models.Model):
     payment_method = models.CharField(
         max_length=128,
         verbose_name=_("betalingsmåde"),
-        choices=PaymentSchedule.payment_method_choices,
+        choices=payment_method_choices,
     )
     amount = models.DecimalField(
         max_digits=14,
