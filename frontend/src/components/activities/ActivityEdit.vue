@@ -7,6 +7,7 @@
         <div class="row">
             <div class="column">
                 <fieldset>
+                    <legend>Status</legend>
                     <input type="checkbox" id="field-status-expected" value="EXPECTED" v-model="act.status">
                     <label for="field-status-expected">Forventning</label>
                 </fieldset>
