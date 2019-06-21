@@ -39,9 +39,9 @@ for klass in (
 
 
 class CustomUserAdmin(BaseUserAdmin):
-    add_fieldsets = BaseUserAdmin.add_fieldsets + (
-        (None, {"fields": ("team", "is_team_leader")}),
-    )
+    fieldsets = (
+        ("Organisation", {"fields": ("team",)}),
+    ) + BaseUserAdmin.fieldsets
 
 
 admin.site.register(User, CustomUserAdmin)

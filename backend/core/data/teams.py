@@ -1,7 +1,7 @@
 teams = [
-    "S-DIG",
-    "Ungerådgivning",
-    "Familierådgivning",
-    "Forebyggende",
-    "Handicap",
+    ("S-DIG", "admin", ["admin"]),
+    ("Ungerådgivning", "ungeleder", ["ungeleder", "ungeraadgiver"]),
+    ("Familierådgivning", "familieleder", ["familieleder", "familieraadgiver"]),
+    ("Forebyggende", "admin", []),
+    ("Handicap", "admin", []),
 ]

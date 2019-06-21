@@ -8,6 +8,7 @@ from core.models import (
     ActivityCatalog,
     Account,
     ApprovalLevel,
+    Team
 )
 
 
@@ -23,6 +24,13 @@ class SchoolDistrictTestCase(TestCase):
         school_district = SchoolDistrict.objects.create(name="Skovlunde Skole")
 
         self.assertEqual(str(school_district), "Skovlunde Skole")
+
+
+class TeamTestCase(TestCase):
+    def test_team_str(self):
+        team = Team.objects.create(name="C-BUR")
+
+        self.assertEqual(str(team), "C-BUR")
 
 
 class SectionsTestCase(TestCase):
