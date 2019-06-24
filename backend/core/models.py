@@ -198,9 +198,9 @@ class PaymentSchedule(models.Model):
         elif self.payment_frequency == self.WEEKLY:
             rrule_frequency = rrule(WEEKLY_rrule, dtstart=start, until=end)
         elif self.payment_frequency == self.MONTHLY:
-            # If monthly, choose the last day of the month.
+            # If monthly, choose the first day of the month.
             rrule_frequency = rrule(
-                MONTHLY_rrule, dtstart=start, until=end, bymonthday=-1
+                MONTHLY_rrule, dtstart=start, until=end, bymonthday=1
             )
         return rrule_frequency
 
@@ -588,9 +588,13 @@ class Activity(AuditModelMixin, models.Model):
     note = models.TextField(null=True, blank=True, max_length=1000)
 
     def total_amount(self):
-        payment_amount = self.payment_plan.payments.aggregate(
-            amount_sum=Coalesce(Sum("amount"), 0)
-        )["amount_sum"]
+        if not self.payment_plan:
+            payment_amount = 0
+        else:
+            payment_amount = self.payment_plan.payments.aggregate(
+                amount_sum=Coalesce(Sum("amount"), 0)
+            )["amount_sum"]
+
         supplementary_amount = self.supplementary_activities.aggregate(
             amount_sum=Coalesce(Sum("payment_plan__payments__amount"), 0)
         )["amount_sum"]
