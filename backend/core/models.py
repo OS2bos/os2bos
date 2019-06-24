@@ -446,18 +446,10 @@ class Appropriation(AuditModelMixin, models.Model):
 
     @property
     def payment_plan(self):
-        """Return the payment plan for this appropriation."""
-
-        # We retrieve the total sum of the main activity
-        # and the supplementary activities.
-        main_activities = self.activities
-        main_activities.annotate(
-            total_sum=Sum(
-                F("payment_plan__payments__amount")
-                + F("supplementary_activities__payment_plan__payments__amount")
-            )
-        )
-        return main_activities
+        # TODO:
+        # In AppropriationSerializer we already provide "activities"
+        # with a total_amount for each activity so this perhaps is not needed.
+        pass
 
 
 class ServiceProvider(models.Model):
@@ -524,7 +516,9 @@ class Activity(AuditModelMixin, models.Model):
     )
 
     start_date = models.DateField(verbose_name=_("startdato"))
-    end_date = models.DateField(verbose_name=_("slutdato"))
+    end_date = models.DateField(
+        verbose_name=_("slutdato"), null=True, blank=True
+    )
 
     # Activity types and choice list.
     MAIN_ACTIVITY = "MAIN_ACTIVITY"
