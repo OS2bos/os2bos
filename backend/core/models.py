@@ -222,7 +222,7 @@ class PaymentSchedule(models.Model):
 
     def generate_payments(self, start, end):
         """
-        Generates payments with a frequency and unit with start, end, amount.
+        Generates payments with a start and end.
         """
         # If no end is specified, choose end of the current year.
         if not end:
@@ -529,11 +529,9 @@ class Activity(AuditModelMixin, models.Model):
     # Activity types and choice list.
     MAIN_ACTIVITY = "MAIN_ACTIVITY"
     SUPPL_ACTIVITY = "SUPPL_ACTIVITY"
-    EXPECTED_CHANGE = "EXPECTED_CHANGE"
     type_choices = (
         (MAIN_ACTIVITY, _("hovedaktivitet")),
         (SUPPL_ACTIVITY, _("følgeaktivitet")),
-        (EXPECTED_CHANGE, _("forventning")),
     )
 
     activity_type = models.CharField(
