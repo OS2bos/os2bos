@@ -32,12 +32,12 @@
                 </fieldset>
                 <fieldset>
                     <label for="field-text">Bemærkning</label>
-                    <textarea></textarea>
+                    <textarea v-model="act.note"></textarea>
                 </fieldset>
                 <hr>
-                <payment-amount-edit />
-                <payment-receiver-edit/>
-                <payment-edit/>
+                <payment-amount-edit v-model="payment_amount"/>
+                <payment-receiver-edit v-model="payment_receiver"/>
+                <payment-edit v-model="payment"/>
 
                 <hr>
                 <fieldset>
@@ -77,6 +77,9 @@
                 act: {
                     status: 'GRANTED'
                 },
+                payment_amount: {},
+                payment_receiver: {},
+                payment: {},
                 create_mode: true
             }
         },
@@ -96,7 +99,8 @@
                     id: this.act.id,
                     start_date: this.act.start_date,
                     end_date: this.act.end_date,
-                    service: this.act.service
+                    service: this.act.service,
+                    note: this.act.note
                 }
                 if (!this.create_mode) {
                     data.appropriation = this.activityObj.appropriation
@@ -114,7 +118,8 @@
                         id: this.act.id,
                         start_date: this.act.start_date,
                         end_date: this.act.end_date,
-                        service: this.act.service
+                        service: this.act.service,
+                        note: this.act.note
                     })
                     .then(res => {
                         this.$router.push(`/appropriation/${ appr_id }`)

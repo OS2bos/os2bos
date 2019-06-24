@@ -37,27 +37,53 @@
                 <dt>Bemærkning</dt>
                 <dd>{{ act.note }}</dd>
             </dl>
-            <dl>
-                <h3>Beløb</h3>
-                <dt>Afregningsenhed</dt>
-                <dd>ikke implementeret</dd>
-                <dt>Beløb</dt>
-                <dd>ikke implementeret</dd>
-            </dl>
-            <dl>
-                <h3>Betales til</h3>
-                <dt>Betalingsmodtager</dt>
-                <dd>ikke implementeret</dd>
-                <dt>ID</dt>
-                <dd>ikke implementeret</dd>
-                <dt>Navn</dt>
-                <dd>ikke implementeret</dd>
-            </dl>
-            <dl>
-                <h3>Betaling</h3>
-                <dt>Betalingsmåde</dt>
-                <dd>ikke implementeret</dd>
-            </dl>
+            
+                <dl v-if="pay">
+                    <h3>Beløb</h3>
+                    <dt>Afregningsenhed</dt>
+                    <dd>
+                        <div v-if="pay.payment_type === 'ONE_TIME_PAYMENT'">Engangsudgift</div>
+                        <div v-if="pay.payment_type === 'RUNNING-PAYMENT'">Fast beløb, løbende</div>
+                        <div v-if="pay.payment_type === 'PER-HOUR-PAYMENT'">Takst pr. time</div>
+                        <div v-if="pay.payment_type === 'PER-DAY-PAYMENT'">Takst pr. døgn</div>
+                        <div v-if="pay.payment_type === 'PER-KM-PAYMENT'">Takst pr. kilometer</div>
+                    </dd>
+                    <dd>
+                        <div v-if="pay.payment_frequency === 'DAILY'">Dagligt</div>
+                        <div v-if="pay.payment_frequency === 'WEEKLY'">Ugentligt</div>
+                        <div v-if="pay.payment_frequency === 'MONTHLY'">Månedligt</div>
+                    </dd>
+                    <dt>Beløb</dt>
+                    <dd>{{ pay.payment_amount }} kr.</dd>
+                </dl>
+                <dl v-if="pay">
+                    <h3>Betales til</h3>
+                    <dt>Betalingsmodtager</dt>
+                    <dd>
+                        <div v-if="pay.recipient_type === 'INTERNAL'">Inten</div>
+                        <div v-if="pay.recipient_type === 'COMPANY'">Firma</div>
+                        <div v-if="pay.recipient_type === 'PERSON'">Person</div>
+                    </dd>
+                    <dt>
+                        <div v-if="pay.recipient_type === 'INTERNAL'">Reference</div>
+                        <div v-if="pay.recipient_type === 'COMPANY'">CVR-nr</div>
+                        <div v-if="pay.recipient_type === 'PERSON'">CPR-nr</div>
+                    </dt>
+                    <dd>{{ pay.recipient_id }}</dd>
+                    <dt>Navn</dt>
+                    <dd>{{ pay.recipient_name }}</dd>
+                </dl>
+                <dl v-if="pay">
+                    <h3>Betaling</h3>
+                    <dt>Betalingsmåde</dt>
+                    <dd>
+                        <div v-if="pay.payment_method === 'INVOICE'">Faktura</div>
+                        <div v-if="pay.payment_method === 'INTERNAL'">Intern afregning</div>
+                        <div v-if="pay.payment_method === 'CASH'">Kontant udbetaling</div>
+                        <div v-if="pay.payment_method === 'SD'">SD-løn</div>
+                    </dd>
+                </dl>
+            
         </div>
     </section>
 
@@ -80,6 +106,7 @@
                 act: null,
                 appr: null,
                 cas: null,
+                pay: null,
                 show_edit: false
             }
         },
@@ -112,6 +139,12 @@
                                     title: `Udgift til ${ activityId2name(this.act.service) }`
                                 }
                             ])
+                        })
+                        .then(resp => {
+                                axios.get(`/payment_schedules/${ id }`)
+                                .then(response => {
+                                    this.pay = response.data
+                                })
                         })
                     })
                 })
