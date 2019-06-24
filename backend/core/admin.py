@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 from core.models import (
     Municipality,
@@ -14,6 +15,8 @@ from core.models import (
     Account,
     ServiceProvider,
     PaymentMethodDetails,
+    Team,
+    User,
     ApprovalLevel,
 )
 
@@ -31,6 +34,16 @@ for klass in (
     ActivityCatalog,
     Account,
     ServiceProvider,
+    Team,
     ApprovalLevel,
 ):
     admin.site.register(klass, admin.ModelAdmin)
+
+
+class CustomUserAdmin(BaseUserAdmin):
+    fieldsets = (
+        ("Organisation", {"fields": ("team",)}),
+    ) + BaseUserAdmin.fieldsets
+
+
+admin.site.register(User, CustomUserAdmin)

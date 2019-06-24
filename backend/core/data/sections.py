@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 sections = [
     {
         "model": "core.sections",
