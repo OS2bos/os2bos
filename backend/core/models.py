@@ -307,6 +307,9 @@ class Appropriation(AuditModelMixin, models.Model):
 
         # TODO: Implement this.
 
+    def __str__(self):
+        return f"{self.sbsys_id} - {self.section}"
+
 
 class ServiceProvider(models.Model):
     """
