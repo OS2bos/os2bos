@@ -6,7 +6,7 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 from parameterized import parameterized
 
-from core.tests.testing_mixins import PaymentScheduleMixin
+from core.tests.testing_mixins import PaymentScheduleMixin, ActivityMixin
 from core.models import (
     Municipality,
     SchoolDistrict,
@@ -68,6 +68,48 @@ class ActivityCatalogTestCase(TestCase):
             str(catalog),
             "010001 - Betaling til andre kommuner/region for specialtandpleje",
         )
+
+
+class ActivityTestCase(TestCase, ActivityMixin, PaymentScheduleMixin):
+
+    def test_activity_total_amount_no_payment_plan(self):
+        activity = self.create_activity()
+        total_amount = activity.total_amount()
+        self.assertEqual(total_amount, 0)
+
+    def test_activity_total_amount_on_main_activity(self):
+        activity = self.create_activity()
+        payment_schedule = self.create_payment_schedule()
+        activity.payment_plan = payment_schedule
+        activity.save()
+        payment_schedule.generate_payments(
+            activity.start_date,
+            activity.end_date
+        )
+        self.assertEqual(activity.total_amount(), Decimal("5000.0"))
+
+    def test_activity_total_amount_on_main_supplementary_activities(self):
+        # Generate main activity
+        activity = self.create_activity()
+        payment_schedule = self.create_payment_schedule()
+        activity.payment_plan = payment_schedule
+        activity.save()
+        payment_schedule.generate_payments(
+            activity.start_date,
+            activity.end_date
+        )
+        # Generate supplementary activity
+        supplementary_activity = self.create_activity()
+        payment_schedule = self.create_payment_schedule()
+        supplementary_activity.payment_plan = payment_schedule
+        supplementary_activity.save()
+        payment_schedule.generate_payments(
+            supplementary_activity.start_date,
+            supplementary_activity.end_date
+        )
+        supplementary_activity.main_activity = activity
+        supplementary_activity.save()
+        self.assertEqual(activity.total_amount(), Decimal("10000.0"))
 
 
 class AccountTestCase(TestCase):
