@@ -71,7 +71,6 @@ class ActivityCatalogTestCase(TestCase):
 
 
 class ActivityTestCase(TestCase, ActivityMixin, PaymentScheduleMixin):
-
     def test_activity_total_amount_no_payment_plan(self):
         activity = self.create_activity()
         total_amount = activity.total_amount()
@@ -83,8 +82,7 @@ class ActivityTestCase(TestCase, ActivityMixin, PaymentScheduleMixin):
         activity.payment_plan = payment_schedule
         activity.save()
         payment_schedule.generate_payments(
-            activity.start_date,
-            activity.end_date
+            activity.start_date, activity.end_date
         )
         self.assertEqual(activity.total_amount(), Decimal("5000.0"))
 
@@ -95,20 +93,24 @@ class ActivityTestCase(TestCase, ActivityMixin, PaymentScheduleMixin):
         activity.payment_plan = payment_schedule
         activity.save()
         payment_schedule.generate_payments(
-            activity.start_date,
-            activity.end_date
+            activity.start_date, activity.end_date
         )
-        # Generate supplementary activity
+        # Generate first supplementary activity
         supplementary_activity = self.create_activity()
         payment_schedule = self.create_payment_schedule()
         supplementary_activity.payment_plan = payment_schedule
         supplementary_activity.save()
         payment_schedule.generate_payments(
-            supplementary_activity.start_date,
-            supplementary_activity.end_date
+            supplementary_activity.start_date, supplementary_activity.end_date
         )
         supplementary_activity.main_activity = activity
         supplementary_activity.save()
+
+        # Generate second supplementary activity without payment schedule.
+        supplementary_activity = self.create_activity()
+        supplementary_activity.main_activity = activity
+        supplementary_activity.save()
+
         self.assertEqual(activity.total_amount(), Decimal("10000.0"))
 
 
