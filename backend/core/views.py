@@ -15,6 +15,7 @@ from core.models import (
     Municipality,
     RelatedPerson,
     SchoolDistrict,
+    Team,
     Sections,
     ActivityCatalog,
     Account,
@@ -31,6 +32,7 @@ from core.serializers import (
     RelatedPersonSerializer,
     MunicipalitySerializer,
     SchoolDistrictSerializer,
+    TeamSerializer,
     SectionsSerializer,
     ActivityCatalogSerializer,
     AccountSerializer,
@@ -50,7 +52,9 @@ class CaseViewSet(viewsets.ModelViewSet):
     serializer_class = CaseSerializer
 
     def perform_create(self, serializer):
-        serializer.save(case_worker=self.request.user)
+        current_user = self.request.user
+        team = current_user.team
+        serializer.save(case_worker=current_user, team=team)
 
     @action(detail=True, methods=["get"])
     def history(self, request, pk=None):
@@ -137,6 +141,11 @@ class MunicipalityViewSet(viewsets.ReadOnlyModelViewSet):
 class SchoolDistrictViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = SchoolDistrict.objects.all()
     serializer_class = SchoolDistrictSerializer
+
+
+class TeamViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Team.objects.all()
+    serializer_class = TeamSerializer
 
 
 class SectionsViewSet(viewsets.ReadOnlyModelViewSet):

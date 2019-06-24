@@ -49,26 +49,27 @@ class SchoolDistrict(models.Model):
         return f"{self.name}"
 
 
+class User(AbstractUser):
+    team = models.ForeignKey(
+        "Team",
+        on_delete=models.PROTECT,
+        related_name="users",
+        null=True,
+        # Don't allow creation of users with no team through user interface.
+        blank=False,
+    )
+
+
 class Team(models.Model):
     """Represents a team in the administration."""
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
+    leader = models.ForeignKey(
+        User, on_delete=models.PROTECT, related_name="managed_teams"
+    )
 
     def __str__(self):
         return f"{self.name}"
-
-
-class User(AbstractUser):
-    team = models.ForeignKey(
-        Team,
-        on_delete=models.PROTECT,
-        related_name="users",
-        null=True,
-        blank=True,
-    )
-    is_team_leader = models.BooleanField(
-        verbose_name=_("teamleder"), default=False
-    )
 
 
 class PaymentSchedule(models.Model):
@@ -150,6 +151,14 @@ class Case(AuditModelMixin, models.Model):
         verbose_name=_("sagsbehandler"),
         related_name="cases",
         on_delete=models.PROTECT,
+    )
+    team = models.ForeignKey(
+        Team,
+        verbose_name=_("team"),
+        related_name="cases",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
     )
     district = models.ForeignKey(
         SchoolDistrict,
