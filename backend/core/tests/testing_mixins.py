@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 
-from core.models import Case, Municipality, SchoolDistrict
+from core.models import Case, Municipality, SchoolDistrict, Team
 
 
 class CaseMixin:
@@ -9,6 +9,7 @@ class CaseMixin:
         case_worker = get_user_model().objects.create(
             username="Orla Frøsnapper"
         )
+        team = Team.objects.create(name="FCK", leader=case_worker)
         municipality = Municipality.objects.create(name="København")
         district = SchoolDistrict.objects.create(name="Baltorpskolen")
         case = Case.objects.create(
@@ -16,6 +17,7 @@ class CaseMixin:
             cpr_number="0205891234",
             name="Jens Jensen",
             case_worker=case_worker,
+            team=team,
             scaling_step=1,
             effort_step="STEP_ONE",
             acting_municipality=municipality,
@@ -28,6 +30,7 @@ class CaseMixin:
     @staticmethod
     def create_case_as_json():
         case_worker = get_user_model().objects.create(username="Andersine And")
+        team = Team.objects.create(name="Brøndby", leader=case_worker)
         municipality_id = Municipality.objects.create(name="Andeby").id
         district = SchoolDistrict.objects.create(
             name="Kornelius Blisand-skolen"
@@ -40,6 +43,7 @@ class CaseMixin:
             "refugee_integration": True,
             "cross_department_measure": True,
             "case_worker": case_worker.id,
+            "team": team.id,
             "scaling_step": 1,
             "effort_step": "STEP_ONE",
             "district": district.id,

@@ -18,6 +18,7 @@ from core.models import (
     HistoricalCase,
     ServiceProvider,
     ApprovalLevel,
+    Team,
 )
 
 
@@ -104,6 +105,12 @@ class RelatedPersonSerializer(serializers.ModelSerializer):
 class MunicipalitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Municipality
+        fields = "__all__"
+
+
+class TeamSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Team
         fields = "__all__"
 
 

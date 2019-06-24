@@ -1,0 +1,92 @@
+[
+{
+    "model": "core.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$150000$uPJ212W8VRq8$PB5RFiTG36j5Bh4EOv9umeaCVOa3K2yw9rUk40w8f54=",
+        "last_login": "2019-06-21T09:36:48Z",
+        "is_superuser": true,
+        "username": "ungeraadgiver",
+        "first_name": "Unge",
+        "last_name": "Raadgiver",
+        "email": "cbur@magenta.dk",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2019-06-21T09:34:12Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "core.user",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$150000$QEPqk3qfecTw$FZOntulqKxws0qyyhsfGpmgUyqRkSDPPZ+zWhWes23o=",
+        "last_login": "2019-06-21T09:49:40Z",
+        "is_superuser": true,
+        "username": "admin",
+        "first_name": "IT",
+        "last_name": "Guy",
+        "email": "cbur@magenta.dk",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2019-06-21T09:47:07Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "core.user",
+    "pk": 3,
+    "fields": {
+        "password": "pbkdf2_sha256$150000$hrDmxl7OeNuB$oIds88QHPY9b2unW6c5gkkC3Xo8NSjOEQdCpSdCfHbE=",
+        "last_login": null,
+        "is_superuser": true,
+        "username": "familieraadgiver",
+        "first_name": "Familie",
+        "last_name": "Raadgiver",
+        "email": "cbur@magenta.dk",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2019-06-21T09:48:48Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "core.user",
+    "pk": 4,
+    "fields": {
+        "password": "pbkdf2_sha256$150000$YYHA7A34MI3h$oPf8shdd9OP5lxplacD0hXrIG3wbKxs/U5a4Op0lab8=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "familieleder",
+        "first_name": "Familie",
+        "last_name": "Leder",
+        "email": "cbur@magenta.dk",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2019-06-21T09:50:44Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "core.user",
+    "pk": 5,
+    "fields": {
+        "password": "pbkdf2_sha256$150000$DoZweG4HtRxZ$y2fJafCMx5zyOmAqcFrN4P8/w1GgGDqjH75BpnDqouM=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "ungeleder",
+        "first_name": "Unge",
+        "last_name": "Leder",
+        "email": "cbur@magenta.dk",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2019-06-21T09:52:45Z",
+        "groups": [],
+        "user_permissions": []
+    }
+}
+]
