@@ -1,6 +1,9 @@
 import os
 import logging
 import requests
+
+from django.template.loader import get_template
+
 from django.conf import settings
 
 from service_person_stamdata_udvidet import get_citizen
@@ -90,3 +93,16 @@ def get_cpr_data_mock(cpr):
         "kommunekode": "370",
     }
     return result
+
+
+def send_appropriation(appropriation):
+    """Generate PDF and XML files from appropriation and send them to SBSYS."""
+
+    # Generate os2forms.xml
+    xml_template = get_template("core/xml/os2forms.xml")
+    xml_data = xml_template.render(context={"appropriation": appropriation})
+    print(xml_data)
+
+    # Generate PDF
+
+    # Send as email

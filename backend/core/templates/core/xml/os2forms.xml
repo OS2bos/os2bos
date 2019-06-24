@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<os2formsFormular>
+
+    <OS2FormsId>99999</OS2FormsId>
+
+    <SBSYSJournalisering>
+
+        <PrimaerPartCprNummer>{{appropriation.case.cpr_number}}</PrimaerPartCprNummer>
+
+        <PrimaerPartCvrNummer></PrimaerPartCvrNummer>
+
+        <KLe>{{appropriation.section.kle_number}}</KLe>
+
+        <SagSkabelonId>{{appropriation.case.sbsys_id}}</SagSkabelonId>
+
+    </SBSYSJournalisering>
+
+    <DigitalForsendelse>
+
+        <MaaSendesTilDFF>nej</MaaSendesTilDFF>
+
+    </DigitalForsendelse>
+
+</os2formsFormular>
