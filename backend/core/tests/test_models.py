@@ -16,6 +16,7 @@ from core.models import (
     Team,
     Payment,
     PaymentSchedule,
+    ServiceProvider,
 )
 
 
@@ -101,6 +102,18 @@ class ActivityTestCase(TestCase, ActivityMixin, PaymentScheduleMixin):
         supplementary_activity.save()
 
         self.assertEqual(activity.total_amount(), Decimal("10000.0"))
+
+    def test_activity_total_amount_on_service_provider(self):
+        service_provider = ServiceProvider.objects.create(
+            name="Test leverandør",
+            vat_factor=Decimal("90")
+        )
+        activity = self.create_activity()
+        payment_schedule = self.create_payment_schedule()
+        activity.payment_plan = payment_schedule
+        activity.service_provider = service_provider
+        activity.save()
+        self.assertEqual(activity.total_amount(), Decimal("4500.0"))
 
 
 class AccountTestCase(TestCase):
@@ -256,6 +269,7 @@ class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin, ActivityMixin):
                 Decimal("100"),
                 0,
                 Decimal("100"),
+                Decimal("100"),
             ),
             (
                 PaymentSchedule.RUNNING_PAYMENT,
@@ -263,12 +277,14 @@ class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin, ActivityMixin):
                 Decimal("100"),
                 0,
                 Decimal("100"),
+                Decimal("100"),
             ),
             (
                 PaymentSchedule.PER_HOUR_PAYMENT,
                 PaymentSchedule.DAILY,
                 Decimal("100"),
                 5,
+                Decimal("100"),
                 Decimal("500"),
             ),
             (
@@ -276,6 +292,7 @@ class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin, ActivityMixin):
                 PaymentSchedule.DAILY,
                 Decimal("100"),
                 10,
+                Decimal("100"),
                 Decimal("1000"),
             ),
         ]
@@ -286,6 +303,7 @@ class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin, ActivityMixin):
         payment_frequency,
         payment_amount,
         payment_units,
+        vat_factor,
         expected,
     ):
         payment_schedule = self.create_payment_schedule(
@@ -296,7 +314,7 @@ class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin, ActivityMixin):
         )
 
         amount = payment_schedule.calculate_per_payment_amount(
-            vat_factor=Decimal("100")
+            vat_factor=vat_factor
         )
 
         self.assertEqual(amount, expected)
