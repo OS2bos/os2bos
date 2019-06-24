@@ -187,7 +187,8 @@ class PaymentSchedule(models.Model):
 
     def create_rrule(self, start, end):
         """
-        Create a dateutil.rrule based on payment_frequency, start and end.
+        Create a dateutil.rrule based on payment_type/payment_frequency,
+        start and end.
         """
         if self.payment_type == self.ONE_TIME_PAYMENT:
             rrule_frequency = rrule(
@@ -202,6 +203,8 @@ class PaymentSchedule(models.Model):
             rrule_frequency = rrule(
                 MONTHLY_rrule, dtstart=start, until=end, bymonthday=1
             )
+        else:
+            raise ValueError(_("ukendt betalingsfrekvens"))
         return rrule_frequency
 
     def calculate_per_payment_amount(self):
@@ -219,6 +222,8 @@ class PaymentSchedule(models.Model):
             return (
                 (self.payment_units * self.payment_amount) / 100 * vat_factor
             )
+        else:
+            raise ValueError(_("ukendt betalingstype"))
 
     def generate_payments(self, start, end):
         """
@@ -449,7 +454,7 @@ class Appropriation(AuditModelMixin, models.Model):
         # TODO:
         # In AppropriationSerializer we already provide "activities"
         # with a total_amount for each activity so this perhaps is not needed.
-        pass
+        pass  # pragma: no cover
 
 
 class ServiceProvider(models.Model):
