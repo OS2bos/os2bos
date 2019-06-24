@@ -80,9 +80,6 @@ class ActivityTestCase(TestCase, ActivityMixin, PaymentScheduleMixin):
         payment_schedule = self.create_payment_schedule()
         activity.payment_plan = payment_schedule
         activity.save()
-        payment_schedule.generate_payments(
-            activity.start_date, activity.end_date
-        )
         self.assertEqual(activity.total_amount(), Decimal("5000.0"))
 
     def test_activity_total_amount_on_main_supplementary_activities(self):
@@ -91,17 +88,10 @@ class ActivityTestCase(TestCase, ActivityMixin, PaymentScheduleMixin):
         payment_schedule = self.create_payment_schedule()
         activity.payment_plan = payment_schedule
         activity.save()
-        payment_schedule.generate_payments(
-            activity.start_date, activity.end_date
-        )
         # Generate first supplementary activity
         supplementary_activity = self.create_activity()
         payment_schedule = self.create_payment_schedule()
         supplementary_activity.payment_plan = payment_schedule
-        supplementary_activity.save()
-        payment_schedule.generate_payments(
-            supplementary_activity.start_date, supplementary_activity.end_date
-        )
         supplementary_activity.main_activity = activity
         supplementary_activity.save()
 
@@ -305,7 +295,9 @@ class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin, ActivityMixin):
             payment_units=payment_units,
         )
 
-        amount = payment_schedule.calculate_per_payment_amount()
+        amount = payment_schedule.calculate_per_payment_amount(
+            vat_factor=Decimal("100")
+        )
 
         self.assertEqual(amount, expected)
 
@@ -318,7 +310,9 @@ class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin, ActivityMixin):
         )
 
         with self.assertRaises(ValueError):
-            payment_schedule.calculate_per_payment_amount()
+            payment_schedule.calculate_per_payment_amount(
+                vat_factor=Decimal("100")
+            )
 
     def test_generate_payments(
         self,
@@ -328,12 +322,12 @@ class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin, ActivityMixin):
             payment_frequency=PaymentSchedule.DAILY,
             payment_amount=Decimal("100")
         )
-        activity = self.create_activity()
-        activity.payment_plan = payment_schedule
-        activity.save()
+        start_date = date(year=2019, month=1, day=1)
+        end_date = date(year=2019, month=1, day=10)
+
         payment_schedule.generate_payments(
-            activity.start_date,
-            activity.end_date
+            start_date,
+            end_date
         )
 
         self.assertIsNotNone(payment_schedule.payments)

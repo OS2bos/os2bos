@@ -8,7 +8,7 @@ from dateutil.rrule import (
     MONTHLY as MONTHLY_rrule,
 )
 from django.db import models
-from django.db.models import Sum, F
+from django.db.models import Sum
 from django.db.models.functions import Coalesce
 from django.contrib.postgres import fields
 from django.contrib.auth.models import AbstractUser
@@ -177,14 +177,6 @@ class PaymentSchedule(models.Model):
         validators=[MinValueValidator(Decimal("0.01"))],
     )
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if not self.payments.exists():
-            if hasattr(self, "activity"):
-                self.generate_payments(
-                    self.activity.start_date, self.activity.end_date
-                )
-
     def create_rrule(self, start, end):
         """
         Create a dateutil.rrule based on payment_type/payment_frequency,
@@ -207,10 +199,7 @@ class PaymentSchedule(models.Model):
             raise ValueError(_("ukendt betalingsfrekvens"))
         return rrule_frequency
 
-    def calculate_per_payment_amount(self):
-        vat_factor = 100
-        if hasattr(self, "activity") and self.activity.service_provider:
-            vat_factor = self.activity.service_provider.vat_factor
+    def calculate_per_payment_amount(self, vat_factor):
 
         if self.payment_type in [self.ONE_TIME_PAYMENT, self.RUNNING_PAYMENT]:
             return self.payment_amount / 100 * vat_factor
@@ -225,7 +214,7 @@ class PaymentSchedule(models.Model):
         else:
             raise ValueError(_("ukendt betalingstype"))
 
-    def generate_payments(self, start, end):
+    def generate_payments(self, start, end, vat_factor=Decimal("100")):
         """
         Generates payments with a start and end.
         """
@@ -244,7 +233,7 @@ class PaymentSchedule(models.Model):
                 recipient_id=self.recipient_id,
                 recipient_name=self.recipient_name,
                 payment_method=self.payment_method,
-                amount=self.calculate_per_payment_amount(),
+                amount=self.calculate_per_payment_amount(vat_factor),
                 payment_schedule=self,
             )
 
@@ -598,6 +587,20 @@ class Activity(AuditModelMixin, models.Model):
             amount_sum=Coalesce(Sum("payment_plan__payments__amount"), 0)
         )["amount_sum"]
         return payment_amount + supplementary_amount
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        vat_factor = Decimal("100")
+        if self.service_provider:
+            vat_factor = self.service_provider.vat_factor
+
+        if self.payment_plan and not self.payment_plan.payments.exists():
+            self.payment_plan.generate_payments(
+                self.start_date,
+                self.end_date,
+                vat_factor
+            )
 
 
 class RelatedPerson(models.Model):
