@@ -246,3 +246,5 @@ DEFAULT_FROM_EMAIL = settings.get(
 SBSYS_EMAIL = settings.get(
     "SBSYS_EMAIL", fallback="admin@bevillingsplatform-test.magenta.dk"
 )
+SBSYS_APPROPRIATION_TEMPLATE = "core/html/appropriation_letter.html"
+SBSYS_XML_TEMPLATE = "core/xml/os2forms.xml"

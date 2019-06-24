@@ -102,12 +102,12 @@ def send_appropriation(appropriation):
     """Generate PDF and XML files from appropriation and send them to SBSYS."""
     render_context = {"appropriation": appropriation}
     # Generate os2forms.xml
-    xml_template = get_template("core/xml/os2forms.xml")
+    xml_template = get_template(settings.SBSYS_XML_TEMPLATE)
     xml_data = xml_template.render(context=render_context)
     xml_file_name = "os2forms.xml"
 
     # Generate PDF
-    html_template = get_template("core/html/appropriation_letter.html")
+    html_template = get_template(settings.SBSYS_APPROPRIATION_TEMPLATE)
     html_data = html_template.render(context=render_context)
     pdf_data = HTML(string=html_data).write_pdf()
     pdf_file_name = f"{appropriation.sbsys_id}.pdf"
