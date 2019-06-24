@@ -8,7 +8,7 @@
             <div class="column">
                 <fieldset>
                     <legend>Status</legend>
-                    <input type="checkbox" id="field-status-expected" value="EXPECTED" v-model="act.status">
+                    <input type="checkbox" id="field-status-expected" v-model="act_status_expected">
                     <label for="field-status-expected">Forventning</label>
                 </fieldset>
                 <fieldset>
@@ -74,9 +74,8 @@
         ],
         data: function() {
             return {
-                act: {
-                    status: 'GRANTED'
-                },
+                act: {},
+                act_status_expected: false,
                 payment_amount: {},
                 payment_receiver: {},
                 payment: {},
@@ -94,15 +93,19 @@
             },
             saveChanges: function() {
                 let data = {
-                    status: this.act.status,
                     activity_type: this.act.activity_type,
-                    id: this.act.id,
                     start_date: this.act.start_date,
                     end_date: this.act.end_date,
                     service: this.act.service,
                     note: this.act.note
                 }
+                if (this.act_status_expected) {
+                    data.status = 'EXPECTED'
+                } else {
+                    data.status = 'GRANTED'
+                }
                 if (!this.create_mode) {
+                    data.id = this.act.id
                     data.appropriation = this.activityObj.appropriation
                     axios.patch(`/activities/${ this.act.id }/`, data)
                     .then(res => {
@@ -111,16 +114,8 @@
                     .catch(err => console.log(err))
                 } else {
                     const appr_id = this.$route.params.apprid
-                    axios.post(`/activities/`, {
-                        appropriation: appr_id,
-                        status: this.act.status,
-                        activity_type: this.act.activity_type,
-                        id: this.act.id,
-                        start_date: this.act.start_date,
-                        end_date: this.act.end_date,
-                        service: this.act.service,
-                        note: this.act.note
-                    })
+                    data.appropriation = appr_id
+                    axios.post(`/activities/`, data)
                     .then(res => {
                         this.$router.push(`/appropriation/${ appr_id }`)
                     })
