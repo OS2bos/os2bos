@@ -48,15 +48,31 @@ class HistoricalCaseSerializer(serializers.ModelSerializer):
         )
 
 
-class AppropriationSerializer(serializers.ModelSerializer):
+class SupplementaryActivitySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Appropriation
+        model = Activity
         fields = "__all__"
 
 
 class ActivitySerializer(serializers.ModelSerializer):
+    total_amount = serializers.SerializerMethodField()
+    supplementary_activities = SupplementaryActivitySerializer(
+        many=True, read_only=True
+    )
+
     class Meta:
         model = Activity
+        fields = "__all__"
+
+    def get_total_amount(self, obj):
+        return obj.total_amount()
+
+
+class AppropriationSerializer(serializers.ModelSerializer):
+    activities = ActivitySerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Appropriation
         fields = "__all__"
 
 

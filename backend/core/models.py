@@ -9,6 +9,7 @@ from dateutil.rrule import (
 )
 from django.db import models
 from django.db.models import Sum, F
+from django.db.models.functions import Coalesce
 from django.contrib.postgres import fields
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
@@ -39,6 +40,18 @@ effort_steps_choices = (
     (STEP_FOUR, _("Trin 4: Anbringelse i slægt eller netværk")),
     (STEP_FIVE, _("Trin 5: Anbringelse i forskellige typer af plejefamilier")),
     (STEP_SIX, _("Trin 6: Anbringelse i institutionstilbud")),
+)
+
+# Payment methods and choice list.
+CASH = "CASH"
+SD = "SD"
+INVOICE = "INVOICE"
+INTERNAL = "INTERNAL"
+payment_method_choices = (
+    (CASH, _("Udbetaling")),
+    (SD, _("SD-LØN")),
+    (INVOICE, _("Faktura")),
+    (INTERNAL, _("Intern afregning")),
 )
 
 
@@ -114,17 +127,6 @@ class PaymentSchedule(models.Model):
     recipient_id = models.CharField(max_length=128, verbose_name=_("ID"))
     recipient_name = models.CharField(max_length=128, verbose_name=_("Navn"))
 
-    # Payment methods and choice list.
-    CASH = "CASH"
-    SD = "SD"
-    INVOICE = "INVOICE"
-    INTERNAL = "INTERNAL"
-    payment_method_choices = (
-        (CASH, _("Udbetaling")),
-        (SD, _("SD-LØN")),
-        (INVOICE, _("Faktura")),
-        (INTERNAL, _("Intern afregning")),
-    )
     payment_method = models.CharField(
         max_length=128,
         verbose_name=_("betalingsmåde"),
@@ -175,6 +177,14 @@ class PaymentSchedule(models.Model):
         validators=[MinValueValidator(Decimal("0.01"))],
     )
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if not self.payments.exists():
+            if hasattr(self, "activity"):
+                self.generate_payments(
+                    self.activity.start_date, self.activity.end_date
+                )
+
     def create_rrule(self, start, end):
         """
         Create a dateutil.rrule based on payment_frequency, start and end.
@@ -196,9 +206,7 @@ class PaymentSchedule(models.Model):
 
     def calculate_per_payment_amount(self):
         vat_factor = 100
-        if hasattr(self, "activity") and hasattr(
-            self.activity, "service_provider"
-        ):
+        if hasattr(self, "activity") and self.activity.service_provider:
             vat_factor = self.activity.service_provider.vat_factor
 
         if self.payment_type in [self.ONE_TIME_PAYMENT, self.RUNNING_PAYMENT]:
@@ -214,7 +222,7 @@ class PaymentSchedule(models.Model):
 
     def generate_payments(self, start, end):
         """
-        Generates payments with a frequency and unit with start, end, amount.
+        Generates payments with a start and end.
         """
         # If no end is specified, choose end of the current year.
         if not end:
@@ -229,6 +237,8 @@ class PaymentSchedule(models.Model):
                 date=date_obj,
                 recipient_type=self.recipient_type,
                 recipient_id=self.recipient_id,
+                recipient_name=self.recipient_name,
+                payment_method=self.payment_method,
                 amount=self.calculate_per_payment_amount(),
                 payment_schedule=self,
             )
@@ -253,7 +263,7 @@ class Payment(models.Model):
     payment_method = models.CharField(
         max_length=128,
         verbose_name=_("betalingsmåde"),
-        choices=PaymentSchedule.payment_method_choices,
+        choices=payment_method_choices,
     )
     amount = models.DecimalField(
         max_digits=14,
@@ -519,11 +529,9 @@ class Activity(AuditModelMixin, models.Model):
     # Activity types and choice list.
     MAIN_ACTIVITY = "MAIN_ACTIVITY"
     SUPPL_ACTIVITY = "SUPPL_ACTIVITY"
-    EXPECTED_CHANGE = "EXPECTED_CHANGE"
     type_choices = (
         (MAIN_ACTIVITY, _("hovedaktivitet")),
         (SUPPL_ACTIVITY, _("følgeaktivitet")),
-        (EXPECTED_CHANGE, _("forventning")),
     )
 
     activity_type = models.CharField(
@@ -578,6 +586,15 @@ class Activity(AuditModelMixin, models.Model):
     )
 
     note = models.TextField(null=True, blank=True, max_length=1000)
+
+    def total_amount(self):
+        payment_amount = self.payment_plan.payments.aggregate(
+            amount_sum=Coalesce(Sum("amount"), 0)
+        )["amount_sum"]
+        supplementary_amount = self.supplementary_activities.aggregate(
+            amount_sum=Coalesce(Sum("payment_plan__payments__amount"), 0)
+        )["amount_sum"]
+        return payment_amount + supplementary_amount
 
 
 class RelatedPerson(models.Model):
