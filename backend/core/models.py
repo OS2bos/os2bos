@@ -182,8 +182,7 @@ class PaymentSchedule(models.Model):
         if not self.payments.exists():
             if hasattr(self, "activity"):
                 self.generate_payments(
-                    self.activity.start_date,
-                    self.activity.end_date
+                    self.activity.start_date, self.activity.end_date
                 )
 
     def create_rrule(self, start, end):
