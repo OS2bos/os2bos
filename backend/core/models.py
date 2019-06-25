@@ -441,8 +441,6 @@ class Appropriation(AuditModelMixin, models.Model):
     @property
     def payment_plan(self):
         # TODO:
-        # In AppropriationSerializer we already provide "activities"
-        # with a total_amount for each activity so this perhaps is not needed.
         pass  # pragma: no cover
 
 
