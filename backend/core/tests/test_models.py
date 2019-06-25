@@ -105,8 +105,7 @@ class ActivityTestCase(TestCase, ActivityMixin, PaymentScheduleMixin):
 
     def test_activity_total_amount_on_service_provider(self):
         service_provider = ServiceProvider.objects.create(
-            name="Test leverandør",
-            vat_factor=Decimal("90")
+            name="Test leverandør", vat_factor=Decimal("90")
         )
         activity = self.create_activity()
         payment_schedule = self.create_payment_schedule()
@@ -319,9 +318,7 @@ class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin, ActivityMixin):
 
         self.assertEqual(amount, expected)
 
-    def test_calculate_per_payment_amount_invalid_payment_type(
-        self,
-    ):
+    def test_calculate_per_payment_amount_invalid_payment_type(self,):
         payment_schedule = self.create_payment_schedule(
             payment_type="ugyldig betalingstype",
             payment_frequency=PaymentSchedule.DAILY,
@@ -332,39 +329,29 @@ class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin, ActivityMixin):
                 vat_factor=Decimal("100")
             )
 
-    def test_generate_payments(
-        self,
-    ):
+    def test_generate_payments(self,):
         payment_schedule = self.create_payment_schedule(
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
             payment_frequency=PaymentSchedule.DAILY,
-            payment_amount=Decimal("100")
+            payment_amount=Decimal("100"),
         )
         start_date = date(year=2019, month=1, day=1)
         end_date = date(year=2019, month=1, day=10)
 
-        payment_schedule.generate_payments(
-            start_date,
-            end_date
-        )
+        payment_schedule.generate_payments(start_date, end_date)
 
         self.assertIsNotNone(payment_schedule.payments)
         self.assertEqual(len(payment_schedule.payments.all()), 10)
 
-    def test_generate_payments_no_end_date(
-        self,
-    ):
+    def test_generate_payments_no_end_date(self,):
         payment_schedule = self.create_payment_schedule(
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
             payment_frequency=PaymentSchedule.MONTHLY,
-            payment_amount=Decimal("100")
+            payment_amount=Decimal("100"),
         )
         start_date = date(year=2019, month=1, day=1)
         # Start in January and no end should generate 12 monthly payments.
-        payment_schedule.generate_payments(
-            start_date,
-            None
-        )
+        payment_schedule.generate_payments(start_date, None)
 
         self.assertIsNotNone(payment_schedule.payments)
         self.assertEqual(len(payment_schedule.payments.all()), 12)
