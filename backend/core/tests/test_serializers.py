@@ -5,9 +5,7 @@ from core.serializers import ActivitySerializer
 
 
 class ActivitySerializerTestCase(
-    TestCase,
-    ActivityMixin,
-    PaymentScheduleMixin
+    TestCase, ActivityMixin, PaymentScheduleMixin
 ):
     def test_get_total_amount(self):
         activity = self.create_activity()
