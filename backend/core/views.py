@@ -156,7 +156,9 @@ class CharInFilter(filters.BaseInFilter, filters.CharFilter):
 
 
 class AllowedForStepsFilter(filters.FilterSet):
-    allowed_for_steps = CharInFilter(field_name="allowed_for_steps", lookup_expr="contains")
+    allowed_for_steps = CharInFilter(
+        field_name="allowed_for_steps", lookup_expr="contains"
+    )
 
     class Meta:
         model = Sections
