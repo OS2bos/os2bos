@@ -1,7 +1,8 @@
-const axios = require('axios');
+const axios = require('axios'),
+    base_url = 'http://localhost:8080'
 
 function postSuccess(res) {
-    console.log('posting went well')
+    console.log(res)
 }
 
 function postFail(err) {
@@ -12,12 +13,12 @@ function postFail(err) {
 function authLogin() {
 
     //Auth Login
-    return axios.post('http://localhost:8000/api/token/', {
-        "username": "sagsbehandler",
+    return axios.post(`${ base_url }/api/token/`, {
+        "username": "ungeraadgiver",
         "password": "sagsbehandler"
     })
     .then(res => {
-        postSuccess(res)
+        postSuccess('Logged in')
         axios.defaults.headers.common['Authorization'] = `Bearer ${ res.data.access }`
     })
     .catch(err => { postFail(err) })
@@ -26,7 +27,7 @@ function authLogin() {
 function testData() {
 
     // Create cases
-    axios.post('http://localhost:8000/api/cases/', {
+    axios.post(`${ base_url }/api/cases/`, {
         "user_created": "leil",
         "sbsys_id": "46.46.24-64-ghis-872",
         "cpr_number": "000000-0000",
@@ -44,35 +45,35 @@ function testData() {
     })
     .then(res => { 
 
-        postSuccess(res) 
-        axios.post('http://localhost:8000/api/appropriations/', {
+        postSuccess('Case 1 created') 
+        axios.post(`${ base_url }/api/appropriations/`, {
             "sbsys_id": "77.25.25-72-nhis-0184",
             "section": 12,
             "status": "DRAFT",
             "case": res.data.id
         })
-        .then(res => { postSuccess(res) })
+        .then(res => { postSuccess('Appropriation 1 created') })
         .catch(err => { postFail(err) })
-        axios.post('http://localhost:8000/api/appropriations/', {
+        axios.post(`${ base_url }/api/appropriations/`, {
             "sbsys_id": "34.34.95-15-xoiu-1",
             "section": 12,
             "status": "DRAFT",
             "case": res.data.id
         })
-        .then(res => { postSuccess(res) })
+        .then(res => { postSuccess('Appropriation 2 created') })
         .catch(err => { postFail(err) })
-        axios.post('http://localhost:8000/api/appropriations/', {
+        axios.post(`${ base_url }/api/appropriations/`, {
             "sbsys_id": "89.89.72-1-abie-082",
             "section": 62,
             "status": "DRAFT",
             "case": res.data.id
         })
-        .then(res => { postSuccess(res) })
+        .then(res => { postSuccess('Appropriation 3 created') })
         .catch(err => { postFail(err) })
 
     })
     .catch(err => { postFail(err) })
-    axios.post('http://localhost:8000/api/cases/', {
+    axios.post(`${ base_url }/api/cases/`, {
         "user_created": "Inger Støjberg",
         "sbsys_id": "63.14.75-17-XHhi-4",
         "cpr_number": "000000-0000",
@@ -90,27 +91,27 @@ function testData() {
     })
     .then(res => { 
 
-        postSuccess(res) 
-        axios.post('http://localhost:8000/api/appropriations/', {
+        postSuccess('Case 2 created') 
+        axios.post(`${ base_url }/api/appropriations/`, {
             "sbsys_id": "71.95.10-00-qygs-1",
             "section": 15,
             "status": "DRAFT",
             "case": res.data.id
         })
-        .then(res => { postSuccess(res) })
+        .then(res => { postSuccess('Appropriation 4 created') })
         .catch(err => { postFail(err) })
-        axios.post('http://localhost:8000/api/appropriations/', {
+        axios.post(`${ base_url }/api/appropriations/`, {
             "sbsys_id": "85.82.12-2-xniw-28",
             "section": 23,
             "status": "DRAFT",
             "case": res.data.id
         })
-        .then(res => { postSuccess(res) })
+        .then(res => { postSuccess('Appropriation 5 created') })
         .catch(err => { postFail(err) })
 
     })
     .catch(err => { postFail(err) })
-    axios.post('http://localhost:8000/api/cases/', {
+    axios.post(`${ base_url }/api/cases/`, {
         "user_created": "leil",
         "sbsys_id": "56.17.45-10-bnih-84",
         "cpr_number": "000000-0000",
@@ -128,14 +129,14 @@ function testData() {
     })
     .then(res => { 
         
-        postSuccess(res) 
-        axios.post('http://localhost:8000/api/appropriations/', {
+        postSuccess('Case 3 created') 
+        axios.post(`${ base_url }/api/appropriations/`, {
             "sbsys_id": "98.08.23-17-lokq-26",
             "section": 6,
             "status": "DRAFT",
             "case": res.data.id
         })
-        axios.post('http://localhost:8000/api/related_persons/', {
+        axios.post(`${ base_url }/api/related_persons/`, {
             "id": 1,
             "relation_type": "Mor",
             "cpr_number": "121290-1122",
@@ -144,8 +145,8 @@ function testData() {
             "main_case": 3
         })
         .then(apprres => { 
-            postSuccess(apprres)
-            axios.post('http://localhost:8000/api/activities/', {
+            postSuccess('Related person 1 created')
+            axios.post(`${ base_url }/api/activities/`, {
                 "id": 3,
                 "revision": "",
                 "created": "2019-05-28T12:50:14.362135+02:00",
@@ -166,10 +167,10 @@ function testData() {
                 "modifies": null,
                 "appropriation": apprres.data.id
             })
-            .then(resact => { postSuccess(resact) })
+            .then(resact => { postSuccess('Activity 1 created') })
             .catch(err => { postFail(err) })
 
-            axios.post('http://localhost:8000/api/activities/', {
+            axios.post(`${ base_url }/api/activities/`, {
                 "id": 2,
                 "revision": "",
                 "created": "2019-05-28T16:15:29.257103+02:00",
@@ -190,7 +191,7 @@ function testData() {
                 "modifies": null,
                 "appropriation": apprres.data.id
             })
-            .then(resact => { postSuccess(resact) })
+            .then(resact => { postSuccess('Activity 1 created') })
             .catch(err => { postFail(err) })
         
         })
@@ -203,6 +204,9 @@ function testData() {
 
 async function submitTestData() {
    await authLogin()
+   console.log('---------')
+   console.log('Logged in')
+   console.log('---------')
    testData()
 }
 
