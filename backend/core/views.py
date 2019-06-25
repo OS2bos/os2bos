@@ -6,6 +6,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 
+
+from django_filters import rest_framework as filters
+
 from core.models import (
     Case,
     Appropriation,
@@ -148,14 +151,28 @@ class TeamViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TeamSerializer
 
 
+class CharInFilter(filters.BaseInFilter, filters.CharFilter):
+    pass
+
+
+class AllowedForStepsFilter(filters.FilterSet):
+    allowed_for_steps = CharInFilter(field_name="allowed_for_steps", lookup_expr="contains")
+
+    class Meta:
+        model = Sections
+        fields = "__all__"
+
+
 class SectionsViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Sections.objects.all()
     serializer_class = SectionsSerializer
+    filterset_class = AllowedForStepsFilter
 
 
 class ActivityCatalogViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ActivityCatalog.objects.all()
     serializer_class = ActivityCatalogSerializer
+    filterset_fields = "__all__"
 
 
 class AccountViewSet(viewsets.ReadOnlyModelViewSet):
