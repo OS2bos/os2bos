@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -ex
 
 ./manage.py ensure_db_connection --wait 30
 
@@ -8,18 +8,13 @@ set -e
 # the correct folder in Dockerfile. When the model have stabilized, the
 # migrations should be comitted to the repository and these lines should be
 # removed. See https://redmine.magenta-aps.dk/issues/30087
-echo "[docker-compose] manage.py makemigrations"
 ./manage.py makemigrations
 
-echo "[docker-compose] manage.py  migrate"
 ./manage.py migrate
 
 # See https://redmine.magenta-aps.dk/issues/30026 for changing this to a management command.
-echo "[docker-compose] manage.py initialize"
 echo 'from bevillingsplatform.initialize import initialize;initialize()' | python manage.py shell
 
-
-echo "[docker-compose] manage.py collectstatic"
 ./manage.py collectstatic --no-input --clear
 
 exec "$@"
