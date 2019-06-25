@@ -597,9 +597,7 @@ class Activity(AuditModelMixin, models.Model):
 
         if self.payment_plan and not self.payment_plan.payments.exists():
             self.payment_plan.generate_payments(
-                self.start_date,
-                self.end_date,
-                vat_factor
+                self.start_date, self.end_date, vat_factor
             )
 
 
