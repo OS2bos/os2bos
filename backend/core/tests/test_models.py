@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from decimal import Decimal
 from datetime import date
 
@@ -6,7 +5,7 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 from parameterized import parameterized
 
-from core.tests.testing_mixins import PaymentScheduleMixin
+from core.tests.testing_mixins import PaymentScheduleMixin, ActivityMixin
 from core.models import (
     Municipality,
     SchoolDistrict,
@@ -17,6 +16,7 @@ from core.models import (
     Team,
     Payment,
     PaymentSchedule,
+    ServiceProvider,
 )
 
 
@@ -70,6 +70,52 @@ class ActivityCatalogTestCase(TestCase):
         )
 
 
+class ActivityTestCase(TestCase, ActivityMixin, PaymentScheduleMixin):
+    def test_activity_total_amount_no_payment_plan(self):
+        activity = self.create_activity()
+        total_amount = activity.total_amount()
+        self.assertEqual(total_amount, 0)
+
+    def test_activity_total_amount_on_main_activity(self):
+        activity = self.create_activity()
+        payment_schedule = self.create_payment_schedule()
+        activity.payment_plan = payment_schedule
+        activity.save()
+        self.assertEqual(activity.total_amount(), Decimal("5000.0"))
+
+    def test_activity_total_amount_on_main_supplementary_activities(self):
+        # Generate main activity
+        activity = self.create_activity()
+        payment_schedule = self.create_payment_schedule()
+        activity.payment_plan = payment_schedule
+        activity.save()
+        # Generate first supplementary activity
+        supplementary_activity = self.create_activity()
+        payment_schedule = self.create_payment_schedule()
+        supplementary_activity.payment_plan = payment_schedule
+        supplementary_activity.main_activity = activity
+        supplementary_activity.save()
+
+        # Generate second supplementary activity without payment schedule.
+        supplementary_activity = self.create_activity()
+        supplementary_activity.main_activity = activity
+        supplementary_activity.save()
+
+        self.assertEqual(activity.total_amount(), Decimal("10000.0"))
+
+    def test_activity_total_amount_on_service_provider(self):
+        service_provider = ServiceProvider.objects.create(
+            name="Test leverandør",
+            vat_factor=Decimal("90")
+        )
+        activity = self.create_activity()
+        payment_schedule = self.create_payment_schedule()
+        activity.payment_plan = payment_schedule
+        activity.service_provider = service_provider
+        activity.save()
+        self.assertEqual(activity.total_amount(), Decimal("4500.0"))
+
+
 class AccountTestCase(TestCase):
     def test_account_str(self):
         sections = Sections.objects.create(
@@ -110,7 +156,7 @@ class PaymentTestCase(TestCase, PaymentScheduleMixin):
         self.assertEqual(str(payment), "2019-01-01 - 500.0")
 
 
-class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin):
+class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin, ActivityMixin):
     def test_create_rrule_daily_10_days(self):
         payment_schedule = self.create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY
@@ -203,6 +249,18 @@ class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin):
             list(rrule)[0].date(), date(year=2019, month=1, day=1)
         )
 
+    def test_create_rrule_incorrect_frequency(self):
+        payment_schedule = self.create_payment_schedule(
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency="incorrect frequency",
+        )
+
+        with self.assertRaises(ValueError):
+            payment_schedule.create_rrule(
+                start=date(year=2019, month=1, day=1),
+                end=date(year=2019, month=2, day=1),
+            )
+
     @parameterized.expand(
         [
             (
@@ -211,6 +269,7 @@ class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin):
                 Decimal("100"),
                 0,
                 Decimal("100"),
+                Decimal("100"),
             ),
             (
                 PaymentSchedule.RUNNING_PAYMENT,
@@ -218,12 +277,14 @@ class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin):
                 Decimal("100"),
                 0,
                 Decimal("100"),
+                Decimal("100"),
             ),
             (
                 PaymentSchedule.PER_HOUR_PAYMENT,
                 PaymentSchedule.DAILY,
                 Decimal("100"),
                 5,
+                Decimal("100"),
                 Decimal("500"),
             ),
             (
@@ -231,6 +292,7 @@ class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin):
                 PaymentSchedule.DAILY,
                 Decimal("100"),
                 10,
+                Decimal("100"),
                 Decimal("1000"),
             ),
         ]
@@ -241,6 +303,7 @@ class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin):
         payment_frequency,
         payment_amount,
         payment_units,
+        vat_factor,
         expected,
     ):
         payment_schedule = self.create_payment_schedule(
@@ -250,6 +313,58 @@ class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin):
             payment_units=payment_units,
         )
 
-        amount = payment_schedule.calculate_per_payment_amount()
+        amount = payment_schedule.calculate_per_payment_amount(
+            vat_factor=vat_factor
+        )
 
         self.assertEqual(amount, expected)
+
+    def test_calculate_per_payment_amount_invalid_payment_type(
+        self,
+    ):
+        payment_schedule = self.create_payment_schedule(
+            payment_type="ugyldig betalingstype",
+            payment_frequency=PaymentSchedule.DAILY,
+        )
+
+        with self.assertRaises(ValueError):
+            payment_schedule.calculate_per_payment_amount(
+                vat_factor=Decimal("100")
+            )
+
+    def test_generate_payments(
+        self,
+    ):
+        payment_schedule = self.create_payment_schedule(
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_amount=Decimal("100")
+        )
+        start_date = date(year=2019, month=1, day=1)
+        end_date = date(year=2019, month=1, day=10)
+
+        payment_schedule.generate_payments(
+            start_date,
+            end_date
+        )
+
+        self.assertIsNotNone(payment_schedule.payments)
+        self.assertEqual(len(payment_schedule.payments.all()), 10)
+
+    def test_generate_payments_no_end_date(
+        self,
+    ):
+        payment_schedule = self.create_payment_schedule(
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_amount=Decimal("100")
+        )
+        start_date = date(year=2019, month=1, day=1)
+        # Start in January and no end should generate 12 monthly payments.
+        payment_schedule.generate_payments(
+            start_date,
+            None
+        )
+
+        self.assertIsNotNone(payment_schedule.payments)
+        self.assertEqual(len(payment_schedule.payments.all()), 12)

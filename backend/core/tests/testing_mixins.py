@@ -84,13 +84,15 @@ class PaymentScheduleMixin:
 
 
 class ActivityMixin:
-    def create_activity():
+    @staticmethod
+    def create_activity(
+        start_date=date(year=2019, month=1, day=1),
+        end_date=date(year=2019, month=1, day=10),
+    ):
         activity_catalog = ActivityCatalog.objects.create(
             max_tolerance_in_percent=10,
             max_tolerance_in_dkk=1000
         )
-        start_date = date(year=2019, month=1, day=1)
-        end_date = date(year=2019, month=1, day=10)
         activity = Activity.objects.create(
             start_date=start_date,
             end_date=end_date,
