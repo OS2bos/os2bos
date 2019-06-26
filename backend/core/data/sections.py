@@ -1,6 +1,6 @@
 sections = [
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 1,
         "fields": {
             "paragraph": "ABL-54-",
@@ -10,7 +10,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 2,
         "fields": {
             "paragraph": "ABL-105-2",
@@ -20,7 +20,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 3,
         "fields": {
             "paragraph": "AKL-46-",
@@ -30,7 +30,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 4,
         "fields": {
             "paragraph": "AKL-83-",
@@ -40,7 +40,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 5,
         "fields": {
             "paragraph": "AKL-84-",
@@ -50,7 +50,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 6,
         "fields": {
             "paragraph": "DTL-4-",
@@ -60,7 +60,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 7,
         "fields": {
             "paragraph": "DTL-41-7",
@@ -70,7 +70,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 8,
         "fields": {
             "paragraph": "DTL-43-1.3",
@@ -80,7 +80,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 9,
         "fields": {
             "paragraph": "DTL-43-1.4",
@@ -90,7 +90,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 10,
         "fields": {
             "paragraph": "DTL-43-",
@@ -100,7 +100,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 11,
         "fields": {
             "paragraph": "DTL-63-1.3",
@@ -110,7 +110,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 12,
         "fields": {
             "paragraph": "DTL-63-1.4",
@@ -120,7 +120,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 13,
         "fields": {
             "paragraph": "DTL-63-",
@@ -130,7 +130,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 14,
         "fields": {
             "paragraph": "DTL-76-",
@@ -140,7 +140,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 15,
         "fields": {
             "paragraph": "DTL-80-",
@@ -150,7 +150,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 16,
         "fields": {
             "paragraph": "FSL-3-4",
@@ -160,7 +160,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 17,
         "fields": {
             "paragraph": "FSL-12-2",
@@ -170,7 +170,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 18,
         "fields": {
             "paragraph": "FSL-20-1",
@@ -180,7 +180,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 19,
         "fields": {
             "paragraph": "FSL-20-2",
@@ -190,7 +190,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 20,
         "fields": {
             "paragraph": "FSL-20-3",
@@ -200,7 +200,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 21,
         "fields": {
             "paragraph": "FSL-20-5",
@@ -210,7 +210,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 22,
         "fields": {
             "paragraph": "FSL-23-",
@@ -220,7 +220,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 23,
         "fields": {
             "paragraph": "FSL-26-",
@@ -230,7 +230,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 24,
         "fields": {
             "paragraph": "FSL-36-3",
@@ -240,7 +240,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 25,
         "fields": {
             "paragraph": "FSL-36-6",
@@ -250,7 +250,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 26,
         "fields": {
             "paragraph": "FSL-36-7",
@@ -260,7 +260,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 27,
         "fields": {
             "paragraph": "IGL-23-D",
@@ -270,7 +270,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 28,
         "fields": {
             "paragraph": "LAB-22-",
@@ -280,7 +280,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 29,
         "fields": {
             "paragraph": "LAB-32-2",
@@ -290,7 +290,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 30,
         "fields": {
             "paragraph": "LAB-32-1.1",
@@ -300,7 +300,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 31,
         "fields": {
             "paragraph": "LAB-32-1.2",
@@ -310,7 +310,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 32,
         "fields": {
             "paragraph": "LAB-32-",
@@ -320,7 +320,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 33,
         "fields": {
             "paragraph": "LAB-42-",
@@ -330,7 +330,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 34,
         "fields": {
             "paragraph": "LAB-51-",
@@ -340,7 +340,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 35,
         "fields": {
             "paragraph": "LAB-74-",
@@ -350,7 +350,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 36,
         "fields": {
             "paragraph": "LAB-76-",
@@ -360,7 +360,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 37,
         "fields": {
             "paragraph": "LAB-78-",
@@ -370,7 +370,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 38,
         "fields": {
             "paragraph": "LSV-1-1",
@@ -380,7 +380,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 39,
         "fields": {
             "paragraph": "SEL-10-",
@@ -390,7 +390,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 40,
         "fields": {
             "paragraph": "SEL-11-2",
@@ -400,7 +400,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 41,
         "fields": {
             "paragraph": "SEL-11-3",
@@ -410,7 +410,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 42,
         "fields": {
             "paragraph": "SEL-11-4",
@@ -420,7 +420,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 43,
         "fields": {
             "paragraph": "SEL-11-6",
@@ -430,7 +430,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 44,
         "fields": {
             "paragraph": "SEL-11-7",
@@ -440,7 +440,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 45,
         "fields": {
             "paragraph": "SEL-11-7",
@@ -450,7 +450,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 46,
         "fields": {
             "paragraph": "SEL-11-8",
@@ -460,7 +460,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 47,
         "fields": {
             "paragraph": "SEL-11-8",
@@ -470,7 +470,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 48,
         "fields": {
             "paragraph": "SEL-11-3.1",
@@ -480,7 +480,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 49,
         "fields": {
             "paragraph": "SEL-11-3.2",
@@ -490,7 +490,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 50,
         "fields": {
             "paragraph": "SEL-11-3.3",
@@ -500,7 +500,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 51,
         "fields": {
             "paragraph": "SEL-11-3.4",
@@ -510,7 +510,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 52,
         "fields": {
             "paragraph": "SEL-11-4.1",
@@ -520,7 +520,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 53,
         "fields": {
             "paragraph": "SEL-11-4.1. jfr. stk. 3. nr. 1",
@@ -530,7 +530,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 54,
         "fields": {
             "paragraph": "SEL-11-4.2",
@@ -540,7 +540,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 55,
         "fields": {
             "paragraph": "SEL-12-a",
@@ -550,7 +550,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 56,
         "fields": {
             "paragraph": "SEL-12-b",
@@ -560,7 +560,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 57,
         "fields": {
             "paragraph": "SEL-12-",
@@ -570,7 +570,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 58,
         "fields": {
             "paragraph": "SEL-32-3",
@@ -580,7 +580,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 59,
         "fields": {
             "paragraph": "SEL-32-a",
@@ -590,7 +590,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 60,
         "fields": {
             "paragraph": "SEL-32-a.1",
@@ -600,7 +600,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 61,
         "fields": {
             "paragraph": "SEL-32-a.3",
@@ -610,7 +610,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 62,
         "fields": {
             "paragraph": "SEL-32-a.4",
@@ -620,7 +620,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 63,
         "fields": {
             "paragraph": "SEL-32-a.5",
@@ -630,7 +630,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 64,
         "fields": {
             "paragraph": "SEL-32-a.6",
@@ -640,7 +640,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 65,
         "fields": {
             "paragraph": "SEL-32-",
@@ -650,7 +650,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 66,
         "fields": {
             "paragraph": "SEL-36-",
@@ -660,7 +660,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 67,
         "fields": {
             "paragraph": "SEL-41-",
@@ -670,7 +670,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 68,
         "fields": {
             "paragraph": "SEL-42-",
@@ -680,7 +680,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 69,
         "fields": {
             "paragraph": "SEL-43-",
@@ -690,7 +690,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 70,
         "fields": {
             "paragraph": "SEL-44-jfr. \u00a784",
@@ -700,7 +700,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 71,
         "fields": {
             "paragraph": "SEL-44-",
@@ -710,7 +710,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 72,
         "fields": {
             "paragraph": "SEL-44-",
@@ -720,7 +720,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 73,
         "fields": {
             "paragraph": "SEL-44-",
@@ -730,7 +730,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 74,
         "fields": {
             "paragraph": "SEL-44-",
@@ -740,7 +740,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 75,
         "fields": {
             "paragraph": "SEL-45-",
@@ -750,7 +750,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 76,
         "fields": {
             "paragraph": "SEL-50-b",
@@ -760,7 +760,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 77,
         "fields": {
             "paragraph": "SEL-50-",
@@ -770,7 +770,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 78,
         "fields": {
             "paragraph": "SEL-50-",
@@ -780,7 +780,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 79,
         "fields": {
             "paragraph": "SEL-51-2",
@@ -790,7 +790,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 80,
         "fields": {
             "paragraph": "SEL-51-",
@@ -800,7 +800,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 81,
         "fields": {
             "paragraph": "SEL-52-2",
@@ -810,7 +810,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 82,
         "fields": {
             "paragraph": "SEL-52-3.1",
@@ -820,7 +820,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 83,
         "fields": {
             "paragraph": "SEL-52-3.2",
@@ -830,7 +830,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 84,
         "fields": {
             "paragraph": "SEL-52-3.3",
@@ -840,7 +840,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 85,
         "fields": {
             "paragraph": "SEL-52-3.4",
@@ -850,7 +850,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 86,
         "fields": {
             "paragraph": "SEL-52-3.5",
@@ -860,7 +860,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 87,
         "fields": {
             "paragraph": "SEL-52-3.6",
@@ -870,7 +870,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 88,
         "fields": {
             "paragraph": "SEL-52-3.6",
@@ -880,7 +880,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 89,
         "fields": {
             "paragraph": "SEL-52-3.7",
@@ -890,7 +890,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 90,
         "fields": {
             "paragraph": "SEL-52-3.7",
@@ -900,7 +900,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 91,
         "fields": {
             "paragraph": "SEL-52-3.7",
@@ -910,7 +910,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 92,
         "fields": {
             "paragraph": "SEL-52-3.7",
@@ -920,7 +920,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 93,
         "fields": {
             "paragraph": "SEL-52-3.8",
@@ -930,7 +930,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 94,
         "fields": {
             "paragraph": "SEL-52-3.9",
@@ -940,7 +940,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 95,
         "fields": {
             "paragraph": "SEL-52-3.9",
@@ -950,7 +950,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 96,
         "fields": {
             "paragraph": "SEL-52-a.1.1",
@@ -960,7 +960,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 97,
         "fields": {
             "paragraph": "SEL-52-a.1.2",
@@ -970,7 +970,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 98,
         "fields": {
             "paragraph": "SEL-52-a.1.3",
@@ -980,7 +980,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 99,
         "fields": {
             "paragraph": "SEL-54-1",
@@ -990,7 +990,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 100,
         "fields": {
             "paragraph": "SEL-54-2",
@@ -1000,7 +1000,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 101,
         "fields": {
             "paragraph": "SEL-54-a",
@@ -1010,7 +1010,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 102,
         "fields": {
             "paragraph": "SEL-55-2",
@@ -1020,7 +1020,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 103,
         "fields": {
             "paragraph": "SEL-57-a",
@@ -1030,7 +1030,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 104,
         "fields": {
             "paragraph": "SEL-57-a.2.1",
@@ -1040,7 +1040,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 105,
         "fields": {
             "paragraph": "SEL-57-a.2.2",
@@ -1050,7 +1050,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 106,
         "fields": {
             "paragraph": "SEL-57-a.2.3",
@@ -1060,7 +1060,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 107,
         "fields": {
             "paragraph": "SEL-57-a.2.4",
@@ -1070,7 +1070,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 108,
         "fields": {
             "paragraph": "SEL-57-a.4",
@@ -1080,7 +1080,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 109,
         "fields": {
             "paragraph": "SEL-57-b",
@@ -1090,7 +1090,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 110,
         "fields": {
             "paragraph": "SEL-57-c.1",
@@ -1100,7 +1100,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 111,
         "fields": {
             "paragraph": "SEL-57-c.2",
@@ -1110,7 +1110,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 112,
         "fields": {
             "paragraph": "SEL-57-d.1",
@@ -1120,7 +1120,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 113,
         "fields": {
             "paragraph": "SEL-57-d.2",
@@ -1130,7 +1130,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 114,
         "fields": {
             "paragraph": "SEL-58-",
@@ -1140,7 +1140,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 115,
         "fields": {
             "paragraph": "SEL-63-",
@@ -1150,7 +1150,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 116,
         "fields": {
             "paragraph": "SEL-68-2",
@@ -1160,7 +1160,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 117,
         "fields": {
             "paragraph": "SEL-68-b.4",
@@ -1170,7 +1170,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 118,
         "fields": {
             "paragraph": "SEL-68-",
@@ -1180,7 +1180,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 119,
         "fields": {
             "paragraph": "SEL-71-2",
@@ -1190,7 +1190,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 120,
         "fields": {
             "paragraph": "SEL-71-3",
@@ -1200,7 +1200,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 121,
         "fields": {
             "paragraph": "SEL-71-8",
@@ -1210,7 +1210,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 122,
         "fields": {
             "paragraph": "SEL-71-",
@@ -1220,7 +1220,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 123,
         "fields": {
             "paragraph": "SEL-72-",
@@ -1230,7 +1230,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 124,
         "fields": {
             "paragraph": "SEL-76-1",
@@ -1240,7 +1240,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 125,
         "fields": {
             "paragraph": "SEL-76-2",
@@ -1250,7 +1250,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 126,
         "fields": {
             "paragraph": "SEL-76-3",
@@ -1260,7 +1260,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 127,
         "fields": {
             "paragraph": "SEL-76-4",
@@ -1270,7 +1270,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 128,
         "fields": {
             "paragraph": "SEL-76-5",
@@ -1280,7 +1280,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 129,
         "fields": {
             "paragraph": "SEL-76-6",
@@ -1290,7 +1290,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 130,
         "fields": {
             "paragraph": "SEL-76-8",
@@ -1300,7 +1300,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 131,
         "fields": {
             "paragraph": "SEL-76-3.1",
@@ -1310,7 +1310,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 132,
         "fields": {
             "paragraph": "SEL-76-3.1",
@@ -1320,7 +1320,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 133,
         "fields": {
             "paragraph": "SEL-76-3.2",
@@ -1330,7 +1330,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 134,
         "fields": {
             "paragraph": "SEL-76-3.3",
@@ -1340,7 +1340,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 135,
         "fields": {
             "paragraph": "SEL-76-3.4",
@@ -1350,7 +1350,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 136,
         "fields": {
             "paragraph": "SEL-76-3.4",
@@ -1360,7 +1360,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 137,
         "fields": {
             "paragraph": "SEL-76-a",
@@ -1370,7 +1370,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 138,
         "fields": {
             "paragraph": "SEL-78-",
@@ -1380,7 +1380,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 139,
         "fields": {
             "paragraph": "SEL-79-",
@@ -1390,7 +1390,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 140,
         "fields": {
             "paragraph": "SEL-80-",
@@ -1400,7 +1400,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 141,
         "fields": {
             "paragraph": "SEL-83-a",
@@ -1410,7 +1410,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 142,
         "fields": {
             "paragraph": "SEL-83-",
@@ -1420,7 +1420,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 143,
         "fields": {
             "paragraph": "SEL-83-",
@@ -1430,7 +1430,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 144,
         "fields": {
             "paragraph": "SEL-84-",
@@ -1440,7 +1440,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 145,
         "fields": {
             "paragraph": "SEL-85-",
@@ -1450,7 +1450,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 146,
         "fields": {
             "paragraph": "SEL-85-",
@@ -1460,7 +1460,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 147,
         "fields": {
             "paragraph": "SEL-86-",
@@ -1470,7 +1470,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 148,
         "fields": {
             "paragraph": "SEL-87-",
@@ -1480,7 +1480,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 149,
         "fields": {
             "paragraph": "SEL-94-",
@@ -1490,7 +1490,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 150,
         "fields": {
             "paragraph": "SEL-95-1",
@@ -1500,7 +1500,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 151,
         "fields": {
             "paragraph": "SEL-95-2",
@@ -1510,7 +1510,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 152,
         "fields": {
             "paragraph": "SEL-95-3",
@@ -1520,7 +1520,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 153,
         "fields": {
             "paragraph": "SEL-95-",
@@ -1530,7 +1530,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 154,
         "fields": {
             "paragraph": "SEL-96-1",
@@ -1540,7 +1540,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 155,
         "fields": {
             "paragraph": "SEL-96-3",
@@ -1550,7 +1550,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 156,
         "fields": {
             "paragraph": "SEL-96-b",
@@ -1560,7 +1560,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 157,
         "fields": {
             "paragraph": "SEL-96-",
@@ -1570,7 +1570,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 158,
         "fields": {
             "paragraph": "SEL-97-",
@@ -1580,7 +1580,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 159,
         "fields": {
             "paragraph": "SEL-97-",
@@ -1590,7 +1590,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 160,
         "fields": {
             "paragraph": "SEL-98-",
@@ -1600,7 +1600,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 161,
         "fields": {
             "paragraph": "SEL-99-",
@@ -1610,7 +1610,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 162,
         "fields": {
             "paragraph": "SEL-100-",
@@ -1620,7 +1620,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 163,
         "fields": {
             "paragraph": "SEL-101-3",
@@ -1630,7 +1630,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 164,
         "fields": {
             "paragraph": "SEL-101-a",
@@ -1640,7 +1640,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 165,
         "fields": {
             "paragraph": "SEL-101-",
@@ -1650,7 +1650,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 166,
         "fields": {
             "paragraph": "SEL-102-",
@@ -1660,7 +1660,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 167,
         "fields": {
             "paragraph": "SEL-102-",
@@ -1670,7 +1670,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 168,
         "fields": {
             "paragraph": "SEL-103-2",
@@ -1680,7 +1680,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 169,
         "fields": {
             "paragraph": "SEL-103-",
@@ -1690,7 +1690,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 170,
         "fields": {
             "paragraph": "SEL-103-",
@@ -1700,7 +1700,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 171,
         "fields": {
             "paragraph": "SEL-103-",
@@ -1710,7 +1710,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 172,
         "fields": {
             "paragraph": "SEL-104-",
@@ -1720,7 +1720,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 173,
         "fields": {
             "paragraph": "SEL-104-",
@@ -1730,7 +1730,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 174,
         "fields": {
             "paragraph": "SEL-104-",
@@ -1740,7 +1740,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 175,
         "fields": {
             "paragraph": "SEL-104-",
@@ -1750,7 +1750,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 176,
         "fields": {
             "paragraph": "SEL-105-",
@@ -1760,7 +1760,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 177,
         "fields": {
             "paragraph": "SEL-107-1",
@@ -1770,7 +1770,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 178,
         "fields": {
             "paragraph": "SEL-107-1",
@@ -1780,7 +1780,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 179,
         "fields": {
             "paragraph": "SEL-107-1",
@@ -1790,7 +1790,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 180,
         "fields": {
             "paragraph": "SEL-107-2.1",
@@ -1800,7 +1800,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 181,
         "fields": {
             "paragraph": "SEL-107-2.1",
@@ -1810,7 +1810,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 182,
         "fields": {
             "paragraph": "SEL-107-2.1",
@@ -1820,7 +1820,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 183,
         "fields": {
             "paragraph": "SEL-107-2.2",
@@ -1830,7 +1830,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 184,
         "fields": {
             "paragraph": "SEL-107-2.2",
@@ -1840,7 +1840,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 185,
         "fields": {
             "paragraph": "SEL-107-2.2",
@@ -1850,7 +1850,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 186,
         "fields": {
             "paragraph": "SEL-107-",
@@ -1860,7 +1860,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 187,
         "fields": {
             "paragraph": "SEL-108-",
@@ -1870,7 +1870,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 188,
         "fields": {
             "paragraph": "SEL-108-",
@@ -1880,7 +1880,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 189,
         "fields": {
             "paragraph": "SEL-108-",
@@ -1890,7 +1890,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 190,
         "fields": {
             "paragraph": "SEL-108-",
@@ -1900,7 +1900,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 191,
         "fields": {
             "paragraph": "SEL-109-2",
@@ -1910,7 +1910,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 192,
         "fields": {
             "paragraph": "SEL-109-7",
@@ -1920,7 +1920,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 193,
         "fields": {
             "paragraph": "SEL-109-8",
@@ -1930,7 +1930,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 194,
         "fields": {
             "paragraph": "SEL-109-",
@@ -1940,7 +1940,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 195,
         "fields": {
             "paragraph": "SEL-110-",
@@ -1950,7 +1950,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 196,
         "fields": {
             "paragraph": "SEL-112-",
@@ -1960,7 +1960,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 197,
         "fields": {
             "paragraph": "SEL-113-",
@@ -1970,7 +1970,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 198,
         "fields": {
             "paragraph": "SEL-114-",
@@ -1980,7 +1980,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 199,
         "fields": {
             "paragraph": "SEL-116-4",
@@ -1990,7 +1990,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 200,
         "fields": {
             "paragraph": "SEL-116-",
@@ -2000,7 +2000,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 201,
         "fields": {
             "paragraph": "SEL-117-",
@@ -2010,7 +2010,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 202,
         "fields": {
             "paragraph": "SEL-118-",
@@ -2020,7 +2020,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 203,
         "fields": {
             "paragraph": "SEL-119-",
@@ -2030,7 +2030,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 204,
         "fields": {
             "paragraph": "SEL-122-",
@@ -2040,7 +2040,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 205,
         "fields": {
             "paragraph": "SEL-140-",
@@ -2050,7 +2050,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 206,
         "fields": {
             "paragraph": "SEL-141-",
@@ -2060,7 +2060,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 207,
         "fields": {
             "paragraph": "SEL-152-",
@@ -2070,7 +2070,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 208,
         "fields": {
             "paragraph": "SEL-153-",
@@ -2080,7 +2080,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 209,
         "fields": {
             "paragraph": "SEL-154-",
@@ -2090,7 +2090,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 210,
         "fields": {
             "paragraph": "SEL-155-b.1",
@@ -2100,7 +2100,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 211,
         "fields": {
             "paragraph": "SEL-155-b.2",
@@ -2110,7 +2110,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 212,
         "fields": {
             "paragraph": "SEL-159-",
@@ -2120,7 +2120,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 213,
         "fields": {
             "paragraph": "SEL-160-",
@@ -2130,7 +2130,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 214,
         "fields": {
             "paragraph": "SEL-163-2",
@@ -2140,7 +2140,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 215,
         "fields": {
             "paragraph": "SEL-168-5",
@@ -2150,7 +2150,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 216,
         "fields": {
             "paragraph": "SEL-192-",
@@ -2160,7 +2160,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 217,
         "fields": {
             "paragraph": "SFL-78-a",
@@ -2170,7 +2170,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 218,
         "fields": {
             "paragraph": "SFL-78-",
@@ -2180,7 +2180,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 219,
         "fields": {
             "paragraph": "STU-2-1",
@@ -2190,7 +2190,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 220,
         "fields": {
             "paragraph": "STU-5-1",
@@ -2200,7 +2200,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 221,
         "fields": {
             "paragraph": "STU-10-",
@@ -2210,7 +2210,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 222,
         "fields": {
             "paragraph": "SUL-140-",
@@ -2220,7 +2220,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 223,
         "fields": {
             "paragraph": "SUL-141-",
@@ -2230,7 +2230,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 224,
         "fields": {
             "paragraph": "SUL-142-",
@@ -2240,7 +2240,7 @@ sections = [
         },
     },
     {
-        "model": "core.sections",
+        "model": "core.section",
         "pk": 225,
         "fields": {
             "paragraph": "UBA-8-3",

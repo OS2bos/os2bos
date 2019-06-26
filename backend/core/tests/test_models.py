@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from core.models import (
     Municipality,
     SchoolDistrict,
-    Sections,
+    Section,
     ActivityCatalog,
     Account,
     ApprovalLevel,
@@ -36,9 +36,9 @@ class TeamTestCase(TestCase):
         self.assertEqual(str(team), "C-BUR")
 
 
-class SectionsTestCase(TestCase):
-    def test_sections_str(self):
-        sections = Sections.objects.create(
+class SectionTestCase(TestCase):
+    def test_section_str(self):
+        sections = Section.objects.create(
             paragraph="ABL-105-2",
             kle_number="27.45.04",
             text="Lov om almene boliger",
@@ -66,7 +66,7 @@ class ActivityCatalogTestCase(TestCase):
 
 class AccountTestCase(TestCase):
     def test_account_str(self):
-        sections = Sections.objects.create(
+        sections = Section.objects.create(
             paragraph="ABL-105-2",
             kle_number="27.45.04",
             text="Lov om almene boliger",

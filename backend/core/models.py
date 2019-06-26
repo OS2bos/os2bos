@@ -230,7 +230,7 @@ class ApprovalLevel(models.Model):
         return f"{self.name}"
 
 
-class Sections(models.Model):
+class Section(models.Model):
     """Law sections and the corresponding KLE codes.
 
     Each section is associated with the target group for which it is
@@ -264,7 +264,7 @@ class Appropriation(AuditModelMixin, models.Model):
         unique=True, max_length=128, verbose_name=_("SBSYS-ID")
     )
     section = models.ForeignKey(
-        Sections,
+        Section,
         related_name="appropriations",
         null=True,
         blank=True,
@@ -336,10 +336,10 @@ class ActivityCatalog(models.Model):
         verbose_name=_("Max tolerance i DKK")
     )
     main_activity_for = models.ManyToManyField(
-        Sections, related_name="main_activities"
+        Section, related_name="main_activities"
     )
     supplementary_activity_for = models.ManyToManyField(
-        Sections, related_name="supplementary_activities"
+        Section, related_name="supplementary_activities"
     )
     service_providers = models.ManyToManyField(
         ServiceProvider, related_name="activity_catalogs"
@@ -469,14 +469,14 @@ class RelatedPerson(models.Model):
 class Account(models.Model):
     """Class containing account numbers.
 
-    Should have a different number for each (ActivityCatalog, Sections) pair.
+    Should have a different number for each (ActivityCatalog, Section) pair.
     """
 
     number = models.CharField(max_length=128)
     activity_catalog = models.ForeignKey(
         ActivityCatalog, null=False, on_delete=models.CASCADE
     )
-    section = models.ForeignKey(Sections, null=False, on_delete=models.CASCADE)
+    section = models.ForeignKey(Section, null=False, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.number} - {self.activity_catalog} - {self.section}"
