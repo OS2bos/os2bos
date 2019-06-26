@@ -1,12 +1,7 @@
 from datetime import date
 from decimal import Decimal
 
-from dateutil.rrule import (
-    rrule,
-    DAILY as DAILY_rrule,
-    WEEKLY as WEEKLY_rrule,
-    MONTHLY as MONTHLY_rrule,
-)
+from dateutil import rrule
 from django.db import models
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
@@ -16,6 +11,8 @@ from django.utils.translation import gettext_lazy as _
 from django.core.validators import MinValueValidator
 from django_audit_fields.models import AuditModelMixin
 from simple_history.models import HistoricalRecords
+
+from core.utils import compute_exclude_rruleset
 
 # Target group - definitions and choice list.
 FAMILY_DEPT = "FAMILY_DEPT"
@@ -168,12 +165,12 @@ class PaymentSchedule(models.Model):
     )
     # number of units to pay, ie. XX kilometres or hours
     payment_units = models.PositiveIntegerField(
-        verbose_name="betalingsenheder", blank=True, null=True
+        verbose_name=_("betalingsenheder"), blank=True, null=True
     )
     payment_amount = models.DecimalField(
         max_digits=14,
         decimal_places=2,
-        verbose_name="beløb",
+        verbose_name=_("beløb"),
         validators=[MinValueValidator(Decimal("0.01"))],
     )
 
@@ -182,21 +179,25 @@ class PaymentSchedule(models.Model):
         Create a dateutil.rrule based on payment_type/payment_frequency,
         start and end.
         """
+        rrule_set = rrule.rruleset(start)
         if self.payment_type == self.ONE_TIME_PAYMENT:
             rrule_frequency = rrule(
-                DAILY_rrule, count=1, dtstart=start, until=end
+                rrule.DAILY, count=1, dtstart=start
             )
         elif self.payment_frequency == self.DAILY:
-            rrule_frequency = rrule(DAILY_rrule, dtstart=start, until=end)
+            rrule_frequency = rrule(rrule.DAILY, dtstart=start, until=end)
         elif self.payment_frequency == self.WEEKLY:
-            rrule_frequency = rrule(WEEKLY_rrule, dtstart=start, until=end)
+            rrule_frequency = rrule(rrule.WEEKLY, dtstart=start, until=end)
         elif self.payment_frequency == self.MONTHLY:
             # If monthly, choose the first day of the month.
             rrule_frequency = rrule(
-                MONTHLY_rrule, dtstart=start, until=end, bymonthday=1
+                rrule.MONTHLY, dtstart=start, until=end, bymonthday=1
             )
         else:
             raise ValueError(_("ukendt betalingsfrekvens"))
+
+        rrule_set = compute_exclude_rruleset(rrule_set)
+
         return rrule_frequency
 
     def calculate_per_payment_amount(self, vat_factor):
@@ -262,10 +263,10 @@ class Payment(models.Model):
     amount = models.DecimalField(
         max_digits=14,
         decimal_places=2,
-        verbose_name="beløb",
+        verbose_name=_("beløb"),
         validators=[MinValueValidator(Decimal("0.01"))],
     )
-    paid = models.BooleanField(default=False, verbose_name="betalt")
+    paid = models.BooleanField(default=False, verbose_name=_("betalt"))
 
     payment_schedule = models.ForeignKey(
         PaymentSchedule, on_delete=models.CASCADE, related_name="payments"

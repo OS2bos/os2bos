@@ -1,7 +1,9 @@
 import os
 import logging
 import requests
+
 from django.conf import settings
+from dateutil import rrule
 
 from service_person_stamdata_udvidet import get_citizen
 
@@ -90,3 +92,32 @@ def get_cpr_data_mock(cpr):
         "kommunekode": "370",
     }
     return result
+
+def compute_exclude_rruleset(rrule_set, start):
+    # Exclude Saturday, Sunday.
+    rrule_set.exrule(rrule.rrule(rrule.YEARLY, byweekday=(rrule.SA, rrule.SU), dtstart=start))
+
+    # Exclude 'static holidays'
+    # Exclude Christmas days
+    rrule_set.exrule(rrule.rrule(rrule.YEARLY, bymonth=12, bymonthday=[24, 25, 26], dtstart=start))
+    # Exclude Grundlovsdag
+    rrule_set.exrule(rrule.rrule(rrule.YEARLY, bymonth=6, bymonthday=5, dtstart=start))
+    # Exclude New Years days
+    rrule_set.exrule(rrule.rrule(rrule.YEARLY, bymonth=12, bymonthday=31, dtstart=start))
+    rrule_set.exrule(rrule.rrule(rrule.YEARLY, bymonth=1, bymonthday=1, dtstart=start))
+
+    # Exclude Easter and dependant holidays
+    holidays_offset_from_easter = [
+        -7,      # Palmesøndag
+        -3,      # Skærtorsdag
+        -2,      # Langfredag
+        0,       # Påskedag
+        1,       # 2. Påskedag
+        7*7,     # Pinsedag
+        (7*7)+1, # 2. Pinsedag
+        (4*7)-2, # Store bededag
+        (-3)+6*7 # Kristi himmelfartsdag
+    ]
+    rrule_set.exrule(rrule.rrule(rrule.YEARLY, byeaster=holidays_offset_from_easter, dtstart=start))
+
+    return rrule_set
