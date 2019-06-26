@@ -318,7 +318,7 @@ class ServiceProvider(models.Model):
     vat_factor = models.DecimalField(max_digits=5, decimal_places=2)
 
 
-class ActivityCatalog(models.Model):
+class ActivityDetails(models.Model):
     """Class containing all services offered by this municipality.
 
     Each service is associated with the legal articles for which it is
@@ -353,7 +353,7 @@ class Activity(AuditModelMixin, models.Model):
     """An activity is a specific service provided within an appropriation."""
 
     # The service contains the name, tolerance, etc.
-    service = models.ForeignKey(ActivityCatalog, on_delete=models.PROTECT)
+    details = models.ForeignKey(ActivityDetails, on_delete=models.PROTECT)
 
     # Status - definitions and choice list.
     STATUS_EXPECTED = "EXPECTED"
@@ -469,12 +469,12 @@ class RelatedPerson(models.Model):
 class Account(models.Model):
     """Class containing account numbers.
 
-    Should have a different number for each (ActivityCatalog, Section) pair.
+    Should have a different number for each (ActivityDetails, Section) pair.
     """
 
     number = models.CharField(max_length=128)
     activity_catalog = models.ForeignKey(
-        ActivityCatalog, null=False, on_delete=models.CASCADE
+        ActivityDetails, null=False, on_delete=models.CASCADE
     )
     section = models.ForeignKey(Section, null=False, on_delete=models.CASCADE)
 

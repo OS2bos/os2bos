@@ -7,7 +7,7 @@ from core.models import (
     Municipality,
     SchoolDistrict,
     Section,
-    ActivityCatalog,
+    ActivityDetails,
     Account,
     ApprovalLevel,
     Team,
@@ -49,9 +49,9 @@ class SectionTestCase(TestCase):
         self.assertEqual(str(sections), "ABL-105-2 - 27.45.04")
 
 
-class ActivityCatalogTestCase(TestCase):
+class ActivityDetailsTestCase(TestCase):
     def test_activitycatalog_str(self):
-        catalog = ActivityCatalog.objects.create(
+        catalog = ActivityDetails.objects.create(
             name="Betaling til andre kommuner/region for specialtandpleje",
             activity_id="010001",
             max_tolerance_in_dkk=5000,
@@ -73,7 +73,7 @@ class AccountTestCase(TestCase):
             allowed_for_steps=[],
             law_text_name="Lov om almene boliger",
         )
-        catalog = ActivityCatalog.objects.create(
+        catalog = ActivityDetails.objects.create(
             name="Betaling til andre kommuner/region for specialtandpleje",
             activity_id="010001",
             max_tolerance_in_dkk=5000,
