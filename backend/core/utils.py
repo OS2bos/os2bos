@@ -94,7 +94,7 @@ def get_cpr_data_mock(cpr):
     return result
 
 
-def compute_exclude_rruleset(rrule_set, start):
+def exclude_holidays_from_rruleset(rrule_set, start):
     # Exclude Saturday, Sunday.
     rrule_set.exrule(
         rrule.rrule(

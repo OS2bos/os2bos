@@ -12,7 +12,7 @@ from django.core.validators import MinValueValidator
 from django_audit_fields.models import AuditModelMixin
 from simple_history.models import HistoricalRecords
 
-from core.utils import compute_exclude_rruleset
+from core.utils import exclude_holidays_from_rruleset
 
 # Target group - definitions and choice list.
 FAMILY_DEPT = "FAMILY_DEPT"
@@ -198,7 +198,7 @@ class PaymentSchedule(models.Model):
         else:
             raise ValueError(_("ukendt betalingsfrekvens"))
 
-        rrule_set = compute_exclude_rruleset(rrule_set)
+        rrule_set = exclude_holidays_from_rruleset(rrule_set)
 
         return rrule_frequency
 
