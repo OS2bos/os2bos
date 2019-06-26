@@ -342,7 +342,7 @@ class ActivityDetails(models.Model):
         Section, related_name="supplementary_activities"
     )
     service_providers = models.ManyToManyField(
-        ServiceProvider, related_name="activity_catalogs"
+        ServiceProvider, related_name="activities"
     )
 
     def __str__(self):
@@ -473,18 +473,18 @@ class Account(models.Model):
     """
 
     number = models.CharField(max_length=128)
-    activity_catalog = models.ForeignKey(
+    activity = models.ForeignKey(
         ActivityDetails, null=False, on_delete=models.CASCADE
     )
     section = models.ForeignKey(Section, null=False, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.number} - {self.activity_catalog} - {self.section}"
+        return f"{self.number} - {self.activity} - {self.section}"
 
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["activity_catalog", "section"],
+                fields=["activity", "section"],
                 name="unique_account_number",
             )
         ]

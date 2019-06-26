@@ -50,7 +50,7 @@ class SectionTestCase(TestCase):
 
 
 class ActivityDetailsTestCase(TestCase):
-    def test_activitycatalog_str(self):
+    def test_activitydetails_str(self):
         catalog = ActivityDetails.objects.create(
             name="Betaling til andre kommuner/region for specialtandpleje",
             activity_id="010001",
@@ -73,17 +73,17 @@ class AccountTestCase(TestCase):
             allowed_for_steps=[],
             law_text_name="Lov om almene boliger",
         )
-        catalog = ActivityDetails.objects.create(
+        activity_details = ActivityDetails.objects.create(
             name="Betaling til andre kommuner/region for specialtandpleje",
             activity_id="010001",
             max_tolerance_in_dkk=5000,
             max_tolerance_in_percent=10,
         )
         account = Account.objects.create(
-            number="123456", section=sections, activity_catalog=catalog
+            number="123456", section=sections, activity=activity_details
         )
 
-        self.assertEqual(str(account), f"123456 - {catalog} - {sections}")
+        self.assertEqual(str(account), f"123456 - {activity_details} - {sections}")
 
 
 class ApprovalLevelTestCase(TestCase):
