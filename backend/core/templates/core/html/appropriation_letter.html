@@ -17,7 +17,7 @@
                 <dl id="appropriation-details">
                     <dt>Status</dt>
                     <dd style="border-bottom: 1px solid #fff; padding-bottom: 1rem;">
-		    <strong>{{appropriation.status|title}} 30. juli 2019</strong>
+		    <strong>{{appropriation.status|title}} {{appropriation.modified}}</strong>
                     </dd>
                     <dt>Bevillingskompetence</dt>
                     <dd>
@@ -27,6 +27,9 @@
                     <dd>
 		    {{appropriation.section.paragraph}} {{appropriation.section.kle_number}} {{appropriation.section.text}}
                     </dd>
+
+		    <dt>SBSYS-skabelon-ID</dt>
+		    <dd>1230etellerandet</dd>
                 </dl>
 
                 <aside id="case-details">
