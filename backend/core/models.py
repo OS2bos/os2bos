@@ -342,7 +342,7 @@ class ActivityDetails(models.Model):
         Section, related_name="supplementary_activities"
     )
     service_providers = models.ManyToManyField(
-        ServiceProvider, related_name="activities"
+        ServiceProvider, related_name="supplied_activities"
     )
 
     def __str__(self):
