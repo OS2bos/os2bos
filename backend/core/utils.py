@@ -109,9 +109,14 @@ def send_appropriation(appropriation):
     # Generate PDF
     html_template = get_template(settings.SBSYS_APPROPRIATION_TEMPLATE)
     html_data = html_template.render(context=render_context)
-    pdf_data = HTML(string=html_data).write_pdf()
+
+    # Configure fonts for correct rendering.
+    font_config = FontConfiguration()
+    pdf_data = HTML(string=html_data).write_pdf(font_config=font_config)
     pdf_file_name = f"{appropriation.sbsys_id}.pdf"
-    HTML(string=html_data).write_pdf(f"core/migrations/{pdf_file_name}")
+    HTML(string=html_data).write_pdf(
+        f"core/migrations/{pdf_file_name}", font_config=font_config
+    )
 
     # Send as email
     msg = EmailMessage()
