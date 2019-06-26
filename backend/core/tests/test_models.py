@@ -83,7 +83,9 @@ class AccountTestCase(TestCase):
             number="123456", section=sections, activity=activity_details
         )
 
-        self.assertEqual(str(account), f"123456 - {activity_details} - {sections}")
+        self.assertEqual(
+            str(account), f"123456 - {activity_details} - {sections}"
+        )
 
 
 class ApprovalLevelTestCase(TestCase):

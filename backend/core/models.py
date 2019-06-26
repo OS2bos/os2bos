@@ -484,7 +484,6 @@ class Account(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["activity", "section"],
-                name="unique_account_number",
+                fields=["activity", "section"], name="unique_account_number"
             )
         ]
