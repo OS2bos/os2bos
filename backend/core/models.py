@@ -181,14 +181,14 @@ class PaymentSchedule(models.Model):
         """
         rrule_set = rrule.rruleset(start)
         if self.payment_type == self.ONE_TIME_PAYMENT:
-            rrule_frequency = rrule(rrule.DAILY, count=1, dtstart=start)
+            rrule_frequency = rrule.rrule(rrule.DAILY, count=1, dtstart=start)
         elif self.payment_frequency == self.DAILY:
-            rrule_frequency = rrule(rrule.DAILY, dtstart=start, until=end)
+            rrule_frequency = rrule.rrule(rrule.DAILY, dtstart=start, until=end)
         elif self.payment_frequency == self.WEEKLY:
-            rrule_frequency = rrule(rrule.WEEKLY, dtstart=start, until=end)
+            rrule_frequency = rrule.rrule(rrule.WEEKLY, dtstart=start, until=end)
         elif self.payment_frequency == self.MONTHLY:
             # If monthly, choose the first day of the month.
-            rrule_frequency = rrule(
+            rrule_frequency = rrule.rrule(
                 rrule.MONTHLY, dtstart=start, until=end, bymonthday=1
             )
         else:
