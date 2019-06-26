@@ -179,7 +179,8 @@ class PaymentSchedule(models.Model):
         Create a dateutil.rrule based on payment_type/payment_frequency,
         start and end.
         """
-        rrule_set = rrule.rruleset(start)
+        rrule_set = rrule.rruleset()
+
         if self.payment_type == self.ONE_TIME_PAYMENT:
             rrule_frequency = rrule.rrule(rrule.DAILY, count=1, dtstart=start)
         elif self.payment_frequency == self.DAILY:
@@ -198,9 +199,10 @@ class PaymentSchedule(models.Model):
         else:
             raise ValueError(_("ukendt betalingsfrekvens"))
 
-        rrule_set = exclude_holidays_from_rruleset(rrule_set)
+        rrule_set.rrule(rrule_frequency)
+        rrule_set = exclude_holidays_from_rruleset(rrule_set, start)
 
-        return rrule_frequency
+        return rrule_set
 
     def calculate_per_payment_amount(self, vat_factor):
 
