@@ -219,7 +219,7 @@ class PaymentSchedule(models.Model):
         """
         Generates payments with a start and end.
         """
-        # If no end is specified, choose end of the current year.
+        # If no end is specified, choose end of the next year.
         if not end:
             today = date.today()
             end = today.replace(
