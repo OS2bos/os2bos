@@ -5,7 +5,7 @@ Currently this requires the sheet "Paragraffer" be saved
 as "paragraffer.csv" in the current directory.
 """
 import csv
-from core.models import Sections
+from core.models import Section
 
 with open("paragraffer.csv") as csvfile:
     reader = csv.reader(csvfile)
@@ -15,6 +15,7 @@ with open("paragraffer.csv") as csvfile:
         key = row[3]
         text = row[4]
         kle = row[5]
+        sbsys_template_id = row[7]
 
         action_tracks = [x.strip() for x in row[10].split(",") if x != ""]
         target_groups = [x.strip() for x in row[11].split(",") if x != ""]
@@ -49,10 +50,11 @@ with open("paragraffer.csv") as csvfile:
         # ABL - Andelsboligloven
         # SUL - Sundhedsloven
         # STU - Lov om ungdomsuddannelse for unge med særlige behov
-        Sections.objects.update_or_create(
+        Section.objects.update_or_create(
             **{
                 "paragraph": key,
                 "kle_number": kle,
+                "sbsys_template_id": sbsys_template_id,
                 "text": text,
                 "law_text_name": law_text_name,
                 "allowed_for_disability_target_group": "Handicap"
