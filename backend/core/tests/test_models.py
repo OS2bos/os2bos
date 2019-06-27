@@ -372,7 +372,8 @@ class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin, ActivityMixin):
 
         with mock.patch("core.models.date") as date_mock:
             date_mock.today.return_value = date(year=2020, month=7, day=1)
-            date_mock.today.replace.return_value = date(year=2021, month=12, day=12)
+            date_mock.max.month = 12
+            date_mock.max.day = 31
             payment_schedule.synchronize_payments(start_date, end_date)
         self.assertEqual(len(payment_schedule.payments.all()), 36)
 

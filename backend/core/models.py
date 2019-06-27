@@ -242,6 +242,7 @@ class PaymentSchedule(models.Model):
 
     def synchronize_payments(self, start, end, vat_factor=Decimal("100")):
         today = date.today()
+
         # If no existing payments is generated we can't do anything.
         if not self.payments.exists():
             return
@@ -267,8 +268,8 @@ class PaymentSchedule(models.Model):
         if end and (newest_payment.date > end):
             self.payments.filter(date__gt=end).delete()
 
-        # If the newest payment has a date less than 6 months from now
-        # we can generate new payments for another period.
+        # If end is unbounded and the newest payment has a date less
+        # than 6 months from now we can generate new payments for another period.
         if not end and (newest_payment.date < today + relativedelta(months=6)):
             self.generate_payments(new_start)
 
