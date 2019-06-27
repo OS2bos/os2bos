@@ -165,12 +165,12 @@ class PaymentSchedule(models.Model):
     )
     # number of units to pay, ie. XX kilometres or hours
     payment_units = models.PositiveIntegerField(
-        verbose_name="betalingsenheder", blank=True, null=True
+        verbose_name=_("betalingsenheder"), blank=True, null=True
     )
     payment_amount = models.DecimalField(
         max_digits=14,
         decimal_places=2,
-        verbose_name="beløb",
+        verbose_name=_("beløb"),
         validators=[MinValueValidator(Decimal("0.01"))],
     )
 
@@ -266,10 +266,10 @@ class Payment(models.Model):
     amount = models.DecimalField(
         max_digits=14,
         decimal_places=2,
-        verbose_name="beløb",
+        verbose_name=_("beløb"),
         validators=[MinValueValidator(Decimal("0.01"))],
     )
-    paid = models.BooleanField(default=False, verbose_name="betalt")
+    paid = models.BooleanField(default=False, verbose_name=_("betalt"))
 
     payment_schedule = models.ForeignKey(
         PaymentSchedule, on_delete=models.CASCADE, related_name="payments"
