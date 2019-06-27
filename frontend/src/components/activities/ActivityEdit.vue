@@ -35,9 +35,9 @@
                     <textarea v-model="act.note"></textarea>
                 </fieldset>
                 <hr>
-                <payment-amount-edit :payment-obj="pay" @update="changePayAmount" />
-                <payment-receiver-edit :payment-obj="pay" @update="changePayReceiver" />
-                <payment-edit :payment-obj="pay" @update="changePayment" />
+                <payment-amount-edit :payment-obj="pay" />
+                <payment-receiver-edit :payment-obj="pay" />
+                <payment-edit :payment-obj="pay" />
                 <hr>
                 <fieldset>
                     <input type="submit" value="Gem">
@@ -75,7 +75,7 @@
             return {
                 act: {},
                 act_status_expected: false,
-                pay: null,
+                pay: {},
                 create_mode: true
             }
         },
@@ -87,15 +87,6 @@
         methods: {
             changeActivity: function(act) {
                 this.act.details = act
-            },
-            changePayAmount: function(obj) {
-
-            },
-            changePayReceiver: function(obj) {
-
-            },
-            changePayment: function(obj) {
-
             },
             saveChanges: function() {
                 let data = {
