@@ -21,12 +21,12 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="p in paymentsObj" :key="p.id">
+                <tr v-for="p in payments" :key="p.id">
                     <td>{{ displayDate(p.date) }}</td>
                     <td>{{ p.amount }}</td>
                     <td>
-                        <div v-if="p.paid === 'true'">Betalt</div>
-                        <div v-if="p.paid === 'false'">Ikke betalt</div>
+                        <div v-if="p.paid === true">Betalt</div>
+                        <div v-if="p.paid === false">Ikke betalt</div>
                     </td>
                 </tr>
             </tbody>
@@ -44,7 +44,11 @@
         props: [
             'paymentsObj'
         ],
-
+        computed: {
+            payments: function() {
+                return this.paymentsObj
+            }
+        },
         methods: {
             displayDate: function(dt) {
                 return json2js(dt)
