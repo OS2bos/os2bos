@@ -352,7 +352,7 @@ class ActivityDetails(models.Model):
 class Activity(AuditModelMixin, models.Model):
     """An activity is a specific service provided within an appropriation."""
 
-    # The service contains the name, tolerance, etc.
+    # The details object contains the name, tolerance, etc. of the service.
     details = models.ForeignKey(ActivityDetails, on_delete=models.PROTECT)
 
     # Status - definitions and choice list.
