@@ -53,6 +53,12 @@
                     <div v-if="pay.payment_frequency === 'WEEKLY'">Ugentligt</div>
                     <div v-if="pay.payment_frequency === 'MONTHLY'">Månedligt</div>
                 </dd>
+                <dt>
+                    <div v-if="pay.payment_type === 'PER_HOUR_PAYMENT'">Timer</div>
+                    <div v-if="pay.payment_type === 'PER_DAY_PAYMENT'">Døgn</div>
+                    <div v-if="pay.payment_type === 'PER_KM_PAYMENT'">Kilometer</div>
+                </dt>
+                <dd>{{ pay.payment_units }}</dd>
                 <dt>Beløb</dt>
                 <dd>{{ pay.payment_amount }} kr.</dd>
             </dl>
