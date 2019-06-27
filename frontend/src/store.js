@@ -5,6 +5,8 @@ import nav from './store-modules/nav.js'
 import lists from './store-modules/lists.js'
 import activity from './store-modules/activity.js'
 import payment from './store-modules/payment.js'
+import appropriation from './store-modules/appropriation.js'
+import main_case from './store-modules/case.js'
 
 Vue.use(Vuex)
 
@@ -14,6 +16,8 @@ export default new Vuex.Store({
         nav,
         lists,
         activity,
-        payment
+        payment,
+        appropriation,
+        main_case
     }
 })

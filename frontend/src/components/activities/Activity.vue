@@ -108,8 +108,6 @@
         },
         data: function() {
             return {
-                appr: null,
-                cas: null,
                 payments: null,
                 show_edit: false
             }
@@ -120,47 +118,39 @@
             },
             pay: function() {
                 return this.$store.getters.getPaymentSchedule
+            },
+            appr: function() {
+                return this.$store.getters.getAppropriation
+            },
+            cas: function() {
+                return this.$store.getters.getCase
+            }
+        },
+        watch: {
+            cas: function() {
+                if (this.cas) {
+                    this.$store.commit('setBreadcrumb', [
+                        {
+                            link: '/',
+                            title: 'Mine sager'
+                        },
+                        {
+                            link: `/case/${ this.cas.id }`,
+                            title: `Hovedsag ${ this.cas.sbsys_id }`
+                        },
+                        {
+                            link: `/appropriation/${ this.appr.id }`,
+                            title: `Foranstaltning ${ this.appr.sbsys_id }`
+                        },
+                        {
+                            link: false,
+                            title: `Udgift til ${ activityId2name(this.act.details) }`
+                        }
+                    ])
+                }
             }
         },
         methods: {
-            fetch_info: function(act) {
-                axios.get(`/appropriations/${ act.appropriation }`)
-                .then(resp => {
-                    this.appr = resp.data
-                    axios.get(`/cases/${ this.appr.case }`)
-                    .then(response => {
-                        this.cas = response.data
-                        this.$store.commit('setBreadcrumb', [
-                            {
-                                link: '/',
-                                title: 'Mine sager'
-                            },
-                            {
-                                link: `/case/${ this.cas.id }`,
-                                title: `Hovedsag ${ this.cas.sbsys_id }`
-                            },
-                            {
-                                link: `/appropriation/${ this.appr.id }`,
-                                title: `Foranstaltning ${ this.appr.sbsys_id }`
-                            },
-                            {
-                                link: false,
-                                title: `Udgift til ${ activityId2name(this.act.details) }`
-                            }
-                        ])
-                    })
-                    .then(resp => {
-                            axios.get(`/payment_schedules/${ this.act.payment_plan }`)
-                            .then(response => {
-                                this.pay = response.data
-                                    axios.get(`/payments/?payment_schedules=${ this.pay.payments.payment_schedule }`)
-                                .then(respon => {
-                                    this.payments = respon.data
-                                })
-                            })
-                    })
-                })
-            },
             reload: function() {
                 this.show_edit =  false
             },

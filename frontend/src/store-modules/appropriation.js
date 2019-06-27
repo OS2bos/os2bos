@@ -1,91 +1,29 @@
 import axios from '../components/http/Http.js'
 
 const state = {
-    municipalities: null,
-    districts: null,
-    activities: null,
-    sections: null,
-    users: null
+    appropriation: null
 }
 
 const getters = {
-    getMunis (state) {
-        return state.municipalities ? state.municipalities : false
-    },
-    getDistricts (state) {
-        return state.districts ? state.districts : false
-    },
-    getActivities (state) {
-        return state.activities ? state.activities : false
-    },
-    getSections (state) {
-        return state.sections ? state.sections : false
-    },
-    getUsers (state) {
-        return state.users ? state.users : false
+    getAppropriation (state) {
+        return state.appropriation ? state.appropriation : false
     }
 }
 
 const mutations = {
-    setMunis (state, munis) {
-        state.municipalities = munis
-    },
-    setDist (state, districts) {
-        state.districts = districts
-    },
-    setAct (state, activities) {
-        state.activities = activities
-    },
-    setSections (state, sections) {
-        state.sections = sections
-    },
-    setUsers (state, users) {
-        state.users = users
+    setAppropriation (state, appropriation) {
+        state.appropriation = appropriation
     }
 }
 
 const actions = {
-    fetchMunis: function({commit}) {
-        axios.get('/municipalities/')
+    fetchAppropriation: function({commit,dispatch}, appr_id) {
+        axios.get(`/appropriations/${ appr_id }/`)
         .then(res => {
-            commit('setMunis', res.data)
+            dispatch('fetchCase', res.data.case)
+            commit('setAppropriation', res.data)
         })
         .catch(err => console.log(err))
-    },
-    fetchDistricts: function({commit}) {
-        axios.get('/school_districts/')
-        .then(res => {
-            commit('setDist', res.data)
-        })
-        .catch(err => console.log(err))
-    },
-    fetchActivities: function({commit}) {
-        axios.get('/activity_details/')
-        .then(res => {
-            commit('setAct', res.data)
-        })
-        .catch(err => console.log(err))
-    },
-    fetchSections: function({commit}) {
-        axios.get('/sections/')
-        .then(res => {
-            commit('setSections', res.data)
-        })
-        .catch(err => console.log(err))
-    },
-    fetchUsers: function({commit}) {
-        axios.get('/users/')
-        .then(res => {
-            commit('setUsers', res.data)
-        })
-        .catch(err => console.log(err))
-    },
-    fetchLists: function({dispatch}) {
-        dispatch('fetchMunis')
-        dispatch('fetchDistricts')
-        dispatch('fetchActivities')
-        dispatch('fetchSections')
-        dispatch('fetchUsers')
     }
 }
 

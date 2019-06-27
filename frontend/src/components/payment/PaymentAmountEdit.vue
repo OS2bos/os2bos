@@ -112,7 +112,6 @@
             }
         },
         created: function() {
-            console.log(this.paymentObj)
             if (this.paymentObj) {
                 this.entry = this.paymentObj
             }

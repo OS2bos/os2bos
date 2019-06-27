@@ -80,15 +80,20 @@
         },
         data: function() {
             return {
-                appr: null,
                 cas: null,
                 show_edit: false
+            }
+        },
+        computed: {
+            appr: function() {
+                return this.$store.getters.getAppropriation
             }
         },
         methods: {
             update: function() {
                 this.show_edit =  false
                 this.fetchAppr(this.$route.params.id)
+                this.$store.dispatch('fetchAppropriation', this.$route.params.id)
             },
             fetchAppr: function(id) {
                 axios.get(`/appropriations/${ id }`)
