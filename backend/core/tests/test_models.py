@@ -318,7 +318,7 @@ class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin, ActivityMixin):
 
         self.assertEqual(amount, expected)
 
-    def test_calculate_per_payment_amount_invalid_payment_type(self,):
+    def test_calculate_per_payment_amount_invalid_payment_type(self):
         payment_schedule = self.create_payment_schedule(
             payment_type="ugyldig betalingstype",
             payment_frequency=PaymentSchedule.DAILY,
@@ -329,7 +329,7 @@ class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin, ActivityMixin):
                 vat_factor=Decimal("100")
             )
 
-    def test_generate_payments(self,):
+    def test_generate_payments(self):
         payment_schedule = self.create_payment_schedule(
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
             payment_frequency=PaymentSchedule.DAILY,
@@ -343,7 +343,7 @@ class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin, ActivityMixin):
         self.assertIsNotNone(payment_schedule.payments)
         self.assertEqual(len(payment_schedule.payments.all()), 10)
 
-    def test_generate_payments_no_end_date(self,):
+    def test_generate_payments_no_end_date(self):
         payment_schedule = self.create_payment_schedule(
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
             payment_frequency=PaymentSchedule.MONTHLY,

@@ -268,9 +268,7 @@ class PaymentSchedule(models.Model):
 
         # If the newest payment has a date less than 6 months from now
         # we can generate new payments for another period.
-        if not end and (
-            newest_payment.date < today + relativedelta(months=6)
-        ):
+        if not end and (newest_payment.date < today + relativedelta(months=6)):
             self.generate_payments(new_start)
 
 
