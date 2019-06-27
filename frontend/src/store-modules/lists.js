@@ -60,7 +60,7 @@ const actions = {
         .catch(err => console.log(err))
     },
     fetchActivities: function({commit}) {
-        axios.get('/activity_catalogs/')
+        axios.get('/activity_details/')
         .then(res => {
             commit('setAct', res.data)
         })
