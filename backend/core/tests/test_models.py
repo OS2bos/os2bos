@@ -350,8 +350,9 @@ class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin, ActivityMixin):
             payment_amount=Decimal("100"),
         )
         start_date = date(year=2019, month=1, day=1)
-        # Start in January and no end should generate 12 monthly payments.
+        # Start in January and no end should generate 24 monthly payments
+        # (till end of next year)
         payment_schedule.generate_payments(start_date, None)
 
         self.assertIsNotNone(payment_schedule.payments)
-        self.assertEqual(len(payment_schedule.payments.all()), 12)
+        self.assertEqual(len(payment_schedule.payments.all()), 24)
