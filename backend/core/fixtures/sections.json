@@ -1,6 +1,6 @@
 [
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 226,
     "fields": {
       "paragraph": "ABL-54-",
@@ -13,7 +13,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 227,
     "fields": {
       "paragraph": "ABL-105-2",
@@ -26,7 +26,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 228,
     "fields": {
       "paragraph": "AKL-46-",
@@ -39,7 +39,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 229,
     "fields": {
       "paragraph": "AKL-83-",
@@ -52,7 +52,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 230,
     "fields": {
       "paragraph": "AKL-84-",
@@ -65,7 +65,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 231,
     "fields": {
       "paragraph": "DTL-4-",
@@ -78,7 +78,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 232,
     "fields": {
       "paragraph": "DTL-41-7",
@@ -91,7 +91,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 233,
     "fields": {
       "paragraph": "DTL-43-1.3",
@@ -104,7 +104,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 234,
     "fields": {
       "paragraph": "DTL-43-1.4",
@@ -117,7 +117,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 235,
     "fields": {
       "paragraph": "DTL-43-",
@@ -130,7 +130,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 236,
     "fields": {
       "paragraph": "DTL-63-1.3",
@@ -143,7 +143,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 237,
     "fields": {
       "paragraph": "DTL-63-1.4",
@@ -156,7 +156,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 238,
     "fields": {
       "paragraph": "DTL-63-",
@@ -169,7 +169,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 239,
     "fields": {
       "paragraph": "DTL-76-",
@@ -182,7 +182,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 240,
     "fields": {
       "paragraph": "DTL-80-",
@@ -195,7 +195,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 241,
     "fields": {
       "paragraph": "FSL-3-4",
@@ -208,7 +208,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 242,
     "fields": {
       "paragraph": "FSL-12-2",
@@ -221,7 +221,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 243,
     "fields": {
       "paragraph": "FSL-20-1",
@@ -234,7 +234,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 244,
     "fields": {
       "paragraph": "FSL-20-2",
@@ -247,7 +247,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 245,
     "fields": {
       "paragraph": "FSL-20-3",
@@ -260,7 +260,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 246,
     "fields": {
       "paragraph": "FSL-20-5",
@@ -273,7 +273,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 247,
     "fields": {
       "paragraph": "FSL-23-",
@@ -286,7 +286,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 248,
     "fields": {
       "paragraph": "FSL-26-",
@@ -299,7 +299,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 249,
     "fields": {
       "paragraph": "FSL-36-3",
@@ -312,7 +312,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 250,
     "fields": {
       "paragraph": "FSL-36-6",
@@ -325,7 +325,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 251,
     "fields": {
       "paragraph": "FSL-36-7",
@@ -338,7 +338,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 252,
     "fields": {
       "paragraph": "IGL-23-D",
@@ -351,7 +351,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 253,
     "fields": {
       "paragraph": "LAB-22-",
@@ -364,7 +364,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 254,
     "fields": {
       "paragraph": "LAB-32-2",
@@ -377,7 +377,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 255,
     "fields": {
       "paragraph": "LAB-32-1.1",
@@ -390,7 +390,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 256,
     "fields": {
       "paragraph": "LAB-32-1.2",
@@ -403,7 +403,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 257,
     "fields": {
       "paragraph": "LAB-32-",
@@ -416,7 +416,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 258,
     "fields": {
       "paragraph": "LAB-42-",
@@ -429,7 +429,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 259,
     "fields": {
       "paragraph": "LAB-51-",
@@ -442,7 +442,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 260,
     "fields": {
       "paragraph": "LAB-74-",
@@ -455,7 +455,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 261,
     "fields": {
       "paragraph": "LAB-76-",
@@ -468,7 +468,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 262,
     "fields": {
       "paragraph": "LAB-78-",
@@ -481,7 +481,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 263,
     "fields": {
       "paragraph": "LSV-1-1",
@@ -494,7 +494,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 264,
     "fields": {
       "paragraph": "SEL-10-",
@@ -507,7 +507,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 265,
     "fields": {
       "paragraph": "SEL-11-2",
@@ -520,7 +520,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 266,
     "fields": {
       "paragraph": "SEL-11-3",
@@ -533,7 +533,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 267,
     "fields": {
       "paragraph": "SEL-11-4",
@@ -546,7 +546,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 268,
     "fields": {
       "paragraph": "SEL-11-6",
@@ -559,7 +559,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 269,
     "fields": {
       "paragraph": "SEL-11-7",
@@ -572,7 +572,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 270,
     "fields": {
       "paragraph": "SEL-11-7",
@@ -585,7 +585,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 271,
     "fields": {
       "paragraph": "SEL-11-8",
@@ -598,7 +598,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 272,
     "fields": {
       "paragraph": "SEL-11-8",
@@ -611,7 +611,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 273,
     "fields": {
       "paragraph": "SEL-11-3.1",
@@ -624,7 +624,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 274,
     "fields": {
       "paragraph": "SEL-11-3.2",
@@ -637,7 +637,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 275,
     "fields": {
       "paragraph": "SEL-11-3.3",
@@ -650,7 +650,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 276,
     "fields": {
       "paragraph": "SEL-11-3.4",
@@ -663,7 +663,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 277,
     "fields": {
       "paragraph": "SEL-11-4.1",
@@ -676,7 +676,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 278,
     "fields": {
       "paragraph": "SEL-11-4.1. jfr. stk. 3. nr. 1",
@@ -689,7 +689,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 279,
     "fields": {
       "paragraph": "SEL-11-4.2",
@@ -702,7 +702,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 280,
     "fields": {
       "paragraph": "SEL-12-a",
@@ -715,7 +715,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 281,
     "fields": {
       "paragraph": "SEL-12-b",
@@ -728,7 +728,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 282,
     "fields": {
       "paragraph": "SEL-12-",
@@ -741,7 +741,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 283,
     "fields": {
       "paragraph": "SEL-32-3",
@@ -754,7 +754,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 284,
     "fields": {
       "paragraph": "SEL-32-a",
@@ -767,7 +767,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 285,
     "fields": {
       "paragraph": "SEL-32-a.1",
@@ -780,7 +780,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 286,
     "fields": {
       "paragraph": "SEL-32-a.3",
@@ -793,7 +793,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 287,
     "fields": {
       "paragraph": "SEL-32-a.4",
@@ -806,7 +806,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 288,
     "fields": {
       "paragraph": "SEL-32-a.5",
@@ -819,7 +819,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 289,
     "fields": {
       "paragraph": "SEL-32-a.6",
@@ -832,7 +832,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 290,
     "fields": {
       "paragraph": "SEL-32-",
@@ -845,7 +845,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 291,
     "fields": {
       "paragraph": "SEL-36-",
@@ -858,7 +858,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 292,
     "fields": {
       "paragraph": "SEL-41-",
@@ -871,7 +871,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 293,
     "fields": {
       "paragraph": "SEL-42-",
@@ -884,7 +884,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 294,
     "fields": {
       "paragraph": "SEL-43-",
@@ -897,7 +897,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 295,
     "fields": {
       "paragraph": "SEL-44-jfr. §84",
@@ -910,7 +910,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 296,
     "fields": {
       "paragraph": "SEL-44-jfr. §84",
@@ -923,7 +923,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 297,
     "fields": {
       "paragraph": "SEL-44-jfr. §84",
@@ -936,7 +936,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 298,
     "fields": {
       "paragraph": "SEL-44-jfr. §84",
@@ -949,7 +949,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 299,
     "fields": {
       "paragraph": "SEL-44-jfr. §84",
@@ -962,7 +962,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 300,
     "fields": {
       "paragraph": "SEL-45-",
@@ -975,7 +975,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 301,
     "fields": {
       "paragraph": "SEL-50-b",
@@ -988,7 +988,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 302,
     "fields": {
       "paragraph": "SEL-50-",
@@ -1001,7 +1001,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 303,
     "fields": {
       "paragraph": "SEL-50-",
@@ -1014,7 +1014,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 304,
     "fields": {
       "paragraph": "SEL-51-2",
@@ -1027,7 +1027,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 305,
     "fields": {
       "paragraph": "SEL-51-",
@@ -1040,7 +1040,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 306,
     "fields": {
       "paragraph": "SEL-52-2",
@@ -1053,7 +1053,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 307,
     "fields": {
       "paragraph": "SEL-52-3.1",
@@ -1066,7 +1066,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 308,
     "fields": {
       "paragraph": "SEL-52-3.2",
@@ -1079,7 +1079,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 309,
     "fields": {
       "paragraph": "SEL-52-3.3",
@@ -1092,7 +1092,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 310,
     "fields": {
       "paragraph": "SEL-52-3.4",
@@ -1105,7 +1105,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 311,
     "fields": {
       "paragraph": "SEL-52-3.5",
@@ -1118,7 +1118,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 312,
     "fields": {
       "paragraph": "SEL-52-3.6",
@@ -1131,7 +1131,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 313,
     "fields": {
       "paragraph": "SEL-52-3.6",
@@ -1144,7 +1144,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 314,
     "fields": {
       "paragraph": "SEL-52-3.7",
@@ -1157,7 +1157,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 315,
     "fields": {
       "paragraph": "SEL-52-3.7",
@@ -1170,7 +1170,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 316,
     "fields": {
       "paragraph": "SEL-52-3.7",
@@ -1183,7 +1183,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 317,
     "fields": {
       "paragraph": "SEL-52-3.7",
@@ -1196,7 +1196,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 318,
     "fields": {
       "paragraph": "SEL-52-3.8",
@@ -1209,7 +1209,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 319,
     "fields": {
       "paragraph": "SEL-52-3.9",
@@ -1222,7 +1222,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 320,
     "fields": {
       "paragraph": "SEL-52-3.9",
@@ -1235,7 +1235,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 321,
     "fields": {
       "paragraph": "SEL-52-a.1.1",
@@ -1248,7 +1248,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 322,
     "fields": {
       "paragraph": "SEL-52-a.1.2",
@@ -1261,7 +1261,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 323,
     "fields": {
       "paragraph": "SEL-52-a.1.3",
@@ -1274,7 +1274,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 324,
     "fields": {
       "paragraph": "SEL-54-1",
@@ -1287,7 +1287,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 325,
     "fields": {
       "paragraph": "SEL-54-2",
@@ -1300,7 +1300,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 326,
     "fields": {
       "paragraph": "SEL-54-a",
@@ -1313,7 +1313,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 327,
     "fields": {
       "paragraph": "SEL-55-2",
@@ -1326,7 +1326,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 328,
     "fields": {
       "paragraph": "SEL-57-a",
@@ -1339,7 +1339,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 329,
     "fields": {
       "paragraph": "SEL-57-a.2.1",
@@ -1352,7 +1352,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 330,
     "fields": {
       "paragraph": "SEL-57-a.2.2",
@@ -1365,7 +1365,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 331,
     "fields": {
       "paragraph": "SEL-57-a.2.3",
@@ -1378,7 +1378,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 332,
     "fields": {
       "paragraph": "SEL-57-a.2.4",
@@ -1391,7 +1391,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 333,
     "fields": {
       "paragraph": "SEL-57-a.4",
@@ -1404,7 +1404,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 334,
     "fields": {
       "paragraph": "SEL-57-b",
@@ -1417,7 +1417,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 335,
     "fields": {
       "paragraph": "SEL-57-c.1",
@@ -1430,7 +1430,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 336,
     "fields": {
       "paragraph": "SEL-57-c.2",
@@ -1443,7 +1443,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 337,
     "fields": {
       "paragraph": "SEL-57-d.1",
@@ -1456,7 +1456,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 338,
     "fields": {
       "paragraph": "SEL-57-d.2",
@@ -1469,7 +1469,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 339,
     "fields": {
       "paragraph": "SEL-58-",
@@ -1482,7 +1482,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 340,
     "fields": {
       "paragraph": "SEL-63-",
@@ -1495,7 +1495,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 341,
     "fields": {
       "paragraph": "SEL-68-2",
@@ -1508,7 +1508,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 342,
     "fields": {
       "paragraph": "SEL-68-b.4",
@@ -1521,7 +1521,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 343,
     "fields": {
       "paragraph": "SEL-68-",
@@ -1534,7 +1534,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 344,
     "fields": {
       "paragraph": "SEL-71-2",
@@ -1547,7 +1547,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 345,
     "fields": {
       "paragraph": "SEL-71-3",
@@ -1560,7 +1560,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 346,
     "fields": {
       "paragraph": "SEL-71-8",
@@ -1573,7 +1573,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 347,
     "fields": {
       "paragraph": "SEL-71-",
@@ -1586,7 +1586,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 348,
     "fields": {
       "paragraph": "SEL-72-",
@@ -1599,7 +1599,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 349,
     "fields": {
       "paragraph": "SEL-76-1",
@@ -1612,7 +1612,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 350,
     "fields": {
       "paragraph": "SEL-76-2",
@@ -1625,7 +1625,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 351,
     "fields": {
       "paragraph": "SEL-76-3",
@@ -1638,7 +1638,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 352,
     "fields": {
       "paragraph": "SEL-76-4",
@@ -1651,7 +1651,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 353,
     "fields": {
       "paragraph": "SEL-76-5",
@@ -1664,7 +1664,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 354,
     "fields": {
       "paragraph": "SEL-76-6",
@@ -1677,7 +1677,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 355,
     "fields": {
       "paragraph": "SEL-76-8",
@@ -1690,7 +1690,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 356,
     "fields": {
       "paragraph": "SEL-76-3.1",
@@ -1703,7 +1703,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 357,
     "fields": {
       "paragraph": "SEL-76-3.1",
@@ -1716,7 +1716,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 358,
     "fields": {
       "paragraph": "SEL-76-3.2",
@@ -1729,7 +1729,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 359,
     "fields": {
       "paragraph": "SEL-76-3.3",
@@ -1742,7 +1742,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 360,
     "fields": {
       "paragraph": "SEL-76-3.4",
@@ -1755,7 +1755,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 361,
     "fields": {
       "paragraph": "SEL-76-3.4",
@@ -1768,7 +1768,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 362,
     "fields": {
       "paragraph": "SEL-76-a",
@@ -1781,7 +1781,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 363,
     "fields": {
       "paragraph": "SEL-78-",
@@ -1794,7 +1794,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 364,
     "fields": {
       "paragraph": "SEL-79-",
@@ -1807,7 +1807,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 365,
     "fields": {
       "paragraph": "SEL-80-",
@@ -1820,7 +1820,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 366,
     "fields": {
       "paragraph": "SEL-83-a",
@@ -1833,7 +1833,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 367,
     "fields": {
       "paragraph": "SEL-83-",
@@ -1846,7 +1846,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 368,
     "fields": {
       "paragraph": "SEL-83-",
@@ -1859,7 +1859,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 369,
     "fields": {
       "paragraph": "SEL-84-",
@@ -1872,7 +1872,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 370,
     "fields": {
       "paragraph": "SEL-85-",
@@ -1885,7 +1885,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 371,
     "fields": {
       "paragraph": "SEL-85-",
@@ -1898,7 +1898,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 372,
     "fields": {
       "paragraph": "SEL-86-",
@@ -1911,7 +1911,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 373,
     "fields": {
       "paragraph": "SEL-87-",
@@ -1924,7 +1924,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 374,
     "fields": {
       "paragraph": "SEL-94-",
@@ -1937,7 +1937,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 375,
     "fields": {
       "paragraph": "SEL-95-1",
@@ -1950,7 +1950,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 376,
     "fields": {
       "paragraph": "SEL-95-2",
@@ -1963,7 +1963,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 377,
     "fields": {
       "paragraph": "SEL-95-3",
@@ -1976,7 +1976,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 378,
     "fields": {
       "paragraph": "SEL-95-",
@@ -1989,7 +1989,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 379,
     "fields": {
       "paragraph": "SEL-96-1",
@@ -2002,7 +2002,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 380,
     "fields": {
       "paragraph": "SEL-96-3",
@@ -2015,7 +2015,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 381,
     "fields": {
       "paragraph": "SEL-96-b",
@@ -2028,7 +2028,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 382,
     "fields": {
       "paragraph": "SEL-96-",
@@ -2041,7 +2041,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 383,
     "fields": {
       "paragraph": "SEL-97-",
@@ -2054,7 +2054,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 384,
     "fields": {
       "paragraph": "SEL-97-",
@@ -2067,7 +2067,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 385,
     "fields": {
       "paragraph": "SEL-98-",
@@ -2080,7 +2080,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 386,
     "fields": {
       "paragraph": "SEL-99-",
@@ -2093,7 +2093,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 387,
     "fields": {
       "paragraph": "SEL-100-",
@@ -2106,7 +2106,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 388,
     "fields": {
       "paragraph": "SEL-101-3",
@@ -2119,7 +2119,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 389,
     "fields": {
       "paragraph": "SEL-101-a",
@@ -2132,7 +2132,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 390,
     "fields": {
       "paragraph": "SEL-101-",
@@ -2145,7 +2145,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 391,
     "fields": {
       "paragraph": "SEL-102-",
@@ -2158,7 +2158,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 392,
     "fields": {
       "paragraph": "SEL-102-",
@@ -2171,7 +2171,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 393,
     "fields": {
       "paragraph": "SEL-103-2",
@@ -2184,7 +2184,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 394,
     "fields": {
       "paragraph": "SEL-103-",
@@ -2197,7 +2197,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 395,
     "fields": {
       "paragraph": "SEL-103-",
@@ -2210,7 +2210,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 396,
     "fields": {
       "paragraph": "SEL-103-",
@@ -2223,7 +2223,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 397,
     "fields": {
       "paragraph": "SEL-104-",
@@ -2236,7 +2236,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 398,
     "fields": {
       "paragraph": "SEL-104-",
@@ -2249,7 +2249,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 399,
     "fields": {
       "paragraph": "SEL-104-",
@@ -2262,7 +2262,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 400,
     "fields": {
       "paragraph": "SEL-104-",
@@ -2275,7 +2275,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 401,
     "fields": {
       "paragraph": "SEL-105-",
@@ -2288,7 +2288,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 402,
     "fields": {
       "paragraph": "SEL-107-1",
@@ -2301,7 +2301,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 403,
     "fields": {
       "paragraph": "SEL-107-1",
@@ -2314,7 +2314,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 404,
     "fields": {
       "paragraph": "SEL-107-1",
@@ -2327,7 +2327,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 405,
     "fields": {
       "paragraph": "SEL-107-2.1",
@@ -2340,7 +2340,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 406,
     "fields": {
       "paragraph": "SEL-107-2.1",
@@ -2353,7 +2353,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 407,
     "fields": {
       "paragraph": "SEL-107-2.1",
@@ -2366,7 +2366,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 408,
     "fields": {
       "paragraph": "SEL-107-2.2",
@@ -2379,7 +2379,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 409,
     "fields": {
       "paragraph": "SEL-107-2.2",
@@ -2392,7 +2392,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 410,
     "fields": {
       "paragraph": "SEL-107-2.2",
@@ -2405,7 +2405,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 411,
     "fields": {
       "paragraph": "SEL-107-",
@@ -2418,7 +2418,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 412,
     "fields": {
       "paragraph": "SEL-108-",
@@ -2431,7 +2431,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 413,
     "fields": {
       "paragraph": "SEL-108-",
@@ -2444,7 +2444,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 414,
     "fields": {
       "paragraph": "SEL-108-",
@@ -2457,7 +2457,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 415,
     "fields": {
       "paragraph": "SEL-108-",
@@ -2470,7 +2470,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 416,
     "fields": {
       "paragraph": "SEL-109-2",
@@ -2483,7 +2483,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 417,
     "fields": {
       "paragraph": "SEL-109-7",
@@ -2496,7 +2496,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 418,
     "fields": {
       "paragraph": "SEL-109-8",
@@ -2509,7 +2509,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 419,
     "fields": {
       "paragraph": "SEL-109-",
@@ -2522,7 +2522,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 420,
     "fields": {
       "paragraph": "SEL-110-",
@@ -2535,7 +2535,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 421,
     "fields": {
       "paragraph": "SEL-112-",
@@ -2548,7 +2548,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 422,
     "fields": {
       "paragraph": "SEL-113-",
@@ -2561,7 +2561,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 423,
     "fields": {
       "paragraph": "SEL-114-",
@@ -2574,7 +2574,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 424,
     "fields": {
       "paragraph": "SEL-116-4",
@@ -2587,7 +2587,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 425,
     "fields": {
       "paragraph": "SEL-116-",
@@ -2600,7 +2600,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 426,
     "fields": {
       "paragraph": "SEL-117-",
@@ -2613,7 +2613,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 427,
     "fields": {
       "paragraph": "SEL-118-",
@@ -2626,7 +2626,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 428,
     "fields": {
       "paragraph": "SEL-119-",
@@ -2639,7 +2639,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 429,
     "fields": {
       "paragraph": "SEL-122-",
@@ -2652,7 +2652,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 430,
     "fields": {
       "paragraph": "SEL-140-",
@@ -2665,7 +2665,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 431,
     "fields": {
       "paragraph": "SEL-141-",
@@ -2678,7 +2678,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 432,
     "fields": {
       "paragraph": "SEL-152-",
@@ -2691,7 +2691,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 433,
     "fields": {
       "paragraph": "SEL-153-",
@@ -2704,7 +2704,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 434,
     "fields": {
       "paragraph": "SEL-154-",
@@ -2717,7 +2717,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 435,
     "fields": {
       "paragraph": "SEL-155-b.1",
@@ -2730,7 +2730,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 436,
     "fields": {
       "paragraph": "SEL-155-b.2",
@@ -2743,7 +2743,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 437,
     "fields": {
       "paragraph": "SEL-159-",
@@ -2756,7 +2756,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 438,
     "fields": {
       "paragraph": "SEL-160-",
@@ -2769,7 +2769,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 439,
     "fields": {
       "paragraph": "SEL-163-2",
@@ -2782,7 +2782,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 440,
     "fields": {
       "paragraph": "SEL-168-5",
@@ -2795,7 +2795,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 441,
     "fields": {
       "paragraph": "SEL-192-",
@@ -2808,7 +2808,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 442,
     "fields": {
       "paragraph": "SFL-78-a",
@@ -2821,7 +2821,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 443,
     "fields": {
       "paragraph": "SFL-78-",
@@ -2834,7 +2834,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 444,
     "fields": {
       "paragraph": "STU-2-1",
@@ -2847,7 +2847,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 445,
     "fields": {
       "paragraph": "STU-5-1",
@@ -2860,7 +2860,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 446,
     "fields": {
       "paragraph": "STU-10-",
@@ -2873,7 +2873,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 447,
     "fields": {
       "paragraph": "SUL-140-",
@@ -2886,7 +2886,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 448,
     "fields": {
       "paragraph": "SUL-141-",
@@ -2899,7 +2899,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 449,
     "fields": {
       "paragraph": "SUL-142-",
@@ -2912,7 +2912,7 @@
     }
   },
   {
-    "model": "core.sections",
+    "model": "core.section",
     "pk": 450,
     "fields": {
       "paragraph": "UBA-8-3",

@@ -22,7 +22,7 @@
             </fieldset>
             <fieldset>
                 <label for="selectField">Aktivitet</label>
-                <list-picker :dom-id="'selectField'" :selected-id="act.service" @selection="changeActivity" :list="activities" />
+                <list-picker :dom-id="'selectField'" :selected-id="act.details" @selection="changeActivity" :list="activities" />
             </fieldset>
             <fieldset>
                 <label for="field-startdate">Startdato</label>
@@ -121,7 +121,7 @@
         },
         methods: {
             changeActivity: function(act) {
-                this.act.service = act
+                this.act.details = act
             },
             saveChanges: function() {
                 let data = {
@@ -130,7 +130,7 @@
                     id: this.act.id,
                     start_date: this.act.start_date,
                     end_date: this.act.end_date,
-                    service: this.act.service
+                    details: this.act.details
                 }
                 if (!this.create_mode) {
                     data.appropriation = this.activityObj.appropriation
@@ -148,7 +148,7 @@
                         id: this.act.id,
                         start_date: this.act.start_date,
                         end_date: this.act.end_date,
-                        service: this.act.service
+                        details: this.act.details
                     })
                     .then(res => {
                         this.$router.push(`/appropriation/${ appr_id }`)

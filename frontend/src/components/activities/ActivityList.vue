@@ -18,7 +18,7 @@
                     <td>
                         <div v-html="statusLabel(a.status)"></div>
                     </td>
-                    <td><router-link :to="`/activity/${ a.id }`">{{ activityId2name(a.service) }}</router-link></td>
+                    <td><router-link :to="`/activity/${ a.id }`">{{ activityId2name(a.details) }}</router-link></td>
                     <td>300578-2222 - Ukendt</td>
                     <td>{{ displayDate(a.start_date) }}</td>
                     <td>{{ displayDate(a.end_date) }}</td>

@@ -19,8 +19,8 @@ from core.models import (
     RelatedPerson,
     SchoolDistrict,
     Team,
-    Sections,
-    ActivityCatalog,
+    Section,
+    ActivityDetails,
     Account,
     ServiceProvider,
     ApprovalLevel,
@@ -36,8 +36,8 @@ from core.serializers import (
     MunicipalitySerializer,
     SchoolDistrictSerializer,
     TeamSerializer,
-    SectionsSerializer,
-    ActivityCatalogSerializer,
+    SectionSerializer,
+    ActivityDetailsSerializer,
     AccountSerializer,
     UserSerializer,
     HistoricalCaseSerializer,
@@ -161,19 +161,19 @@ class AllowedForStepsFilter(filters.FilterSet):
     )
 
     class Meta:
-        model = Sections
+        model = Section
         fields = "__all__"
 
 
-class SectionsViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Sections.objects.all()
-    serializer_class = SectionsSerializer
+class SectionViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Section.objects.all()
+    serializer_class = SectionSerializer
     filterset_class = AllowedForStepsFilter
 
 
-class ActivityCatalogViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = ActivityCatalog.objects.all()
-    serializer_class = ActivityCatalogSerializer
+class ActivityDetailsViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = ActivityDetails.objects.all()
+    serializer_class = ActivityDetailsSerializer
     filterset_fields = "__all__"
 
 
