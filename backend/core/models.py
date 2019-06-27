@@ -181,7 +181,7 @@ class PaymentSchedule(models.Model):
         """
         if self.payment_type == self.ONE_TIME_PAYMENT:
             rrule_frequency = rrule.rrule(
-                rrule.DAILY, count=1, dtstart=start, until=end
+                rrule.DAILY, count=1, dtstart=start
             )
         elif self.payment_frequency == self.DAILY:
             rrule_frequency = rrule.rrule(
