@@ -4,8 +4,68 @@
         <h1 v-if="create_mode">Opret Aktivitet</h1>
         <h1 v-else>Redigér Aktivitet</h1>
 
+<<<<<<< HEAD
         <div class="row">
             <div class="column">
+=======
+            <fieldset>
+                <legend>Status</legend>
+                <input type="radio" id="field-status-granted" value="GRANTED" v-model="act.status">
+                <label for="field-status-granted">Bevilling</label>
+                <input type="radio" id="field-status-expected" value="EXPECTED" v-model="act.status">
+                <label for="field-status-expected">Forventning</label>
+            </fieldset>
+            <fieldset>
+                <legend>Type</legend>
+                <input type="radio" id="field-type-main" value="MAIN_ACTIVITY" v-model="act.activity_type">
+                <label for="field-type-main">Hovedaktivitet</label>
+                <input type="radio" id="field-type-suppl" value="SUPPL_ACTIVITY" v-model="act.activity_type">
+                <label for="field-type-suppl">Følgeaktivitet</label>
+                <input type="radio" id="field-type-expected" value="EXPECTED_CHANGE" v-model="act.activity_type">
+                <label for="field-type-expected">Forventning</label>
+            </fieldset>
+            <fieldset>
+                <label for="selectField">Aktivitet</label>
+                <list-picker :dom-id="'selectField'" :selected-id="act.details" @selection="changeActivity" :list="activities" />
+            </fieldset>
+            <fieldset>
+                <label for="field-startdate">Startdato</label>
+                <input type="date" id="field-startdate" v-model="act.start_date">
+            </fieldset>
+            <fieldset>
+                <label for="field-enddate">Slutdato</label>
+                <input type="date" id="field-enddate" v-model="act.end_date">
+            </fieldset>
+            <hr>
+            <fieldset>
+                <label for="field-cost">Bevilget beløb</label>
+                <input type="number" id="field-cost" value="0">
+            </fieldset>
+            <fieldset>
+                <legend>Udgiftstype</legend>
+                <input type="radio" id="field-cost-single" :value="false">
+                <label for="field-cost-single">Følgeydelse</label>
+                <input type="radio" id="field-cost-recurring" :value="true">
+                <label for="field-cost-recurring">Enkeltudgift</label>
+            </fieldset>
+            <fieldset>
+                <label for="field-note">Bemærkning</label>
+                <textarea id="field-note"></textarea>
+            </fieldset>
+            <hr>
+            <fieldset>
+                <legend>Betalingsmodtager</legend>
+                <input type="radio" id="field-payment-type-inherit" value="inherit">
+                <label for="field-payment-type-inherit">Samme som hovedydelsen</label>
+                <input type="radio" id="field-payment-type-intern" value="intern">
+                <label for="field-payment-type-intern">Intern</label>
+                <input type="radio" id="field-payment-type-person" value="person">
+                <label for="field-payment-type-person">Person</label>
+                <input type="radio" id="field-payment-type-firm" value="firma">
+                <label for="field-payment-type-firm">Firma</label>
+            </fieldset>
+            <template>
+>>>>>>> develop
                 <fieldset>
                     <legend>Status</legend>
                     <input type="checkbox" id="field-status-expected" v-model="act_status_expected">
@@ -89,21 +149,17 @@
         },
         methods: {
             changeActivity: function(act) {
-                this.act.service = act
+                this.act.details = act
             },
             saveChanges: function() {
                 let data = {
                     activity_type: this.act.activity_type,
                     start_date: this.act.start_date,
                     end_date: this.act.end_date,
-                    service: this.act.service,
+                    details: this.act.details,
                     note: this.act.note
                 }
-                if (this.act_status_expected) {
-                    data.status = 'EXPECTED'
-                } else {
-                    data.status = 'GRANTED'
-                }
+                data.status = this.act_status_expected ? 'EXPECTED' : 'GRANTED'
                 if (!this.create_mode) {
                     data.id = this.act.id
                     data.appropriation = this.activityObj.appropriation

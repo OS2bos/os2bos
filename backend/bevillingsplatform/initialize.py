@@ -15,7 +15,7 @@ def initialize():
     initialize_municipalities()
     initialize_school_districts()
     initialize_sections()
-    initialize_activity_catalogs()
+    initialize_activity_details()
     initialize_service_providers()
     initialize_users()
     initialize_teams()
@@ -44,13 +44,13 @@ def initialize_sections():
     call_command("loaddata", "sections.json", app_label="core")
 
 
-def initialize_activity_catalogs():
-    """Initialize all the relevant activity catalogs
+def initialize_activity_details():
+    """Initialize all the relevant activity details.
 
-    Data should be the output of manage.py dumpdata core.activitycatalog
+    Data should be the output of manage.py dumpdata core.activitydetails
 
     """
-    call_command("loaddata", "activitycatalog.json", app_label="core")
+    call_command("loaddata", "activitydetails.json", app_label="core")
 
 
 def initialize_service_providers():

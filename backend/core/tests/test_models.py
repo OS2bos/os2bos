@@ -9,8 +9,8 @@ from core.tests.testing_mixins import PaymentScheduleMixin, ActivityMixin
 from core.models import (
     Municipality,
     SchoolDistrict,
-    Sections,
-    ActivityCatalog,
+    Section,
+    ActivityDetails,
     Account,
     ApprovalLevel,
     Team,
@@ -42,9 +42,9 @@ class TeamTestCase(TestCase):
         self.assertEqual(str(team), "C-BUR")
 
 
-class SectionsTestCase(TestCase):
-    def test_sections_str(self):
-        sections = Sections.objects.create(
+class SectionTestCase(TestCase):
+    def test_section_str(self):
+        sections = Section.objects.create(
             paragraph="ABL-105-2",
             kle_number="27.45.04",
             text="Lov om almene boliger",
@@ -55,9 +55,9 @@ class SectionsTestCase(TestCase):
         self.assertEqual(str(sections), "ABL-105-2 - 27.45.04")
 
 
-class ActivityCatalogTestCase(TestCase):
-    def test_activitycatalog_str(self):
-        catalog = ActivityCatalog.objects.create(
+class ActivityDetailsTestCase(TestCase):
+    def test_activitydetails_str(self):
+        catalog = ActivityDetails.objects.create(
             name="Betaling til andre kommuner/region for specialtandpleje",
             activity_id="010001",
             max_tolerance_in_dkk=5000,
@@ -118,24 +118,26 @@ class ActivityTestCase(TestCase, ActivityMixin, PaymentScheduleMixin):
 
 class AccountTestCase(TestCase):
     def test_account_str(self):
-        sections = Sections.objects.create(
+        sections = Section.objects.create(
             paragraph="ABL-105-2",
             kle_number="27.45.04",
             text="Lov om almene boliger",
             allowed_for_steps=[],
             law_text_name="Lov om almene boliger",
         )
-        catalog = ActivityCatalog.objects.create(
+        activity_details = ActivityDetails.objects.create(
             name="Betaling til andre kommuner/region for specialtandpleje",
             activity_id="010001",
             max_tolerance_in_dkk=5000,
             max_tolerance_in_percent=10,
         )
         account = Account.objects.create(
-            number="123456", section=sections, activity_catalog=catalog
+            number="123456", section=sections, activity=activity_details
         )
 
-        self.assertEqual(str(account), f"123456 - {catalog} - {sections}")
+        self.assertEqual(
+            str(account), f"123456 - {activity_details} - {sections}"
+        )
 
 
 class ApprovalLevelTestCase(TestCase):

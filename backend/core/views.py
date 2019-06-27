@@ -6,6 +6,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 
+
+from django_filters import rest_framework as filters
+
 from core.models import (
     Case,
     Appropriation,
@@ -16,8 +19,8 @@ from core.models import (
     RelatedPerson,
     SchoolDistrict,
     Team,
-    Sections,
-    ActivityCatalog,
+    Section,
+    ActivityDetails,
     Account,
     ServiceProvider,
     PaymentMethodDetails,
@@ -34,8 +37,8 @@ from core.serializers import (
     MunicipalitySerializer,
     SchoolDistrictSerializer,
     TeamSerializer,
-    SectionsSerializer,
-    ActivityCatalogSerializer,
+    SectionSerializer,
+    ActivityDetailsSerializer,
     AccountSerializer,
     UserSerializer,
     HistoricalCaseSerializer,
@@ -155,14 +158,30 @@ class TeamViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TeamSerializer
 
 
-class SectionsViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Sections.objects.all()
-    serializer_class = SectionsSerializer
+class CharInFilter(filters.BaseInFilter, filters.CharFilter):
+    pass
 
 
-class ActivityCatalogViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = ActivityCatalog.objects.all()
-    serializer_class = ActivityCatalogSerializer
+class AllowedForStepsFilter(filters.FilterSet):
+    allowed_for_steps = CharInFilter(
+        field_name="allowed_for_steps", lookup_expr="contains"
+    )
+
+    class Meta:
+        model = Section
+        fields = "__all__"
+
+
+class SectionViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Section.objects.all()
+    serializer_class = SectionSerializer
+    filterset_class = AllowedForStepsFilter
+
+
+class ActivityDetailsViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = ActivityDetails.objects.all()
+    serializer_class = ActivityDetailsSerializer
+    filterset_fields = "__all__"
 
 
 class AccountViewSet(viewsets.ReadOnlyModelViewSet):
