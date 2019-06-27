@@ -20,7 +20,7 @@
                 </fieldset>
                 <fieldset>
                     <label for="selectField">Aktivitet</label>
-                    <list-picker :dom-id="'selectField'" :selected-id="act.service" @selection="changeActivity" :list="activities" />
+                    <list-picker :dom-id="'selectField'" :selected-id="act.details" @selection="changeActivity" :list="activities" />
                 </fieldset>
                 <fieldset>
                     <label for="field-startdate">Startdato</label>
