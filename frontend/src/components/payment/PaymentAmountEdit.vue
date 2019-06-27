@@ -6,36 +6,36 @@
             <h2>Beløb</h2>
             <label>Afregningshed</label>
             <div class="rows">
-                <select v-model="entry.type" style="margin-right: 1rem; min-width: 13rem;">
-                    <option v-for="o in entry.type_options" :key="o.key" :value="o.key">
+                <select v-model="entry.payment_type" style="margin-right: 1rem; min-width: 13rem;">
+                    <option v-for="o in choices.type_options" :key="o.key" :value="o.key">
                         {{ o.val }}
                     </option>
                 </select>
-                <select v-model="entry.frequency" v-if="entry.type !== 'ONE_TIME_PAYMENT'">
-                    <option v-for="o in entry.frequency_options" :key="o.key" :value="o.key">
+                <select v-model="entry.payment_frequency" v-if="entry.type !== 'ONE_TIME_PAYMENT'">
+                    <option v-for="o in choices.frequency_options" :key="o.key" :value="o.key">
                         {{ o.val }}
                     </option>
                 </select>
             </div>
-            <fieldset v-if="entry.type === 'PER_HOUR_PAYMENT' || entry.type === 'PER_DAY_PAYMENT' || entry.type === 'PER_KM_PAYMENT'" class="rows">
+            <fieldset v-if="entry.payment_type === 'PER_HOUR_PAYMENT' || entry.payment_type === 'PER_DAY_PAYMENT' || entry.payment_type === 'PER_KM_PAYMENT'" class="rows">
                 <div style="margin-right: .5rem;">
-                    <label v-if="entry.type === 'PER_HOUR_PAYMENT'">Timer</label>
-                    <label v-if="entry.type === 'PER_DAY_PAYMENT'">Døgn</label>
-                    <label v-if="entry.type === 'PER_KM_PAYMENT'">Kilometer</label>
-                    <input v-model="entry.units" type="number"> á
+                    <label v-if="entry.payment_type === 'PER_HOUR_PAYMENT'">Timer</label>
+                    <label v-if="entry.payment_type === 'PER_DAY_PAYMENT'">Døgn</label>
+                    <label v-if="entry.payment_type === 'PER_KM_PAYMENT'">Kilometer</label>
+                    <input v-model="entry.payment_units" type="number"> á
                 </div>
                 <div>
                     <label>Takst</label>
-                    <input v-model="entry.amount" type="number"> kr
+                    <input v-model="entry.payment_amount" type="number"> kr
                 </div>
             </fieldset>
             <fieldset v-else>
                 <label>Beløb</label>
-                <input v-model="entry.amount" type="number"> kr
+                <input v-model="entry.payment_amount" type="number"> kr
             </fieldset>
         </div>
 
-        <payment-plan :amount="entry.amount" :units="entry.units" :type="entry.type" :frequency="entry.frequency" />
+        <payment-plan :amount="entry.payment_amount" :units="entry.payment_units" :type="entry.payment_type" :frequency="entry.payment_frequency" />
     </div>
 
 </template>
@@ -49,10 +49,12 @@
         components: {
             PaymentPlan
         },
+        props: [
+            'paymentObj'
+        ],
         data: function() {
             return {
-                entry: {
-                    type: 'RUNNING_PAYMENT', // default is running payment
+                choices: {
                     type_options: [
                         {
                             key: 'ONE_TIME_PAYMENT',
@@ -75,7 +77,6 @@
                             val: 'Takst pr. kilometer'
                         }
                     ],
-                    frequency: 'MONTHLY', // default is pr month
                     frequency_options: [
                         {
                             key: 'MONTHLY',
@@ -90,22 +91,30 @@
                             val: 'Dagligt'
                         },
                     ],
-                    units: 0,
-                    amount: 0
+                },
+                entry: {
+                    payment_type: 'RUNNING_PAYMENT', // default is running payment
+                    payment_frequency: 'MONTHLY', // default is pr month
+                    payment_units: 0,
+                    payment_amount: 0
                 }
             }
         },
-        methods: {
-            saveChanges: function() {
-                this.$emit('payment-amount')
-            }
-        },
         watch: {
+            paymentObj: function() {
+                this.entry = this.paymentObj
+            },
             entry: {
                 handler (newVal) {
-                    this.$emit('input', newVal)
+                    this.$emit('update', this.entry)
                 },
                 deep: true
+            }
+        },
+        created: function() {
+            console.log(this.paymentObj)
+            if (this.paymentObj) {
+                this.entry = this.paymentObj
             }
         }
 

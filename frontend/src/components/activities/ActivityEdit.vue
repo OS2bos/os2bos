@@ -35,10 +35,9 @@
                     <textarea v-model="act.note"></textarea>
                 </fieldset>
                 <hr>
-                <payment-amount-edit v-model="pay.payment_amount"/>
-                <payment-receiver-edit v-model="pay.payment_receiver"/>
-                <payment-edit v-model="pay.payment"/>
-
+                <payment-amount-edit :payment-obj="pay" @update="changePayAmount" />
+                <payment-receiver-edit :payment-obj="pay" @update="changePayReceiver" />
+                <payment-edit :payment-obj="pay" @update="changePayment" />
                 <hr>
                 <fieldset>
                     <input type="submit" value="Gem">
@@ -76,11 +75,7 @@
             return {
                 act: {},
                 act_status_expected: false,
-                pay: {
-                    payment_amount: {},
-                    payment_receiver: {},
-                    payment: {}
-                },
+                pay: null,
                 create_mode: true
             }
         },
@@ -93,6 +88,15 @@
             changeActivity: function(act) {
                 this.act.details = act
             },
+            changePayAmount: function(obj) {
+
+            },
+            changePayReceiver: function(obj) {
+
+            },
+            changePayment: function(obj) {
+
+            },
             saveChanges: function() {
                 let data = {
                     activity_type: this.act.activity_type,
@@ -101,15 +105,15 @@
                     details: this.act.details,
                     note: this.act.note
                 }
-                 let data_payee = {
-                    recipient_type: this.pay.payment_receiver.selected,
-                    recipient_id: this.pay.payment_receiver.payee_id,
-                    recipient_name: this.pay.payment_receiver.payee_name,
-                    payment_method: this.pay.payment.selected,
-                    payment_frequency: this.pay.payment_amount.frequency,
-                    payment_type: this.pay.payment_amount.type,
-                    payment_units: this.pay.payment_amount.units,
-                    payment_amount: this.pay.payment_amount.amount
+                let data_payee = {
+                    recipient_type: this.pay.recipient_type,
+                    recipient_id: this.pay.recipient_id,
+                    recipient_name: this.pay.recipient_name,
+                    payment_method: this.pay.payment_method,
+                    payment_frequency: this.pay.payment_frequency,
+                    payment_type: this.pay.payment_type,
+                    payment_units: this.pay.payment_units,
+                    payment_amount: this.pay.payment_amount
                 }
                 data.status = this.act_status_expected ? 'EXPECTED' : 'GRANTED'
                 if (!this.create_mode) {
@@ -148,12 +152,20 @@
                 } else {
                     this.$router.push(`/appropriation/${ this.$route.params.apprid }`)
                 }  
+            },
+            fetchPaymentInfo: function(pay_plan_id) {
+                axios.get(`/payment_schedules/${ pay_plan_id }/`)
+                .then(res => {
+                    this.pay = res.data
+                })
+                .catch(err => console.log(err))
             }
         },
         created: function() {
             if (this.activityObj) {
                 this.create_mode = false
                 this.act = this.activityObj
+                this.fetchPaymentInfo(this.activityObj.payment_plan)
             }
         }
     }

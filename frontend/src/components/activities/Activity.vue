@@ -38,53 +38,52 @@
                 <dd>{{ act.note }}</dd>
             </dl>
             
-                <dl v-if="pay">
-                    <h3>Beløb</h3>
-                    <dt>Afregningsenhed</dt>
-                    <dd>
-                        <div v-if="pay.payment_type === 'ONE_TIME_PAYMENT'">Engangsudgift</div>
-                        <div v-if="pay.payment_type === 'RUNNING_PAYMENT'">Fast beløb, løbende</div>
-                        <div v-if="pay.payment_type === 'PER_HOUR_PAYMENT'">Takst pr. time</div>
-                        <div v-if="pay.payment_type === 'PER_DAY_PAYMENT'">Takst pr. døgn</div>
-                        <div v-if="pay.payment_type === 'PER_KM_PAYMENT'">Takst pr. kilometer</div>
-                    </dd>
-                    <dd>
-                        <div v-if="pay.payment_frequency === 'DAILY'">Dagligt</div>
-                        <div v-if="pay.payment_frequency === 'WEEKLY'">Ugentligt</div>
-                        <div v-if="pay.payment_frequency === 'MONTHLY'">Månedligt</div>
-                    </dd>
-                    <dt>Beløb</dt>
-                    <dd>{{ pay.payment_amount }} kr.</dd>
-                </dl>
-                <dl v-if="pay">
-                    <h3>Betales til</h3>
-                    <dt>Betalingsmodtager</dt>
-                    <dd>
-                        <div v-if="pay.recipient_type === 'INTERNAL'">Inten</div>
-                        <div v-if="pay.recipient_type === 'COMPANY'">Firma</div>
-                        <div v-if="pay.recipient_type === 'PERSON'">Person</div>
-                    </dd>
-                    <dt>
-                        <div v-if="pay.recipient_type === 'INTERNAL'">Reference</div>
-                        <div v-if="pay.recipient_type === 'COMPANY'">CVR-nr</div>
-                        <div v-if="pay.recipient_type === 'PERSON'">CPR-nr</div>
-                    </dt>
-                    <dd>{{ pay.recipient_id }}</dd>
-                    <dt>Navn</dt>
-                    <dd>{{ pay.recipient_name }}</dd>
-                </dl>
-                <dl v-if="pay">
-                    <h3>Betaling</h3>
-                    <dt>Betalingsmåde</dt>
-                    <dd>
-                        <div v-if="pay.payment_method === 'INVOICE'">Faktura</div>
-                        <div v-if="pay.payment_method === 'INTERNAL'">Intern afregning</div>
-                        <div v-if="pay.payment_method === 'CASH'">Kontant udbetaling</div>
-                        <div v-if="pay.payment_method === 'SD'">SD-løn</div>
-                    </dd>
-                </dl>
+            <dl v-if="pay">
+                <h3>Beløb</h3>
+                <dt>Afregningsenhed</dt>
+                <dd>
+                    <div v-if="pay.payment_type === 'ONE_TIME_PAYMENT'">Engangsudgift</div>
+                    <div v-if="pay.payment_type === 'RUNNING_PAYMENT'">Fast beløb, løbende</div>
+                    <div v-if="pay.payment_type === 'PER_HOUR_PAYMENT'">Takst pr. time</div>
+                    <div v-if="pay.payment_type === 'PER_DAY_PAYMENT'">Takst pr. døgn</div>
+                    <div v-if="pay.payment_type === 'PER_KM_PAYMENT'">Takst pr. kilometer</div>
+                </dd>
+                <dd>
+                    <div v-if="pay.payment_frequency === 'DAILY'">Dagligt</div>
+                    <div v-if="pay.payment_frequency === 'WEEKLY'">Ugentligt</div>
+                    <div v-if="pay.payment_frequency === 'MONTHLY'">Månedligt</div>
+                </dd>
+                <dt>Beløb</dt>
+                <dd>{{ pay.payment_amount }} kr.</dd>
+            </dl>
+            <dl v-if="pay">
+                <h3>Betales til</h3>
+                <dt>Betalingsmodtager</dt>
+                <dd>
+                    <div v-if="pay.recipient_type === 'INTERNAL'">Inten</div>
+                    <div v-if="pay.recipient_type === 'COMPANY'">Firma</div>
+                    <div v-if="pay.recipient_type === 'PERSON'">Person</div>
+                </dd>
+                <dt>
+                    <div v-if="pay.recipient_type === 'INTERNAL'">Reference</div>
+                    <div v-if="pay.recipient_type === 'COMPANY'">CVR-nr</div>
+                    <div v-if="pay.recipient_type === 'PERSON'">CPR-nr</div>
+                </dt>
+                <dd>{{ pay.recipient_id }}</dd>
+                <dt>Navn</dt>
+                <dd>{{ pay.recipient_name }}</dd>
+            </dl>
+            <dl v-if="pay">
+                <h3>Betaling</h3>
+                <dt>Betalingsmåde</dt>
+                <dd>
+                    <div v-if="pay.payment_method === 'INVOICE'">Faktura</div>
+                    <div v-if="pay.payment_method === 'INTERNAL'">Intern afregning</div>
+                    <div v-if="pay.payment_method === 'CASH'">Kontant udbetaling</div>
+                    <div v-if="pay.payment_method === 'SD'">SD-løn</div>
+                </dd>
+            </dl>
 
-            
         </div>
         <div class="payment-schedule" v-if="!show_edit">
             <payment-schedule :payments-obj="payments"/>
