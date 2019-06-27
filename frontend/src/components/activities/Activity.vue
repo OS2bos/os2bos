@@ -108,57 +108,58 @@
         },
         data: function() {
             return {
-                act: null,
                 appr: null,
                 cas: null,
-                pay: null,
                 payments: null,
                 show_edit: false
             }
         },
+        computed: {
+            act: function() {
+                return this.$store.getters.getActivity
+            },
+            pay: function() {
+                return this.$store.getters.getPaymentSchedule
+            }
+        },
         methods: {
-            fetch_act: function(id) {
-                axios.get(`/activities/${ id }`)
-                .then(res => {
-                    this.act = res.data
-                    axios.get(`/appropriations/${ this.act.appropriation }`)
+            fetch_info: function(act) {
+                axios.get(`/appropriations/${ act.appropriation }`)
+                .then(resp => {
+                    this.appr = resp.data
+                    axios.get(`/cases/${ this.appr.case }`)
+                    .then(response => {
+                        this.cas = response.data
+                        this.$store.commit('setBreadcrumb', [
+                            {
+                                link: '/',
+                                title: 'Mine sager'
+                            },
+                            {
+                                link: `/case/${ this.cas.id }`,
+                                title: `Hovedsag ${ this.cas.sbsys_id }`
+                            },
+                            {
+                                link: `/appropriation/${ this.appr.id }`,
+                                title: `Foranstaltning ${ this.appr.sbsys_id }`
+                            },
+                            {
+                                link: false,
+                                title: `Udgift til ${ activityId2name(this.act.details) }`
+                            }
+                        ])
+                    })
                     .then(resp => {
-                        this.appr = resp.data
-                        axios.get(`/cases/${ this.appr.case }`)
-                        .then(response => {
-                            this.cas = response.data
-                            this.$store.commit('setBreadcrumb', [
-                                {
-                                    link: '/',
-                                    title: 'Mine sager'
-                                },
-                                {
-                                    link: `/case/${ this.cas.id }`,
-                                    title: `Hovedsag ${ this.cas.sbsys_id }`
-                                },
-                                {
-                                    link: `/appropriation/${ this.appr.id }`,
-                                    title: `Foranstaltning ${ this.appr.sbsys_id }`
-                                },
-                                {
-                                    link: false,
-                                    title: `Udgift til ${ activityId2name(this.act.details) }`
-                                }
-                            ])
-                        })
-                        .then(resp => {
-                                axios.get(`/payment_schedules/${ this.act.payment_plan }`)
-                                .then(response => {
-                                    this.pay = response.data
-                                     axios.get(`/payments/?payment_schedules=${ this.pay.payments.payment_schedule }`)
-                                    .then(respon => {
-                                        this.payments = respon.data
-                                    })
+                            axios.get(`/payment_schedules/${ this.act.payment_plan }`)
+                            .then(response => {
+                                this.pay = response.data
+                                    axios.get(`/payments/?payment_schedules=${ this.pay.payments.payment_schedule }`)
+                                .then(respon => {
+                                    this.payments = respon.data
                                 })
-                        })
+                            })
                     })
                 })
-                .catch(err => console.log(err))
             },
             reload: function() {
                 this.show_edit =  false
@@ -177,7 +178,7 @@
             }
         },
         created: function() {
-            this.fetch_act(this.$route.params.id)
+            this.$store.dispatch('fetchActivity', this.$route.params.id)
         }
     }
     

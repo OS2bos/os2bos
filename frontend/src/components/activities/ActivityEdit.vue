@@ -118,6 +118,9 @@
                             axios.patch(`/activities/${ res.data.id }/`, {
                                 payment_plan: resp.data.id
                             })
+                            .then(() => {
+                                this.$store.dispatch('fetchActivity', res.data.id)
+                            })
                         })
                     })
                         .catch(err => console.log(err))
@@ -131,6 +134,9 @@
                         .then(resp => {
                             axios.patch(`/activities/${ res.data.id }/`, {
                                 payment_plan: resp.data.id
+                            })
+                            .then(() => {
+                                this.$store.dispatch('fetchActivity', res.data.id)
                             })
                         })
                     })
