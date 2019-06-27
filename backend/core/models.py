@@ -1,7 +1,7 @@
 from datetime import date
 from decimal import Decimal
 
-from dateutil import rrule
+from dateutil import rrule, relativedelta
 from django.db import models
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
@@ -180,9 +180,7 @@ class PaymentSchedule(models.Model):
         start and end.
         """
         if self.payment_type == self.ONE_TIME_PAYMENT:
-            rrule_frequency = rrule.rrule(
-                rrule.DAILY, count=1, dtstart=start
-            )
+            rrule_frequency = rrule.rrule(rrule.DAILY, count=1, dtstart=start)
         elif self.payment_frequency == self.DAILY:
             rrule_frequency = rrule.rrule(
                 rrule.DAILY, dtstart=start, until=end
@@ -240,6 +238,40 @@ class PaymentSchedule(models.Model):
                 amount=self.calculate_per_payment_amount(vat_factor),
                 payment_schedule=self,
             )
+
+    def synchronize_payments(self, start, end, vat_factor=Decimal("100")):
+        today = date.today()
+        # If no existing payments is generated we can't do anything.
+        if not self.payments.exists():
+            return
+
+        newest_payment = self.payments.order_by("-date").first()
+
+        # The new start_date should be based on the newest payment date
+        # and the payment frequency.
+        if self.payment_frequency == PaymentSchedule.DAILY:
+            new_start = newest_payment.date + relativedelta(days=1)
+        elif self.payment_frequency == PaymentSchedule.WEEKLY:
+            new_start = newest_payment.date + relativedelta(weeks=1)
+        elif self.payment_frequency == PaymentSchedule.MONTHLY:
+            new_start = newest_payment.date + relativedelta(months=1)
+
+        # Handle the case where an end_date is set in the future
+        # after already having generated payments with no end_date.
+        if end and (new_start < end):
+            self.generate_payments(new_start, end)
+
+        # Handle the case where an end_date is set in the past after
+        # already having generated payments with no end_date
+        if end and (newest_payment.date > end):
+            self.payments.filter(date__gt=end).delete()
+
+        # If the newest payment has a date less than 6 months from now
+        # we can generate new payments for another period.
+        if not end and (
+            newest_payment.date < today + relativedelta(months=6)
+        ):
+            self.generate_payments(new_start)
 
 
 class Payment(models.Model):
@@ -599,6 +631,10 @@ class Activity(AuditModelMixin, models.Model):
 
         if self.payment_plan and not self.payment_plan.payments.exists():
             self.payment_plan.generate_payments(
+                self.start_date, self.end_date, vat_factor
+            )
+        elif self.payment_plan and self.payment_plan.payments.exists():
+            self.payment_plan.synchronize_payments(
                 self.start_date, self.end_date, vat_factor
             )
 
