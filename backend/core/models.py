@@ -12,8 +12,6 @@ from django.core.validators import MinValueValidator
 from django_audit_fields.models import AuditModelMixin
 from simple_history.models import HistoricalRecords
 
-from core.utils import exclude_holidays_from_rruleset
-
 # Target group - definitions and choice list.
 FAMILY_DEPT = "FAMILY_DEPT"
 DISABILITY_DEPT = "DISABILITY_DEPT"
@@ -77,7 +75,9 @@ class PaymentMethodDetails(models.Model):
     )
 
     tax_card = models.CharField(
-        max_length=128, verbose_name=("skattekort"), choices=tax_card_choices
+        max_length=128,
+        verbose_name=(_("skattekort")),
+        choices=tax_card_choices,
     )
 
 
@@ -165,12 +165,12 @@ class PaymentSchedule(models.Model):
     )
     # number of units to pay, ie. XX kilometres or hours
     payment_units = models.PositiveIntegerField(
-        verbose_name=_("betalingsenheder"), blank=True, null=True
+        verbose_name="betalingsenheder", blank=True, null=True
     )
     payment_amount = models.DecimalField(
         max_digits=14,
         decimal_places=2,
-        verbose_name=_("beløb"),
+        verbose_name="beløb",
         validators=[MinValueValidator(Decimal("0.01"))],
     )
 
@@ -179,10 +179,10 @@ class PaymentSchedule(models.Model):
         Create a dateutil.rrule based on payment_type/payment_frequency,
         start and end.
         """
-        rrule_set = rrule.rruleset()
-
         if self.payment_type == self.ONE_TIME_PAYMENT:
-            rrule_frequency = rrule.rrule(rrule.DAILY, count=1, dtstart=start)
+            rrule_frequency = rrule.rrule(
+                rrule.DAILY, count=1, dtstart=start, until=end
+            )
         elif self.payment_frequency == self.DAILY:
             rrule_frequency = rrule.rrule(
                 rrule.DAILY, dtstart=start, until=end
@@ -198,11 +198,7 @@ class PaymentSchedule(models.Model):
             )
         else:
             raise ValueError(_("ukendt betalingsfrekvens"))
-
-        rrule_set.rrule(rrule_frequency)
-        rrule_set = exclude_holidays_from_rruleset(rrule_set, start)
-
-        return rrule_set
+        return rrule_frequency
 
     def calculate_per_payment_amount(self, vat_factor):
 
@@ -225,7 +221,10 @@ class PaymentSchedule(models.Model):
         """
         # If no end is specified, choose end of the current year.
         if not end:
-            end = date.today().replace(month=date.max.month, day=date.max.day)
+            today = date.today()
+            end = today.replace(
+                year=today.year + 1, month=date.max.month, day=date.max.day
+            )
 
         rrule_frequency = self.create_rrule(start, end)
 
@@ -267,10 +266,10 @@ class Payment(models.Model):
     amount = models.DecimalField(
         max_digits=14,
         decimal_places=2,
-        verbose_name=_("beløb"),
+        verbose_name="beløb",
         validators=[MinValueValidator(Decimal("0.01"))],
     )
-    paid = models.BooleanField(default=False, verbose_name=_("betalt"))
+    paid = models.BooleanField(default=False, verbose_name="betalt")
 
     payment_schedule = models.ForeignKey(
         PaymentSchedule, on_delete=models.CASCADE, related_name="payments"
