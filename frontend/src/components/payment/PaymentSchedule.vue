@@ -21,65 +21,13 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Januar</td>
-                    <td>Ingen betaling</td>
-                    <td>Nej</td>
-                </tr>
-                <tr>
-                    <td>Februar</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>Marts</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>April</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>Maj</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>Juni</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>Juli</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>August</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>September</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>Oktober</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>November</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>December</td>
-                    <td></td>
-                    <td></td>
+                <tr v-for="p in paymentsObj" :key="p.id">
+                    <td>{{ displayDate(p.date) }}</td>
+                    <td>{{ p.amount }}</td>
+                    <td>
+                        <div v-if="p.paid === 'true'">Betalt</div>
+                        <div v-if="p.paid === 'false'">Ikke betalt</div>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -89,10 +37,20 @@
 
 <script>
 
+    import { json2js } from '../filters/Date.js'
+
     export default {
 
+        props: [
+            'paymentsObj'
+        ],
+
+        methods: {
+            displayDate: function(dt) {
+                return json2js(dt)
+            }
+        }
     }
-    
 </script>
 
 <style>

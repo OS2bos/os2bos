@@ -43,10 +43,10 @@
                     <dt>Afregningsenhed</dt>
                     <dd>
                         <div v-if="pay.payment_type === 'ONE_TIME_PAYMENT'">Engangsudgift</div>
-                        <div v-if="pay.payment_type === 'RUNNING-PAYMENT'">Fast beløb, løbende</div>
-                        <div v-if="pay.payment_type === 'PER-HOUR-PAYMENT'">Takst pr. time</div>
-                        <div v-if="pay.payment_type === 'PER-DAY-PAYMENT'">Takst pr. døgn</div>
-                        <div v-if="pay.payment_type === 'PER-KM-PAYMENT'">Takst pr. kilometer</div>
+                        <div v-if="pay.payment_type === 'RUNNING_PAYMENT'">Fast beløb, løbende</div>
+                        <div v-if="pay.payment_type === 'PER_HOUR_PAYMENT'">Takst pr. time</div>
+                        <div v-if="pay.payment_type === 'PER_DAY_PAYMENT'">Takst pr. døgn</div>
+                        <div v-if="pay.payment_type === 'PER_KM_PAYMENT'">Takst pr. kilometer</div>
                     </dd>
                     <dd>
                         <div v-if="pay.payment_frequency === 'DAILY'">Dagligt</div>
@@ -83,7 +83,11 @@
                         <div v-if="pay.payment_method === 'SD'">SD-løn</div>
                     </dd>
                 </dl>
+
             
+        </div>
+        <div class="payment-schedule" v-if="!show_edit">
+            <payment-schedule :payments-obj="payments"/>
         </div>
     </section>
 
@@ -93,13 +97,15 @@
 
     import axios from '../http/Http.js'
     import ActivityEdit from './ActivityEdit.vue'
+    import PaymentSchedule from '../payment/PaymentSchedule.vue'
     import { json2js } from '../filters/Date.js'
     import { activityId2name, sectionId2name, displayStatus } from '../filters/Labels.js'
 
     export default {
 
         components: {
-            ActivityEdit
+            ActivityEdit,
+            PaymentSchedule
         },
         data: function() {
             return {
@@ -107,6 +113,7 @@
                 appr: null,
                 cas: null,
                 pay: null,
+                payments: null,
                 show_edit: false
             }
         },
@@ -141,9 +148,13 @@
                             ])
                         })
                         .then(resp => {
-                                axios.get(`/payment_schedules/${ id }`)
+                                axios.get(`/payment_schedules/${ this.act.payment_plan }`)
                                 .then(response => {
                                     this.pay = response.data
+                                     axios.get(`/payments/?payment_schedules=${ this.pay.payments.payment_schedule }`)
+                                    .then(respon => {
+                                        this.payments = respon.data
+                                    })
                                 })
                         })
                     })
@@ -197,6 +208,10 @@
         justify-content: start;
         background-color: var(--grey1);
         padding: 1.5rem 2rem 2rem;
+    }
+
+     .payment-schedule {
+        margin: 1rem;
     }
 
 </style>
