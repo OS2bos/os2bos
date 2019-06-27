@@ -367,7 +367,7 @@ class ApprovalLevel(models.Model):
         return f"{self.name}"
 
 
-class Sections(models.Model):
+class Section(models.Model):
     """Law sections and the corresponding KLE codes.
 
     Each section is associated with the target group for which it is
@@ -401,7 +401,7 @@ class Appropriation(AuditModelMixin, models.Model):
         unique=True, max_length=128, verbose_name=_("SBSYS-ID")
     )
     section = models.ForeignKey(
-        Sections,
+        Section,
         related_name="appropriations",
         null=True,
         blank=True,
@@ -461,7 +461,7 @@ class ServiceProvider(models.Model):
     )
 
 
-class ActivityCatalog(models.Model):
+class ActivityDetails(models.Model):
     """Class containing all services offered by this municipality.
 
     Each service is associated with the legal articles for which it is
@@ -479,13 +479,13 @@ class ActivityCatalog(models.Model):
         verbose_name=_("Max tolerance i DKK")
     )
     main_activity_for = models.ManyToManyField(
-        Sections, related_name="main_activities"
+        Section, related_name="main_activities"
     )
     supplementary_activity_for = models.ManyToManyField(
-        Sections, related_name="supplementary_activities"
+        Section, related_name="supplementary_activities"
     )
     service_providers = models.ManyToManyField(
-        ServiceProvider, related_name="activity_catalogs"
+        ServiceProvider, related_name="supplied_activities"
     )
 
     def __str__(self):
@@ -495,8 +495,8 @@ class ActivityCatalog(models.Model):
 class Activity(AuditModelMixin, models.Model):
     """An activity is a specific service provided within an appropriation."""
 
-    # The service contains the name, tolerance, etc.
-    service = models.ForeignKey(ActivityCatalog, on_delete=models.PROTECT)
+    # The details object contains the name, tolerance, etc. of the service.
+    details = models.ForeignKey(ActivityDetails, on_delete=models.PROTECT)
 
     # Status - definitions and choice list.
     STATUS_EXPECTED = "EXPECTED"
@@ -641,22 +641,21 @@ class RelatedPerson(models.Model):
 class Account(models.Model):
     """Class containing account numbers.
 
-    Should have a different number for each (ActivityCatalog, Sections) pair.
+    Should have a different number for each (ActivityDetails, Section) pair.
     """
 
     number = models.CharField(max_length=128)
-    activity_catalog = models.ForeignKey(
-        ActivityCatalog, null=False, on_delete=models.CASCADE
+    activity = models.ForeignKey(
+        ActivityDetails, null=False, on_delete=models.CASCADE
     )
-    section = models.ForeignKey(Sections, null=False, on_delete=models.CASCADE)
+    section = models.ForeignKey(Section, null=False, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.number} - {self.activity_catalog} - {self.section}"
+        return f"{self.number} - {self.activity} - {self.section}"
 
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["activity_catalog", "section"],
-                name="unique_account_number",
+                fields=["activity", "section"], name="unique_account_number"
             )
         ]

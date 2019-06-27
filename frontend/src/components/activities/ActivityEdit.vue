@@ -91,14 +91,14 @@
         },
         methods: {
             changeActivity: function(act) {
-                this.act.service = act
+                this.act.details = act
             },
             saveChanges: function() {
                 let data = {
                     activity_type: this.act.activity_type,
                     start_date: this.act.start_date,
                     end_date: this.act.end_date,
-                    service: this.act.service,
+                    details: this.act.details,
                     note: this.act.note
                 }
                  let data_payee = {
@@ -111,11 +111,7 @@
                     payment_units: this.pay.payment_amount.units,
                     payment_amount: this.pay.payment_amount.amount
                 }
-                if (this.act_status_expected) {
-                    data.status = 'EXPECTED'
-                } else {
-                    data.status = 'GRANTED'
-                }
+                data.status = this.act_status_expected ? 'EXPECTED' : 'GRANTED'
                 if (!this.create_mode) {
                     data.id = this.act.id
                     data.appropriation = this.activityObj.appropriation

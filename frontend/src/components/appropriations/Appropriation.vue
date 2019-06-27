@@ -9,7 +9,6 @@
             </template>
             <div>
                 <button @click="show_edit = !show_edit" class="appr-edit-btn">Redigér</button>
-                <router-link :to="`/appropriation/${ appr.id }/print`">Print</router-link>
             </div>
         </header>
 

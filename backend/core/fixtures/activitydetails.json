@@ -1,6 +1,6 @@
 [
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 474,
     "fields": {
       "name": "§ 11,3,2 Netværks-/samtalegruppe",
@@ -15,7 +15,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 475,
     "fields": {
       "name": "Advokatbistand",
@@ -30,7 +30,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 476,
     "fields": {
       "name": "Aflastning",
@@ -51,7 +51,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 477,
     "fields": {
       "name": "Aktiviteter og materialer",
@@ -67,7 +67,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 478,
     "fields": {
       "name": "Anden hjælp efter § 52,3,9",
@@ -83,7 +83,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 479,
     "fields": {
       "name": "Annoncer m.m",
@@ -96,7 +96,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 480,
     "fields": {
       "name": "Anskaffelser",
@@ -109,7 +109,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 481,
     "fields": {
       "name": "Behandling fysisk/psykiske børn",
@@ -124,7 +124,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 482,
     "fields": {
       "name": "Behandling og pleje",
@@ -137,7 +137,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 483,
     "fields": {
       "name": "Beklædning",
@@ -150,7 +150,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 484,
     "fields": {
       "name": "Berigtigelser vedr. refusion",
@@ -165,7 +165,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 485,
     "fields": {
       "name": "Betaling til andre kommuner/region for specialtandpleje",
@@ -178,7 +178,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 486,
     "fields": {
       "name": "Betaling til og fra kommuner",
@@ -195,7 +195,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 487,
     "fields": {
       "name": "Betaling til og fra regioner",
@@ -210,7 +210,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 488,
     "fields": {
       "name": "Børnehuset, obj. finansiering",
@@ -223,7 +223,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 489,
     "fields": {
       "name": "Børnehuset, takst",
@@ -238,7 +238,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 490,
     "fields": {
       "name": "Bøtø",
@@ -251,7 +251,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 491,
     "fields": {
       "name": "Dagbehandlingstilbud",
@@ -270,7 +270,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 492,
     "fields": {
       "name": "Det Opsøgende Team (DOT)",
@@ -283,7 +283,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 493,
     "fields": {
       "name": "Det specialiserede børneområde øvrige",
@@ -296,7 +296,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 494,
     "fields": {
       "name": "Døgninstitutioner vedr. nedsat funktionsevne",
@@ -313,7 +313,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 495,
     "fields": {
       "name": "Døgninstitutioner vedr. sociale adfærdsproblemer",
@@ -329,7 +329,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 496,
     "fields": {
       "name": "Døgnophold for familien",
@@ -344,7 +344,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 497,
     "fields": {
       "name": "Døgnophold for forældremyndighedsindehaveren, barnet, den un",
@@ -357,7 +357,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 498,
     "fields": {
       "name": "Egenbetaling vedr. §§ 159 og 160",
@@ -373,7 +373,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 499,
     "fields": {
       "name": "Egenbetaling, beboere",
@@ -388,7 +388,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 500,
     "fields": {
       "name": "Eget værelse",
@@ -406,7 +406,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 501,
     "fields": {
       "name": "Ekstraordinær bevilling",
@@ -419,7 +419,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 502,
     "fields": {
       "name": "E-projektet",
@@ -432,7 +432,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 503,
     "fields": {
       "name": "Familiebehandling",
@@ -447,7 +447,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 504,
     "fields": {
       "name": "Familierådgivning",
@@ -460,7 +460,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 505,
     "fields": {
       "name": "Familierådgivning, forebyggende",
@@ -476,7 +476,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 506,
     "fields": {
       "name": "Ferieaktiviter",
@@ -496,7 +496,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 507,
     "fields": {
       "name": "Forældrebetaling, inkl. tilskud",
@@ -512,7 +512,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 508,
     "fields": {
       "name": "Forældrenetværk",
@@ -525,7 +525,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 509,
     "fields": {
       "name": "Fripladser",
@@ -538,7 +538,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 510,
     "fields": {
       "name": "Første benyt. år 2017",
@@ -551,7 +551,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 511,
     "fields": {
       "name": "Hjemmehos",
@@ -566,7 +566,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 512,
     "fields": {
       "name": "Hjemmehos, intern",
@@ -581,7 +581,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 513,
     "fields": {
       "name": "Hjælpemidler",
@@ -594,7 +594,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 514,
     "fields": {
       "name": "Husets drift",
@@ -607,7 +607,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 515,
     "fields": {
       "name": "Indtægter fra regioner",
@@ -620,7 +620,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 516,
     "fields": {
       "name": "Integration af flygtninge",
@@ -635,7 +635,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 517,
     "fields": {
       "name": "Inventar",
@@ -648,7 +648,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 518,
     "fields": {
       "name": "IT- og metodeimplementering",
@@ -661,7 +661,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 519,
     "fields": {
       "name": "IT-udstyr",
@@ -674,7 +674,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 520,
     "fields": {
       "name": "Kommunale plejefamilier",
@@ -690,7 +690,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 521,
     "fields": {
       "name": "Kommunale plejefamilier, vederlag",
@@ -707,7 +707,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 522,
     "fields": {
       "name": "Kommunikationscenteret",
@@ -722,7 +722,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 523,
     "fields": {
       "name": "Kompetenceudvikling",
@@ -735,7 +735,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 524,
     "fields": {
       "name": "Konsulentbistand efter § 11,3,1",
@@ -750,7 +750,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 525,
     "fields": {
       "name": "Kontaktperson",
@@ -772,7 +772,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 526,
     "fields": {
       "name": "Kontaktperson for hele familien",
@@ -787,7 +787,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 527,
     "fields": {
       "name": "Kortvarigt efterværn, § 62a, 3, 6",
@@ -803,7 +803,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 528,
     "fields": {
       "name": "Kost- og efterskoler",
@@ -821,7 +821,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 529,
     "fields": {
       "name": "Kriminalpræventiv indsats",
@@ -834,7 +834,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 530,
     "fields": {
       "name": "Kursus",
@@ -847,7 +847,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 531,
     "fields": {
       "name": "Kvindekrisecentre",
@@ -860,7 +860,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 532,
     "fields": {
       "name": "Køb af træningsredskaber til hjemmetræning",
@@ -873,7 +873,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 533,
     "fields": {
       "name": "Køretøjer",
@@ -886,7 +886,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 534,
     "fields": {
       "name": "Kørsel",
@@ -905,7 +905,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 535,
     "fields": {
       "name": "Kørsel til ankestyrelse og forældres opholdskommune",
@@ -918,7 +918,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 536,
     "fields": {
       "name": "Ledelse og administration",
@@ -931,7 +931,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 537,
     "fields": {
       "name": "Ledsageordning for personer m/nedsat funktionsevne (§ 45)",
@@ -944,7 +944,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 538,
     "fields": {
       "name": "Lektiehjælp",
@@ -957,7 +957,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 539,
     "fields": {
       "name": "Logopæd/Motorik",
@@ -970,7 +970,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 540,
     "fields": {
       "name": "Lommepenge",
@@ -985,7 +985,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 541,
     "fields": {
       "name": "Merudgiftsydelse, jfr. SEL § 41",
@@ -1000,7 +1000,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 542,
     "fields": {
       "name": "Motocross",
@@ -1013,7 +1013,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 543,
     "fields": {
       "name": "Netværksplejefamilier",
@@ -1028,7 +1028,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 544,
     "fields": {
       "name": "Over-/underskud på PPR",
@@ -1041,7 +1041,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 545,
     "fields": {
       "name": "Overførsel mellem år",
@@ -1054,7 +1054,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 546,
     "fields": {
       "name": "Overført overskud",
@@ -1067,7 +1067,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 547,
     "fields": {
       "name": "Overvåget samvær",
@@ -1082,7 +1082,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 548,
     "fields": {
       "name": "Personale",
@@ -1095,7 +1095,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 549,
     "fields": {
       "name": "Personalevelfærd",
@@ -1108,7 +1108,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 550,
     "fields": {
       "name": "Pigeprojektet",
@@ -1121,7 +1121,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 551,
     "fields": {
       "name": "Piger med grænser",
@@ -1134,7 +1134,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 552,
     "fields": {
       "name": "Plejefamilier, eksl. vederlag",
@@ -1153,7 +1153,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 553,
     "fields": {
       "name": "Plejefamilier, vederlag",
@@ -1171,7 +1171,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 554,
     "fields": {
       "name": "Plejehjemsforeninger mv.",
@@ -1188,7 +1188,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 555,
     "fields": {
       "name": "PPR-Lokaler",
@@ -1201,7 +1201,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 556,
     "fields": {
       "name": "PPR-Psykologer",
@@ -1214,7 +1214,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 557,
     "fields": {
       "name": "Praktikantvejledervederlag (PPR)",
@@ -1227,7 +1227,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 558,
     "fields": {
       "name": "Praktikophold",
@@ -1240,7 +1240,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 559,
     "fields": {
       "name": "Prævention, § 11,4",
@@ -1253,7 +1253,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 560,
     "fields": {
       "name": "Pædagogiske vejledere",
@@ -1266,7 +1266,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 561,
     "fields": {
       "name": "Refusion vedr. funktion 05.28.20",
@@ -1279,7 +1279,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 562,
     "fields": {
       "name": "Refusion vedr. funktion 05.28.21",
@@ -1292,7 +1292,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 563,
     "fields": {
       "name": "Refusion vedr. funktion 05.28.23",
@@ -1305,7 +1305,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 564,
     "fields": {
       "name": "Refusion vedr. funktion 05.28.24",
@@ -1318,7 +1318,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 565,
     "fields": {
       "name": "Refusion vedr. funktion 05.28.25",
@@ -1331,7 +1331,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 566,
     "fields": {
       "name": "Reguleringskonto indenfor servicerammen",
@@ -1344,7 +1344,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 567,
     "fields": {
       "name": "Rengøring",
@@ -1357,7 +1357,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 568,
     "fields": {
       "name": "Renter af kortfristet gæld personale",
@@ -1370,7 +1370,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 569,
     "fields": {
       "name": "Repræsentation",
@@ -1383,7 +1383,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 570,
     "fields": {
       "name": "Ressourcepædagoger",
@@ -1396,7 +1396,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 571,
     "fields": {
       "name": "Restance IT",
@@ -1409,7 +1409,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 572,
     "fields": {
       "name": "Rådgivning",
@@ -1422,7 +1422,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 573,
     "fields": {
       "name": "SD fejlkonto C-BUR",
@@ -1435,7 +1435,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 574,
     "fields": {
       "name": "Sikrede institutioner, obj. finansiering",
@@ -1448,7 +1448,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 575,
     "fields": {
       "name": "Sikrede institutioner, opholdsbetaling",
@@ -1461,7 +1461,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 576,
     "fields": {
       "name": "SI-midler (Særlig Inklusion)",
@@ -1474,7 +1474,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 577,
     "fields": {
       "name": "Skilsmissegruppe",
@@ -1487,7 +1487,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 578,
     "fields": {
       "name": "Små hjælpemidler",
@@ -1502,7 +1502,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 579,
     "fields": {
       "name": "Soc.pæd. opholdssteder",
@@ -1523,7 +1523,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 580,
     "fields": {
       "name": "Socialtilsynet, obj. finansiering",
@@ -1536,7 +1536,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 581,
     "fields": {
       "name": "Ssp-samarbejdet",
@@ -1549,7 +1549,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 582,
     "fields": {
       "name": "Støtte til forhindring af anbringelse",
@@ -1565,7 +1565,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 583,
     "fields": {
       "name": "Støtte til forældremyndighedsindehaveren efter § 52a og § 52",
@@ -1585,7 +1585,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 584,
     "fields": {
       "name": "Støtte til fritidstilbud",
@@ -1600,7 +1600,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 585,
     "fields": {
       "name": "Støtte til ophold på kost-/efterskole",
@@ -1613,7 +1613,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 586,
     "fields": {
       "name": "Støtteperson",
@@ -1629,7 +1629,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 587,
     "fields": {
       "name": "Supervision",
@@ -1646,7 +1646,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 588,
     "fields": {
       "name": "Søskendetilbud",
@@ -1659,7 +1659,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 589,
     "fields": {
       "name": "Tabt arbejdsfortjeneste, jfr. SEL § 42",
@@ -1674,7 +1674,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 590,
     "fields": {
       "name": "Task force socialstyrelsen",
@@ -1687,7 +1687,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 591,
     "fields": {
       "name": "Telefoni",
@@ -1700,7 +1700,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 592,
     "fields": {
       "name": "Temadage, ture",
@@ -1713,7 +1713,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 593,
     "fields": {
       "name": "Testmaterialer",
@@ -1726,7 +1726,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 594,
     "fields": {
       "name": "Tilbagebetaling",
@@ -1739,7 +1739,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 595,
     "fields": {
       "name": "Tolk",
@@ -1752,7 +1752,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 596,
     "fields": {
       "name": "Udgifter til flygtninge (100 % ref.)",
@@ -1765,7 +1765,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 597,
     "fields": {
       "name": "Udgifter vedr. samvær",
@@ -1778,7 +1778,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 598,
     "fields": {
       "name": "Ungeindsatsen",
@@ -1791,7 +1791,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 599,
     "fields": {
       "name": "Ungerådgivningen",
@@ -1804,7 +1804,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 600,
     "fields": {
       "name": "Vedligeholdelse",
@@ -1817,7 +1817,7 @@
     }
   },
   {
-    "model": "core.activitycatalog",
+    "model": "core.activitydetails",
     "pk": 601,
     "fields": {
       "name": "Øvrige indtægter vedr. §§ 159 og 160",

@@ -4,7 +4,7 @@
         <header class="activity-header">
             <h1>
                 <i class="material-icons">style</i>
-                Udgift til {{ activityId2name(act.service) }}
+                Udgift til {{ activityId2name(act.details) }}
             </h1>
             <button @click="show_edit = !show_edit" class="act-edit-btn">Redigér</button>
         </header>
@@ -29,7 +29,7 @@
                 <dt>Bevilges efter §</dt>
                 <dd v-if="appr">{{ displaySection(appr.section) }}</dd>
                 <dt>Aktivitet</dt>
-                <dd>{{ activityId2name(act.service) }}</dd>
+                <dd>{{ activityId2name(act.details) }}</dd>
                 <dt>Startdato</dt>
                 <dd>{{ displayDate(act.start_date) }}</dd>
                 <dt>Slutdato</dt>
@@ -143,7 +143,7 @@
                                 },
                                 {
                                     link: false,
-                                    title: `Udgift til ${ activityId2name(this.act.service) }`
+                                    title: `Udgift til ${ activityId2name(this.act.details) }`
                                 }
                             ])
                         })

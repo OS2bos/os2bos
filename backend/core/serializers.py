@@ -12,8 +12,8 @@ from core.models import (
     PaymentMethodDetails,
     Payment,
     SchoolDistrict,
-    Sections,
-    ActivityCatalog,
+    Section,
+    ActivityDetails,
     Account,
     HistoricalCase,
     ServiceProvider,
@@ -120,15 +120,15 @@ class SchoolDistrictSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class SectionsSerializer(serializers.ModelSerializer):
+class SectionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Sections
+        model = Section
         fields = "__all__"
 
 
-class ActivityCatalogSerializer(serializers.ModelSerializer):
+class ActivityDetailsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ActivityCatalog
+        model = ActivityDetails
         fields = "__all__"
 
 
