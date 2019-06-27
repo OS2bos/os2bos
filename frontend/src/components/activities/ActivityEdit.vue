@@ -35,9 +35,9 @@
                     <textarea v-model="act.note"></textarea>
                 </fieldset>
                 <hr>
-                <payment-amount-edit v-model="payment_amount"/>
-                <payment-receiver-edit v-model="payment_receiver"/>
-                <payment-edit v-model="payment"/>
+                <payment-amount-edit v-model="pay.payment_amount"/>
+                <payment-receiver-edit v-model="pay.payment_receiver"/>
+                <payment-edit v-model="pay.payment"/>
 
                 <hr>
                 <fieldset>
@@ -76,9 +76,11 @@
             return {
                 act: {},
                 act_status_expected: false,
-                payment_amount: {},
-                payment_receiver: {},
-                payment: {},
+                pay: {
+                    payment_amount: {},
+                    payment_receiver: {},
+                    payment: {}
+                },
                 create_mode: true
             }
         },
@@ -99,6 +101,16 @@
                     service: this.act.service,
                     note: this.act.note
                 }
+                 let data_payee = {
+                    recipient_type: this.pay.payment_receiver.selected,
+                    recipient_id: this.pay.payment_receiver.payee_id,
+                    recipient_name: this.pay.payment_receiver.payee_name,
+                    payment_method: this.pay.payment.selected,
+                    payment_frequency: this.pay.payment_amount.frequency,
+                    payment_type: this.pay.payment_amount.type,
+                    payment_units: this.pay.payment_amount.units,
+                    payment_amount: this.pay.payment_amount.amount
+                }
                 if (this.act_status_expected) {
                     data.status = 'EXPECTED'
                 } else {
@@ -110,14 +122,26 @@
                     axios.patch(`/activities/${ this.act.id }/`, data)
                     .then(res => {
                         this.$emit('save', res.data)
+                        axios.patch(`/payment_schedules/${ this.act.payment_plan }/`, data_payee)
+                        .then(resp => {
+                            axios.patch(`/activities/${ res.data.id }/`, {
+                                payment_plan: resp.data.id
+                            })
+                        })
                     })
-                    .catch(err => console.log(err))
+                        .catch(err => console.log(err))
                 } else {
                     const appr_id = this.$route.params.apprid
                     data.appropriation = appr_id
                     axios.post(`/activities/`, data)
                     .then(res => {
                         this.$router.push(`/appropriation/${ appr_id }`)
+                        axios.post(`/payment_schedules/`, data_payee)
+                        .then(resp => {
+                            axios.patch(`/activities/${ res.data.id }/`, {
+                                payment_plan: resp.data.id
+                            })
+                        })
                     })
                     .catch(err => console.log(err))
                 }
@@ -130,7 +154,7 @@
                 }  
             }
         },
-         created: function() {
+        created: function() {
             if (this.activityObj) {
                 this.create_mode = false
                 this.act = this.activityObj

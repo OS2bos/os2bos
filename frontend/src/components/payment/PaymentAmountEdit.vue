@@ -6,39 +6,36 @@
             <h2>Beløb</h2>
             <label>Afregningshed</label>
             <div class="rows">
-                <select v-model="type" style="margin-right: 1rem; min-width: 13rem;">
-                    <option v-for="o in type_options" :key="o.key" :value="o.key">
+                <select v-model="entry.type" style="margin-right: 1rem; min-width: 13rem;">
+                    <option v-for="o in entry.type_options" :key="o.key" :value="o.key">
                         {{ o.val }}
                     </option>
                 </select>
-                <select v-model="frequency" v-if="type !== 'ONE-TIME-PAYMENT'">
-                    <option v-for="o in frequency_options" :key="o.key" :value="o.key">
+                <select v-model="entry.frequency" v-if="entry.type !== 'ONE_TIME_PAYMENT'">
+                    <option v-for="o in entry.frequency_options" :key="o.key" :value="o.key">
                         {{ o.val }}
                     </option>
                 </select>
             </div>
-            <fieldset v-if="type === 'PER-HOUR-PAYMENT' || type === 'PER-DAY-PAYMENT' || type === 'PER-KM-PAYMENT'" class="rows">
+            <fieldset v-if="entry.type === 'PER_HOUR_PAYMENT' || entry.type === 'PER_DAY_PAYMENT' || entry.type === 'PER_KM_PAYMENT'" class="rows">
                 <div style="margin-right: .5rem;">
-                    <label v-if="type === 'PER-HOUR-PAYMENT'">Timer</label>
-                    <label v-if="type === 'PER-DAY-PAYMENT'">Døgn</label>
-                    <label v-if="type === 'PER-KM-PAYMENT'">Kilometer</label>
-                    <input v-model="units" type="number"> á
+                    <label v-if="entry.type === 'PER_HOUR_PAYMENT'">Timer</label>
+                    <label v-if="entry.type === 'PER_DAY_PAYMENT'">Døgn</label>
+                    <label v-if="entry.type === 'PER_KM_PAYMENT'">Kilometer</label>
+                    <input v-model="entry.units" type="number"> á
                 </div>
                 <div>
                     <label>Takst</label>
-                    <input v-model="amount" type="number"> kr
+                    <input v-model="entry.amount" type="number"> kr
                 </div>
             </fieldset>
             <fieldset v-else>
                 <label>Beløb</label>
-                <input v-model="amount" type="number"> kr
+                <input v-model="entry.amount" type="number"> kr
             </fieldset>
         </div>
 
-        <payment-plan :amount="amount" :units="units" :type="type" :frequency="frequency" />
-        <div>
-            <button class="payment-schedule-btn" type="button" @click="paymentSchedule()">Betalingsplan</button>
-        </div>
+        <payment-plan :amount="entry.amount" :units="entry.units" :type="entry.type" :frequency="entry.frequency" />
     </div>
 
 </template>
@@ -54,54 +51,61 @@
         },
         data: function() {
             return {
-                type: 'RUNNING-PAYMENT', // default is running payment
-                type_options: [
-                    {
-                        key: 'ONE-TIME-PAYMENT',
-                        val: 'Engangsudgift'
-                    },
-                    {
-                        key: 'RUNNING-PAYMENT',
-                        val: 'Fast beløb, løbende'
-                    },
-                    {
-                        key: 'PER-HOUR-PAYMENT',
-                        val: 'Takst pr. time'
-                    },
-                    {
-                        key: 'PER-DAY-PAYMENT',
-                        val: 'Takst pr. døgn'
-                    },
-                    {
-                        key: 'PER-KM-PAYMENT',
-                        val: 'Takst pr. kilometer'
-                    }
-                ],
-                frequency: 'PAY-EVERY-MONTH', // default is pr month
-                frequency_options: [
-                    {
-                        key: 'PAY-EVERY-MONTH',
-                        val: 'Månedligt'
-                    },
-                    {
-                        key: 'PAY-EVERY-WEEK',
-                        val: 'Ugentligt'
-                    },
-                    {
-                        key: 'PAY-EVERY-DAY',
-                        val: 'Dagligt'
-                    },
-                ],
-                units: 0,
-                amount: 0
+                entry: {
+                    type: 'RUNNING_PAYMENT', // default is running payment
+                    type_options: [
+                        {
+                            key: 'ONE_TIME_PAYMENT',
+                            val: 'Engangsudgift'
+                        },
+                        {
+                            key: 'RUNNING_PAYMENT',
+                            val: 'Fast beløb, løbende'
+                        },
+                        {
+                            key: 'PER_HOUR_PAYMENT',
+                            val: 'Takst pr. time'
+                        },
+                        {
+                            key: 'PER_DAY_PAYMENT',
+                            val: 'Takst pr. døgn'
+                        },
+                        {
+                            key: 'PER_KM_PAYMENT',
+                            val: 'Takst pr. kilometer'
+                        }
+                    ],
+                    frequency: 'MONTHLY', // default is pr month
+                    frequency_options: [
+                        {
+                            key: 'MONTHLY',
+                            val: 'Månedligt'
+                        },
+                        {
+                            key: 'WEEKLY',
+                            val: 'Ugentligt'
+                        },
+                        {
+                            key: 'DAILY',
+                            val: 'Dagligt'
+                        },
+                    ],
+                    units: 0,
+                    amount: 0
+                }
             }
         },
         methods: {
             saveChanges: function() {
                 this.$emit('payment-amount')
-            },
-            paymentSchedule: function() {
-                this.$router.push(`/paymentschedule/`)
+            }
+        },
+        watch: {
+            entry: {
+                handler (newVal) {
+                    this.$emit('input', newVal)
+                },
+                deep: true
             }
         }
 
