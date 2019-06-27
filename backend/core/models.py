@@ -1,7 +1,8 @@
 from datetime import date
 from decimal import Decimal
 
-from dateutil import rrule, relativedelta
+from dateutil import rrule
+from dateutil.relativedelta import relativedelta
 from django.db import models
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
@@ -213,7 +214,7 @@ class PaymentSchedule(models.Model):
         else:
             raise ValueError(_("ukendt betalingstype"))
 
-    def generate_payments(self, start, end, vat_factor=Decimal("100")):
+    def generate_payments(self, start, end=None, vat_factor=Decimal("100")):
         """
         Generates payments with a start and end.
         """
@@ -627,14 +628,15 @@ class Activity(AuditModelMixin, models.Model):
         if self.service_provider:
             vat_factor = self.service_provider.vat_factor
 
-        if self.payment_plan and not self.payment_plan.payments.exists():
-            self.payment_plan.generate_payments(
-                self.start_date, self.end_date, vat_factor
-            )
-        elif self.payment_plan and self.payment_plan.payments.exists():
-            self.payment_plan.synchronize_payments(
-                self.start_date, self.end_date, vat_factor
-            )
+        if self.payment_plan:
+            if not self.payment_plan.payments.exists():
+                self.payment_plan.generate_payments(
+                    self.start_date, self.end_date, vat_factor
+                )
+            if self.payment_plan.payments.exists():
+                self.payment_plan.synchronize_payments(
+                    self.start_date, self.end_date, vat_factor
+                )
 
 
 class RelatedPerson(models.Model):

@@ -1,5 +1,6 @@
 from decimal import Decimal
 from datetime import date
+from unittest import mock
 
 from django.test import TestCase
 from django.contrib.auth import get_user_model
@@ -356,3 +357,58 @@ class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin, ActivityMixin):
 
         self.assertIsNotNone(payment_schedule.payments)
         self.assertEqual(len(payment_schedule.payments.all()), 24)
+
+    def test_synchronize_payments_no_end_needs_further_payments(self):
+        payment_schedule = self.create_payment_schedule(
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_amount=Decimal("100"),
+        )
+        start_date = date(year=2019, month=1, day=1)
+        end_date = None
+
+        payment_schedule.generate_payments(start_date, end_date)
+        self.assertEqual(len(payment_schedule.payments.all()), 24)
+
+        with mock.patch("core.models.date") as date_mock:
+            date_mock.today.return_value = date(year=2020, month=7, day=1)
+            date_mock.today.replace.return_value = date(year=2021, month=12, day=12)
+            payment_schedule.synchronize_payments(start_date, end_date)
+        self.assertEqual(len(payment_schedule.payments.all()), 36)
+
+    def test_synchronize_payments_new_end_date_in_past(self):
+        payment_schedule = self.create_payment_schedule(
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_amount=Decimal("100"),
+        )
+        start_date = date(year=2019, month=1, day=1)
+        end_date = None
+
+        payment_schedule.generate_payments(start_date, end_date)
+
+        self.assertEqual(len(payment_schedule.payments.all()), 24)
+
+        new_end_date = date(year=2019, month=6, day=1)
+        payment_schedule.synchronize_payments(start_date, new_end_date)
+
+        self.assertEqual(len(payment_schedule.payments.all()), 6)
+
+    def test_synchronize_payments_new_end_date_in_future(self):
+        payment_schedule = self.create_payment_schedule(
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_amount=Decimal("100"),
+        )
+        start_date = date(year=2019, month=1, day=1)
+        end_date = None
+
+        # Generate payments till 2020-12-1
+        payment_schedule.generate_payments(start_date, end_date)
+
+        self.assertEqual(len(payment_schedule.payments.all()), 24)
+
+        new_end_date = date(year=2021, month=2, day=1)
+        payment_schedule.synchronize_payments(start_date, new_end_date)
+
+        self.assertEqual(len(payment_schedule.payments.all()), 26)
