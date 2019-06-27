@@ -55,19 +55,19 @@
                 let str = 'Der betales '
 
                 switch(this.type) {
-                    case 'ONE-TIME-PAYMENT':
+                    case 'ONE_TIME_PAYMENT':
                         str += `${ this.amount } kr én gang`
                         break
-                    case 'RUNNING-PAYMENT':
+                    case 'RUNNING_PAYMENT':
                         str += `${ this.amount } kr pr ${ this.freq_name }`
                         break
-                    case 'PER-HOUR-PAYMENT':
+                    case 'PER_HOUR_PAYMENT':
                         str += `${ this.amount } kr pr time - ${ this.units } timer pr ${ this.freq_name }`
                         break
-                    case 'PER-DAY-PAYMENT':
+                    case 'PER_DAY_PAYMENT':
                         str += `${ this.amount } kr pr døgn - ${ this.units } døgn pr ${ this.freq_name }`
                         break
-                    case 'PER-KM-PAYMENT':
+                    case 'PER_KM_PAYMENT':
                         str += `${ this.amount } kr pr kilometer - ${ this.units } kilometer pr ${ this.freq_name }`
                         break
                     default:
@@ -79,10 +79,10 @@
             yearly_cost: function() {
                 let num = 0
                 switch(this.type) {
-                    case 'ONE-TIME-PAYMENT':
+                    case 'ONE_TIME_PAYMENT':
                         num = this.amount
                         break
-                    case 'RUNNING-PAYMENT':
+                    case 'RUNNING_PAYMENT':
                         num = this.amount * this.freq_factor
                         break
                     default:
@@ -92,17 +92,17 @@
             },
             freq_name: function() {
                 switch(this.frequency) {
-                    case 'PAY-EVERY-MONTH':
+                    case 'MONTHLY':
                         this.freq_factor = 12
                         this.month_factor = 1
                         return 'måned'
                         break
-                    case 'PAY-EVERY-WEEK':
+                    case 'WEEKLY':
                         this.freq_factor = 52
                         this.month_factor = 4
                         return 'uge'
                         break
-                    case 'PAY-EVERY-DAY':
+                    case 'DAILY':
                         this.freq_factor = 365
                         this.month_factor = 31
                         return 'dag'
