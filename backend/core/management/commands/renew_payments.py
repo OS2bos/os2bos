@@ -15,6 +15,5 @@ class Command(BaseCommand):
         for schedule in recurring_schedules:
             activity = schedule.activity
             schedule.synchronize_payments(
-                activity.start_date,
-                activity.end_date
+                activity.start_date, activity.end_date
             )
