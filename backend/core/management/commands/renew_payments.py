@@ -13,4 +13,8 @@ class Command(BaseCommand):
         ).exclude(payment_type=PaymentSchedule.ONE_TIME_PAYMENT)
 
         for schedule in recurring_schedules:
-            schedule.synchronize_payments()
+            activity = schedule.activity
+            schedule.synchronize_payments(
+                activity.start_date,
+                activity.end_date
+            )

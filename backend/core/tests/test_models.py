@@ -351,7 +351,6 @@ class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin, ActivityMixin):
 
         payment_schedule.generate_payments(start_date, end_date)
 
-        self.assertIsNotNone(payment_schedule.payments)
         self.assertEqual(payment_schedule.payments.count(), 10)
 
     def test_generate_payments_no_end_date(self):
