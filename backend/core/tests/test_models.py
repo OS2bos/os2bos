@@ -167,81 +167,54 @@ class PaymentTestCase(TestCase, PaymentScheduleMixin):
 
 
 class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin, ActivityMixin):
-    def test_create_rrule_daily_10_days(self):
+    @parameterized.expand([
+        (
+            PaymentSchedule.DAILY,
+            date(year=2019, month=1, day=1),
+            date(year=2019, month=1, day=10),
+            10
+        ),
+        (
+            PaymentSchedule.DAILY,
+            date(year=2019, month=1, day=1),
+            date(year=2019, month=1, day=1),
+            1
+        ),
+        (
+            PaymentSchedule.MONTHLY,
+            date(year=2019, month=1, day=1),
+            date(year=2019, month=10, day=1),
+            10
+        ),
+        (
+            PaymentSchedule.MONTHLY,
+            date(year=2019, month=1, day=1),
+            date(year=2019, month=1, day=1),
+            1
+        ),
+        (
+            PaymentSchedule.WEEKLY,
+            date(year=2019, month=1, day=1),
+            date(year=2019, month=2, day=1),
+            5
+        ),
+        (
+            PaymentSchedule.WEEKLY,
+            date(year=2019, month=1, day=1),
+            date(year=2019, month=1, day=1),
+            1
+        ),
+    ])
+    def test_create_rrule_frequency(self, frequency, start, end, expected):
         payment_schedule = self.create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY
+            payment_frequency=frequency
         )
-
         rrule = payment_schedule.create_rrule(
-            start=date(year=2019, month=1, day=1),
-            end=date(year=2019, month=1, day=10),
+            start=start,
+            end=end,
         )
 
-        self.assertEqual(len(list(rrule)), 10)
-        # Assert days from 1-10 are generated.
-        self.assertCountEqual(
-            [event.day for event in list(rrule)], list(range(1, 11))
-        )
-
-    def test_create_rrule_daily_1_days(self):
-        payment_schedule = self.create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY
-        )
-
-        rrule = payment_schedule.create_rrule(
-            start=date(year=2019, month=1, day=1),
-            end=date(year=2019, month=1, day=1),
-        )
-
-        self.assertEqual(len(list(rrule)), 1)
-
-    def test_create_rrule_monthly_10_months(self):
-        payment_schedule = self.create_payment_schedule(
-            payment_frequency=PaymentSchedule.MONTHLY
-        )
-
-        rrule = payment_schedule.create_rrule(
-            start=date(year=2019, month=1, day=1),
-            end=date(year=2019, month=10, day=1),
-        )
-
-        self.assertEqual(len(list(rrule)), 10)
-
-    def test_create_rrule_monthly_1_months(self):
-        payment_schedule = self.create_payment_schedule(
-            payment_frequency=PaymentSchedule.MONTHLY
-        )
-
-        rrule = payment_schedule.create_rrule(
-            start=date(year=2019, month=1, day=1),
-            end=date(year=2019, month=1, day=1),
-        )
-
-        self.assertEqual(len(list(rrule)), 1)
-
-    def test_create_rrule_weekly_4_weeks(self):
-        payment_schedule = self.create_payment_schedule(
-            payment_frequency=PaymentSchedule.WEEKLY
-        )
-
-        rrule = payment_schedule.create_rrule(
-            start=date(year=2019, month=1, day=1),
-            end=date(year=2019, month=2, day=1),
-        )
-
-        self.assertEqual(len(list(rrule)), 5)
-
-    def test_create_rrule_weekly_1_weeks(self):
-        payment_schedule = self.create_payment_schedule(
-            payment_frequency=PaymentSchedule.WEEKLY
-        )
-
-        rrule = payment_schedule.create_rrule(
-            start=date(year=2019, month=1, day=1),
-            end=date(year=2019, month=1, day=1),
-        )
-
-        self.assertEqual(len(list(rrule)), 1)
+        self.assertEqual(len(list(rrule)), expected)
 
     def test_create_rrule_one_time_1_day(self):
         payment_schedule = self.create_payment_schedule(
