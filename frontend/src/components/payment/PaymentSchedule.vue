@@ -55,10 +55,9 @@
             },
             sum: function() {
                 if (this.payments) {
-                    return this.payments.reduce((total, payment) => {
-                        console.log(total)
+                    return this.payments.reduce(function(total, payment) {
                         return total += parseInt(payment.amount)
-                    })
+                    }, 0)
                 }
             }
         },
