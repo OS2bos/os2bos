@@ -241,6 +241,9 @@ class PaymentSchedule(models.Model):
             )
 
     def synchronize_payments(self, start, end, vat_factor=Decimal("100")):
+        """
+        Synchronize an existing number of payments for a new end_date.
+        """
         today = date.today()
 
         # If no existing payments is generated we can't do anything.
@@ -257,11 +260,13 @@ class PaymentSchedule(models.Model):
             new_start = newest_payment.date + relativedelta(weeks=1)
         elif self.payment_frequency == PaymentSchedule.MONTHLY:
             new_start = newest_payment.date + relativedelta(months=1)
+        else:
+            raise ValueError(_("ukendt betalingsfrekvens"))
 
         # Handle the case where an end_date is set in the future
         # after already having generated payments with no end_date.
         if end and (new_start < end):
-            self.generate_payments(new_start, end)
+            self.generate_payments(new_start, end, vat_factor)
 
         # Handle the case where an end_date is set in the past after
         # already having generated payments with no end_date
@@ -271,7 +276,7 @@ class PaymentSchedule(models.Model):
         # If end is unbounded and the newest payment has a date less than
         # 6 months from now we can generate new payments for another period.
         if not end and (newest_payment.date < today + relativedelta(months=6)):
-            self.generate_payments(new_start)
+            self.generate_payments(new_start, end, vat_factor)
 
 
 class Payment(models.Model):
@@ -630,12 +635,12 @@ class Activity(AuditModelMixin, models.Model):
             vat_factor = self.service_provider.vat_factor
 
         if self.payment_plan:
-            if not self.payment_plan.payments.exists():
-                self.payment_plan.generate_payments(
-                    self.start_date, self.end_date, vat_factor
-                )
             if self.payment_plan.payments.exists():
                 self.payment_plan.synchronize_payments(
+                    self.start_date, self.end_date, vat_factor
+                )
+            else:
+                self.payment_plan.generate_payments(
                     self.start_date, self.end_date, vat_factor
                 )
 
