@@ -14,6 +14,7 @@ from core.models import (
     ActivityDetails,
     Account,
     ServiceProvider,
+    PaymentMethodDetails,
     Team,
     User,
     ApprovalLevel,
@@ -22,6 +23,7 @@ from core.models import (
 for klass in (
     Municipality,
     PaymentSchedule,
+    PaymentMethodDetails,
     Payment,
     Case,
     Appropriation,

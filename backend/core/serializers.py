@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
 
@@ -9,6 +10,7 @@ from core.models import (
     RelatedPerson,
     Municipality,
     PaymentSchedule,
+    PaymentMethodDetails,
     Payment,
     SchoolDistrict,
     Section,
@@ -47,27 +49,63 @@ class HistoricalCaseSerializer(serializers.ModelSerializer):
         )
 
 
-class AppropriationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Appropriation
-        fields = "__all__"
-
-
-class ActivitySerializer(serializers.ModelSerializer):
+class SupplementaryActivitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Activity
         fields = "__all__"
 
 
-class PaymentScheduleSerializer(serializers.ModelSerializer):
+class ActivitySerializer(serializers.ModelSerializer):
+    total_amount = serializers.SerializerMethodField()
+    supplementary_activities = SupplementaryActivitySerializer(
+        many=True, read_only=True
+    )
+
+    def validate(self, data):
+        # Check that start_date is before end_date
+        if (
+            data["start_date"]
+            and data["end_date"]
+            and data["start_date"] > data["end_date"]
+        ):
+            raise serializers.ValidationError(
+                _("startdato skal være før slutdato")
+            )
+        return data
+
     class Meta:
-        model = PaymentSchedule
+        model = Activity
+        fields = "__all__"
+
+    def get_total_amount(self, obj):
+        return obj.total_amount()
+
+
+class AppropriationSerializer(serializers.ModelSerializer):
+    activities = ActivitySerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Appropriation
         fields = "__all__"
 
 
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
+        fields = "__all__"
+
+
+class PaymentMethodDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PaymentMethodDetails
+        fields = "__all__"
+
+
+class PaymentScheduleSerializer(serializers.ModelSerializer):
+    payments = PaymentSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = PaymentSchedule
         fields = "__all__"
 
 
