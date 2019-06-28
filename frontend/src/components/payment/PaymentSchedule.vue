@@ -23,7 +23,7 @@
             <tbody>
                 <tr v-for="p in payments" :key="p.id">
                     <td>{{ displayDate(p.date) }}</td>
-                    <td>{{ p.amount }}</td>
+                    <td>{{ p.amount }} kr.</td>
                     <td>
                         <div v-if="p.paid === true">Betalt</div>
                         <div v-if="p.paid === false">Ikke betalt</div>
@@ -31,7 +31,7 @@
                 </tr>
                 <tr>
                     <th>I alt pr år</th>
-                    <th>{{ sum }}</th>
+                    <th>{{ sum }} kr.</th>
                     <td></td>
                 </tr>
             </tbody>
