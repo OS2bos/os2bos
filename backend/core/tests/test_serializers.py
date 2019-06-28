@@ -29,13 +29,13 @@ class ActivitySerializerTestCase(
             "end_date": "2018-01-01",
             "service": activity_catalog.pk,
             "status": Activity.STATUS_EXPECTED,
-            "activity_type": Activity.MAIN_ACTIVITY
+            "activity_type": Activity.MAIN_ACTIVITY,
         }
         serializer = ActivitySerializer(data=data)
         serializer.is_valid()
         self.assertEqual(
             serializer.errors["non_field_errors"][0],
-            "startdato skal være før slutdato"
+            "startdato skal være før slutdato",
         )
 
     def test_validate_start_before_end(self):
@@ -48,7 +48,7 @@ class ActivitySerializerTestCase(
             "end_date": "2019-01-01",
             "service": activity_catalog.pk,
             "status": Activity.STATUS_EXPECTED,
-            "activity_type": Activity.MAIN_ACTIVITY
+            "activity_type": Activity.MAIN_ACTIVITY,
         }
         serializer = ActivitySerializer(data=data)
         serializer.is_valid()
