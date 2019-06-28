@@ -268,8 +268,8 @@ class PaymentSchedule(models.Model):
         if end and (newest_payment.date > end):
             self.payments.filter(date__gt=end).delete()
 
-        # If end is unbounded and the newest payment has a date less
-        # than 6 months from now we can generate new payments for another period.
+        # If end is unbounded and the newest payment has a date less than
+        # 6 months from now we can generate new payments for another period.
         if not end and (newest_payment.date < today + relativedelta(months=6)):
             self.generate_payments(new_start)
 
