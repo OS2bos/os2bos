@@ -368,6 +368,9 @@ class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin, ActivityMixin):
         self.assertEqual(payment_schedule.payments.count(), 24)
 
     def test_synchronize_payments_no_end_needs_further_payments(self):
+        # Test the case where end is unbounded and payments are generated till
+        # end of next year then middle of next year is reached
+        # and new payments should be generated once again
         payment_schedule = self.create_payment_schedule(
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
             payment_frequency=PaymentSchedule.MONTHLY,
@@ -375,10 +378,12 @@ class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin, ActivityMixin):
         )
         start_date = date(year=2019, month=1, day=1)
         end_date = None
-
+        # Initial call to generate payments will generate 24 payments.
         payment_schedule.generate_payments(start_date, end_date)
         self.assertEqual(len(payment_schedule.payments.all()), 24)
 
+        # Now we are in the future and we need to generate new payments
+        # because end is still unbounded
         with mock.patch("core.models.date") as date_mock:
             date_mock.today.return_value = date(year=2020, month=7, day=1)
             date_mock.max.month = 12
@@ -387,6 +392,8 @@ class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin, ActivityMixin):
         self.assertEqual(payment_schedule.payments.count(), 36)
 
     def test_synchronize_payments_new_end_date_in_past(self):
+        # Test the case where we generate payments for an unbounded end
+        # and next the end is set so we need to delete some generated payments.
         payment_schedule = self.create_payment_schedule(
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
             payment_frequency=PaymentSchedule.MONTHLY,
