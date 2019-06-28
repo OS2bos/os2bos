@@ -167,52 +167,51 @@ class PaymentTestCase(TestCase, PaymentScheduleMixin):
 
 
 class PaymentScheduleTestCase(TestCase, PaymentScheduleMixin, ActivityMixin):
-    @parameterized.expand([
-        (
-            PaymentSchedule.DAILY,
-            date(year=2019, month=1, day=1),
-            date(year=2019, month=1, day=10),
-            10
-        ),
-        (
-            PaymentSchedule.DAILY,
-            date(year=2019, month=1, day=1),
-            date(year=2019, month=1, day=1),
-            1
-        ),
-        (
-            PaymentSchedule.MONTHLY,
-            date(year=2019, month=1, day=1),
-            date(year=2019, month=10, day=1),
-            10
-        ),
-        (
-            PaymentSchedule.MONTHLY,
-            date(year=2019, month=1, day=1),
-            date(year=2019, month=1, day=1),
-            1
-        ),
-        (
-            PaymentSchedule.WEEKLY,
-            date(year=2019, month=1, day=1),
-            date(year=2019, month=2, day=1),
-            5
-        ),
-        (
-            PaymentSchedule.WEEKLY,
-            date(year=2019, month=1, day=1),
-            date(year=2019, month=1, day=1),
-            1
-        ),
-    ])
+    @parameterized.expand(
+        [
+            (
+                PaymentSchedule.DAILY,
+                date(year=2019, month=1, day=1),
+                date(year=2019, month=1, day=10),
+                10,
+            ),
+            (
+                PaymentSchedule.DAILY,
+                date(year=2019, month=1, day=1),
+                date(year=2019, month=1, day=1),
+                1,
+            ),
+            (
+                PaymentSchedule.MONTHLY,
+                date(year=2019, month=1, day=1),
+                date(year=2019, month=10, day=1),
+                10,
+            ),
+            (
+                PaymentSchedule.MONTHLY,
+                date(year=2019, month=1, day=1),
+                date(year=2019, month=1, day=1),
+                1,
+            ),
+            (
+                PaymentSchedule.WEEKLY,
+                date(year=2019, month=1, day=1),
+                date(year=2019, month=2, day=1),
+                5,
+            ),
+            (
+                PaymentSchedule.WEEKLY,
+                date(year=2019, month=1, day=1),
+                date(year=2019, month=1, day=1),
+                1,
+            ),
+        ]
+    )
     def test_create_rrule_frequency(self, frequency, start, end, expected):
         payment_schedule = self.create_payment_schedule(
             payment_frequency=frequency
         )
-        rrule = payment_schedule.create_rrule(
-            start=start,
-            end=end,
-        )
+        rrule = payment_schedule.create_rrule(start=start, end=end)
 
         self.assertEqual(len(list(rrule)), expected)
 
