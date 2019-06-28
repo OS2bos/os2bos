@@ -29,6 +29,11 @@
                         <div v-if="p.paid === false">Ikke betalt</div>
                     </td>
                 </tr>
+                <tr>
+                    <th>I alt pr år</th>
+                    <th>{{ sum }}</th>
+                    <td></td>
+                </tr>
             </tbody>
         </table>
     </section>
@@ -47,6 +52,14 @@
         computed: {
             payments: function() {
                 return this.paymentsObj
+            },
+            sum: function() {
+                if (this.payments) {
+                    return this.payments.reduce((total, payment) => {
+                        console.log(total)
+                        return total += parseInt(payment.amount)
+                    })
+                }
             }
         },
         methods: {

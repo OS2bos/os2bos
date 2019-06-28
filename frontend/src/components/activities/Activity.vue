@@ -92,7 +92,7 @@
 
         </div>
         <div class="payment-schedule" v-if="!show_edit">
-            <payment-schedule :payments-obj="payments"/>
+            <payment-schedule :payments-obj="pay.payments"/>
         </div>
     </section>
 
