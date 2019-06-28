@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
 
@@ -59,6 +60,18 @@ class ActivitySerializer(serializers.ModelSerializer):
     supplementary_activities = SupplementaryActivitySerializer(
         many=True, read_only=True
     )
+
+    def validate(self, data):
+        # Check that start_date is before end_date
+        if (
+            data["start_date"]
+            and data["end_date"]
+            and data["start_date"] > data["end_date"]
+        ):
+            raise serializers.ValidationError(
+                _("startdato skal være før slutdato")
+            )
+        return data
 
     class Meta:
         model = Activity
