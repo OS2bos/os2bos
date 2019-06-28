@@ -25,8 +25,8 @@
                     <td>{{ displayDate(p.date) }}</td>
                     <td>{{ p.amount }} kr.</td>
                     <td>
-                        <div v-if="p.paid === true">Betalt</div>
-                        <div v-if="p.paid === false">Ikke betalt</div>
+                        <span v-if="p.paid === true">Ja</span>
+                        <span v-else>Nej</span>
                     </td>
                 </tr>
                 <tr>
