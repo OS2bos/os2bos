@@ -13,6 +13,8 @@ from django.core.validators import MinValueValidator
 from django_audit_fields.models import AuditModelMixin
 from simple_history.models import HistoricalRecords
 
+from core.managers import PaymentQuerySet
+
 # Target group - definitions and choice list.
 FAMILY_DEPT = "FAMILY_DEPT"
 DISABILITY_DEPT = "DISABILITY_DEPT"
@@ -285,6 +287,8 @@ class Payment(models.Model):
     These may be entered manually, but ideally they should be imported
     from an accounts payable system."""
 
+    objects = PaymentQuerySet.as_manager()
+
     date = models.DateField(verbose_name=_("betalingsdato"))
 
     recipient_type = models.CharField(
@@ -481,8 +485,16 @@ class Appropriation(AuditModelMixin, models.Model):
 
     @property
     def payment_plan(self):
-        # TODO:
-        pass  # pragma: no cover
+        activities = self.activities.all().select_related(
+            "payment_plan"
+        ).prefetch_related(
+            "payment_plan__payments",
+            "supplementary_activities__payment_plan__payments"
+        )
+
+        for activity in activities:
+            activity.supplementary_activities
+
 
 
 class ServiceProvider(models.Model):
