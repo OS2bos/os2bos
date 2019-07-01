@@ -17,7 +17,7 @@ class PaymentQuerySet(models.QuerySet):
     def is_paid(self):
         return self.filter(paid=True)
 
-    def bin_monthly(self):
+    def bin_in_monthly_amounts(self):
         """
         Annotate each Payment with a date_str = YYYY - MM
         """
@@ -27,4 +27,4 @@ class PaymentQuerySet(models.QuerySet):
                 Value("-", CharField()),
                 LPad(Cast(ExtractMonth("date"), CharField()), 2, fill_text=Value("0")),
             )
-        ).aggregate("")
+        ).values("date_str").order_by("date_str").annotate(Sum("amount"))
