@@ -23,20 +23,24 @@ with open("aktiviteter.csv") as csvfile:
         tolerance_dkk = row[3]
         main_activity_on = row[4]
         suppl_activity_on = row[5]
-        object, created = ActivityDetails.objects.update_or_create(
-            name=name,
-            activity_id=activity_id,
-            max_tolerance_in_percent=tolerance_percent,
-            max_tolerance_in_dkk=tolerance_dkk,
-        )
+        try:
+            ad, created = ActivityDetails.objects.update_or_create(
+                name=name,
+                activity_id=activity_id,
+                max_tolerance_in_percent=tolerance_percent,
+                max_tolerance_in_dkk=tolerance_dkk,
+            )
+        except Exception as e:
+            print(f"Import of activity {activity_id} failed: {e}")
+            continue
         main_activity_for = Section.objects.filter(paragraph=main_activity_on)
         if main_activity_for.exists():
             main_activity_for = main_activity_for.first()
-            object.main_activity_for.add(main_activity_for)
+            ad.main_activity_for.add(main_activity_for)
 
         supplementary_activity_for = Section.objects.filter(
             paragraph=suppl_activity_on
         )
         if supplementary_activity_for.exists():
             supplementary_activity_for = supplementary_activity_for.first()
-            object.supplementary_activity_for.add(supplementary_activity_for)
+            ad.supplementary_activity_for.add(supplementary_activity_for)
