@@ -7,7 +7,7 @@ as "aktiviteter.csv" in the current directory.
 
 NOTE: This requires the Section models to have been populated first.
 """
-from core.models import ActivityDetails, Sections
+from core.models import ActivityDetails, Section
 import csv
 
 with open("aktiviteter.csv") as csvfile:
@@ -29,12 +29,12 @@ with open("aktiviteter.csv") as csvfile:
             max_tolerance_in_percent=tolerance_percent,
             max_tolerance_in_dkk=tolerance_dkk,
         )
-        main_activity_for = Sections.objects.filter(paragraph=main_activity_on)
+        main_activity_for = Section.objects.filter(paragraph=main_activity_on)
         if main_activity_for.exists():
             main_activity_for = main_activity_for.first()
             object.main_activity_for.add(main_activity_for)
 
-        supplementary_activity_for = Sections.objects.filter(
+        supplementary_activity_for = Section.objects.filter(
             paragraph=suppl_activity_on
         )
         if supplementary_activity_for.exists():

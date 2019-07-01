@@ -10,7 +10,7 @@ from core.models import (
     Team,
     Activity,
     PaymentSchedule,
-    ActivityCatalog,
+    ActivityDetails,
 )
 
 
@@ -89,10 +89,10 @@ class ActivityMixin:
         start_date=date(year=2019, month=1, day=1),
         end_date=date(year=2019, month=1, day=10),
     ):
-        activity_catalog = ActivityCatalog.objects.create(
+        activity_details = ActivityDetails.objects.create(
             max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
         )
         activity = Activity.objects.create(
-            start_date=start_date, end_date=end_date, service=activity_catalog
+            start_date=start_date, end_date=end_date, details=activity_details
         )
         return activity
