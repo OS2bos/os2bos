@@ -60,6 +60,18 @@ function userId2name(id) {
     }
 }
 
+function approvalId2name(id) {
+    const approval_list = store.getters.getApprovals
+    if (approval_list) {
+        let approval = approval_list.find(function(element) {
+            return element.id === parseInt(id);
+        })
+        return approval.name
+    } else {
+        return 'Ikke tilgængelig'
+    }
+}
+
 function displayStatus(status) {
     let status_str = ''
     switch(status) {
@@ -118,5 +130,6 @@ export {
     sectionId2name,
     userId2name,
     displayStatus,
-    displayEffort
+    displayEffort,
+    approvalId2name
 }
