@@ -12,7 +12,7 @@
 
         <KLe>{{appropriation.section.kle_number}}</KLe>
 
-        <SagSkabelonId>{{appropriation.case.sbsys_id}}</SagSkabelonId>
+        <SagSkabelonId>{{appropriation.section.sbsys_template_id}}</SagSkabelonId>
 
     </SBSYSJournalisering>
 
