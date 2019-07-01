@@ -611,7 +611,7 @@ class Activity(AuditModelMixin, models.Model):
         Appropriation,
         null=True,
         blank=True,
-        related_name="main_activity",
+        related_name="activities",
         on_delete=models.CASCADE,
     )
 
