@@ -74,8 +74,13 @@
                 }
             },
             cancel: function() {
-                this.$emit('close')
-                this.$router.push(`/appropriation/${ this.appr.id }/`)
+                if (!this.create_mode) {
+                    this.$emit('close')
+                    this.$router.push(`/appropriation/${ this.appr.id }/`) 
+                } else {
+                    this.$emit('close')
+                    this.$router.push(`/case/${ this.$route.params.caseid }/`) 
+                }
             }
         },
         created: function() {

@@ -70,7 +70,7 @@ const actions = {
     setTimer: function({dispatch}) {
         setTimeout(() => {
             dispatch('refreshToken')
-        }, 25000);
+        }, 270000);
     },
     refreshToken: function({commit, dispatch, state}) {
         if (state.refreshtoken) {    
@@ -92,7 +92,6 @@ const actions = {
         function waitForUsers() {
             setTimeout(function() {
                 if (rootState.lists.users) {
-                    console.log('we got users')
                     const stored_username = sessionStorage.getItem('username')
                     let name = ''
                     if (username) {
