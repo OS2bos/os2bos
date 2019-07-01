@@ -115,9 +115,6 @@ def send_appropriation(appropriation):
     font_config = FontConfiguration()
     pdf_data = HTML(string=html_data).write_pdf(font_config=font_config)
     pdf_file_name = f"{appropriation.sbsys_id}.pdf"
-    HTML(string=html_data).write_pdf(
-        f"core/migrations/{pdf_file_name}", font_config=font_config
-    )
 
     # Send as email
     msg = EmailMessage()
