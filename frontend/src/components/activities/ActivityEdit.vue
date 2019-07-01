@@ -14,9 +14,9 @@
                 <fieldset>
                     <legend>Type</legend>
                     <input type="radio" id="field-type-main" value="MAIN_ACTIVITY" v-model="act.activity_type">
-                    <label for="field-type-main">Foranstaltningsudgift</label>
+                    <label for="field-type-main">Hovedydelse</label>
                     <input type="radio" id="field-type-suppl" value="SUPPL_ACTIVITY" v-model="act.activity_type">
-                    <label for="field-type-suppl">Følgeudgift</label>
+                    <label for="field-type-suppl">Følgeydelse</label>
                 </fieldset>
                 <fieldset>
                     <label for="selectField">Aktivitet</label>

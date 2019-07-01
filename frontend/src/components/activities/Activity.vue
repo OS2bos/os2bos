@@ -23,8 +23,8 @@
                     Type
                 </dt>
                 <dd>
-                    <div v-if="act.activity_type === 'MAIN_ACTIVITY'">Foranstaltningsudgift</div>
-                    <div v-if="act.activity_type === 'SUPPL_ACTIVITY'">Følgeudgift</div>
+                    <div v-if="act.activity_type === 'MAIN_ACTIVITY'">Hovedydelse</div>
+                    <div v-if="act.activity_type === 'SUPPL_ACTIVITY'">Følgeydelse</div>
                 </dd>
                 <dt>Bevilges efter §</dt>
                 <dd v-if="appr">{{ displaySection(appr.section) }}</dd>
@@ -142,11 +142,11 @@
                         },
                         {
                             link: `/case/${ this.cas.id }`,
-                            title: `Hovedsag ${ this.cas.sbsys_id }`
+                            title: `Hovedsag ${ this.cas.sbsys_id }, ${ this.cas.name }`
                         },
                         {
                             link: `/appropriation/${ this.appr.id }`,
-                            title: `Foranstaltning ${ this.appr.sbsys_id }`
+                            title: `Bevillingsskrivelse ${ this.appr.sbsys_id }`
                         },
                         {
                             link: false,

@@ -112,7 +112,7 @@
                     },
                     {
                         link: false,
-                        title: `Foranstaltning ${ this.appr.sbsys_id }`
+                        title: `Bevillingsskrivelse ${ this.appr.sbsys_id }`
                     }
                 ])
             }
