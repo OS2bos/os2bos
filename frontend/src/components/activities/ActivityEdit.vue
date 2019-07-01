@@ -4,92 +4,49 @@
         <h1 v-if="create_mode">Opret Aktivitet</h1>
         <h1 v-else>Redigér Aktivitet</h1>
 
-            <fieldset>
-                <legend>Status</legend>
-                <input type="radio" id="field-status-granted" value="GRANTED" v-model="act.status">
-                <label for="field-status-granted">Bevilling</label>
-                <input type="radio" id="field-status-expected" value="EXPECTED" v-model="act.status">
-                <label for="field-status-expected">Forventning</label>
-            </fieldset>
-            <fieldset>
-                <legend>Type</legend>
-                <input type="radio" id="field-type-main" value="MAIN_ACTIVITY" v-model="act.activity_type">
-                <label for="field-type-main">Hovedaktivitet</label>
-                <input type="radio" id="field-type-suppl" value="SUPPL_ACTIVITY" v-model="act.activity_type">
-                <label for="field-type-suppl">Følgeaktivitet</label>
-                <input type="radio" id="field-type-expected" value="EXPECTED_CHANGE" v-model="act.activity_type">
-                <label for="field-type-expected">Forventning</label>
-            </fieldset>
-            <fieldset>
-                <label for="selectField">Aktivitet</label>
-                <list-picker :dom-id="'selectField'" :selected-id="act.details" @selection="changeActivity" :list="activities" />
-            </fieldset>
-            <fieldset>
-                <label for="field-startdate">Startdato</label>
-                <input type="date" id="field-startdate" v-model="act.start_date">
-            </fieldset>
-            <fieldset>
-                <label for="field-enddate">Slutdato</label>
-                <input type="date" id="field-enddate" v-model="act.end_date">
-            </fieldset>
-            <hr>
-            <fieldset>
-                <label for="field-cost">Bevilget beløb</label>
-                <input type="number" id="field-cost" value="0">
-            </fieldset>
-            <fieldset>
-                <legend>Udgiftstype</legend>
-                <input type="radio" id="field-cost-single" :value="false">
-                <label for="field-cost-single">Følgeydelse</label>
-                <input type="radio" id="field-cost-recurring" :value="true">
-                <label for="field-cost-recurring">Enkeltudgift</label>
-            </fieldset>
-            <fieldset>
-                <label for="field-note">Bemærkning</label>
-                <textarea id="field-note"></textarea>
-            </fieldset>
-            <hr>
-            <fieldset>
-                <legend>Betalingsmodtager</legend>
-                <input type="radio" id="field-payment-type-inherit" value="inherit">
-                <label for="field-payment-type-inherit">Samme som hovedydelsen</label>
-                <input type="radio" id="field-payment-type-intern" value="intern">
-                <label for="field-payment-type-intern">Intern</label>
-                <input type="radio" id="field-payment-type-person" value="person">
-                <label for="field-payment-type-person">Person</label>
-                <input type="radio" id="field-payment-type-firm" value="firma">
-                <label for="field-payment-type-firm">Firma</label>
-            </fieldset>
-            <template>
+        <div class="row">
+            <div class="column">
                 <fieldset>
-                    <label for="field-payment-id">
-                        <template>CPR-nr/</template>
-                        <template>CVR-nr </template>
-                        <template>Reference</template>
-                    </label>
-                    <input type="text" id="field-payment-id" value="Ukendt">
+                    <legend>Status</legend>
+                    <input type="checkbox" id="field-status-expected" v-model="act_status_expected">
+                    <label for="field-status-expected">Forventning</label>
                 </fieldset>
                 <fieldset>
-                    <label for="field-payment-name">Navn</label>
-                    <input type="text" id="field-payment-name" value="Ukendt">
+                    <legend>Type</legend>
+                    <input type="radio" id="field-type-main" value="MAIN_ACTIVITY" v-model="act.activity_type">
+                    <label for="field-type-main">Foranstaltningsudgift</label>
+                    <input type="radio" id="field-type-suppl" value="SUPPL_ACTIVITY" v-model="act.activity_type">
+                    <label for="field-type-suppl">Følgeudgift</label>
                 </fieldset>
                 <fieldset>
-                    <legend>Betalingsmåde</legend>
-                    <input type="radio" id="field-payment-method-cash" value="kontant">
-                    <label for="field-payment-method-cash">Kontant udbetaling</label>
-                    <input type="radio" id="field-payment-method-sd" value="SD-løn">
-                    <label for="field-payment-method-sd">SD-løn</label>
-                    <input type="radio" id="field-payment-method-invoice" value="faktura">
-                    <label for="field-payment-method-invoice">Faktura</label>
-                    <input type="radio" id="field-payment-method-internal" value="intern afregning">
-                    <label for="field-payment-method-internal">Intern afregning</label>
+                    <label for="selectField">Aktivitet</label>
+                    <list-picker :dom-id="'selectField'" :selected-id="act.details" @selection="changeActivity" :list="activities" />
                 </fieldset>
-            </template>
-            <hr>
-            <fieldset>
-                <input type="submit" value="Gem">
-                <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
-            </fieldset>
+                <fieldset>
+                    <label for="field-startdate">Startdato</label>
+                    <input type="date" id="field-startdate" v-model="act.start_date">
+                </fieldset>
+                <fieldset>
+                    <label for="field-enddate">Slutdato</label>
+                    <input type="date" id="field-enddate" v-model="act.end_date">
+                </fieldset>
+                <fieldset>
+                    <label for="field-text">Bemærkning</label>
+                    <textarea v-model="act.note"></textarea>
+                </fieldset>
+                <hr>
+                <payment-amount-edit :payment-obj="pay" />
+                <payment-receiver-edit :payment-obj="pay" />
+                <payment-edit :payment-obj="pay" />
+                <hr>
+                <fieldset>
+                    <input type="submit" value="Gem">
+                    <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
+                </fieldset>
+            </div>
+
+            <div class="column"></div>
+        </div>
         </form>
     </section>
 
@@ -99,11 +56,17 @@
 
     import axios from '../http/Http.js'
     import ListPicker from '../forms/ListPicker.vue'
+    import PaymentAmountEdit from '../payment/PaymentAmountEdit.vue'
+    import PaymentReceiverEdit from '../payment/PaymentReceiverEdit.vue'
+    import PaymentEdit from '../payment/PaymentEdit.vue'
 
     export default {
 
         components: {
-            ListPicker
+            ListPicker,
+            PaymentAmountEdit,
+            PaymentReceiverEdit,
+            PaymentEdit
         },
         props: [
             'activityObj'
@@ -111,6 +74,8 @@
         data: function() {
             return {
                 act: {},
+                act_status_expected: false,
+                pay: {},
                 create_mode: true
             }
         },
@@ -125,33 +90,55 @@
             },
             saveChanges: function() {
                 let data = {
-                    status: this.act.status,
                     activity_type: this.act.activity_type,
-                    id: this.act.id,
                     start_date: this.act.start_date,
                     end_date: this.act.end_date,
-                    details: this.act.details
+                    details: this.act.details,
+                    note: this.act.note
                 }
+                let data_payee = {
+                    recipient_type: this.pay.recipient_type,
+                    recipient_id: this.pay.recipient_id,
+                    recipient_name: this.pay.recipient_name,
+                    payment_method: this.pay.payment_method,
+                    payment_frequency: this.pay.payment_frequency,
+                    payment_type: this.pay.payment_type,
+                    payment_units: this.pay.payment_units,
+                    payment_amount: this.pay.payment_amount
+                }
+                data.status = this.act_status_expected ? 'EXPECTED' : 'GRANTED'
                 if (!this.create_mode) {
+                    data.id = this.act.id
                     data.appropriation = this.activityObj.appropriation
                     axios.patch(`/activities/${ this.act.id }/`, data)
                     .then(res => {
                         this.$emit('save', res.data)
+                        axios.patch(`/payment_schedules/${ this.act.payment_plan }/`, data_payee)
+                        .then(resp => {
+                            axios.patch(`/activities/${ res.data.id }/`, {
+                                payment_plan: resp.data.id
+                            })
+                            .then(() => {
+                                this.$store.dispatch('fetchActivity', res.data.id)
+                            })
+                        })
                     })
-                    .catch(err => console.log(err))
+                        .catch(err => console.log(err))
                 } else {
                     const appr_id = this.$route.params.apprid
-                    axios.post(`/activities/`, {
-                        appropriation: appr_id,
-                        status: this.act.status,
-                        activity_type: this.act.activity_type,
-                        id: this.act.id,
-                        start_date: this.act.start_date,
-                        end_date: this.act.end_date,
-                        details: this.act.details
-                    })
+                    data.appropriation = appr_id
+                    axios.post(`/activities/`, data)
                     .then(res => {
                         this.$router.push(`/appropriation/${ appr_id }`)
+                        axios.post(`/payment_schedules/`, data_payee)
+                        .then(resp => {
+                            axios.patch(`/activities/${ res.data.id }/`, {
+                                payment_plan: resp.data.id
+                            })
+                            .then(() => {
+                                this.$store.dispatch('fetchActivity', res.data.id)
+                            })
+                        })
                     })
                     .catch(err => console.log(err))
                 }
@@ -162,12 +149,20 @@
                 } else {
                     this.$router.push(`/appropriation/${ this.$route.params.apprid }`)
                 }  
+            },
+            fetchPaymentInfo: function(pay_plan_id) {
+                axios.get(`/payment_schedules/${ pay_plan_id }/`)
+                .then(res => {
+                    this.pay = res.data
+                })
+                .catch(err => console.log(err))
             }
         },
-         created: function() {
+        created: function() {
             if (this.activityObj) {
                 this.create_mode = false
                 this.act = this.activityObj
+                this.fetchPaymentInfo(this.activityObj.payment_plan)
             }
         }
     }
@@ -185,6 +180,10 @@
         background-color: transparent;
         color: var(--primary);
         border-color: transparent;
+    }
+
+    .activity.expectation {
+        border: solid 3px var(--danger);
     }
 
 </style>

@@ -95,30 +95,31 @@
         
         data: function() {
             return {
-                cas: null,
                 edit_mode: false
+            }
+        },
+        computed: {
+            cas: function() {
+                return this.$store.getters.getCase
+            }
+        },
+        watch: {
+            cas: function() {
+                this.$store.commit('setBreadcrumb', [
+                    {
+                        link: '/',
+                        title: 'Mine sager'
+                    },
+                    {
+                        link: false,
+                        title: `${ this.cas.sbsys_id}, ${ this.cas.name}`
+                    }
+                ])
             }
         },
         methods: {
             update: function() {
-                this.fetchCase(this.$route.params.id)
-            },
-            fetchCase: function(id) {
-                axios.get(`/cases/${id}/`)
-                .then(res => {
-                    this.cas = res.data
-                    this.$store.commit('setBreadcrumb', [
-                        {
-                            link: '/',
-                            title: 'Mine sager'
-                        },
-                        {
-                            link: false,
-                            title: `${ this.cas.sbsys_id}, ${ this.cas.name}`
-                        }
-                    ])
-                })
-                .catch(err => console.log(err))
+                this.$store.dispatch('fetchCase', this.$route.params.id)
             },
             reload: function() {
                 this.edit_mode =  false

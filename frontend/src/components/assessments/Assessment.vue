@@ -5,11 +5,17 @@
         </header>
 
         <form class="assessment-form" @submit.prevent="saveAssessment()">
-            <assessment-edit :case-obj="cas" @assessment="updateAssessment" />
-            <fieldset style="margin: 0 1rem 1rem;">
-                <input type="submit" value="Opdatér">
-                <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
-            </fieldset>
+            <div class="row">
+                <div class="column">
+                    <assessment-edit :case-obj="cas" @assessment="updateAssessment" />
+                    <fieldset style="margin: 0 1rem 1rem;">
+                        <input type="submit" value="Opdatér">
+                        <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
+                    </fieldset>
+
+                </div>
+                <div class="column"></div>
+            </div>
         </form>
 
         <assessment-history :case-obj="cas" />
