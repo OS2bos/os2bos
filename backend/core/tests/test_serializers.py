@@ -58,7 +58,7 @@ class ActivitySerializerTestCase(
         serializer.is_valid()
         self.assertEqual(serializer.errors, {})
 
-    def test_validate_start_before_end_no_end(self):
+    def test_validate_no_end(self):
         activity_details = ActivityDetails.objects.create(
             max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
         )
