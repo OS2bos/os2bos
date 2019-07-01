@@ -242,7 +242,6 @@ DEFAULT_FROM_EMAIL = settings.get(
     "DEFAULT_FROM_EMAIL", fallback="admin@bevillingsplatform-test.magenta.dk"
 )
 
-# For production, this will be OS2Forms@balk.dk.
 SBSYS_EMAIL = settings.get(
     "SBSYS_EMAIL", fallback="admin@bevillingsplatform-test.magenta.dk"
 )
