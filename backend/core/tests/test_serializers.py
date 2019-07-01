@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from core.models import ActivityCatalog, Activity
+from core.models import ActivityDetails, Activity
 from core.tests.testing_mixins import ActivityMixin, PaymentScheduleMixin
 from core.serializers import ActivitySerializer
 
@@ -20,14 +20,14 @@ class ActivitySerializerTestCase(
         self.assertEqual(data["total_amount"], activity.total_amount())
 
     def test_validate_end_before_start(self):
-        activity_catalog = ActivityCatalog.objects.create(
+        activity_details = ActivityDetails.objects.create(
             max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
         )
         # start_date > end_date
         data = {
             "start_date": "2019-01-01",
             "end_date": "2018-01-01",
-            "service": activity_catalog.pk,
+            "details": activity_details.pk,
             "status": Activity.STATUS_EXPECTED,
             "activity_type": Activity.MAIN_ACTIVITY,
         }
@@ -39,14 +39,14 @@ class ActivitySerializerTestCase(
         )
 
     def test_validate_start_before_end(self):
-        activity_catalog = ActivityCatalog.objects.create(
+        activity_details = ActivityDetails.objects.create(
             max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
         )
         # start_date < end_date
         data = {
             "start_date": "2018-01-01",
             "end_date": "2019-01-01",
-            "service": activity_catalog.pk,
+            "details": activity_details.pk,
             "status": Activity.STATUS_EXPECTED,
             "activity_type": Activity.MAIN_ACTIVITY,
         }

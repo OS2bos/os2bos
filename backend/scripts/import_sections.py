@@ -5,7 +5,7 @@ Currently this requires the sheet "Paragraffer" be saved
 as "paragraffer.csv" in the current directory.
 """
 import csv
-from core.models import Sections
+from core.models import Section
 
 with open("paragraffer.csv") as csvfile:
     reader = csv.reader(csvfile)
@@ -49,7 +49,7 @@ with open("paragraffer.csv") as csvfile:
         # ABL - Andelsboligloven
         # SUL - Sundhedsloven
         # STU - Lov om ungdomsuddannelse for unge med særlige behov
-        Sections.objects.update_or_create(
+        Section.objects.update_or_create(
             **{
                 "paragraph": key,
                 "kle_number": kle,

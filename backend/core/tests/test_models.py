@@ -58,7 +58,7 @@ class SectionTestCase(TestCase):
 
 class ActivityDetailsTestCase(TestCase):
     def test_activitydetails_str(self):
-        catalog = ActivityDetails.objects.create(
+        details = ActivityDetails.objects.create(
             name="Betaling til andre kommuner/region for specialtandpleje",
             activity_id="010001",
             max_tolerance_in_dkk=5000,
@@ -66,7 +66,7 @@ class ActivityDetailsTestCase(TestCase):
         )
 
         self.assertEqual(
-            str(catalog),
+            str(details),
             "010001 - Betaling til andre kommuner/region for specialtandpleje",
         )
 
