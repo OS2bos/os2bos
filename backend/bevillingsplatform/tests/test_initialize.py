@@ -19,4 +19,4 @@ class InitializeTestCase(TestCase):
     def test_initialize_generates_sections(self):
         initialize()
         sections_count = Section.objects.count()
-        self.assertEqual(sections_count, 225)
+        self.assertEqual(sections_count, 226)
