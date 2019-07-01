@@ -58,6 +58,21 @@ class ActivitySerializerTestCase(
         serializer.is_valid()
         self.assertEqual(serializer.errors, {})
 
+    def test_validate_start_before_end_no_end(self):
+        activity_details = ActivityDetails.objects.create(
+            max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
+        )
+        # no end_date
+        data = {
+            "start_date": "2018-01-01",
+            "details": activity_details.pk,
+            "status": Activity.STATUS_EXPECTED,
+            "activity_type": Activity.MAIN_ACTIVITY,
+        }
+        serializer = ActivitySerializer(data=data)
+        serializer.is_valid()
+        self.assertEqual(serializer.errors, {})
+
 
 class CaseSerializerTestCase(TestCase, CaseMixin):
     def test_validate_error_no_district_for_family_dept(self):
