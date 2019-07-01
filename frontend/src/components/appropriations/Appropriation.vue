@@ -5,10 +5,15 @@
             <h1>Bevillingsskrivelse</h1>
             <span v-html="statusLabel(appr.status)" style="margin: 0 1rem;"></span>
             <template v-if="appr.approval_level"> af
-                {{ appr.approval_level }}
+                {{ displayApprovalName(appr.approval_level) }}
             </template>
             <div>
                 <button @click="show_edit = !show_edit" class="appr-edit-btn">Redigér</button>
+            </div>
+
+            <div>
+                <button @click="showModal = true" class="approval-btn">Godkend</button>
+                <approval :approval-obj="appr" v-if="showModal" @close="update()"></approval>
             </div>
         </header>
 
@@ -67,7 +72,8 @@
     import ActivityList3 from '../activities/ActivityList3.vue'
     import ActivityList4 from '../activities/ActivityList4.vue'
     import AppropriationEdit from './AppropriationEdit.vue'
-    import { municipalityId2name, districtId2name, sectionId2name, displayStatus, userId2name } from '../filters/Labels.js'
+    import Approval from './Approval.vue'
+    import { municipalityId2name, districtId2name, sectionId2name, displayStatus, userId2name, approvalId2name } from '../filters/Labels.js'
 
     export default {
 
@@ -76,11 +82,13 @@
             ActivityList2,
             ActivityList3,
             ActivityList4,
-            AppropriationEdit
+            AppropriationEdit,
+            Approval
         },
         data: function() {
             return {
-                show_edit: false
+                show_edit: false,
+                showModal: false
             }
         },
         computed: {
@@ -112,6 +120,7 @@
         methods: {
             update: function() {
                 this.show_edit =  false
+                this. showModal = false
                 this.$store.dispatch('fetchAppropriation', this.$route.params.id)
             },
             reload: function() {
@@ -131,6 +140,9 @@
             },
             displayUserName: function(id) {
                 return userId2name(id)
+            },
+            displayApprovalName: function(id) {
+                return approvalId2name(id)
             }
         },
         created: function() {
@@ -154,6 +166,10 @@
     }
 
     .appropriation .appr-edit-btn {
+        margin: 0 1rem;
+    }
+
+    .appropriation .approval-btn {
         margin: 0 1rem;
     }
 
