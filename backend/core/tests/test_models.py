@@ -8,6 +8,7 @@ from parameterized import parameterized
 
 from core.tests.testing_mixins import PaymentScheduleMixin, ActivityMixin
 from core.models import (
+    Appropriation,
     Municipality,
     SchoolDistrict,
     Section,
@@ -19,6 +20,16 @@ from core.models import (
     PaymentSchedule,
     ServiceProvider,
 )
+
+
+class AppropriationTestCase(TestCase):
+    def test_appropriation_str(self):
+        section = Section(paragraph="ABZ-52-54", kle_number="11.22.33")
+        appropriation = Appropriation(sbsys_id="XXX-YYY-ZZZ", section=section)
+
+        self.assertEqual(
+            str(appropriation), "XXX-YYY-ZZZ - ABZ-52-54 - 11.22.33"
+        )
 
 
 class MunicipalityTestCase(TestCase):
