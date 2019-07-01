@@ -9,7 +9,6 @@
             </template>
             <div>
                 <button @click="show_edit = !show_edit" class="appr-edit-btn">Redigér</button>
-                <router-link :to="`/appropriation/${ appr.id }/print`">Print</router-link>
             </div>
         </header>
 
@@ -81,42 +80,39 @@
         },
         data: function() {
             return {
-                appr: null,
-                cas: null,
                 show_edit: false
+            }
+        },
+        computed: {
+            cas: function() {
+                return this.$store.getters.getCase
+            },
+            appr: function() {
+                return this.$store.getters.getAppropriation
+            }
+        },
+        watch: {
+            appr: function() {
+                this.$store.commit('setBreadcrumb', [
+                    {
+                        link: '/',
+                        title: 'Mine sager'
+                    },
+                    {
+                        link: `/case/${ this.appr.case }`,
+                        title: `${ this.cas.sbsys_id }, ${ this.cas.name }`
+                    },
+                    {
+                        link: false,
+                        title: `Foranstaltning ${ this.appr.sbsys_id }`
+                    }
+                ])
             }
         },
         methods: {
             update: function() {
                 this.show_edit =  false
-                this.fetchAppr(this.$route.params.id)
-            },
-            fetchAppr: function(id) {
-                axios.get(`/appropriations/${ id }`)
-                .then(res => {
-                    this.appr = res.data
-
-                    axios.get(`/cases/${ res.data.case }`)
-                    .then(resp => {
-                        this.cas = resp.data
-                        this.$store.commit('setBreadcrumb', [
-                            {
-                                link: '/',
-                                title: 'Mine sager'
-                            },
-                            {
-                                link: `/case/${ this.appr.case }`,
-                                title: `${ this.cas.sbsys_id }, ${ this.cas.name }`
-                            },
-                            {
-                                link: false,
-                                title: `Foranstaltning ${ this.appr.sbsys_id }`
-                            }
-                        ])
-
-                    })
-                })
-                .catch(err => console.log(err))
+                this.$store.dispatch('fetchAppropriation', this.$route.params.id)
             },
             reload: function() {
                 this.show_edit =  false

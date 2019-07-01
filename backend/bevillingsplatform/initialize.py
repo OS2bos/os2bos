@@ -39,7 +39,7 @@ def initialize_approval_levels():
 def initialize_sections():
     """Initialize all the relevant law sections.
 
-    Data should be the output of manage.py dumpdata core.sections
+    Data should be the output of manage.py dumpdata core.section
     """
     call_command("loaddata", "sections.json", app_label="core")
 

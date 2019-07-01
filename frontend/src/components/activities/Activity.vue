@@ -19,9 +19,12 @@
                 <dd>
                     <div v-html="statusLabel(act.status)"></div>
                 </dd>
-                <dt>Type</dt>
+                <dt>
+                    Type
+                </dt>
                 <dd>
-                    <div>{{ act.activity_type }}</div>
+                    <div v-if="act.activity_type === 'MAIN_ACTIVITY'">Foranstaltningsudgift</div>
+                    <div v-if="act.activity_type === 'SUPPL_ACTIVITY'">Følgeudgift</div>
                 </dd>
                 <dt>Bevilges efter §</dt>
                 <dd v-if="appr">{{ displaySection(appr.section) }}</dd>
@@ -31,40 +34,65 @@
                 <dd>{{ displayDate(act.start_date) }}</dd>
                 <dt>Slutdato</dt>
                 <dd>{{ displayDate(act.end_date) }}</dd>
+                <dt>Bemærkning</dt>
+                <dd>{{ act.note }}</dd>
             </dl>
-            <dl>
-                <h3>Udgifter</h3>
-                <dt>Beløb</dt>
-                <dd>ikke implementeret</dd>
+            
+            <dl v-if="pay">
+                <h3>Beløb</h3>
                 <dt>Afregningsenhed</dt>
                 <dd>
-                    <template>
-                        <p>Kroner pr. måned ikke implementeret</p>
-                        <p>Første år ikke implementeret</p>
-                        <p>Årligt ikke implementeret</p>
-                    </template>
-                    <template>
-                        <p>Enkeltudgift ikke implementeret</p>
-                    </template>
+                    <div v-if="pay.payment_type === 'ONE_TIME_PAYMENT'">Engangsudgift</div>
+                    <div v-if="pay.payment_type === 'RUNNING_PAYMENT'">Fast beløb, løbende</div>
+                    <div v-if="pay.payment_type === 'PER_HOUR_PAYMENT'">Takst pr. time</div>
+                    <div v-if="pay.payment_type === 'PER_DAY_PAYMENT'">Takst pr. døgn</div>
+                    <div v-if="pay.payment_type === 'PER_KM_PAYMENT'">Takst pr. kilometer</div>
                 </dd>
-                <dt>Bemærkninger</dt>
-                <dd>ikke implementeret</dd>
+                <dd>
+                    <div v-if="pay.payment_frequency === 'DAILY'">Dagligt</div>
+                    <div v-if="pay.payment_frequency === 'WEEKLY'">Ugentligt</div>
+                    <div v-if="pay.payment_frequency === 'MONTHLY'">Månedligt</div>
+                </dd>
+                <dt>
+                    <div v-if="pay.payment_type === 'PER_HOUR_PAYMENT'">Timer</div>
+                    <div v-if="pay.payment_type === 'PER_DAY_PAYMENT'">Døgn</div>
+                    <div v-if="pay.payment_type === 'PER_KM_PAYMENT'">Kilometer</div>
+                </dt>
+                <dd>{{ pay.payment_units }}</dd>
+                <dt>Beløb</dt>
+                <dd>{{ pay.payment_amount }} kr.</dd>
             </dl>
-            <dl>
-                <h3>Betalingsmodtager</h3>
-                <dt>Type</dt>
-                <dd>ikke implementeret</dd>
-                <dt>ID</dt>
-                <dd>ikke implementeret</dd>
+            <dl v-if="pay">
+                <h3>Betales til</h3>
+                <dt>Betalingsmodtager</dt>
+                <dd>
+                    <div v-if="pay.recipient_type === 'INTERNAL'">Inten</div>
+                    <div v-if="pay.recipient_type === 'COMPANY'">Firma</div>
+                    <div v-if="pay.recipient_type === 'PERSON'">Person</div>
+                </dd>
+                <dt>
+                    <div v-if="pay.recipient_type === 'INTERNAL'">Reference</div>
+                    <div v-if="pay.recipient_type === 'COMPANY'">CVR-nr</div>
+                    <div v-if="pay.recipient_type === 'PERSON'">CPR-nr</div>
+                </dt>
+                <dd>{{ pay.recipient_id }}</dd>
                 <dt>Navn</dt>
-                <dd>ikke implementeret</dd>
+                <dd>{{ pay.recipient_name }}</dd>
+            </dl>
+            <dl v-if="pay">
+                <h3>Betaling</h3>
                 <dt>Betalingsmåde</dt>
                 <dd>
-                    <span>
-                        ikke implementeret
-                    </span>
+                    <div v-if="pay.payment_method === 'INVOICE'">Faktura</div>
+                    <div v-if="pay.payment_method === 'INTERNAL'">Intern afregning</div>
+                    <div v-if="pay.payment_method === 'CASH'">Kontant udbetaling</div>
+                    <div v-if="pay.payment_method === 'SD'">SD-løn</div>
                 </dd>
             </dl>
+
+        </div>
+        <div class="payment-schedule" v-if="!show_edit">
+            <payment-schedule :payments-obj="pay.payments"/>
         </div>
     </section>
 
@@ -74,56 +102,61 @@
 
     import axios from '../http/Http.js'
     import ActivityEdit from './ActivityEdit.vue'
+    import PaymentSchedule from '../payment/PaymentSchedule.vue'
     import { json2js } from '../filters/Date.js'
     import { activityId2name, sectionId2name, displayStatus } from '../filters/Labels.js'
 
     export default {
 
         components: {
-            ActivityEdit
+            ActivityEdit,
+            PaymentSchedule
         },
         data: function() {
             return {
-                act: null,
-                appr: null,
-                cas: null,
+                payments: null,
                 show_edit: false
             }
         },
-        methods: {
-            fetch_act: function(id) {
-                axios.get(`/activities/${ id }`)
-                .then(res => {
-                    this.act = res.data
-                    axios.get(`/appropriations/${ this.act.appropriation }`)
-                    .then(resp => {
-                        this.appr = resp.data
-                        axios.get(`/cases/${ this.appr.case }`)
-                        .then(response => {
-                            this.cas = response.data
-                            this.$store.commit('setBreadcrumb', [
-                                {
-                                    link: '/',
-                                    title: 'Mine sager'
-                                },
-                                {
-                                    link: `/case/${ this.cas.id }`,
-                                    title: `Hovedsag ${ this.cas.sbsys_id }`
-                                },
-                                {
-                                    link: `/appropriation/${ this.appr.id }`,
-                                    title: `Foranstaltning ${ this.appr.sbsys_id }`
-                                },
-                                {
-                                    link: false,
-                                    title: `Udgift til ${ activityId2name(this.act.details) }`
-                                }
-                            ])
-                        })
-                    })
-                })
-                .catch(err => console.log(err))
+        computed: {
+            act: function() {
+                return this.$store.getters.getActivity
             },
+            pay: function() {
+                return this.$store.getters.getPaymentSchedule
+            },
+            appr: function() {
+                return this.$store.getters.getAppropriation
+            },
+            cas: function() {
+                return this.$store.getters.getCase
+            }
+        },
+        watch: {
+            cas: function() {
+                if (this.cas) {
+                    this.$store.commit('setBreadcrumb', [
+                        {
+                            link: '/',
+                            title: 'Mine sager'
+                        },
+                        {
+                            link: `/case/${ this.cas.id }`,
+                            title: `Hovedsag ${ this.cas.sbsys_id }`
+                        },
+                        {
+                            link: `/appropriation/${ this.appr.id }`,
+                            title: `Foranstaltning ${ this.appr.sbsys_id }`
+                        },
+                        {
+                            link: false,
+                            title: `Udgift til ${ activityId2name(this.act.details) }`
+                        }
+                    ])
+                }
+            }
+        },
+        methods: {
             reload: function() {
                 this.show_edit =  false
             },
@@ -141,7 +174,7 @@
             }
         },
         created: function() {
-            this.fetch_act(this.$route.params.id)
+            this.$store.dispatch('fetchActivity', this.$route.params.id)
         }
     }
     
@@ -171,6 +204,10 @@
         justify-content: start;
         background-color: var(--grey1);
         padding: 1.5rem 2rem 2rem;
+    }
+
+     .payment-schedule {
+        margin: 1rem;
     }
 
 </style>

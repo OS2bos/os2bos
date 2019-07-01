@@ -19,7 +19,7 @@
                         <div v-html="statusLabel(a.status)"></div>
                     </td>
                     <td><router-link :to="`/activity/${ a.id }`">{{ activityId2name(a.details) }}</router-link></td>
-                    <td>300578-2222 - Ukendt</td>
+                    <td></td>
                     <td>{{ displayDate(a.start_date) }}</td>
                     <td>{{ displayDate(a.end_date) }}</td>
                     <td>ikke implementeret</td>
@@ -64,7 +64,8 @@
         ],
         data: function() {
             return {
-                acts: null   
+                acts: null,
+                pay: null
             }
         },
         methods: {
@@ -75,6 +76,10 @@
               axios.get(`/activities/?appropriation=${ this.apprId }`)
                 .then(res => {
                     this.acts = res.data
+                    axios.get(`/payment_schedules/?activities=${ this.acts.payment_plan  }`)
+                        .then(resp => {
+                            this.pay = resp.data
+                        })
                 })
                 .catch(err => console.log(err))
             },

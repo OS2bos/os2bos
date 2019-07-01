@@ -4,6 +4,7 @@ import requests
 
 from django.template.loader import get_template
 from django.core.mail import EmailMessage
+
 from django.conf import settings
 
 from weasyprint import HTML
