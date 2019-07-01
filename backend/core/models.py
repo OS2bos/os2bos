@@ -626,6 +626,11 @@ class Activity(AuditModelMixin, models.Model):
 
     note = models.TextField(null=True, blank=True, max_length=1000)
 
+    def payment_plan(self):
+        activities = Activity.objects.filter(pk=self.pk) | self.supplementary_activities.all()
+        expected_activities = activities.filter(status=self.STATUS_EXPECTED)
+        granted_activities = activities.filter(status=self.GRANTED)
+
     def total_amount(self):
         if not self.payment_plan:
             payment_amount = 0
