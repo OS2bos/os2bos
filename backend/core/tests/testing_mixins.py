@@ -1,6 +1,17 @@
+from decimal import Decimal
+from datetime import date
+
 from django.contrib.auth import get_user_model
 
-from core.models import Case, Municipality, SchoolDistrict, Team
+from core.models import (
+    Case,
+    Municipality,
+    SchoolDistrict,
+    Team,
+    Activity,
+    PaymentSchedule,
+    ActivityDetails,
+)
 
 
 class CaseMixin:
@@ -53,3 +64,35 @@ class CaseMixin:
         }
 
         return json
+
+
+class PaymentScheduleMixin:
+    @staticmethod
+    def create_payment_schedule(
+        payment_frequency=PaymentSchedule.DAILY,
+        payment_type=PaymentSchedule.RUNNING_PAYMENT,
+        payment_amount=Decimal("500.0"),
+        payment_units=0,
+    ):
+        payment_schedule = PaymentSchedule.objects.create(
+            payment_amount=payment_amount,
+            payment_frequency=payment_frequency,
+            payment_type=payment_type,
+            payment_units=payment_units,
+        )
+        return payment_schedule
+
+
+class ActivityMixin:
+    @staticmethod
+    def create_activity(
+        start_date=date(year=2019, month=1, day=1),
+        end_date=date(year=2019, month=1, day=10),
+    ):
+        activity_details = ActivityDetails.objects.create(
+            max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
+        )
+        activity = Activity.objects.create(
+            start_date=start_date, end_date=end_date, details=activity_details
+        )
+        return activity

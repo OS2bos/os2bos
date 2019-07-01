@@ -23,6 +23,7 @@ from core.models import (
     ActivityDetails,
     Account,
     ServiceProvider,
+    PaymentMethodDetails,
     ApprovalLevel,
 )
 
@@ -42,6 +43,7 @@ from core.serializers import (
     UserSerializer,
     HistoricalCaseSerializer,
     ServiceProviderSerializer,
+    PaymentMethodDetailsSerializer,
     ApprovalLevelSerializer,
 )
 
@@ -81,6 +83,11 @@ class ActivityViewSet(viewsets.ModelViewSet):
     serializer_class = ActivitySerializer
 
     filterset_fields = "__all__"
+
+
+class PaymentMethodDetailsViewSet(viewsets.ModelViewSet):
+    queryset = PaymentMethodDetails.objects.all()
+    serializer_class = PaymentMethodDetailsSerializer
 
 
 class PaymentScheduleViewSet(viewsets.ModelViewSet):
