@@ -492,6 +492,9 @@ class Appropriation(AuditModelMixin, models.Model):
         # TODO:
         pass  # pragma: no cover
 
+    def __str__(self):
+        return f"{self.sbsys_id} - {self.section}"
+
 
 class ServiceProvider(models.Model):
     """

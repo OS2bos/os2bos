@@ -2,7 +2,13 @@ import os
 import logging
 import requests
 
+from django.template.loader import get_template
+from django.core.mail import EmailMessage
+
 from django.conf import settings
+
+from weasyprint import HTML
+from weasyprint.fonts import FontConfiguration
 
 from service_person_stamdata_udvidet import get_citizen
 
@@ -91,3 +97,34 @@ def get_cpr_data_mock(cpr):
         "kommunekode": "370",
     }
     return result
+
+
+def send_appropriation(appropriation):
+    """Generate PDF and XML files from appropriation and send them to SBSYS."""
+    render_context = {"appropriation": appropriation}
+    # Generate os2forms.xml
+    xml_template = get_template(settings.SBSYS_XML_TEMPLATE)
+    xml_data = xml_template.render(context=render_context)
+    xml_file_name = "os2forms.xml"
+
+    # Generate PDF
+    html_template = get_template(settings.SBSYS_APPROPRIATION_TEMPLATE)
+    html_data = html_template.render(context=render_context)
+
+    # Configure fonts for correct rendering.
+    font_config = FontConfiguration()
+    pdf_data = HTML(string=html_data).write_pdf(font_config=font_config)
+    pdf_file_name = f"{appropriation.sbsys_id}.pdf"
+
+    # Send as email
+    msg = EmailMessage()
+    msg.subject = "SBSYS-journalisering"
+    msg.body = ""
+    msg.from_email = settings.DEFAULT_FROM_EMAIL
+    msg.to = [settings.SBSYS_EMAIL]
+    msg.attachments = [
+        (xml_file_name, xml_data, "text/xml"),
+        (pdf_file_name, pdf_data, "application/pdf"),
+    ]
+
+    msg.send()
