@@ -538,9 +538,11 @@ class Activity(AuditModelMixin, models.Model):
     details = models.ForeignKey(ActivityDetails, on_delete=models.PROTECT)
 
     # Status - definitions and choice list.
+    STATUS_DRAFT = "DRAFT"
     STATUS_EXPECTED = "EXPECTED"
     STATUS_GRANTED = "GRANTED"
     status_choices = (
+        (STATUS_DRAFT, _("kladde")),
         (STATUS_EXPECTED, _("forventet")),
         (STATUS_GRANTED, _("bevilget")),
     )
