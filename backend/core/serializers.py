@@ -73,7 +73,7 @@ class ActivitySerializer(serializers.ModelSerializer):
     def validate(self, data):
         # Check that start_date is before end_date
         if (
-            data["start_date"]
+            "end_date" in data
             and data["end_date"]
             and data["start_date"] > data["end_date"]
         ):
