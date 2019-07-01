@@ -20,6 +20,7 @@ from core.models import (
     ServiceProvider,
     ApprovalLevel,
     Team,
+    FAMILY_DEPT,
 )
 
 
@@ -33,6 +34,14 @@ class CaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Case
         fields = "__all__"
+
+    def validate(self, data):
+        # check if target_group is family, district is given
+        if data["target_group"] == FAMILY_DEPT and not data["district"]:
+            raise serializers.ValidationError(
+                _("En sag med familie målgruppe skal have et distrikt")
+            )
+        return data
 
 
 class HistoricalCaseSerializer(serializers.ModelSerializer):
