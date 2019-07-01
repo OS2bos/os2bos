@@ -92,7 +92,7 @@
                         <dt>Team:</dt>
                         <dd>ikke implementeret</dd>
                     </dl>
-                    <fieldset>
+                    <fieldset v-if="cas.target_group === 'FAMILY_DEPT'">
                         <label for="selectField4">Distrikt:</label>
                         <list-picker :dom-id="'selectField4'" :selected-id="cas.district" @selection="changeDistrict" :list="districts" />
                     </fieldset>
