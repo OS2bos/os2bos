@@ -18,7 +18,7 @@
             </fieldset>
             <fieldset>
                 <input type="submit" value="Gem">
-                <button v-if="!create_mode" class="cancel-btn" type="button" @click="cancel()">Annullér</button>
+                <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
             </fieldset>
         </form>
     </article>
@@ -74,7 +74,13 @@
                 }
             },
             cancel: function() {
-                this.$emit('close')
+                if (!this.create_mode) {
+                    this.$emit('close')
+                    this.$router.push(`/appropriation/${ this.appr.id }/`) 
+                } else {
+                    this.$emit('close')
+                    this.$router.push(`/case/${ this.$route.params.caseid }/`) 
+                }
             }
         },
         created: function() {

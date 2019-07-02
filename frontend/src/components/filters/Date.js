@@ -1,6 +1,10 @@
 function json2js(jsondatetime) {
-    const dt = new Date(jsondatetime)
-    return `${ dt.getDate() }. ${ strMonth(dt.getMonth()) } ${ dt.getFullYear() }, ${ leadZero(dt.getHours()) }:${ leadZero(dt.getMinutes()) }`
+    if (jsondatetime) {
+        const dt = new Date(jsondatetime)
+        return `${ dt.getDate() }. ${ strMonth(dt.getMonth()) } ${ dt.getFullYear() }, ${ leadZero(dt.getHours()) }:${ leadZero(dt.getMinutes()) }`
+    } else {
+        return '-'
+    }
 }
 
 function leadZero(number) {

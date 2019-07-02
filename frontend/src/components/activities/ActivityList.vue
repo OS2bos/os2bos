@@ -2,7 +2,7 @@
 
     <section class="activities">
         <button class="activities-create-btn" title="Ny aktivitet" @click="$router.push(`/appropriation/${ apprId }/activity-create/`)">+ Tilføj ydelse</button>
-        <table>
+        <table v-if="acts && acts.length > 0">
             <thead>
                 <tr>
                     <th>Status</th>
@@ -16,10 +16,10 @@
             <tbody>
                 <tr v-for="a in acts" :key="a.id">
                     <td>
-                        <span :class="`status-${ a.status }`">{{ a.status }}</span>
+                        <div v-html="statusLabel(a.status)"></div>
                     </td>
-                    <td><router-link :to="`/activity/${ a.id }`">{{ activityId2name(a.service) }}</router-link></td>
-                    <td>300578-2222 - Ukendt</td>
+                    <td><router-link :to="`/activity/${ a.id }`">{{ activityId2name(a.details) }}</router-link></td>
+                    <td></td>
                     <td>{{ displayDate(a.start_date) }}</td>
                     <td>{{ displayDate(a.end_date) }}</td>
                     <td>ikke implementeret</td>
@@ -46,6 +46,7 @@
                 </tr>
             </tbody>
         </table>
+        <p v-if="!acts || acts.length < 1">Der er endnu ingen ydelser</p>
     </section>
 
 </template>
@@ -54,7 +55,7 @@
 
     import axios from '../http/Http.js'
     import { json2js } from '../filters/Date.js'
-    import { activityId2name } from '../filters/Labels.js'
+    import { activityId2name, displayStatus } from '../filters/Labels.js'
 
     export default {
 
@@ -63,7 +64,8 @@
         ],
         data: function() {
             return {
-                acts: null   
+                acts: null,
+                pay: null
             }
         },
         methods: {
@@ -74,6 +76,10 @@
               axios.get(`/activities/?appropriation=${ this.apprId }`)
                 .then(res => {
                     this.acts = res.data
+                    axios.get(`/payment_schedules/?activities=${ this.acts.payment_plan  }`)
+                        .then(resp => {
+                            this.pay = resp.data
+                        })
                 })
                 .catch(err => console.log(err))
             },
@@ -82,6 +88,9 @@
             },
             activityId2name: function(id) {
                 return activityId2name(id)
+            },
+            statusLabel: function(status) {
+                return displayStatus(status)
             }
         },
        created: function() {
@@ -106,24 +115,6 @@
 
     .activities-create-btn {
         margin: 0 0 1rem;
-    }
-
-    .activities .status-GRANTED {
-        background-color: var(--success);
-        color: white;
-        padding: .25rem;
-    }
-
-    .activities .status-EXPECTED {
-        background-color: var(--warning);
-        color: white;
-        padding: .25rem;
-    }
-
-    .total-sum {
-        background-color: green;
-        color: white;
-        padding: .25rem;
     }
 
 </style>

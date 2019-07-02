@@ -3,12 +3,15 @@ import Router from 'vue-router'
 import Cases from './components/cases/Cases.vue'
 import Case from './components/cases/Case.vue'
 import CaseEdit from './components/cases/CaseEdit.vue'
+import FamilyOverviewEdit from './components/familyoverview/FamilyOverviewEdit.vue'
 import Assessment from './components/assessments/Assessment.vue'
 import Appropriation from './components/appropriations/Appropriation.vue'
 import AppropriationEdit from './components/appropriations/AppropriationEdit.vue'
 import Activity from './components/activities/Activity.vue'
 import ActivityEdit from './components/activities/ActivityEdit.vue'
+import PaymentSchedule from './components/payment/PaymentSchedule.vue'
 import Login from './components/auth/Login.vue'
+import Page404 from './components/http/Page404.vue'
 import store from './store.js'
 
 Vue.use(Router)
@@ -31,7 +34,18 @@ const router = new Router({
             component: CaseEdit
         },
         {
+            path: '/case/:casid/familyoverview-create/',
+            name: 'familyoverview-create',
+            component: FamilyOverviewEdit
+        },
+        {
+            path: '/case/:casid/familyoverview-edit/:famid',
+            name: 'familyoverview-edit',
+            component: FamilyOverviewEdit
+        },
+        {
             path: '/assessment/:id',
+            path: '/case/:id/assessment',
             name: 'assessment',
             component: Assessment
         },
@@ -53,7 +67,13 @@ const router = new Router({
         {
             path: '/appropriation/:apprid/activity-create/',
             name: 'activity-create',
-            component: ActivityEdit
+            component: ActivityEdit,
+            props: { mode: 'create' }
+        },
+        {
+            path: '/paymentschedule/',
+            name: 'paymentschedule',
+            component: PaymentSchedule
         },
         {
             path: '/login',
@@ -63,8 +83,26 @@ const router = new Router({
             // this generates a separate chunk (about.[hash].js) for this route
             // which is lazy-loaded when the route is visited.
             //component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+        },
+        {
+            // This route must declared last
+            path: '*',
+            name: 'page404',
+            component: Page404
         }
     ]
+})
+
+router.beforeEach((to, from, next) => {
+    if (to.name === 'login') {
+        next()
+    } else if (sessionStorage.getItem('accesstoken')) {
+        next()
+    } else {
+        next({
+            path: '/login'
+        }) 
+    }
 })
 
 router.afterEach((to, from) => {

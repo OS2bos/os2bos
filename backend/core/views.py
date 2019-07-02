@@ -1,10 +1,13 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 from django.utils.translation import gettext_lazy as _
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
+
+
+from django_filters import rest_framework as filters
 
 from core.models import (
     Case,
@@ -15,8 +18,13 @@ from core.models import (
     Municipality,
     RelatedPerson,
     SchoolDistrict,
-    Sections,
-    ActivityCatalog,
+    Team,
+    Section,
+    ActivityDetails,
+    Account,
+    ServiceProvider,
+    PaymentMethodDetails,
+    ApprovalLevel,
 )
 
 from core.serializers import (
@@ -28,10 +36,15 @@ from core.serializers import (
     RelatedPersonSerializer,
     MunicipalitySerializer,
     SchoolDistrictSerializer,
-    SectionsSerializer,
-    ActivityCatalogSerializer,
+    TeamSerializer,
+    SectionSerializer,
+    ActivityDetailsSerializer,
+    AccountSerializer,
     UserSerializer,
     HistoricalCaseSerializer,
+    ServiceProviderSerializer,
+    PaymentMethodDetailsSerializer,
+    ApprovalLevelSerializer,
 )
 
 from core.utils import get_person_info
@@ -44,7 +57,9 @@ class CaseViewSet(viewsets.ModelViewSet):
     serializer_class = CaseSerializer
 
     def perform_create(self, serializer):
-        serializer.save(case_worker=self.request.user)
+        current_user = self.request.user
+        team = current_user.team
+        serializer.save(case_worker=current_user, team=team)
 
     @action(detail=True, methods=["get"])
     def history(self, request, pk=None):
@@ -70,6 +85,11 @@ class ActivityViewSet(viewsets.ModelViewSet):
     filterset_fields = "__all__"
 
 
+class PaymentMethodDetailsViewSet(viewsets.ModelViewSet):
+    queryset = PaymentMethodDetails.objects.all()
+    serializer_class = PaymentMethodDetailsSerializer
+
+
 class PaymentScheduleViewSet(viewsets.ModelViewSet):
     queryset = PaymentSchedule.objects.all()
     serializer_class = PaymentScheduleSerializer
@@ -83,6 +103,8 @@ class PaymentViewSet(viewsets.ModelViewSet):
 class RelatedPersonViewSet(viewsets.ModelViewSet):
     queryset = RelatedPerson.objects.all()
     serializer_class = RelatedPersonSerializer
+
+    filterset_fields = "__all__"
 
     @action(detail=False, methods=["get"])
     def fetch_from_serviceplatformen(self, request):
@@ -131,16 +153,52 @@ class SchoolDistrictViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = SchoolDistrictSerializer
 
 
-class SectionsViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Sections.objects.all()
-    serializer_class = SectionsSerializer
+class TeamViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Team.objects.all()
+    serializer_class = TeamSerializer
 
 
-class ActivityCatalogViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = ActivityCatalog.objects.all()
-    serializer_class = ActivityCatalogSerializer
+class CharInFilter(filters.BaseInFilter, filters.CharFilter):
+    pass
+
+
+class AllowedForStepsFilter(filters.FilterSet):
+    allowed_for_steps = CharInFilter(
+        field_name="allowed_for_steps", lookup_expr="contains"
+    )
+
+    class Meta:
+        model = Section
+        fields = "__all__"
+
+
+class SectionViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Section.objects.all()
+    serializer_class = SectionSerializer
+    filterset_class = AllowedForStepsFilter
+
+
+class ActivityDetailsViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = ActivityDetails.objects.all()
+    serializer_class = ActivityDetailsSerializer
+    filterset_fields = "__all__"
+
+
+class AccountViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Account.objects.all()
+    serializer_class = AccountSerializer
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = User.objects.all()
+    queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
+
+
+class ServiceProviderViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = ServiceProvider.objects.all()
+    serializer_class = ServiceProviderSerializer
+
+
+class ApprovalLevelViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = ApprovalLevel.objects.all()
+    serializer_class = ApprovalLevelSerializer

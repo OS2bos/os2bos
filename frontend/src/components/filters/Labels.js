@@ -26,7 +26,7 @@ function districtId2name(id) {
 
 function activityId2name(id) {
     const act_list = store.getters.getActivities
-    if (id) {
+    if (act_list) {
         let act = act_list.find(function(element) {
             return element.id === id;
         })
@@ -48,6 +48,30 @@ function sectionId2name(id) {
     }
 }
 
+function userId2name(id) {
+    const user_list = store.getters.getUsers
+    if (user_list) {
+        let user = user_list.find(function(u) {
+            return u.id === parseInt(id);
+        })
+        return user.username
+    } else {
+        return 'Ikke tilgængelig'
+    }
+}
+
+function approvalId2name(id) {
+    const approval_list = store.getters.getApprovals
+    if (approval_list) {
+        let approval = approval_list.find(function(element) {
+            return element.id === parseInt(id);
+        })
+        return approval.name
+    } else {
+        return 'Ikke tilgængelig'
+    }
+}
+
 function displayStatus(status) {
     let status_str = ''
     switch(status) {
@@ -55,6 +79,9 @@ function displayStatus(status) {
             status_str = 'kladde'
             break;
         case 'BUDGETED':
+            status_str = 'forventet'
+            break;
+        case 'EXPECTED':
             status_str = 'forventet'
             break;
         case 'GRANTED':
@@ -69,10 +96,40 @@ function displayStatus(status) {
     return `<span class="label label-${ status }">${ status_str }</span>`
 }
 
+function displayEffort(effort_step) {
+    let effort_str = ''
+    switch(effort_step) {
+        case 'STEP_ONE':
+            effort_str = 'Trin 1 - Tidlig indsats i almenområdet'
+            break
+        case 'STEP_TWO':
+            effort_str = 'Trin 2 - Forebyggelse'
+            break
+        case 'STEP_THREE':
+            effort_str = 'Trin 3 - Hjemmebaserede indsatser'
+            break
+        case 'STEP_FOUR':
+            effort_str = 'Trin 4 - Anbringelse i slægt eller netværk'
+            break
+        case 'STEP_FIVE':
+            effort_str = 'Trin 5 - Anbringelse i forskellige typer af plejefamilier'
+            break
+        case 'STEP_SIX':
+            effort_str = 'Trin 6 - Anbringelse i institutionstilbud'
+            break
+        default:
+            effort_str = 'ukendt'
+    }
+    return effort_str
+}
+
 export {
     municipalityId2name, 
     districtId2name,
     activityId2name,
     sectionId2name,
-    displayStatus
+    userId2name,
+    displayStatus,
+    displayEffort,
+    approvalId2name
 }

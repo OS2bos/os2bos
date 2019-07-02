@@ -1,21 +1,229 @@
-image: python:latest
+# For `docker push` to work, the following envionment variables have to set in
+# the Gitlab UI.
+# RELEASE_REGISTRY_USER
+# RELEASE_REGISTRY_PASSWORD
+# RELEASE_REGISTRY=docker.io
+# RELEASE_REGISTRY_IMAGE=index.docker.io/magentaaps/bevillingsplatform
 
-services:
-  - postgres:latest
+stages:
+  - lint-build
+  - test
+  - release
+  - deploy
+
 
 variables:
-  POSTGRES_DB: postgres
-  POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: postgres
+  IMAGE_SHA: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}
+  IMAGE_DEV: ${CI_REGISTRY_IMAGE}:dev
+  IMAGE_RC: ${CI_REGISTRY_IMAGE}:rc
 
-before_script:
-  - mkdir /logs/
-  - pip install tox
+  IMAGE: magentaaps/bevillingsplatform
+  IMAGE_TAG: ${IMAGE}:${CI_COMMIT_REF_SLUG}
+  IMAGE_LATEST: ${IMAGE}:latest
+  # When using dind service we need to instruct docker, to talk with the
+  # daemon started inside of the service. The daemon is available with
+  # a network connection instead of the default /var/run/docker.sock socket.
+  #
+  # The 'docker' hostname is the alias of the service container as described at
+  # https://docs.gitlab.com/ee/ci/docker/using_docker_images.html#accessing-the-services
+  DOCKER_HOST: tcp://docker:2375/
+  # When using dind, it's wise to use the overlayfs driver for
+  # improved performance.
+  DOCKER_DRIVER: overlay2
+
+# Lint stage
+#############
+
+# For now we execute the lint and build stage as one stage to speed up the
+# pipeline. When it is possible to use a DAG for describing the relations
+# (https://gitlab.com/gitlab-org/gitlab-ce/issues/47063), the lint jobs can be
+# executed in its own stage where no further jobs depend on them.
+
+.lint-default: &lint-default
+  stage: lint-build
+  image: python:3.7
+  tags:
+    - docker
+  before_script:
+    - pip3 install -r backend/requirements-test.txt
 
 lint:
+  <<: *lint-default
   script:
-  - tox -e lint
+    - cd backend
+    - black --check --diff .
+    - flake8 .
 
-test:
+docs:
+  <<: *lint-default
   script:
-  - tox -e ci,coverage
+    - sphinx-build docs/source /doc-build
+  artifacts:
+    paths:
+      - doc-build
+
+
+# Build stage
+#############
+
+build:
+  stage: lint-build
+  services:
+   - docker:dind
+  image: docker:latest
+  tags:
+    - docker
+    - privileged
+  before_script:
+    # Login to GitLab registry
+    - echo ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
+    - docker pull ${IMAGE_DEV} || true
+  script:
+    - docker build -f docker/Dockerfile --pull --tag ${IMAGE_SHA} --cache-from ${IMAGE_DEV} .
+    - docker push ${IMAGE_SHA}
+
+
+# Test stage
+############
+
+
+unit-test:
+  stage: test
+  image:
+    name: ${IMAGE_SHA}
+  tags:
+    - docker
+  services:
+    - name: postgres:11
+      alias: db
+  variables:
+    POSTGRES_USER: bev
+    POSTGRES_PASSWORD: bev
+    DJANGO_SETTINGS_INI: $CI_PROJECT_DIR/dev-settings.ini
+    COVERAGE_FILE: $CI_PROJECT_DIR/.coverage
+  script:
+    #- manage.py makemigrations --check &&
+    - cd /code/backend &&
+      pytest
+      --cov=core
+      --cov=bevillingsplatform
+      --junitxml $CI_PROJECT_DIR/junit.xml
+      --cov-report html:$CI_PROJECT_DIR/coverage-html
+      --cov-report term
+      --cov-fail-under=100
+      -p no:cacheprovider
+
+  coverage: '/TOTAL.*\s+(\d+%)$/'
+  artifacts:
+    when: always
+    paths:
+      - $CI_PROJECT_DIR/coverage-html
+    reports:
+      junit: $CI_PROJECT_DIR/junit.xml
+
+
+.integration-test:
+  stage: test
+  image: docker:latest
+  services:
+   - docker:dind
+  tags:
+    - docker
+  before_script:
+    # Login to GitLab registry
+    - echo ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
+    - docker pull ${IMAGE_SHA}
+  script:
+    - # TODO run tests
+
+
+# Release stage
+###############
+
+.release-default: &release-default
+  stage: release
+  image: docker:latest
+  services:
+   - docker:dind
+  variables:
+    GIT_STRATEGY: none # We do not need the source code
+  tags:
+    - docker
+    - privileged
+  before_script:
+    # Login to GitLab registry
+    - echo ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
+    - docker pull ${IMAGE_SHA}
+
+
+release-dev:
+  <<: *release-default
+  only:
+    - /develop/
+  script:
+    - docker tag ${IMAGE_SHA} ${IMAGE_DEV}
+    - docker push ${IMAGE_DEV}
+
+
+release-rc:
+  <<: *release-default
+  only:
+    - /release/.*/
+  script:
+    - docker tag ${IMAGE_SHA} ${IMAGE_RC}
+    - docker push ${IMAGE_RC}
+
+
+release-master:
+  <<: *release-default
+  only:
+    - tags
+  script:
+    # Login to Docker Hub registry
+    - echo ${RELEASE_REGISTRY_PASSWORD} | docker login -u ${RELEASE_REGISTRY_USER} --password-stdin ${RELEASE_REGISTRY}
+    - echo Tagging with ${IMAGE_TAG}
+    - docker tag ${IMAGE_SHA} ${IMAGE_TAG}
+    - echo Tagging with ${IMAGE_LATEST}
+    - docker tag ${IMAGE_SHA} ${IMAGE_LATEST}
+    - docker push ${IMAGE_TAG}
+    - docker push ${IMAGE_LATEST}
+
+
+# Deploy stage
+##############
+
+.deploy-default: &deploy-default
+  stage: deploy
+  variables:
+    GIT_STRATEGY: none
+  tags:
+    - docker
+    - privileged
+    # TODO fix tags
+
+
+.deploy-dev:
+  <<: *deploy-default
+  only:
+    - develop
+  script:
+    - echo Deploying ${IMAGE_DEV} to moradev.magneta.dk
+    # TODO: push ${IMAGE_DEV} to moradev.magneta.dk
+
+
+.deploy-rc:
+  <<: *deploy-default
+  only:
+    - /release/.*/
+  script:
+    - echo Deploying ${IMAGE_RC} to moratest.magneta.dk
+    # TODO: push ${IMAGE_RC} to moratest.magneta.dk
+
+
+.deploy-master:
+  <<: *deploy-default
+  only:
+    - tags
+  script:
+    echo Deploying ${IMAGE_LATEST} to morademo.magneta.dk
+    # TODO: push ${IMAGE_LATEST} to morademo.magneta.dk

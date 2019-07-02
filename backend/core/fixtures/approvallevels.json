@@ -1,0 +1,44 @@
+[
+  {
+    "model": "core.approvallevel",
+    "pk": 1,
+    "fields": {
+      "name": "egenkompetence"
+    }
+  },
+  {
+    "model": "core.approvallevel",
+    "pk": 2,
+    "fields": {
+      "name": "teammøde"
+    }
+  },
+  {
+    "model": "core.approvallevel",
+    "pk": 3,
+    "fields": {
+      "name": "fagspecialist"
+    }
+  },
+  {
+    "model": "core.approvallevel",
+    "pk": 4,
+    "fields": {
+      "name": "teamleder"
+    }
+  },
+  {
+    "model": "core.approvallevel",
+    "pk": 5,
+    "fields": {
+      "name": "afsnitsleder"
+    }
+  },
+  {
+    "model": "core.approvallevel",
+    "pk": 6,
+    "fields": {
+      "name": "ungdomskriminalitetsnævnet"
+    }
+  }
+]

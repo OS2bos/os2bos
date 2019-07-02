@@ -1,0 +1,4 @@
+# Packaging and CI
+docker @md
+docker-compose.yml @md
+.gitlab-ci.yml @md

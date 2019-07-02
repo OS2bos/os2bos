@@ -24,10 +24,7 @@
             AppFooter
         },
         created: function() {
-            this.$store.dispatch('fetchMunis')
-            this.$store.dispatch('fetchDistricts')
-            this.$store.dispatch('fetchActivities')
-            this.$store.dispatch('fetchSections')
+            this.$store.dispatch('autoLogin')
         }
         
     }
@@ -84,6 +81,11 @@
         color: white;
     }
 
+    .label-EXPECTED {
+        background-color: var(--warning);
+        color: white;
+    }
+
     .label-GRANTED {
         background-color: var(--success);
         color: white;
@@ -92,6 +94,20 @@
     .label-DISCONTINUED {
         background-color: var(--danger);
         color: white;
+    }
+
+    .row {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        width: 100%;
+    }
+
+    .column {
+        display: flex;
+        flex-direction: column;
+        flex-basis: 100%;
+        flex: 1;
     }
 
 </style>

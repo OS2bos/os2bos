@@ -1,97 +1,58 @@
 <template>
-    <article class="activity-edit">
+    <section :class="`activity-edit activity-${ mode } expected-${ act_status_expected }`">
+        <header class="header" v-if="mode === 'create'">
+            <h1>Opret Aktivitet</h1>
+        </header>
+        <header class="header" v-if="mode === 'edit'">
+            <h1>Redigér Aktivitet</h1>
+        </header>
+        <header class="header" v-if="mode === 'clone'">
+            <h1>Opret forventet justering</h1>
+            <p>Du er ved at lave en forventet justering til aktiviteten {{ act.details }}.</p>
+        </header>
         <form @submit.prevent="saveChanges()">
-        <h1 v-if="create_mode">Opret Aktivitet</h1>
-        <h1 v-else>Redigér Aktivitet</h1>
-
-            <fieldset>
-                <legend>Status</legend>
-                <input type="radio" id="field-status-granted" value="GRANTED" v-model="act.status">
-                <label for="field-status-granted">Bevilling</label>
-                <input type="radio" id="field-status-expected" value="EXPECTED" v-model="act.status">
-                <label for="field-status-expected">Forventning</label>
-            </fieldset>
-            <fieldset>
-                <legend>Type</legend>
-                <input type="radio" id="field-type-main" value="MAIN_ACTIVITY" v-model="act.activity_type">
-                <label for="field-type-main">Hovedaktivitet</label>
-                <input type="radio" id="field-type-suppl" value="SUPPL_ACTIVITY" v-model="act.activity_type">
-                <label for="field-type-suppl">Følgeaktivitet</label>
-                <input type="radio" id="field-type-expected" value="EXPECTED_CHANGE" v-model="act.activity_type">
-                <label for="field-type-expected">Forventning</label>
-            </fieldset>
-            <fieldset>
-                <label for="selectField">Aktivitet</label>
-                <list-picker :dom-id="'selectField'" :selected-id="act.service" @selection="changeActivity" :list="activities" />
-            </fieldset>
-            <fieldset>
-                <label for="field-startdate">Startdato</label>
-                <input type="date" id="field-startdate" v-model="act.start_date">
-            </fieldset>
-            <fieldset>
-                <label for="field-enddate">Slutdato</label>
-                <input type="date" id="field-enddate" v-model="act.end_date">
-            </fieldset>
-            <hr>
-            <fieldset>
-                <label for="field-cost">Bevilget beløb</label>
-                <input type="number" id="field-cost" value="0">
-            </fieldset>
-            <fieldset>
-                <legend>Udgiftstype</legend>
-                <input type="radio" id="field-cost-single" :value="false">
-                <label for="field-cost-single">Følgeydelse</label>
-                <input type="radio" id="field-cost-recurring" :value="true">
-                <label for="field-cost-recurring">Enkeltudgift</label>
-            </fieldset>
-            <fieldset>
-                <label for="field-note">Bemærkning</label>
-                <textarea id="field-note"></textarea>
-            </fieldset>
-            <hr>
-            <fieldset>
-                <legend>Betalingsmodtager</legend>
-                <input type="radio" id="field-payment-type-inherit" value="inherit">
-                <label for="field-payment-type-inherit">Samme som hovedydelsen</label>
-                <input type="radio" id="field-payment-type-intern" value="intern">
-                <label for="field-payment-type-intern">Intern</label>
-                <input type="radio" id="field-payment-type-person" value="person">
-                <label for="field-payment-type-person">Person</label>
-                <input type="radio" id="field-payment-type-firm" value="firma">
-                <label for="field-payment-type-firm">Firma</label>
-            </fieldset>
-            <template>
-                <fieldset>
-                    <label for="field-payment-id">
-                        <template>CPR-nr/</template>
-                        <template>CVR-nr </template>
-                        <template>Reference</template>
-                    </label>
-                    <input type="text" id="field-payment-id" value="Ukendt">
-                </fieldset>
-                <fieldset>
-                    <label for="field-payment-name">Navn</label>
-                    <input type="text" id="field-payment-name" value="Ukendt">
-                </fieldset>
-                <fieldset>
-                    <legend>Betalingsmåde</legend>
-                    <input type="radio" id="field-payment-method-cash" value="kontant">
-                    <label for="field-payment-method-cash">Kontant udbetaling</label>
-                    <input type="radio" id="field-payment-method-sd" value="SD-løn">
-                    <label for="field-payment-method-sd">SD-løn</label>
-                    <input type="radio" id="field-payment-method-invoice" value="faktura">
-                    <label for="field-payment-method-invoice">Faktura</label>
-                    <input type="radio" id="field-payment-method-internal" value="intern afregning">
-                    <label for="field-payment-method-internal">Intern afregning</label>
-                </fieldset>
-            </template>
-            <hr>
-            <fieldset>
-                <input type="submit" value="Gem">
-                <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
-            </fieldset>
+            <div class="row">
+                <div class="column">
+                    <fieldset v-if="mode === 'create'">
+                        <input type="checkbox" id="field-status-expected" v-model="act_status_expected">
+                        <label for="field-status-expected">Opret som forventet justering</label>
+                    </fieldset>
+                    <fieldset v-if="mode === 'create'">
+                        <legend>Type</legend>
+                        <input type="radio" id="field-type-main" value="MAIN_ACTIVITY" v-model="act.activity_type">
+                        <label for="field-type-main">Hovedydelse</label>
+                        <input type="radio" id="field-type-suppl" value="SUPPL_ACTIVITY" v-model="act.activity_type">
+                        <label for="field-type-suppl">Følgeydelse</label>
+                    </fieldset>
+                    <fieldset>
+                        <label for="selectField">Aktivitet</label>
+                        <list-picker :dom-id="'selectField'" :selected-id="act.details" @selection="changeActivity" :list="activities" />
+                    </fieldset>
+                    <fieldset>
+                        <label for="field-startdate">Startdato</label>
+                        <input type="date" id="field-startdate" v-model="act.start_date">
+                    </fieldset>
+                    <fieldset>
+                        <label for="field-enddate">Slutdato</label>
+                        <input type="date" id="field-enddate" v-model="act.end_date">
+                    </fieldset>
+                    <fieldset>
+                        <label for="field-text">Bemærkning</label>
+                        <textarea v-model="act.note"></textarea>
+                    </fieldset>
+                    <hr>
+                    <payment-amount-edit :payment-obj="pay" />
+                    <payment-receiver-edit :payment-obj="pay" />
+                    <payment-edit :payment-obj="pay" />
+                    <hr>
+                    <fieldset>
+                        <input type="submit" value="Gem">
+                        <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
+                    </fieldset>
+                </div>
+            </div>
         </form>
-    </article>
+    </section>
 
 </template>
 
@@ -99,19 +60,27 @@
 
     import axios from '../http/Http.js'
     import ListPicker from '../forms/ListPicker.vue'
+    import PaymentAmountEdit from '../payment/PaymentAmountEdit.vue'
+    import PaymentReceiverEdit from '../payment/PaymentReceiverEdit.vue'
+    import PaymentEdit from '../payment/PaymentEdit.vue'
 
     export default {
 
         components: {
-            ListPicker
+            ListPicker,
+            PaymentAmountEdit,
+            PaymentReceiverEdit,
+            PaymentEdit
         },
         props: [
+            'mode', // Can be either 'create', 'edit', or 'clone'
             'activityObj'
         ],
         data: function() {
             return {
                 act: {},
-                create_mode: true
+                act_status_expected: false,
+                pay: {}
             }
         },
         computed: {
@@ -121,53 +90,99 @@
         },
         methods: {
             changeActivity: function(act) {
-                this.act.service = act
-            },
-            cancel: function() {
-                if (!this.create_mode) {
-                    this.$emit('close')
-                } else {
-                    this.$router.push('/')
-                }  
+                this.act.details = act
             },
             saveChanges: function() {
+                
+                const appr_id = this.$route.params.apprid
                 let data = {
-                    status: this.act.status,
-                    activity_type: this.act.activity_type,
-                    id: this.act.id,
-                    start_date: this.act.start_date,
-                    end_date: this.act.end_date,
-                    service: this.act.service
-                }
-                if (!this.create_mode) {
+                        activity_type: this.act.activity_type,
+                        start_date: this.act.start_date,
+                        end_date: this.act.end_date,
+                        details: this.act.details,
+                        note: this.act.note
+                    },
+                    data_payee = {
+                        recipient_type: this.pay.recipient_type,
+                        recipient_id: this.pay.recipient_id,
+                        recipient_name: this.pay.recipient_name,
+                        payment_method: this.pay.payment_method,
+                        payment_frequency: this.pay.payment_frequency,
+                        payment_type: this.pay.payment_type,
+                        payment_units: this.pay.payment_units,
+                        payment_amount: this.pay.payment_amount
+                    }
+
+                if (this.mode === 'create') {
+                    data.appropriation = appr_id
+                    data.status = this.act_status_expected ? 'EXPECTED' : 'DRAFT'
+                } else if (this.mode === 'clone') {
                     data.appropriation = this.activityObj.appropriation
+                    data.modifies = this.act.id
+                    data.status = 'EXPECTED'
+                } else {
+                    data.id = this.act.id
+                    data.appropriation = this.activityObj.appropriation
+                }
+
+                if (this.mode === 'create' || this.mode === 'clone') {
+                    // POSTING an activity
+
+                    axios.post(`/activities/`, data)
+                    .then(res => {
+                        this.$router.push(`/appropriation/${ appr_id }`)
+                        axios.post(`/payment_schedules/`, data_payee)
+                        .then(resp => {
+                            axios.patch(`/activities/${ res.data.id }/`, {
+                                payment_plan: resp.data.id
+                            })
+                            .then(() => {
+                                this.$store.dispatch('fetchActivity', res.data.id)
+                            })
+                        })
+                    })
+                    .catch(err => console.log(err))
+
+                } else {
+                    // PATCHING an activity
+
                     axios.patch(`/activities/${ this.act.id }/`, data)
                     .then(res => {
                         this.$emit('save', res.data)
+                        axios.patch(`/payment_schedules/${ this.act.payment_plan }/`, data_payee)
+                        .then(resp => {
+                            axios.patch(`/activities/${ res.data.id }/`, {
+                                payment_plan: resp.data.id
+                            })
+                            .then(() => {
+                                this.$store.dispatch('fetchActivity', res.data.id)
+                            })
+                        })
                     })
                     .catch(err => console.log(err))
-                } else {
-                    const appr_id = this.$route.params.apprid
-                    axios.post(`/activities/`, {
-                        appropriation: appr_id,
-                        status: this.act.status,
-                        activity_type: this.act.activity_type,
-                        id: this.act.id,
-                        start_date: this.act.start_date,
-                        end_date: this.act.end_date,
-                        service: this.act.service
-                    })
-                    .then(res => {
-                        this.$router.push(`/appropriation/${ appr_id }`)
-                    })
-                    .catch(err => console.log(err))
+
                 }
+            },
+            cancel: function() {
+                if (this.mode !== 'create') {
+                    this.$emit('close')
+                } else {
+                    this.$router.push(`/appropriation/${ this.$route.params.apprid }`)
+                }  
+            },
+            fetchPaymentInfo: function(pay_plan_id) {
+                axios.get(`/payment_schedules/${ pay_plan_id }/`)
+                .then(res => {
+                    this.pay = res.data
+                })
+                .catch(err => console.log(err))
             }
         },
-         created: function() {
+        created: function() {
+            console.log(this.mode)
             if (this.activityObj) {
-                this.create_mode = false
                 this.act = this.activityObj
+                this.fetchPaymentInfo(this.activityObj.payment_plan)
             }
         }
     }
@@ -177,7 +192,27 @@
 <style>
 
     .activity-edit {
-        margin: 0;
+        margin: 1rem;
+        background-color: var(--grey1);
+    }
+
+    .activity-edit > header {
+        background-color: var(--grey2);
+        padding: 1rem;
+    }
+
+    .activity-edit.activity-clone,
+    .activity-edit.expected-true {
+        background-color: hsl(40, 90%, 80%);
+    }
+
+    .activity-edit.activity-clone > header,
+    .activity-edit.expected-true > header {
+        background-color: hsl(40, 90%, 70%);
+    }
+
+    .activity-edit form {
+        background-color: transparent;
     }
 
     .activity-edit .cancel-btn {

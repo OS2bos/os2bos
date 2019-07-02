@@ -5,11 +5,15 @@
             <h1>Bevillingsskrivelse</h1>
             <span v-html="statusLabel(appr.status)" style="margin: 0 1rem;"></span>
             <template v-if="appr.approval_level"> af
-                {{ appr.approval_level }}
+                {{ displayApprovalName(appr.approval_level) }}
             </template>
             <div>
                 <button @click="show_edit = !show_edit" class="appr-edit-btn">Redigér</button>
-                <router-link :to="`/appropriation/${ appr.id }/print`">Print</router-link>
+            </div>
+
+            <div>
+                <button @click="showModal = true" class="approval-btn">Godkend</button>
+                <approval :approval-obj="appr" v-if="showModal" @close="update()"></approval>
             </div>
         </header>
 
@@ -25,7 +29,7 @@
                     <dt>Foranstaltningssag (SBSYS)</dt>
                     <dd>{{ appr.sbsys_id}}</dd>
                     <dt>Sagsbehandler</dt>
-                    <dd>{{ cas.case_worker}}</dd>
+                    <dd>{{ displayUserName(cas.case_worker) }}</dd>
                 </dl>
             </div>
 
@@ -53,9 +57,6 @@
             <div class="sagsbev appr-grid-box">
                 <h2>Der bevilges:</h2>
                 <activity-list :appr-id="appr.id" />
-                <!-- <activity-list2 :appr-id="appr.id" /> -->
-                <!-- <activity-list3 :appr-id="appr.id" /> -->
-                <!-- <activity-list4 :appr-id="appr.id" /> -->
             </div>
 
         </div>
@@ -71,7 +72,8 @@
     import ActivityList3 from '../activities/ActivityList3.vue'
     import ActivityList4 from '../activities/ActivityList4.vue'
     import AppropriationEdit from './AppropriationEdit.vue'
-    import { municipalityId2name, districtId2name, sectionId2name, displayStatus } from '../filters/Labels.js'
+    import Approval from './Approval.vue'
+    import { municipalityId2name, districtId2name, sectionId2name, displayStatus, userId2name, approvalId2name } from '../filters/Labels.js'
 
     export default {
 
@@ -80,49 +82,57 @@
             ActivityList2,
             ActivityList3,
             ActivityList4,
-            AppropriationEdit
+            AppropriationEdit,
+            Approval
         },
         data: function() {
             return {
-                appr: null,
-                cas: null,
-                show_edit: false
+                show_edit: false,
+                showModal: false
+            }
+        },
+        computed: {
+            cas: function() {
+                return this.$store.getters.getCase
+            },
+            appr: function() {
+                return this.$store.getters.getAppropriation
+            }
+        },
+        watch: {
+            appr: function() {
+                this.updateBreadCrumb()
+            },
+            cas: function() {
+                this.updateBreadCrumb()
             }
         },
         methods: {
             update: function() {
                 this.show_edit =  false
-                this.fetchAppr(this.$route.params.id)
-            },
-            fetchAppr: function(id) {
-                axios.get(`/appropriations/${ id }`)
-                .then(res => {
-                    this.appr = res.data
-
-                    axios.get(`/cases/${ res.data.case }`)
-                    .then(resp => {
-                        this.cas = resp.data
-                        this.$store.commit('setBreadcrumb', [
-                            {
-                                link: '/',
-                                title: 'Mine sager'
-                            },
-                            {
-                                link: `/case/${ this.appr.case }`,
-                                title: `${ this.cas.sbsys_id }, ${ this.cas.name }`
-                            },
-                            {
-                                link: false,
-                                title: `Foranstaltning ${ this.appr.sbsys_id }`
-                            }
-                        ])
-
-                    })
-                })
-                .catch(err => console.log(err))
+                this. showModal = false
+                this.$store.dispatch('fetchAppropriation', this.$route.params.id)
             },
             reload: function() {
                 this.show_edit =  false
+            },
+            updateBreadCrumb: function() {
+                if (this.cas && this.appr) {
+                    this.$store.commit('setBreadcrumb', [
+                        {
+                            link: '/',
+                            title: 'Mine sager'
+                        },
+                        {
+                            link: `/case/${ this.appr.case }`,
+                            title: `${ this.cas.sbsys_id }, ${ this.cas.name }`
+                        },
+                        {
+                            link: false,
+                            title: `Bevillingsskrivelse ${ this.appr.sbsys_id }`
+                        }
+                    ])
+                }
             },
             displayMuniName: function(id) {
                 return municipalityId2name(id)
@@ -136,6 +146,12 @@
             statusLabel: function(status) {
                 return displayStatus(status)
             },
+            displayUserName: function(id) {
+                return userId2name(id)
+            },
+            displayApprovalName: function(id) {
+                return approvalId2name(id)
+            }
         },
         created: function() {
             this.update()
@@ -158,6 +174,10 @@
     }
 
     .appropriation .appr-edit-btn {
+        margin: 0 1rem;
+    }
+
+    .appropriation .approval-btn {
         margin: 0 1rem;
     }
 

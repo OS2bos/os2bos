@@ -12,35 +12,60 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 import configparser
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-base_settings_path = os.path.join(BASE_DIR, "base.ini")
 
-# define defaults for ConfigParser
-defaults = {"BASE_DIR": BASE_DIR}
-config = configparser.ConfigParser(defaults=defaults)
-# load base settings from base.ini into the ConfigParser
-config.read(base_settings_path)
+config = configparser.ConfigParser()
+config["settings"] = {}
 
-# If another settings ini is defined, load it
-settings_name = os.getenv("DJANGO_SETTINGS_INI", None)
-if settings_name:  # pragma: no branch
-    settings_path = os.path.join(BASE_DIR, settings_name)
-    config.read(settings_path)
+
+# Our customized user model
+AUTH_USER_MODEL = "core.User"
+
+# We support loading settings from two files. The fallback values in this
+# `settings.py` is first overwritten by the values defined in the file where
+# the env var `DJANGO_SETTINGS_INI_PRELOAD` points to. Finally the values are
+# overwritten by the values the env var `DJANGO_SETTINGS_INI` points to.
+#
+# The `DJANGO_SETTINGS_INI_PRELOAD` file is for an alternative set of default
+# values. It is useful in a specific envionment such as Docker. An example is
+# the setting for STATIC_ROOT. The default in `settings.py` is relative to the
+# current directory. In Docker it should be an absolute path that is easy to
+# mount a volume to.
+#
+# The `DJANGO_SETTINGS_INI` file is for normal settings and shoud generally be
+# unique to a instance deployment.
+
+for env in ["DJANGO_SETTINGS_INI_PRELOAD", "DJANGO_SETTINGS_INI"]:
+    path = os.getenv(env, None)
+    if path:
+        try:
+            with open(path) as fp:
+                config.read_file(fp)
+            logger.info("Loaded setting %s from %s" % (env, path))
+        except OSError as e:
+            logger.error(
+                "Loading setting %s from %s failed with %s." % (env, path, e)
+            )
+
 
 # use settings section as default
-default_config = config["settings"]
+settings = config["settings"]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = default_config.get("SECRET_KEY")
+SECRET_KEY = settings.get("SECRET_KEY", fallback="Not.a.secret")
 
 # SECURITY WARNING: don"t run with debug turned on in production!
-DEBUG = default_config.getboolean("DEBUG")
+DEBUG = settings.getboolean("DEBUG", fallback=False)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = settings.get("ALLOWED_HOSTS", fallback="").split(",")
 
 
 # Application definition
@@ -61,6 +86,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -89,6 +115,7 @@ TEMPLATES = [
     }
 ]
 
+
 WSGI_APPLICATION = "bevillingsplatform.wsgi.application"
 
 
@@ -97,12 +124,14 @@ WSGI_APPLICATION = "bevillingsplatform.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": default_config.get("DATABASE_ENGINE"),
-        "NAME": default_config.get("DATABASE_NAME"),
-        "USER": default_config.get("DATABASE_USER"),
-        "PASSWORD": default_config.get("DATABASE_PASSWORD"),
-        "HOST": default_config.get("DATABASE_HOST"),
-        "PORT": default_config.get("DATABASE_PORT"),
+        "ENGINE": settings.get(
+            "DATABASE_ENGINE", fallback="django.db.backends.postgresql"
+        ),
+        "NAME": settings.get("DATABASE_NAME", fallback=""),
+        "USER": settings.get("DATABASE_USER", fallback=""),
+        "PASSWORD": settings.get("DATABASE_PASSWORD", fallback=""),
+        "HOST": settings.get("DATABASE_HOST", fallback=""),
+        "PORT": settings.getint("DATABASE_PORT", fallback=5432),
     }
 }
 
@@ -143,24 +172,30 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
+STATIC_URL = "/api/static/"
+STATIC_ROOT = settings.get(
+    "STATIC_ROOT", fallback=os.path.join(BASE_DIR, "static")
+)
 
-FORCE_SCRIPT_NAME = default_config.get("FORCE_SCRIPT_NAME")
-STATIC_URL = FORCE_SCRIPT_NAME + "/static/"
-STATIC_ROOT = default_config.get("STATIC_ROOT")
+STATICFILES_DIRS = [
+    # The vue frontend code is output to this directory. `./manage.py
+    # collectstatic` copies it to `STATIC_ROOT/frontend` where it it served by
+    # WhiteNoise via `bevillingsplatform/urls.py`.
+    ("frontend", "../frontend/dist")
+]
+
 
 # Serviceplatform service UUIDs
 SERVICEPLATFORM_UUIDS = {
-    "service_agreement": default_config.get(
-        "SERVICEPLATFORM_SERVICE_AGREEMENT"
-    ),
-    "user_system": default_config.get("SERVICEPLATFORM_USER_SYSTEM"),
-    "user": default_config.get("SERVICEPLATFORM_USER"),
-    "service": default_config.get("SERVICEPLATFORM_SERVICE"),
+    "service_agreement": settings.get("SERVICEPLATFORM_SERVICE_AGREEMENT"),
+    "user_system": settings.get("SERVICEPLATFORM_USER_SYSTEM"),
+    "user": settings.get("SERVICEPLATFORM_USER"),
+    "service": settings.get("SERVICEPLATFORM_SERVICE"),
 }
 
 # Serviceplatform Certificate
 
-SERVICEPLATFORM_CERTIFICATE_PATH = default_config.get(
+SERVICEPLATFORM_CERTIFICATE_PATH = settings.get(
     "SERVICEPLATFORM_CERTIFICATE_PATH"
 )
 
@@ -170,6 +205,10 @@ REST_FRAMEWORK = {
     ),
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
+    ),
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
     ),
 }
 
@@ -181,7 +220,9 @@ LOGGING = {
         "default": {
             "level": "DEBUG",
             "class": "logging.FileHandler",
-            "filename": "/logs/debug.log",
+            "filename": settings.get(
+                "LOG_FILE", fallback=os.path.join(BASE_DIR, "debug.log")
+            ),
         }
     },
     "loggers": {
@@ -190,10 +231,20 @@ LOGGING = {
 }
 
 # Email settings
-EMAIL_BACKEND = default_config.get("EMAIL_BACKEND")
-EMAIL_HOST_USER = default_config.get("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = default_config.get("EMAIL_HOST_PASSWORD")
-EMAIL_HOST = default_config.get("EMAIL_HOST")
-EMAIL_PORT = default_config.get("EMAIL_PORT")
-DEFAULT_FROM_EMAIL = default_config.get("DEFAULT_FROM_EMAIL")
-TO_EMAIL_FOR_PAYMENTS = default_config.get("TO_EMAIL_FOR_PAYMENTS")
+EMAIL_BACKEND = settings.get(
+    "EMAIL_BACKEND", fallback="django.core.mail.backends.smtp.EmailBackend"
+)
+EMAIL_HOST_USER = settings.get("EMAIL_HOST_USER", fallback="")
+EMAIL_HOST_PASSWORD = settings.get("EMAIL_HOST_PASSWORD", fallback="")
+EMAIL_HOST = settings.get("EMAIL_HOST", fallback="")
+EMAIL_PORT = settings.getint("EMAIL_PORT", fallback=25)
+DEFAULT_FROM_EMAIL = settings.get(
+    "DEFAULT_FROM_EMAIL", fallback="admin@bevillingsplatform-test.magenta.dk"
+)
+
+SBSYS_EMAIL = settings.get(
+    "SBSYS_EMAIL", fallback="admin@bevillingsplatform-test.magenta.dk"
+)
+TO_EMAIL_FOR_PAYMENTS = settings.get("TO_EMAIL_FOR_PAYMENTS", fallback="admin@bevillingsplatform-test.magenta.dk")
+SBSYS_APPROPRIATION_TEMPLATE = "core/html/appropriation_letter.html"
+SBSYS_XML_TEMPLATE = "core/xml/os2forms.xml"

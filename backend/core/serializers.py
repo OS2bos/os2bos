@@ -1,4 +1,5 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
 
@@ -9,17 +10,23 @@ from core.models import (
     RelatedPerson,
     Municipality,
     PaymentSchedule,
+    PaymentMethodDetails,
     Payment,
     SchoolDistrict,
-    Sections,
-    ActivityCatalog,
+    Section,
+    ActivityDetails,
+    Account,
     HistoricalCase,
+    ServiceProvider,
+    ApprovalLevel,
+    Team,
+    FAMILY_DEPT,
 )
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = get_user_model()
         fields = ["id", "username", "cases"]
 
 
@@ -27,6 +34,16 @@ class CaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Case
         fields = "__all__"
+
+    def validate(self, data):
+        # check that if target_group is family, district is given
+        if (
+            "target_group" in data and data["target_group"] == FAMILY_DEPT
+        ) and ("district" not in data or not data["district"]):
+            raise serializers.ValidationError(
+                _("En sag med familie målgruppe skal have et distrikt")
+            )
+        return data
 
 
 class HistoricalCaseSerializer(serializers.ModelSerializer):
@@ -43,27 +60,63 @@ class HistoricalCaseSerializer(serializers.ModelSerializer):
         )
 
 
-class AppropriationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Appropriation
-        fields = "__all__"
-
-
-class ActivitySerializer(serializers.ModelSerializer):
+class SupplementaryActivitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Activity
         fields = "__all__"
 
 
-class PaymentScheduleSerializer(serializers.ModelSerializer):
+class ActivitySerializer(serializers.ModelSerializer):
+    total_amount = serializers.SerializerMethodField()
+    supplementary_activities = SupplementaryActivitySerializer(
+        many=True, read_only=True
+    )
+
+    def validate(self, data):
+        # Check that start_date is before end_date
+        if (
+            "end_date" in data
+            and data["end_date"]
+            and data["start_date"] > data["end_date"]
+        ):
+            raise serializers.ValidationError(
+                _("startdato skal være før slutdato")
+            )
+        return data
+
     class Meta:
-        model = PaymentSchedule
+        model = Activity
+        fields = "__all__"
+
+    def get_total_amount(self, obj):
+        return obj.total_amount()
+
+
+class AppropriationSerializer(serializers.ModelSerializer):
+    activities = ActivitySerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Appropriation
         fields = "__all__"
 
 
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
+        fields = "__all__"
+
+
+class PaymentMethodDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PaymentMethodDetails
+        fields = "__all__"
+
+
+class PaymentScheduleSerializer(serializers.ModelSerializer):
+    payments = PaymentSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = PaymentSchedule
         fields = "__all__"
 
 
@@ -79,19 +132,43 @@ class MunicipalitySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class TeamSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Team
+        fields = "__all__"
+
+
 class SchoolDistrictSerializer(serializers.ModelSerializer):
     class Meta:
         model = SchoolDistrict
         fields = "__all__"
 
 
-class SectionsSerializer(serializers.ModelSerializer):
+class SectionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Sections
+        model = Section
         fields = "__all__"
 
 
-class ActivityCatalogSerializer(serializers.ModelSerializer):
+class ActivityDetailsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ActivityCatalog
+        model = ActivityDetails
+        fields = "__all__"
+
+
+class AccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = "__all__"
+
+
+class ServiceProviderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceProvider
+        fields = "__all__"
+
+
+class ApprovalLevelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ApprovalLevel
         fields = "__all__"

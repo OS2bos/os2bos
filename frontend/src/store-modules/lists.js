@@ -4,7 +4,9 @@ const state = {
     municipalities: null,
     districts: null,
     activities: null,
-    sections: null
+    sections: null,
+    users: null,
+    approval_levels: null
 }
 
 const getters = {
@@ -19,6 +21,12 @@ const getters = {
     },
     getSections (state) {
         return state.sections ? state.sections : false
+    },
+    getUsers (state) {
+        return state.users ? state.users : false
+    },
+    getApprovals (state) {
+        return state.approval_levels ? state.approval_levels : false
     }
 }
 
@@ -34,6 +42,12 @@ const mutations = {
     },
     setSections (state, sections) {
         state.sections = sections
+    },
+    setUsers (state, users) {
+        state.users = users
+    },
+    setAppro (state, approvals) {
+        state.approval_levels = approvals
     }
 }
 
@@ -53,7 +67,7 @@ const actions = {
         .catch(err => console.log(err))
     },
     fetchActivities: function({commit}) {
-        axios.get('/activity_catalogs/')
+        axios.get('/activity_details/')
         .then(res => {
             commit('setAct', res.data)
         })
@@ -65,6 +79,28 @@ const actions = {
             commit('setSections', res.data)
         })
         .catch(err => console.log(err))
+    },
+    fetchUsers: function({commit}) {
+        axios.get('/users/')
+        .then(res => {
+            commit('setUsers', res.data)
+        })
+        .catch(err => console.log(err))
+    },
+    fetchApprovals: function({commit}) {
+        axios.get('/approval_levels/')
+        .then(res => {
+            commit('setAppro', res.data)
+        })
+        .catch(err => console.log(err))
+    },
+    fetchLists: function({dispatch}) {
+        dispatch('fetchMunis')
+        dispatch('fetchDistricts')
+        dispatch('fetchActivities')
+        dispatch('fetchSections')
+        dispatch('fetchUsers')
+        dispatch('fetchApprovals')
     }
 }
 
