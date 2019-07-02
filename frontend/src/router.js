@@ -11,6 +11,7 @@ import Activity from './components/activities/Activity.vue'
 import ActivityEdit from './components/activities/ActivityEdit.vue'
 import PaymentSchedule from './components/payment/PaymentSchedule.vue'
 import Login from './components/auth/Login.vue'
+import Page404 from './components/http/Page404.vue'
 import store from './store.js'
 
 Vue.use(Router)
@@ -66,7 +67,8 @@ const router = new Router({
         {
             path: '/appropriation/:apprid/activity-create/',
             name: 'activity-create',
-            component: ActivityEdit
+            component: ActivityEdit,
+            props: { mode: 'create' }
         },
         {
             path: '/paymentschedule/',
@@ -81,6 +83,12 @@ const router = new Router({
             // this generates a separate chunk (about.[hash].js) for this route
             // which is lazy-loaded when the route is visited.
             //component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+        },
+        {
+            // This route must declared last
+            path: '*',
+            name: 'page404',
+            component: Page404
         }
     ]
 })

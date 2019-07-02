@@ -7,7 +7,7 @@
                 <i class="material-icons">folder_shared</i>
                 Hovedsag {{ cas.sbsys_id }}
             </h1>
-            <button @click="edit_mode = !edit_mode">Redigér</button>
+            <button v-if="!edit_mode" @click="edit_mode = !edit_mode">Redigér</button>
         </header>
 
         <div class="case-info" v-if="!edit_mode">

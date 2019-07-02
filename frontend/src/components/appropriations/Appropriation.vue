@@ -101,20 +101,10 @@
         },
         watch: {
             appr: function() {
-                this.$store.commit('setBreadcrumb', [
-                    {
-                        link: '/',
-                        title: 'Mine sager'
-                    },
-                    {
-                        link: `/case/${ this.appr.case }`,
-                        title: `${ this.cas.sbsys_id }, ${ this.cas.name }`
-                    },
-                    {
-                        link: false,
-                        title: `Bevillingsskrivelse ${ this.appr.sbsys_id }`
-                    }
-                ])
+                this.updateBreadCrumb()
+            },
+            cas: function() {
+                this.updateBreadCrumb()
             }
         },
         methods: {
@@ -125,6 +115,24 @@
             },
             reload: function() {
                 this.show_edit =  false
+            },
+            updateBreadCrumb: function() {
+                if (this.cas && this.appr) {
+                    this.$store.commit('setBreadcrumb', [
+                        {
+                            link: '/',
+                            title: 'Mine sager'
+                        },
+                        {
+                            link: `/case/${ this.appr.case }`,
+                            title: `${ this.cas.sbsys_id }, ${ this.cas.name }`
+                        },
+                        {
+                            link: false,
+                            title: `Bevillingsskrivelse ${ this.appr.sbsys_id }`
+                        }
+                    ])
+                }
             },
             displayMuniName: function(id) {
                 return municipalityId2name(id)
