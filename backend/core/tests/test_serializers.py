@@ -103,3 +103,16 @@ class CaseSerializerTestCase(TestCase, CaseMixin):
         is_valid = serializer.is_valid()
 
         self.assertTrue(is_valid)
+
+    def test_validate_error_family_dept_partial(self):
+        # Create initial valid case
+        case = self.create_case()
+        data = CaseSerializer(case).data
+        # no target_group for partial update
+        data.pop("target_group")
+        data["district"] = None
+        data["sbsys_id"] = "12356789"
+        serializer = CaseSerializer(data=data, partial=True)
+        is_valid = serializer.is_valid()
+
+        self.assertTrue(is_valid)
