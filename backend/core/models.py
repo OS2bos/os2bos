@@ -320,9 +320,9 @@ class Payment(models.Model):
 
     def is_payment_method_and_recipient_allowed(self):
         allowed = {
-            PaymentSchedule.INTERNAL: [PaymentSchedule.INTERNAL],
-            PaymentSchedule.PERSON: [PaymentSchedule.CASH, PaymentSchedule.SD],
-            PaymentSchedule.COMPANY: [PaymentSchedule.INVOICE],
+            PaymentSchedule.INTERNAL: [INTERNAL],
+            PaymentSchedule.PERSON: [CASH, SD],
+            PaymentSchedule.COMPANY: [INVOICE],
         }
         return self.payment_method in allowed[self.recipient_type]
 
