@@ -1,17 +1,13 @@
-<<<<<<< HEAD
-# -*- coding: utf-8 -*-
 from datetime import timedelta
 from django.test import TestCase
 from django.utils import timezone
 from django.core import mail
-=======
 from decimal import Decimal
 from datetime import date
 from unittest import mock
 
 from django.test import TestCase
 from django.contrib.auth import get_user_model
->>>>>>> develop
 from parameterized import parameterized
 
 from core.tests.testing_mixins import PaymentScheduleMixin, ActivityMixin
