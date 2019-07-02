@@ -125,19 +125,6 @@ the container. This is messy an will fail because the application user does not
 have permission to write files. Don't use `tox` inside the container.
 
 
-#### Django superuser
-
-To create a Django superuser on container startup, set all three following
-envionment variables:
-```bash
-SUPERUSER_NAME
-SUPERUSER_EMAIL
-SUPERUSER_PASSWORD
-```
-If a user with that name already exists the password or email will *not* be
-changed. The container will however start.
-
-
 ### Docker-compose
 
 You can use ``docker-compose`` to start up bevillingsplatform and related
