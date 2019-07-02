@@ -70,8 +70,7 @@ RUN pip3 install -r backend/requirements.txt -r backend/requirements-test.txt
 # Copy and install backend code.
 COPY README.md .
 COPY LICENSE .
-COPY docker/docker-settings.ini ./docker/docker-settings.ini
-COPY docker/docker-entrypoint.sh ./docker/docker-entrypoint.sh
+COPY docker ./docker
 COPY tox.ini .
 COPY backend ./backend
 
