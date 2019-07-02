@@ -483,19 +483,9 @@ class Appropriation(AuditModelMixin, models.Model):
         Case, on_delete=models.CASCADE, related_name="appropriations"
     )
 
-    @property
-    def payment_plan(self):
-        activities = self.activities.all().select_related(
-            "payment_plan"
-        ).prefetch_related(
-            "payment_plan__payments",
-            "supplementary_activities__payment_plan__payments"
-        )
-
-        for activity in activities:
-            activity.supplementary_activities
-
-
+    def monthly_payment_plan(self):
+        payments = Payment.objects.filter(payment_schedule__activity__in=self.activities)
+        return payments.bin_in_monthly_amounts_per_status()
 
 class ServiceProvider(models.Model):
     """
@@ -626,10 +616,9 @@ class Activity(AuditModelMixin, models.Model):
 
     note = models.TextField(null=True, blank=True, max_length=1000)
 
-    def payment_plan(self):
-        activities = Activity.objects.filter(pk=self.pk) | self.supplementary_activities.all()
-        expected_activities = activities.filter(status=self.STATUS_EXPECTED)
-        granted_activities = activities.filter(status=self.GRANTED)
+    def monthly_payment_plan(self):
+        payments = Payment.objects.filter(payment_schedule__activity=self)
+        return payments.bin_in_monthly_amounts()
 
     def total_amount(self):
         if not self.payment_plan:

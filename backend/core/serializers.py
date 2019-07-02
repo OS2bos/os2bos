@@ -57,6 +57,7 @@ class SupplementaryActivitySerializer(serializers.ModelSerializer):
 
 class ActivitySerializer(serializers.ModelSerializer):
     total_amount = serializers.SerializerMethodField()
+    monthly_payment_plan = serializers.SerializerMethodField()
     supplementary_activities = SupplementaryActivitySerializer(
         many=True, read_only=True
     )
@@ -79,6 +80,9 @@ class ActivitySerializer(serializers.ModelSerializer):
 
     def get_total_amount(self, obj):
         return obj.total_amount()
+
+    def get_monthly_payment_plan(self, obj):
+        return obj.monthly_payment_plan()
 
 
 class AppropriationSerializer(serializers.ModelSerializer):
