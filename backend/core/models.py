@@ -366,7 +366,6 @@ class Payment(models.Model):
         return f"{self.date} - {self.amount}"
 
 
-
 class Case(AuditModelMixin, models.Model):
     """A case, covering one child - corresponding to a Hovedsag in SBSYS."""
 

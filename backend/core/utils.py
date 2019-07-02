@@ -140,6 +140,7 @@ def send_payment_deleted_email(payment):
         [settings.TO_EMAIL_FOR_PAYMENTS],
     )
 
+
 def send_appropriation(appropriation):
     """Generate PDF and XML files from appropriation and send them to SBSYS."""
     render_context = {"appropriation": appropriation}
