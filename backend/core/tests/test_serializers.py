@@ -12,7 +12,6 @@ from core.serializers import ActivitySerializer, CaseSerializer
 class ActivitySerializerTestCase(
     TestCase, ActivityMixin, PaymentScheduleMixin
 ):
-
     def test_validate_end_before_start(self):
         activity_details = ActivityDetails.objects.create(
             max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
