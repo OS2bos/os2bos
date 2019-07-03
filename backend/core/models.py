@@ -632,16 +632,13 @@ class Activity(AuditModelMixin, models.Model):
                 amount_sum=Coalesce(Sum("amount"), 0)
             )["amount_sum"]
 
-        if self.appropriation is not None:
-            supplementary_amount = self.appropriation.activities.filter(
-                activity_type=Activity.MAIN_ACTIVITY
-            ).aggregate(
-                amount_sum=Coalesce(Sum("payment_plan__payments__amount"), 0)
-            )[
-                "amount_sum"
-            ]
-        else:
-            supplementary_amount = 0
+        supplementary_amount = self.appropriation.activities.filter(
+            activity_type=Activity.MAIN_ACTIVITY
+        ).aggregate(
+            amount_sum=Coalesce(Sum("payment_plan__payments__amount"), 0)
+        )[
+            "amount_sum"
+        ]
 
         return payment_amount + supplementary_amount
 
