@@ -106,7 +106,9 @@ class ActivityMixin:
             max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
         )
         activity = Activity.objects.create(
-            start_date=start_date, end_date=end_date,
-            details=activity_details, appropriation=appropriation
+            start_date=start_date,
+            end_date=end_date,
+            details=activity_details,
+            appropriation=appropriation,
         )
         return activity

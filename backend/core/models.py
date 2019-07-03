@@ -611,9 +611,7 @@ class Activity(AuditModelMixin, models.Model):
     )
     # The appropriation that owns this activity.
     appropriation = models.ForeignKey(
-        Appropriation,
-        related_name="activities",
-        on_delete=models.CASCADE,
+        Appropriation, related_name="activities", on_delete=models.CASCADE
     )
 
     service_provider = models.ForeignKey(
