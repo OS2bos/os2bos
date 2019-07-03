@@ -13,7 +13,9 @@ from django.db.models.functions import (
 
 class PaymentQuerySet(models.QuerySet):
     def amount_sum(self):
-        return self.aggregate(amount_sum=Coalesce(Sum("amount"), 0))["amount_sum"]
+        return self.aggregate(amount_sum=Coalesce(Sum("amount"), 0))[
+            "amount_sum"
+        ]
 
     def in_this_year(self):
         now = timezone.now()
@@ -32,10 +34,19 @@ class PaymentQuerySet(models.QuerySet):
             {'date_month': '2019-08', 'amount': Decimal('1500.00')}
         ]
         """
-        return self.annotate(
-            date_month=Concat(
-                Cast(ExtractYear("date"), CharField()),
-                Value("-", CharField()),
-                LPad(Cast(ExtractMonth("date"), CharField()), 2, fill_text=Value("0")),
+        return (
+            self.annotate(
+                date_month=Concat(
+                    Cast(ExtractYear("date"), CharField()),
+                    Value("-", CharField()),
+                    LPad(
+                        Cast(ExtractMonth("date"), CharField()),
+                        2,
+                        fill_text=Value("0"),
+                    ),
+                )
             )
-        ).values("date_month").order_by("date_month").annotate(amount=Sum("amount"))
+            .values("date_month")
+            .order_by("date_month")
+            .annotate(amount=Sum("amount"))
+        )

@@ -497,9 +497,15 @@ class Appropriation(AuditModelMixin, models.Model):
         this Appropriation (both main and supplementary activities).
         """
         all_activities = (
-            self.activities.all() |
-            Activity.objects.filter(main_activity__in=self.activities.all())
-        ).filter(status=Activity.STATUS_GRANTED).distinct()
+            (
+                self.activities.all()
+                | Activity.objects.filter(
+                    main_activity__in=self.activities.all()
+                )
+            )
+            .filter(status=Activity.STATUS_GRANTED)
+            .distinct()
+        )
 
         this_years_payments = Payment.objects.filter(
             payment_schedule__activity__in=all_activities
@@ -516,13 +522,13 @@ class Appropriation(AuditModelMixin, models.Model):
         if it modifies another activity.
         """
         all_activities = (
-            self.activities.all() |
-            Activity.objects.filter(main_activity__in=self.activities.all())
+            self.activities.all()
+            | Activity.objects.filter(main_activity__in=self.activities.all())
         ).distinct()
 
         all_activities = all_activities.filter(
-            Q(status=Activity.STATUS_GRANTED, modified_by__isnull=True) |
-            Q(status=Activity.STATUS_EXPECTED)
+            Q(status=Activity.STATUS_GRANTED, modified_by__isnull=True)
+            | Q(status=Activity.STATUS_EXPECTED)
         )
 
         this_years_payments = Payment.objects.filter(
@@ -674,16 +680,12 @@ class Activity(AuditModelMixin, models.Model):
         now = timezone.now()
         payments = Payment.objects.filter(
             payment_schedule__activity=self
-        ).filter(
-            date__year=now.year
-        )
+        ).filter(date__year=now.year)
 
         return payments.amount_sum()
 
     def total_cost(self):
-        payments = Payment.objects.filter(
-            payment_schedule__activity=self
-        )
+        payments = Payment.objects.filter(payment_schedule__activity=self)
         return payments.amount_sum()
 
     def save(self, *args, **kwargs):
