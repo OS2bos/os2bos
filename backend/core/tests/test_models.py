@@ -83,11 +83,6 @@ class ActivityDetailsTestCase(TestCase):
 
 
 class ActivityTestCase(TestCase, ActivityMixin, PaymentScheduleMixin):
-    def test_activity_total_amount_no_payment_plan(self):
-        activity = self.create_activity()
-        total_amount = activity.total_amount()
-        self.assertEqual(total_amount, 0)
-
     def test_activity_synchronize_payments_on_save(self):
         activity = self.create_activity()
         payment_schedule = self.create_payment_schedule()
@@ -97,44 +92,6 @@ class ActivityTestCase(TestCase, ActivityMixin, PaymentScheduleMixin):
         activity.end_date = date(year=2019, month=1, day=13)
         activity.save()
         self.assertEqual(activity.payment_plan.payments.count(), 13)
-
-    def test_activity_total_amount_on_main_activity(self):
-        activity = self.create_activity()
-        payment_schedule = self.create_payment_schedule()
-        activity.payment_plan = payment_schedule
-        activity.save()
-        self.assertEqual(activity.total_amount(), Decimal("5000.0"))
-
-    def test_activity_total_amount_on_main_supplementary_activities(self):
-        # Generate main activity
-        activity = self.create_activity()
-        payment_schedule = self.create_payment_schedule()
-        activity.payment_plan = payment_schedule
-        activity.save()
-        # Generate first supplementary activity
-        supplementary_activity = self.create_activity()
-        payment_schedule = self.create_payment_schedule()
-        supplementary_activity.payment_plan = payment_schedule
-        supplementary_activity.main_activity = activity
-        supplementary_activity.save()
-
-        # Generate second supplementary activity without payment schedule.
-        supplementary_activity = self.create_activity()
-        supplementary_activity.main_activity = activity
-        supplementary_activity.save()
-
-        self.assertEqual(activity.total_amount(), Decimal("10000.0"))
-
-    def test_activity_total_amount_on_service_provider(self):
-        service_provider = ServiceProvider.objects.create(
-            name="Test leverandør", vat_factor=Decimal("90")
-        )
-        activity = self.create_activity()
-        payment_schedule = self.create_payment_schedule()
-        activity.payment_plan = payment_schedule
-        activity.service_provider = service_provider
-        activity.save()
-        self.assertEqual(activity.total_amount(), Decimal("4500.0"))
 
 
 class AccountTestCase(TestCase):
