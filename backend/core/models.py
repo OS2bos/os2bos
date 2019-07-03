@@ -522,7 +522,7 @@ class Appropriation(AuditModelMixin, models.Model):
 
         all_activities = all_activities.filter(
             Q(status=Activity.STATUS_GRANTED, modified_by__isnull=True) |
-            Q(status=Activity.STATUS_EXPECTED, modifies__isnull=False)
+            Q(status=Activity.STATUS_EXPECTED)
         )
 
         this_years_payments = Payment.objects.filter(
