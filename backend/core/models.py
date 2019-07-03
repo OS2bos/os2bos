@@ -490,19 +490,16 @@ class Appropriation(AuditModelMixin, models.Model):
     @property
     def main_activity(self):
         """Return main activity, if any."""
-        for a in self.activities.all():
-            if a.activity_type == Activity.MAIN_ACTIVITY:
-                # Invariant: There is only one main activity.
-                return a
+        f = self.activities.filter(activity_type=Activity.MAIN_ACTIVITY)
+        if f.exists():
+            # Invariant: There is only one main activity.
+            return f.first()
 
     @property
     def supplementary_activities(self):
         """Return all non-main activities."""
-        return (
-            a
-            for a in self.activities.all()
-            if a.activity_type == Activity.SUPPL_ACTIVITY
-        )
+        f = self.activities.filter(activity_type=Activity.SUPPL_ACTIVITY)
+        return (a for a in f)
 
     @property
     def payment_plan(self):
@@ -603,17 +600,6 @@ class Activity(AuditModelMixin, models.Model):
         blank=True,
     )
 
-    # Supplementary activities will point to their main activity.
-    # Root activities may be a main activity and followed by any
-    # supplementary activity.
-    main_activity = models.ForeignKey(
-        "self",
-        null=True,
-        blank=True,
-        related_name="supplementary_activities",
-        on_delete=models.CASCADE,
-        verbose_name=_("hovedaktivitet"),
-    )
     # An expected change modifies another actitvity and will eventually
     # be merged with it.
     modifies = models.ForeignKey(
@@ -650,9 +636,17 @@ class Activity(AuditModelMixin, models.Model):
                 amount_sum=Coalesce(Sum("amount"), 0)
             )["amount_sum"]
 
-        supplementary_amount = self.supplementary_activities.aggregate(
-            amount_sum=Coalesce(Sum("payment_plan__payments__amount"), 0)
-        )["amount_sum"]
+        if self.appropriation is not None:
+            supplementary_amount = self.appropriation.activities.filter(
+                activity_type=Activity.MAIN_ACTIVITY
+            ).aggregate(
+                amount_sum=Coalesce(Sum("payment_plan__payments__amount"), 0)
+            )[
+                "amount_sum"
+            ]
+        else:
+            supplementary_amount = 0
+
         return payment_amount + supplementary_amount
 
     def save(self, *args, **kwargs):

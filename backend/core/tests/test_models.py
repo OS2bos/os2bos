@@ -19,6 +19,7 @@ from core.models import (
     Payment,
     PaymentSchedule,
     ServiceProvider,
+    Activity,
 )
 
 
@@ -45,7 +46,7 @@ class AppropriationTestCase(TestCase, ActivityMixin):
                 sbsys_id="XXX-YYY-ZZZ", section=section
             )
             activity = self.create_activity()
-            activity.activity_type = SUPPLEMENTARY_ACTIVITY
+            activity.activity_type = Activity.SUPPLEMENTARY_ACTIVITY
             activity.appropriation = appropriation
             self.assertEqual(activity, self.supplementary_activities[0])
 
@@ -122,26 +123,6 @@ class ActivityTestCase(TestCase, ActivityMixin, PaymentScheduleMixin):
         activity.payment_plan = payment_schedule
         activity.save()
         self.assertEqual(activity.total_amount(), Decimal("5000.0"))
-
-    def test_activity_total_amount_on_main_supplementary_activities(self):
-        # Generate main activity
-        activity = self.create_activity()
-        payment_schedule = self.create_payment_schedule()
-        activity.payment_plan = payment_schedule
-        activity.save()
-        # Generate first supplementary activity
-        supplementary_activity = self.create_activity()
-        payment_schedule = self.create_payment_schedule()
-        supplementary_activity.payment_plan = payment_schedule
-        supplementary_activity.main_activity = activity
-        supplementary_activity.save()
-
-        # Generate second supplementary activity without payment schedule.
-        supplementary_activity = self.create_activity()
-        supplementary_activity.main_activity = activity
-        supplementary_activity.save()
-
-        self.assertEqual(activity.total_amount(), Decimal("10000.0"))
 
     def test_activity_total_amount_on_service_provider(self):
         service_provider = ServiceProvider.objects.create(
