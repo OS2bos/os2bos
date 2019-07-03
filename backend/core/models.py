@@ -4,11 +4,11 @@ from decimal import Decimal
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
 from django.db import models
-from django.db.models import Sum
-from django.db.models.functions import Coalesce
+from django.db.models import Q
 from django.contrib.postgres import fields
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
 from django.core.validators import MinValueValidator
 from django_audit_fields.models import AuditModelMixin
 from simple_history.models import HistoricalRecords
@@ -483,9 +483,46 @@ class Appropriation(AuditModelMixin, models.Model):
         Case, on_delete=models.CASCADE, related_name="appropriations"
     )
 
-    def monthly_payment_plan(self):
-        payments = Payment.objects.filter(payment_schedule__activity__in=self.activities)
-        return payments.bin_in_monthly_amounts_per_status()
+    def total_granted_this_year(self):
+        """
+        Retrieve total amount granted this year for payments related to
+        this Appropriation (both main and supplementary activities).
+        """
+        all_activities = (
+            self.activities.all() |
+            Activity.objects.filter(main_activity__in=self.activities.all())
+        ).filter(status=Activity.STATUS_GRANTED).distinct()
+
+        this_years_payments = Payment.objects.filter(
+            payment_schedule__activity__in=all_activities
+        ).in_this_year()
+
+        return this_years_payments.amount_sum()
+
+    def total_expected_this_year(self):
+        """
+        Retrieve total amount expected this year for payments related to
+        this Appropriation.
+
+        we take into account granted payments but overrule with expected
+        if it modifies another activity.
+        """
+        all_activities = (
+            self.activities.all() |
+            Activity.objects.filter(main_activity__in=self.activities.all())
+        ).distinct()
+
+        all_activities = all_activities.filter(
+            Q(status=Activity.STATUS_GRANTED, modified_by__isnull=True) |
+            Q(status=Activity.STATUS_EXPECTED, modifies__isnull=False)
+        )
+
+        this_years_payments = Payment.objects.filter(
+            payment_schedule__activity__in=all_activities
+        ).in_this_year()
+
+        return this_years_payments.amount_sum()
+
 
 class ServiceProvider(models.Model):
     """
@@ -620,18 +657,21 @@ class Activity(AuditModelMixin, models.Model):
         payments = Payment.objects.filter(payment_schedule__activity=self)
         return payments.bin_in_monthly_amounts()
 
-    def total_amount(self):
-        if not self.payment_plan:
-            payment_amount = 0
-        else:
-            payment_amount = self.payment_plan.payments.aggregate(
-                amount_sum=Coalesce(Sum("amount"), 0)
-            )["amount_sum"]
+    def total_cost_this_year(self):
+        now = timezone.now()
+        payments = Payment.objects.filter(
+            payment_schedule__activity=self
+        ).filter(
+            date__year=now.year
+        )
 
-        supplementary_amount = self.supplementary_activities.aggregate(
-            amount_sum=Coalesce(Sum("payment_plan__payments__amount"), 0)
-        )["amount_sum"]
-        return payment_amount + supplementary_amount
+        return payments.amount_sum()
+
+    def total_cost(self):
+        payments = Payment.objects.filter(
+            payment_schedule__activity=self
+        )
+        return payments.amount_sum()
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
