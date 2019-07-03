@@ -18,7 +18,6 @@ from core.models import (
     Team,
     Payment,
     PaymentSchedule,
-    ServiceProvider,
 )
 
 
