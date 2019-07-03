@@ -22,7 +22,7 @@ from core.models import (
 )
 
 
-class AppropriationTestCase(TestCase):
+class AppropriationTestCase(TestCase, ActivityMixin):
     def test_appropriation_str(self):
         section = Section(paragraph="ABZ-52-54", kle_number="11.22.33")
         appropriation = Appropriation(sbsys_id="XXX-YYY-ZZZ", section=section)
@@ -30,6 +30,24 @@ class AppropriationTestCase(TestCase):
         self.assertEqual(
             str(appropriation), "XXX-YYY-ZZZ - ABZ-52-54 - 11.22.33"
         )
+
+        def test_main_activity(self):
+            appropriation = Appropriation(
+                sbsys_id="XXX-YYY-ZZZ", section=section
+            )
+            activity = self.create_activity()
+            activity.activity_type = Activity.MAIN_ACTIVITY
+            activity.appropriation = appropriation
+            self.assertEqual(activity, appropriation.main_activity)
+
+        def test_supplementary_ativities(self):
+            appropriation = Appropriation(
+                sbsys_id="XXX-YYY-ZZZ", section=section
+            )
+            activity = self.create_activity()
+            activity.activity_type = SUPPLEMENTARY_ACTIVITY
+            activity.appropriation = appropriation
+            self.assertEqual(activity, self.supplementary_activities[0])
 
 
 class MunicipalityTestCase(TestCase):
