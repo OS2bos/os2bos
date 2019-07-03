@@ -67,9 +67,9 @@ class SupplementaryActivitySerializer(serializers.ModelSerializer):
 
 
 class ActivitySerializer(serializers.ModelSerializer):
-    total_cost = serializers.SerializerMethodField()
-    total_cost_this_year = serializers.SerializerMethodField()
-    monthly_payment_plan = serializers.SerializerMethodField()
+    monthly_payment_plan = serializers.ReadOnlyField()
+    total_cost = serializers.ReadOnlyField()
+    total_cost_this_year = serializers.ReadOnlyField()
 
     supplementary_activities = SupplementaryActivitySerializer(
         many=True, read_only=True
@@ -91,31 +91,16 @@ class ActivitySerializer(serializers.ModelSerializer):
         model = Activity
         fields = "__all__"
 
-    def get_total_cost(self, obj):
-        return obj.total_cost()
-
-    def get_monthly_payment_plan(self, obj):
-        return obj.monthly_payment_plan()
-
-    def get_total_cost_this_year(self, obj):
-        return obj.total_cost_this_year()
-
 
 class AppropriationSerializer(serializers.ModelSerializer):
-    total_granted_this_year = serializers.SerializerMethodField()
-    total_expected_this_year = serializers.SerializerMethodField()
+    total_granted_this_year = serializers.ReadOnlyField()
+    total_expected_this_year = serializers.ReadOnlyField()
 
     activities = ActivitySerializer(many=True, read_only=True)
 
     class Meta:
         model = Appropriation
         fields = "__all__"
-
-    def get_total_granted_this_year(self, obj):
-        return obj.total_granted_this_year()
-
-    def get_total_expected_this_year(self, obj):
-        return obj.total_expected_this_year()
 
 
 class PaymentSerializer(serializers.ModelSerializer):

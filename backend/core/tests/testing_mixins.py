@@ -12,6 +12,7 @@ from core.models import (
     PaymentSchedule,
     ActivityDetails,
     Appropriation,
+    Payment,
 )
 
 
@@ -134,3 +135,22 @@ class AppropriationMixin:
             sbsys_id=sbsys_id, case=case
         )
         return appropriation
+
+
+class PaymentMixin:
+    @staticmethod
+    def create_payment(date=date.today(), amount=Decimal("500")):
+        payment_schedule = PaymentSchedule.objects.create(
+            payment_amount=amount,
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            payment_units=0,
+        )
+        payment = Payment.objects.create(
+            recipient_id="Test",
+            recipient_name="Test",
+            date=date,
+            amount=amount,
+            payment_schedule=payment_schedule,
+        )
+        return payment

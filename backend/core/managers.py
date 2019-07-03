@@ -21,9 +21,6 @@ class PaymentQuerySet(models.QuerySet):
         now = timezone.now()
         return self.filter(date__year=now.year)
 
-    def is_paid(self):
-        return self.filter(paid=True)
-
     def bin_in_monthly_amounts(self):
         """
         Bin in monthly amounts.

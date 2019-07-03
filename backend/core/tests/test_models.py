@@ -24,6 +24,7 @@ from core.models import (
     Payment,
     PaymentSchedule,
     Activity,
+    ServiceProvider,
 )
 
 
@@ -186,6 +187,21 @@ class ActivityTestCase(TestCase, ActivityMixin, PaymentScheduleMixin):
         activity.save()
         self.assertEqual(activity.payment_plan.payments.count(), 13)
 
+    def test_activity_total_cost_with_service_provider(self):
+        service_provider = ServiceProvider.objects.create(
+            name="Test leverandør", vat_factor=Decimal("90")
+        )
+        payment_schedule = self.create_payment_schedule()
+        activity = self.create_activity(
+            payment_plan=payment_schedule, service_provider=service_provider
+        )
+
+        self.assertEqual(activity.total_cost(), Decimal("4500.0"))
+
+    def test_activity_no_payment_plan_on_save(self):
+        activity = self.create_activity()
+        self.assertIsNone(activity.payment_plan)
+
     def test_activity_total_cost(self):
         payment_schedule = self.create_payment_schedule()
         # 10 days, daily payments of 500.
@@ -243,12 +259,13 @@ class ActivityTestCase(TestCase, ActivityMixin, PaymentScheduleMixin):
             end_date=end_date,
             payment_plan=payment_schedule,
         )
-        breakpoint()
         expected = [
             {"date_month": "2019-12", "amount": Decimal("15500")},
             {"date_month": "2020-01", "amount": Decimal("500")},
         ]
-        self.assertEqual(activity.monthly_payment_plan(), expected)
+        self.assertEqual(
+            [entry for entry in activity.monthly_payment_plan()], expected
+        )
 
 
 class AccountTestCase(TestCase):
