@@ -19,14 +19,14 @@
                     </fieldset>
                     <fieldset v-if="mode === 'create'">
                         <legend>Type</legend>
-                        <input type="radio" id="field-type-main" value="MAIN_ACTIVITY" v-model="act.activity_type">
+                        <input type="radio" id="field-type-main" value="MAIN_ACTIVITY" v-model="act.activity_type" @change='activityList()'>
                         <label for="field-type-main">Hovedydelse</label>
-                        <input type="radio" id="field-type-suppl" value="SUPPL_ACTIVITY" v-model="act.activity_type">
+                        <input type="radio" id="field-type-suppl" value="SUPPL_ACTIVITY" v-model="act.activity_type" @change='activityList()'>
                         <label for="field-type-suppl">Følgeydelse</label>
                     </fieldset>
                     <fieldset>
                         <label for="selectField">Aktivitet</label>
-                        <list-picker :dom-id="'selectField'" :selected-id="act.details" @selection="changeActivity" :list="activities" />
+                        <list-picker :dom-id="'selectField'" :disabled="disableAct" :selected-id="act.details" @selection="changeActivity" :list="act_details" />
                     </fieldset>
                     <fieldset>
                         <label for="field-startdate">Startdato</label>
@@ -80,12 +80,21 @@
             return {
                 act: {},
                 act_status_expected: false,
-                pay: {}
+                pay: {},
+                act_details: null
             }
         },
         computed: {
             activities: function() {
                 return this.$store.getters.getActivities
+            },
+            appropriation: function() {
+                return this.$store.getters.getAppropriation
+            },
+            disableAct: function () {
+                if (this.act_details < 1) {
+                    return true
+                }
             }
         },
         methods: {
@@ -160,7 +169,6 @@
                         })
                     })
                     .catch(err => console.log(err))
-
                 }
             },
             cancel: function() {
@@ -176,13 +184,26 @@
                     this.pay = res.data
                 })
                 .catch(err => console.log(err))
+            },
+            activityList: function() {
+                let actList
+                if (this.act.activity_type === 'MAIN_ACTIVITY') {
+                    actList = `main_activity_for=${ this.appropriation.section }`
+                } else {
+                    actList = `supplementary_activity_for=${ this.appropriation.section }`
+                }
+                axios.get(`/activity_details?${ actList }`)
+                .then(res => {
+                    this.act_details = res.data
+                })
+                .catch(err => console.log(err))
             }
         },
         created: function() {
-            console.log(this.mode)
             if (this.activityObj) {
                 this.act = this.activityObj
                 this.fetchPaymentInfo(this.activityObj.payment_plan)
+                this.activityList()
             }
         }
     }
