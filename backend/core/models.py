@@ -612,8 +612,6 @@ class Activity(AuditModelMixin, models.Model):
     # The appropriation that owns this activity.
     appropriation = models.ForeignKey(
         Appropriation,
-        null=True,
-        blank=True,
         related_name="activities",
         on_delete=models.CASCADE,
     )

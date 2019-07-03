@@ -11,6 +11,8 @@ from core.models import (
     Activity,
     PaymentSchedule,
     ActivityDetails,
+    Section,
+    Appropriation,
 )
 
 
@@ -89,10 +91,22 @@ class ActivityMixin:
         start_date=date(year=2019, month=1, day=1),
         end_date=date(year=2019, month=1, day=10),
     ):
+        case = CaseMixin.create_case()
+        section = Section.objects.create(
+            paragraph="ABL-105-2",
+            kle_number="27.45.04",
+            text="Lov om almene boliger",
+            allowed_for_steps=[],
+            law_text_name="Lov om almene boliger",
+        )
+        appropriation = Appropriation.objects.create(
+            sbsys_id="XXX-YYY-ZZZ", section=section, case=case
+        )
         activity_details = ActivityDetails.objects.create(
             max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
         )
         activity = Activity.objects.create(
-            start_date=start_date, end_date=end_date, details=activity_details
+            start_date=start_date, end_date=end_date,
+            details=activity_details, appropriation=appropriation
         )
         return activity
