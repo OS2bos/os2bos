@@ -6,7 +6,11 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 from parameterized import parameterized
 
-from core.tests.testing_mixins import PaymentScheduleMixin, ActivityMixin
+from core.tests.testing_mixins import (
+    PaymentScheduleMixin,
+    ActivityMixin,
+    CaseMixin,
+)
 from core.models import (
     Appropriation,
     Municipality,
@@ -23,7 +27,7 @@ from core.models import (
 )
 
 
-class AppropriationTestCase(TestCase, ActivityMixin):
+class AppropriationTestCase(TestCase, ActivityMixin, CaseMixin):
     def test_appropriation_str(self):
         section = Section(paragraph="ABZ-52-54", kle_number="11.22.33")
         appropriation = Appropriation(sbsys_id="XXX-YYY-ZZZ", section=section)
@@ -32,29 +36,43 @@ class AppropriationTestCase(TestCase, ActivityMixin):
             str(appropriation), "XXX-YYY-ZZZ - ABZ-52-54 - 11.22.33"
         )
 
-        def test_main_activity(self):
-            appropriation = Appropriation(
-                sbsys_id="XXX-YYY-ZZZ", section=section
-            )
-            appropriation.save()
-            activity = self.create_activity()
-            activity.activity_type = Activity.MAIN_ACTIVITY
-            activity.save()
-            appropriation.activities.add(activity)
-            appropriation.save()
-            self.assertEqual(activity, appropriation.main_activity)
+    def test_main_activity(self):
+        case = self.create_case()
+        section = Section.objects.create(
+            paragraph="ABL-105-2",
+            kle_number="27.45.04",
+            text="Lov om almene boliger",
+            allowed_for_steps=[],
+            law_text_name="Lov om almene boliger",
+        )
+        appropriation = Appropriation.objects.create(
+            sbsys_id="XXX-YYY-ZZZ", section=section, case=case
+        )
+        activity = self.create_activity()
+        activity.activity_type = Activity.MAIN_ACTIVITY
+        activity.appropriation = appropriation
+        activity.save()
+        self.assertEqual(activity, appropriation.main_activity)
 
-        def test_supplementary_activities(self):
-            appropriation = Appropriation(
-                sbsys_id="XXX-YYY-ZZZ", section=section
-            )
-            appropriation.save()
-            activity = self.create_activity()
-            activity.activity_type = Activity.SUPPLEMENTARY_ACTIVITY
-            activity.save()
-            appropriation.activities.add(activity)
-            appropriation.save()
-            self.assertEqual(activity, self.supplementary_activities[0])
+    def test_supplementary_activities(self):
+        case = self.create_case()
+        section = Section.objects.create(
+            paragraph="ABL-105-2",
+            kle_number="27.45.04",
+            text="Lov om almene boliger",
+            allowed_for_steps=[],
+            law_text_name="Lov om almene boliger",
+        )
+        appropriation = Appropriation.objects.create(
+            sbsys_id="XXX-YYY-ZZZ", section=section, case=case
+        )
+        activity = self.create_activity()
+        activity.activity_type = Activity.SUPPL_ACTIVITY
+        activity.appropriation = appropriation
+        activity.save()
+        self.assertEqual(
+            activity, next(appropriation.supplementary_activities)
+        )
 
 
 class MunicipalityTestCase(TestCase):
