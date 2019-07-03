@@ -11,6 +11,7 @@ from core.models import (
     Activity,
     PaymentSchedule,
     ActivityDetails,
+    Appropriation,
 )
 
 
@@ -88,11 +89,48 @@ class ActivityMixin:
     def create_activity(
         start_date=date(year=2019, month=1, day=1),
         end_date=date(year=2019, month=1, day=10),
+        status=Activity.STATUS_DRAFT,
+        **kwargs
     ):
         activity_details = ActivityDetails.objects.create(
             max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
         )
+
         activity = Activity.objects.create(
-            start_date=start_date, end_date=end_date, details=activity_details
+            start_date=start_date,
+            end_date=end_date,
+            details=activity_details,
+            status=status,
+            **kwargs
         )
         return activity
+
+
+class AppropriationMixin:
+    @staticmethod
+    def create_appropriation(sbsys_id="test"):
+        # create the related case
+        case_worker = get_user_model().objects.create(
+            username="Orla Frøsnapper"
+        )
+        team = Team.objects.create(name="FCK", leader=case_worker)
+        municipality = Municipality.objects.create(name="København")
+        district = SchoolDistrict.objects.create(name="Baltorpskolen")
+        case = Case.objects.create(
+            sbsys_id="13212",
+            cpr_number="0205891234",
+            name="Jens Jensen",
+            case_worker=case_worker,
+            team=team,
+            scaling_step=1,
+            effort_step="STEP_ONE",
+            acting_municipality=municipality,
+            district=district,
+            paying_municipality=municipality,
+            residence_municipality=municipality,
+        )
+
+        appropriation = Appropriation.objects.create(
+            sbsys_id=sbsys_id, case=case
+        )
+        return appropriation
