@@ -36,18 +36,22 @@ class AppropriationTestCase(TestCase, ActivityMixin):
             appropriation = Appropriation(
                 sbsys_id="XXX-YYY-ZZZ", section=section
             )
+            appropriation.save()
             activity = self.create_activity()
             activity.activity_type = Activity.MAIN_ACTIVITY
             activity.appropriation = appropriation
+            activity.save()
             self.assertEqual(activity, appropriation.main_activity)
 
         def test_supplementary_ativities(self):
             appropriation = Appropriation(
                 sbsys_id="XXX-YYY-ZZZ", section=section
             )
+            appropriation.save()
             activity = self.create_activity()
             activity.activity_type = Activity.SUPPLEMENTARY_ACTIVITY
             activity.appropriation = appropriation
+            activity.save()
             self.assertEqual(activity, self.supplementary_activities[0])
 
 
