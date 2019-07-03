@@ -10,7 +10,6 @@
                 <fieldset>
                     <label for="field-sbsys-id">SBSYS Hovedsag:</label>
                     <input id="field-sbsys-id" type="search" v-model="cas.sbsys_id">
-                    <button class="case-button" disabled>Hent</button>
                 </fieldset>
             
                 <fieldset>
@@ -21,18 +20,6 @@
                 <fieldset>
                     <label for="field-cpr">Sagspart, CPR-nr</label>
                     <input id="field-cpr" type="text" v-model="cas.cpr_number">
-                </fieldset>
-
-                <fieldset>
-                    <h3>Familie og relationer:</h3>
-                    <dl>
-                        <dt>Mor:</dt>
-                        <dd>ikke implementeret</dd>
-                        <dt>Far:</dt>
-                        <dd>ikke implementeret</dd>
-                        <dt>Andre:</dt>
-                        <dd>ikke implementeret</dd>
-                    </dl>
                 </fieldset>
 
                 <fieldset>
@@ -92,7 +79,7 @@
                         <dt>Team:</dt>
                         <dd>ikke implementeret</dd>
                     </dl>
-                    <fieldset>
+                    <fieldset v-if="cas.target_group === 'FAMILY_DEPT'">
                         <label for="selectField4">Distrikt:</label>
                         <list-picker :dom-id="'selectField4'" :selected-id="cas.district" @selection="changeDistrict" :list="districts" />
                     </fieldset>

@@ -2,7 +2,7 @@
 
     <section class="appropriations">
         <header class="appropriations-header">
-            <h1>Foranstaltninger</h1>
+            <h1>Bevillingsskrivelser</h1>
             <button class="appropriation-create-btn" @click="$router.push(`/case/${ caseId }/appropriation-create/`)">+ Opret bevillingsskrivelse</button>
         </header>
         <table class="appropriation-list" v-if="apprs && apprs.length > 0">
@@ -69,6 +69,11 @@
                 if (this.apprs) {
                     return this.apprs.reduce(getTotal, 0)
                 }
+            }
+        },
+        watch: {
+            caseId: function() {
+                this.fetchAppropriations()
             }
         },
         methods: {

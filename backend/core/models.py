@@ -347,6 +347,8 @@ class Case(AuditModelMixin, models.Model):
         related_name="cases",
         verbose_name=_("skoledistrikt"),
         on_delete=models.PROTECT,
+        null=True,
+        blank=True,
     )
     paying_municipality = models.ForeignKey(
         Municipality,
@@ -433,6 +435,12 @@ class Section(models.Model):
     )
     law_text_name = models.CharField(
         max_length=128, verbose_name=_("lov tekst navn")
+    )
+    sbsys_template_id = models.CharField(
+        max_length=128,
+        verbose_name=_("SBSYS skabelon-id"),
+        blank=True,
+        null=True,
     )
 
     def __str__(self):
@@ -523,6 +531,9 @@ class Appropriation(AuditModelMixin, models.Model):
 
         return this_years_payments.amount_sum()
 
+    def __str__(self):
+        return f"{self.sbsys_id} - {self.section}"
+
 
 class ServiceProvider(models.Model):
     """
@@ -577,9 +588,11 @@ class Activity(AuditModelMixin, models.Model):
     details = models.ForeignKey(ActivityDetails, on_delete=models.PROTECT)
 
     # Status - definitions and choice list.
+    STATUS_DRAFT = "DRAFT"
     STATUS_EXPECTED = "EXPECTED"
     STATUS_GRANTED = "GRANTED"
     status_choices = (
+        (STATUS_DRAFT, _("kladde")),
         (STATUS_EXPECTED, _("forventet")),
         (STATUS_GRANTED, _("bevilget")),
     )

@@ -20,6 +20,7 @@ from core.models import (
     ServiceProvider,
     ApprovalLevel,
     Team,
+    FAMILY_DEPT,
 )
 
 
@@ -33,6 +34,16 @@ class CaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Case
         fields = "__all__"
+
+    def validate(self, data):
+        # check that if target_group is family, district is given
+        if (
+            "target_group" in data and data["target_group"] == FAMILY_DEPT
+        ) and ("district" not in data or not data["district"]):
+            raise serializers.ValidationError(
+                _("En sag med familie målgruppe skal have et distrikt")
+            )
+        return data
 
 
 class HistoricalCaseSerializer(serializers.ModelSerializer):
@@ -67,7 +78,7 @@ class ActivitySerializer(serializers.ModelSerializer):
     def validate(self, data):
         # Check that start_date is before end_date
         if (
-            data["start_date"]
+            "end_date" in data
             and data["end_date"]
             and data["start_date"] > data["end_date"]
         ):

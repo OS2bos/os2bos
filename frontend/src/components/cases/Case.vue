@@ -7,7 +7,7 @@
                 <i class="material-icons">folder_shared</i>
                 Hovedsag {{ cas.sbsys_id }}
             </h1>
-            <button @click="edit_mode = !edit_mode">Redigér</button>
+            <button v-if="!edit_mode" @click="edit_mode = !edit_mode">Redigér</button>
         </header>
 
         <div class="case-info" v-if="!edit_mode">
@@ -25,8 +25,10 @@
                 </dd>
             </dl>
             <dl>
-                <dt>Distrikt</dt>
-                <dd>{{ displayDistrictName(cas.district) }}</dd>
+                <template v-if="cas.target_group === 'FAMILY_DEPT'">
+                    <dt>Distrikt</dt>
+                    <dd>{{ displayDistrictName(cas.district) }}</dd>
+                </template>
                 <dt>Målgruppe</dt>
                 <dd>
                     <span v-if="cas.target_group === 'DISABILITY_DEPT'">

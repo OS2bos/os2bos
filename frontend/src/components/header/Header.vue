@@ -4,8 +4,8 @@
         <div class="globalheader">
             <h1 title="Ballerup Bevillingsplatformen">
                 <router-link to="/" class="header-link">
-                    <img class="global-logo" src="/logo.svg" alt="" />
-                    <span>Ballerup <br>Bevillingsplatform</span>
+                    <img class="global-logo" src="/logo.png" alt="" />
+                    <span class="global-brandname">Bevillingsplatformen</span>
                 </router-link>
             </h1>
             <user-actions />
@@ -45,23 +45,32 @@
     .globalheader > h1 {
         margin: 0;
         padding: 0;
+        display: block;
     }
 
     .header-link {
+        display: block;
         margin: 0;
         padding: 0;
-        font-size: 1.125rem;
-        color: #0b7ead;
-        display: flex;
-        flex-flow: row nowrap;
         border: none !important;
+        position: relative;
     }
 
     .global-logo {
-        height: 2.5rem;
+        height: 3.5rem;
         width: auto;
         opacity: 1;
-        margin: .25rem .5rem 0 0;
+        margin: 0 .5rem 0 0;
+    }
+
+    .global-brandname {
+        position: absolute;
+        bottom: 0.25rem;
+        left: 3.375rem;
+        font-size: 1rem;
+        letter-spacing: 1px;
+        color: var(--grey10);
+        text-transform: uppercase;
     }
 
 </style>

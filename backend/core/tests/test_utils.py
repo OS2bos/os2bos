@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 from unittest import mock
 from django.test import TestCase
+from django.core import mail
 
 from django.contrib.auth import get_user_model
 
 import requests
 
 from core.utils import get_cpr_data, get_person_info, get_cpr_data_mock
+from core.utils import send_appropriation
+
+from core.models import Case, Section, Appropriation
 
 
 class AuthenticatedTestCase(TestCase):
@@ -78,3 +82,18 @@ class GetPersonInfoTestCase(TestCase):
 
         self.assertIn("relationer", result)
         self.assertIn("adresseringsnavn", result["relationer"][0])
+
+
+class SendAppropriationTestCase(TestCase):
+    def test_send_appropriation(self):
+        s = Section(
+            paragraph="ABL-105-2",
+            kle_number="27.45.04",
+            sbsys_template_id="SBSYS_xxxyyyyzzz",
+            law_text_name="Lov om almene boliger",
+        )
+
+        c = Case(name="Hej med Dig", cpr_number="11123", sbsys_id="11.22.33")
+        a = Appropriation(section=s, case=c, sbsys_id="SBSYS-33-34-35")
+        send_appropriation(a)
+        self.assertEqual(len(mail.outbox), 1)
