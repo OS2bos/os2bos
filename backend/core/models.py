@@ -488,6 +488,23 @@ class Appropriation(AuditModelMixin, models.Model):
     )
 
     @property
+    def main_activity(self):
+        """Return main activity, if any."""
+        for a in self.activities.all():
+            if a.activity_type == Activity.MAIN_ACTIVITY:
+                # Invariant: There is only one main activity.
+                return a
+
+    @property
+    def supplementary_activities(self):
+        """Return all non-main activities."""
+        return (
+            a
+            for a in self.activities.all()
+            if a.activity_type == Activity.SUPPL_ACTIVITY
+        )
+
+    @property
     def payment_plan(self):
         # TODO:
         pass  # pragma: no cover
@@ -606,9 +623,7 @@ class Activity(AuditModelMixin, models.Model):
         related_name="modified_by",
         on_delete=models.CASCADE,
     )
-    # The appropriation that own this activity.
-    # The appropriation will and must be set on the *main* activity
-    # only.
+    # The appropriation that owns this activity.
     appropriation = models.ForeignKey(
         Appropriation,
         null=True,
