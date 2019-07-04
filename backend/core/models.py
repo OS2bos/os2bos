@@ -491,6 +491,7 @@ class Appropriation(AuditModelMixin, models.Model):
         Case, on_delete=models.CASCADE, related_name="appropriations"
     )
 
+    @property
     def total_granted_this_year(self):
         """
         Retrieve total amount granted this year for payments related to
@@ -513,6 +514,7 @@ class Appropriation(AuditModelMixin, models.Model):
 
         return this_years_payments.amount_sum()
 
+    @property
     def total_expected_this_year(self):
         """
         Retrieve total amount expected this year for payments related to
@@ -672,10 +674,12 @@ class Activity(AuditModelMixin, models.Model):
 
     note = models.TextField(null=True, blank=True, max_length=1000)
 
+    @property
     def monthly_payment_plan(self):
         payments = Payment.objects.filter(payment_schedule__activity=self)
         return payments.bin_in_monthly_amounts()
 
+    @property
     def total_cost_this_year(self):
         now = timezone.now()
         payments = Payment.objects.filter(
@@ -684,6 +688,7 @@ class Activity(AuditModelMixin, models.Model):
 
         return payments.amount_sum()
 
+    @property
     def total_cost(self):
         payments = Payment.objects.filter(payment_schedule__activity=self)
         return payments.amount_sum()
