@@ -25,12 +25,11 @@ from core.models import (
     PaymentSchedule,
     Activity,
     ServiceProvider,
+    Activity,
 )
 
 
-class AppropriationTestCase(
-    TestCase, AppropriationMixin, PaymentScheduleMixin, ActivityMixin
-):
+class AppropriationTestCase(TestCase, PaymentScheduleMixin, ActivityMixin):
     def test_appropriation_str(self):
         section = Section(paragraph="ABZ-52-54", kle_number="11.22.33")
         appropriation = Appropriation(sbsys_id="XXX-YYY-ZZZ", section=section)
@@ -44,17 +43,16 @@ class AppropriationTestCase(
         now = timezone.now()
         start_date = date(year=now.year, month=1, day=1)
         end_date = date(year=now.year, month=1, day=10)
-        appropriation = self.create_appropriation()
         # create main activity with GRANTED.
         payment_schedule = self.create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
         )
-        main_activity = self.create_activity(
+        activity = self.create_activity(
             start_date=start_date,
             end_date=end_date,
+            activity_type=Activity.MAIN_ACTIVITY,
             status=Activity.STATUS_GRANTED,
-            appropriation=appropriation,
             payment_plan=payment_schedule,
         )
 
@@ -67,11 +65,11 @@ class AppropriationTestCase(
             start_date=start_date,
             end_date=end_date,
             status=Activity.STATUS_GRANTED,
-            main_activity=main_activity,
+            activity_type=Activity.SUPPL_ACTIVITY,
             payment_plan=payment_schedule,
         )
         self.assertEqual(
-            appropriation.total_granted_this_year, Decimal("10000")
+            activity.appropriation.total_granted_this_year, Decimal("10000")
         )
 
     def test_total_expected_this_year(self):
@@ -79,17 +77,16 @@ class AppropriationTestCase(
         now = timezone.now()
         start_date = date(year=now.year, month=1, day=1)
         end_date = date(year=now.year, month=1, day=10)
-        appropriation = self.create_appropriation()
         # create main activity with GRANTED.
         payment_schedule = self.create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
         )
-        main_activity = self.create_activity(
+        activity = self.create_activity(
             start_date=start_date,
             end_date=end_date,
+            activity_type=Activity.MAIN_ACTIVITY,
             status=Activity.STATUS_GRANTED,
-            appropriation=appropriation,
             payment_plan=payment_schedule,
         )
 
@@ -102,7 +99,7 @@ class AppropriationTestCase(
             start_date=start_date,
             end_date=end_date,
             status=Activity.STATUS_GRANTED,
-            main_activity=main_activity,
+            activity_type=Activity.SUPPL_ACTIVITY,
             payment_plan=payment_schedule,
         )
 
@@ -116,13 +113,29 @@ class AppropriationTestCase(
             start_date=start_date,
             end_date=end_date,
             status=Activity.STATUS_EXPECTED,
-            main_activity=main_activity,
+            activity_type=Activity.SUPPL_ACTIVITY,
             payment_plan=payment_schedule,
             modifies=supplementary_activity,
         )
 
         self.assertEqual(
-            appropriation.total_expected_this_year, Decimal("12000")
+            activity.appropriation.total_expected_this_year, Decimal("12000")
+        )
+
+    def test_main_activity(self):
+        activity = self.create_activity()
+        appropriation = activity.appropriation
+        activity.activity_type = Activity.MAIN_ACTIVITY
+        activity.save()
+        self.assertEqual(activity, appropriation.main_activity)
+
+    def test_supplementary_activities(self):
+        activity = self.create_activity()
+        appropriation = activity.appropriation
+        activity.activity_type = Activity.SUPPL_ACTIVITY
+        activity.save()
+        self.assertEqual(
+            activity, next(appropriation.supplementary_activities)
         )
 
 
@@ -246,7 +259,6 @@ class ActivityTestCase(TestCase, ActivityMixin, PaymentScheduleMixin):
             end_date=end_date,
             payment_plan=payment_schedule,
         )
-
         self.assertEqual(activity.total_cost_this_year, Decimal("15500"))
 
     def test_activity_monthly_payment_plan(self):

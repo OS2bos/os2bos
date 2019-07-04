@@ -13,20 +13,24 @@ from core.models import (
     ActivityDetails,
     Appropriation,
     Payment,
+    Section,
 )
+
+
+User = get_user_model()
 
 
 class CaseMixin:
     @staticmethod
-    def create_case():
-        case_worker = get_user_model().objects.create(
-            username="Orla Frøsnapper"
+    def create_case(sbsys_id="13212"):
+        case_worker, _ = User.objects.get_or_create(username="Orla Frøsnapper")
+        team, _ = Team.objects.get_or_create(name="FCK", leader=case_worker)
+        municipality, _ = Municipality.objects.get_or_create(name="København")
+        district, _ = SchoolDistrict.objects.get_or_create(
+            name="Baltorpskolen"
         )
-        team = Team.objects.create(name="FCK", leader=case_worker)
-        municipality = Municipality.objects.create(name="København")
-        district = SchoolDistrict.objects.create(name="Baltorpskolen")
         case = Case.objects.create(
-            sbsys_id="13212",
+            sbsys_id=sbsys_id,
             cpr_number="0205891234",
             name="Jens Jensen",
             case_worker=case_worker,
@@ -42,7 +46,7 @@ class CaseMixin:
 
     @staticmethod
     def create_case_as_json():
-        case_worker = get_user_model().objects.create(username="Andersine And")
+        case_worker = User.objects.create(username="Andersine And")
         team = Team.objects.create(name="Brøndby", leader=case_worker)
         municipality_id = Municipality.objects.create(name="Andeby").id
         district = SchoolDistrict.objects.create(
@@ -93,6 +97,35 @@ class ActivityMixin:
         status=Activity.STATUS_DRAFT,
         **kwargs
     ):
+        case_worker, _ = User.objects.get_or_create(username="Orla Frøsnapper")
+        team, _ = Team.objects.get_or_create(name="FCK", leader=case_worker)
+        municipality, _ = Municipality.objects.get_or_create(name="København")
+        district, _ = SchoolDistrict.objects.get_or_create(
+            name="Baltorpskolen"
+        )
+        case, _ = Case.objects.get_or_create(
+            sbsys_id="test",
+            cpr_number="0205891234",
+            name="Jens Jensen",
+            case_worker=case_worker,
+            team=team,
+            scaling_step=1,
+            effort_step="STEP_ONE",
+            acting_municipality=municipality,
+            district=district,
+            paying_municipality=municipality,
+            residence_municipality=municipality,
+        )
+        section, _ = Section.objects.get_or_create(
+            paragraph="ABL-105-2",
+            kle_number="27.45.04",
+            text="Lov om almene boliger",
+            allowed_for_steps=[],
+            law_text_name="Lov om almene boliger",
+        )
+        appropriation, _ = Appropriation.objects.get_or_create(
+            sbsys_id="XXX-YYY-ZZZ", section=section, case=case
+        )
         activity_details = ActivityDetails.objects.create(
             max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
         )
@@ -102,6 +135,7 @@ class ActivityMixin:
             end_date=end_date,
             details=activity_details,
             status=status,
+            appropriation=appropriation,
             **kwargs
         )
         return activity
@@ -111,14 +145,14 @@ class AppropriationMixin:
     @staticmethod
     def create_appropriation(sbsys_id="test"):
         # create the related case
-        case_worker = get_user_model().objects.create(
-            username="Orla Frøsnapper"
+        case_worker, _ = get_user_model().objects.get_or_create(
+            username="Benny Badekar"
         )
-        team = Team.objects.create(name="FCK", leader=case_worker)
-        municipality = Municipality.objects.create(name="København")
-        district = SchoolDistrict.objects.create(name="Baltorpskolen")
+        team, _ = Team.objects.get_or_create(name="ÅB", leader=case_worker)
+        municipality, _ = Municipality.objects.get_or_create(name="Århus")
+        district, _ = SchoolDistrict.objects.get_or_create(name="Skovlunde")
         case = Case.objects.create(
-            sbsys_id="13212",
+            sbsys_id=sbsys_id,
             cpr_number="0205891234",
             name="Jens Jensen",
             case_worker=case_worker,

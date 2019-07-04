@@ -497,19 +497,12 @@ class Appropriation(AuditModelMixin, models.Model):
         Retrieve total amount granted this year for payments related to
         this Appropriation (both main and supplementary activities).
         """
-        all_activities = (
-            (
-                self.activities.all()
-                | Activity.objects.filter(
-                    main_activity__in=self.activities.all()
-                )
-            )
-            .filter(status=Activity.STATUS_GRANTED)
-            .distinct()
+        granted_activities = self.activities.all().filter(
+            status=Activity.STATUS_GRANTED
         )
 
         this_years_payments = Payment.objects.filter(
-            payment_schedule__activity__in=all_activities
+            payment_schedule__activity__in=granted_activities
         ).in_this_year()
 
         return this_years_payments.amount_sum()
@@ -523,12 +516,8 @@ class Appropriation(AuditModelMixin, models.Model):
         we take into account granted payments but overrule with expected
         if it modifies another activity.
         """
-        all_activities = (
-            self.activities.all()
-            | Activity.objects.filter(main_activity__in=self.activities.all())
-        ).distinct()
 
-        all_activities = all_activities.filter(
+        all_activities = self.activities.filter(
             Q(status=Activity.STATUS_GRANTED, modified_by__isnull=True)
             | Q(status=Activity.STATUS_EXPECTED)
         )
@@ -538,6 +527,25 @@ class Appropriation(AuditModelMixin, models.Model):
         ).in_this_year()
 
         return this_years_payments.amount_sum()
+
+    @property
+    def main_activity(self):
+        """Return main activity, if any."""
+        f = self.activities.filter(activity_type=Activity.MAIN_ACTIVITY)
+        if f.exists():
+            # Invariant: There is only one main activity.
+            return f.first()
+
+    @property
+    def supplementary_activities(self):
+        """Return all non-main activities."""
+        f = self.activities.filter(activity_type=Activity.SUPPL_ACTIVITY)
+        return (a for a in f)
+
+    @property
+    def payment_plan(self):
+        # TODO:
+        pass  # pragma: no cover
 
     def __str__(self):
         return f"{self.sbsys_id} - {self.section}"
@@ -633,17 +641,6 @@ class Activity(AuditModelMixin, models.Model):
         blank=True,
     )
 
-    # Supplementary activities will point to their main activity.
-    # Root activities may be a main activity and followed by any
-    # supplementary activity.
-    main_activity = models.ForeignKey(
-        "self",
-        null=True,
-        blank=True,
-        related_name="supplementary_activities",
-        on_delete=models.CASCADE,
-        verbose_name=_("hovedaktivitet"),
-    )
     # An expected change modifies another actitvity and will eventually
     # be merged with it.
     modifies = models.ForeignKey(
@@ -653,15 +650,9 @@ class Activity(AuditModelMixin, models.Model):
         related_name="modified_by",
         on_delete=models.CASCADE,
     )
-    # The appropriation that own this activity.
-    # The appropriation will and must be set on the *main* activity
-    # only.
+    # The appropriation that owns this activity.
     appropriation = models.ForeignKey(
-        Appropriation,
-        null=True,
-        blank=True,
-        related_name="activities",
-        on_delete=models.CASCADE,
+        Appropriation, related_name="activities", on_delete=models.CASCADE
     )
 
     service_provider = models.ForeignKey(
@@ -677,7 +668,7 @@ class Activity(AuditModelMixin, models.Model):
     @property
     def monthly_payment_plan(self):
         payments = Payment.objects.filter(payment_schedule__activity=self)
-        return payments.bin_in_monthly_amounts()
+        return payments.group_by_monthly_amounts()
 
     @property
     def total_cost_this_year(self):

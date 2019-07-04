@@ -4,9 +4,6 @@
             <h1>Familieoversigt</h1>
             <button class="familyoverview-create-btn" @click="$router.push(`/case/${ caseId }/familyoverview-create/`)">+ Opret familierelation</button>
         </header>
-        <!-- <div v-if="show_edit">
-            <family-overview-edit :fam-obj="fam" v-if="show_edit" @close="update()" />
-        </div> -->
         <table class="familyoverview-list" v-if="fam && fam.length > 0">
             <thead>
                 <tr>
@@ -20,9 +17,11 @@
                 <tr v-for="f in fam" :key="f.id">
                     <td>{{ f.relation_type }}</td>
                     <td>{{ f.cpr_number }} - {{ f.name }}</td>
-                    <td>{{ f.related_case }}</td>
                     <td>
-                        <!-- <button @click="show_edit = !show_edit" class="familyoverview-create-btn"><i class="material-icons">edit</i></button> -->
+                        <span v-if="!f.related_case">-</span>
+                        {{ f.related_case }}
+                    </td>
+                    <td>
                         <router-link :to="`/case/${ caseId }/familyoverview-edit/${ f.id }`">
                             <i class="material-icons edit-icon">edit</i>
                         </router-link>

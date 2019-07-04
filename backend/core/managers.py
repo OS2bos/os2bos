@@ -21,9 +21,9 @@ class PaymentQuerySet(models.QuerySet):
         now = timezone.now()
         return self.filter(date__year=now.year)
 
-    def bin_in_monthly_amounts(self):
+    def group_by_monthly_amounts(self):
         """
-        Bin in monthly amounts.
+        Group by monthly amounts.
 
         The output will look like this:
         [
