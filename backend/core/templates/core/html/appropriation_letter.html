@@ -168,58 +168,70 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="text-muted">Foranstaltningsydelse<br> <em>Anden hjælp efter § 52,3,9</em></td>
-                            <td>30. juli 2019 - 30. januar 2020</td>
-                            <td class="align-right">pr måned<br> 30.000 kr</td>
+                            <td class="text-muted">Hovedydelse<br> <em>
+                                {{appropriation.main_activity.details.name}}
+			    </em></td>
+                            <td>
+                                {{appropriation.main_activity.start_date }} -
+                                {{appropriation.main_activity.end_date|default_if_none:""}}
+                            </td>
+                            <td class="align-right">
+                                {{appropriation.main_activity.payment_plan.payment_frequency}}
+                                <br> 
+                                {{appropriation.main_activity.payment_plan.payment_amount}}
+                                <br> 
+                            </td>
+                            <!-- TODO: The two amounts below must be
+                                supplied when supported by backend -->
                             <td class="align-right">150.000 kr</td>
                             <td class="align-right">360.000 kr</td>
                             <td>
                                 <dl>
-                                    <dt>Firma</dt>
-                                    <dd>Magenta ApS</dd>
-                                    <dt>CVR</dt>
-                                    <dd>XXXXXXXXXXX</dd>
+                                    <dt>{{appropriation.main_activity.payment_plan.recipient_type}}</dt>
+                                    <dd>{{appropriation.main_activity.payment_plan.recipient_name}}</dd>
+                                    <dt>
+                                    {% if appropriation.main_activity.payment_plan.recipient_type == appropriation.main_activity.payment_plan.PERSON %}
+                                    CPR
+                                    {% elif appropriation.main_activity.payment_plan.recipient_type == appropriation.main_activity.payment_plan.COMPANY %}
+                                    CVR
+                                    {% else %}
+                                    Reference
+                                    {% endif %}
+                                    </dt>
+                                    <dd>{{appropriation.main_activity.payment_plan.recipient_id}}</dd>
                                     <dt>Betalingsform</dt>
-                                    <dd>Faktura</dd>
+                                    <dd>{{appropriation.main_activity.payment_plan.payment_method}}</dd>
                                 </dl>
                             </td>
                         </tr>
+                        {% for a in appropriation.supplementary_activities %}
                         <tr>
-                            <td class="text-muted">Følgeydelse<br> <em>Beklædning</em></td>
-                            <td>30. juli 2019 -</td>
+                            <td class="text-muted">Følgeydelse<br>
+                                <em>{{a.details.name}}</em></td>
+                            <td>{{a.start_date}} - {{a.end_date|default_if_none:""}}</td>
                             <td class="align-right">enkeltydelse<br> 500 kr</td>
                             <td class="align-right">500 kr</td>
                             <td class="align-right">-</td>
                             <td>
                                 <dl>
-                                    <dt>Intern</dt>
-                                    <dd>Børnehuset</dd>
-                                    <dt>Reference</dt>
-                                    <dd>XXXXXXXXXXX</dd>
+                                    <dt>{{a.recipient_type}}</dt>
+                                    <dd>{{a.recipient_name}}</dd>
+                                    <dt>
+                                    {% if a.payment_plan.recipient_type == a.payment_plan.PERSON %}
+                                    CPR
+                                    {% elif a.appropriation.main_activity.payment_plan.recipient_type == a.payment_plan.COMPANY %}
+                                    CVR
+                                    {% else %}
+                                    Reference
+                                    {% endif %}
+                                    </dt>
+                                    <dd>{{a.payment_plan.recipient_id}}</dd>
                                     <dt>Betalingsform</dt>
-                                    <dd>Intern afregning</dd>
+                                    <dd>{{a.payment_plan.payment_method}}</dd>
                                 </dl>
                             </td>
                         </tr>
-                        <tr>
-                            <td class="text-muted">Følgeydelse<br> <em>Dagbehandlingstilbud</em></td>
-                            <td>30. juli 2019 - 12. oktober 2019</td>
-                            <td class="align-right">pr døgn<br> 200 kr</td>
-                            <td class="align-right">46.500 kr</td>
-                            <td class="align-right">73.000 kr</td>
-                            <td>
-                                <dl>
-                                    <dt>Privatperson</dt>
-                                    <dd>Morten Koch</dd>
-                                    <dt>CPR</dt>
-                                    <dd>XXXXXXX-XXXX</dd>
-                                    <dt>Betalingsform</dt>
-                                    <dd>SDLøn</dd>
-                                    <dt>Skattekort</dt>
-                                    <dd>Bikort</dd>
-                                </dl>
-                            </td>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
 

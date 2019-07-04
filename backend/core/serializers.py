@@ -27,7 +27,7 @@ from core.models import (
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ["id", "username", "cases"]
+        fields = ("id", "username", "cases", "team")
 
 
 class CaseSerializer(serializers.ModelSerializer):
@@ -60,17 +60,10 @@ class HistoricalCaseSerializer(serializers.ModelSerializer):
         )
 
 
-class SupplementaryActivitySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Activity
-        fields = "__all__"
-
-
 class ActivitySerializer(serializers.ModelSerializer):
-    total_amount = serializers.SerializerMethodField()
-    supplementary_activities = SupplementaryActivitySerializer(
-        many=True, read_only=True
-    )
+    monthly_payment_plan = serializers.ReadOnlyField()
+    total_cost = serializers.ReadOnlyField()
+    total_cost_this_year = serializers.ReadOnlyField()
 
     def validate(self, data):
         # Check that start_date is before end_date
@@ -88,11 +81,11 @@ class ActivitySerializer(serializers.ModelSerializer):
         model = Activity
         fields = "__all__"
 
-    def get_total_amount(self, obj):
-        return obj.total_amount()
-
 
 class AppropriationSerializer(serializers.ModelSerializer):
+    total_granted_this_year = serializers.ReadOnlyField()
+    total_expected_this_year = serializers.ReadOnlyField()
+
     activities = ActivitySerializer(many=True, read_only=True)
 
     class Meta:

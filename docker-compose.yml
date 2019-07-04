@@ -44,10 +44,6 @@ services:
     volumes:
       - .:/code/
       - ./dev-settings.ini:/settings.ini
-    environment:
-      - SUPERUSER_NAME=sagsbehandler
-      - SUPERUSER_EMAIL=cbur@magenta.dk
-      - SUPERUSER_PASSWORD=sagsbehandler
     depends_on:
       - db
       - postfix
@@ -66,6 +62,7 @@ services:
       # The following file adds the CREATEDB clause to the db user to enable it
       # to run django tests. This should not be used in production.
       - ./docker/postgres-initdb.d/30-add-createdb-permission.sh:/docker-entrypoint-initdb.d/30-add-createdb-permission.sh
+      #- postgres-initdb.d:/docker-entrypoint-initdb.d
 
   postfix:
     image: catatnight/postfix
@@ -74,3 +71,22 @@ services:
     environment:
       - maildomain=magenta.dk
       - smtp_user=bev:bev
+
+  # The following service is to copy the scripts needed to initialize the
+  # database with user and extensions to a volume. It is not needed when the
+  # volume `./docker/postgres-initdb.d/:/docker-entrypoint-initdb.d` is bound in
+  # db above.
+  bev-cp:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: dist
+    user: root
+    entrypoint: []
+    command: ["cp", "-r", "/code/docker/postgres-initdb.d/20-create-db-and-user.sh", "/postgres-initdb.d/"]
+    volumes:
+      - postgres-initdb.d:/postgres-initdb.d
+
+
+volumes:
+  postgres-initdb.d:

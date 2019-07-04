@@ -4,11 +4,11 @@ from decimal import Decimal
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
 from django.db import models
-from django.db.models import Sum
-from django.db.models.functions import Coalesce
+from django.db.models import Q
 from django.contrib.postgres import fields
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
 from django.core.validators import MinValueValidator
 from django_audit_fields.models import AuditModelMixin
 from simple_history.models import HistoricalRecords
@@ -18,6 +18,7 @@ from core.utils import (
     send_payment_changed_email,
     send_payment_deleted_email,
 )
+from core.managers import PaymentQuerySet
 
 # Target group - definitions and choice list.
 FAMILY_DEPT = "FAMILY_DEPT"
@@ -291,6 +292,8 @@ class Payment(models.Model):
     These may be entered manually, but ideally they should be imported
     from an accounts payable system."""
 
+    objects = PaymentQuerySet.as_manager()
+
     date = models.DateField(verbose_name=_("betalingsdato"))
 
     recipient_type = models.CharField(
@@ -538,6 +541,57 @@ class Appropriation(AuditModelMixin, models.Model):
     )
 
     @property
+    def total_granted_this_year(self):
+        """
+        Retrieve total amount granted this year for payments related to
+        this Appropriation (both main and supplementary activities).
+        """
+        granted_activities = self.activities.all().filter(
+            status=Activity.STATUS_GRANTED
+        )
+
+        this_years_payments = Payment.objects.filter(
+            payment_schedule__activity__in=granted_activities
+        ).in_this_year()
+
+        return this_years_payments.amount_sum()
+
+    @property
+    def total_expected_this_year(self):
+        """
+        Retrieve total amount expected this year for payments related to
+        this Appropriation.
+
+        we take into account granted payments but overrule with expected
+        if it modifies another activity.
+        """
+
+        all_activities = self.activities.filter(
+            Q(status=Activity.STATUS_GRANTED, modified_by__isnull=True)
+            | Q(status=Activity.STATUS_EXPECTED)
+        )
+
+        this_years_payments = Payment.objects.filter(
+            payment_schedule__activity__in=all_activities
+        ).in_this_year()
+
+        return this_years_payments.amount_sum()
+
+    @property
+    def main_activity(self):
+        """Return main activity, if any."""
+        f = self.activities.filter(activity_type=Activity.MAIN_ACTIVITY)
+        if f.exists():
+            # Invariant: There is only one main activity.
+            return f.first()
+
+    @property
+    def supplementary_activities(self):
+        """Return all non-main activities."""
+        f = self.activities.filter(activity_type=Activity.SUPPL_ACTIVITY)
+        return (a for a in f)
+
+    @property
     def payment_plan(self):
         # TODO:
         pass  # pragma: no cover
@@ -636,17 +690,6 @@ class Activity(AuditModelMixin, models.Model):
         blank=True,
     )
 
-    # Supplementary activities will point to their main activity.
-    # Root activities may be a main activity and followed by any
-    # supplementary activity.
-    main_activity = models.ForeignKey(
-        "self",
-        null=True,
-        blank=True,
-        related_name="supplementary_activities",
-        on_delete=models.CASCADE,
-        verbose_name=_("hovedaktivitet"),
-    )
     # An expected change modifies another actitvity and will eventually
     # be merged with it.
     modifies = models.ForeignKey(
@@ -656,15 +699,9 @@ class Activity(AuditModelMixin, models.Model):
         related_name="modified_by",
         on_delete=models.CASCADE,
     )
-    # The appropriation that own this activity.
-    # The appropriation will and must be set on the *main* activity
-    # only.
+    # The appropriation that owns this activity.
     appropriation = models.ForeignKey(
-        Appropriation,
-        null=True,
-        blank=True,
-        related_name="activities",
-        on_delete=models.CASCADE,
+        Appropriation, related_name="activities", on_delete=models.CASCADE
     )
 
     service_provider = models.ForeignKey(
@@ -677,18 +714,24 @@ class Activity(AuditModelMixin, models.Model):
 
     note = models.TextField(null=True, blank=True, max_length=1000)
 
-    def total_amount(self):
-        if not self.payment_plan:
-            payment_amount = 0
-        else:
-            payment_amount = self.payment_plan.payments.aggregate(
-                amount_sum=Coalesce(Sum("amount"), 0)
-            )["amount_sum"]
+    @property
+    def monthly_payment_plan(self):
+        payments = Payment.objects.filter(payment_schedule__activity=self)
+        return payments.group_by_monthly_amounts()
 
-        supplementary_amount = self.supplementary_activities.aggregate(
-            amount_sum=Coalesce(Sum("payment_plan__payments__amount"), 0)
-        )["amount_sum"]
-        return payment_amount + supplementary_amount
+    @property
+    def total_cost_this_year(self):
+        now = timezone.now()
+        payments = Payment.objects.filter(
+            payment_schedule__activity=self
+        ).filter(date__year=now.year)
+
+        return payments.amount_sum()
+
+    @property
+    def total_cost(self):
+        payments = Payment.objects.filter(payment_schedule__activity=self)
+        return payments.amount_sum()
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

@@ -18,7 +18,7 @@
             </fieldset>
             <fieldset>
                 <label for="field-sbsysid">SBSYS Hovedsag</label>
-                <input id="field-sbsysid" type="text" v-model="fam.related_case" required>
+                <input id="field-sbsysid" type="text" v-model="fam.related_case">
             </fieldset>
             <fieldset>
                 <input type="submit" value="Gem">

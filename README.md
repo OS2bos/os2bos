@@ -9,14 +9,14 @@ TL;DR: To get a running development environment run:
 ```bash
 git@git.magenta.dk:bevillingsplatform/bevillingsplatform.git
 cd bevillingsplatform
-docker-compose up -d --build
+docker-compose up -d --build frontend
 ```
 
 You can now reach the frontend at http://localhost:8080. The frontend will proxy
 all request to the backend.
 
 Run backend tests with:
-```
+```bash
 docker-compose exec bev pytest
 ```
 
@@ -38,8 +38,12 @@ To configure the django inside the image, add your setting to
 `/code/settings.ini`. This is easiest done by binding a file from the host
 machine to this file.
 
-The container requires a connection to a postgres database. It is configured
-with the `DATABASE_*` settings.
+The container requires a connection to a postgres database server. It is
+configured with the `DATABASE_*` settings. The database server must have a user
+and a database object. It can be created with the help of
+`/docker/postgres-initdb.d/20-create-db-and-user.sh`. This file can easily be
+mounted into `/docker-entrypoint-initdb.d/` in [the official postgres docker
+image](https://hub.docker.com/_/postgres).
 
 You can start a the container with:
 ```bash
@@ -125,19 +129,6 @@ the container. This is messy an will fail because the application user does not
 have permission to write files. Don't use `tox` inside the container.
 
 
-#### Django superuser
-
-To create a Django superuser on container startup, set all three following
-envionment variables:
-```bash
-SUPERUSER_NAME
-SUPERUSER_EMAIL
-SUPERUSER_PASSWORD
-```
-If a user with that name already exists the password or email will *not* be
-changed. The container will however start.
-
-
 ### Docker-compose
 
 You can use ``docker-compose`` to start up bevillingsplatform and related
@@ -163,7 +154,7 @@ you to edit the backend files and the server will be reloaded automatically.
 
 To pull the images and start the three service run:
 ```bash
-docker-compose up -d --build
+docker-compose up -d --build frontend
 ```
 
 The `-d` flag move the services to the background. You can inspect the output of
@@ -173,7 +164,8 @@ in `docker-compose.yml`. The `--build` flag builds the newest docker image for
 
 To stop the service again run `docker-compose stop`. This will stop the
 services, but the data will persist. To completely remove the containers and
-data run `docker-compose down`.
+data run `docker-compose down -v`.
+
 
 #### Tests and shell access
 
@@ -184,6 +176,17 @@ To get shell access to the backend run `docker-compose exec bev bash`.
 
 If you want to write files from inside the container, make sure the `bev` user
 have permission to do so. See [User permissions](#user-permissions).
+
+
+#### Postgres initialisation
+
+The ``docker-compose.yml`` file contains a service named ``bev-cp``. Its purpose
+is to copy the files needed to initialize the database and database user to a
+volume. This volume can then be mounted to the postgres image to automatically
+initialize the database. This functionality is not needed by default because the
+needed files are mounted directly from the host. It is included as an example
+when you want to use an environment closer to production.
+
 
 ## Other Readmes
 
