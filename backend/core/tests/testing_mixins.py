@@ -145,9 +145,7 @@ class AppropriationMixin:
     @staticmethod
     def create_appropriation(sbsys_id="test"):
         # create the related case
-        case_worker, _ = get_user_model().objects.get_or_create(
-            username="Benny Badekar"
-        )
+        case_worker, _ = User.objects.get_or_create(username="Benny Badekar")
         team, _ = Team.objects.get_or_create(name="ÅB", leader=case_worker)
         municipality, _ = Municipality.objects.get_or_create(name="Århus")
         district, _ = SchoolDistrict.objects.get_or_create(name="Skovlunde")
