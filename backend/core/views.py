@@ -56,6 +56,8 @@ class CaseViewSet(viewsets.ModelViewSet):
     queryset = Case.objects.all()
     serializer_class = CaseSerializer
 
+    filterset_fields = "__all__"
+
     def perform_create(self, serializer):
         current_user = self.request.user
         team = current_user.team
