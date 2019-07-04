@@ -1,26 +1,28 @@
 from django.test import TestCase
 
-from core.models import ActivityDetails, Activity, Appropriation
+from core.models import ActivityDetails, Activity
 from core.models import FAMILY_DEPT, DISABILITY_DEPT
-from core.tests.testing_mixins import (
-    ActivityMixin,
-    CaseMixin,
-    PaymentScheduleMixin,
+from core.tests.testing_utils import (
+    BasicTestMixin,
+    create_case,
+    create_appropriation,
 )
 from core.serializers import ActivitySerializer, CaseSerializer
 
 
-class ActivitySerializerTestCase(
-    TestCase, ActivityMixin, PaymentScheduleMixin, CaseMixin
-):
+class ActivitySerializerTestCase(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
     def test_validate_end_before_start(self):
         activity_details = ActivityDetails.objects.create(
             max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
         )
-        case = self.create_case()
-        appropriation = Appropriation.objects.create(
-            sbsys_id="XXX-YYY-ZZZ", case=case
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
         )
+        appropriation = create_appropriation(case=case)
         # start_date > end_date
         data = {
             "start_date": "2019-01-01",
@@ -41,10 +43,10 @@ class ActivitySerializerTestCase(
         activity_details = ActivityDetails.objects.create(
             max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
         )
-        case = self.create_case()
-        appropriation = Appropriation.objects.create(
-            sbsys_id="XXX-YYY-ZZZ", case=case
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
         )
+        appropriation = create_appropriation(case=case)
         # start_date < end_date
         data = {
             "start_date": "2018-01-01",
@@ -62,10 +64,10 @@ class ActivitySerializerTestCase(
         activity_details = ActivityDetails.objects.create(
             max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
         )
-        case = self.create_case()
-        appropriation = Appropriation.objects.create(
-            sbsys_id="XXX-YYY-ZZZ", case=case
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
         )
+        appropriation = create_appropriation(case=case)
         # no end_date
         data = {
             "start_date": "2018-01-01",
@@ -79,10 +81,16 @@ class ActivitySerializerTestCase(
         self.assertEqual(serializer.errors, {})
 
 
-class CaseSerializerTestCase(TestCase, CaseMixin):
+class CaseSerializerTestCase(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
     def test_validate_error_no_district_for_family_dept(self):
         # Create initial valid case
-        case = self.create_case()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
 
         data = CaseSerializer(case).data
         data["target_group"] = FAMILY_DEPT
@@ -99,7 +107,9 @@ class CaseSerializerTestCase(TestCase, CaseMixin):
 
     def test_validate_success_no_district_for_handicap_dept(self):
         # Create initial valid case
-        case = self.create_case()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
         data = CaseSerializer(case).data
         data["target_group"] = DISABILITY_DEPT
         data["district"] = None
@@ -111,7 +121,9 @@ class CaseSerializerTestCase(TestCase, CaseMixin):
 
     def test_validate_error_family_dept_partial(self):
         # Create initial valid case
-        case = self.create_case()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
         data = CaseSerializer(case).data
         # no target_group for partial update
         data.pop("target_group")

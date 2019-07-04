@@ -3,7 +3,11 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 
 from .test_utils import AuthenticatedTestCase
-from core.tests.testing_mixins import CaseMixin
+from core.tests.testing_utils import (
+    BasicTestMixin,
+    create_case,
+    create_case_as_json,
+)
 from core.models import STEP_ONE, STEP_THREE, STEP_FIVE
 
 
@@ -87,9 +91,15 @@ class TestRelatedPersonsViewSet(AuthenticatedTestCase):
         self.assertEqual(response.json(), expected_format)
 
 
-class TestCaseViewSet(AuthenticatedTestCase, CaseMixin):
+class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
     def test_history_action_no_history(self):
-        case = self.create_case()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
         reverse_url = reverse("case-history", kwargs={"pk": case.pk})
 
         self.client.login(username=self.username, password=self.password)
@@ -98,7 +108,9 @@ class TestCaseViewSet(AuthenticatedTestCase, CaseMixin):
         self.assertEqual(response.json()[0]["scaling_step"], 1)
 
     def test_history_action_changed_scaling_steps(self):
-        case = self.create_case()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
         # Change to different scaling steps.
         case.scaling_step = 5
         case.save()
@@ -117,7 +129,9 @@ class TestCaseViewSet(AuthenticatedTestCase, CaseMixin):
         )
 
     def test_history_action_changed_effort_steps(self):
-        case = self.create_case()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
         # Change to different effort steps.
         case.effort_step = STEP_THREE
         case.save()
@@ -137,7 +151,9 @@ class TestCaseViewSet(AuthenticatedTestCase, CaseMixin):
         )
 
     def test_history_action_changed_case_worker(self):
-        case = self.create_case()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
         # Change to different effort steps.
         orla = case.case_worker
         leif = get_user_model().objects.create(username="Leif")
@@ -161,7 +177,9 @@ class TestCaseViewSet(AuthenticatedTestCase, CaseMixin):
 
     def test_simple_post(self):
         url = reverse("case-list")
-        json = self.create_case_as_json()
+        json = create_case_as_json(
+            self.case_worker, self.team, self.municipality, self.district
+        )
         self.client.login(username=self.username, password=self.password)
         response = self.client.post(url, json)
         self.assertEqual(response.status_code, 201)
