@@ -336,10 +336,10 @@ class Payment(models.Model):
         """
         if (
             self.recipient_type == PaymentSchedule.INTERNAL
-            and self.payment_method == PaymentSchedule.INTERNAL
+            and self.payment_method == INTERNAL
         ) or (
             self.recipient_type == PaymentSchedule.PERSON
-            and self.payment_method == PaymentSchedule.SD
+            and self.payment_method == SD
         ):
             return True
         return False

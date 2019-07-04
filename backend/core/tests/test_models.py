@@ -16,6 +16,7 @@ from core.tests.testing_utils import (
     create_appropriation,
     create_case,
     create_section,
+    create_payment,
 )
 from core.models import (
     Municipality,
@@ -389,7 +390,7 @@ class ApprovalLevelTestCase(TestCase):
 class PaymentTestCase(TestCase):
     def test_payment_str(self):
         payment_schedule = create_payment_schedule()
-        payment = Payment.objects.create(
+        payment = create_payment(
             payment_schedule=payment_schedule,
             date=date(year=2019, month=1, day=1),
             amount=Decimal("500.0"),
@@ -706,8 +707,8 @@ class PaymentScheduleTestCase(TestCase):
     def test_payment_and_recipient_allowed_save(
         self, recipient_type, payment_method
     ):
-        payment_schedule = self.create_payment_schedule()
-        payment = Payment.objects.create(
+        payment_schedule = create_payment_schedule()
+        payment = create_payment(
             payment_schedule=payment_schedule,
             date=timezone.now(),
             recipient_type=recipient_type,
@@ -733,7 +734,7 @@ class PaymentScheduleTestCase(TestCase):
     ):
         payment_schedule = create_payment_schedule()
         with self.assertRaises(ValueError):
-            Payment.objects.create(
+            create_payment(
                 payment_schedule=payment_schedule,
                 date=timezone.now(),
                 recipient_type=recipient_type,
@@ -742,23 +743,23 @@ class PaymentScheduleTestCase(TestCase):
 
     def test_payment_create_email_sent(self):
         # Should trigger a create email.
-        payment_schedule = self.create_payment_schedule()
-        Payment.objects.create(
-            payment_schedule=self.payment_schedule,
+        payment_schedule = create_payment_schedule()
+        create_payment(
+            payment_schedule=payment_schedule,
             date=timezone.now(),
             recipient_type=PaymentSchedule.PERSON,
-            payment_method=PaymentSchedule.SD,
+            payment_method=SD,
         )
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, "Betaling oprettet")
 
     def test_payment_update_email_sent(self):
-        payment_schedule = self.create_payment_schedule()
-        payment = Payment.objects.create(
-            payment_schedule=self.payment_schedule,
+        payment_schedule = create_payment_schedule()
+        payment = create_payment(
+            payment_schedule=payment_schedule,
             date=timezone.now(),
             recipient_type=PaymentSchedule.PERSON,
-            payment_method=PaymentSchedule.SD,
+            payment_method=SD,
         )
         # Should trigger a update email.
         payment.date = timezone.now() + timedelta(days=3)
@@ -767,12 +768,12 @@ class PaymentScheduleTestCase(TestCase):
         self.assertEqual(mail.outbox[1].subject, "Betaling ændret")
 
     def test_payment_delete_email_sent(self):
-        payment_schedule = self.create_payment_schedule()
-        payment = Payment.objects.create(
-            payment_schedule=self.payment_schedule,
+        payment_schedule = create_payment_schedule()
+        payment = create_payment(
+            payment_schedule=payment_schedule,
             date=timezone.now(),
             recipient_type=PaymentSchedule.PERSON,
-            payment_method=PaymentSchedule.SD,
+            payment_method=SD,
         )
         # Should trigger a delete mail.
         payment.delete()
@@ -780,23 +781,23 @@ class PaymentScheduleTestCase(TestCase):
         self.assertEqual(mail.outbox[1].subject, "Betaling slettet")
 
     def test_payment_create_email_shouldnt_send(self):
-        payment_schedule = self.create_payment_schedule()
-        Payment.objects.create(
-            payment_schedule=self.payment_schedule,
+        payment_schedule = create_payment_schedule()
+        create_payment(
+            payment_schedule=payment_schedule,
             date=timezone.now(),
             recipient_type=PaymentSchedule.PERSON,
-            payment_method=PaymentSchedule.CASH,
+            payment_method=CASH,
         )
         # Shouldn't trigger an email.
         self.assertEqual(len(mail.outbox), 0)
 
     def test_payment_delete_email_shouldnt_send(self):
-        payment_schedule = self.create_payment_schedule()
-        payment = Payment.objects.create(
-            payment_schedule=self.payment_schedule,
+        payment_schedule = create_payment_schedule()
+        payment = create_payment(
+            payment_schedule=payment_schedule,
             date=timezone.now(),
             recipient_type=PaymentSchedule.PERSON,
-            payment_method=PaymentSchedule.CASH,
+            payment_method=CASH,
         )
         payment.delete()
         # Shouldn't trigger an email.
