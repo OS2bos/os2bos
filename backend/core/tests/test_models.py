@@ -19,16 +19,33 @@ from core.models import (
     Payment,
     PaymentSchedule,
     ServiceProvider,
+    Activity,
 )
 
 
-class AppropriationTestCase(TestCase):
+class AppropriationTestCase(TestCase, ActivityMixin):
     def test_appropriation_str(self):
         section = Section(paragraph="ABZ-52-54", kle_number="11.22.33")
         appropriation = Appropriation(sbsys_id="XXX-YYY-ZZZ", section=section)
 
         self.assertEqual(
             str(appropriation), "XXX-YYY-ZZZ - ABZ-52-54 - 11.22.33"
+        )
+
+    def test_main_activity(self):
+        activity = self.create_activity()
+        appropriation = activity.appropriation
+        activity.activity_type = Activity.MAIN_ACTIVITY
+        activity.save()
+        self.assertEqual(activity, appropriation.main_activity)
+
+    def test_supplementary_activities(self):
+        activity = self.create_activity()
+        appropriation = activity.appropriation
+        activity.activity_type = Activity.SUPPL_ACTIVITY
+        activity.save()
+        self.assertEqual(
+            activity, next(appropriation.supplementary_activities)
         )
 
 
@@ -104,26 +121,6 @@ class ActivityTestCase(TestCase, ActivityMixin, PaymentScheduleMixin):
         activity.payment_plan = payment_schedule
         activity.save()
         self.assertEqual(activity.total_amount(), Decimal("5000.0"))
-
-    def test_activity_total_amount_on_main_supplementary_activities(self):
-        # Generate main activity
-        activity = self.create_activity()
-        payment_schedule = self.create_payment_schedule()
-        activity.payment_plan = payment_schedule
-        activity.save()
-        # Generate first supplementary activity
-        supplementary_activity = self.create_activity()
-        payment_schedule = self.create_payment_schedule()
-        supplementary_activity.payment_plan = payment_schedule
-        supplementary_activity.main_activity = activity
-        supplementary_activity.save()
-
-        # Generate second supplementary activity without payment schedule.
-        supplementary_activity = self.create_activity()
-        supplementary_activity.main_activity = activity
-        supplementary_activity.save()
-
-        self.assertEqual(activity.total_amount(), Decimal("10000.0"))
 
     def test_activity_total_amount_on_service_provider(self):
         service_provider = ServiceProvider.objects.create(

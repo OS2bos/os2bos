@@ -60,17 +60,8 @@ class HistoricalCaseSerializer(serializers.ModelSerializer):
         )
 
 
-class SupplementaryActivitySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Activity
-        fields = "__all__"
-
-
 class ActivitySerializer(serializers.ModelSerializer):
     total_amount = serializers.SerializerMethodField()
-    supplementary_activities = SupplementaryActivitySerializer(
-        many=True, read_only=True
-    )
 
     def validate(self, data):
         # Check that start_date is before end_date

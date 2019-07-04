@@ -488,6 +488,20 @@ class Appropriation(AuditModelMixin, models.Model):
     )
 
     @property
+    def main_activity(self):
+        """Return main activity, if any."""
+        f = self.activities.filter(activity_type=Activity.MAIN_ACTIVITY)
+        if f.exists():
+            # Invariant: There is only one main activity.
+            return f.first()
+
+    @property
+    def supplementary_activities(self):
+        """Return all non-main activities."""
+        f = self.activities.filter(activity_type=Activity.SUPPL_ACTIVITY)
+        return (a for a in f)
+
+    @property
     def payment_plan(self):
         # TODO:
         pass  # pragma: no cover
@@ -586,17 +600,6 @@ class Activity(AuditModelMixin, models.Model):
         blank=True,
     )
 
-    # Supplementary activities will point to their main activity.
-    # Root activities may be a main activity and followed by any
-    # supplementary activity.
-    main_activity = models.ForeignKey(
-        "self",
-        null=True,
-        blank=True,
-        related_name="supplementary_activities",
-        on_delete=models.CASCADE,
-        verbose_name=_("hovedaktivitet"),
-    )
     # An expected change modifies another actitvity and will eventually
     # be merged with it.
     modifies = models.ForeignKey(
@@ -606,15 +609,9 @@ class Activity(AuditModelMixin, models.Model):
         related_name="modified_by",
         on_delete=models.CASCADE,
     )
-    # The appropriation that own this activity.
-    # The appropriation will and must be set on the *main* activity
-    # only.
+    # The appropriation that owns this activity.
     appropriation = models.ForeignKey(
-        Appropriation,
-        null=True,
-        blank=True,
-        related_name="activities",
-        on_delete=models.CASCADE,
+        Appropriation, related_name="activities", on_delete=models.CASCADE
     )
 
     service_provider = models.ForeignKey(
@@ -635,9 +632,14 @@ class Activity(AuditModelMixin, models.Model):
                 amount_sum=Coalesce(Sum("amount"), 0)
             )["amount_sum"]
 
-        supplementary_amount = self.supplementary_activities.aggregate(
+        supplementary_amount = self.appropriation.activities.filter(
+            activity_type=Activity.MAIN_ACTIVITY
+        ).aggregate(
             amount_sum=Coalesce(Sum("payment_plan__payments__amount"), 0)
-        )["amount_sum"]
+        )[
+            "amount_sum"
+        ]
+
         return payment_amount + supplementary_amount
 
     def save(self, *args, **kwargs):
