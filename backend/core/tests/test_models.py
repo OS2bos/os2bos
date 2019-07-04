@@ -25,7 +25,6 @@ from core.models import (
     Account,
     ApprovalLevel,
     Team,
-    Payment,
     PaymentSchedule,
     ServiceProvider,
     CASH,
