@@ -13,17 +13,6 @@ from core.serializers import ActivitySerializer, CaseSerializer
 class ActivitySerializerTestCase(
     TestCase, ActivityMixin, PaymentScheduleMixin, CaseMixin
 ):
-    def test_get_total_amount(self):
-        activity = self.create_activity()
-        payment_schedule = self.create_payment_schedule()
-        activity.payment_plan = payment_schedule
-        activity.save()
-        payment_schedule.generate_payments(
-            activity.start_date, activity.end_date
-        )
-        data = ActivitySerializer(activity).data
-        self.assertEqual(data["total_amount"], activity.total_amount())
-
     def test_validate_end_before_start(self):
         activity_details = ActivityDetails.objects.create(
             max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
@@ -87,7 +76,6 @@ class ActivitySerializerTestCase(
         }
         serializer = ActivitySerializer(data=data)
         serializer.is_valid()
-        print(serializer.errors)
         self.assertEqual(serializer.errors, {})
 
 

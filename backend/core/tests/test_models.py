@@ -2,6 +2,7 @@ from decimal import Decimal
 from datetime import date
 from unittest import mock
 
+from django.utils import timezone
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from parameterized import parameterized
@@ -23,13 +24,97 @@ from core.models import (
 )
 
 
-class AppropriationTestCase(TestCase, ActivityMixin):
+class AppropriationTestCase(TestCase, PaymentScheduleMixin, ActivityMixin):
     def test_appropriation_str(self):
         section = Section(paragraph="ABZ-52-54", kle_number="11.22.33")
         appropriation = Appropriation(sbsys_id="XXX-YYY-ZZZ", section=section)
 
         self.assertEqual(
             str(appropriation), "XXX-YYY-ZZZ - ABZ-52-54 - 11.22.33"
+        )
+
+    def test_total_granted_this_year(self):
+        # generate a start and end span of 10 days
+        now = timezone.now()
+        start_date = date(year=now.year, month=1, day=1)
+        end_date = date(year=now.year, month=1, day=10)
+        # create main activity with GRANTED.
+        payment_schedule = self.create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+        )
+        activity = self.create_activity(
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=Activity.MAIN_ACTIVITY,
+            status=Activity.STATUS_GRANTED,
+            payment_plan=payment_schedule,
+        )
+
+        payment_schedule = self.create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+        )
+
+        self.create_activity(
+            start_date=start_date,
+            end_date=end_date,
+            status=Activity.STATUS_GRANTED,
+            activity_type=Activity.SUPPL_ACTIVITY,
+            payment_plan=payment_schedule,
+        )
+        self.assertEqual(
+            activity.appropriation.total_granted_this_year, Decimal("10000")
+        )
+
+    def test_total_expected_this_year(self):
+        # generate a start and end span of 10 days
+        now = timezone.now()
+        start_date = date(year=now.year, month=1, day=1)
+        end_date = date(year=now.year, month=1, day=10)
+        # create main activity with GRANTED.
+        payment_schedule = self.create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+        )
+        activity = self.create_activity(
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=Activity.MAIN_ACTIVITY,
+            status=Activity.STATUS_GRANTED,
+            payment_plan=payment_schedule,
+        )
+
+        payment_schedule = self.create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+        )
+        # create a GRANTED supplementary activity.
+        supplementary_activity = self.create_activity(
+            start_date=start_date,
+            end_date=end_date,
+            status=Activity.STATUS_GRANTED,
+            activity_type=Activity.SUPPL_ACTIVITY,
+            payment_plan=payment_schedule,
+        )
+
+        payment_schedule = self.create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_amount=Decimal("700"),
+        )
+        # create an EXPECTED supplementary activity overruling the GRANTED.
+        self.create_activity(
+            start_date=start_date,
+            end_date=end_date,
+            status=Activity.STATUS_EXPECTED,
+            activity_type=Activity.SUPPL_ACTIVITY,
+            payment_plan=payment_schedule,
+            modifies=supplementary_activity,
+        )
+
+        self.assertEqual(
+            activity.appropriation.total_expected_this_year, Decimal("12000")
         )
 
     def test_main_activity(self):
@@ -100,38 +185,94 @@ class ActivityDetailsTestCase(TestCase):
 
 
 class ActivityTestCase(TestCase, ActivityMixin, PaymentScheduleMixin):
-    def test_activity_total_amount_no_payment_plan(self):
-        activity = self.create_activity()
-        total_amount = activity.total_amount()
-        self.assertEqual(total_amount, 0)
-
     def test_activity_synchronize_payments_on_save(self):
-        activity = self.create_activity()
         payment_schedule = self.create_payment_schedule()
-        activity.payment_plan = payment_schedule
-        activity.save()
+        activity = self.create_activity(payment_plan=payment_schedule)
+
         self.assertEqual(activity.payment_plan.payments.count(), 10)
+
         activity.end_date = date(year=2019, month=1, day=13)
         activity.save()
         self.assertEqual(activity.payment_plan.payments.count(), 13)
 
-    def test_activity_total_amount_on_main_activity(self):
-        activity = self.create_activity()
-        payment_schedule = self.create_payment_schedule()
-        activity.payment_plan = payment_schedule
-        activity.save()
-        self.assertEqual(activity.total_amount(), Decimal("5000.0"))
-
-    def test_activity_total_amount_on_service_provider(self):
+    def test_activity_total_cost_with_service_provider(self):
         service_provider = ServiceProvider.objects.create(
             name="Test leverandør", vat_factor=Decimal("90")
         )
-        activity = self.create_activity()
         payment_schedule = self.create_payment_schedule()
-        activity.payment_plan = payment_schedule
-        activity.service_provider = service_provider
-        activity.save()
-        self.assertEqual(activity.total_amount(), Decimal("4500.0"))
+        activity = self.create_activity(
+            payment_plan=payment_schedule, service_provider=service_provider
+        )
+
+        self.assertEqual(activity.total_cost, Decimal("4500.0"))
+
+    def test_activity_no_payment_plan_on_save(self):
+        activity = self.create_activity()
+        self.assertIsNone(activity.payment_plan)
+
+    def test_activity_total_cost(self):
+        payment_schedule = self.create_payment_schedule()
+        # 10 days, daily payments of 500.
+        activity = self.create_activity(payment_plan=payment_schedule)
+
+        self.assertEqual(activity.total_cost, Decimal("5000"))
+
+    def test_activity_total_cost_spanning_years(self):
+        payment_schedule = self.create_payment_schedule()
+        start_date = date(year=2019, month=12, day=1)
+        end_date = date(year=2020, month=1, day=1)
+        # 32 days, daily payments of 500.
+        activity = self.create_activity(
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+        )
+
+        self.assertEqual(activity.total_cost, Decimal("16000"))
+
+    def test_activity_total_cost_this_year(self):
+        now = timezone.now()
+        payment_schedule = self.create_payment_schedule()
+        start_date = date(year=now.year, month=12, day=1)
+        end_date = date(year=now.year, month=12, day=15)
+        # 15 days, daily payments of 500.
+        activity = self.create_activity(
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+        )
+        self.assertEqual(activity.total_cost_this_year, Decimal("7500"))
+
+    def test_activity_total_cost_this_year_spanning_years(self):
+        now = timezone.now()
+        payment_schedule = self.create_payment_schedule()
+        start_date = date(year=now.year, month=12, day=1)
+        end_date = date(year=now.year + 1, month=1, day=1)
+        # 31 days, daily payments of 500.
+        activity = self.create_activity(
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+        )
+        self.assertEqual(activity.total_cost_this_year, Decimal("15500"))
+
+    def test_activity_monthly_payment_plan(self):
+        start_date = date(year=2019, month=12, day=1)
+        end_date = date(year=2020, month=1, day=1)
+        payment_schedule = self.create_payment_schedule()
+        # 32 days, daily payments of 500.
+        activity = self.create_activity(
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+        )
+        expected = [
+            {"date_month": "2019-12", "amount": Decimal("15500")},
+            {"date_month": "2020-01", "amount": Decimal("500")},
+        ]
+        self.assertEqual(
+            [entry for entry in activity.monthly_payment_plan], expected
+        )
 
 
 class AccountTestCase(TestCase):
