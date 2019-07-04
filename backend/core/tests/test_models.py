@@ -71,7 +71,7 @@ class AppropriationTestCase(
             payment_plan=payment_schedule,
         )
         self.assertEqual(
-            appropriation.total_granted_this_year(), Decimal("10000")
+            appropriation.total_granted_this_year, Decimal("10000")
         )
 
     def test_total_expected_this_year(self):
@@ -122,7 +122,7 @@ class AppropriationTestCase(
         )
 
         self.assertEqual(
-            appropriation.total_expected_this_year(), Decimal("12000")
+            appropriation.total_expected_this_year, Decimal("12000")
         )
 
 
@@ -196,7 +196,7 @@ class ActivityTestCase(TestCase, ActivityMixin, PaymentScheduleMixin):
             payment_plan=payment_schedule, service_provider=service_provider
         )
 
-        self.assertEqual(activity.total_cost(), Decimal("4500.0"))
+        self.assertEqual(activity.total_cost, Decimal("4500.0"))
 
     def test_activity_no_payment_plan_on_save(self):
         activity = self.create_activity()
@@ -207,7 +207,7 @@ class ActivityTestCase(TestCase, ActivityMixin, PaymentScheduleMixin):
         # 10 days, daily payments of 500.
         activity = self.create_activity(payment_plan=payment_schedule)
 
-        self.assertEqual(activity.total_cost(), Decimal("5000"))
+        self.assertEqual(activity.total_cost, Decimal("5000"))
 
     def test_activity_total_cost_spanning_years(self):
         payment_schedule = self.create_payment_schedule()
@@ -220,7 +220,7 @@ class ActivityTestCase(TestCase, ActivityMixin, PaymentScheduleMixin):
             payment_plan=payment_schedule,
         )
 
-        self.assertEqual(activity.total_cost(), Decimal("16000"))
+        self.assertEqual(activity.total_cost, Decimal("16000"))
 
     def test_activity_total_cost_this_year(self):
         now = timezone.now()
@@ -233,7 +233,7 @@ class ActivityTestCase(TestCase, ActivityMixin, PaymentScheduleMixin):
             end_date=end_date,
             payment_plan=payment_schedule,
         )
-        self.assertEqual(activity.total_cost_this_year(), Decimal("7500"))
+        self.assertEqual(activity.total_cost_this_year, Decimal("7500"))
 
     def test_activity_total_cost_this_year_spanning_years(self):
         now = timezone.now()
@@ -247,7 +247,7 @@ class ActivityTestCase(TestCase, ActivityMixin, PaymentScheduleMixin):
             payment_plan=payment_schedule,
         )
 
-        self.assertEqual(activity.total_cost_this_year(), Decimal("15500"))
+        self.assertEqual(activity.total_cost_this_year, Decimal("15500"))
 
     def test_activity_monthly_payment_plan(self):
         start_date = date(year=2019, month=12, day=1)
@@ -264,7 +264,7 @@ class ActivityTestCase(TestCase, ActivityMixin, PaymentScheduleMixin):
             {"date_month": "2020-01", "amount": Decimal("500")},
         ]
         self.assertEqual(
-            [entry for entry in activity.monthly_payment_plan()], expected
+            [entry for entry in activity.monthly_payment_plan], expected
         )
 
 
