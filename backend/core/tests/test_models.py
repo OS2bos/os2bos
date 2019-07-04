@@ -7,11 +7,7 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 from parameterized import parameterized
 
-from core.tests.testing_mixins import (
-    PaymentScheduleMixin,
-    ActivityMixin,
-    AppropriationMixin,
-)
+from core.tests.testing_mixins import PaymentScheduleMixin, ActivityMixin
 from core.models import (
     Appropriation,
     Municipality,
@@ -23,7 +19,6 @@ from core.models import (
     Team,
     Payment,
     PaymentSchedule,
-    Activity,
     ServiceProvider,
     Activity,
 )
