@@ -67,9 +67,8 @@
         position: absolute;
         bottom: 0.25rem;
         left: 3.375rem;
-        font-size: 1rem;
+        font-size: .9rem;
         letter-spacing: 1px;
-        color: var(--grey10);
         text-transform: uppercase;
     }
 
