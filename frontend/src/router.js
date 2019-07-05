@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Cases from './components/cases/Cases.vue'
+import AllCases from './components/cases/AllCases.vue'
 import Case from './components/cases/Case.vue'
 import CaseEdit from './components/cases/CaseEdit.vue'
 import FamilyOverviewEdit from './components/familyoverview/FamilyOverviewEdit.vue'
@@ -32,6 +33,11 @@ const router = new Router({
             path: '/case-create/',
             name: 'case-create',
             component: CaseEdit
+        },
+        {
+            path: '/all-cases/',
+            name: 'all-cases',
+            component: AllCases
         },
         {
             path: '/case/:casid/familyoverview-create/',
