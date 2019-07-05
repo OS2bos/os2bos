@@ -2,6 +2,7 @@ from decimal import Decimal
 from datetime import date
 
 from django.contrib.auth import get_user_model
+from django.test import TestCase
 
 from core.models import (
     Case,
@@ -18,6 +19,17 @@ from core.models import (
 
 
 User = get_user_model()
+
+
+class AuthenticatedTestCase(TestCase):
+    """Simple class for authenticating before accessing a view."""
+
+    def setUp(self):
+        self.username = "user"
+        self.password = "s1kr3t"
+        User.objects.create_user(
+            self.username, f"{self.username}@company.com", self.password
+        )
 
 
 class BasicTestMixin:
@@ -91,7 +103,7 @@ def create_activity(
     start_date=date(year=2019, month=1, day=1),
     end_date=date(year=2019, month=1, day=10),
     status=Activity.STATUS_DRAFT,
-    **kwargs
+    **kwargs,
 ):
     activity_details = ActivityDetails.objects.create(
         max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
@@ -103,7 +115,7 @@ def create_activity(
         details=activity_details,
         status=status,
         appropriation=appropriation,
-        **kwargs
+        **kwargs,
     )
     return activity
 
@@ -136,7 +148,7 @@ def create_section(
     paragraph="ABL-105-2",
     kle_number="27.45.04",
     allowed_for_steps=None,
-    **kwargs
+    **kwargs,
 ):
     if not allowed_for_steps:
         allowed_for_steps = []
@@ -144,6 +156,6 @@ def create_section(
         paragraph=paragraph,
         kle_number=kle_number,
         allowed_for_steps=allowed_for_steps,
-        **kwargs
+        **kwargs,
     )
     return section
