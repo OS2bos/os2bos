@@ -2,7 +2,7 @@
 
     <div class="useractions" v-if="auth">
         <p style="margin: 0 1rem;">
-            Logget ind som <strong>{{ user.username }}</strong>
+            Logget ind som <strong>{{ user.username }}</strong>, {{ team.name }}
         </p>
         <button @click="logout()">Log ud</button>
     </div>
@@ -23,7 +23,14 @@
                 return this.$store.getters.getAuth
             },
             user: function() {
-                return this.$store.getters.getUser
+                let user = this.$store.getters.getUser
+                if (user) {
+                    this.$store.dispatch('fetchTeam', user.team)
+                }
+                return user
+            },
+            team: function() {
+                return this.$store.getters.getTeam
             }
         },
         methods: {

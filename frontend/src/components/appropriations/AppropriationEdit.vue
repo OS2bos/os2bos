@@ -12,7 +12,7 @@
                 <label for="field-lawref">Bevilling efter §</label>
                 <select id="field-lawref" class="listpicker" v-model="appr.section" required>
                     <option v-for="s in sections" :value="s.id" :key="s.id">
-                        {{ s.paragraph }} {{ s.kle_number }} {{ s.text }}
+                        {{ s.paragraph }} {{ s.text }}
                     </option>
                 </select>
             </fieldset>

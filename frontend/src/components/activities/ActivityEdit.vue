@@ -1,7 +1,8 @@
 <template>
     <section :class="`activity-edit activity-${ mode } expected-${ act_status_expected }`">
         <header class="header" v-if="mode === 'create'">
-            <h1>Opret Aktivitet</h1>
+            <h1 v-if="act_status_expected">Opret forventet Aktivitet</h1>
+            <h1 v-else>Opret Aktivitet</h1>
         </header>
         <header class="header" v-if="mode === 'edit'">
             <h1>Redigér Aktivitet</h1>
@@ -15,7 +16,7 @@
                 <div class="column">
                     <fieldset v-if="mode === 'create'">
                         <input type="checkbox" id="field-status-expected" v-model="act_status_expected">
-                        <label for="field-status-expected">Opret som forventet justering</label>
+                        <label for="field-status-expected">Opret forventet aktivitet</label>
                     </fieldset>
                     <fieldset v-if="mode === 'create'">
                         <legend>Type</legend>

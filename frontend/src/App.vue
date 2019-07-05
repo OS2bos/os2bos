@@ -72,7 +72,7 @@
     }
 
     .label-DRAFT {
-        background-color: var(--grey7);
+        background-color: var(--grey3);
         color: white;
     }
 

@@ -10,11 +10,11 @@
                     <th>Udbetales til</th>
                     <th>Start</th>
                     <th>Slut</th>
-                    <th>Økonomi</th>
+                    <th style="text-align: right;">Udgift i år</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="a in acts" :key="a.id">
+                <tr v-for="a in acts" :key="a.id" :class="{'expected-row': a.status === 'EXPECTED'}">
                     <td>
                         <div v-html="statusLabel(a.status)"></div>
                     </td>
@@ -22,16 +22,16 @@
                     <td></td>
                     <td>{{ displayDate(a.start_date) }}</td>
                     <td>{{ displayDate(a.end_date) }}</td>
-                    <td>ikke implementeret</td>
+                    <td style="text-align: right;">{{ a.total_cost_this_year }} kr</td>
                 </tr>
                 <tr>
                     <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td style="text-align: right;">Pr. måned</td>
-                    <td>
-                        ikke implementeret kr.
+                    <td style="font-weight: bold;">Samlet bevilget</td>
+                    <td style="text-align: right; font-weight: bold;">
+                        {{ appropriation.total_granted_this_year }} kr
                     </td>
                 </tr>
                 <tr>
@@ -39,9 +39,9 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td style="text-align: right;">Samlet sum</td>
-                    <td>
-                        <u>ikke implementeret kr.</u>
+                    <td class="expected">Samlet forventet</td>
+                    <td class="expected" style="text-align: right;">
+                        {{ appropriation.total_expected_this_year }} kr
                     </td>
                 </tr>
             </tbody>
@@ -66,6 +66,11 @@
             return {
                 acts: null,
                 pay: null
+            }
+        },
+        computed: {
+            appropriation: function() {
+                return this.$store.getters.getAppropriation
             }
         },
         methods: {
@@ -115,6 +120,11 @@
 
     .activities-create-btn {
         margin: 0 0 1rem;
+    }
+
+    .activities .expected-row > td,
+    .activities .expected {
+        background-color: hsl(var(--color3), 80%, 80%); 
     }
 
 </style>
