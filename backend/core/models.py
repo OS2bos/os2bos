@@ -13,11 +13,7 @@ from django.core.validators import MinValueValidator
 from django_audit_fields.models import AuditModelMixin
 from simple_history.models import HistoricalRecords
 
-from core.utils import (
-    send_payment_created_email,
-    send_payment_changed_email,
-    send_payment_deleted_email,
-)
+from core.utils import send_activity_deleted_email
 from core.managers import PaymentQuerySet
 
 # Target group - definitions and choice list.
@@ -182,6 +178,40 @@ class PaymentSchedule(models.Model):
         validators=[MinValueValidator(Decimal("0.01"))],
     )
 
+    @staticmethod
+    def is_payment_method_and_recipient_type_allowed(
+        payment_method, recipient_type
+    ):
+        allowed = {
+            PaymentSchedule.INTERNAL: [INTERNAL],
+            PaymentSchedule.PERSON: [CASH, SD],
+            PaymentSchedule.COMPANY: [INVOICE],
+        }
+        return payment_method in allowed[recipient_type]
+
+    def triggers_payment_email(self):
+        """
+        Trigger a payment email only in the (recipient_type->payment_method) case
+        of Internal->Internal or Person->SD.
+        """
+        if (
+            self.recipient_type == self.INTERNAL
+            and self.payment_method == INTERNAL
+        ) or (
+            self.recipient_type == self.PERSON and self.payment_method == SD
+        ):
+            return True
+        return False
+
+    def save(self, *args, **kwargs):
+        if not self.is_payment_method_and_recipient_type_allowed(
+            self.payment_method, self.recipient_type
+        ):
+            raise ValueError(
+                _("ugyldig betalingsmetode for betalingsmodtager")
+            )
+        super().save(*args, **kwargs)
+
     def create_rrule(self, start, end):
         """
         Create a dateutil.rrule based on payment_type/payment_frequency,
@@ -321,49 +351,14 @@ class Payment(models.Model):
         PaymentSchedule, on_delete=models.CASCADE, related_name="payments"
     )
 
-    def is_payment_method_and_recipient_allowed(self):
-        allowed = {
-            PaymentSchedule.INTERNAL: [INTERNAL],
-            PaymentSchedule.PERSON: [CASH, SD],
-            PaymentSchedule.COMPANY: [INVOICE],
-        }
-        return self.payment_method in allowed[self.recipient_type]
-
-    def send_email(self):
-        """
-        Send an email only in the (recipient_type->payment_method) case
-        of Internal->Internal or Person->SD.
-        """
-        if (
-            self.recipient_type == PaymentSchedule.INTERNAL
-            and self.payment_method == INTERNAL
-        ) or (
-            self.recipient_type == PaymentSchedule.PERSON
-            and self.payment_method == SD
-        ):
-            return True
-        return False
-
     def save(self, *args, **kwargs):
-        if not self.is_payment_method_and_recipient_allowed():
+        if not self.payment_schedule.is_payment_method_and_recipient_type_allowed(
+            self.payment_method, self.recipient_type
+        ):
             raise ValueError(
                 _("ugyldig betalingsmetode for betalingsmodtager")
             )
-        is_created = not self.pk
         super().save(*args, **kwargs)
-
-        if self.send_email():
-            if is_created:
-                send_payment_created_email(self)
-            else:
-                send_payment_changed_email(self)
-
-    def delete(self, *args, **kwargs):
-        send_email = self.send_email()
-        super().delete(*args, **kwargs)
-
-        if send_email:
-            send_payment_deleted_email(self)
 
     def __str__(self):
         return f"{self.date} - {self.amount}"
@@ -749,6 +744,10 @@ class Activity(AuditModelMixin, models.Model):
                 self.payment_plan.generate_payments(
                     self.start_date, self.end_date, vat_factor
                 )
+
+    def delete(self, *args, **kwargs):
+        send_activity_deleted_email(self)
+        super().delete(*args, **kwargs)
 
 
 class RelatedPerson(models.Model):

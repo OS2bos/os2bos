@@ -127,12 +127,6 @@ def create_payment(
     recipient_type=PaymentSchedule.PERSON,
     payment_method=SD,
 ):
-    payment_schedule = PaymentSchedule.objects.create(
-        payment_amount=amount,
-        payment_frequency=PaymentSchedule.DAILY,
-        payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
-        payment_units=0,
-    )
     payment = Payment.objects.create(
         recipient_id="Test",
         recipient_name="Test",
