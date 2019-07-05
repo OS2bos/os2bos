@@ -125,6 +125,7 @@ class PaymentSchedule(models.Model):
         verbose_name=_("betalingsmodtager"),
         choices=recipient_choices,
     )
+    # TODO: namechange - this refers actually to the recipient CPR
     recipient_id = models.CharField(max_length=128, verbose_name=_("ID"))
     recipient_name = models.CharField(max_length=128, verbose_name=_("Navn"))
 
