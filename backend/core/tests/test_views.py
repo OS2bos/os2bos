@@ -2,8 +2,8 @@ from unittest import mock
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 
-from .test_utils import AuthenticatedTestCase
 from core.tests.testing_utils import (
+    AuthenticatedTestCase,
     BasicTestMixin,
     create_case,
     create_case_as_json,
