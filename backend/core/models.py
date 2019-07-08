@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 from decimal import Decimal
 
 from dateutil import rrule
@@ -14,6 +14,7 @@ from django_audit_fields.models import AuditModelMixin
 from simple_history.models import HistoricalRecords
 
 from core.managers import PaymentQuerySet
+from core.utils import send_appropriation
 
 # Target group - definitions and choice list.
 FAMILY_DEPT = "FAMILY_DEPT"
@@ -546,6 +547,58 @@ class Appropriation(AuditModelMixin, models.Model):
     def payment_plan(self):
         # TODO:
         pass  # pragma: no cover
+
+    def grant(self, approval_level, approval_note):
+        """Grant this app - change state and all Activities to GRANTED."""
+        if self.status in [self.STATUS_DRAFT, self.STATUS_BUDGETED]:
+            # This hasn't been granted yet.
+            if approval_level is None:
+                raise RuntimeError(_("Angiv venligst bevillingskompetence"))
+
+            approval_level = ApprovalLevel.objects.get(id=approval_level)
+            self.approval_level = approval_level
+            self.approval_note = approval_note
+
+            self.status = self.STATUS_GRANTED
+            for a in self.activities.all():
+                # We could do this with an update, but we need to activate the
+                # save() method on each activity.
+                a.status = a.STATUS_GRANTED
+                a.save()
+            self.save()
+        elif self.status == self.STATUS_GRANTED:
+            # Grant all non-granted activities.
+            # Merge and delete expectations that modify other activities.
+            if approval_level:
+                self.approval_level = ApprovalLevel.objects.get(
+                    id=approval_level
+                )
+            if approval_note:
+                self.approval_note = approval_note
+            if approval_level or approval_note:
+                self.save()
+            # Now go through the activities.
+            for a in self.activities.exclude(status=Activity.STATUS_GRANTED):
+                # If a modifies another, merge -
+                # else just set status = GRANTED.
+                if a.modifies:
+                    # "Merge" by ending current activity today
+                    # and granting the new one from tomorrow.
+                    a.modifies.end_date = date.today()
+                    a.start_date = date.today() + timedelta(days=1)
+                    a.status = a.STATUS_GRANTED
+                    a.modifies.save()
+                    a.save()
+                else:
+                    a.status = a.STATUS_GRANTED
+                    a.save()
+
+        else:
+            raise RuntimeError(
+                _("Kan ikke bevilge en udløbet foranstaltning.")
+            )
+        # Everything went fine, we can send to SBSYS.
+        send_appropriation(self)
 
     def __str__(self):
         return f"{self.sbsys_id} - {self.section}"

@@ -1,12 +1,18 @@
 from unittest import mock
+from datetime import date
+
 from django.urls import reverse
 from django.contrib.auth import get_user_model
+
+from core.models import Activity, ApprovalLevel, Appropriation
 
 from core.tests.testing_utils import (
     AuthenticatedTestCase,
     BasicTestMixin,
     create_case,
     create_case_as_json,
+    create_appropriation,
+    create_activity,
 )
 from core.models import STEP_ONE, STEP_THREE, STEP_FIVE
 
@@ -183,3 +189,135 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         self.client.login(username=self.username, password=self.password)
         response = self.client.post(url, json)
         self.assertEqual(response.status_code, 201)
+
+
+class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_grant_new(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, status=Appropriation.STATUS_DRAFT
+        )
+        activity = create_activity(  # noqa - it *will* be used.
+            case,
+            appropriation,
+            end_date=date(year=2020, month=12, day=24),
+            activity_type=Activity.MAIN_ACTIVITY,
+        )
+        url = reverse("appropriation-grant", kwargs={"pk": appropriation.pk})
+        self.client.login(username=self.username, password=self.password)
+        approval_level, _ = ApprovalLevel.objects.get_or_create(
+            name="egenkompetence"
+        )
+        json = {"approval_level": approval_level.id}
+        response = self.client.patch(
+            url, json, content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_grant_discontinued(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY",
+            case=case,
+            status=Appropriation.STATUS_DISCONTINUED,
+        )
+        activity = create_activity(  # noqa - it *will* be used.
+            case,
+            appropriation,
+            end_date=date(year=2020, month=12, day=24),
+            activity_type=Activity.MAIN_ACTIVITY,
+        )
+        url = reverse("appropriation-grant", kwargs={"pk": appropriation.pk})
+        self.client.login(username=self.username, password=self.password)
+        approval_level, _ = ApprovalLevel.objects.get_or_create(
+            name="egenkompetence"
+        )
+        json = {"approval_level": approval_level.id, "approval_note": "Hej!"}
+        response = self.client.patch(
+            url, json, content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 400)
+
+    def test_grant_granted(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, status=Appropriation.STATUS_GRANTED
+        )
+        activity = create_activity(  # noqa - it *will* be used.
+            case,
+            appropriation,
+            end_date=date(year=2020, month=12, day=24),
+            status=Activity.STATUS_GRANTED,
+            activity_type=Activity.MAIN_ACTIVITY,
+        )
+        modifying_activity = create_activity(  # noqa - it *will* be used.
+            case,
+            appropriation,
+            end_date=date(year=2022, month=12, day=24),
+            status=Activity.STATUS_EXPECTED,
+            activity_type=Activity.MAIN_ACTIVITY,
+            modifies=activity,
+        )
+        draft_activity = create_activity(  # noqa - it *will* be used.
+            case,
+            appropriation,
+            end_date=date(year=2023, month=12, day=24),
+            status=Activity.STATUS_DRAFT,
+            activity_type=Activity.SUPPL_ACTIVITY,
+        )
+        url = reverse("appropriation-grant", kwargs={"pk": appropriation.pk})
+        self.client.login(username=self.username, password=self.password)
+        approval_level, _ = ApprovalLevel.objects.get_or_create(
+            name="egenkompetence"
+        )
+        json = {"approval_level": approval_level.id, "approval_note": "HEJ!"}
+        response = self.client.patch(
+            url, json, content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_no_approval_level(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, status=Appropriation.STATUS_DRAFT
+        )
+        activity = create_activity(  # noqa - it *will* be used.
+            case,
+            appropriation,
+            end_date=date(year=2020, month=12, day=24),
+            activity_type=Activity.MAIN_ACTIVITY,
+        )
+        url = reverse("appropriation-grant", kwargs={"pk": appropriation.pk})
+        self.client.login(username=self.username, password=self.password)
+        json = {"approval_note": "Hello!"}
+        response = self.client.patch(
+            url, json, content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 400)
+
+    def test_grant_granted_no_approval_note_or_level(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, status=Appropriation.STATUS_GRANTED
+        )
+        url = reverse("appropriation-grant", kwargs={"pk": appropriation.pk})
+        self.client.login(username=self.username, password=self.password)
+        json = {}
+        response = self.client.patch(
+            url, json, content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
