@@ -14,7 +14,7 @@
                     <th>Oprettet</th>
                     <th>Senest ændret</th>
                     <th style="text-align: right">Bevilget i år</th>
-                    <th class="expected" style="text-align: right">Forventet i år</th>
+                    <th style="text-align: right">Forventet i år</th>
                 </tr>
             </thead>
             <tbody>
@@ -30,7 +30,11 @@
                     <td>{{ displayDate(a.created) }}</td>
                     <td>{{ displayDate(a.modified) }}</td>
                     <td style="text-align: right">{{ a.total_granted_this_year }} kr</td>
-                    <td class="expected" style="text-align: right">{{ a.total_expected_this_year }} kr</td>
+                    <template v-if="a.total_expected_this_year > 0 && a.total_expected_this_year !== a.total_granted_this_year">
+                        <td class="expected" style="text-align: right">{{ a.total_expected_this_year }} kr</td>
+                    </template>
+                    <td v-else></td>
+                    
                 </tr>
                 <tr>
                     <td style="border: none;"></td>
@@ -38,8 +42,11 @@
                     <td style="border: none;"></td>
                     <td style="border: none;"></td>
                     <td style="text-align: right; border: none;">Samlet</td>
-                    <td style="text-align: right; border: none;">{{ total_granted }} kr</td>
-                    <td class="expected" style="text-align: right; border: none;">{{ total_expected }} kr</td>
+                    <td style="text-align: right; border: none;"><strong>{{ total_granted }} kr</strong></td>
+                    <template v-if="has_expected">
+                        <td class="expected" style="text-align: right; border: none;">{{ total_expected }} kr</td>
+                    </template>
+                    <td v-else></td>
                 </tr>
             </tbody>
         </table>
@@ -71,6 +78,13 @@
                 }
                 if (this.apprs) {
                     return this.apprs.reduce(getTotal, 0)
+                } else {
+                    return false
+                }
+            },
+            has_expected: function() {
+                if (this.total_expected > 0 && this.total_expected !== this.total_granted) {
+                    return true
                 } else {
                     return false
                 }

@@ -18,7 +18,10 @@
                     <td>
                         <div v-html="statusLabel(a.status)"></div>
                     </td>
-                    <td><router-link :to="`/activity/${ a.id }`">{{ activityId2name(a.details) }}</router-link></td>
+                    <td>
+                        <router-link :to="`/activity/${ a.id }`">{{ activityId2name(a.details) }}</router-link>
+                        <span v-if="a.activity_type === 'MAIN_ACTIVITY'" class="act-label">Hovedydelse</span>
+                    </td>
                     <td></td>
                     <td>{{ displayDate(a.start_date) }}</td>
                     <td>{{ displayDate(a.end_date) }}</td>
@@ -34,7 +37,7 @@
                         {{ appropriation.total_granted_this_year }} kr
                     </td>
                 </tr>
-                <tr>
+                <tr v-if="has_expected">
                     <td></td>
                     <td></td>
                     <td></td>
@@ -62,31 +65,29 @@
         props: [
             'apprId'
         ],
-        data: function() {
-            return {
-                acts: null,
-                pay: null
-            }
-        },
         computed: {
             appropriation: function() {
                 return this.$store.getters.getAppropriation
+            },
+            has_expected: function() {
+                if (this.appropriation.total_expected_this_year > 0 && this.appropriation.total_granted_this_year !== this.appropriation.total_expected_this_year) {
+                    return true
+                } else {
+                    return false
+                }
+            },
+            acts: function() {
+                return this.$store.getters.getActivities
+            }
+        },
+        watch: {
+            apprId: function() {
+                this.update()
             }
         },
         methods: {
             update: function() {
-                this.fetchActivities(this.$route.params.id)
-            },
-            fetchActivities: function() {
-              axios.get(`/activities/?appropriation=${ this.apprId }`)
-                .then(res => {
-                    this.acts = res.data
-                    axios.get(`/payment_schedules/?activities=${ this.acts.payment_plan  }`)
-                        .then(resp => {
-                            this.pay = resp.data
-                        })
-                })
-                .catch(err => console.log(err))
+                this.$store.dispatch('fetchActivities', this.apprId)
             },
             displayDate: function(dt) {
                 return json2js(dt)
@@ -125,6 +126,12 @@
     .activities .expected-row > td,
     .activities .expected {
         background-color: hsl(var(--color3), 80%, 80%); 
+    }
+
+    .activities .act-label {
+        opacity: .66;
+        font-size: .85rem;
+        margin: 0 1rem;
     }
 
 </style>

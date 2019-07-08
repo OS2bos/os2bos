@@ -50,6 +50,7 @@
 <script>
 
     import axios from '../http/Http.js'
+    import notify from '../notifications/Notify.js'
 
     export default {
 
@@ -67,16 +68,18 @@
             saveChanges: function() {
                 let data = {
                   approval_level: this.appro.approval_level,
-                  approval_note: this.appro.approval_note,
-                  status: 'GRANTED',
-                  sbsys_id: this.approvalObj.sbsys_id,
-                  case: this.approvalObj.case
+                  approval_note: this.appro.approval_note
                 }
-                axios.patch(`/appropriations/${ this.approvalObj.id }/`, data)
-                .then(res => {
+                axios.patch(`/appropriations/${ this.approvalObj.id }/grant/`, data)
+                .then(() => {
+                  notify('Bevilling godkendt', 'success')
+                  this.$store.dispatch('fetchActivities', this.approvalObj.id)
                   this.$emit('close')
                 })
-                .catch(err => console.log(err))
+                .catch(err => {
+                  notify('Der opstod en fejl. Bevilling kunne ikke godkendes', 'error')
+                  console.log(err)
+                })
             }
        },
        created: function() {

@@ -3,9 +3,9 @@ import axios from '../components/http/Http.js'
 const state = {
     municipalities: null,
     districts: null,
-    activities: null,
     sections: null,
-    approval_levels: null
+    approval_levels: null,
+    activity_details: null
 }
 
 const getters = {
@@ -15,14 +15,14 @@ const getters = {
     getDistricts (state) {
         return state.districts ? state.districts : false
     },
-    getActivities (state) {
-        return state.activities ? state.activities : false
-    },
     getSections (state) {
         return state.sections ? state.sections : false
     },
     getApprovals (state) {
         return state.approval_levels ? state.approval_levels : false
+    },
+    getActivityDetails ( state ) {
+        return state.activity_details ? state.activity_details : false
     }
 }
 
@@ -33,14 +33,14 @@ const mutations = {
     setDist (state, districts) {
         state.districts = districts
     },
-    setAct (state, activities) {
-        state.activities = activities
-    },
     setSections (state, sections) {
         state.sections = sections
     },
     setAppro (state, approvals) {
         state.approval_levels = approvals
+    },
+    setActDetails (state, act_details) {
+        state.activity_details = act_details
     }
 }
 
@@ -59,10 +59,10 @@ const actions = {
         })
         .catch(err => console.log(err))
     },
-    fetchActivities: function({commit}) {
+    fetchActivityDetails: function({commit}) {
         return axios.get('/activity_details/')
         .then(res => {
-            commit('setAct', res.data)
+            commit('setActDetails', res.data)
         })
         .catch(err => console.log(err))
     },
@@ -86,7 +86,7 @@ const actions = {
             dispatch('fetchTeams'),
             dispatch('fetchMunis'),
             dispatch('fetchDistricts'),
-            dispatch('fetchActivities'),
+            dispatch('fetchActivityDetails'),
             dispatch('fetchSections'),
             dispatch('fetchApprovals')
         ])
