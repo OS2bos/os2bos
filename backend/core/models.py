@@ -255,6 +255,9 @@ class PaymentSchedule(models.Model):
 
         newest_payment = self.payments.order_by("-date").first()
 
+        # One time payment is a special case and should not be handled.
+        if self.payment_type == PaymentSchedule.ONE_TIME_PAYMENT:
+            return
         # The new start_date should be based on the newest payment date
         # and the payment frequency.
         if self.payment_frequency == PaymentSchedule.DAILY:
