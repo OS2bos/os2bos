@@ -1,10 +1,7 @@
 <template>
-
     <section class="cases" v-if="cas">
         <header class="cases-header">
-            <h1>Mine sager</h1>
-            <button class="create" @click="$router.push('case-create')">+ Tilknyt hovedsag</button>
-            <button class="all-cases" @click="$router.push('all-cases')">Alle sager</button>
+            <h1>Alle sager</h1>
         </header>
         <table v-if="cas.length > 0">
             <thead>
@@ -41,11 +38,9 @@
             Der er ikke tilknyttet nogen sager
         </p>
     </section>
-
 </template>
 
 <script>
-
     import axios from '../http/Http.js'
     import { json2js } from '../filters/Date.js'
 
@@ -56,28 +51,30 @@
                 cas: null
             }
         },
-        computed: {
-            user: function() {
-                return this.$store.getters.getUser
-            }
-        },
         watch: {
-            user: function() {
-                this.update()
-            }
+          cas: function() {
+              this.$store.commit('setBreadcrumb', [
+                  {
+                      link: '/',
+                      title: 'Mine sager'
+                  },
+                  {
+                      link: false,
+                      title: "Alle sager"
+                  }
+              ])
+          }
         },
         methods: {
             update: function() {
                 this.fetchCases(this.$route.params.id)
             },
             fetchCases: function(id) {
-                if (this.user) {
-                    axios.get(`/cases/?case_worker=${ this.user.id }`)
-                    .then(res => {
-                        this.cas = res.data
-                    })
-                    .catch(err => console.log(err))
-                }
+                axios.get('/cases/')
+                .then(res => {
+                    this.cas = res.data
+                })
+                .catch(err => console.log(err))
             },
             displayDate: function(dt) {
                 return json2js(dt)
@@ -86,7 +83,7 @@
         created: function() {
             this.update()
         }
-        
+
     }
     
 </script>
@@ -101,14 +98,6 @@
         display: flex;
         flex-flow: row nowrap;
         align-items: center;
-    }
-
-    .cases .create {
-        margin: 0 2rem;
-    }
-
-    .cases .all-cases {
-        margin: 0 0rem;
     }
 
 </style>

@@ -2,6 +2,7 @@ from decimal import Decimal
 from datetime import date
 
 from django.contrib.auth import get_user_model
+from django.test import TestCase
 
 from core.models import (
     Case,
@@ -19,6 +20,17 @@ from core.models import (
 
 
 User = get_user_model()
+
+
+class AuthenticatedTestCase(TestCase):
+    """Simple class for authenticating before accessing a view."""
+
+    def setUp(self):
+        self.username = "user"
+        self.password = "s1kr3t"
+        User.objects.create_user(
+            self.username, f"{self.username}@company.com", self.password
+        )
 
 
 class BasicTestMixin:

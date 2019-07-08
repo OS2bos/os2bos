@@ -72,6 +72,21 @@ function approvalId2name(id) {
     }
 }
 
+function teamId2name(id) {
+    const team_list = store.getters.getTeams
+    if (team_list) {
+        let team = team_list.find(function(element) {
+            return element.id === parseInt(id);
+        })
+        return {
+            name: team.name,
+            leader: team.leader
+        }
+    } else {
+        return 'Ikke tilgængelig'
+    }
+}
+
 function displayStatus(status) {
     let status_str = ''
     switch(status) {
@@ -131,5 +146,6 @@ export {
     userId2name,
     displayStatus,
     displayEffort,
-    approvalId2name
+    approvalId2name,
+    teamId2name
 }

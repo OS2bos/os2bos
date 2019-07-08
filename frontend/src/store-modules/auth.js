@@ -6,16 +6,12 @@ import store from '../store.js';
 
 const state = {
     accesstoken: null,
-    refreshtoken: null,
-    user: null
+    refreshtoken: null
 }
 
 const getters = {
     getAuth (state) {
         return state.accesstoken ? true : false
-    },
-    getUser (state) {
-        return state.user ? state.user : false
     }
 }
 
@@ -36,19 +32,11 @@ const mutations = {
             sessionStorage.setItem('refreshtoken', token)
         }
         state.refreshtoken = token
-    },
-    setUser (state, user) {
-        if (user === null) {
-            sessionStorage.removeItem('username')
-        } else {
-            sessionStorage.setItem('username', user.username)
-        }
-        state.user = user
     }
 }
 
 const actions = {
-    login: function({commit, dispatch}, authData) {
+    login: function({commit, dispatch, rootState}, authData) {
         axios.post('/token/', {
             username: authData.username,
             password: authData.password
@@ -58,9 +46,17 @@ const actions = {
             commit('setRefreshToken', res.data.refresh)
             dispatch('setTimer')
             dispatch('fetchLists')
-            dispatch('fetchUser', authData.username)
-            router.push('/')
-            notify('Du er logget ind', 'success')
+            .then(() => {
+                let user = rootState.user.users.find(function(u) {
+                    return u.username === authData.username
+                })
+                commit('setUser', user)
+                notify('Du er logget ind', 'success')
+                dispatch('postLogin')
+            })
+            .catch(err => {
+                console.log(err)
+            })
         })
         .catch(err => {
             notify('Log ind fejlede', 'error', err)
@@ -72,6 +68,9 @@ const actions = {
             dispatch('refreshToken')
         }, 270000);
     },
+    postLogin: function({dispatch}) {
+        router.push('/')
+    },
     refreshToken: function({commit, dispatch, state}) {
         if (state.refreshtoken) {    
             axios.post('/token/refresh/', {
@@ -79,7 +78,6 @@ const actions = {
             })
             .then(res => {
                 commit('setAccessToken', res.data.access)
-                dispatch('fetchLists')
                 dispatch('setTimer')
             })
             .catch(err => {
@@ -88,39 +86,26 @@ const actions = {
             })
         }
     },
-    fetchUser: async function({commit, rootState}, username) {
-        function waitForUsers() {
-            setTimeout(function() {
-                if (rootState.lists.users) {
-                    const stored_username = sessionStorage.getItem('username')
-                    let name = ''
-                    if (username) {
-                        name = username
-                    } else if (stored_username) {
-                        name = stored_username
-                    } else {
-                        return false
-                    }
-                    const user = rootState.lists.users.find(u => {
-                        return u.username === name
-                    })
-                    commit('setUser', user)
-                } else {
-                    waitForUsers()
-                }
-            }, 500)
-        }
-        waitForUsers()
-    },
-    autoLogin: function({commit, dispatch}) {
+    autoLogin: function({commit, dispatch, rootState}) {
         // check for tokens in session storage and refresh session
         const refreshtoken = sessionStorage.getItem('refreshtoken')
         const accesstoken = sessionStorage.getItem('accesstoken')
+        const user_id = parseInt(sessionStorage.getItem('userid'))
         if (refreshtoken) {
             commit('setAccessToken', accesstoken)
             commit('setRefreshToken', refreshtoken)
-            dispatch('fetchUser')
-            dispatch('refreshToken')
+            dispatch('fetchLists')
+            .then(res => {
+                let user = rootState.user.users.find(function(u) {
+                    return u.id === user_id
+                })
+                commit('setUser', user)
+                dispatch('postLogin')
+                dispatch('refreshToken')
+            })
+            .catch(err => {
+                console.log(err)
+            })
         } else {
             dispatch('clearAuth')
         }

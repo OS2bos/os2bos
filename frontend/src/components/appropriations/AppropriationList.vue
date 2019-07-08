@@ -13,7 +13,8 @@
                     <th>Bevillingsparagraf</th>
                     <th>Oprettet</th>
                     <th>Senest ændret</th>
-                    <th style="text-align: right">Økonomi</th>
+                    <th style="text-align: right">Bevilget i år</th>
+                    <th class="expected" style="text-align: right">Forventet i år</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,7 +29,8 @@
                     <td>§ {{ displaySection(a.section) }}</td>
                     <td>{{ displayDate(a.created) }}</td>
                     <td>{{ displayDate(a.modified) }}</td>
-                    <td style="text-align: right">ikke implementeret</td>
+                    <td style="text-align: right">{{ a.total_granted_this_year }} kr</td>
+                    <td class="expected" style="text-align: right">{{ a.total_expected_this_year }} kr</td>
                 </tr>
                 <tr>
                     <td style="border: none;"></td>
@@ -36,7 +38,8 @@
                     <td style="border: none;"></td>
                     <td style="border: none;"></td>
                     <td style="text-align: right; border: none;">Samlet</td>
-                    <td style="text-align: right; border: none;">{{ total_amounts }} kr</td>
+                    <td style="text-align: right; border: none;">{{ total_granted }} kr</td>
+                    <td class="expected" style="text-align: right; border: none;">{{ total_expected }} kr</td>
                 </tr>
             </tbody>
         </table>
@@ -62,12 +65,24 @@
             }
         },
         computed: {
-            total_amounts: function() {
+            total_granted: function() {
                 function getTotal(total, a) {
-                    //return total + a.payment.total_amount
+                    return total + a.total_granted_this_year
                 }
                 if (this.apprs) {
                     return this.apprs.reduce(getTotal, 0)
+                } else {
+                    return false
+                }
+            },
+            total_expected: function() {
+                function getTotal(total, a) {
+                    return total + a.total_expected_this_year
+                }
+                if (this.apprs) {
+                    return this.apprs.reduce(getTotal, 0)
+                } else {
+                    return false
                 }
             }
         },
@@ -121,6 +136,10 @@
     .appropriations .status {
         font-weight: bold;
         color: black;
+    }
+
+    .appropriations .expected {
+        background-color: hsl(var(--color3), 80%, 80%); 
     }
 
 </style>
