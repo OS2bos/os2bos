@@ -65,31 +65,22 @@
         props: [
             'apprId'
         ],
-        data: function() {
-            return {
-                acts: null,
-                pay: null
-            }
-        },
         computed: {
             appropriation: function() {
                 return this.$store.getters.getAppropriation
+            },
+            acts: function() {
+                return this.$store.getters.getActivities
+            }
+        },
+        watch: {
+            apprId: function() {
+                this.update()
             }
         },
         methods: {
             update: function() {
-                this.fetchActivities(this.$route.params.id)
-            },
-            fetchActivities: function() {
-              axios.get(`/activities/?appropriation=${ this.apprId }`)
-                .then(res => {
-                    this.acts = res.data
-                    axios.get(`/payment_schedules/?activities=${ this.acts.payment_plan  }`)
-                        .then(resp => {
-                            this.pay = resp.data
-                        })
-                })
-                .catch(err => console.log(err))
+                this.$store.dispatch('fetchActivities', this.apprId)
             },
             displayDate: function(dt) {
                 return json2js(dt)

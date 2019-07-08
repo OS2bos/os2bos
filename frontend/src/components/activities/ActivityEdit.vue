@@ -86,9 +86,6 @@
             }
         },
         computed: {
-            activities: function() {
-                return this.$store.getters.getActivities
-            },
             appropriation: function() {
                 return this.$store.getters.getAppropriation
             },
