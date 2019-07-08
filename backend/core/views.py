@@ -79,6 +79,22 @@ class AppropriationViewSet(viewsets.ModelViewSet):
 
     filterset_fields = "__all__"
 
+    @action(detail=True, methods=["patch"])
+    def grant(self, request, pk=None):
+        """Grant this appropriation."""
+        appropriation = self.get_object()
+        approval_level = request.data.get("approval_level", None)
+        approval_note = request.data.get("approval_note", "")
+
+        try:
+            appropriation.grant(approval_level, approval_note)
+            response = Response("OK", status.HTTP_200_OK)
+        except Exception as e:
+            response = Response(
+                {"errors": [str(e)]}, status.HTTP_400_BAD_REQUEST
+            )
+        return response
+
 
 class ActivityViewSet(viewsets.ModelViewSet):
     queryset = Activity.objects.all()
