@@ -73,6 +73,7 @@
                 axios.patch(`/appropriations/${ this.approvalObj.id }/grant/`, data)
                 .then(() => {
                   notify('Bevilling godkendt', 'success')
+                  this.$store.dispatch('fetchActivities', this.approvalObj.id)
                   this.$emit('close')
                 })
                 .catch(err => {

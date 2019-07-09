@@ -8,6 +8,7 @@
                     <span class="global-brandname">Bevillingsplatformen</span>
                 </router-link>
             </h1>
+            <search />
             <user-actions />
         </div>
         <breadcrumb />
@@ -19,12 +20,14 @@
 
     import Breadcrumb from './Breadcrumb.vue'
     import UserActions from '../auth/UserActions.vue'
+    import Search from '../search/Search.vue'
     
     export default {
 
         components: {
             Breadcrumb,
-            UserActions
+            UserActions,
+            Search
         }
 
     }

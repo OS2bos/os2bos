@@ -255,6 +255,9 @@ class PaymentSchedule(models.Model):
 
         newest_payment = self.payments.order_by("-date").first()
 
+        # One time payment is a special case and should not be handled.
+        if self.payment_type == PaymentSchedule.ONE_TIME_PAYMENT:
+            return
         # The new start_date should be based on the newest payment date
         # and the payment frequency.
         if self.payment_frequency == PaymentSchedule.DAILY:
@@ -744,15 +747,25 @@ class Activity(AuditModelMixin, models.Model):
         if self.service_provider:
             vat_factor = self.service_provider.vat_factor
 
-        if self.payment_plan:
-            if self.payment_plan.payments.exists():
-                self.payment_plan.synchronize_payments(
-                    self.start_date, self.end_date, vat_factor
-                )
-            else:
+        if not self.payment_plan:
+            return
+
+        if self.payment_plan.payments.exists():
+            # In the STATUS_DRAFT case we delete and
+            # regenerate payments no matter what.
+            if self.status == Activity.STATUS_DRAFT:
+                self.payment_plan.payments.all().delete()
                 self.payment_plan.generate_payments(
                     self.start_date, self.end_date, vat_factor
                 )
+            else:
+                self.payment_plan.synchronize_payments(
+                    self.start_date, self.end_date, vat_factor
+                )
+        else:
+            self.payment_plan.generate_payments(
+                self.start_date, self.end_date, vat_factor
+            )
 
 
 class RelatedPerson(models.Model):

@@ -11,15 +11,15 @@
                     <label for="field-sbsys-id">SBSYS Hovedsag:</label>
                     <input id="field-sbsys-id" type="search" v-model="cas.sbsys_id">
                 </fieldset>
+
+                <fieldset>
+                    <label for="field-cpr">Sagspart, CPR-nr</label>
+                    <input id="field-cpr" type="text" v-model="cas.cpr_number" @input="lookupCPR(cas.cpr_number)">
+                </fieldset>
             
                 <fieldset>
                     <label for="field-name">Sagspart, navn</label>
                     <input id="field-name" type="text" v-model="cas.name">
-                </fieldset>
-
-                <fieldset>
-                    <label for="field-cpr">Sagspart, CPR-nr</label>
-                    <input id="field-cpr" type="text" v-model="cas.cpr_number">
                 </fieldset>
 
                 <fieldset>
@@ -30,7 +30,7 @@
                         :selected-id="cas.paying_municipality" 
                         @selection="changeMuni($event, 'paying_municipality')" 
                         :list="municipalities" 
-                        default="42" />
+                        :default="42" />
                 </fieldset>
 
                 <fieldset>
@@ -40,7 +40,7 @@
                         :selected-id="cas.acting_municipality" 
                         @selection="changeMuni($event, 'acting_municipality')" 
                         :list="municipalities" 
-                        default="42" />
+                        :default="42" />
                 </fieldset>
 
                 <fieldset>
@@ -50,7 +50,7 @@
                         :selected-id="cas.residence_municipality" 
                         @selection="changeMuni($event, 'residence_municipality')" 
                         :list="municipalities" 
-                        default="42" />
+                        :default="42" />
                 </fieldset>
 
                 <fieldset>
@@ -71,23 +71,21 @@
 
                 <assessment-edit :case-obj="cas" @assessment="updateAssessment" />
 
-                <div>
-                    <h3>Sagsbehandling:</h3>
-                    <dl>
-                        <dt>Sagsbehander:</dt>
-                        <dd>{{ cas.case_worker }}</dd>
-                        <dt>Team:</dt>
-                        <dd>ikke implementeret</dd>
-                    </dl>
-                    <fieldset v-if="cas.target_group === 'FAMILY_DEPT'">
-                        <label for="selectField4">Distrikt:</label>
-                        <list-picker :dom-id="'selectField4'" :selected-id="cas.district" @selection="changeDistrict" :list="districts" />
-                    </fieldset>
-                    <fieldset>
-                        <dt>Leder:</dt>
-                        <dd>ikke implementeret</dd>
-                    </fieldset>
-                </div>
+                <h3>Sagsbehandling:</h3>
+                <fieldset>
+                    <label for="selectCaseWorker">Sagsbehandler</label>
+                    <list-picker :dom-id="'selectCaseWorker'" :selected-id="cas.case_worker" @selection="changeCaseWorker" :list="users" display-key="username" />
+                </fieldset>
+                <dl v-if="cas.team_data">
+                    <dt>Team</dt>
+                    <dd>{{ cas.team_data.name }}</dd>
+                    <dt>Leder</dt>
+                    <dd>{{ cas.team_data.leader_name }}</dd>
+                </dl>
+                <fieldset v-if="cas.target_group === 'FAMILY_DEPT'">
+                    <label for="selectField4">Distrikt</label>
+                    <list-picker :dom-id="'selectField4'" :selected-id="cas.district" @selection="changeDistrict" :list="districts" />
+                </fieldset>
                 
                 <fieldset>
                     <input type="submit" value="Gem">
@@ -107,6 +105,7 @@
     import axios from '../http/Http.js'
     import ListPicker from '../forms/ListPicker.vue'
     import AssessmentEdit from '../assessments/AssessmentEdit.vue'
+    import { userId2name, teamId2name } from '../filters/Labels.js'
 
     export default {
 
@@ -132,6 +131,12 @@
             },
             user: function() {
                 return this.$store.getters.getUser
+            },
+            users: function() {
+                return this.$store.getters.getUsers
+            },
+            teams: function() {
+                return this.$store.getters.getTeams
             }
         },
         methods: {
@@ -141,11 +146,39 @@
             changeDistrict: function(dist) {
                 this.cas.district = dist
             },
+            changeCaseWorker: function(user_id) {
+                this.cas.case_worker = user_id
+                this.fetchTeamInfo()
+            },
+            fetchTeamInfo: function() {
+                if (this.cas.case_worker) {
+                    let worker = this.users.find(u => {
+                        return u.id === this.cas.case_worker
+                    })
+                    this.cas.team_data = this.teams.find(t => {
+                        return t.id === worker.team
+                    })
+                    this.cas.team = this.cas.team_data.id
+                    this.cas.team_data.leader_name = userId2name(this.cas.team_data.leader)
+                    this.$forceUpdate()
+                }
+            },
             cancel: function() {
                 if (!this.create_mode) {
                     this.$emit('close')
                 } else {
                     this.$router.push('/')
+                }  
+            },
+            lookupCPR: function(cpr_no) {
+                const cpr = cpr_no.replace('-','')
+                if (cpr.length > 9) {
+                    axios.get(`/related_persons/fetch_from_serviceplatformen/?cpr=${ cpr }`)
+                    .then(res => {
+                        this.cas.name = res.data[0].name
+                        this.$forceUpdate()
+                    })
+                    .catch(err => console.log(err))
                 }  
             },
             updateAssessment: function(assessment) {
@@ -159,7 +192,8 @@
             saveChanges: function() {
                 let data = {
                     sbsys_id: this.cas.sbsys_id,
-                    case_worker: this.user.id,
+                    case_worker: this.cas.case_worker,
+                    team: this.cas.team,
                     district: this.cas.district,
                     effort_step: this.cas.effort_step,
                     scaling_step: this.cas.scaling_step,
@@ -193,6 +227,7 @@
             if (this.caseObj) {
                 this.create_mode = false
                 this.cas = this.caseObj
+                this.fetchTeamInfo()
             }
         }
     }

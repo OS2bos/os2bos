@@ -37,7 +37,7 @@
                         {{ appropriation.total_granted_this_year }} kr
                     </td>
                 </tr>
-                <tr>
+                <tr v-if="has_expected">
                     <td></td>
                     <td></td>
                     <td></td>
@@ -68,6 +68,13 @@
         computed: {
             appropriation: function() {
                 return this.$store.getters.getAppropriation
+            },
+            has_expected: function() {
+                if (this.appropriation.total_expected_this_year > 0 && this.appropriation.total_granted_this_year !== this.appropriation.total_expected_this_year) {
+                    return true
+                } else {
+                    return false
+                }
             },
             acts: function() {
                 return this.$store.getters.getActivities

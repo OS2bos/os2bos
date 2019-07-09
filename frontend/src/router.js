@@ -35,6 +35,11 @@ const router = new Router({
             component: CaseEdit
         },
         {
+            path: '/all-cases/:query',
+            name: 'some-cases',
+            component: AllCases
+        },
+        {
             path: '/all-cases/',
             name: 'all-cases',
             component: AllCases

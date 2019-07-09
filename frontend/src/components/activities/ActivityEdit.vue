@@ -137,13 +137,14 @@
 
                     axios.post(`/activities/`, data)
                     .then(res => {
-                        this.$router.push(`/appropriation/${ appr_id }`)
                         axios.post(`/payment_schedules/`, data_payee)
+                        
                         .then(resp => {
                             axios.patch(`/activities/${ res.data.id }/`, {
                                 payment_plan: resp.data.id
                             })
                             .then(() => {
+                                this.$router.push(`/appropriation/${ appr_id }`)
                                 this.$store.dispatch('fetchActivity', res.data.id)
                             })
                         })
