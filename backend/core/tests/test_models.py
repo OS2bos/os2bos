@@ -1,5 +1,5 @@
 from decimal import Decimal
-from datetime import date
+from datetime import date, timedelta
 from unittest import mock
 
 from django.utils import timezone
@@ -26,6 +26,7 @@ from core.models import (
     PaymentSchedule,
     ServiceProvider,
     Activity,
+    Appropriation,
 )
 
 
@@ -167,6 +168,35 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         self.assertEqual(
             activity, next(appropriation.supplementary_activities)
         )
+
+    def test_appropriation_grant_sets_appropriation_date(self):
+        approval_level = ApprovalLevel.objects.create(name="egenkompetence")
+        payment_schedule = create_payment_schedule()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_DRAFT
+        )
+        now = timezone.now()
+        start_date = now + timedelta(days=6)
+        end_date = now + timedelta(days=12)
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=Activity.MAIN_ACTIVITY,
+            status=Activity.STATUS_DRAFT,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+        )
+
+        appropriation.grant(
+            approval_level.id, "note til bevillingsgodkendelse"
+        )
+
+        today = now.date()
+        self.assertEqual(appropriation.appropriation_date, today)
 
 
 class MunicipalityTestCase(TestCase):
