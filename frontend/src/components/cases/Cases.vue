@@ -4,7 +4,7 @@
         <header class="cases-header">
             <h1>Mine sager</h1>
             <button class="create" @click="$router.push('case-create')">+ Tilknyt hovedsag</button>
-            <button class="all-cases" @click="$router.push('all-cases')">Alle sager</button>
+            <button class="all-cases" @click="$router.push(`/all-cases/`)">Alle sager</button>
         </header>
         <table v-if="cas.length > 0">
             <thead>
