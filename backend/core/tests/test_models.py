@@ -431,6 +431,42 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             payment_plan=payment_schedule,
             status=Activity.STATUS_GRANTED,
         )
+        self.assertEqual(len(mail.outbox), 1)
+        email_message = mail.outbox[0]
+        self.assertIn("Aktivitet oprettet", email_message.subject)
+        self.assertIn("Barnets CPR nummer: 0205891234", email_message.body)
+        self.assertIn("Beløb: 500,0", email_message.body)
+        self.assertIn("Afregningsenheder: 0", email_message.body)
+        self.assertIn("Start dato: 1. december 2019", email_message.body)
+        self.assertIn("Slut dato: 1. januar 2020", email_message.body)
+
+    def test_activity_updated_payment_email(self):
+        start_date = date(year=2019, month=12, day=1)
+        end_date = date(year=2020, month=1, day=1)
+        payment_schedule = create_payment_schedule()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED
+        )
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=Activity.STATUS_GRANTED,
+        )
+        activity.save()
+        self.assertEqual(len(mail.outbox), 2)
+        email_message = mail.outbox[1]
+        self.assertIn("Aktivitet opdateret", email_message.subject)
+        self.assertIn("Barnets CPR nummer: 0205891234", email_message.body)
+        self.assertIn("Beløb: 500,0", email_message.body)
+        self.assertIn("Afregningsenheder: 0", email_message.body)
+        self.assertIn("Start dato: 1. december 2019", email_message.body)
+        self.assertIn("Slut dato: 1. januar 2020", email_message.body)
 
 
 class AccountTestCase(TestCase):

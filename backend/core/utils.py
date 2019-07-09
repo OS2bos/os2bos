@@ -119,7 +119,7 @@ def send_activity_created_email(activity):
 
 
 def send_activity_updated_email(activity):
-    subject = _("Aktivitet ændret")
+    subject = _("Aktivitet opdateret")
     template = "emails/activity_updated.html"
     send_activity_email(subject, template, activity)
 

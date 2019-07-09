@@ -4,8 +4,8 @@
 <p>Barnets CPR nummer: {{ activity.appropriation.case.cpr_number }}</p>
 <p>Start dato: {{ activity.start_date }}</p>
 <p>Slut dato: {{ activity.end_date }}</p>
-<p>Beløb: {{ activity.payment_plan.amount }}</p>
-<p>Afregningsenheder: {{ activity.payment_plan.units }}</p>
+<p>Beløb: {{ activity.payment_plan.payment_amount }}</p>
+<p>Afregningsenheder: {{ activity.payment_plan.payment_units }}</p>
 
 <h1>Betalingsmodtager</h1>
 <p>CPR/CVR: {{ activity.payment_plan.recipient_id }}</p>
