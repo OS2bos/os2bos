@@ -6,8 +6,8 @@
                 <i class="material-icons">style</i>
                 Udgift til {{ activityId2name(act.details) }}
             </h1>
-            <button @click="show_edit = !show_edit" class="act-edit-btn">Redigér</button>
-            <button @click="createExpected()" class="act-edit-btn">+ Lav forventet justering</button>
+            <button v-if="act.status !== 'GRANTED'" @click="show_edit = !show_edit" class="act-edit-btn">Redigér</button>
+            <button v-if="act.status === 'GRANTED'" @click="createExpected()" class="act-edit-btn">+ Lav forventet justering</button>
         </header>
 
         <div v-if="show_edit">
@@ -93,7 +93,7 @@
 
         </div>
         <div class="payment-schedule" v-if="!show_edit">
-            <payment-schedule :payments-obj="pay.payments" />
+            <payment-schedule :payments="pay.payments" />
         </div>
     </section>
 

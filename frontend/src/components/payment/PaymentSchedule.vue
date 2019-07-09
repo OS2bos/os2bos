@@ -1,27 +1,22 @@
 <template>
 
     <section class="payment_schedule">
-      <div class="row">
-        <div class="column">
-          <label>Vælg år</label>
-          <select>
-            <option value="2019">2019</option>
-            <option value="2018">2018</option>
-            <option value="2017">2017</option>
-          </select>
-        </div>
-        <div class="column"></div>
-      </div>
+        
+        <label>Vælg år</label>
+        <select v-model="current_year">
+            <option v-for="y in years" :value="y">{{ y }}</option>
+        </select>
+    
         <table>
             <thead>
                 <tr>
-                    <th>Måned</th>
+                    <th>Dato</th>
                     <th>Beløb</th>
                     <th>Betalt</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="p in payments" :key="p.id">
+                <tr v-for="p in payments_by_year" :key="p.id">
                     <td>{{ displayDate(p.date) }}</td>
                     <td>{{ p.amount }} kr.</td>
                     <td>
@@ -42,20 +37,30 @@
 
 <script>
 
-    import { json2js } from '../filters/Date.js'
+    import { json2jsDate } from '../filters/Date.js'
 
     export default {
 
         props: [
-            'paymentsObj'
+            'payments'
         ],
+        data: function() {
+            return {
+                now: new Date(),
+                years: [],
+                current_year: null
+            }
+        },
         computed: {
-            payments: function() {
-                return this.paymentsObj
+            payments_by_year: function() {
+                let payms = this.payments.filter(payment => {
+                    return this.current_year === parseInt(payment.date.substr(0,4))
+                })
+                return payms
             },
             sum: function() {
-                if (this.payments) {
-                    return this.payments.reduce(function(total, payment) {
+                if (this.payments_by_year) {
+                    return this.payments_by_year.reduce(function(total, payment) {
                         return total += parseInt(payment.amount)
                     }, 0)
                 }
@@ -63,8 +68,17 @@
         },
         methods: {
             displayDate: function(dt) {
-                return json2js(dt)
+                return json2jsDate(dt)
+            },
+            createYearList: function() {
+                this.years.push(this.now.getFullYear() - 1)
+                this.years.push(this.now.getFullYear())
+                this.years.push(this.now.getFullYear() + 1)
+                this.current_year = this.now.getFullYear()
             }
+        },
+        created: function() {
+            this.createYearList()
         }
     }
 </script>

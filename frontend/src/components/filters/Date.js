@@ -7,6 +7,15 @@ function json2js(jsondatetime) {
     }
 }
 
+function json2jsDate(jsondatetime) {
+    if (jsondatetime) {
+        const dt = new Date(jsondatetime)
+        return `${ dt.getDate() }. ${ strMonth(dt.getMonth()) } ${ dt.getFullYear() }`
+    } else {
+        return '-'
+    }
+}
+
 function leadZero(number) {
     if (number < 10) {
         return `0${ number }`
@@ -23,5 +32,6 @@ function strMonth(month_index) {
 }
 
 export {
-    json2js
+    json2js,
+    json2jsDate
 }
