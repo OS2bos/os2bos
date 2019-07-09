@@ -1,7 +1,5 @@
-from datetime import timedelta
 from django.test import TestCase
 from django.utils import timezone
-from django.core import mail
 from decimal import Decimal
 from datetime import date
 from unittest import mock
