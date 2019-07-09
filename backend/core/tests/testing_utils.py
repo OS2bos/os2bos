@@ -90,6 +90,8 @@ def create_payment_schedule(
     payment_units=0,
     recipient_type=PaymentSchedule.PERSON,
     payment_method=SD,
+    recipient_id="0205891234",
+    recipient_name="Jens Testersen",
 ):
     payment_schedule = PaymentSchedule.objects.create(
         payment_amount=payment_amount,
@@ -98,6 +100,8 @@ def create_payment_schedule(
         payment_units=payment_units,
         recipient_type=recipient_type,
         payment_method=payment_method,
+        recipient_id=recipient_id,
+        recipient_name=recipient_name,
     )
     return payment_schedule
 
