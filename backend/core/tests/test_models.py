@@ -747,7 +747,7 @@ class PaymentScheduleTestCase(TestCase):
         self, recipient_type, payment_method
     ):
         with self.assertRaises(ValueError):
-            payment_schedule = create_payment_schedule(
+            create_payment_schedule(
                 recipient_type=recipient_type, payment_method=payment_method
             )
 
