@@ -115,6 +115,7 @@ class PaymentScheduleSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 _("ugyldig betalingsmetode for betalingsmodtager")
             )
+        return data
 
     class Meta:
         model = PaymentSchedule
