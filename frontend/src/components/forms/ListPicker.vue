@@ -2,7 +2,7 @@
 
     <select :id="domId" class="listpicker" @change="emitChange" v-model="selection">
         <option v-for="l in list" :value="l.id" :key="l.id">
-            {{ l.name }}
+            {{ l[displayKey] }}
         </option>
     </select>
 
@@ -14,12 +14,19 @@
 
     export default {
 
-        props: [
-            'domId',
-            'selectedId',
-            'list',
-            'default'
-        ],
+        props: {
+            domId: String,
+            selectedId: Number,
+            list: Array,
+            default: {
+                type: Number,
+                default: null
+            },
+            displayKey: {
+                type: String,
+                default: 'name'
+            }
+        },
         data: function(){
             return {
                 selection: null
