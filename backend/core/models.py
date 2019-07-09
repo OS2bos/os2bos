@@ -491,6 +491,9 @@ class Appropriation(AuditModelMixin, models.Model):
         verbose_name=_("evt. bemærkning"), blank=True
     )
 
+    appropriation_date = models.DateField(
+        verbose_name=_("bevillingsdato"), null=True, blank=True
+    )
     case = models.ForeignKey(
         Case, on_delete=models.CASCADE, related_name="appropriations"
     )
@@ -561,7 +564,7 @@ class Appropriation(AuditModelMixin, models.Model):
             approval_level = ApprovalLevel.objects.get(id=approval_level)
             self.approval_level = approval_level
             self.approval_note = approval_note
-
+            self.appropriation_date = timezone.now().date()
             self.status = self.STATUS_GRANTED
             for a in self.activities.all():
                 # We could do this with an update, but we need to activate the
@@ -578,8 +581,8 @@ class Appropriation(AuditModelMixin, models.Model):
                 )
             if approval_note:
                 self.approval_note = approval_note
-            if approval_level or approval_note:
-                self.save()
+            self.appropriation_date = timezone.now().date()
+            self.save()
             # Now go through the activities.
             for a in self.activities.exclude(status=Activity.STATUS_GRANTED):
                 # If a modifies another, merge -
