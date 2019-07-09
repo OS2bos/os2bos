@@ -237,6 +237,36 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         activity.save()
         self.assertEqual(activity.payment_plan.payments.count(), 13)
 
+    def test_activity_synchronize_payments_on_save_one_time_payment(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        payment_schedule = create_payment_schedule(
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT
+        )
+        activity = create_activity(
+            case,
+            appropriation,
+            payment_plan=payment_schedule,
+            status=Activity.STATUS_GRANTED,
+        )
+
+        self.assertEqual(activity.payment_plan.payments.count(), 1)
+        self.assertEqual(
+            activity.payment_plan.payments.first().date,
+            date(year=2019, month=1, day=1),
+        )
+        # A new end_date should not affect the one time payment.
+        activity.end_date = date(year=2019, month=1, day=13)
+        activity.save()
+
+        self.assertEqual(activity.payment_plan.payments.count(), 1)
+        self.assertEqual(
+            activity.payment_plan.payments.first().date,
+            date(year=2019, month=1, day=1),
+        )
+
     def test_activity_regenerate_payments_on_draft_save(self):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
