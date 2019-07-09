@@ -13,7 +13,6 @@ from django.core.validators import MinValueValidator
 from django_audit_fields.models import AuditModelMixin
 from simple_history.models import HistoricalRecords
 
-from core.utils import send_activity_deleted_email
 from core.managers import PaymentQuerySet
 from core.utils import send_appropriation
 

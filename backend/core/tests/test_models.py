@@ -423,7 +423,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         appropriation = create_appropriation(
             case=case, status=Appropriation.STATUS_GRANTED
         )
-        activity = create_activity(
+        create_activity(
             case,
             appropriation,
             start_date=start_date,
