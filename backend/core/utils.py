@@ -101,16 +101,16 @@ def get_cpr_data_mock(cpr):
     }
     return result
 
-def send_activity_email(subject, template, activity)
-    message = render_to_string(
-        template, {"activity": activity}
-    )
+
+def send_activity_email(subject, template, activity):
+    message = render_to_string(template, {"activity": activity})
     send_mail(
         subject,
         message,
         settings.DEFAULT_FROM_EMAIL,
         [settings.TO_EMAIL_FOR_PAYMENTS],
     )
+
 
 def send_activity_created_email(activity):
     subject = _("Aktivitet oprettet")
