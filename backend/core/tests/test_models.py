@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.utils import timezone
+from django.core import mail
 from decimal import Decimal
 from datetime import date
 from unittest import mock
@@ -30,6 +31,7 @@ from core.models import (
     INVOICE,
     INTERNAL,
     Activity,
+    Appropriation,
 )
 
 
@@ -356,6 +358,25 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         ]
         self.assertEqual(
             [entry for entry in activity.monthly_payment_plan], expected
+        )
+
+    def test_activity_created_payment_email(self):
+        start_date = date(year=2019, month=12, day=1)
+        end_date = date(year=2020, month=1, day=1)
+        payment_schedule = create_payment_schedule()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED
+        )
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=Activity.STATUS_GRANTED,
         )
 
 

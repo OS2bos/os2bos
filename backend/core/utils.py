@@ -101,11 +101,9 @@ def get_cpr_data_mock(cpr):
     }
     return result
 
-
-def send_activity_created_email(activity):
-    subject = _("Aktivitet oprettet")
+def send_activity_email(subject, template, activity)
     message = render_to_string(
-        "emails/activity_created.html", {"activity": activity}
+        template, {"activity": activity}
     )
     send_mail(
         subject,
@@ -113,32 +111,23 @@ def send_activity_created_email(activity):
         settings.DEFAULT_FROM_EMAIL,
         [settings.TO_EMAIL_FOR_PAYMENTS],
     )
+
+def send_activity_created_email(activity):
+    subject = _("Aktivitet oprettet")
+    template = "emails/activity_created.html"
+    send_activity_email(subject, template, activity)
 
 
 def send_activity_updated_email(activity):
     subject = _("Aktivitet ændret")
-    message = render_to_string(
-        "emails/activity_updated.html", {"activity": activity}
-    )
-    send_mail(
-        subject,
-        message,
-        settings.DEFAULT_FROM_EMAIL,
-        [settings.TO_EMAIL_FOR_PAYMENTS],
-    )
+    template = "emails/activity_updated.html"
+    send_activity_email(subject, template, activity)
 
 
 def send_activity_deleted_email(activity):
     subject = _("Aktivitet slettet")
-    message = render_to_string(
-        "emails/activity_deleted.html", {"activity": activity}
-    )
-    send_mail(
-        subject,
-        message,
-        settings.DEFAULT_FROM_EMAIL,
-        [settings.TO_EMAIL_FOR_PAYMENTS],
-    )
+    template = "emails/activity_deleted.html"
+    send_activity_email(subject, template, activity)
 
 
 def send_appropriation(appropriation):

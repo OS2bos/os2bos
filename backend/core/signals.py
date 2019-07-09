@@ -1,12 +1,13 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
+from django.core.mail import send_mail
 from core.models import Activity, Appropriation
 from core.utils import send_activity_created_email, send_activity_changed_email
 
 
 @receiver(post_save, sender=Activity)
-def send_email_on_save(sender, instance, created, **kwargs):
+def send_activity_payment_email(sender, instance, created, **kwargs):
+    send_mail("test", "test", "test@test.dk", ["test@test.dk"])
     # If activity or appropriation is not granted we don't send an email.
     if (
         not instance.status == Activity.STATUS_GRANTED

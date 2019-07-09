@@ -109,7 +109,7 @@ class PaymentScheduleSerializer(serializers.ModelSerializer):
     payments = PaymentSerializer(many=True, read_only=True)
 
     def validate(self, data):
-        if not self.Meta.model.is_payment_method_and_recipient_type_allowed(
+        if not self.Meta.model.is_payment_and_recipient_allowed(
             data["payment_method"], data["recipient_type"]
         ):
             raise serializers.ValidationError(

@@ -181,7 +181,7 @@ class PaymentSchedule(models.Model):
     )
 
     @staticmethod
-    def is_payment_method_and_recipient_type_allowed(
+    def is_payment_and_recipient_allowed(
         payment_method, recipient_type
     ):
         allowed = {
@@ -193,8 +193,8 @@ class PaymentSchedule(models.Model):
 
     def triggers_payment_email(self):
         """
-        Trigger a payment email only in the (recipient_type->payment_method) case
-        of Internal->Internal or Person->SD.
+        Trigger a payment email only in the (recipient_type->payment_method)
+        case of Internal->Internal or Person->SD.
         """
         if (
             self.recipient_type == self.INTERNAL
@@ -206,7 +206,7 @@ class PaymentSchedule(models.Model):
         return False
 
     def save(self, *args, **kwargs):
-        if not self.is_payment_method_and_recipient_type_allowed(
+        if not self.is_payment_and_recipient_allowed(
             self.payment_method, self.recipient_type
         ):
             raise ValueError(
@@ -354,7 +354,7 @@ class Payment(models.Model):
     )
 
     def save(self, *args, **kwargs):
-        if not self.payment_schedule.is_payment_method_and_recipient_type_allowed(
+        if not self.payment_schedule.is_payment_and_recipient_allowed(
             self.payment_method, self.recipient_type
         ):
             raise ValueError(
