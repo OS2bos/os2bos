@@ -181,9 +181,7 @@ class PaymentSchedule(models.Model):
     )
 
     @staticmethod
-    def is_payment_and_recipient_allowed(
-        payment_method, recipient_type
-    ):
+    def is_payment_and_recipient_allowed(payment_method, recipient_type):
         allowed = {
             PaymentSchedule.INTERNAL: [INTERNAL],
             PaymentSchedule.PERSON: [CASH, SD],
@@ -811,10 +809,6 @@ class Activity(AuditModelMixin, models.Model):
             self.payment_plan.generate_payments(
                 self.start_date, self.end_date, vat_factor
             )
-
-    def delete(self, *args, **kwargs):
-        send_activity_deleted_email(self)
-        super().delete(*args, **kwargs)
 
 
 class RelatedPerson(models.Model):
