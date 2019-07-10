@@ -58,7 +58,7 @@ class CaseViewSet(viewsets.ModelViewSet):
     filterset_fields = "__all__"
 
     def perform_update(self, serializer):
-        # save history_change_reason for Case.
+        # save history_change_reason for the Case used for assessments.
         change_reason = None
         if (
             "history_change_reason" in self.request.data
@@ -71,7 +71,7 @@ class CaseViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["get"])
     def history(self, request, pk=None):
         """
-        Fetch history of HistoricalCases.
+        Fetch history of HistoricalCases which we use as assessments.
         """
         case = self.get_object()
         serializer = HistoricalCaseSerializer(case.history.all(), many=True)
