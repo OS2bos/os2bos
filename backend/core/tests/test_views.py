@@ -181,6 +181,33 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
             [orla.id, leif.id, lone.id],
         )
 
+    def test_patch_history_change_reason_is_saved(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        reverse_url = reverse("case-history", kwargs={"pk": case.pk})
+
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(reverse_url)
+
+        # Assert no note is saved initially.
+        self.assertEqual(len(response.json()), 1)
+        self.assertIsNone(response.json()[0]["history_change_reason"])
+
+        # Update with a history_change_reason.
+        reverse_url = reverse("case-detail", kwargs={"pk": case.pk})
+        response = self.client.patch(
+            reverse_url, json={"history_change_reason": "history was changed"}
+        )
+        # Assert note is now saved
+        reverse_url = reverse("case-history", kwargs={"pk": case.pk})
+        response = self.client.get(reverse_url)
+        breakpoint()
+        self.assertEqual(len(response.json()), 2)
+        self.assertEqual(
+            response.json()[0]["history_change_reason"], "history was changed"
+        )
+
     def test_simple_post(self):
         url = reverse("case-list")
         json = create_case_as_json(
