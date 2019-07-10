@@ -6,7 +6,6 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 
-
 from django_filters import rest_framework as filters
 
 from core.models import (
@@ -58,10 +57,16 @@ class CaseViewSet(viewsets.ModelViewSet):
 
     filterset_fields = "__all__"
 
-    def perform_create(self, serializer):
-        current_user = self.request.user
-        team = current_user.team
-        serializer.save(case_worker=current_user, team=team)
+    def perform_update(self, serializer):
+        # save history_change_reason for Case.
+        change_reason = None
+        if (
+            "history_change_reason" in self.request.data
+            and self.request.data["history_change_reason"]
+        ):
+            change_reason = self.request.data.pop("history_change_reason")
+
+        serializer.save(changeReason=change_reason)
 
     @action(detail=True, methods=["get"])
     def history(self, request, pk=None):
