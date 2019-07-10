@@ -20,8 +20,11 @@ def get_person_info(cpr):
     """
     Get CPR data on a person and his/her relations.
     """
-    # TODO: switch out these mock calls with the real ones.
-    result = get_cpr_data_mock(cpr)
+    if settings.USE_SERVICEPLATFORMEN:
+        result = get_cpr_data(cpr)
+    else:
+        result = get_cpr_data_mock(cpr)
+
     if not result:
         return None
     for relation in result["relationer"]:

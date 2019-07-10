@@ -184,6 +184,8 @@ STATICFILES_DIRS = [
     ("frontend", "../frontend/dist")
 ]
 
+# Whether we use Serviceplatformen or a mocked version
+USE_SERVICEPLATFORMEN = settings.get("USE_SERVICEPLATFORMEN", fallback=False)
 
 # Serviceplatform service UUIDs
 SERVICEPLATFORM_UUIDS = {
