@@ -57,6 +57,7 @@ class HistoricalCaseSerializer(serializers.ModelSerializer):
             "scaling_step",
             "history_date",
             "history_user",
+            "history_change_reason",
         )
 
 
