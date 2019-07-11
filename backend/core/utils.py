@@ -20,7 +20,7 @@ def get_person_info(cpr):
     """
     Get CPR data on a person and his/her relations.
     """
-    if settings.USE_SERVICEPLATFORMEN:
+    if settings.USE_SERVICEPLATFORM:
         func = get_cpr_data
     else:
         func = get_cpr_data_mock
@@ -50,6 +50,7 @@ def get_cpr_data(cpr):
             service_uuids=settings.SERVICEPLATFORM_UUIDS,
             certificate=settings.SERVICEPLATFORM_CERTIFICATE_PATH,
             cprnr=cpr,
+            production=settings.USE_SERVICEPLATFORM_PROD,
         )
         return result
     except requests.exceptions.HTTPError:
