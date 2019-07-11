@@ -42,6 +42,7 @@
         display: flex;
         flex-flow: column nowrap;
         width: 100%;
+        min-width: 60rem;
         height: 100%;
     }
 
@@ -60,7 +61,7 @@
     }
 
     .material-icons {
-        font-size: 3rem;
+        font-size: 2rem;
         vertical-align: middle;
     }
 

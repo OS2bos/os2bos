@@ -3,6 +3,7 @@
         <header class="cases-header">
             <h1 v-if="!urlQuery">Alle sager</h1>
             <h1 v-if="urlQuery">Søgeresultater</h1>
+            <search />
         </header>
         <table v-if="items.length > 0">
             <template>
@@ -49,9 +50,13 @@
 <script>
     import axios from '../http/Http.js'
     import { json2js } from '../filters/Date.js'
+    import Search from '../search/Search.vue'
 
     export default {
 
+        components: {
+            Search
+        },
         data: function() {
             return {
                 cas: null,
@@ -64,14 +69,6 @@
             }
         },
         watch: {
-          items: function() {
-              this.$store.commit('setBreadcrumb', [
-                  {
-                      link: '/',
-                      title: 'Mine sager'
-                  }
-              ])
-          },
           urlQuery: function() {
               this.displayItems(this.$route.params.query)
           }
@@ -118,6 +115,10 @@
         display: flex;
         flex-flow: row nowrap;
         align-items: center;
+    }
+
+    .cases .search {
+        margin: 0 2rem;
     }
 
 </style>

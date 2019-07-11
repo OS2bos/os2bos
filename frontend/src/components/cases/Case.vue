@@ -166,6 +166,10 @@
     .case-header > button {
         margin: 1rem;
     }
+    
+    .case-header .material-icons {
+        font-size: 3rem;
+    }
 
     .case-info {
         display: grid; 

@@ -22,8 +22,8 @@
                         {{ f.related_case }}
                     </td>
                     <td>
-                        <router-link :to="`/case/${ caseId }/familyoverview-edit/${ f.id }`">
-                            <i class="material-icons edit-icon">edit</i>
+                        <router-link :to="`/case/${ caseId }/familyoverview-edit/${ f.id }`" class="edit-icon">
+                            <i class="material-icons">edit</i>
                         </router-link>
                     </td>
                 </tr>
@@ -86,8 +86,8 @@
         margin: 0 1rem;
     }
 
-    .edit-icon {
-        font-size: 1rem !important;
+    .familyoverview a.edit-icon {
+        border: none;
     }
 
 </style>
