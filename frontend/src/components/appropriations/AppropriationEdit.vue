@@ -6,7 +6,7 @@
         <form @submit.prevent="saveChanges()">
             <fieldset>
                 <label for="field-sbsysid">Foranstaltningssag (SBSYS-sag)</label>
-                <input id="field-sbsysid" type="text" v-model="appr.sbsys_id" required>
+                <input id="field-sbsysid" type="text" v-model="appr.sbsys_id" required @input="checkKLE(appr.sbsys_id)">
             </fieldset>
             <fieldset>
                 <label for="field-lawref">Bevilling efter §</label>
@@ -37,7 +37,9 @@
         data: function() {
             return {
                 appr: {},
-                create_mode: true
+                create_mode: true,
+                kle: null,
+                kle_regex: /\d{2}\.\d{2}\.\d{2}/
             }
         },
         computed: {
@@ -48,6 +50,17 @@
         methods: {
             changeSection: function(section_id) {
                 this.appr.section = section_id
+            },
+            checkKLE: function(input) {
+                this.kle = input.match(this.kle_regex)
+                if (this.kle) {
+                    let section = this.sections.find(s => {
+                        return s.kle_number === this.kle[0]
+                    })
+                    this.appr.section = section.id
+                } else {
+                    return false
+                }                
             },
             saveChanges: function() {
                 if (!this.create_mode) {
