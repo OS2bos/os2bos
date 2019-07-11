@@ -104,7 +104,7 @@
     import axios from '../http/Http.js'
     import ActivityEdit from './ActivityEdit.vue'
     import PaymentSchedule from '../payment/PaymentSchedule.vue'
-    import { json2js } from '../filters/Date.js'
+    import { json2jsDate } from '../filters/Date.js'
     import { activityId2name, sectionId2name, displayStatus } from '../filters/Labels.js'
 
     export default {
@@ -163,7 +163,7 @@
                 this.show_edit =  false
             },
             displayDate: function(dt) {
-                return json2js(dt)
+                return json2jsDate(dt)
             },
             activityId2name: function(id) {
                 return activityId2name(id)
