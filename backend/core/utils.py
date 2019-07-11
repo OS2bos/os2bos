@@ -21,15 +21,15 @@ def get_person_info(cpr):
     Get CPR data on a person and his/her relations.
     """
     if settings.USE_SERVICEPLATFORMEN:
-        result = get_cpr_data(cpr)
+        func = get_cpr_data
     else:
-        result = get_cpr_data_mock(cpr)
-
+        func = get_cpr_data_mock
+    result = func(cpr)
     if not result:
         return None
     for relation in result["relationer"]:
         relation_cpr = relation["cprnr"]
-        relation_data = get_cpr_data_mock(relation_cpr)
+        relation_data = func(relation_cpr)
         if relation_data:
             relation.update(relation_data)
     return result
