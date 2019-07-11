@@ -148,6 +148,8 @@ class PaymentSchedule(models.Model):
         max_length=128,
         verbose_name=_("betalingsfrekvens"),
         choices=payment_frequency_choices,
+        null=True,
+        blank=True,
     )
 
     ONE_TIME_PAYMENT = "ONE_TIME_PAYMENT"
