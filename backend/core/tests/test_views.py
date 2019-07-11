@@ -197,16 +197,38 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         # Update with a history_change_reason.
         reverse_url = reverse("case-detail", kwargs={"pk": case.pk})
         response = self.client.patch(
-            reverse_url, json={"history_change_reason": "history was changed"}
+            reverse_url,
+            {"history_change_reason": "history was changed"},
+            content_type="application/json",
         )
         # Assert note is now saved
         reverse_url = reverse("case-history", kwargs={"pk": case.pk})
         response = self.client.get(reverse_url)
-        breakpoint()
+
         self.assertEqual(len(response.json()), 2)
         self.assertEqual(
             response.json()[0]["history_change_reason"], "history was changed"
         )
+
+    def test_patch_is_saved(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+
+        self.client.login(username=self.username, password=self.password)
+
+        reverse_url = reverse("case-detail", kwargs={"pk": case.pk})
+        response = self.client.get(reverse_url)
+        self.assertEqual(response.json()["name"], "Jens Jensen")
+
+        # Update with a new name.
+        response = self.client.patch(
+            reverse_url, {"name": "new name"}, content_type="application/json"
+        )
+        # Assert note is now saved
+        response = self.client.get(reverse_url)
+
+        self.assertEqual(response.json()["name"], "new name")
 
     def test_simple_post(self):
         url = reverse("case-list")
