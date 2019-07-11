@@ -2,16 +2,16 @@
 
     <section class="appropriation" v-if="appr">
         <header class="appropriation-header">
-            <h1>Bevillingsskrivelse</h1>
-            <span v-html="statusLabel(appr.status)" style="margin: 0 1rem;"></span>
-            <template v-if="appr.approval_level"> af
-                {{ displayApprovalName(appr.approval_level) }}
-            </template>
+            <div>
+                <h1 style="display: inline-block;">Bevillingsskrivelse</h1>
+                <span v-html="statusLabel(appr.status)" style="margin: 0 .5rem 0 1rem;"></span>
+                <template v-if="appr.approval_level"> 
+                    af {{ displayApprovalName(appr.approval_level) }}, 
+                    {{ displayDate(appr.appropriation_date) }}
+                </template>
+            </div>
             <div>
                 <button @click="show_edit = !show_edit" class="appr-edit-btn">Redigér</button>
-            </div>
-
-            <div>
                 <button @click="showModal = true" class="approval-btn">Godkend</button>
                 <approval :approval-obj="appr" v-if="showModal" @close="update()"></approval>
             </div>
@@ -73,6 +73,7 @@
     import ActivityList4 from '../activities/ActivityList4.vue'
     import AppropriationEdit from './AppropriationEdit.vue'
     import Approval from './Approval.vue'
+    import { json2jsDate } from '../filters/Date.js'
     import { municipalityId2name, districtId2name, sectionId2name, displayStatus, userId2name, approvalId2name } from '../filters/Labels.js'
 
     export default {
@@ -115,6 +116,9 @@
             },
             reload: function() {
                 this.show_edit =  false
+            },
+            displayDate: function(date) {
+                return json2jsDate(date)
             },
             updateBreadCrumb: function() {
                 if (this.cas && this.appr) {
@@ -163,14 +167,18 @@
 <style>
 
     .appropriation {
-        margin: 0 1rem 1rem;
+        margin: 1rem 2rem 2rem;
     }
 
     .appropriation-header {
         display: flex;
         flex-flow: row nowrap;
         align-items: center;
-        justify-content: flex-start;
+        justify-content: space-between;
+    }
+
+    .appropriation-header .material-icons {
+        font-size: 3rem;
     }
 
     .appropriation .appr-edit-btn {
@@ -209,6 +217,7 @@
 
     .sagslaw {
         grid-area: 2 / 1 / 3 / 7;
+        background-color: var(--grey1);
     }
 
     .sagsbev {

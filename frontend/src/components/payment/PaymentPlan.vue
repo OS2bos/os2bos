@@ -1,22 +1,10 @@
 <template>
 
-    <div class="payment-plan">
-        <h2>Betalingsplan</h2>
-        {{ abstract }}
-
-        <table>
-            <tbody>
-                <tr>
-                    <td>
-                        I alt pr år
-                    </td>
-                    <td style="text-align: right;">
-                        <strong>{{ yearly_cost }} kr</strong>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    <article class="payment-plan">
+        <h1>Forventet udgift</h1>
+        <p>{{ abstract }}</p>
+        <p v-if="yearly_cost">Det er <strong>{{ yearly_cost }} kr</strong> pr. år</p>
+    </article>
 
 </template>
 
@@ -33,42 +21,40 @@
         data: function() {
             return {
                 freq_factor: 0,
-                month_factor: 0,
-                months: [
-                    'januar',
-                    'februar',
-                    'marts',
-                    'april',
-                    'maj',
-                    'juni',
-                    'juli',
-                    'august',
-                    'september',
-                    'oktober',
-                    'november',
-                    'december'
-                ]
+                month_factor: 0
             }
         },
         computed: {
             abstract: function() {
-                let str = 'Der betales '
+                let str = 'Udgiften bliver '
 
                 switch(this.type) {
                     case 'ONE_TIME_PAYMENT':
                         str += `${ this.amount } kr én gang`
                         break
                     case 'RUNNING_PAYMENT':
-                        str += `${ this.amount } kr pr ${ this.freq_name }`
+                        str += `${ this.amount } kr hver ${ this.freq_name }`
                         break
                     case 'PER_HOUR_PAYMENT':
-                        str += `${ this.amount } kr pr time - ${ this.units } timer pr ${ this.freq_name }`
+                        if (this.units) {
+                            str += `${ this.units } timer á ${ this.amount } kr hver ${ this.freq_name }`
+                        } else {
+                            str = '-'
+                        }
                         break
                     case 'PER_DAY_PAYMENT':
-                        str += `${ this.amount } kr pr døgn - ${ this.units } døgn pr ${ this.freq_name }`
+                        if (this.units) {
+                            str += `${ this.units } døgn á ${ this.amount } kr hver ${ this.freq_name }`
+                        } else {
+                            str = '-'
+                        }
                         break
                     case 'PER_KM_PAYMENT':
-                        str += `${ this.amount } kr pr kilometer - ${ this.units } kilometer pr ${ this.freq_name }`
+                        if (this.units) {
+                            str += `${ this.units } kilometer á ${ this.amount } kr hver ${ this.freq_name }`
+                        } else {
+                            str = '-'
+                        }
                         break
                     default:
                         str += 'intet'
@@ -108,7 +94,7 @@
                         return 'dag'
                         break
                     default:
-                        return 'ukendt'
+                        return '-'
                 }
             }
         },
@@ -120,3 +106,12 @@
     }
     
 </script>
+
+<style>
+
+    .payment-plan h1 {
+        font-size: 1.25rem;
+        padding-top: 0;
+    }
+
+</style>

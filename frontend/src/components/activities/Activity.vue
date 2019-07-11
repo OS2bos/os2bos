@@ -11,7 +11,7 @@
         </header>
 
         <div v-if="show_edit">
-            <activity-edit :activity-obj="act" v-if="show_edit" @save="reload()" :mode="edit_mode" />
+            <activity-edit :activity-obj="act" v-if="show_edit" @save="reload()" @close="show_edit = !show_edit" :mode="edit_mode" />
         </div>
 
         <div class="activity-info" v-if="!show_edit">
@@ -197,6 +197,10 @@
         flex-flow: row nowrap;
         align-items: center;
         justify-content: flex-start;
+    }
+
+    .activity-header .material-icons {
+        font-size: 3rem;
     }
 
     .activity .act-edit-btn {

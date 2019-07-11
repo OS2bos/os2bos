@@ -9,7 +9,10 @@
         </header>
         <header class="header" v-if="mode === 'clone'">
             <h1>Opret forventet justering</h1>
-            <p>Du er ved at lave en forventet justering til aktiviteten {{ act.details }}.</p>
+            <p>
+                Du er ved at lave en forventet justering til aktiviteten:<br> 
+                <strong>{{ displayActName(act.details) }}</strong>
+            </p>
         </header>
         <form @submit.prevent="saveChanges()">
             <div class="row">
@@ -64,6 +67,7 @@
     import PaymentAmountEdit from '../payment/PaymentAmountEdit.vue'
     import PaymentReceiverEdit from '../payment/PaymentReceiverEdit.vue'
     import PaymentEdit from '../payment/PaymentEdit.vue'
+    import { activityId2name } from '../filters/Labels.js'
 
     export default {
 
@@ -98,6 +102,9 @@
         methods: {
             changeActivity: function(act) {
                 this.act.details = act
+            },
+            displayActName: function(id) {
+                return activityId2name(id)
             },
             saveChanges: function() {
                 
