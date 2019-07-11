@@ -57,6 +57,11 @@ class CaseViewSet(viewsets.ModelViewSet):
 
     filterset_fields = "__all__"
 
+    def perform_create(self, serializer):
+        current_user = self.request.user
+        team = current_user.team
+        serializer.save(case_worker=current_user, team=team)
+
     def perform_update(self, serializer):
         # save history_change_reason for the Case used for assessments.
         change_reason = None
