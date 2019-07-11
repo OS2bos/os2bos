@@ -53,6 +53,11 @@
                 show_edit: false
             }
         },
+        watch: {
+          caseId: function() {
+            this.fetchFamilyOverview()
+          }
+        },
         methods: {
             fetchFamilyOverview: function() {
                 axios.get(`/related_persons/?main_case=${ this.caseId }`)

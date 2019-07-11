@@ -25,7 +25,7 @@
                 <tr v-for="h in his" :key="h.id">
                     <td>
                         <i class="material-icons">account_circle</i>
-                        {{ h.case_worker }}
+                        {{ displayUserName(h.case_worker) }}
                     </td>
                     <td :class="`step-${h.effort_step}`">
                         {{ displayEffortName(h.effort_step) }}
@@ -34,7 +34,7 @@
                         {{ h.scaling_step }}
                     </td>
                     <td>
-                        Ikke implementeret
+                        {{ h.history_change_reason }}
                     </td>
                     <td>
                         {{ displayDate(h.history_date) }}
@@ -49,7 +49,7 @@
 
     import axios from '../http/Http.js'
     import { json2js } from '../filters/Date.js'
-    import { displayEffort } from '../filters/Labels.js'
+    import { displayEffort, userId2name } from '../filters/Labels.js'
 
     export default {
 
@@ -82,6 +82,9 @@
             },
             displayEffortName: function(str) {
                 return displayEffort(str)
+            },
+            displayUserName: function(id) {
+                return userId2name(id)
             }
         },
         created: function() {
