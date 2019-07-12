@@ -109,6 +109,27 @@ class PaymentMethodDetailsSerializer(serializers.ModelSerializer):
 class PaymentScheduleSerializer(serializers.ModelSerializer):
     payments = PaymentSerializer(many=True, read_only=True)
 
+    def validate(self, data):
+        one_time_payment = (
+            data["payment_type"] == PaymentSchedule.ONE_TIME_PAYMENT
+        )
+        payment_frequency = (
+            "payment_frequency" in data and data["payment_frequency"]
+        )
+        if not one_time_payment and not payment_frequency:
+            raise serializers.ValidationError(
+                _(
+                    "En betalingtype der ikke er en engangsbetaling "
+                    "skal have en betalingsfrekvens"
+                )
+            )
+        elif one_time_payment and payment_frequency:
+            raise serializers.ValidationError(
+                _("En engangsbetaling må ikke have en betalingsfrekvens")
+            )
+
+        return data
+
     class Meta:
         model = PaymentSchedule
         fields = "__all__"

@@ -9,7 +9,7 @@
                 <div class="column">
                     <assessment-edit :case-obj="cas" @assessment="updateAssessment" />
                     <fieldset style="margin: 0 1rem 1rem;">
-                        <input type="submit" value="Opdatér">
+                        <input :disabled="disableButton" type="submit" value="Opdatér">
                         <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
                     </fieldset>
 
@@ -39,7 +39,8 @@
         data: function() {
             return {
                 cas_id: null,
-                cas: null
+                cas: null,
+                disableButton: true
             }
         },
         methods: {
@@ -74,11 +75,16 @@
                 if (assessment.effort_step) {
                     this.cas.effort_step = assessment.effort_step
                 }
+                if (assessment.history_change_reason) {
+                    this.cas.history_change_reason = assessment.history_change_reason
+                }
+                this.disableButton = false
             },
             saveAssessment: function() {
                 axios.patch(`/cases/${ this.cas_id}/`, {
                     scaling_step: this.cas.scaling_step,
-                    effort_step: this.cas.effort_step
+                    effort_step: this.cas.effort_step,
+                    history_change_reason: this.cas.history_change_reason
                 })
                 .then(res => {
                     this.update()

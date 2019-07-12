@@ -17,7 +17,7 @@
                 <input id="field-relation" type="text" v-model="fam.relation_type" required>
             </fieldset>
             <fieldset>
-                <label for="field-sbsysid">SBSYS Hovedsag</label>
+                <label for="field-sbsysid">Relateret SBSYS sag</label>
                 <input id="field-sbsysid" type="text" v-model="fam.related_case">
             </fieldset>
             <fieldset>
