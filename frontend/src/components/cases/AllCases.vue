@@ -4,9 +4,9 @@
             <h1 v-if="!urlQuery">Alle sager</h1>
             <h1 v-if="urlQuery">Søgeresultater</h1>
             <search />
+            <button class="deleted-case" @click="$router.push('/deleted-cases/')">Udgåede sager</button>
         </header>
         <table v-if="items.length > 0">
-            <template>
             <thead>
                 <tr>
                     <th>
@@ -36,7 +36,6 @@
                     </td>
                 </tr>
             </tbody>
-            </template>
         </table>
         <p v-if="!urlQuery && items.length < 1">
             Der er ikke tilknyttet nogen sager
@@ -119,6 +118,10 @@
 
     .cases .search {
         margin: 0 2rem;
+    }
+
+    .cases .deleted-case {
+        margin: 0 1rem;
     }
 
 </style>
