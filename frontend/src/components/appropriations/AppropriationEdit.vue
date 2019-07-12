@@ -39,15 +39,32 @@
                 appr: {},
                 create_mode: true,
                 kle: null,
-                kle_regex: /\d{2}\.\d{2}\.\d{2}/
+                kle_regex: /\d{2}\.\d{2}\.\d{2}/,
+                sections: null
             }
         },
         computed: {
-            sections: function() {
-                return this.$store.getters.getSections
+            cas: function() {
+                return this.$store.getters.getCase
+            },
+            cas_target: function() {
+                if (this.cas.target_group === 'FAMILY_DEPT') {
+                    return 'allowed_for_family_target_group=true'
+                } else if (this.cas.target_group === 'DISABILITY_DEPT') {
+                    return 'allowed_for_disability_target_group=true'
+                } else {
+                    return ''
+                }
             }
         },
         methods: {
+            fetchSections: function() {
+                axios.get(`/sections?allowed_for_steps=${ this.cas.effort_step }&${ this.cas_target}`)
+                .then(res => {
+                    this.sections = res.data
+                })
+                .catch(err => console.log(err))
+            },
             changeSection: function(section_id) {
                 this.appr.section = section_id
             },
@@ -97,6 +114,7 @@
             }
         },
         created: function() {
+            this.fetchSections()
             if (this.apprObj) {
                 this.create_mode = false
                 this.appr = this.apprObj
