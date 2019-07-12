@@ -55,6 +55,9 @@
                 } else {
                     return ''
                 }
+            },
+            all_sections: function() {
+                return this.$store.getters.getSections
             }
         },
         methods: {
@@ -71,7 +74,7 @@
             checkKLE: function(input) {
                 this.kle = input.match(this.kle_regex)
                 if (this.kle) {
-                    let section = this.sections.find(s => {
+                    let section = this.all_sections.find(s => {
                         return s.kle_number === this.kle[0]
                     })
                     this.appr.section = section.id

@@ -5,7 +5,7 @@ const state = {
     districts: null,
     sections: null,
     approval_levels: null,
-    activity_details: null
+    service_providers: null
 }
 
 const getters = {
@@ -21,8 +21,8 @@ const getters = {
     getApprovals (state) {
         return state.approval_levels ? state.approval_levels : false
     },
-    getActivityDetails ( state ) {
-        return state.activity_details ? state.activity_details : false
+    getServiceProviders ( state ) {
+        return state.service_providers ? state.service_providers : false
     }
 }
 
@@ -39,8 +39,12 @@ const mutations = {
     setAppro (state, approvals) {
         state.approval_levels = approvals
     },
-    setActDetails (state, act_details) {
-        state.activity_details = act_details
+    setServiceProviders (state, sp_list) {
+        state.service_providers = sp_list.sort(function(a,b) {
+            if (a.name > b.name) { return 1 } 
+            if (a.name < b.name) { return -1 }
+            return 0
+        })
     }
 }
 
@@ -59,13 +63,6 @@ const actions = {
         })
         .catch(err => console.log(err))
     },
-    fetchActivityDetails: function({commit}) {
-        return axios.get('/activity_details/')
-        .then(res => {
-            commit('setActDetails', res.data)
-        })
-        .catch(err => console.log(err))
-    },
     fetchSections: function({commit}) {
         return axios.get('/sections/')
         .then(res => {
@@ -80,6 +77,13 @@ const actions = {
         })
         .catch(err => console.log(err))
     },
+    fetchServiceProviders: function({commit}) {
+        return axios.get('/service_providers/')
+        .then(res => {
+            commit('setServiceProviders', res.data)
+        })
+        .catch(err => console.log(err))
+    },
     fetchLists: function({dispatch}) {
         return Promise.all([
             dispatch('fetchUsers'),
@@ -88,7 +92,8 @@ const actions = {
             dispatch('fetchDistricts'),
             dispatch('fetchActivityDetails'),
             dispatch('fetchSections'),
-            dispatch('fetchApprovals')
+            dispatch('fetchApprovals'),
+            dispatch('fetchServiceProviders')
         ])
         .then(() => {
             // Nothing yet
