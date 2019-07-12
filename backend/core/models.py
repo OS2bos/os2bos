@@ -420,7 +420,7 @@ class Case(AuditModelMixin, models.Model):
         )
 
         all_main_expired_activities = all_main_activities.filter(
-            end_date__lte=today
+            end_date__lt=today
         )
         return (
             all_main_activities.count() == all_main_expired_activities.count()
