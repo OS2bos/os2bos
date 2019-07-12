@@ -2,7 +2,9 @@ import axios from '../components/http/Http.js'
 
 const state = {
     activity: null,
-    activity_list: null
+    activity_list: null,
+    activity_detail: null,
+    activity_details: null
 }
 
 const getters = {
@@ -11,6 +13,12 @@ const getters = {
     },
     getActivity (state) {
         return state.activity ? state.activity : false
+    },
+    getActivityDetails ( state ) {
+        return state.activity_details ? state.activity_details : false
+    },
+    getActivityDetail (state) {
+        return state.activity_detail ? state.activity_detail : false
     }
 }
 
@@ -20,6 +28,12 @@ const mutations = {
     },
     setActivity (state, activity) {
         state.activity = activity
+    },
+    setActDetails (state, act_details) {
+        state.activity_details = act_details
+    },
+    setActDetail (state, act_detail) {
+        state.activity_detail = act_detail
     }
 }
 
@@ -38,7 +52,6 @@ const actions = {
             })
             .catch(err => console.log(err))
         }
-        
     },
     fetchActivity: function({commit, dispatch}, act_id) {
         axios.get(`/activities/${ act_id }/`)
@@ -46,6 +59,20 @@ const actions = {
             dispatch('fetchPaymentSchedule', res.data.payment_plan)
             dispatch('fetchAppropriation', res.data.appropriation)
             commit('setActivity', res.data)
+        })
+        .catch(err => console.log(err))
+    },
+    fetchActivityDetails: function({commit}) {
+        return axios.get('/activity_details/')
+        .then(res => {
+            commit('setActDetails', res.data)
+        })
+        .catch(err => console.log(err))
+    },
+    fetchActivityDetail: function({commit}, act_detail_id) {
+        axios.get(`/activity_details/${ act_detail_id }/`)
+        .then(res => {
+            commit('setActDetails', res.data)
         })
         .catch(err => console.log(err))
     }
