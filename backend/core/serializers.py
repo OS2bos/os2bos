@@ -43,6 +43,20 @@ class CaseSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 _("En sag med familie målgruppe skal have et distrikt")
             )
+        # check that if target_group is family, effort_step and
+        # scaling_step is given.
+        if (
+            "target_group" in data and data["target_group"] == FAMILY_DEPT
+        ) and (
+            ("scaling_step" not in data or not data["scaling_step"])
+            or ("effort_step" not in data or not data["effort_step"])
+        ):
+            raise serializers.ValidationError(
+                _(
+                    "en sag med familie målgruppe skal have en"
+                    " indsats- og skaleringstrappe"
+                )
+            )
         return data
 
 
