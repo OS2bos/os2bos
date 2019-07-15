@@ -1,6 +1,15 @@
 from django.utils import timezone
 from django.db import models
-from django.db.models import Sum, CharField, Value, Q, Case, When, BooleanField
+from django.db.models import (
+    Sum,
+    CharField,
+    Value,
+    Q,
+    Case,
+    When,
+    BooleanField,
+    Count,
+)
 from django.db.models.functions import (
     Coalesce,
     Cast,
@@ -58,19 +67,27 @@ class CaseQuerySet(models.QuerySet):
             Q(end_date__gte=today) | Q(end_date__isnull=True),
             activity_type=Activity.MAIN_ACTIVITY,
         )
-        # If activity is a main activity and
-        # end date > today or null it is not expired.
-        return self.annotate(
-            expired=Case(
-                When(
-                    Q(appropriations__isnull=True)
-                    | Q(appropriations__activities__isnull=True)
-                    | Q(
-                        appropriations__activities__in=all_ongoing_main_activities
-                    ),
-                    then=Value(False),
-                ),
-                default=Value(True),
-                output_field=BooleanField(),
-            )
-        ).distinct("id")
+        # return self.annotate(
+        #     expired=Case(
+        #         When(appropriations__isnull=True, then=Value(False)),
+        #         When(
+        #             appropriations__activities__isnull=True, then=Value(False)
+        #         ),
+        #         When(
+        #             appropriations__activities__in=all_ongoing_main_activities,
+        #             then=Value(False),
+        #         ),
+        #         default=Value(True),
+        #         output_field=BooleanField(),
+        #     )
+        # )
+        ongoing_cases = self.filter(
+            appropriations__isnull=True,
+            appropriations__activities__isnull=True,
+            appropriations__activities__in=all_ongoing_main_activities,
+        ).distinct()
+        expired_cases = self.difference(ongoing_cases).distinct()
+
+        return ongoing_cases.annotate(
+            expired=Value(False, BooleanField())
+        ) | expired_cases.annotate(expired=Value(True, BooleanField()))

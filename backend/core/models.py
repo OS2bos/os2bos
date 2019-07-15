@@ -414,22 +414,22 @@ class Case(AuditModelMixin, models.Model):
         ]
     )
 
-    # @property
-    # def expired(self):
-    #     today = timezone.now().date()
-    #     all_main_activities = Activity.objects.filter(
-    #         activity_type=Activity.MAIN_ACTIVITY, appropriation__case=self
-    #     )
-    #     # If no activities exists, we will not consider it expired.
-    #     if not all_main_activities.exists():
-    #         return False
+    @property
+    def expired(self):
+        today = timezone.now().date()
+        all_main_activities = Activity.objects.filter(
+            activity_type=Activity.MAIN_ACTIVITY, appropriation__case=self
+        )
+        # If no activities exists, we will not consider it expired.
+        if not all_main_activities.exists():
+            return False
 
-    #     all_main_expired_activities = all_main_activities.filter(
-    #         end_date__lt=today
-    #     )
-    #     return (
-    #         all_main_activities.count() == all_main_expired_activities.count()
-    #     )
+        all_main_expired_activities = all_main_activities.filter(
+            end_date__lt=today
+        )
+        return (
+            all_main_activities.count() == all_main_expired_activities.count()
+        )
 
 
 class ApprovalLevel(models.Model):
