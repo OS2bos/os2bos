@@ -9,6 +9,9 @@
             <thead>
                 <tr>
                     <th>
+                        Status
+                    </th>
+                    <th>
                         SBSYS-hovedsag nr.
                     </th> 
                     <th>
@@ -21,6 +24,9 @@
             </thead>
             <tbody>
                 <tr v-for="c in cas" :key="c.id">
+                    <td>
+                        <span class="status-active" v-if="c.expired === false">Aktiv</span>
+                    </td>
                     <td>
                         <i class="material-icons">folder_shared</i>
                         <router-link :to="`/case/${ c.id }`">
@@ -71,7 +77,7 @@
             },
             fetchCases: function(id) {
                 if (this.user) {
-                    axios.get(`/cases/?case_worker=${ this.user.id }`)
+                    axios.get(`/cases/?case_worker=${ this.user.id }&expired=false`)
                     .then(res => {
                         this.cas = res.data
                     })
@@ -104,6 +110,12 @@
 
     .cases .create {
         margin: 0 2rem;
+    }
+
+    .cases .status-active {
+        background-color: var(--success);
+        color: white;
+        padding: .25rem;
     }
 
 </style>
