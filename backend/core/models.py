@@ -415,6 +415,20 @@ class Case(AuditModelMixin, models.Model):
         ]
     )
 
+    @property
+    def expired(self):
+        today = timezone.now().date()
+        all_main_activities = Activity.objects.filter(
+            activity_type=Activity.MAIN_ACTIVITY, appropriation__case=self
+        )
+
+        all_main_expired_activities = all_main_activities.filter(
+            end_date__lt=today
+        )
+        return (
+            all_main_activities.count() == all_main_expired_activities.count()
+        )
+
 
 class ApprovalLevel(models.Model):
     name = models.CharField(max_length=128, verbose_name=_("navn"))
