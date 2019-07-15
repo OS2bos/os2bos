@@ -102,6 +102,7 @@
         methods: {
             changeActivity: function(act) {
                 this.act.details = act
+                this.$store.commit('setActDetail', act)
             },
             displayActName: function(id) {
                 return activityId2name(id)
