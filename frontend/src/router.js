@@ -4,7 +4,6 @@ import Cases from './components/cases/Cases.vue'
 import AllCases from './components/cases/AllCases.vue'
 import Case from './components/cases/Case.vue'
 import CaseEdit from './components/cases/CaseEdit.vue'
-import DeletedCases from './components/cases/DeletedCases.vue'
 import FamilyOverviewEdit from './components/familyoverview/FamilyOverviewEdit.vue'
 import Assessment from './components/assessments/Assessment.vue'
 import Appropriation from './components/appropriations/Appropriation.vue'
@@ -50,11 +49,6 @@ const router = new Router({
             path: '/all-cases/',
             name: 'all-cases',
             component: AllCases
-        },
-        {
-            path: '/deleted-cases/',
-            name: 'deleted-cases',
-            component: DeletedCases
         },
         {
             path: '/case/:casid/familyoverview-create/',
