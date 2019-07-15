@@ -3,12 +3,16 @@
         <header class="cases-header">
             <h1 v-if="!urlQuery">Alle sager</h1>
             <h1 v-if="urlQuery">Søgeresultater</h1>
+            <!-- <h1 v-if="expiredItems">Udgåede sager</h1> -->
             <search />
-            <button class="deleted-case" @click="$router.push('/deleted-cases/')">Udgåede sager</button>
+            <button class="deleted-case" @click="expiredItems()">Udgåede sager</button>
         </header>
         <table v-if="items.length > 0">
             <thead>
                 <tr>
+                    <th>
+                        Status
+                    </th>
                     <th>
                         SBSYS-hovedsag nr.
                     </th> 
@@ -22,6 +26,10 @@
             </thead>
             <tbody>
                 <tr v-for="i in items" :key="i.id">
+                    <td>
+                        <span class="status-expired" v-if="i.expired === true">Udgået</span>
+                        <span class="status-active" v-if="i.expired === false">Aktiv</span>
+                    </td>
                     <td>
                         <i class="material-icons">folder_shared</i>
                         <router-link :to="`/case/${ i.id }`">
@@ -93,7 +101,15 @@
                     .then(res => {
                         this.items = res.data
                     })
+                } else {
+                    this.fetchCases()
                 }
+            },
+            expiredItems: function() {
+                axios.get(`/cases/?expired=${ true }`)
+                .then(res => {
+                    this.items = res.data
+                })
             }
         },
         created: function() {
@@ -122,6 +138,18 @@
 
     .cases .deleted-case {
         margin: 0 1rem;
+    }
+
+    .cases .status-expired {
+        background-color: var(--danger);
+        color: white;
+        padding: .25rem;
+    }
+
+    .cases .status-active {
+        background-color: var(--success);
+        color: white;
+        padding: .25rem;
     }
 
 </style>
