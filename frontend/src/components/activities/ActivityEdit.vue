@@ -109,7 +109,6 @@
             },
             saveChanges: function() {
                 
-                const appr_id = this.$route.params.apprid
                 let data = {
                         activity_type: this.act.activity_type,
                         start_date: this.act.start_date,
@@ -129,7 +128,7 @@
                     }
 
                 if (this.mode === 'create') {
-                    data.appropriation = appr_id
+                    data.appropriation = this.$route.params.apprid
                     data.status = this.act_status_expected ? 'EXPECTED' : 'DRAFT'
                 } else if (this.mode === 'clone') {
                     data.appropriation = this.activityObj.appropriation
@@ -152,7 +151,7 @@
                                 payment_plan: resp.data.id
                             })
                             .then(() => {
-                                this.$router.push(`/appropriation/${ appr_id }`)
+                                this.$router.push(`/appropriation/${ this.appropriation.id }`)
                                 this.$store.dispatch('fetchActivity', res.data.id)
                             })
                         })
