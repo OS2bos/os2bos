@@ -54,8 +54,10 @@ from core.utils import get_person_info
 class CaseViewSet(viewsets.ModelViewSet):
     queryset = Case.objects.all()
     serializer_class = CaseSerializer
-
     filterset_fields = "__all__"
+
+    def get_queryset(self):
+        return self.queryset.annotate_expired()
 
     def perform_create(self, serializer):
         current_user = self.request.user

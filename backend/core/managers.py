@@ -1,6 +1,6 @@
 from django.utils import timezone
 from django.db import models
-from django.db.models import Sum, CharField, Value
+from django.db.models import Sum, CharField, Value, Q, Case, When, BooleanField
 from django.db.models.functions import (
     Coalesce,
     Cast,
@@ -47,3 +47,30 @@ class PaymentQuerySet(models.QuerySet):
             .order_by("date_month")
             .annotate(amount=Sum("amount"))
         )
+
+
+class CaseQuerySet(models.QuerySet):
+    def annotate_expired(self):
+        from core.models import Activity
+
+        today = timezone.now().date()
+        all_ongoing_main_activities = Activity.objects.filter(
+            Q(end_date__gte=today) | Q(end_date__isnull=True),
+            activity_type=Activity.MAIN_ACTIVITY,
+        )
+        # If activity is a main activity and
+        # end date > today or null it is not expired.
+        return self.annotate(
+            expired=Case(
+                When(
+                    Q(appropriations__isnull=True)
+                    | Q(appropriations__activities__isnull=True)
+                    | Q(
+                        appropriations__activities__in=all_ongoing_main_activities
+                    ),
+                    then=Value(False),
+                ),
+                default=Value(True),
+                output_field=BooleanField(),
+            )
+        ).distinct("id")
