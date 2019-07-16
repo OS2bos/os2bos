@@ -130,7 +130,6 @@ class PaymentScheduleSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 _("ugyldig betalingsmetode for betalingsmodtager")
             )
-        return data
 
         one_time_payment = (
             data["payment_type"] == PaymentSchedule.ONE_TIME_PAYMENT
