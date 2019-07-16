@@ -1,5 +1,7 @@
 import logging
 
+from django.utils import timezone
+
 from rest_framework import status
 
 
@@ -19,13 +21,25 @@ class AuditMixin:
         )
         status_code = response.status_code
 
+        view = self.get_view_name()
+        action = self.action
+        method = request.method.lower()
+        status_code = status_code
+        request_path = request.path
+        datetime = timezone.now()
+
+        log_str = f'{datetime} "{view}" {action} {method} {request_path} {status_code}'
         if request.method.lower() in self.log_methods:
             # Now perform logging.
             if status.is_server_error(status_code):
-                self.logger.error(f"SERVER ERROR: {response.data}")
+                self.logger.error(
+                    f"SERVER ERROR: {log_str}", error=response.data
+                )
             if status.is_client_error(status_code):
-                self.logger.error(f"CLIENT ERROR: {response.data}")
+                self.logger.error(
+                    f"CLIENT ERROR: {log_str}", error=response.data
+                )
             else:
-                self.logger.info(f"INFO: {response.data}")
+                self.logger.info(f"INFO: {log_str}")
 
         return response
