@@ -28,7 +28,10 @@ class AuditMixin:
         request_path = request.path
         datetime = timezone.now()
 
-        log_str = f'{datetime} "{view}" {action} {method} {request_path} {status_code}'
+        log_str = (
+            f'{datetime} "{view}" {action} {method}'
+            + f"{request_path} {status_code}"
+        )
         if request.method.lower() in self.log_methods:
             # Now perform logging.
             if status.is_server_error(status_code):
