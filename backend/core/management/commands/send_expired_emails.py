@@ -7,7 +7,10 @@ from core.utils import send_activity_expired_email
 
 
 class Command(BaseCommand):
-    help = "Sends emails to activities that have expired in the last X days."
+    help = (
+        "Sends emails for activities that have "
+        "expired in the last number of days."
+    )
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -15,7 +18,9 @@ class Command(BaseCommand):
             "--last-days",
             default=1,
             type=int,
-            help="Send expired emails for activities that are --last-days old.",
+            help=(
+                "Send expired emails for activities that are --last-days old."
+            ),
         )
 
     def handle(self, *args, **options):
