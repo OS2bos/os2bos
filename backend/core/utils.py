@@ -124,9 +124,9 @@ def send_activity_updated_email(activity):
     send_activity_email(subject, template, activity)
 
 
-def send_activity_deleted_email(activity):
-    subject = _("Aktivitet slettet")
-    template = "emails/activity_deleted.html"
+def send_activity_expired_email(activity):
+    subject = _("Aktivitet udgået")
+    template = "emails/activity_expired.html"
     send_activity_email(subject, template, activity)
 
 

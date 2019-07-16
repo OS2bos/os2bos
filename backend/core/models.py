@@ -190,6 +190,7 @@ class PaymentSchedule(models.Model):
         }
         return payment_method in allowed[recipient_type]
 
+    @property
     def triggers_payment_email(self):
         """
         Trigger a payment email only in the (recipient_type->payment_method)
@@ -792,6 +793,23 @@ class Activity(AuditModelMixin, models.Model):
     def total_cost(self):
         payments = Payment.objects.filter(payment_schedule__activity=self)
         return payments.amount_sum()
+
+    @property
+    def triggers_payment_email(self):
+        # If activity or appropriation is not granted we don't send an email.
+        if (
+            not self.status == Activity.STATUS_GRANTED
+            or not self.appropriation.status == Appropriation.STATUS_GRANTED
+        ):
+            return False
+
+        # Don't trigger the email if the payment plan does not exist
+        # or does not need a payment email to trigger.
+        if not hasattr(self, "payment_plan") or not self.payment_plan:
+            return False
+        if not self.payment_plan.triggers_payment_email:
+            return False
+        return True
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
