@@ -1,8 +1,20 @@
 <template>
     <section :class="`activity-edit activity-${ mode } expected-${ act_status_expected }`">
         <header class="header" v-if="mode === 'create'">
-            <h1 v-if="act_status_expected">Opret forventet Aktivitet</h1>
-            <h1 v-else>Opret Aktivitet</h1>
+            <h1>
+                <template v-if="act_status_expected">
+                    Tilføj forventet
+                </template>
+                <template v-else>
+                    Tilføj
+                </template>
+                <template v-if="main_act">
+                    følgeydelse
+                </template>
+                <template v-else>
+                    aktivitet
+                </template>
+            </h1>
         </header>
         <header class="header" v-if="mode === 'edit'">
             <h1>Redigér Aktivitet</h1>
@@ -21,13 +33,17 @@
                         <input type="checkbox" id="field-status-expected" v-model="act_status_expected">
                         <label for="field-status-expected">Opret forventet aktivitet</label>
                     </fieldset>
-                    <fieldset v-if="mode === 'create'">
+                    <fieldset v-if="mode === 'create' && !main_act">
                         <legend>Type</legend>
                         <input type="radio" id="field-type-main" value="MAIN_ACTIVITY" v-model="act.activity_type" @change='activityList()'>
                         <label for="field-type-main">Hovedydelse</label>
                         <input type="radio" id="field-type-suppl" value="SUPPL_ACTIVITY" v-model="act.activity_type" @change='activityList()'>
                         <label for="field-type-suppl">Følgeydelse</label>
                     </fieldset>
+                    <dl v-else>
+                        <dt>Type</dt>
+                        <dd>Følgeydelse</dd>
+                    </dl>
                     <fieldset>
                         <label for="selectField">Aktivitet</label>
                         <list-picker :dom-id="'selectField'" :disabled="disableAct" :selected-id="act.details" @selection="changeActivity" :list="act_details" />
@@ -97,6 +113,29 @@
                 if (this.act_details < 1) {
                     return true
                 }
+            },
+            main_act: function() {
+                if (this.appropriation) {
+                    let act = false
+                    for (let a of this.appropriation.activities) {
+                        if (a.activity_type === 'MAIN_ACTIVITY') {
+                            act = a
+                        }
+                    }
+                    if (act) {
+                        this.act.activity_type = 'SUPPL_ACTIVITY'
+                        this.activityList()
+                        if (!this.act.start_date) {
+                            this.act.start_date = act.start_date
+                        }
+                        if (!this.act.end_date) {
+                            this.act.end_date = act.end_date
+                        }
+                    }
+                    return act
+                } else {
+                    return false
+                }
             }
         },
         methods: {
@@ -109,7 +148,6 @@
             },
             saveChanges: function() {
                 
-                const appr_id = this.$route.params.apprid
                 let data = {
                         activity_type: this.act.activity_type,
                         start_date: this.act.start_date,
@@ -129,7 +167,7 @@
                     }
 
                 if (this.mode === 'create') {
-                    data.appropriation = appr_id
+                    data.appropriation = this.$route.params.apprid
                     data.status = this.act_status_expected ? 'EXPECTED' : 'DRAFT'
                 } else if (this.mode === 'clone') {
                     data.appropriation = this.activityObj.appropriation
@@ -152,7 +190,7 @@
                                 payment_plan: resp.data.id
                             })
                             .then(() => {
-                                this.$router.push(`/appropriation/${ appr_id }`)
+                                this.$router.push(`/appropriation/${ this.appropriation.id }`)
                                 this.$store.dispatch('fetchActivity', res.data.id)
                             })
                         })

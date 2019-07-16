@@ -383,10 +383,13 @@ class Case(AuditModelMixin, models.Model):
         max_length=128,
         choices=effort_steps_choices,
         verbose_name=_("indsatstrappe"),
+        blank=True,
     )
     scaling_step = models.PositiveSmallIntegerField(
         verbose_name=_("skaleringstrappe"),
         choices=[(i, i) for i in range(1, 11)],
+        blank=True,
+        null=True,
     )
     refugee_integration = models.BooleanField(
         verbose_name=_("integrationsindsatsen"), default=False
