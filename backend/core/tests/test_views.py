@@ -14,7 +14,6 @@ from core.tests.testing_utils import (
     create_case_as_json,
     create_appropriation,
     create_activity,
-    create_appropriation,
     create_payment_schedule,
 )
 from core.models import STEP_ONE, STEP_THREE, STEP_FIVE
@@ -256,7 +255,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         )
         appropriation = create_appropriation(case=case)
         # create a main activity with an expired end_date.
-        expired_activity = create_activity(
+        create_activity(
             case=case,
             appropriation=appropriation,
             start_date=now - timedelta(days=6),
@@ -289,7 +288,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         )
         appropriation = create_appropriation(case=case)
         # create a main activity with an expired end_date.
-        expired_activity = create_activity(
+        create_activity(
             case=case,
             appropriation=appropriation,
             start_date=now - timedelta(days=6),
