@@ -1,6 +1,6 @@
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
-from core.models import Activity, Appropriation
+from core.models import Activity
 from core.utils import (
     send_activity_created_email,
     send_activity_updated_email,
