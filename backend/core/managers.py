@@ -1,15 +1,6 @@
 from django.utils import timezone
 from django.db import models
-from django.db.models import (
-    Sum,
-    CharField,
-    Value,
-    Q,
-    Case,
-    When,
-    BooleanField,
-    Count,
-)
+from django.db.models import Sum, CharField, Value, Q
 from django.db.models.functions import (
     Coalesce,
     Cast,

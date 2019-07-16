@@ -60,7 +60,7 @@ class CaseQuerySetTestCase(TestCase, BasicTestMixin):
     def setUpTestData(cls):
         cls.basic_setup()
 
-    def test_annotate_expired_one_expired_one_ongoing(self):
+    def test_expired_one_expired_one_ongoing(self):
         now_date = timezone.now().date()
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -129,7 +129,7 @@ class CaseQuerySetTestCase(TestCase, BasicTestMixin):
         self.assertEqual(expired_cases.count(), 0)
         self.assertEqual(ongoing_cases.count(), 1)
 
-    def test_annotate_expired_all_expired(self):
+    def test_expired_all_expired(self):
         now_date = timezone.now().date()
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -154,7 +154,7 @@ class CaseQuerySetTestCase(TestCase, BasicTestMixin):
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
         )
         # create an expired main activity
-        activity = create_activity(
+        create_activity(
             case=case,
             appropriation=appropriation,
             start_date=now_date - timedelta(days=2),
@@ -183,7 +183,7 @@ class CaseQuerySetTestCase(TestCase, BasicTestMixin):
             payment_frequency=PaymentSchedule.DAILY,
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
         )
-        # create an ongoing main activity
+        # create an expired main activity
         create_activity(
             case=case,
             appropriation=appropriation,
