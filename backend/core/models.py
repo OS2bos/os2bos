@@ -385,10 +385,13 @@ class Case(AuditModelMixin, models.Model):
         max_length=128,
         choices=effort_steps_choices,
         verbose_name=_("indsatstrappe"),
+        blank=True,
     )
     scaling_step = models.PositiveSmallIntegerField(
         verbose_name=_("skaleringstrappe"),
         choices=[(i, i) for i in range(1, 11)],
+        blank=True,
+        null=True,
     )
     refugee_integration = models.BooleanField(
         verbose_name=_("integrationsindsatsen"), default=False
@@ -396,6 +399,8 @@ class Case(AuditModelMixin, models.Model):
     cross_department_measure = models.BooleanField(
         verbose_name=_("tværgående ungeindsats"), default=False
     )
+    note = models.TextField(verbose_name=_("note"), blank=True)
+
     # We only need to store historical records of
     # effort_step, scaling_step, case_worker,
     # thus we can exclude everything else.
@@ -411,6 +416,7 @@ class Case(AuditModelMixin, models.Model):
             "name",
             "cpr_number",
             "sbsys_id",
+            "note",
         ]
     )
 

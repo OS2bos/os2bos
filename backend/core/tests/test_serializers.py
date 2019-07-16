@@ -146,6 +146,51 @@ class CaseSerializerTestCase(TestCase, BasicTestMixin):
 
         self.assertTrue(is_valid)
 
+    def test_validate_success_disability_dept_no_scaling_or_effort_step(self):
+        # create valid case for DISABILITY_DEPT
+        case = create_case(
+            self.case_worker,
+            self.team,
+            self.municipality,
+            self.district,
+            target_group=DISABILITY_DEPT,
+        )
+
+        data = CaseSerializer(case).data
+        # new sbys_id, remove effort and scaling step.
+        data["sbsys_id"] = "12356789"
+        data.pop("effort_step")
+        data.pop("scaling_step")
+        serializer = CaseSerializer(data=data)
+        is_valid = serializer.is_valid()
+
+        self.assertTrue(is_valid)
+
+    def test_validate_error_family_dept_no_scaling_or_effort_step(self):
+        # create initial valid case for FAMILY_DEPT
+        case = create_case(
+            self.case_worker,
+            self.team,
+            self.municipality,
+            self.district,
+            target_group=FAMILY_DEPT,
+        )
+
+        data = CaseSerializer(case).data
+        # new sbys_id, remove effort and scaling step.
+        data["sbsys_id"] = "12356789"
+        data.pop("effort_step")
+        data.pop("scaling_step")
+        serializer = CaseSerializer(data=data)
+        is_valid = serializer.is_valid()
+
+        self.assertFalse(is_valid)
+        self.assertEqual(
+            serializer.errors["non_field_errors"][0],
+            "en sag med familie målgruppe skal have en"
+            " indsats- og skaleringstrappe",
+        )
+
 
 class PaymentScheduleSerializerTestCase(TestCase, BasicTestMixin):
     @classmethod
