@@ -52,7 +52,7 @@ class PaymentQuerySet(models.QuerySet):
 class CaseQuerySet(models.QuerySet):
     def ongoing(self):
         """
-        Return all ongoing (non-expired) Cases.
+        Only include ongoing (non-expired) Cases.
         """
         from core.models import Activity
 
@@ -71,6 +71,6 @@ class CaseQuerySet(models.QuerySet):
 
     def expired(self):
         """
-        Return all expired Cases.
+        Only include expired Cases.
         """
         return self.difference(self.ongoing())
