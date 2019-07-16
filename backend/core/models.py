@@ -13,7 +13,6 @@ from django.core.validators import MinValueValidator
 from django_audit_fields.models import AuditModelMixin
 from simple_history.models import HistoricalRecords
 
-from core.utils import send_activity_deleted_email
 from core.managers import PaymentQuerySet
 from core.utils import send_appropriation
 
@@ -183,9 +182,7 @@ class PaymentSchedule(models.Model):
     )
 
     @staticmethod
-    def is_payment_method_and_recipient_type_allowed(
-        payment_method, recipient_type
-    ):
+    def is_payment_and_recipient_allowed(payment_method, recipient_type):
         allowed = {
             PaymentSchedule.INTERNAL: [INTERNAL],
             PaymentSchedule.PERSON: [CASH, SD],
@@ -195,8 +192,8 @@ class PaymentSchedule(models.Model):
 
     def triggers_payment_email(self):
         """
-        Trigger a payment email only in the (recipient_type->payment_method) case
-        of Internal->Internal or Person->SD.
+        Trigger a payment email only in the (recipient_type->payment_method)
+        case of Internal->Internal or Person->SD.
         """
         if (
             self.recipient_type == self.INTERNAL
@@ -208,7 +205,7 @@ class PaymentSchedule(models.Model):
         return False
 
     def save(self, *args, **kwargs):
-        if not self.is_payment_method_and_recipient_type_allowed(
+        if not self.is_payment_and_recipient_allowed(
             self.payment_method, self.recipient_type
         ):
             raise ValueError(
@@ -359,7 +356,7 @@ class Payment(models.Model):
     )
 
     def save(self, *args, **kwargs):
-        if not self.payment_schedule.is_payment_method_and_recipient_type_allowed(
+        if not self.payment_schedule.is_payment_and_recipient_allowed(
             self.payment_method, self.recipient_type
         ):
             raise ValueError(
@@ -822,10 +819,6 @@ class Activity(AuditModelMixin, models.Model):
             self.payment_plan.generate_payments(
                 self.start_date, self.end_date, vat_factor
             )
-
-    def delete(self, *args, **kwargs):
-        send_activity_deleted_email(self)
-        super().delete(*args, **kwargs)
 
 
 class RelatedPerson(models.Model):

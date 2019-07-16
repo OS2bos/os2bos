@@ -81,7 +81,7 @@ INSTALLED_APPS = [
     "django_extensions",
     "django_filters",
     "simple_history",
-    "core",
+    "core.apps.CoreConfig",
 ]
 
 MIDDLEWARE = [
