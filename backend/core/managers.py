@@ -1,6 +1,6 @@
 from django.utils import timezone
 from django.db import models
-from django.db.models import Sum, CharField, Value, Q
+from django.db.models import Sum, CharField, Value, Q, F, Count
 from django.db.models.functions import (
     Coalesce,
     Cast,
@@ -54,23 +54,35 @@ class CaseQuerySet(models.QuerySet):
         """
         Only include ongoing (non-expired) Cases.
         """
-        from core.models import Activity
-
-        today = timezone.now().date()
-        all_ongoing_main_activities = Activity.objects.filter(
-            Q(end_date__gte=today) | Q(end_date__isnull=True),
-            activity_type=Activity.MAIN_ACTIVITY,
-        )
-        ongoing_cases = self.filter(
-            Q(appropriations__isnull=True)
-            | Q(appropriations__activities__isnull=True)
-            | Q(appropriations__activities__in=all_ongoing_main_activities)
-        ).distinct()
-
-        return ongoing_cases
+        expired_ids = self.expired().values_list("id", flat=True)
+        return self.exclude(id__in=expired_ids)
 
     def expired(self):
         """
         Only include expired Cases.
         """
-        return self.difference(self.ongoing())
+        from core.models import Activity
+
+        today = timezone.now().date()
+        # exclude cases with no activities and filter for activities
+        # where the number of main activities and expired main activities
+        # are the same
+        return (
+            self.exclude(appropriations__activities__isnull=True)
+            .annotate(
+                expired_main_activities_count=Count(
+                    "appropriations__activities",
+                    filter=Q(
+                        appropriations__activities__end_date__lt=today,
+                        appropriations__activities__activity_type=Activity.MAIN_ACTIVITY,
+                    ),
+                )
+            )
+            .annotate(
+                main_activities_count=Count(
+                    "appropriations__activities",
+                    appropriations__activities__activity_type=Activity.MAIN_ACTIVITY,
+                )
+            )
+            .filter(expired_main_activities_count=F("main_activities_count"))
+        ).distinct()

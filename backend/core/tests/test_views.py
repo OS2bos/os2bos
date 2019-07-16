@@ -307,6 +307,51 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         response = self.client.get(url, data)
         self.assertEqual(len(response.json()), 0)
 
+    def test_get_non_expired_filter_no_activities(self):
+        url = reverse("case-list")
+        self.client.login(username=self.username, password=self.password)
+
+        now = timezone.now().date()
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        data = {"expired": False}
+        response = self.client.get(url, data)
+
+        self.assertEqual(len(response.json()), 1)
+        self.assertEqual(response.json()[0]["id"], case.id)
+
+        data = {"expired": True}
+        response = self.client.get(url, data)
+        self.assertEqual(len(response.json()), 0)
+
+    def test_get_non_expired_filter_no_appropriations(self):
+        url = reverse("case-list")
+        self.client.login(username=self.username, password=self.password)
+
+        now = timezone.now().date()
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        data = {"expired": False}
+        response = self.client.get(url, data)
+
+        self.assertEqual(len(response.json()), 1)
+        self.assertEqual(response.json()[0]["id"], case.id)
+
+        data = {"expired": True}
+        response = self.client.get(url, data)
+        self.assertEqual(len(response.json()), 0)
+
 
 class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
     @classmethod
