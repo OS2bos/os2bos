@@ -33,11 +33,11 @@ class AuditMixin:
             # Now perform logging.
             if status.is_server_error(status_code):
                 self.logger.error(
-                    f"SERVER ERROR: {log_str}", error=response.data
+                    f"SERVER ERROR: {log_str} {response.data}"
                 )
             if status.is_client_error(status_code):
                 self.logger.error(
-                    f"CLIENT ERROR: {log_str}", error=response.data
+                    f"CLIENT ERROR: {log_str} {response.data}"
                 )
             else:
                 self.logger.info(f"INFO: {log_str}")
