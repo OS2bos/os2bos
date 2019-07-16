@@ -64,6 +64,14 @@ class CaseQuerySet(models.QuerySet):
         from core.models import Activity
 
         today = timezone.now().date()
+
+        main_expired_q = Q(
+            appropriations__activities__end_date__lt=today,
+            appropriations__activities__activity_type=Activity.MAIN_ACTIVITY,
+        )
+        main_q = Q(
+            appropriations__activities__activity_type=Activity.MAIN_ACTIVITY
+        )
         # exclude cases with no activities and filter for activities
         # where the number of main activities and expired main activities
         # are the same
@@ -71,17 +79,12 @@ class CaseQuerySet(models.QuerySet):
             self.exclude(appropriations__activities__isnull=True)
             .annotate(
                 expired_main_activities_count=Count(
-                    "appropriations__activities",
-                    filter=Q(
-                        appropriations__activities__end_date__lt=today,
-                        appropriations__activities__activity_type=Activity.MAIN_ACTIVITY,
-                    ),
+                    "appropriations__activities", filter=main_expired_q
                 )
             )
             .annotate(
                 main_activities_count=Count(
-                    "appropriations__activities",
-                    appropriations__activities__activity_type=Activity.MAIN_ACTIVITY,
+                    "appropriations__activities", filter=main_q
                 )
             )
             .filter(expired_main_activities_count=F("main_activities_count"))

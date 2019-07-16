@@ -311,15 +311,11 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         url = reverse("case-list")
         self.client.login(username=self.username, password=self.password)
 
-        now = timezone.now().date()
-        payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-        )
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        appropriation = create_appropriation(case=case)
+        create_appropriation(case=case)
+
         data = {"expired": False}
         response = self.client.get(url, data)
 
@@ -333,12 +329,6 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
     def test_get_non_expired_filter_no_appropriations(self):
         url = reverse("case-list")
         self.client.login(username=self.username, password=self.password)
-
-        now = timezone.now().date()
-        payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-        )
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
