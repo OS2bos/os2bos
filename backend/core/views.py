@@ -48,10 +48,16 @@ from core.serializers import (
 
 from core.utils import get_person_info
 
+from core.mixins import AuditMixin
+
 # Working models, read/write
 
 
-class CaseViewSet(viewsets.ModelViewSet):
+class AuditViewSet(AuditMixin, viewsets.ModelViewSet):
+    pass
+
+
+class CaseViewSet(AuditViewSet):
     queryset = Case.objects.all()
     serializer_class = CaseSerializer
 
@@ -83,7 +89,7 @@ class CaseViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-class AppropriationViewSet(viewsets.ModelViewSet):
+class AppropriationViewSet(AuditViewSet):
     queryset = Appropriation.objects.all()
     serializer_class = AppropriationSerializer
 
@@ -106,29 +112,29 @@ class AppropriationViewSet(viewsets.ModelViewSet):
         return response
 
 
-class ActivityViewSet(viewsets.ModelViewSet):
+class ActivityViewSet(AuditViewSet):
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
 
     filterset_fields = "__all__"
 
 
-class PaymentMethodDetailsViewSet(viewsets.ModelViewSet):
+class PaymentMethodDetailsViewSet(AuditViewSet):
     queryset = PaymentMethodDetails.objects.all()
     serializer_class = PaymentMethodDetailsSerializer
 
 
-class PaymentScheduleViewSet(viewsets.ModelViewSet):
+class PaymentScheduleViewSet(AuditViewSet):
     queryset = PaymentSchedule.objects.all()
     serializer_class = PaymentScheduleSerializer
 
 
-class PaymentViewSet(viewsets.ModelViewSet):
+class PaymentViewSet(AuditViewSet):
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
 
 
-class RelatedPersonViewSet(viewsets.ModelViewSet):
+class RelatedPersonViewSet(AuditViewSet):
     queryset = RelatedPerson.objects.all()
     serializer_class = RelatedPersonSerializer
 
