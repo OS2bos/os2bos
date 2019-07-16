@@ -14,11 +14,15 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="a in acts" :key="a.id" :class="{'expected-row': a.status === 'EXPECTED'}">
+                <tr v-for="a in acts" :key="a.id" :class="{ 'expected-row': a.status === 'EXPECTED', 'adjustment-row': a.modifies }">
                     <td>
                         <div v-html="statusLabel(a.status)"></div>
                     </td>
-                    <td><router-link :to="`/activity/${ a.id }`">{{ activityId2name(a.details) }}</router-link></td>
+                    <td>
+                        <span v-if="a.modifies" class="act-label"><i class="material-icons">subdirectory_arrow_right</i></span>
+                        <router-link :to="`/activity/${ a.id }`">{{ activityId2name(a.details) }}</router-link>
+                        <span v-if="a.activity_type === 'MAIN_ACTIVITY'" class="act-label">Hovedydelse</span>
+                    </td>
                     <td></td>
                     <td>{{ displayDate(a.start_date) }}</td>
                     <td>{{ displayDate(a.end_date) }}</td>
@@ -34,7 +38,7 @@
                         {{ appropriation.total_granted_this_year }} kr
                     </td>
                 </tr>
-                <tr>
+                <tr v-if="has_expected">
                     <td></td>
                     <td></td>
                     <td></td>
@@ -54,7 +58,7 @@
 <script>
 
     import axios from '../http/Http.js'
-    import { json2js } from '../filters/Date.js'
+    import { json2jsDate } from '../filters/Date.js'
     import { activityId2name, displayStatus } from '../filters/Labels.js'
 
     export default {
@@ -62,34 +66,32 @@
         props: [
             'apprId'
         ],
-        data: function() {
-            return {
-                acts: null,
-                pay: null
-            }
-        },
         computed: {
             appropriation: function() {
                 return this.$store.getters.getAppropriation
+            },
+            has_expected: function() {
+                if (this.appropriation.total_expected_this_year > 0 && this.appropriation.total_granted_this_year !== this.appropriation.total_expected_this_year) {
+                    return true
+                } else {
+                    return false
+                }
+            },
+            acts: function() {
+                return this.$store.getters.getActivities
+            }
+        },
+        watch: {
+            apprId: function() {
+                this.update()
             }
         },
         methods: {
             update: function() {
-                this.fetchActivities(this.$route.params.id)
-            },
-            fetchActivities: function() {
-              axios.get(`/activities/?appropriation=${ this.apprId }`)
-                .then(res => {
-                    this.acts = res.data
-                    axios.get(`/payment_schedules/?activities=${ this.acts.payment_plan  }`)
-                        .then(resp => {
-                            this.pay = resp.data
-                        })
-                })
-                .catch(err => console.log(err))
+                this.$store.dispatch('fetchActivities', this.apprId)
             },
             displayDate: function(dt) {
-                return json2js(dt)
+                return json2jsDate(dt)
             },
             activityId2name: function(id) {
                 return activityId2name(id)
@@ -125,6 +127,16 @@
     .activities .expected-row > td,
     .activities .expected {
         background-color: hsl(var(--color3), 80%, 80%); 
+    }
+
+    .activities .adjustment-row > td {
+        border-top: none;
+    }
+
+    .activities .act-label {
+        opacity: .66;
+        font-size: .85rem;
+        margin: 0 1rem;
     }
 
 </style>

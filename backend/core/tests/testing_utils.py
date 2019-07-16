@@ -16,6 +16,7 @@ from core.models import (
     Payment,
     Section,
     SD,
+    FAMILY_DEPT,
 )
 
 
@@ -42,7 +43,16 @@ class BasicTestMixin:
         cls.district = SchoolDistrict.objects.create(name="Baltorpskolen")
 
 
-def create_case(case_worker, team, municipality, district, sbsys_id="13212"):
+def create_case(
+    case_worker,
+    team,
+    municipality,
+    district,
+    sbsys_id="13212",
+    scaling_step=1,
+    effort_step="STEP_ONE",
+    target_group=FAMILY_DEPT,
+):
 
     case = Case.objects.create(
         sbsys_id=sbsys_id,
@@ -50,12 +60,13 @@ def create_case(case_worker, team, municipality, district, sbsys_id="13212"):
         name="Jens Jensen",
         case_worker=case_worker,
         team=team,
-        scaling_step=1,
-        effort_step="STEP_ONE",
+        scaling_step=scaling_step,
+        effort_step=effort_step,
         acting_municipality=municipality,
         district=district,
         paying_municipality=municipality,
         residence_municipality=municipality,
+        target_group=target_group,
     )
     return case
 

@@ -6,7 +6,7 @@
         <form @submit.prevent="saveChanges()">
             <fieldset>
                 <label for="field-sbsysid">Foranstaltningssag (SBSYS-sag)</label>
-                <input id="field-sbsysid" type="text" v-model="appr.sbsys_id" required>
+                <input id="field-sbsysid" type="text" v-model="appr.sbsys_id" required @input="checkKLE(appr.sbsys_id)">
             </fieldset>
             <fieldset>
                 <label for="field-lawref">Bevilling efter §</label>
@@ -37,17 +37,50 @@
         data: function() {
             return {
                 appr: {},
-                create_mode: true
+                create_mode: true,
+                kle: null,
+                kle_regex: /\d{2}\.\d{2}\.\d{2}/,
+                sections: null
             }
         },
         computed: {
-            sections: function() {
+            cas: function() {
+                return this.$store.getters.getCase
+            },
+            cas_target: function() {
+                if (this.cas.target_group === 'FAMILY_DEPT') {
+                    return 'allowed_for_family_target_group=true'
+                } else if (this.cas.target_group === 'DISABILITY_DEPT') {
+                    return 'allowed_for_disability_target_group=true'
+                } else {
+                    return ''
+                }
+            },
+            all_sections: function() {
                 return this.$store.getters.getSections
             }
         },
         methods: {
+            fetchSections: function() {
+                axios.get(`/sections?allowed_for_steps=${ this.cas.effort_step }&${ this.cas_target}`)
+                .then(res => {
+                    this.sections = res.data
+                })
+                .catch(err => console.log(err))
+            },
             changeSection: function(section_id) {
                 this.appr.section = section_id
+            },
+            checkKLE: function(input) {
+                this.kle = input.match(this.kle_regex)
+                if (this.kle) {
+                    let section = this.all_sections.find(s => {
+                        return s.kle_number === this.kle[0]
+                    })
+                    this.appr.section = section.id
+                } else {
+                    return false
+                }                
             },
             saveChanges: function() {
                 if (!this.create_mode) {
@@ -84,6 +117,7 @@
             }
         },
         created: function() {
+            this.fetchSections()
             if (this.apprObj) {
                 this.create_mode = false
                 this.appr = this.apprObj

@@ -3,7 +3,7 @@ from django.test import TestCase
 from django.utils import timezone
 from django.core import mail
 from decimal import Decimal
-from datetime import date
+from datetime import date, timedelta
 from unittest import mock
 
 from django.contrib.auth import get_user_model
@@ -32,6 +32,7 @@ from core.models import (
     INVOICE,
     INTERNAL,
     Activity,
+    Appropriation,
 )
 
 
@@ -174,6 +175,35 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             activity, next(appropriation.supplementary_activities)
         )
 
+    def test_appropriation_grant_sets_appropriation_date(self):
+        approval_level = ApprovalLevel.objects.create(name="egenkompetence")
+        payment_schedule = create_payment_schedule()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_DRAFT
+        )
+        now = timezone.now()
+        start_date = now + timedelta(days=6)
+        end_date = now + timedelta(days=12)
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=Activity.MAIN_ACTIVITY,
+            status=Activity.STATUS_DRAFT,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+        )
+
+        appropriation.grant(
+            approval_level.id, "note til bevillingsgodkendelse"
+        )
+
+        today = now.date()
+        self.assertEqual(appropriation.appropriation_date, today)
+
 
 class MunicipalityTestCase(TestCase):
     def test_municipality_str(self):
@@ -231,7 +261,10 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         appropriation = create_appropriation(case=case)
         payment_schedule = create_payment_schedule()
         activity = create_activity(
-            case, appropriation, payment_plan=payment_schedule
+            case,
+            appropriation,
+            payment_plan=payment_schedule,
+            status=Activity.STATUS_GRANTED,
         )
 
         self.assertEqual(activity.payment_plan.payments.count(), 10)
@@ -239,6 +272,56 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         activity.end_date = date(year=2019, month=1, day=13)
         activity.save()
         self.assertEqual(activity.payment_plan.payments.count(), 13)
+
+    def test_activity_synchronize_payments_on_save_one_time_payment(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        payment_schedule = create_payment_schedule(
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT
+        )
+        activity = create_activity(
+            case,
+            appropriation,
+            payment_plan=payment_schedule,
+            status=Activity.STATUS_GRANTED,
+        )
+
+        self.assertEqual(activity.payment_plan.payments.count(), 1)
+        self.assertEqual(
+            activity.payment_plan.payments.first().date,
+            date(year=2019, month=1, day=1),
+        )
+        # A new end_date should not affect the one time payment.
+        activity.end_date = date(year=2019, month=1, day=13)
+        activity.save()
+
+        self.assertEqual(activity.payment_plan.payments.count(), 1)
+        self.assertEqual(
+            activity.payment_plan.payments.first().date,
+            date(year=2019, month=1, day=1),
+        )
+
+    def test_activity_regenerate_payments_on_draft_save(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        payment_schedule = create_payment_schedule()
+        activity = create_activity(
+            case,
+            appropriation,
+            payment_plan=payment_schedule,
+            status=Activity.STATUS_DRAFT,
+        )
+
+        self.assertEqual(activity.payment_plan.payments.count(), 10)
+
+        payment_schedule.payment_frequency = PaymentSchedule.MONTHLY
+        payment_schedule.save()
+        activity.save()
+        self.assertEqual(activity.payment_plan.payments.count(), 1)
 
     def test_activity_total_cost_with_service_provider(self):
         case = create_case(

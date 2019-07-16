@@ -8,7 +8,14 @@
                     <span class="global-brandname">Bevillingsplatformen</span>
                 </router-link>
             </h1>
-            <user-actions />
+            <div class="row" style="width: auto; align-items: center;">
+                <nav v-if="auth" class="globalnav">
+                    <router-link to="/my-cases/">Mine sager</router-link>
+                    <router-link to="/all-cases/">Find sag</router-link>
+                    <!-- <router-link to="/data-view/">Find ydelse</router-link> -->
+                </nav>
+                <user-actions />
+            </div>
         </div>
         <breadcrumb />
     </header> 
@@ -25,6 +32,11 @@
         components: {
             Breadcrumb,
             UserActions
+        },
+        computed: {
+            auth: function() {
+                return this.$store.getters.getAuth
+            }
         }
 
     }
@@ -70,6 +82,16 @@
         font-size: .9rem;
         letter-spacing: 1px;
         text-transform: uppercase;
+    }
+
+    .globalheader .globalnav {
+        margin: 0 2rem;
+    }
+
+    .globalheader .globalnav > a {
+        display: inline-block;
+        padding: .5rem;
+        margin: 0 0 0 1rem;
     }
 
 </style>

@@ -22,8 +22,8 @@
                         {{ f.related_case }}
                     </td>
                     <td>
-                        <router-link :to="`/case/${ caseId }/familyoverview-edit/${ f.id }`">
-                            <i class="material-icons edit-icon">edit</i>
+                        <router-link :to="`/case/${ caseId }/familyoverview-edit/${ f.id }`" class="edit-icon">
+                            <i class="material-icons">edit</i>
                         </router-link>
                     </td>
                 </tr>
@@ -52,6 +52,11 @@
                 fam: null,
                 show_edit: false
             }
+        },
+        watch: {
+          caseId: function() {
+            this.fetchFamilyOverview()
+          }
         },
         methods: {
             fetchFamilyOverview: function() {
@@ -86,8 +91,8 @@
         margin: 0 1rem;
     }
 
-    .edit-icon {
-        font-size: 1rem;
+    .familyoverview a.edit-icon {
+        border: none;
     }
 
 </style>

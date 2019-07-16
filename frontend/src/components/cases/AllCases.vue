@@ -1,9 +1,12 @@
 <template>
-    <section class="cases" v-if="cas">
+    <section class="cases" v-if="items">
         <header class="cases-header">
-            <h1>Alle sager</h1>
+            <h1 v-if="!urlQuery">Alle sager</h1>
+            <h1 v-if="urlQuery">Søgeresultater</h1>
+            <search />
         </header>
-        <table v-if="cas.length > 0">
+        <table v-if="items.length > 0">
+            <template>
             <thead>
                 <tr>
                     <th>
@@ -18,24 +21,28 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="c in cas" :key="c.id">
+                <tr v-for="i in items" :key="i.id">
                     <td>
                         <i class="material-icons">folder_shared</i>
-                        <router-link :to="`/case/${ c.id }`">
-                            {{ c.sbsys_id }}
+                        <router-link :to="`/case/${ i.id }`">
+                            {{ i.sbsys_id }}
                         </router-link>
                     </td>
                     <td>
-                        {{ c.cpr_number }} - {{ c.name }}
+                        {{ i.cpr_number }} - {{ i.name }}
                     </td>
                     <td>
-                        {{ displayDate(c.modified) }}
+                        {{ displayDate(i.modified) }}
                     </td>
                 </tr>
             </tbody>
+            </template>
         </table>
-        <p v-if="cas.length < 1">
+        <p v-if="!urlQuery && items.length < 1">
             Der er ikke tilknyttet nogen sager
+        </p>
+        <p v-if="urlQuery && items.length < 1">
+            Ingen resultater
         </p>
     </section>
 </template>
@@ -43,41 +50,51 @@
 <script>
     import axios from '../http/Http.js'
     import { json2js } from '../filters/Date.js'
+    import Search from '../search/Search.vue'
 
     export default {
 
+        components: {
+            Search
+        },
         data: function() {
             return {
-                cas: null
+                cas: null,
+                items: null
+            }
+        },
+        computed: {
+            urlQuery: function() {
+                return this.$route.params.query ? this.$route.params.query: false
             }
         },
         watch: {
-          cas: function() {
-              this.$store.commit('setBreadcrumb', [
-                  {
-                      link: '/',
-                      title: 'Mine sager'
-                  },
-                  {
-                      link: false,
-                      title: "Alle sager"
-                  }
-              ])
+          urlQuery: function() {
+              this.displayItems(this.$route.params.query)
           }
         },
         methods: {
             update: function() {
                 this.fetchCases(this.$route.params.id)
+                this.displayItems(this.$route.params.query)
             },
             fetchCases: function(id) {
                 axios.get('/cases/')
                 .then(res => {
-                    this.cas = res.data
+                    this.items = res.data
                 })
                 .catch(err => console.log(err))
             },
             displayDate: function(dt) {
                 return json2js(dt)
+            }, 
+            displayItems: function() {
+                if (this.$route.params.query) {
+                    axios.get(`/cases/?cpr_number=${ this.$route.params.query }`)
+                    .then(res => {
+                        this.items = res.data
+                    })
+                }
             }
         },
         created: function() {
@@ -98,6 +115,10 @@
         display: flex;
         flex-flow: row nowrap;
         align-items: center;
+    }
+
+    .cases .search {
+        margin: 0 2rem;
     }
 
 </style>

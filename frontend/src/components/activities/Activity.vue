@@ -6,12 +6,12 @@
                 <i class="material-icons">style</i>
                 Udgift til {{ activityId2name(act.details) }}
             </h1>
-            <button @click="show_edit = !show_edit" class="act-edit-btn">Redigér</button>
-            <button @click="createExpected()" class="act-edit-btn">+ Lav forventet justering</button>
+            <button v-if="act.status !== 'GRANTED'" @click="show_edit = !show_edit" class="act-edit-btn">Redigér</button>
+            <button v-if="act.status === 'GRANTED'" @click="createExpected()" class="act-edit-btn">+ Lav forventet justering</button>
         </header>
 
         <div v-if="show_edit">
-            <activity-edit :activity-obj="act" v-if="show_edit" @save="reload()" :mode="edit_mode" />
+            <activity-edit :activity-obj="act" v-if="show_edit" @save="reload()" @close="show_edit = !show_edit" :mode="edit_mode" />
         </div>
 
         <div class="activity-info" v-if="!show_edit">
@@ -93,7 +93,7 @@
 
         </div>
         <div class="payment-schedule" v-if="!show_edit">
-            <payment-schedule :payments-obj="pay.payments" />
+            <payment-schedule :payments="pay.payments" />
         </div>
     </section>
 
@@ -104,7 +104,7 @@
     import axios from '../http/Http.js'
     import ActivityEdit from './ActivityEdit.vue'
     import PaymentSchedule from '../payment/PaymentSchedule.vue'
-    import { json2js } from '../filters/Date.js'
+    import { json2jsDate } from '../filters/Date.js'
     import { activityId2name, sectionId2name, displayStatus } from '../filters/Labels.js'
 
     export default {
@@ -163,7 +163,7 @@
                 this.show_edit =  false
             },
             displayDate: function(dt) {
-                return json2js(dt)
+                return json2jsDate(dt)
             },
             activityId2name: function(id) {
                 return activityId2name(id)
@@ -197,6 +197,10 @@
         flex-flow: row nowrap;
         align-items: center;
         justify-content: flex-start;
+    }
+
+    .activity-header .material-icons {
+        font-size: 3rem;
     }
 
     .activity .act-edit-btn {

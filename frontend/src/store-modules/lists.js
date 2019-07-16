@@ -3,9 +3,9 @@ import axios from '../components/http/Http.js'
 const state = {
     municipalities: null,
     districts: null,
-    activities: null,
     sections: null,
-    approval_levels: null
+    approval_levels: null,
+    service_providers: null
 }
 
 const getters = {
@@ -15,14 +15,14 @@ const getters = {
     getDistricts (state) {
         return state.districts ? state.districts : false
     },
-    getActivities (state) {
-        return state.activities ? state.activities : false
-    },
     getSections (state) {
         return state.sections ? state.sections : false
     },
     getApprovals (state) {
         return state.approval_levels ? state.approval_levels : false
+    },
+    getServiceProviders ( state ) {
+        return state.service_providers ? state.service_providers : false
     }
 }
 
@@ -33,14 +33,18 @@ const mutations = {
     setDist (state, districts) {
         state.districts = districts
     },
-    setAct (state, activities) {
-        state.activities = activities
-    },
     setSections (state, sections) {
         state.sections = sections
     },
     setAppro (state, approvals) {
         state.approval_levels = approvals
+    },
+    setServiceProviders (state, sp_list) {
+        state.service_providers = sp_list.sort(function(a,b) {
+            if (a.name > b.name) { return 1 } 
+            if (a.name < b.name) { return -1 }
+            return 0
+        })
     }
 }
 
@@ -59,13 +63,6 @@ const actions = {
         })
         .catch(err => console.log(err))
     },
-    fetchActivities: function({commit}) {
-        return axios.get('/activity_details/')
-        .then(res => {
-            commit('setAct', res.data)
-        })
-        .catch(err => console.log(err))
-    },
     fetchSections: function({commit}) {
         return axios.get('/sections/')
         .then(res => {
@@ -80,15 +77,23 @@ const actions = {
         })
         .catch(err => console.log(err))
     },
+    fetchServiceProviders: function({commit}) {
+        return axios.get('/service_providers/')
+        .then(res => {
+            commit('setServiceProviders', res.data)
+        })
+        .catch(err => console.log(err))
+    },
     fetchLists: function({dispatch}) {
         return Promise.all([
             dispatch('fetchUsers'),
             dispatch('fetchTeams'),
             dispatch('fetchMunis'),
             dispatch('fetchDistricts'),
-            dispatch('fetchActivities'),
+            dispatch('fetchActivityDetails'),
             dispatch('fetchSections'),
-            dispatch('fetchApprovals')
+            dispatch('fetchApprovals'),
+            dispatch('fetchServiceProviders')
         ])
         .then(() => {
             // Nothing yet

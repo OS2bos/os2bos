@@ -33,13 +33,10 @@
             </select>
         </fieldset>
 
-        <!--
-        #TODO: Add note to API backend. Does note attach to case or assessement history?
-        <fieldset>
-            <label for="textArea">Bemærkning til vurdering</label>
-            <textarea id="textArea" v-model="cas.note"></textarea>
+        <fieldset v-if="!create_mode">
+            <label for="textArea">Bemærkning</label>
+            <textarea id="textArea" v-model="cas.history_change_reason" @change="updateNote()"></textarea>
         </fieldset>
-        -->
 
     </div>
 
@@ -58,7 +55,8 @@
             return {
                 cas: {
                     effort_step: null,
-                    scaling_step: null
+                    scaling_step: null,
+                    history_change_reason: null
                 },
                 create_mode: false
             }
@@ -72,6 +70,11 @@
             updateScaling: function() {
                 this.$emit('assessment', {
                     scaling_step: this.cas.scaling_step
+                })
+            },
+            updateNote: function() {
+                this.$emit('assessment', {
+                    history_change_reason: this.cas.history_change_reason
                 })
             }
         },

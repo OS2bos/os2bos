@@ -1,63 +1,111 @@
 <template>
-  <div>
-    <hr>
-    <h2>Betales til</h2>
-    <label>Betalingsmodtager</label>
-    <select  v-model="entry.recipient_type">
-      <option value="INTERNAL">Intern</option>
-      <option value="COMPANY">Firma</option>
-      <option value="PERSON">Person</option>
-    </select>
-    <fieldset v-if="entry.recipient_type">
-        <label v-if="entry.recipient_type === 'INTERNAL'" for="field-payee-id">
-          Reference
-        </label>
-        <label v-if="entry.recipient_type === 'COMPANY'" for="field-payee-id">
-          CVR-nr
-        </label>
-        <label v-if="entry.recipient_type === 'PERSON'" for="field-payee-id">
-          CPR-nr
-        </label>
-        <input type="text" id="field-payee-id" v-model="entry.recipient_id">
-    </fieldset>
-    <fieldset>
-        <label for="field-payee-name">Navn</label>
-        <input type="text" id="field-payee-name" v-model="entry.recipient_name">
-    </fieldset>
-  </div>
+    <section class="payment-receiver">
+        <label>Betalingsmodtager</label>
+        <select  v-model="entry.recipient_type">
+            <option value="INTERNAL">Intern</option>
+            <option value="COMPANY">Firma</option>
+            <option value="PERSON">Person</option>
+        </select>
+        <template v-if="entry.recipient_type === 'COMPANY' && service_providers">
+            <label>Mulige leverandører</label>
+            <select v-model="service_provider">
+                <option v-for="s in service_providers" :key="s.id" :value="s">
+                    {{ s.name }}
+                </option>
+            </select>
+        </template>
+
+        <template v-if="entry.recipient_type">
+            <fieldset>
+                <label v-if="entry.recipient_type === 'INTERNAL'" for="field-payee-id">
+                    Reference
+                </label>
+                <label v-if="entry.recipient_type === 'COMPANY'" for="field-payee-id">
+                    CVR-nr
+                </label>
+                <label v-if="entry.recipient_type === 'PERSON'" for="field-payee-id">
+                    CPR-nr
+                </label>
+                <input type="text" id="field-payee-id" v-model="entry.recipient_id">
+            </fieldset>
+            <fieldset>
+                <label for="field-payee-name">Navn</label>
+                <input type="text" id="field-payee-name" v-model="entry.recipient_name">
+            </fieldset>
+        </template>
+    </section>
 </template>
 
 <script>
-  export default {
+    export default {
 
-    props: [
-      'paymentObj'
-    ],
-    data: function() {
-      return {
-        entry: {
-          recipient_type: null,
-          recipient_id: null,
-          recipient_name: null
-        }
-      }
-    },
-    watch: {
-      paymentObj: function() {
-        this.entry = this.paymentObj
-      },
-      entry: {
-        handler (newVal) {
-          this.$emit('update', this.entry)
+        props: [
+            'paymentObj'
+        ],
+        data: function() {
+            return {
+                entry: {
+                    recipient_type: null,
+                    recipient_id: null,
+                    recipient_name: null
+                },
+                service_provider: null
+            }
         },
-        deep: true
-      }
-    },
-    created: function() {
-      if (this.paymentObj) {
-        this.entry = this.paymentObj
-      }
+        computed: {
+            activity_detail: function() {
+                return this.$store.getters.getActivityDetail
+            },
+            service_providers_data: function() {
+                return this.$store.getters.getServiceProviders
+            },
+            service_providers: function() {
+                if (this.activity_detail) {
+                    let arr = []
+                    for (let s in this.activity_detail.service_providers) {
+                        let sp = this.service_providers_data.find(function(element) {
+                            return element.id = this.activity_detail.service_providers[s].id
+                        })
+                        arr.push(sp)
+                    }
+                    if (arr.length > 0) {
+                        return arr
+                    } else {
+                        return this.service_providers_data
+                    }
+                } else {
+                    return false
+                }
+            }
+        },
+        watch: {
+            paymentObj: function() {
+                this.entry = this.paymentObj
+            },
+            entry: {
+                handler () {
+                    this.$emit('update', this.entry)
+                },
+                deep: true
+            },
+            service_provider: function() {
+                this.entry.recipient_id = this.service_provider.cvr_number
+                this.entry.recipient_name = this.service_provider.name
+            }
+        },
+        created: function() {
+            if (this.paymentObj) {
+                this.entry = this.paymentObj
+            }
+        }
+
+    }
+</script>
+
+<style>
+
+    .payment-receiver {
+        margin: 1rem 0;
     }
 
-  }
-</script>
+</style>

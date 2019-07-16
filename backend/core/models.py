@@ -150,6 +150,8 @@ class PaymentSchedule(models.Model):
         max_length=128,
         verbose_name=_("betalingsfrekvens"),
         choices=payment_frequency_choices,
+        null=True,
+        blank=True,
     )
 
     ONE_TIME_PAYMENT = "ONE_TIME_PAYMENT"
@@ -291,6 +293,9 @@ class PaymentSchedule(models.Model):
 
         newest_payment = self.payments.order_by("-date").first()
 
+        # One time payment is a special case and should not be handled.
+        if self.payment_type == PaymentSchedule.ONE_TIME_PAYMENT:
+            return
         # The new start_date should be based on the newest payment date
         # and the payment frequency.
         if self.payment_frequency == PaymentSchedule.DAILY:
@@ -423,10 +428,13 @@ class Case(AuditModelMixin, models.Model):
         max_length=128,
         choices=effort_steps_choices,
         verbose_name=_("indsatstrappe"),
+        blank=True,
     )
     scaling_step = models.PositiveSmallIntegerField(
         verbose_name=_("skaleringstrappe"),
         choices=[(i, i) for i in range(1, 11)],
+        blank=True,
+        null=True,
     )
     refugee_integration = models.BooleanField(
         verbose_name=_("integrationsindsatsen"), default=False
@@ -434,6 +442,8 @@ class Case(AuditModelMixin, models.Model):
     cross_department_measure = models.BooleanField(
         verbose_name=_("tværgående ungeindsats"), default=False
     )
+    note = models.TextField(verbose_name=_("note"), blank=True)
+
     # We only need to store historical records of
     # effort_step, scaling_step, case_worker,
     # thus we can exclude everything else.
@@ -449,6 +459,7 @@ class Case(AuditModelMixin, models.Model):
             "name",
             "cpr_number",
             "sbsys_id",
+            "note",
         ]
     )
 
@@ -533,6 +544,9 @@ class Appropriation(AuditModelMixin, models.Model):
         verbose_name=_("evt. bemærkning"), blank=True
     )
 
+    appropriation_date = models.DateField(
+        verbose_name=_("bevillingsdato"), null=True, blank=True
+    )
     case = models.ForeignKey(
         Case, on_delete=models.CASCADE, related_name="appropriations"
     )
@@ -603,7 +617,7 @@ class Appropriation(AuditModelMixin, models.Model):
             approval_level = ApprovalLevel.objects.get(id=approval_level)
             self.approval_level = approval_level
             self.approval_note = approval_note
-
+            self.appropriation_date = timezone.now().date()
             self.status = self.STATUS_GRANTED
             for a in self.activities.all():
                 # We could do this with an update, but we need to activate the
@@ -620,8 +634,8 @@ class Appropriation(AuditModelMixin, models.Model):
                 )
             if approval_note:
                 self.approval_note = approval_note
-            if approval_level or approval_note:
-                self.save()
+            self.appropriation_date = timezone.now().date()
+            self.save()
             # Now go through the activities.
             for a in self.activities.exclude(status=Activity.STATUS_GRANTED):
                 # If a modifies another, merge -
@@ -789,15 +803,25 @@ class Activity(AuditModelMixin, models.Model):
         if self.service_provider:
             vat_factor = self.service_provider.vat_factor
 
-        if self.payment_plan:
-            if self.payment_plan.payments.exists():
-                self.payment_plan.synchronize_payments(
-                    self.start_date, self.end_date, vat_factor
-                )
-            else:
+        if not self.payment_plan:
+            return
+
+        if self.payment_plan.payments.exists():
+            # In the STATUS_DRAFT case we delete and
+            # regenerate payments no matter what.
+            if self.status == Activity.STATUS_DRAFT:
+                self.payment_plan.payments.all().delete()
                 self.payment_plan.generate_payments(
                     self.start_date, self.end_date, vat_factor
                 )
+            else:
+                self.payment_plan.synchronize_payments(
+                    self.start_date, self.end_date, vat_factor
+                )
+        else:
+            self.payment_plan.generate_payments(
+                self.start_date, self.end_date, vat_factor
+            )
 
     def delete(self, *args, **kwargs):
         send_activity_deleted_email(self)

@@ -7,7 +7,10 @@
                 <i class="material-icons">folder_shared</i>
                 Hovedsag {{ cas.sbsys_id }}
             </h1>
-            <button v-if="!edit_mode" @click="edit_mode = !edit_mode">Redigér</button>
+            <div v-if="!edit_mode" class="actions">
+                <button @click="edit_mode = !edit_mode">Redigér</button>
+                <a :href="`/api/cases/${ cas.id }/csv/`" target="_blank">Download .CSV</a>
+            </div>
         </header>
 
         <div class="case-info" v-if="!edit_mode">
@@ -54,9 +57,9 @@
                 <dt>Sagsbehander</dt>
                 <dd>{{ displayUserName(cas.case_worker) }}</dd>
                 <dt>Team</dt>
-                <dd>ikke implementeret</dd>
+                <dd>{{ displayTeamName(cas.team).name }}</dd>
                 <dt>Leder</dt>
-                <dd>ikke implementeret</dd>
+                <dd>{{ displayUserName( displayTeamName(cas.team).leader ) }}</dd>
             </dl>
             <dl>
                 <dt>Betalingskommune</dt>
@@ -85,7 +88,7 @@
     import Appropriations from '../appropriations/AppropriationList.vue'
     import FamilyOverview from '../familyoverview/FamilyOverview.vue'
     import axios from '../http/Http.js'
-    import { municipalityId2name, districtId2name, displayEffort, userId2name } from '../filters/Labels.js'
+    import { municipalityId2name, districtId2name, displayEffort, userId2name, teamId2name } from '../filters/Labels.js'
 
     export default {
 
@@ -138,6 +141,9 @@
             },
             displayUserName: function(id) {
                 return userId2name(id)
+            },
+            displayTeamName: function(id) {
+                return teamId2name(id)
             }
         },
         created: function() {
@@ -160,8 +166,16 @@
         align-items: center;
     }
 
-    .case-header > button {
+    .case .actions {
         margin: 1rem;
+    }
+
+    .case .actions > * {
+        margin: 0 .5rem;
+    }
+    
+    .case-header .material-icons {
+        font-size: 3rem;
     }
 
     .case-info {
