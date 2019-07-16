@@ -61,6 +61,13 @@
                     <label for="inputRadio2">Handicapafdelingen</label>
                 </fieldset>
 
+                <assessment-edit :case-obj="cas" @assessment="updateAssessment" v-if="cas.target_group === 'FAMILY_DEPT'" />
+
+                <fieldset v-if="cas.target_group === 'FAMILY_DEPT'">
+                    <label for="selectField4">Distrikt</label>
+                    <list-picker :dom-id="'selectField4'" :selected-id="cas.district" required @selection="changeDistrict" :list="districts" />
+                </fieldset>
+
                 <fieldset>
                     <h3>Andet:</h3>
                     <input id="inputCheckbox1" type="checkbox" v-model="cas.refugee_integration">
@@ -69,23 +76,19 @@
                     <label for="inputCheckbox2">Tværgående ungeindsats</label>
                 </fieldset>
 
-                <assessment-edit :case-obj="cas" @assessment="updateAssessment" />
-
-                <h3>Sagsbehandling:</h3>
-                <fieldset>
-                    <label for="selectCaseWorker">Sagsbehandler</label>
-                    <list-picker :dom-id="'selectCaseWorker'" :selected-id="cas.case_worker" @selection="changeCaseWorker" :list="users" display-key="username" />
-                </fieldset>
-                <dl v-if="cas.team_data">
-                    <dt>Team</dt>
-                    <dd>{{ cas.team_data.name }}</dd>
-                    <dt>Leder</dt>
-                    <dd>{{ cas.team_data.leader_name }}</dd>
-                </dl>
-                <fieldset v-if="cas.target_group === 'FAMILY_DEPT'">
-                    <label for="selectField4">Distrikt</label>
-                    <list-picker :dom-id="'selectField4'" :selected-id="cas.district" @selection="changeDistrict" :list="districts" />
-                </fieldset>
+                <template v-if="!create_mode">
+                    <h3>Sagsbehandling:</h3>
+                    <fieldset>
+                        <label for="selectCaseWorker">Sagsbehandler</label>
+                        <list-picker :dom-id="'selectCaseWorker'" :selected-id="cas.case_worker" @selection="changeCaseWorker" :list="users" display-key="username" />
+                    </fieldset>
+                    <dl v-if="cas.team_data">
+                        <dt>Team</dt>
+                        <dd>{{ cas.team_data.name }}</dd>
+                        <dt>Leder</dt>
+                        <dd>{{ cas.team_data.leader_name }}</dd>
+                    </dl>
+                </template>
                 
                 <fieldset>
                     <input type="submit" value="Gem">
@@ -215,6 +218,7 @@
                     })
                     .catch(err => console.log(err))
                 } else {
+                    data.case_worker = this.user.id
                     axios.post('/cases/', data)
                     .then(res => {
                         this.$router.push(`/case/${ res.data.id }/`)
