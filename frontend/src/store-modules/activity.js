@@ -39,16 +39,48 @@ const mutations = {
 
 const actions = {
     fetchActivities: function({commit}, appropriation_id) {
+
+        function sortActs(act_list) {
+            
+            let list = act_list.sort(function(a,b) {
+                if (a.activity_type === 'MAIN_ACTIVITY') {
+                    return -1
+                } else if (a.activity_type === 'SUPPL_ACTIVITY') {
+                    return 1
+                } else {
+                    return 0
+                }
+            })
+
+            let modifier_list = []
+            
+            for (let l in list) {
+                const l_item = list[l]
+                if (l_item.modifies) {
+                    modifier_list.push(l_item)
+                    const modifier = list.splice(l, 1)
+                }
+            }
+            for (let m of modifier_list) {
+                const modified_idx = list.findIndex(function(e) {
+                    return e.id === m.modifies
+                })
+                list.splice(modified_idx + 1, 0, m)
+            }
+
+            return list
+        }
+
         if (appropriation_id) {
             return axios.get(`/activities/?appropriation=${ appropriation_id }`)
             .then(res => {
-                commit('setActivityList', res.data)
+                commit('setActivityList', sortActs(res.data))
             })
             .catch(err => console.log(err))
         } else {
             return axios.get(`/activities/`)
             .then(res => {
-                commit('setActivityList', res.data)
+                commit('setActivityList', sortActs(res.data))
             })
             .catch(err => console.log(err))
         }
