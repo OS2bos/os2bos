@@ -85,7 +85,7 @@ class CaseQuerySetTestCase(TestCase, BasicTestMixin):
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
         )
         # create an ongoing main activity
-        activity = create_activity(
+        create_activity(
             case=case,
             appropriation=appropriation,
             start_date=now_date - timedelta(days=1),
@@ -115,7 +115,7 @@ class CaseQuerySetTestCase(TestCase, BasicTestMixin):
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
         )
         # create an ongoing main activity
-        activity = create_activity(
+        create_activity(
             case=case,
             appropriation=appropriation,
             start_date=now_date - timedelta(days=1),
@@ -124,11 +124,10 @@ class CaseQuerySetTestCase(TestCase, BasicTestMixin):
             status=Activity.STATUS_GRANTED,
             payment_plan=payment_schedule,
         )
-        annotated_cases = Case.objects.all().annotate_expired()
-        self.assertEqual(annotated_cases.count(), 1)
-        self.assertSequenceEqual(
-            annotated_cases.values_list("expired", flat=True), [False]
-        )
+        expired_cases = Case.objects.all().expired()
+        ongoing_cases = Case.objects.all().ongoing()
+        self.assertEqual(expired_cases.count(), 0)
+        self.assertEqual(ongoing_cases.count(), 1)
 
     def test_annotate_expired_all_expired(self):
         now_date = timezone.now().date()
@@ -185,7 +184,7 @@ class CaseQuerySetTestCase(TestCase, BasicTestMixin):
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
         )
         # create an ongoing main activity
-        activity = create_activity(
+        create_activity(
             case=case,
             appropriation=appropriation,
             start_date=now_date - timedelta(days=8),
@@ -195,8 +194,7 @@ class CaseQuerySetTestCase(TestCase, BasicTestMixin):
             payment_plan=payment_schedule,
         )
 
-        annotated_cases = Case.objects.all().annotate_expired()
-        self.assertEqual(annotated_cases.count(), 1)
-        self.assertSequenceEqual(
-            annotated_cases.values_list("expired", flat=True), [True]
-        )
+        expired_cases = Case.objects.all().expired()
+        ongoing_cases = Case.objects.all().ongoing()
+        self.assertEqual(expired_cases.count(), 1)
+        self.assertEqual(ongoing_cases.count(), 0)
