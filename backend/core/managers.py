@@ -51,6 +51,9 @@ class PaymentQuerySet(models.QuerySet):
 
 class CaseQuerySet(models.QuerySet):
     def ongoing(self):
+        """
+        Return all ongoing (non-expired) Cases.
+        """
         from core.models import Activity
 
         today = timezone.now().date()
@@ -67,4 +70,7 @@ class CaseQuerySet(models.QuerySet):
         return ongoing_cases
 
     def expired(self):
+        """
+        Return all expired Cases.
+        """
         return self.difference(self.ongoing())
