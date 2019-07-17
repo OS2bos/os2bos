@@ -212,6 +212,7 @@ REST_FRAMEWORK = {
     ),
 }
 
+LOG_DIR = settings.get("LOG_DIR", fallback="/log")
 # Logging
 LOGGING = {
     "version": 1,
@@ -221,12 +222,28 @@ LOGGING = {
             "level": "DEBUG",
             "class": "logging.FileHandler",
             "filename": settings.get(
-                "LOG_FILE", fallback=os.path.join(BASE_DIR, "debug.log")
+                "LOG_FILE", fallback=os.path.join(LOG_DIR, "debug.log")
             ),
-        }
+        },
+        "audit": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": settings.get(
+                "AUDIT_LOG_FILE", fallback=os.path.join(LOG_DIR, "audit.log")
+            ),
+        },
     },
     "loggers": {
-        "django": {"handlers": ["default"], "level": "INFO", "propagate": True}
+        "django": {
+            "handlers": ["default"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        "bevillingsplatform.audit": {
+            "handlers": ["audit"],
+            "level": "INFO",
+            "propagate": True,
+        },
     },
 }
 
