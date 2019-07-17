@@ -14,7 +14,7 @@
                         Skaleringstrappe
                     </th>
                     <th>
-                        Bemærkning
+                        Supplerende information
                     </th>
                     <th>
                         Dato
