@@ -90,7 +90,7 @@
                 this.displayItems(this.$route.params.query)
             },
             fetchCases: function(id) {
-                axios.get('/cases/')
+                axios.get('/cases/?expired=false')
                 .then(res => {
                     this.items = res.data
                 })
