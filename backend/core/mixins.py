@@ -21,7 +21,7 @@ class AuditMixin:
         )
         status_code = response.status_code
 
-        view = self.get_view_name()
+        username = request.user.username
         action = self.action
         method = request.method.lower()
         status_code = status_code
@@ -29,7 +29,7 @@ class AuditMixin:
         datetime = timezone.now()
 
         log_str = (
-            f'{datetime} "{view}" {action} {method}'
+            f"{datetime} {username} {action} {method}"
             + f"{request_path} {status_code}"
         )
         if request.method.lower() in self.log_methods:

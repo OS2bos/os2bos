@@ -53,6 +53,20 @@ from core.mixins import AuditMixin
 # Working models, read/write
 
 
+class CaseFilter(filters.FilterSet):
+    expired = filters.BooleanFilter(method="filter_expired", label=_("Udgået"))
+
+    class Meta:
+        model = Case
+        fields = "__all__"
+
+    def filter_expired(self, queryset, name, value):
+        if value:
+            return queryset.expired()
+        else:
+            return queryset.ongoing()
+
+
 class AuditViewSet(AuditMixin, viewsets.ModelViewSet):
     pass
 
@@ -60,8 +74,7 @@ class AuditViewSet(AuditMixin, viewsets.ModelViewSet):
 class CaseViewSet(AuditViewSet):
     queryset = Case.objects.all()
     serializer_class = CaseSerializer
-
-    filterset_fields = "__all__"
+    filterset_class = CaseFilter
 
     def perform_create(self, serializer):
         current_user = self.request.user
