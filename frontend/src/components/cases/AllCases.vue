@@ -1,11 +1,14 @@
 <template>
     <section class="cases" v-if="items">
         <header class="cases-header">
-            <h1 v-if="!urlQuery">Alle sager</h1>
-            <h1 v-if="urlQuery">Søgeresultater</h1>
-            <!-- <h1 v-if="expiredItems">Udgåede sager</h1> -->
+            <h1 v-if="!urlQuery && !status_expired">Alle sager</h1>
+            <h1 v-if="urlQuery && !status_expired">Søgeresultater</h1>
+            <h1 v-if="status_expired">Udgåede sager</h1>
             <search />
-            <button class="deleted-case" @click="expiredItems()">Udgåede sager</button>
+            <fieldset class="expired-case">
+                <input type="checkbox" id="field-status-expired" v-model="status_expired" @click="expiredItems()">
+                <label for="field-status-expired">Udgåede sager</label>
+            </fieldset>
         </header>
         <table v-if="items.length > 0">
             <thead>
@@ -67,7 +70,8 @@
         data: function() {
             return {
                 cas: null,
-                items: null
+                items: null,
+                status_expired: false
             }
         },
         computed: {
@@ -106,10 +110,14 @@
                 }
             },
             expiredItems: function() {
-                axios.get(`/cases/?expired=${ true }`)
-                .then(res => {
-                    this.items = res.data
-                })
+                if (this.status_expired === false) {
+                    axios.get(`/cases/?expired=${ true }`)
+                    .then(res => {
+                        this.items = res.data
+                    })
+                } else {
+                    this.fetchCases()
+                }
             }
         },
         created: function() {
@@ -136,8 +144,8 @@
         margin: 0 2rem;
     }
 
-    .cases .deleted-case {
-        margin: 0 1rem;
+    .cases .expired-case {
+        margin: 0 0rem;
     }
 
     .cases .status-expired {
