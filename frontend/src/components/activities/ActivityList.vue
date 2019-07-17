@@ -8,6 +8,7 @@
                     <th>Status</th>
                     <th>Ydelse</th>
                     <th>Udbetales til</th>
+                    <th>Supplerende information</th>
                     <th>Start</th>
                     <th>Slut</th>
                     <th style="text-align: right;">Udgift i år</th>
@@ -24,11 +25,13 @@
                         <span v-if="a.activity_type === 'MAIN_ACTIVITY'" class="act-label">Hovedydelse</span>
                     </td>
                     <td></td>
+                    <td>{{ a.note }}</td>
                     <td>{{ displayDate(a.start_date) }}</td>
                     <td>{{ displayDate(a.end_date) }}</td>
                     <td style="text-align: right;">{{ a.total_cost_this_year }} kr</td>
                 </tr>
                 <tr>
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -39,6 +42,7 @@
                     </td>
                 </tr>
                 <tr v-if="has_expected">
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>

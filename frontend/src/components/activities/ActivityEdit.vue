@@ -57,7 +57,7 @@
                         <input type="date" id="field-enddate" v-model="act.end_date">
                     </fieldset>
                     <fieldset>
-                        <label for="field-text">Bemærkning</label>
+                        <label for="field-text">Supplerende information</label>
                         <textarea v-model="act.note"></textarea>
                     </fieldset>
                     <hr>
