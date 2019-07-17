@@ -111,7 +111,7 @@
             },
             expiredItems: function() {
                 if (this.status_expired === false) {
-                    axios.get(`/cases/?expired=${ true }`)
+                    axios.get(`/cases/?expired=true`)
                     .then(res => {
                         this.items = res.data
                     })
