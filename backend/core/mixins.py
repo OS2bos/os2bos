@@ -23,13 +23,16 @@ class AuditMixin:
 
         username = request.user.username
         action = self.action
-        method = request.method.lower()
+        method = request.method
         status_code = status_code
         request_path = request.path
         datetime = timezone.now()
 
+        if status_code == 201 and action == "create":
+            objid = response.data["id"]
+            request_path = f"{request_path}{objid}"
         log_str = (
-            f"{datetime} {username} {action} {method}"
+            f"{datetime} {username} {action} {method} "
             + f"{request_path} {status_code}"
         )
         if request.method.lower() in self.log_methods:
