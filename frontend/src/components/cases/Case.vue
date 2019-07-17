@@ -106,20 +106,36 @@
         computed: {
             cas: function() {
                 return this.$store.getters.getCase
+            },
+            user: function() {
+                return this.$store.getters.getUser
             }
         },
         watch: {
             cas: function() {
-                this.$store.commit('setBreadcrumb', [
-                    {
-                        link: '/',
-                        title: 'Mine sager'
-                    },
-                    {
-                        link: false,
-                        title: `${ this.cas.sbsys_id}, ${ this.cas.name}`
-                    }
-                ])
+                if (this.cas.case_worker === this.user.id) {
+                    this.$store.commit('setBreadcrumb', [
+                        {
+                            link: '/',
+                            title: 'Mine sager'
+                        },
+                        {
+                            link: false,
+                            title: `${ this.cas.sbsys_id}, ${ this.cas.name}`
+                        }
+                    ])
+                } else {
+                    this.$store.commit('setBreadcrumb', [
+                        {
+                            link: '/all-cases',
+                            title: 'Alle sager'
+                        },
+                        {
+                            link: false,
+                            title: `${ this.cas.sbsys_id}, ${ this.cas.name}`
+                        }
+                    ])
+                }
             }
         },
         methods: {

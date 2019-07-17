@@ -193,6 +193,11 @@
                 }
             },
             saveChanges: function() {
+                let cpr = this.cas.cpr_number
+                if (!cpr.match(/-/)) {
+                    let str = cpr.substring(6, 10).replace('', '-')
+                    cpr = cpr.substring(0, 6) + str
+                }
                 let data = {
                     sbsys_id: this.cas.sbsys_id,
                     case_worker: this.cas.case_worker,
@@ -201,7 +206,7 @@
                     effort_step: this.cas.effort_step,
                     scaling_step: this.cas.scaling_step,
                     name: this.cas.name,
-                    cpr_number: this.cas.cpr_number,
+                    cpr_number: cpr,
                     paying_municipality: this.cas.paying_municipality,
                     acting_municipality: this.cas.acting_municipality,
                     residence_municipality: this.cas.residence_municipality,
