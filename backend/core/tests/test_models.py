@@ -771,3 +771,107 @@ class PaymentScheduleTestCase(TestCase):
         payment_schedule.save()
         with self.assertRaises(ValueError):
             payment_schedule.synchronize_payments(start_date, end_date)
+
+
+class CaseTestCase(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_expired_one(self):
+        # generate a just expired end_date
+        now = timezone.now()
+        start_date = date(year=now.year, month=1, day=1)
+        end_date = now.date() - timedelta(days=1)
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=Activity.MAIN_ACTIVITY,
+            status=Activity.STATUS_GRANTED,
+            payment_plan=payment_schedule,
+        )
+
+        self.assertTrue(case.expired)
+
+    def test_expired_none(self):
+        # generate an end_date in the future
+        now = timezone.now()
+        start_date = date(year=now.year, month=1, day=1)
+        end_date = now.date()
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=Activity.MAIN_ACTIVITY,
+            status=Activity.STATUS_GRANTED,
+            payment_plan=payment_schedule,
+        )
+
+        self.assertFalse(case.expired)
+
+    def test_expired_no_activities(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+
+        self.assertFalse(case.expired)
+
+    def test_expired_multiple_main_activities(self):
+        now = timezone.now()
+        start_date = date(year=now.year, month=1, day=1)
+        end_date = now.date() - timedelta(days=3)
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        # create an activity with an expired end_date
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=Activity.MAIN_ACTIVITY,
+            status=Activity.STATUS_GRANTED,
+            payment_plan=payment_schedule,
+        )
+        # create an activity with an expired end_date
+        start_date = now.date() - timedelta(days=2)
+        end_date = now.date() - timedelta(days=1)
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+        )
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=Activity.MAIN_ACTIVITY,
+            status=Activity.STATUS_GRANTED,
+            payment_plan=payment_schedule,
+        )
+
+        self.assertTrue(case.expired)

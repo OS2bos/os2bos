@@ -1,6 +1,6 @@
 from django.utils import timezone
 from django.db import models
-from django.db.models import Sum, CharField, Value
+from django.db.models import Sum, CharField, Value, Q, F, Count
 from django.db.models.functions import (
     Coalesce,
     Cast,
@@ -47,3 +47,45 @@ class PaymentQuerySet(models.QuerySet):
             .order_by("date_month")
             .annotate(amount=Sum("amount"))
         )
+
+
+class CaseQuerySet(models.QuerySet):
+    def ongoing(self):
+        """
+        Only include ongoing (non-expired) Cases.
+        """
+        expired_ids = self.expired().values_list("id", flat=True)
+        return self.exclude(id__in=expired_ids)
+
+    def expired(self):
+        """
+        Only include expired Cases.
+        """
+        from core.models import Activity
+
+        today = timezone.now().date()
+
+        main_expired_q = Q(
+            appropriations__activities__end_date__lt=today,
+            appropriations__activities__activity_type=Activity.MAIN_ACTIVITY,
+        )
+        main_q = Q(
+            appropriations__activities__activity_type=Activity.MAIN_ACTIVITY
+        )
+        # exclude cases with no activities and filter for activities
+        # where the number of main activities and expired main activities
+        # are the same
+        return (
+            self.exclude(appropriations__activities__isnull=True)
+            .annotate(
+                expired_main_activities_count=Count(
+                    "appropriations__activities", filter=main_expired_q
+                )
+            )
+            .annotate(
+                main_activities_count=Count(
+                    "appropriations__activities", filter=main_q
+                )
+            )
+            .filter(expired_main_activities_count=F("main_activities_count"))
+        ).distinct()
