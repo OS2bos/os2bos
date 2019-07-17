@@ -194,9 +194,7 @@
             },
             saveChanges: function() {
                 let cpr = this.cas.cpr_number
-                if (cpr.match(/-/)) {
-                    cpr
-                } else {
+                if (!cpr.match(/-/)) {
                     let str = cpr.substring(6, 10).replace('', '-')
                     cpr = cpr.substring(0, 6) + str
                 }

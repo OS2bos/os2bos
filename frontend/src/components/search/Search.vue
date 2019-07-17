@@ -40,9 +40,7 @@
       methods: {
         updateItems (query) {
           query = query || ''
-          if (query.match(/-/)) {
-              query
-          } else {
+          if (!query.match(/-/)) {
               let str = query.substring(6, 10).replace('', '-')
               query = query.substring(0, 6) + str
           }

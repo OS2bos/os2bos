@@ -81,13 +81,15 @@
         },
         watch: {
           urlQuery: function() {
-              this.displayItems(this.$route.params.query)
+              this.update()
           }
         },
         methods: {
             update: function() {
                 this.fetchCases(this.$route.params.id)
-                this.displayItems(this.$route.params.query)
+                if (this.$route.params.query) {
+                    this.displayItems(this.$route.params.query)
+                }
             },
             fetchCases: function(id) {
                 axios.get('/cases/?expired=false')
@@ -100,14 +102,10 @@
                 return json2js(dt)
             }, 
             displayItems: function() {
-                if (this.$route.params.query) {
-                    axios.get(`/cases/?cpr_number=${ this.$route.params.query }`)
-                    .then(res => {
-                        this.items = res.data
-                    })
-                } else {
-                    this.fetchCases()
-                }
+                axios.get(`/cases/?cpr_number=${ this.$route.params.query }`)
+                .then(res => {
+                    this.items = res.data
+                })
             },
             expiredItems: function() {
                 if (this.status_expired === false) {
