@@ -4,7 +4,7 @@
           class="search-bar"
           name="search" 
           type="search" 
-          placeholder="Søg på cpr nr. - eks. 000000-0000" 
+          placeholder="Søg på cpr nr." 
           v-model="item"
           @update-items="updateItems"
           :min-len="10"
