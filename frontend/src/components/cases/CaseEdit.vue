@@ -64,7 +64,7 @@
                 <assessment-edit :case-obj="cas" @assessment="updateAssessment" v-if="cas.target_group === 'FAMILY_DEPT'" />
 
                 <fieldset v-if="cas.target_group === 'FAMILY_DEPT'">
-                    <label for="selectField4">Distrikt</label>
+                    <label for="selectField4">Skoledistrikt (nuværende eller oprindeligt)</label>
                     <list-picker :dom-id="'selectField4'" :selected-id="cas.district" required @selection="changeDistrict" :list="districts" />
                 </fieldset>
 
