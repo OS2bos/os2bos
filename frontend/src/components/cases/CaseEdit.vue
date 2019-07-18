@@ -9,17 +9,17 @@
             <div class="column">
                 <fieldset>
                     <label for="field-sbsys-id">SBSYS Hovedsag:</label>
-                    <input id="field-sbsys-id" type="search" v-model="cas.sbsys_id">
+                    <input id="field-sbsys-id" type="search" v-model="cas.sbsys_id" required>
                 </fieldset>
 
                 <fieldset>
                     <label for="field-cpr">Sagspart, CPR-nr</label>
-                    <input id="field-cpr" type="text" v-model="cas.cpr_number" @input="lookupCPR(cas.cpr_number)">
+                    <input id="field-cpr" type="text" v-model="cas.cpr_number" @input="lookupCPR(cas.cpr_number)" required>
                 </fieldset>
             
                 <fieldset>
                     <label for="field-name">Sagspart, navn</label>
-                    <input id="field-name" type="text" v-model="cas.name">
+                    <input id="field-name" type="text" v-model="cas.name" required>
                 </fieldset>
 
                 <fieldset>
