@@ -28,10 +28,18 @@ const getters = {
 
 const mutations = {
     setMunis (state, munis) {
-        state.municipalities = munis
+        state.municipalities = munis.sort(function(a,b) {
+            if (a.name > b.name) { return 1 } 
+            if (a.name < b.name) { return -1 }
+            return 0
+        })
     },
     setDist (state, districts) {
-        state.districts = districts
+        state.districts = districts.sort(function(a,b) {
+            if (a.name > b.name) { return 1 } 
+            if (a.name < b.name) { return -1 }
+            return 0
+        })
     },
     setSections (state, sections) {
         state.sections = sections
