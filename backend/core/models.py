@@ -524,6 +524,9 @@ class Appropriation(AuditModelMixin, models.Model):
     case = models.ForeignKey(
         Case, on_delete=models.CASCADE, related_name="appropriations"
     )
+    note = models.TextField(
+        verbose_name=_("supplerende oplysninger"), blank=True
+    )
 
     @property
     def total_granted_this_year(self):
