@@ -4,7 +4,7 @@
         <select  v-model="entry.payment_method">
             <option value="INVOICE">Faktura</option>
             <option value="INTERNAL">Intern afregning</option>
-            <option value="CASH">Kontant udbetaling</option>
+            <option value="CASH">Betaling</option>
             <option value="SD">SD-løn</option>
         </select>
         <div v-if="entry.payment_method">

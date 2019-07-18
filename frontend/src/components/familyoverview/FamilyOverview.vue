@@ -9,7 +9,7 @@
                 <tr>
                     <th>Relation</th>
                     <th>Borger</th>
-                    <th>Sag</th>
+                    <th>Relateret sag</th>
                     <th></th>
                 </tr>
             </thead>
