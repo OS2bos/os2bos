@@ -10,6 +10,7 @@
                 <fieldset>
                     <label for="field-sbsys-id">SBSYS Hovedsag:</label>
                     <input id="field-sbsys-id" type="search" v-model="cas.sbsys_id" required>
+                    <span class="danger" v-if="sbsysCheck">SBSYS-sagsnummer er ikke et KLE-nummer</span>
                 </fieldset>
 
                 <fieldset>
@@ -140,6 +141,14 @@
             },
             teams: function() {
                 return this.$store.getters.getTeams
+            },
+            sbsysCheck: function() {
+                let kle = this.cas.sbsys_id
+                if (kle) {
+                    if (kle.match(/[^0-9, .]/g)) {
+                        return true
+                    }
+                }
             }
         },
         methods: {
@@ -258,6 +267,10 @@
         background-color: transparent;
         color: var(--primary);
         border-color: transparent;
+    }
+
+    .danger {
+        color: var(--danger);
     }
 
 </style>
