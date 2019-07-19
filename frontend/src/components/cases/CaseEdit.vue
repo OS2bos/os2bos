@@ -10,7 +10,7 @@
                 <fieldset>
                     <label for="field-sbsys-id">SBSYS Hovedsag:</label>
                     <input id="field-sbsys-id" type="search" v-model="cas.sbsys_id" required>
-                    <span class="danger" v-if="sbsysCheck">SBSYS-sagsnummer er ikke et KLE-nummer</span>
+                    <span class="danger" v-if="sbsysCheck">Sagsnummeret har ikke et gyldig KLE-nummer</span>
                 </fieldset>
 
                 <fieldset>
@@ -145,7 +145,7 @@
             sbsysCheck: function() {
                 let kle = this.cas.sbsys_id
                 if (kle) {
-                    if (kle.match(/[^0-9, .]/g)) {
+                    if (!kle.match(/27.24.00/) && !kle.length < 9) {
                         return true
                     }
                 }
