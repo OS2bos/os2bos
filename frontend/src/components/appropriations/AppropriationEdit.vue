@@ -77,7 +77,11 @@
                     let section = this.all_sections.find(s => {
                         return s.kle_number === this.kle[0]
                     })
-                    this.appr.section = section.id
+                    if (section) {
+                        this.appr.section = section.id
+                    } else {
+                        return false
+                    }
                 } else {
                     return false
                 }                
