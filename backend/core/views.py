@@ -117,6 +117,8 @@ class AppropriationViewSet(AuditViewSet):
 
         try:
             appropriation.grant(approval_level, approval_note)
+            # Success, set approval user.
+            appropriation.approval_user = request.user
             response = Response("OK", status.HTTP_200_OK)
         except Exception as e:
             response = Response(
