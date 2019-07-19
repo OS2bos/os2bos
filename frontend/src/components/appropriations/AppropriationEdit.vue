@@ -74,13 +74,9 @@
             checkKLE: function(input) {
                 this.kle = input.match(this.kle_regex)
                 if (this.kle) {
-                    let section = this.all_sections.find(s => {
-                        return s.kle_number === this.kle[0]
-                    })
-                    if (section) {
+                    let sections = this.all_sections.filter(s => s.kle_number === this.kle[0])
+                    if (sections.length === 1) {
                         this.appr.section = section.id
-                    } else {
-                        return false
                     }
                 } else {
                     return false
