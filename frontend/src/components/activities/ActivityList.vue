@@ -7,8 +7,8 @@
                 <tr>
                     <th>Status</th>
                     <th>Ydelse</th>
-                    <th>Udbetales til</th>
                     <th>Supplerende information</th>
+                    <th>Udbetales til</th>
                     <th>Start</th>
                     <th>Slut</th>
                     <th style="text-align: right;">Udgift i år</th>
@@ -17,15 +17,15 @@
             <tbody>
                 <tr v-for="a in acts" :key="a.id" :class="{ 'expected-row': a.status === 'EXPECTED', 'adjustment-row': a.modifies }">
                     <td>
-                        <div v-html="statusLabel(a.status)"></div>
+                        <div class="mini-label" v-html="statusLabel(a.status)"></div>
                     </td>
                     <td>
                         <span v-if="a.modifies" class="act-label"><i class="material-icons">subdirectory_arrow_right</i></span>
                         <router-link :to="`/activity/${ a.id }`">{{ activityId2name(a.details) }}</router-link>
                         <span v-if="a.activity_type === 'MAIN_ACTIVITY'" class="act-label">Hovedydelse</span>
                     </td>
-                    <td></td>
                     <td>{{ a.note }}</td>
+                    <td></td>
                     <td>{{ displayDate(a.start_date) }}</td>
                     <td>{{ displayDate(a.end_date) }}</td>
                     <td style="text-align: right;">{{ a.total_cost_this_year }} kr</td>

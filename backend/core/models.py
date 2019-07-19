@@ -517,6 +517,13 @@ class Appropriation(AuditModelMixin, models.Model):
     approval_note = models.TextField(
         verbose_name=_("evt. bemærkning"), blank=True
     )
+    approval_user = models.ForeignKey(
+        User,
+        related_name="approved_appropriations",
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+    )
 
     appropriation_date = models.DateField(
         verbose_name=_("bevillingsdato"), null=True, blank=True
@@ -609,8 +616,7 @@ class Appropriation(AuditModelMixin, models.Model):
                 self.approval_level = ApprovalLevel.objects.get(
                     id=approval_level
                 )
-            if approval_note:
-                self.approval_note = approval_note
+            self.approval_note = approval_note
             self.appropriation_date = timezone.now().date()
             self.save()
             # Now go through the activities.
