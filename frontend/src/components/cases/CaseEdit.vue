@@ -10,7 +10,7 @@
                 <fieldset>
                     <label for="field-sbsys-id">SBSYS Hovedsag:</label>
                     <input id="field-sbsys-id" type="search" v-model="cas.sbsys_id" required>
-                    <span class="danger" v-if="sbsysCheck">Sagsnummeret har ikke et gyldig KLE-nummer</span>
+                    <span class="danger" v-if="sbsysCheck">Sagsnummeret indeholder ikke et gyldig KLE-nummer</span>
                 </fieldset>
 
                 <fieldset>
