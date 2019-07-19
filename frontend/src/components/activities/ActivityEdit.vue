@@ -50,11 +50,11 @@
                     </fieldset>
                     <fieldset>
                         <label for="field-startdate">Startdato</label>
-                        <input type="date" id="field-startdate" v-model="act.start_date">
+                        <input type="date" id="field-startdate" v-model="act.start_date" :max="current_end_date" @change="setMinMaxDates()">
                     </fieldset>
                     <fieldset>
                         <label for="field-enddate">Slutdato</label>
-                        <input type="date" id="field-enddate" v-model="act.end_date">
+                        <input type="date" id="field-enddate" v-model="act.end_date" :min="current_start_date" @change="setMinMaxDates()">
                     </fieldset>
                     <fieldset>
                         <label for="field-text">Supplerende information</label>
@@ -102,7 +102,9 @@
                 act: {},
                 act_status_expected: false,
                 pay: {},
-                act_details: null
+                act_details: null,
+                current_start_date: null,
+                current_end_date: null
             }
         },
         computed: {
@@ -142,6 +144,14 @@
             changeActivity: function(act) {
                 this.act.details = act
                 this.$store.commit('setActDetail', act)
+            },
+            setMinMaxDates: function() {
+                if (this.act.start_date) {
+                    this.current_start_date = this.act.start_date
+                }
+                if (this.act.end_date) {
+                    this.current_end_date = this.act.end_date
+                }
             },
             displayActName: function(id) {
                 return activityId2name(id)
