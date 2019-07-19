@@ -616,8 +616,7 @@ class Appropriation(AuditModelMixin, models.Model):
                 self.approval_level = ApprovalLevel.objects.get(
                     id=approval_level
                 )
-            if approval_note:
-                self.approval_note = approval_note
+            self.approval_note = approval_note
             self.appropriation_date = timezone.now().date()
             self.save()
             # Now go through the activities.
