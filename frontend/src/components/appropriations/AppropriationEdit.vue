@@ -17,6 +17,10 @@
                 </select>
             </fieldset>
             <fieldset>
+                <label for="field-text">Supplerende information</label>
+                <textarea v-model="appr.note"></textarea>
+            </fieldset>
+            <fieldset>
                 <input type="submit" value="Gem">
                 <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
             </fieldset>
@@ -86,7 +90,8 @@
                 if (!this.create_mode) {
                     axios.patch(`/appropriations/${ this.appr.id }/`, {
                         sbsys_id: this.appr.sbsys_id,
-                        section: this.appr.section
+                        section: this.appr.section,
+                        note: this.appr.note
                     })
                     .then(res => {
                         this.$emit('close')
@@ -97,6 +102,7 @@
                     axios.post(`/appropriations/`, {
                         sbsys_id: this.appr.sbsys_id,
                         section: this.appr.section,
+                        note: this.appr.note,
                         status: 'DRAFT',
                         case: cas_id
                     })
