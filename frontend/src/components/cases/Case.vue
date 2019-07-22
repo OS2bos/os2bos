@@ -7,7 +7,10 @@
                 <i class="material-icons">folder_shared</i>
                 Hovedsag {{ cas.sbsys_id }}
             </h1>
-            <button v-if="!edit_mode" @click="edit_mode = !edit_mode">Redigér</button>
+            <div v-if="!edit_mode" class="actions">
+                <button @click="edit_mode = !edit_mode">Redigér</button>
+                <a :href="`/api/cases/${ cas.id }/csv/`" target="_blank">Download .CSV</a>
+            </div>
         </header>
 
         <div class="case-info" v-if="!edit_mode">
@@ -103,20 +106,36 @@
         computed: {
             cas: function() {
                 return this.$store.getters.getCase
+            },
+            user: function() {
+                return this.$store.getters.getUser
             }
         },
         watch: {
             cas: function() {
-                this.$store.commit('setBreadcrumb', [
-                    {
-                        link: '/',
-                        title: 'Mine sager'
-                    },
-                    {
-                        link: false,
-                        title: `${ this.cas.sbsys_id}, ${ this.cas.name}`
-                    }
-                ])
+                if (this.cas.case_worker === this.user.id) {
+                    this.$store.commit('setBreadcrumb', [
+                        {
+                            link: '/',
+                            title: 'Mine sager'
+                        },
+                        {
+                            link: false,
+                            title: `${ this.cas.sbsys_id}, ${ this.cas.name}`
+                        }
+                    ])
+                } else {
+                    this.$store.commit('setBreadcrumb', [
+                        {
+                            link: '/all-cases',
+                            title: 'Alle sager'
+                        },
+                        {
+                            link: false,
+                            title: `${ this.cas.sbsys_id}, ${ this.cas.name}`
+                        }
+                    ])
+                }
             }
         },
         methods: {
@@ -163,8 +182,16 @@
         align-items: center;
     }
 
-    .case-header > button {
+    .case .actions {
         margin: 1rem;
+    }
+
+    .case .actions > * {
+        margin: 0 .5rem;
+    }
+    
+    .case-header .material-icons {
+        font-size: 3rem;
     }
 
     .case-info {

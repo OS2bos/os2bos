@@ -53,10 +53,15 @@
         },
         computed: {
             payments_by_year: function() {
-                let payms = this.payments.filter(payment => {
-                    return this.current_year === parseInt(payment.date.substr(0,4))
-                })
-                return payms
+                if (this.payments) {
+                    let payms = this.payments.filter(payment => {
+                        return this.current_year === parseInt(payment.date.substr(0,4))
+                    })
+                    return payms
+                } else {
+                    return false
+                }
+                
             },
             sum: function() {
                 if (this.payments_by_year) {

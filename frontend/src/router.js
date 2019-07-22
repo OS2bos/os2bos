@@ -11,6 +11,7 @@ import AppropriationEdit from './components/appropriations/AppropriationEdit.vue
 import Activity from './components/activities/Activity.vue'
 import ActivityEdit from './components/activities/ActivityEdit.vue'
 import PaymentSchedule from './components/payment/PaymentSchedule.vue'
+import DataView from './components/dataview/DataView.vue'
 import Login from './components/auth/Login.vue'
 import Page404 from './components/http/Page404.vue'
 import store from './store.js'
@@ -22,6 +23,11 @@ const router = new Router({
         {
             path: '/',
             name: 'home',
+            component: Cases
+        },
+        {
+            path: '/my-cases/',
+            name: 'my-caces',
             component: Cases
         },
         {
@@ -85,6 +91,11 @@ const router = new Router({
             path: '/paymentschedule/',
             name: 'paymentschedule',
             component: PaymentSchedule
+        },
+        {
+            path: '/data-view/',
+            name: 'dataview',
+            component: DataView
         },
         {
             path: '/login',

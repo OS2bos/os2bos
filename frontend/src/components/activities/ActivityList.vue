@@ -7,6 +7,7 @@
                 <tr>
                     <th>Status</th>
                     <th>Ydelse</th>
+                    <th>Supplerende information</th>
                     <th>Udbetales til</th>
                     <th>Start</th>
                     <th>Slut</th>
@@ -14,14 +15,16 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="a in acts" :key="a.id" :class="{'expected-row': a.status === 'EXPECTED'}">
+                <tr v-for="a in acts" :key="a.id" :class="{ 'expected-row': a.status === 'EXPECTED', 'adjustment-row': a.modifies }">
                     <td>
-                        <div v-html="statusLabel(a.status)"></div>
+                        <div class="mini-label" v-html="statusLabel(a.status)"></div>
                     </td>
                     <td>
+                        <span v-if="a.modifies" class="act-label"><i class="material-icons">subdirectory_arrow_right</i></span>
                         <router-link :to="`/activity/${ a.id }`">{{ activityId2name(a.details) }}</router-link>
                         <span v-if="a.activity_type === 'MAIN_ACTIVITY'" class="act-label">Hovedydelse</span>
                     </td>
+                    <td>{{ a.note }}</td>
                     <td></td>
                     <td>{{ displayDate(a.start_date) }}</td>
                     <td>{{ displayDate(a.end_date) }}</td>
@@ -32,12 +35,14 @@
                     <td></td>
                     <td></td>
                     <td></td>
+                    <td></td>
                     <td style="font-weight: bold;">Samlet bevilget</td>
                     <td style="text-align: right; font-weight: bold;">
                         {{ appropriation.total_granted_this_year }} kr
                     </td>
                 </tr>
                 <tr v-if="has_expected">
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -57,7 +62,7 @@
 <script>
 
     import axios from '../http/Http.js'
-    import { json2js } from '../filters/Date.js'
+    import { json2jsDate } from '../filters/Date.js'
     import { activityId2name, displayStatus } from '../filters/Labels.js'
 
     export default {
@@ -90,7 +95,7 @@
                 this.$store.dispatch('fetchActivities', this.apprId)
             },
             displayDate: function(dt) {
-                return json2js(dt)
+                return json2jsDate(dt)
             },
             activityId2name: function(id) {
                 return activityId2name(id)
@@ -126,6 +131,10 @@
     .activities .expected-row > td,
     .activities .expected {
         background-color: hsl(var(--color3), 80%, 80%); 
+    }
+
+    .activities .adjustment-row > td {
+        border-top: none;
     }
 
     .activities .act-label {

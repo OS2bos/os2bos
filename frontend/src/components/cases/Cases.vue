@@ -3,12 +3,14 @@
     <section class="cases" v-if="cas">
         <header class="cases-header">
             <h1>Mine sager</h1>
-            <button class="create" @click="$router.push('case-create')">+ Tilknyt hovedsag</button>
-            <button class="all-cases" @click="$router.push(`/all-cases/`)">Alle sager</button>
+            <button class="create" @click="$router.push('/case-create/')">+ Tilknyt hovedsag</button>
         </header>
         <table v-if="cas.length > 0">
             <thead>
                 <tr>
+                    <th>
+                        Status
+                    </th>
                     <th>
                         SBSYS-hovedsag nr.
                     </th> 
@@ -22,6 +24,9 @@
             </thead>
             <tbody>
                 <tr v-for="c in cas" :key="c.id">
+                    <td>
+                        <span class="status-active" v-if="c.expired === false">Aktiv</span>
+                    </td>
                     <td>
                         <i class="material-icons">folder_shared</i>
                         <router-link :to="`/case/${ c.id }`">
@@ -72,7 +77,7 @@
             },
             fetchCases: function(id) {
                 if (this.user) {
-                    axios.get(`/cases/?case_worker=${ this.user.id }`)
+                    axios.get(`/cases/?case_worker=${ this.user.id }&expired=false`)
                     .then(res => {
                         this.cas = res.data
                     })
@@ -107,8 +112,10 @@
         margin: 0 2rem;
     }
 
-    .cases .all-cases {
-        margin: 0 0rem;
+    .cases .status-active {
+        background-color: var(--success);
+        color: white;
+        padding: .25rem;
     }
 
 </style>

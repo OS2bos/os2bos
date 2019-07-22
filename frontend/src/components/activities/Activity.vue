@@ -11,7 +11,7 @@
         </header>
 
         <div v-if="show_edit">
-            <activity-edit :activity-obj="act" v-if="show_edit" @save="reload()" :mode="edit_mode" />
+            <activity-edit :activity-obj="act" v-if="show_edit" @save="reload()" @close="show_edit = !show_edit" :mode="edit_mode" />
         </div>
 
         <div class="activity-info" v-if="!show_edit">
@@ -35,7 +35,7 @@
                 <dd>{{ displayDate(act.start_date) }}</dd>
                 <dt>Slutdato</dt>
                 <dd>{{ displayDate(act.end_date) }}</dd>
-                <dt>Bemærkning</dt>
+                <dt>Supplerende information</dt>
                 <dd>{{ act.note }}</dd>
             </dl>
             
@@ -104,7 +104,7 @@
     import axios from '../http/Http.js'
     import ActivityEdit from './ActivityEdit.vue'
     import PaymentSchedule from '../payment/PaymentSchedule.vue'
-    import { json2js } from '../filters/Date.js'
+    import { json2jsDate } from '../filters/Date.js'
     import { activityId2name, sectionId2name, displayStatus } from '../filters/Labels.js'
 
     export default {
@@ -163,7 +163,7 @@
                 this.show_edit =  false
             },
             displayDate: function(dt) {
-                return json2js(dt)
+                return json2jsDate(dt)
             },
             activityId2name: function(id) {
                 return activityId2name(id)
@@ -197,6 +197,10 @@
         flex-flow: row nowrap;
         align-items: center;
         justify-content: flex-start;
+    }
+
+    .activity-header .material-icons {
+        font-size: 3rem;
     }
 
     .activity .act-edit-btn {

@@ -4,10 +4,10 @@
           class="search-bar"
           name="search" 
           type="search" 
-          placeholder="Søg på cpr nr. - eks. 000000-0000" 
+          placeholder="Søg på cpr nr." 
           v-model="item"
           @update-items="updateItems"
-          :min-len="11"
+          :min-len="10"
         />
     </div>
 </template>
@@ -40,6 +40,10 @@
       methods: {
         updateItems (query) {
           query = query || ''
+          if (!query.match(/-/)) {
+              let str = query.substring(6, 10).replace('', '-')
+              query = query.substring(0, 6) + str
+          }
           this.$router.push(`/all-cases/${ query }`)
         }
       }

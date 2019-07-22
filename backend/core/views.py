@@ -6,7 +6,6 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 
-
 from django_filters import rest_framework as filters
 
 from core.models import (
@@ -49,31 +48,61 @@ from core.serializers import (
 
 from core.utils import get_person_info
 
+from core.mixins import AuditMixin
+
 # Working models, read/write
 
 
-class CaseViewSet(viewsets.ModelViewSet):
+class CaseFilter(filters.FilterSet):
+    expired = filters.BooleanFilter(method="filter_expired", label=_("Udgået"))
+
+    class Meta:
+        model = Case
+        fields = "__all__"
+
+    def filter_expired(self, queryset, name, value):
+        if value:
+            return queryset.expired()
+        else:
+            return queryset.ongoing()
+
+
+class AuditViewSet(AuditMixin, viewsets.ModelViewSet):
+    pass
+
+
+class CaseViewSet(AuditViewSet):
     queryset = Case.objects.all()
     serializer_class = CaseSerializer
-
-    filterset_fields = "__all__"
+    filterset_class = CaseFilter
 
     def perform_create(self, serializer):
         current_user = self.request.user
         team = current_user.team
         serializer.save(case_worker=current_user, team=team)
 
+    def perform_update(self, serializer):
+        # save history_change_reason for the Case used for assessments.
+        change_reason = None
+        if (
+            "history_change_reason" in self.request.data
+            and self.request.data["history_change_reason"]
+        ):
+            change_reason = self.request.data.pop("history_change_reason")
+
+        serializer.save(changeReason=change_reason)
+
     @action(detail=True, methods=["get"])
     def history(self, request, pk=None):
         """
-        Fetch history of HistoricalCases.
+        Fetch history of HistoricalCases which we use as assessments.
         """
         case = self.get_object()
         serializer = HistoricalCaseSerializer(case.history.all(), many=True)
         return Response(serializer.data)
 
 
-class AppropriationViewSet(viewsets.ModelViewSet):
+class AppropriationViewSet(AuditViewSet):
     queryset = Appropriation.objects.all()
     serializer_class = AppropriationSerializer
 
@@ -88,6 +117,9 @@ class AppropriationViewSet(viewsets.ModelViewSet):
 
         try:
             appropriation.grant(approval_level, approval_note)
+            # Success, set approval user.
+            appropriation.approval_user = request.user
+            appropriation.save()
             response = Response("OK", status.HTTP_200_OK)
         except Exception as e:
             response = Response(
@@ -96,29 +128,29 @@ class AppropriationViewSet(viewsets.ModelViewSet):
         return response
 
 
-class ActivityViewSet(viewsets.ModelViewSet):
+class ActivityViewSet(AuditViewSet):
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
 
     filterset_fields = "__all__"
 
 
-class PaymentMethodDetailsViewSet(viewsets.ModelViewSet):
+class PaymentMethodDetailsViewSet(AuditViewSet):
     queryset = PaymentMethodDetails.objects.all()
     serializer_class = PaymentMethodDetailsSerializer
 
 
-class PaymentScheduleViewSet(viewsets.ModelViewSet):
+class PaymentScheduleViewSet(AuditViewSet):
     queryset = PaymentSchedule.objects.all()
     serializer_class = PaymentScheduleSerializer
 
 
-class PaymentViewSet(viewsets.ModelViewSet):
+class PaymentViewSet(AuditViewSet):
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
 
 
-class RelatedPersonViewSet(viewsets.ModelViewSet):
+class RelatedPersonViewSet(AuditViewSet):
     queryset = RelatedPerson.objects.all()
     serializer_class = RelatedPersonSerializer
 
