@@ -1,7 +1,7 @@
 [
    {
       "model":"core.section",
-      "pk":373,
+      "pk":519,
       "fields":{
          "paragraph":"SEL-10",
          "kle_number":"27.12.04",
@@ -15,7 +15,7 @@
    },
    {
       "model":"core.section",
-      "pk":374,
+      "pk":520,
       "fields":{
          "paragraph":"SEL-100",
          "kle_number":"32.18.08",
@@ -29,7 +29,7 @@
    },
    {
       "model":"core.section",
-      "pk":375,
+      "pk":521,
       "fields":{
          "paragraph":"SEL-101",
          "kle_number":"27.51.04",
@@ -43,7 +43,7 @@
    },
    {
       "model":"core.section",
-      "pk":376,
+      "pk":522,
       "fields":{
          "paragraph":"SEL-101-3",
          "kle_number":"27.24.42",
@@ -57,7 +57,7 @@
    },
    {
       "model":"core.section",
-      "pk":377,
+      "pk":523,
       "fields":{
          "paragraph":"SEL-101-a",
          "kle_number":"27.51.04",
@@ -71,7 +71,7 @@
    },
    {
       "model":"core.section",
-      "pk":378,
+      "pk":524,
       "fields":{
          "paragraph":"SEL-102",
          "kle_number":"27.51.08",
@@ -85,7 +85,7 @@
    },
    {
       "model":"core.section",
-      "pk":379,
+      "pk":525,
       "fields":{
          "paragraph":"SEL-103",
          "kle_number":"27.54.04",
@@ -99,7 +99,7 @@
    },
    {
       "model":"core.section",
-      "pk":380,
+      "pk":526,
       "fields":{
          "paragraph":"SEL-103-2",
          "kle_number":"27.54.04",
@@ -113,7 +113,7 @@
    },
    {
       "model":"core.section",
-      "pk":381,
+      "pk":527,
       "fields":{
          "paragraph":"SEL-104",
          "kle_number":"27.54.08",
@@ -127,7 +127,7 @@
    },
    {
       "model":"core.section",
-      "pk":382,
+      "pk":528,
       "fields":{
          "paragraph":"SEL-105",
          "kle_number":"27.54.04",
@@ -141,7 +141,7 @@
    },
    {
       "model":"core.section",
-      "pk":383,
+      "pk":529,
       "fields":{
          "paragraph":"SEL-107",
          "kle_number":"27.57.04",
@@ -155,7 +155,7 @@
    },
    {
       "model":"core.section",
-      "pk":384,
+      "pk":530,
       "fields":{
          "paragraph":"SEL-107-1",
          "kle_number":"27.57.04",
@@ -169,7 +169,7 @@
    },
    {
       "model":"core.section",
-      "pk":385,
+      "pk":531,
       "fields":{
          "paragraph":"SEL-107-2.1",
          "kle_number":"27.57.04",
@@ -183,7 +183,7 @@
    },
    {
       "model":"core.section",
-      "pk":386,
+      "pk":532,
       "fields":{
          "paragraph":"SEL-107-2.2",
          "kle_number":"27.57.04",
@@ -197,7 +197,7 @@
    },
    {
       "model":"core.section",
-      "pk":387,
+      "pk":533,
       "fields":{
          "paragraph":"SEL-108",
          "kle_number":"27.57.08",
@@ -211,7 +211,7 @@
    },
    {
       "model":"core.section",
-      "pk":388,
+      "pk":534,
       "fields":{
          "paragraph":"SEL-109",
          "kle_number":"27.57.12",
@@ -225,7 +225,7 @@
    },
    {
       "model":"core.section",
-      "pk":389,
+      "pk":535,
       "fields":{
          "paragraph":"SEL-109-2",
          "kle_number":"27.51.08",
@@ -239,7 +239,7 @@
    },
    {
       "model":"core.section",
-      "pk":390,
+      "pk":536,
       "fields":{
          "paragraph":"SEL-109-7",
          "kle_number":"27.57.12",
@@ -253,7 +253,7 @@
    },
    {
       "model":"core.section",
-      "pk":391,
+      "pk":537,
       "fields":{
          "paragraph":"SEL-109-8",
          "kle_number":"27.57.12",
@@ -267,7 +267,7 @@
    },
    {
       "model":"core.section",
-      "pk":392,
+      "pk":538,
       "fields":{
          "paragraph":"SEL-110",
          "kle_number":"27.57.16",
@@ -281,7 +281,7 @@
    },
    {
       "model":"core.section",
-      "pk":393,
+      "pk":539,
       "fields":{
          "paragraph":"SEL-112",
          "kle_number":"27.60.04",
@@ -295,7 +295,7 @@
    },
    {
       "model":"core.section",
-      "pk":394,
+      "pk":540,
       "fields":{
          "paragraph":"SEL-11-2",
          "kle_number":"27.12.06",
@@ -309,7 +309,7 @@
    },
    {
       "model":"core.section",
-      "pk":395,
+      "pk":541,
       "fields":{
          "paragraph":"SEL-113",
          "kle_number":"27.60.16",
@@ -323,7 +323,7 @@
    },
    {
       "model":"core.section",
-      "pk":396,
+      "pk":542,
       "fields":{
          "paragraph":"SEL-11-3",
          "kle_number":"27.12.06",
@@ -337,7 +337,7 @@
    },
    {
       "model":"core.section",
-      "pk":397,
+      "pk":543,
       "fields":{
          "paragraph":"SEL-11-3.1",
          "kle_number":"27.12.06",
@@ -351,7 +351,7 @@
    },
    {
       "model":"core.section",
-      "pk":398,
+      "pk":544,
       "fields":{
          "paragraph":"SEL-11-3.2",
          "kle_number":"27.12.06",
@@ -365,7 +365,7 @@
    },
    {
       "model":"core.section",
-      "pk":399,
+      "pk":545,
       "fields":{
          "paragraph":"SEL-11-3.3",
          "kle_number":"27.12.06",
@@ -379,7 +379,7 @@
    },
    {
       "model":"core.section",
-      "pk":400,
+      "pk":546,
       "fields":{
          "paragraph":"SEL-11-3.4",
          "kle_number":"27.12.06",
@@ -393,7 +393,7 @@
    },
    {
       "model":"core.section",
-      "pk":401,
+      "pk":547,
       "fields":{
          "paragraph":"SEL-114",
          "kle_number":"27.60.20",
@@ -407,7 +407,7 @@
    },
    {
       "model":"core.section",
-      "pk":402,
+      "pk":548,
       "fields":{
          "paragraph":"SEL-11-4",
          "kle_number":"27.12.06",
@@ -421,7 +421,7 @@
    },
    {
       "model":"core.section",
-      "pk":403,
+      "pk":549,
       "fields":{
          "paragraph":"SEL-11-4.1",
          "kle_number":"27.12.06",
@@ -435,7 +435,7 @@
    },
    {
       "model":"core.section",
-      "pk":404,
+      "pk":550,
       "fields":{
          "paragraph":"SEL-11-4.1. jfr. stk. 3. nr. 1",
          "kle_number":"27.12.06",
@@ -449,7 +449,7 @@
    },
    {
       "model":"core.section",
-      "pk":405,
+      "pk":551,
       "fields":{
          "paragraph":"SEL-11-4.2",
          "kle_number":"27.12.06",
@@ -463,7 +463,7 @@
    },
    {
       "model":"core.section",
-      "pk":406,
+      "pk":552,
       "fields":{
          "paragraph":"SEL-116",
          "kle_number":"27.60.24",
@@ -477,7 +477,7 @@
    },
    {
       "model":"core.section",
-      "pk":407,
+      "pk":553,
       "fields":{
          "paragraph":"SEL-11-6",
          "kle_number":"27.12.06",
@@ -491,7 +491,7 @@
    },
    {
       "model":"core.section",
-      "pk":408,
+      "pk":554,
       "fields":{
          "paragraph":"SEL-116-4",
          "kle_number":"27.60.24",
@@ -505,7 +505,7 @@
    },
    {
       "model":"core.section",
-      "pk":409,
+      "pk":555,
       "fields":{
          "paragraph":"SEL-117",
          "kle_number":"27.60.28",
@@ -519,7 +519,7 @@
    },
    {
       "model":"core.section",
-      "pk":410,
+      "pk":556,
       "fields":{
          "paragraph":"SEL-11-7",
          "kle_number":"27.12.08",
@@ -533,7 +533,7 @@
    },
    {
       "model":"core.section",
-      "pk":411,
+      "pk":557,
       "fields":{
          "paragraph":"SEL-118",
          "kle_number":"27.63.04",
@@ -547,7 +547,7 @@
    },
    {
       "model":"core.section",
-      "pk":412,
+      "pk":558,
       "fields":{
          "paragraph":"SEL-11-8",
          "kle_number":"27.12.08",
@@ -561,7 +561,7 @@
    },
    {
       "model":"core.section",
-      "pk":413,
+      "pk":559,
       "fields":{
          "paragraph":"SEL-119",
          "kle_number":"32.18.14",
@@ -575,7 +575,7 @@
    },
    {
       "model":"core.section",
-      "pk":414,
+      "pk":560,
       "fields":{
          "paragraph":"SEL-12",
          "kle_number":"27.12.04",
@@ -589,7 +589,7 @@
    },
    {
       "model":"core.section",
-      "pk":415,
+      "pk":561,
       "fields":{
          "paragraph":"SEL-122",
          "kle_number":"32.18.14",
@@ -603,7 +603,7 @@
    },
    {
       "model":"core.section",
-      "pk":416,
+      "pk":562,
       "fields":{
          "paragraph":"SEL-12-a",
          "kle_number":"27.12.04",
@@ -617,7 +617,7 @@
    },
    {
       "model":"core.section",
-      "pk":417,
+      "pk":563,
       "fields":{
          "paragraph":"SEL-12-b",
          "kle_number":"27.12.04",
@@ -631,7 +631,7 @@
    },
    {
       "model":"core.section",
-      "pk":418,
+      "pk":564,
       "fields":{
          "paragraph":"SEL-140",
          "kle_number":"27.24.06",
@@ -645,7 +645,7 @@
    },
    {
       "model":"core.section",
-      "pk":419,
+      "pk":565,
       "fields":{
          "paragraph":"SEL-141",
          "kle_number":"27.12.12",
@@ -659,7 +659,7 @@
    },
    {
       "model":"core.section",
-      "pk":420,
+      "pk":566,
       "fields":{
          "paragraph":"SEL-152",
          "kle_number":"27.24.45",
@@ -673,7 +673,7 @@
    },
    {
       "model":"core.section",
-      "pk":421,
+      "pk":567,
       "fields":{
          "paragraph":"SEL-153",
          "kle_number":"27.24.45",
@@ -687,7 +687,7 @@
    },
    {
       "model":"core.section",
-      "pk":422,
+      "pk":568,
       "fields":{
          "paragraph":"SEL-154",
          "kle_number":"27.24.45",
@@ -701,7 +701,7 @@
    },
    {
       "model":"core.section",
-      "pk":423,
+      "pk":569,
       "fields":{
          "paragraph":"SEL-155-b.1",
          "kle_number":"27.24.45",
@@ -715,7 +715,7 @@
    },
    {
       "model":"core.section",
-      "pk":424,
+      "pk":570,
       "fields":{
          "paragraph":"SEL-155-b.2",
          "kle_number":"27.24.45",
@@ -729,7 +729,7 @@
    },
    {
       "model":"core.section",
-      "pk":425,
+      "pk":571,
       "fields":{
          "paragraph":"SEL-159",
          "kle_number":"27.27.26",
@@ -743,7 +743,7 @@
    },
    {
       "model":"core.section",
-      "pk":426,
+      "pk":572,
       "fields":{
          "paragraph":"SEL-160",
          "kle_number":"27.27.26",
@@ -757,7 +757,7 @@
    },
    {
       "model":"core.section",
-      "pk":427,
+      "pk":573,
       "fields":{
          "paragraph":"SEL-163-2",
          "kle_number":"27.57.08",
@@ -771,7 +771,7 @@
    },
    {
       "model":"core.section",
-      "pk":428,
+      "pk":574,
       "fields":{
          "paragraph":"SEL-168-5",
          "kle_number":"27.24.33",
@@ -785,7 +785,7 @@
    },
    {
       "model":"core.section",
-      "pk":429,
+      "pk":575,
       "fields":{
          "paragraph":"SEL-192",
          "kle_number":"27.42.04",
@@ -799,7 +799,7 @@
    },
    {
       "model":"core.section",
-      "pk":430,
+      "pk":576,
       "fields":{
          "paragraph":"SEL-32",
          "kle_number":"27.18.20",
@@ -813,7 +813,7 @@
    },
    {
       "model":"core.section",
-      "pk":431,
+      "pk":577,
       "fields":{
          "paragraph":"SEL-32-3",
          "kle_number":"27.18.12",
@@ -827,7 +827,7 @@
    },
    {
       "model":"core.section",
-      "pk":432,
+      "pk":578,
       "fields":{
          "paragraph":"SEL-32-a",
          "kle_number":"27.18.20",
@@ -841,7 +841,7 @@
    },
    {
       "model":"core.section",
-      "pk":433,
+      "pk":579,
       "fields":{
          "paragraph":"SEL-32-a.1",
          "kle_number":"27.18.20",
@@ -855,7 +855,7 @@
    },
    {
       "model":"core.section",
-      "pk":434,
+      "pk":580,
       "fields":{
          "paragraph":"SEL-32-a.3",
          "kle_number":"27.18.20",
@@ -869,7 +869,7 @@
    },
    {
       "model":"core.section",
-      "pk":435,
+      "pk":581,
       "fields":{
          "paragraph":"SEL-32-a.4",
          "kle_number":"27.30.00",
@@ -883,7 +883,7 @@
    },
    {
       "model":"core.section",
-      "pk":436,
+      "pk":582,
       "fields":{
          "paragraph":"SEL-32-a.5",
          "kle_number":"27.30.20",
@@ -897,7 +897,7 @@
    },
    {
       "model":"core.section",
-      "pk":437,
+      "pk":583,
       "fields":{
          "paragraph":"SEL-32-a.6",
          "kle_number":"27.18.20",
@@ -911,7 +911,7 @@
    },
    {
       "model":"core.section",
-      "pk":438,
+      "pk":584,
       "fields":{
          "paragraph":"SEL-36",
          "kle_number":"27.18.24",
@@ -925,7 +925,7 @@
    },
    {
       "model":"core.section",
-      "pk":439,
+      "pk":585,
       "fields":{
          "paragraph":"SEL-41",
          "kle_number":"32.18.04",
@@ -939,7 +939,7 @@
    },
    {
       "model":"core.section",
-      "pk":440,
+      "pk":586,
       "fields":{
          "paragraph":"SEL-42",
          "kle_number":"32.18.12",
@@ -953,7 +953,7 @@
    },
    {
       "model":"core.section",
-      "pk":441,
+      "pk":587,
       "fields":{
          "paragraph":"SEL-43",
          "kle_number":"32.18.12",
@@ -967,7 +967,7 @@
    },
    {
       "model":"core.section",
-      "pk":442,
+      "pk":588,
       "fields":{
          "paragraph":"SEL-44-jfr. \u00a784",
          "kle_number":"27.21.16",
@@ -981,7 +981,7 @@
    },
    {
       "model":"core.section",
-      "pk":443,
+      "pk":589,
       "fields":{
          "paragraph":"SEL-45",
          "kle_number":"27.21.08",
@@ -995,7 +995,7 @@
    },
    {
       "model":"core.section",
-      "pk":444,
+      "pk":590,
       "fields":{
          "paragraph":"SEL-50",
          "kle_number":"27.24.03",
@@ -1009,7 +1009,7 @@
    },
    {
       "model":"core.section",
-      "pk":445,
+      "pk":591,
       "fields":{
          "paragraph":"SEL-50-b",
          "kle_number":"27.24.03",
@@ -1023,7 +1023,7 @@
    },
    {
       "model":"core.section",
-      "pk":446,
+      "pk":592,
       "fields":{
          "paragraph":"SEL-51",
          "kle_number":"27.24.03",
@@ -1037,7 +1037,7 @@
    },
    {
       "model":"core.section",
-      "pk":447,
+      "pk":593,
       "fields":{
          "paragraph":"SEL-51-2",
          "kle_number":"27.24.03",
@@ -1051,7 +1051,7 @@
    },
    {
       "model":"core.section",
-      "pk":448,
+      "pk":594,
       "fields":{
          "paragraph":"SEL-52-2",
          "kle_number":"27.27.00",
@@ -1065,7 +1065,7 @@
    },
    {
       "model":"core.section",
-      "pk":449,
+      "pk":595,
       "fields":{
          "paragraph":"SEL-52-3.1",
          "kle_number":"27.27.03",
@@ -1079,7 +1079,7 @@
    },
    {
       "model":"core.section",
-      "pk":450,
+      "pk":596,
       "fields":{
          "paragraph":"SEL-52-3.2",
          "kle_number":"27.27.06",
@@ -1093,7 +1093,7 @@
    },
    {
       "model":"core.section",
-      "pk":451,
+      "pk":597,
       "fields":{
          "paragraph":"SEL-52-3.3",
          "kle_number":"27.27.09",
@@ -1107,7 +1107,7 @@
    },
    {
       "model":"core.section",
-      "pk":452,
+      "pk":598,
       "fields":{
          "paragraph":"SEL-52-3.4",
          "kle_number":"27.27.12",
@@ -1121,7 +1121,7 @@
    },
    {
       "model":"core.section",
-      "pk":453,
+      "pk":599,
       "fields":{
          "paragraph":"SEL-52-3.5",
          "kle_number":"27.27.15",
@@ -1135,7 +1135,7 @@
    },
    {
       "model":"core.section",
-      "pk":454,
+      "pk":600,
       "fields":{
          "paragraph":"SEL-52-3.6",
          "kle_number":"27.27.24",
@@ -1149,7 +1149,7 @@
    },
    {
       "model":"core.section",
-      "pk":455,
+      "pk":601,
       "fields":{
          "paragraph":"SEL-52-3.7",
          "kle_number":"27.27.26",
@@ -1163,7 +1163,7 @@
    },
    {
       "model":"core.section",
-      "pk":456,
+      "pk":602,
       "fields":{
          "paragraph":"SEL-52-3.8",
          "kle_number":"27.27.51",
@@ -1177,7 +1177,7 @@
    },
    {
       "model":"core.section",
-      "pk":457,
+      "pk":603,
       "fields":{
          "paragraph":"SEL-52-3.9",
          "kle_number":"27.27.54",
@@ -1191,7 +1191,7 @@
    },
    {
       "model":"core.section",
-      "pk":458,
+      "pk":604,
       "fields":{
          "paragraph":"SEL-52-a.1.1",
          "kle_number":"27.24.09",
@@ -1205,7 +1205,7 @@
    },
    {
       "model":"core.section",
-      "pk":459,
+      "pk":605,
       "fields":{
          "paragraph":"SEL-52-a.1.2",
          "kle_number":"27.24.09",
@@ -1219,7 +1219,7 @@
    },
    {
       "model":"core.section",
-      "pk":460,
+      "pk":606,
       "fields":{
          "paragraph":"SEL-52-a.1.3",
          "kle_number":"27.24.09",
@@ -1233,7 +1233,7 @@
    },
    {
       "model":"core.section",
-      "pk":461,
+      "pk":607,
       "fields":{
          "paragraph":"SEL-54-1",
          "kle_number":"27.24.15",
@@ -1247,7 +1247,7 @@
    },
    {
       "model":"core.section",
-      "pk":462,
+      "pk":608,
       "fields":{
          "paragraph":"SEL-54-2",
          "kle_number":"27.24.15",
@@ -1261,7 +1261,7 @@
    },
    {
       "model":"core.section",
-      "pk":463,
+      "pk":609,
       "fields":{
          "paragraph":"SEL-54-a",
          "kle_number":"27.24.18",
@@ -1275,7 +1275,7 @@
    },
    {
       "model":"core.section",
-      "pk":464,
+      "pk":610,
       "fields":{
          "paragraph":"SEL-55-2",
          "kle_number":"27.24.21",
@@ -1289,7 +1289,7 @@
    },
    {
       "model":"core.section",
-      "pk":465,
+      "pk":611,
       "fields":{
          "paragraph":"SEL-57-a",
          "kle_number":"27.24.24",
@@ -1303,7 +1303,7 @@
    },
    {
       "model":"core.section",
-      "pk":466,
+      "pk":612,
       "fields":{
          "paragraph":"SEL-57-a.2.1",
          "kle_number":"27.24.24",
@@ -1317,7 +1317,7 @@
    },
    {
       "model":"core.section",
-      "pk":467,
+      "pk":613,
       "fields":{
          "paragraph":"SEL-57-a.2.2",
          "kle_number":"27.24.24",
@@ -1331,7 +1331,7 @@
    },
    {
       "model":"core.section",
-      "pk":468,
+      "pk":614,
       "fields":{
          "paragraph":"SEL-57-a.2.3",
          "kle_number":"27.24.24",
@@ -1345,7 +1345,7 @@
    },
    {
       "model":"core.section",
-      "pk":469,
+      "pk":615,
       "fields":{
          "paragraph":"SEL-57-a.2.4",
          "kle_number":"27.24.24",
@@ -1359,7 +1359,7 @@
    },
    {
       "model":"core.section",
-      "pk":470,
+      "pk":616,
       "fields":{
          "paragraph":"SEL-57-a.4",
          "kle_number":"27.24.24",
@@ -1373,7 +1373,7 @@
    },
    {
       "model":"core.section",
-      "pk":471,
+      "pk":617,
       "fields":{
          "paragraph":"SEL-57-b",
          "kle_number":"27.24.25",
@@ -1387,7 +1387,7 @@
    },
    {
       "model":"core.section",
-      "pk":472,
+      "pk":618,
       "fields":{
          "paragraph":"SEL-57-c.1",
          "kle_number":"27.24.20",
@@ -1401,7 +1401,7 @@
    },
    {
       "model":"core.section",
-      "pk":473,
+      "pk":619,
       "fields":{
          "paragraph":"SEL-57-c.2",
          "kle_number":"27.24.20",
@@ -1415,7 +1415,7 @@
    },
    {
       "model":"core.section",
-      "pk":474,
+      "pk":620,
       "fields":{
          "paragraph":"SEL-57-d.1",
          "kle_number":"27.24.26",
@@ -1429,7 +1429,7 @@
    },
    {
       "model":"core.section",
-      "pk":475,
+      "pk":621,
       "fields":{
          "paragraph":"SEL-57-d.2",
          "kle_number":"27.24.18",
@@ -1443,7 +1443,7 @@
    },
    {
       "model":"core.section",
-      "pk":476,
+      "pk":622,
       "fields":{
          "paragraph":"SEL-58-jf 52-3.7",
          "kle_number":"27.24.27",
@@ -1457,7 +1457,7 @@
    },
    {
       "model":"core.section",
-      "pk":477,
+      "pk":623,
       "fields":{
          "paragraph":"SEL-63",
          "kle_number":"27.27.48",
@@ -1471,7 +1471,7 @@
    },
    {
       "model":"core.section",
-      "pk":478,
+      "pk":624,
       "fields":{
          "paragraph":"SEL-68",
          "kle_number":"27.27.48",
@@ -1485,7 +1485,7 @@
    },
    {
       "model":"core.section",
-      "pk":479,
+      "pk":625,
       "fields":{
          "paragraph":"SEL-68-2",
          "kle_number":"27.27.26",
@@ -1499,7 +1499,7 @@
    },
    {
       "model":"core.section",
-      "pk":480,
+      "pk":626,
       "fields":{
          "paragraph":"SEL-68-b.4",
          "kle_number":"27.24.06",
@@ -1513,7 +1513,7 @@
    },
    {
       "model":"core.section",
-      "pk":481,
+      "pk":627,
       "fields":{
          "paragraph":"SEL-71",
          "kle_number":"27.24.36",
@@ -1527,7 +1527,7 @@
    },
    {
       "model":"core.section",
-      "pk":482,
+      "pk":628,
       "fields":{
          "paragraph":"SEL-71-2",
          "kle_number":"27.24.36",
@@ -1541,7 +1541,7 @@
    },
    {
       "model":"core.section",
-      "pk":483,
+      "pk":629,
       "fields":{
          "paragraph":"SEL-71-3",
          "kle_number":"27.24.36",
@@ -1555,7 +1555,7 @@
    },
    {
       "model":"core.section",
-      "pk":484,
+      "pk":630,
       "fields":{
          "paragraph":"SEL-71-8",
          "kle_number":"27.24.36",
@@ -1569,7 +1569,7 @@
    },
    {
       "model":"core.section",
-      "pk":485,
+      "pk":631,
       "fields":{
          "paragraph":"SEL-72",
          "kle_number":"27.24.39",
@@ -1583,7 +1583,7 @@
    },
    {
       "model":"core.section",
-      "pk":486,
+      "pk":632,
       "fields":{
          "paragraph":"SEL-76-1",
          "kle_number":"27.27.00",
@@ -1597,7 +1597,7 @@
    },
    {
       "model":"core.section",
-      "pk":487,
+      "pk":633,
       "fields":{
          "paragraph":"SEL-76-2",
          "kle_number":"27.27.24",
@@ -1611,7 +1611,7 @@
    },
    {
       "model":"core.section",
-      "pk":488,
+      "pk":634,
       "fields":{
          "paragraph":"SEL-76-3",
          "kle_number":"27.27.24",
@@ -1625,7 +1625,7 @@
    },
    {
       "model":"core.section",
-      "pk":489,
+      "pk":635,
       "fields":{
          "paragraph":"SEL-76-3.1",
          "kle_number":"27.27.24",
@@ -1639,7 +1639,7 @@
    },
    {
       "model":"core.section",
-      "pk":490,
+      "pk":636,
       "fields":{
          "paragraph":"SEL-76-3.2",
          "kle_number":"27.27.64",
@@ -1653,7 +1653,7 @@
    },
    {
       "model":"core.section",
-      "pk":491,
+      "pk":637,
       "fields":{
          "paragraph":"SEL-76-3.3",
          "kle_number":"27.27.54",
@@ -1667,7 +1667,7 @@
    },
    {
       "model":"core.section",
-      "pk":492,
+      "pk":638,
       "fields":{
          "paragraph":"SEL-76-3.4",
          "kle_number":"27.27.26",
@@ -1681,7 +1681,7 @@
    },
    {
       "model":"core.section",
-      "pk":493,
+      "pk":639,
       "fields":{
          "paragraph":"SEL-76-4",
          "kle_number":"27.27.24",
@@ -1695,7 +1695,7 @@
    },
    {
       "model":"core.section",
-      "pk":494,
+      "pk":640,
       "fields":{
          "paragraph":"SEL-76-5",
          "kle_number":"27.27.24",
@@ -1709,7 +1709,7 @@
    },
    {
       "model":"core.section",
-      "pk":495,
+      "pk":641,
       "fields":{
          "paragraph":"SEL-76-6",
          "kle_number":"27.24.21",
@@ -1723,7 +1723,7 @@
    },
    {
       "model":"core.section",
-      "pk":496,
+      "pk":642,
       "fields":{
          "paragraph":"SEL-76-8",
          "kle_number":"27.27.26",
@@ -1737,7 +1737,7 @@
    },
    {
       "model":"core.section",
-      "pk":497,
+      "pk":643,
       "fields":{
          "paragraph":"SEL-76-a",
          "kle_number":"27.36.06",
@@ -1751,7 +1751,7 @@
    },
    {
       "model":"core.section",
-      "pk":498,
+      "pk":644,
       "fields":{
          "paragraph":"SEL-78",
          "kle_number":"27.33.00",
@@ -1765,7 +1765,7 @@
    },
    {
       "model":"core.section",
-      "pk":499,
+      "pk":645,
       "fields":{
          "paragraph":"SEL-79",
          "kle_number":"27.35.08",
@@ -1779,7 +1779,7 @@
    },
    {
       "model":"core.section",
-      "pk":500,
+      "pk":646,
       "fields":{
          "paragraph":"SEL-80",
          "kle_number":"27.35.12",
@@ -1793,7 +1793,7 @@
    },
    {
       "model":"core.section",
-      "pk":501,
+      "pk":647,
       "fields":{
          "paragraph":"SEL-83",
          "kle_number":"27.36.04",
@@ -1807,7 +1807,7 @@
    },
    {
       "model":"core.section",
-      "pk":502,
+      "pk":648,
       "fields":{
          "paragraph":"SEL-83-a",
          "kle_number":"27.39.16",
@@ -1821,7 +1821,7 @@
    },
    {
       "model":"core.section",
-      "pk":503,
+      "pk":649,
       "fields":{
          "paragraph":"SEL-84",
          "kle_number":"27.36.08",
@@ -1835,7 +1835,7 @@
    },
    {
       "model":"core.section",
-      "pk":504,
+      "pk":650,
       "fields":{
          "paragraph":"SEL-85",
          "kle_number":"27.36.12",
@@ -1849,7 +1849,7 @@
    },
    {
       "model":"core.section",
-      "pk":505,
+      "pk":651,
       "fields":{
          "paragraph":"SEL-86",
          "kle_number":"27.36.16",
@@ -1863,7 +1863,7 @@
    },
    {
       "model":"core.section",
-      "pk":506,
+      "pk":652,
       "fields":{
          "paragraph":"SEL-87",
          "kle_number":"27.36.00",
@@ -1877,7 +1877,7 @@
    },
    {
       "model":"core.section",
-      "pk":507,
+      "pk":653,
       "fields":{
          "paragraph":"SEL-94",
          "kle_number":"27.39.08",
@@ -1891,7 +1891,7 @@
    },
    {
       "model":"core.section",
-      "pk":508,
+      "pk":654,
       "fields":{
          "paragraph":"SEL-95",
          "kle_number":"27.39.16",
@@ -1905,7 +1905,7 @@
    },
    {
       "model":"core.section",
-      "pk":509,
+      "pk":655,
       "fields":{
          "paragraph":"SEL-95-1",
          "kle_number":"27.39.16",
@@ -1919,7 +1919,7 @@
    },
    {
       "model":"core.section",
-      "pk":510,
+      "pk":656,
       "fields":{
          "paragraph":"SEL-95-2",
          "kle_number":"27.39.16",
@@ -1933,7 +1933,7 @@
    },
    {
       "model":"core.section",
-      "pk":511,
+      "pk":657,
       "fields":{
          "paragraph":"SEL-95-3",
          "kle_number":"27.39.20",
@@ -1947,7 +1947,7 @@
    },
    {
       "model":"core.section",
-      "pk":512,
+      "pk":658,
       "fields":{
          "paragraph":"SEL-96",
          "kle_number":"27.39.20",
@@ -1961,7 +1961,7 @@
    },
    {
       "model":"core.section",
-      "pk":513,
+      "pk":659,
       "fields":{
          "paragraph":"SEL-96-1",
          "kle_number":"27.39.20",
@@ -1975,7 +1975,7 @@
    },
    {
       "model":"core.section",
-      "pk":514,
+      "pk":660,
       "fields":{
          "paragraph":"SEL-96-3",
          "kle_number":"27.39.20",
@@ -1989,7 +1989,7 @@
    },
    {
       "model":"core.section",
-      "pk":515,
+      "pk":661,
       "fields":{
          "paragraph":"SEL-96-b",
          "kle_number":"27.24.18",
@@ -2003,7 +2003,7 @@
    },
    {
       "model":"core.section",
-      "pk":516,
+      "pk":662,
       "fields":{
          "paragraph":"SEL-97",
          "kle_number":"27.48.04",
@@ -2017,7 +2017,7 @@
    },
    {
       "model":"core.section",
-      "pk":517,
+      "pk":663,
       "fields":{
          "paragraph":"SEL-98",
          "kle_number":"27.48.08",
@@ -2031,7 +2031,7 @@
    },
    {
       "model":"core.section",
-      "pk":518,
+      "pk":664,
       "fields":{
          "paragraph":"SEL-99",
          "kle_number":"27.48.08",
