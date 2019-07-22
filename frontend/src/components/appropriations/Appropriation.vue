@@ -26,7 +26,7 @@
                             af {{ displayApprovalName(appr.approval_level) }}, 
                             {{ displayDate(appr.appropriation_date) }}
                         </template>
-                        <span v-if="appr.approval_note && appr.approval_note !== ''">med bemærkningen:<br> {{ appr.approval_note }}</span>
+                        <span v-if="appr.approval_note && appr.approval_note !== ''">med bemærkningen:<br> <em>{{ appr.approval_note }}</em></span>
                     </p>
                 </div>
 

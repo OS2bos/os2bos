@@ -2,7 +2,11 @@
 
     <div class="useractions" v-if="auth">
         <p style="margin: 0 1rem;">
-            <strong>{{ user.username }}</strong><br> {{ team.name }}
+            <strong>
+                {{ user.username }}
+            </strong>
+            <br>
+            {{ team.name }}
         </p>
         <button @click="logout()">Log ud</button>
     </div>
