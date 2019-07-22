@@ -9,17 +9,17 @@
             <div class="column">
                 <fieldset>
                     <label for="field-sbsys-id">SBSYS Hovedsag:</label>
-                    <input id="field-sbsys-id" type="search" v-model="cas.sbsys_id">
+                    <input id="field-sbsys-id" type="search" v-model="cas.sbsys_id" required>
                 </fieldset>
 
                 <fieldset>
                     <label for="field-cpr">Sagspart, CPR-nr</label>
-                    <input id="field-cpr" type="text" v-model="cas.cpr_number" @input="lookupCPR(cas.cpr_number)">
+                    <input id="field-cpr" type="text" v-model="cas.cpr_number" @input="lookupCPR(cas.cpr_number)" required>
                 </fieldset>
             
                 <fieldset>
                     <label for="field-name">Sagspart, navn</label>
-                    <input id="field-name" type="text" v-model="cas.name">
+                    <input id="field-name" type="text" v-model="cas.name" required>
                 </fieldset>
 
                 <fieldset>
@@ -61,13 +61,6 @@
                     <label for="inputRadio2">Handicapafdelingen</label>
                 </fieldset>
 
-                <assessment-edit :case-obj="cas" @assessment="updateAssessment" v-if="cas.target_group === 'FAMILY_DEPT'" />
-
-                <fieldset v-if="cas.target_group === 'FAMILY_DEPT'">
-                    <label for="selectField4">Distrikt</label>
-                    <list-picker :dom-id="'selectField4'" :selected-id="cas.district" required @selection="changeDistrict" :list="districts" />
-                </fieldset>
-
                 <fieldset>
                     <h3>Andet:</h3>
                     <input id="inputCheckbox1" type="checkbox" v-model="cas.refugee_integration">
@@ -75,6 +68,13 @@
                     <input id="inputCheckbox2" type="checkbox" v-model="cas.cross_department_measure">
                     <label for="inputCheckbox2">Tværgående ungeindsats</label>
                 </fieldset>
+
+                <fieldset v-if="cas.target_group === 'FAMILY_DEPT'">
+                    <label for="selectField4">Skoledistrikt (nuværende eller oprindeligt)</label>
+                    <list-picker :dom-id="'selectField4'" :selected-id="cas.district" required @selection="changeDistrict" :list="districts" />
+                </fieldset>
+
+                <assessment-edit :case-obj="cas" @assessment="updateAssessment" />
 
                 <template v-if="!create_mode">
                     <h3>Sagsbehandling:</h3>
@@ -193,6 +193,11 @@
                 }
             },
             saveChanges: function() {
+                let cpr = this.cas.cpr_number
+                if (!cpr.match(/-/)) {
+                    let str = cpr.substring(6, 10).replace('', '-')
+                    cpr = cpr.substring(0, 6) + str
+                }
                 let data = {
                     sbsys_id: this.cas.sbsys_id,
                     case_worker: this.cas.case_worker,
@@ -201,7 +206,7 @@
                     effort_step: this.cas.effort_step,
                     scaling_step: this.cas.scaling_step,
                     name: this.cas.name,
-                    cpr_number: this.cas.cpr_number,
+                    cpr_number: cpr,
                     paying_municipality: this.cas.paying_municipality,
                     acting_municipality: this.cas.acting_municipality,
                     residence_municipality: this.cas.residence_municipality,

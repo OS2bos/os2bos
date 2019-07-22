@@ -1,10 +1,11 @@
 from unittest import mock
-from datetime import date
+from datetime import date, timedelta
 
 from django.urls import reverse
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
-from core.models import Activity, ApprovalLevel, Appropriation
+from core.models import Activity, ApprovalLevel, Appropriation, PaymentSchedule
 
 from core.tests.testing_utils import (
     AuthenticatedTestCase,
@@ -13,6 +14,7 @@ from core.tests.testing_utils import (
     create_case_as_json,
     create_appropriation,
     create_activity,
+    create_payment_schedule,
 )
 from core.models import STEP_ONE, STEP_THREE, STEP_FIVE
 
@@ -239,6 +241,107 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         response = self.client.post(url, json)
         self.assertEqual(response.status_code, 201)
 
+    def test_get_expired_filter(self):
+        url = reverse("case-list")
+        self.client.login(username=self.username, password=self.password)
+
+        now = timezone.now().date()
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        # create a main activity with an expired end_date.
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=now - timedelta(days=6),
+            end_date=now - timedelta(days=1),
+            activity_type=Activity.MAIN_ACTIVITY,
+            status=Activity.STATUS_GRANTED,
+            payment_plan=payment_schedule,
+        )
+        data = {"expired": True}
+        response = self.client.get(url, data)
+
+        self.assertEqual(len(response.json()), 1)
+        self.assertEqual(response.json()[0]["id"], case.id)
+
+        data = {"expired": False}
+        response = self.client.get(url, data)
+        self.assertEqual(len(response.json()), 0)
+
+    def test_get_non_expired_filter(self):
+        url = reverse("case-list")
+        self.client.login(username=self.username, password=self.password)
+
+        now = timezone.now().date()
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        # create a main activity with an expired end_date.
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=now - timedelta(days=6),
+            end_date=now + timedelta(days=1),
+            activity_type=Activity.MAIN_ACTIVITY,
+            status=Activity.STATUS_GRANTED,
+            payment_plan=payment_schedule,
+        )
+        data = {"expired": False}
+        response = self.client.get(url, data)
+
+        self.assertEqual(len(response.json()), 1)
+        self.assertEqual(response.json()[0]["id"], case.id)
+
+        data = {"expired": True}
+        response = self.client.get(url, data)
+        self.assertEqual(len(response.json()), 0)
+
+    def test_get_non_expired_filter_no_activities(self):
+        url = reverse("case-list")
+        self.client.login(username=self.username, password=self.password)
+
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        create_appropriation(case=case)
+
+        data = {"expired": False}
+        response = self.client.get(url, data)
+
+        self.assertEqual(len(response.json()), 1)
+        self.assertEqual(response.json()[0]["id"], case.id)
+
+        data = {"expired": True}
+        response = self.client.get(url, data)
+        self.assertEqual(len(response.json()), 0)
+
+    def test_get_non_expired_filter_no_appropriations(self):
+        url = reverse("case-list")
+        self.client.login(username=self.username, password=self.password)
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        data = {"expired": False}
+        response = self.client.get(url, data)
+
+        self.assertEqual(len(response.json()), 1)
+        self.assertEqual(response.json()[0]["id"], case.id)
+
+        data = {"expired": True}
+        response = self.client.get(url, data)
+        self.assertEqual(len(response.json()), 0)
+
 
 class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
     @classmethod
@@ -252,7 +355,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, status=Appropriation.STATUS_DRAFT
         )
-        activity = create_activity(  # noqa - it *will* be used.
+        create_activity(
             case,
             appropriation,
             end_date=date(year=2020, month=12, day=24),

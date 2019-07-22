@@ -17,6 +17,10 @@
                 </select>
             </fieldset>
             <fieldset>
+                <label for="field-text">Supplerende information</label>
+                <textarea v-model="appr.note"></textarea>
+            </fieldset>
+            <fieldset>
                 <input type="submit" value="Gem">
                 <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
             </fieldset>
@@ -74,10 +78,10 @@
             checkKLE: function(input) {
                 this.kle = input.match(this.kle_regex)
                 if (this.kle) {
-                    let section = this.all_sections.find(s => {
-                        return s.kle_number === this.kle[0]
-                    })
-                    this.appr.section = section.id
+                    let sections = this.all_sections.filter(s => s.kle_number === this.kle[0])
+                    if (sections.length === 1) {
+                        this.appr.section = section.id
+                    }
                 } else {
                     return false
                 }                
@@ -86,7 +90,8 @@
                 if (!this.create_mode) {
                     axios.patch(`/appropriations/${ this.appr.id }/`, {
                         sbsys_id: this.appr.sbsys_id,
-                        section: this.appr.section
+                        section: this.appr.section,
+                        note: this.appr.note
                     })
                     .then(res => {
                         this.$emit('close')
@@ -97,6 +102,7 @@
                     axios.post(`/appropriations/`, {
                         sbsys_id: this.appr.sbsys_id,
                         section: this.appr.section,
+                        note: this.appr.note,
                         status: 'DRAFT',
                         case: cas_id
                     })

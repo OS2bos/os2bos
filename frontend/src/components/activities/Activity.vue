@@ -35,7 +35,7 @@
                 <dd>{{ displayDate(act.start_date) }}</dd>
                 <dt>Slutdato</dt>
                 <dd>{{ displayDate(act.end_date) }}</dd>
-                <dt>Bemærkning</dt>
+                <dt>Supplerende information</dt>
                 <dd>{{ act.note }}</dd>
             </dl>
             

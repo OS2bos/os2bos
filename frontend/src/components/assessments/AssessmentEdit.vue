@@ -34,7 +34,7 @@
         </fieldset>
 
         <fieldset v-if="!create_mode">
-            <label for="textArea">Bemærkning</label>
+            <label for="textArea">Supplerende information</label>
             <textarea id="textArea" v-model="cas.history_change_reason" @change="updateNote()"></textarea>
         </fieldset>
 

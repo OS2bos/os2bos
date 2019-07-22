@@ -13,7 +13,7 @@ from django.core.validators import MinValueValidator
 from django_audit_fields.models import AuditModelMixin
 from simple_history.models import HistoricalRecords
 
-from core.managers import PaymentQuerySet
+from core.managers import PaymentQuerySet, CaseQuerySet
 from core.utils import send_appropriation
 
 # Target group - definitions and choice list.
@@ -372,6 +372,8 @@ class Payment(models.Model):
 class Case(AuditModelMixin, models.Model):
     """A case, covering one child - corresponding to a Hovedsag in SBSYS."""
 
+    objects = CaseQuerySet.as_manager()
+
     sbsys_id = models.CharField(
         unique=True, max_length=128, verbose_name=_("SBSYS-ID")
     )
@@ -461,6 +463,23 @@ class Case(AuditModelMixin, models.Model):
         ]
     )
 
+    @property
+    def expired(self):
+        today = timezone.now().date()
+        all_main_activities = Activity.objects.filter(
+            activity_type=Activity.MAIN_ACTIVITY, appropriation__case=self
+        )
+        # If no activities exists, we will not consider it expired.
+        if not all_main_activities.exists():
+            return False
+
+        all_main_expired_activities = all_main_activities.filter(
+            end_date__lt=today
+        )
+        return (
+            all_main_activities.count() == all_main_expired_activities.count()
+        )
+
 
 class ApprovalLevel(models.Model):
     name = models.CharField(max_length=128, verbose_name=_("navn"))
@@ -541,12 +560,22 @@ class Appropriation(AuditModelMixin, models.Model):
     approval_note = models.TextField(
         verbose_name=_("evt. bemærkning"), blank=True
     )
+    approval_user = models.ForeignKey(
+        User,
+        related_name="approved_appropriations",
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+    )
 
     appropriation_date = models.DateField(
         verbose_name=_("bevillingsdato"), null=True, blank=True
     )
     case = models.ForeignKey(
         Case, on_delete=models.CASCADE, related_name="appropriations"
+    )
+    note = models.TextField(
+        verbose_name=_("supplerende oplysninger"), blank=True
     )
 
     @property
@@ -630,8 +659,7 @@ class Appropriation(AuditModelMixin, models.Model):
                 self.approval_level = ApprovalLevel.objects.get(
                     id=approval_level
                 )
-            if approval_note:
-                self.approval_note = approval_note
+            self.approval_note = approval_note
             self.appropriation_date = timezone.now().date()
             self.save()
             # Now go through the activities.

@@ -4,15 +4,10 @@
         <header class="appropriation-header">
             <div>
                 <h1 style="display: inline-block;">Bevillingsskrivelse</h1>
-                <span v-html="statusLabel(appr.status)" style="margin: 0 .5rem 0 1rem;"></span>
-                <template v-if="appr.approval_level"> 
-                    af {{ displayApprovalName(appr.approval_level) }}, 
-                    {{ displayDate(appr.appropriation_date) }}
-                </template>
             </div>
             <div>
                 <button @click="show_edit = !show_edit" class="appr-edit-btn">Redigér</button>
-                <button @click="showModal = true" class="approval-btn">Godkend</button>
+                <button @click="preApprovalCheck()" class="approval-btn">Godkend</button>
                 <approval :approval-obj="appr" v-if="showModal" @close="update()"></approval>
             </div>
         </header>
@@ -23,36 +18,47 @@
 
         <div class="appr-grid" v-if="cas">
 
-        <template v-if="!show_edit">
-            <div class="sagsbeh appr-grid-box">
-                <dl>
-                    <dt>Foranstaltningssag (SBSYS)</dt>
-                    <dd>{{ appr.sbsys_id}}</dd>
-                    <dt>Sagsbehandler</dt>
-                    <dd>{{ displayUserName(cas.case_worker) }}</dd>
-                </dl>
-            </div>
+            <template v-if="!show_edit">
+                <div class="sagsstatus appr-grid-box">
+                    <p>
+                        <span v-html="statusLabel(appr.status)" style="display: inline-block; margin: .5rem .25rem 0 0;"></span>
+                        <template v-if="appr.approval_level"> 
+                            af {{ displayApprovalName(appr.approval_level) }}, 
+                            {{ displayDate(appr.appropriation_date) }}
+                        </template>
+                        <span v-if="appr.approval_note && appr.approval_note !== ''">med bemærkningen:<br> {{ appr.approval_note }}</span>
+                    </p>
+                </div>
 
-            <div class="sagspart appr-grid-box">
-                <dl>
-                    <dt>Sagspart</dt>
-                    <dd>{{ cas.cpr_number }}, {{ cas.name }}</dd>
-                    <dt>Betalingskommune</dt>
-                    <dd>{{ displayMuniName(cas.paying_municipality) }}</dd>
-                    <dt>Handlekommune</dt>
-                    <dd>{{ displayMuniName(cas.acting_municipality) }}</dd>
-                    <dt>Bopælskommune</dt>
-                    <dd>{{ displayMuniName(cas.residence_municipality) }}</dd>
-                </dl>
-            </div>
-            
-            <div class="sagslaw appr-grid-box">
-                <dl> 
-                    <dt>Bevilges efter §</dt>
-                    <dd>{{ displaySection(appr.section) }}</dd>
-                </dl>
-            </div>
-        </template>
+                <div class="sagsbeh appr-grid-box">
+                    <dl>
+                        <dt>Foranstaltningssag (SBSYS)</dt>
+                        <dd>{{ appr.sbsys_id}}</dd>
+                        <dt>Sagsbehandler</dt>
+                        <dd>{{ displayUserName(cas.case_worker) }}</dd>
+                    </dl>
+                </div>
+
+                <div class="sagspart appr-grid-box">
+                    <dl>
+                        <dt>Sagspart</dt>
+                        <dd>{{ cas.cpr_number }}, {{ cas.name }}</dd>
+                        <dt>Betalingskommune</dt>
+                        <dd>{{ displayMuniName(cas.paying_municipality) }}</dd>
+                        <dt>Handlekommune</dt>
+                        <dd>{{ displayMuniName(cas.acting_municipality) }}</dd>
+                        <dt>Bopælskommune</dt>
+                        <dd>{{ displayMuniName(cas.residence_municipality) }}</dd>
+                    </dl>
+                </div>
+                
+                <div class="sagslaw appr-grid-box">
+                    <dl> 
+                        <dt>Bevilges efter §</dt>
+                        <dd>{{ displaySection(appr.section) }}</dd>
+                    </dl>
+                </div>
+            </template>
 
             <div class="sagsbev appr-grid-box">
                 <h2>Der bevilges:</h2>
@@ -111,7 +117,7 @@
         methods: {
             update: function() {
                 this.show_edit =  false
-                this. showModal = false
+                this.showModal = false
                 this.$store.dispatch('fetchAppropriation', this.$route.params.id)
             },
             reload: function() {
@@ -119,6 +125,13 @@
             },
             displayDate: function(date) {
                 return json2jsDate(date)
+            },
+            preApprovalCheck: function() {
+                if (this.appr.activities.length > 0) {
+                    this.showModal = true
+                } else {
+                    alert('Der er ikke valgt nogen aktiviteter endnu')
+                }
             },
             updateBreadCrumb: function() {
                 if (this.cas && this.appr) {
@@ -198,7 +211,7 @@
     .appr-grid {
         display: grid;
         grid-template-columns: repeat(6, auto);
-        grid-template-rows: repeat(3, auto);
+        grid-template-rows: repeat(4, auto);
     }
 
     .appr-grid-box {
@@ -207,21 +220,25 @@
         margin: 1px;
     }
 
+    .sagsstatus {
+        grid-area: 1 / 1 / 2 / 7;
+    }
+
     .sagsbeh {
-        grid-area: 1 / 1 / 2 / 4;
+        grid-area: 2 / 1 / 3 / 4;
     }
 
     .sagspart {
-        grid-area: 1 / 4 / 2 / 7;
+        grid-area: 2 / 4 / 3 / 7;
     }
 
     .sagslaw {
-        grid-area: 2 / 1 / 3 / 7;
+        grid-area: 3 / 1 / 4 / 7;
         background-color: var(--grey1);
     }
 
     .sagsbev {
-        grid-area: 3 / 1 / 4 / 7;
+        grid-area: 4 / 1 / 5 / 7;
     }
 
     @media screen and (min-width: 45rem) {

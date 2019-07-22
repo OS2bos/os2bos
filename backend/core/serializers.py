@@ -31,6 +31,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class CaseSerializer(serializers.ModelSerializer):
+    expired = serializers.ReadOnlyField()
+
     class Meta:
         model = Case
         fields = "__all__"

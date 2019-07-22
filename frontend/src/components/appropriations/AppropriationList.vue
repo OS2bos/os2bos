@@ -11,6 +11,7 @@
                     <th>Status</th>
                     <th>Foranstaltningssag nr.</th>
                     <th>Bevillingsparagraf</th>
+                    <th>Supplerende information</th>
                     <th>Oprettet</th>
                     <th>Senest ændret</th>
                     <th style="text-align: right">Bevilget i år</th>
@@ -27,6 +28,7 @@
                         </router-link>
                     </td>
                     <td>§ {{ displaySection(a.section) }}</td>
+                    <td>{{ a.note }}</td>
                     <td>{{ displayDate(a.created) }}</td>
                     <td>{{ displayDate(a.modified) }}</td>
                     <td style="text-align: right">{{ a.total_granted_this_year }} kr</td>

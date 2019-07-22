@@ -72,6 +72,11 @@
         text-transform: capitalize;
     }
 
+    .mini-label .label {
+        padding: .124rem .25rem;
+        font-size: .85rem;
+    }
+
     .label-DRAFT {
         background-color: var(--grey3);
         color: white;
