@@ -145,7 +145,7 @@
             sbsysCheck: function() {
                 let kle = this.cas.sbsys_id
                 if (kle) {
-                    if (!kle.match("27.24.00") && !kle.length < 9) {
+                    if (!kle.match("27.24.00") && kle.length >= 8) {
                         return true
                     }
                 }
