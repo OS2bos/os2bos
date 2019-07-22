@@ -728,6 +728,10 @@ class ActivityDetails(models.Model):
         ServiceProvider, related_name="supplied_activities"
     )
 
+    main_activities = models.ManyToManyField(
+        "self", related_name="supplementary_activities"
+    )
+
     def __str__(self):
         return f"{self.activity_id} - {self.name}"
 
