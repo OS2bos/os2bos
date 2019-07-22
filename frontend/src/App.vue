@@ -102,6 +102,10 @@
         color: white;
     }
 
+    .danger {
+        color: var(--danger);
+    }
+
     .row {
         display: flex;
         flex-direction: row;

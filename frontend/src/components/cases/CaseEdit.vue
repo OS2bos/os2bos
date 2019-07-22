@@ -269,8 +269,4 @@
         border-color: transparent;
     }
 
-    .danger {
-        color: var(--danger);
-    }
-
 </style>
