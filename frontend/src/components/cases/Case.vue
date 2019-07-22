@@ -28,10 +28,6 @@
                 </dd>
             </dl>
             <dl>
-                <template v-if="cas.target_group === 'FAMILY_DEPT'">
-                    <dt>Distrikt</dt>
-                    <dd>{{ displayDistrictName(cas.district) }}</dd>
-                </template>
                 <dt>Målgruppe</dt>
                 <dd>
                     <span v-if="cas.target_group === 'DISABILITY_DEPT'">
@@ -41,6 +37,10 @@
                         Familieafdelingen
                     </span>
                 </dd>
+                <template v-if="cas.target_group === 'FAMILY_DEPT'">
+                    <dt>Skoledistrikt</dt>
+                    <dd>{{ displayDistrictName(cas.district) }}</dd>
+                </template>
                 <template v-if="cas.cross_department_measure || cas.refugee_integration">
                     <dt>Indsatser</dt>
                     <dd>

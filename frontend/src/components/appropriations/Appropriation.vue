@@ -32,6 +32,8 @@
 
                 <div class="sagsbeh appr-grid-box">
                     <dl>
+                        <dt>SBSYS-hovedsag nr.</dt>
+                        <dd>{{ cas.sbsys_id }}</dd>
                         <dt>Foranstaltningssag (SBSYS)</dt>
                         <dd>{{ appr.sbsys_id}}</dd>
                         <dt>Sagsbehandler</dt>
