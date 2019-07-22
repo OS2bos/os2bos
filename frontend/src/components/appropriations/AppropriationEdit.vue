@@ -7,6 +7,7 @@
             <fieldset>
                 <label for="field-sbsysid">Foranstaltningssag (SBSYS-sag)</label>
                 <input id="field-sbsysid" type="text" v-model="appr.sbsys_id" required @input="checkKLE(appr.sbsys_id)">
+                <span class="danger" v-if="sbsysCheck">Sagsnummeret svarer ikke til en de paragraffer der kan vælges</span>
             </fieldset>
             <fieldset>
                 <label for="field-lawref">Bevilling efter §</label>
@@ -44,7 +45,8 @@
                 create_mode: true,
                 kle: null,
                 kle_regex: /\d{2}\.\d{2}\.\d{2}/,
-                sections: null
+                sections: null,
+                sbsysCheck: false
             }
         },
         computed: {
@@ -76,11 +78,14 @@
                 this.appr.section = section_id
             },
             checkKLE: function(input) {
+                this.sbsysCheck = false
                 this.kle = input.match(this.kle_regex)
                 if (this.kle) {
                     let sections = this.all_sections.filter(s => s.kle_number === this.kle[0])
                     if (sections.length === 1) {
                         this.appr.section = section.id
+                    } else if (sections.length === 0) {
+                        this.sbsysCheck = true
                     }
                 } else {
                     return false

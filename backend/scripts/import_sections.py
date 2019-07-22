@@ -14,11 +14,11 @@ with open("paragraffer.csv") as csvfile:
     for row in rows[1:]:
         key = row[3]
         text = row[4]
-        kle = row[5]
-        sbsys_template_id = row[7]
+        kle = row[6]
+        sbsys_template_id = row[8]
 
-        action_tracks = [x.strip() for x in row[10].split(",") if x != ""]
-        target_groups = [x.strip() for x in row[11].split(",") if x != ""]
+        action_tracks = [x.strip() for x in row[11].split(",") if x != ""]
+        target_groups = [x.strip() for x in row[12].split(",") if x != ""]
         tracks_to_steps_dict = {
             "Spor 1": ["STEP_ONE", "STEP_TWO"],
             "Spor 2": ["STEP_THREE"],

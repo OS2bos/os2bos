@@ -6,6 +6,9 @@ from django.template.loader import get_template
 from django.core.mail import EmailMessage
 
 from django.conf import settings
+from django.template.loader import render_to_string
+from django.core.mail import send_mail
+from django.utils.translation import gettext_lazy as _
 
 from weasyprint import HTML
 from weasyprint.fonts import FontConfiguration
@@ -101,6 +104,34 @@ def get_cpr_data_mock(cpr):
         "kommunekode": "370",
     }
     return result
+
+
+def send_activity_email(subject, template, activity):
+    message = render_to_string(template, {"activity": activity})
+    send_mail(
+        subject,
+        message,
+        settings.DEFAULT_FROM_EMAIL,
+        [settings.TO_EMAIL_FOR_PAYMENTS],
+    )
+
+
+def send_activity_created_email(activity):
+    subject = _("Aktivitet oprettet")
+    template = "emails/activity_created.html"
+    send_activity_email(subject, template, activity)
+
+
+def send_activity_updated_email(activity):
+    subject = _("Aktivitet opdateret")
+    template = "emails/activity_updated.html"
+    send_activity_email(subject, template, activity)
+
+
+def send_activity_expired_email(activity):
+    subject = _("Aktivitet udgået")
+    template = "emails/activity_expired.html"
+    send_activity_email(subject, template, activity)
 
 
 def send_appropriation(appropriation):

@@ -10,6 +10,7 @@
                 <fieldset>
                     <label for="field-sbsys-id">SBSYS Hovedsag:</label>
                     <input id="field-sbsys-id" type="search" v-model="cas.sbsys_id" required>
+                    <span class="danger" v-if="sbsysCheck">Sagsnummeret indeholder ikke et gyldig KLE-nummer</span>
                 </fieldset>
 
                 <fieldset>
@@ -140,6 +141,14 @@
             },
             teams: function() {
                 return this.$store.getters.getTeams
+            },
+            sbsysCheck: function() {
+                let kle = this.cas.sbsys_id
+                if (kle) {
+                    if (!kle.match("27.24.00") && kle.length >= 8) {
+                        return true
+                    }
+                }
             }
         },
         methods: {

@@ -65,18 +65,18 @@
         methods: {
             saveChanges: function() {
                 let data = {
-                approval_level: this.appro.approval_level,
-                approval_note: this.appro.approval_note
+                    approval_level: this.appro.approval_level,
+                    approval_note: this.appro.approval_note
                 }
+                this.$emit('close')
                 axios.patch(`/appropriations/${ this.approvalObj.id }/grant/`, data)
                 .then(() => {
-                notify('Bevilling godkendt', 'success')
-                this.$store.dispatch('fetchActivities', this.approvalObj.id)
-                this.$emit('close')
+                    notify('Bevilling godkendt', 'success')
+                    this.$store.dispatch('fetchActivities', this.approvalObj.id)
                 })
                 .catch(err => {
-                notify('Der opstod en fejl. Bevilling kunne ikke godkendes', 'error')
-                console.log(err)
+                    notify('Der opstod en fejl. Bevilling kunne ikke godkendes', 'error')
+                    console.log(err)
                 })
             }
         },

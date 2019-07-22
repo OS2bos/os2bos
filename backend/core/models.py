@@ -125,6 +125,7 @@ class PaymentSchedule(models.Model):
         verbose_name=_("betalingsmodtager"),
         choices=recipient_choices,
     )
+    # TODO: namechange - this refers actually to the recipient CPR
     recipient_id = models.CharField(max_length=128, verbose_name=_("ID"))
     recipient_name = models.CharField(max_length=128, verbose_name=_("Navn"))
 
@@ -179,6 +180,39 @@ class PaymentSchedule(models.Model):
         verbose_name=_("beløb"),
         validators=[MinValueValidator(Decimal("0.01"))],
     )
+
+    @staticmethod
+    def is_payment_and_recipient_allowed(payment_method, recipient_type):
+        allowed = {
+            PaymentSchedule.INTERNAL: [INTERNAL],
+            PaymentSchedule.PERSON: [CASH, SD],
+            PaymentSchedule.COMPANY: [INVOICE],
+        }
+        return payment_method in allowed[recipient_type]
+
+    @property
+    def triggers_payment_email(self):
+        """
+        Trigger a payment email only in the (recipient_type->payment_method)
+        case of Internal->Internal or Person->SD.
+        """
+        if (
+            self.recipient_type == self.INTERNAL
+            and self.payment_method == INTERNAL
+        ) or (
+            self.recipient_type == self.PERSON and self.payment_method == SD
+        ):
+            return True
+        return False
+
+    def save(self, *args, **kwargs):
+        if not self.is_payment_and_recipient_allowed(
+            self.payment_method, self.recipient_type
+        ):
+            raise ValueError(
+                _("ugyldig betalingsmetode for betalingsmodtager")
+            )
+        super().save(*args, **kwargs)
 
     def create_rrule(self, start, end):
         """
@@ -322,6 +356,15 @@ class Payment(models.Model):
         PaymentSchedule, on_delete=models.CASCADE, related_name="payments"
     )
 
+    def save(self, *args, **kwargs):
+        if not self.payment_schedule.is_payment_and_recipient_allowed(
+            self.payment_method, self.recipient_type
+        ):
+            raise ValueError(
+                _("ugyldig betalingsmetode for betalingsmodtager")
+            )
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.date} - {self.amount}"
 
@@ -385,13 +428,10 @@ class Case(AuditModelMixin, models.Model):
         max_length=128,
         choices=effort_steps_choices,
         verbose_name=_("indsatstrappe"),
-        blank=True,
     )
     scaling_step = models.PositiveSmallIntegerField(
         verbose_name=_("skaleringstrappe"),
         choices=[(i, i) for i in range(1, 11)],
-        blank=True,
-        null=True,
     )
     refugee_integration = models.BooleanField(
         verbose_name=_("integrationsindsatsen"), default=False
@@ -688,6 +728,10 @@ class ActivityDetails(models.Model):
         ServiceProvider, related_name="supplied_activities"
     )
 
+    main_activities = models.ManyToManyField(
+        "self", related_name="supplementary_activities"
+    )
+
     def __str__(self):
         return f"{self.activity_id} - {self.name}"
 
@@ -778,6 +822,23 @@ class Activity(AuditModelMixin, models.Model):
     def total_cost(self):
         payments = Payment.objects.filter(payment_schedule__activity=self)
         return payments.amount_sum()
+
+    @property
+    def triggers_payment_email(self):
+        # If activity or appropriation is not granted we don't send an email.
+        if (
+            not self.status == Activity.STATUS_GRANTED
+            or not self.appropriation.status == Appropriation.STATUS_GRANTED
+        ):
+            return False
+
+        # Don't trigger the email if the payment plan does not exist
+        # or does not need a payment email to trigger.
+        if not hasattr(self, "payment_plan") or not self.payment_plan:
+            return False
+        if not self.payment_plan.triggers_payment_email:
+            return False
+        return True
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

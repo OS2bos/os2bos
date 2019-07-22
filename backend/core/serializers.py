@@ -45,20 +45,6 @@ class CaseSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 _("En sag med familie målgruppe skal have et distrikt")
             )
-        # check that if target_group is family, effort_step and
-        # scaling_step is given.
-        if (
-            "target_group" in data and data["target_group"] == FAMILY_DEPT
-        ) and (
-            ("scaling_step" not in data or not data["scaling_step"])
-            or ("effort_step" not in data or not data["effort_step"])
-        ):
-            raise serializers.ValidationError(
-                _(
-                    "en sag med familie målgruppe skal have en"
-                    " indsats- og skaleringstrappe"
-                )
-            )
         return data
 
 
@@ -126,6 +112,13 @@ class PaymentScheduleSerializer(serializers.ModelSerializer):
     payments = PaymentSerializer(many=True, read_only=True)
 
     def validate(self, data):
+        if not self.Meta.model.is_payment_and_recipient_allowed(
+            data["payment_method"], data["recipient_type"]
+        ):
+            raise serializers.ValidationError(
+                _("ugyldig betalingsmetode for betalingsmodtager")
+            )
+
         one_time_payment = (
             data["payment_type"] == PaymentSchedule.ONE_TIME_PAYMENT
         )
