@@ -78,6 +78,7 @@
                 this.appr.section = section_id
             },
             checkKLE: function(input) {
+                this.sbsysCheck = false
                 this.kle = input.match(this.kle_regex)
                 if (this.kle) {
                     let sections = this.all_sections.filter(s => s.kle_number === this.kle[0])
