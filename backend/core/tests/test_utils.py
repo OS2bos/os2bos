@@ -69,7 +69,7 @@ class GetPersonInfoTestCase(TestCase):
         self.assertIn("relationer", result)
         self.assertIn("adresseringsnavn", result["relationer"][0])
 
-    @override_settings(USE_SERVICEPLATFORMEN=True)
+    @override_settings(USE_SERVICEPLATFORM=True)
     @mock.patch("core.utils.get_cpr_data")
     def test_get_person_info_get_cpr_data(self, get_cpr_data_mock):
         get_cpr_data_mock.return_value = {
