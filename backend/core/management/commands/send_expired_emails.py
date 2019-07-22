@@ -35,5 +35,5 @@ class Command(BaseCommand):
 
         for activity in activities:
             if not activity.triggers_payment_email:
-                return
+                continue
             send_activity_expired_email(activity)
