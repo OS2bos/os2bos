@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from unittest import mock
 
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.core import mail
 import requests
 
@@ -68,6 +68,52 @@ class GetPersonInfoTestCase(TestCase):
 
         self.assertIn("relationer", result)
         self.assertIn("adresseringsnavn", result["relationer"][0])
+
+    @override_settings(USE_SERVICEPLATFORM=True)
+    @mock.patch("core.utils.get_cpr_data")
+    def test_get_person_info_get_cpr_data(self, get_cpr_data_mock):
+        get_cpr_data_mock.return_value = {
+            "statsborgerskab": "5100",
+            "efternavn": "Jensen",
+            "postdistrikt": "Næstved",
+            "foedselsregistreringssted": "Myndighedsnavn for landekode: 5902",
+            "boernUnder18": "false",
+            "civilstandsdato": "1991-03-21+01:00",
+            "adresseringsnavn": "Jens Jensner Jensen",
+            "fornavn": "Jens Jensner",
+            "tilflytningsdato": "2001-12-01+01:00",
+            "markedsfoeringsbeskyttelse": "true",
+            "vejkode": "1759",
+            "standardadresse": "Sterkelsvej 17 A,2",
+            "etage": "02",
+            "koen": "M",
+            "status": "80",
+            "foedselsdato": "1978-04-27+01:00",
+            "vejnavn": "Sterkelsvej",
+            "statsborgerskabdato": "1991-09-23+02:00",
+            "adressebeskyttelse": "false",
+            "stilling": "Sygepl ske",
+            "gaeldendePersonnummer": "2704785263",
+            "vejadresseringsnavn": "Sterkelsvej",
+            "civilstand": "G",
+            "alder": "59",
+            "relationer": [
+                {"cprnr": "0123456780", "relation": "aegtefaelle"},
+                {"cprnr": "1123456789", "relation": "barn"},
+                {"cprnr": "2123456789", "relation": "barn"},
+                {"cprnr": "3123456789", "relation": "barn"},
+                {"cprnr": "0000000000", "relation": "mor"},
+                {"cprnr": "0000000000", "relation": "far"},
+            ],
+            "postnummer": "4700",
+            "husnummer": "017A",
+            "vejviserbeskyttelse": "true",
+            "kommunekode": "370",
+        }
+        result = get_person_info("1234567890")
+
+        self.assertIn("relationer", result)
+        self.assertIn("efternavn", result)
 
 
 class SendAppropriationTestCase(TestCase):

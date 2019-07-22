@@ -23,13 +23,16 @@ def get_person_info(cpr):
     """
     Get CPR data on a person and his/her relations.
     """
-    # TODO: switch out these mock calls with the real ones.
-    result = get_cpr_data_mock(cpr)
+    if settings.USE_SERVICEPLATFORM:
+        func = get_cpr_data
+    else:
+        func = get_cpr_data_mock
+    result = func(cpr)
     if not result:
         return None
     for relation in result["relationer"]:
         relation_cpr = relation["cprnr"]
-        relation_data = get_cpr_data_mock(relation_cpr)
+        relation_data = func(relation_cpr)
         if relation_data:
             relation.update(relation_data)
     return result
@@ -50,6 +53,7 @@ def get_cpr_data(cpr):
             service_uuids=settings.SERVICEPLATFORM_UUIDS,
             certificate=settings.SERVICEPLATFORM_CERTIFICATE_PATH,
             cprnr=cpr,
+            production=settings.USE_SERVICEPLATFORM_PROD,
         )
         return result
     except requests.exceptions.HTTPError:
