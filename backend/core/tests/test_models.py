@@ -990,6 +990,7 @@ class PaymentScheduleTestCase(TestCase):
                 payment_method=payment_method,
             )
 
+
 class CaseTestCase(TestCase, BasicTestMixin):
     @classmethod
     def setUpTestData(cls):
@@ -1092,4 +1093,3 @@ class CaseTestCase(TestCase, BasicTestMixin):
         )
 
         self.assertTrue(case.expired)
->>>>>>> develop
