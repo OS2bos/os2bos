@@ -77,20 +77,24 @@ textarea {
 
 input[type="radio"],
 input[type="checkbox"] {
-    display: block;
-    margin: .5rem .25rem;
+    position: absolute;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
     
     & + label {
-        vertical-align: middle;
+        position: relative;
         display: block;
-        margin: -1.5rem 0 0;
+        margin: 0 0 .5rem;
     }
     & + label::before {
         content: '';
         display: inline-block;
         width: 1rem;
         height: 1rem;
-        background-color: var(--grey2);
+        background-color: var(--grey0);
+        border: solid .125rem var(--grey2);
         margin-right: 0.25rem;
         padding: 0.25rem;
         line-height: 1;
@@ -98,25 +102,35 @@ input[type="checkbox"] {
         text-align: center;
     }
     &:focus + label {
-        box-shadow: 0 0.25rem 0.25rem var(--grey5); 
+        box-shadow: 0 0.25rem 0.25rem var(--grey5);
     }
     &:checked + label::before {
-        content: '✔';
         color: var(--grey0);
         background-color: var(--primary);
+        border-color: var(--primary);
+    }
+    &:disabled + label {
+        color: var(--grey5);
+    }
+    &:disabled + label::before {
+        background-color: var(--grey2);
+        border-color: var(--grey2);
     }
 }
 
-input[type="radio"]{
+input[type="checkbox"] {
+    
+    &:checked + label::before {
+        content: '✔';
+    }
+}
+
+input[type="radio"] {
     
     & + label::before {
-        padding: 0;
         border-radius: 50%;
-        background-color: var(--grey0);
-        border: solid .25rem var(--grey2);
     }
     &:checked + label::before {
         content: '';
-        background-color: var(--primary);
     }
 }

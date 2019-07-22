@@ -1,246 +1,520 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="da">
     <head>
         <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width,initial-scale=1.0">
         <title>Bevillingsskrivelse</title>
-	       <style>
-@page {
-	margin: 42pt 36pt;
-}
+        <style>
+            @page {
+                margin: 40pt 40pt 60pt;
 
-* {
-	box-sizing: border-box;
-}
+                @top-right {
+                    font-family: Arial, sans-serif;
+                    font-weight: normal;
+                    font-size: 8pt;
+                    content: counter(page) " af " counter(pages);
+                }
+            }
 
-				    body {
-					    font: 12pt/1.5 sans-serif;
-					    color: hsl(0,0%,0%);
-					    margin: 0;
-					    padding: 0;
-					    orphans: 2;
-					    widows: 2;
-				    }
+            * {
+                box-sizing: border-box;
+            }
 
-				    main {
-					    max-width: 21cm;
-					    margin: 0 auto;
-				    }
+            body {
+                font: 10pt Arial, sans-serif;
+                line-height: 1.3;
+                color: #000;
+                background-color: #fff;
+                margin: 0;
+                padding: 0;
+                orphans: 2;
+                widows: 2;
+            }
 
-				    dl {
-					    margin: 0;
-				    }
+            article {
+                max-width: 21cm;
+                margin: 0 auto;
+            }
 
-				    dt {
-					    margin: 0;
-					    font-size: 10pt;
-				    }
+            section {
+                page-break-inside: avoid;
+                border-top: solid 1px #ccc;
+                padding: 20pt 0;
+            }
 
-				    dd {
-					    margin: 0 0 12pt;
-				    }
+            header {
+                display: flex;
+                flex-flow: row nowrap;
+                justify-content: space-between;
+                align-items: center;
+            }
 
-				    th,
-				    td {
-					    padding: 12pt 12pt;
-					    vertical-align: top;
-					    text-align: left;
-				    }
+            header > p {
+                color: #999;
+                font-size: 10pt;
+            }
 
-				    td dd {
-					    margin-bottom: 6pt;
-				    }
+            h1 {
+                font-size: 16pt;
+                margin: 0 0 10pt;
+                padding: 0;
+            }
 
-				    #appropriation-details,
-				    #case-details {
-					    width: 50%;
-				    }
+            h2 {
+                font-size: 13pt;
+                margin: 20pt 0 10pt;
+                padding: 0;
+            }
 
-				    #appropriation-details {
-					    padding: 24pt;
-					    float: left;
-					    border: 1pt solid hsl(0,0%,50%);
-				    }
+            h3 {
+                font-size: 11pt;
+                margin: 0;
+                padding: 0;
+            }
 
-				    #case-details {
-					    padding: 0 24pt 24pt;
-					    float: right;
-				    }
+            dl,
+            table {
+                margin: 10pt 0;
+            }
 
-				    #case-details > h2 {
-					    margin-top: 0;
-				    }
+            th,
+            dt {
+                font-size: 9pt;
+                padding: 5pt 10pt 0 0;
+                font-weight: normal;
+                color: #999;
+            }
 
-				    .align-right {
-					    text-align: right;
-				    }
+            th,
+            td {
+                text-align: left;
+            }
 
-				    .text-muted {
-					    color: hsl(0,0%,50%);
-					    font-weight: normal;
-				    }
+            table {
+                width: 100%;
+            }
 
-				    .text-muted em {
-					    color: hsl(0,0%,0%);
-					    font-style: normal;
-					    font-weight: bold;
-				    }
+            th {
+                vertical-align: bottom;
+            }
 
-				    tr:first-child td {
-					    border-top: 1pt solid hsl(0,0%,0%);
-					    border-bottom: 1pt solid hsl(0,0%,0%);
-				    }
+            td {
+                vertical-align: top;
+                padding: 0 10pt 5pt 0;
+            }
 
-	       </style>
+            dd {
+                margin: 0 0 10pt;
+                padding: 0;
+            }
 
+            .logo {
+                width: 60pt;
+                height: auto;
+            }
+
+            .align-right {
+                text-align: right;
+                white-space: nowrap;
+            }
+
+            .approval-stamp {
+                display: inline-block;
+                background-color: #000;
+                color: #fff;
+                padding: 5pt 10pt;
+                border-radius: 5pt;
+                margin: 0 3pt 0 0;
+            }
+
+            .bordered {
+                border: solid 1px #ccc;
+                padding: 5pt 10pt;
+                margin: 10pt 0;
+            }
+
+            .muni-name {
+                font-size: 13pt;
+                font-weight: normal;
+            }
+
+            .muted {
+                font-size: 10pt;
+                color: #999;
+                font-weight: normal;
+            }
+
+            #case-info-primary th,
+            #case-info-primary td {
+                border-left: 1px solid #ccc;
+                padding-left: 10pt;
+            }
+            #case-info-primary th:first-child,
+            #case-info-primary td:first-child {
+                border-left: none; 
+                padding-left: 0;
+            }
+
+        </style>
     </head>
     <body>
-        
-        <main>
+        <article>
+            
+            <header>
+                <h1>
+                    <span class="muni-name">Ballerup Kommune</span><br>
+                    Bevillingsskrivelse
+                </h1>
+                <p class="align-right">Foranstaltningssag<br> <strong>{{appropriation.sbsys_id}}</strong></p>
+            </header>
 
-            <article>
+            <table>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th class="align-right">Godkendt dato</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong class="approval-stamp" style="vertical-align: middle;">Godkendt</strong> ved {{ appropriation.approval_level.name }}</td>
+                        <td class="align-right" style="vertical-align: middle;">{{ appropriation.modified }}</td>
+                    </tr>
+                </tbody>
+            </table>
 
-		    <h1 style="font-size: 2rem; margin: 0 0 2rem;">Bevillingsskrivelse<br> til foranstaltningssag {{appropriation.sbsysid}}</h1>
+            {% if appropriation.approval_note %}
+            <dl>
+                <dt>Bemærkning til godkendelse</dt>
+                <dd><em>{{ appropriation.approval_note }}</em></dd>
+            </dl>
+            {% endif %}
 
-                <dl id="appropriation-details">
-                    <dt>Status</dt>
-                    <dd style="border-bottom: 1px solid #fff; padding-bottom: 1rem;">
-		    <strong>{{appropriation.status|title}} {{appropriation.modified}}</strong>
-                    </dd>
-                    <dt>Bevillingskompetence</dt>
-                    <dd>
-		    {{appropriation.approval_level.name}}
-                    </dd>
-		    <dt>Bevilget efter paragraf §</dt>
-                    <dd>
-		    {{appropriation.section.paragraph}} {{appropriation.section.kle_number}} {{appropriation.section.text}}
-                    </dd>
+            <table id="case-info-primary" class="bordered">
+                <thead>
+                    <tr>
+                        <th>Sagsbehandler</th>
+                        <th>CPR-nummer</th>
+                        <th>Navn</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ appropriation.case.case_worker.first_name }} {{ appropriation.case.case_worker.last_name }}</td>
+                        <td>{{ appropriation.case.cpr_number }}</td>
+                        <td>{{ appropriation.case.name }}</td>
+                    </tr>
+                </tbody>
+            </table>
 
-		    <dt>SBSYS-skabelon-ID</dt>
-		    <dd>{{appropriation.section.sbsys_template_id}}</dd>
-                </dl>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Hovedsag SBSYS-nr.</th>
+                        <th>Betalingskommune</th>
+                        <th>Handlekommune</th>
+                        <th>Bopælskommune</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ appropriation.case.sbsys_id }}</td>
+                        <td>{{ appropriation.case.paying_municipality.name }}</td>
+                        <td>{{ appropriation.case.acting_municipality.name }}</td>
+                        <td>{{ appropriation.case.residence_municipality.name }}</td>
+                    </tr>
+                </tbody>
+            </table>
 
-                <aside id="case-details">
+            <dl id="section-info" class="bordered">
+                <dt>Bevilget efter paragraf §</dt>
+                <dd>
+                    {{ appropriation.section.paragraph }} {{ appropriation.section.text }}
+                </dd>
+            </dl>
 
-                    <h2 style="padding-top: 0;">Relateret til hovedsag</h2>
-
-                    <dl>
-                        <dt>SBSYS ID</dt>
-                        <dd>
-			{{appropriation.case.sbsys_id}}
-                        </dd>
-                        <dt>Sagspart</dt>
-                        <dd>
-			{{appropriation.case.name}}<br>
-			{{appropriation.case.cpr_number}}
-                        </dd>
-                        <dt>Betalingskommune</dt>
-                        <dd>
-			{{appropriation.case.paying_municipality.name}}
-                        </dd>
-                        <dt>Handlekommune</dt>
-                        <dd>
-			{{appropriation.case.acting_municipality.name}}
-                        </dd>
-                        <dt>Bopælskommune</dt>
-                        <dd>
-			{{appropriation.case.residence_municipality.name}}
-                        </dd>
-                    </dl>
-
-                </aside>
-
-                <hr style="clear: both; width: 100%;">
-
-                <h2 style="font-size: 1.5rem;">Bevilgede ydelser</h2>
-
-                <table>
+            <h2>Det bevilges:</h2>
+            <section>
+                <h3>{{ appropriation.main_activity.details.name }} <span class="muted">Hovedydelse</span></h3>
+                {% if appropriation.main_activity.note %}
+                    <p>{{ appropriation.main_activity.note }}</p>
+                {% endif %}
+                <table style="width: auto">
                     <thead>
                         <tr>
-                            <th>Aktivitet</th>
-                            <th>Periode</th>
-                            <th class="align-right">Udgift</th>
-                            <th class="align-right">Udgift,<br> indeværende år</th>
-                            <th class="align-right">Udgift,<br> årligt</th>
-                            <th>Udbetales til</th>
+                            <th>Startdato</th>
+                            <th>Slutdato</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="text-muted">Hovedydelse<br> <em>
-                                {{appropriation.main_activity.details.name}}
-			    </em></td>
-                            <td>
-                                {{appropriation.main_activity.start_date }} -
-                                {{appropriation.main_activity.end_date|default_if_none:""}}
-                            </td>
-                            <td class="align-right">
-                                {{appropriation.main_activity.payment_plan.payment_frequency}}
-                                <br> 
-                                {{appropriation.main_activity.payment_plan.payment_amount}}
-                                <br> 
-                            </td>
-                            <!-- TODO: The two amounts below must be
-                                supplied when supported by backend -->
-                            <td class="align-right">150.000 kr</td>
-                            <td class="align-right">360.000 kr</td>
-                            <td>
-                                <dl>
-                                    <dt>{{appropriation.main_activity.payment_plan.recipient_type}}</dt>
-                                    <dd>{{appropriation.main_activity.payment_plan.recipient_name}}</dd>
-                                    <dt>
-                                    {% if appropriation.main_activity.payment_plan.recipient_type == appropriation.main_activity.payment_plan.PERSON %}
-                                    CPR
-                                    {% elif appropriation.main_activity.payment_plan.recipient_type == appropriation.main_activity.payment_plan.COMPANY %}
-                                    CVR
-                                    {% else %}
-                                    Reference
-                                    {% endif %}
-                                    </dt>
-                                    <dd>{{appropriation.main_activity.payment_plan.recipient_id}}</dd>
-                                    <dt>Betalingsform</dt>
-                                    <dd>{{appropriation.main_activity.payment_plan.payment_method}}</dd>
-                                </dl>
-                            </td>
+                            <td>{{ appropriation.main_activity.start_date }}</td>
+                            <td>{{ appropriation.main_activity.end_date|default_if_none:"" }}</td>
                         </tr>
-                        {% for a in appropriation.supplementary_activities %}
-                        <tr>
-                            <td class="text-muted">Følgeydelse<br>
-                                <em>{{a.details.name}}</em></td>
-                            <td>{{a.start_date}} - {{a.end_date|default_if_none:""}}</td>
-                            <td class="align-right">enkeltydelse<br> 500 kr</td>
-                            <td class="align-right">500 kr</td>
-                            <td class="align-right">-</td>
-                            <td>
-                                <dl>
-                                    <dt>{{a.recipient_type}}</dt>
-                                    <dd>{{a.recipient_name}}</dd>
-                                    <dt>
-                                    {% if a.payment_plan.recipient_type == a.payment_plan.PERSON %}
-                                    CPR
-                                    {% elif a.appropriation.main_activity.payment_plan.recipient_type == a.payment_plan.COMPANY %}
-                                    CVR
-                                    {% else %}
-                                    Reference
-                                    {% endif %}
-                                    </dt>
-                                    <dd>{{a.payment_plan.recipient_id}}</dd>
-                                    <dt>Betalingsform</dt>
-                                    <dd>{{a.payment_plan.payment_method}}</dd>
-                                </dl>
-                            </td>
-                        </tr>
-                        {% endfor %}
                     </tbody>
                 </table>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Afregningsenhed</th>
+                            {% if appropriation.main_activity.payment_plan.payment_type == "RUNNING_PAYMENT" or appropriation.main_activity.payment_plan.payment_type == "ONE_TIME_PAYMENT" %}
+                                <th class="align-right">
+                                    Beløb
+                                </th>
+                            {% else %}
+                                <th class="align-right">
+                                    Takst
+                                </th>
+                                <th>
+                                    Antal
+                                    {% if appropriation.main_activity.payment_plan.payment_type == "PER_KM_PAYMENT" %}
+                                        km
+                                    {% elif appropriation.main_activity.payment_plan.payment_type == "PER_HOUR_PAYMENT" %}
+                                        timer
+                                    {% elif appropriation.main_activity.payment_plan.payment_type == "PER_DAY_PAYMENT" %}
+                                        døgn
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </th>
+                            {% endif %}
+                            {% if appropriation.main_activity.payment_plan.payment_type != "ONE_TIME_PAYMENT"%}
+                                <th>Betalingsfrekvens</th>
+                            {% endif %}
+                            <th class="align-right">Omkostninger, indeværende år</th>
+                            <th class="align-right">Omkostninger, totalt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                {% if appropriation.main_activity.payment_plan.payment_type == "RUNNING_PAYMENT" %}
+                                    Løbende betaling
+                                {% elif appropriation.main_activity.payment_plan.payment_type == "PER_DAY_PAYMENT" %}
+                                    Betaling pr. døgn
+                                {% elif appropriation.main_activity.payment_plan.payment_type == "PER_KM_PAYMENT" %}
+                                    Betaling pr. kilometer
+                                {% elif appropriation.main_activity.payment_plan.payment_type == "PER_HOUR_PAYMENT" %}
+                                    Betaling pr. time
+                                {% elif appropriation.main_activity.payment_plan.payment_type == "ONE_TIME_PAYMENT" %}
+                                    Enkeltbetaling
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="align-right">{{ appropriation.main_activity.payment_plan.payment_amount }} kr</td>
+                            {% if appropriation.main_activity.payment_plan.payment_type != "RUNNING_PAYMENT" and appropriation.main_activity.payment_plan.payment_type != "ONE_TIME_PAYMENT" %}
+                                <td>{{ appropriation.main_activity.payment_plan.payment_units }}</td>
+                            {% endif %}                            
+                            {% if appropriation.main_activity.payment_plan.payment_type != "ONE_TIME_PAYMENT"%}
+                                <td>
+                                    {% if appropriation.main_activity.payment_plan.payment_frequency == "MONTHLY" %}
+                                        Månedlig
+                                    {% elif appropriation.main_activity.payment_plan.payment_frequency == "WEEKLY" %}
+                                        Ugentlig
+                                    {% elif appropriation.main_activity.payment_plan.payment_frequency == "DAILY" %}
+                                        Daglig
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                            <td class="align-right">{{ appropriation.main_activity.total_cost_this_year }} kr</td>
+                            <td class="align-right"><strong>{{ appropriation.main_activity.total_cost }} kr</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <dl>
+                    <dt>Betales til</dt>
+                    <dd>
+                        {% if appropriation.main_activity.payment_plan.recipient_type == "COMPANY" %}
+                            Firma
+                        {% elif appropriation.main_activity.payment_plan.recipient_type == "PERSON" %}
+                            Person
+                        {% elif appropriation.main_activity.payment_plan.recipient_type == "INTERNAL" %}
+                            Intern
+                        {% else %}
+                            -
+                        {% endif %}
+                        <br>
+                        {{ appropriation.main_activity.payment_plan.recipient_name }}<br>
+                        {% if appropriation.main_activity.payment_plan.recipient_type == appropriation.main_activity.payment_plan.PERSON %}
+                            <span>CPR-nr. </span>
+                        {% elif appropriation.main_activity.payment_plan.recipient_type == appropriation.main_activity.payment_plan.COMPANY %}
+                            <span>CVR-nr. </span>
+                        {% else %}
+                            <span>Reference </span>
+                        {% endif %}
+                        {{ appropriation.main_activity.payment_plan.recipient_id }}<br>
+                        Betales via 
+                        {% if appropriation.main_activity.payment_plan.payment_method == "INVOICE" %}
+                            faktura
+                        {% elif appropriation.main_activity.payment_plan.payment_method == "SD" %}
+                            SD-løn
+                        {% elif appropriation.main_activity.payment_plan.payment_method == "INTERNAL" %}
+                            intern afregning
+                        {% elif appropriation.main_activity.payment_plan.payment_method == "CASH" %}
+                            betaling
+                        {% else %}
+                            -
+                        {% endif %}   
+                        {% if appropriation.main_activity.payment_plan.payment_method_details %}
+                            <br>{{ appropriation.main_activity.payment_plan.payment_method_details }}
+                        {% endif %} 
+                    </dd>
+                </dl>
+            </section>
 
-            </article>
+            {% for a in appropriation.supplementary_activities %}
+                <section>
+                    <h3>{{ a.details.name }} <span class="muted">Følgeydelse</span></h3>
+                    {% if a.note %}
+                        <p>{{ a.note }}</p>
+                    {% endif %}
+                    <table style="width: auto">
+                        <thead>
+                            <tr>
+                                <th>Startdato</th>
+                                <th>Slutdato</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ a.start_date }}</td>
+                                <td>{{ a.end_date|default_if_none:"" }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Afregningsenhed</th>
+                                {% if a.payment_plan.payment_type == "RUNNING_PAYMENT" or a.payment_plan.payment_type == "ONE_TIME_PAYMENT" %}
+                                    <th class="align-right">
+                                        Beløb
+                                    </th>
+                                {% else %}
+                                    <th class="align-right">
+                                        Takst
+                                    </th>
+                                    <th>
+                                        Antal
+                                        {% if a.payment_plan.payment_type == "PER_KM_PAYMENT" %}
+                                            km
+                                        {% elif a.payment_plan.payment_type == "PER_HOUR_PAYMENT" %}
+                                            timer
+                                        {% elif a.payment_plan.payment_type == "PER_DAY_PAYMENT" %}
+                                            døgn
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </th>        
+                                {% endif %}
+                                {% if a.payment_plan.payment_type != "ONE_TIME_PAYMENT"%}
+                                    <th>Betalingsfrekvens</th>
+                                {% endif %}
+                                <th class="align-right">Omkostninger, indeværende år</th>
+                                <th class="align-right">Omkostninger, totalt</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    {% if a.payment_plan.payment_type == "RUNNING_PAYMENT" %}
+                                        Løbende betaling
+                                    {% elif a.payment_plan.payment_type == "PER_DAY_PAYMENT" %}
+                                        Betaling pr. døgn
+                                    {% elif a.payment_plan.payment_type == "PER_KM_PAYMENT" %}
+                                        Betaling pr. kilometer
+                                    {% elif a.payment_plan.payment_type == "PER_HOUR_PAYMENT" %}
+                                        Betaling pr. time
+                                    {% elif a.payment_plan.payment_type == "ONE_TIME_PAYMENT" %}
+                                        Enkeltbetaling
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td class="align-right">{{ a.payment_plan.payment_amount }} kr</td>
+                                {% if a.payment_plan.payment_type != "RUNNING_PAYMENT" and a.payment_plan.payment_type != "ONE_TIME_PAYMENT" %}
+                                    <td>{{ a.payment_plan.payment_units }}</td>
+                                {% endif %}
+                                {% if a.payment_plan.payment_type != "ONE_TIME_PAYMENT"%}
+                                    <td>
+                                        {% if a.payment_plan.payment_frequency == "MONTHLY" %}
+                                            Månedlig
+                                        {% elif a.payment_plan.payment_frequency == "WEEKLY" %}
+                                            Ugentlig
+                                        {% elif a.payment_plan.payment_frequency == "DAILY" %}
+                                            Daglig
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+                                <td class="align-right">{{ a.total_cost_this_year }} kr</td>
+                                <td class="align-right"><strong>{{ a.total_cost }} kr</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <dl>
+                        <dt>Betales til</dt>
+                        <dd>
+                            {% if a.payment_plan.recipient_type == "COMPANY" %}
+                                Firma
+                            {% elif a.payment_plan.recipient_type == "PERSON" %}
+                                Person
+                            {% elif a.payment_plan.recipient_type == "INTERNAL" %}
+                                Intern
+                            {% else %}
+                                -
+                            {% endif %}
+                            <br>
+                            {{ a.payment_plan.recipient_name }}<br>
+                            {% if a.payment_plan.recipient_type == "PERSON" %}
+                                <span>CPR-nr. </span>
+                            {% elif a.payment_plan.recipient_type == "COMPANY" %}
+                                <span>CVR-n.r </span>
+                            {% else %}
+                                <span>Reference </span>
+                            {% endif %}
+                            {{ a.payment_plan.recipient_id }}<br>
+                            Betales via 
+                            {% if a.payment_plan.payment_method == "INVOICE" %}
+                                faktura
+                            {% elif a.payment_plan.payment_method == "SD" %}
+                                SD-løn
+                            {% elif a.payment_plan.payment_method == "INTERNAL" %}
+                                intern afregning
+                            {% elif a.payment_plan.payment_method == "CASH" %}
+                                betaling
+                            {% else %}
+                                -
+                            {% endif %}   
+                            {% if a.payment_plan.payment_method_details %}
+                                <br>{{ a.payment_plan.payment_method_details }}
+                            {% endif %}   
+                        </dd>
+                    </dl>
+                </section>
+            {% endfor %}
 
-        </main>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="align-right">Samlede omkostninger, indeværende år</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="align-right" style="border-top: solid 1pt #ccc; border-bottom: solid 2pt #000; padding: 5pt 10pt;">
+                            <strong>{{ appropriation.total_granted_this_year }} kr</strong>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 
-        <footer></footer>
-
+        </article>
     </body>
 </html>
-
