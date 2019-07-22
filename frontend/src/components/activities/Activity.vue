@@ -59,7 +59,9 @@
                     <div v-if="pay.payment_type === 'PER_DAY_PAYMENT'">Døgn</div>
                     <div v-if="pay.payment_type === 'PER_KM_PAYMENT'">Kilometer</div>
                 </dt>
-                <dd>{{ pay.payment_units }}</dd>
+                <dd v-if="pay.payment_type === 'PER_HOUR_PAYMENT' || pay.payment_type === 'PER_DAY_PAYMENT' || pay.payment_type === 'PER_KM_PAYMENT'">
+                    {{ pay.payment_units }}
+                </dd>
                 <dt>Beløb</dt>
                 <dd>{{ pay.payment_amount }} kr.</dd>
             </dl>
@@ -67,7 +69,7 @@
                 <h3>Betales til</h3>
                 <dt>Betalingsmodtager</dt>
                 <dd>
-                    <div v-if="pay.recipient_type === 'INTERNAL'">Inten</div>
+                    <div v-if="pay.recipient_type === 'INTERNAL'">Intern</div>
                     <div v-if="pay.recipient_type === 'COMPANY'">Firma</div>
                     <div v-if="pay.recipient_type === 'PERSON'">Person</div>
                 </dd>

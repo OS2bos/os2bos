@@ -88,6 +88,7 @@
                 })
                 .then(res => {
                     this.update()
+                    this.disableButton = true
                 })
                 .catch(err => console.log(err))
             },

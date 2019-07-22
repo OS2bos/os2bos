@@ -35,7 +35,7 @@
 
         <fieldset v-if="!create_mode">
             <label for="textArea">Supplerende information</label>
-            <textarea id="textArea" v-model="cas.history_change_reason" @change="updateNote()"></textarea>
+            <textarea maxlength="100" id="textArea" v-model="cas.history_change_reason" @change="updateNote()"></textarea>
         </fieldset>
 
     </div>
