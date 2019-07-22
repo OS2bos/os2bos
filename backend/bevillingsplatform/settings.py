@@ -81,7 +81,7 @@ INSTALLED_APPS = [
     "django_extensions",
     "django_filters",
     "simple_history",
-    "core",
+    "core.apps.CoreConfig",
 ]
 
 MIDDLEWARE = [
@@ -261,6 +261,10 @@ DEFAULT_FROM_EMAIL = settings.get(
 
 SBSYS_EMAIL = settings.get(
     "SBSYS_EMAIL", fallback="admin@bevillingsplatform-test.magenta.dk"
+)
+TO_EMAIL_FOR_PAYMENTS = settings.get(
+    "TO_EMAIL_FOR_PAYMENTS",
+    fallback="admin@bevillingsplatform-test.magenta.dk",
 )
 SBSYS_APPROPRIATION_TEMPLATE = "core/html/appropriation_letter.html"
 SBSYS_XML_TEMPLATE = "core/xml/os2forms.xml"

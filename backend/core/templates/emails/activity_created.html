@@ -1,0 +1,17 @@
+{% extends "emails/base.html" %}
+{% block content %}
+<h1>Sagsoplysninger</h1>
+<p>Barnets CPR nummer: {{ activity.appropriation.case.cpr_number }}</p>
+<p>Start dato: {{ activity.start_date }}</p>
+<p>Slut dato: {{ activity.end_date }}</p>
+<p>Beløb: {{ activity.payment_plan.payment_amount }}</p>
+<p>Afregningsenheder: {{ activity.payment_plan.payment_units }}</p>
+
+<h1>Betalingsmodtager</h1>
+<p>CPR/CVR: {{ activity.payment_plan.recipient_id }}</p>
+<p>Navn: {{ activity.payment_plan.recipient_name }}</p>
+<p>Modtagertype: {{ activity.payment_plan.recipient_type }}</p>
+<p>Oplysninger om skattekort: {{ activity.payment_plan.payment_method_details.tax_card }}</p>
+<p>Oplysninger om betalingsmåde: {{ activity.payment_plan.payment_method }}</p>
+
+{% endblock %}

@@ -112,6 +112,13 @@ class PaymentScheduleSerializer(serializers.ModelSerializer):
     payments = PaymentSerializer(many=True, read_only=True)
 
     def validate(self, data):
+        if not self.Meta.model.is_payment_and_recipient_allowed(
+            data["payment_method"], data["recipient_type"]
+        ):
+            raise serializers.ValidationError(
+                _("ugyldig betalingsmetode for betalingsmodtager")
+            )
+
         one_time_payment = (
             data["payment_type"] == PaymentSchedule.ONE_TIME_PAYMENT
         )

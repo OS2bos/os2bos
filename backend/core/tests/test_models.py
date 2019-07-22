@@ -1,9 +1,10 @@
+from django.test import TestCase
+from django.utils import timezone
+from django.core import mail
 from decimal import Decimal
 from datetime import date, timedelta
 from unittest import mock
 
-from django.utils import timezone
-from django.test import TestCase
 from django.contrib.auth import get_user_model
 from parameterized import parameterized
 
@@ -14,6 +15,7 @@ from core.tests.testing_utils import (
     create_appropriation,
     create_case,
     create_section,
+    create_payment,
 )
 from core.models import (
     Municipality,
@@ -22,9 +24,12 @@ from core.models import (
     Account,
     ApprovalLevel,
     Team,
-    Payment,
     PaymentSchedule,
     ServiceProvider,
+    CASH,
+    SD,
+    INVOICE,
+    INTERNAL,
     Activity,
     Appropriation,
 )
@@ -248,7 +253,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
     def setUpTestData(cls):
         cls.basic_setup()
 
-    def test_activity_synchronize_payments_on_save(self):
+    def test_synchronize_payments_on_save(self):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
@@ -267,7 +272,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         activity.save()
         self.assertEqual(activity.payment_plan.payments.count(), 13)
 
-    def test_activity_synchronize_payments_on_save_one_time_payment(self):
+    def test_synchronize_payments_on_save_one_time_payment(self):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
@@ -297,7 +302,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             date(year=2019, month=1, day=1),
         )
 
-    def test_activity_regenerate_payments_on_draft_save(self):
+    def test_regenerate_payments_on_draft_save(self):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
@@ -317,7 +322,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         activity.save()
         self.assertEqual(activity.payment_plan.payments.count(), 1)
 
-    def test_activity_total_cost_with_service_provider(self):
+    def test_total_cost_with_service_provider(self):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
@@ -335,7 +340,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
 
         self.assertEqual(activity.total_cost, Decimal("4500.0"))
 
-    def test_activity_no_payment_plan_on_save(self):
+    def test_no_payment_plan_on_save(self):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
@@ -343,7 +348,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         activity = create_activity(case, appropriation)
         self.assertIsNone(activity.payment_plan)
 
-    def test_activity_total_cost(self):
+    def test_total_cost(self):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
@@ -356,7 +361,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
 
         self.assertEqual(activity.total_cost, Decimal("5000"))
 
-    def test_activity_total_cost_spanning_years(self):
+    def test_total_cost_spanning_years(self):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
@@ -375,7 +380,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
 
         self.assertEqual(activity.total_cost, Decimal("16000"))
 
-    def test_activity_total_cost_this_year(self):
+    def test_total_cost_this_year(self):
         now = timezone.now()
         payment_schedule = create_payment_schedule()
         start_date = date(year=now.year, month=12, day=1)
@@ -394,7 +399,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         self.assertEqual(activity.total_cost_this_year, Decimal("7500"))
 
-    def test_activity_total_cost_this_year_spanning_years(self):
+    def test_total_cost_this_year_spanning_years(self):
         now = timezone.now()
         payment_schedule = create_payment_schedule()
         start_date = date(year=now.year, month=12, day=1)
@@ -413,7 +418,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         self.assertEqual(activity.total_cost_this_year, Decimal("15500"))
 
-    def test_activity_monthly_payment_plan(self):
+    def test_monthly_payment_plan(self):
         start_date = date(year=2019, month=12, day=1)
         end_date = date(year=2020, month=1, day=1)
         payment_schedule = create_payment_schedule()
@@ -436,6 +441,154 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         self.assertEqual(
             [entry for entry in activity.monthly_payment_plan], expected
         )
+
+    def test_created_payment_email(self):
+        start_date = date(year=2019, month=12, day=1)
+        end_date = date(year=2020, month=1, day=1)
+        payment_schedule = create_payment_schedule()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED
+        )
+        create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=Activity.STATUS_GRANTED,
+        )
+        self.assertEqual(len(mail.outbox), 1)
+        email_message = mail.outbox[0]
+        self.assertIn("Aktivitet oprettet", email_message.subject)
+        self.assertIn("Barnets CPR nummer: 0205891234", email_message.body)
+        self.assertIn("Beløb: 500,0", email_message.body)
+        self.assertIn("Afregningsenheder: 0", email_message.body)
+        self.assertIn("Start dato: 1. december 2019", email_message.body)
+        self.assertIn("Slut dato: 1. januar 2020", email_message.body)
+
+    def test_updated_payment_email(self):
+        start_date = date(year=2019, month=12, day=1)
+        end_date = date(year=2020, month=1, day=1)
+        payment_schedule = create_payment_schedule()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED
+        )
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=Activity.STATUS_GRANTED,
+        )
+        activity.save()
+        self.assertEqual(len(mail.outbox), 2)
+        email_message = mail.outbox[1]
+        self.assertIn("Aktivitet opdateret", email_message.subject)
+        self.assertIn("Barnets CPR nummer: 0205891234", email_message.body)
+        self.assertIn("Beløb: 500,0", email_message.body)
+        self.assertIn("Afregningsenheder: 0", email_message.body)
+        self.assertIn("Start dato: 1. december 2019", email_message.body)
+        self.assertIn("Slut dato: 1. januar 2020", email_message.body)
+
+    def test_deleted_payment_email(self):
+        start_date = date(year=2019, month=12, day=1)
+        end_date = date(year=2020, month=1, day=1)
+        payment_schedule = create_payment_schedule()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED
+        )
+        # Should send a payment deleted email as status is GRANTED.
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=Activity.STATUS_GRANTED,
+        )
+        activity.delete()
+        self.assertEqual(len(mail.outbox), 2)
+        email_message = mail.outbox[1]
+        self.assertIn("Aktivitet udgået", email_message.subject)
+        self.assertIn("Barnets CPR nummer: 0205891234", email_message.body)
+        self.assertIn("Beløb: 500,0", email_message.body)
+        self.assertIn("Afregningsenheder: 0", email_message.body)
+        self.assertIn("Start dato: 1. december 2019", email_message.body)
+        self.assertIn("Slut dato: 1. januar 2020", email_message.body)
+
+    def test_payment_email_draft_should_not_send(self):
+        start_date = date(year=2019, month=12, day=1)
+        end_date = date(year=2020, month=1, day=1)
+        payment_schedule = create_payment_schedule()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_DRAFT
+        )
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=Activity.STATUS_DRAFT,
+        )
+        activity.delete()
+        self.assertEqual(len(mail.outbox), 0)
+
+    def test_deleted_payment_email_person_cash_should_not_send(self):
+        start_date = date(year=2019, month=12, day=1)
+        end_date = date(year=2020, month=1, day=1)
+        payment_schedule = create_payment_schedule(
+            payment_method=CASH, recipient_type=PaymentSchedule.PERSON
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED
+        )
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=Activity.STATUS_GRANTED,
+        )
+        activity.delete()
+        self.assertEqual(len(mail.outbox), 0)
+
+    def test_deleted_payment_email_no_payment_plan_should_not_send(self):
+        start_date = date(year=2019, month=12, day=1)
+        end_date = date(year=2020, month=1, day=1)
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED
+        )
+        # Generate an activity with no payment plan.
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            status=Activity.STATUS_GRANTED,
+        )
+        activity.delete()
+        self.assertEqual(len(mail.outbox), 0)
 
 
 class AccountTestCase(TestCase):
@@ -466,7 +619,7 @@ class ApprovalLevelTestCase(TestCase):
 class PaymentTestCase(TestCase):
     def test_payment_str(self):
         payment_schedule = create_payment_schedule()
-        payment = Payment.objects.create(
+        payment = create_payment(
             payment_schedule=payment_schedule,
             date=date(year=2019, month=1, day=1),
             amount=Decimal("500.0"),
@@ -606,6 +759,26 @@ class PaymentScheduleTestCase(TestCase):
         )
 
         self.assertEqual(amount, expected)
+
+    @parameterized.expand(
+        [
+            (PaymentSchedule.INTERNAL, CASH),
+            (PaymentSchedule.INTERNAL, SD),
+            (PaymentSchedule.INTERNAL, INVOICE),
+            (PaymentSchedule.PERSON, INTERNAL),
+            (PaymentSchedule.PERSON, INVOICE),
+            (PaymentSchedule.COMPANY, CASH),
+            (PaymentSchedule.COMPANY, SD),
+            (PaymentSchedule.COMPANY, INTERNAL),
+        ]
+    )
+    def test_save_with_payment_and_recipient(
+        self, recipient_type, payment_method
+    ):
+        with self.assertRaises(ValueError):
+            create_payment_schedule(
+                recipient_type=recipient_type, payment_method=payment_method
+            )
 
     def test_calculate_per_payment_amount_invalid_payment_type(self):
         payment_schedule = create_payment_schedule(
@@ -771,6 +944,51 @@ class PaymentScheduleTestCase(TestCase):
         payment_schedule.save()
         with self.assertRaises(ValueError):
             payment_schedule.synchronize_payments(start_date, end_date)
+
+    @parameterized.expand(
+        [
+            (PaymentSchedule.PERSON, SD),
+            (PaymentSchedule.PERSON, CASH),
+            (PaymentSchedule.INTERNAL, INTERNAL),
+            (PaymentSchedule.COMPANY, INVOICE),
+        ]
+    )
+    def test_payment_and_recipient_allowed_save(
+        self, recipient_type, payment_method
+    ):
+        payment_schedule = create_payment_schedule()
+        payment = create_payment(
+            payment_schedule=payment_schedule,
+            date=timezone.now(),
+            recipient_type=recipient_type,
+            payment_method=payment_method,
+        )
+        self.assertEqual(payment.recipient_type, recipient_type)
+        self.assertEqual(payment.payment_method, payment_method)
+
+    @parameterized.expand(
+        [
+            (PaymentSchedule.PERSON, INTERNAL),
+            (PaymentSchedule.PERSON, INVOICE),
+            (PaymentSchedule.INTERNAL, CASH),
+            (PaymentSchedule.INTERNAL, SD),
+            (PaymentSchedule.INTERNAL, INVOICE),
+            (PaymentSchedule.COMPANY, INTERNAL),
+            (PaymentSchedule.COMPANY, SD),
+            (PaymentSchedule.COMPANY, CASH),
+        ]
+    )
+    def test_payment_and_recipient_disallowed_save(
+        self, recipient_type, payment_method
+    ):
+        payment_schedule = create_payment_schedule()
+        with self.assertRaises(ValueError):
+            create_payment(
+                payment_schedule=payment_schedule,
+                date=timezone.now(),
+                recipient_type=recipient_type,
+                payment_method=payment_method,
+            )
 
 
 class CaseTestCase(TestCase, BasicTestMixin):

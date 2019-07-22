@@ -14,6 +14,7 @@ from core.tests.testing_utils import (
     BasicTestMixin,
     create_case,
     create_appropriation,
+    create_payment_schedule,
 )
 from core.serializers import (
     ActivitySerializer,
@@ -210,3 +211,23 @@ class PaymentScheduleSerializerTestCase(TestCase, BasicTestMixin):
         is_valid = serializer.is_valid()
 
         self.assertTrue(is_valid)
+
+    def test_validate_payment_and_recipient_allowed(self):
+        payment_schedule = create_payment_schedule(
+            payment_method=CASH, recipient_type=PaymentSchedule.PERSON
+        )
+        data = PaymentScheduleSerializer(payment_schedule).data
+        serializer = PaymentScheduleSerializer(data=data)
+        self.assertTrue(serializer.is_valid())
+
+    def test_validate_error_payment_and_recipient_not_allowed(self):
+        payment_schedule = create_payment_schedule()
+        data = PaymentScheduleSerializer(payment_schedule).data
+        data["payment_method"] = CASH
+        data["recipient_type"] = PaymentSchedule.INTERNAL
+        serializer = PaymentScheduleSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertEqual(
+            "ugyldig betalingsmetode for betalingsmodtager",
+            serializer.errors["non_field_errors"][0],
+        )
