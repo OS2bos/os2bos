@@ -1,7 +1,7 @@
 <template>
     <section class="payment-receiver">
         <label>Betalingsmodtager</label>
-        <select  v-model="entry.recipient_type">
+        <select  v-model="entry.recipient_type" required>
             <option value="INTERNAL">Intern</option>
             <option value="COMPANY">Firma</option>
             <option value="PERSON">Person</option>
@@ -26,11 +26,11 @@
                 <label v-if="entry.recipient_type === 'PERSON'" for="field-payee-id">
                     CPR-nr
                 </label>
-                <input type="text" id="field-payee-id" v-model="entry.recipient_id">
+                <input type="text" id="field-payee-id" v-model="entry.recipient_id" required>
             </fieldset>
             <fieldset>
                 <label for="field-payee-name">Navn</label>
-                <input type="text" id="field-payee-name" v-model="entry.recipient_name">
+                <input type="text" id="field-payee-name" v-model="entry.recipient_name" required>
             </fieldset>
         </template>
     </section>

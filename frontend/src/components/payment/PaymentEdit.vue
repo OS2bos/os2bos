@@ -1,7 +1,7 @@
 <template>
     <section class="payment-method">
         <label>Betalingsmåde</label>
-        <select  v-model="entry.payment_method">
+        <select  v-model="entry.payment_method" required>
             <option value="INVOICE" v-if="paymentObj.recipient_type === 'COMPANY'">Faktura</option>
             <option value="INTERNAL" v-if="paymentObj.recipient_type === 'INTERNAL'">Intern afregning</option>
             <option value="CASH" v-if="paymentObj.recipient_type === 'PERSON' || paymentObj.recipient_type === 'COMPANY'">
@@ -19,9 +19,9 @@
             </div>
             <div v-if="entry.payment_method === 'SD'">
                 <strong>Skattekort</strong>
-                <input type="radio" id="field-main" name="payment-type" :value="{tax_type: 'MAIN_CARD'}" v-model="entry.payment_method_details">
+                <input type="radio" id="field-main" name="payment-type" :value="{tax_type: 'MAIN_CARD'}" v-model="entry.payment_method_details" required>
                 <label for="field-main">Hovedkort</label>
-                <input type="radio" id="field-secondary" name="payment-type" :value="{tax_type: 'SECONDARY_CARD'}" v-model="entry.payment_method_details">
+                <input type="radio" id="field-secondary" name="payment-type" :value="{tax_type: 'SECONDARY_CARD'}" v-model="entry.payment_method_details" required>
                 <label for="field-secondary">Bikort</label>
             </div>
         </div>
