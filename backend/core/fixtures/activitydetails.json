@@ -1,7 +1,7 @@
 [
    {
       "model":"core.activitydetails",
-      "pk":1293,
+      "pk":1379,
       "fields":{
          "name":"K\u00f8rsel i egen bil",
          "activity_id":"010009",
@@ -11,68 +11,69 @@
 
          ],
          "supplementary_activity_for":[
-            598,
-            637,
-            588,
-            599,
-            642,
-            597,
-            643,
-            601,
-            605,
             595,
-            600,
-            603,
-            636,
             584,
-            641,
-            640,
-            633,
-            604,
-            622,
+            588,
             596,
-            635
+            597,
+            598,
+            599,
+            600,
+            601,
+            603,
+            604,
+            605,
+            622,
+            633,
+            635,
+            636,
+            637,
+            640,
+            641,
+            642,
+            643
          ],
          "service_providers":[
 
          ],
          "main_activities":[
-            1299,
-            1300,
-            1301,
-            1302,
-            1304,
-            1305,
-            1320,
-            1321,
-            1322,
-            1330,
-            1354,
-            1360,
-            1361,
-            1365,
-            1366,
-            1367,
-            1368,
-            1373,
-            1375
+            1385,
+            1386,
+            1387,
+            1388,
+            1390,
+            1391,
+            1406,
+            1407,
+            1408,
+            1416,
+            1440,
+            1446,
+            1447,
+            1451,
+            1452,
+            1453,
+            1454,
+            1459,
+            1461
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1294,
+      "pk":1380,
       "fields":{
          "name":"Aktiviteter",
          "activity_id":"010011",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            604,
+            606
          ],
          "supplementary_activity_for":[
-            589,
             595,
+            589,
             596,
             597,
             598,
@@ -84,25 +85,25 @@
 
          ],
          "main_activities":[
-            1302,
-            1304,
-            1305,
-            1320,
-            1321,
-            1330,
-            1361,
-            1366,
-            1367,
-            1368,
-            1371,
-            1373,
-            1375
+            1388,
+            1390,
+            1391,
+            1406,
+            1407,
+            1416,
+            1447,
+            1452,
+            1453,
+            1454,
+            1457,
+            1459,
+            1461
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1295,
+      "pk":1381,
       "fields":{
          "name":"Tolk",
          "activity_id":"010137",
@@ -112,84 +113,84 @@
 
          ],
          "supplementary_activity_for":[
-            578,
-            598,
-            589,
-            556,
-            534,
-            637,
-            588,
-            599,
-            642,
-            592,
-            597,
-            643,
-            601,
-            607,
             595,
-            600,
-            603,
-            544,
-            636,
-            641,
-            651,
-            640,
-            633,
-            590,
-            549,
-            622,
-            596,
-            591,
-            602,
             543,
+            544,
+            549,
+            556,
+            578,
+            588,
+            589,
+            590,
+            591,
+            592,
+            596,
+            597,
+            598,
+            599,
+            600,
+            601,
+            602,
+            603,
+            607,
             609,
+            622,
+            633,
             635,
-            638
+            636,
+            637,
+            638,
+            640,
+            641,
+            642,
+            643,
+            651,
+            534
          ],
          "service_providers":[
 
          ],
          "main_activities":[
-            1298,
-            1299,
-            1300,
-            1301,
-            1302,
-            1304,
-            1305,
-            1306,
-            1310,
-            1311,
-            1320,
-            1321,
-            1322,
-            1323,
-            1330,
-            1355,
-            1358,
-            1359,
-            1360,
-            1361,
-            1362,
-            1363,
-            1364,
-            1365,
-            1366,
-            1367,
-            1368,
-            1369,
-            1370,
-            1371,
-            1373,
-            1375,
-            1376,
-            1377
+            1384,
+            1385,
+            1386,
+            1387,
+            1388,
+            1390,
+            1391,
+            1392,
+            1396,
+            1397,
+            1406,
+            1407,
+            1408,
+            1409,
+            1416,
+            1441,
+            1444,
+            1445,
+            1446,
+            1447,
+            1448,
+            1449,
+            1450,
+            1451,
+            1452,
+            1453,
+            1454,
+            1455,
+            1456,
+            1457,
+            1459,
+            1461,
+            1462,
+            1463
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1296,
+      "pk":1382,
       "fields":{
          "name":"Egenbetaling, beboere",
          "activity_id":"010097",
@@ -199,31 +200,31 @@
 
          ],
          "supplementary_activity_for":[
-            534,
             601,
             635,
-            637
+            637,
+            534
          ],
          "service_providers":[
 
          ],
          "main_activities":[
-            1366,
-            1367,
-            1320,
-            1299,
-            1321,
-            1300,
-            1301,
-            1322,
-            1323,
-            1330
+            1416,
+            1406,
+            1385,
+            1386,
+            1387,
+            1407,
+            1408,
+            1409,
+            1452,
+            1453
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1297,
+      "pk":1383,
       "fields":{
          "name":"Advokatbistand",
          "activity_id":"010037",
@@ -239,28 +240,28 @@
 
          ],
          "main_activities":[
-            1366,
-            1367,
-            1320,
-            1299,
-            1321,
-            1300,
-            1301,
-            1322,
-            1330
+            1416,
+            1406,
+            1385,
+            1386,
+            1387,
+            1407,
+            1408,
+            1452,
+            1453
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1298,
+      "pk":1384,
       "fields":{
          "name":"R\u00e5dgivning, unders\u00f8gelse og behandling",
          "activity_id":"010031",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            556
          ],
          "supplementary_activity_for":[
 
@@ -269,20 +270,24 @@
 
          ],
          "main_activities":[
-            1295
+            1381
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1299,
+      "pk":1385,
       "fields":{
          "name":"Soc.p\u00e6d. opholdssteder",
          "activity_id":"010038",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            601,
+            622,
+            635,
+            637,
+            642
          ],
          "supplementary_activity_for":[
 
@@ -291,35 +296,41 @@
 
          ],
          "main_activities":[
-            1293,
-            1295,
-            1296,
-            1297,
-            1308,
-            1316,
-            1319,
-            1333,
-            1334,
-            1335,
-            1336,
-            1343,
-            1346,
-            1352,
-            1356,
-            1357
+            1379,
+            1381,
+            1382,
+            1383,
+            1394,
+            1402,
+            1405,
+            1419,
+            1420,
+            1421,
+            1422,
+            1429,
+            1432,
+            1438,
+            1442,
+            1443
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1300,
+      "pk":1386,
       "fields":{
          "name":"Kost- og efterskoler",
          "activity_id":"010039",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            601,
+            604,
+            605,
+            622,
+            635,
+            637,
+            642
          ],
          "supplementary_activity_for":[
 
@@ -328,35 +339,36 @@
 
          ],
          "main_activities":[
-            1293,
-            1295,
-            1296,
-            1297,
-            1308,
-            1316,
-            1319,
-            1333,
-            1334,
-            1335,
-            1336,
-            1343,
-            1346,
-            1352,
-            1356,
-            1357
+            1379,
+            1381,
+            1382,
+            1383,
+            1394,
+            1402,
+            1405,
+            1419,
+            1420,
+            1421,
+            1422,
+            1429,
+            1432,
+            1438,
+            1442,
+            1443
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1301,
+      "pk":1387,
       "fields":{
          "name":"Eget v\u00e6relse",
          "activity_id":"010040",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            601,
+            635
          ],
          "supplementary_activity_for":[
 
@@ -365,34 +377,34 @@
 
          ],
          "main_activities":[
-            1293,
-            1295,
-            1296,
-            1297,
-            1308,
-            1316,
-            1319,
-            1333,
-            1334,
-            1335,
-            1336,
-            1337,
-            1346,
-            1352,
-            1356
+            1379,
+            1381,
+            1382,
+            1383,
+            1394,
+            1402,
+            1405,
+            1419,
+            1420,
+            1421,
+            1422,
+            1423,
+            1432,
+            1438,
+            1442
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1302,
+      "pk":1388,
       "fields":{
          "name":"Familiebehandling",
          "activity_id":"010043",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            597
          ],
          "supplementary_activity_for":[
 
@@ -401,16 +413,16 @@
 
          ],
          "main_activities":[
-            1356,
-            1295,
-            1293,
-            1294
+            1381,
+            1379,
+            1380,
+            1442
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1303,
+      "pk":1389,
       "fields":{
          "name":"Aflastning",
          "activity_id":"010045",
@@ -426,20 +438,23 @@
 
          ],
          "main_activities":[
-            1320
+            1406
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1304,
+      "pk":1390,
       "fields":{
          "name":"Kontaktperson",
          "activity_id":"010046",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            600,
+            605,
+            636,
+            640
          ],
          "supplementary_activity_for":[
 
@@ -448,23 +463,23 @@
 
          ],
          "main_activities":[
-            1356,
-            1295,
-            1293,
-            1294
+            1381,
+            1379,
+            1380,
+            1442
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1305,
+      "pk":1391,
       "fields":{
          "name":"Kontaktperson for hele familien",
          "activity_id":"010047",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            600
          ],
          "supplementary_activity_for":[
 
@@ -473,23 +488,23 @@
 
          ],
          "main_activities":[
-            1356,
-            1295,
-            1293,
-            1294
+            1381,
+            1379,
+            1380,
+            1442
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1306,
+      "pk":1392,
       "fields":{
          "name":"Konsulentbistand efter \u00a7 11,3,1",
          "activity_id":"010051",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            543
          ],
          "supplementary_activity_for":[
 
@@ -498,21 +513,21 @@
 
          ],
          "main_activities":[
-            1295,
-            1324
+            1381,
+            1410
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1307,
+      "pk":1393,
       "fields":{
          "name":"Pr\u00e6vention, \u00a7 11,4",
          "activity_id":"010052",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            551
          ],
          "supplementary_activity_for":[
 
@@ -527,14 +542,14 @@
    },
    {
       "model":"core.activitydetails",
-      "pk":1308,
+      "pk":1394,
       "fields":{
          "name":"St\u00f8tte til fritidstilbud",
          "activity_id":"010053",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            553
          ],
          "supplementary_activity_for":[
             601,
@@ -548,28 +563,30 @@
 
          ],
          "main_activities":[
-            1366,
-            1367,
-            1320,
-            1299,
-            1321,
-            1300,
-            1301,
-            1322,
-            1330
+            1416,
+            1406,
+            1385,
+            1386,
+            1387,
+            1407,
+            1408,
+            1452,
+            1453
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1309,
+      "pk":1395,
       "fields":{
          "name":"St\u00f8tte til for\u00e6ldremyndighedsindehaveren efter \u00a7 52a og \u00a7 52",
          "activity_id":"010068",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            604,
+            605,
+            606
          ],
          "supplementary_activity_for":[
 
@@ -584,14 +601,14 @@
    },
    {
       "model":"core.activitydetails",
-      "pk":1310,
+      "pk":1396,
       "fields":{
          "name":"St\u00f8tteperson til for\u00e6ldremyndighedsindehaveren",
          "activity_id":"St\u00f8ts",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            607
          ],
          "supplementary_activity_for":[
 
@@ -600,20 +617,20 @@
 
          ],
          "main_activities":[
-            1295
+            1381
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1311,
+      "pk":1397,
       "fields":{
          "name":"Praktikophold",
          "activity_id":"010070",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            602
          ],
          "supplementary_activity_for":[
 
@@ -622,22 +639,22 @@
 
          ],
          "main_activities":[
-            1356,
-            1295,
-            1332
+            1381,
+            1418,
+            1442
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1312,
+      "pk":1398,
       "fields":{
          "name":"Overv\u00e5get samv\u00e6r",
          "activity_id":"Overv7",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            637
          ],
          "supplementary_activity_for":[
 
@@ -652,14 +669,14 @@
    },
    {
       "model":"core.activitydetails",
-      "pk":1313,
+      "pk":1399,
       "fields":{
          "name":"Overv\u00e5get samv\u00e6r",
          "activity_id":"Overv9",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            637
          ],
          "supplementary_activity_for":[
 
@@ -674,14 +691,14 @@
    },
    {
       "model":"core.activitydetails",
-      "pk":1314,
+      "pk":1400,
       "fields":{
          "name":"Overv\u00e5get samv\u00e6r",
          "activity_id":"Overv3",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            637
          ],
          "supplementary_activity_for":[
 
@@ -696,14 +713,14 @@
    },
    {
       "model":"core.activitydetails",
-      "pk":1315,
+      "pk":1401,
       "fields":{
          "name":"Overv\u00e5get samv\u00e6r",
          "activity_id":"Overv5",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            637
          ],
          "supplementary_activity_for":[
 
@@ -718,7 +735,7 @@
    },
    {
       "model":"core.activitydetails",
-      "pk":1316,
+      "pk":1402,
       "fields":{
          "name":"Overv\u00e5get samv\u00e6r",
          "activity_id":"Overa",
@@ -735,28 +752,28 @@
 
          ],
          "main_activities":[
-            1366,
-            1367,
-            1320,
-            1299,
-            1321,
-            1300,
-            1301,
-            1322,
-            1330
+            1416,
+            1406,
+            1385,
+            1386,
+            1387,
+            1407,
+            1408,
+            1452,
+            1453
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1317,
+      "pk":1403,
       "fields":{
          "name":"St\u00f8tte til forhindring af anbringelse",
          "activity_id":"010081",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            605
          ],
          "supplementary_activity_for":[
 
@@ -771,14 +788,14 @@
    },
    {
       "model":"core.activitydetails",
-      "pk":1318,
+      "pk":1404,
       "fields":{
          "name":"Familier\u00e5dgivning, forebyggende",
          "activity_id":"010082",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            605
          ],
          "supplementary_activity_for":[
 
@@ -793,7 +810,7 @@
    },
    {
       "model":"core.activitydetails",
-      "pk":1319,
+      "pk":1405,
       "fields":{
          "name":"Ferieaktiviteter",
          "activity_id":"010083",
@@ -803,43 +820,51 @@
 
          ],
          "supplementary_activity_for":[
-            642,
-            643,
-            604,
+            584,
             601,
-            635,
-            622,
+            604,
             605,
+            622,
+            635,
             637,
-            584
+            642,
+            643
          ],
          "service_providers":[
 
          ],
          "main_activities":[
-            1366,
-            1367,
-            1320,
-            1299,
-            1321,
-            1300,
-            1301,
-            1322,
-            1354,
-            1330
+            1416,
+            1406,
+            1385,
+            1386,
+            1387,
+            1407,
+            1408,
+            1452,
+            1440,
+            1453
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1320,
+      "pk":1406,
       "fields":{
          "name":"Plejefamilier, vederlag",
          "activity_id":"010085",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            588,
+            598,
+            599,
+            601,
+            622,
+            635,
+            637,
+            642,
+            643
          ],
          "supplementary_activity_for":[
 
@@ -848,38 +873,44 @@
 
          ],
          "main_activities":[
-            1293,
-            1294,
-            1295,
-            1296,
-            1297,
-            1303,
-            1308,
-            1316,
-            1319,
-            1329,
-            1333,
-            1334,
-            1335,
-            1336,
-            1345,
-            1346,
-            1350,
-            1352,
-            1356
+            1379,
+            1380,
+            1381,
+            1382,
+            1383,
+            1389,
+            1394,
+            1402,
+            1405,
+            1415,
+            1419,
+            1420,
+            1421,
+            1422,
+            1431,
+            1432,
+            1436,
+            1438,
+            1442
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1321,
+      "pk":1407,
       "fields":{
          "name":"Netv\u00e6rksplejefamilier",
          "activity_id":"010086",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            588,
+            599,
+            601,
+            622,
+            635,
+            637,
+            642
          ],
          "supplementary_activity_for":[
 
@@ -888,37 +919,39 @@
 
          ],
          "main_activities":[
-            1293,
-            1294,
-            1295,
-            1296,
-            1297,
-            1308,
-            1316,
-            1319,
-            1327,
-            1329,
-            1333,
-            1334,
-            1335,
-            1336,
-            1345,
-            1346,
-            1352,
-            1356
+            1379,
+            1380,
+            1381,
+            1382,
+            1383,
+            1394,
+            1402,
+            1405,
+            1413,
+            1415,
+            1419,
+            1420,
+            1421,
+            1422,
+            1431,
+            1432,
+            1438,
+            1442
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1322,
+      "pk":1408,
       "fields":{
          "name":"Sikrede institutioner, opholdsbetaling",
          "activity_id":"010091",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            601,
+            622,
+            642
          ],
          "supplementary_activity_for":[
 
@@ -927,35 +960,35 @@
 
          ],
          "main_activities":[
-            1293,
-            1295,
-            1296,
-            1297,
-            1308,
-            1316,
-            1319,
-            1333,
-            1334,
-            1335,
-            1336,
-            1343,
-            1346,
-            1352,
-            1356,
-            1357
+            1379,
+            1381,
+            1382,
+            1383,
+            1394,
+            1402,
+            1405,
+            1419,
+            1420,
+            1421,
+            1422,
+            1429,
+            1432,
+            1438,
+            1442,
+            1443
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1323,
+      "pk":1409,
       "fields":{
          "name":"Kvindekrisecentre",
          "activity_id":"010096",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            534
          ],
          "supplementary_activity_for":[
 
@@ -964,14 +997,14 @@
 
          ],
          "main_activities":[
-            1295,
-            1296
+            1381,
+            1382
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1324,
+      "pk":1410,
       "fields":{
          "name":"Egenbetaling",
          "activity_id":"EgenB",
@@ -987,20 +1020,20 @@
 
          ],
          "main_activities":[
-            1306
+            1392
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1325,
+      "pk":1411,
       "fields":{
          "name":"Merudgiftsydelse, jfr. SEL \u00a7 41",
          "activity_id":"010101",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            585
          ],
          "supplementary_activity_for":[
 
@@ -1009,26 +1042,26 @@
 
          ],
          "main_activities":[
-            1326,
-            1331,
-            1332,
-            1338,
-            1339,
-            1340,
-            1341,
-            1342,
-            1346,
-            1347,
-            1348,
-            1349,
-            1351,
-            1356
+            1412,
+            1417,
+            1418,
+            1424,
+            1425,
+            1426,
+            1427,
+            1428,
+            1432,
+            1433,
+            1434,
+            1435,
+            1437,
+            1442
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1326,
+      "pk":1412,
       "fields":{
          "name":"\u00d8vrige udgifter jf \u00a741",
          "activity_id":"Andre41",
@@ -1044,20 +1077,20 @@
 
          ],
          "main_activities":[
-            1325
+            1411
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1327,
+      "pk":1413,
       "fields":{
          "name":"Tabt arbejdsfortjeneste",
          "activity_id":"010102",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            586
          ],
          "supplementary_activity_for":[
             601,
@@ -1068,14 +1101,14 @@
 
          ],
          "main_activities":[
-            1378,
-            1321
+            1407,
+            1464
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1328,
+      "pk":1414,
       "fields":{
          "name":"K\u00f8b af tr\u00e6ningsredskaber til hjemmetr\u00e6ning",
          "activity_id":"010103",
@@ -1091,13 +1124,13 @@
 
          ],
          "main_activities":[
-            1370
+            1456
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1329,
+      "pk":1415,
       "fields":{
          "name":"Supervision",
          "activity_id":"010111",
@@ -1115,23 +1148,28 @@
 
          ],
          "main_activities":[
-            1320,
-            1370,
-            1321,
-            1330
+            1416,
+            1456,
+            1406,
+            1407
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1330,
+      "pk":1416,
       "fields":{
          "name":"Kommunale plejefamilier, vederlag",
          "activity_id":"010135",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            588,
+            599,
+            601,
+            622,
+            635,
+            642
          ],
          "supplementary_activity_for":[
 
@@ -1140,30 +1178,30 @@
 
          ],
          "main_activities":[
-            1293,
-            1294,
-            1295,
-            1296,
-            1297,
-            1308,
-            1316,
-            1319,
-            1329,
-            1333,
-            1334,
-            1335,
-            1336,
-            1344,
-            1345,
-            1346,
-            1352,
-            1356
+            1379,
+            1380,
+            1381,
+            1382,
+            1383,
+            1394,
+            1402,
+            1405,
+            1415,
+            1419,
+            1420,
+            1421,
+            1422,
+            1430,
+            1431,
+            1432,
+            1438,
+            1442
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1331,
+      "pk":1417,
       "fields":{
          "name":"Kursus",
          "activity_id":"010138",
@@ -1180,14 +1218,14 @@
 
          ],
          "main_activities":[
-            1370,
-            1325
+            1456,
+            1411
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1332,
+      "pk":1418,
       "fields":{
          "name":"Bekl\u00e6dning",
          "activity_id":"010145",
@@ -1204,14 +1242,14 @@
 
          ],
          "main_activities":[
-            1311,
-            1325
+            1397,
+            1411
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1333,
+      "pk":1419,
       "fields":{
          "name":"Andre indsatser vedr. Aflastning",
          "activity_id":"Andre5235",
@@ -1232,21 +1270,21 @@
 
          ],
          "main_activities":[
-            1366,
-            1367,
-            1320,
-            1299,
-            1321,
-            1300,
-            1301,
-            1322,
-            1330
+            1416,
+            1406,
+            1385,
+            1386,
+            1387,
+            1407,
+            1408,
+            1452,
+            1453
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1334,
+      "pk":1420,
       "fields":{
          "name":"Andre indsatser vedr. Anbringelsen",
          "activity_id":"Andre5237",
@@ -1267,21 +1305,21 @@
 
          ],
          "main_activities":[
-            1366,
-            1367,
-            1320,
-            1299,
-            1321,
-            1300,
-            1301,
-            1322,
-            1330
+            1416,
+            1406,
+            1385,
+            1386,
+            1387,
+            1407,
+            1408,
+            1452,
+            1453
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1335,
+      "pk":1421,
       "fields":{
          "name":"Andre indsatser vedr. Behandling el. praktisk/p\u00e6dagogisk st\u00f8tte",
          "activity_id":"Andre5239",
@@ -1302,21 +1340,21 @@
 
          ],
          "main_activities":[
-            1366,
-            1367,
-            1320,
-            1299,
-            1321,
-            1300,
-            1301,
-            1322,
-            1330
+            1416,
+            1406,
+            1385,
+            1386,
+            1387,
+            1407,
+            1408,
+            1452,
+            1453
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1336,
+      "pk":1422,
       "fields":{
          "name":"Andre indsatser vedr. Familie- og dagbehandling eller intern skole",
          "activity_id":"Andre5233",
@@ -1337,21 +1375,21 @@
 
          ],
          "main_activities":[
-            1366,
-            1367,
-            1320,
-            1299,
-            1321,
-            1300,
-            1301,
-            1322,
-            1330
+            1416,
+            1406,
+            1385,
+            1386,
+            1387,
+            1407,
+            1408,
+            1452,
+            1453
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1337,
+      "pk":1423,
       "fields":{
          "name":"Andre indsatser vedr. Kontaktperson",
          "activity_id":"Andre5236",
@@ -1371,13 +1409,13 @@
 
          ],
          "main_activities":[
-            1301
+            1387
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1338,
+      "pk":1424,
       "fields":{
          "name":"Di\u00e6t- og supplerende kost",
          "activity_id":"Di\u00e6tKo",
@@ -1393,13 +1431,13 @@
 
          ],
          "main_activities":[
-            1325
+            1411
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1339,
+      "pk":1425,
       "fields":{
          "name":"Form\u00e5lsbestemt k\u00f8rsel",
          "activity_id":"K\u00f8rForm",
@@ -1415,13 +1453,13 @@
 
          ],
          "main_activities":[
-            1325
+            1411
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1340,
+      "pk":1426,
       "fields":{
          "name":"Fritidsk\u00f8rsel",
          "activity_id":"K\u00f8rFri",
@@ -1437,13 +1475,13 @@
 
          ],
          "main_activities":[
-            1325
+            1411
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1341,
+      "pk":1427,
       "fields":{
          "name":"Handicapcykel",
          "activity_id":"HandiCy",
@@ -1459,13 +1497,13 @@
 
          ],
          "main_activities":[
-            1325
+            1411
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1342,
+      "pk":1428,
       "fields":{
          "name":"Handicapk\u00f8ret\u00f8j",
          "activity_id":"HandiBil",
@@ -1481,13 +1519,13 @@
 
          ],
          "main_activities":[
-            1325
+            1411
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1343,
+      "pk":1429,
       "fields":{
          "name":"Institutioner, Andre udgifter",
          "activity_id":"InstAUdg",
@@ -1497,32 +1535,32 @@
 
          ],
          "supplementary_activity_for":[
-            642,
-            604,
-            601,
-            635,
-            622,
             598,
+            599,
+            601,
+            604,
             605,
+            622,
+            635,
             637,
-            599
+            642
          ],
          "service_providers":[
 
          ],
          "main_activities":[
-            1366,
-            1367,
-            1368,
-            1299,
-            1300,
-            1322
+            1454,
+            1385,
+            1386,
+            1408,
+            1452,
+            1453
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1344,
+      "pk":1430,
       "fields":{
          "name":"Kommunale plejefamilier, andre udgifter",
          "activity_id":"010134",
@@ -1542,13 +1580,13 @@
 
          ],
          "main_activities":[
-            1330
+            1416
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1345,
+      "pk":1431,
       "fields":{
          "name":"Kost og logi",
          "activity_id":"KostLogi",
@@ -1558,29 +1596,29 @@
 
          ],
          "supplementary_activity_for":[
-            642,
-            643,
-            601,
+            588,
             598,
+            599,
+            601,
             622,
             635,
             637,
-            588,
-            599
+            642,
+            643
          ],
          "service_providers":[
 
          ],
          "main_activities":[
-            1320,
-            1321,
-            1330
+            1416,
+            1406,
+            1407
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1346,
+      "pk":1432,
       "fields":{
          "name":"Medicin og creme",
          "activity_id":"Medic",
@@ -1602,22 +1640,22 @@
 
          ],
          "main_activities":[
-            1366,
-            1367,
-            1320,
-            1299,
-            1321,
-            1300,
-            1301,
-            1322,
-            1325,
-            1330
+            1416,
+            1406,
+            1385,
+            1386,
+            1387,
+            1407,
+            1408,
+            1411,
+            1452,
+            1453
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1347,
+      "pk":1433,
       "fields":{
          "name":"Merudgift til kost (for\u00e6ldre)",
          "activity_id":"SuppKost",
@@ -1633,13 +1671,13 @@
 
          ],
          "main_activities":[
-            1325
+            1411
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1348,
+      "pk":1434,
       "fields":{
          "name":"Merudgifter til el, vand og varme",
          "activity_id":"MerEl",
@@ -1655,13 +1693,13 @@
 
          ],
          "main_activities":[
-            1325
+            1411
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1349,
+      "pk":1435,
       "fields":{
          "name":"Merudgifter til husleje og flytteudgifter",
          "activity_id":"MerHusl",
@@ -1677,13 +1715,13 @@
 
          ],
          "main_activities":[
-            1325
+            1411
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1350,
+      "pk":1436,
       "fields":{
          "name":"Plejefamilier, andre udgifter",
          "activity_id":"010084",
@@ -1704,13 +1742,13 @@
 
          ],
          "main_activities":[
-            1320
+            1406
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1351,
+      "pk":1437,
       "fields":{
          "name":"Reng\u00f8ring",
          "activity_id":"010010",
@@ -1726,13 +1764,13 @@
 
          ],
          "main_activities":[
-            1325
+            1411
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1352,
+      "pk":1438,
       "fields":{
          "name":"St\u00f8ttet samv\u00e6r",
          "activity_id":"St\u00f8ta",
@@ -1749,28 +1787,28 @@
 
          ],
          "main_activities":[
-            1366,
-            1367,
-            1320,
-            1299,
-            1321,
-            1300,
-            1301,
-            1322,
-            1330
+            1416,
+            1406,
+            1385,
+            1386,
+            1387,
+            1407,
+            1408,
+            1452,
+            1453
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1353,
+      "pk":1439,
       "fields":{
          "name":"S\u00e6rlig supplerende ydelse ved tabt arbejdsfortjeneste",
          "activity_id":"S\u00e6rYd",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            587
          ],
          "supplementary_activity_for":[
 
@@ -1785,14 +1823,14 @@
    },
    {
       "model":"core.activitydetails",
-      "pk":1354,
+      "pk":1440,
       "fields":{
          "name":"S\u00e6rlige klubtilbud",
          "activity_id":"S\u00e6rklub",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            584
          ],
          "supplementary_activity_for":[
 
@@ -1801,22 +1839,22 @@
 
          ],
          "main_activities":[
-            1356,
-            1319,
-            1293
+            1379,
+            1405,
+            1442
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1355,
+      "pk":1441,
       "fields":{
          "name":"Tilknytning af koordinator",
          "activity_id":"Koordi",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            609
          ],
          "supplementary_activity_for":[
 
@@ -1825,13 +1863,13 @@
 
          ],
          "main_activities":[
-            1295
+            1381
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1356,
+      "pk":1442,
       "fields":{
          "name":"Transportomkostninger",
          "activity_id":"Transp",
@@ -1841,61 +1879,61 @@
 
          ],
          "supplementary_activity_for":[
-            598,
-            637,
-            588,
-            599,
-            642,
-            597,
-            643,
-            601,
-            605,
             595,
-            585,
-            600,
-            603,
-            636,
             584,
-            641,
-            640,
-            633,
-            604,
-            622,
+            585,
+            588,
             596,
+            597,
+            598,
+            599,
+            600,
+            601,
             602,
-            635
+            603,
+            604,
+            605,
+            622,
+            633,
+            635,
+            636,
+            637,
+            640,
+            641,
+            642,
+            643
          ],
          "service_providers":[
 
          ],
          "main_activities":[
-            1299,
-            1300,
-            1301,
-            1302,
-            1304,
-            1305,
-            1311,
-            1320,
-            1321,
-            1322,
-            1325,
-            1330,
-            1354,
-            1360,
-            1361,
-            1365,
-            1366,
-            1367,
-            1368,
-            1373,
-            1375
+            1385,
+            1386,
+            1387,
+            1388,
+            1390,
+            1391,
+            1397,
+            1406,
+            1407,
+            1408,
+            1411,
+            1416,
+            1440,
+            1446,
+            1447,
+            1451,
+            1452,
+            1453,
+            1454,
+            1459,
+            1461
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1357,
+      "pk":1443,
       "fields":{
          "name":"T\u00f8j og lommepenge",
          "activity_id":"010144",
@@ -1915,24 +1953,24 @@
 
          ],
          "main_activities":[
-            1366,
-            1367,
-            1299,
-            1300,
-            1322
+            1385,
+            1386,
+            1408,
+            1452,
+            1453
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1358,
+      "pk":1444,
       "fields":{
          "name":"\u00d8konomisk st\u00f8tte til konsulentbistand",
          "activity_id":"\u00d8konK",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            549
          ],
          "supplementary_activity_for":[
 
@@ -1941,20 +1979,20 @@
 
          ],
          "main_activities":[
-            1295
+            1381
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1359,
+      "pk":1445,
       "fields":{
          "name":"\u00a7 11,3,2 Netv\u00e6rks-/samtalegruppe",
          "activity_id":"010054",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            544
          ],
          "supplementary_activity_for":[
 
@@ -1963,20 +2001,20 @@
 
          ],
          "main_activities":[
-            1295
+            1381
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1360,
+      "pk":1446,
       "fields":{
          "name":"Afl\u00f8sning  i hjemmet",
          "activity_id":"Afl\u00f8 ",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            588
          ],
          "supplementary_activity_for":[
 
@@ -1985,22 +2023,22 @@
 
          ],
          "main_activities":[
-            1356,
-            1295,
-            1293
+            1381,
+            1379,
+            1442
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1361,
+      "pk":1447,
       "fields":{
          "name":"Anden hj\u00e6lp efter \u00a7 52,3,9",
          "activity_id":"010069",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            603
          ],
          "supplementary_activity_for":[
 
@@ -2009,23 +2047,23 @@
 
          ],
          "main_activities":[
-            1356,
-            1295,
-            1293,
-            1294
+            1381,
+            1379,
+            1380,
+            1442
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1362,
+      "pk":1448,
       "fields":{
          "name":"Anden st\u00f8tte",
          "activity_id":"AS7634",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            638
          ],
          "supplementary_activity_for":[
 
@@ -2034,20 +2072,20 @@
 
          ],
          "main_activities":[
-            1295
+            1381
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1363,
+      "pk":1449,
       "fields":{
          "name":"B\u00f8rnehuset, takst",
          "activity_id":"010073",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            591
          ],
          "supplementary_activity_for":[
 
@@ -2056,20 +2094,21 @@
 
          ],
          "main_activities":[
-            1295
+            1381
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1364,
+      "pk":1450,
       "fields":{
          "name":"B\u00f8rnepsykologisk unders\u00f8gelse jf \u00a750-5",
          "activity_id":"B\u00f8rno",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            590,
+            592
          ],
          "supplementary_activity_for":[
 
@@ -2078,20 +2117,20 @@
 
          ],
          "main_activities":[
-            1295
+            1381
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1365,
+      "pk":1451,
       "fields":{
          "name":"Dagbehandlingstilbud",
          "activity_id":"010018",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            597
          ],
          "supplementary_activity_for":[
 
@@ -2100,22 +2139,24 @@
 
          ],
          "main_activities":[
-            1356,
-            1295,
-            1293
+            1381,
+            1379,
+            1442
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1366,
+      "pk":1452,
       "fields":{
          "name":"D\u00f8gninstitutioner vedr. nedsat funktionsevne",
          "activity_id":"010089",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            588,
+            599,
+            622
          ],
          "supplementary_activity_for":[
 
@@ -2124,36 +2165,39 @@
 
          ],
          "main_activities":[
-            1293,
-            1294,
-            1295,
-            1296,
-            1297,
-            1308,
-            1316,
-            1319,
-            1333,
-            1334,
-            1335,
-            1336,
-            1343,
-            1346,
-            1352,
-            1356,
-            1357
+            1379,
+            1380,
+            1381,
+            1382,
+            1383,
+            1394,
+            1402,
+            1405,
+            1419,
+            1420,
+            1421,
+            1422,
+            1429,
+            1432,
+            1438,
+            1442,
+            1443
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1367,
+      "pk":1453,
       "fields":{
          "name":"D\u00f8gninstitutioner vedr. sociale adf\u00e6rdsproblemer",
          "activity_id":"010087",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            588,
+            599,
+            622,
+            635
          ],
          "supplementary_activity_for":[
 
@@ -2162,36 +2206,36 @@
 
          ],
          "main_activities":[
-            1293,
-            1294,
-            1295,
-            1296,
-            1297,
-            1308,
-            1316,
-            1319,
-            1333,
-            1334,
-            1335,
-            1336,
-            1343,
-            1346,
-            1352,
-            1356,
-            1357
+            1379,
+            1380,
+            1381,
+            1382,
+            1383,
+            1394,
+            1402,
+            1405,
+            1419,
+            1420,
+            1421,
+            1422,
+            1429,
+            1432,
+            1438,
+            1442,
+            1443
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1368,
+      "pk":1454,
       "fields":{
          "name":"D\u00f8gnophold for familien",
          "activity_id":"010044",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            598
          ],
          "supplementary_activity_for":[
 
@@ -2200,24 +2244,25 @@
 
          ],
          "main_activities":[
-            1356,
-            1295,
-            1293,
-            1343,
-            1294
+            1381,
+            1379,
+            1429,
+            1380,
+            1442
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1369,
+      "pk":1455,
       "fields":{
          "name":"For\u00e6ldrekompetenceunders\u00f8gelse",
          "activity_id":"For\u00e6o",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            590,
+            592
          ],
          "supplementary_activity_for":[
 
@@ -2226,20 +2271,20 @@
 
          ],
          "main_activities":[
-            1295
+            1381
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1370,
+      "pk":1456,
       "fields":{
          "name":"Hjemmetr\u00e6ning",
          "activity_id":"HjemTr",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            578
          ],
          "supplementary_activity_for":[
 
@@ -2248,23 +2293,23 @@
 
          ],
          "main_activities":[
-            1295,
-            1328,
-            1331,
-            1329
+            1414,
+            1381,
+            1415,
+            1417
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1371,
+      "pk":1457,
       "fields":{
          "name":"Ledsageordning for personer m/nedsat funktionsevne (\u00a7 45)",
          "activity_id":"010099",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            589
          ],
          "supplementary_activity_for":[
 
@@ -2273,21 +2318,22 @@
 
          ],
          "main_activities":[
-            1295,
-            1294
+            1381,
+            1380
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1372,
+      "pk":1458,
       "fields":{
          "name":"L\u00f8nkompensation",
          "activity_id":"L\u00f8nks",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            604,
+            605
          ],
          "supplementary_activity_for":[
 
@@ -2302,14 +2348,14 @@
    },
    {
       "model":"core.activitydetails",
-      "pk":1373,
+      "pk":1459,
       "fields":{
          "name":"Ophold i dagtilbud",
          "activity_id":"Ophod",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            595
          ],
          "supplementary_activity_for":[
 
@@ -2318,23 +2364,23 @@
 
          ],
          "main_activities":[
-            1356,
-            1295,
-            1293,
-            1294
+            1381,
+            1379,
+            1380,
+            1442
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1374,
+      "pk":1460,
       "fields":{
          "name":"Opretholdelse af kontaktperson ",
          "activity_id":"Opree",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            633
          ],
          "supplementary_activity_for":[
 
@@ -2349,14 +2395,14 @@
    },
    {
       "model":"core.activitydetails",
-      "pk":1375,
+      "pk":1461,
       "fields":{
          "name":"Praktisk, p\u00e6dagogisk eller anden st\u00f8tte i hjemmet",
          "activity_id":"Prak ",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            596
          ],
          "supplementary_activity_for":[
 
@@ -2365,23 +2411,23 @@
 
          ],
          "main_activities":[
-            1356,
-            1295,
-            1293,
-            1294
+            1381,
+            1379,
+            1380,
+            1442
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1376,
+      "pk":1462,
       "fields":{
          "name":"Psykologhj\u00e6lp til b\u00f8rn",
          "activity_id":"Psyk",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            534
          ],
          "supplementary_activity_for":[
 
@@ -2390,20 +2436,20 @@
 
          ],
          "main_activities":[
-            1295
+            1381
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1377,
+      "pk":1463,
       "fields":{
          "name":"Genoptr\u00e6ning (vedligeholdelsestr\u00e6ning)",
          "activity_id":"VedhTr",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-
+            651
          ],
          "supplementary_activity_for":[
 
@@ -2412,60 +2458,20 @@
 
          ],
          "main_activities":[
-            1295
+            1381
          ]
       }
    },
    {
       "model":"core.activitydetails",
-      "pk":1378,
+      "pk":1464,
       "fields":{
          "name":"-",
          "activity_id":"Dummy",
          "max_tolerance_in_percent":10,
          "max_tolerance_in_dkk":5000,
          "main_activity_for":[
-            534,
-            543,
-            544,
-            549,
-            551,
-            553,
-            556,
-            578,
-            584,
-            585,
-            586,
-            587,
-            588,
-            589,
-            590,
-            591,
-            592,
-            595,
-            596,
-            597,
-            598,
-            599,
-            600,
-            601,
-            602,
-            603,
-            604,
-            605,
-            606,
-            607,
-            609,
-            622,
-            633,
-            635,
-            636,
-            637,
-            638,
-            640,
-            642,
-            643,
-            651
+
          ],
          "supplementary_activity_for":[
             586
@@ -2474,7 +2480,7 @@
 
          ],
          "main_activities":[
-            1327
+            1413
          ]
       }
    }

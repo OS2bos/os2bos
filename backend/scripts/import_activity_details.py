@@ -68,7 +68,7 @@ with open("aktiviteter.csv") as csvfile:
             main_activity_for = Section.objects.filter(paragraph=paragraph)
             if main_activity_for.exists():
                 main_activity_for = main_activity_for.first()
-                ad.main_activity_for.add(main_activity_for)
+                details_obj.main_activity_for.add(main_activity_for)
 
         for paragraph in section_supplementary_dict[details_obj.activity_id]:
             supplementary_activity_for = Section.objects.filter(
