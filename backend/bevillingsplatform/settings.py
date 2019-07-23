@@ -185,9 +185,11 @@ STATICFILES_DIRS = [
 ]
 
 # Whether we use Serviceplatformen or a mocked version
-USE_SERVICEPLATFORM = settings.get("USE_SERVICEPLATFORM", fallback=False)
+USE_SERVICEPLATFORM = settings.getboolean(
+    "USE_SERVICEPLATFORM", fallback=False
+)
 # Whether we use the Serviceplatformen prod or test endpoint
-USE_SERVICEPLATFORM_PROD = settings.get(
+USE_SERVICEPLATFORM_PROD = settings.getboolean(
     "USE_SERVICEPLATFORM_PROD", fallback=False
 )
 
