@@ -43,12 +43,13 @@
                     <td style="border: none;"></td>
                     <td style="border: none;"></td>
                     <td style="border: none;"></td>
+                    <td style="border: none;"></td>
                     <td style="text-align: right; border: none;">Samlet</td>
                     <td style="text-align: right; border: none;"><strong>{{ total_granted }} kr</strong></td>
                     <template v-if="has_expected">
                         <td class="expected" style="text-align: right; border: none;">{{ total_expected }} kr</td>
                     </template>
-                    <td v-else></td>
+                    <td style="border: none;" v-else></td>
                 </tr>
             </tbody>
         </table>
