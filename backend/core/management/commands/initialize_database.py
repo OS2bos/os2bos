@@ -27,16 +27,12 @@ class Command(BaseCommand):
         print("Seed database with (static) basic data")
 
         # Run script
-        try:
-            initialize()
-        except Exception as error:
-            print(
-                "!! ERROR running the script - See python traceback output !!"
-            )
-            print(error)
+        initialize()
 
-            # Exit unclean
-            sys.exit(1)
+        # Inform user that the operation is complete
+        # Assuming that if any of the underlying functions fail
+        # the process is stopped/caught in place
+        print("Database seeded with (static) basic data")
 
         # Exit clean
         sys.exit(0)
