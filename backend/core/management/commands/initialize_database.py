@@ -1,4 +1,3 @@
-import sys
 from django.core.management.base import BaseCommand
 
 from bevillingsplatform.initialize import initialize
@@ -33,6 +32,3 @@ class Command(BaseCommand):
         # Assuming that if any of the underlying functions fail
         # the process is stopped/caught in place
         print("Database seeded with (static) basic data")
-
-        # Exit clean
-        sys.exit(0)
