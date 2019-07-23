@@ -38,6 +38,10 @@
                         <dd>{{ appr.sbsys_id}}</dd>
                         <dt>Sagsbehandler</dt>
                         <dd>{{ displayUserName(cas.case_worker) }}</dd>
+                        <template v-if="appr.note">
+                            <dt>Supplerende oplysninger</dt>
+                            <dd>{{ appr.note }}</dd>
+                        </template>
                     </dl>
                 </div>
 
