@@ -90,6 +90,11 @@
                         <dd>{{ cas.team_data.leader_name }}</dd>
                     </dl>
                 </template>
+
+                <fieldset>
+                    <label for="field-case-info">Supplerende oplysninger for sag</label>
+                    <textarea id="field-case-info" v-model="cas.note" placeholder="Angiv supplerende oplysninger her"></textarea>
+                </fieldset>
                 
                 <fieldset>
                     <input type="submit" value="Gem">
@@ -223,7 +228,8 @@
                     refugee_integration: this.cas.refugee_integration,
                     cross_department_measure: this.cas.cross_department_measure,
                     scaling_step: this.cas.scaling_step,
-                    effort_step: this.cas.effort_step
+                    effort_step: this.cas.effort_step,
+                    note: this.cas.note ? this.cas.note : null
                 }
                 if (!this.create_mode) {
                     axios.patch(`/cases/${ this.cas.id }/`, data)

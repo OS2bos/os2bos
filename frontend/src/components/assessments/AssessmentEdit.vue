@@ -33,8 +33,8 @@
             </select>
         </fieldset>
 
-        <fieldset v-if="!create_mode">
-            <label for="textArea">Supplerende information</label>
+        <fieldset>
+            <label for="textArea">Supplerende information til vurdering</label>
             <textarea maxlength="100" id="textArea" v-model="cas.history_change_reason" @change="updateNote()"></textarea>
         </fieldset>
 

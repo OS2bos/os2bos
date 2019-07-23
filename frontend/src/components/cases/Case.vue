@@ -52,6 +52,10 @@
                         </div>
                     </dd>
                 </template>
+                <template v-if="cas.note">
+                    <dt>Supplerende oplysninger</dt>
+                    <dd>{{ cas.note }}</dd>
+                </template>
             </dl>
             <dl>
                 <dt>Sagsbehander</dt>
