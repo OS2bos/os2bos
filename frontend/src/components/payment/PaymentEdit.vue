@@ -2,10 +2,12 @@
     <section class="payment-method">
         <label>Betalingsmåde</label>
         <select  v-model="entry.payment_method">
-            <option value="INVOICE">Faktura</option>
-            <option value="INTERNAL">Intern afregning</option>
-            <option value="CASH">Betaling</option>
-            <option value="SD">SD-løn</option>
+            <option value="INVOICE" v-if="paymentObj.recipient_type === 'COMPANY'">Faktura</option>
+            <option value="INTERNAL" v-if="paymentObj.recipient_type === 'INTERNAL'">Intern afregning</option>
+            <option value="CASH" v-if="paymentObj.recipient_type === 'PERSON' || paymentObj.recipient_type === 'COMPANY'">
+              Betaling
+            </option>
+            <option value="SD" v-if="paymentObj.recipient_type === 'PERSON'">SD-løn</option>
         </select>
         <div v-if="entry.payment_method">
             <div v-if="entry.payment_method === 'CASH'">
