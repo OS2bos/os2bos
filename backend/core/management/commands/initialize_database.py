@@ -7,8 +7,8 @@ from bevillingsplatform.initialize import initialize
 class Command(BaseCommand):
     """
     Initialize database.
-    Helper command to seed database with (static) basic data. 
-    
+    Helper command to seed database with (static) basic data.
+
     :Reference: :mod:`bevillingsplatform.initialize`
 
     Should be able to be run multiple times over without generating duplicates.
