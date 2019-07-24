@@ -906,21 +906,39 @@ class RelatedPerson(models.Model):
 class Account(models.Model):
     """Class containing account numbers.
 
-    Should have a different number for each (ActivityDetails, Section) pair.
+    Should have a number for each
+    (main activity, supplementary activity, section) pair.
     """
 
     number = models.CharField(max_length=128)
-    activity = models.ForeignKey(
-        ActivityDetails, null=False, on_delete=models.CASCADE
+    main_activity = models.ForeignKey(
+        ActivityDetails,
+        null=False,
+        on_delete=models.CASCADE,
+        related_name="main_accounts",
     )
-    section = models.ForeignKey(Section, null=False, on_delete=models.CASCADE)
+    supplementary_activity = models.ForeignKey(
+        ActivityDetails,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name="supplementary_accounts",
+    )
+    section = models.ForeignKey(
+        Section, null=False, on_delete=models.CASCADE, related_name="accounts"
+    )
 
     def __str__(self):
-        return f"{self.number} - {self.activity} - {self.section}"
+        return (
+            f"{self.number} - "
+            f"{self.main_activity} - "
+            f"{self.supplementary_activity} - "
+            f"{self.section}"
+        )
 
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["activity", "section"], name="unique_account_number"
+                fields=["main_activity", "supplementary_activity", "section"],
+                name="unique_account_number",
             )
         ]
