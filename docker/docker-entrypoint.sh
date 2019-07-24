@@ -12,8 +12,9 @@ set -ex
 
 ./manage.py migrate
 
-# See https://redmine.magenta-aps.dk/issues/30026 for changing this to a management command.
-echo 'from bevillingsplatform.initialize import initialize;initialize()' | python manage.py shell
+# Seed database
+# Reference: `bevillingsplatform.initialize`
+./manage.py initialize_database
 
 ./manage.py collectstatic --no-input --clear
 
