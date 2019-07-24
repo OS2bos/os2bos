@@ -237,6 +237,7 @@ class ActivityDetailsViewSet(viewsets.ReadOnlyModelViewSet):
 class AccountViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
+    filterset_fields = "__all__"
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):

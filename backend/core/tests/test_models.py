@@ -593,19 +593,31 @@ class ActivityTestCase(TestCase, BasicTestMixin):
 
 class AccountTestCase(TestCase):
     def test_account_str(self):
-        sections = create_section()
-        activity_details = ActivityDetails.objects.create(
+        section = create_section()
+        main_activity_details = ActivityDetails.objects.create(
+            name="Betaling til andre kommuner/region for specialtandpleje",
+            activity_id="010001",
+            max_tolerance_in_dkk=5000,
+            max_tolerance_in_percent=10,
+        )
+        supplementary_activity_details = ActivityDetails.objects.create(
             name="Betaling til andre kommuner/region for specialtandpleje",
             activity_id="010001",
             max_tolerance_in_dkk=5000,
             max_tolerance_in_percent=10,
         )
         account = Account.objects.create(
-            number="123456", section=sections, activity=activity_details
+            number="123456",
+            section=section,
+            main_activity=main_activity_details,
+            supplementary_activity=supplementary_activity_details,
         )
 
         self.assertEqual(
-            str(account), f"123456 - {activity_details} - {sections}"
+            str(account),
+            f"123456 - {main_activity_details} - "
+            f"{supplementary_activity_details} - "
+            f"{section}",
         )
 
 
