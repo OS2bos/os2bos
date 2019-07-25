@@ -229,7 +229,7 @@
                     cross_department_measure: this.cas.cross_department_measure,
                     scaling_step: this.cas.scaling_step,
                     effort_step: this.cas.effort_step,
-                    note: this.cas.note ? this.cas.note : null
+                    note: this.cas.note ? this.cas.note : ''
                 }
                 if (!this.create_mode) {
                     axios.patch(`/cases/${ this.cas.id }/`, data)
