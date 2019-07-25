@@ -7,7 +7,7 @@
           placeholder="Søg på cpr nr." 
           v-model="item"
           @update-items="updateItems"
-          :min-len="10"
+          :min-len="4"
         />
     </div>
 </template>
