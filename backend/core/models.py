@@ -613,6 +613,16 @@ class Appropriation(AuditModelMixin, models.Model):
         return this_years_payments.amount_sum()
 
     @property
+    def total_expected_full_year(self):
+        all_activities = self.activities.filter(
+            Q(status=Activity.STATUS_GRANTED, modified_by__isnull=True)
+            | Q(status=Activity.STATUS_EXPECTED)
+        )
+        return sum(
+            [activity.total_cost_for_full_year for activity in all_activities]
+        )
+
+    @property
     def main_activity(self):
         """Return main activity, if any."""
         f = self.activities.filter(activity_type=Activity.MAIN_ACTIVITY)
