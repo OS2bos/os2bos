@@ -445,7 +445,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(case=case)
-        # 365 days, daily payments of 500.
+
         activity = create_activity(
             case, appropriation, start_date=start_date, end_date=end_date
         )
