@@ -824,6 +824,23 @@ class Activity(AuditModelMixin, models.Model):
         return payments.amount_sum()
 
     @property
+    def total_cost_for_full_year(self):
+        if not self.payment_plan:
+            return Decimal(0.0)
+
+        vat_factor = self.get_vat_factor
+        now = timezone.now()
+        start_date = date(now.year, month=1, day=1)
+        end_date = date(now.year, month=12, day=31)
+        num_payments = len(
+            list(self.payment_plan.create_rrule(start_date, end_date))
+        )
+        return (
+            self.payment_plan.calculate_per_payment_amount(vat_factor)
+            * num_payments
+        )
+
+    @property
     def triggers_payment_email(self):
         # If activity or appropriation is not granted we don't send an email.
         if (
@@ -840,16 +857,20 @@ class Activity(AuditModelMixin, models.Model):
             return False
         return True
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-
+    @property
+    def get_vat_factor(self):
         vat_factor = Decimal("100")
         if self.service_provider:
             vat_factor = self.service_provider.vat_factor
+        return vat_factor
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
 
         if not self.payment_plan:
             return
 
+        vat_factor = self.get_vat_factor
         if self.payment_plan.payments.exists():
             # In the STATUS_DRAFT case we delete and
             # regenerate payments no matter what.
