@@ -5,7 +5,7 @@
 <p>Start dato: {{ activity.start_date }}</p>
 <p>Slut dato: {{ activity.end_date }}</p>
 <p>Beløb: {{ activity.payment_plan.payment_amount }}</p>
-<p>Afregningsenheder: {{ activity.payment_plan.payment_units }}</p>
+<p>Afregningsenheder: {{ activity.payment_plan.payment_units|default_if_none:"0" }}</p>
 
 <h1>Betalingsmodtager</h1>
 <p>CPR/CVR: {{ activity.payment_plan.recipient_id }}</p>
