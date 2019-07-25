@@ -67,6 +67,7 @@ class ActivitySerializer(serializers.ModelSerializer):
     monthly_payment_plan = serializers.ReadOnlyField()
     total_cost = serializers.ReadOnlyField()
     total_cost_this_year = serializers.ReadOnlyField()
+    total_cost_for_full_year = serializers.ReadOnlyField()
     recipient_name = serializers.ReadOnlyField(
         source="payment_plan.recipient_name", default=None
     )
