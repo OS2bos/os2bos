@@ -43,6 +43,7 @@ router.register(r"activity_details", views.ActivityDetailsViewSet)
 router.register(r"service_providers", views.ServiceProviderViewSet)
 router.register(r"approval_levels", views.ApprovalLevelViewSet)
 router.register(r"users", views.UserViewSet)
+router.register(r"accounts", views.AccountViewSet)
 
 urlpatterns = [
     path("api/admin/", admin.site.urls),

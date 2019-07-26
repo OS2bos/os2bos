@@ -2,7 +2,13 @@
 from django.test import TestCase
 
 from bevillingsplatform.initialize import initialize
-from core.models import Municipality, SchoolDistrict, Section
+from core.models import (
+    Municipality,
+    SchoolDistrict,
+    Section,
+    Account,
+    ActivityDetails,
+)
 
 
 class InitializeTestCase(TestCase):
@@ -20,3 +26,13 @@ class InitializeTestCase(TestCase):
         initialize()
         sections_count = Section.objects.count()
         self.assertEqual(sections_count, 146)
+
+    def test_initialize_generates_activity_details(self):
+        initialize()
+        details_count = ActivityDetails.objects.count()
+        self.assertEqual(details_count, 86)
+
+    def test_initialize_generates_accounts(self):
+        initialize()
+        accounts_count = Account.objects.count()
+        self.assertEqual(accounts_count, 883)
