@@ -465,7 +465,6 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         self.assertIn("Aktivitet oprettet", email_message.subject)
         self.assertIn("Barnets CPR nummer: 0205891234", email_message.body)
         self.assertIn("Beløb: 500,0", email_message.body)
-        self.assertIn("Afregningsenheder: 0", email_message.body)
         self.assertIn("Start dato: 1. december 2019", email_message.body)
         self.assertIn("Slut dato: 1. januar 2020", email_message.body)
 
@@ -493,7 +492,6 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         self.assertIn("Aktivitet opdateret", email_message.subject)
         self.assertIn("Barnets CPR nummer: 0205891234", email_message.body)
         self.assertIn("Beløb: 500,0", email_message.body)
-        self.assertIn("Afregningsenheder: 0", email_message.body)
         self.assertIn("Start dato: 1. december 2019", email_message.body)
         self.assertIn("Slut dato: 1. januar 2020", email_message.body)
 
@@ -522,7 +520,6 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         self.assertIn("Aktivitet udgået", email_message.subject)
         self.assertIn("Barnets CPR nummer: 0205891234", email_message.body)
         self.assertIn("Beløb: 500,0", email_message.body)
-        self.assertIn("Afregningsenheder: 0", email_message.body)
         self.assertIn("Start dato: 1. december 2019", email_message.body)
         self.assertIn("Slut dato: 1. januar 2020", email_message.body)
 
