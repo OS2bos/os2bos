@@ -139,10 +139,12 @@ class PaymentSchedule(models.Model):
     )
     DAILY = "DAILY"
     WEEKLY = "WEEKLY"
+    BIWEEKLY = "BIWEEKLY"
     MONTHLY = "MONTHLY"
     payment_frequency_choices = (
         (DAILY, _("Dagligt")),
         (WEEKLY, _("Ugentligt")),
+        (BIWEEKLY, _("Hver 2. uge")),
         (MONTHLY, _("Månedligt")),
     )
     payment_frequency = models.CharField(
@@ -229,6 +231,10 @@ class PaymentSchedule(models.Model):
             rrule_frequency = rrule.rrule(
                 rrule.WEEKLY, dtstart=start, until=end
             )
+        elif self.payment_frequency == self.BIWEEKLY:
+            rrule_frequency = rrule.rrule(
+                rrule.WEEKLY, dtstart=start, until=end, interval=2
+            )
         elif self.payment_frequency == self.MONTHLY:
             # If monthly, choose the first day of the month.
             rrule_frequency = rrule.rrule(
@@ -300,6 +306,8 @@ class PaymentSchedule(models.Model):
             new_start = newest_payment.date + relativedelta(days=1)
         elif self.payment_frequency == PaymentSchedule.WEEKLY:
             new_start = newest_payment.date + relativedelta(weeks=1)
+        elif self.payment_frequency == PaymentSchedule.BIWEEKLY:
+            new_start = newest_payment.date + relativedelta(weeks=2)
         elif self.payment_frequency == PaymentSchedule.MONTHLY:
             new_start = newest_payment.date + relativedelta(months=1)
         else:

@@ -655,18 +655,6 @@ class PaymentScheduleTestCase(TestCase):
                 1,
             ),
             (
-                PaymentSchedule.MONTHLY,
-                date(year=2019, month=1, day=1),
-                date(year=2019, month=10, day=1),
-                10,
-            ),
-            (
-                PaymentSchedule.MONTHLY,
-                date(year=2019, month=1, day=1),
-                date(year=2019, month=1, day=1),
-                1,
-            ),
-            (
                 PaymentSchedule.WEEKLY,
                 date(year=2019, month=1, day=1),
                 date(year=2019, month=2, day=1),
@@ -674,6 +662,30 @@ class PaymentScheduleTestCase(TestCase):
             ),
             (
                 PaymentSchedule.WEEKLY,
+                date(year=2019, month=1, day=1),
+                date(year=2019, month=1, day=1),
+                1,
+            ),
+            (
+                PaymentSchedule.BIWEEKLY,
+                date(year=2019, month=1, day=1),
+                date(year=2019, month=2, day=1),
+                3,
+            ),
+            (
+                PaymentSchedule.BIWEEKLY,
+                date(year=2019, month=1, day=1),
+                date(year=2019, month=1, day=1),
+                1,
+            ),
+            (
+                PaymentSchedule.MONTHLY,
+                date(year=2019, month=1, day=1),
+                date(year=2019, month=10, day=1),
+                10,
+            ),
+            (
+                PaymentSchedule.MONTHLY,
                 date(year=2019, month=1, day=1),
                 date(year=2019, month=1, day=1),
                 1,
@@ -922,7 +934,7 @@ class PaymentScheduleTestCase(TestCase):
 
         self.assertEqual(payment_schedule.payments.count(), 0)
 
-    def test_synchronize_payments_end_date_in_future_for_weeks(self):
+    def test_synchronize_payments_end_date_in_future_for_weekly(self):
         payment_schedule = create_payment_schedule(
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
             payment_frequency=PaymentSchedule.WEEKLY,
@@ -938,6 +950,23 @@ class PaymentScheduleTestCase(TestCase):
         payment_schedule.synchronize_payments(start_date, end_date)
 
         self.assertEqual(payment_schedule.payments.count(), 13)
+
+    def test_synchronize_payments_end_date_in_future_for_biweekly(self):
+        payment_schedule = create_payment_schedule(
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=PaymentSchedule.BIWEEKLY,
+            payment_amount=Decimal("100"),
+        )
+        start_date = date(year=2019, month=1, day=1)
+        end_date = date(year=2019, month=3, day=1)
+        payment_schedule.generate_payments(start_date, end_date)
+
+        self.assertEqual(payment_schedule.payments.count(), 5)
+
+        end_date = date(year=2019, month=4, day=1)
+        payment_schedule.synchronize_payments(start_date, end_date)
+
+        self.assertEqual(payment_schedule.payments.count(), 7)
 
     def test_synchronize_payments_invalid_frequency(self):
         payment_schedule = create_payment_schedule(
