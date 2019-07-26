@@ -12,6 +12,11 @@
 {% if activity.payment_plan.payment_units %}
     <p>Afregningsenheder: {{ activity.payment_plan.payment_units }}</p>
 {% endif %}
+{% if activity.account %}
+    <p>Kontering: {{ activity.account.number }}</p>
+{% else %}
+    <p>Kontering: Ingen </p>
+{% endif %}
 
 <h1>Betalingsmodtager</h1>
 <p>CPR/CVR: {{ activity.payment_plan.recipient_id }}</p>
