@@ -614,6 +614,10 @@ class Appropriation(AuditModelMixin, models.Model):
 
     @property
     def total_expected_full_year(self):
+        """
+        Retrieve total amount expected for the year
+        extrapolating for the full year (January 1st - 31st December)
+        """
         all_activities = self.activities.filter(
             Q(status=Activity.STATUS_GRANTED, modified_by__isnull=True)
             | Q(status=Activity.STATUS_EXPECTED)
@@ -835,6 +839,10 @@ class Activity(AuditModelMixin, models.Model):
 
     @property
     def total_cost_for_full_year(self):
+        """
+        Retrieve total amount expected for the year
+        extrapolating for the full year (January 1st - 31st December)
+        """
         if not self.payment_plan:
             return Decimal(0.0)
 
