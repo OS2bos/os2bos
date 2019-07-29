@@ -623,7 +623,7 @@ class Appropriation(AuditModelMixin, models.Model):
             | Q(status=Activity.STATUS_EXPECTED)
         )
         return sum(
-            [activity.total_cost_for_full_year for activity in all_activities]
+            [activity.total_cost_full_year for activity in all_activities]
         )
 
     @property
@@ -838,7 +838,7 @@ class Activity(AuditModelMixin, models.Model):
         return payments.amount_sum()
 
     @property
-    def total_cost_for_full_year(self):
+    def total_cost_full_year(self):
         """
         Retrieve total amount expected for the year
         extrapolating for the full year (January 1st - 31st December)

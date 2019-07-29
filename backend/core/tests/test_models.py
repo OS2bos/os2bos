@@ -478,7 +478,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         self.assertEqual(activity.total_cost_this_year, Decimal("15500"))
 
-    def test_total_cost_for_full_year(self):
+    def test_total_cost_full_year(self):
         now = timezone.now()
         payment_schedule = create_payment_schedule()
         start_date = date(year=now.year, month=12, day=1)
@@ -495,9 +495,9 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             end_date=end_date,
             payment_plan=payment_schedule,
         )
-        self.assertEqual(activity.total_cost_for_full_year, Decimal("182500"))
+        self.assertEqual(activity.total_cost_full_year, Decimal("182500"))
 
-    def test_total_cost_for_full_year_no_payment_plan(self):
+    def test_total_cost_for_year_no_payment_plan(self):
         now = timezone.now()
         start_date = date(year=now.year, month=12, day=1)
         end_date = date(year=now.year, month=12, day=15)
@@ -509,7 +509,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         activity = create_activity(
             case, appropriation, start_date=start_date, end_date=end_date
         )
-        self.assertEqual(activity.total_cost_for_full_year, Decimal("0"))
+        self.assertEqual(activity.total_cost_full_year, Decimal("0"))
 
     def test_monthly_payment_plan(self):
         start_date = date(year=2019, month=12, day=1)
