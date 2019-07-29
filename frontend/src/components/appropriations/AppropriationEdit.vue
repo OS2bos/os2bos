@@ -12,7 +12,7 @@
             <fieldset>
                 <label for="field-lawref">Bevilling efter §</label>
                 <select id="field-lawref" class="listpicker" v-model="appr.section" required>
-                    <option v-for="s in sections" :value="s.id" :key="s.id">
+                    <option :disabled="disabled" v-for="s in sections" :value="s.id" :key="s.id">
                         {{ s.paragraph }} {{ s.text }}
                     </option>
                 </select>
@@ -46,7 +46,8 @@
                 kle: null,
                 kle_regex: /\d{2}\.\d{2}\.\d{2}/,
                 sections: null,
-                sbsysCheck: false
+                sbsysCheck: false,
+                disabled: false
             }
         },
         computed: {
@@ -79,11 +80,13 @@
             },
             checkKLE: function(input) {
                 this.sbsysCheck = false
+                this.disabled = false
                 this.kle = input.match(this.kle_regex)
                 if (this.kle) {
                     let sections = this.all_sections.filter(s => s.kle_number === this.kle[0])
                     if (sections.length === 1) {
-                        this.appr.section = section.id
+                        this.appr.section = sections[0].id
+                        this.disabled = true
                     } else if (sections.length === 0) {
                         this.sbsysCheck = true
                     }
