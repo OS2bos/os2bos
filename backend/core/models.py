@@ -737,7 +737,7 @@ class ActivityDetails(models.Model):
     )
 
     main_activities = models.ManyToManyField(
-        "self", related_name="supplementary_activities"
+        "self", related_name="supplementary_activities", symmetrical=False
     )
 
     def __str__(self):

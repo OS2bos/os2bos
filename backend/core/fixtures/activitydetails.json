@@ -1,2487 +1,1862 @@
 [
-   {
-      "model":"core.activitydetails",
-      "pk":1379,
-      "fields":{
-         "name":"K\u00f8rsel i egen bil",
-         "activity_id":"010009",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            595,
-            584,
-            588,
-            596,
-            597,
-            598,
-            599,
-            600,
-            601,
-            603,
-            604,
-            605,
-            622,
-            633,
-            635,
-            636,
-            637,
-            640,
-            641,
-            642,
-            643
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1385,
-            1386,
-            1387,
-            1388,
-            1390,
-            1391,
-            1406,
-            1407,
-            1408,
-            1416,
-            1440,
-            1446,
-            1447,
-            1451,
-            1452,
-            1453,
-            1454,
-            1459,
-            1461
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1380,
-      "fields":{
-         "name":"Aktiviteter",
-         "activity_id":"010011",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            604,
-            606
-         ],
-         "supplementary_activity_for":[
-            595,
-            589,
-            596,
-            597,
-            598,
-            599,
-            600,
-            603
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1388,
-            1390,
-            1391,
-            1406,
-            1407,
-            1416,
-            1447,
-            1452,
-            1453,
-            1454,
-            1457,
-            1459,
-            1461
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1381,
-      "fields":{
-         "name":"Tolk",
-         "activity_id":"010137",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            595,
-            543,
-            544,
-            549,
-            556,
-            578,
-            588,
-            589,
-            590,
-            591,
-            592,
-            596,
-            597,
-            598,
-            599,
-            600,
-            601,
-            602,
-            603,
-            607,
-            609,
-            622,
-            633,
-            635,
-            636,
-            637,
-            638,
-            640,
-            641,
-            642,
-            643,
-            651,
-            534
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1384,
-            1385,
-            1386,
-            1387,
-            1388,
-            1390,
-            1391,
-            1392,
-            1396,
-            1397,
-            1406,
-            1407,
-            1408,
-            1409,
-            1416,
-            1441,
-            1444,
-            1445,
-            1446,
-            1447,
-            1448,
-            1449,
-            1450,
-            1451,
-            1452,
-            1453,
-            1454,
-            1455,
-            1456,
-            1457,
-            1459,
-            1461,
-            1462,
-            1463
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1382,
-      "fields":{
-         "name":"Egenbetaling, beboere",
-         "activity_id":"010097",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            601,
-            635,
-            637,
-            534
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1416,
-            1406,
-            1385,
-            1386,
-            1387,
-            1407,
-            1408,
-            1409,
-            1452,
-            1453
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1383,
-      "fields":{
-         "name":"Advokatbistand",
-         "activity_id":"010037",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            622
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1416,
-            1406,
-            1385,
-            1386,
-            1387,
-            1407,
-            1408,
-            1452,
-            1453
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1384,
-      "fields":{
-         "name":"R\u00e5dgivning, unders\u00f8gelse og behandling",
-         "activity_id":"010031",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            556
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1381
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1385,
-      "fields":{
-         "name":"Soc.p\u00e6d. opholdssteder",
-         "activity_id":"010038",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            601,
-            622,
-            635,
-            637,
-            642
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1379,
-            1381,
-            1382,
-            1383,
-            1394,
-            1402,
-            1405,
-            1419,
-            1420,
-            1421,
-            1422,
-            1429,
-            1432,
-            1438,
-            1442,
-            1443
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1386,
-      "fields":{
-         "name":"Kost- og efterskoler",
-         "activity_id":"010039",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            601,
-            604,
-            605,
-            622,
-            635,
-            637,
-            642
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1379,
-            1381,
-            1382,
-            1383,
-            1394,
-            1402,
-            1405,
-            1419,
-            1420,
-            1421,
-            1422,
-            1429,
-            1432,
-            1438,
-            1442,
-            1443
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1387,
-      "fields":{
-         "name":"Eget v\u00e6relse",
-         "activity_id":"010040",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            601,
-            635
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1379,
-            1381,
-            1382,
-            1383,
-            1394,
-            1402,
-            1405,
-            1419,
-            1420,
-            1421,
-            1422,
-            1423,
-            1432,
-            1438,
-            1442
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1388,
-      "fields":{
-         "name":"Familiebehandling",
-         "activity_id":"010043",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            597
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1381,
-            1379,
-            1380,
-            1442
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1389,
-      "fields":{
-         "name":"Aflastning",
-         "activity_id":"010045",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            643
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1406
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1390,
-      "fields":{
-         "name":"Kontaktperson",
-         "activity_id":"010046",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            600,
-            605,
-            636,
-            640
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1381,
-            1379,
-            1380,
-            1442
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1391,
-      "fields":{
-         "name":"Kontaktperson for hele familien",
-         "activity_id":"010047",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            600
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1381,
-            1379,
-            1380,
-            1442
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1392,
-      "fields":{
-         "name":"Konsulentbistand efter \u00a7 11,3,1",
-         "activity_id":"010051",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            543
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1381,
-            1410
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1393,
-      "fields":{
-         "name":"Pr\u00e6vention, \u00a7 11,4",
-         "activity_id":"010052",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            551
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1394,
-      "fields":{
-         "name":"St\u00f8tte til fritidstilbud",
-         "activity_id":"010053",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            553
-         ],
-         "supplementary_activity_for":[
-            601,
-            622,
-            635,
-            637,
-            642,
-            643
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1416,
-            1406,
-            1385,
-            1386,
-            1387,
-            1407,
-            1408,
-            1452,
-            1453
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1395,
-      "fields":{
-         "name":"St\u00f8tte til for\u00e6ldremyndighedsindehaveren efter \u00a7 52a og \u00a7 52",
-         "activity_id":"010068",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            604,
-            605,
-            606
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1396,
-      "fields":{
-         "name":"St\u00f8tteperson til for\u00e6ldremyndighedsindehaveren",
-         "activity_id":"St\u00f8ts",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            607
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1381
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1397,
-      "fields":{
-         "name":"Praktikophold",
-         "activity_id":"010070",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            602
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1381,
-            1418,
-            1442
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1398,
-      "fields":{
-         "name":"Overv\u00e5get samv\u00e6r",
-         "activity_id":"Overv7",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            637
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1399,
-      "fields":{
-         "name":"Overv\u00e5get samv\u00e6r",
-         "activity_id":"Overv9",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            637
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1400,
-      "fields":{
-         "name":"Overv\u00e5get samv\u00e6r",
-         "activity_id":"Overv3",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            637
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1401,
-      "fields":{
-         "name":"Overv\u00e5get samv\u00e6r",
-         "activity_id":"Overv5",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            637
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1402,
-      "fields":{
-         "name":"Overv\u00e5get samv\u00e6r",
-         "activity_id":"Overa",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            601,
-            622
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1416,
-            1406,
-            1385,
-            1386,
-            1387,
-            1407,
-            1408,
-            1452,
-            1453
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1403,
-      "fields":{
-         "name":"St\u00f8tte til forhindring af anbringelse",
-         "activity_id":"010081",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            605
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1404,
-      "fields":{
-         "name":"Familier\u00e5dgivning, forebyggende",
-         "activity_id":"010082",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            605
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1405,
-      "fields":{
-         "name":"Ferieaktiviteter",
-         "activity_id":"010083",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            584,
-            601,
-            604,
-            605,
-            622,
-            635,
-            637,
-            642,
-            643
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1416,
-            1406,
-            1385,
-            1386,
-            1387,
-            1407,
-            1408,
-            1452,
-            1440,
-            1453
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1406,
-      "fields":{
-         "name":"Plejefamilier, vederlag",
-         "activity_id":"010085",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            588,
-            598,
-            599,
-            601,
-            622,
-            635,
-            637,
-            642,
-            643
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1379,
-            1380,
-            1381,
-            1382,
-            1383,
-            1389,
-            1394,
-            1402,
-            1405,
-            1415,
-            1419,
-            1420,
-            1421,
-            1422,
-            1431,
-            1432,
-            1436,
-            1438,
-            1442
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1407,
-      "fields":{
-         "name":"Netv\u00e6rksplejefamilier",
-         "activity_id":"010086",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            588,
-            599,
-            601,
-            622,
-            635,
-            637,
-            642
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1379,
-            1380,
-            1381,
-            1382,
-            1383,
-            1394,
-            1402,
-            1405,
-            1413,
-            1415,
-            1419,
-            1420,
-            1421,
-            1422,
-            1431,
-            1432,
-            1438,
-            1442
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1408,
-      "fields":{
-         "name":"Sikrede institutioner, opholdsbetaling",
-         "activity_id":"010091",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            601,
-            622,
-            642
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1379,
-            1381,
-            1382,
-            1383,
-            1394,
-            1402,
-            1405,
-            1419,
-            1420,
-            1421,
-            1422,
-            1429,
-            1432,
-            1438,
-            1442,
-            1443
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1409,
-      "fields":{
-         "name":"Kvindekrisecentre",
-         "activity_id":"010096",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            534
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1381,
-            1382
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1410,
-      "fields":{
-         "name":"Egenbetaling",
-         "activity_id":"EgenB",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            543
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1392
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1411,
-      "fields":{
-         "name":"Merudgiftsydelse, jfr. SEL \u00a7 41",
-         "activity_id":"010101",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            585
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1412,
-            1417,
-            1418,
-            1424,
-            1425,
-            1426,
-            1427,
-            1428,
-            1432,
-            1433,
-            1434,
-            1435,
-            1437,
-            1442
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1412,
-      "fields":{
-         "name":"\u00d8vrige udgifter jf \u00a741",
-         "activity_id":"Andre41",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            585
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1411
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1413,
-      "fields":{
-         "name":"Tabt arbejdsfortjeneste",
-         "activity_id":"010102",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            586
-         ],
-         "supplementary_activity_for":[
-            601,
-            622,
-            642
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1407,
-            1464
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1414,
-      "fields":{
-         "name":"K\u00f8b af tr\u00e6ningsredskaber til hjemmetr\u00e6ning",
-         "activity_id":"010103",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            578
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1456
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1415,
-      "fields":{
-         "name":"Supervision",
-         "activity_id":"010111",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            578,
-            598,
-            599
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1416,
-            1456,
-            1406,
-            1407
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1416,
-      "fields":{
-         "name":"Kommunale plejefamilier, vederlag",
-         "activity_id":"010135",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            588,
-            599,
-            601,
-            622,
-            635,
-            642
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1379,
-            1380,
-            1381,
-            1382,
-            1383,
-            1394,
-            1402,
-            1405,
-            1415,
-            1419,
-            1420,
-            1421,
-            1422,
-            1430,
-            1431,
-            1432,
-            1438,
-            1442
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1417,
-      "fields":{
-         "name":"Kursus",
-         "activity_id":"010138",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            578,
-            585
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1456,
-            1411
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1418,
-      "fields":{
-         "name":"Bekl\u00e6dning",
-         "activity_id":"010145",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            585,
-            602
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1397,
-            1411
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1419,
-      "fields":{
-         "name":"Andre indsatser vedr. Aflastning",
-         "activity_id":"Andre5235",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            601,
-            622,
-            635,
-            637,
-            642,
-            643
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1416,
-            1406,
-            1385,
-            1386,
-            1387,
-            1407,
-            1408,
-            1452,
-            1453
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1420,
-      "fields":{
-         "name":"Andre indsatser vedr. Anbringelsen",
-         "activity_id":"Andre5237",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            601,
-            622,
-            635,
-            637,
-            642,
-            643
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1416,
-            1406,
-            1385,
-            1386,
-            1387,
-            1407,
-            1408,
-            1452,
-            1453
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1421,
-      "fields":{
-         "name":"Andre indsatser vedr. Behandling el. praktisk/p\u00e6dagogisk st\u00f8tte",
-         "activity_id":"Andre5239",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            601,
-            622,
-            635,
-            637,
-            642,
-            643
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1416,
-            1406,
-            1385,
-            1386,
-            1387,
-            1407,
-            1408,
-            1452,
-            1453
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1422,
-      "fields":{
-         "name":"Andre indsatser vedr. Familie- og dagbehandling eller intern skole",
-         "activity_id":"Andre5233",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            601,
-            622,
-            635,
-            637,
-            642,
-            643
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1416,
-            1406,
-            1385,
-            1386,
-            1387,
-            1407,
-            1408,
-            1452,
-            1453
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1423,
-      "fields":{
-         "name":"Andre indsatser vedr. Kontaktperson",
-         "activity_id":"Andre5236",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            601,
-            622,
-            635,
-            637,
-            642
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1387
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1424,
-      "fields":{
-         "name":"Di\u00e6t- og supplerende kost",
-         "activity_id":"Di\u00e6tKo",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            585
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1411
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1425,
-      "fields":{
-         "name":"Form\u00e5lsbestemt k\u00f8rsel",
-         "activity_id":"K\u00f8rForm",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            585
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1411
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1426,
-      "fields":{
-         "name":"Fritidsk\u00f8rsel",
-         "activity_id":"K\u00f8rFri",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            585
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1411
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1427,
-      "fields":{
-         "name":"Handicapcykel",
-         "activity_id":"HandiCy",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            585
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1411
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1428,
-      "fields":{
-         "name":"Handicapk\u00f8ret\u00f8j",
-         "activity_id":"HandiBil",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            585
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1411
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1429,
-      "fields":{
-         "name":"Institutioner, Andre udgifter",
-         "activity_id":"InstAUdg",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            598,
-            599,
-            601,
-            604,
-            605,
-            622,
-            635,
-            637,
-            642
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1454,
-            1385,
-            1386,
-            1408,
-            1452,
-            1453
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1430,
-      "fields":{
-         "name":"Kommunale plejefamilier, andre udgifter",
-         "activity_id":"010134",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            588,
-            598,
-            599,
-            601,
-            622
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1416
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1431,
-      "fields":{
-         "name":"Kost og logi",
-         "activity_id":"KostLogi",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            588,
-            598,
-            599,
-            601,
-            622,
-            635,
-            637,
-            642,
-            643
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1416,
-            1406,
-            1407
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1432,
-      "fields":{
-         "name":"Medicin og creme",
-         "activity_id":"Medic",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            585,
-            601,
-            622,
-            635,
-            637,
-            642,
-            643
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1416,
-            1406,
-            1385,
-            1386,
-            1387,
-            1407,
-            1408,
-            1411,
-            1452,
-            1453
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1433,
-      "fields":{
-         "name":"Merudgift til kost (for\u00e6ldre)",
-         "activity_id":"SuppKost",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            585
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1411
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1434,
-      "fields":{
-         "name":"Merudgifter til el, vand og varme",
-         "activity_id":"MerEl",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            585
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1411
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1435,
-      "fields":{
-         "name":"Merudgifter til husleje og flytteudgifter",
-         "activity_id":"MerHusl",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            585
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1411
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1436,
-      "fields":{
-         "name":"Plejefamilier, andre udgifter",
-         "activity_id":"010084",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            588,
-            598,
-            599,
-            601,
-            622,
-            643
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1406
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1437,
-      "fields":{
-         "name":"Reng\u00f8ring",
-         "activity_id":"010010",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            585
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1411
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1438,
-      "fields":{
-         "name":"St\u00f8ttet samv\u00e6r",
-         "activity_id":"St\u00f8ta",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            601,
-            622
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1416,
-            1406,
-            1385,
-            1386,
-            1387,
-            1407,
-            1408,
-            1452,
-            1453
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1439,
-      "fields":{
-         "name":"S\u00e6rlig supplerende ydelse ved tabt arbejdsfortjeneste",
-         "activity_id":"S\u00e6rYd",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            587
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1440,
-      "fields":{
-         "name":"S\u00e6rlige klubtilbud",
-         "activity_id":"S\u00e6rklub",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            584
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1379,
-            1405,
-            1442
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1441,
-      "fields":{
-         "name":"Tilknytning af koordinator",
-         "activity_id":"Koordi",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            609
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1381
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1442,
-      "fields":{
-         "name":"Transportomkostninger",
-         "activity_id":"Transp",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            595,
-            584,
-            585,
-            588,
-            596,
-            597,
-            598,
-            599,
-            600,
-            601,
-            602,
-            603,
-            604,
-            605,
-            622,
-            633,
-            635,
-            636,
-            637,
-            640,
-            641,
-            642,
-            643
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1385,
-            1386,
-            1387,
-            1388,
-            1390,
-            1391,
-            1397,
-            1406,
-            1407,
-            1408,
-            1411,
-            1416,
-            1440,
-            1446,
-            1447,
-            1451,
-            1452,
-            1453,
-            1454,
-            1459,
-            1461
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1443,
-      "fields":{
-         "name":"T\u00f8j og lommepenge",
-         "activity_id":"010144",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            601,
-            622,
-            635,
-            637,
-            642
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1385,
-            1386,
-            1408,
-            1452,
-            1453
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1444,
-      "fields":{
-         "name":"\u00d8konomisk st\u00f8tte til konsulentbistand",
-         "activity_id":"\u00d8konK",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            549
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1381
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1445,
-      "fields":{
-         "name":"\u00a7 11,3,2 Netv\u00e6rks-/samtalegruppe",
-         "activity_id":"010054",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            544
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1381
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1446,
-      "fields":{
-         "name":"Afl\u00f8sning  i hjemmet",
-         "activity_id":"Afl\u00f8 ",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            588
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1381,
-            1379,
-            1442
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1447,
-      "fields":{
-         "name":"Anden hj\u00e6lp efter \u00a7 52,3,9",
-         "activity_id":"010069",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            603
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1381,
-            1379,
-            1380,
-            1442
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1448,
-      "fields":{
-         "name":"Anden st\u00f8tte",
-         "activity_id":"AS7634",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            638
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1381
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1449,
-      "fields":{
-         "name":"B\u00f8rnehuset, takst",
-         "activity_id":"010073",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            591
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1381
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1450,
-      "fields":{
-         "name":"B\u00f8rnepsykologisk unders\u00f8gelse jf \u00a750-5",
-         "activity_id":"B\u00f8rno",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            590,
-            592
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1381
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1451,
-      "fields":{
-         "name":"Dagbehandlingstilbud",
-         "activity_id":"010018",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            597
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1381,
-            1379,
-            1442
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1452,
-      "fields":{
-         "name":"D\u00f8gninstitutioner vedr. nedsat funktionsevne",
-         "activity_id":"010089",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            588,
-            599,
-            622
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1379,
-            1380,
-            1381,
-            1382,
-            1383,
-            1394,
-            1402,
-            1405,
-            1419,
-            1420,
-            1421,
-            1422,
-            1429,
-            1432,
-            1438,
-            1442,
-            1443
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1453,
-      "fields":{
-         "name":"D\u00f8gninstitutioner vedr. sociale adf\u00e6rdsproblemer",
-         "activity_id":"010087",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            588,
-            599,
-            622,
-            635
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1379,
-            1380,
-            1381,
-            1382,
-            1383,
-            1394,
-            1402,
-            1405,
-            1419,
-            1420,
-            1421,
-            1422,
-            1429,
-            1432,
-            1438,
-            1442,
-            1443
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1454,
-      "fields":{
-         "name":"D\u00f8gnophold for familien",
-         "activity_id":"010044",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            598
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1381,
-            1379,
-            1429,
-            1380,
-            1442
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1455,
-      "fields":{
-         "name":"For\u00e6ldrekompetenceunders\u00f8gelse",
-         "activity_id":"For\u00e6o",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            590,
-            592
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1381
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1456,
-      "fields":{
-         "name":"Hjemmetr\u00e6ning",
-         "activity_id":"HjemTr",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            578
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1414,
-            1381,
-            1415,
-            1417
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1457,
-      "fields":{
-         "name":"Ledsageordning for personer m/nedsat funktionsevne (\u00a7 45)",
-         "activity_id":"010099",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            589
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1381,
-            1380
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1458,
-      "fields":{
-         "name":"L\u00f8nkompensation",
-         "activity_id":"L\u00f8nks",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            604,
-            605
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1459,
-      "fields":{
-         "name":"Ophold i dagtilbud",
-         "activity_id":"Ophod",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            595
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1381,
-            1379,
-            1380,
-            1442
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1460,
-      "fields":{
-         "name":"Opretholdelse af kontaktperson ",
-         "activity_id":"Opree",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            633
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1461,
-      "fields":{
-         "name":"Praktisk, p\u00e6dagogisk eller anden st\u00f8tte i hjemmet",
-         "activity_id":"Prak ",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            596
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1381,
-            1379,
-            1380,
-            1442
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1462,
-      "fields":{
-         "name":"Psykologhj\u00e6lp til b\u00f8rn",
-         "activity_id":"Psyk",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            534
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1381
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1463,
-      "fields":{
-         "name":"Genoptr\u00e6ning (vedligeholdelsestr\u00e6ning)",
-         "activity_id":"VedhTr",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-            651
-         ],
-         "supplementary_activity_for":[
-
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1381
-         ]
-      }
-   },
-   {
-      "model":"core.activitydetails",
-      "pk":1464,
-      "fields":{
-         "name":"-",
-         "activity_id":"Dummy",
-         "max_tolerance_in_percent":10,
-         "max_tolerance_in_dkk":5000,
-         "main_activity_for":[
-
-         ],
-         "supplementary_activity_for":[
-            586
-         ],
-         "service_providers":[
-
-         ],
-         "main_activities":[
-            1413
-         ]
-      }
-   }
+    {
+        "model": "core.activitydetails",
+        "pk": 1551,
+        "fields": {
+            "name": "K\u00f8rsel i egen bil",
+            "activity_id": "010009",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                927,
+                896,
+                929,
+                880,
+                914,
+                888,
+                887,
+                934,
+                932,
+                935,
+                933,
+                893,
+                928,
+                892,
+                891,
+                895,
+                897,
+                890,
+                889,
+                876,
+                925
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1557,
+                1558,
+                1559,
+                1560,
+                1562,
+                1563,
+                1578,
+                1579,
+                1580,
+                1588,
+                1612,
+                1618,
+                1619,
+                1623,
+                1624,
+                1625,
+                1626,
+                1631,
+                1633
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1552,
+        "fields": {
+            "name": "Aktiviteter",
+            "activity_id": "010011",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                896,
+                898
+            ],
+            "supplementary_activity_for": [
+                881,
+                887,
+                888,
+                889,
+                890,
+                891,
+                892,
+                895
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1560,
+                1562,
+                1563,
+                1578,
+                1579,
+                1588,
+                1619,
+                1624,
+                1625,
+                1626,
+                1629,
+                1631,
+                1633
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1553,
+        "fields": {
+            "name": "Tolk",
+            "activity_id": "010137",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                927,
+                929,
+                880,
+                930,
+                914,
+                870,
+                894,
+                888,
+                943,
+                884,
+                887,
+                848,
+                836,
+                899,
+                934,
+                932,
+                935,
+                826,
+                881,
+                933,
+                883,
+                893,
+                928,
+                841,
+                882,
+                891,
+                892,
+                895,
+                901,
+                835,
+                890,
+                889,
+                925
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1556,
+                1557,
+                1558,
+                1559,
+                1560,
+                1562,
+                1563,
+                1564,
+                1568,
+                1569,
+                1578,
+                1579,
+                1580,
+                1581,
+                1588,
+                1613,
+                1616,
+                1617,
+                1618,
+                1619,
+                1620,
+                1621,
+                1622,
+                1623,
+                1624,
+                1625,
+                1626,
+                1627,
+                1628,
+                1629,
+                1631,
+                1633,
+                1634,
+                1635
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1554,
+        "fields": {
+            "name": "Egenbetaling, beboere",
+            "activity_id": "010097",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                826,
+                893,
+                927,
+                929
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1624,
+                1625,
+                1578,
+                1557,
+                1579,
+                1558,
+                1559,
+                1580,
+                1581,
+                1588
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1555,
+        "fields": {
+            "name": "Advokatbistand",
+            "activity_id": "010037",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                914
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1624,
+                1625,
+                1578,
+                1557,
+                1579,
+                1558,
+                1559,
+                1580,
+                1588
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1556,
+        "fields": {
+            "name": "R\u00e5dgivning, unders\u00f8gelse og behandling",
+            "activity_id": "010031",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                848
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1557,
+        "fields": {
+            "name": "Soc.p\u00e6d. opholdssteder",
+            "activity_id": "010038",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                893,
+                914,
+                927,
+                929,
+                934
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1558,
+        "fields": {
+            "name": "Kost- og efterskoler",
+            "activity_id": "010039",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                893,
+                896,
+                897,
+                914,
+                927,
+                929,
+                934
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1559,
+        "fields": {
+            "name": "Eget v\u00e6relse",
+            "activity_id": "010040",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                893,
+                927
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1560,
+        "fields": {
+            "name": "Familiebehandling",
+            "activity_id": "010043",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                889
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1561,
+        "fields": {
+            "name": "Aflastning",
+            "activity_id": "010045",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                935
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1578
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1562,
+        "fields": {
+            "name": "Kontaktperson",
+            "activity_id": "010046",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                892,
+                897,
+                928,
+                932
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1563,
+        "fields": {
+            "name": "Kontaktperson for hele familien",
+            "activity_id": "010047",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                892
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1564,
+        "fields": {
+            "name": "Konsulentbistand efter \u00a7 11,3,1",
+            "activity_id": "010051",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                835
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1565,
+        "fields": {
+            "name": "Pr\u00e6vention, \u00a7 11,4",
+            "activity_id": "010052",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                843
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1566,
+        "fields": {
+            "name": "St\u00f8tte til fritidstilbud",
+            "activity_id": "010053",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                845
+            ],
+            "supplementary_activity_for": [
+                893,
+                914,
+                927,
+                929,
+                934,
+                935
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1624,
+                1625,
+                1578,
+                1557,
+                1579,
+                1558,
+                1559,
+                1580,
+                1588
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1567,
+        "fields": {
+            "name": "St\u00f8tte til for\u00e6ldremyndighedsindehaveren efter \u00a7 52a og \u00a7 52",
+            "activity_id": "010068",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                896,
+                897,
+                898
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1568,
+        "fields": {
+            "name": "St\u00f8tteperson til for\u00e6ldremyndighedsindehaveren",
+            "activity_id": "St\u00f8ts",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                899
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1569,
+        "fields": {
+            "name": "Praktikophold",
+            "activity_id": "010070",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                894
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1570,
+        "fields": {
+            "name": "Overv\u00e5get samv\u00e6r",
+            "activity_id": "Overv7",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                929
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1571,
+        "fields": {
+            "name": "Overv\u00e5get samv\u00e6r",
+            "activity_id": "Overv9",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                929
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1572,
+        "fields": {
+            "name": "Overv\u00e5get samv\u00e6r",
+            "activity_id": "Overv3",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                929
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1573,
+        "fields": {
+            "name": "Overv\u00e5get samv\u00e6r",
+            "activity_id": "Overv5",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                929
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1574,
+        "fields": {
+            "name": "Overv\u00e5get samv\u00e6r",
+            "activity_id": "Overa",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                893,
+                914
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1624,
+                1625,
+                1578,
+                1557,
+                1579,
+                1558,
+                1559,
+                1580,
+                1588
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1575,
+        "fields": {
+            "name": "St\u00f8tte til forhindring af anbringelse",
+            "activity_id": "010081",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                897
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1576,
+        "fields": {
+            "name": "Familier\u00e5dgivning, forebyggende",
+            "activity_id": "010082",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                897
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1577,
+        "fields": {
+            "name": "Ferieaktiviteter",
+            "activity_id": "010083",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                927,
+                896,
+                893,
+                934,
+                929,
+                914,
+                897,
+                935,
+                876
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1624,
+                1625,
+                1578,
+                1612,
+                1557,
+                1579,
+                1558,
+                1559,
+                1580,
+                1588
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1578,
+        "fields": {
+            "name": "Plejefamilier, vederlag",
+            "activity_id": "010085",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                927,
+                893,
+                934,
+                929,
+                880,
+                914,
+                891,
+                890,
+                935
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1579,
+        "fields": {
+            "name": "Netv\u00e6rksplejefamilier",
+            "activity_id": "010086",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                880,
+                891,
+                893,
+                914,
+                927,
+                929,
+                934
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1580,
+        "fields": {
+            "name": "Sikrede institutioner, opholdsbetaling",
+            "activity_id": "010091",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                893,
+                914,
+                934
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1581,
+        "fields": {
+            "name": "Kvindekrisecentre",
+            "activity_id": "010096",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                826
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1582,
+        "fields": {
+            "name": "Egenbetaling",
+            "activity_id": "EgenB",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                835
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1564
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1583,
+        "fields": {
+            "name": "Merudgiftsydelse, jfr. SEL \u00a7 41",
+            "activity_id": "010101",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                877
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1584,
+        "fields": {
+            "name": "\u00d8vrige udgifter jf \u00a741",
+            "activity_id": "Andre41",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                877
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1583
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1585,
+        "fields": {
+            "name": "Tabt arbejdsfortjeneste",
+            "activity_id": "010102",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                878
+            ],
+            "supplementary_activity_for": [
+                893,
+                914,
+                934
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1579
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1586,
+        "fields": {
+            "name": "K\u00f8b af tr\u00e6ningsredskaber til hjemmetr\u00e6ning",
+            "activity_id": "010103",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                870
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1628
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1587,
+        "fields": {
+            "name": "Supervision",
+            "activity_id": "010111",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                870,
+                890,
+                891
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1628,
+                1578,
+                1579,
+                1588
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1588,
+        "fields": {
+            "name": "Kommunale plejefamilier, vederlag",
+            "activity_id": "010135",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                880,
+                891,
+                893,
+                914,
+                927,
+                934
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1589,
+        "fields": {
+            "name": "Kursus",
+            "activity_id": "010138",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                870,
+                877
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1583,
+                1628
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1590,
+        "fields": {
+            "name": "Bekl\u00e6dning",
+            "activity_id": "010145",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                877,
+                894
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1569,
+                1583
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1591,
+        "fields": {
+            "name": "Andre indsatser vedr. Aflastning",
+            "activity_id": "Andre5235",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                893,
+                914,
+                927,
+                929,
+                934,
+                935
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1624,
+                1625,
+                1578,
+                1557,
+                1579,
+                1558,
+                1559,
+                1580,
+                1588
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1592,
+        "fields": {
+            "name": "Andre indsatser vedr. Anbringelsen",
+            "activity_id": "Andre5237",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                893,
+                914,
+                927,
+                929,
+                934,
+                935
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1624,
+                1625,
+                1578,
+                1557,
+                1579,
+                1558,
+                1559,
+                1580,
+                1588
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1593,
+        "fields": {
+            "name": "Andre indsatser vedr. Behandling el. praktisk/p\u00e6dagogisk st\u00f8tte",
+            "activity_id": "Andre5239",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                893,
+                914,
+                927,
+                929,
+                934,
+                935
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1624,
+                1625,
+                1578,
+                1557,
+                1579,
+                1558,
+                1559,
+                1580,
+                1588
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1594,
+        "fields": {
+            "name": "Andre indsatser vedr. Familie- og dagbehandling eller intern skole",
+            "activity_id": "Andre5233",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                893,
+                914,
+                927,
+                929,
+                934,
+                935
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1624,
+                1625,
+                1578,
+                1557,
+                1579,
+                1558,
+                1559,
+                1580,
+                1588
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1595,
+        "fields": {
+            "name": "Andre indsatser vedr. Kontaktperson",
+            "activity_id": "Andre5236",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                893,
+                914,
+                927,
+                929,
+                934
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1559
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1596,
+        "fields": {
+            "name": "Di\u00e6t- og supplerende kost",
+            "activity_id": "Di\u00e6tKo",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                877
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1583
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1597,
+        "fields": {
+            "name": "Form\u00e5lsbestemt k\u00f8rsel",
+            "activity_id": "K\u00f8rForm",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                877
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1583
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1598,
+        "fields": {
+            "name": "Fritidsk\u00f8rsel",
+            "activity_id": "K\u00f8rFri",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                877
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1583
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1599,
+        "fields": {
+            "name": "Handicapcykel",
+            "activity_id": "HandiCy",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                877
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1583
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1600,
+        "fields": {
+            "name": "Handicapk\u00f8ret\u00f8j",
+            "activity_id": "HandiBil",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                877
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1583
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1601,
+        "fields": {
+            "name": "Institutioner, Andre udgifter",
+            "activity_id": "InstAUdg",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                927,
+                896,
+                893,
+                934,
+                929,
+                914,
+                891,
+                897,
+                890
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1624,
+                1625,
+                1626,
+                1557,
+                1558,
+                1580
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1602,
+        "fields": {
+            "name": "Kommunale plejefamilier, andre udgifter",
+            "activity_id": "010134",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                880,
+                890,
+                891,
+                893,
+                914
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1588
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1603,
+        "fields": {
+            "name": "Kost og logi",
+            "activity_id": "KostLogi",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                927,
+                893,
+                934,
+                929,
+                880,
+                914,
+                891,
+                890,
+                935
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1578,
+                1579,
+                1588
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1604,
+        "fields": {
+            "name": "Medicin og creme",
+            "activity_id": "Medic",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                877,
+                893,
+                914,
+                927,
+                929,
+                934,
+                935
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1624,
+                1625,
+                1578,
+                1557,
+                1579,
+                1558,
+                1559,
+                1580,
+                1583,
+                1588
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1605,
+        "fields": {
+            "name": "Merudgift til kost (for\u00e6ldre)",
+            "activity_id": "SuppKost",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                877
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1583
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1606,
+        "fields": {
+            "name": "Merudgifter til el, vand og varme",
+            "activity_id": "MerEl",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                877
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1583
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1607,
+        "fields": {
+            "name": "Merudgifter til husleje og flytteudgifter",
+            "activity_id": "MerHusl",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                877
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1583
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1608,
+        "fields": {
+            "name": "Plejefamilier, andre udgifter",
+            "activity_id": "010084",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                880,
+                890,
+                891,
+                893,
+                914,
+                935
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1578
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1609,
+        "fields": {
+            "name": "Reng\u00f8ring",
+            "activity_id": "010010",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                877
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1583
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1610,
+        "fields": {
+            "name": "St\u00f8ttet samv\u00e6r",
+            "activity_id": "St\u00f8ta",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                893,
+                914
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1624,
+                1625,
+                1578,
+                1557,
+                1579,
+                1558,
+                1559,
+                1580,
+                1588
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1611,
+        "fields": {
+            "name": "S\u00e6rlig supplerende ydelse ved tabt arbejdsfortjeneste",
+            "activity_id": "S\u00e6rYd",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                879
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1612,
+        "fields": {
+            "name": "S\u00e6rlige klubtilbud",
+            "activity_id": "S\u00e6rklub",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                876
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1613,
+        "fields": {
+            "name": "Tilknytning af koordinator",
+            "activity_id": "Koordi",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                901
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1614,
+        "fields": {
+            "name": "Transportomkostninger",
+            "activity_id": "Transp",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                927,
+                896,
+                929,
+                880,
+                914,
+                894,
+                888,
+                887,
+                934,
+                932,
+                935,
+                933,
+                877,
+                893,
+                928,
+                892,
+                891,
+                895,
+                897,
+                890,
+                889,
+                876,
+                925
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1557,
+                1558,
+                1559,
+                1560,
+                1562,
+                1563,
+                1569,
+                1578,
+                1579,
+                1580,
+                1583,
+                1588,
+                1612,
+                1618,
+                1619,
+                1623,
+                1624,
+                1625,
+                1626,
+                1631,
+                1633
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1615,
+        "fields": {
+            "name": "T\u00f8j og lommepenge",
+            "activity_id": "010144",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                893,
+                914,
+                927,
+                929,
+                934
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1624,
+                1625,
+                1557,
+                1558,
+                1580
+            ]
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1616,
+        "fields": {
+            "name": "\u00d8konomisk st\u00f8tte til konsulentbistand",
+            "activity_id": "\u00d8konK",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                841
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1617,
+        "fields": {
+            "name": "\u00a7 11,3,2 Netv\u00e6rks-/samtalegruppe",
+            "activity_id": "010054",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                836
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1618,
+        "fields": {
+            "name": "Afl\u00f8sning  i hjemmet",
+            "activity_id": "Afl\u00f8 ",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                880
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1619,
+        "fields": {
+            "name": "Anden hj\u00e6lp efter \u00a7 52,3,9",
+            "activity_id": "010069",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                895
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1620,
+        "fields": {
+            "name": "Anden st\u00f8tte",
+            "activity_id": "AS7634",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                930
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1621,
+        "fields": {
+            "name": "B\u00f8rnehuset, takst",
+            "activity_id": "010073",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                883
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1622,
+        "fields": {
+            "name": "B\u00f8rnepsykologisk unders\u00f8gelse jf \u00a750-5",
+            "activity_id": "B\u00f8rno",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                882,
+                884
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1623,
+        "fields": {
+            "name": "Dagbehandlingstilbud",
+            "activity_id": "010018",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                889
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1624,
+        "fields": {
+            "name": "D\u00f8gninstitutioner vedr. nedsat funktionsevne",
+            "activity_id": "010089",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                880,
+                891,
+                914
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1625,
+        "fields": {
+            "name": "D\u00f8gninstitutioner vedr. sociale adf\u00e6rdsproblemer",
+            "activity_id": "010087",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                880,
+                891,
+                914,
+                927
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1626,
+        "fields": {
+            "name": "D\u00f8gnophold for familien",
+            "activity_id": "010044",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                890
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1627,
+        "fields": {
+            "name": "For\u00e6ldrekompetenceunders\u00f8gelse",
+            "activity_id": "For\u00e6o",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                882,
+                884
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1628,
+        "fields": {
+            "name": "Hjemmetr\u00e6ning",
+            "activity_id": "HjemTr",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                870
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1629,
+        "fields": {
+            "name": "Ledsageordning for personer m/nedsat funktionsevne (\u00a7 45)",
+            "activity_id": "010099",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                881
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1630,
+        "fields": {
+            "name": "L\u00f8nkompensation",
+            "activity_id": "L\u00f8nks",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                896,
+                897
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1631,
+        "fields": {
+            "name": "Ophold i dagtilbud",
+            "activity_id": "Ophod",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                887
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1632,
+        "fields": {
+            "name": "Opretholdelse af kontaktperson ",
+            "activity_id": "Opree",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                925
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1633,
+        "fields": {
+            "name": "Praktisk, p\u00e6dagogisk eller anden st\u00f8tte i hjemmet",
+            "activity_id": "Prak ",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                888
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1634,
+        "fields": {
+            "name": "Psykologhj\u00e6lp til b\u00f8rn",
+            "activity_id": "Psyk",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                826
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1635,
+        "fields": {
+            "name": "Genoptr\u00e6ning (vedligeholdelsestr\u00e6ning)",
+            "activity_id": "VedhTr",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [
+                943
+            ],
+            "supplementary_activity_for": [],
+            "service_providers": [],
+            "main_activities": []
+        }
+    },
+    {
+        "model": "core.activitydetails",
+        "pk": 1636,
+        "fields": {
+            "name": "-",
+            "activity_id": "Dummy",
+            "max_tolerance_in_percent": 10,
+            "max_tolerance_in_dkk": 5000,
+            "main_activity_for": [],
+            "supplementary_activity_for": [
+                878
+            ],
+            "service_providers": [],
+            "main_activities": [
+                1585
+            ]
+        }
+    }
 ]
