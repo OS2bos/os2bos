@@ -1002,7 +1002,10 @@ class RelatedPerson(models.Model):
     )
 
     main_case = models.ForeignKey(
-        Case, related_name="related_persons", on_delete=models.CASCADE
+        Case,
+        related_name="related_persons",
+        on_delete=models.CASCADE,
+        verbose_name=_("hovedsag"),
     )
 
     @staticmethod
@@ -1029,21 +1032,29 @@ class Account(models.Model):
     (main activity, supplementary activity, section) pair.
     """
 
-    number = models.CharField(max_length=128)
+    number = models.CharField(
+        max_length=128, verbose_name=_("konteringsnummer")
+    )
     main_activity = models.ForeignKey(
         ActivityDetails,
         null=False,
         on_delete=models.CASCADE,
         related_name="main_accounts",
+        verbose_name=_("hovedaktivitet"),
     )
     supplementary_activity = models.ForeignKey(
         ActivityDetails,
         null=True,
         on_delete=models.CASCADE,
         related_name="supplementary_accounts",
+        verbose_name=_("følgeudgift"),
     )
     section = models.ForeignKey(
-        Section, null=False, on_delete=models.CASCADE, related_name="accounts"
+        Section,
+        null=False,
+        on_delete=models.CASCADE,
+        related_name="accounts",
+        verbose_name=_("paragraf"),
     )
 
     def __str__(self):
