@@ -775,7 +775,7 @@ class PaymentTestCase(TestCase):
             date=date(year=2019, month=1, day=1),
             amount=Decimal("500.0"),
         )
-        self.assertEqual(str(payment), "2019-01-01 - 500.0")
+        self.assertEqual(str(payment), "Person - Test - 2019-01-01 - 500.0")
 
 
 class PaymentScheduleTestCase(TestCase):
@@ -1169,6 +1169,13 @@ class PaymentScheduleTestCase(TestCase):
                 recipient_type=recipient_type,
                 payment_method=payment_method,
             )
+
+    def test_str(self):
+        payment_schedule = create_payment_schedule()
+        self.assertEqual(
+            str(payment_schedule),
+            "Person - Jens Testersen - Fast beløb, løbende - Dagligt - 500.0",
+        )
 
 
 class CaseTestCase(TestCase, BasicTestMixin):

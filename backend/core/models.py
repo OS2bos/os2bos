@@ -117,10 +117,6 @@ class User(AbstractUser):
 class Team(models.Model):
     """Represents a team in the administration."""
 
-    class Meta:
-        verbose_name = _("team")
-        verbose_name_plural = _("teams")
-
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     leader = models.ForeignKey(
         User, on_delete=models.PROTECT, related_name="managed_teams"
@@ -416,7 +412,13 @@ class Payment(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.date} - {self.amount}"
+        recipient_type_str = self.get_recipient_type_display()
+        return (
+            f"{recipient_type_str} - "
+            f"{self.recipient_name} - "
+            f"{self.date} - "
+            f"{self.amount}"
+        )
 
 
 class Case(AuditModelMixin, models.Model):
