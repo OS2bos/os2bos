@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
+from core.forms import SectionForm
+
 from core.models import (
     Municipality,
     PaymentSchedule,
@@ -30,7 +32,6 @@ for klass in (
     Activity,
     RelatedPerson,
     SchoolDistrict,
-    Section,
     Account,
     ServiceProvider,
     Team,
@@ -52,7 +53,14 @@ class ActivityDetailsAdmin(admin.ModelAdmin):
         "service_providers",
         "main_activities",
     )
+    search_fields = ("activity_id",)
+
+
+class SectionAdmin(admin.ModelAdmin):
+    form = SectionForm
+    search_fields = ("paragraph", "kle_number")
 
 
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(ActivityDetails, ActivityDetailsAdmin)
+admin.site.register(Section, SectionAdmin)

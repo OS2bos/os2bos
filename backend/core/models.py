@@ -575,7 +575,9 @@ class Section(models.Model):
         verbose_name=_("tilladt for handicapafdelingen"), default=False
     )
     allowed_for_steps = fields.ArrayField(
-        models.CharField(max_length=128, choices=effort_steps_choices), size=6
+        models.CharField(max_length=128, choices=effort_steps_choices),
+        size=6,
+        verbose_name=_("tilladt for trin i indsatstrappen"),
     )
     law_text_name = models.CharField(
         max_length=128, verbose_name=_("lov tekst navn")
@@ -803,7 +805,7 @@ class ActivityDetails(models.Model):
 
     name = models.CharField(max_length=128, verbose_name=_("Navn"))
     activity_id = models.CharField(
-        max_length=128, verbose_name=_("aktivitets ID")
+        max_length=128, verbose_name=_("aktivitets ID"), unique=True
     )
     max_tolerance_in_percent = models.PositiveSmallIntegerField(
         verbose_name=_("max tolerance i procent")
@@ -847,7 +849,11 @@ class Activity(AuditModelMixin, models.Model):
         verbose_name = _("aktivitet")
         verbose_name_plural = _("aktiviteter")
 
-    details = models.ForeignKey(ActivityDetails, on_delete=models.PROTECT)
+    details = models.ForeignKey(
+        ActivityDetails,
+        on_delete=models.PROTECT,
+        verbose_name=_("aktivitetsdetalje"),
+    )
 
     # Status - definitions and choice list.
     STATUS_DRAFT = "DRAFT"
@@ -898,7 +904,10 @@ class Activity(AuditModelMixin, models.Model):
     )
     # The appropriation that owns this activity.
     appropriation = models.ForeignKey(
-        Appropriation, related_name="activities", on_delete=models.CASCADE
+        Appropriation,
+        related_name="activities",
+        on_delete=models.CASCADE,
+        verbose_name=_("bevilling"),
     )
 
     service_provider = models.ForeignKey(
@@ -907,6 +916,7 @@ class Activity(AuditModelMixin, models.Model):
         blank=True,
         related_name="activities",
         on_delete=models.SET_NULL,
+        verbose_name=_("leverandør"),
     )
 
     note = models.TextField(null=True, blank=True, max_length=1000)
