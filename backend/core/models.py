@@ -354,6 +354,18 @@ class PaymentSchedule(models.Model):
         if not end and (newest_payment.date < today + relativedelta(months=6)):
             self.generate_payments(new_start, end, vat_factor)
 
+    def __str__(self):
+        recipient_type_str = self.get_recipient_type_display()
+        payment_frequency_str = self.get_payment_frequency_display()
+        payment_type_str = self.get_payment_type_display()
+        return (
+            f"{recipient_type_str} - "
+            f"{self.recipient_name} - "
+            f"{payment_type_str} - "
+            f"{payment_frequency_str} - "
+            f"{self.payment_amount}"
+        )
+
 
 class Payment(models.Model):
     """Represents an amount paid to a supplier - amount, recpient, date.
