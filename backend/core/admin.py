@@ -33,7 +33,6 @@ for klass in (
     RelatedPerson,
     SchoolDistrict,
     Account,
-    ServiceProvider,
     Team,
     ApprovalLevel,
 ):
@@ -61,6 +60,11 @@ class SectionAdmin(admin.ModelAdmin):
     search_fields = ("paragraph", "kle_number")
 
 
+class ServiceProviderAdmin(admin.ModelAdmin):
+    search_fields = ("name", "cvr_number")
+
+
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(ActivityDetails, ActivityDetailsAdmin)
 admin.site.register(Section, SectionAdmin)
+admin.site.register(ServiceProvider, ServiceProviderAdmin)
