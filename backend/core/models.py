@@ -1081,6 +1081,7 @@ class Account(models.Model):
     supplementary_activity = models.ForeignKey(
         ActivityDetails,
         null=True,
+        blank=True,
         on_delete=models.CASCADE,
         related_name="supplementary_accounts",
         verbose_name=_("følgeudgift"),
