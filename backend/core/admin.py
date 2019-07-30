@@ -39,12 +39,14 @@ for klass in (
     admin.site.register(klass, admin.ModelAdmin)
 
 
+@admin.register(User)
 class CustomUserAdmin(BaseUserAdmin):
     fieldsets = (
         ("Organisation", {"fields": ("team",)}),
     ) + BaseUserAdmin.fieldsets
 
 
+@admin.register(ActivityDetails)
 class ActivityDetailsAdmin(admin.ModelAdmin):
     filter_horizontal = (
         "main_activity_for",
@@ -55,16 +57,12 @@ class ActivityDetailsAdmin(admin.ModelAdmin):
     search_fields = ("activity_id",)
 
 
+@admin.register(Section)
 class SectionAdmin(admin.ModelAdmin):
     form = SectionForm
     search_fields = ("paragraph", "kle_number")
 
 
+@admin.register(ServiceProvider)
 class ServiceProviderAdmin(admin.ModelAdmin):
     search_fields = ("name", "cvr_number")
-
-
-admin.site.register(User, CustomUserAdmin)
-admin.site.register(ActivityDetails, ActivityDetailsAdmin)
-admin.site.register(Section, SectionAdmin)
-admin.site.register(ServiceProvider, ServiceProviderAdmin)
