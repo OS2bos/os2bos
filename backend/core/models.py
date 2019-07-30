@@ -402,7 +402,10 @@ class Payment(models.Model):
     paid = models.BooleanField(default=False, verbose_name=_("betalt"))
 
     payment_schedule = models.ForeignKey(
-        PaymentSchedule, on_delete=models.CASCADE, related_name="payments"
+        PaymentSchedule,
+        on_delete=models.CASCADE,
+        related_name="payments",
+        verbose_name=_("betalingsplan"),
     )
 
     def save(self, *args, **kwargs):
