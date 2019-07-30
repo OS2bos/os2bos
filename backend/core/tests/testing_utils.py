@@ -14,6 +14,7 @@ from core.models import (
     ActivityDetails,
     Appropriation,
     Payment,
+    ServiceProvider,
     Section,
     Account,
     SD,
