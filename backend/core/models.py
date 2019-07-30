@@ -119,7 +119,10 @@ class Team(models.Model):
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     leader = models.ForeignKey(
-        User, on_delete=models.PROTECT, related_name="managed_teams"
+        User,
+        on_delete=models.PROTECT,
+        related_name="managed_teams",
+        verbose_name=_("leder"),
     )
 
     def __str__(self):
@@ -766,13 +769,18 @@ class ServiceProvider(models.Model):
         verbose_name = _("leverandør")
         verbose_name_plural = _("leverandører")
 
-    cvr_number = models.CharField(max_length=8, blank=True)
-    name = models.CharField(max_length=128, blank=False)
+    cvr_number = models.CharField(
+        max_length=8, blank=True, verbose_name=_("cvr-nummer")
+    )
+    name = models.CharField(
+        max_length=128, blank=False, verbose_name=_("navn")
+    )
     vat_factor = models.DecimalField(
         default=100.0,
         max_digits=5,
         decimal_places=2,
         validators=[MinValueValidator(Decimal("0.01"))],
+        verbose_name=_("momsfaktor"),
     )
 
     def __str__(self):

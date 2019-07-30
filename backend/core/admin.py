@@ -31,7 +31,6 @@ for klass in (
     RelatedPerson,
     SchoolDistrict,
     Section,
-    ActivityDetails,
     Account,
     ServiceProvider,
     Team,
@@ -46,4 +45,14 @@ class CustomUserAdmin(BaseUserAdmin):
     ) + BaseUserAdmin.fieldsets
 
 
+class ActivityDetailsAdmin(admin.ModelAdmin):
+    filter_horizontal = (
+        "main_activity_for",
+        "supplementary_activity_for",
+        "service_providers",
+        "main_activities",
+    )
+
+
 admin.site.register(User, CustomUserAdmin)
+admin.site.register(ActivityDetails, ActivityDetailsAdmin)
