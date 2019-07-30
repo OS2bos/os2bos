@@ -280,7 +280,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
 
         self.assertEqual(
             str(activity),
-            "010101 - Test aktivitet - hovedaktivitet - bevilget",
+            "000000 - Test aktivitet - hovedaktivitet - bevilget",
         )
 
     def test_synchronize_payments_on_save(self):
@@ -741,7 +741,7 @@ class AccountTestCase(TestCase):
         )
         supplementary_activity_details = ActivityDetails.objects.create(
             name="Betaling til andre kommuner/region for specialtandpleje",
-            activity_id="010001",
+            activity_id="010002",
             max_tolerance_in_dkk=5000,
             max_tolerance_in_percent=10,
         )

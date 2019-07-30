@@ -128,8 +128,8 @@ def create_activity(
     **kwargs,
 ):
     if "details" not in kwargs:
-        details = ActivityDetails.objects.create(
-            activity_id="010101",
+        details, unused = ActivityDetails.objects.get_or_create(
+            activity_id="000000",
             name="Test aktivitet",
             max_tolerance_in_percent=10,
             max_tolerance_in_dkk=1000,
