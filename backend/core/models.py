@@ -57,6 +57,10 @@ payment_method_choices = (
 class Municipality(models.Model):
     """Represents a Danish municipality."""
 
+    class Meta:
+        verbose_name = _("kommune")
+        verbose_name_plural = _("kommuner")
+
     name = models.CharField(max_length=128, verbose_name=_("navn"))
 
     def __str__(self):
@@ -66,6 +70,10 @@ class Municipality(models.Model):
 class SchoolDistrict(models.Model):
     """Represents a Danish school district."""
 
+    class Meta:
+        verbose_name = _("distrikt")
+        verbose_name_plural = _("distrikter")
+
     name = models.CharField(max_length=128, verbose_name=_("navn"))
 
     def __str__(self):
@@ -73,6 +81,12 @@ class SchoolDistrict(models.Model):
 
 
 class PaymentMethodDetails(models.Model):
+    """ Contains extra information about a payment method."""
+
+    class Meta:
+        verbose_name = _("betalingsmetode-detalje")
+        verbose_name_plural = _("betalingsmetode-detaljer")
+
     tax_card_choices = (
         ("MAIN_CARD", _("Hovedkort")),
         ("SECONDARY_CARD", _("Bikort")),
@@ -86,6 +100,10 @@ class PaymentMethodDetails(models.Model):
 
 
 class User(AbstractUser):
+    class Meta:
+        verbose_name = _("bruger")
+        verbose_name_plural = _("brugere")
+
     team = models.ForeignKey(
         "Team",
         on_delete=models.PROTECT,
@@ -99,6 +117,10 @@ class User(AbstractUser):
 class Team(models.Model):
     """Represents a team in the administration."""
 
+    class Meta:
+        verbose_name = _("team")
+        verbose_name_plural = _("teams")
+
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     leader = models.ForeignKey(
         User, on_delete=models.PROTECT, related_name="managed_teams"
@@ -110,6 +132,10 @@ class Team(models.Model):
 
 class PaymentSchedule(models.Model):
     """Schedule a payment for an Activity."""
+
+    class Meta:
+        verbose_name = _("betalingsplan")
+        verbose_name_plural = _("betalingsplaner")
 
     # Recipient types and choice list.
     INTERNAL = "INTERNAL"
@@ -335,6 +361,10 @@ class Payment(models.Model):
     These may be entered manually, but ideally they should be imported
     from an accounts payable system."""
 
+    class Meta:
+        verbose_name = _("betaling")
+        verbose_name_plural = _("betalinger")
+
     objects = PaymentQuerySet.as_manager()
 
     date = models.DateField(verbose_name=_("betalingsdato"))
@@ -379,6 +409,10 @@ class Payment(models.Model):
 
 class Case(AuditModelMixin, models.Model):
     """A case, covering one child - corresponding to a Hovedsag in SBSYS."""
+
+    class Meta:
+        verbose_name = _("sag")
+        verbose_name_plural = _("sager")
 
     objects = CaseQuerySet.as_manager()
 
@@ -490,6 +524,10 @@ class Case(AuditModelMixin, models.Model):
 
 
 class ApprovalLevel(models.Model):
+    class Meta:
+        verbose_name = _("bevillingsniveau")
+        verbose_name_plural = _("bevillingsniveauer")
+
     name = models.CharField(max_length=128, verbose_name=_("navn"))
 
     def __str__(self):
@@ -502,6 +540,10 @@ class Section(models.Model):
     Each section is associated with the target group for which it is
     allowed as well as the action steps allowed.
     """
+
+    class Meta:
+        verbose_name = _("paragraf")
+        verbose_name_plural = _("paragraffer")
 
     paragraph = models.CharField(max_length=128, verbose_name=_("paragraf"))
     kle_number = models.CharField(max_length=128, verbose_name=_("KLE-nummer"))
@@ -531,6 +573,10 @@ class Section(models.Model):
 
 class Appropriation(AuditModelMixin, models.Model):
     """An appropriation of funds in a Case - corresponds to a Sag in SBSYS."""
+
+    class Meta:
+        verbose_name = _("bevilling")
+        verbose_name_plural = _("bevillinger")
 
     sbsys_id = models.CharField(
         unique=True, max_length=128, verbose_name=_("SBSYS-ID")
@@ -702,6 +748,10 @@ class ServiceProvider(models.Model):
     Class containing information for a specific service provider.
     """
 
+    class Meta:
+        verbose_name = _("leverandør")
+        verbose_name_plural = _("leverandører")
+
     cvr_number = models.CharField(max_length=8, blank=True)
     name = models.CharField(max_length=128, blank=False)
     vat_factor = models.DecimalField(
@@ -721,6 +771,10 @@ class ActivityDetails(models.Model):
     Each service is associated with the legal articles for which it is
     allowed as well as a price range.
     """
+
+    class Meta:
+        verbose_name = _("aktivitetsdetalje")
+        verbose_name_plural = _("aktivitetsdetaljer")
 
     name = models.CharField(max_length=128, verbose_name=_("Navn"))
     activity_id = models.CharField(
@@ -754,6 +808,11 @@ class Activity(AuditModelMixin, models.Model):
     """An activity is a specific service provided within an appropriation."""
 
     # The details object contains the name, tolerance, etc. of the service.
+
+    class Meta:
+        verbose_name = _("aktivitet")
+        verbose_name_plural = _("aktiviteter")
+
     details = models.ForeignKey(ActivityDetails, on_delete=models.PROTECT)
 
     # Status - definitions and choice list.
@@ -913,6 +972,10 @@ class Activity(AuditModelMixin, models.Model):
 class RelatedPerson(models.Model):
     """A person related to a Case, e.g. as a parent or sibling."""
 
+    class Meta:
+        verbose_name = _("relateret person")
+        verbose_name_plural = _("relaterede personer")
+
     relation_type = models.CharField(
         max_length=128, verbose_name=_("relation")
     )
@@ -978,6 +1041,8 @@ class Account(models.Model):
         )
 
     class Meta:
+        verbose_name = _("konto")
+        verbose_name_plural = _("konti")
         constraints = [
             models.UniqueConstraint(
                 fields=["main_activity", "supplementary_activity", "section"],
