@@ -818,6 +818,11 @@ class Activity(AuditModelMixin, models.Model):
 
     note = models.TextField(null=True, blank=True, max_length=1000)
 
+    def __str__(self):
+        activity_type_str = self.get_activity_type_display()
+        status_str = self.get_status_display()
+        return f"{self.details} - {activity_type_str} - {status_str}"
+
     @property
     def account(self):
         if self.activity_type == Activity.MAIN_ACTIVITY:

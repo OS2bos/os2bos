@@ -129,7 +129,10 @@ def create_activity(
 ):
     if "details" not in kwargs:
         details = ActivityDetails.objects.create(
-            max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
+            activity_id="010101",
+            name="Test aktivitet",
+            max_tolerance_in_percent=10,
+            max_tolerance_in_dkk=1000,
         )
     else:
         details = kwargs.pop("details")
@@ -201,6 +204,8 @@ def create_account(
 
 
 def create_service_provider(cvr_number, name):
-    service_provider = ServiceProvider.objects.create(cvr_number, name)
+    service_provider = ServiceProvider.objects.create(
+        cvr_number=cvr_number, name=name
+    )
 
     return service_provider

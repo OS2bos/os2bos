@@ -264,6 +264,25 @@ class ActivityTestCase(TestCase, BasicTestMixin):
     def setUpTestData(cls):
         cls.basic_setup()
 
+    def test_str(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        payment_schedule = create_payment_schedule()
+        activity = create_activity(
+            case,
+            appropriation,
+            payment_plan=payment_schedule,
+            status=Activity.STATUS_GRANTED,
+            activity_type=Activity.MAIN_ACTIVITY,
+        )
+
+        self.assertEqual(
+            str(activity),
+            "010101 - Test aktivitet - hovedaktivitet - bevilget",
+        )
+
     def test_synchronize_payments_on_save(self):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
