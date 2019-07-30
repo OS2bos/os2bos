@@ -84,8 +84,8 @@ class PaymentMethodDetails(models.Model):
     """ Contains extra information about a payment method."""
 
     class Meta:
-        verbose_name = _("betalingsmetode detalje")
-        verbose_name_plural = _("betalingsmetode detaljer")
+        verbose_name = _("betalingsmåde detalje")
+        verbose_name_plural = _("betalingsmåde detaljer")
 
     tax_card_choices = (
         ("MAIN_CARD", _("Hovedkort")),
@@ -160,7 +160,11 @@ class PaymentSchedule(models.Model):
         choices=payment_method_choices,
     )
     payment_method_details = models.ForeignKey(
-        PaymentMethodDetails, null=True, blank=True, on_delete=models.SET_NULL
+        PaymentMethodDetails,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        verbose_name=_("betalingsmåde detalje"),
     )
     DAILY = "DAILY"
     WEEKLY = "WEEKLY"
