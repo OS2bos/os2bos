@@ -846,7 +846,7 @@ class Activity(AuditModelMixin, models.Model):
         if not self.payment_plan:
             return Decimal(0.0)
 
-        vat_factor = self.get_vat_factor
+        vat_factor = self.vat_factor
         now = timezone.now()
         start_date = date(now.year, month=1, day=1)
         end_date = date(now.year, month=12, day=31)
@@ -876,7 +876,7 @@ class Activity(AuditModelMixin, models.Model):
         return True
 
     @property
-    def get_vat_factor(self):
+    def vat_factor(self):
         vat_factor = Decimal("100")
         if self.service_provider:
             vat_factor = self.service_provider.vat_factor
@@ -888,7 +888,7 @@ class Activity(AuditModelMixin, models.Model):
         if not self.payment_plan:
             return
 
-        vat_factor = self.get_vat_factor
+        vat_factor = self.vat_factor
         if self.payment_plan.payments.exists():
             # In the STATUS_DRAFT case we delete and
             # regenerate payments no matter what.
