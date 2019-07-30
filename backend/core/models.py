@@ -468,6 +468,9 @@ class Case(AuditModelMixin, models.Model):
         ]
     )
 
+    def __str__(self):
+        return f"{self.sbsys_id}"
+
     @property
     def expired(self):
         today = timezone.now().date()

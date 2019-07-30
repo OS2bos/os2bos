@@ -1157,6 +1157,13 @@ class CaseTestCase(TestCase, BasicTestMixin):
     def setUpTestData(cls):
         cls.basic_setup()
 
+    def test_str(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+
+        self.assertEqual(str(case), case.sbsys_id)
+
     def test_expired_one(self):
         # generate a just expired end_date
         now = timezone.now()
