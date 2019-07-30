@@ -84,8 +84,8 @@ class PaymentMethodDetails(models.Model):
     """ Contains extra information about a payment method."""
 
     class Meta:
-        verbose_name = _("betalingsmetode-detalje")
-        verbose_name_plural = _("betalingsmetode-detaljer")
+        verbose_name = _("betalingsmetode detalje")
+        verbose_name_plural = _("betalingsmetode detaljer")
 
     tax_card_choices = (
         ("MAIN_CARD", _("Hovedkort")),
@@ -149,7 +149,7 @@ class PaymentSchedule(models.Model):
     )
     # TODO: namechange - this refers actually to the recipient CPR
     recipient_id = models.CharField(max_length=128, verbose_name=_("ID"))
-    recipient_name = models.CharField(max_length=128, verbose_name=_("Navn"))
+    recipient_name = models.CharField(max_length=128, verbose_name=_("navn"))
 
     payment_method = models.CharField(
         max_length=128,
@@ -434,7 +434,7 @@ class Case(AuditModelMixin, models.Model):
         unique=True, max_length=128, verbose_name=_("SBSYS-ID")
     )
     cpr_number = models.CharField(max_length=12, verbose_name=_("cpr-nummer"))
-    name = models.CharField(max_length=128, verbose_name=_("Navn"))
+    name = models.CharField(max_length=128, verbose_name=_("navn"))
     case_worker = models.ForeignKey(
         User,
         verbose_name=_("sagsbehandler"),
@@ -792,26 +792,35 @@ class ActivityDetails(models.Model):
 
     name = models.CharField(max_length=128, verbose_name=_("Navn"))
     activity_id = models.CharField(
-        max_length=128, verbose_name=_("Aktivitets ID")
+        max_length=128, verbose_name=_("aktivitets ID")
     )
     max_tolerance_in_percent = models.PositiveSmallIntegerField(
-        verbose_name=_("Max tolerance i procent")
+        verbose_name=_("max tolerance i procent")
     )
     max_tolerance_in_dkk = models.PositiveIntegerField(
-        verbose_name=_("Max tolerance i DKK")
+        verbose_name=_("max tolerance i DKK")
     )
     main_activity_for = models.ManyToManyField(
-        Section, related_name="main_activities"
+        Section,
+        related_name="main_activities",
+        verbose_name=_("hovedaktivitet for paragraffer"),
     )
     supplementary_activity_for = models.ManyToManyField(
-        Section, related_name="supplementary_activities"
+        Section,
+        related_name="supplementary_activities",
+        verbose_name=_("følgeudgift for paragraffer"),
     )
     service_providers = models.ManyToManyField(
-        ServiceProvider, related_name="supplied_activities"
+        ServiceProvider,
+        related_name="supplied_activities",
+        verbose_name=_("leverandører"),
     )
 
     main_activities = models.ManyToManyField(
-        "self", related_name="supplementary_activities", symmetrical=False
+        "self",
+        related_name="supplementary_activities",
+        symmetrical=False,
+        verbose_name=_("tilladte hovedaktiviteter"),
     )
 
     def __str__(self):
