@@ -654,7 +654,7 @@ class Appropriation(AuditModelMixin, models.Model):
         Case,
         on_delete=models.CASCADE,
         related_name="appropriations",
-        verobse_name=_("sag"),
+        verbose_name=_("sag"),
     )
     note = models.TextField(
         verbose_name=_("supplerende oplysninger"), blank=True
