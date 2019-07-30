@@ -17,6 +17,7 @@ from core.tests.testing_utils import (
     create_section,
     create_payment,
     create_account,
+    create_service_provider,
 )
 from core.models import (
     Municipality,
@@ -203,6 +204,15 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
 
         today = now.date()
         self.assertEqual(appropriation.appropriation_date, today)
+
+
+class ServiceProviderTestCase(TestCase):
+    def test_service_provider_str(self):
+        service_provider = create_service_provider(
+            cvr_number="12345678", name="Test Leverandør"
+        )
+
+        self.assertEqual(str(service_provider), "12345678 - Test Leverandør")
 
 
 class MunicipalityTestCase(TestCase):

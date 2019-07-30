@@ -197,3 +197,9 @@ def create_account(
         number=number,
     )
     return account
+
+
+def create_service_provider(cvr_number, name):
+    service_provider = ServiceProvider.objects.create(cvr_number, name)
+
+    return service_provider

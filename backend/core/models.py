@@ -708,6 +708,9 @@ class ServiceProvider(models.Model):
         validators=[MinValueValidator(Decimal("0.01"))],
     )
 
+    def __str__(self):
+        return f"{self.cvr_number} - {self.name}"
+
 
 class ActivityDetails(models.Model):
     """Class containing all services offered by this municipality.
