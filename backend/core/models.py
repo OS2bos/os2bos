@@ -609,6 +609,7 @@ class Appropriation(AuditModelMixin, models.Model):
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
+        verbose_name=_("paragraf"),
     )
 
     # Status - definitions and choice list.
@@ -632,6 +633,7 @@ class Appropriation(AuditModelMixin, models.Model):
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
+        verbose_name=_("bevillingsniveau"),
     )
     approval_note = models.TextField(
         verbose_name=_("evt. bemærkning"), blank=True
@@ -642,13 +644,17 @@ class Appropriation(AuditModelMixin, models.Model):
         null=True,
         blank=True,
         on_delete=models.PROTECT,
+        verbose_name=_("bevilget af bruger"),
     )
 
     appropriation_date = models.DateField(
         verbose_name=_("bevillingsdato"), null=True, blank=True
     )
     case = models.ForeignKey(
-        Case, on_delete=models.CASCADE, related_name="appropriations"
+        Case,
+        on_delete=models.CASCADE,
+        related_name="appropriations",
+        verobse_name=_("sag"),
     )
     note = models.TextField(
         verbose_name=_("supplerende oplysninger"), blank=True
