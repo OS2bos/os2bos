@@ -813,6 +813,29 @@ class Activity(AuditModelMixin, models.Model):
     note = models.TextField(null=True, blank=True, max_length=1000)
 
     @property
+    def account(self):
+        if self.activity_type == Activity.MAIN_ACTIVITY:
+            accounts = Account.objects.filter(
+                section=self.appropriation.section,
+                main_activity=self.details,
+                supplementary_activity=None,
+            )
+        else:
+            main_activity = self.appropriation.main_activity
+            if not main_activity:
+                return None
+            accounts = Account.objects.filter(
+                section=self.appropriation.section,
+                main_activity=main_activity.details,
+                supplementary_activity=self.details,
+            )
+        if accounts.exists():
+            account = accounts.first()
+        else:
+            account = None
+        return account
+
+    @property
     def monthly_payment_plan(self):
         payments = Payment.objects.filter(payment_schedule__activity=self)
         return payments.group_by_monthly_amounts()

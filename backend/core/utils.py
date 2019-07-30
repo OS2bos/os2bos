@@ -9,6 +9,7 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.utils.translation import gettext_lazy as _
+from django.utils.html import strip_tags
 
 from weasyprint import HTML
 from weasyprint.fonts import FontConfiguration
@@ -107,12 +108,13 @@ def get_cpr_data_mock(cpr):
 
 
 def send_activity_email(subject, template, activity):
-    message = render_to_string(template, {"activity": activity})
+    html_message = render_to_string(template, {"activity": activity})
     send_mail(
         subject,
-        message,
+        strip_tags(html_message),
         settings.DEFAULT_FROM_EMAIL,
         [settings.TO_EMAIL_FOR_PAYMENTS],
+        html_message=html_message,
     )
 
 

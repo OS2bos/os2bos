@@ -16,6 +16,7 @@ from core.tests.testing_utils import (
     create_case,
     create_section,
     create_payment,
+    create_account,
 )
 from core.models import (
     Municipality,
@@ -465,7 +466,6 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         self.assertIn("Aktivitet oprettet", email_message.subject)
         self.assertIn("Barnets CPR nummer: 0205891234", email_message.body)
         self.assertIn("Beløb: 500,0", email_message.body)
-        self.assertIn("Afregningsenheder: 0", email_message.body)
         self.assertIn("Start dato: 1. december 2019", email_message.body)
         self.assertIn("Slut dato: 1. januar 2020", email_message.body)
 
@@ -493,7 +493,6 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         self.assertIn("Aktivitet opdateret", email_message.subject)
         self.assertIn("Barnets CPR nummer: 0205891234", email_message.body)
         self.assertIn("Beløb: 500,0", email_message.body)
-        self.assertIn("Afregningsenheder: 0", email_message.body)
         self.assertIn("Start dato: 1. december 2019", email_message.body)
         self.assertIn("Slut dato: 1. januar 2020", email_message.body)
 
@@ -522,7 +521,6 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         self.assertIn("Aktivitet udgået", email_message.subject)
         self.assertIn("Barnets CPR nummer: 0205891234", email_message.body)
         self.assertIn("Beløb: 500,0", email_message.body)
-        self.assertIn("Afregningsenheder: 0", email_message.body)
         self.assertIn("Start dato: 1. december 2019", email_message.body)
         self.assertIn("Slut dato: 1. januar 2020", email_message.body)
 
@@ -589,6 +587,118 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         activity.delete()
         self.assertEqual(len(mail.outbox), 0)
+
+    def test_account_main_activity(self):
+        start_date = date(year=2019, month=12, day=1)
+        end_date = date(year=2020, month=1, day=1)
+        payment_schedule = create_payment_schedule()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED, section=section
+        )
+
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=Activity.STATUS_GRANTED,
+            activity_type=Activity.MAIN_ACTIVITY,
+        )
+        account = create_account(
+            main_activity=activity.details,
+            supplementary_activity=None,
+            section=section,
+        )
+        self.assertEqual(activity.account, account)
+
+    def test_account_supplementary_activity(self):
+        start_date = date(year=2019, month=12, day=1)
+        end_date = date(year=2020, month=1, day=1)
+        payment_schedule = create_payment_schedule()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED, section=section
+        )
+        main_activity_details = ActivityDetails.objects.create(
+            name="Betaling til andre kommuner/region for specialtandpleje",
+            activity_id="010001",
+            max_tolerance_in_dkk=5000,
+            max_tolerance_in_percent=10,
+        )
+        supplementary_activity_details = ActivityDetails.objects.create(
+            name="Tandbørste",
+            activity_id="010002",
+            max_tolerance_in_dkk=5000,
+            max_tolerance_in_percent=10,
+        )
+
+        main_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=Activity.STATUS_GRANTED,
+            activity_type=Activity.MAIN_ACTIVITY,
+            details=main_activity_details,
+        )
+        payment_schedule = create_payment_schedule()
+        supplementary_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=Activity.STATUS_GRANTED,
+            activity_type=Activity.SUPPL_ACTIVITY,
+            details=supplementary_activity_details,
+        )
+
+        account = create_account(
+            main_activity=main_activity.details,
+            supplementary_activity=supplementary_activity.details,
+            section=section,
+        )
+        self.assertEqual(supplementary_activity.account, account)
+
+    def test_account_no_account(self):
+        start_date = date(year=2019, month=12, day=1)
+        end_date = date(year=2020, month=1, day=1)
+        payment_schedule = create_payment_schedule()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED, section=section
+        )
+        main_activity_details = ActivityDetails.objects.create(
+            name="Betaling til andre kommuner/region for specialtandpleje",
+            activity_id="010001",
+            max_tolerance_in_dkk=5000,
+            max_tolerance_in_percent=10,
+        )
+
+        main_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=Activity.STATUS_GRANTED,
+            activity_type=Activity.MAIN_ACTIVITY,
+            details=main_activity_details,
+        )
+
+        self.assertIsNone(main_activity.account)
 
 
 class AccountTestCase(TestCase):
