@@ -995,33 +995,6 @@ class Activity(AuditModelMixin, models.Model):
             return False
         return True
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-
-        vat_factor = Decimal("100")
-        if self.service_provider:
-            vat_factor = self.service_provider.vat_factor
-
-        if not self.payment_plan:
-            return
-
-        if self.payment_plan.payments.exists():
-            # In the STATUS_DRAFT case we delete and
-            # regenerate payments no matter what.
-            if self.status == Activity.STATUS_DRAFT:
-                self.payment_plan.payments.all().delete()
-                self.payment_plan.generate_payments(
-                    self.start_date, self.end_date, vat_factor
-                )
-            else:
-                self.payment_plan.synchronize_payments(
-                    self.start_date, self.end_date, vat_factor
-                )
-        else:
-            self.payment_plan.generate_payments(
-                self.start_date, self.end_date, vat_factor
-            )
-
 
 class RelatedPerson(models.Model):
     """A person related to a Case, e.g. as a parent or sibling."""

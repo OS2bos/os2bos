@@ -205,6 +205,158 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         today = now.date()
         self.assertEqual(appropriation.appropriation_date, today)
 
+    def test_appropriation_grant_on_already_granted_daily(self):
+        approval_level = ApprovalLevel.objects.create(name="egenkompetence")
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_frequency=PaymentSchedule.DAILY,
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED
+        )
+        now = timezone.now().date()
+        start_date = now - timedelta(days=6)
+        end_date = now + timedelta(days=12)
+        # create an already granted activity.
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=Activity.MAIN_ACTIVITY,
+            status=Activity.STATUS_GRANTED,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+        )
+        modifies_payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("600.0"),
+            payment_frequency=PaymentSchedule.DAILY,
+        )
+        # let the granted activity be modified by another expected activity.
+        modifies_activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=Activity.MAIN_ACTIVITY,
+            start_date=start_date,
+            status=Activity.STATUS_EXPECTED,
+            end_date=end_date + timedelta(days=6),
+            modifies=activity,
+            payment_plan=modifies_payment_schedule,
+        )
+
+        appropriation.grant(
+            approval_level.id, "note til bevillingsgodkendelse"
+        )
+        activity.refresh_from_db()
+        modifies_activity.refresh_from_db()
+        # the old activity should expire today.
+        self.assertEqual(activity.end_date, timezone.now().date())
+        # expected status should be granted with a start_date of tomorrow.
+        self.assertEqual(modifies_activity.status, Activity.STATUS_GRANTED)
+        self.assertEqual(
+            modifies_activity.start_date,
+            timezone.now().date() + timedelta(days=1),
+        )
+        # the payments of the old activity should expire today or before.
+        activity_payments = activity.payment_plan.payments
+        self.assertTrue(
+            activity_payments.order_by("date").first().date
+            <= timezone.now().date()
+        )
+        # the payments of the new activity should start today or after.
+        modifies_payments = modifies_activity.payment_plan.payments
+
+        self.assertTrue(
+            modifies_payments.order_by("date").first().date
+            >= (timezone.now() + timedelta(days=1)).date()
+        )
+        # assert payments are generated correctly.
+        self.assertSequenceEqual(
+            [
+                x.date
+                for x in (activity_payments.all() | modifies_payments.all())
+            ],
+            [start_date + timedelta(days=x) for x in range(25)],
+        )
+
+    def test_appropriation_grant_on_already_granted_weekly(self):
+        approval_level = ApprovalLevel.objects.create(name="egenkompetence")
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_frequency=PaymentSchedule.WEEKLY,
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED
+        )
+        now = timezone.now().date()
+        start_date = now - timedelta(days=6)
+        end_date = now + timedelta(days=12)
+        # create an already granted activity.
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=Activity.MAIN_ACTIVITY,
+            status=Activity.STATUS_GRANTED,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+        )
+        modifies_payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("600.0"),
+            payment_frequency=PaymentSchedule.WEEKLY,
+        )
+        # let the granted activity be modified by another expected activity.
+        modifies_activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=Activity.MAIN_ACTIVITY,
+            start_date=start_date,
+            status=Activity.STATUS_EXPECTED,
+            end_date=end_date + timedelta(days=12),
+            modifies=activity,
+            payment_plan=modifies_payment_schedule,
+        )
+
+        appropriation.grant(
+            approval_level.id, "note til bevillingsgodkendelse"
+        )
+        activity.refresh_from_db()
+        modifies_activity.refresh_from_db()
+        # the old activity should expire today.
+        self.assertEqual(activity.end_date, timezone.now().date())
+        # expected status should be granted with a start_date of tomorrow.
+        self.assertEqual(modifies_activity.status, Activity.STATUS_GRANTED)
+        self.assertEqual(
+            modifies_activity.start_date,
+            timezone.now().date() + timedelta(days=1),
+        )
+        # the payments of the old activity should expire today or before.
+        activity_payments = activity.payment_plan.payments
+        self.assertTrue(
+            activity_payments.order_by("date").first().date
+            <= timezone.now().date()
+        )
+        # the payments of the new activity should start today or after.
+        modifies_payments = modifies_activity.payment_plan.payments
+
+        self.assertTrue(
+            modifies_payments.order_by("date").first().date
+            >= (timezone.now() + timedelta(days=1)).date()
+        )
+        # assert payments are generated correctly.
+        self.assertSequenceEqual(
+            [
+                x.date
+                for x in (activity_payments.all() | modifies_payments.all())
+            ],
+            [start_date + timedelta(days=7 * x) for x in range(5)],
+        )
+
 
 class ServiceProviderTestCase(TestCase):
     def test_service_provider_str(self):
