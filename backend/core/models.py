@@ -712,7 +712,7 @@ class Appropriation(AuditModelMixin, models.Model):
             | Q(status=Activity.STATUS_EXPECTED)
         )
         return sum(
-            [activity.total_cost_full_year for activity in all_activities]
+            activity.total_cost_full_year for activity in all_activities
         )
 
     @property
