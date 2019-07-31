@@ -17,6 +17,7 @@ from core.tests.testing_utils import (
     create_section,
     create_payment,
     create_account,
+    create_service_provider,
 )
 from core.models import (
     Municipality,
@@ -205,6 +206,15 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         self.assertEqual(appropriation.appropriation_date, today)
 
 
+class ServiceProviderTestCase(TestCase):
+    def test_service_provider_str(self):
+        service_provider = create_service_provider(
+            cvr_number="12345678", name="Test Leverandør"
+        )
+
+        self.assertEqual(str(service_provider), "12345678 - Test Leverandør")
+
+
 class MunicipalityTestCase(TestCase):
     def test_municipality_str(self):
         municipality = Municipality.objects.create(name="København")
@@ -253,6 +263,25 @@ class ActivityTestCase(TestCase, BasicTestMixin):
     @classmethod
     def setUpTestData(cls):
         cls.basic_setup()
+
+    def test_str(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        payment_schedule = create_payment_schedule()
+        activity = create_activity(
+            case,
+            appropriation,
+            payment_plan=payment_schedule,
+            status=Activity.STATUS_GRANTED,
+            activity_type=Activity.MAIN_ACTIVITY,
+        )
+
+        self.assertEqual(
+            str(activity),
+            "000000 - Test aktivitet - hovedaktivitet - bevilget",
+        )
 
     def test_synchronize_payments_on_save(self):
         case = create_case(
@@ -712,7 +741,7 @@ class AccountTestCase(TestCase):
         )
         supplementary_activity_details = ActivityDetails.objects.create(
             name="Betaling til andre kommuner/region for specialtandpleje",
-            activity_id="010001",
+            activity_id="010002",
             max_tolerance_in_dkk=5000,
             max_tolerance_in_percent=10,
         )
@@ -746,7 +775,7 @@ class PaymentTestCase(TestCase):
             date=date(year=2019, month=1, day=1),
             amount=Decimal("500.0"),
         )
-        self.assertEqual(str(payment), "2019-01-01 - 500.0")
+        self.assertEqual(str(payment), "Person - Test - 2019-01-01 - 500.0")
 
 
 class PaymentScheduleTestCase(TestCase):
@@ -1141,11 +1170,25 @@ class PaymentScheduleTestCase(TestCase):
                 payment_method=payment_method,
             )
 
+    def test_str(self):
+        payment_schedule = create_payment_schedule()
+        self.assertEqual(
+            str(payment_schedule),
+            "Person - Jens Testersen - Fast beløb, løbende - Dagligt - 500.0",
+        )
+
 
 class CaseTestCase(TestCase, BasicTestMixin):
     @classmethod
     def setUpTestData(cls):
         cls.basic_setup()
+
+    def test_str(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+
+        self.assertEqual(str(case), case.sbsys_id)
 
     def test_expired_one(self):
         # generate a just expired end_date

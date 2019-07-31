@@ -57,6 +57,10 @@ payment_method_choices = (
 class Municipality(models.Model):
     """Represents a Danish municipality."""
 
+    class Meta:
+        verbose_name = _("kommune")
+        verbose_name_plural = _("kommuner")
+
     name = models.CharField(max_length=128, verbose_name=_("navn"))
 
     def __str__(self):
@@ -66,6 +70,10 @@ class Municipality(models.Model):
 class SchoolDistrict(models.Model):
     """Represents a Danish school district."""
 
+    class Meta:
+        verbose_name = _("distrikt")
+        verbose_name_plural = _("distrikter")
+
     name = models.CharField(max_length=128, verbose_name=_("navn"))
 
     def __str__(self):
@@ -73,6 +81,12 @@ class SchoolDistrict(models.Model):
 
 
 class PaymentMethodDetails(models.Model):
+    """ Contains extra information about a payment method."""
+
+    class Meta:
+        verbose_name = _("betalingsmåde detalje")
+        verbose_name_plural = _("betalingsmåde detaljer")
+
     tax_card_choices = (
         ("MAIN_CARD", _("Hovedkort")),
         ("SECONDARY_CARD", _("Bikort")),
@@ -86,6 +100,10 @@ class PaymentMethodDetails(models.Model):
 
 
 class User(AbstractUser):
+    class Meta:
+        verbose_name = _("bruger")
+        verbose_name_plural = _("brugere")
+
     team = models.ForeignKey(
         "Team",
         on_delete=models.PROTECT,
@@ -101,7 +119,10 @@ class Team(models.Model):
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     leader = models.ForeignKey(
-        User, on_delete=models.PROTECT, related_name="managed_teams"
+        User,
+        on_delete=models.PROTECT,
+        related_name="managed_teams",
+        verbose_name=_("leder"),
     )
 
     def __str__(self):
@@ -110,6 +131,10 @@ class Team(models.Model):
 
 class PaymentSchedule(models.Model):
     """Schedule a payment for an Activity."""
+
+    class Meta:
+        verbose_name = _("betalingsplan")
+        verbose_name_plural = _("betalingsplaner")
 
     # Recipient types and choice list.
     INTERNAL = "INTERNAL"
@@ -127,7 +152,7 @@ class PaymentSchedule(models.Model):
     )
     # TODO: namechange - this refers actually to the recipient CPR
     recipient_id = models.CharField(max_length=128, verbose_name=_("ID"))
-    recipient_name = models.CharField(max_length=128, verbose_name=_("Navn"))
+    recipient_name = models.CharField(max_length=128, verbose_name=_("navn"))
 
     payment_method = models.CharField(
         max_length=128,
@@ -135,7 +160,11 @@ class PaymentSchedule(models.Model):
         choices=payment_method_choices,
     )
     payment_method_details = models.ForeignKey(
-        PaymentMethodDetails, null=True, blank=True, on_delete=models.SET_NULL
+        PaymentMethodDetails,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        verbose_name=_("betalingsmåde detalje"),
     )
     DAILY = "DAILY"
     WEEKLY = "WEEKLY"
@@ -328,12 +357,28 @@ class PaymentSchedule(models.Model):
         if not end and (newest_payment.date < today + relativedelta(months=6)):
             self.generate_payments(new_start, end, vat_factor)
 
+    def __str__(self):
+        recipient_type_str = self.get_recipient_type_display()
+        payment_frequency_str = self.get_payment_frequency_display()
+        payment_type_str = self.get_payment_type_display()
+        return (
+            f"{recipient_type_str} - "
+            f"{self.recipient_name} - "
+            f"{payment_type_str} - "
+            f"{payment_frequency_str} - "
+            f"{self.payment_amount}"
+        )
+
 
 class Payment(models.Model):
     """Represents an amount paid to a supplier - amount, recpient, date.
 
     These may be entered manually, but ideally they should be imported
     from an accounts payable system."""
+
+    class Meta:
+        verbose_name = _("betaling")
+        verbose_name_plural = _("betalinger")
 
     objects = PaymentQuerySet.as_manager()
 
@@ -361,7 +406,10 @@ class Payment(models.Model):
     paid = models.BooleanField(default=False, verbose_name=_("betalt"))
 
     payment_schedule = models.ForeignKey(
-        PaymentSchedule, on_delete=models.CASCADE, related_name="payments"
+        PaymentSchedule,
+        on_delete=models.CASCADE,
+        related_name="payments",
+        verbose_name=_("betalingsplan"),
     )
 
     def save(self, *args, **kwargs):
@@ -374,11 +422,21 @@ class Payment(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.date} - {self.amount}"
+        recipient_type_str = self.get_recipient_type_display()
+        return (
+            f"{recipient_type_str} - "
+            f"{self.recipient_name} - "
+            f"{self.date} - "
+            f"{self.amount}"
+        )
 
 
 class Case(AuditModelMixin, models.Model):
     """A case, covering one child - corresponding to a Hovedsag in SBSYS."""
+
+    class Meta:
+        verbose_name = _("sag")
+        verbose_name_plural = _("sager")
 
     objects = CaseQuerySet.as_manager()
 
@@ -386,7 +444,7 @@ class Case(AuditModelMixin, models.Model):
         unique=True, max_length=128, verbose_name=_("SBSYS-ID")
     )
     cpr_number = models.CharField(max_length=12, verbose_name=_("cpr-nummer"))
-    name = models.CharField(max_length=128, verbose_name=_("Navn"))
+    name = models.CharField(max_length=128, verbose_name=_("navn"))
     case_worker = models.ForeignKey(
         User,
         verbose_name=_("sagsbehandler"),
@@ -468,6 +526,9 @@ class Case(AuditModelMixin, models.Model):
         ]
     )
 
+    def __str__(self):
+        return f"{self.sbsys_id}"
+
     @property
     def expired(self):
         today = timezone.now().date()
@@ -487,6 +548,10 @@ class Case(AuditModelMixin, models.Model):
 
 
 class ApprovalLevel(models.Model):
+    class Meta:
+        verbose_name = _("bevillingsniveau")
+        verbose_name_plural = _("bevillingsniveauer")
+
     name = models.CharField(max_length=128, verbose_name=_("navn"))
 
     def __str__(self):
@@ -500,6 +565,10 @@ class Section(models.Model):
     allowed as well as the action steps allowed.
     """
 
+    class Meta:
+        verbose_name = _("paragraf")
+        verbose_name_plural = _("paragraffer")
+
     paragraph = models.CharField(max_length=128, verbose_name=_("paragraf"))
     kle_number = models.CharField(max_length=128, verbose_name=_("KLE-nummer"))
     text = models.TextField(verbose_name=_("forklarende tekst"))
@@ -510,7 +579,9 @@ class Section(models.Model):
         verbose_name=_("tilladt for handicapafdelingen"), default=False
     )
     allowed_for_steps = fields.ArrayField(
-        models.CharField(max_length=128, choices=effort_steps_choices), size=6
+        models.CharField(max_length=128, choices=effort_steps_choices),
+        size=6,
+        verbose_name=_("tilladt for trin i indsatstrappen"),
     )
     law_text_name = models.CharField(
         max_length=128, verbose_name=_("lov tekst navn")
@@ -529,6 +600,10 @@ class Section(models.Model):
 class Appropriation(AuditModelMixin, models.Model):
     """An appropriation of funds in a Case - corresponds to a Sag in SBSYS."""
 
+    class Meta:
+        verbose_name = _("bevilling")
+        verbose_name_plural = _("bevillinger")
+
     sbsys_id = models.CharField(
         unique=True, max_length=128, verbose_name=_("SBSYS-ID")
     )
@@ -538,6 +613,7 @@ class Appropriation(AuditModelMixin, models.Model):
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
+        verbose_name=_("paragraf"),
     )
 
     # Status - definitions and choice list.
@@ -561,6 +637,7 @@ class Appropriation(AuditModelMixin, models.Model):
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
+        verbose_name=_("bevillingsniveau"),
     )
     approval_note = models.TextField(
         verbose_name=_("evt. bemærkning"), blank=True
@@ -571,13 +648,17 @@ class Appropriation(AuditModelMixin, models.Model):
         null=True,
         blank=True,
         on_delete=models.PROTECT,
+        verbose_name=_("bevilget af bruger"),
     )
 
     appropriation_date = models.DateField(
         verbose_name=_("bevillingsdato"), null=True, blank=True
     )
     case = models.ForeignKey(
-        Case, on_delete=models.CASCADE, related_name="appropriations"
+        Case,
+        on_delete=models.CASCADE,
+        related_name="appropriations",
+        verbose_name=_("sag"),
     )
     note = models.TextField(
         verbose_name=_("supplerende oplysninger"), blank=True
@@ -699,14 +780,26 @@ class ServiceProvider(models.Model):
     Class containing information for a specific service provider.
     """
 
-    cvr_number = models.CharField(max_length=8, blank=True)
-    name = models.CharField(max_length=128, blank=False)
+    class Meta:
+        verbose_name = _("leverandør")
+        verbose_name_plural = _("leverandører")
+
+    cvr_number = models.CharField(
+        max_length=8, blank=True, verbose_name=_("cvr-nummer")
+    )
+    name = models.CharField(
+        max_length=128, blank=False, verbose_name=_("navn")
+    )
     vat_factor = models.DecimalField(
         default=100.0,
         max_digits=5,
         decimal_places=2,
         validators=[MinValueValidator(Decimal("0.01"))],
+        verbose_name=_("momsfaktor"),
     )
+
+    def __str__(self):
+        return f"{self.cvr_number} - {self.name}"
 
 
 class ActivityDetails(models.Model):
@@ -716,28 +809,41 @@ class ActivityDetails(models.Model):
     allowed as well as a price range.
     """
 
+    class Meta:
+        verbose_name = _("aktivitetsdetalje")
+        verbose_name_plural = _("aktivitetsdetaljer")
+
     name = models.CharField(max_length=128, verbose_name=_("Navn"))
     activity_id = models.CharField(
-        max_length=128, verbose_name=_("Aktivitets ID")
+        max_length=128, verbose_name=_("aktivitets ID"), unique=True
     )
     max_tolerance_in_percent = models.PositiveSmallIntegerField(
-        verbose_name=_("Max tolerance i procent")
+        verbose_name=_("max tolerance i procent")
     )
     max_tolerance_in_dkk = models.PositiveIntegerField(
-        verbose_name=_("Max tolerance i DKK")
+        verbose_name=_("max tolerance i DKK")
     )
     main_activity_for = models.ManyToManyField(
-        Section, related_name="main_activities"
+        Section,
+        related_name="main_activities",
+        verbose_name=_("hovedaktivitet for paragraffer"),
     )
     supplementary_activity_for = models.ManyToManyField(
-        Section, related_name="supplementary_activities"
+        Section,
+        related_name="supplementary_activities",
+        verbose_name=_("følgeudgift for paragraffer"),
     )
     service_providers = models.ManyToManyField(
-        ServiceProvider, related_name="supplied_activities"
+        ServiceProvider,
+        related_name="supplied_activities",
+        verbose_name=_("leverandører"),
     )
 
     main_activities = models.ManyToManyField(
-        "self", related_name="supplementary_activities", symmetrical=False
+        "self",
+        related_name="supplementary_activities",
+        symmetrical=False,
+        verbose_name=_("tilladte hovedaktiviteter"),
     )
 
     def __str__(self):
@@ -748,7 +854,16 @@ class Activity(AuditModelMixin, models.Model):
     """An activity is a specific service provided within an appropriation."""
 
     # The details object contains the name, tolerance, etc. of the service.
-    details = models.ForeignKey(ActivityDetails, on_delete=models.PROTECT)
+
+    class Meta:
+        verbose_name = _("aktivitet")
+        verbose_name_plural = _("aktiviteter")
+
+    details = models.ForeignKey(
+        ActivityDetails,
+        on_delete=models.PROTECT,
+        verbose_name=_("aktivitetsdetalje"),
+    )
 
     # Status - definitions and choice list.
     STATUS_DRAFT = "DRAFT"
@@ -799,7 +914,10 @@ class Activity(AuditModelMixin, models.Model):
     )
     # The appropriation that owns this activity.
     appropriation = models.ForeignKey(
-        Appropriation, related_name="activities", on_delete=models.CASCADE
+        Appropriation,
+        related_name="activities",
+        on_delete=models.CASCADE,
+        verbose_name=_("bevilling"),
     )
 
     service_provider = models.ForeignKey(
@@ -808,9 +926,15 @@ class Activity(AuditModelMixin, models.Model):
         blank=True,
         related_name="activities",
         on_delete=models.SET_NULL,
+        verbose_name=_("leverandør"),
     )
 
     note = models.TextField(null=True, blank=True, max_length=1000)
+
+    def __str__(self):
+        activity_type_str = self.get_activity_type_display()
+        status_str = self.get_status_display()
+        return f"{self.details} - {activity_type_str} - {status_str}"
 
     @property
     def account(self):
@@ -902,6 +1026,10 @@ class Activity(AuditModelMixin, models.Model):
 class RelatedPerson(models.Model):
     """A person related to a Case, e.g. as a parent or sibling."""
 
+    class Meta:
+        verbose_name = _("relateret person")
+        verbose_name_plural = _("relaterede personer")
+
     relation_type = models.CharField(
         max_length=128, verbose_name=_("relation")
     )
@@ -914,7 +1042,10 @@ class RelatedPerson(models.Model):
     )
 
     main_case = models.ForeignKey(
-        Case, related_name="related_persons", on_delete=models.CASCADE
+        Case,
+        related_name="related_persons",
+        on_delete=models.CASCADE,
+        verbose_name=_("hovedsag"),
     )
 
     @staticmethod
@@ -941,21 +1072,30 @@ class Account(models.Model):
     (main activity, supplementary activity, section) pair.
     """
 
-    number = models.CharField(max_length=128)
+    number = models.CharField(
+        max_length=128, verbose_name=_("konteringsnummer")
+    )
     main_activity = models.ForeignKey(
         ActivityDetails,
         null=False,
         on_delete=models.CASCADE,
         related_name="main_accounts",
+        verbose_name=_("hovedaktivitet"),
     )
     supplementary_activity = models.ForeignKey(
         ActivityDetails,
         null=True,
+        blank=True,
         on_delete=models.CASCADE,
         related_name="supplementary_accounts",
+        verbose_name=_("følgeudgift"),
     )
     section = models.ForeignKey(
-        Section, null=False, on_delete=models.CASCADE, related_name="accounts"
+        Section,
+        null=False,
+        on_delete=models.CASCADE,
+        related_name="accounts",
+        verbose_name=_("paragraf"),
     )
 
     def __str__(self):
@@ -967,6 +1107,8 @@ class Account(models.Model):
         )
 
     class Meta:
+        verbose_name = _("konto")
+        verbose_name_plural = _("konti")
         constraints = [
             models.UniqueConstraint(
                 fields=["main_activity", "supplementary_activity", "section"],

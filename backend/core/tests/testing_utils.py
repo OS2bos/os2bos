@@ -14,6 +14,7 @@ from core.models import (
     ActivityDetails,
     Appropriation,
     Payment,
+    ServiceProvider,
     Section,
     Account,
     SD,
@@ -127,8 +128,11 @@ def create_activity(
     **kwargs,
 ):
     if "details" not in kwargs:
-        details = ActivityDetails.objects.create(
-            max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
+        details, unused = ActivityDetails.objects.get_or_create(
+            activity_id="000000",
+            name="Test aktivitet",
+            max_tolerance_in_percent=10,
+            max_tolerance_in_dkk=1000,
         )
     else:
         details = kwargs.pop("details")
@@ -197,3 +201,11 @@ def create_account(
         number=number,
     )
     return account
+
+
+def create_service_provider(cvr_number, name):
+    service_provider = ServiceProvider.objects.create(
+        cvr_number=cvr_number, name=name
+    )
+
+    return service_provider
