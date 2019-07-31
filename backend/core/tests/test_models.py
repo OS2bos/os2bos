@@ -16,6 +16,8 @@ from core.tests.testing_utils import (
     create_case,
     create_section,
     create_payment,
+    create_account,
+    create_service_provider,
 )
 from core.models import (
     Municipality,
@@ -264,6 +266,15 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         self.assertEqual(appropriation.appropriation_date, today)
 
 
+class ServiceProviderTestCase(TestCase):
+    def test_service_provider_str(self):
+        service_provider = create_service_provider(
+            cvr_number="12345678", name="Test Leverandør"
+        )
+
+        self.assertEqual(str(service_provider), "12345678 - Test Leverandør")
+
+
 class MunicipalityTestCase(TestCase):
     def test_municipality_str(self):
         municipality = Municipality.objects.create(name="København")
@@ -312,6 +323,25 @@ class ActivityTestCase(TestCase, BasicTestMixin):
     @classmethod
     def setUpTestData(cls):
         cls.basic_setup()
+
+    def test_str(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        payment_schedule = create_payment_schedule()
+        activity = create_activity(
+            case,
+            appropriation,
+            payment_plan=payment_schedule,
+            status=Activity.STATUS_GRANTED,
+            activity_type=Activity.MAIN_ACTIVITY,
+        )
+
+        self.assertEqual(
+            str(activity),
+            "000000 - Test aktivitet - hovedaktivitet - bevilget",
+        )
 
     def test_synchronize_payments_on_save(self):
         case = create_case(
@@ -558,7 +588,6 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         self.assertIn("Aktivitet oprettet", email_message.subject)
         self.assertIn("Barnets CPR nummer: 0205891234", email_message.body)
         self.assertIn("Beløb: 500,0", email_message.body)
-        self.assertIn("Afregningsenheder: 0", email_message.body)
         self.assertIn("Start dato: 1. december 2019", email_message.body)
         self.assertIn("Slut dato: 1. januar 2020", email_message.body)
 
@@ -586,7 +615,6 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         self.assertIn("Aktivitet opdateret", email_message.subject)
         self.assertIn("Barnets CPR nummer: 0205891234", email_message.body)
         self.assertIn("Beløb: 500,0", email_message.body)
-        self.assertIn("Afregningsenheder: 0", email_message.body)
         self.assertIn("Start dato: 1. december 2019", email_message.body)
         self.assertIn("Slut dato: 1. januar 2020", email_message.body)
 
@@ -615,7 +643,6 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         self.assertIn("Aktivitet udgået", email_message.subject)
         self.assertIn("Barnets CPR nummer: 0205891234", email_message.body)
         self.assertIn("Beløb: 500,0", email_message.body)
-        self.assertIn("Afregningsenheder: 0", email_message.body)
         self.assertIn("Start dato: 1. december 2019", email_message.body)
         self.assertIn("Slut dato: 1. januar 2020", email_message.body)
 
@@ -683,6 +710,118 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         activity.delete()
         self.assertEqual(len(mail.outbox), 0)
 
+    def test_account_main_activity(self):
+        start_date = date(year=2019, month=12, day=1)
+        end_date = date(year=2020, month=1, day=1)
+        payment_schedule = create_payment_schedule()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED, section=section
+        )
+
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=Activity.STATUS_GRANTED,
+            activity_type=Activity.MAIN_ACTIVITY,
+        )
+        account = create_account(
+            main_activity=activity.details,
+            supplementary_activity=None,
+            section=section,
+        )
+        self.assertEqual(activity.account, account)
+
+    def test_account_supplementary_activity(self):
+        start_date = date(year=2019, month=12, day=1)
+        end_date = date(year=2020, month=1, day=1)
+        payment_schedule = create_payment_schedule()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED, section=section
+        )
+        main_activity_details = ActivityDetails.objects.create(
+            name="Betaling til andre kommuner/region for specialtandpleje",
+            activity_id="010001",
+            max_tolerance_in_dkk=5000,
+            max_tolerance_in_percent=10,
+        )
+        supplementary_activity_details = ActivityDetails.objects.create(
+            name="Tandbørste",
+            activity_id="010002",
+            max_tolerance_in_dkk=5000,
+            max_tolerance_in_percent=10,
+        )
+
+        main_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=Activity.STATUS_GRANTED,
+            activity_type=Activity.MAIN_ACTIVITY,
+            details=main_activity_details,
+        )
+        payment_schedule = create_payment_schedule()
+        supplementary_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=Activity.STATUS_GRANTED,
+            activity_type=Activity.SUPPL_ACTIVITY,
+            details=supplementary_activity_details,
+        )
+
+        account = create_account(
+            main_activity=main_activity.details,
+            supplementary_activity=supplementary_activity.details,
+            section=section,
+        )
+        self.assertEqual(supplementary_activity.account, account)
+
+    def test_account_no_account(self):
+        start_date = date(year=2019, month=12, day=1)
+        end_date = date(year=2020, month=1, day=1)
+        payment_schedule = create_payment_schedule()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED, section=section
+        )
+        main_activity_details = ActivityDetails.objects.create(
+            name="Betaling til andre kommuner/region for specialtandpleje",
+            activity_id="010001",
+            max_tolerance_in_dkk=5000,
+            max_tolerance_in_percent=10,
+        )
+
+        main_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=Activity.STATUS_GRANTED,
+            activity_type=Activity.MAIN_ACTIVITY,
+            details=main_activity_details,
+        )
+
+        self.assertIsNone(main_activity.account)
+
 
 class AccountTestCase(TestCase):
     def test_account_str(self):
@@ -695,7 +834,7 @@ class AccountTestCase(TestCase):
         )
         supplementary_activity_details = ActivityDetails.objects.create(
             name="Betaling til andre kommuner/region for specialtandpleje",
-            activity_id="010001",
+            activity_id="010002",
             max_tolerance_in_dkk=5000,
             max_tolerance_in_percent=10,
         )
@@ -729,7 +868,7 @@ class PaymentTestCase(TestCase):
             date=date(year=2019, month=1, day=1),
             amount=Decimal("500.0"),
         )
-        self.assertEqual(str(payment), "2019-01-01 - 500.0")
+        self.assertEqual(str(payment), "Person - Test - 2019-01-01 - 500.0")
 
 
 class PaymentScheduleTestCase(TestCase):
@@ -748,18 +887,6 @@ class PaymentScheduleTestCase(TestCase):
                 1,
             ),
             (
-                PaymentSchedule.MONTHLY,
-                date(year=2019, month=1, day=1),
-                date(year=2019, month=10, day=1),
-                10,
-            ),
-            (
-                PaymentSchedule.MONTHLY,
-                date(year=2019, month=1, day=1),
-                date(year=2019, month=1, day=1),
-                1,
-            ),
-            (
                 PaymentSchedule.WEEKLY,
                 date(year=2019, month=1, day=1),
                 date(year=2019, month=2, day=1),
@@ -767,6 +894,30 @@ class PaymentScheduleTestCase(TestCase):
             ),
             (
                 PaymentSchedule.WEEKLY,
+                date(year=2019, month=1, day=1),
+                date(year=2019, month=1, day=1),
+                1,
+            ),
+            (
+                PaymentSchedule.BIWEEKLY,
+                date(year=2019, month=1, day=1),
+                date(year=2019, month=2, day=1),
+                3,
+            ),
+            (
+                PaymentSchedule.BIWEEKLY,
+                date(year=2019, month=1, day=1),
+                date(year=2019, month=1, day=1),
+                1,
+            ),
+            (
+                PaymentSchedule.MONTHLY,
+                date(year=2019, month=1, day=1),
+                date(year=2019, month=10, day=1),
+                10,
+            ),
+            (
+                PaymentSchedule.MONTHLY,
                 date(year=2019, month=1, day=1),
                 date(year=2019, month=1, day=1),
                 1,
@@ -1015,7 +1166,7 @@ class PaymentScheduleTestCase(TestCase):
 
         self.assertEqual(payment_schedule.payments.count(), 0)
 
-    def test_synchronize_payments_end_date_in_future_for_weeks(self):
+    def test_synchronize_payments_end_date_in_future_for_weekly(self):
         payment_schedule = create_payment_schedule(
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
             payment_frequency=PaymentSchedule.WEEKLY,
@@ -1031,6 +1182,23 @@ class PaymentScheduleTestCase(TestCase):
         payment_schedule.synchronize_payments(start_date, end_date)
 
         self.assertEqual(payment_schedule.payments.count(), 13)
+
+    def test_synchronize_payments_end_date_in_future_for_biweekly(self):
+        payment_schedule = create_payment_schedule(
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=PaymentSchedule.BIWEEKLY,
+            payment_amount=Decimal("100"),
+        )
+        start_date = date(year=2019, month=1, day=1)
+        end_date = date(year=2019, month=3, day=1)
+        payment_schedule.generate_payments(start_date, end_date)
+
+        self.assertEqual(payment_schedule.payments.count(), 5)
+
+        end_date = date(year=2019, month=4, day=1)
+        payment_schedule.synchronize_payments(start_date, end_date)
+
+        self.assertEqual(payment_schedule.payments.count(), 7)
 
     def test_synchronize_payments_invalid_frequency(self):
         payment_schedule = create_payment_schedule(
@@ -1095,11 +1263,25 @@ class PaymentScheduleTestCase(TestCase):
                 payment_method=payment_method,
             )
 
+    def test_str(self):
+        payment_schedule = create_payment_schedule()
+        self.assertEqual(
+            str(payment_schedule),
+            "Person - Jens Testersen - Fast beløb, løbende - Dagligt - 500.0",
+        )
+
 
 class CaseTestCase(TestCase, BasicTestMixin):
     @classmethod
     def setUpTestData(cls):
         cls.basic_setup()
+
+    def test_str(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+
+        self.assertEqual(str(case), case.sbsys_id)
 
     def test_expired_one(self):
         # generate a just expired end_date
