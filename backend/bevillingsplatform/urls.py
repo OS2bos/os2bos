@@ -29,9 +29,11 @@ from core import views
 
 router = routers.DefaultRouter()
 router.register(r"cases", views.CaseViewSet)
-router.register(r"appropriations", views.AppropriationViewSet)
-router.register(r"activities", views.ActivityViewSet)
-router.register(r"payment_schedules", views.PaymentScheduleViewSet)
+router.register(r"appropriations", views.AppropriationViewSet, "appropriation")
+router.register(r"activities", views.ActivityViewSet, "activity")
+router.register(
+    r"payment_schedules", views.PaymentScheduleViewSet, "paymentschedule"
+)
 router.register(r"payment_method_details", views.PaymentMethodDetailsViewSet)
 router.register(r"payments", views.PaymentViewSet)
 router.register(r"related_persons", views.RelatedPersonViewSet)
