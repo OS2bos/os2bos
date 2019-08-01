@@ -14,6 +14,7 @@ class Command(BaseCommand):
 
         for schedule in recurring_schedules:
             activity = schedule.activity
+            vat_factor = activity.vat_factor
             schedule.synchronize_payments(
-                activity.start_date, activity.end_date
+                activity.start_date, activity.end_date, vat_factor
             )

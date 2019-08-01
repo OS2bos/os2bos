@@ -473,3 +473,51 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             url, json, content_type="application/json"
         )
         self.assertEqual(response.status_code, 200)
+
+
+class TestPaymentScheduleViewSet(AuthenticatedTestCase):
+    def test_get(self):
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+        )
+        url = reverse("paymentschedule-list")
+        self.client.login(username=self.username, password=self.password)
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()[0]["id"], payment_schedule.id)
+
+
+class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_get(self):
+        now = timezone.now().date()
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=now - timedelta(days=6),
+            end_date=now + timedelta(days=6),
+            activity_type=Activity.MAIN_ACTIVITY,
+            status=Activity.STATUS_GRANTED,
+            payment_plan=payment_schedule,
+        )
+        url = reverse("activity-list")
+        self.client.login(username=self.username, password=self.password)
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()[0]["id"], activity.id)
