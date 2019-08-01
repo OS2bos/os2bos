@@ -99,6 +99,11 @@ class AppropriationSerializer(serializers.ModelSerializer):
 
     activities = ActivitySerializer(many=True, read_only=True)
 
+    @staticmethod
+    def setup_eager_loading(queryset):
+        queryset = queryset.prefetch_related("activities")
+        return queryset
+
     class Meta:
         model = Appropriation
         fields = "__all__"
@@ -118,6 +123,11 @@ class PaymentMethodDetailsSerializer(serializers.ModelSerializer):
 
 class PaymentScheduleSerializer(serializers.ModelSerializer):
     payments = PaymentSerializer(many=True, read_only=True)
+
+    @staticmethod
+    def setup_eager_loading(queryset):
+        queryset = queryset.prefetch_related("payments")
+        return queryset
 
     def validate(self, data):
         if not self.Meta.model.is_payment_and_recipient_allowed(
