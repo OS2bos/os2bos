@@ -325,12 +325,12 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             activity_payments.order_by("date").first().date
             <= timezone.now().date()
         )
-        # the payments of the new activity should start today or after.
+        # the payments of the new activity should start after today.
         modifies_payments = modifies_activity.payment_plan.payments
 
         self.assertTrue(
             modifies_payments.order_by("date").first().date
-            >= (timezone.now() + timedelta(days=1)).date()
+            > timezone.now().date()
         )
         # assert payments are generated correctly.
         self.assertSequenceEqual(
@@ -406,7 +406,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
 
         self.assertTrue(
             modifies_payments.order_by("date").first().date
-            >= (timezone.now() + timedelta(days=1)).date()
+            > timezone.now().date()
         )
         # assert payments are generated correctly.
         self.assertSequenceEqual(

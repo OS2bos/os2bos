@@ -35,13 +35,10 @@ def generate_payments_on_pre_save(sender, instance, **kwargs):
     except sender.DoesNotExist:
         old_status = instance.status
 
-    vat_factor = Decimal("100")
-    if instance.service_provider:
-        vat_factor = instance.service_provider.vat_factor
-
     if not instance.payment_plan:
         return
 
+    vat_factor = instance.vat_factor
     if instance.payment_plan.payments.exists():
         # If status is either STATUS_DRAFT or STATUS_EXPECTED or
         # the activity was just granted we delete and
