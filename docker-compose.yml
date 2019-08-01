@@ -43,7 +43,7 @@ services:
     command: ["gunicorn", "-b", "0.0.0.0:5000", "--reload", "--access-logfile", "-", "bevillingsplatform.wsgi"]
     volumes:
       - .:/code/
-      - ./dev-environment/dev-settings.ini:/settings.ini
+      - ./dev-environment/dev-settings.ini:/user-settings.ini
     depends_on:
       - db
       - postfix

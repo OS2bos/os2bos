@@ -35,8 +35,8 @@ LABEL org.opencontainers.image.title="Bevillingsplatform" \
 # Force the stdout and stderr streams from python to be unbuffered. See
 # https://docs.python.org/3/using/cmdline.html#cmdoption-u
 ENV PYTHONUNBUFFERED=1 \
-  DJANGO_SETTINGS_INI=/settings.ini \
-  DJANGO_SETTINGS_INI_PRELOAD=/code/docker/docker-settings.ini
+  BEV_SYSTEM_CONFIG_PATH=/code/docker/docker-settings.ini \
+  BEV_USER_CONFIG_PATH=/user-settings.ini
 
 
 WORKDIR /code/

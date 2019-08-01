@@ -28,19 +28,19 @@ AUTH_USER_MODEL = "core.User"
 
 # We support loading settings from two files. The fallback values in this
 # `settings.py` is first overwritten by the values defined in the file where
-# the env var `DJANGO_SETTINGS_INI_PRELOAD` points to. Finally the values are
-# overwritten by the values the env var `DJANGO_SETTINGS_INI` points to.
+# the env var `BEV_SYSTEM_CONFIG_PATH` points to. Finally the values are
+# overwritten by the values the env var `BEV_USER_CONFIG_PATH` points to.
 #
-# The `DJANGO_SETTINGS_INI_PRELOAD` file is for an alternative set of default
+# The `BEV_SYSTEM_CONFIG_PATH` file is for an alternative set of default
 # values. It is useful in a specific envionment such as Docker. An example is
 # the setting for STATIC_ROOT. The default in `settings.py` is relative to the
 # current directory. In Docker it should be an absolute path that is easy to
 # mount a volume to.
 #
-# The `DJANGO_SETTINGS_INI` file is for normal settings and shoud generally be
+# The `BEV_USER_CONFIG_PATH` file is for normal settings and shoud generally be
 # unique to a instance deployment.
 
-for env in ["DJANGO_SETTINGS_INI_PRELOAD", "DJANGO_SETTINGS_INI"]:
+for env in ["BEV_SYSTEM_CONFIG_PATH", "BEV_USER_CONFIG_PATH"]:
     path = os.getenv(env, None)
     if path:
         try:
