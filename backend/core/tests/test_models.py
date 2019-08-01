@@ -153,6 +153,66 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             activity.appropriation.total_expected_this_year, Decimal("12000")
         )
 
+    def test_total_expected_full_year(self):
+        # generate a start and end span of 10 days
+        now = timezone.now()
+        start_date = date(year=now.year, month=1, day=1)
+        end_date = date(year=now.year, month=1, day=10)
+        # create main activity with GRANTED.
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=Activity.MAIN_ACTIVITY,
+            status=Activity.STATUS_GRANTED,
+            payment_plan=payment_schedule,
+        )
+
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+        )
+        # create a GRANTED supplementary activity.
+        supplementary_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            status=Activity.STATUS_GRANTED,
+            activity_type=Activity.SUPPL_ACTIVITY,
+            payment_plan=payment_schedule,
+        )
+
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_amount=Decimal("700"),
+        )
+        # create an EXPECTED supplementary activity overruling the GRANTED.
+        create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            status=Activity.STATUS_EXPECTED,
+            activity_type=Activity.SUPPL_ACTIVITY,
+            payment_plan=payment_schedule,
+            modifies=supplementary_activity,
+        )
+
+        self.assertEqual(
+            activity.appropriation.total_expected_full_year, Decimal("438000")
+        )
+
     def test_main_activity(self):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -599,6 +659,39 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             payment_plan=payment_schedule,
         )
         self.assertEqual(activity.total_cost_this_year, Decimal("15500"))
+
+    def test_total_cost_full_year(self):
+        now = timezone.now()
+        payment_schedule = create_payment_schedule()
+        start_date = date(year=now.year, month=12, day=1)
+        end_date = date(year=now.year, month=12, day=15)
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        # 365 days, daily payments of 500.
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+        )
+        self.assertEqual(activity.total_cost_full_year, Decimal("182500"))
+
+    def test_total_cost_for_year_no_payment_plan(self):
+        now = timezone.now()
+        start_date = date(year=now.year, month=12, day=1)
+        end_date = date(year=now.year, month=12, day=15)
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+
+        activity = create_activity(
+            case, appropriation, start_date=start_date, end_date=end_date
+        )
+        self.assertEqual(activity.total_cost_full_year, Decimal("0"))
 
     def test_monthly_payment_plan(self):
         start_date = date(year=2019, month=12, day=1)

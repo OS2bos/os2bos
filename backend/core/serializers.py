@@ -67,6 +67,7 @@ class ActivitySerializer(serializers.ModelSerializer):
     monthly_payment_plan = serializers.ReadOnlyField()
     total_cost = serializers.ReadOnlyField()
     total_cost_this_year = serializers.ReadOnlyField()
+    total_cost_full_year = serializers.ReadOnlyField()
     recipient_name = serializers.ReadOnlyField(
         source="payment_plan.recipient_name", default=None
     )
@@ -94,6 +95,7 @@ class ActivitySerializer(serializers.ModelSerializer):
 class AppropriationSerializer(serializers.ModelSerializer):
     total_granted_this_year = serializers.ReadOnlyField()
     total_expected_this_year = serializers.ReadOnlyField()
+    total_expected_full_year = serializers.ReadOnlyField()
 
     activities = ActivitySerializer(many=True, read_only=True)
 

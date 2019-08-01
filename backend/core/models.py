@@ -702,6 +702,20 @@ class Appropriation(AuditModelMixin, models.Model):
         return this_years_payments.amount_sum()
 
     @property
+    def total_expected_full_year(self):
+        """
+        Retrieve total amount expected for the year
+        extrapolating for the full year (January 1 - December 31)
+        """
+        all_activities = self.activities.filter(
+            Q(status=Activity.STATUS_GRANTED, modified_by__isnull=True)
+            | Q(status=Activity.STATUS_EXPECTED)
+        )
+        return sum(
+            activity.total_cost_full_year for activity in all_activities
+        )
+
+    @property
     def main_activity(self):
         """Return main activity, if any."""
         f = self.activities.filter(activity_type=Activity.MAIN_ACTIVITY)
@@ -979,6 +993,27 @@ class Activity(AuditModelMixin, models.Model):
         return payments.amount_sum()
 
     @property
+    def total_cost_full_year(self):
+        """
+        Retrieve total amount expected for the year
+        extrapolating for the full year (January 1 - December 31)
+        """
+        if not self.payment_plan:
+            return Decimal(0.0)
+
+        vat_factor = self.vat_factor
+        now = timezone.now()
+        start_date = date(now.year, month=1, day=1)
+        end_date = date(now.year, month=12, day=31)
+        num_payments = len(
+            list(self.payment_plan.create_rrule(start_date, end_date))
+        )
+        return (
+            self.payment_plan.calculate_per_payment_amount(vat_factor)
+            * num_payments
+        )
+
+    @property
     def triggers_payment_email(self):
         # If activity or appropriation is not granted we don't send an email.
         if (
@@ -994,6 +1029,13 @@ class Activity(AuditModelMixin, models.Model):
         if not self.payment_plan.triggers_payment_email:
             return False
         return True
+
+    @property
+    def vat_factor(self):
+        vat_factor = Decimal("100")
+        if self.service_provider:
+            vat_factor = self.service_provider.vat_factor
+        return vat_factor
 
 
 class RelatedPerson(models.Model):
