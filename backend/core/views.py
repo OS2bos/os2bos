@@ -133,10 +133,14 @@ class AppropriationViewSet(AuditViewSet):
 
 
 class ActivityViewSet(AuditViewSet):
-    queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
 
     filterset_fields = "__all__"
+
+    def get_queryset(self):
+        queryset = Activity.objects.all()
+        queryset = self.get_serializer_class().setup_eager_loading(queryset)
+        return queryset
 
 
 class PaymentMethodDetailsViewSet(AuditViewSet):

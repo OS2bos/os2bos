@@ -75,6 +75,11 @@ class ActivitySerializer(serializers.ModelSerializer):
         source="payment_plan.recipient_id", default=None
     )
 
+    @staticmethod
+    def setup_eager_loading(queryset):
+        queryset = queryset.select_related("payment_plan")
+        return queryset
+
     def validate(self, data):
         # Check that start_date is before end_date
         if (

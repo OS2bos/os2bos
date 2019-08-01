@@ -30,7 +30,7 @@ from core import views
 router = routers.DefaultRouter()
 router.register(r"cases", views.CaseViewSet)
 router.register(r"appropriations", views.AppropriationViewSet, "appropriation")
-router.register(r"activities", views.ActivityViewSet)
+router.register(r"activities", views.ActivityViewSet, "activity")
 router.register(
     r"payment_schedules", views.PaymentScheduleViewSet, "payment_schedule"
 )
