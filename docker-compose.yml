@@ -43,7 +43,7 @@ services:
     command: ["gunicorn", "-b", "0.0.0.0:5000", "--reload", "--access-logfile", "-", "bevillingsplatform.wsgi"]
     volumes:
       - .:/code/
-      - ./dev-settings.ini:/settings.ini
+      - ./dev-environment/dev-settings.ini:/settings.ini
     depends_on:
       - db
       - postfix
@@ -56,12 +56,12 @@ services:
   db:
     image: postgres:10
     env_file:
-      - docker/db.env
+      - dev-environment/db.env
     volumes:
       - ./docker/postgres-initdb.d/20-create-db-and-user.sh:/docker-entrypoint-initdb.d/20-create-db-and-user.sh
       # The following file adds the CREATEDB clause to the db user to enable it
       # to run django tests. This should not be used in production.
-      - ./docker/postgres-initdb.d/30-add-createdb-permission.sh:/docker-entrypoint-initdb.d/30-add-createdb-permission.sh
+      - ./dev-environment/postgres-initdb.d/30-add-createdb-permission.sh:/docker-entrypoint-initdb.d/30-add-createdb-permission.sh
       #- postgres-initdb.d:/docker-entrypoint-initdb.d
 
   postfix:
