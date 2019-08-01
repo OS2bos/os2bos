@@ -32,7 +32,7 @@ router.register(r"cases", views.CaseViewSet)
 router.register(r"appropriations", views.AppropriationViewSet, "appropriation")
 router.register(r"activities", views.ActivityViewSet, "activity")
 router.register(
-    r"payment_schedules", views.PaymentScheduleViewSet, "payment_schedule"
+    r"payment_schedules", views.PaymentScheduleViewSet, "paymentschedule"
 )
 router.register(r"payment_method_details", views.PaymentMethodDetailsViewSet)
 router.register(r"payments", views.PaymentViewSet)
