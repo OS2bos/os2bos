@@ -11,6 +11,8 @@ from django.core.mail import send_mail
 from django.utils.translation import gettext_lazy as _
 from django.utils.html import strip_tags
 
+from constance import config
+
 from weasyprint import HTML
 from weasyprint.fonts import FontConfiguration
 
@@ -112,8 +114,8 @@ def send_activity_email(subject, template, activity):
     send_mail(
         subject,
         strip_tags(html_message),
-        settings.DEFAULT_FROM_EMAIL,
-        [settings.TO_EMAIL_FOR_PAYMENTS],
+        config.DEFAULT_FROM_EMAIL,
+        [config.TO_EMAIL_FOR_PAYMENTS],
         html_message=html_message,
     )
 
@@ -157,8 +159,8 @@ def send_appropriation(appropriation):
     msg = EmailMessage()
     msg.subject = "SBSYS-journalisering"
     msg.body = ""
-    msg.from_email = settings.DEFAULT_FROM_EMAIL
-    msg.to = [settings.SBSYS_EMAIL]
+    msg.from_email = config.DEFAULT_FROM_EMAIL
+    msg.to = [config.SBSYS_EMAIL]
     msg.attachments = [
         (xml_file_name, xml_data, "text/xml"),
         (pdf_file_name, pdf_data, "application/pdf"),
