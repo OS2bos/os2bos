@@ -14,6 +14,8 @@ import os
 import configparser
 import logging
 
+from django.utils.translation import gettext_lazy as _
+
 logger = logging.getLogger(__name__)
 
 
@@ -37,6 +39,7 @@ AUTH_USER_MODEL = "core.User"
 # current directory. In Docker it should be an absolute path that is easy to
 # mount a volume to.
 #
+
 # The `BEV_USER_CONFIG_PATH` file is for normal settings and shoud generally be
 # unique to a instance deployment.
 
@@ -81,6 +84,8 @@ INSTALLED_APPS = [
     "django_extensions",
     "django_filters",
     "simple_history",
+    "constance",
+    "constance.backends.database",
     "core.apps.CoreConfig",
 ]
 
@@ -263,16 +268,34 @@ EMAIL_HOST_USER = settings.get("EMAIL_HOST_USER", fallback="")
 EMAIL_HOST_PASSWORD = settings.get("EMAIL_HOST_PASSWORD", fallback="")
 EMAIL_HOST = settings.get("EMAIL_HOST", fallback="")
 EMAIL_PORT = settings.getint("EMAIL_PORT", fallback=25)
-DEFAULT_FROM_EMAIL = settings.get(
-    "DEFAULT_FROM_EMAIL", fallback="admin@bevillingsplatform-test.magenta.dk"
-)
 
-SBSYS_EMAIL = settings.get(
-    "SBSYS_EMAIL", fallback="admin@bevillingsplatform-test.magenta.dk"
-)
-TO_EMAIL_FOR_PAYMENTS = settings.get(
-    "TO_EMAIL_FOR_PAYMENTS",
-    fallback="admin@bevillingsplatform-test.magenta.dk",
-)
+# We use Constance for being able to set live settings
+# (settings on the fly from Django admin).
+# The defaults are loaded from the settings INI file.
+CONSTANCE_CONFIG = {
+    "SBSYS_EMAIL": (
+        settings.get(
+            "SBSYS_EMAIL", fallback="admin@bevillingsplatform-test.magenta.dk"
+        ),
+        _("modtager af SBSYS emails"),
+    ),
+    "TO_EMAIL_FOR_PAYMENTS": (
+        settings.get(
+            "TO_EMAIL_FOR_PAYMENTS",
+            fallback="admin@bevillingsplatform-test.magenta.dk",
+        ),
+        _("modtager af betalings emails"),
+    ),
+    "DEFAULT_FROM_EMAIL": (
+        settings.get(
+            "DEFAULT_FROM_EMAIL",
+            fallback="admin@bevillingsplatform-test.magenta.dk",
+        ),
+        _("fra-email"),
+    ),
+}
+CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
+
+
 SBSYS_APPROPRIATION_TEMPLATE = "core/html/appropriation_letter.html"
 SBSYS_XML_TEMPLATE = "core/xml/os2forms.xml"
