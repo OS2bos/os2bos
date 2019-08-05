@@ -91,7 +91,7 @@
 },
 {
     "model": "core.user",
-    "pk": 5,
+    "pk": 6,
     "fields": {
         "password": "pbkdf2_sha256$150000$zLIdyC71Z92C$OthjelCn/3NvG3cETpoIZ3in+MCrvPmgnqSM/v5L3RM=",
         "last_login": null,
