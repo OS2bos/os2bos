@@ -124,7 +124,7 @@ class ActivitySerializer(WritableNestedModelSerializer):
         source="payment_plan.recipient_id", default=None
     )
 
-    payment_plan = PaymentScheduleSerializer(partial=True)
+    payment_plan = PaymentScheduleSerializer(partial=True, required=False)
 
     @staticmethod
     def setup_eager_loading(queryset):
