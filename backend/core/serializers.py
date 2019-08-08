@@ -117,12 +117,6 @@ class ActivitySerializer(WritableNestedModelSerializer):
     total_cost = serializers.ReadOnlyField()
     total_cost_this_year = serializers.ReadOnlyField()
     total_cost_full_year = serializers.ReadOnlyField()
-    recipient_name = serializers.ReadOnlyField(
-        source="payment_plan.recipient_name", default=None
-    )
-    recipient_id = serializers.ReadOnlyField(
-        source="payment_plan.recipient_id", default=None
-    )
 
     payment_plan = PaymentScheduleSerializer(partial=True, required=False)
 
