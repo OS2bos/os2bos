@@ -216,6 +216,13 @@
                     this.$router.push(`/appropriation/${ this.$route.params.apprid }`)
                 }  
             },
+            fetchPaymentInfo: function(pay_plan_id) {
+                axios.get(`/payment_schedules/${ pay_plan_id }/`)
+                .then(res => {
+                    this.pay = res.data
+                })
+                .catch(err => console.log(err))
+            },
             activityList: function() {
                 let actList
                 if (this.act.activity_type === 'MAIN_ACTIVITY') {
