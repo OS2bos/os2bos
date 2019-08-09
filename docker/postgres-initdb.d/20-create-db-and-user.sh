@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (C) 2015-2019 Magenta ApS, http://magenta.dk.
+# Copyright (C) 2019 Magenta ApS, http://magenta.dk.
 # Contact: info@magenta.dk.
 #
 # This Source Code Form is subject to the terms of the Mozilla Public
