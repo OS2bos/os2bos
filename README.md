@@ -193,3 +193,15 @@ when you want to use an environment closer to production.
 [Backend README](backend/README.md)
 
 [Frontend README](frontend/README.md)
+
+## Licensing
+
+Copyright (c) 2019 Magenta Aps
+Bevillingsplatform is free software; you may use, study, modify and
+distribute it under the terms of version 2.0 of the Mozilla Public
+License. See the LICENSE file for details. If a copy of the MPL was not
+distributed with this file, You can obtain one at
+http://mozilla.org/MPL/2.0/.
+
+All source code in this and the underlying directories is subject to
+the terms of the Mozilla Public License, v. 2.0.
