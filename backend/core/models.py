@@ -443,7 +443,7 @@ class Case(AuditModelMixin, models.Model):
     sbsys_id = models.CharField(
         unique=True, max_length=128, verbose_name=_("SBSYS-ID")
     )
-    cpr_number = models.CharField(max_length=12, verbose_name=_("cpr-nummer"))
+    cpr_number = models.CharField(max_length=10, verbose_name=_("cpr-nummer"))
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     case_worker = models.ForeignKey(
         User,
@@ -1049,7 +1049,7 @@ class RelatedPerson(models.Model):
         max_length=128, verbose_name=_("relation")
     )
     cpr_number = models.CharField(
-        max_length=12, verbose_name=_("cpr-nummer"), blank=True
+        max_length=10, verbose_name=_("cpr-nummer"), blank=True
     )
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     related_case = models.CharField(
