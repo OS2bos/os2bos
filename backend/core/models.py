@@ -587,10 +587,7 @@ class Section(models.Model):
         max_length=128, verbose_name=_("lov tekst navn")
     )
     sbsys_template_id = models.CharField(
-        max_length=128,
-        verbose_name=_("SBSYS skabelon-id"),
-        blank=True,
-        null=True,
+        max_length=128, verbose_name=_("SBSYS skabelon-id"), blank=True
     )
 
     def __str__(self):
