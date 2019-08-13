@@ -78,7 +78,7 @@ def create_case_as_json(
 ):
     json = {
         "sbsys_id": "xxx-yyyx",
-        "cpr_number": "111213-0014",
+        "cpr_number": "1112130014",
         "name": "Mak Mouse",
         "target_group": "FAMILY_DEPT",
         "refugee_integration": True,
