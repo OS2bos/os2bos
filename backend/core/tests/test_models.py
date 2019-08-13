@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from django.test import TestCase
 from django.utils import timezone
 from django.core import mail
@@ -228,6 +229,15 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
 
         self.assertEqual(activity, appropriation.main_activity)
+
+    def test_constraint_on_more_than_one_main_activity(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        create_activity(case, appropriation, activity_type=MAIN_ACTIVITY)
+        with self.assertRaises(IntegrityError):
+            create_activity(case, appropriation, activity_type=MAIN_ACTIVITY)
 
     def test_supplementary_activities(self):
         case = create_case(

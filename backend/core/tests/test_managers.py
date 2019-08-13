@@ -12,7 +12,13 @@ from core.tests.testing_utils import (
     create_payment_schedule,
     create_activity,
 )
-from core.models import Payment, PaymentSchedule, Activity, Case
+from core.models import (
+    Payment,
+    PaymentSchedule,
+    Case,
+    MAIN_ACTIVITY,
+    STATUS_GRANTED,
+)
 
 
 class PaymentQuerySetTestCase(TestCase):
