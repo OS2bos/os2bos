@@ -6,7 +6,6 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 
 from core.models import (
-    Activity,
     ApprovalLevel,
     Appropriation,
     PaymentSchedule,

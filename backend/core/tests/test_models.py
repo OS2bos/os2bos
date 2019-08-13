@@ -33,7 +33,6 @@ from core.models import (
     SD,
     INVOICE,
     INTERNAL,
-    Activity,
     Appropriation,
     MAIN_ACTIVITY,
     SUPPL_ACTIVITY,
