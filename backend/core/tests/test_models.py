@@ -95,6 +95,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             activity_type=SUPPL_ACTIVITY,
             payment_plan=payment_schedule,
         )
+
         self.assertEqual(
             activity.appropriation.total_granted_this_year, Decimal("10000")
         )
@@ -133,8 +134,8 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             appropriation,
             start_date=start_date,
             end_date=end_date,
-            status=Activity.STATUS_GRANTED,
-            activity_type=Activity.SUPPL_ACTIVITY,
+            status=STATUS_GRANTED,
+            activity_type=SUPPL_ACTIVITY,
             payment_plan=payment_schedule,
         )
 
@@ -149,8 +150,8 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             appropriation,
             start_date=start_date,
             end_date=end_date,
-            status=Activity.STATUS_EXPECTED,
-            activity_type=Activity.SUPPL_ACTIVITY,
+            status=STATUS_EXPECTED,
+            activity_type=SUPPL_ACTIVITY,
             payment_plan=payment_schedule,
             modifies=supplementary_activity,
         )
@@ -193,8 +194,8 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             appropriation,
             start_date=start_date,
             end_date=end_date,
-            status=Activity.STATUS_GRANTED,
-            activity_type=Activity.SUPPL_ACTIVITY,
+            status=STATUS_GRANTED,
+            activity_type=SUPPL_ACTIVITY,
             payment_plan=payment_schedule,
         )
 
@@ -209,8 +210,8 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             appropriation,
             start_date=start_date,
             end_date=end_date,
-            status=Activity.STATUS_EXPECTED,
-            activity_type=Activity.SUPPL_ACTIVITY,
+            status=STATUS_EXPECTED,
+            activity_type=SUPPL_ACTIVITY,
             payment_plan=payment_schedule,
             modifies=supplementary_activity,
         )
@@ -238,6 +239,28 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         create_activity(case, appropriation, activity_type=MAIN_ACTIVITY)
         with self.assertRaises(IntegrityError):
             create_activity(case, appropriation, activity_type=MAIN_ACTIVITY)
+
+    def test_constraint_more_than_one_activity(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        create_activity(case, appropriation, activity_type=MAIN_ACTIVITY)
+        create_activity(case, appropriation, activity_type=SUPPL_ACTIVITY)
+        self.assertEqual(appropriation.activities.count(), 2)
+
+    def test_constraint_more_than_one_activity_with_expected(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        activity = create_activity(
+            case, appropriation, activity_type=MAIN_ACTIVITY
+        )
+        create_activity(
+            case, appropriation, activity_type=MAIN_ACTIVITY, modifies=activity
+        )
+        self.assertEqual(appropriation.activities.count(), 2)
 
     def test_supplementary_activities(self):
         case = create_case(
@@ -329,7 +352,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         # the old activity should expire today.
         self.assertEqual(activity.end_date, timezone.now().date())
         # expected status should be granted with a start_date of tomorrow.
-        self.assertEqual(modifies_activity.status, Activity.STATUS_GRANTED)
+        self.assertEqual(modifies_activity.status, STATUS_GRANTED)
         self.assertEqual(
             modifies_activity.start_date,
             timezone.now().date() + timedelta(days=1),
@@ -376,7 +399,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             case=case,
             appropriation=appropriation,
             activity_type=MAIN_ACTIVITY,
-            status=Activity.STATUS_GRANTED,
+            status=STATUS_GRANTED,
             start_date=start_date,
             end_date=end_date,
             payment_plan=payment_schedule,
@@ -391,7 +414,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             appropriation=appropriation,
             activity_type=MAIN_ACTIVITY,
             start_date=start_date,
-            status=Activity.STATUS_EXPECTED,
+            status=STATUS_EXPECTED,
             end_date=end_date + timedelta(days=12),
             modifies=activity,
             payment_plan=modifies_payment_schedule,
@@ -405,7 +428,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         # the old activity should expire today.
         self.assertEqual(activity.end_date, timezone.now().date())
         # expected status should be granted with a start_date of tomorrow.
-        self.assertEqual(modifies_activity.status, Activity.STATUS_GRANTED)
+        self.assertEqual(modifies_activity.status, STATUS_GRANTED)
         self.assertEqual(
             modifies_activity.start_date,
             timezone.now().date() + timedelta(days=1),
@@ -501,7 +524,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             case,
             appropriation,
             payment_plan=payment_schedule,
-            status=Activity.STATUS_GRANTED,
+            status=STATUS_GRANTED,
             activity_type=MAIN_ACTIVITY,
         )
 
@@ -520,7 +543,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             case,
             appropriation,
             payment_plan=payment_schedule,
-            status=Activity.STATUS_GRANTED,
+            status=STATUS_GRANTED,
         )
 
         self.assertEqual(activity.payment_plan.payments.count(), 10)
@@ -541,7 +564,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             case,
             appropriation,
             payment_plan=payment_schedule,
-            status=Activity.STATUS_GRANTED,
+            status=STATUS_GRANTED,
         )
 
         self.assertEqual(activity.payment_plan.payments.count(), 1)
@@ -569,7 +592,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             case,
             appropriation,
             payment_plan=payment_schedule,
-            status=Activity.STATUS_DRAFT,
+            status=STATUS_DRAFT,
         )
 
         self.assertEqual(activity.payment_plan.payments.count(), 10)
@@ -748,7 +771,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             start_date=start_date,
             end_date=end_date,
             payment_plan=payment_schedule,
-            status=Activity.STATUS_GRANTED,
+            status=STATUS_GRANTED,
         )
         self.assertEqual(len(mail.outbox), 1)
         email_message = mail.outbox[0]
@@ -774,7 +797,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             start_date=start_date,
             end_date=end_date,
             payment_plan=payment_schedule,
-            status=Activity.STATUS_GRANTED,
+            status=STATUS_GRANTED,
         )
         activity.save()
         self.assertEqual(len(mail.outbox), 2)
@@ -802,7 +825,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             start_date=start_date,
             end_date=end_date,
             payment_plan=payment_schedule,
-            status=Activity.STATUS_GRANTED,
+            status=STATUS_GRANTED,
         )
         activity.delete()
         self.assertEqual(len(mail.outbox), 2)
@@ -829,7 +852,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             start_date=start_date,
             end_date=end_date,
             payment_plan=payment_schedule,
-            status=Activity.STATUS_DRAFT,
+            status=STATUS_DRAFT,
         )
         activity.delete()
         self.assertEqual(len(mail.outbox), 0)
@@ -852,7 +875,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             start_date=start_date,
             end_date=end_date,
             payment_plan=payment_schedule,
-            status=Activity.STATUS_GRANTED,
+            status=STATUS_GRANTED,
         )
         activity.delete()
         self.assertEqual(len(mail.outbox), 0)
@@ -872,7 +895,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             appropriation,
             start_date=start_date,
             end_date=end_date,
-            status=Activity.STATUS_GRANTED,
+            status=STATUS_GRANTED,
         )
         activity.delete()
         self.assertEqual(len(mail.outbox), 0)
@@ -895,7 +918,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             start_date=start_date,
             end_date=end_date,
             payment_plan=payment_schedule,
-            status=Activity.STATUS_GRANTED,
+            status=STATUS_GRANTED,
             activity_type=MAIN_ACTIVITY,
         )
         account = create_account(
@@ -935,7 +958,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             start_date=start_date,
             end_date=end_date,
             payment_plan=payment_schedule,
-            status=Activity.STATUS_GRANTED,
+            status=STATUS_GRANTED,
             activity_type=MAIN_ACTIVITY,
             details=main_activity_details,
         )
@@ -946,8 +969,8 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             start_date=start_date,
             end_date=end_date,
             payment_plan=payment_schedule,
-            status=Activity.STATUS_GRANTED,
-            activity_type=Activity.SUPPL_ACTIVITY,
+            status=STATUS_GRANTED,
+            activity_type=SUPPL_ACTIVITY,
             details=supplementary_activity_details,
         )
 
@@ -982,7 +1005,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             start_date=start_date,
             end_date=end_date,
             payment_plan=payment_schedule,
-            status=Activity.STATUS_GRANTED,
+            status=STATUS_GRANTED,
             activity_type=MAIN_ACTIVITY,
             details=main_activity_details,
         )
@@ -1541,7 +1564,7 @@ class CaseTestCase(TestCase, BasicTestMixin):
             appropriation=appropriation,
             start_date=start_date,
             end_date=end_date,
-            activity_type=MAIN_ACTIVITY,
+            activity_type=SUPPL_ACTIVITY,
             status=STATUS_GRANTED,
             payment_plan=payment_schedule,
         )

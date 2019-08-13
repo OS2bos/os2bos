@@ -745,7 +745,7 @@ class Appropriation(AuditModelMixin, models.Model):
     @property
     def supplementary_activities(self):
         """Return all non-main activities."""
-        f = self.activities.filter(activity_type=Activity.SUPPL_ACTIVITY)
+        f = self.activities.filter(activity_type=SUPPL_ACTIVITY)
         return (a for a in f)
 
     @property
@@ -768,7 +768,7 @@ class Appropriation(AuditModelMixin, models.Model):
             for a in self.activities.all():
                 # We could do this with an update, but we need to activate the
                 # save() method on each activity.
-                a.status = a.STATUS_GRANTED
+                a.status = STATUS_GRANTED
                 a.save()
             self.save()
         elif self.status == STATUS_GRANTED:
@@ -892,10 +892,12 @@ class Activity(AuditModelMixin, models.Model):
         verbose_name = _("aktivitet")
         verbose_name_plural = _("aktiviteter")
         constraints = [
-            # Appropriation can only have a single main activity.
+            # Appropriation can only have a single main activity
+            # that does not have an expected activity.
             models.UniqueConstraint(
                 fields=["appropriation"],
-                condition=Q(activity_type=MAIN_ACTIVITY),
+                condition=Q(activity_type=MAIN_ACTIVITY)
+                & Q(modifies__isnull=True),
                 name="unique_main_activity",
             )
         ]

@@ -14,6 +14,7 @@ from core.models import (
     SUPPL_ACTIVITY,
     STATUS_GRANTED,
     STATUS_DRAFT,
+    STATUS_EXPECTED,
 )
 
 from core.tests.testing_utils import (
@@ -418,14 +419,14 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             case,
             appropriation,
             end_date=date(year=2020, month=12, day=24),
-            status=Activity.STATUS_GRANTED,
+            status=STATUS_GRANTED,
             activity_type=MAIN_ACTIVITY,
         )
         modifying_activity = create_activity(  # noqa - it *will* be used.
             case,
             appropriation,
             end_date=date(year=2022, month=12, day=24),
-            status=Activity.STATUS_EXPECTED,
+            status=STATUS_EXPECTED,
             activity_type=MAIN_ACTIVITY,
             modifies=activity,
         )

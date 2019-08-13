@@ -89,7 +89,7 @@ class CaseQuerySetTestCase(TestCase, BasicTestMixin):
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
         )
         # create an expired main activity
-        create_activity(
+        activity = create_activity(
             case=case,
             appropriation=appropriation,
             start_date=now_date - timedelta(days=3),
@@ -111,6 +111,7 @@ class CaseQuerySetTestCase(TestCase, BasicTestMixin):
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
             payment_plan=payment_schedule,
+            modifies=activity,
         )
         # create a second appropriation
         appropriation = create_appropriation(case=case, sbsys_id="6521")
@@ -119,7 +120,7 @@ class CaseQuerySetTestCase(TestCase, BasicTestMixin):
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
         )
         # create an expired main activity
-        create_activity(
+        activity = create_activity(
             case=case,
             appropriation=appropriation,
             start_date=now_date - timedelta(days=3),
@@ -141,6 +142,7 @@ class CaseQuerySetTestCase(TestCase, BasicTestMixin):
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
             payment_plan=payment_schedule,
+            modifies=activity,
         )
         expired_cases = Case.objects.all().expired()
         ongoing_cases = Case.objects.all().ongoing()
@@ -158,7 +160,7 @@ class CaseQuerySetTestCase(TestCase, BasicTestMixin):
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
         )
         # create an expired main activity
-        create_activity(
+        activity = create_activity(
             case=case,
             appropriation=appropriation,
             start_date=now_date - timedelta(days=4),
@@ -180,6 +182,7 @@ class CaseQuerySetTestCase(TestCase, BasicTestMixin):
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
             payment_plan=payment_schedule,
+            modifies=activity,
         )
         # create a second appropriation
         appropriation = create_appropriation(case=case, sbsys_id="6521")
@@ -188,7 +191,7 @@ class CaseQuerySetTestCase(TestCase, BasicTestMixin):
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
         )
         # create an expired main activity
-        create_activity(
+        activity = create_activity(
             case=case,
             appropriation=appropriation,
             start_date=now_date - timedelta(days=10),
@@ -210,6 +213,7 @@ class CaseQuerySetTestCase(TestCase, BasicTestMixin):
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
             payment_plan=payment_schedule,
+            modifies=activity,
         )
 
         expired_cases = Case.objects.all().expired()
