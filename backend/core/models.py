@@ -62,7 +62,7 @@ type_choices = (
     (SUPPL_ACTIVITY, _("følgeaktivitet")),
 )
 
-# Status - definitions and choice list.
+# Activity status definitions and choice list.
 STATUS_DRAFT = "DRAFT"
 STATUS_EXPECTED = "EXPECTED"
 STATUS_GRANTED = "GRANTED"
