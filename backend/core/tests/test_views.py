@@ -13,6 +13,7 @@ from core.models import (
     MAIN_ACTIVITY,
     SUPPL_ACTIVITY,
     STATUS_GRANTED,
+    STATUS_DRAFT,
 )
 
 from core.tests.testing_utils import (
