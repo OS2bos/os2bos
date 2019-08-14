@@ -192,7 +192,7 @@
                 if (cpr.length > 9) {
                     axios.get(`/related_persons/fetch_from_serviceplatformen/?cpr=${ cpr }`)
                     .then(res => {
-                        this.cas.name = res.data[0].name
+                        this.cas.name = res.data.name
                         this.$forceUpdate()
                     })
                     .catch(err => console.log(err))

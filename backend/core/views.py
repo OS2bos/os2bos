@@ -193,13 +193,14 @@ class RelatedPersonViewSet(AuditViewSet):
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        relations = []
+        person = RelatedPerson.serviceplatformen_to_related_person(cpr_data)
+        person["relations"] = []
         for relation in cpr_data["relationer"]:
-            relations.append(
+            person["relations"].append(
                 RelatedPerson.serviceplatformen_to_related_person(relation)
             )
 
-        return Response(relations, status.HTTP_200_OK)
+        return Response(person, status.HTTP_200_OK)
 
 
 # Master data, read only.
