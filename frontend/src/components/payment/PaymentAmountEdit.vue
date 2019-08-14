@@ -20,7 +20,7 @@
                 <div class="payment-amount-fields">
                     <fieldset v-if="entry.payment_type === 'ONE_TIME_PAYMENT' || entry.payment_type === 'RUNNING_PAYMENT'">
                         <label>Beløb</label>
-                        <input v-model="entry.payment_amount" type="number"> kr
+                        <input v-model="entry.payment_amount" type="number" step="0.01"> kr
                     </fieldset>
                     <fieldset v-if="entry.payment_type && entry.payment_type !== 'ONE_TIME_PAYMENT'">
                         <label for="pay-freq">Hver</label>
@@ -39,7 +39,7 @@
                         </div>
                         <div>
                             <label>til takst</label>
-                            <input v-model="entry.payment_amount" type="number"> kr<br>
+                            <input v-model="entry.payment_amount" type="number" step="0.01"> kr<br>
                             <a href="https://www.kl.dk/media/16653/taksttabel_-2019.pdf" target="_blank">Find takster her</a>
                         </div>
                     </fieldset>
