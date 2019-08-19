@@ -8,6 +8,7 @@
 
 from datetime import date, timedelta
 from decimal import Decimal
+import uuid
 
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
@@ -219,6 +220,7 @@ class PaymentSchedule(models.Model):
         verbose_name=_("beløb"),
         validators=[MinValueValidator(Decimal("0.01"))],
     )
+    payment_id = models.UUIDField(default=uuid.uuid4, editable=False)
 
     @staticmethod
     def is_payment_and_recipient_allowed(payment_method, recipient_type):

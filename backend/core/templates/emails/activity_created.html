@@ -27,12 +27,13 @@
 {% else %}
     <p>Kontering: Ingen </p>
 {% endif %}
+<p>BetalingsID: {{ activity.payment_plan.payment_id }}</p>
 
 <h1>Betalingsmodtager</h1>
 <p>CPR/CVR: {{ activity.payment_plan.recipient_id }}</p>
 <p>Navn: {{ activity.payment_plan.recipient_name }}</p>
-<p>Modtagertype: {{ activity.payment_plan.recipient_type }}</p>
+<p>Modtagertype: {{ activity.payment_plan.get_recipient_type_display }}</p>
 <p>Oplysninger om skattekort: {{ activity.payment_plan.payment_method_details.tax_card }}</p>
-<p>Oplysninger om betalingsmåde: {{ activity.payment_plan.payment_method }}</p>
+<p>Oplysninger om betalingsmåde: {{ activity.payment_plan.get_payment_method_display }}</p>
 
 {% endblock %}
