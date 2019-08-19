@@ -171,18 +171,18 @@
                         start_date: this.act.start_date,
                         end_date: this.act.end_date,
                         details: this.act.details,
-                        note: this.act.note
-                    },
-                    data_payee = {
-                        recipient_type: this.pay.recipient_type,
-                        recipient_id: this.pay.recipient_id,
-                        recipient_name: this.pay.recipient_name,
-                        payment_method: this.pay.payment_method,
-                        payment_frequency: this.pay.payment_frequency,
-                        payment_type: this.pay.payment_type,
-                        payment_units: this.pay.payment_units,
-                        payment_amount: this.pay.payment_amount
-                    }
+                        note: this.act.note,
+                        payment_plan: {
+                            recipient_type: this.pay.recipient_type,
+                            recipient_id: this.pay.recipient_id,
+                            recipient_name: this.pay.recipient_name,
+                            payment_method: this.pay.payment_method,
+                            payment_frequency: this.pay.payment_frequency,
+                            payment_type: this.pay.payment_type,
+                            payment_units: this.pay.payment_units,
+                            payment_amount: this.pay.payment_amount
+                        }
+                }
 
                 if (this.mode === 'create') {
                     data.appropriation = this.$route.params.apprid
@@ -193,6 +193,7 @@
                     data.status = 'EXPECTED'
                 } else {
                     data.id = this.act.id
+                    data.payment_plan.id = this.act.payment_plan.id
                     data.appropriation = this.activityObj.appropriation
                 }
 
@@ -201,17 +202,8 @@
 
                     axios.post(`/activities/`, data)
                     .then(res => {
-                        axios.post(`/payment_schedules/`, data_payee)
-                        
-                        .then(resp => {
-                            axios.patch(`/activities/${ res.data.id }/`, {
-                                payment_plan: resp.data.id
-                            })
-                            .then(() => {
-                                this.$router.push(`/appropriation/${ this.appropriation.id }`)
-                                this.$store.dispatch('fetchActivity', res.data.id)
-                            })
-                        })
+                        this.$router.push(`/appropriation/${ this.appropriation.id }`)
+                        this.$store.dispatch('fetchActivity', res.data.id)
                     })
                     .catch(err => console.log(err))
 
@@ -220,16 +212,7 @@
 
                     axios.patch(`/activities/${ this.act.id }/`, data)
                     .then(res => {
-                        this.$emit('save', res.data)
-                        axios.patch(`/payment_schedules/${ this.act.payment_plan }/`, data_payee)
-                        .then(resp => {
-                            axios.patch(`/activities/${ res.data.id }/`, {
-                                payment_plan: resp.data.id
-                            })
-                            .then(() => {
-                                this.$store.dispatch('fetchActivity', res.data.id)
-                            })
-                        })
+                        this.$store.dispatch('fetchActivity', res.data.id)
                     })
                     .catch(err => console.log(err))
                 }
@@ -265,7 +248,7 @@
         created: function() {
             if (this.activityObj) {
                 this.act = this.activityObj
-                this.fetchPaymentInfo(this.activityObj.payment_plan)
+                this.pay = this.act.payment_plan
                 this.activityList()
             }
         }

@@ -96,9 +96,9 @@ const actions = {
     fetchActivity: function({commit, dispatch}, act_id) {
         axios.get(`/activities/${ act_id }/`)
         .then(res => {
-            dispatch('fetchPaymentSchedule', res.data.payment_plan)
             dispatch('fetchAppropriation', res.data.appropriation)
             commit('setActivity', res.data)
+            commit('setPaymentSchedule', res.data.payment_plan)
         })
         .catch(err => console.log(err))
     },
