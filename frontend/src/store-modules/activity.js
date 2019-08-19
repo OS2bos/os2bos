@@ -1,3 +1,11 @@
+/* Copyright (C) 2019 Magenta ApS, http://magenta.dk.
+ * Contact: info@magenta.dk.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+
 import axios from '../components/http/Http.js'
 
 const state = {
@@ -88,9 +96,9 @@ const actions = {
     fetchActivity: function({commit, dispatch}, act_id) {
         axios.get(`/activities/${ act_id }/`)
         .then(res => {
-            dispatch('fetchPaymentSchedule', res.data.payment_plan)
             dispatch('fetchAppropriation', res.data.appropriation)
             commit('setActivity', res.data)
+            commit('setPaymentSchedule', res.data.payment_plan)
         })
         .catch(err => console.log(err))
     },

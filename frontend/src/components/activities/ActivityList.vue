@@ -1,3 +1,11 @@
+<!-- Copyright (C) 2019 Magenta ApS, http://magenta.dk.
+   - Contact: info@magenta.dk.
+   -
+   - This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
+
+
 <template>
 
     <section class="activities">
@@ -25,7 +33,7 @@
                         <span v-if="a.activity_type === 'MAIN_ACTIVITY'" class="act-label">Hovedydelse</span>
                     </td>
                     <td>{{ a.note }}</td>
-                    <td>{{ a.recipient_id }} - {{ a.recipient_name }}</td>
+                    <td>{{ a.payment_plan.recipient_id }} - {{ a.payment_plan.recipient_name }}</td>
                     <td>{{ displayDate(a.start_date) }}</td>
                     <td>{{ displayDate(a.end_date) }}</td>
                     <td style="text-align: right;">{{ a.total_cost_this_year }} kr</td>
