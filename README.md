@@ -197,6 +197,7 @@ when you want to use an environment closer to production.
 ## Licensing
 
 Copyright (c) 2019 Magenta Aps
+
 Bevillingsplatform is free software; you may use, study, modify and
 distribute it under the terms of version 2.0 of the Mozilla Public
 License. See the LICENSE file for details. If a copy of the MPL was not
