@@ -1,5 +1,14 @@
+# Copyright (C) 2019 Magenta ApS, http://magenta.dk.
+# Contact: info@magenta.dk.
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+
 from datetime import date, timedelta
 from decimal import Decimal
+import uuid
 
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
@@ -211,6 +220,7 @@ class PaymentSchedule(models.Model):
         verbose_name=_("beløb"),
         validators=[MinValueValidator(Decimal("0.01"))],
     )
+    payment_id = models.UUIDField(default=uuid.uuid4, editable=False)
 
     @staticmethod
     def is_payment_and_recipient_allowed(payment_method, recipient_type):
@@ -443,7 +453,7 @@ class Case(AuditModelMixin, models.Model):
     sbsys_id = models.CharField(
         unique=True, max_length=128, verbose_name=_("SBSYS-ID")
     )
-    cpr_number = models.CharField(max_length=12, verbose_name=_("cpr-nummer"))
+    cpr_number = models.CharField(max_length=10, verbose_name=_("cpr-nummer"))
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     case_worker = models.ForeignKey(
         User,
@@ -1046,7 +1056,7 @@ class RelatedPerson(models.Model):
         max_length=128, verbose_name=_("relation")
     )
     cpr_number = models.CharField(
-        max_length=12, verbose_name=_("cpr-nummer"), blank=True
+        max_length=10, verbose_name=_("cpr-nummer"), blank=True
     )
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     related_case = models.CharField(

@@ -1,7 +1,17 @@
+# Copyright (C) 2019 Magenta ApS, http://magenta.dk.
+# Contact: info@magenta.dk.
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
+
+from drf_writable_nested import WritableNestedModelSerializer
 
 from core.models import (
     Case,
@@ -51,8 +61,9 @@ class CaseSerializer(serializers.ModelSerializer):
 class HistoricalCaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = HistoricalCase
-        # include history_date (date saved)
-        # and history_user (user responsible for saving).
+        # include history_date (date saved),
+        # history_user (user responsible for saving),
+        # and history_change_reason (reason for change).
         fields = (
             "case_worker",
             "effort_step",
@@ -63,66 +74,9 @@ class HistoricalCaseSerializer(serializers.ModelSerializer):
         )
 
 
-class ActivitySerializer(serializers.ModelSerializer):
-    monthly_payment_plan = serializers.ReadOnlyField()
-    total_cost = serializers.ReadOnlyField()
-    total_cost_this_year = serializers.ReadOnlyField()
-    total_cost_full_year = serializers.ReadOnlyField()
-    recipient_name = serializers.ReadOnlyField(
-        source="payment_plan.recipient_name", default=None
-    )
-    recipient_id = serializers.ReadOnlyField(
-        source="payment_plan.recipient_id", default=None
-    )
-
-    @staticmethod
-    def setup_eager_loading(queryset):
-        queryset = queryset.select_related("payment_plan")
-        return queryset
-
-    def validate(self, data):
-        # Check that start_date is before end_date
-        if (
-            "end_date" in data
-            and data["end_date"]
-            and data["start_date"] > data["end_date"]
-        ):
-            raise serializers.ValidationError(
-                _("startdato skal være før slutdato")
-            )
-        return data
-
-    class Meta:
-        model = Activity
-        fields = "__all__"
-
-
-class AppropriationSerializer(serializers.ModelSerializer):
-    total_granted_this_year = serializers.ReadOnlyField()
-    total_expected_this_year = serializers.ReadOnlyField()
-    total_expected_full_year = serializers.ReadOnlyField()
-
-    activities = ActivitySerializer(many=True, read_only=True)
-
-    @staticmethod
-    def setup_eager_loading(queryset):
-        queryset = queryset.prefetch_related("activities")
-        return queryset
-
-    class Meta:
-        model = Appropriation
-        fields = "__all__"
-
-
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
-        fields = "__all__"
-
-
-class PaymentMethodDetailsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PaymentMethodDetails
         fields = "__all__"
 
 
@@ -164,6 +118,59 @@ class PaymentScheduleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PaymentSchedule
+        fields = "__all__"
+
+
+class ActivitySerializer(WritableNestedModelSerializer):
+    monthly_payment_plan = serializers.ReadOnlyField()
+    total_cost = serializers.ReadOnlyField()
+    total_cost_this_year = serializers.ReadOnlyField()
+    total_cost_full_year = serializers.ReadOnlyField()
+
+    payment_plan = PaymentScheduleSerializer(partial=True, required=False)
+
+    @staticmethod
+    def setup_eager_loading(queryset):
+        queryset = queryset.select_related("payment_plan")
+        return queryset
+
+    def validate(self, data):
+        # Check that start_date is before end_date
+        if (
+            "end_date" in data
+            and data["end_date"]
+            and data["start_date"] > data["end_date"]
+        ):
+            raise serializers.ValidationError(
+                _("startdato skal være før slutdato")
+            )
+        return data
+
+    class Meta:
+        model = Activity
+        fields = "__all__"
+
+
+class AppropriationSerializer(serializers.ModelSerializer):
+    total_granted_this_year = serializers.ReadOnlyField()
+    total_expected_this_year = serializers.ReadOnlyField()
+    total_expected_full_year = serializers.ReadOnlyField()
+
+    activities = ActivitySerializer(many=True, read_only=True)
+
+    @staticmethod
+    def setup_eager_loading(queryset):
+        queryset = queryset.prefetch_related("activities")
+        return queryset
+
+    class Meta:
+        model = Appropriation
+        fields = "__all__"
+
+
+class PaymentMethodDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PaymentMethodDetails
         fields = "__all__"
 
 

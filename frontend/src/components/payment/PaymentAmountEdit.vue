@@ -1,3 +1,11 @@
+<!-- Copyright (C) 2019 Magenta ApS, http://magenta.dk.
+   - Contact: info@magenta.dk.
+   -
+   - This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
+
+
 <template>
 
     <section class="payment-amount">
@@ -20,7 +28,7 @@
                 <div class="payment-amount-fields">
                     <fieldset v-if="entry.payment_type === 'ONE_TIME_PAYMENT' || entry.payment_type === 'RUNNING_PAYMENT'">
                         <label>Beløb</label>
-                        <input v-model="entry.payment_amount" type="number" required> kr
+                        <input v-model="entry.payment_amount" type="number" step="0.01" required> kr
                     </fieldset>
                     <fieldset v-if="entry.payment_type && entry.payment_type !== 'ONE_TIME_PAYMENT'">
                         <label for="pay-freq">Hver</label>
@@ -39,7 +47,7 @@
                         </div>
                         <div>
                             <label>til takst</label>
-                            <input v-model="entry.payment_amount" type="number" required> kr<br>
+                            <input v-model="entry.payment_amount" type="number" required step="0.01"> kr<br>
                             <a href="https://www.kl.dk/media/16653/taksttabel_-2019.pdf" target="_blank">Find takster her</a>
                         </div>
                     </fieldset>
