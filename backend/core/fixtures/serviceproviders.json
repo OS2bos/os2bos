@@ -1,2576 +1,4115 @@
 [
-{
-    "model": "core.serviceprovider",
-    "pk": 1,
-    "fields": {
-        "cvr_number": "30047923",
-        "name": "Den Selvejende Institution Kvindehjemmet i K\u00f8benhavn",
-        "vat_factor": "95.40"
+    {
+        "model": "core.serviceprovider",
+        "pk": 1078,
+        "fields": {
+            "cvr_number": "10104181",
+            "name": "Magles\u00f8hus",
+            "vat_factor": "95.40"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1079,
+        "fields": {
+            "cvr_number": "10117115",
+            "name": "Stilleb\u00e6kken",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1080,
+        "fields": {
+            "cvr_number": "10174155",
+            "name": "St\u00f8vring Omsorgshjem",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1081,
+        "fields": {
+            "cvr_number": "10197171",
+            "name": "L\u00d8VDAL NATURCENTER",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1082,
+        "fields": {
+            "cvr_number": "10199107",
+            "name": "Sm\u00e5skolen S\u00f8folkene",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1083,
+        "fields": {
+            "cvr_number": "10261899",
+            "name": "Husene p\u00e5 Frydensdalsvej",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1084,
+        "fields": {
+            "cvr_number": "10303044",
+            "name": "Sontex A/S",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1085,
+        "fields": {
+            "cvr_number": "10508630",
+            "name": "KRAGEREDEG\u00c5RD",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1086,
+        "fields": {
+            "cvr_number": "10861284",
+            "name": "V\u00e6dderbo",
+            "vat_factor": "95.40"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1087,
+        "fields": {
+            "cvr_number": "11106005",
+            "name": "Fredericia Krisecenter",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1088,
+        "fields": {
+            "cvr_number": "11565603",
+            "name": "Egfond / Egholdt",
+            "vat_factor": "95.40"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1089,
+        "fields": {
+            "cvr_number": "11598757",
+            "name": "Hotel Grantoften",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1090,
+        "fields": {
+            "cvr_number": "11715311",
+            "name": "Krisecentre",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1091,
+        "fields": {
+            "cvr_number": "11846459",
+            "name": "M\u00f8lleg\u00e5rdens Private Botilbud",
+            "vat_factor": "95.40"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1092,
+        "fields": {
+            "cvr_number": "11931316",
+            "name": "Thorsh\u00f8jg\u00e5rd",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1093,
+        "fields": {
+            "cvr_number": "11986943",
+            "name": "Esrom  Kost-og Friskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1094,
+        "fields": {
+            "cvr_number": "12186479",
+            "name": "Bog\u00f8 Kostskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1095,
+        "fields": {
+            "cvr_number": "12489404",
+            "name": "Hiller\u00f8d Kvindecenter",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1096,
+        "fields": {
+            "cvr_number": "12518757",
+            "name": "MR - Handicap og psykiatri",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1097,
+        "fields": {
+            "cvr_number": "12518765",
+            "name": "Skolen p\u00e5 Kastelsvej",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1098,
+        "fields": {
+            "cvr_number": "12572999",
+            "name": "Stiftelsen SOLHAVEN",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1099,
+        "fields": {
+            "cvr_number": "12874502",
+            "name": "Billehave Efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1100,
+        "fields": {
+            "cvr_number": "12932502",
+            "name": "Park Street Nordicom/Zleep Room",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1101,
+        "fields": {
+            "cvr_number": "13081042",
+            "name": "Familiecentret Lille N\u00f8rremark",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1102,
+        "fields": {
+            "cvr_number": "13182000",
+            "name": "Oure Kosrgymnasium",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1103,
+        "fields": {
+            "cvr_number": "13909644",
+            "name": "Vejlefjord - fjordbo II",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1104,
+        "fields": {
+            "cvr_number": "14221379",
+            "name": "Ulstrup Efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1105,
+        "fields": {
+            "cvr_number": "14527702",
+            "name": "Kollegiet Axeltorv",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1106,
+        "fields": {
+            "cvr_number": "14618600",
+            "name": "Sofie Rifbjerg Efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1107,
+        "fields": {
+            "cvr_number": "14628088",
+            "name": "Institut for Integration",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1108,
+        "fields": {
+            "cvr_number": "14983392",
+            "name": "Efterskolen Flyvesandet",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1109,
+        "fields": {
+            "cvr_number": "15111283",
+            "name": "SAHVA A/S",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1110,
+        "fields": {
+            "cvr_number": "15307595",
+            "name": "Den Gamle Brugs",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1111,
+        "fields": {
+            "cvr_number": "15531584",
+            "name": "Frydensberg Efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1112,
+        "fields": {
+            "cvr_number": "15588977",
+            "name": "LUNDEKOLLEKTIVET FOND",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1113,
+        "fields": {
+            "cvr_number": "15658339",
+            "name": "Den selvejende inst. Egedal",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1114,
+        "fields": {
+            "cvr_number": "15686375",
+            "name": "OPHOLDSSTEDET 4700",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1115,
+        "fields": {
+            "cvr_number": "15722673",
+            "name": "Dueslaget",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1116,
+        "fields": {
+            "cvr_number": "15746513",
+            "name": "Kofoeds Skole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1117,
+        "fields": {
+            "cvr_number": "15837128",
+            "name": "Glostrup Observations-og behandlingshjem",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1118,
+        "fields": {
+            "cvr_number": "16057118",
+            "name": "Efterskole Lindenborg",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1119,
+        "fields": {
+            "cvr_number": "16088951",
+            "name": "Engg\u00e5rdens Hestepension",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1120,
+        "fields": {
+            "cvr_number": "16289404",
+            "name": "Regnbuehuset",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1121,
+        "fields": {
+            "cvr_number": "16343943",
+            "name": "Grennessminde",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1122,
+        "fields": {
+            "cvr_number": "17195549",
+            "name": "Center for Autisme",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1123,
+        "fields": {
+            "cvr_number": "17383213",
+            "name": "T\u00d8LL\u00d8SE B\u00d8RNE- & UNGDOMSPENSION",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1124,
+        "fields": {
+            "cvr_number": "17510606",
+            "name": "Kvadderkj\u00e6r",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1125,
+        "fields": {
+            "cvr_number": "17573896",
+            "name": "ADVOKATFIRMAET VON DER MAASE V/JENS CHR. VON DER MAASE",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1126,
+        "fields": {
+            "cvr_number": "17743171",
+            "name": "SKOVBOGAARD",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1127,
+        "fields": {
+            "cvr_number": "18391007",
+            "name": "H\u00e5rslev Efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1128,
+        "fields": {
+            "cvr_number": "18451778",
+            "name": "Solvang",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1129,
+        "fields": {
+            "cvr_number": "18461501",
+            "name": "H\u00d8JDERYGGENS PSYKOLOGKONTOR V/OLE STJERNHOLM",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1130,
+        "fields": {
+            "cvr_number": "18643294",
+            "name": "Teaterbygningen Fanefjord",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1131,
+        "fields": {
+            "cvr_number": "18675439",
+            "name": "Butterfly",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1132,
+        "fields": {
+            "cvr_number": "18675447",
+            "name": "SIVK\u00c6R",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1133,
+        "fields": {
+            "cvr_number": "18706571",
+            "name": "Psykolog Susanne Kofoed",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1134,
+        "fields": {
+            "cvr_number": "19049574",
+            "name": "Skovbo Efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1135,
+        "fields": {
+            "cvr_number": "19178749",
+            "name": "Drosthuset Glostrup",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1136,
+        "fields": {
+            "cvr_number": "19186407",
+            "name": "Tv\u00e6rs ApS",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1137,
+        "fields": {
+            "cvr_number": "19210170",
+            "name": "Fr\u00f8slevlejrens Efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1138,
+        "fields": {
+            "cvr_number": "19275086",
+            "name": "Opholdsstedet Clemens Gaarden",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1139,
+        "fields": {
+            "cvr_number": "19369609",
+            "name": "Overf\u00f8rsterg\u00e5rden",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1140,
+        "fields": {
+            "cvr_number": "19406679",
+            "name": "Krums\u00f8 Fri- og Kostskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1141,
+        "fields": {
+            "cvr_number": "19700046",
+            "name": "S\u00f8egaard",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1142,
+        "fields": {
+            "cvr_number": "19700046",
+            "name": "Opholdsstedet S\u00f8egaard",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1143,
+        "fields": {
+            "cvr_number": "19796787",
+            "name": "TEGLG\u00c5RDSLUND UNGDOMSBOLIGER",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1144,
+        "fields": {
+            "cvr_number": "19819493",
+            "name": "Krummeb\u00e6kgaard",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1145,
+        "fields": {
+            "cvr_number": "20030380",
+            "name": "Tagk\u00e6rg\u00e5rd",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1146,
+        "fields": {
+            "cvr_number": "20129638",
+            "name": "T\u00f8ll\u00f8se slot efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1147,
+        "fields": {
+            "cvr_number": "20240636",
+            "name": "Lavuks Aftentilbud",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1148,
+        "fields": {
+            "cvr_number": "20243872",
+            "name": "Skolen ved Sorte hest",
+            "vat_factor": "95.40"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1149,
+        "fields": {
+            "cvr_number": "20377003",
+            "name": "RYTTERG\u00c5RDEN",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1150,
+        "fields": {
+            "cvr_number": "20415290",
+            "name": "Psykologerne i Aller\u00f8d/Ruben Elgaard",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1151,
+        "fields": {
+            "cvr_number": "20462183",
+            "name": "LINDERSVOLD",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1152,
+        "fields": {
+            "cvr_number": "20638230",
+            "name": "Sk\u00e5rup Efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1153,
+        "fields": {
+            "cvr_number": "20770279",
+            "name": "Opholdsstedet Unika",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1154,
+        "fields": {
+            "cvr_number": "20803746",
+            "name": "Projektskolen Grennessminde",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1155,
+        "fields": {
+            "cvr_number": "20867043",
+            "name": "DEN PSYKOLOGISKE R\u00c5DGIVNING V/ BENTE FRIIS HOLM",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1156,
+        "fields": {
+            "cvr_number": "20868074",
+            "name": "Lindh\u00f8jg\u00e5rd",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1157,
+        "fields": {
+            "cvr_number": "20894938",
+            "name": "SAKSO",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1158,
+        "fields": {
+            "cvr_number": "20956372",
+            "name": "B\u00f8rnehuset Siv",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1159,
+        "fields": {
+            "cvr_number": "20991275",
+            "name": "Ister\u00f8d Efter- og H\u00f8jskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1160,
+        "fields": {
+            "cvr_number": "21002542",
+            "name": "Opholdsstedet TINGGAARDEN",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1161,
+        "fields": {
+            "cvr_number": "21102792",
+            "name": "DET SOCIALP\u00c6DAGOGISKE OPHOLDSSTED KERNEHUSET ApS",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1162,
+        "fields": {
+            "cvr_number": "21157104",
+            "name": "Den selvejende inst. Gr\u00f8nsund",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1163,
+        "fields": {
+            "cvr_number": "21169900",
+            "name": "Gedebjerg",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1164,
+        "fields": {
+            "cvr_number": "21416428",
+            "name": "VBT",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1165,
+        "fields": {
+            "cvr_number": "21440639",
+            "name": "Andsh\u00f8jgaard",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1166,
+        "fields": {
+            "cvr_number": "21560707",
+            "name": "KH KNUD HJULMAND PSYKOLOGISK KONSULTATION",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1167,
+        "fields": {
+            "cvr_number": "21697435",
+            "name": "Sandbakken",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1168,
+        "fields": {
+            "cvr_number": "21703281",
+            "name": "Opholdsstedet R\u00f8nneb\u00e6k",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1169,
+        "fields": {
+            "cvr_number": "21868809",
+            "name": "Anders B. Larsen",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1170,
+        "fields": {
+            "cvr_number": "21911348",
+            "name": "Aved\u00f8re Tolk-R\u00e5dgivning v/Ayhan Demir",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1171,
+        "fields": {
+            "cvr_number": "22010689",
+            "name": "Opholdsstedet Tiagrehus",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1172,
+        "fields": {
+            "cvr_number": "22021478",
+            "name": "Bostedet Fruerlund",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1173,
+        "fields": {
+            "cvr_number": "22028634",
+            "name": "Opholdsstedet Peterslyst ridecenter",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1174,
+        "fields": {
+            "cvr_number": "23790718",
+            "name": "HAVREG\u00c5RDEN  Lille Kost- og Dagskole ",
+            "vat_factor": "95.40"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1175,
+        "fields": {
+            "cvr_number": "24197646",
+            "name": "Svendebjerggaard",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1176,
+        "fields": {
+            "cvr_number": "24206475",
+            "name": "BOAS",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1177,
+        "fields": {
+            "cvr_number": "24206475",
+            "name": "Stranden 222",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1178,
+        "fields": {
+            "cvr_number": "24975592",
+            "name": "Frejlev Gl. Brugs",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1179,
+        "fields": {
+            "cvr_number": "25106741",
+            "name": "Familieinstitutionen Skovv\u00e6nge",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1180,
+        "fields": {
+            "cvr_number": "25155599",
+            "name": "Haug\u00e5rdhus",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1181,
+        "fields": {
+            "cvr_number": "25168232",
+            "name": "Vitus",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1182,
+        "fields": {
+            "cvr_number": "25169395",
+            "name": "S\u00f8ren Kierkegaard Kollegiet v. Center for",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1183,
+        "fields": {
+            "cvr_number": "25266390",
+            "name": "Projekt Start/ JMB BO v/Mogens Bergg",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1184,
+        "fields": {
+            "cvr_number": "25354656",
+            "name": "Fonden Godhavn",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1185,
+        "fields": {
+            "cvr_number": "25354656",
+            "name": "Godhavn",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1186,
+        "fields": {
+            "cvr_number": "25365194",
+            "name": "Skovriderg\u00e5rden \"Hildesvig\"",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1187,
+        "fields": {
+            "cvr_number": "25477154",
+            "name": "DUOS",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1188,
+        "fields": {
+            "cvr_number": "25499395",
+            "name": "Paideia",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1189,
+        "fields": {
+            "cvr_number": "25513630",
+            "name": "Schreiber Satellitten",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1190,
+        "fields": {
+            "cvr_number": "25528603",
+            "name": "M\u00d8LLEN",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1191,
+        "fields": {
+            "cvr_number": "25529839",
+            "name": "M\u00e5l\u00f8vg\u00e5rd",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1192,
+        "fields": {
+            "cvr_number": "25542991",
+            "name": "Kammergave",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1193,
+        "fields": {
+            "cvr_number": "25599772",
+            "name": "Fonden Bof\u00e6llesskabet \u00d8rb\u00e6kskilde",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1194,
+        "fields": {
+            "cvr_number": "25672836",
+            "name": "Birketoften",
+            "vat_factor": "95.40"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1195,
+        "fields": {
+            "cvr_number": "25672836",
+            "name": "Sozial Service",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1196,
+        "fields": {
+            "cvr_number": "25685970",
+            "name": "Fonden Asgaard",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1197,
+        "fields": {
+            "cvr_number": "25722329",
+            "name": "Mandecentret",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1198,
+        "fields": {
+            "cvr_number": "25726960",
+            "name": "P\u00e5 Rette Kurs",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1199,
+        "fields": {
+            "cvr_number": "25731832",
+            "name": "VESTERMARKEN",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1200,
+        "fields": {
+            "cvr_number": "25797809",
+            "name": "DSI Andromeda",
+            "vat_factor": "95.40"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1201,
+        "fields": {
+            "cvr_number": "25812018",
+            "name": "Socialprojektet \"M\u00d8LLEHUSET\"",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1202,
+        "fields": {
+            "cvr_number": "25812042",
+            "name": "Frederikssud Krisecenter",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1203,
+        "fields": {
+            "cvr_number": "25824237",
+            "name": "Hjemb\u00e6k Efterskole",
+            "vat_factor": "95.40"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1204,
+        "fields": {
+            "cvr_number": "25896564",
+            "name": "Opholdsst. Birkemoseg\u00e5rd",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1205,
+        "fields": {
+            "cvr_number": "25896564",
+            "name": "Fonden/Den Selvej Inst Birkemoseg\u00e5rd",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1206,
+        "fields": {
+            "cvr_number": "25916786",
+            "name": "Base Camp",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1207,
+        "fields": {
+            "cvr_number": "25937295",
+            "name": "Lystruphave Efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1208,
+        "fields": {
+            "cvr_number": "26004659",
+            "name": "Projekt Plan B",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1209,
+        "fields": {
+            "cvr_number": "26026059",
+            "name": "Florenhus",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1210,
+        "fields": {
+            "cvr_number": "26045592",
+            "name": "Den selvej. inst. Dysseg\u00e5rden",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1211,
+        "fields": {
+            "cvr_number": "26046769",
+            "name": "Samtalev\u00e6rkstedet v/ Jesper Mathiasen",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1212,
+        "fields": {
+            "cvr_number": "26201446",
+            "name": "Svennebjerggaard",
+            "vat_factor": "95.40"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1213,
+        "fields": {
+            "cvr_number": "26201705",
+            "name": "S\u00f8b\u00e6kskolen",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1214,
+        "fields": {
+            "cvr_number": "26309638",
+            "name": "Magleby Fri- og Efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1215,
+        "fields": {
+            "cvr_number": "26490286",
+            "name": "Opholdsstedet Strandager",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1216,
+        "fields": {
+            "cvr_number": "26566398",
+            "name": "Lundby Efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1217,
+        "fields": {
+            "cvr_number": "26646294",
+            "name": "Fonden Kanonen",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1218,
+        "fields": {
+            "cvr_number": "26653932",
+            "name": "Springbr\u00e6ttet",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1219,
+        "fields": {
+            "cvr_number": "26689465",
+            "name": "SVANEN",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1220,
+        "fields": {
+            "cvr_number": "26717086",
+            "name": "Efterskolen \u00d8sterg\u00e5rds Udskolingskoncept",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1221,
+        "fields": {
+            "cvr_number": "26723817",
+            "name": "Ungdomsh\u00f8jskolen ved Ribe",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1222,
+        "fields": {
+            "cvr_number": "26874823",
+            "name": "Den selvejende institution Marita",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1223,
+        "fields": {
+            "cvr_number": "26877741",
+            "name": "Ungdomsh\u00f8jskolen PTG",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1224,
+        "fields": {
+            "cvr_number": "26909724",
+            "name": "Fonden Koloni",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1225,
+        "fields": {
+            "cvr_number": "26946891",
+            "name": "Ringsted Krisecenter",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1226,
+        "fields": {
+            "cvr_number": "26953545",
+            "name": "Botilbud Feddet",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1227,
+        "fields": {
+            "cvr_number": "26955084",
+            "name": "Fonden Vestermarken",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1228,
+        "fields": {
+            "cvr_number": "26964660",
+            "name": "Back2Care",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1229,
+        "fields": {
+            "cvr_number": "26980267",
+            "name": "Bof\u00e6llesskabet Ingersmind",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1230,
+        "fields": {
+            "cvr_number": "26989264",
+            "name": "Center for Kognitiv Adf\u00e6rdsterapi",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1231,
+        "fields": {
+            "cvr_number": "27057853",
+            "name": "V\u00e6dderbo",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1232,
+        "fields": {
+            "cvr_number": "27074987",
+            "name": "Team One",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1233,
+        "fields": {
+            "cvr_number": "27079172",
+            "name": "Det Lille Opholdssted Egholt",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1234,
+        "fields": {
+            "cvr_number": "27099602",
+            "name": "Den Selvejende Institution Alfa - Fredensborg",
+            "vat_factor": "95.40"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1235,
+        "fields": {
+            "cvr_number": "27117279",
+            "name": "Familiecenter Dyreby",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1236,
+        "fields": {
+            "cvr_number": "27133290",
+            "name": "Kongensgaard Efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1237,
+        "fields": {
+            "cvr_number": "27134165",
+            "name": "Dagbehandlingsskolen Fyrt\u00e5rnet",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1238,
+        "fields": {
+            "cvr_number": "27165869",
+            "name": "Jabes",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1239,
+        "fields": {
+            "cvr_number": "27190677",
+            "name": "Stahlschmidt",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1240,
+        "fields": {
+            "cvr_number": "27227988",
+            "name": "Opholdsstedet Skytteg\u00e5rden",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1241,
+        "fields": {
+            "cvr_number": "27239501",
+            "name": "Hammer & Co.",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1242,
+        "fields": {
+            "cvr_number": "27263860",
+            "name": "OASEN",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1243,
+        "fields": {
+            "cvr_number": "27351034",
+            "name": "Specialisterne",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1244,
+        "fields": {
+            "cvr_number": "27352448",
+            "name": "Opholdsstedet Arken",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1245,
+        "fields": {
+            "cvr_number": "27352448",
+            "name": "Fonden/Den selvst\u00e6ndige Institution Opholdsstedet Arken",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1246,
+        "fields": {
+            "cvr_number": "27379966",
+            "name": "Opholdsstedet Jungsg\u00e5rden",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1247,
+        "fields": {
+            "cvr_number": "27419798",
+            "name": "Vand og By Ungdom",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1248,
+        "fields": {
+            "cvr_number": "27438148",
+            "name": "DEN SPECIALP\u00c6DAGOGISKE DAGBEHANDLINGSINSTITUTION SPUTNIK ApS",
+            "vat_factor": "95.40"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1249,
+        "fields": {
+            "cvr_number": "27448909",
+            "name": "Det Gamle Apotek I/S",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1250,
+        "fields": {
+            "cvr_number": "27479332",
+            "name": "S\u00c6TERG\u00c5RDEN",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1251,
+        "fields": {
+            "cvr_number": "27591507",
+            "name": "Casablanca Bo & Erhverv",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1252,
+        "fields": {
+            "cvr_number": "27670040",
+            "name": "K\u00f8benhavns idr\u00e6t efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1253,
+        "fields": {
+            "cvr_number": "27735428",
+            "name": "Ballerup L\u00e5sesmedie",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1254,
+        "fields": {
+            "cvr_number": "27747590",
+            "name": "Kickan L. Andersen",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1255,
+        "fields": {
+            "cvr_number": "27776760",
+            "name": "S\u00f8nderbjergg\u00e5rd",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1256,
+        "fields": {
+            "cvr_number": "27819559",
+            "name": "Bente Aaskov",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1257,
+        "fields": {
+            "cvr_number": "27829317",
+            "name": "Opholdssted Bogense",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1258,
+        "fields": {
+            "cvr_number": "27882013",
+            "name": "UDVALGET FOR HUSMODERFERIE",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1259,
+        "fields": {
+            "cvr_number": "27888348",
+            "name": "F\u00c6STER Terapi, P\u00e6dagogik og Supervision",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1260,
+        "fields": {
+            "cvr_number": "28097778",
+            "name": "Sundbog\u00e5rd",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1261,
+        "fields": {
+            "cvr_number": "28181922",
+            "name": "Skr\u00e6nten",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1262,
+        "fields": {
+            "cvr_number": "28186177",
+            "name": "Skjoldborghus",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1263,
+        "fields": {
+            "cvr_number": "28258933",
+            "name": "S/I Petersdal",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1264,
+        "fields": {
+            "cvr_number": "28306474",
+            "name": "Zleep Hotel Ballerup",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1265,
+        "fields": {
+            "cvr_number": "28400365",
+            "name": "L\u00f8vehjerte I/S",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1266,
+        "fields": {
+            "cvr_number": "28470185",
+            "name": "Fonden Carpe Diem Huset",
+            "vat_factor": "95.40"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1267,
+        "fields": {
+            "cvr_number": "28598084",
+            "name": "IDR\u00c6TSEFTERSKOLE  ULB\u00d8LLE",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1268,
+        "fields": {
+            "cvr_number": "28618360",
+            "name": "Move 1/ v. Pia Lund-Nielsen",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1269,
+        "fields": {
+            "cvr_number": "28910843",
+            "name": "Hoptrup Efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1270,
+        "fields": {
+            "cvr_number": "28935072",
+            "name": "Karise efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1271,
+        "fields": {
+            "cvr_number": "28968191",
+            "name": "Den selvejende inst. S\u00f8stjerneskolen",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1272,
+        "fields": {
+            "cvr_number": "29089035",
+            "name": "Psykolog Anne Blom Corlin",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1273,
+        "fields": {
+            "cvr_number": "29178954",
+            "name": "Fonden Boskov",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1274,
+        "fields": {
+            "cvr_number": "29188459",
+            "name": "Bof\u00e6llesskab Odsherred",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1275,
+        "fields": {
+            "cvr_number": "29188475",
+            "name": "Fakse Kommune",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1276,
+        "fields": {
+            "cvr_number": "29188505",
+            "name": "Botilbuddet Florenshus",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1277,
+        "fields": {
+            "cvr_number": "29188599",
+            "name": "Bof\u00e6llesskabet Violen",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1278,
+        "fields": {
+            "cvr_number": "29188599",
+            "name": "Marie Grubbe Skolen",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1279,
+        "fields": {
+            "cvr_number": "29189625",
+            "name": "N\u00e6stved kommune",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1280,
+        "fields": {
+            "cvr_number": "29189676",
+            "name": "Bo og Naboskab Pr\u00e6st\u00f8",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1281,
+        "fields": {
+            "cvr_number": "29190623",
+            "name": "N\u00f8debogr\u00e5d",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1282,
+        "fields": {
+            "cvr_number": "29190909",
+            "name": "Center for h\u00f8retab",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1283,
+        "fields": {
+            "cvr_number": "29236038",
+            "name": "FONDEN BAKKEG\u00c5RDEN",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1284,
+        "fields": {
+            "cvr_number": "29236054",
+            "name": "Fonden Spor 3 - Satelitten",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1285,
+        "fields": {
+            "cvr_number": "29268991",
+            "name": "Opholdsstedet Clemens",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1286,
+        "fields": {
+            "cvr_number": "29285993",
+            "name": "Holmegaards Heldagsskole v/Jan Knudsen",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1287,
+        "fields": {
+            "cvr_number": "29422710",
+            "name": "FULTON - STIFTELSEN",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1288,
+        "fields": {
+            "cvr_number": "29662398",
+            "name": "MonaK",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1289,
+        "fields": {
+            "cvr_number": "29714711",
+            "name": "Psykolog Mette Sofie Hyltoft Degn",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1290,
+        "fields": {
+            "cvr_number": "29814600",
+            "name": "Dagbehandlingsskolen Kompasset",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1291,
+        "fields": {
+            "cvr_number": "29866961",
+            "name": "Psykolog Majken Olesen v/Majken Olesen",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1292,
+        "fields": {
+            "cvr_number": "29896569",
+            "name": "Movia",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1293,
+        "fields": {
+            "cvr_number": "29908958",
+            "name": "Bramsn\u00e6svig",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1294,
+        "fields": {
+            "cvr_number": "29982538",
+            "name": "RED Safehouse",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1295,
+        "fields": {
+            "cvr_number": "30015878",
+            "name": "H\u00f8jer Design Efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1296,
+        "fields": {
+            "cvr_number": "30016998",
+            "name": "Behandlingsstedet Holbrogaard",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1297,
+        "fields": {
+            "cvr_number": "30032683",
+            "name": "Jyderup Private Heldagsskole v/Kasper Martensen",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1298,
+        "fields": {
+            "cvr_number": "30047249",
+            "name": "Psykoanalytisk/terapeutisk/praksis v/Elisabeth Bruhn-Thomsen",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1299,
+        "fields": {
+            "cvr_number": "30047923",
+            "name": "Kvindehjemmet Jagtvej",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1300,
+        "fields": {
+            "cvr_number": "30067940",
+            "name": "FAMILIEST\u00d8TTEN ApS",
+            "vat_factor": "95.40"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1301,
+        "fields": {
+            "cvr_number": "30112806",
+            "name": "Opholdsstedet Lillevangsg\u00e5rd",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1302,
+        "fields": {
+            "cvr_number": "30127056",
+            "name": "Oph.sted: PROJEKTORGANISATIONEN",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1303,
+        "fields": {
+            "cvr_number": "30145631",
+            "name": "Aktiv Weekend",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1304,
+        "fields": {
+            "cvr_number": "30177029",
+            "name": "PSYKOLOGSELSKABET TOFTEMOSEGAARD ApS",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1305,
+        "fields": {
+            "cvr_number": "30339983",
+            "name": "Aktiv kollegiet",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1306,
+        "fields": {
+            "cvr_number": "30426606",
+            "name": "AH-Praksis v/Annette Bjerum Hagenbo",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1307,
+        "fields": {
+            "cvr_number": "30467167",
+            "name": "Psykologberedskabet v/Trine Lindemark",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1308,
+        "fields": {
+            "cvr_number": "30499107",
+            "name": "CEKTOS",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1309,
+        "fields": {
+            "cvr_number": "30552202",
+            "name": "Fonden VITA",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1310,
+        "fields": {
+            "cvr_number": "30552385",
+            "name": "Skovg\u00e5rden - Skole- og behandlingshj",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1311,
+        "fields": {
+            "cvr_number": "30623770",
+            "name": "OPHOLDSSTEDET SKARBYVEJ",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1312,
+        "fields": {
+            "cvr_number": "30656598",
+            "name": "Fonden Forcen",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1313,
+        "fields": {
+            "cvr_number": "30677153",
+            "name": "Fonden Solstriben",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1314,
+        "fields": {
+            "cvr_number": "30714547",
+            "name": "Polaris",
+            "vat_factor": "95.40"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1315,
+        "fields": {
+            "cvr_number": "30768965",
+            "name": "Fonden Opholdsstedet Mississippi",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1316,
+        "fields": {
+            "cvr_number": "30789466",
+            "name": "Den selvejende institution Stedet",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1317,
+        "fields": {
+            "cvr_number": "30815769",
+            "name": "Fonden Familieplejen Storstr\u00f8m",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1318,
+        "fields": {
+            "cvr_number": "30918576",
+            "name": "Fonden Ungdomsuddannelsen U-3",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1319,
+        "fields": {
+            "cvr_number": "31194997",
+            "name": "Ud i livet",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1320,
+        "fields": {
+            "cvr_number": "31198143",
+            "name": "Trish Nymark Psykoterapeut",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1321,
+        "fields": {
+            "cvr_number": "31249031",
+            "name": "DropUd",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1322,
+        "fields": {
+            "cvr_number": "31382599",
+            "name": "FONDEN OPERATION SELVSVING",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1323,
+        "fields": {
+            "cvr_number": "31507413",
+            "name": "Den Selvej. Inst. Skovly",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1324,
+        "fields": {
+            "cvr_number": "31526094",
+            "name": "KH Stork\u00f8benhavn",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1325,
+        "fields": {
+            "cvr_number": "31579384",
+            "name": "Ahmet Demir-Socialkonsulent, Fam.behandling",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1326,
+        "fields": {
+            "cvr_number": "31718090",
+            "name": "Boligf\u00e6llesskabet Egebo I/S",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1327,
+        "fields": {
+            "cvr_number": "31720982",
+            "name": "Specialkonsulent Lars Thomsen",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1328,
+        "fields": {
+            "cvr_number": "31735815",
+            "name": "Familien Frederiksens Isheste",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1329,
+        "fields": {
+            "cvr_number": "31813107",
+            "name": "Oph.st. UNDER URET",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1330,
+        "fields": {
+            "cvr_number": "31940109",
+            "name": "St\u00f8ttecompagniet",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1331,
+        "fields": {
+            "cvr_number": "31951437",
+            "name": "Opholdsstedet H\u00f8jbrogaard",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1332,
+        "fields": {
+            "cvr_number": "32041396",
+            "name": "MTFC-Hovedstaden",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1333,
+        "fields": {
+            "cvr_number": "32107907",
+            "name": "Bostedet Caroline Marie",
+            "vat_factor": "95.40"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1334,
+        "fields": {
+            "cvr_number": "32225659",
+            "name": "Opholdsstedet Pondus",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1335,
+        "fields": {
+            "cvr_number": "32250327",
+            "name": "de2konsulenter v Nete Lindskrog",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1336,
+        "fields": {
+            "cvr_number": "32279082",
+            "name": "Villa Vivamus",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1337,
+        "fields": {
+            "cvr_number": "32422578",
+            "name": "Fonden Bakkeg\u00e5rden",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1338,
+        "fields": {
+            "cvr_number": "32521169",
+            "name": "Aloma konsulenterne",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1339,
+        "fields": {
+            "cvr_number": "32584292",
+            "name": "Heldagsskolen Lindersvold",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1340,
+        "fields": {
+            "cvr_number": "32722814",
+            "name": "Bl\u00e5 kors hjemmet",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1341,
+        "fields": {
+            "cvr_number": "32750605",
+            "name": "Pars Tolkeservice",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1342,
+        "fields": {
+            "cvr_number": "32830951",
+            "name": "IDR\u00c6TSAKADEMIETS BOST\u00d8TTE OG JOBTR\u00c6NING ApS/",
+            "vat_factor": "95.40"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1343,
+        "fields": {
+            "cvr_number": "32863558",
+            "name": "Fonden Tagk\u00e6rgaard",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1344,
+        "fields": {
+            "cvr_number": "32865283",
+            "name": "Halla Tolkeservice v/Halla Al-bacha",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1345,
+        "fields": {
+            "cvr_number": "33022611",
+            "name": "Den Selvejende institution Levuk",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1346,
+        "fields": {
+            "cvr_number": "33038844",
+            "name": "SOKON Socialkonsulenter/samv\u00e6r",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1347,
+        "fields": {
+            "cvr_number": "33044984",
+            "name": "Opholdsstedet Kurreholm",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1348,
+        "fields": {
+            "cvr_number": "33046103",
+            "name": "Nymand A/S-k\u00f8rsel",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1349,
+        "fields": {
+            "cvr_number": "33081723",
+            "name": "Opholdsstedet Kaoskonsulenterne",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1350,
+        "fields": {
+            "cvr_number": "33188722",
+            "name": "Opholdsstedet Vadsbyh\u00f8j",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1351,
+        "fields": {
+            "cvr_number": "33211872",
+            "name": "Opholdsstedet Parkg\u00e5rden",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1352,
+        "fields": {
+            "cvr_number": "33216688",
+            "name": "Etebjerggaard opholdssted",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1353,
+        "fields": {
+            "cvr_number": "33247745",
+            "name": "Botilbuddet K\u00e6derupvej  APS",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1354,
+        "fields": {
+            "cvr_number": "33329261",
+            "name": "Januscentret",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1355,
+        "fields": {
+            "cvr_number": "33361378",
+            "name": "Dankbar Aps",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1356,
+        "fields": {
+            "cvr_number": "33374194",
+            "name": "Advokaterne Algade 43",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1357,
+        "fields": {
+            "cvr_number": "33423748",
+            "name": "Opholdsstedet \u00d8rting",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1358,
+        "fields": {
+            "cvr_number": "33423748",
+            "name": "Fonden \u00d8rting ",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1359,
+        "fields": {
+            "cvr_number": "33443323",
+            "name": "K-Byrial Jensen-psykolog v/Karen Byrial Jensen",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1360,
+        "fields": {
+            "cvr_number": "33583311",
+            "name": "PsykologCompagniet",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1361,
+        "fields": {
+            "cvr_number": "33664907",
+            "name": "Privat praktiserende psykolog Pia Karoline Sparrebro",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1362,
+        "fields": {
+            "cvr_number": "33668163",
+            "name": "Psykolog Lene Kiel Jespersen",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1363,
+        "fields": {
+            "cvr_number": "33673507",
+            "name": "Sor\u00f8 apotek",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1364,
+        "fields": {
+            "cvr_number": "33721897",
+            "name": "Behandlingscenter Himmerland",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1365,
+        "fields": {
+            "cvr_number": "33734727",
+            "name": "Psykolog Elisabeth Christensen",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1366,
+        "fields": {
+            "cvr_number": "33743114",
+            "name": "Psykoterapeutisk praksis v/Rikke Leerh\u00f8j Rahm",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1367,
+        "fields": {
+            "cvr_number": "33880782",
+            "name": "ST\u00d8TTEBUREAUET ApS",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1368,
+        "fields": {
+            "cvr_number": "33903685",
+            "name": "Psykolog Martin Skriver",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1369,
+        "fields": {
+            "cvr_number": "33926804",
+            "name": "Fonden Kalles hus",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1370,
+        "fields": {
+            "cvr_number": "33998465",
+            "name": "Dalmskov v/Thomas Dalmskov",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1371,
+        "fields": {
+            "cvr_number": "34002169",
+            "name": "Psykolog Margit Novland",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1372,
+        "fields": {
+            "cvr_number": "34112185",
+            "name": "Vejen-videre v/Kristine Kim Nielsen",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1373,
+        "fields": {
+            "cvr_number": "34174156",
+            "name": "Mette Skj\u00e6rb\u00e6k PRC/selvforst\u00e5eskursus",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1374,
+        "fields": {
+            "cvr_number": "34276250",
+            "name": "Psykologisk Konsultation v/ Birgit Bonde",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1375,
+        "fields": {
+            "cvr_number": "34363501",
+            "name": "Den selvej. inst. Kildeh\u00f8jen",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1376,
+        "fields": {
+            "cvr_number": "34456194",
+            "name": "Pitstop-nu aps",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1377,
+        "fields": {
+            "cvr_number": "34509824",
+            "name": "Familie-og Psykoterapeut Tina Stenkl\u00f8v",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1378,
+        "fields": {
+            "cvr_number": "34600767",
+            "name": "Opholdsstedet Lykkegard",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1379,
+        "fields": {
+            "cvr_number": "34668094",
+            "name": "True north efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1380,
+        "fields": {
+            "cvr_number": "35023747",
+            "name": "Sanne Lundberg Psykoterapeut",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1381,
+        "fields": {
+            "cvr_number": "35047719",
+            "name": "Nordfyns Efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1382,
+        "fields": {
+            "cvr_number": "35062025",
+            "name": "Opholdsstedet Piberhus Fond",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1383,
+        "fields": {
+            "cvr_number": "35209115",
+            "name": "Odense Kvindekrisecentre",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1384,
+        "fields": {
+            "cvr_number": "35237038",
+            "name": "Concura",
+            "vat_factor": "95.40"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1385,
+        "fields": {
+            "cvr_number": "35248940",
+            "name": "Kilden",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1386,
+        "fields": {
+            "cvr_number": "35300821",
+            "name": "Terapi-Huset",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1387,
+        "fields": {
+            "cvr_number": "35504915",
+            "name": "Psykolog Kris Simonsen",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1388,
+        "fields": {
+            "cvr_number": "35551026",
+            "name": "Fredslund Consulting",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1389,
+        "fields": {
+            "cvr_number": "35558500",
+            "name": "Ny Krums\u00f8 Skole & Socialp\u00e6d. Opholds",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1390,
+        "fields": {
+            "cvr_number": "35735887",
+            "name": "Fonden Holb\u00e6k Krisecenter Medusa",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1391,
+        "fields": {
+            "cvr_number": "35861696",
+            "name": "Molis Aps.",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1392,
+        "fields": {
+            "cvr_number": "35954716",
+            "name": "Salling Group (Dansk Supermarked)",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1393,
+        "fields": {
+            "cvr_number": "36028521",
+            "name": "Familie & Evidens Center",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1394,
+        "fields": {
+            "cvr_number": "36067977",
+            "name": "Leute Aps",
+            "vat_factor": "80.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1395,
+        "fields": {
+            "cvr_number": "36109920",
+            "name": "Opholdssted Soranahus",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1396,
+        "fields": {
+            "cvr_number": "36176618",
+            "name": "Kalleruphus",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1397,
+        "fields": {
+            "cvr_number": "36264462",
+            "name": "Ditte Lindqvist",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1398,
+        "fields": {
+            "cvr_number": "36290498",
+            "name": "Wiicare",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1399,
+        "fields": {
+            "cvr_number": "36317361",
+            "name": "Havrehuset",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1400,
+        "fields": {
+            "cvr_number": "36586044",
+            "name": "Den selvejende institution Svaneke Friskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1401,
+        "fields": {
+            "cvr_number": "36630639",
+            "name": "Psykolog Anja Brems",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1402,
+        "fields": {
+            "cvr_number": "36981180",
+            "name": "Samv\u00e6r i Centrum",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1403,
+        "fields": {
+            "cvr_number": "37188722",
+            "name": "Opholdsstedet Vadsbyh\u00f8j",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1404,
+        "fields": {
+            "cvr_number": "37273449",
+            "name": "Skotteruphus",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1405,
+        "fields": {
+            "cvr_number": "37348953",
+            "name": "Stenb\u00e6k, Bang & Willumsen, Privatpraktiserende p\u00e6dagoger ApS",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1406,
+        "fields": {
+            "cvr_number": "37471992",
+            "name": "Socialkrea",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1407,
+        "fields": {
+            "cvr_number": "37494496",
+            "name": "Socialkonsulent Nanna Olesen",
+            "vat_factor": "95.40"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1408,
+        "fields": {
+            "cvr_number": "37614238",
+            "name": "FK care APS Bostedet Spiren",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1409,
+        "fields": {
+            "cvr_number": "37844071",
+            "name": "M\u00f8lleg\u00e5rdens botilbud",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1410,
+        "fields": {
+            "cvr_number": "37862703",
+            "name": "Lise S. Westermann PRC/samtaler",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1411,
+        "fields": {
+            "cvr_number": "37914312",
+            "name": "M\u00f8ltrup Optagelseshjem",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1412,
+        "fields": {
+            "cvr_number": "38347497",
+            "name": "U:Point",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1413,
+        "fields": {
+            "cvr_number": "38454293",
+            "name": "Fyrt\u00e5rnet Stenl\u00f8se/behandl.",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1414,
+        "fields": {
+            "cvr_number": "38462385",
+            "name": "Psykolog Sophie Risom",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1415,
+        "fields": {
+            "cvr_number": "38522809",
+            "name": "Job & Uddannelse Erhvervsskolen",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1416,
+        "fields": {
+            "cvr_number": "38723170",
+            "name": "Dvj consulting and social development/st\u00f8tte",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1417,
+        "fields": {
+            "cvr_number": "38729616",
+            "name": "Bog\u00f8 Kollegiet",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1418,
+        "fields": {
+            "cvr_number": "39220253",
+            "name": "Line Ibsen/Selvforst\u00e5else",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1419,
+        "fields": {
+            "cvr_number": "39306069",
+            "name": "Udvejen.dk",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1420,
+        "fields": {
+            "cvr_number": "39392186",
+            "name": "Kollerupcare",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1421,
+        "fields": {
+            "cvr_number": "39405296",
+            "name": "Caico Crafts",
+            "vat_factor": "80.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1422,
+        "fields": {
+            "cvr_number": "39481812",
+            "name": "Ubbely Krisecenter",
+            "vat_factor": "95.40"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1423,
+        "fields": {
+            "cvr_number": "39551519",
+            "name": "Skolen i Skibby",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1424,
+        "fields": {
+            "cvr_number": "39625970",
+            "name": "Broen",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1425,
+        "fields": {
+            "cvr_number": "39684918",
+            "name": "B\u00f8rnecentret Fjordh\u00f8j",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1426,
+        "fields": {
+            "cvr_number": "40233156",
+            "name": "BACKSPIN & SELVV\u00c6RD ApS",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1427,
+        "fields": {
+            "cvr_number": "40371117",
+            "name": "Vordingborgskolen",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1428,
+        "fields": {
+            "cvr_number": "41332328",
+            "name": "F\u00c6LLESSKABET FANEFJORD FOND",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1429,
+        "fields": {
+            "cvr_number": "43286617",
+            "name": "Ellesletteg\u00e5rd",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1430,
+        "fields": {
+            "cvr_number": "43431597",
+            "name": "L\u00e6nke-Pensionatet",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1431,
+        "fields": {
+            "cvr_number": "44388618",
+            "name": "VEJLEFJORDSKOLEN",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1432,
+        "fields": {
+            "cvr_number": "44683016",
+            "name": "N\u00e6sgaard efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1433,
+        "fields": {
+            "cvr_number": "44773070",
+            "name": "Rosenhaven Plejecenter",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1434,
+        "fields": {
+            "cvr_number": "45005917",
+            "name": "Langelands efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1435,
+        "fields": {
+            "cvr_number": "46231112",
+            "name": "Egmont H\u00f8jskolen",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1436,
+        "fields": {
+            "cvr_number": "46231112",
+            "name": "Egmont H\u00f8jskolen",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1437,
+        "fields": {
+            "cvr_number": "48390950",
+            "name": "ESROM KOST- OG FRISKOLE",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1438,
+        "fields": {
+            "cvr_number": "49015011",
+            "name": "Efterskolen Solbakken",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1439,
+        "fields": {
+            "cvr_number": "49148011",
+            "name": "Bornholms Krist Friskole Davidskolen",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1440,
+        "fields": {
+            "cvr_number": "49801513",
+            "name": "F\u00e5revejleefterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1441,
+        "fields": {
+            "cvr_number": "49801513",
+            "name": "F\u00c5REVEJLE FRI- OG EFTERSKOLE",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1442,
+        "fields": {
+            "cvr_number": "50823848",
+            "name": "Skolehaven",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1443,
+        "fields": {
+            "cvr_number": "52675510",
+            "name": "Sams\u00f8 efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1444,
+        "fields": {
+            "cvr_number": "53383211",
+            "name": "Familieinst./Familiehuset Engelsborg",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1445,
+        "fields": {
+            "cvr_number": "54801610",
+            "name": "Lomborg Gymnastik- og Idr\u00e6tsefterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1446,
+        "fields": {
+            "cvr_number": "55134510",
+            "name": "Instituttet for blinde og svagtseend",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1447,
+        "fields": {
+            "cvr_number": "55373707",
+            "name": "Fonden oph.st.: RISBYG\u00c5RD",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1448,
+        "fields": {
+            "cvr_number": "55453004",
+            "name": "Hjortholm",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1449,
+        "fields": {
+            "cvr_number": "55627312",
+            "name": "Askovhus",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1450,
+        "fields": {
+            "cvr_number": "55775214",
+            "name": "DAB",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1451,
+        "fields": {
+            "cvr_number": "55894009",
+            "name": "Bog\u00f8 Kostskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1452,
+        "fields": {
+            "cvr_number": "57646233",
+            "name": "Holdstedgaard",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1453,
+        "fields": {
+            "cvr_number": "58626716",
+            "name": "glamsbjerg fri og efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1454,
+        "fields": {
+            "cvr_number": "58842117",
+            "name": "Midtfyns efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1455,
+        "fields": {
+            "cvr_number": "58937517",
+            "name": "Ringe Fri- og Efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1456,
+        "fields": {
+            "cvr_number": "59276417",
+            "name": "Opholdsstedet Arken",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1457,
+        "fields": {
+            "cvr_number": "59477218",
+            "name": "HINDHOLM EFTERSKOLE",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1458,
+        "fields": {
+            "cvr_number": "59477218",
+            "name": "Holmstrup Efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1459,
+        "fields": {
+            "cvr_number": "59541919",
+            "name": "Osted Fri- og Efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1460,
+        "fields": {
+            "cvr_number": "59575511",
+            "name": "T\u00f8mmerup efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1461,
+        "fields": {
+            "cvr_number": "59607316",
+            "name": "Birkebo",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1462,
+        "fields": {
+            "cvr_number": "62924810",
+            "name": "Dantaxi 4x48",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1463,
+        "fields": {
+            "cvr_number": "62924810",
+            "name": "Dantaxi 4x48",
+            "vat_factor": "95.40"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1464,
+        "fields": {
+            "cvr_number": "62988711",
+            "name": "Tommerup Efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1465,
+        "fields": {
+            "cvr_number": "63447412",
+            "name": "Blykobbe Efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1466,
+        "fields": {
+            "cvr_number": "63640719",
+            "name": "Omr\u00e5deinstitutionen Dildhaven",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1467,
+        "fields": {
+            "cvr_number": "64502018",
+            "name": "Bof\u00e6llesskab Jernbane Alle",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1468,
+        "fields": {
+            "cvr_number": "64593528",
+            "name": "Thorsh\u00f8jg\u00e5rd",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1469,
+        "fields": {
+            "cvr_number": "64942212",
+            "name": "B\u00f8rne- og familiehus Arild",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1470,
+        "fields": {
+            "cvr_number": "64942212",
+            "name": "Ertodeto",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1471,
+        "fields": {
+            "cvr_number": "65321089",
+            "name": "Louisenlund",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1472,
+        "fields": {
+            "cvr_number": "65344718",
+            "name": "Holte-Hus Efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1473,
+        "fields": {
+            "cvr_number": "65462117",
+            "name": "Klank Efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1474,
+        "fields": {
+            "cvr_number": "65589447",
+            "name": "\u00d8se efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1475,
+        "fields": {
+            "cvr_number": "65655012",
+            "name": "EFTERSKOLEN \u00d8STERG\u00c5RD",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1476,
+        "fields": {
+            "cvr_number": "65782413",
+            "name": "Roholte Efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1477,
+        "fields": {
+            "cvr_number": "66252817",
+            "name": "AKUcenter H\u00f8jagergaard",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1478,
+        "fields": {
+            "cvr_number": "66408310",
+            "name": "Stenhus Kostskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1479,
+        "fields": {
+            "cvr_number": "67794710",
+            "name": "Ubby Fri- og Idr\u00e6tsefterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1480,
+        "fields": {
+            "cvr_number": "67794710",
+            "name": "Friskolen & Idr\u00e6tsefterskolen Ubby",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1481,
+        "fields": {
+            "cvr_number": "68513928",
+            "name": "Hjortholm Kostskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1482,
+        "fields": {
+            "cvr_number": "69661513",
+            "name": "Faxehus efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1483,
+        "fields": {
+            "cvr_number": "69783414",
+            "name": "NIELSSTRUP",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1484,
+        "fields": {
+            "cvr_number": "70087316",
+            "name": "Odsherreds Efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1485,
+        "fields": {
+            "cvr_number": "70295415",
+            "name": "Sor\u00f8 Husholdningsskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1486,
+        "fields": {
+            "cvr_number": "74577016",
+            "name": "DSI Kollegiet Nord-lys",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1487,
+        "fields": {
+            "cvr_number": "75521755",
+            "name": "Overmarksg\u00e5rden",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1488,
+        "fields": {
+            "cvr_number": "75711115",
+            "name": "TAXA SYD AMBA",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1489,
+        "fields": {
+            "cvr_number": "75736215",
+            "name": "AKTIV WEEKEND",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1490,
+        "fields": {
+            "cvr_number": "76409110",
+            "name": "Kalleruphus  psyk. bo- og behand ",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1491,
+        "fields": {
+            "cvr_number": "76767416",
+            "name": "I/S Kilden",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1492,
+        "fields": {
+            "cvr_number": "77252010",
+            "name": "FABU-FONDEN",
+            "vat_factor": "95.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1493,
+        "fields": {
+            "cvr_number": "78297212",
+            "name": "Skolen p\u00e5 Slotsv\u00e6nget",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1494,
+        "fields": {
+            "cvr_number": "78627719",
+            "name": "SKOVLY",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1495,
+        "fields": {
+            "cvr_number": "78637528",
+            "name": "NORDTOFTE",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1496,
+        "fields": {
+            "cvr_number": "78887915",
+            "name": "Startskuddet",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1497,
+        "fields": {
+            "cvr_number": "79005312",
+            "name": "Fonden Krisecentret R\u00f8ntofte",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1498,
+        "fields": {
+            "cvr_number": "80429959",
+            "name": "Skr\u00f8dstrup efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1499,
+        "fields": {
+            "cvr_number": "81368813",
+            "name": "Nordsj\u00e6llands Efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1500,
+        "fields": {
+            "cvr_number": "81473315",
+            "name": "Grennessminde Birker\u00f8d",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1501,
+        "fields": {
+            "cvr_number": "81956928",
+            "name": "Nysted efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1502,
+        "fields": {
+            "cvr_number": "83280115",
+            "name": "Korinth Efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1503,
+        "fields": {
+            "cvr_number": "84414913",
+            "name": "Landsforeningen Autisme",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1504,
+        "fields": {
+            "cvr_number": "84493813",
+            "name": "Efterskolen Waldemarsbo",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1505,
+        "fields": {
+            "cvr_number": "85188119",
+            "name": "ADVODAN Lolland-Falster",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1506,
+        "fields": {
+            "cvr_number": "85630113",
+            "name": "H\u00f8rhuset",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1507,
+        "fields": {
+            "cvr_number": "85709119",
+            "name": "Ringe Kost- og Realskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1508,
+        "fields": {
+            "cvr_number": "86944510",
+            "name": "Bindern\u00e6s efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1509,
+        "fields": {
+            "cvr_number": "89185513",
+            "name": "Halstedhus Efterskole",
+            "vat_factor": "95.40"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1510,
+        "fields": {
+            "cvr_number": "89257514",
+            "name": "Pederstrup efterskole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1511,
+        "fields": {
+            "cvr_number": "93019350",
+            "name": "STUTTERI SVANEMOSEN V/ARNE NIELSEN",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1512,
+        "fields": {
+            "cvr_number": "97124390",
+            "name": "Familieh\u00f8jskolen Sk\u00e6rg\u00e5rden",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1513,
+        "fields": {
+            "cvr_number": "",
+            "name": "Bof\u00e6llesskabet Alstrup all\u00e9",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1514,
+        "fields": {
+            "cvr_number": "",
+            "name": "M\u00f8llebakken",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1515,
+        "fields": {
+            "cvr_number": "",
+            "name": "Forsorgshjemmet Solvang",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1516,
+        "fields": {
+            "cvr_number": "",
+            "name": "Skovv\u00e6nget",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1517,
+        "fields": {
+            "cvr_number": "",
+            "name": "\"Fiktiv\" Strandager",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1518,
+        "fields": {
+            "cvr_number": "",
+            "name": "Munkeg\u00e5rd",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1519,
+        "fields": {
+            "cvr_number": "",
+            "name": "Basen",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1520,
+        "fields": {
+            "cvr_number": "",
+            "name": "Farmen/behandl.",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1521,
+        "fields": {
+            "cvr_number": "",
+            "name": "Fjordskolen/socialdel",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1522,
+        "fields": {
+            "cvr_number": "",
+            "name": "Fortuna ApS",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1523,
+        "fields": {
+            "cvr_number": "",
+            "name": "Henrik Skovsen/kontaktper.",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1524,
+        "fields": {
+            "cvr_number": "",
+            "name": "JSR-socialkonsulenter",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1525,
+        "fields": {
+            "cvr_number": "",
+            "name": "KAB husleje,Egebjergvang 169",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1526,
+        "fields": {
+            "cvr_number": "",
+            "name": "MK Consult",
+            "vat_factor": "95.40"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1527,
+        "fields": {
+            "cvr_number": "",
+            "name": "Pausen",
+            "vat_factor": "95.40"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1528,
+        "fields": {
+            "cvr_number": "",
+            "name": "Pia Offenberg/st\u00f8tte",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1529,
+        "fields": {
+            "cvr_number": "",
+            "name": "Pilely G\u00e5rd",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1530,
+        "fields": {
+            "cvr_number": "",
+            "name": "Skolen Gimle-Behandling p\u00e5 intern skole",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1531,
+        "fields": {
+            "cvr_number": "",
+            "name": "Socialkonsulenterne, Fam.behandl.",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1532,
+        "fields": {
+            "cvr_number": "",
+            "name": "Steiner B\u00f8rnehave",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1533,
+        "fields": {
+            "cvr_number": "",
+            "name": "Taxa 4x35",
+            "vat_factor": "100.00"
+        }
+    },
+    {
+        "model": "core.serviceprovider",
+        "pk": 1534,
+        "fields": {
+            "cvr_number": "",
+            "name": "Villa Magnoila",
+            "vat_factor": "100.00"
+        }
     }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 2,
-    "fields": {
-        "cvr_number": "39405296",
-        "name": "Caico Crafts",
-        "vat_factor": "80.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 3,
-    "fields": {
-        "cvr_number": "39481812",
-        "name": "Ubbely Krisecenter",
-        "vat_factor": "95.40"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 4,
-    "fields": {
-        "cvr_number": "77252010",
-        "name": "FABU-FONDEN",
-        "vat_factor": "95.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 5,
-    "fields": {
-        "cvr_number": "",
-        "name": "ADVODAN Lolland-Falster",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 6,
-    "fields": {
-        "cvr_number": "",
-        "name": "Advokaterne Algade 43",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 7,
-    "fields": {
-        "cvr_number": "",
-        "name": "ADVOKATFIRMAET VON DER MAASE V/JENS CHR. VON DER MAASE",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 8,
-    "fields": {
-        "cvr_number": "",
-        "name": "Ahmet Demir-Socialkonsulent, Fam.behandling",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 9,
-    "fields": {
-        "cvr_number": "",
-        "name": "AH-Praksis v/Annette Bjerum Hagenbo",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 10,
-    "fields": {
-        "cvr_number": "",
-        "name": "Alfa-Fredensborg",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 11,
-    "fields": {
-        "cvr_number": "",
-        "name": "Aloma konsulenterne",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 12,
-    "fields": {
-        "cvr_number": "",
-        "name": "Anders B. Larsen/st\u00f8tte",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 13,
-    "fields": {
-        "cvr_number": "",
-        "name": "Aved\u00f8re Tolk-R\u00e5dgivning v/Ayhan Demir",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 14,
-    "fields": {
-        "cvr_number": "",
-        "name": "Back2Care",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 15,
-    "fields": {
-        "cvr_number": "",
-        "name": "BACKSPIN & SELVV\u00c6RD ApS/samv\u00e6r",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 16,
-    "fields": {
-        "cvr_number": "",
-        "name": "Ballerup L\u00e5sesmedie",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 17,
-    "fields": {
-        "cvr_number": "",
-        "name": "Basen",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 18,
-    "fields": {
-        "cvr_number": "",
-        "name": "Bente Friis Holm/for\u00e6ldrek.unders.",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 19,
-    "fields": {
-        "cvr_number": "",
-        "name": "Bente Aaskov/st\u00f8tte",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 20,
-    "fields": {
-        "cvr_number": "",
-        "name": "Billehave Efterskole",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 21,
-    "fields": {
-        "cvr_number": "",
-        "name": "Bindern\u00e6s Efterskole",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 22,
-    "fields": {
-        "cvr_number": "",
-        "name": "Birketoften/aflastning",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 23,
-    "fields": {
-        "cvr_number": "",
-        "name": "Bog\u00f8 Kollegiet",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 24,
-    "fields": {
-        "cvr_number": "",
-        "name": "Bog\u00f8 Kostskole",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 25,
-    "fields": {
-        "cvr_number": "",
-        "name": "Bornholms Krist Friskole Davidskolen",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 26,
-    "fields": {
-        "cvr_number": "",
-        "name": "Bostedet Caroline Marie",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 27,
-    "fields": {
-        "cvr_number": "",
-        "name": "Bramsn\u00e6svig",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 28,
-    "fields": {
-        "cvr_number": "",
-        "name": "B\u00f8rnecenter SIV",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 29,
-    "fields": {
-        "cvr_number": "",
-        "name": "B\u00f8rnehuset Lindh\u00f8jg\u00e5rd, udslusning",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 30,
-    "fields": {
-        "cvr_number": "",
-        "name": "Carpe Diem Huset",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 31,
-    "fields": {
-        "cvr_number": "",
-        "name": "CEKTOS",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 32,
-    "fields": {
-        "cvr_number": "",
-        "name": "Center for Kognitiv Adf\u00e6rdsterapi",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 33,
-    "fields": {
-        "cvr_number": "",
-        "name": "Dagbehandlingsskolen Fyrt\u00e5rnet/behandl.",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 34,
-    "fields": {
-        "cvr_number": "",
-        "name": "Dagbehandlingsskolen Kompasset",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 35,
-    "fields": {
-        "cvr_number": "",
-        "name": "Dalmskov v/Thomas Dalmskov",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 36,
-    "fields": {
-        "cvr_number": "",
-        "name": "Dankbar Aps",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 37,
-    "fields": {
-        "cvr_number": "",
-        "name": "Dansk Supermarked/F\u00f8tex",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 38,
-    "fields": {
-        "cvr_number": "",
-        "name": "Dantaxi 4x48",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 39,
-    "fields": {
-        "cvr_number": "",
-        "name": "de2konsulenter v Nete Lindskrog",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 40,
-    "fields": {
-        "cvr_number": "",
-        "name": "Den Gamle Brugs",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 41,
-    "fields": {
-        "cvr_number": "",
-        "name": "DEN PSYKOLOGISKE R\u00c5DGIVNING V/ BENTE FRIIS HOLM",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 42,
-    "fields": {
-        "cvr_number": "",
-        "name": "Den selvej. inst. Dysseg\u00e5rden",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 43,
-    "fields": {
-        "cvr_number": "",
-        "name": "Den selvejende Inst. Kildeh\u00f8jen",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 44,
-    "fields": {
-        "cvr_number": "",
-        "name": "Den selvejende inst. S\u00f8stjerneskolen/ dagbehandl.",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 45,
-    "fields": {
-        "cvr_number": "",
-        "name": "Den Selvejende institution Levuk",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 46,
-    "fields": {
-        "cvr_number": "",
-        "name": "DEN SELVEJENDE INSTITUTION SKOLEN P\u00c5 SLOTSV\u00c6NGET",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 47,
-    "fields": {
-        "cvr_number": "",
-        "name": "Den selvejende institution Svaneke Friskole",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 48,
-    "fields": {
-        "cvr_number": "",
-        "name": "DET SOCIALP\u00c6DAGOGISKE OPHOLDSSTED KERNEHUSET ApS",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 49,
-    "fields": {
-        "cvr_number": "",
-        "name": "Ditte Lindqvist",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 50,
-    "fields": {
-        "cvr_number": "",
-        "name": "Driftfonden Concura/aflastning/k\u00f8rsel",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 51,
-    "fields": {
-        "cvr_number": "",
-        "name": "DSI Andromeda",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 52,
-    "fields": {
-        "cvr_number": "",
-        "name": "DSI Kollegiet Nord-lys",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 53,
-    "fields": {
-        "cvr_number": "",
-        "name": "DUOS",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 54,
-    "fields": {
-        "cvr_number": "",
-        "name": "Dvj consulting and social development/st\u00f8tte",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 55,
-    "fields": {
-        "cvr_number": "",
-        "name": "Efterskolen Lindenborg",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 56,
-    "fields": {
-        "cvr_number": "",
-        "name": "Egfond, ophold",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 57,
-    "fields": {
-        "cvr_number": "",
-        "name": "Egfond/ophold",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 58,
-    "fields": {
-        "cvr_number": "",
-        "name": "Egholt/ophold",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 59,
-    "fields": {
-        "cvr_number": "",
-        "name": "Egholt/skole",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 60,
-    "fields": {
-        "cvr_number": "",
-        "name": "EKJ.Holmegaards Heldagsskole v/Jan Knudsen",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 61,
-    "fields": {
-        "cvr_number": "",
-        "name": "Engg\u00e5rdens Hestepension",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 62,
-    "fields": {
-        "cvr_number": "",
-        "name": "Esrum Kostskole",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 63,
-    "fields": {
-        "cvr_number": "",
-        "name": "Familien Frederiksens Isheste",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 64,
-    "fields": {
-        "cvr_number": "",
-        "name": "Familie-og Psykoterapeut Tina Stenkl\u00f8v",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 65,
-    "fields": {
-        "cvr_number": "",
-        "name": "FAMILIEST\u00d8TTEN ApS",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 66,
-    "fields": {
-        "cvr_number": "",
-        "name": "Farmen/behandl.",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 67,
-    "fields": {
-        "cvr_number": "",
-        "name": "Fjordskolen/socialdel",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 68,
-    "fields": {
-        "cvr_number": "",
-        "name": "FK care APS Bostedet Spiren",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 69,
-    "fields": {
-        "cvr_number": "",
-        "name": "Fonden Center For Autisme/ungegrp.",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 70,
-    "fields": {
-        "cvr_number": "",
-        "name": "Fonden Clemens Gaarden",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 71,
-    "fields": {
-        "cvr_number": "",
-        "name": "Fonden Clemens Gaarden/skoletilbud",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 72,
-    "fields": {
-        "cvr_number": "",
-        "name": "Fonden Familieplejen Storstr\u00f8m",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 73,
-    "fields": {
-        "cvr_number": "",
-        "name": "Fonden Godhavn",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 74,
-    "fields": {
-        "cvr_number": "",
-        "name": "Fonden Grennesminde, opholdsted, intensiv botr\u00e6ning",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 75,
-    "fields": {
-        "cvr_number": "",
-        "name": "Fonden Holb\u00e6k Krisecenter Medusa",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 76,
-    "fields": {
-        "cvr_number": "",
-        "name": "Fonden Kalles hus",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 77,
-    "fields": {
-        "cvr_number": "",
-        "name": "Fonden Kalles hus/ ekstra st\u00f8tte",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 78,
-    "fields": {
-        "cvr_number": "",
-        "name": "Fonden Koloni",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 79,
-    "fields": {
-        "cvr_number": "",
-        "name": "Fonden Koloni/aflastn.",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 80,
-    "fields": {
-        "cvr_number": "",
-        "name": "Fonden Koloni/Pigegruppe",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 81,
-    "fields": {
-        "cvr_number": "",
-        "name": "Fonden Kvadderkj\u00e6r",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 82,
-    "fields": {
-        "cvr_number": "",
-        "name": "Fonden Solstriben/oph.",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 83,
-    "fields": {
-        "cvr_number": "",
-        "name": "Fonden Tagk\u00e6rgaard/afrusning/afklaring",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 84,
-    "fields": {
-        "cvr_number": "",
-        "name": "Fonden VITA",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 85,
-    "fields": {
-        "cvr_number": "",
-        "name": "Fonden \u00d8rting ",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 86,
-    "fields": {
-        "cvr_number": "",
-        "name": "Fonden/ Den Selvejende Inst. Birkemoseg\u00e5rd",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 87,
-    "fields": {
-        "cvr_number": "",
-        "name": "Fonden/Den Selvej Inst Birkemoseg\u00e5rd",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 88,
-    "fields": {
-        "cvr_number": "",
-        "name": "Fonden/Den selvst\u00e6ndige Institution Opholdsstedet Arken",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 89,
-    "fields": {
-        "cvr_number": "",
-        "name": "Fonden/Den selvst\u00e6ndige Institution Opholdsstedet Arken/samv\u00e6r+cykel",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 90,
-    "fields": {
-        "cvr_number": "",
-        "name": "Fortuna ApS",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 91,
-    "fields": {
-        "cvr_number": "",
-        "name": "Fredslund Consulting",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 92,
-    "fields": {
-        "cvr_number": "",
-        "name": "Fredslund Consulting ",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 93,
-    "fields": {
-        "cvr_number": "",
-        "name": "Fredslund Consulting/kontaktperson",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 94,
-    "fields": {
-        "cvr_number": "",
-        "name": "Friskolen & Idr\u00e6tsefterskolen Ubby",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 95,
-    "fields": {
-        "cvr_number": "",
-        "name": "Fyrt\u00e5rnet Stenl\u00f8se/behandl.",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 96,
-    "fields": {
-        "cvr_number": "",
-        "name": "F\u00e6llesskabet Fanefjord Fond",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 97,
-    "fields": {
-        "cvr_number": "",
-        "name": "F\u00c6STER Terapi, P\u00e6dagogik og Supervision",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 98,
-    "fields": {
-        "cvr_number": "",
-        "name": "F\u00c5REVEJLE FRI- OG EFTERSKOLE",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 99,
-    "fields": {
-        "cvr_number": "",
-        "name": "F\u00e5revejleefterskole",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 100,
-    "fields": {
-        "cvr_number": "",
-        "name": "Gedebjerg/socialp.foranstaltning",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 101,
-    "fields": {
-        "cvr_number": "",
-        "name": "Glostrup Observations-og behandlingshjem",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 102,
-    "fields": {
-        "cvr_number": "",
-        "name": "Godhavn",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 103,
-    "fields": {
-        "cvr_number": "",
-        "name": "Grennesminde, Birker\u00f8d-Behandling p\u00e5 Grennesminde Birker\u00f8d/socialdel",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 104,
-    "fields": {
-        "cvr_number": "",
-        "name": "Halla Albacha",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 105,
-    "fields": {
-        "cvr_number": "",
-        "name": "Halstedhus Efterskole",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 106,
-    "fields": {
-        "cvr_number": "",
-        "name": "Handicap ridning",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 107,
-    "fields": {
-        "cvr_number": "",
-        "name": "Havreg\u00e5rden Lille kost- og dagskole",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 108,
-    "fields": {
-        "cvr_number": "",
-        "name": "Havreg\u00e5rden Lille kost- og dagskole/underv.",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 109,
-    "fields": {
-        "cvr_number": "",
-        "name": "Havreg\u00e5rdens Lille Kost- og Dagskole",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 110,
-    "fields": {
-        "cvr_number": "",
-        "name": "Hcoaching/st\u00f8tte",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 111,
-    "fields": {
-        "cvr_number": "",
-        "name": "Heldagsskolen Lindersvold",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 112,
-    "fields": {
-        "cvr_number": "",
-        "name": "Henriette H\u00f8st-Madsen",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 113,
-    "fields": {
-        "cvr_number": "",
-        "name": "Henrik Skovsen/kontaktper.",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 114,
-    "fields": {
-        "cvr_number": "",
-        "name": "Hiller\u00f8d Kommune/Kurreholm",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 115,
-    "fields": {
-        "cvr_number": "",
-        "name": "Hoptrup Efterskole",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 116,
-    "fields": {
-        "cvr_number": "",
-        "name": "HT Consult v/Henrik Thorsdal",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 117,
-    "fields": {
-        "cvr_number": "",
-        "name": "Husleje/str\u00f8m",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 118,
-    "fields": {
-        "cvr_number": "",
-        "name": "Husmoderferie",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 119,
-    "fields": {
-        "cvr_number": "",
-        "name": "Idr\u00e6tsakademiet/dagbehandling",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 120,
-    "fields": {
-        "cvr_number": "",
-        "name": "IDR\u00c6TSAKADEMIETS BOST\u00d8TTE OG JOBTR\u00c6NING ApS,udredn. + behandl.",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 121,
-    "fields": {
-        "cvr_number": "",
-        "name": "IDR\u00c6TSAKADEMIETS BOST\u00d8TTE OG JOBTR\u00c6NING ApS/",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 122,
-    "fields": {
-        "cvr_number": "",
-        "name": "IDR\u00c6TSAKADEMIETS BOST\u00d8TTE OG JOBTR\u00c6NING ApS/Behandl.",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 123,
-    "fields": {
-        "cvr_number": "",
-        "name": "IDR\u00c6TSAKADEMIETS BOST\u00d8TTE OG JOBTR\u00c6NING ApS/st\u00f8tte",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 124,
-    "fields": {
-        "cvr_number": "",
-        "name": "Institut for Integration",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 125,
-    "fields": {
-        "cvr_number": "",
-        "name": "Januscenteret - udredning",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 126,
-    "fields": {
-        "cvr_number": "",
-        "name": "Januscentret",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 127,
-    "fields": {
-        "cvr_number": "",
-        "name": "Job & Uddannelse Erhvervsskolen",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 128,
-    "fields": {
-        "cvr_number": "",
-        "name": "JSR-socialkonsulenter",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 129,
-    "fields": {
-        "cvr_number": "",
-        "name": "Jyderup Private Heldagsskole-Dagbehandling",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 130,
-    "fields": {
-        "cvr_number": "",
-        "name": "KAB husleje,Egebjergvang 169",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 131,
-    "fields": {
-        "cvr_number": "",
-        "name": "Kanonen",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 132,
-    "fields": {
-        "cvr_number": "",
-        "name": "Karise Efterskole",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 133,
-    "fields": {
-        "cvr_number": "",
-        "name": "K-Byrial Jensen-psykolog v/Karen Byrial Jensen",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 134,
-    "fields": {
-        "cvr_number": "",
-        "name": "Kickan L.Andersen-r\u00e5dgivning",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 135,
-    "fields": {
-        "cvr_number": "",
-        "name": "Kickhan Andersen",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 136,
-    "fields": {
-        "cvr_number": "",
-        "name": "Klank Efterskole",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 137,
-    "fields": {
-        "cvr_number": "",
-        "name": "Knud Hjulmand, KH Psykologisk Kons",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 138,
-    "fields": {
-        "cvr_number": "",
-        "name": "Knud Hjulmand, KH Psykologisk Kons./for\u00e6ldrekomp.unders.+b\u00f8rnepsykl.",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 139,
-    "fields": {
-        "cvr_number": "",
-        "name": "Kollerupcare",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 140,
-    "fields": {
-        "cvr_number": "",
-        "name": "Korinth Efterskole - Spejderskolen",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 141,
-    "fields": {
-        "cvr_number": "",
-        "name": "Kurreholm",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 142,
-    "fields": {
-        "cvr_number": "",
-        "name": "K\u00f8benhavns Idr\u00e6tsefterskole",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 143,
-    "fields": {
-        "cvr_number": "",
-        "name": "K\u00f8benhavns Idr\u00e6tsefterskole/t\u00f8j+indmeld.",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 144,
-    "fields": {
-        "cvr_number": "",
-        "name": "K\u00f8rsel b\u00f8rneterapien",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 145,
-    "fields": {
-        "cvr_number": "",
-        "name": "Landsforeningen Autisme",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 146,
-    "fields": {
-        "cvr_number": "",
-        "name": "Lenja / st\u00f8tte(52..6)",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 147,
-    "fields": {
-        "cvr_number": "",
-        "name": "Lenja/st\u00f8tte til mor",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 148,
-    "fields": {
-        "cvr_number": "",
-        "name": "Leute Aps",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 149,
-    "fields": {
-        "cvr_number": "",
-        "name": "Leute Aps./ aflastn.",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 150,
-    "fields": {
-        "cvr_number": "",
-        "name": "Line Ibsen/Selvforst\u00e5else",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 151,
-    "fields": {
-        "cvr_number": "",
-        "name": "Lise S. Westermann PRC/samtaler",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 152,
-    "fields": {
-        "cvr_number": "",
-        "name": "Lomborg Gymnastik- og Idr\u00e6tsefterskole",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 153,
-    "fields": {
-        "cvr_number": "",
-        "name": "Lomborg Gymnastik- og Idr\u00e6tsefterskole/skit\u00f8j",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 154,
-    "fields": {
-        "cvr_number": "",
-        "name": "Lotte - Staaal./ st\u00f8tte",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 155,
-    "fields": {
-        "cvr_number": "",
-        "name": "Lotte - Staaal./samv\u00e6r",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 156,
-    "fields": {
-        "cvr_number": "",
-        "name": "Lundby Efterskole",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 157,
-    "fields": {
-        "cvr_number": "",
-        "name": "Magleby Fri og Efterskole",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 158,
-    "fields": {
-        "cvr_number": "",
-        "name": "Magleby Fri- og Efterskole",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 159,
-    "fields": {
-        "cvr_number": "",
-        "name": "Magleby Fri- og Efterskole/mentor",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 160,
-    "fields": {
-        "cvr_number": "",
-        "name": "Magles\u00f8hus, ophold",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 161,
-    "fields": {
-        "cvr_number": "",
-        "name": "Malthes Coach",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 162,
-    "fields": {
-        "cvr_number": "",
-        "name": "Mette Skj\u00e6rb\u00e6k PRC/selvforst\u00e5eskursus",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 163,
-    "fields": {
-        "cvr_number": "",
-        "name": "MICAN, aflastn.",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 164,
-    "fields": {
-        "cvr_number": "",
-        "name": "MICAN, Fam.behandling",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 165,
-    "fields": {
-        "cvr_number": "",
-        "name": "MICAN, St\u00f8tte/Kontakt",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 166,
-    "fields": {
-        "cvr_number": "",
-        "name": "Mina Hindholm Efterskole",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 167,
-    "fields": {
-        "cvr_number": "",
-        "name": "MK Consult/ p\u00e6dagogisk hj\u00e6lp",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 168,
-    "fields": {
-        "cvr_number": "",
-        "name": "Molis Aps.",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 169,
-    "fields": {
-        "cvr_number": "",
-        "name": "Molis Aps/Kusus om mad og autisme",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 170,
-    "fields": {
-        "cvr_number": "",
-        "name": "MonaK",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 171,
-    "fields": {
-        "cvr_number": "",
-        "name": "Move 1/ botr\u00e6ning",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 172,
-    "fields": {
-        "cvr_number": "",
-        "name": "Move 1/ v. Pia Lund-Nielsen",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 173,
-    "fields": {
-        "cvr_number": "",
-        "name": "Movia",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 174,
-    "fields": {
-        "cvr_number": "",
-        "name": "M\u00f8lleg\u00e5rdens Opholdssted",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 175,
-    "fields": {
-        "cvr_number": "",
-        "name": "Nordfyns Efterskole",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 176,
-    "fields": {
-        "cvr_number": "",
-        "name": "Nordsj\u00e6llands Efterskole",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 177,
-    "fields": {
-        "cvr_number": "",
-        "name": "Nymand A/S-k\u00f8rsel",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 178,
-    "fields": {
-        "cvr_number": "",
-        "name": "Nysted Efterskole",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 179,
-    "fields": {
-        "cvr_number": "",
-        "name": "Nysted Efterskole, st\u00f8tte",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 180,
-    "fields": {
-        "cvr_number": "",
-        "name": "N\u00e6sgaard Efterskole",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 181,
-    "fields": {
-        "cvr_number": "",
-        "name": "Odense Kommune / Fonden Kalles hus/ophold",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 182,
-    "fields": {
-        "cvr_number": "",
-        "name": "Odsherreds efterskole",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 183,
-    "fields": {
-        "cvr_number": "",
-        "name": "Ole Stjernholm",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 184,
-    "fields": {
-        "cvr_number": "",
-        "name": "Omr\u00e5deinstitutionen Dildhaven",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 185,
-    "fields": {
-        "cvr_number": "",
-        "name": "Opholdssted Bogense/bodel",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 186,
-    "fields": {
-        "cvr_number": "",
-        "name": "Opholdsstedet Paideia",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 187,
-    "fields": {
-        "cvr_number": "",
-        "name": "Opholdsstedet Paideia/Ekstra ressourcer",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 188,
-    "fields": {
-        "cvr_number": "",
-        "name": "Opholdsstedet Parkg\u00e5rden",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 189,
-    "fields": {
-        "cvr_number": "",
-        "name": "Opholdsstedet Piberhus Fond,oph.med ekstra st\u00f8tte",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 190,
-    "fields": {
-        "cvr_number": "",
-        "name": "Opholdsstedet Piberhus Fond,oph.uden ekstra st\u00f8tte",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 191,
-    "fields": {
-        "cvr_number": "",
-        "name": "Opholdsstedet S\u00f8egaard",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 192,
-    "fields": {
-        "cvr_number": "",
-        "name": "Park Street Nordicom/Zleep Room",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 193,
-    "fields": {
-        "cvr_number": "",
-        "name": "Pars Tolkeservice",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 194,
-    "fields": {
-        "cvr_number": "",
-        "name": "Pausen",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 195,
-    "fields": {
-        "cvr_number": "",
-        "name": "Pia Offenberg/st\u00f8tte",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 196,
-    "fields": {
-        "cvr_number": "",
-        "name": "Pilely G\u00e5rd",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 197,
-    "fields": {
-        "cvr_number": "",
-        "name": "Pitstop-nu aps",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 198,
-    "fields": {
-        "cvr_number": "",
-        "name": "Pitstop-nu aps/Motivationsbehandling",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 199,
-    "fields": {
-        "cvr_number": "",
-        "name": "Polaris/Behandl.",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 200,
-    "fields": {
-        "cvr_number": "",
-        "name": "Privat praktisernden psykolog Pia K. Sparrebro p\u00e5 Ubbely Krisecenter",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 201,
-    "fields": {
-        "cvr_number": "",
-        "name": "Projekt Plan B",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 202,
-    "fields": {
-        "cvr_number": "",
-        "name": "Psykoanalytisk/terapeutisk/praksis v/Elisabeth Bruhn-Thomsen",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 203,
-    "fields": {
-        "cvr_number": "",
-        "name": "Psykolog Anja Brems",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 204,
-    "fields": {
-        "cvr_number": "",
-        "name": "Psykolog Anne Blom Corlin/supervi.",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 205,
-    "fields": {
-        "cvr_number": "",
-        "name": "Psykolog Elisabeth Christenden",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 206,
-    "fields": {
-        "cvr_number": "",
-        "name": "Psykolog Kris Simonsen",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 207,
-    "fields": {
-        "cvr_number": "",
-        "name": "Psykolog Lene Kiel Jespersen",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 208,
-    "fields": {
-        "cvr_number": "",
-        "name": "Psykolog Majken Olesen v/Majken Olesen",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 209,
-    "fields": {
-        "cvr_number": "",
-        "name": "Psykolog Margit Novland  / Supervision",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 210,
-    "fields": {
-        "cvr_number": "",
-        "name": "psykolog Martin Skriver",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 211,
-    "fields": {
-        "cvr_number": "",
-        "name": "Psykolog Mette Sofie Hyltoft Degn",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 212,
-    "fields": {
-        "cvr_number": "",
-        "name": "Psykolog Sophie Risom",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 213,
-    "fields": {
-        "cvr_number": "",
-        "name": "Psykolog Susanne Kofoed",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 214,
-    "fields": {
-        "cvr_number": "",
-        "name": "Psykologberedskabet v/Trine Lindemark",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 215,
-    "fields": {
-        "cvr_number": "",
-        "name": "PsykologCompagniet",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 216,
-    "fields": {
-        "cvr_number": "",
-        "name": "Psykologerne i Aller\u00f8d/Ruben Elgaard",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 217,
-    "fields": {
-        "cvr_number": "",
-        "name": "Psykologisk Konsultation v/ Birgit Bonde",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 218,
-    "fields": {
-        "cvr_number": "",
-        "name": "PSYKOLOGSELSKABET TOFTEMOSEGAARD ApS",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 219,
-    "fields": {
-        "cvr_number": "",
-        "name": "Psykoterapeutisk praksis v/Rikke Leerh\u00f8j Rahm",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 220,
-    "fields": {
-        "cvr_number": "",
-        "name": "RINGE KOST & REALSKOLE,ophold",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 221,
-    "fields": {
-        "cvr_number": "",
-        "name": "R\u00f8ntofte Krisecenter",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 222,
-    "fields": {
-        "cvr_number": "",
-        "name": "S/I Petersdal",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 223,
-    "fields": {
-        "cvr_number": "",
-        "name": "SAHVA A/S/protese",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 224,
-    "fields": {
-        "cvr_number": "",
-        "name": "SAKSO",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 225,
-    "fields": {
-        "cvr_number": "",
-        "name": "Samtalev\u00e6rkstedet v/ Jesper Mathiasen",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 226,
-    "fields": {
-        "cvr_number": "",
-        "name": "Samv\u00e6r i Centrum",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 227,
-    "fields": {
-        "cvr_number": "",
-        "name": "Sanne Lundberg Psykoterapeut",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 228,
-    "fields": {
-        "cvr_number": "",
-        "name": "Sanne Lundberg Psykoterapeut MPF/Theraplay",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 229,
-    "fields": {
-        "cvr_number": "",
-        "name": "Sanne Lundberg Psykoteraprut/Dorianne Barslev",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 230,
-    "fields": {
-        "cvr_number": "",
-        "name": "Skolen Gimle-Behandling p\u00e5 intern skole",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 231,
-    "fields": {
-        "cvr_number": "",
-        "name": "Skolen i Skibby-Behandlingsdel - Skolen i Skibby",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 232,
-    "fields": {
-        "cvr_number": "",
-        "name": "Skolen Sorte hest",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 233,
-    "fields": {
-        "cvr_number": "",
-        "name": "Skolen Sputnik ",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 234,
-    "fields": {
-        "cvr_number": "",
-        "name": "Skolen Sputnik /socialdel",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 235,
-    "fields": {
-        "cvr_number": "",
-        "name": "Skolen Sputnik /socialdel/behandl.",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 236,
-    "fields": {
-        "cvr_number": "",
-        "name": "Skolen Sputnik/sof 2018 Kategori 2, soc.p\u00e6d",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 237,
-    "fields": {
-        "cvr_number": "",
-        "name": "SkolenSputnik",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 238,
-    "fields": {
-        "cvr_number": "",
-        "name": "Sm\u00e5skolen ved Nakkeb\u00f8lle Fjord",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 239,
-    "fields": {
-        "cvr_number": "",
-        "name": "Sm\u00e5skolen ved Nakkeb\u00f8lle Fjord/sommerlejr",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 240,
-    "fields": {
-        "cvr_number": "",
-        "name": "Socialkonsulent Nanna Olesen",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 241,
-    "fields": {
-        "cvr_number": "",
-        "name": "Socialkonsulenterne, Fam.behandl.",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 242,
-    "fields": {
-        "cvr_number": "",
-        "name": "Socialkrea/ st\u00f8tte ",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 243,
-    "fields": {
-        "cvr_number": "",
-        "name": "Sofie Rifbjerg Efterskole",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 244,
-    "fields": {
-        "cvr_number": "",
-        "name": "SOKON Socialkonsulenter/samv\u00e6r",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 245,
-    "fields": {
-        "cvr_number": "",
-        "name": "Sontex A/S/Hovedreng\u00f8ring",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 246,
-    "fields": {
-        "cvr_number": "",
-        "name": "Soranahus",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 247,
-    "fields": {
-        "cvr_number": "",
-        "name": "Soranahus/PC",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 248,
-    "fields": {
-        "cvr_number": "",
-        "name": "Sor\u00f8 apotek",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 249,
-    "fields": {
-        "cvr_number": "",
-        "name": "SPUTNIK /m\u00f8de",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 250,
-    "fields": {
-        "cvr_number": "",
-        "name": "SPUTNIK /socialdel",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 251,
-    "fields": {
-        "cvr_number": "",
-        "name": "Sputnik Kup\u00e9en/BEHANDL.",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 252,
-    "fields": {
-        "cvr_number": "",
-        "name": "Sputnik/mentor",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 253,
-    "fields": {
-        "cvr_number": "",
-        "name": "Stahlschmidt",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 254,
-    "fields": {
-        "cvr_number": "",
-        "name": "Steiner B\u00f8rnehave",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 255,
-    "fields": {
-        "cvr_number": "",
-        "name": "Stenb\u00e6k, Bang & Willumsen, Privatpraktiserende p\u00e6dagoger ApS/weekendfritten",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 256,
-    "fields": {
-        "cvr_number": "",
-        "name": "ST\u00d8TTEBUREAUET ApS",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 257,
-    "fields": {
-        "cvr_number": "",
-        "name": "St\u00f8ttecompagniet",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 258,
-    "fields": {
-        "cvr_number": "",
-        "name": "Svaneke Friskole/skolepenge/bus",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 259,
-    "fields": {
-        "cvr_number": "",
-        "name": "Svennebjerggaard",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 260,
-    "fields": {
-        "cvr_number": "",
-        "name": "S\u00f8b\u00e6kskolen/dagbehandl.",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 261,
-    "fields": {
-        "cvr_number": "",
-        "name": "Taxa 3 x 34, flytning fra Faxe",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 262,
-    "fields": {
-        "cvr_number": "",
-        "name": "Taxa 4x35",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 263,
-    "fields": {
-        "cvr_number": "",
-        "name": "TAXA SYD AMBA",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 264,
-    "fields": {
-        "cvr_number": "",
-        "name": "Terapi-Huset/individuel",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 265,
-    "fields": {
-        "cvr_number": "",
-        "name": "Th\u00f8rsh\u00f8jg\u00e5rd",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 266,
-    "fields": {
-        "cvr_number": "",
-        "name": "Tommerup Efterskole",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 267,
-    "fields": {
-        "cvr_number": "",
-        "name": "Trish Nymark P., psykolog",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 268,
-    "fields": {
-        "cvr_number": "",
-        "name": "True North Efterskole Snaptun",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 269,
-    "fields": {
-        "cvr_number": "",
-        "name": "U:Point",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 270,
-    "fields": {
-        "cvr_number": "",
-        "name": "u:point ",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 271,
-    "fields": {
-        "cvr_number": "",
-        "name": "u:point/hjemme hos st\u00f8tte",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 272,
-    "fields": {
-        "cvr_number": "",
-        "name": "U:Point/kontaktp.",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 273,
-    "fields": {
-        "cvr_number": "",
-        "name": "U:point/kontaktperson",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 274,
-    "fields": {
-        "cvr_number": "",
-        "name": "u:point/kontp.+ fitness+adm.",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 275,
-    "fields": {
-        "cvr_number": "",
-        "name": "UDVALGET FOR HUSMODERFERIE",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 276,
-    "fields": {
-        "cvr_number": "",
-        "name": "Udvejen.dk",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 277,
-    "fields": {
-        "cvr_number": "",
-        "name": "Ulstrup Efterskole",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 278,
-    "fields": {
-        "cvr_number": "",
-        "name": "Ungdomsh\u00f8jskolen ved Ribe",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 279,
-    "fields": {
-        "cvr_number": "",
-        "name": "VBT /K\u00f8rsel",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 280,
-    "fields": {
-        "cvr_number": "",
-        "name": "Vejen-videre v/Kristine Kim Nielsen",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 281,
-    "fields": {
-        "cvr_number": "",
-        "name": "VEJLEFJORDSKOLEN",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 282,
-    "fields": {
-        "cvr_number": "",
-        "name": "Villa Magnoila",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 283,
-    "fields": {
-        "cvr_number": "",
-        "name": "Vivamus",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 284,
-    "fields": {
-        "cvr_number": "",
-        "name": "V\u00e6dderbo",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 285,
-    "fields": {
-        "cvr_number": "",
-        "name": "Waldemarsbo Efterskole",
-        "vat_factor": "100.00"
-    }
-},
-{
-    "model": "core.serviceprovider",
-    "pk": 286,
-    "fields": {
-        "cvr_number": "",
-        "name": "Wiicare",
-        "vat_factor": "100.00"
-    }
-}
 ]

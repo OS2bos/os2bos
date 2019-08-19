@@ -103,10 +103,14 @@ class CaseViewSet(AuditViewSet):
 
 
 class AppropriationViewSet(AuditViewSet):
-    queryset = Appropriation.objects.all()
     serializer_class = AppropriationSerializer
 
     filterset_fields = "__all__"
+
+    def get_queryset(self):
+        queryset = Appropriation.objects.all()
+        queryset = self.get_serializer_class().setup_eager_loading(queryset)
+        return queryset
 
     @action(detail=True, methods=["patch"])
     def grant(self, request, pk=None):
@@ -129,10 +133,14 @@ class AppropriationViewSet(AuditViewSet):
 
 
 class ActivityViewSet(AuditViewSet):
-    queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
 
     filterset_fields = "__all__"
+
+    def get_queryset(self):
+        queryset = Activity.objects.all()
+        queryset = self.get_serializer_class().setup_eager_loading(queryset)
+        return queryset
 
 
 class PaymentMethodDetailsViewSet(AuditViewSet):
@@ -141,8 +149,12 @@ class PaymentMethodDetailsViewSet(AuditViewSet):
 
 
 class PaymentScheduleViewSet(AuditViewSet):
-    queryset = PaymentSchedule.objects.all()
     serializer_class = PaymentScheduleSerializer
+
+    def get_queryset(self):
+        queryset = PaymentSchedule.objects.all()
+        queryset = self.get_serializer_class().setup_eager_loading(queryset)
+        return queryset
 
 
 class PaymentViewSet(AuditViewSet):
@@ -237,6 +249,7 @@ class ActivityDetailsViewSet(viewsets.ReadOnlyModelViewSet):
 class AccountViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
+    filterset_fields = "__all__"
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):

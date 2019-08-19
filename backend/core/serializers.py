@@ -67,6 +67,18 @@ class ActivitySerializer(serializers.ModelSerializer):
     monthly_payment_plan = serializers.ReadOnlyField()
     total_cost = serializers.ReadOnlyField()
     total_cost_this_year = serializers.ReadOnlyField()
+    total_cost_full_year = serializers.ReadOnlyField()
+    recipient_name = serializers.ReadOnlyField(
+        source="payment_plan.recipient_name", default=None
+    )
+    recipient_id = serializers.ReadOnlyField(
+        source="payment_plan.recipient_id", default=None
+    )
+
+    @staticmethod
+    def setup_eager_loading(queryset):
+        queryset = queryset.select_related("payment_plan")
+        return queryset
 
     def validate(self, data):
         # Check that start_date is before end_date
@@ -88,8 +100,14 @@ class ActivitySerializer(serializers.ModelSerializer):
 class AppropriationSerializer(serializers.ModelSerializer):
     total_granted_this_year = serializers.ReadOnlyField()
     total_expected_this_year = serializers.ReadOnlyField()
+    total_expected_full_year = serializers.ReadOnlyField()
 
     activities = ActivitySerializer(many=True, read_only=True)
+
+    @staticmethod
+    def setup_eager_loading(queryset):
+        queryset = queryset.prefetch_related("activities")
+        return queryset
 
     class Meta:
         model = Appropriation
@@ -110,6 +128,11 @@ class PaymentMethodDetailsSerializer(serializers.ModelSerializer):
 
 class PaymentScheduleSerializer(serializers.ModelSerializer):
     payments = PaymentSerializer(many=True, read_only=True)
+
+    @staticmethod
+    def setup_eager_loading(queryset):
+        queryset = queryset.prefetch_related("payments")
+        return queryset
 
     def validate(self, data):
         if not self.Meta.model.is_payment_and_recipient_allowed(

@@ -88,5 +88,23 @@
         "groups": [],
         "user_permissions": []
     }
+},
+{
+    "model": "core.user",
+    "pk": 6,
+    "fields": {
+        "password": "pbkdf2_sha256$150000$zLIdyC71Z92C$OthjelCn/3NvG3cETpoIZ3in+MCrvPmgnqSM/v5L3RM=",
+        "last_login": null,
+        "is_superuser": true,
+        "username": "heidi",
+        "first_name": "Heidi",
+        "last_name": "Engelhardt Bebe",
+        "email": "hbb@balk.dk",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2019-08-05T09:12:45Z",
+        "groups": [],
+        "user_permissions": []
+    }
 }
 ]

@@ -14,7 +14,9 @@ from core.models import (
     ActivityDetails,
     Appropriation,
     Payment,
+    ServiceProvider,
     Section,
+    Account,
     SD,
     FAMILY_DEPT,
 )
@@ -125,14 +127,20 @@ def create_activity(
     status=Activity.STATUS_DRAFT,
     **kwargs,
 ):
-    activity_details = ActivityDetails.objects.create(
-        max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
-    )
+    if "details" not in kwargs:
+        details, unused = ActivityDetails.objects.get_or_create(
+            activity_id="000000",
+            name="Test aktivitet",
+            max_tolerance_in_percent=10,
+            max_tolerance_in_dkk=1000,
+        )
+    else:
+        details = kwargs.pop("details")
 
     activity = Activity.objects.create(
         start_date=start_date,
         end_date=end_date,
-        details=activity_details,
+        details=details,
         status=status,
         appropriation=appropriation,
         **kwargs,
@@ -181,3 +189,23 @@ def create_section(
         **kwargs,
     )
     return section
+
+
+def create_account(
+    main_activity, supplementary_activity, section, number="12345678"
+):
+    account = Account.objects.create(
+        main_activity=main_activity,
+        supplementary_activity=supplementary_activity,
+        section=section,
+        number=number,
+    )
+    return account
+
+
+def create_service_provider(cvr_number, name):
+    service_provider = ServiceProvider.objects.create(
+        cvr_number=cvr_number, name=name
+    )
+
+    return service_provider
