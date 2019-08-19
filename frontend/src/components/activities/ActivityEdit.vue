@@ -193,7 +193,7 @@
                     // POSTING an activity
 
                     axios.post(`/activities/`, data)
-                    .then(() => {
+                    .then(res => {
                         this.$router.push(`/appropriation/${ this.appropriation.id }`)
                         this.$store.dispatch('fetchActivity', res.data.id)
                     })
@@ -203,7 +203,7 @@
                     // PATCHING an activity
 
                     axios.patch(`/activities/${ this.act.id }/`, data)
-                    .then(() => {
+                    .then(res => {
                         this.$store.dispatch('fetchActivity', res.data.id)
                     })
                     .catch(err => console.log(err))
