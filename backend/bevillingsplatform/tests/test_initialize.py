@@ -15,6 +15,7 @@ from core.models import (
     Section,
     Account,
     ActivityDetails,
+    PaymentMethodDetails,
 )
 
 
@@ -43,3 +44,8 @@ class InitializeTestCase(TestCase):
         initialize()
         accounts_count = Account.objects.count()
         self.assertEqual(accounts_count, 883)
+
+    def test_initialize_generates_payment_method_details(self):
+        initialize()
+        payment_method_details_count = PaymentMethodDetails.objects.count()
+        self.assertEqual(payment_method_details_count, 2)
