@@ -33,10 +33,14 @@
                 <dd>{{ activityId2name(act.details) }}</dd>
                 <dt>Startdato</dt>
                 <dd>{{ displayDate(act.start_date) }}</dd>
-                <dt>Slutdato</dt>
-                <dd>{{ displayDate(act.end_date) }}</dd>
-                <dt>Supplerende information</dt>
-                <dd>{{ act.note }}</dd>
+                <template v-if="act.end_date">
+                    <dt>Slutdato</dt>
+                    <dd>{{ displayDate(act.end_date) }}</dd>
+                </template>
+                <template v-if="act.note">
+                    <dt>Supplerende information</dt>
+                    <dd>{{ act.note }}</dd>
+                </template>
             </dl>
             
             <dl v-if="pay">
