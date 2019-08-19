@@ -1,3 +1,11 @@
+# Copyright (C) 2019 Magenta ApS, http://magenta.dk.
+# Contact: info@magenta.dk.
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+
 from decimal import Decimal
 from datetime import date
 
@@ -79,7 +87,7 @@ def create_case_as_json(
 ):
     json = {
         "sbsys_id": "xxx-yyyx",
-        "cpr_number": "111213-0014",
+        "cpr_number": "1112130014",
         "name": "Mak Mouse",
         "target_group": "FAMILY_DEPT",
         "refugee_integration": True,
