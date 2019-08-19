@@ -61,8 +61,9 @@ class CaseSerializer(serializers.ModelSerializer):
 class HistoricalCaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = HistoricalCase
-        # include history_date (date saved)
-        # and history_user (user responsible for saving).
+        # include history_date (date saved),
+        # history_user (user responsible for saving),
+        # and history_change_reason (reason for change).
         fields = (
             "case_worker",
             "effort_step",
