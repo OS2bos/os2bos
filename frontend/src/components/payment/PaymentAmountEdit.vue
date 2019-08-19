@@ -47,7 +47,7 @@
                         </div>
                         <div>
                             <label>til takst</label>
-                            <input v-model="entry.payment_amount" type="number" required step="0.01"> kr<br>
+                            <input v-model="entry.payment_amount" type="number" step="0.01" required> kr<br>
                             <a href="https://www.kl.dk/media/16653/taksttabel_-2019.pdf" target="_blank">Find takster her</a>
                         </div>
                     </fieldset>

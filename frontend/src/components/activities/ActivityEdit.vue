@@ -43,9 +43,9 @@
                     </fieldset>
                     <fieldset v-if="mode === 'create' && !main_act">
                         <legend>Type</legend>
-                        <input type="radio" id="field-type-main" value="MAIN_ACTIVITY" v-model="act.activity_type" @change='activityList()' required name="typechoice">
+                        <input type="radio" id="field-type-main" value="MAIN_ACTIVITY" name="activity" v-model="act.activity_type" @change='activityList()' required>
                         <label for="field-type-main">Hovedydelse</label>
-                        <input type="radio" id="field-type-suppl" value="SUPPL_ACTIVITY" v-model="act.activity_type" @change='activityList()' required name="typechoice">
+                        <input type="radio" id="field-type-suppl" value="SUPPL_ACTIVITY" name="activity" v-model="act.activity_type" @change='activityList()'>
                         <label for="field-type-suppl">Følgeydelse</label>
                     </fieldset>
                     <dl v-else>
@@ -54,7 +54,7 @@
                     </dl>
                     <fieldset>
                         <label for="selectField">Aktivitet</label>
-                        <list-picker :dom-id="'selectField'" :disabled="disableAct" :selected-id="act.details" @selection="changeActivity" :list="act_details" />
+                        <list-picker :dom-id="'selectField'" :disabled="disableAct" :selected-id="act.details" @selection="changeActivity" :list="act_details" required/>
                     </fieldset>
                     <fieldset>
                         <label for="field-startdate">Startdato</label>
@@ -213,6 +213,7 @@
 
                     axios.patch(`/activities/${ this.act.id }/`, data)
                     .then(res => {
+                        this.$router.push(`/appropriation/${ this.appropriation.id }`)
                         this.$store.dispatch('fetchActivity', res.data.id)
                     })
                     .catch(err => console.log(err))
