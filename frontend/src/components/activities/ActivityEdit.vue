@@ -180,7 +180,8 @@
                             payment_frequency: this.pay.payment_frequency,
                             payment_type: this.pay.payment_type,
                             payment_units: this.pay.payment_units,
-                            payment_amount: this.pay.payment_amount
+                            payment_amount: this.pay.payment_amount,
+                            payment_method_details: this.pay.payment_method_details
                         }
                 }
 
@@ -223,13 +224,6 @@
                 } else {
                     this.$router.push(`/appropriation/${ this.$route.params.apprid }`)
                 }  
-            },
-            fetchPaymentInfo: function(pay_plan_id) {
-                axios.get(`/payment_schedules/${ pay_plan_id }/`)
-                .then(res => {
-                    this.pay = res.data
-                })
-                .catch(err => console.log(err))
             },
             activityList: function() {
                 let actList
