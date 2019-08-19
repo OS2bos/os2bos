@@ -9,7 +9,7 @@
 <template>
     <section class="payment-method">
         <label>Betalingsmåde</label>
-        <select  v-model="entry.payment_method">
+        <select  v-model="entry.payment_method" required>
             <option value="INVOICE" v-if="paymentObj.recipient_type === 'COMPANY'">Faktura</option>
             <option value="INTERNAL" v-if="paymentObj.recipient_type === 'INTERNAL'">Intern afregning</option>
             <option value="CASH" v-if="paymentObj.recipient_type === 'PERSON' || paymentObj.recipient_type === 'COMPANY'">
