@@ -159,7 +159,6 @@ class PaymentSchedule(models.Model):
         verbose_name=_("betalingsmodtager"),
         choices=recipient_choices,
     )
-    # TODO: namechange - this refers actually to the recipient CPR
     recipient_id = models.CharField(max_length=128, verbose_name=_("ID"))
     recipient_name = models.CharField(max_length=128, verbose_name=_("navn"))
 
@@ -848,16 +847,19 @@ class ActivityDetails(models.Model):
         Section,
         related_name="main_activities",
         verbose_name=_("hovedaktivitet for paragraffer"),
+        blank=True,
     )
     supplementary_activity_for = models.ManyToManyField(
         Section,
         related_name="supplementary_activities",
         verbose_name=_("følgeudgift for paragraffer"),
+        blank=True,
     )
     service_providers = models.ManyToManyField(
         ServiceProvider,
         related_name="supplied_activities",
         verbose_name=_("leverandører"),
+        blank=True,
     )
 
     main_activities = models.ManyToManyField(
@@ -865,6 +867,7 @@ class ActivityDetails(models.Model):
         related_name="supplementary_activities",
         symmetrical=False,
         verbose_name=_("tilladte hovedaktiviteter"),
+        blank=True,
     )
 
     def __str__(self):
