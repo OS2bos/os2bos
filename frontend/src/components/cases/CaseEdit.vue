@@ -23,7 +23,7 @@
 
                 <fieldset>
                     <label for="field-cpr">Sagspart, CPR-nr</label>
-                    <input id="field-cpr" type="text" v-model="cas.cpr_number" @input="lookupCPR(cas.cpr_number)" required>
+                    <input id="field-cpr" type="text" v-model="cas.cpr_number" @input="lookupCPR(cas.cpr_number)" pattern=".{10,10}" required title="Only 10 characters allowed">
                 </fieldset>
             
                 <fieldset>
@@ -216,8 +216,8 @@
             },
             saveChanges: function() {
                 let cpr = this.cas.cpr_number
-                if (!cpr.match(/-/)) {
-                    let str = cpr.substring(6, 10).replace('', '-')
+                if (cpr.match(/-/)) {
+                    let str = cpr.substring(6, 11).replace('-', '')
                     cpr = cpr.substring(0, 6) + str
                 }
                 let data = {
