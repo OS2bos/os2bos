@@ -11,7 +11,7 @@ test('Create Case', async t => {
     await t
         .useRole( user )
         .click(Selector('button').withText('+ Tilknyt hovedsag'))
-        .typeText('#field-sbsys-id', '24.24.23-testsag')
+        .typeText('#field-sbsys-id', '24.23.22-testsag')
         .typeText('#field-cpr', '000000-0000')
         .click(Selector('label').withAttribute('for', 'inputRadio1'))
         .click('#selectField4')
@@ -21,6 +21,6 @@ test('Create Case', async t => {
         .click('#field-skaleringstrappe')
         .click(Selector('#field-skaleringstrappe option').withText('10'))
         .click(Selector('input').withAttribute('type', 'submit'))
-        .expect(Selector(".cases-header h1").innerText).contains('Mine sager')
+        .expect(Selector('.case-header h1').innerText).contains('24.24.22-testsag')
 
 })
