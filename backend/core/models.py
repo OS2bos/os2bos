@@ -19,6 +19,7 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.core.validators import MinValueValidator
+from django.core.exceptions import ValidationError
 from django_audit_fields.models import AuditModelMixin
 from simple_history.models import HistoricalRecords
 

@@ -8,7 +8,7 @@
 
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
-
+from datetime import date
 from rest_framework import serializers
 
 from drf_writable_nested import WritableNestedModelSerializer
@@ -135,6 +135,7 @@ class ActivitySerializer(WritableNestedModelSerializer):
         return queryset
 
     def validate(self, data):
+        today = date.today()
         # Check that start_date is before end_date
         if (
             "end_date" in data
@@ -144,6 +145,19 @@ class ActivitySerializer(WritableNestedModelSerializer):
             raise serializers.ValidationError(
                 _("startdato skal være før slutdato")
             )
+        if "modifies" in data and data["modifies"]:
+            modifies_id = data["modifies"]
+            modifies_activity = Activity.objects.get(id=modifies_id)
+            if not modifies_activity.end_date or not (
+                today < data["start_date"] < modifies_activity.end_date
+            ):
+                raise serializers.ValidationError(
+                    _(
+                        "den justerede aktivitets startdato skal være i"
+                        " spændet fra i morgen til den bevilgede aktivitets"
+                        " slutdato"
+                    )
+                )
         return data
 
     class Meta:
