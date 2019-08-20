@@ -12,22 +12,22 @@
         <h1>Betaling</h1>
         <div class="row">
             <fieldset style="margin-right: 2rem;">
-                <legend>Hvordan skal det betales?</legend>
+                <legend class="required">Hvordan skal det betales?</legend>
                 <input type="radio" value="ONE_TIME_PAYMENT" name="pay-type" id="pay-type-1" v-model="entry.payment_type" required>
                 <label for="pay-type-1">Engangsudgift</label>
-                <input type="radio" value="RUNNING_PAYMENT" name="pay-type" id="pay-type-2" v-model="entry.payment_type" required>
+                <input type="radio" value="RUNNING_PAYMENT" name="pay-type" id="pay-type-2" v-model="entry.payment_type">
                 <label for="pay-type-2">Fast beløb, løbende</label>
-                <input type="radio" value="PER_HOUR_PAYMENT" name="pay-type" id="pay-type-3" v-model="entry.payment_type" required>
+                <input type="radio" value="PER_HOUR_PAYMENT" name="pay-type" id="pay-type-3" v-model="entry.payment_type">
                 <label for="pay-type-3">Pr. time</label>
-                <input type="radio" value="PER_DAY_PAYMENT" name="pay-type" id="pay-type-4" v-model="entry.payment_type" required>
+                <input type="radio" value="PER_DAY_PAYMENT" name="pay-type" id="pay-type-4" v-model="entry.payment_type">
                 <label for="pay-type-4">Pr. døgn</label>
-                <input type="radio" value="PER_KM_PAYMENT" name="pay-type" id="pay-type-5" v-model="entry.payment_type" required>
+                <input type="radio" value="PER_KM_PAYMENT" name="pay-type" id="pay-type-5" v-model="entry.payment_type">
                 <label for="pay-type-5">Pr. kilometer</label>
             </fieldset>
             <div>
                 <div class="payment-amount-fields">
                     <fieldset v-if="entry.payment_type === 'ONE_TIME_PAYMENT' || entry.payment_type === 'RUNNING_PAYMENT'">
-                        <label>Beløb</label>
+                        <label class="required">Beløb</label>
                         <input v-model="entry.payment_amount" type="number" step="0.01" required> kr
                     </fieldset>
                     <fieldset v-if="entry.payment_type && entry.payment_type !== 'ONE_TIME_PAYMENT'">
