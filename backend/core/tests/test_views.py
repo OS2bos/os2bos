@@ -13,7 +13,16 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 
-from core.models import Activity, ApprovalLevel, Appropriation, PaymentSchedule
+from core.models import (
+    ApprovalLevel,
+    Appropriation,
+    PaymentSchedule,
+    MAIN_ACTIVITY,
+    SUPPL_ACTIVITY,
+    STATUS_GRANTED,
+    STATUS_DRAFT,
+    STATUS_EXPECTED,
+)
 
 from core.tests.testing_utils import (
     AuthenticatedTestCase,
@@ -82,28 +91,31 @@ class TestRelatedPersonsViewSet(AuthenticatedTestCase):
         response = self.client.get(reverse_url, data={"cpr": "1234567890"})
 
         self.assertEqual(response.status_code, 200)
-        expected_format = [
-            {
-                "cpr_number": "0123456780",
-                "relation_type": "aegtefaelle",
-                "name": "Iben Jensen",
-            },
-            {
-                "cpr_number": "2123456789",
-                "relation_type": "barn",
-                "name": "Ib Jensen",
-            },
-            {
-                "cpr_number": "0000000000",
-                "relation_type": "mor",
-                "name": "Ingeborg Jensen",
-            },
-            {
-                "cpr_number": "0000000000",
-                "relation_type": "far",
-                "name": "Gunnar Jensen",
-            },
-        ]
+        expected_format = {
+            "name": "Bo Jensen",
+            "relations": [
+                {
+                    "cpr_number": "0123456780",
+                    "relation_type": "aegtefaelle",
+                    "name": "Iben Jensen",
+                },
+                {
+                    "cpr_number": "2123456789",
+                    "relation_type": "barn",
+                    "name": "Ib Jensen",
+                },
+                {
+                    "cpr_number": "0000000000",
+                    "relation_type": "mor",
+                    "name": "Ingeborg Jensen",
+                },
+                {
+                    "cpr_number": "0000000000",
+                    "relation_type": "far",
+                    "name": "Gunnar Jensen",
+                },
+            ],
+        }
         self.assertEqual(response.json(), expected_format)
 
 
@@ -268,8 +280,8 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
             appropriation=appropriation,
             start_date=now - timedelta(days=6),
             end_date=now - timedelta(days=1),
-            activity_type=Activity.MAIN_ACTIVITY,
-            status=Activity.STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
             payment_plan=payment_schedule,
         )
         data = {"expired": True}
@@ -301,8 +313,8 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
             appropriation=appropriation,
             start_date=now - timedelta(days=6),
             end_date=now + timedelta(days=1),
-            activity_type=Activity.MAIN_ACTIVITY,
-            status=Activity.STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
             payment_plan=payment_schedule,
         )
         data = {"expired": False}
@@ -367,7 +379,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             case,
             appropriation,
             end_date=date(year=2020, month=12, day=24),
-            activity_type=Activity.MAIN_ACTIVITY,
+            activity_type=MAIN_ACTIVITY,
         )
         url = reverse("appropriation-grant", kwargs={"pk": appropriation.pk})
         self.client.login(username=self.username, password=self.password)
@@ -393,7 +405,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             case,
             appropriation,
             end_date=date(year=2020, month=12, day=24),
-            activity_type=Activity.MAIN_ACTIVITY,
+            activity_type=MAIN_ACTIVITY,
         )
         url = reverse("appropriation-grant", kwargs={"pk": appropriation.pk})
         self.client.login(username=self.username, password=self.password)
@@ -417,23 +429,23 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             case,
             appropriation,
             end_date=date(year=2020, month=12, day=24),
-            status=Activity.STATUS_GRANTED,
-            activity_type=Activity.MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
         )
         modifying_activity = create_activity(  # noqa - it *will* be used.
             case,
             appropriation,
             end_date=date(year=2022, month=12, day=24),
-            status=Activity.STATUS_EXPECTED,
-            activity_type=Activity.MAIN_ACTIVITY,
+            status=STATUS_EXPECTED,
+            activity_type=MAIN_ACTIVITY,
             modifies=activity,
         )
         draft_activity = create_activity(  # noqa - it *will* be used.
             case,
             appropriation,
             end_date=date(year=2023, month=12, day=24),
-            status=Activity.STATUS_DRAFT,
-            activity_type=Activity.SUPPL_ACTIVITY,
+            status=STATUS_DRAFT,
+            activity_type=SUPPL_ACTIVITY,
         )
         url = reverse("appropriation-grant", kwargs={"pk": appropriation.pk})
         self.client.login(username=self.username, password=self.password)
@@ -457,7 +469,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             case,
             appropriation,
             end_date=date(year=2020, month=12, day=24),
-            activity_type=Activity.MAIN_ACTIVITY,
+            activity_type=MAIN_ACTIVITY,
         )
         url = reverse("appropriation-grant", kwargs={"pk": appropriation.pk})
         self.client.login(username=self.username, password=self.password)
@@ -518,8 +530,8 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
             appropriation=appropriation,
             start_date=now - timedelta(days=6),
             end_date=now + timedelta(days=6),
-            activity_type=Activity.MAIN_ACTIVITY,
-            status=Activity.STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
             payment_plan=payment_schedule,
         )
         url = reverse("activity-list")

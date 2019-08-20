@@ -18,6 +18,7 @@ from core.models import (
     SchoolDistrict,
     Team,
     Activity,
+    STATUS_DRAFT,
     PaymentSchedule,
     ActivityDetails,
     Appropriation,
@@ -132,7 +133,7 @@ def create_activity(
     appropriation,
     start_date=date(year=2019, month=1, day=1),
     end_date=date(year=2019, month=1, day=10),
-    status=Activity.STATUS_DRAFT,
+    status=STATUS_DRAFT,
     **kwargs,
 ):
     if "details" not in kwargs:

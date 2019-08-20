@@ -70,8 +70,8 @@ import router from '../../router.js';
                 if (cpr.length > 9) {
                     axios.get(`/related_persons/fetch_from_serviceplatformen/?cpr=${ cpr }`)
                     .then(res => {
-                        this.fam.name = res.data[0].name
-                        this.fam.relation_type = res.data[0].relation_type
+                        this.fam.name = res.data.relations[0].name
+                        this.fam.relation_type = res.data.relations[0].relation_type
                         this.$forceUpdate()
                     })
                     .catch(err => console.log(err))

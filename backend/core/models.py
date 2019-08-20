@@ -63,6 +63,25 @@ payment_method_choices = (
 )
 
 
+# Activity types and choice list.
+MAIN_ACTIVITY = "MAIN_ACTIVITY"
+SUPPL_ACTIVITY = "SUPPL_ACTIVITY"
+type_choices = (
+    (MAIN_ACTIVITY, _("hovedaktivitet")),
+    (SUPPL_ACTIVITY, _("følgeaktivitet")),
+)
+
+# Activity status definitions and choice list.
+STATUS_DRAFT = "DRAFT"
+STATUS_EXPECTED = "EXPECTED"
+STATUS_GRANTED = "GRANTED"
+status_choices = (
+    (STATUS_DRAFT, _("kladde")),
+    (STATUS_EXPECTED, _("forventet")),
+    (STATUS_GRANTED, _("bevilget")),
+)
+
+
 class Municipality(models.Model):
     """Represents a Danish municipality."""
 
@@ -542,7 +561,7 @@ class Case(AuditModelMixin, models.Model):
     def expired(self):
         today = timezone.now().date()
         all_main_activities = Activity.objects.filter(
-            activity_type=Activity.MAIN_ACTIVITY, appropriation__case=self
+            activity_type=MAIN_ACTIVITY, appropriation__case=self
         )
         # If no activities exists, we will not consider it expired.
         if not all_main_activities.exists():
@@ -677,7 +696,7 @@ class Appropriation(AuditModelMixin, models.Model):
         this Appropriation (both main and supplementary activities).
         """
         granted_activities = self.activities.all().filter(
-            status=Activity.STATUS_GRANTED
+            status=STATUS_GRANTED
         )
 
         this_years_payments = Payment.objects.filter(
@@ -697,8 +716,8 @@ class Appropriation(AuditModelMixin, models.Model):
         """
 
         all_activities = self.activities.filter(
-            Q(status=Activity.STATUS_GRANTED, modified_by__isnull=True)
-            | Q(status=Activity.STATUS_EXPECTED)
+            Q(status=STATUS_GRANTED, modified_by__isnull=True)
+            | Q(status=STATUS_EXPECTED)
         )
 
         this_years_payments = Payment.objects.filter(
@@ -714,8 +733,8 @@ class Appropriation(AuditModelMixin, models.Model):
         extrapolating for the full year (January 1 - December 31)
         """
         all_activities = self.activities.filter(
-            Q(status=Activity.STATUS_GRANTED, modified_by__isnull=True)
-            | Q(status=Activity.STATUS_EXPECTED)
+            Q(status=STATUS_GRANTED, modified_by__isnull=True)
+            | Q(status=STATUS_EXPECTED)
         )
         return sum(
             activity.total_cost_full_year for activity in all_activities
@@ -724,7 +743,7 @@ class Appropriation(AuditModelMixin, models.Model):
     @property
     def main_activity(self):
         """Return main activity, if any."""
-        f = self.activities.filter(activity_type=Activity.MAIN_ACTIVITY)
+        f = self.activities.filter(activity_type=MAIN_ACTIVITY)
         if f.exists():
             # Invariant: There is only one main activity.
             return f.first()
@@ -732,7 +751,7 @@ class Appropriation(AuditModelMixin, models.Model):
     @property
     def supplementary_activities(self):
         """Return all non-main activities."""
-        f = self.activities.filter(activity_type=Activity.SUPPL_ACTIVITY)
+        f = self.activities.filter(activity_type=SUPPL_ACTIVITY)
         return (a for a in f)
 
     @property
@@ -751,14 +770,14 @@ class Appropriation(AuditModelMixin, models.Model):
             self.approval_level = approval_level
             self.approval_note = approval_note
             self.appropriation_date = timezone.now().date()
-            self.status = self.STATUS_GRANTED
+            self.status = STATUS_GRANTED
             for a in self.activities.all():
                 # We could do this with an update, but we need to activate the
                 # save() method on each activity.
-                a.status = a.STATUS_GRANTED
+                a.status = STATUS_GRANTED
                 a.save()
             self.save()
-        elif self.status == self.STATUS_GRANTED:
+        elif self.status == STATUS_GRANTED:
             # Grant all non-granted activities.
             # Merge and delete expectations that modify other activities.
             if approval_level:
@@ -769,7 +788,7 @@ class Appropriation(AuditModelMixin, models.Model):
             self.appropriation_date = timezone.now().date()
             self.save()
             # Now go through the activities.
-            for a in self.activities.exclude(status=Activity.STATUS_GRANTED):
+            for a in self.activities.exclude(status=STATUS_GRANTED):
                 # If a modifies another, merge -
                 # else just set status = GRANTED.
                 if a.modifies:
@@ -777,11 +796,11 @@ class Appropriation(AuditModelMixin, models.Model):
                     # and granting the new one from tomorrow.
                     a.modifies.end_date = date.today()
                     a.start_date = date.today() + timedelta(days=1)
-                    a.status = a.STATUS_GRANTED
+                    a.status = STATUS_GRANTED
                     a.modifies.save()
                     a.save()
                 else:
-                    a.status = a.STATUS_GRANTED
+                    a.status = STATUS_GRANTED
                     a.save()
 
         else:
@@ -882,6 +901,16 @@ class Activity(AuditModelMixin, models.Model):
     class Meta:
         verbose_name = _("aktivitet")
         verbose_name_plural = _("aktiviteter")
+        constraints = [
+            # Appropriation can only have a single main activity
+            # that does not have an expected activity.
+            models.UniqueConstraint(
+                fields=["appropriation"],
+                condition=Q(activity_type=MAIN_ACTIVITY)
+                & Q(modifies__isnull=True),
+                name="unique_main_activity",
+            )
+        ]
 
     details = models.ForeignKey(
         ActivityDetails,
@@ -889,15 +918,6 @@ class Activity(AuditModelMixin, models.Model):
         verbose_name=_("aktivitetsdetalje"),
     )
 
-    # Status - definitions and choice list.
-    STATUS_DRAFT = "DRAFT"
-    STATUS_EXPECTED = "EXPECTED"
-    STATUS_GRANTED = "GRANTED"
-    status_choices = (
-        (STATUS_DRAFT, _("kladde")),
-        (STATUS_EXPECTED, _("forventet")),
-        (STATUS_GRANTED, _("bevilget")),
-    )
     status = models.CharField(
         verbose_name=_("status"), max_length=128, choices=status_choices
     )
@@ -905,14 +925,6 @@ class Activity(AuditModelMixin, models.Model):
     start_date = models.DateField(verbose_name=_("startdato"))
     end_date = models.DateField(
         verbose_name=_("slutdato"), null=True, blank=True
-    )
-
-    # Activity types and choice list.
-    MAIN_ACTIVITY = "MAIN_ACTIVITY"
-    SUPPL_ACTIVITY = "SUPPL_ACTIVITY"
-    type_choices = (
-        (MAIN_ACTIVITY, _("hovedaktivitet")),
-        (SUPPL_ACTIVITY, _("følgeaktivitet")),
     )
 
     activity_type = models.CharField(
@@ -962,7 +974,7 @@ class Activity(AuditModelMixin, models.Model):
 
     @property
     def account(self):
-        if self.activity_type == Activity.MAIN_ACTIVITY:
+        if self.activity_type == MAIN_ACTIVITY:
             accounts = Account.objects.filter(
                 section=self.appropriation.section,
                 main_activity=self.details,
@@ -1027,7 +1039,7 @@ class Activity(AuditModelMixin, models.Model):
     def triggers_payment_email(self):
         # If activity or appropriation is not granted we don't send an email.
         if (
-            not self.status == Activity.STATUS_GRANTED
+            not self.status == STATUS_GRANTED
             or not self.appropriation.status == Appropriation.STATUS_GRANTED
         ):
             return False
