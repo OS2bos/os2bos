@@ -27,9 +27,9 @@
             </div>
             <div v-if="entry.payment_method === 'SD'">
                 <strong>Skattekort</strong>
-                <input type="radio" id="field-main" name="payment-type" :value="{tax_type: 'MAIN_CARD'}" v-model="entry.payment_method_details">
+                <input type="radio" id="field-main" name="payment-type" value="1" v-model="entry.payment_method_details" required>
                 <label for="field-main">Hovedkort</label>
-                <input type="radio" id="field-secondary" name="payment-type" :value="{tax_type: 'SECONDARY_CARD'}" v-model="entry.payment_method_details">
+                <input type="radio" id="field-secondary" name="payment-type" value="2" v-model="entry.payment_method_details" required>
                 <label for="field-secondary">Bikort</label>
             </div>
         </div>

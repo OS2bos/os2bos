@@ -167,21 +167,22 @@
             saveChanges: function() {
                 
                 let data = {
-                        activity_type: this.act.activity_type,
-                        start_date: this.act.start_date,
-                        end_date: this.act.end_date,
-                        details: this.act.details,
-                        note: this.act.note,
-                        payment_plan: {
-                            recipient_type: this.pay.recipient_type,
-                            recipient_id: this.pay.recipient_id,
-                            recipient_name: this.pay.recipient_name,
-                            payment_method: this.pay.payment_method,
-                            payment_frequency: this.pay.payment_frequency,
-                            payment_type: this.pay.payment_type,
-                            payment_units: this.pay.payment_units,
-                            payment_amount: this.pay.payment_amount
-                        }
+                    activity_type: this.act.activity_type,
+                    start_date: this.act.start_date,
+                    end_date: this.act.end_date,
+                    details: this.act.details,
+                    note: this.act.note,
+                    payment_plan: {
+                        recipient_type: this.pay.recipient_type,
+                        recipient_id: this.pay.recipient_id,
+                        recipient_name: this.pay.recipient_name,
+                        payment_method: this.pay.payment_method,
+                        payment_frequency: this.pay.payment_frequency,
+                        payment_type: this.pay.payment_type,
+                        payment_units: this.pay.payment_units,
+                        payment_amount: this.pay.payment_amount,
+                        payment_method_details: parseInt(this.pay.payment_method_details)
+                    }
                 }
 
                 if (this.mode === 'create') {
@@ -224,13 +225,6 @@
                 } else {
                     this.$router.push(`/appropriation/${ this.$route.params.apprid }`)
                 }  
-            },
-            fetchPaymentInfo: function(pay_plan_id) {
-                axios.get(`/payment_schedules/${ pay_plan_id }/`)
-                .then(res => {
-                    this.pay = res.data
-                })
-                .catch(err => console.log(err))
             },
             activityList: function() {
                 let actList

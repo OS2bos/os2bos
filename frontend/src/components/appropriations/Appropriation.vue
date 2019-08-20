@@ -88,9 +88,6 @@
 
     import axios from '../http/Http.js'
     import ActivityList from '../activities/ActivityList.vue'
-    import ActivityList2 from '../activities/ActivityList2.vue'
-    import ActivityList3 from '../activities/ActivityList3.vue'
-    import ActivityList4 from '../activities/ActivityList4.vue'
     import AppropriationEdit from './AppropriationEdit.vue'
     import Approval from './Approval.vue'
     import { json2jsDate } from '../filters/Date.js'
@@ -100,9 +97,6 @@
 
         components: {
             ActivityList,
-            ActivityList2,
-            ActivityList3,
-            ActivityList4,
             AppropriationEdit,
             Approval
         },
