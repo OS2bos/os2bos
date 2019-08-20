@@ -19,6 +19,7 @@
                     <label for="field-sbsys-id">SBSYS Hovedsag:</label>
                     <input id="field-sbsys-id" type="search" v-model="cas.sbsys_id" required>
                     <span class="danger" v-if="sbsysCheck">Sagsnummeret indeholder ikke et gyldigt KLE-nummer</span>
+                    <error v-if="errors && errors.sbsys_id" :msgs="errors.sbsys_id" />
                 </fieldset>
 
                 <fieldset>
@@ -123,12 +124,14 @@
     import ListPicker from '../forms/ListPicker.vue'
     import AssessmentEdit from '../assessments/AssessmentEdit.vue'
     import { userId2name, teamId2name } from '../filters/Labels.js'
+    import Error from '../forms/Error.vue'
 
     export default {
 
         components: {
             ListPicker,
-            AssessmentEdit
+            AssessmentEdit,
+            Error
         },
         props: [
             'caseObj'
@@ -136,7 +139,8 @@
         data: function() {
             return {
                 cas: {},
-                create_mode: true
+                create_mode: true,
+                errors: null
             }
         },
         computed: {
@@ -244,15 +248,18 @@
                     .then(res => {
                         this.$emit('close', res.data)
                     })
-                    .catch(err => console.log(err))
+                    .catch(err => this.handleError(err))
                 } else {
                     data.case_worker = this.user.id
                     axios.post('/cases/', data)
                     .then(res => {
                         this.$router.push(`/case/${ res.data.id }/`)
                     })
-                    .catch(err => console.log(err))
+                    .catch(err => this.handleError(err))
                 }
+            },
+            handleError: function(error) {
+                this.errors = Error.methods.handleError(error)
             }
         },
         created: function() {
