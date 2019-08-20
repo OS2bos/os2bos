@@ -1,7 +1,14 @@
+<!-- Copyright (C) 2019 Magenta ApS, http://magenta.dk.
+   - Contact: info@magenta.dk.
+   -
+   - This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
+
 <template>
 
     <div class="danger error" v-if="msgs">
-        <p v-for="m in msgs" :key="m[0]">
+        <p v-for="m in msgs" :key="m[0]" class="error-msg">
             {{ m }}
         </p>
     </div>
@@ -39,3 +46,11 @@
     }
 
 </script>
+
+<style>
+
+    .error-msg {
+        margin: .25rem 0;
+    }
+
+</style>
