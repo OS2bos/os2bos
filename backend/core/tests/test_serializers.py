@@ -12,10 +12,11 @@ from django.test import TestCase
 
 from core.models import (
     ActivityDetails,
-    Activity,
     FAMILY_DEPT,
     DISABILITY_DEPT,
     CASH,
+    MAIN_ACTIVITY,
+    STATUS_EXPECTED,
     PaymentSchedule,
 )
 from core.tests.testing_utils import (
@@ -49,8 +50,8 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             "start_date": "2019-01-01",
             "end_date": "2018-01-01",
             "details": activity_details.pk,
-            "status": Activity.STATUS_EXPECTED,
-            "activity_type": Activity.MAIN_ACTIVITY,
+            "status": STATUS_EXPECTED,
+            "activity_type": MAIN_ACTIVITY,
             "appropriation": appropriation.pk,
         }
         serializer = ActivitySerializer(data=data)
@@ -73,8 +74,8 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             "start_date": "2018-01-01",
             "end_date": "2019-01-01",
             "details": activity_details.pk,
-            "status": Activity.STATUS_EXPECTED,
-            "activity_type": Activity.MAIN_ACTIVITY,
+            "status": STATUS_EXPECTED,
+            "activity_type": MAIN_ACTIVITY,
             "appropriation": appropriation.pk,
         }
         serializer = ActivitySerializer(data=data)
@@ -93,8 +94,8 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         data = {
             "start_date": "2018-01-01",
             "details": activity_details.pk,
-            "status": Activity.STATUS_EXPECTED,
-            "activity_type": Activity.MAIN_ACTIVITY,
+            "status": STATUS_EXPECTED,
+            "activity_type": MAIN_ACTIVITY,
             "appropriation": appropriation.pk,
         }
         serializer = ActivitySerializer(data=data)
