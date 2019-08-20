@@ -801,18 +801,11 @@ class Appropriation(AuditModelMixin, models.Model):
                 # If a modifies another, merge -
                 # else just set status = GRANTED.
                 if a.modifies and a.modifies.ongoing:
-                    # "Merge" by ending current activity today
-                    # and granting the new one from tomorrow.
-                    a.modifies.end_date = date.today()
-                    a.start_date = date.today() + timedelta(days=1)
+                    # "Merge" by ending current activity the day
+                    # before the new start_date
+                    a.modifies.end_date = a.start_date - timedelta(days=1)
                     a.status = STATUS_GRANTED
                     a.modifies.save()
-                    a.save()
-                elif a.modifies and a.modifies.in_the_future:
-                    # "Merge" by deleting the future activity and
-                    # granting the new one.
-                    a.modifies.delete()
-                    a.status = a.STATUS_GRANTED
                     a.save()
                 else:
                     a.status = STATUS_GRANTED
