@@ -32,6 +32,7 @@ from core.models import (
     Team,
     FAMILY_DEPT,
 )
+from core.utils import get_next_interval
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -149,12 +150,16 @@ class ActivitySerializer(WritableNestedModelSerializer):
             modifies_id = data["modifies"]
             modifies_activity = Activity.objects.get(id=modifies_id)
             if not modifies_activity.end_date or not (
-                today < data["start_date"] < modifies_activity.end_date
+                today
+                < get_next_interval(
+                    data["start_date"], data["payment_frequency"]
+                )
+                < modifies_activity.end_date
             ):
                 raise serializers.ValidationError(
                     _(
                         "den justerede aktivitets startdato skal være i"
-                        " spændet fra i morgen til den bevilgede aktivitets"
+                        " spændet fra i dag + interval til den bevilgede aktivitets"
                         " slutdato"
                     )
                 )

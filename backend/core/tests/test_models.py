@@ -339,14 +339,16 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             payment_amount=Decimal("600.0"),
             payment_frequency=PaymentSchedule.DAILY,
         )
+        modified_start_date = start_date + timedelta(days=1)
+        modified_end_date = end_date + timedelta(days=6)
         # let the granted activity be modified by another expected activity.
         modifies_activity = create_activity(
             case=case,
             appropriation=appropriation,
             activity_type=MAIN_ACTIVITY,
-            start_date=start_date,
+            start_date=modified_start_date,
             status=STATUS_EXPECTED,
-            end_date=end_date + timedelta(days=6),
+            end_date=modified_end_date,
             modifies=activity,
             payment_plan=modifies_payment_schedule,
         )
@@ -356,26 +358,28 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
         activity.refresh_from_db()
         modifies_activity.refresh_from_db()
-        # the old activity should expire today.
-        self.assertEqual(activity.end_date, timezone.now().date())
-        # expected status should be granted with a start_date of tomorrow.
-        self.assertEqual(modifies_activity.status, STATUS_GRANTED)
+        # the old activity should expire the day before
+        # the start_date of the new one.
         self.assertEqual(
-            modifies_activity.start_date,
-            timezone.now().date() + timedelta(days=1),
+            activity.end_date, modified_start_date - timedelta(days=1)
         )
-        # the payments of the old activity should expire today or before.
+        # expected status should be granted with the
+        # start_date of the new activity.
+        self.assertEqual(modifies_activity.status, STATUS_GRANTED)
+        self.assertEqual(modifies_activity.start_date, modified_start_date)
+        # the payments of the old activity should expire
+        # before the new end_date.
         activity_payments = activity.payment_plan.payments
         self.assertTrue(
             activity_payments.order_by("date").first().date
-            <= timezone.now().date()
+            < modified_start_date
         )
         # the payments of the new activity should start after today.
         modifies_payments = modifies_activity.payment_plan.payments
 
         self.assertTrue(
             modifies_payments.order_by("date").first().date
-            > timezone.now().date()
+            >= modified_start_date
         )
         # assert payments are generated correctly.
         self.assertSequenceEqual(
@@ -415,14 +419,16 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             payment_amount=Decimal("600.0"),
             payment_frequency=PaymentSchedule.WEEKLY,
         )
+        modified_start_date = start_date + timedelta(days=7)
+        modified_end_date = end_date + timedelta(days=12)
         # let the granted activity be modified by another expected activity.
         modifies_activity = create_activity(
             case=case,
             appropriation=appropriation,
             activity_type=MAIN_ACTIVITY,
-            start_date=start_date,
+            start_date=modified_start_date,
             status=STATUS_EXPECTED,
-            end_date=end_date + timedelta(days=12),
+            end_date=modified_end_date,
             modifies=activity,
             payment_plan=modifies_payment_schedule,
         )
@@ -432,27 +438,28 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
         activity.refresh_from_db()
         modifies_activity.refresh_from_db()
-        # the old activity should expire today.
-        self.assertEqual(activity.end_date, timezone.now().date())
-        # expected status should be granted with a start_date of tomorrow.
-        self.assertEqual(modifies_activity.status, STATUS_GRANTED)
+        # the old activity should expire the day before
+        # the start_date of the new one.
         self.assertEqual(
-            modifies_activity.start_date,
-            timezone.now().date() + timedelta(days=1),
+            activity.end_date, modified_start_date - timedelta(days=1)
         )
+        # expected status should be granted with the new start_date.
+        self.assertEqual(modifies_activity.status, STATUS_GRANTED)
+        self.assertEqual(modifies_activity.start_date, modified_start_date)
         # the payments of the old activity should expire today or before.
         activity_payments = activity.payment_plan.payments
         self.assertTrue(
             activity_payments.order_by("date").first().date
-            <= timezone.now().date()
+            < modified_start_date
         )
         # the payments of the new activity should start today or after.
         modifies_payments = modifies_activity.payment_plan.payments
 
         self.assertTrue(
             modifies_payments.order_by("date").first().date
-            > timezone.now().date()
+            >= modified_start_date
         )
+        breakpoint()
         # assert payments are generated correctly.
         self.assertSequenceEqual(
             [

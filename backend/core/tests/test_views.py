@@ -422,9 +422,11 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, status=Appropriation.STATUS_GRANTED
         )
+        start_date = timezone.now()
         activity = create_activity(  # noqa - it *will* be used.
             case,
             appropriation,
+            start_date=start_date,
             end_date=date(year=2020, month=12, day=24),
             status=STATUS_GRANTED,
             activity_type=MAIN_ACTIVITY,
@@ -432,6 +434,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         modifying_activity = create_activity(  # noqa - it *will* be used.
             case,
             appropriation,
+            start_date=start_date + timedelta(days=1),
             end_date=date(year=2022, month=12, day=24),
             status=STATUS_EXPECTED,
             activity_type=MAIN_ACTIVITY,

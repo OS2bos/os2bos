@@ -9,9 +9,9 @@
 from datetime import date, timedelta
 from decimal import Decimal
 import uuid
-
-from dateutil import rrule
 from dateutil.relativedelta import relativedelta
+from dateutil import rrule
+
 from django.db import models
 from django.db.models import Q, F
 from django.contrib.postgres import fields
@@ -23,7 +23,7 @@ from django_audit_fields.models import AuditModelMixin
 from simple_history.models import HistoricalRecords
 
 from core.managers import PaymentQuerySet, CaseQuerySet
-from core.utils import send_appropriation
+from core.utils import send_appropriation, get_next_interval
 
 # Target group - definitions and choice list.
 FAMILY_DEPT = "FAMILY_DEPT"
@@ -359,16 +359,9 @@ class PaymentSchedule(models.Model):
             return
         # The new start_date should be based on the newest payment date
         # and the payment frequency.
-        if self.payment_frequency == PaymentSchedule.DAILY:
-            new_start = newest_payment.date + relativedelta(days=1)
-        elif self.payment_frequency == PaymentSchedule.WEEKLY:
-            new_start = newest_payment.date + relativedelta(weeks=1)
-        elif self.payment_frequency == PaymentSchedule.BIWEEKLY:
-            new_start = newest_payment.date + relativedelta(weeks=2)
-        elif self.payment_frequency == PaymentSchedule.MONTHLY:
-            new_start = newest_payment.date + relativedelta(months=1)
-        else:
-            raise ValueError(_("ukendt betalingsfrekvens"))
+        new_start = get_next_interval(
+            newest_payment.date, self.payment_frequency
+        )
 
         # Handle the case where an end_date is set in the future
         # after already having generated payments with no end_date.
@@ -717,11 +710,8 @@ class Appropriation(AuditModelMixin, models.Model):
         """
 
         all_activities = self.activities.filter(
-            Q(status=Activity.STATUS_EXPECTED)
-            | Q(
-                status=Activity.STATUS_GRANTED,
-                modified_by__status=Activity.STATUS_GRANTED,
-            )
+            Q(status=STATUS_EXPECTED)
+            | Q(status=STATUS_GRANTED, modified_by__status=STATUS_GRANTED)
         )
 
         this_years_payments = Payment.objects.filter(
@@ -737,12 +727,9 @@ class Appropriation(AuditModelMixin, models.Model):
         extrapolating for the full year (January 1 - December 31)
         """
         all_activities = self.activities.filter(
-            Q(status=Activity.STATUS_GRANTED, modified_by__isnull=True)
-            | Q(status=Activity.STATUS_EXPECTED)
-            | Q(
-                status=Activity.STATUS_GRANTED,
-                modified_by__status=Activity.STATUS_GRANTED,
-            )
+            Q(status=STATUS_GRANTED, modified_by__isnull=True)
+            | Q(status=STATUS_EXPECTED)
+            | Q(status=STATUS_GRANTED, modified_by__status=STATUS_GRANTED)
         )
         return sum(
             activity.total_cost_full_year for activity in all_activities
