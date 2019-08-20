@@ -18,21 +18,19 @@
                     <th>Relation</th>
                     <th>Borger</th>
                     <th>Relateret sag</th>
-                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="f in fam" :key="f.id">
                     <td>{{ f.relation_type }}</td>
-                    <td>{{ f.cpr_number }} - {{ f.name }}</td>
+                    <td>
+                        <router-link :to="`/case/${ caseId }/familyoverview-edit/${ f.id }`">
+                            {{ f.cpr_number }} - {{ f.name }}
+                        </router-link>        
+                    </td>
                     <td>
                         <span v-if="!f.related_case">-</span>
                         {{ f.related_case }}
-                    </td>
-                    <td>
-                        <router-link :to="`/case/${ caseId }/familyoverview-edit/${ f.id }`" class="edit-icon">
-                            <i class="material-icons">edit</i>
-                        </router-link>
                     </td>
                 </tr>
             </tbody>
@@ -97,10 +95,6 @@
 
     .familyoverview-create-btn {
         margin: 0 1rem;
-    }
-
-    .familyoverview a.edit-icon {
-        border: none;
     }
 
 </style>

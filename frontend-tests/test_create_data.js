@@ -6,7 +6,7 @@ import { user } from './roles.js'
 fixture `Create some data`// declare the fixture
     .page `http://localhost:8080/#/my-cases/`  // specify the start page
 
-test.skip('Create Case', async t => {
+test('Create Case', async t => {
     
     await t
         .useRole( user )
@@ -25,7 +25,7 @@ test.skip('Create Case', async t => {
 
 })
 
-test.skip('Create Appropriation', async t => {
+test('Create Appropriation', async t => {
 
     await t
         .useRole( user )
@@ -33,7 +33,7 @@ test.skip('Create Appropriation', async t => {
         .click(Selector('.appropriation-create-btn'))
         .typeText('#field-sbsysid', 'xx.xx.xx-yy-testbevilling')
         .click('#field-lawref')
-        .click(Selector('#field-lawref option').nth(1))
+        .click(Selector('#field-lawref option').withText('SEL-109 27.57.12 Botilbud, kriseramte kvinder'))
         .click(Selector('input').withAttribute('type', 'submit'))
         .expect(Selector('.appropriation-header h1').innerText).contains('Bevillingsskrivelse')
 

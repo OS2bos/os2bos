@@ -54,7 +54,7 @@
                     </dl>
                     <fieldset>
                         <label for="fieldSelectAct">Aktivitet</label>
-                        <list-picker :dom-id="'fieldSelectAct'" :disabled="disableAct" :selected-id="act.details" @selection="changeActivity" :list="act_details" required/>
+                        <list-picker :dom-id="'fieldSelectAct'" :disabled="disableAct" :selected-id="act.details" @selection="changeActivity" :list="act_details" required />
                     </fieldset>
                     <fieldset>
                         <label for="field-startdate">Startdato</label>
@@ -74,7 +74,7 @@
                     <payment-edit :payment-obj="pay" />
                     <hr>
                     <fieldset>
-                        <input type="submit" value="Gem">
+                        <input type="submit" value="Gem" :disabled="disableAct">
                         <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
                     </fieldset>
                 </div>
@@ -92,6 +92,7 @@
     import PaymentReceiverEdit from '../payment/PaymentReceiverEdit.vue'
     import PaymentEdit from '../payment/PaymentEdit.vue'
     import { activityId2name } from '../filters/Labels.js'
+    import Error from '../forms/Error.vue'
 
     export default {
 
@@ -112,7 +113,8 @@
                 pay: {},
                 act_details: null,
                 current_start_date: null,
-                current_end_date: null
+                current_end_date: null,
+                errors: null
             }
         },
         computed: {
@@ -206,7 +208,7 @@
                         this.$router.push(`/appropriation/${ this.appropriation.id }`)
                         this.$store.dispatch('fetchActivity', res.data.id)
                     })
-                    .catch(err => console.log(err))
+                    .catch(err => this.handleError(err))
 
                 } else {
                     // PATCHING an activity
@@ -216,8 +218,11 @@
                         this.$router.push(`/appropriation/${ this.appropriation.id }`)
                         this.$store.dispatch('fetchActivity', res.data.id)
                     })
-                    .catch(err => console.log(err))
+                    .catch(err => this.handleError(err))
                 }
+            },
+            handleError: function(error) {
+                this.errors = Error.methods.handleError(error)
             },
             cancel: function() {
                 if (this.mode !== 'create') {
