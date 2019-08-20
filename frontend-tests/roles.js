@@ -7,7 +7,7 @@ const user = Role('http://localhost:8080/#/login', async t => {
         .typeText('#password', 'sagsbehandler')
         .click(Selector('input').withAttribute('type','submit'))
         
-}, { preserveUrl: true })
+})
 
 export {
     user

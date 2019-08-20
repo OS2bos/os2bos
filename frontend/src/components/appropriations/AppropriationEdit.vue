@@ -15,7 +15,8 @@
             <fieldset>
                 <label for="field-sbsysid">Foranstaltningssag (SBSYS-sag)</label>
                 <input id="field-sbsysid" type="text" v-model="appr.sbsys_id" required @input="checkKLE(appr.sbsys_id)">
-                <span class="danger" v-if="sbsysCheck">Sagsnummeret svarer ikke til en de paragraffer der kan vælges</span>
+                <span class="danger" v-if="sbsysCheck">Sagsnummeret svarer ikke til en af de paragraffer, der kan vælges</span>
+                <error v-if="errors && errors.sbsys_id" :msgs="errors.sbsys_id" />
             </fieldset>
             <fieldset>
                 <label for="field-lawref">Bevilling efter §</label>
@@ -41,9 +42,13 @@
 <script>
 
     import axios from '../http/Http.js'
+    import Error from '../forms/Error.vue'
 
     export default {
 
+        components: {
+            Error
+        },
         props: [
             'apprObj'
         ],
@@ -55,7 +60,8 @@
                 kle_regex: /\d{2}\.\d{2}\.\d{2}/,
                 sections: null,
                 sbsysCheck: false,
-                disabled: false
+                disabled: false,
+                errors: null
             }
         },
         computed: {
@@ -112,7 +118,7 @@
                     .then(res => {
                         this.$emit('close')
                     })
-                    .catch(err => console.log(err))
+                    .catch(err => { this.handleError(err) })
                 } else {
                     const cas_id = this.$route.params.caseid
                     axios.post(`/appropriations/`, {
@@ -125,8 +131,11 @@
                     .then(res => {
                         this.$router.push(`/appropriation/${ res.data.id }/`)
                     })
-                    .catch(err => console.log(err))
+                    .catch(err => { this.handleError(err) })
                 }
+            },
+            handleError: function(error) {
+                this.errors = Error.methods.handleError(error)
             },
             cancel: function() {
                 if (!this.create_mode) {

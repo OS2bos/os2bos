@@ -4,9 +4,9 @@ import { Selector } from 'testcafe'
 import { user } from './roles.js'
 
 fixture `Create some data`// declare the fixture
-    .page `localhost:8080`;  // specify the start page
+    .page `http://localhost:8080/#/my-cases/`  // specify the start page
 
-test('Create Case', async t => {
+test.skip('Create Case', async t => {
     
     await t
         .useRole( user )
@@ -25,10 +25,9 @@ test('Create Case', async t => {
 
 })
 
-test('Create Appropriation', async t => {
-    
+test.skip('Create Appropriation', async t => {
+
     await t
-        .navigateTo('localhost:8080/#/my-cases/')
         .useRole( user )
         .click(Selector('a').withText('xx.xx.xx-testsag'))
         .click(Selector('.appropriation-create-btn'))
@@ -43,7 +42,6 @@ test('Create Appropriation', async t => {
 test('Create Activity', async t => {
     
     await t
-        .navigateTo('localhost:8080/#/my-cases/')
         .useRole( user )
         .click(Selector('a').withText('xx.xx.xx-testsag'))
         .click(Selector('a').withText('xx.xx.xx-yy-testbevilling'))
@@ -61,6 +59,4 @@ test('Create Activity', async t => {
         .expect(Selector('.appropriation-header h1').innerText).contains('Bevillingsskrivelse')
         */
         
-        
-
 })

@@ -39,11 +39,3 @@
     }
 
 </script>
-
-<style>
-
-    .error span {
-        text-transform: capitalize;
-    }
-
-</style>
