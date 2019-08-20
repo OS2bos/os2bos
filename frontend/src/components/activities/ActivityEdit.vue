@@ -53,8 +53,8 @@
                         <dd>Følgeydelse</dd>
                     </dl>
                     <fieldset>
-                        <label for="selectField">Aktivitet</label>
-                        <list-picker :dom-id="'selectField'" :disabled="disableAct" :selected-id="act.details" @selection="changeActivity" :list="act_details" required/>
+                        <label for="fieldSelectAct">Aktivitet</label>
+                        <list-picker :dom-id="'fieldSelectAct'" :disabled="disableAct" :selected-id="act.details" @selection="changeActivity" :list="act_details" required/>
                     </fieldset>
                     <fieldset>
                         <label for="field-startdate">Startdato</label>

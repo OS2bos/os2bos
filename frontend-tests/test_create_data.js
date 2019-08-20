@@ -28,8 +28,8 @@ test('Create Case', async t => {
 test('Create Appropriation', async t => {
     
     await t
-        .useRole( user )
         .navigateTo('localhost:8080/#/my-cases/')
+        .useRole( user )
         .click(Selector('a').withText('xx.xx.xx-testsag'))
         .click(Selector('.appropriation-create-btn'))
         .typeText('#field-sbsysid', 'xx.xx.xx-yy-testbevilling')
@@ -37,5 +37,30 @@ test('Create Appropriation', async t => {
         .click(Selector('#field-lawref option').nth(1))
         .click(Selector('input').withAttribute('type', 'submit'))
         .expect(Selector('.appropriation-header h1').innerText).contains('Bevillingsskrivelse')
+
+})
+
+test('Create Activity', async t => {
+    
+    await t
+        .navigateTo('localhost:8080/#/my-cases/')
+        .useRole( user )
+        .click(Selector('a').withText('xx.xx.xx-testsag'))
+        .click(Selector('a').withText('xx.xx.xx-yy-testbevilling'))
+        .click(Selector('.activities-create-btn'))
+        .click(Selector('label').withAttribute('for', 'field-type-main'))
+        .click('#fieldSelectAct')
+        .click(Selector('#fieldSelectAct option').nth(1))
+        .typeText('#field-startdate', '2019-08-21')
+        
+        /*
+        .typeText('#field-sbsysid', 'xx.xx.xx-yy-testbevilling')
+        .click('#field-lawref')
+        .click(Selector('#field-lawref option').nth(1))
+        .click(Selector('input').withAttribute('type', 'submit'))
+        .expect(Selector('.appropriation-header h1').innerText).contains('Bevillingsskrivelse')
+        */
+        
+        
 
 })
