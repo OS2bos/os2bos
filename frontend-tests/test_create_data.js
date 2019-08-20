@@ -24,3 +24,18 @@ test('Create Case', async t => {
         .expect(Selector('.case-header h1').innerText).contains('xx.xx.xx-testsag')
 
 })
+
+test('Create Appropriation', async t => {
+    
+    await t
+        .useRole( user )
+        .navigateTo('localhost:8080/#/my-cases/')
+        .click(Selector('a').withText('xx.xx.xx-testsag'))
+        .click(Selector('.appropriation-create-btn'))
+        .typeText('#field-sbsysid', 'xx.xx.xx-yy-testbevilling')
+        .click('#field-lawref')
+        .click(Selector('#field-lawref option').nth(1))
+        .click(Selector('input').withAttribute('type', 'submit'))
+        .expect(Selector('.appropriation-header h1').innerText).contains('Bevillingsskrivelse')
+
+})
