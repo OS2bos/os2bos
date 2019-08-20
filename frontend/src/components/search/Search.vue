@@ -15,8 +15,10 @@
           placeholder="Søg på cpr nr." 
           v-model="item"
           @update-items="updateItems"
-          :min-len="4"
+          :min-len="10"
+          
         />
+        <span class="danger" v-if="digitsCheck">CPR-nr skal være 10 tegn</span>
     </div>
 </template>
 
@@ -34,7 +36,8 @@
 
       data: function() {
           return {
-            item: null
+            item: null,
+            digitsCheck: false
           }
       },
       computed: {
@@ -48,9 +51,9 @@
       methods: {
         updateItems (query) {
           query = query || ''
-          if (!query.match(/-/)) {
-              let str = query.substring(6, 10).replace('', '-')
-              query = query.substring(0, 6) + str
+          this.digitsCheck = false
+          if (query.length > 10) {
+              this.digitsCheck = true
           }
           this.$router.push(`/all-cases/${ query }`)
         }

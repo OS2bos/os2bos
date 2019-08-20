@@ -1,0 +1,16 @@
+[
+    {
+        "model": "core.paymentmethoddetails",
+        "pk": 1,
+        "fields": {
+            "tax_card": "MAIN_CARD"
+        }
+    },
+    {
+        "model": "core.paymentmethoddetails",
+        "pk": 2,
+        "fields": {
+            "tax_card": "SECONDARY_CARD"
+        }
+    }
+]

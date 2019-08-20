@@ -28,6 +28,7 @@ def initialize():
     initialize_users()
     initialize_teams()
     initialize_approval_levels()
+    initialize_payment_method_details()
 
 
 def initialize_municipalities():
@@ -85,6 +86,10 @@ def initialize_users():
 
     """
     call_command("loaddata", "users.json", app_label="core")
+
+
+def initialize_payment_method_details():
+    call_command("loaddata", "paymentmethoddetails.json", app_label="core")
 
 
 def initialize_school_districts():

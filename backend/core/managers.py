@@ -69,17 +69,15 @@ class CaseQuerySet(models.QuerySet):
         """
         Only include expired Cases.
         """
-        from core.models import Activity
+        from core.models import MAIN_ACTIVITY
 
         today = timezone.now().date()
 
         main_expired_q = Q(
             appropriations__activities__end_date__lt=today,
-            appropriations__activities__activity_type=Activity.MAIN_ACTIVITY,
+            appropriations__activities__activity_type=MAIN_ACTIVITY,
         )
-        main_q = Q(
-            appropriations__activities__activity_type=Activity.MAIN_ACTIVITY
-        )
+        main_q = Q(appropriations__activities__activity_type=MAIN_ACTIVITY)
         # exclude cases with no activities and filter for activities
         # where the number of main activities and expired main activities
         # are the same

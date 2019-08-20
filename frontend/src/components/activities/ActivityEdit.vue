@@ -43,9 +43,9 @@
                     </fieldset>
                     <fieldset v-if="mode === 'create' && !main_act">
                         <legend>Type</legend>
-                        <input type="radio" id="field-type-main" value="MAIN_ACTIVITY" v-model="act.activity_type" @change='activityList()'>
+                        <input type="radio" id="field-type-main" value="MAIN_ACTIVITY" name="activity" v-model="act.activity_type" @change='activityList()' required>
                         <label for="field-type-main">Hovedydelse</label>
-                        <input type="radio" id="field-type-suppl" value="SUPPL_ACTIVITY" v-model="act.activity_type" @change='activityList()'>
+                        <input type="radio" id="field-type-suppl" value="SUPPL_ACTIVITY" name="activity" v-model="act.activity_type" @change='activityList()'>
                         <label for="field-type-suppl">Følgeydelse</label>
                     </fieldset>
                     <dl v-else>
@@ -54,11 +54,11 @@
                     </dl>
                     <fieldset>
                         <label for="selectField">Aktivitet</label>
-                        <list-picker :dom-id="'selectField'" :disabled="disableAct" :selected-id="act.details" @selection="changeActivity" :list="act_details" />
+                        <list-picker :dom-id="'selectField'" :disabled="disableAct" :selected-id="act.details" @selection="changeActivity" :list="act_details" required/>
                     </fieldset>
                     <fieldset>
                         <label for="field-startdate">Startdato</label>
-                        <input type="date" id="field-startdate" v-model="act.start_date" :max="current_end_date" @change="setMinMaxDates()">
+                        <input type="date" id="field-startdate" v-model="act.start_date" :max="current_end_date" @change="setMinMaxDates()" required>
                     </fieldset>
                     <fieldset>
                         <label for="field-enddate">Slutdato</label>
@@ -167,21 +167,22 @@
             saveChanges: function() {
                 
                 let data = {
-                        activity_type: this.act.activity_type,
-                        start_date: this.act.start_date,
-                        end_date: this.act.end_date,
-                        details: this.act.details,
-                        note: this.act.note,
-                        payment_plan: {
-                            recipient_type: this.pay.recipient_type,
-                            recipient_id: this.pay.recipient_id,
-                            recipient_name: this.pay.recipient_name,
-                            payment_method: this.pay.payment_method,
-                            payment_frequency: this.pay.payment_frequency,
-                            payment_type: this.pay.payment_type,
-                            payment_units: this.pay.payment_units,
-                            payment_amount: this.pay.payment_amount
-                        }
+                    activity_type: this.act.activity_type,
+                    start_date: this.act.start_date,
+                    end_date: this.act.end_date,
+                    details: this.act.details,
+                    note: this.act.note,
+                    payment_plan: {
+                        recipient_type: this.pay.recipient_type,
+                        recipient_id: this.pay.recipient_id,
+                        recipient_name: this.pay.recipient_name,
+                        payment_method: this.pay.payment_method,
+                        payment_frequency: this.pay.payment_frequency,
+                        payment_type: this.pay.payment_type,
+                        payment_units: this.pay.payment_units,
+                        payment_amount: this.pay.payment_amount,
+                        payment_method_details: parseInt(this.pay.payment_method_details)
+                    }
                 }
 
                 if (this.mode === 'create') {
@@ -212,6 +213,7 @@
 
                     axios.patch(`/activities/${ this.act.id }/`, data)
                     .then(res => {
+                        this.$router.push(`/appropriation/${ this.appropriation.id }`)
                         this.$store.dispatch('fetchActivity', res.data.id)
                     })
                     .catch(err => console.log(err))
@@ -223,13 +225,6 @@
                 } else {
                     this.$router.push(`/appropriation/${ this.$route.params.apprid }`)
                 }  
-            },
-            fetchPaymentInfo: function(pay_plan_id) {
-                axios.get(`/payment_schedules/${ pay_plan_id }/`)
-                .then(res => {
-                    this.pay = res.data
-                })
-                .catch(err => console.log(err))
             },
             activityList: function() {
                 let actList
