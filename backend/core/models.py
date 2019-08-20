@@ -917,8 +917,9 @@ class Activity(AuditModelMixin, models.Model):
         verbose_name = _("aktivitet")
         verbose_name_plural = _("aktiviteter")
         constraints = [
+            # Activity start_date should come before end_date.
             models.CheckConstraint(
-                check=Q(end_date__gte=F("start_date")),
+                check=Q(start_date__lte=F("end_date")),
                 name="end_date_after_start_date",
             ),
             # Appropriation can only have a single main activity
