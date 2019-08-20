@@ -23,7 +23,7 @@
 
                 <fieldset>
                     <label for="field-cpr">Sagspart, CPR-nr</label>
-                    <input id="field-cpr" type="text" v-model="cas.cpr_number" @input="lookupCPR(cas.cpr_number)" pattern=".{10,10}" required title="Only 10 characters is allowed">
+                    <input id="field-cpr" type="text" v-model="cas.cpr_number" @input="lookupCPR(cas.cpr_number)" pattern=".{10,10}" required title="Only 10 characters allowed">
                 </fieldset>
             
                 <fieldset>
