@@ -24,7 +24,7 @@
 
                 <fieldset>
                     <label for="field-cpr">Sagspart, CPR-nr</label>
-                    <input id="field-cpr" type="text" v-model="cas.cpr_number" @input="lookupCPR(cas.cpr_number)" maxlength="11" required>
+                    <input id="field-cpr" type="text" v-model="cas.cpr_number" @input="lookupCPR(cas.cpr_number)" maxlength="11" required minlength="10">
                 </fieldset>
             
                 <fieldset>
