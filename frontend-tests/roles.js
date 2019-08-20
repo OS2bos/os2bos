@@ -1,6 +1,6 @@
 import { Role, Selector } from 'testcafe'
 
-const user = Role('http://localhost:8000/#/login', async t => {
+const user = Role('http://localhost:8080/#/login', async t => {
 
     await t
         .typeText('#username', 'ungeraadgiver')
