@@ -6,6 +6,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "test": "./node_modules/.bin/testcafe 'chrome:headless' ./tests/*.js",
     "testdata": "node ./scripts/create_test_data.js"
   },
   "repository": {
@@ -31,7 +32,6 @@
     "@vue/cli-service": "^3.8.3",
     "postcss-import": "^12.0.1",
     "precss": "^4.0.0",
-    "testcafe": "^1.4.1",
     "vue-template-compiler": "^2.5.21"
   },
   "postcss": {
