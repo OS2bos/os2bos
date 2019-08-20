@@ -17,7 +17,6 @@
             </h1>
             <div v-if="!edit_mode" class="actions">
                 <button @click="edit_mode = !edit_mode">Redigér</button>
-                <a :href="`/api/cases/${ cas.id }/csv/`" target="_blank">Download .CSV</a>
             </div>
         </header>
 
