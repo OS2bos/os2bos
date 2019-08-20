@@ -16,11 +16,11 @@ test('Create Case', async t => {
         .click(Selector('label').withAttribute('for', 'inputRadio1'))
         .click('#selectField4')
         .click(Selector('#selectField4 option').withText('Baltorp'))
-        .click('#selectField1')
-        .click(Selector('#selectField1 option').withText('Trin 3 - Hjemmebaserede indsatser'))
-        .click('#selectField2')
-        .click(Selector('#selectField2 option').withText('10'))
+        .click('#field-indsatstrappe')
+        .click(Selector('#field-indsatstrappe option').withText('Trin 3 - Hjemmebaserede indsatser'))
+        .click('#field-skaleringstrappe')
+        .click(Selector('#field-skaleringstrappe option').withText('10'))
+        .click(Selector('input').withAttribute('type', 'submit'))
+        .expect(Selector(".cases-header h1").innerText).contains('Mine sager')
 
-        
-        .expect(Selector('.msg').nth(1).innerText).contains('Du er logget ud')
 })
