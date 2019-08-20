@@ -13,7 +13,7 @@ import uuid
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
 from django.db import models
-from django.db.models import Q
+from django.db.models import Q, F
 from django.contrib.postgres import fields
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
@@ -677,7 +677,7 @@ class Appropriation(AuditModelMixin, models.Model):
         Retrieve total amount granted this year for payments related to
         this Appropriation (both main and supplementary activities).
         """
-        granted_activities = self.activities.all().filter(
+        granted_activities = self.activities.filter(
             status=Activity.STATUS_GRANTED
         )
 
@@ -698,8 +698,11 @@ class Appropriation(AuditModelMixin, models.Model):
         """
 
         all_activities = self.activities.filter(
-            Q(status=Activity.STATUS_GRANTED, modified_by__isnull=True)
-            | Q(status=Activity.STATUS_EXPECTED)
+            Q(status=Activity.STATUS_EXPECTED)
+            | Q(
+                status=Activity.STATUS_GRANTED,
+                modified_by__status=Activity.STATUS_GRANTED,
+            )
         )
 
         this_years_payments = Payment.objects.filter(
@@ -717,6 +720,10 @@ class Appropriation(AuditModelMixin, models.Model):
         all_activities = self.activities.filter(
             Q(status=Activity.STATUS_GRANTED, modified_by__isnull=True)
             | Q(status=Activity.STATUS_EXPECTED)
+            | Q(
+                status=Activity.STATUS_GRANTED,
+                modified_by__status=Activity.STATUS_GRANTED,
+            )
         )
         return sum(
             activity.total_cost_full_year for activity in all_activities
@@ -769,17 +776,24 @@ class Appropriation(AuditModelMixin, models.Model):
             self.approval_note = approval_note
             self.appropriation_date = timezone.now().date()
             self.save()
+
             # Now go through the activities.
             for a in self.activities.exclude(status=Activity.STATUS_GRANTED):
                 # If a modifies another, merge -
                 # else just set status = GRANTED.
-                if a.modifies:
+                if a.modifies and a.modifies.ongoing:
                     # "Merge" by ending current activity today
                     # and granting the new one from tomorrow.
                     a.modifies.end_date = date.today()
                     a.start_date = date.today() + timedelta(days=1)
                     a.status = a.STATUS_GRANTED
                     a.modifies.save()
+                    a.save()
+                elif a.modifies and a.modifies.in_the_future:
+                    # "Merge" by deleting the future activity and
+                    # granting the new one.
+                    a.modifies.delete()
+                    a.status = a.STATUS_GRANTED
                     a.save()
                 else:
                     a.status = a.STATUS_GRANTED
@@ -879,6 +893,12 @@ class Activity(AuditModelMixin, models.Model):
     class Meta:
         verbose_name = _("aktivitet")
         verbose_name_plural = _("aktiviteter")
+        constraints = [
+            models.CheckConstraint(
+                check=Q(end_date__gte=F("start_date")),
+                name="end_date_after_start_date",
+            )
+        ]
 
     details = models.ForeignKey(
         ActivityDetails,
@@ -958,6 +978,18 @@ class Activity(AuditModelMixin, models.Model):
         return f"{self.details} - {activity_type_str} - {status_str}"
 
     @property
+    def in_the_future(self):
+        today = date.today()
+        return self.start_date > today
+
+    @property
+    def ongoing(self):
+        today = date.today()
+        return self.start_date <= today and (
+            not self.end_date or self.end_date > today
+        )
+
+    @property
     def account(self):
         if self.activity_type == Activity.MAIN_ACTIVITY:
             accounts = Account.objects.filter(
@@ -980,6 +1012,17 @@ class Activity(AuditModelMixin, models.Model):
             account = None
         return account
 
+    def get_expected_payments_from_today(self):
+        today = date.today()
+        payments = Payment.objects.none()
+        if self.modifies and self.status == Activity.STATUS_EXPECTED:
+            payments = Payment.objects.filter(
+                payment_schedule__activity=self, date__gt=today
+            )
+        else:
+            payments = Payment.objects.filter(payment_schedule__activity=self)
+        return payments
+
     @property
     def monthly_payment_plan(self):
         payments = Payment.objects.filter(payment_schedule__activity=self)
@@ -988,15 +1031,14 @@ class Activity(AuditModelMixin, models.Model):
     @property
     def total_cost_this_year(self):
         now = timezone.now()
-        payments = Payment.objects.filter(
-            payment_schedule__activity=self
-        ).filter(date__year=now.year)
-
+        payments = self.get_expected_payments_from_today().filter(
+            date__year=now.year
+        )
         return payments.amount_sum()
 
     @property
     def total_cost(self):
-        payments = Payment.objects.filter(payment_schedule__activity=self)
+        payments = self.get_expected_payments_from_today()
         return payments.amount_sum()
 
     @property
