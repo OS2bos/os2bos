@@ -91,28 +91,31 @@ class TestRelatedPersonsViewSet(AuthenticatedTestCase):
         response = self.client.get(reverse_url, data={"cpr": "1234567890"})
 
         self.assertEqual(response.status_code, 200)
-        expected_format = [
-            {
-                "cpr_number": "0123456780",
-                "relation_type": "aegtefaelle",
-                "name": "Iben Jensen",
-            },
-            {
-                "cpr_number": "2123456789",
-                "relation_type": "barn",
-                "name": "Ib Jensen",
-            },
-            {
-                "cpr_number": "0000000000",
-                "relation_type": "mor",
-                "name": "Ingeborg Jensen",
-            },
-            {
-                "cpr_number": "0000000000",
-                "relation_type": "far",
-                "name": "Gunnar Jensen",
-            },
-        ]
+        expected_format = {
+            "name": "Bo Jensen",
+            "relations": [
+                {
+                    "cpr_number": "0123456780",
+                    "relation_type": "aegtefaelle",
+                    "name": "Iben Jensen",
+                },
+                {
+                    "cpr_number": "2123456789",
+                    "relation_type": "barn",
+                    "name": "Ib Jensen",
+                },
+                {
+                    "cpr_number": "0000000000",
+                    "relation_type": "mor",
+                    "name": "Ingeborg Jensen",
+                },
+                {
+                    "cpr_number": "0000000000",
+                    "relation_type": "far",
+                    "name": "Gunnar Jensen",
+                },
+            ],
+        }
         self.assertEqual(response.json(), expected_format)
 
 

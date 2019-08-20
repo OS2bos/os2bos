@@ -200,7 +200,8 @@
                 if (cpr.length > 9) {
                     axios.get(`/related_persons/fetch_from_serviceplatformen/?cpr=${ cpr }`)
                     .then(res => {
-                        this.cas.name = res.data[0].name
+                        this.cas.name = res.data.name
+                        this.relations = res.data.relations
                         this.$forceUpdate()
                     })
                     .catch(err => console.log(err))
@@ -249,6 +250,20 @@
                     data.case_worker = this.user.id
                     axios.post('/cases/', data)
                     .then(res => {
+                        if (this.relations) {
+                            for (let i in this.relations) {
+                                let r = this.relations[i]
+                                let data_related = {
+                                    relation_type: r.relation_type,
+                                    cpr_number: r.cpr_number,
+                                    name: r.name,
+                                    related_case: r.related_case ? r.related_case : '',
+                                    main_case: res.data.id
+                                }
+                                axios.post('/related_persons/', data_related)
+                                .catch(err => console.log(err))
+                            }
+                        }
                         this.$router.push(`/case/${ res.data.id }/`)
                     })
                     .catch(err => console.log(err))
