@@ -43,7 +43,7 @@ class InitializeTestCase(TestCase):
     def test_initialize_generates_accounts(self):
         initialize()
         accounts_count = Account.objects.count()
-        self.assertEqual(accounts_count, 883)
+        self.assertEqual(accounts_count, 889)
 
     def test_initialize_generates_payment_method_details(self):
         initialize()
