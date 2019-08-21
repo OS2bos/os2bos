@@ -13,15 +13,15 @@
         <h1 v-else>Redigér familierelation</h1>
         <form @submit.prevent="saveChanges()">
             <fieldset>
-                <label for="field-cpr">Cpr-nummer</label>
+                <label class="required" for="field-cpr">Cpr-nummer</label>
                 <input id="field-cpr" type="text" v-model="fam.cpr_number" required @input="lookupCPR(fam.cpr_number)">
             </fieldset>
             <fieldset>
-                <label for="field-name">Navn</label>
+                <label class="required" for="field-name">Navn</label>
                 <input id="field-name" type="text" v-model="fam.name" required>
             </fieldset>
             <fieldset>
-                <label for="field-relation">Relation</label>
+                <label class="required" for="field-relation">Relation</label>
                 <input id="field-relation" type="text" v-model="fam.relation_type" required>
             </fieldset>
             <fieldset>

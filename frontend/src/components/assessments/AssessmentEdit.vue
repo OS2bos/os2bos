@@ -14,8 +14,8 @@
         <h2 v-else>Vurdering</h2>
 
         <fieldset>
-            <label for="selectField1">Indsatstrappen</label>
-            <select id="selectField1" v-model="cas.effort_step" required @change="updateEffort()">
+            <label class="required" for="field-indsatstrappe">Indsatstrappen</label>
+            <select id="field-indsatstrappe" v-model="cas.effort_step" required @change="updateEffort()">
                 <option value="STEP_ONE">Trin 1 - Tidlig indsats i almenområdet</option>
                 <option value="STEP_TWO">Trin 2 - Forebyggelse</option>
                 <option value="STEP_THREE">Trin 3 - Hjemmebaserede indsatser</option>
@@ -26,8 +26,8 @@
         </fieldset>
 
         <fieldset>
-            <label for="selectField2">Skaleringstrappen</label>
-            <select id="selectField2" v-model="cas.scaling_step" required @change="updateScaling()">
+            <label class="required" for="field-skaleringstrappe">Skaleringstrappen</label>
+            <select id="field-skaleringstrappe" v-model="cas.scaling_step" required @change="updateScaling()">
                 <option value="10">10</option>
                 <option value="9">9</option>
                 <option value="8">8</option>

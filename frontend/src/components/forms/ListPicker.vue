@@ -8,7 +8,7 @@
 
 <template>
 
-    <select :id="domId" class="listpicker" @change="emitChange" v-model="selection">
+    <select :id="domId" class="listpicker" @change="emitChange" v-model="selection" :required="required">
         <option v-for="l in list" :value="l.id" :key="l.id">
             {{ l[displayKey] }}
         </option>
@@ -33,7 +33,8 @@
             displayKey: {
                 type: String,
                 default: 'name'
-            }
+            },
+            required: Boolean
         },
         data: function(){
             return {

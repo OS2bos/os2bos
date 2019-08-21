@@ -80,6 +80,13 @@
         text-transform: capitalize;
     }
 
+    legend.required::after,
+    label.required::after {
+        content: "*";
+        color: var(--danger);
+        margin: 0 .25rem;
+    }
+
     .mini-label .label {
         padding: .124rem .25rem;
         font-size: .85rem;
