@@ -155,7 +155,7 @@ class ActivitySerializer(WritableNestedModelSerializer):
                     data["payment_plan"]["payment_frequency"],
                 )
             else:
-                next_payment = modifies.payment_plan.next_payment
+                next_payment = modifies.payment_plan.next_payment.date
 
             if not (
                 today < next_payment <= data["start_date"] <= modifies.end_date
