@@ -422,7 +422,11 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, status=Appropriation.STATUS_GRANTED
         )
-        start_date = timezone.now()
+        start_date = timezone.now().date()
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+        )
         activity = create_activity(  # noqa - it *will* be used.
             case,
             appropriation,
@@ -430,6 +434,11 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             end_date=date(year=2020, month=12, day=24),
             status=STATUS_GRANTED,
             activity_type=MAIN_ACTIVITY,
+            payment_plan=payment_schedule,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
         )
         modifying_activity = create_activity(  # noqa - it *will* be used.
             case,
@@ -439,13 +448,20 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             status=STATUS_EXPECTED,
             activity_type=MAIN_ACTIVITY,
             modifies=activity,
+            payment_plan=payment_schedule,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
         )
         draft_activity = create_activity(  # noqa - it *will* be used.
             case,
             appropriation,
+            start_date=start_date,
             end_date=date(year=2023, month=12, day=24),
             status=STATUS_DRAFT,
             activity_type=SUPPL_ACTIVITY,
+            payment_plan=payment_schedule,
         )
         url = reverse("appropriation-grant", kwargs={"pk": appropriation.pk})
         self.client.login(username=self.username, password=self.password)
