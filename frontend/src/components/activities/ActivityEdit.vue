@@ -42,7 +42,7 @@
                         <label for="field-status-expected">Opret forventet aktivitet</label>
                     </fieldset>
                     <fieldset v-if="mode === 'create' && !main_act">
-                        <legend>Type</legend>
+                        <legend class="required">Type</legend>
                         <input type="radio" id="field-type-main" value="MAIN_ACTIVITY" name="activity" v-model="act.activity_type" @change='activityList()' required>
                         <label for="field-type-main">Hovedydelse</label>
                         <input type="radio" id="field-type-suppl" value="SUPPL_ACTIVITY" name="activity" v-model="act.activity_type" @change='activityList()'>
@@ -53,12 +53,13 @@
                         <dd>Følgeydelse</dd>
                     </dl>
                     <fieldset>
-                        <label for="selectField">Aktivitet</label>
-                        <list-picker :dom-id="'selectField'" :disabled="disableAct" :selected-id="act.details" @selection="changeActivity" :list="act_details" required/>
+                        <label class="required" for="fieldSelectAct">Aktivitet</label>
+                        <list-picker :dom-id="'fieldSelectAct'" :disabled="disableAct" :selected-id="act.details" @selection="changeActivity" :list="act_details" required />
                     </fieldset>
                     <fieldset>
-                        <label for="field-startdate">Startdato</label>
+                        <label class="required" for="field-startdate">Startdato</label>
                         <input type="date" id="field-startdate" v-model="act.start_date" :max="current_end_date" @change="setMinMaxDates()" required>
+                        <error v-if="errors && errors.start_date" :msgs="errors.start_date" />
                     </fieldset>
                     <fieldset>
                         <label for="field-enddate">Slutdato</label>
@@ -74,7 +75,7 @@
                     <payment-edit :payment-obj="pay" />
                     <hr>
                     <fieldset>
-                        <input type="submit" value="Gem">
+                        <input type="submit" value="Gem" :disabled="disableAct">
                         <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
                     </fieldset>
                 </div>
@@ -92,6 +93,7 @@
     import PaymentReceiverEdit from '../payment/PaymentReceiverEdit.vue'
     import PaymentEdit from '../payment/PaymentEdit.vue'
     import { activityId2name } from '../filters/Labels.js'
+    import Error from '../forms/Error.vue'
 
     export default {
 
@@ -99,7 +101,8 @@
             ListPicker,
             PaymentAmountEdit,
             PaymentReceiverEdit,
-            PaymentEdit
+            PaymentEdit,
+            Error
         },
         props: [
             'mode', // Can be either 'create', 'edit', or 'clone'
@@ -112,7 +115,8 @@
                 pay: {},
                 act_details: null,
                 current_start_date: null,
-                current_end_date: null
+                current_end_date: null,
+                errors: null
             }
         },
         computed: {
@@ -206,7 +210,7 @@
                         this.$router.push(`/appropriation/${ this.appropriation.id }`)
                         this.$store.dispatch('fetchActivity', res.data.id)
                     })
-                    .catch(err => console.log(err))
+                    .catch(err => this.handleError(err))
 
                 } else {
                     // PATCHING an activity
@@ -216,8 +220,11 @@
                         this.$router.push(`/appropriation/${ this.appropriation.id }`)
                         this.$store.dispatch('fetchActivity', res.data.id)
                     })
-                    .catch(err => console.log(err))
+                    .catch(err => this.handleError(err))
                 }
+            },
+            handleError: function(error) {
+                this.errors = Error.methods.handleError(error)
             },
             cancel: function() {
                 if (this.mode !== 'create') {

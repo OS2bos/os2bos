@@ -12,7 +12,7 @@
         <h1>Betaling</h1>
         <div class="row">
             <fieldset style="margin-right: 2rem;">
-                <legend>Hvordan skal det betales?</legend>
+                <legend class="required">Hvordan skal det betales?</legend>
                 <input type="radio" value="ONE_TIME_PAYMENT" name="pay-type" id="pay-type-1" v-model="entry.payment_type" required>
                 <label for="pay-type-1">Engangsudgift</label>
                 <input type="radio" value="RUNNING_PAYMENT" name="pay-type" id="pay-type-2" v-model="entry.payment_type" required>
@@ -27,11 +27,11 @@
             <div>
                 <div class="payment-amount-fields">
                     <fieldset v-if="entry.payment_type === 'ONE_TIME_PAYMENT' || entry.payment_type === 'RUNNING_PAYMENT'">
-                        <label>Beløb</label>
+                        <label class="required">Beløb</label>
                         <input v-model="entry.payment_amount" type="number" step="0.01" required> kr
                     </fieldset>
                     <fieldset v-if="entry.payment_type && entry.payment_type !== 'ONE_TIME_PAYMENT'">
-                        <label for="pay-freq">Hver</label>
+                        <label class="required" for="pay-freq">Hver</label>
                         <select v-model="entry.payment_frequency" id="pay-freq" required>
                             <option v-for="o in choices.frequency_options" :key="o.key" :value="o.key">
                                 {{ o.val }}
@@ -40,13 +40,13 @@
                     </fieldset>
                     <fieldset v-if="entry.payment_type === 'PER_HOUR_PAYMENT' || entry.payment_type === 'PER_DAY_PAYMENT' || entry.payment_type === 'PER_KM_PAYMENT'" class="rows">
                         <div style="margin-right: .5rem;">
-                            <label v-if="entry.payment_type === 'PER_HOUR_PAYMENT'">betales antal timer</label>
-                            <label v-if="entry.payment_type === 'PER_DAY_PAYMENT'">betales antal døgn</label>
-                            <label v-if="entry.payment_type === 'PER_KM_PAYMENT'">betales antal kilometer</label>
+                            <label class="required" v-if="entry.payment_type === 'PER_HOUR_PAYMENT'">betales antal timer</label>
+                            <label class="required" v-if="entry.payment_type === 'PER_DAY_PAYMENT'">betales antal døgn</label>
+                            <label class="required" v-if="entry.payment_type === 'PER_KM_PAYMENT'">betales antal kilometer</label>
                             <input v-model="entry.payment_units" type="number" required>
                         </div>
                         <div>
-                            <label>til takst</label>
+                            <label class="required">til takst</label>
                             <input v-model="entry.payment_amount" type="number" step="0.01" required> kr<br>
                             <a href="https://www.kl.dk/media/16653/taksttabel_-2019.pdf" target="_blank">Find takster her</a>
                         </div>
