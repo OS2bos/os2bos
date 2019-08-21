@@ -16,25 +16,25 @@
         <div class="row">
             <div class="column">
                 <fieldset>
-                    <label for="field-sbsys-id">SBSYS Hovedsag:</label>
+                    <label class="required" for="field-sbsys-id">SBSYS Hovedsag:</label>
                     <input id="field-sbsys-id" type="search" v-model="cas.sbsys_id" required>
                     <span class="danger" v-if="sbsysCheck">Sagsnummeret indeholder ikke et gyldigt KLE-nummer</span>
                     <error v-if="errors && errors.sbsys_id" :msgs="errors.sbsys_id" />
                 </fieldset>
 
                 <fieldset>
-                    <label for="field-cpr">Sagspart, CPR-nr</label>
+                    <label class="required" for="field-cpr">Sagspart, CPR-nr</label>
                     <input id="field-cpr" type="text" v-model="cas.cpr_number" @input="lookupCPR(cas.cpr_number)" maxlength="11" required minlength="10">
                 </fieldset>
             
                 <fieldset>
-                    <label for="field-name">Sagspart, navn</label>
+                    <label class="required" for="field-name">Sagspart, navn</label>
                     <input id="field-name" type="text" v-model="cas.name" required>
                 </fieldset>
 
                 <fieldset>
                     <h3>Kommune:</h3>
-                    <label for="selectField1">Betalingskommune:</label>
+                    <label class="required" for="selectField1">Betalingskommune:</label>
                     <list-picker 
                         :dom-id="'selectField1'" 
                         :selected-id="cas.paying_municipality" 
@@ -44,7 +44,7 @@
                 </fieldset>
 
                 <fieldset>
-                    <label for="selectField2">Handlekommune:</label>
+                    <label class="required" for="selectField2">Handlekommune:</label>
                     <list-picker 
                         :dom-id="'selectField2'" 
                         :selected-id="cas.acting_municipality" 
@@ -54,7 +54,7 @@
                 </fieldset>
 
                 <fieldset>
-                    <label for="selectField3">Bopælsskommune:</label>
+                    <label class="required" for="selectField3">Bopælsskommune:</label>
                     <list-picker 
                         :dom-id="'selectField3'" 
                         :selected-id="cas.residence_municipality" 
@@ -64,7 +64,7 @@
                 </fieldset>
 
                 <fieldset>
-                    <h3>Målgruppe:</h3>
+                    <legend class="required">Målgruppe:</legend>
                     <input id="inputRadio1" type="radio" value="FAMILY_DEPT" v-model="cas.target_group" name="target-group" required>
                     <label for="inputRadio1">Familieafdelingen</label>
                     <input id="inputRadio2" type="radio" value="DISABILITY_DEPT" v-model="cas.target_group" name="target-group" required>
@@ -72,7 +72,7 @@
                 </fieldset>
 
                 <fieldset>
-                    <h3>Andet:</h3>
+                    <legend>Andet:</legend>
                     <input id="inputCheckbox1" type="checkbox" v-model="cas.refugee_integration">
                     <label for="inputCheckbox1">Integrationsindsatsen</label>
                     <input id="inputCheckbox2" type="checkbox" v-model="cas.cross_department_measure">
@@ -80,7 +80,7 @@
                 </fieldset>
 
                 <fieldset v-if="cas.target_group === 'FAMILY_DEPT'">
-                    <label for="selectField4">Skoledistrikt (nuværende eller oprindeligt)</label>
+                    <label class="required" for="selectField4">Skoledistrikt (nuværende eller oprindeligt)</label>
                     <list-picker :dom-id="'selectField4'" :selected-id="cas.district" required @selection="changeDistrict" :list="districts" />
                 </fieldset>
 
@@ -89,7 +89,7 @@
                 <template v-if="!create_mode">
                     <h3>Sagsbehandling:</h3>
                     <fieldset>
-                        <label for="selectCaseWorker">Sagsbehandler</label>
+                        <label class="required" for="selectCaseWorker">Sagsbehandler</label>
                         <list-picker :dom-id="'selectCaseWorker'" :selected-id="cas.case_worker" @selection="changeCaseWorker" :list="users" display-key="username" />
                     </fieldset>
                     <dl v-if="cas.team_data">

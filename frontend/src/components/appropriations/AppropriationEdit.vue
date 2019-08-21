@@ -13,13 +13,13 @@
         <h1 v-else>Redigér bevillingskrivelse</h1>
         <form @submit.prevent="saveChanges()">
             <fieldset>
-                <label for="field-sbsysid">Foranstaltningssag (SBSYS-sag)</label>
+                <label class="required" for="field-sbsysid">Foranstaltningssag (SBSYS-sag)</label>
                 <input id="field-sbsysid" type="text" v-model="appr.sbsys_id" required @input="checkKLE(appr.sbsys_id)">
                 <span class="danger" v-if="sbsysCheck">Sagsnummeret svarer ikke til en af de paragraffer, der kan vælges</span>
                 <error v-if="errors && errors.sbsys_id" :msgs="errors.sbsys_id" />
             </fieldset>
             <fieldset>
-                <label for="field-lawref">Bevilling efter §</label>
+                <label class="required" for="field-lawref">Bevilling efter §</label>
                 <select id="field-lawref" class="listpicker" v-model="appr.section" required>
                     <option :disabled="disabled" v-for="s in sections" :value="s.id" :key="s.id">
                         {{ s.paragraph }} {{ s.text }}
