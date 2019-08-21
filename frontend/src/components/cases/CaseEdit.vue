@@ -218,6 +218,9 @@
                 if (assessment.effort_step) {
                     this.cas.effort_step = assessment.effort_step
                 }
+                if (assessment.history_change_reason) {
+                    this.cas.history_change_reason = assessment.history_change_reason
+                }
             },
             saveChanges: function() {
                 let cpr = this.cas.cpr_number
@@ -242,6 +245,7 @@
                     cross_department_measure: this.cas.cross_department_measure,
                     scaling_step: this.cas.scaling_step,
                     effort_step: this.cas.effort_step,
+                    history_change_reason: this.cas.history_change_reason,
                     note: this.cas.note ? this.cas.note : ''
                 }
                 if (!this.create_mode) {

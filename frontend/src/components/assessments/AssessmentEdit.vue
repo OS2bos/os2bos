@@ -101,21 +101,8 @@
 
     .assessment {
         margin: 0;
-    }
-
-    .assessment-form {
-        padding: 0;
-    }
-
-    .assessment-button {
-        margin-left: 0.5rem;
-    }
-
-    .assessment .cancel-btn {
-        margin-left: 0.5rem;
-        background-color: transparent;
-        color: var(--primary);
-        border-color: transparent;
+        padding: .5rem;
+        background-color: var(--grey2);
     }
 
 </style>
