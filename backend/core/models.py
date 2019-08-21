@@ -1045,17 +1045,6 @@ class Activity(AuditModelMixin, models.Model):
             account = None
         return account
 
-    def get_expected_payments_from_today(self):
-        today = date.today()
-        payments = Payment.objects.none()
-        if self.modifies and self.status == STATUS_EXPECTED:
-            payments = Payment.objects.filter(
-                payment_schedule__activity=self, date__gt=today
-            )
-        else:
-            payments = Payment.objects.filter(payment_schedule__activity=self)
-        return payments
-
     @property
     def monthly_payment_plan(self):
         payments = Payment.objects.filter(payment_schedule__activity=self)
@@ -1063,15 +1052,44 @@ class Activity(AuditModelMixin, models.Model):
 
     @property
     def total_cost_this_year(self):
-        now = timezone.now()
-        payments = self.get_expected_payments_from_today().filter(
-            date__year=now.year
-        )
-        return payments.amount_sum()
+        if self.status == STATUS_GRANTED and self.modified_by.exists():
+            payments = Payment.objects.filter(
+                payment_schedule__activity=self
+            ).exclude(
+                Q(
+                    date__lte=F(
+                        "payment_schedule__activity__modified_by__start_date"
+                    )
+                )
+                | Q(
+                    date__gt=F(
+                        "payment_schedule__activity__modified_by__end_date"
+                    )
+                )
+            )
+        else:
+            payments = Payment.objects.filter(payment_schedule__activity=self)
+        return payments.in_this_year().amount_sum()
 
     @property
     def total_cost(self):
-        payments = self.get_expected_payments_from_today()
+        if self.status == STATUS_GRANTED and self.modified_by.exists():
+            payments = Payment.objects.filter(
+                payment_schedule__activity=self
+            ).exclude(
+                Q(
+                    date__lte=F(
+                        "payment_schedule__activity__modified_by__start_date"
+                    )
+                )
+                | Q(
+                    date__gt=F(
+                        "payment_schedule__activity__modified_by__end_date"
+                    )
+                )
+            )
+        else:
+            payments = Payment.objects.filter(payment_schedule__activity=self)
         return payments.amount_sum()
 
     @property

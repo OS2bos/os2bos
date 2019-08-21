@@ -65,7 +65,6 @@ class PaymentQuerySet(models.QuerySet):
         STATUS_EXPECTED with no modifies
         STATUS_GRANTED with GRANTED modified_by
         STATUS_GRANTED with EXPECTED modified_by overruled with start_date, end_date both inclusive
-        granted + granted with expected & modified_by overruling)
         """
         from core.models import STATUS_EXPECTED, STATUS_GRANTED
 
