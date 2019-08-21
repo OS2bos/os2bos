@@ -56,6 +56,14 @@ class PaymentQuerySet(models.QuerySet):
             .annotate(amount=Sum("amount"))
         )
 
+    def expected(self):
+        from core.models import STATUS_EXPECTED, STATUS_GRANTED
+
+        self.filter(
+            Q(payment_schedule__activity__status=STATUS_GRANTED)
+            | Q(payment_schedule__activity__status=STATUS_EXPECTED)
+        )
+
 
 class CaseQuerySet(models.QuerySet):
     def ongoing(self):

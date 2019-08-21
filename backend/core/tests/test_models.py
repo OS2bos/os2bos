@@ -110,8 +110,8 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
     def test_total_expected_this_year(self):
         # generate a start and end span of 10 days
         now = timezone.now()
-        start_date = date(year=now.year, month=1, day=1)
-        end_date = date(year=now.year, month=1, day=10)
+        start_date = now
+        end_date = now + timedelta(days=10)
         # create main activity with GRANTED.
         payment_schedule = create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
@@ -155,7 +155,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         create_activity(
             case,
             appropriation,
-            start_date=start_date,
+            start_date=start_date + timedelta(days=1),
             end_date=end_date,
             status=STATUS_EXPECTED,
             activity_type=SUPPL_ACTIVITY,
@@ -164,7 +164,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
 
         self.assertEqual(
-            activity.appropriation.total_expected_this_year, Decimal("12000")
+            activity.appropriation.total_expected_this_year, Decimal("13000")
         )
 
     def test_total_expected_full_year(self):
