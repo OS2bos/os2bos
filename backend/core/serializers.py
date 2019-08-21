@@ -146,21 +146,26 @@ class ActivitySerializer(WritableNestedModelSerializer):
             raise serializers.ValidationError(
                 _("startdato skal være før slutdato")
             )
+
         if "modifies" in data and data["modifies"]:
-            modifies_id = data["modifies"]
-            modifies_activity = Activity.objects.get(id=modifies_id)
-            if not modifies_activity.end_date or not (
-                today
-                < get_next_interval(
-                    data["start_date"], data["payment_frequency"]
+            modifies = data["modifies"]
+            if not modifies.ongoing:
+                next_payment = get_next_interval(
+                    data["modifies"].start_date,
+                    data["payment_plan"]["payment_frequency"],
                 )
-                < modifies_activity.end_date
+            else:
+                next_payment = modifies.payment_plan.next_payment
+
+            if not (
+                today < next_payment <= data["start_date"] <= modifies.end_date
             ):
                 raise serializers.ValidationError(
                     _(
-                        "den justerede aktivitets startdato skal være i"
-                        " spændet fra i dag + interval til den bevilgede aktivitets"
-                        " slutdato"
+                        f"den justerede aktivitets startdato skal være i"
+                        f" fremtiden i spændet fra næste betalingsdato:"
+                        f" {next_payment} til"
+                        f" ydelsens slutdato: {modifies.end_date}"
                     )
                 )
         return data

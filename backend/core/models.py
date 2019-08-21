@@ -12,7 +12,7 @@ import uuid
 from dateutil.relativedelta import relativedelta
 from dateutil import rrule
 
-from django.db import models
+from django.db import models, transaction
 from django.db.models import Q, F
 from django.contrib.postgres import fields
 from django.contrib.auth.models import AbstractUser
@@ -239,6 +239,17 @@ class PaymentSchedule(models.Model):
         validators=[MinValueValidator(Decimal("0.01"))],
     )
     payment_id = models.UUIDField(default=uuid.uuid4, editable=False)
+
+    @property
+    def next_payment(self):
+        today = date.today()
+        upcoming_payments = self.payments.filter(date__gt=today).order_by(
+            "date"
+        )
+        if not upcoming_payments.exists():
+            return None
+        else:
+            return upcoming_payments.first()
 
     @staticmethod
     def is_payment_and_recipient_allowed(payment_method, recipient_type):
@@ -754,6 +765,7 @@ class Appropriation(AuditModelMixin, models.Model):
         # TODO:
         pass  # pragma: no cover
 
+    @transaction.atomic
     def grant(self, approval_level, approval_note):
         """Grant this app - change state and all Activities to GRANTED."""
         if self.status in [self.STATUS_DRAFT, self.STATUS_BUDGETED]:
@@ -785,9 +797,15 @@ class Appropriation(AuditModelMixin, models.Model):
 
             # Now go through the activities.
             for a in self.activities.exclude(status=STATUS_GRANTED):
-                # If a modifies another, merge -
+                # If a modifies another and is valid, merge -
                 # else just set status = GRANTED.
-                if a.modifies and a.modifies.ongoing:
+                if a.modifies:
+                    if not a.validate_expected():
+                        raise RuntimeError(
+                            _(
+                                "Den justerede ydelse har ikke det korrekte datospænd"
+                            )
+                        )
                     # "Merge" by ending current activity the day
                     # before the new start_date
                     a.modifies.end_date = a.start_date - timedelta(days=1)
@@ -972,6 +990,23 @@ class Activity(AuditModelMixin, models.Model):
         status_str = self.get_status_display()
         return f"{self.details} - {activity_type_str} - {status_str}"
 
+    def validate_expected(self):
+        today = date.today()
+        if not self.modifies:
+            return False
+        if not self.modifies.ongoing:
+            next_payment = get_next_interval(
+                self.modifies.start_date, self.payment_plan.payment_frequency
+            )
+        else:
+            next_payment = self.modifies.payment_plan.next_payment
+
+        if not (
+            today < next_payment <= self.start_date <= self.modifies.end_date
+        ):
+            raise False
+        return True
+
     @property
     def in_the_future(self):
         today = date.today()
@@ -1010,7 +1045,7 @@ class Activity(AuditModelMixin, models.Model):
     def get_expected_payments_from_today(self):
         today = date.today()
         payments = Payment.objects.none()
-        if self.modifies and self.status == Activity.STATUS_EXPECTED:
+        if self.modifies and self.status == STATUS_EXPECTED:
             payments = Payment.objects.filter(
                 payment_schedule__activity=self, date__gt=today
             )
