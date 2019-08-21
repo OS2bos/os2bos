@@ -1055,9 +1055,9 @@ class Activity(AuditModelMixin, models.Model):
         if self.status == STATUS_GRANTED and self.modified_by.exists():
             payments = Payment.objects.filter(
                 payment_schedule__activity=self
-            ).exclude(
+            ).filter(
                 Q(
-                    date__lte=F(
+                    date__lt=F(
                         "payment_schedule__activity__modified_by__start_date"
                     )
                 )
@@ -1076,9 +1076,9 @@ class Activity(AuditModelMixin, models.Model):
         if self.status == STATUS_GRANTED and self.modified_by.exists():
             payments = Payment.objects.filter(
                 payment_schedule__activity=self
-            ).exclude(
+            ).filter(
                 Q(
-                    date__lte=F(
+                    date__lt=F(
                         "payment_schedule__activity__modified_by__start_date"
                     )
                 )
