@@ -14,14 +14,14 @@
             <option value="COMPANY">Firma</option>
             <option value="PERSON">Person</option>
         </select>
-        <template v-if="entry.recipient_type === 'COMPANY' && service_providers">
+        <fieldset v-if="entry.recipient_type === 'COMPANY' && service_providers">
             <label>Mulige leverandører</label>
             <select v-model="service_provider">
                 <option v-for="s in service_providers" :key="s.id" :value="s">
                     {{ s.name }}
                 </option>
             </select>
-        </template>
+        </fieldset>
 
         <template v-if="entry.recipient_type">
             <fieldset>
