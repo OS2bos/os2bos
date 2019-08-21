@@ -108,10 +108,10 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
 
     def test_total_expected_this_year(self):
-        # generate a start and end span of 10 days
+        # generate a start and end span of 3 days
         now = timezone.now()
         start_date = now
-        end_date = now + timedelta(days=10)
+        end_date = now + timedelta(days=2)
         # create main activity with GRANTED.
         payment_schedule = create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
@@ -162,9 +162,57 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             payment_plan=payment_schedule,
             modifies=supplementary_activity,
         )
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+        )
+        # create a DRAFT supplementary activity which should not be counted.
+        create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            status=STATUS_DRAFT,
+            activity_type=SUPPL_ACTIVITY,
+            payment_plan=payment_schedule,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+        )
+        # create a GRANTED supplementary activity which has
+        # modified another that is also GRANTED.
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+        )
+        supplementary_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=start_date,
+            status=STATUS_GRANTED,
+            activity_type=SUPPL_ACTIVITY,
+            payment_plan=payment_schedule,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_amount=Decimal("700"),
+        )
+        create_activity(
+            case,
+            appropriation,
+            start_date=start_date + timedelta(days=1),
+            end_date=end_date,
+            status=STATUS_GRANTED,
+            activity_type=SUPPL_ACTIVITY,
+            payment_plan=payment_schedule,
+            modifies=supplementary_activity,
+        )
 
         self.assertEqual(
-            activity.appropriation.total_expected_this_year, Decimal("13000")
+            activity.appropriation.total_expected_this_year, Decimal("5300")
         )
 
     def test_total_expected_full_year(self):

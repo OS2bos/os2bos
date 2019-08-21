@@ -720,37 +720,15 @@ class Appropriation(AuditModelMixin, models.Model):
         if it modifies another activity.
         """
 
-        all_activities = self.activities.filter(
+        activities = self.activities.filter(
             Q(status=STATUS_GRANTED) | Q(status=STATUS_EXPECTED)
         )
-
-        modifies_activities = all_activities.filter(
-            status=STATUS_EXPECTED, modifies__isnull=False
-        )
-        modified_by_activities = all_activities.filter(
-            status=STATUS_GRANTED, modified_by__isnull=False
-        )
-
-        this_years_payments = (
-            Payment.objects.filter(
-                payment_schedule__activity__in=all_activities
-            )
-            .exclude(
-                Q(
-                    date__lte=F(
-                        "payment_schedule__activity__modified_by__start_date"
-                    )
-                )
-                | Q(
-                    date__gte=F(
-                        "payment_schedule__activity__modified_by__end_date"
-                    )
-                ),
-                payment_schedule__activity__in=modified_by_activities,
-            )
+        return (
+            Payment.objects.filter(payment_schedule__activity__in=activities)
+            .expected()
             .in_this_year()
+            .amount_sum()
         )
-        return this_years_payments.amount_sum()
 
     @property
     def total_expected_full_year(self):
