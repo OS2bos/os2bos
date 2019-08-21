@@ -58,6 +58,8 @@ class PaymentQuerySet(models.QuerySet):
 
     def expected(self):
         """
+        Filter out the expected payments
+        (granted + granted with expected & modified_by overruling)
         """
         from core.models import STATUS_EXPECTED, STATUS_GRANTED
 
