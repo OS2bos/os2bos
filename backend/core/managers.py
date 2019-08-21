@@ -58,8 +58,14 @@ class PaymentQuerySet(models.QuerySet):
 
     def expected(self):
         """
-        Filter out the expected payments
-        (granted + granted with expected & modified_by overruling)
+        Filter out the expected payments.
+        Thus payments that has the following properties:
+
+        STATUS_GRANTED with no EXPECTED modified_by
+        STATUS_EXPECTED with no modifies
+        STATUS_GRANTED with GRANTED modified_by
+        STATUS_GRANTED with EXPECTED modified_by overruled with start_date, end_date both inclusive
+        granted + granted with expected & modified_by overruling)
         """
         from core.models import STATUS_EXPECTED, STATUS_GRANTED
 
