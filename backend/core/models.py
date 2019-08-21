@@ -1002,9 +1002,12 @@ class Activity(AuditModelMixin, models.Model):
             next_payment = self.modifies.payment_plan.next_payment
 
         if not (
-            today < next_payment <= self.start_date <= self.modifies.end_date
+            today
+            < next_payment.date
+            <= self.start_date
+            <= self.modifies.end_date
         ):
-            raise False
+            return False
         return True
 
     @property

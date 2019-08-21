@@ -339,7 +339,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             payment_amount=Decimal("600.0"),
             payment_frequency=PaymentSchedule.DAILY,
         )
-        modified_start_date = start_date + timedelta(days=1)
+        modified_start_date = now + timedelta(days=1)
         modified_end_date = end_date + timedelta(days=6)
         # let the granted activity be modified by another expected activity.
         modifies_activity = create_activity(
@@ -459,7 +459,6 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             modifies_payments.order_by("date").first().date
             >= modified_start_date
         )
-        breakpoint()
         # assert payments are generated correctly.
         self.assertSequenceEqual(
             [
