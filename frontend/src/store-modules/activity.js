@@ -49,34 +49,37 @@ const actions = {
     fetchActivities: function({commit}, appropriation_id) {
 
         function sortActs(act_list) {
-            
-            let list = act_list.sort(function(a,b) {
-                if (a.activity_type === 'MAIN_ACTIVITY') {
-                    return -1
-                } else if (a.activity_type === 'SUPPL_ACTIVITY') {
-                    return 1
-                } else {
-                    return 0
-                }
-            })
 
-            let modifier_list = []
-            
-            for (let l in list) {
-                const l_item = list[l]
-                if (l_item.modifies) {
-                    modifier_list.push(l_item)
-                    const modifier = list.splice(l, 1)
+            let sorted_list = [],
+                main_acts = act_list.filter(act => act.activity_type === 'MAIN_ACTIVITY'),
+                sec_acts = act_list.filter(act => act.activity_type === 'SUPPL_ACTIVITY')
+
+            function sortByModifier(list) {
+                let new_list = list.slice()
+                for (let a = 0; a < list.length; a++) {
+                    const act = list[a]
+                    
+                    if (act.modifies) {
+                    
+                        const elem = new_list.splice(a, 1)
+                        const parent_idx = new_list.findIndex(el => el.id === act.modifies)
+                        new_list.splice(parent_idx + 1, 0, elem[0])
+                    
+                    } else {
+                    
+                    }
+                    
                 }
-            }
-            for (let m of modifier_list) {
-                const modified_idx = list.findIndex(function(e) {
-                    return e.id === m.modifies
-                })
-                list.splice(modified_idx + 1, 0, m)
+                console.log(new_list)
+                return new_list
             }
 
-            return list
+            main_acts = sortByModifier(main_acts)
+            sec_acts = sortByModifier(sec_acts)
+
+            sorted_list = main_acts.concat(sec_acts)
+            return sorted_list
+
         }
 
         if (appropriation_id) {
