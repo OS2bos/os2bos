@@ -803,7 +803,8 @@ class Appropriation(AuditModelMixin, models.Model):
                     if not a.validate_expected():
                         raise RuntimeError(
                             _(
-                                "Den justerede ydelse har ikke det korrekte datospænd"
+                                "Den justerede ydelse har ikke"
+                                " det korrekte datospænd"
                             )
                         )
                     # "Merge" by ending current activity the day

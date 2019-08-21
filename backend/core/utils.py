@@ -9,7 +9,6 @@
 import os
 import logging
 import requests
-from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 
 from django.template.loader import get_template
