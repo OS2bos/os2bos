@@ -1010,11 +1010,6 @@ class Activity(AuditModelMixin, models.Model):
         return True
 
     @property
-    def in_the_future(self):
-        today = date.today()
-        return self.start_date > today
-
-    @property
     def ongoing(self):
         today = date.today()
         return self.start_date <= today and (
