@@ -1318,12 +1318,12 @@ class PaymentScheduleTestCase(TestCase):
             payment_amount=Decimal("100"),
         )
         start_date = date(year=2019, month=1, day=1)
-        # Start in January and no end should generate 24 monthly payments
+        # Start in January and no end should generate 25 monthly payments
         # (till end of next year)
         payment_schedule.generate_payments(start_date, None)
 
         self.assertIsNotNone(payment_schedule.payments)
-        self.assertEqual(payment_schedule.payments.count(), 24)
+        self.assertEqual(payment_schedule.payments.count(), 25)
 
     def test_synchronize_payments_no_end_needs_further_payments(self):
         # Test the case where end is unbounded and payments are generated till
@@ -1338,7 +1338,7 @@ class PaymentScheduleTestCase(TestCase):
         end_date = None
         # Initial call to generate payments will generate 24 payments.
         payment_schedule.generate_payments(start_date, end_date)
-        self.assertEqual(len(payment_schedule.payments.all()), 24)
+        self.assertEqual(len(payment_schedule.payments.all()), 25)
 
         # Now we are in the future and we need to generate new payments
         # because end is still unbounded
@@ -1347,7 +1347,7 @@ class PaymentScheduleTestCase(TestCase):
             date_mock.max.month = 12
             date_mock.max.day = 31
             payment_schedule.synchronize_payments(start_date, end_date)
-        self.assertEqual(payment_schedule.payments.count(), 36)
+        self.assertEqual(payment_schedule.payments.count(), 37)
 
     def test_synchronize_payments_new_end_date_in_past(self):
         # Test the case where we generate payments for an unbounded end
@@ -1362,7 +1362,7 @@ class PaymentScheduleTestCase(TestCase):
 
         payment_schedule.generate_payments(start_date, end_date)
 
-        self.assertEqual(len(payment_schedule.payments.all()), 24)
+        self.assertEqual(len(payment_schedule.payments.all()), 25)
 
         new_end_date = date(year=2019, month=6, day=1)
         payment_schedule.synchronize_payments(start_date, new_end_date)
@@ -1381,7 +1381,7 @@ class PaymentScheduleTestCase(TestCase):
         # Generate payments till 2020-12-1
         payment_schedule.generate_payments(start_date, end_date)
 
-        self.assertEqual(len(payment_schedule.payments.all()), 24)
+        self.assertEqual(len(payment_schedule.payments.all()), 25)
 
         new_end_date = date(year=2021, month=2, day=1)
         payment_schedule.synchronize_payments(start_date, new_end_date)

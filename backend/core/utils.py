@@ -40,7 +40,7 @@ def get_next_interval(from_date, payment_frequency):
     elif payment_frequency == PaymentSchedule.BIWEEKLY:
         new_start = from_date + relativedelta(weeks=2)
     elif payment_frequency == PaymentSchedule.MONTHLY:
-        new_start = from_date + relativedelta(months=1)
+        new_start = from_date + relativedelta(days=30)
     else:
         raise ValueError(_("ukendt betalingsfrekvens"))
     return new_start

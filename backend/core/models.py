@@ -304,9 +304,8 @@ class PaymentSchedule(models.Model):
                 rrule.WEEKLY, dtstart=start, until=end, interval=2
             )
         elif self.payment_frequency == self.MONTHLY:
-            # If monthly, choose the first day of the month.
             rrule_frequency = rrule.rrule(
-                rrule.MONTHLY, dtstart=start, until=end, bymonthday=1
+                rrule.DAILY, dtstart=start, until=end, interval=30
             )
         else:
             raise ValueError(_("ukendt betalingsfrekvens"))
