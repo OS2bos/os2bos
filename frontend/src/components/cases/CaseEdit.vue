@@ -21,16 +21,11 @@
                     <span class="danger" v-if="sbsysCheck">Sagsnummeret indeholder ikke et gyldigt KLE-nummer</span>
                     <error v-if="errors && errors.sbsys_id" :msgs="errors.sbsys_id" />
                 </fieldset>
-
-                <fieldset>
-                    <label class="required" for="field-cpr">Sagspart, CPR-nr</label>
-                    <input id="field-cpr" type="text" v-model="cas.cpr_number" @input="lookupCPR(cas.cpr_number)" maxlength="11" required minlength="10">
-                </fieldset>
-            
-                <fieldset>
-                    <label class="required" for="field-name">Sagspart, navn</label>
-                    <input id="field-name" type="text" v-model="cas.name" required>
-                </fieldset>
+                
+                <div>
+                    <h3 style="padding-bottom: 0;">Sagspart:</h3>
+                    <cpr-lookup :cpr.sync="cas.cpr_number" :name.sync="cas.name" />
+                </div>
 
                 <fieldset>
                     <h3>Kommune:</h3>
@@ -125,13 +120,15 @@
     import AssessmentEdit from '../assessments/AssessmentEdit.vue'
     import { userId2name, teamId2name } from '../filters/Labels.js'
     import Error from '../forms/Error.vue'
+    import CprLookup from '../forms/CprLookUp.vue'
 
     export default {
 
         components: {
             ListPicker,
             AssessmentEdit,
-            Error
+            Error,
+            CprLookup
         },
         props: [
             'caseObj'
@@ -197,18 +194,6 @@
                     this.$emit('close')
                 } else {
                     this.$router.push('/')
-                }  
-            },
-            lookupCPR: function(cpr_no) {
-                const cpr = cpr_no.replace('-','')
-                if (cpr.length > 9) {
-                    axios.get(`/related_persons/fetch_from_serviceplatformen/?cpr=${ cpr }`)
-                    .then(res => {
-                        this.cas.name = res.data.name
-                        this.relations = res.data.relations
-                        this.$forceUpdate()
-                    })
-                    .catch(err => console.log(err))
                 }  
             },
             updateAssessment: function(assessment) {
