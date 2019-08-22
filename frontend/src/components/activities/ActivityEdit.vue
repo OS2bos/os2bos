@@ -16,11 +16,11 @@
                 <template v-else>
                     Tilføj
                 </template>
-                <template v-if="main_act">
+                <template v-if="has_main_act">
                     følgeydelse
                 </template>
                 <template v-else>
-                    aktivitet
+                    hovedydelse
                 </template>
             </h1>
         </header>
@@ -41,17 +41,6 @@
                         <input type="checkbox" id="field-status-expected" v-model="act_status_expected">
                         <label for="field-status-expected">Opret forventet aktivitet</label>
                     </fieldset>
-                    <fieldset v-if="mode === 'create' && !main_act">
-                        <legend class="required">Type</legend>
-                        <input type="radio" id="field-type-main" value="MAIN_ACTIVITY" name="activity" v-model="act.activity_type" @change='activityList()' required>
-                        <label for="field-type-main">Hovedydelse</label>
-                        <input type="radio" id="field-type-suppl" value="SUPPL_ACTIVITY" name="activity" v-model="act.activity_type" @change='activityList()'>
-                        <label for="field-type-suppl">Følgeydelse</label>
-                    </fieldset>
-                    <dl v-else>
-                        <dt>Type</dt>
-                        <dd>Følgeydelse</dd>
-                    </dl>
                     <fieldset>
                         <label class="required" for="fieldSelectAct">Aktivitet</label>
                         <list-picker :dom-id="'fieldSelectAct'" :disabled="disableAct" :selected-id="act.details" @selection="changeActivity" :list="act_details" required />
@@ -128,7 +117,7 @@
                     return true
                 }
             },
-            main_act: function() {
+            has_main_act: function() {
                 if (this.appropriation) {
                     let act = false
                     for (let a of this.appropriation.activities) {
@@ -145,10 +134,15 @@
                         if (!this.act.end_date) {
                             this.act.end_date = act.end_date
                         }
+                        return true
+                    } else {
+                        this.act.activity_type = 'MAIN_ACTIVITY'
+                        this.activityList()
+                        return false
                     }
-                    return act
+                    
                 } else {
-                    return false
+                    return null
                 }
             }
         },
