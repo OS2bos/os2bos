@@ -18,6 +18,7 @@
                 @input="lookupCPR(instance_cpr)"
                 maxlength="11" minlength="10"
                 required>
+            <error err-key="cpr_number" />
         </fieldset>
 
         <fieldset>
@@ -37,9 +38,13 @@
 <script>
 
     import axios from '../http/Http.js'
+    import Error from '../forms/Error.vue'
 
     export default {
 
+        components: {
+            Error
+        },
         props: [
             'cpr',
             'name'

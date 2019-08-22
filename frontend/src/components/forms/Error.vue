@@ -7,10 +7,20 @@
 
 <template>
 
-    <div class="danger error" v-if="msgs">
-        <p v-for="m in msgs" :key="m[0]" class="error-msg">
-            {{ m }}
+    <div class="danger error">
+
+        <p class="error-msg" v-for="e in errors[errKey]" v-if="errors[errKey]">
+            {{ e }}
         </p>
+        
+        <p class="error-msg" v-for="e in errors.detail" v-if="errors.detail">
+            {{ e }}
+        </p>
+    
+        <p class="error-msg" v-for="e in errors.detail" v-if="errors.non_field_errors">
+            {{ e }}
+        </p>
+    
     </div>
 
 </template>
@@ -21,25 +31,15 @@
 
     export default {
 
-        props: [
-            'msgs'
-        ],
-        methods: {
-            handleError: function(error) {
-                let msgs = {error: ['Der skete en fejl']}
-                if (error.response) {
-                    msgs = error.response.data // return the error JSON object
-                    for (let m in msgs) {
-                        notify(msgs[m][0], 'error')
-                    }
-                } else if (error.request) {
-                    msgs = {error: [error.request.responseText]}
-                    notify(msgs.error[0], 'error')
-                } else if (error.message) {
-                    msgs = {error: [error.message]}
-                    notify(msgs.error[0], 'error')
-                }
-                return msgs
+        props: {
+            errKey: {
+                type: String,
+                default: ''
+            }
+        },
+        computed: {
+            errors: function() {
+                return this.$store.getters.getErrors
             }
         }
 
