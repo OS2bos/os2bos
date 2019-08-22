@@ -66,6 +66,12 @@
                         <label for="inputRadio1">Familieafdelingen</label>
                         <input id="inputRadio2" type="radio" value="DISABILITY_DEPT" v-model="cas.target_group" name="target-group" required>
                         <label for="inputRadio2">Handicapafdelingen</label>
+                        <error err-key="target_group" />
+                    </fieldset>
+
+                    <fieldset v-if="cas.target_group === 'FAMILY_DEPT'">
+                        <label class="required" for="selectField4">Skoledistrikt (nuværende eller oprindeligt)</label>
+                        <list-picker :dom-id="'selectField4'" :selected-id="cas.district" @selection="changeDistrict" :list="districts" required />
                     </fieldset>
 
                     <fieldset>
@@ -74,11 +80,6 @@
                         <label for="inputCheckbox1">Integrationsindsatsen</label>
                         <input id="inputCheckbox2" type="checkbox" v-model="cas.cross_department_measure">
                         <label for="inputCheckbox2">Tværgående ungeindsats</label>
-                    </fieldset>
-
-                    <fieldset v-if="cas.target_group === 'FAMILY_DEPT'">
-                        <label class="required" for="selectField4">Skoledistrikt (nuværende eller oprindeligt)</label>
-                        <list-picker :dom-id="'selectField4'" :selected-id="cas.district" required @selection="changeDistrict" :list="districts" />
                     </fieldset>
 
                     <template v-if="!create_mode">
@@ -212,10 +213,6 @@
             },
             saveChanges: function() {
                 let cpr = this.cas.cpr_number
-                if (cpr.match(/-/)) {
-                    let str = cpr.substring(6, 11).replace('-', '')
-                    cpr = cpr.substring(0, 6) + str
-                }
                 let data = {
                     sbsys_id: this.cas.sbsys_id,
                     case_worker: this.cas.case_worker,

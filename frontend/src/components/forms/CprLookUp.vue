@@ -29,6 +29,7 @@
                 v-model="instance_name"
                 @input="$emit('update:name', instance_name)"
                 required>
+            <error err-key="name" />
         </fieldset>
 
     </div>

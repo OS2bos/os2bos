@@ -13,11 +13,11 @@
             {{ e }}
         </p>
         
-        <p class="error-msg" v-for="e in errors.detail" v-if="errors.detail">
+        <p class="error-msg" v-for="e in errors.detail" v-if="errKey === '' && errors.detail">
             {{ e }}
         </p>
     
-        <p class="error-msg" v-for="e in errors.detail" v-if="errors.non_field_errors">
+        <p class="error-msg" v-for="e in errors.non_field_errors" v-if="errKey === '' && errors.non_field_errors">
             {{ e }}
         </p>
     
