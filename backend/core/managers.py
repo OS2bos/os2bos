@@ -73,12 +73,14 @@ class PaymentQuerySet(models.QuerySet):
             | Q(payment_schedule__activity__status=STATUS_EXPECTED)
         ).exclude(
             Q(
-                date__lte=F(
+                date__gte=F(
                     "payment_schedule__activity__modified_by__start_date"
                 )
             )
-            | Q(
-                date__gt=F("payment_schedule__activity__modified_by__end_date")
+            & Q(
+                date__lte=F(
+                    "payment_schedule__activity__modified_by__end_date"
+                )
             ),
             payment_schedule__activity__status=STATUS_GRANTED,
             payment_schedule__activity__modified_by__isnull=False,
