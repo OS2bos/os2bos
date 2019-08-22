@@ -55,22 +55,15 @@ const actions = {
                 sec_acts = act_list.filter(act => act.activity_type === 'SUPPL_ACTIVITY')
 
             function sortByModifier(list) {
-                let new_list = list.slice()
-                for (let a = 0; a < list.length; a++) {
-                    const act = list[a]
-                    
-                    if (act.modifies) {
-                    
-                        const elem = new_list.splice(a, 1)
-                        const parent_idx = new_list.findIndex(el => el.id === act.modifies)
-                        new_list.splice(parent_idx + 1, 0, elem[0])
-                    
+                let new_list = list.sort(function(a,b) {
+                    if (b.modifies === a.id) {
+                        return -1
+                    } else if (a.modifies === null) {
+                        return 0
                     } else {
-                    
+                        return 1
                     }
-                    
-                }
-                console.log(new_list)
+                })
                 return new_list
             }
 
