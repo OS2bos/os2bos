@@ -12,10 +12,12 @@
         <h1 v-if="create_mode">Opret familierelation</h1>
         <h1 v-else>Redigér familierelation</h1>
         <form @submit.prevent="saveChanges()">
+            <error />
             <cpr-lookup :cpr.sync="fam.cpr_number" :name.sync="fam.name" />
             <fieldset>
                 <label class="required" for="field-relation">Relation</label>
                 <input id="field-relation" type="text" v-model="fam.relation_type" required>
+                <error err-key="relation_type" />
             </fieldset>
             <fieldset>
                 <label for="field-sbsysid">Relateret SBSYS sag</label>
@@ -35,11 +37,13 @@
     import axios from '../http/Http.js'
     import router from '../../router.js'
     import CprLookup from '../forms/CprLookUp.vue'
+    import Error from '../forms/Error.vue'
 
     export default {
 
         components: {
-            CprLookup
+            CprLookup,
+            Error
         },
         data: function() {
             return {
@@ -73,7 +77,7 @@
                     .then(res => {
                         this.$router.push(`/case/${ this.casid }/`)
                     })
-                    .catch(err => console.log(err))
+                    .catch(err => this.$store.dispatch('parseErrorOutput', err))
                 } else {
                     axios.post(`/related_persons/`, {
                         relation_type: this.fam.relation_type,
@@ -85,7 +89,7 @@
                     .then(res => {
                         this.$router.push(`/case/${ this.casid }/`)
                     })
-                    .catch(err => console.log(err))
+                    .catch(err => this.$store.dispatch('parseErrorOutput', err))
                 }
             },
             cancel: function() {

@@ -14,6 +14,7 @@
             <option value="COMPANY">Firma</option>
             <option value="PERSON">Person</option>
         </select>
+        <error err-key="recipient_type" />
         <fieldset v-if="entry.recipient_type === 'COMPANY' && service_providers">
             <label>Mulige leverandører</label>
             <select v-model="service_provider">
@@ -35,18 +36,26 @@
                     CPR-nr
                 </label>
                 <input type="text" id="field-payee-id" v-model="entry.recipient_id" required>
+                <error err-key="recipient_id" />
             </fieldset>
             <fieldset>
                 <label class="required" for="field-payee-name">Navn</label>
                 <input type="text" id="field-payee-name" v-model="entry.recipient_name" required>
+                <error err-key="recipient_name" />
             </fieldset>
         </template>
     </section>
 </template>
 
 <script>
+
+    import Error from '../forms/Error.vue'
+
     export default {
 
+        components: {
+            Error
+        },
         props: [
             'paymentObj'
         ],
