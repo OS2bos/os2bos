@@ -49,34 +49,30 @@ const actions = {
     fetchActivities: function({commit}, appropriation_id) {
 
         function sortActs(act_list) {
-            
-            let list = act_list.sort(function(a,b) {
-                if (a.activity_type === 'MAIN_ACTIVITY') {
-                    return -1
-                } else if (a.activity_type === 'SUPPL_ACTIVITY') {
-                    return 1
-                } else {
-                    return 0
-                }
-            })
 
-            let modifier_list = []
-            
-            for (let l in list) {
-                const l_item = list[l]
-                if (l_item.modifies) {
-                    modifier_list.push(l_item)
-                    const modifier = list.splice(l, 1)
-                }
-            }
-            for (let m of modifier_list) {
-                const modified_idx = list.findIndex(function(e) {
-                    return e.id === m.modifies
+            let sorted_list = [],
+                main_acts = act_list.filter(act => act.activity_type === 'MAIN_ACTIVITY'),
+                sec_acts = act_list.filter(act => act.activity_type === 'SUPPL_ACTIVITY')
+
+            function sortByModifier(list) {
+                let new_list = list.sort(function(a,b) {
+                    if (b.modifies === a.id) {
+                        return -1
+                    } else if (a.modifies === null) {
+                        return 0
+                    } else {
+                        return 1
+                    }
                 })
-                list.splice(modified_idx + 1, 0, m)
+                return new_list
             }
 
-            return list
+            main_acts = sortByModifier(main_acts)
+            sec_acts = sortByModifier(sec_acts)
+
+            sorted_list = main_acts.concat(sec_acts)
+            return sorted_list
+
         }
 
         if (appropriation_id) {
