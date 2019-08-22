@@ -21,16 +21,11 @@
                     <span class="danger" v-if="sbsysCheck">Sagsnummeret indeholder ikke et gyldigt KLE-nummer</span>
                     <error v-if="errors && errors.sbsys_id" :msgs="errors.sbsys_id" />
                 </fieldset>
-
-                <fieldset>
-                    <label class="required" for="field-cpr">Sagspart, CPR-nr</label>
-                    <input id="field-cpr" type="text" v-model="cas.cpr_number" @input="lookupCPR(cas.cpr_number)" maxlength="11" required minlength="10">
-                </fieldset>
-            
-                <fieldset>
-                    <label class="required" for="field-name">Sagspart, navn</label>
-                    <input id="field-name" type="text" v-model="cas.name" required>
-                </fieldset>
+                
+                <div>
+                    <h3 style="padding-bottom: 0;">Sagspart:</h3>
+                    <cpr-lookup :cpr.sync="cas.cpr_number" :name.sync="cas.name" />
+                </div>
 
                 <fieldset>
                     <h3>Kommune:</h3>
@@ -84,8 +79,6 @@
                     <list-picker :dom-id="'selectField4'" :selected-id="cas.district" required @selection="changeDistrict" :list="districts" />
                 </fieldset>
 
-                <assessment-edit :case-obj="cas" @assessment="updateAssessment" />
-
                 <template v-if="!create_mode">
                     <h3>Sagsbehandling:</h3>
                     <fieldset>
@@ -104,6 +97,8 @@
                     <label for="field-case-info">Supplerende oplysninger for sag</label>
                     <textarea id="field-case-info" v-model="cas.note" placeholder="Angiv supplerende oplysninger her"></textarea>
                 </fieldset>
+
+                <assessment-edit :case-obj="cas" @assessment="updateAssessment" />
                 
                 <fieldset>
                     <input type="submit" value="Gem">
@@ -125,13 +120,15 @@
     import AssessmentEdit from '../assessments/AssessmentEdit.vue'
     import { userId2name, teamId2name } from '../filters/Labels.js'
     import Error from '../forms/Error.vue'
+    import CprLookup from '../forms/CprLookUp.vue'
 
     export default {
 
         components: {
             ListPicker,
             AssessmentEdit,
-            Error
+            Error,
+            CprLookup
         },
         props: [
             'caseObj'
@@ -140,7 +137,8 @@
             return {
                 cas: {},
                 create_mode: true,
-                errors: null
+                errors: null,
+                assessment_changes: false
             }
         },
         computed: {
@@ -199,19 +197,8 @@
                     this.$router.push('/')
                 }  
             },
-            lookupCPR: function(cpr_no) {
-                const cpr = cpr_no.replace('-','')
-                if (cpr.length > 9) {
-                    axios.get(`/related_persons/fetch_from_serviceplatformen/?cpr=${ cpr }`)
-                    .then(res => {
-                        this.cas.name = res.data.name
-                        this.relations = res.data.relations
-                        this.$forceUpdate()
-                    })
-                    .catch(err => console.log(err))
-                }  
-            },
             updateAssessment: function(assessment) {
+                this.assessment_changes = true
                 if (assessment.scaling_step) {
                     this.cas.scaling_step = assessment.scaling_step
                 }
@@ -233,8 +220,6 @@
                     case_worker: this.cas.case_worker,
                     team: this.cas.team,
                     district: this.cas.district,
-                    effort_step: this.cas.effort_step,
-                    scaling_step: this.cas.scaling_step,
                     name: this.cas.name,
                     cpr_number: cpr,
                     paying_municipality: this.cas.paying_municipality,
@@ -243,10 +228,12 @@
                     target_group: this.cas.target_group,
                     refugee_integration: this.cas.refugee_integration,
                     cross_department_measure: this.cas.cross_department_measure,
-                    scaling_step: this.cas.scaling_step,
-                    effort_step: this.cas.effort_step,
-                    history_change_reason: this.cas.history_change_reason,
                     note: this.cas.note ? this.cas.note : ''
+                }
+                if (this.assessment_changes) {
+                    data.scaling_step = this.cas.scaling_step
+                    data.effort_step = this.cas.effort_step
+                    data.history_change_reason = this.cas.history_change_reason
                 }
                 if (!this.create_mode) {
                     axios.patch(`/cases/${ this.cas.id }/`, data)
