@@ -14,18 +14,15 @@
         </p>
         
         <template v-if="errKey === ''">
-        <p class="error-msg" v-for="e in errors.detail" v-if="errors.detail">
-            {{ e }}
-        </p>
-    
-        <p class="error-msg" v-for="e in errors.non_field_errors" v-if="errors.non_field_errors">
-            {{ e }}
-        </p>
-
-        <p class="error-msg" v-for="e in errors.errors" v-if="errors.errors">
-            {{ e }}
-        </p>
-
+            <p class="error-msg" v-for="e in errors.detail" v-if="errors.detail">
+                {{ e }}
+            </p>
+            <p class="error-msg" v-for="e in errors.non_field_errors" v-if="errors.non_field_errors">
+                {{ e }}
+            </p>
+            <p class="error-msg" v-for="e in errors.errors" v-if="errors.errors">
+                {{ e }}
+            </p>
         </template>
     
     </div>
