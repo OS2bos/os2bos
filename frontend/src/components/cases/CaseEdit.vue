@@ -198,7 +198,6 @@
                 }  
             },
             updateAssessment: function(assessment) {
-                console.log('UPDATING ASSESSMENT')
                 this.assessment_changes = true
                 if (assessment.scaling_step) {
                     this.cas.scaling_step = assessment.scaling_step
