@@ -1,7 +1,7 @@
 [
     {
         "model": "core.section",
-        "pk": 811,
+        "pk": 957,
         "fields": {
             "paragraph": "SEL-10",
             "kle_number": "27.12.04",
@@ -15,7 +15,7 @@
     },
     {
         "model": "core.section",
-        "pk": 812,
+        "pk": 958,
         "fields": {
             "paragraph": "SEL-100",
             "kle_number": "32.18.08",
@@ -29,7 +29,7 @@
     },
     {
         "model": "core.section",
-        "pk": 813,
+        "pk": 959,
         "fields": {
             "paragraph": "SEL-101",
             "kle_number": "27.51.04",
@@ -43,7 +43,7 @@
     },
     {
         "model": "core.section",
-        "pk": 814,
+        "pk": 960,
         "fields": {
             "paragraph": "SEL-101-3",
             "kle_number": "27.24.42",
@@ -57,7 +57,7 @@
     },
     {
         "model": "core.section",
-        "pk": 815,
+        "pk": 961,
         "fields": {
             "paragraph": "SEL-101-a",
             "kle_number": "27.51.04",
@@ -71,7 +71,7 @@
     },
     {
         "model": "core.section",
-        "pk": 816,
+        "pk": 962,
         "fields": {
             "paragraph": "SEL-102",
             "kle_number": "27.51.08",
@@ -85,7 +85,7 @@
     },
     {
         "model": "core.section",
-        "pk": 817,
+        "pk": 963,
         "fields": {
             "paragraph": "SEL-103",
             "kle_number": "27.54.04",
@@ -99,7 +99,7 @@
     },
     {
         "model": "core.section",
-        "pk": 818,
+        "pk": 964,
         "fields": {
             "paragraph": "SEL-103-2",
             "kle_number": "27.54.04",
@@ -113,7 +113,7 @@
     },
     {
         "model": "core.section",
-        "pk": 819,
+        "pk": 965,
         "fields": {
             "paragraph": "SEL-104",
             "kle_number": "27.54.08",
@@ -127,7 +127,7 @@
     },
     {
         "model": "core.section",
-        "pk": 820,
+        "pk": 966,
         "fields": {
             "paragraph": "SEL-105",
             "kle_number": "27.54.04",
@@ -141,7 +141,7 @@
     },
     {
         "model": "core.section",
-        "pk": 821,
+        "pk": 967,
         "fields": {
             "paragraph": "SEL-107",
             "kle_number": "27.57.04",
@@ -155,7 +155,7 @@
     },
     {
         "model": "core.section",
-        "pk": 822,
+        "pk": 968,
         "fields": {
             "paragraph": "SEL-107-1",
             "kle_number": "27.57.04",
@@ -169,7 +169,7 @@
     },
     {
         "model": "core.section",
-        "pk": 823,
+        "pk": 969,
         "fields": {
             "paragraph": "SEL-107-2.1",
             "kle_number": "27.57.04",
@@ -183,7 +183,7 @@
     },
     {
         "model": "core.section",
-        "pk": 824,
+        "pk": 970,
         "fields": {
             "paragraph": "SEL-107-2.2",
             "kle_number": "27.57.04",
@@ -197,7 +197,7 @@
     },
     {
         "model": "core.section",
-        "pk": 825,
+        "pk": 971,
         "fields": {
             "paragraph": "SEL-108",
             "kle_number": "27.57.08",
@@ -211,7 +211,7 @@
     },
     {
         "model": "core.section",
-        "pk": 826,
+        "pk": 972,
         "fields": {
             "paragraph": "SEL-109",
             "kle_number": "27.57.12",
@@ -225,49 +225,49 @@
     },
     {
         "model": "core.section",
-        "pk": 827,
+        "pk": 973,
         "fields": {
             "paragraph": "SEL-109-2",
             "kle_number": "27.51.08",
             "text": "Botilbud - Kriseramte kvinder,anonymt el",
-            "allowed_for_family_target_group": true,
-            "allowed_for_disability_target_group": true,
-            "allowed_for_steps": "[\"STEP_ONE\", \"STEP_TWO\", \"STEP_THREE\", \"STEP_FOUR\", \"STEP_FIVE\", \"STEP_SIX\"]",
+            "allowed_for_family_target_group": false,
+            "allowed_for_disability_target_group": false,
+            "allowed_for_steps": "[]",
             "law_text_name": "Serviceloven",
             "sbsys_template_id": ""
         }
     },
     {
         "model": "core.section",
-        "pk": 828,
+        "pk": 974,
         "fields": {
             "paragraph": "SEL-109-7",
             "kle_number": "27.57.12",
             "text": "Botilbud - Kriseramte kvinder, familier\u00e5",
-            "allowed_for_family_target_group": true,
-            "allowed_for_disability_target_group": true,
-            "allowed_for_steps": "[\"STEP_ONE\", \"STEP_TWO\", \"STEP_THREE\", \"STEP_FOUR\", \"STEP_FIVE\", \"STEP_SIX\"]",
+            "allowed_for_family_target_group": false,
+            "allowed_for_disability_target_group": false,
+            "allowed_for_steps": "[]",
             "law_text_name": "Serviceloven",
             "sbsys_template_id": ""
         }
     },
     {
         "model": "core.section",
-        "pk": 829,
+        "pk": 975,
         "fields": {
             "paragraph": "SEL-109-8",
             "kle_number": "27.57.12",
             "text": "Botilbud - Kriseramte kvinder, psykologb",
-            "allowed_for_family_target_group": true,
-            "allowed_for_disability_target_group": true,
-            "allowed_for_steps": "[\"STEP_ONE\", \"STEP_TWO\", \"STEP_THREE\", \"STEP_FOUR\", \"STEP_FIVE\", \"STEP_SIX\"]",
+            "allowed_for_family_target_group": false,
+            "allowed_for_disability_target_group": false,
+            "allowed_for_steps": "[]",
             "law_text_name": "Serviceloven",
             "sbsys_template_id": ""
         }
     },
     {
         "model": "core.section",
-        "pk": 830,
+        "pk": 976,
         "fields": {
             "paragraph": "SEL-110",
             "kle_number": "27.57.16",
@@ -281,7 +281,7 @@
     },
     {
         "model": "core.section",
-        "pk": 831,
+        "pk": 977,
         "fields": {
             "paragraph": "SEL-112",
             "kle_number": "27.60.04",
@@ -295,21 +295,21 @@
     },
     {
         "model": "core.section",
-        "pk": 832,
+        "pk": 978,
         "fields": {
             "paragraph": "SEL-11-2",
             "kle_number": "27.12.06",
             "text": "Familier\u00e5dgivning - forebyggende",
             "allowed_for_family_target_group": true,
             "allowed_for_disability_target_group": true,
-            "allowed_for_steps": "[\"STEP_ONE\", \"STEP_TWO\"]",
+            "allowed_for_steps": "[]",
             "law_text_name": "Serviceloven",
             "sbsys_template_id": ""
         }
     },
     {
         "model": "core.section",
-        "pk": 833,
+        "pk": 979,
         "fields": {
             "paragraph": "SEL-113",
             "kle_number": "27.60.16",
@@ -323,21 +323,21 @@
     },
     {
         "model": "core.section",
-        "pk": 834,
+        "pk": 980,
         "fields": {
             "paragraph": "SEL-11-3",
             "kle_number": "27.12.06",
             "text": "Konsulentbistand mv. til b\u00f8rn, unge og familier med hensyn til b\u00f8rn og unges forhold",
             "allowed_for_family_target_group": true,
             "allowed_for_disability_target_group": true,
-            "allowed_for_steps": "[\"STEP_ONE\", \"STEP_TWO\"]",
+            "allowed_for_steps": "[]",
             "law_text_name": "Serviceloven",
             "sbsys_template_id": ""
         }
     },
     {
         "model": "core.section",
-        "pk": 835,
+        "pk": 981,
         "fields": {
             "paragraph": "SEL-11-3.1",
             "kle_number": "27.12.06",
@@ -351,7 +351,7 @@
     },
     {
         "model": "core.section",
-        "pk": 836,
+        "pk": 982,
         "fields": {
             "paragraph": "SEL-11-3.2",
             "kle_number": "27.12.06",
@@ -365,35 +365,35 @@
     },
     {
         "model": "core.section",
-        "pk": 837,
+        "pk": 983,
         "fields": {
             "paragraph": "SEL-11-3.3",
             "kle_number": "27.12.06",
             "text": "R\u00e5dgivning om familieplanl\u00e6gning - foreb",
             "allowed_for_family_target_group": true,
             "allowed_for_disability_target_group": true,
-            "allowed_for_steps": "[\"STEP_ONE\", \"STEP_TWO\"]",
+            "allowed_for_steps": "[]",
             "law_text_name": "Serviceloven",
             "sbsys_template_id": ""
         }
     },
     {
         "model": "core.section",
-        "pk": 838,
+        "pk": 984,
         "fields": {
             "paragraph": "SEL-11-3.4",
             "kle_number": "27.12.06",
             "text": "Andre forebyggende indsatser",
             "allowed_for_family_target_group": true,
             "allowed_for_disability_target_group": true,
-            "allowed_for_steps": "[\"STEP_ONE\", \"STEP_TWO\"]",
+            "allowed_for_steps": "[]",
             "law_text_name": "Serviceloven",
             "sbsys_template_id": ""
         }
     },
     {
         "model": "core.section",
-        "pk": 839,
+        "pk": 985,
         "fields": {
             "paragraph": "SEL-114",
             "kle_number": "27.60.20",
@@ -407,21 +407,21 @@
     },
     {
         "model": "core.section",
-        "pk": 840,
+        "pk": 986,
         "fields": {
             "paragraph": "SEL-11-4",
             "kle_number": "27.12.06",
             "text": "Udgifter til pr\u00e6vention",
             "allowed_for_family_target_group": true,
             "allowed_for_disability_target_group": true,
-            "allowed_for_steps": "[\"STEP_ONE\", \"STEP_TWO\"]",
+            "allowed_for_steps": "[]",
             "law_text_name": "Serviceloven",
             "sbsys_template_id": "998"
         }
     },
     {
         "model": "core.section",
-        "pk": 841,
+        "pk": 987,
         "fields": {
             "paragraph": "SEL-11-4.1",
             "kle_number": "27.12.06",
@@ -435,35 +435,35 @@
     },
     {
         "model": "core.section",
-        "pk": 842,
+        "pk": 988,
         "fields": {
             "paragraph": "SEL-11-4.1. jfr. stk. 3. nr. 1",
             "kle_number": "27.12.06",
             "text": "Konsulentbistand",
             "allowed_for_family_target_group": true,
             "allowed_for_disability_target_group": true,
-            "allowed_for_steps": "[\"STEP_ONE\", \"STEP_TWO\"]",
+            "allowed_for_steps": "[]",
             "law_text_name": "Serviceloven",
             "sbsys_template_id": ""
         }
     },
     {
         "model": "core.section",
-        "pk": 843,
+        "pk": 989,
         "fields": {
             "paragraph": "SEL-11-4.2",
             "kle_number": "27.12.06",
             "text": "\u00d8konomisk st\u00f8tte pr\u00e6vention",
             "allowed_for_family_target_group": true,
             "allowed_for_disability_target_group": true,
-            "allowed_for_steps": "[\"STEP_ONE\", \"STEP_TWO\"]",
+            "allowed_for_steps": "[]",
             "law_text_name": "Serviceloven",
             "sbsys_template_id": ""
         }
     },
     {
         "model": "core.section",
-        "pk": 844,
+        "pk": 990,
         "fields": {
             "paragraph": "SEL-116",
             "kle_number": "27.60.24",
@@ -477,21 +477,21 @@
     },
     {
         "model": "core.section",
-        "pk": 845,
+        "pk": 991,
         "fields": {
             "paragraph": "SEL-11-6",
             "kle_number": "27.12.06",
             "text": "\u00d8konomisk st\u00f8tte til fritidstilbud - for",
             "allowed_for_family_target_group": true,
             "allowed_for_disability_target_group": true,
-            "allowed_for_steps": "[\"STEP_ONE\", \"STEP_TWO\"]",
+            "allowed_for_steps": "[]",
             "law_text_name": "Serviceloven",
             "sbsys_template_id": "999"
         }
     },
     {
         "model": "core.section",
-        "pk": 846,
+        "pk": 992,
         "fields": {
             "paragraph": "SEL-116-4",
             "kle_number": "27.60.24",
@@ -505,7 +505,7 @@
     },
     {
         "model": "core.section",
-        "pk": 847,
+        "pk": 993,
         "fields": {
             "paragraph": "SEL-117",
             "kle_number": "27.60.28",
@@ -519,7 +519,7 @@
     },
     {
         "model": "core.section",
-        "pk": 848,
+        "pk": 994,
         "fields": {
             "paragraph": "SEL-11-7",
             "kle_number": "27.12.08",
@@ -533,7 +533,7 @@
     },
     {
         "model": "core.section",
-        "pk": 849,
+        "pk": 995,
         "fields": {
             "paragraph": "SEL-118",
             "kle_number": "27.63.04",
@@ -547,21 +547,21 @@
     },
     {
         "model": "core.section",
-        "pk": 850,
+        "pk": 996,
         "fields": {
             "paragraph": "SEL-11-8",
             "kle_number": "27.12.08",
             "text": "S\u00e6rlig familievejlederordning",
             "allowed_for_family_target_group": true,
             "allowed_for_disability_target_group": true,
-            "allowed_for_steps": "[\"STEP_ONE\", \"STEP_TWO\"]",
+            "allowed_for_steps": "[]",
             "law_text_name": "Serviceloven",
             "sbsys_template_id": "1001"
         }
     },
     {
         "model": "core.section",
-        "pk": 851,
+        "pk": 997,
         "fields": {
             "paragraph": "SEL-119",
             "kle_number": "32.18.14",
@@ -575,7 +575,7 @@
     },
     {
         "model": "core.section",
-        "pk": 852,
+        "pk": 998,
         "fields": {
             "paragraph": "SEL-12",
             "kle_number": "27.12.04",
@@ -589,7 +589,7 @@
     },
     {
         "model": "core.section",
-        "pk": 853,
+        "pk": 999,
         "fields": {
             "paragraph": "SEL-122",
             "kle_number": "32.18.14",
@@ -603,7 +603,7 @@
     },
     {
         "model": "core.section",
-        "pk": 854,
+        "pk": 1000,
         "fields": {
             "paragraph": "SEL-12-a",
             "kle_number": "27.12.04",
@@ -617,7 +617,7 @@
     },
     {
         "model": "core.section",
-        "pk": 855,
+        "pk": 1001,
         "fields": {
             "paragraph": "SEL-12-b",
             "kle_number": "27.12.04",
@@ -631,7 +631,7 @@
     },
     {
         "model": "core.section",
-        "pk": 856,
+        "pk": 1002,
         "fields": {
             "paragraph": "SEL-140",
             "kle_number": "27.24.06",
@@ -645,7 +645,7 @@
     },
     {
         "model": "core.section",
-        "pk": 857,
+        "pk": 1003,
         "fields": {
             "paragraph": "SEL-141",
             "kle_number": "27.12.12",
@@ -659,7 +659,7 @@
     },
     {
         "model": "core.section",
-        "pk": 858,
+        "pk": 1004,
         "fields": {
             "paragraph": "SEL-152",
             "kle_number": "27.24.45",
@@ -673,7 +673,7 @@
     },
     {
         "model": "core.section",
-        "pk": 859,
+        "pk": 1005,
         "fields": {
             "paragraph": "SEL-153",
             "kle_number": "27.24.45",
@@ -687,7 +687,7 @@
     },
     {
         "model": "core.section",
-        "pk": 860,
+        "pk": 1006,
         "fields": {
             "paragraph": "SEL-154",
             "kle_number": "27.24.45",
@@ -701,7 +701,7 @@
     },
     {
         "model": "core.section",
-        "pk": 861,
+        "pk": 1007,
         "fields": {
             "paragraph": "SEL-155-b.1",
             "kle_number": "27.24.45",
@@ -715,7 +715,7 @@
     },
     {
         "model": "core.section",
-        "pk": 862,
+        "pk": 1008,
         "fields": {
             "paragraph": "SEL-155-b.2",
             "kle_number": "27.24.45",
@@ -729,7 +729,7 @@
     },
     {
         "model": "core.section",
-        "pk": 863,
+        "pk": 1009,
         "fields": {
             "paragraph": "SEL-159",
             "kle_number": "27.27.26",
@@ -743,7 +743,7 @@
     },
     {
         "model": "core.section",
-        "pk": 864,
+        "pk": 1010,
         "fields": {
             "paragraph": "SEL-160",
             "kle_number": "27.27.26",
@@ -757,7 +757,7 @@
     },
     {
         "model": "core.section",
-        "pk": 865,
+        "pk": 1011,
         "fields": {
             "paragraph": "SEL-163-2",
             "kle_number": "27.57.08",
@@ -771,7 +771,7 @@
     },
     {
         "model": "core.section",
-        "pk": 866,
+        "pk": 1012,
         "fields": {
             "paragraph": "SEL-168-5",
             "kle_number": "27.24.33",
@@ -785,7 +785,7 @@
     },
     {
         "model": "core.section",
-        "pk": 867,
+        "pk": 1013,
         "fields": {
             "paragraph": "SEL-192",
             "kle_number": "27.42.04",
@@ -799,7 +799,7 @@
     },
     {
         "model": "core.section",
-        "pk": 868,
+        "pk": 1014,
         "fields": {
             "paragraph": "SEL-32",
             "kle_number": "27.18.20",
@@ -813,7 +813,7 @@
     },
     {
         "model": "core.section",
-        "pk": 869,
+        "pk": 1015,
         "fields": {
             "paragraph": "SEL-32-3",
             "kle_number": "27.18.12",
@@ -827,21 +827,21 @@
     },
     {
         "model": "core.section",
-        "pk": 870,
+        "pk": 1016,
         "fields": {
             "paragraph": "SEL-32-a",
             "kle_number": "27.18.20",
             "text": "Hjemmetr\u00e6ning",
             "allowed_for_family_target_group": false,
-            "allowed_for_disability_target_group": false,
-            "allowed_for_steps": "[]",
+            "allowed_for_disability_target_group": true,
+            "allowed_for_steps": "[\"STEP_ONE\", \"STEP_TWO\", \"STEP_THREE\", \"STEP_FOUR\", \"STEP_FIVE\", \"STEP_SIX\"]",
             "law_text_name": "Serviceloven",
             "sbsys_template_id": "920"
         }
     },
     {
         "model": "core.section",
-        "pk": 871,
+        "pk": 1017,
         "fields": {
             "paragraph": "SEL-32-a.1",
             "kle_number": "27.18.20",
@@ -855,7 +855,7 @@
     },
     {
         "model": "core.section",
-        "pk": 872,
+        "pk": 1018,
         "fields": {
             "paragraph": "SEL-32-a.3",
             "kle_number": "27.18.20",
@@ -869,7 +869,7 @@
     },
     {
         "model": "core.section",
-        "pk": 873,
+        "pk": 1019,
         "fields": {
             "paragraph": "SEL-32-a.4",
             "kle_number": "27.30.00",
@@ -883,7 +883,7 @@
     },
     {
         "model": "core.section",
-        "pk": 874,
+        "pk": 1020,
         "fields": {
             "paragraph": "SEL-32-a.5",
             "kle_number": "27.30.20",
@@ -897,7 +897,7 @@
     },
     {
         "model": "core.section",
-        "pk": 875,
+        "pk": 1021,
         "fields": {
             "paragraph": "SEL-32-a.6",
             "kle_number": "27.18.20",
@@ -911,63 +911,63 @@
     },
     {
         "model": "core.section",
-        "pk": 876,
+        "pk": 1022,
         "fields": {
             "paragraph": "SEL-36",
             "kle_number": "27.18.24",
             "text": "S\u00e6rlige klubtilbud",
             "allowed_for_family_target_group": false,
-            "allowed_for_disability_target_group": false,
-            "allowed_for_steps": "[]",
+            "allowed_for_disability_target_group": true,
+            "allowed_for_steps": "[\"STEP_ONE\", \"STEP_TWO\", \"STEP_THREE\", \"STEP_FOUR\", \"STEP_FIVE\", \"STEP_SIX\"]",
             "law_text_name": "Serviceloven",
             "sbsys_template_id": ""
         }
     },
     {
         "model": "core.section",
-        "pk": 877,
+        "pk": 1023,
         "fields": {
             "paragraph": "SEL-41",
             "kle_number": "32.18.04",
             "text": "Merudgifter til b\u00f8rn",
             "allowed_for_family_target_group": false,
-            "allowed_for_disability_target_group": false,
-            "allowed_for_steps": "[]",
+            "allowed_for_disability_target_group": true,
+            "allowed_for_steps": "[\"STEP_ONE\", \"STEP_TWO\", \"STEP_THREE\", \"STEP_FOUR\", \"STEP_FIVE\", \"STEP_SIX\"]",
             "law_text_name": "Serviceloven",
             "sbsys_template_id": ""
         }
     },
     {
         "model": "core.section",
-        "pk": 878,
+        "pk": 1024,
         "fields": {
             "paragraph": "SEL-42",
             "kle_number": "32.18.12",
             "text": "Tabt arbejdsfortjeneste ved fors\u00f8rgelse",
             "allowed_for_family_target_group": false,
             "allowed_for_disability_target_group": true,
-            "allowed_for_steps": "[\"STEP_ONE\", \"STEP_TWO\", \"STEP_THREE\", \"STEP_FOUR\", \"STEP_FIVE\", \"STEP_SIX\"]",
+            "allowed_for_steps": "[]",
             "law_text_name": "Serviceloven",
             "sbsys_template_id": ""
         }
     },
     {
         "model": "core.section",
-        "pk": 879,
+        "pk": 1025,
         "fields": {
             "paragraph": "SEL-43",
             "kle_number": "32.18.12",
             "text": "S\u00e6rlig supplerende ydelse ved tabt arbejdsfortjeneste",
             "allowed_for_family_target_group": false,
             "allowed_for_disability_target_group": true,
-            "allowed_for_steps": "[\"STEP_ONE\", \"STEP_TWO\", \"STEP_THREE\", \"STEP_FOUR\", \"STEP_FIVE\", \"STEP_SIX\"]",
+            "allowed_for_steps": "[]",
             "law_text_name": "Serviceloven",
             "sbsys_template_id": ""
         }
     },
     {
         "model": "core.section",
-        "pk": 880,
+        "pk": 1026,
         "fields": {
             "paragraph": "SEL-44-jfr. \u00a784",
             "kle_number": "27.21.16",
@@ -981,7 +981,7 @@
     },
     {
         "model": "core.section",
-        "pk": 881,
+        "pk": 1027,
         "fields": {
             "paragraph": "SEL-45",
             "kle_number": "27.21.08",
@@ -995,7 +995,7 @@
     },
     {
         "model": "core.section",
-        "pk": 882,
+        "pk": 1028,
         "fields": {
             "paragraph": "SEL-50",
             "kle_number": "27.24.03",
@@ -1009,7 +1009,7 @@
     },
     {
         "model": "core.section",
-        "pk": 883,
+        "pk": 1029,
         "fields": {
             "paragraph": "SEL-50-b",
             "kle_number": "27.24.03",
@@ -1023,7 +1023,7 @@
     },
     {
         "model": "core.section",
-        "pk": 884,
+        "pk": 1030,
         "fields": {
             "paragraph": "SEL-51",
             "kle_number": "27.24.03",
@@ -1037,35 +1037,35 @@
     },
     {
         "model": "core.section",
-        "pk": 885,
+        "pk": 1031,
         "fields": {
             "paragraph": "SEL-51-2",
             "kle_number": "27.24.03",
             "text": "Unders\u00f8gelse, B\u00f8rnehus - Tvang",
             "allowed_for_family_target_group": true,
             "allowed_for_disability_target_group": true,
-            "allowed_for_steps": "[\"STEP_ONE\", \"STEP_TWO\", \"STEP_THREE\", \"STEP_FOUR\", \"STEP_FIVE\", \"STEP_SIX\"]",
+            "allowed_for_steps": "[]",
             "law_text_name": "Serviceloven",
             "sbsys_template_id": ""
         }
     },
     {
         "model": "core.section",
-        "pk": 886,
+        "pk": 1032,
         "fields": {
             "paragraph": "SEL-52-2",
             "kle_number": "27.27.00",
             "text": "Foranstaltninger efter stk. 3 sidel\u00f8bend",
             "allowed_for_family_target_group": true,
             "allowed_for_disability_target_group": true,
-            "allowed_for_steps": "[\"STEP_ONE\", \"STEP_TWO\", \"STEP_THREE\", \"STEP_FOUR\", \"STEP_FIVE\", \"STEP_SIX\"]",
+            "allowed_for_steps": "[]",
             "law_text_name": "Serviceloven",
             "sbsys_template_id": ""
         }
     },
     {
         "model": "core.section",
-        "pk": 887,
+        "pk": 1033,
         "fields": {
             "paragraph": "SEL-52-3.1",
             "kle_number": "27.27.03",
@@ -1079,7 +1079,7 @@
     },
     {
         "model": "core.section",
-        "pk": 888,
+        "pk": 1034,
         "fields": {
             "paragraph": "SEL-52-3.2",
             "kle_number": "27.27.06",
@@ -1093,7 +1093,7 @@
     },
     {
         "model": "core.section",
-        "pk": 889,
+        "pk": 1035,
         "fields": {
             "paragraph": "SEL-52-3.3",
             "kle_number": "27.27.09",
@@ -1107,7 +1107,7 @@
     },
     {
         "model": "core.section",
-        "pk": 890,
+        "pk": 1036,
         "fields": {
             "paragraph": "SEL-52-3.4",
             "kle_number": "27.27.12",
@@ -1121,7 +1121,7 @@
     },
     {
         "model": "core.section",
-        "pk": 891,
+        "pk": 1037,
         "fields": {
             "paragraph": "SEL-52-3.5",
             "kle_number": "27.27.15",
@@ -1135,7 +1135,7 @@
     },
     {
         "model": "core.section",
-        "pk": 892,
+        "pk": 1038,
         "fields": {
             "paragraph": "SEL-52-3.6",
             "kle_number": "27.27.24",
@@ -1149,7 +1149,7 @@
     },
     {
         "model": "core.section",
-        "pk": 893,
+        "pk": 1039,
         "fields": {
             "paragraph": "SEL-52-3.7",
             "kle_number": "27.27.26",
@@ -1163,7 +1163,7 @@
     },
     {
         "model": "core.section",
-        "pk": 894,
+        "pk": 1040,
         "fields": {
             "paragraph": "SEL-52-3.8",
             "kle_number": "27.27.51",
@@ -1177,7 +1177,7 @@
     },
     {
         "model": "core.section",
-        "pk": 895,
+        "pk": 1041,
         "fields": {
             "paragraph": "SEL-52-3.9",
             "kle_number": "27.27.54",
@@ -1191,7 +1191,7 @@
     },
     {
         "model": "core.section",
-        "pk": 896,
+        "pk": 1042,
         "fields": {
             "paragraph": "SEL-52-a.1.1",
             "kle_number": "27.24.09",
@@ -1205,7 +1205,7 @@
     },
     {
         "model": "core.section",
-        "pk": 897,
+        "pk": 1043,
         "fields": {
             "paragraph": "SEL-52-a.1.2",
             "kle_number": "27.24.09",
@@ -1219,7 +1219,7 @@
     },
     {
         "model": "core.section",
-        "pk": 898,
+        "pk": 1044,
         "fields": {
             "paragraph": "SEL-52-a.1.3",
             "kle_number": "27.24.09",
@@ -1233,7 +1233,7 @@
     },
     {
         "model": "core.section",
-        "pk": 899,
+        "pk": 1045,
         "fields": {
             "paragraph": "SEL-54-1",
             "kle_number": "27.24.15",
@@ -1247,7 +1247,7 @@
     },
     {
         "model": "core.section",
-        "pk": 900,
+        "pk": 1046,
         "fields": {
             "paragraph": "SEL-54-2",
             "kle_number": "27.24.15",
@@ -1261,7 +1261,7 @@
     },
     {
         "model": "core.section",
-        "pk": 901,
+        "pk": 1047,
         "fields": {
             "paragraph": "SEL-54-a",
             "kle_number": "27.24.18",
@@ -1275,7 +1275,7 @@
     },
     {
         "model": "core.section",
-        "pk": 902,
+        "pk": 1048,
         "fields": {
             "paragraph": "SEL-55-2",
             "kle_number": "27.24.21",
@@ -1289,7 +1289,7 @@
     },
     {
         "model": "core.section",
-        "pk": 903,
+        "pk": 1049,
         "fields": {
             "paragraph": "SEL-57-a",
             "kle_number": "27.24.24",
@@ -1303,7 +1303,7 @@
     },
     {
         "model": "core.section",
-        "pk": 904,
+        "pk": 1050,
         "fields": {
             "paragraph": "SEL-57-a.2.1",
             "kle_number": "27.24.24",
@@ -1317,7 +1317,7 @@
     },
     {
         "model": "core.section",
-        "pk": 905,
+        "pk": 1051,
         "fields": {
             "paragraph": "SEL-57-a.2.2",
             "kle_number": "27.24.24",
@@ -1331,7 +1331,7 @@
     },
     {
         "model": "core.section",
-        "pk": 906,
+        "pk": 1052,
         "fields": {
             "paragraph": "SEL-57-a.2.3",
             "kle_number": "27.24.24",
@@ -1345,7 +1345,7 @@
     },
     {
         "model": "core.section",
-        "pk": 907,
+        "pk": 1053,
         "fields": {
             "paragraph": "SEL-57-a.2.4",
             "kle_number": "27.24.24",
@@ -1359,7 +1359,7 @@
     },
     {
         "model": "core.section",
-        "pk": 908,
+        "pk": 1054,
         "fields": {
             "paragraph": "SEL-57-a.4",
             "kle_number": "27.24.24",
@@ -1373,7 +1373,7 @@
     },
     {
         "model": "core.section",
-        "pk": 909,
+        "pk": 1055,
         "fields": {
             "paragraph": "SEL-57-b",
             "kle_number": "27.24.25",
@@ -1387,7 +1387,7 @@
     },
     {
         "model": "core.section",
-        "pk": 910,
+        "pk": 1056,
         "fields": {
             "paragraph": "SEL-57-c.1",
             "kle_number": "27.24.20",
@@ -1401,7 +1401,7 @@
     },
     {
         "model": "core.section",
-        "pk": 911,
+        "pk": 1057,
         "fields": {
             "paragraph": "SEL-57-c.2",
             "kle_number": "27.24.20",
@@ -1415,7 +1415,7 @@
     },
     {
         "model": "core.section",
-        "pk": 912,
+        "pk": 1058,
         "fields": {
             "paragraph": "SEL-57-d.1",
             "kle_number": "27.24.26",
@@ -1429,7 +1429,7 @@
     },
     {
         "model": "core.section",
-        "pk": 913,
+        "pk": 1059,
         "fields": {
             "paragraph": "SEL-57-d.2",
             "kle_number": "27.24.18",
@@ -1443,7 +1443,7 @@
     },
     {
         "model": "core.section",
-        "pk": 914,
+        "pk": 1060,
         "fields": {
             "paragraph": "SEL-58-jf 52-3.7",
             "kle_number": "27.24.27",
@@ -1457,7 +1457,7 @@
     },
     {
         "model": "core.section",
-        "pk": 915,
+        "pk": 1061,
         "fields": {
             "paragraph": "SEL-63",
             "kle_number": "27.27.48",
@@ -1471,7 +1471,7 @@
     },
     {
         "model": "core.section",
-        "pk": 916,
+        "pk": 1062,
         "fields": {
             "paragraph": "SEL-68",
             "kle_number": "27.27.48",
@@ -1485,7 +1485,7 @@
     },
     {
         "model": "core.section",
-        "pk": 917,
+        "pk": 1063,
         "fields": {
             "paragraph": "SEL-68-2",
             "kle_number": "27.27.26",
@@ -1499,7 +1499,7 @@
     },
     {
         "model": "core.section",
-        "pk": 918,
+        "pk": 1064,
         "fields": {
             "paragraph": "SEL-68-b.4",
             "kle_number": "27.24.06",
@@ -1513,7 +1513,7 @@
     },
     {
         "model": "core.section",
-        "pk": 919,
+        "pk": 1065,
         "fields": {
             "paragraph": "SEL-71",
             "kle_number": "27.24.36",
@@ -1527,7 +1527,7 @@
     },
     {
         "model": "core.section",
-        "pk": 920,
+        "pk": 1066,
         "fields": {
             "paragraph": "SEL-71-2",
             "kle_number": "27.24.36",
@@ -1541,7 +1541,7 @@
     },
     {
         "model": "core.section",
-        "pk": 921,
+        "pk": 1067,
         "fields": {
             "paragraph": "SEL-71-3",
             "kle_number": "27.24.36",
@@ -1555,7 +1555,7 @@
     },
     {
         "model": "core.section",
-        "pk": 922,
+        "pk": 1068,
         "fields": {
             "paragraph": "SEL-71-8",
             "kle_number": "27.24.36",
@@ -1569,7 +1569,7 @@
     },
     {
         "model": "core.section",
-        "pk": 923,
+        "pk": 1069,
         "fields": {
             "paragraph": "SEL-72",
             "kle_number": "27.24.39",
@@ -1583,7 +1583,7 @@
     },
     {
         "model": "core.section",
-        "pk": 924,
+        "pk": 1070,
         "fields": {
             "paragraph": "SEL-76-1",
             "kle_number": "27.27.00",
@@ -1597,7 +1597,7 @@
     },
     {
         "model": "core.section",
-        "pk": 925,
+        "pk": 1071,
         "fields": {
             "paragraph": "SEL-76-2",
             "kle_number": "27.27.24",
@@ -1611,7 +1611,7 @@
     },
     {
         "model": "core.section",
-        "pk": 926,
+        "pk": 1072,
         "fields": {
             "paragraph": "SEL-76-3",
             "kle_number": "27.27.24",
@@ -1625,7 +1625,7 @@
     },
     {
         "model": "core.section",
-        "pk": 927,
+        "pk": 1073,
         "fields": {
             "paragraph": "SEL-76-3.1",
             "kle_number": "27.27.24",
@@ -1639,7 +1639,7 @@
     },
     {
         "model": "core.section",
-        "pk": 928,
+        "pk": 1074,
         "fields": {
             "paragraph": "SEL-76-3.2",
             "kle_number": "27.27.64",
@@ -1653,7 +1653,7 @@
     },
     {
         "model": "core.section",
-        "pk": 929,
+        "pk": 1075,
         "fields": {
             "paragraph": "SEL-76-3.3",
             "kle_number": "27.27.54",
@@ -1667,7 +1667,7 @@
     },
     {
         "model": "core.section",
-        "pk": 930,
+        "pk": 1076,
         "fields": {
             "paragraph": "SEL-76-3.4",
             "kle_number": "27.27.26",
@@ -1681,7 +1681,7 @@
     },
     {
         "model": "core.section",
-        "pk": 931,
+        "pk": 1077,
         "fields": {
             "paragraph": "SEL-76-4",
             "kle_number": "27.27.24",
@@ -1695,21 +1695,21 @@
     },
     {
         "model": "core.section",
-        "pk": 932,
+        "pk": 1078,
         "fields": {
             "paragraph": "SEL-76-5",
             "kle_number": "27.27.24",
             "text": "Fast kontaktperson 18-22 \u00e5rige for tidligere tvangsanbragte",
             "allowed_for_family_target_group": false,
             "allowed_for_disability_target_group": false,
-            "allowed_for_steps": "[]",
+            "allowed_for_steps": "[\"STEP_THREE\"]",
             "law_text_name": "Serviceloven",
             "sbsys_template_id": ""
         }
     },
     {
         "model": "core.section",
-        "pk": 933,
+        "pk": 1079,
         "fields": {
             "paragraph": "SEL-76-6",
             "kle_number": "27.24.21",
@@ -1723,35 +1723,35 @@
     },
     {
         "model": "core.section",
-        "pk": 934,
+        "pk": 1080,
         "fields": {
             "paragraph": "SEL-76-8",
             "kle_number": "27.27.26",
             "text": "Tilbagevenden til anbringelsessted",
             "allowed_for_family_target_group": false,
             "allowed_for_disability_target_group": false,
-            "allowed_for_steps": "[]",
+            "allowed_for_steps": "[\"STEP_FOUR\", \"STEP_FIVE\", \"STEP_SIX\"]",
             "law_text_name": "Serviceloven",
             "sbsys_template_id": ""
         }
     },
     {
         "model": "core.section",
-        "pk": 935,
+        "pk": 1081,
         "fields": {
             "paragraph": "SEL-76-a",
             "kle_number": "27.36.06",
             "text": "Opretholdelse af anbringelse i plejefamilie ud over det 18. \u00e5r for unge",
             "allowed_for_family_target_group": false,
             "allowed_for_disability_target_group": false,
-            "allowed_for_steps": "[]",
+            "allowed_for_steps": "[\"STEP_FOUR\", \"STEP_FIVE\", \"STEP_SIX\"]",
             "law_text_name": "Serviceloven",
             "sbsys_template_id": ""
         }
     },
     {
         "model": "core.section",
-        "pk": 936,
+        "pk": 1082,
         "fields": {
             "paragraph": "SEL-78",
             "kle_number": "27.33.00",
@@ -1765,7 +1765,7 @@
     },
     {
         "model": "core.section",
-        "pk": 937,
+        "pk": 1083,
         "fields": {
             "paragraph": "SEL-79",
             "kle_number": "27.35.08",
@@ -1779,7 +1779,7 @@
     },
     {
         "model": "core.section",
-        "pk": 938,
+        "pk": 1084,
         "fields": {
             "paragraph": "SEL-80",
             "kle_number": "27.35.12",
@@ -1793,7 +1793,7 @@
     },
     {
         "model": "core.section",
-        "pk": 939,
+        "pk": 1085,
         "fields": {
             "paragraph": "SEL-83",
             "kle_number": "27.36.04",
@@ -1807,7 +1807,7 @@
     },
     {
         "model": "core.section",
-        "pk": 940,
+        "pk": 1086,
         "fields": {
             "paragraph": "SEL-83-a",
             "kle_number": "27.39.16",
@@ -1821,7 +1821,7 @@
     },
     {
         "model": "core.section",
-        "pk": 941,
+        "pk": 1087,
         "fields": {
             "paragraph": "SEL-84",
             "kle_number": "27.36.08",
@@ -1835,7 +1835,7 @@
     },
     {
         "model": "core.section",
-        "pk": 942,
+        "pk": 1088,
         "fields": {
             "paragraph": "SEL-85",
             "kle_number": "27.36.12",
@@ -1849,21 +1849,21 @@
     },
     {
         "model": "core.section",
-        "pk": 943,
+        "pk": 1089,
         "fields": {
             "paragraph": "SEL-86",
             "kle_number": "27.36.16",
             "text": "Genoptr\u00e6ning (vedligeholdelsestr\u00e6ning)",
             "allowed_for_family_target_group": false,
             "allowed_for_disability_target_group": false,
-            "allowed_for_steps": "[]",
+            "allowed_for_steps": "[\"STEP_ONE\", \"STEP_TWO\"]",
             "law_text_name": "Serviceloven",
             "sbsys_template_id": ""
         }
     },
     {
         "model": "core.section",
-        "pk": 944,
+        "pk": 1090,
         "fields": {
             "paragraph": "SEL-87",
             "kle_number": "27.36.00",
@@ -1877,7 +1877,7 @@
     },
     {
         "model": "core.section",
-        "pk": 945,
+        "pk": 1091,
         "fields": {
             "paragraph": "SEL-94",
             "kle_number": "27.39.08",
@@ -1891,7 +1891,7 @@
     },
     {
         "model": "core.section",
-        "pk": 946,
+        "pk": 1092,
         "fields": {
             "paragraph": "SEL-95",
             "kle_number": "27.39.16",
@@ -1905,7 +1905,7 @@
     },
     {
         "model": "core.section",
-        "pk": 947,
+        "pk": 1093,
         "fields": {
             "paragraph": "SEL-95-1",
             "kle_number": "27.39.16",
@@ -1919,7 +1919,7 @@
     },
     {
         "model": "core.section",
-        "pk": 948,
+        "pk": 1094,
         "fields": {
             "paragraph": "SEL-95-2",
             "kle_number": "27.39.16",
@@ -1933,7 +1933,7 @@
     },
     {
         "model": "core.section",
-        "pk": 949,
+        "pk": 1095,
         "fields": {
             "paragraph": "SEL-95-3",
             "kle_number": "27.39.20",
@@ -1947,7 +1947,7 @@
     },
     {
         "model": "core.section",
-        "pk": 950,
+        "pk": 1096,
         "fields": {
             "paragraph": "SEL-96",
             "kle_number": "27.39.20",
@@ -1961,7 +1961,7 @@
     },
     {
         "model": "core.section",
-        "pk": 951,
+        "pk": 1097,
         "fields": {
             "paragraph": "SEL-96-1",
             "kle_number": "27.39.20",
@@ -1975,7 +1975,7 @@
     },
     {
         "model": "core.section",
-        "pk": 952,
+        "pk": 1098,
         "fields": {
             "paragraph": "SEL-96-3",
             "kle_number": "27.39.20",
@@ -1989,7 +1989,7 @@
     },
     {
         "model": "core.section",
-        "pk": 953,
+        "pk": 1099,
         "fields": {
             "paragraph": "SEL-96-b",
             "kle_number": "27.24.18",
@@ -2003,7 +2003,7 @@
     },
     {
         "model": "core.section",
-        "pk": 954,
+        "pk": 1100,
         "fields": {
             "paragraph": "SEL-97",
             "kle_number": "27.48.04",
@@ -2017,7 +2017,7 @@
     },
     {
         "model": "core.section",
-        "pk": 955,
+        "pk": 1101,
         "fields": {
             "paragraph": "SEL-98",
             "kle_number": "27.48.08",
@@ -2031,7 +2031,7 @@
     },
     {
         "model": "core.section",
-        "pk": 956,
+        "pk": 1102,
         "fields": {
             "paragraph": "SEL-99",
             "kle_number": "27.48.08",

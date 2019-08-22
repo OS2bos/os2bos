@@ -13,15 +13,15 @@
         <h1 v-else>Redigér familierelation</h1>
         <form @submit.prevent="saveChanges()">
             <fieldset>
-                <label for="field-cpr">Cpr-nummer</label>
+                <label class="required" for="field-cpr">Cpr-nummer</label>
                 <input id="field-cpr" type="text" v-model="fam.cpr_number" required @input="lookupCPR(fam.cpr_number)">
             </fieldset>
             <fieldset>
-                <label for="field-name">Navn</label>
+                <label class="required" for="field-name">Navn</label>
                 <input id="field-name" type="text" v-model="fam.name" required>
             </fieldset>
             <fieldset>
-                <label for="field-relation">Relation</label>
+                <label class="required" for="field-relation">Relation</label>
                 <input id="field-relation" type="text" v-model="fam.relation_type" required>
             </fieldset>
             <fieldset>
@@ -70,8 +70,8 @@ import router from '../../router.js';
                 if (cpr.length > 9) {
                     axios.get(`/related_persons/fetch_from_serviceplatformen/?cpr=${ cpr }`)
                     .then(res => {
-                        this.fam.name = res.data[0].name
-                        this.fam.relation_type = res.data[0].relation_type
+                        this.fam.name = res.data.relations[0].name
+                        this.fam.relation_type = res.data.relations[0].relation_type
                         this.$forceUpdate()
                     })
                     .catch(err => console.log(err))

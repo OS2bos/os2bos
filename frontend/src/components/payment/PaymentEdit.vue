@@ -8,7 +8,7 @@
 
 <template>
     <section class="payment-method">
-        <label>Betalingsmåde</label>
+        <label class="required">Betalingsmåde</label>
         <select  v-model="entry.payment_method" required>
             <option value="INVOICE" v-if="paymentObj.recipient_type === 'COMPANY'">Faktura</option>
             <option value="INTERNAL" v-if="paymentObj.recipient_type === 'INTERNAL'">Intern afregning</option>
@@ -25,13 +25,13 @@
                 Det er ikke muligt at udbetale til et kontonummer.
                 </p>
             </div>
-            <div v-if="entry.payment_method === 'SD'">
-                <strong>Skattekort</strong>
+            <fieldset v-if="entry.payment_method === 'SD'">
+                <legend class="required">Skattekort</legend>
                 <input type="radio" id="field-main" name="payment-type" value="1" v-model="entry.payment_method_details" required>
                 <label for="field-main">Hovedkort</label>
                 <input type="radio" id="field-secondary" name="payment-type" value="2" v-model="entry.payment_method_details" required>
                 <label for="field-secondary">Bikort</label>
-            </div>
+            </fieldset>
         </div>
     </section>
 </template>

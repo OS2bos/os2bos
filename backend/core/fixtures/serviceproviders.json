@@ -1,7 +1,7 @@
 [
     {
         "model": "core.serviceprovider",
-        "pk": 1078,
+        "pk": 2862,
         "fields": {
             "cvr_number": "10104181",
             "name": "Magles\u00f8hus",
@@ -10,7 +10,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1079,
+        "pk": 2863,
         "fields": {
             "cvr_number": "10117115",
             "name": "Stilleb\u00e6kken",
@@ -19,7 +19,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1080,
+        "pk": 2864,
         "fields": {
             "cvr_number": "10174155",
             "name": "St\u00f8vring Omsorgshjem",
@@ -28,7 +28,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1081,
+        "pk": 2865,
         "fields": {
             "cvr_number": "10197171",
             "name": "L\u00d8VDAL NATURCENTER",
@@ -37,7 +37,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1082,
+        "pk": 2866,
         "fields": {
             "cvr_number": "10199107",
             "name": "Sm\u00e5skolen S\u00f8folkene",
@@ -46,7 +46,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1083,
+        "pk": 2867,
         "fields": {
             "cvr_number": "10261899",
             "name": "Husene p\u00e5 Frydensdalsvej",
@@ -55,7 +55,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1084,
+        "pk": 2868,
         "fields": {
             "cvr_number": "10303044",
             "name": "Sontex A/S",
@@ -64,7 +64,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1085,
+        "pk": 2869,
         "fields": {
             "cvr_number": "10508630",
             "name": "KRAGEREDEG\u00c5RD",
@@ -73,7 +73,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1086,
+        "pk": 2870,
         "fields": {
             "cvr_number": "10861284",
             "name": "V\u00e6dderbo",
@@ -82,7 +82,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1087,
+        "pk": 2871,
         "fields": {
             "cvr_number": "11106005",
             "name": "Fredericia Krisecenter",
@@ -91,7 +91,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1088,
+        "pk": 2872,
         "fields": {
             "cvr_number": "11565603",
             "name": "Egfond / Egholdt",
@@ -100,7 +100,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1089,
+        "pk": 2873,
         "fields": {
             "cvr_number": "11598757",
             "name": "Hotel Grantoften",
@@ -109,7 +109,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1090,
+        "pk": 2874,
         "fields": {
             "cvr_number": "11715311",
             "name": "Krisecentre",
@@ -118,7 +118,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1091,
+        "pk": 2875,
         "fields": {
             "cvr_number": "11846459",
             "name": "M\u00f8lleg\u00e5rdens Private Botilbud",
@@ -127,7 +127,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1092,
+        "pk": 2876,
         "fields": {
             "cvr_number": "11931316",
             "name": "Thorsh\u00f8jg\u00e5rd",
@@ -136,7 +136,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1093,
+        "pk": 2877,
         "fields": {
             "cvr_number": "11986943",
             "name": "Esrom  Kost-og Friskole",
@@ -145,7 +145,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1094,
+        "pk": 2878,
         "fields": {
             "cvr_number": "12186479",
             "name": "Bog\u00f8 Kostskole",
@@ -154,7 +154,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1095,
+        "pk": 2879,
         "fields": {
             "cvr_number": "12489404",
             "name": "Hiller\u00f8d Kvindecenter",
@@ -163,7 +163,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1096,
+        "pk": 2880,
         "fields": {
             "cvr_number": "12518757",
             "name": "MR - Handicap og psykiatri",
@@ -172,7 +172,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1097,
+        "pk": 2881,
         "fields": {
             "cvr_number": "12518765",
             "name": "Skolen p\u00e5 Kastelsvej",
@@ -181,7 +181,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1098,
+        "pk": 2882,
         "fields": {
             "cvr_number": "12572999",
             "name": "Stiftelsen SOLHAVEN",
@@ -190,7 +190,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1099,
+        "pk": 2883,
         "fields": {
             "cvr_number": "12874502",
             "name": "Billehave Efterskole",
@@ -199,7 +199,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1100,
+        "pk": 2884,
         "fields": {
             "cvr_number": "12932502",
             "name": "Park Street Nordicom/Zleep Room",
@@ -208,7 +208,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1101,
+        "pk": 2885,
         "fields": {
             "cvr_number": "13081042",
             "name": "Familiecentret Lille N\u00f8rremark",
@@ -217,7 +217,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1102,
+        "pk": 2886,
         "fields": {
             "cvr_number": "13182000",
             "name": "Oure Kosrgymnasium",
@@ -226,7 +226,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1103,
+        "pk": 2887,
         "fields": {
             "cvr_number": "13909644",
             "name": "Vejlefjord - fjordbo II",
@@ -235,7 +235,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1104,
+        "pk": 2888,
         "fields": {
             "cvr_number": "14221379",
             "name": "Ulstrup Efterskole",
@@ -244,7 +244,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1105,
+        "pk": 2889,
         "fields": {
             "cvr_number": "14527702",
             "name": "Kollegiet Axeltorv",
@@ -253,7 +253,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1106,
+        "pk": 2890,
         "fields": {
             "cvr_number": "14618600",
             "name": "Sofie Rifbjerg Efterskole",
@@ -262,7 +262,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1107,
+        "pk": 2891,
         "fields": {
             "cvr_number": "14628088",
             "name": "Institut for Integration",
@@ -271,7 +271,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1108,
+        "pk": 2892,
         "fields": {
             "cvr_number": "14983392",
             "name": "Efterskolen Flyvesandet",
@@ -280,7 +280,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1109,
+        "pk": 2893,
         "fields": {
             "cvr_number": "15111283",
             "name": "SAHVA A/S",
@@ -289,7 +289,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1110,
+        "pk": 2894,
         "fields": {
             "cvr_number": "15307595",
             "name": "Den Gamle Brugs",
@@ -298,7 +298,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1111,
+        "pk": 2895,
         "fields": {
             "cvr_number": "15531584",
             "name": "Frydensberg Efterskole",
@@ -307,7 +307,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1112,
+        "pk": 2896,
         "fields": {
             "cvr_number": "15588977",
             "name": "LUNDEKOLLEKTIVET FOND",
@@ -316,7 +316,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1113,
+        "pk": 2897,
         "fields": {
             "cvr_number": "15658339",
             "name": "Den selvejende inst. Egedal",
@@ -325,7 +325,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1114,
+        "pk": 2898,
         "fields": {
             "cvr_number": "15686375",
             "name": "OPHOLDSSTEDET 4700",
@@ -334,7 +334,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1115,
+        "pk": 2899,
         "fields": {
             "cvr_number": "15722673",
             "name": "Dueslaget",
@@ -343,7 +343,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1116,
+        "pk": 2900,
         "fields": {
             "cvr_number": "15746513",
             "name": "Kofoeds Skole",
@@ -352,7 +352,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1117,
+        "pk": 2901,
         "fields": {
             "cvr_number": "15837128",
             "name": "Glostrup Observations-og behandlingshjem",
@@ -361,7 +361,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1118,
+        "pk": 2902,
         "fields": {
             "cvr_number": "16057118",
             "name": "Efterskole Lindenborg",
@@ -370,7 +370,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1119,
+        "pk": 2903,
         "fields": {
             "cvr_number": "16088951",
             "name": "Engg\u00e5rdens Hestepension",
@@ -379,7 +379,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1120,
+        "pk": 2904,
         "fields": {
             "cvr_number": "16289404",
             "name": "Regnbuehuset",
@@ -388,7 +388,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1121,
+        "pk": 2905,
         "fields": {
             "cvr_number": "16343943",
             "name": "Grennessminde",
@@ -397,7 +397,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1122,
+        "pk": 2906,
         "fields": {
             "cvr_number": "17195549",
             "name": "Center for Autisme",
@@ -406,7 +406,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1123,
+        "pk": 2907,
         "fields": {
             "cvr_number": "17383213",
             "name": "T\u00d8LL\u00d8SE B\u00d8RNE- & UNGDOMSPENSION",
@@ -415,7 +415,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1124,
+        "pk": 2908,
         "fields": {
             "cvr_number": "17510606",
             "name": "Kvadderkj\u00e6r",
@@ -424,7 +424,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1125,
+        "pk": 2909,
         "fields": {
             "cvr_number": "17573896",
             "name": "ADVOKATFIRMAET VON DER MAASE V/JENS CHR. VON DER MAASE",
@@ -433,7 +433,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1126,
+        "pk": 2910,
         "fields": {
             "cvr_number": "17743171",
             "name": "SKOVBOGAARD",
@@ -442,7 +442,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1127,
+        "pk": 2911,
         "fields": {
             "cvr_number": "18391007",
             "name": "H\u00e5rslev Efterskole",
@@ -451,7 +451,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1128,
+        "pk": 2912,
         "fields": {
             "cvr_number": "18451778",
             "name": "Solvang",
@@ -460,7 +460,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1129,
+        "pk": 2913,
         "fields": {
             "cvr_number": "18461501",
             "name": "H\u00d8JDERYGGENS PSYKOLOGKONTOR V/OLE STJERNHOLM",
@@ -469,7 +469,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1130,
+        "pk": 2914,
         "fields": {
             "cvr_number": "18643294",
             "name": "Teaterbygningen Fanefjord",
@@ -478,7 +478,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1131,
+        "pk": 2915,
         "fields": {
             "cvr_number": "18675439",
             "name": "Butterfly",
@@ -487,7 +487,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1132,
+        "pk": 2916,
         "fields": {
             "cvr_number": "18675447",
             "name": "SIVK\u00c6R",
@@ -496,7 +496,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1133,
+        "pk": 2917,
         "fields": {
             "cvr_number": "18706571",
             "name": "Psykolog Susanne Kofoed",
@@ -505,7 +505,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1134,
+        "pk": 2918,
         "fields": {
             "cvr_number": "19049574",
             "name": "Skovbo Efterskole",
@@ -514,7 +514,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1135,
+        "pk": 2919,
         "fields": {
             "cvr_number": "19178749",
             "name": "Drosthuset Glostrup",
@@ -523,7 +523,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1136,
+        "pk": 2920,
         "fields": {
             "cvr_number": "19186407",
             "name": "Tv\u00e6rs ApS",
@@ -532,7 +532,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1137,
+        "pk": 2921,
         "fields": {
             "cvr_number": "19210170",
             "name": "Fr\u00f8slevlejrens Efterskole",
@@ -541,7 +541,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1138,
+        "pk": 2922,
         "fields": {
             "cvr_number": "19275086",
             "name": "Opholdsstedet Clemens Gaarden",
@@ -550,7 +550,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1139,
+        "pk": 2923,
         "fields": {
             "cvr_number": "19369609",
             "name": "Overf\u00f8rsterg\u00e5rden",
@@ -559,7 +559,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1140,
+        "pk": 2924,
         "fields": {
             "cvr_number": "19406679",
             "name": "Krums\u00f8 Fri- og Kostskole",
@@ -568,7 +568,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1141,
+        "pk": 2925,
         "fields": {
             "cvr_number": "19700046",
             "name": "S\u00f8egaard",
@@ -577,7 +577,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1142,
+        "pk": 2926,
         "fields": {
             "cvr_number": "19700046",
             "name": "Opholdsstedet S\u00f8egaard",
@@ -586,7 +586,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1143,
+        "pk": 2927,
         "fields": {
             "cvr_number": "19796787",
             "name": "TEGLG\u00c5RDSLUND UNGDOMSBOLIGER",
@@ -595,7 +595,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1144,
+        "pk": 2928,
         "fields": {
             "cvr_number": "19819493",
             "name": "Krummeb\u00e6kgaard",
@@ -604,7 +604,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1145,
+        "pk": 2929,
         "fields": {
             "cvr_number": "20030380",
             "name": "Tagk\u00e6rg\u00e5rd",
@@ -613,7 +613,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1146,
+        "pk": 2930,
         "fields": {
             "cvr_number": "20129638",
             "name": "T\u00f8ll\u00f8se slot efterskole",
@@ -622,7 +622,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1147,
+        "pk": 2931,
         "fields": {
             "cvr_number": "20240636",
             "name": "Lavuks Aftentilbud",
@@ -631,7 +631,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1148,
+        "pk": 2932,
         "fields": {
             "cvr_number": "20243872",
             "name": "Skolen ved Sorte hest",
@@ -640,7 +640,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1149,
+        "pk": 2933,
         "fields": {
             "cvr_number": "20377003",
             "name": "RYTTERG\u00c5RDEN",
@@ -649,7 +649,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1150,
+        "pk": 2934,
         "fields": {
             "cvr_number": "20415290",
             "name": "Psykologerne i Aller\u00f8d/Ruben Elgaard",
@@ -658,7 +658,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1151,
+        "pk": 2935,
         "fields": {
             "cvr_number": "20462183",
             "name": "LINDERSVOLD",
@@ -667,7 +667,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1152,
+        "pk": 2936,
         "fields": {
             "cvr_number": "20638230",
             "name": "Sk\u00e5rup Efterskole",
@@ -676,7 +676,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1153,
+        "pk": 2937,
         "fields": {
             "cvr_number": "20770279",
             "name": "Opholdsstedet Unika",
@@ -685,7 +685,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1154,
+        "pk": 2938,
         "fields": {
             "cvr_number": "20803746",
             "name": "Projektskolen Grennessminde",
@@ -694,7 +694,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1155,
+        "pk": 2939,
         "fields": {
             "cvr_number": "20867043",
             "name": "DEN PSYKOLOGISKE R\u00c5DGIVNING V/ BENTE FRIIS HOLM",
@@ -703,7 +703,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1156,
+        "pk": 2940,
         "fields": {
             "cvr_number": "20868074",
             "name": "Lindh\u00f8jg\u00e5rd",
@@ -712,7 +712,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1157,
+        "pk": 2941,
         "fields": {
             "cvr_number": "20894938",
             "name": "SAKSO",
@@ -721,7 +721,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1158,
+        "pk": 2942,
         "fields": {
             "cvr_number": "20956372",
             "name": "B\u00f8rnehuset Siv",
@@ -730,7 +730,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1159,
+        "pk": 2943,
         "fields": {
             "cvr_number": "20991275",
             "name": "Ister\u00f8d Efter- og H\u00f8jskole",
@@ -739,7 +739,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1160,
+        "pk": 2944,
         "fields": {
             "cvr_number": "21002542",
             "name": "Opholdsstedet TINGGAARDEN",
@@ -748,7 +748,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1161,
+        "pk": 2945,
         "fields": {
             "cvr_number": "21102792",
             "name": "DET SOCIALP\u00c6DAGOGISKE OPHOLDSSTED KERNEHUSET ApS",
@@ -757,7 +757,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1162,
+        "pk": 2946,
         "fields": {
             "cvr_number": "21157104",
             "name": "Den selvejende inst. Gr\u00f8nsund",
@@ -766,7 +766,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1163,
+        "pk": 2947,
         "fields": {
             "cvr_number": "21169900",
             "name": "Gedebjerg",
@@ -775,7 +775,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1164,
+        "pk": 2948,
         "fields": {
             "cvr_number": "21416428",
             "name": "VBT",
@@ -784,7 +784,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1165,
+        "pk": 2949,
         "fields": {
             "cvr_number": "21440639",
             "name": "Andsh\u00f8jgaard",
@@ -793,7 +793,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1166,
+        "pk": 2950,
         "fields": {
             "cvr_number": "21560707",
             "name": "KH KNUD HJULMAND PSYKOLOGISK KONSULTATION",
@@ -802,7 +802,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1167,
+        "pk": 2951,
         "fields": {
             "cvr_number": "21697435",
             "name": "Sandbakken",
@@ -811,7 +811,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1168,
+        "pk": 2952,
         "fields": {
             "cvr_number": "21703281",
             "name": "Opholdsstedet R\u00f8nneb\u00e6k",
@@ -820,7 +820,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1169,
+        "pk": 2953,
         "fields": {
             "cvr_number": "21868809",
             "name": "Anders B. Larsen",
@@ -829,7 +829,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1170,
+        "pk": 2954,
         "fields": {
             "cvr_number": "21911348",
             "name": "Aved\u00f8re Tolk-R\u00e5dgivning v/Ayhan Demir",
@@ -838,7 +838,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1171,
+        "pk": 2955,
         "fields": {
             "cvr_number": "22010689",
             "name": "Opholdsstedet Tiagrehus",
@@ -847,7 +847,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1172,
+        "pk": 2956,
         "fields": {
             "cvr_number": "22021478",
             "name": "Bostedet Fruerlund",
@@ -856,7 +856,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1173,
+        "pk": 2957,
         "fields": {
             "cvr_number": "22028634",
             "name": "Opholdsstedet Peterslyst ridecenter",
@@ -865,7 +865,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1174,
+        "pk": 2958,
         "fields": {
             "cvr_number": "23790718",
             "name": "HAVREG\u00c5RDEN  Lille Kost- og Dagskole ",
@@ -874,7 +874,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1175,
+        "pk": 2959,
         "fields": {
             "cvr_number": "24197646",
             "name": "Svendebjerggaard",
@@ -883,7 +883,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1176,
+        "pk": 2960,
         "fields": {
             "cvr_number": "24206475",
             "name": "BOAS",
@@ -892,7 +892,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1177,
+        "pk": 2961,
         "fields": {
             "cvr_number": "24206475",
             "name": "Stranden 222",
@@ -901,7 +901,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1178,
+        "pk": 2962,
         "fields": {
             "cvr_number": "24975592",
             "name": "Frejlev Gl. Brugs",
@@ -910,7 +910,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1179,
+        "pk": 2963,
         "fields": {
             "cvr_number": "25106741",
             "name": "Familieinstitutionen Skovv\u00e6nge",
@@ -919,7 +919,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1180,
+        "pk": 2964,
         "fields": {
             "cvr_number": "25155599",
             "name": "Haug\u00e5rdhus",
@@ -928,7 +928,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1181,
+        "pk": 2965,
         "fields": {
             "cvr_number": "25168232",
             "name": "Vitus",
@@ -937,7 +937,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1182,
+        "pk": 2966,
         "fields": {
             "cvr_number": "25169395",
             "name": "S\u00f8ren Kierkegaard Kollegiet v. Center for",
@@ -946,7 +946,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1183,
+        "pk": 2967,
         "fields": {
             "cvr_number": "25266390",
             "name": "Projekt Start/ JMB BO v/Mogens Bergg",
@@ -955,7 +955,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1184,
+        "pk": 2968,
         "fields": {
             "cvr_number": "25354656",
             "name": "Fonden Godhavn",
@@ -964,7 +964,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1185,
+        "pk": 2969,
         "fields": {
             "cvr_number": "25354656",
             "name": "Godhavn",
@@ -973,7 +973,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1186,
+        "pk": 2970,
         "fields": {
             "cvr_number": "25365194",
             "name": "Skovriderg\u00e5rden \"Hildesvig\"",
@@ -982,7 +982,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1187,
+        "pk": 2971,
         "fields": {
             "cvr_number": "25477154",
             "name": "DUOS",
@@ -991,7 +991,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1188,
+        "pk": 2972,
         "fields": {
             "cvr_number": "25499395",
             "name": "Paideia",
@@ -1000,7 +1000,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1189,
+        "pk": 2973,
         "fields": {
             "cvr_number": "25513630",
             "name": "Schreiber Satellitten",
@@ -1009,7 +1009,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1190,
+        "pk": 2974,
         "fields": {
             "cvr_number": "25528603",
             "name": "M\u00d8LLEN",
@@ -1018,7 +1018,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1191,
+        "pk": 2975,
         "fields": {
             "cvr_number": "25529839",
             "name": "M\u00e5l\u00f8vg\u00e5rd",
@@ -1027,7 +1027,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1192,
+        "pk": 2976,
         "fields": {
             "cvr_number": "25542991",
             "name": "Kammergave",
@@ -1036,7 +1036,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1193,
+        "pk": 2977,
         "fields": {
             "cvr_number": "25599772",
             "name": "Fonden Bof\u00e6llesskabet \u00d8rb\u00e6kskilde",
@@ -1045,7 +1045,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1194,
+        "pk": 2978,
         "fields": {
             "cvr_number": "25672836",
             "name": "Birketoften",
@@ -1054,7 +1054,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1195,
+        "pk": 2979,
         "fields": {
             "cvr_number": "25672836",
             "name": "Sozial Service",
@@ -1063,7 +1063,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1196,
+        "pk": 2980,
         "fields": {
             "cvr_number": "25685970",
             "name": "Fonden Asgaard",
@@ -1072,7 +1072,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1197,
+        "pk": 2981,
         "fields": {
             "cvr_number": "25722329",
             "name": "Mandecentret",
@@ -1081,7 +1081,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1198,
+        "pk": 2982,
         "fields": {
             "cvr_number": "25726960",
             "name": "P\u00e5 Rette Kurs",
@@ -1090,7 +1090,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1199,
+        "pk": 2983,
         "fields": {
             "cvr_number": "25731832",
             "name": "VESTERMARKEN",
@@ -1099,7 +1099,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1200,
+        "pk": 2984,
         "fields": {
             "cvr_number": "25797809",
             "name": "DSI Andromeda",
@@ -1108,7 +1108,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1201,
+        "pk": 2985,
         "fields": {
             "cvr_number": "25812018",
             "name": "Socialprojektet \"M\u00d8LLEHUSET\"",
@@ -1117,7 +1117,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1202,
+        "pk": 2986,
         "fields": {
             "cvr_number": "25812042",
             "name": "Frederikssud Krisecenter",
@@ -1126,7 +1126,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1203,
+        "pk": 2987,
         "fields": {
             "cvr_number": "25824237",
             "name": "Hjemb\u00e6k Efterskole",
@@ -1135,7 +1135,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1204,
+        "pk": 2988,
         "fields": {
             "cvr_number": "25896564",
             "name": "Opholdsst. Birkemoseg\u00e5rd",
@@ -1144,7 +1144,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1205,
+        "pk": 2989,
         "fields": {
             "cvr_number": "25896564",
             "name": "Fonden/Den Selvej Inst Birkemoseg\u00e5rd",
@@ -1153,7 +1153,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1206,
+        "pk": 2990,
         "fields": {
             "cvr_number": "25916786",
             "name": "Base Camp",
@@ -1162,7 +1162,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1207,
+        "pk": 2991,
         "fields": {
             "cvr_number": "25937295",
             "name": "Lystruphave Efterskole",
@@ -1171,7 +1171,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1208,
+        "pk": 2992,
         "fields": {
             "cvr_number": "26004659",
             "name": "Projekt Plan B",
@@ -1180,7 +1180,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1209,
+        "pk": 2993,
         "fields": {
             "cvr_number": "26026059",
             "name": "Florenhus",
@@ -1189,7 +1189,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1210,
+        "pk": 2994,
         "fields": {
             "cvr_number": "26045592",
             "name": "Den selvej. inst. Dysseg\u00e5rden",
@@ -1198,7 +1198,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1211,
+        "pk": 2995,
         "fields": {
             "cvr_number": "26046769",
             "name": "Samtalev\u00e6rkstedet v/ Jesper Mathiasen",
@@ -1207,7 +1207,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1212,
+        "pk": 2996,
         "fields": {
             "cvr_number": "26201446",
             "name": "Svennebjerggaard",
@@ -1216,7 +1216,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1213,
+        "pk": 2997,
         "fields": {
             "cvr_number": "26201705",
             "name": "S\u00f8b\u00e6kskolen",
@@ -1225,7 +1225,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1214,
+        "pk": 2998,
         "fields": {
             "cvr_number": "26309638",
             "name": "Magleby Fri- og Efterskole",
@@ -1234,7 +1234,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1215,
+        "pk": 2999,
         "fields": {
             "cvr_number": "26490286",
             "name": "Opholdsstedet Strandager",
@@ -1243,7 +1243,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1216,
+        "pk": 3000,
         "fields": {
             "cvr_number": "26566398",
             "name": "Lundby Efterskole",
@@ -1252,7 +1252,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1217,
+        "pk": 3001,
         "fields": {
             "cvr_number": "26646294",
             "name": "Fonden Kanonen",
@@ -1261,7 +1261,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1218,
+        "pk": 3002,
         "fields": {
             "cvr_number": "26653932",
             "name": "Springbr\u00e6ttet",
@@ -1270,7 +1270,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1219,
+        "pk": 3003,
         "fields": {
             "cvr_number": "26689465",
             "name": "SVANEN",
@@ -1279,7 +1279,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1220,
+        "pk": 3004,
         "fields": {
             "cvr_number": "26717086",
             "name": "Efterskolen \u00d8sterg\u00e5rds Udskolingskoncept",
@@ -1288,7 +1288,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1221,
+        "pk": 3005,
         "fields": {
             "cvr_number": "26723817",
             "name": "Ungdomsh\u00f8jskolen ved Ribe",
@@ -1297,7 +1297,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1222,
+        "pk": 3006,
         "fields": {
             "cvr_number": "26874823",
             "name": "Den selvejende institution Marita",
@@ -1306,7 +1306,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1223,
+        "pk": 3007,
         "fields": {
             "cvr_number": "26877741",
             "name": "Ungdomsh\u00f8jskolen PTG",
@@ -1315,7 +1315,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1224,
+        "pk": 3008,
         "fields": {
             "cvr_number": "26909724",
             "name": "Fonden Koloni",
@@ -1324,7 +1324,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1225,
+        "pk": 3009,
         "fields": {
             "cvr_number": "26946891",
             "name": "Ringsted Krisecenter",
@@ -1333,7 +1333,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1226,
+        "pk": 3010,
         "fields": {
             "cvr_number": "26953545",
             "name": "Botilbud Feddet",
@@ -1342,7 +1342,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1227,
+        "pk": 3011,
         "fields": {
             "cvr_number": "26955084",
             "name": "Fonden Vestermarken",
@@ -1351,7 +1351,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1228,
+        "pk": 3012,
         "fields": {
             "cvr_number": "26964660",
             "name": "Back2Care",
@@ -1360,7 +1360,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1229,
+        "pk": 3013,
         "fields": {
             "cvr_number": "26980267",
             "name": "Bof\u00e6llesskabet Ingersmind",
@@ -1369,7 +1369,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1230,
+        "pk": 3014,
         "fields": {
             "cvr_number": "26989264",
             "name": "Center for Kognitiv Adf\u00e6rdsterapi",
@@ -1378,7 +1378,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1231,
+        "pk": 3015,
         "fields": {
             "cvr_number": "27057853",
             "name": "V\u00e6dderbo",
@@ -1387,7 +1387,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1232,
+        "pk": 3016,
         "fields": {
             "cvr_number": "27074987",
             "name": "Team One",
@@ -1396,7 +1396,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1233,
+        "pk": 3017,
         "fields": {
             "cvr_number": "27079172",
             "name": "Det Lille Opholdssted Egholt",
@@ -1405,7 +1405,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1234,
+        "pk": 3018,
         "fields": {
             "cvr_number": "27099602",
             "name": "Den Selvejende Institution Alfa - Fredensborg",
@@ -1414,7 +1414,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1235,
+        "pk": 3019,
         "fields": {
             "cvr_number": "27117279",
             "name": "Familiecenter Dyreby",
@@ -1423,7 +1423,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1236,
+        "pk": 3020,
         "fields": {
             "cvr_number": "27133290",
             "name": "Kongensgaard Efterskole",
@@ -1432,7 +1432,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1237,
+        "pk": 3021,
         "fields": {
             "cvr_number": "27134165",
             "name": "Dagbehandlingsskolen Fyrt\u00e5rnet",
@@ -1441,7 +1441,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1238,
+        "pk": 3022,
         "fields": {
             "cvr_number": "27165869",
             "name": "Jabes",
@@ -1450,7 +1450,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1239,
+        "pk": 3023,
         "fields": {
             "cvr_number": "27190677",
             "name": "Stahlschmidt",
@@ -1459,7 +1459,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1240,
+        "pk": 3024,
         "fields": {
             "cvr_number": "27227988",
             "name": "Opholdsstedet Skytteg\u00e5rden",
@@ -1468,7 +1468,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1241,
+        "pk": 3025,
         "fields": {
             "cvr_number": "27239501",
             "name": "Hammer & Co.",
@@ -1477,7 +1477,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1242,
+        "pk": 3026,
         "fields": {
             "cvr_number": "27263860",
             "name": "OASEN",
@@ -1486,7 +1486,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1243,
+        "pk": 3027,
         "fields": {
             "cvr_number": "27351034",
             "name": "Specialisterne",
@@ -1495,7 +1495,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1244,
+        "pk": 3028,
         "fields": {
             "cvr_number": "27352448",
             "name": "Opholdsstedet Arken",
@@ -1504,7 +1504,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1245,
+        "pk": 3029,
         "fields": {
             "cvr_number": "27352448",
             "name": "Fonden/Den selvst\u00e6ndige Institution Opholdsstedet Arken",
@@ -1513,7 +1513,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1246,
+        "pk": 3030,
         "fields": {
             "cvr_number": "27379966",
             "name": "Opholdsstedet Jungsg\u00e5rden",
@@ -1522,7 +1522,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1247,
+        "pk": 3031,
         "fields": {
             "cvr_number": "27419798",
             "name": "Vand og By Ungdom",
@@ -1531,7 +1531,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1248,
+        "pk": 3032,
         "fields": {
             "cvr_number": "27438148",
             "name": "DEN SPECIALP\u00c6DAGOGISKE DAGBEHANDLINGSINSTITUTION SPUTNIK ApS",
@@ -1540,7 +1540,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1249,
+        "pk": 3033,
         "fields": {
             "cvr_number": "27448909",
             "name": "Det Gamle Apotek I/S",
@@ -1549,7 +1549,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1250,
+        "pk": 3034,
         "fields": {
             "cvr_number": "27479332",
             "name": "S\u00c6TERG\u00c5RDEN",
@@ -1558,7 +1558,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1251,
+        "pk": 3035,
         "fields": {
             "cvr_number": "27591507",
             "name": "Casablanca Bo & Erhverv",
@@ -1567,7 +1567,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1252,
+        "pk": 3036,
         "fields": {
             "cvr_number": "27670040",
             "name": "K\u00f8benhavns idr\u00e6t efterskole",
@@ -1576,7 +1576,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1253,
+        "pk": 3037,
         "fields": {
             "cvr_number": "27735428",
             "name": "Ballerup L\u00e5sesmedie",
@@ -1585,7 +1585,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1254,
+        "pk": 3038,
         "fields": {
             "cvr_number": "27747590",
             "name": "Kickan L. Andersen",
@@ -1594,7 +1594,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1255,
+        "pk": 3039,
         "fields": {
             "cvr_number": "27776760",
             "name": "S\u00f8nderbjergg\u00e5rd",
@@ -1603,7 +1603,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1256,
+        "pk": 3040,
         "fields": {
             "cvr_number": "27819559",
             "name": "Bente Aaskov",
@@ -1612,7 +1612,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1257,
+        "pk": 3041,
         "fields": {
             "cvr_number": "27829317",
             "name": "Opholdssted Bogense",
@@ -1621,7 +1621,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1258,
+        "pk": 3042,
         "fields": {
             "cvr_number": "27882013",
             "name": "UDVALGET FOR HUSMODERFERIE",
@@ -1630,7 +1630,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1259,
+        "pk": 3043,
         "fields": {
             "cvr_number": "27888348",
             "name": "F\u00c6STER Terapi, P\u00e6dagogik og Supervision",
@@ -1639,7 +1639,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1260,
+        "pk": 3044,
         "fields": {
             "cvr_number": "28097778",
             "name": "Sundbog\u00e5rd",
@@ -1648,7 +1648,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1261,
+        "pk": 3045,
         "fields": {
             "cvr_number": "28181922",
             "name": "Skr\u00e6nten",
@@ -1657,7 +1657,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1262,
+        "pk": 3046,
         "fields": {
             "cvr_number": "28186177",
             "name": "Skjoldborghus",
@@ -1666,7 +1666,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1263,
+        "pk": 3047,
         "fields": {
             "cvr_number": "28258933",
             "name": "S/I Petersdal",
@@ -1675,7 +1675,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1264,
+        "pk": 3048,
         "fields": {
             "cvr_number": "28306474",
             "name": "Zleep Hotel Ballerup",
@@ -1684,7 +1684,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1265,
+        "pk": 3049,
         "fields": {
             "cvr_number": "28400365",
             "name": "L\u00f8vehjerte I/S",
@@ -1693,7 +1693,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1266,
+        "pk": 3050,
         "fields": {
             "cvr_number": "28470185",
             "name": "Fonden Carpe Diem Huset",
@@ -1702,7 +1702,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1267,
+        "pk": 3051,
         "fields": {
             "cvr_number": "28598084",
             "name": "IDR\u00c6TSEFTERSKOLE  ULB\u00d8LLE",
@@ -1711,7 +1711,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1268,
+        "pk": 3052,
         "fields": {
             "cvr_number": "28618360",
             "name": "Move 1/ v. Pia Lund-Nielsen",
@@ -1720,7 +1720,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1269,
+        "pk": 3053,
         "fields": {
             "cvr_number": "28910843",
             "name": "Hoptrup Efterskole",
@@ -1729,7 +1729,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1270,
+        "pk": 3054,
         "fields": {
             "cvr_number": "28935072",
             "name": "Karise efterskole",
@@ -1738,7 +1738,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1271,
+        "pk": 3055,
         "fields": {
             "cvr_number": "28968191",
             "name": "Den selvejende inst. S\u00f8stjerneskolen",
@@ -1747,7 +1747,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1272,
+        "pk": 3056,
         "fields": {
             "cvr_number": "29089035",
             "name": "Psykolog Anne Blom Corlin",
@@ -1756,7 +1756,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1273,
+        "pk": 3057,
         "fields": {
             "cvr_number": "29178954",
             "name": "Fonden Boskov",
@@ -1765,7 +1765,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1274,
+        "pk": 3058,
         "fields": {
             "cvr_number": "29188459",
             "name": "Bof\u00e6llesskab Odsherred",
@@ -1774,7 +1774,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1275,
+        "pk": 3059,
         "fields": {
             "cvr_number": "29188475",
             "name": "Fakse Kommune",
@@ -1783,7 +1783,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1276,
+        "pk": 3060,
         "fields": {
             "cvr_number": "29188505",
             "name": "Botilbuddet Florenshus",
@@ -1792,7 +1792,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1277,
+        "pk": 3061,
         "fields": {
             "cvr_number": "29188599",
             "name": "Bof\u00e6llesskabet Violen",
@@ -1801,7 +1801,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1278,
+        "pk": 3062,
         "fields": {
             "cvr_number": "29188599",
             "name": "Marie Grubbe Skolen",
@@ -1810,7 +1810,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1279,
+        "pk": 3063,
         "fields": {
             "cvr_number": "29189625",
             "name": "N\u00e6stved kommune",
@@ -1819,7 +1819,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1280,
+        "pk": 3064,
         "fields": {
             "cvr_number": "29189676",
             "name": "Bo og Naboskab Pr\u00e6st\u00f8",
@@ -1828,7 +1828,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1281,
+        "pk": 3065,
         "fields": {
             "cvr_number": "29190623",
             "name": "N\u00f8debogr\u00e5d",
@@ -1837,7 +1837,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1282,
+        "pk": 3066,
         "fields": {
             "cvr_number": "29190909",
             "name": "Center for h\u00f8retab",
@@ -1846,7 +1846,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1283,
+        "pk": 3067,
         "fields": {
             "cvr_number": "29236038",
             "name": "FONDEN BAKKEG\u00c5RDEN",
@@ -1855,7 +1855,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1284,
+        "pk": 3068,
         "fields": {
             "cvr_number": "29236054",
             "name": "Fonden Spor 3 - Satelitten",
@@ -1864,7 +1864,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1285,
+        "pk": 3069,
         "fields": {
             "cvr_number": "29268991",
             "name": "Opholdsstedet Clemens",
@@ -1873,7 +1873,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1286,
+        "pk": 3070,
         "fields": {
             "cvr_number": "29285993",
             "name": "Holmegaards Heldagsskole v/Jan Knudsen",
@@ -1882,7 +1882,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1287,
+        "pk": 3071,
         "fields": {
             "cvr_number": "29422710",
             "name": "FULTON - STIFTELSEN",
@@ -1891,7 +1891,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1288,
+        "pk": 3072,
         "fields": {
             "cvr_number": "29662398",
             "name": "MonaK",
@@ -1900,7 +1900,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1289,
+        "pk": 3073,
         "fields": {
             "cvr_number": "29714711",
             "name": "Psykolog Mette Sofie Hyltoft Degn",
@@ -1909,7 +1909,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1290,
+        "pk": 3074,
         "fields": {
             "cvr_number": "29814600",
             "name": "Dagbehandlingsskolen Kompasset",
@@ -1918,7 +1918,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1291,
+        "pk": 3075,
         "fields": {
             "cvr_number": "29866961",
             "name": "Psykolog Majken Olesen v/Majken Olesen",
@@ -1927,7 +1927,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1292,
+        "pk": 3076,
         "fields": {
             "cvr_number": "29896569",
             "name": "Movia",
@@ -1936,7 +1936,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1293,
+        "pk": 3077,
         "fields": {
             "cvr_number": "29908958",
             "name": "Bramsn\u00e6svig",
@@ -1945,7 +1945,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1294,
+        "pk": 3078,
         "fields": {
             "cvr_number": "29982538",
             "name": "RED Safehouse",
@@ -1954,7 +1954,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1295,
+        "pk": 3079,
         "fields": {
             "cvr_number": "30015878",
             "name": "H\u00f8jer Design Efterskole",
@@ -1963,7 +1963,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1296,
+        "pk": 3080,
         "fields": {
             "cvr_number": "30016998",
             "name": "Behandlingsstedet Holbrogaard",
@@ -1972,7 +1972,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1297,
+        "pk": 3081,
         "fields": {
             "cvr_number": "30032683",
             "name": "Jyderup Private Heldagsskole v/Kasper Martensen",
@@ -1981,7 +1981,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1298,
+        "pk": 3082,
         "fields": {
             "cvr_number": "30047249",
             "name": "Psykoanalytisk/terapeutisk/praksis v/Elisabeth Bruhn-Thomsen",
@@ -1990,7 +1990,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1299,
+        "pk": 3083,
         "fields": {
             "cvr_number": "30047923",
             "name": "Kvindehjemmet Jagtvej",
@@ -1999,7 +1999,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1300,
+        "pk": 3084,
         "fields": {
             "cvr_number": "30067940",
             "name": "FAMILIEST\u00d8TTEN ApS",
@@ -2008,7 +2008,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1301,
+        "pk": 3085,
         "fields": {
             "cvr_number": "30112806",
             "name": "Opholdsstedet Lillevangsg\u00e5rd",
@@ -2017,7 +2017,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1302,
+        "pk": 3086,
         "fields": {
             "cvr_number": "30127056",
             "name": "Oph.sted: PROJEKTORGANISATIONEN",
@@ -2026,7 +2026,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1303,
+        "pk": 3087,
         "fields": {
             "cvr_number": "30145631",
             "name": "Aktiv Weekend",
@@ -2035,7 +2035,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1304,
+        "pk": 3088,
         "fields": {
             "cvr_number": "30177029",
             "name": "PSYKOLOGSELSKABET TOFTEMOSEGAARD ApS",
@@ -2044,7 +2044,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1305,
+        "pk": 3089,
         "fields": {
             "cvr_number": "30339983",
             "name": "Aktiv kollegiet",
@@ -2053,7 +2053,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1306,
+        "pk": 3090,
         "fields": {
             "cvr_number": "30426606",
             "name": "AH-Praksis v/Annette Bjerum Hagenbo",
@@ -2062,7 +2062,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1307,
+        "pk": 3091,
         "fields": {
             "cvr_number": "30467167",
             "name": "Psykologberedskabet v/Trine Lindemark",
@@ -2071,7 +2071,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1308,
+        "pk": 3092,
         "fields": {
             "cvr_number": "30499107",
             "name": "CEKTOS",
@@ -2080,7 +2080,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1309,
+        "pk": 3093,
         "fields": {
             "cvr_number": "30552202",
             "name": "Fonden VITA",
@@ -2089,7 +2089,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1310,
+        "pk": 3094,
         "fields": {
             "cvr_number": "30552385",
             "name": "Skovg\u00e5rden - Skole- og behandlingshj",
@@ -2098,7 +2098,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1311,
+        "pk": 3095,
         "fields": {
             "cvr_number": "30623770",
             "name": "OPHOLDSSTEDET SKARBYVEJ",
@@ -2107,7 +2107,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1312,
+        "pk": 3096,
         "fields": {
             "cvr_number": "30656598",
             "name": "Fonden Forcen",
@@ -2116,7 +2116,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1313,
+        "pk": 3097,
         "fields": {
             "cvr_number": "30677153",
             "name": "Fonden Solstriben",
@@ -2125,7 +2125,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1314,
+        "pk": 3098,
         "fields": {
             "cvr_number": "30714547",
             "name": "Polaris",
@@ -2134,7 +2134,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1315,
+        "pk": 3099,
         "fields": {
             "cvr_number": "30768965",
             "name": "Fonden Opholdsstedet Mississippi",
@@ -2143,7 +2143,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1316,
+        "pk": 3100,
         "fields": {
             "cvr_number": "30789466",
             "name": "Den selvejende institution Stedet",
@@ -2152,7 +2152,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1317,
+        "pk": 3101,
         "fields": {
             "cvr_number": "30815769",
             "name": "Fonden Familieplejen Storstr\u00f8m",
@@ -2161,7 +2161,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1318,
+        "pk": 3102,
         "fields": {
             "cvr_number": "30918576",
             "name": "Fonden Ungdomsuddannelsen U-3",
@@ -2170,7 +2170,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1319,
+        "pk": 3103,
         "fields": {
             "cvr_number": "31194997",
             "name": "Ud i livet",
@@ -2179,7 +2179,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1320,
+        "pk": 3104,
         "fields": {
             "cvr_number": "31198143",
             "name": "Trish Nymark Psykoterapeut",
@@ -2188,7 +2188,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1321,
+        "pk": 3105,
         "fields": {
             "cvr_number": "31249031",
             "name": "DropUd",
@@ -2197,7 +2197,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1322,
+        "pk": 3106,
         "fields": {
             "cvr_number": "31382599",
             "name": "FONDEN OPERATION SELVSVING",
@@ -2206,7 +2206,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1323,
+        "pk": 3107,
         "fields": {
             "cvr_number": "31507413",
             "name": "Den Selvej. Inst. Skovly",
@@ -2215,7 +2215,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1324,
+        "pk": 3108,
         "fields": {
             "cvr_number": "31526094",
             "name": "KH Stork\u00f8benhavn",
@@ -2224,7 +2224,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1325,
+        "pk": 3109,
         "fields": {
             "cvr_number": "31579384",
             "name": "Ahmet Demir-Socialkonsulent, Fam.behandling",
@@ -2233,7 +2233,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1326,
+        "pk": 3110,
         "fields": {
             "cvr_number": "31718090",
             "name": "Boligf\u00e6llesskabet Egebo I/S",
@@ -2242,7 +2242,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1327,
+        "pk": 3111,
         "fields": {
             "cvr_number": "31720982",
             "name": "Specialkonsulent Lars Thomsen",
@@ -2251,7 +2251,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1328,
+        "pk": 3112,
         "fields": {
             "cvr_number": "31735815",
             "name": "Familien Frederiksens Isheste",
@@ -2260,7 +2260,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1329,
+        "pk": 3113,
         "fields": {
             "cvr_number": "31813107",
             "name": "Oph.st. UNDER URET",
@@ -2269,7 +2269,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1330,
+        "pk": 3114,
         "fields": {
             "cvr_number": "31940109",
             "name": "St\u00f8ttecompagniet",
@@ -2278,7 +2278,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1331,
+        "pk": 3115,
         "fields": {
             "cvr_number": "31951437",
             "name": "Opholdsstedet H\u00f8jbrogaard",
@@ -2287,7 +2287,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1332,
+        "pk": 3116,
         "fields": {
             "cvr_number": "32041396",
             "name": "MTFC-Hovedstaden",
@@ -2296,7 +2296,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1333,
+        "pk": 3117,
         "fields": {
             "cvr_number": "32107907",
             "name": "Bostedet Caroline Marie",
@@ -2305,7 +2305,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1334,
+        "pk": 3118,
         "fields": {
             "cvr_number": "32225659",
             "name": "Opholdsstedet Pondus",
@@ -2314,7 +2314,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1335,
+        "pk": 3119,
         "fields": {
             "cvr_number": "32250327",
             "name": "de2konsulenter v Nete Lindskrog",
@@ -2323,7 +2323,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1336,
+        "pk": 3120,
         "fields": {
             "cvr_number": "32279082",
             "name": "Villa Vivamus",
@@ -2332,7 +2332,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1337,
+        "pk": 3121,
         "fields": {
             "cvr_number": "32422578",
             "name": "Fonden Bakkeg\u00e5rden",
@@ -2341,7 +2341,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1338,
+        "pk": 3122,
         "fields": {
             "cvr_number": "32521169",
             "name": "Aloma konsulenterne",
@@ -2350,7 +2350,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1339,
+        "pk": 3123,
         "fields": {
             "cvr_number": "32584292",
             "name": "Heldagsskolen Lindersvold",
@@ -2359,7 +2359,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1340,
+        "pk": 3124,
         "fields": {
             "cvr_number": "32722814",
             "name": "Bl\u00e5 kors hjemmet",
@@ -2368,7 +2368,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1341,
+        "pk": 3125,
         "fields": {
             "cvr_number": "32750605",
             "name": "Pars Tolkeservice",
@@ -2377,7 +2377,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1342,
+        "pk": 3126,
         "fields": {
             "cvr_number": "32830951",
             "name": "IDR\u00c6TSAKADEMIETS BOST\u00d8TTE OG JOBTR\u00c6NING ApS/",
@@ -2386,7 +2386,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1343,
+        "pk": 3127,
         "fields": {
             "cvr_number": "32863558",
             "name": "Fonden Tagk\u00e6rgaard",
@@ -2395,7 +2395,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1344,
+        "pk": 3128,
         "fields": {
             "cvr_number": "32865283",
             "name": "Halla Tolkeservice v/Halla Al-bacha",
@@ -2404,7 +2404,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1345,
+        "pk": 3129,
         "fields": {
             "cvr_number": "33022611",
             "name": "Den Selvejende institution Levuk",
@@ -2413,7 +2413,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1346,
+        "pk": 3130,
         "fields": {
             "cvr_number": "33038844",
             "name": "SOKON Socialkonsulenter/samv\u00e6r",
@@ -2422,7 +2422,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1347,
+        "pk": 3131,
         "fields": {
             "cvr_number": "33044984",
             "name": "Opholdsstedet Kurreholm",
@@ -2431,7 +2431,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1348,
+        "pk": 3132,
         "fields": {
             "cvr_number": "33046103",
             "name": "Nymand A/S-k\u00f8rsel",
@@ -2440,7 +2440,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1349,
+        "pk": 3133,
         "fields": {
             "cvr_number": "33081723",
             "name": "Opholdsstedet Kaoskonsulenterne",
@@ -2449,7 +2449,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1350,
+        "pk": 3134,
         "fields": {
             "cvr_number": "33188722",
             "name": "Opholdsstedet Vadsbyh\u00f8j",
@@ -2458,7 +2458,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1351,
+        "pk": 3135,
         "fields": {
             "cvr_number": "33211872",
             "name": "Opholdsstedet Parkg\u00e5rden",
@@ -2467,7 +2467,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1352,
+        "pk": 3136,
         "fields": {
             "cvr_number": "33216688",
             "name": "Etebjerggaard opholdssted",
@@ -2476,7 +2476,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1353,
+        "pk": 3137,
         "fields": {
             "cvr_number": "33247745",
             "name": "Botilbuddet K\u00e6derupvej  APS",
@@ -2485,7 +2485,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1354,
+        "pk": 3138,
         "fields": {
             "cvr_number": "33329261",
             "name": "Januscentret",
@@ -2494,7 +2494,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1355,
+        "pk": 3139,
         "fields": {
             "cvr_number": "33361378",
             "name": "Dankbar Aps",
@@ -2503,7 +2503,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1356,
+        "pk": 3140,
         "fields": {
             "cvr_number": "33374194",
             "name": "Advokaterne Algade 43",
@@ -2512,7 +2512,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1357,
+        "pk": 3141,
         "fields": {
             "cvr_number": "33423748",
             "name": "Opholdsstedet \u00d8rting",
@@ -2521,7 +2521,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1358,
+        "pk": 3142,
         "fields": {
             "cvr_number": "33423748",
             "name": "Fonden \u00d8rting ",
@@ -2530,7 +2530,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1359,
+        "pk": 3143,
         "fields": {
             "cvr_number": "33443323",
             "name": "K-Byrial Jensen-psykolog v/Karen Byrial Jensen",
@@ -2539,7 +2539,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1360,
+        "pk": 3144,
         "fields": {
             "cvr_number": "33583311",
             "name": "PsykologCompagniet",
@@ -2548,7 +2548,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1361,
+        "pk": 3145,
         "fields": {
             "cvr_number": "33664907",
             "name": "Privat praktiserende psykolog Pia Karoline Sparrebro",
@@ -2557,7 +2557,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1362,
+        "pk": 3146,
         "fields": {
             "cvr_number": "33668163",
             "name": "Psykolog Lene Kiel Jespersen",
@@ -2566,7 +2566,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1363,
+        "pk": 3147,
         "fields": {
             "cvr_number": "33673507",
             "name": "Sor\u00f8 apotek",
@@ -2575,7 +2575,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1364,
+        "pk": 3148,
         "fields": {
             "cvr_number": "33721897",
             "name": "Behandlingscenter Himmerland",
@@ -2584,7 +2584,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1365,
+        "pk": 3149,
         "fields": {
             "cvr_number": "33734727",
             "name": "Psykolog Elisabeth Christensen",
@@ -2593,7 +2593,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1366,
+        "pk": 3150,
         "fields": {
             "cvr_number": "33743114",
             "name": "Psykoterapeutisk praksis v/Rikke Leerh\u00f8j Rahm",
@@ -2602,7 +2602,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1367,
+        "pk": 3151,
         "fields": {
             "cvr_number": "33880782",
             "name": "ST\u00d8TTEBUREAUET ApS",
@@ -2611,7 +2611,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1368,
+        "pk": 3152,
         "fields": {
             "cvr_number": "33903685",
             "name": "Psykolog Martin Skriver",
@@ -2620,7 +2620,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1369,
+        "pk": 3153,
         "fields": {
             "cvr_number": "33926804",
             "name": "Fonden Kalles hus",
@@ -2629,7 +2629,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1370,
+        "pk": 3154,
         "fields": {
             "cvr_number": "33998465",
             "name": "Dalmskov v/Thomas Dalmskov",
@@ -2638,7 +2638,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1371,
+        "pk": 3155,
         "fields": {
             "cvr_number": "34002169",
             "name": "Psykolog Margit Novland",
@@ -2647,7 +2647,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1372,
+        "pk": 3156,
         "fields": {
             "cvr_number": "34112185",
             "name": "Vejen-videre v/Kristine Kim Nielsen",
@@ -2656,7 +2656,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1373,
+        "pk": 3157,
         "fields": {
             "cvr_number": "34174156",
             "name": "Mette Skj\u00e6rb\u00e6k PRC/selvforst\u00e5eskursus",
@@ -2665,7 +2665,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1374,
+        "pk": 3158,
         "fields": {
             "cvr_number": "34276250",
             "name": "Psykologisk Konsultation v/ Birgit Bonde",
@@ -2674,7 +2674,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1375,
+        "pk": 3159,
         "fields": {
             "cvr_number": "34363501",
             "name": "Den selvej. inst. Kildeh\u00f8jen",
@@ -2683,7 +2683,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1376,
+        "pk": 3160,
         "fields": {
             "cvr_number": "34456194",
             "name": "Pitstop-nu aps",
@@ -2692,7 +2692,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1377,
+        "pk": 3161,
         "fields": {
             "cvr_number": "34509824",
             "name": "Familie-og Psykoterapeut Tina Stenkl\u00f8v",
@@ -2701,7 +2701,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1378,
+        "pk": 3162,
         "fields": {
             "cvr_number": "34600767",
             "name": "Opholdsstedet Lykkegard",
@@ -2710,7 +2710,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1379,
+        "pk": 3163,
         "fields": {
             "cvr_number": "34668094",
             "name": "True north efterskole",
@@ -2719,7 +2719,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1380,
+        "pk": 3164,
         "fields": {
             "cvr_number": "35023747",
             "name": "Sanne Lundberg Psykoterapeut",
@@ -2728,7 +2728,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1381,
+        "pk": 3165,
         "fields": {
             "cvr_number": "35047719",
             "name": "Nordfyns Efterskole",
@@ -2737,7 +2737,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1382,
+        "pk": 3166,
         "fields": {
             "cvr_number": "35062025",
             "name": "Opholdsstedet Piberhus Fond",
@@ -2746,7 +2746,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1383,
+        "pk": 3167,
         "fields": {
             "cvr_number": "35209115",
             "name": "Odense Kvindekrisecentre",
@@ -2755,7 +2755,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1384,
+        "pk": 3168,
         "fields": {
             "cvr_number": "35237038",
             "name": "Concura",
@@ -2764,7 +2764,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1385,
+        "pk": 3169,
         "fields": {
             "cvr_number": "35248940",
             "name": "Kilden",
@@ -2773,7 +2773,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1386,
+        "pk": 3170,
         "fields": {
             "cvr_number": "35300821",
             "name": "Terapi-Huset",
@@ -2782,7 +2782,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1387,
+        "pk": 3171,
         "fields": {
             "cvr_number": "35504915",
             "name": "Psykolog Kris Simonsen",
@@ -2791,7 +2791,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1388,
+        "pk": 3172,
         "fields": {
             "cvr_number": "35551026",
             "name": "Fredslund Consulting",
@@ -2800,7 +2800,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1389,
+        "pk": 3173,
         "fields": {
             "cvr_number": "35558500",
             "name": "Ny Krums\u00f8 Skole & Socialp\u00e6d. Opholds",
@@ -2809,7 +2809,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1390,
+        "pk": 3174,
         "fields": {
             "cvr_number": "35735887",
             "name": "Fonden Holb\u00e6k Krisecenter Medusa",
@@ -2818,7 +2818,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1391,
+        "pk": 3175,
         "fields": {
             "cvr_number": "35861696",
             "name": "Molis Aps.",
@@ -2827,7 +2827,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1392,
+        "pk": 3176,
         "fields": {
             "cvr_number": "35954716",
             "name": "Salling Group (Dansk Supermarked)",
@@ -2836,7 +2836,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1393,
+        "pk": 3177,
         "fields": {
             "cvr_number": "36028521",
             "name": "Familie & Evidens Center",
@@ -2845,7 +2845,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1394,
+        "pk": 3178,
         "fields": {
             "cvr_number": "36067977",
             "name": "Leute Aps",
@@ -2854,7 +2854,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1395,
+        "pk": 3179,
         "fields": {
             "cvr_number": "36109920",
             "name": "Opholdssted Soranahus",
@@ -2863,7 +2863,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1396,
+        "pk": 3180,
         "fields": {
             "cvr_number": "36176618",
             "name": "Kalleruphus",
@@ -2872,7 +2872,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1397,
+        "pk": 3181,
         "fields": {
             "cvr_number": "36264462",
             "name": "Ditte Lindqvist",
@@ -2881,7 +2881,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1398,
+        "pk": 3182,
         "fields": {
             "cvr_number": "36290498",
             "name": "Wiicare",
@@ -2890,7 +2890,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1399,
+        "pk": 3183,
         "fields": {
             "cvr_number": "36317361",
             "name": "Havrehuset",
@@ -2899,7 +2899,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1400,
+        "pk": 3184,
         "fields": {
             "cvr_number": "36586044",
             "name": "Den selvejende institution Svaneke Friskole",
@@ -2908,7 +2908,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1401,
+        "pk": 3185,
         "fields": {
             "cvr_number": "36630639",
             "name": "Psykolog Anja Brems",
@@ -2917,7 +2917,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1402,
+        "pk": 3186,
         "fields": {
             "cvr_number": "36981180",
             "name": "Samv\u00e6r i Centrum",
@@ -2926,7 +2926,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1403,
+        "pk": 3187,
         "fields": {
             "cvr_number": "37188722",
             "name": "Opholdsstedet Vadsbyh\u00f8j",
@@ -2935,7 +2935,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1404,
+        "pk": 3188,
         "fields": {
             "cvr_number": "37273449",
             "name": "Skotteruphus",
@@ -2944,7 +2944,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1405,
+        "pk": 3189,
         "fields": {
             "cvr_number": "37348953",
             "name": "Stenb\u00e6k, Bang & Willumsen, Privatpraktiserende p\u00e6dagoger ApS",
@@ -2953,7 +2953,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1406,
+        "pk": 3190,
         "fields": {
             "cvr_number": "37471992",
             "name": "Socialkrea",
@@ -2962,7 +2962,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1407,
+        "pk": 3191,
         "fields": {
             "cvr_number": "37494496",
             "name": "Socialkonsulent Nanna Olesen",
@@ -2971,7 +2971,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1408,
+        "pk": 3192,
         "fields": {
             "cvr_number": "37614238",
             "name": "FK care APS Bostedet Spiren",
@@ -2980,7 +2980,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1409,
+        "pk": 3193,
         "fields": {
             "cvr_number": "37844071",
             "name": "M\u00f8lleg\u00e5rdens botilbud",
@@ -2989,7 +2989,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1410,
+        "pk": 3194,
         "fields": {
             "cvr_number": "37862703",
             "name": "Lise S. Westermann PRC/samtaler",
@@ -2998,7 +2998,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1411,
+        "pk": 3195,
         "fields": {
             "cvr_number": "37914312",
             "name": "M\u00f8ltrup Optagelseshjem",
@@ -3007,7 +3007,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1412,
+        "pk": 3196,
         "fields": {
             "cvr_number": "38347497",
             "name": "U:Point",
@@ -3016,7 +3016,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1413,
+        "pk": 3197,
         "fields": {
             "cvr_number": "38454293",
             "name": "Fyrt\u00e5rnet Stenl\u00f8se/behandl.",
@@ -3025,7 +3025,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1414,
+        "pk": 3198,
         "fields": {
             "cvr_number": "38462385",
             "name": "Psykolog Sophie Risom",
@@ -3034,7 +3034,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1415,
+        "pk": 3199,
         "fields": {
             "cvr_number": "38522809",
             "name": "Job & Uddannelse Erhvervsskolen",
@@ -3043,7 +3043,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1416,
+        "pk": 3200,
         "fields": {
             "cvr_number": "38723170",
             "name": "Dvj consulting and social development/st\u00f8tte",
@@ -3052,7 +3052,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1417,
+        "pk": 3201,
         "fields": {
             "cvr_number": "38729616",
             "name": "Bog\u00f8 Kollegiet",
@@ -3061,7 +3061,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1418,
+        "pk": 3202,
         "fields": {
             "cvr_number": "39220253",
             "name": "Line Ibsen/Selvforst\u00e5else",
@@ -3070,7 +3070,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1419,
+        "pk": 3203,
         "fields": {
             "cvr_number": "39306069",
             "name": "Udvejen.dk",
@@ -3079,7 +3079,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1420,
+        "pk": 3204,
         "fields": {
             "cvr_number": "39392186",
             "name": "Kollerupcare",
@@ -3088,7 +3088,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1421,
+        "pk": 3205,
         "fields": {
             "cvr_number": "39405296",
             "name": "Caico Crafts",
@@ -3097,7 +3097,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1422,
+        "pk": 3206,
         "fields": {
             "cvr_number": "39481812",
             "name": "Ubbely Krisecenter",
@@ -3106,7 +3106,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1423,
+        "pk": 3207,
         "fields": {
             "cvr_number": "39551519",
             "name": "Skolen i Skibby",
@@ -3115,7 +3115,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1424,
+        "pk": 3208,
         "fields": {
             "cvr_number": "39625970",
             "name": "Broen",
@@ -3124,7 +3124,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1425,
+        "pk": 3209,
         "fields": {
             "cvr_number": "39684918",
             "name": "B\u00f8rnecentret Fjordh\u00f8j",
@@ -3133,7 +3133,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1426,
+        "pk": 3210,
         "fields": {
             "cvr_number": "40233156",
             "name": "BACKSPIN & SELVV\u00c6RD ApS",
@@ -3142,7 +3142,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1427,
+        "pk": 3211,
         "fields": {
             "cvr_number": "40371117",
             "name": "Vordingborgskolen",
@@ -3151,7 +3151,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1428,
+        "pk": 3212,
         "fields": {
             "cvr_number": "41332328",
             "name": "F\u00c6LLESSKABET FANEFJORD FOND",
@@ -3160,7 +3160,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1429,
+        "pk": 3213,
         "fields": {
             "cvr_number": "43286617",
             "name": "Ellesletteg\u00e5rd",
@@ -3169,7 +3169,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1430,
+        "pk": 3214,
         "fields": {
             "cvr_number": "43431597",
             "name": "L\u00e6nke-Pensionatet",
@@ -3178,7 +3178,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1431,
+        "pk": 3215,
         "fields": {
             "cvr_number": "44388618",
             "name": "VEJLEFJORDSKOLEN",
@@ -3187,7 +3187,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1432,
+        "pk": 3216,
         "fields": {
             "cvr_number": "44683016",
             "name": "N\u00e6sgaard efterskole",
@@ -3196,7 +3196,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1433,
+        "pk": 3217,
         "fields": {
             "cvr_number": "44773070",
             "name": "Rosenhaven Plejecenter",
@@ -3205,7 +3205,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1434,
+        "pk": 3218,
         "fields": {
             "cvr_number": "45005917",
             "name": "Langelands efterskole",
@@ -3214,7 +3214,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1435,
+        "pk": 3219,
         "fields": {
             "cvr_number": "46231112",
             "name": "Egmont H\u00f8jskolen",
@@ -3223,7 +3223,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1436,
+        "pk": 3220,
         "fields": {
             "cvr_number": "46231112",
             "name": "Egmont H\u00f8jskolen",
@@ -3232,7 +3232,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1437,
+        "pk": 3221,
         "fields": {
             "cvr_number": "48390950",
             "name": "ESROM KOST- OG FRISKOLE",
@@ -3241,7 +3241,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1438,
+        "pk": 3222,
         "fields": {
             "cvr_number": "49015011",
             "name": "Efterskolen Solbakken",
@@ -3250,7 +3250,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1439,
+        "pk": 3223,
         "fields": {
             "cvr_number": "49148011",
             "name": "Bornholms Krist Friskole Davidskolen",
@@ -3259,7 +3259,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1440,
+        "pk": 3224,
         "fields": {
             "cvr_number": "49801513",
             "name": "F\u00e5revejleefterskole",
@@ -3268,7 +3268,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1441,
+        "pk": 3225,
         "fields": {
             "cvr_number": "49801513",
             "name": "F\u00c5REVEJLE FRI- OG EFTERSKOLE",
@@ -3277,7 +3277,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1442,
+        "pk": 3226,
         "fields": {
             "cvr_number": "50823848",
             "name": "Skolehaven",
@@ -3286,7 +3286,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1443,
+        "pk": 3227,
         "fields": {
             "cvr_number": "52675510",
             "name": "Sams\u00f8 efterskole",
@@ -3295,7 +3295,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1444,
+        "pk": 3228,
         "fields": {
             "cvr_number": "53383211",
             "name": "Familieinst./Familiehuset Engelsborg",
@@ -3304,7 +3304,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1445,
+        "pk": 3229,
         "fields": {
             "cvr_number": "54801610",
             "name": "Lomborg Gymnastik- og Idr\u00e6tsefterskole",
@@ -3313,7 +3313,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1446,
+        "pk": 3230,
         "fields": {
             "cvr_number": "55134510",
             "name": "Instituttet for blinde og svagtseend",
@@ -3322,7 +3322,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1447,
+        "pk": 3231,
         "fields": {
             "cvr_number": "55373707",
             "name": "Fonden oph.st.: RISBYG\u00c5RD",
@@ -3331,7 +3331,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1448,
+        "pk": 3232,
         "fields": {
             "cvr_number": "55453004",
             "name": "Hjortholm",
@@ -3340,7 +3340,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1449,
+        "pk": 3233,
         "fields": {
             "cvr_number": "55627312",
             "name": "Askovhus",
@@ -3349,7 +3349,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1450,
+        "pk": 3234,
         "fields": {
             "cvr_number": "55775214",
             "name": "DAB",
@@ -3358,7 +3358,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1451,
+        "pk": 3235,
         "fields": {
             "cvr_number": "55894009",
             "name": "Bog\u00f8 Kostskole",
@@ -3367,7 +3367,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1452,
+        "pk": 3236,
         "fields": {
             "cvr_number": "57646233",
             "name": "Holdstedgaard",
@@ -3376,7 +3376,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1453,
+        "pk": 3237,
         "fields": {
             "cvr_number": "58626716",
             "name": "glamsbjerg fri og efterskole",
@@ -3385,7 +3385,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1454,
+        "pk": 3238,
         "fields": {
             "cvr_number": "58842117",
             "name": "Midtfyns efterskole",
@@ -3394,7 +3394,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1455,
+        "pk": 3239,
         "fields": {
             "cvr_number": "58937517",
             "name": "Ringe Fri- og Efterskole",
@@ -3403,7 +3403,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1456,
+        "pk": 3240,
         "fields": {
             "cvr_number": "59276417",
             "name": "Opholdsstedet Arken",
@@ -3412,7 +3412,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1457,
+        "pk": 3241,
         "fields": {
             "cvr_number": "59477218",
             "name": "HINDHOLM EFTERSKOLE",
@@ -3421,7 +3421,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1458,
+        "pk": 3242,
         "fields": {
             "cvr_number": "59477218",
             "name": "Holmstrup Efterskole",
@@ -3430,7 +3430,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1459,
+        "pk": 3243,
         "fields": {
             "cvr_number": "59541919",
             "name": "Osted Fri- og Efterskole",
@@ -3439,7 +3439,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1460,
+        "pk": 3244,
         "fields": {
             "cvr_number": "59575511",
             "name": "T\u00f8mmerup efterskole",
@@ -3448,7 +3448,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1461,
+        "pk": 3245,
         "fields": {
             "cvr_number": "59607316",
             "name": "Birkebo",
@@ -3457,7 +3457,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1462,
+        "pk": 3246,
         "fields": {
             "cvr_number": "62924810",
             "name": "Dantaxi 4x48",
@@ -3466,7 +3466,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1463,
+        "pk": 3247,
         "fields": {
             "cvr_number": "62924810",
             "name": "Dantaxi 4x48",
@@ -3475,7 +3475,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1464,
+        "pk": 3248,
         "fields": {
             "cvr_number": "62988711",
             "name": "Tommerup Efterskole",
@@ -3484,7 +3484,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1465,
+        "pk": 3249,
         "fields": {
             "cvr_number": "63447412",
             "name": "Blykobbe Efterskole",
@@ -3493,7 +3493,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1466,
+        "pk": 3250,
         "fields": {
             "cvr_number": "63640719",
             "name": "Omr\u00e5deinstitutionen Dildhaven",
@@ -3502,7 +3502,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1467,
+        "pk": 3251,
         "fields": {
             "cvr_number": "64502018",
             "name": "Bof\u00e6llesskab Jernbane Alle",
@@ -3511,7 +3511,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1468,
+        "pk": 3252,
         "fields": {
             "cvr_number": "64593528",
             "name": "Thorsh\u00f8jg\u00e5rd",
@@ -3520,7 +3520,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1469,
+        "pk": 3253,
         "fields": {
             "cvr_number": "64942212",
             "name": "B\u00f8rne- og familiehus Arild",
@@ -3529,7 +3529,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1470,
+        "pk": 3254,
         "fields": {
             "cvr_number": "64942212",
             "name": "Ertodeto",
@@ -3538,7 +3538,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1471,
+        "pk": 3255,
         "fields": {
             "cvr_number": "65321089",
             "name": "Louisenlund",
@@ -3547,7 +3547,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1472,
+        "pk": 3256,
         "fields": {
             "cvr_number": "65344718",
             "name": "Holte-Hus Efterskole",
@@ -3556,7 +3556,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1473,
+        "pk": 3257,
         "fields": {
             "cvr_number": "65462117",
             "name": "Klank Efterskole",
@@ -3565,7 +3565,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1474,
+        "pk": 3258,
         "fields": {
             "cvr_number": "65589447",
             "name": "\u00d8se efterskole",
@@ -3574,7 +3574,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1475,
+        "pk": 3259,
         "fields": {
             "cvr_number": "65655012",
             "name": "EFTERSKOLEN \u00d8STERG\u00c5RD",
@@ -3583,7 +3583,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1476,
+        "pk": 3260,
         "fields": {
             "cvr_number": "65782413",
             "name": "Roholte Efterskole",
@@ -3592,7 +3592,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1477,
+        "pk": 3261,
         "fields": {
             "cvr_number": "66252817",
             "name": "AKUcenter H\u00f8jagergaard",
@@ -3601,7 +3601,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1478,
+        "pk": 3262,
         "fields": {
             "cvr_number": "66408310",
             "name": "Stenhus Kostskole",
@@ -3610,7 +3610,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1479,
+        "pk": 3263,
         "fields": {
             "cvr_number": "67794710",
             "name": "Ubby Fri- og Idr\u00e6tsefterskole",
@@ -3619,7 +3619,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1480,
+        "pk": 3264,
         "fields": {
             "cvr_number": "67794710",
             "name": "Friskolen & Idr\u00e6tsefterskolen Ubby",
@@ -3628,7 +3628,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1481,
+        "pk": 3265,
         "fields": {
             "cvr_number": "68513928",
             "name": "Hjortholm Kostskole",
@@ -3637,7 +3637,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1482,
+        "pk": 3266,
         "fields": {
             "cvr_number": "69661513",
             "name": "Faxehus efterskole",
@@ -3646,7 +3646,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1483,
+        "pk": 3267,
         "fields": {
             "cvr_number": "69783414",
             "name": "NIELSSTRUP",
@@ -3655,7 +3655,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1484,
+        "pk": 3268,
         "fields": {
             "cvr_number": "70087316",
             "name": "Odsherreds Efterskole",
@@ -3664,7 +3664,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1485,
+        "pk": 3269,
         "fields": {
             "cvr_number": "70295415",
             "name": "Sor\u00f8 Husholdningsskole",
@@ -3673,7 +3673,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1486,
+        "pk": 3270,
         "fields": {
             "cvr_number": "74577016",
             "name": "DSI Kollegiet Nord-lys",
@@ -3682,7 +3682,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1487,
+        "pk": 3271,
         "fields": {
             "cvr_number": "75521755",
             "name": "Overmarksg\u00e5rden",
@@ -3691,7 +3691,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1488,
+        "pk": 3272,
         "fields": {
             "cvr_number": "75711115",
             "name": "TAXA SYD AMBA",
@@ -3700,7 +3700,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1489,
+        "pk": 3273,
         "fields": {
             "cvr_number": "75736215",
             "name": "AKTIV WEEKEND",
@@ -3709,7 +3709,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1490,
+        "pk": 3274,
         "fields": {
             "cvr_number": "76409110",
             "name": "Kalleruphus  psyk. bo- og behand ",
@@ -3718,7 +3718,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1491,
+        "pk": 3275,
         "fields": {
             "cvr_number": "76767416",
             "name": "I/S Kilden",
@@ -3727,7 +3727,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1492,
+        "pk": 3276,
         "fields": {
             "cvr_number": "77252010",
             "name": "FABU-FONDEN",
@@ -3736,7 +3736,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1493,
+        "pk": 3277,
         "fields": {
             "cvr_number": "78297212",
             "name": "Skolen p\u00e5 Slotsv\u00e6nget",
@@ -3745,7 +3745,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1494,
+        "pk": 3278,
         "fields": {
             "cvr_number": "78627719",
             "name": "SKOVLY",
@@ -3754,7 +3754,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1495,
+        "pk": 3279,
         "fields": {
             "cvr_number": "78637528",
             "name": "NORDTOFTE",
@@ -3763,7 +3763,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1496,
+        "pk": 3280,
         "fields": {
             "cvr_number": "78887915",
             "name": "Startskuddet",
@@ -3772,7 +3772,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1497,
+        "pk": 3281,
         "fields": {
             "cvr_number": "79005312",
             "name": "Fonden Krisecentret R\u00f8ntofte",
@@ -3781,7 +3781,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1498,
+        "pk": 3282,
         "fields": {
             "cvr_number": "80429959",
             "name": "Skr\u00f8dstrup efterskole",
@@ -3790,7 +3790,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1499,
+        "pk": 3283,
         "fields": {
             "cvr_number": "81368813",
             "name": "Nordsj\u00e6llands Efterskole",
@@ -3799,7 +3799,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1500,
+        "pk": 3284,
         "fields": {
             "cvr_number": "81473315",
             "name": "Grennessminde Birker\u00f8d",
@@ -3808,7 +3808,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1501,
+        "pk": 3285,
         "fields": {
             "cvr_number": "81956928",
             "name": "Nysted efterskole",
@@ -3817,7 +3817,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1502,
+        "pk": 3286,
         "fields": {
             "cvr_number": "83280115",
             "name": "Korinth Efterskole",
@@ -3826,7 +3826,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1503,
+        "pk": 3287,
         "fields": {
             "cvr_number": "84414913",
             "name": "Landsforeningen Autisme",
@@ -3835,7 +3835,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1504,
+        "pk": 3288,
         "fields": {
             "cvr_number": "84493813",
             "name": "Efterskolen Waldemarsbo",
@@ -3844,7 +3844,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1505,
+        "pk": 3289,
         "fields": {
             "cvr_number": "85188119",
             "name": "ADVODAN Lolland-Falster",
@@ -3853,7 +3853,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1506,
+        "pk": 3290,
         "fields": {
             "cvr_number": "85630113",
             "name": "H\u00f8rhuset",
@@ -3862,7 +3862,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1507,
+        "pk": 3291,
         "fields": {
             "cvr_number": "85709119",
             "name": "Ringe Kost- og Realskole",
@@ -3871,7 +3871,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1508,
+        "pk": 3292,
         "fields": {
             "cvr_number": "86944510",
             "name": "Bindern\u00e6s efterskole",
@@ -3880,7 +3880,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1509,
+        "pk": 3293,
         "fields": {
             "cvr_number": "89185513",
             "name": "Halstedhus Efterskole",
@@ -3889,7 +3889,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1510,
+        "pk": 3294,
         "fields": {
             "cvr_number": "89257514",
             "name": "Pederstrup efterskole",
@@ -3898,7 +3898,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1511,
+        "pk": 3295,
         "fields": {
             "cvr_number": "93019350",
             "name": "STUTTERI SVANEMOSEN V/ARNE NIELSEN",
@@ -3907,7 +3907,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1512,
+        "pk": 3296,
         "fields": {
             "cvr_number": "97124390",
             "name": "Familieh\u00f8jskolen Sk\u00e6rg\u00e5rden",
@@ -3916,7 +3916,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1513,
+        "pk": 3297,
         "fields": {
             "cvr_number": "",
             "name": "Bof\u00e6llesskabet Alstrup all\u00e9",
@@ -3925,7 +3925,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1514,
+        "pk": 3298,
         "fields": {
             "cvr_number": "",
             "name": "M\u00f8llebakken",
@@ -3934,7 +3934,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1515,
+        "pk": 3299,
         "fields": {
             "cvr_number": "",
             "name": "Forsorgshjemmet Solvang",
@@ -3943,7 +3943,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1516,
+        "pk": 3300,
         "fields": {
             "cvr_number": "",
             "name": "Skovv\u00e6nget",
@@ -3952,7 +3952,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1517,
+        "pk": 3301,
         "fields": {
             "cvr_number": "",
             "name": "\"Fiktiv\" Strandager",
@@ -3961,7 +3961,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1518,
+        "pk": 3302,
         "fields": {
             "cvr_number": "",
             "name": "Munkeg\u00e5rd",
@@ -3970,7 +3970,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1519,
+        "pk": 3303,
         "fields": {
             "cvr_number": "",
             "name": "Basen",
@@ -3979,7 +3979,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1520,
+        "pk": 3304,
         "fields": {
             "cvr_number": "",
             "name": "Farmen/behandl.",
@@ -3988,7 +3988,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1521,
+        "pk": 3305,
         "fields": {
             "cvr_number": "",
             "name": "Fjordskolen/socialdel",
@@ -3997,7 +3997,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1522,
+        "pk": 3306,
         "fields": {
             "cvr_number": "",
             "name": "Fortuna ApS",
@@ -4006,7 +4006,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1523,
+        "pk": 3307,
         "fields": {
             "cvr_number": "",
             "name": "Henrik Skovsen/kontaktper.",
@@ -4015,7 +4015,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1524,
+        "pk": 3308,
         "fields": {
             "cvr_number": "",
             "name": "JSR-socialkonsulenter",
@@ -4024,7 +4024,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1525,
+        "pk": 3309,
         "fields": {
             "cvr_number": "",
             "name": "KAB husleje,Egebjergvang 169",
@@ -4033,7 +4033,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1526,
+        "pk": 3310,
         "fields": {
             "cvr_number": "",
             "name": "MK Consult",
@@ -4042,7 +4042,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1527,
+        "pk": 3311,
         "fields": {
             "cvr_number": "",
             "name": "Pausen",
@@ -4051,7 +4051,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1528,
+        "pk": 3312,
         "fields": {
             "cvr_number": "",
             "name": "Pia Offenberg/st\u00f8tte",
@@ -4060,7 +4060,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1529,
+        "pk": 3313,
         "fields": {
             "cvr_number": "",
             "name": "Pilely G\u00e5rd",
@@ -4069,7 +4069,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1530,
+        "pk": 3314,
         "fields": {
             "cvr_number": "",
             "name": "Skolen Gimle-Behandling p\u00e5 intern skole",
@@ -4078,7 +4078,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1531,
+        "pk": 3315,
         "fields": {
             "cvr_number": "",
             "name": "Socialkonsulenterne, Fam.behandl.",
@@ -4087,7 +4087,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1532,
+        "pk": 3316,
         "fields": {
             "cvr_number": "",
             "name": "Steiner B\u00f8rnehave",
@@ -4096,7 +4096,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1533,
+        "pk": 3317,
         "fields": {
             "cvr_number": "",
             "name": "Taxa 4x35",
@@ -4105,7 +4105,7 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 1534,
+        "pk": 3318,
         "fields": {
             "cvr_number": "",
             "name": "Villa Magnoila",

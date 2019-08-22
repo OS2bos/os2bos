@@ -74,17 +74,9 @@ COPY docker ./docker
 COPY tox.ini .
 COPY backend ./backend
 
-
 # Copy frontend code.
 COPY --from=frontend /code/frontend/package.json ./frontend/package.json
 COPY --from=frontend /code/frontend/dist ./frontend/dist
-
-# TODO: As the migrations are not committed during the development phase, we
-# make the migrations on runtime in docker-entrypoint.sh. To do this we chown
-# the correct folder in Dockerfile. When the model have stabilized, the
-# migrations should be comitted to the repository and these lines should be
-# removed. See https://redmine.magenta-aps.dk/issues/30087
-RUN chown bev:bev /code/backend/core/migrations
 
 # Run the server as the bev user on port 5000
 WORKDIR /code/backend
