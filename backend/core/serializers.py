@@ -156,19 +156,17 @@ class ActivitySerializer(WritableNestedModelSerializer):
                 )
             else:
                 next_payment = modifies.payment_plan.next_payment
-
-            if not next_payment:
-                raise serializers.ValidationError(
-                    _(
-                        "den bevilgede aktivitet skal have en fremtidig"
-                        " betaling for at man kan lave en forventet justering"
+                if not next_payment:
+                    raise serializers.ValidationError(
+                        _(
+                            "den bevilgede aktivitet skal have en fremtidig"
+                            " betaling for at man kan lave en forventet justering"
+                        )
                     )
-                )
+                next_payment = next_payment.date
+
             if not (
-                today
-                < next_payment.date
-                <= data["start_date"]
-                <= modifies.end_date
+                today < next_payment <= data["start_date"] <= modifies.end_date
             ):
                 raise serializers.ValidationError(
                     _(

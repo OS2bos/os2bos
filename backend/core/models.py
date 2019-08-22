@@ -999,12 +999,12 @@ class Activity(AuditModelMixin, models.Model):
             )
         else:
             next_payment = self.modifies.payment_plan.next_payment
+            if not next_payment:
+                return False
+            next_payment = next_payment.date
 
         if not (
-            today
-            < next_payment.date
-            <= self.start_date
-            <= self.modifies.end_date
+            today < next_payment <= self.start_date <= self.modifies.end_date
         ):
             return False
         return True
