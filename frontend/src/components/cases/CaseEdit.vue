@@ -79,8 +79,6 @@
                     <list-picker :dom-id="'selectField4'" :selected-id="cas.district" required @selection="changeDistrict" :list="districts" />
                 </fieldset>
 
-                <assessment-edit :case-obj="cas" @assessment="updateAssessment" />
-
                 <template v-if="!create_mode">
                     <h3>Sagsbehandling:</h3>
                     <fieldset>
@@ -99,6 +97,8 @@
                     <label for="field-case-info">Supplerende oplysninger for sag</label>
                     <textarea id="field-case-info" v-model="cas.note" placeholder="Angiv supplerende oplysninger her"></textarea>
                 </fieldset>
+
+                <assessment-edit :case-obj="cas" @assessment="updateAssessment" />
                 
                 <fieldset>
                     <input type="submit" value="Gem">
@@ -137,7 +137,8 @@
             return {
                 cas: {},
                 create_mode: true,
-                errors: null
+                errors: null,
+                assessment_changes: false
             }
         },
         computed: {
@@ -197,6 +198,8 @@
                 }  
             },
             updateAssessment: function(assessment) {
+                console.log('UPDATING ASSESSMENT')
+                this.assessment_changes = true
                 if (assessment.scaling_step) {
                     this.cas.scaling_step = assessment.scaling_step
                 }
@@ -218,8 +221,6 @@
                     case_worker: this.cas.case_worker,
                     team: this.cas.team,
                     district: this.cas.district,
-                    effort_step: this.cas.effort_step,
-                    scaling_step: this.cas.scaling_step,
                     name: this.cas.name,
                     cpr_number: cpr,
                     paying_municipality: this.cas.paying_municipality,
@@ -228,10 +229,12 @@
                     target_group: this.cas.target_group,
                     refugee_integration: this.cas.refugee_integration,
                     cross_department_measure: this.cas.cross_department_measure,
-                    scaling_step: this.cas.scaling_step,
-                    effort_step: this.cas.effort_step,
-                    history_change_reason: this.cas.history_change_reason,
                     note: this.cas.note ? this.cas.note : ''
+                }
+                if (this.assessment_changes) {
+                    data.scaling_step = this.cas.scaling_step
+                    data.effort_step = this.cas.effort_step
+                    data.history_change_reason = this.cas.history_change_reason
                 }
                 if (!this.create_mode) {
                     axios.patch(`/cases/${ this.cas.id }/`, data)
