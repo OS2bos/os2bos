@@ -160,7 +160,8 @@ class ActivitySerializer(WritableNestedModelSerializer):
                     raise serializers.ValidationError(
                         _(
                             "den bevilgede aktivitet skal have en fremtidig"
-                            " betaling for at man kan lave en forventet justering"
+                            " betaling for at man kan lave en"
+                            " forventet justering"
                         )
                     )
                 next_payment = next_payment.date
