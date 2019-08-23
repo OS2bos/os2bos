@@ -144,12 +144,37 @@ class ActivitySerializer(WritableNestedModelSerializer):
             and data["start_date"] > data["end_date"]
         ):
             raise serializers.ValidationError(
-                _("startdato skal være før slutdato")
+                _("startdato skal være inden eller det samme som slutdato")
+            )
+
+        # one time payments should have the same start and end date.
+        if (
+            data["payment_plan"]["payment_type"]
+            == PaymentSchedule.ONE_TIME_PAYMENT
+            and not "end_date" in data
+            or data["end_date"] != data["start_date"]
+        ):
+            raise serializers.ValidationError(
+                _("startdato og slutdato skal være ens for engangsbetaling")
             )
 
         if "modifies" in data and data["modifies"]:
             modifies = data["modifies"]
-            if not modifies.ongoing:
+            if (
+                data["payment_plan"]["payment_type"]
+                == PaymentSchedule.ONE_TIME_PAYMENT
+            ):
+                if today < modifies.start_date <= data["start_date"]:
+                    return data
+                else:
+                    raise serializers.ValidationError(
+                        _(
+                            "den bevilgede aktivitet skal have en fremtidig"
+                            " betaling for at man kan lave en"
+                            " forventet justering"
+                        )
+                    )
+            elif not modifies.ongoing:
                 next_payment = get_next_interval(
                     data["modifies"].start_date,
                     data["payment_plan"]["payment_frequency"],

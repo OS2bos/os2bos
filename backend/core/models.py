@@ -993,7 +993,12 @@ class Activity(AuditModelMixin, models.Model):
         today = date.today()
         if not self.modifies:
             return False
-        if not self.modifies.ongoing:
+        if self.payment_plan.payment_type == PaymentSchedule.ONE_TIME_PAYMENT:
+            if today < self.modifies.start_date <= self.start_date:
+                return True
+            else:
+                return False
+        elif not self.modifies.ongoing:
             next_payment = get_next_interval(
                 self.modifies.start_date, self.payment_plan.payment_frequency
             )

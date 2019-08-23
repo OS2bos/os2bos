@@ -31,6 +31,9 @@ logger = logging.getLogger(__name__)
 
 
 def get_next_interval(from_date, payment_frequency):
+    """
+    Calculate the next date based on a start date and payment frequency.
+    """
     from core.models import PaymentSchedule
 
     if payment_frequency == PaymentSchedule.DAILY:

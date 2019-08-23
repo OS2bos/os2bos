@@ -7,8 +7,10 @@
 
 
 from decimal import Decimal
+from datetime import timedelta, date
 
 from django.test import TestCase
+from django.utils import timezone
 
 from core.models import (
     ActivityDetails,
@@ -17,13 +19,16 @@ from core.models import (
     CASH,
     MAIN_ACTIVITY,
     STATUS_EXPECTED,
+    STATUS_GRANTED,
     PaymentSchedule,
+    Appropriation,
 )
 from core.tests.testing_utils import (
     BasicTestMixin,
     create_case,
     create_appropriation,
     create_payment_schedule,
+    create_activity,
 )
 from core.serializers import (
     ActivitySerializer,
@@ -101,6 +106,237 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         serializer = ActivitySerializer(data=data)
         serializer.is_valid()
         self.assertEqual(serializer.errors, {})
+
+    def test_validate_expected_success(self):
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_frequency=PaymentSchedule.WEEKLY,
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED
+        )
+        now = timezone.now().date()
+        start_date = now - timedelta(days=6)
+        end_date = now + timedelta(days=12)
+        details, unused = ActivityDetails.objects.get_or_create(
+            activity_id="000000",
+            name="Test aktivitet",
+            max_tolerance_in_percent=10,
+            max_tolerance_in_dkk=1000,
+        )
+        # create an already granted activity.
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=start_date,
+            end_date=end_date,
+            details=details,
+            payment_plan=payment_schedule,
+        )
+        modifies_payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("600.0"),
+            payment_frequency=PaymentSchedule.WEEKLY,
+        )
+        modified_start_date = start_date + timedelta(days=7)
+        modified_end_date = end_date + timedelta(days=12)
+        # let the granted activity be modified by another expected activity.
+        data = {
+            "case": case.id,
+            "appropriation": appropriation.id,
+            "start_date": modified_start_date,
+            "status": STATUS_EXPECTED,
+            "activity_type": MAIN_ACTIVITY,
+            "end_date": modified_end_date,
+            "modifies": activity.id,
+            "details": details.id,
+            "payment_plan": PaymentScheduleSerializer(
+                modifies_payment_schedule
+            ).data,
+        }
+        serializer = ActivitySerializer(data=data)
+        serializer.is_valid()
+        self.assertEqual(serializer.errors, {})
+
+    def test_validate_expected_invalid_date(self):
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_frequency=PaymentSchedule.WEEKLY,
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED
+        )
+        now = timezone.now().date()
+        start_date = now - timedelta(days=6)
+        end_date = now + timedelta(days=12)
+        details, unused = ActivityDetails.objects.get_or_create(
+            activity_id="000000",
+            name="Test aktivitet",
+            max_tolerance_in_percent=10,
+            max_tolerance_in_dkk=1000,
+        )
+        # create an already granted activity.
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=start_date,
+            end_date=end_date,
+            details=details,
+            payment_plan=payment_schedule,
+        )
+        modifies_payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("600.0"),
+            payment_frequency=PaymentSchedule.WEEKLY,
+        )
+        modified_start_date = start_date
+        modified_end_date = end_date + timedelta(days=12)
+        # let the granted activity be modified by another expected activity.
+        data = {
+            "case": case.id,
+            "appropriation": appropriation.id,
+            "start_date": modified_start_date,
+            "status": STATUS_EXPECTED,
+            "activity_type": MAIN_ACTIVITY,
+            "end_date": modified_end_date,
+            "modifies": activity.id,
+            "details": details.id,
+            "payment_plan": PaymentScheduleSerializer(
+                modifies_payment_schedule
+            ).data,
+        }
+        serializer = ActivitySerializer(data=data)
+        serializer.is_valid()
+
+        self.assertEqual(
+            serializer.errors["non_field_errors"][0],
+            f"den justerede aktivitets startdato skal være i fremtiden"
+            f" i spændet fra næste betalingsdato: "
+            f"{now + timedelta(days=1)}"
+            f" til ydelsens slutdato: {end_date}",
+        )
+
+    def test_validate_expected_no_next_payment(self):
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_frequency=PaymentSchedule.WEEKLY,
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED
+        )
+        start_date = date.today() - timedelta(days=3)
+        end_date = date.today() + timedelta(days=2)
+        details, unused = ActivityDetails.objects.get_or_create(
+            activity_id="000000",
+            name="Test aktivitet",
+            max_tolerance_in_percent=10,
+            max_tolerance_in_dkk=1000,
+        )
+        # create an already granted activity.
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=start_date,
+            end_date=end_date,
+            details=details,
+            payment_plan=payment_schedule,
+        )
+        modifies_payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("600.0"),
+            payment_frequency=PaymentSchedule.WEEKLY,
+        )
+        start_date = date.today() - timedelta(days=3)
+        end_date = date.today() + timedelta(days=2)
+        # let the granted activity be modified by another expected activity.
+        data = {
+            "case": case.id,
+            "appropriation": appropriation.id,
+            "start_date": start_date,
+            "status": STATUS_EXPECTED,
+            "activity_type": MAIN_ACTIVITY,
+            "end_date": end_date,
+            "modifies": activity.id,
+            "details": details.id,
+            "payment_plan": PaymentScheduleSerializer(
+                modifies_payment_schedule
+            ).data,
+        }
+        serializer = ActivitySerializer(data=data)
+        serializer.is_valid()
+
+        self.assertEqual(
+            serializer.errors["non_field_errors"][0],
+            "den bevilgede aktivitet skal have en fremtidig"
+            " betaling for at man kan lave en"
+            " forventet justering",
+        )
+
+    def test_validate_expected_true_ongoing_with_next_payment(self):
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_frequency=PaymentSchedule.DAILY,
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED
+        )
+        start_date = date.today() + timedelta(days=2)
+        end_date = date.today() + timedelta(days=4)
+        details, unused = ActivityDetails.objects.get_or_create(
+            activity_id="000000",
+            name="Test aktivitet",
+            max_tolerance_in_percent=10,
+            max_tolerance_in_dkk=1000,
+        )
+        # create an already granted activity.
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=start_date,
+            end_date=end_date,
+            details=details,
+            payment_plan=payment_schedule,
+        )
+        modifies_payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("600.0"),
+            payment_frequency=PaymentSchedule.DAILY,
+        )
+        start_date = date.today() + timedelta(days=3)
+        end_date = date.today() + timedelta(days=6)
+        # let the granted activity be modified by another expected activity.
+        data = {
+            "case": case.id,
+            "appropriation": appropriation.id,
+            "start_date": start_date,
+            "status": STATUS_EXPECTED,
+            "activity_type": MAIN_ACTIVITY,
+            "end_date": end_date,
+            "modifies": activity.id,
+            "details": details.id,
+            "payment_plan": PaymentScheduleSerializer(
+                modifies_payment_schedule
+            ).data,
+        }
+        serializer = ActivitySerializer(data=data)
+        is_valid = serializer.is_valid()
+        self.assertTrue(is_valid)
 
 
 class CaseSerializerTestCase(TestCase, BasicTestMixin):
