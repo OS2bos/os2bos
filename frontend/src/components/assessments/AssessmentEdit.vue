@@ -15,7 +15,7 @@
 
         <fieldset>
             <label class="required" for="field-indsatstrappe">Indsatstrappen</label>
-            <select id="field-indsatstrappe" v-model="cas.effort_step" required @change="updateEffort()">
+            <select id="field-indsatstrappe" v-model="cas.effort_step" @change="updateEffort()" required>
                 <option value="STEP_ONE">Trin 1 - Tidlig indsats i almenområdet</option>
                 <option value="STEP_TWO">Trin 2 - Forebyggelse</option>
                 <option value="STEP_THREE">Trin 3 - Hjemmebaserede indsatser</option>
@@ -23,11 +23,12 @@
                 <option value="STEP_FIVE">Trin 5 - Anbringelse i forskellige typer af plejefamilier</option>
                 <option value="STEP_SIX">Trin 6 - Anbringelse i institutionstilbud</option>
             </select>
+            <error err-key="effort_step" />
         </fieldset>
 
         <fieldset>
             <label class="required" for="field-skaleringstrappe">Skaleringstrappen</label>
-            <select id="field-skaleringstrappe" v-model="cas.scaling_step" required @change="updateScaling()">
+            <select id="field-skaleringstrappe" v-model="cas.scaling_step" @change="updateScaling()" required>
                 <option value="10">10</option>
                 <option value="9">9</option>
                 <option value="8">8</option>
@@ -39,6 +40,7 @@
                 <option value="2">2</option>
                 <option value="1">1</option>
             </select>
+            <error err-key="scaling_step" />
         </fieldset>
 
         <fieldset>
@@ -53,9 +55,13 @@
 <script>
 
     import axios from '../http/Http.js'
+    import Error from '../forms/Error.vue'
 
     export default {
 
+        components: {
+            Error
+        },
         props: [
             'caseObj'
         ],

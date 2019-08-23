@@ -34,6 +34,7 @@
                                 <label for="inputRadio5">Teammøde</label>
                                 <input id="inputRadio6" type="radio" value="6" v-model="appro.approval_level" name="approval-group" required>
                                 <label for="inputRadio6">Ungdomskriminalitetsnævnet</label>
+                                <error />
                             </fieldset>
 
                             <fieldset>
@@ -59,9 +60,13 @@
 
     import axios from '../http/Http.js'
     import notify from '../notifications/Notify.js'
+    import Error from '../forms/Error.vue'
 
     export default {
 
+        components: {
+            Error
+        },
         props: [
             'approvalObj'
         ],
@@ -83,9 +88,7 @@
                     this.$emit('close')
                 })
                 .catch(err => {
-                    notify('Der opstod en fejl. Bevilling kunne ikke godkendes', 'error')
-                    this.$emit('close')
-                    console.log(err)
+                    this.$store.dispatch('parseErrorOutput', err)
                 })
             }
         },

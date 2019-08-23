@@ -18,6 +18,7 @@
                 @input="lookupCPR(instance_cpr)"
                 maxlength="11" minlength="10"
                 required>
+            <error err-key="cpr_number" />
         </fieldset>
 
         <fieldset>
@@ -28,6 +29,7 @@
                 v-model="instance_name"
                 @input="$emit('update:name', instance_name)"
                 required>
+            <error err-key="name" />
         </fieldset>
 
     </div>
@@ -37,9 +39,13 @@
 <script>
 
     import axios from '../http/Http.js'
+    import Error from '../forms/Error.vue'
 
     export default {
 
+        components: {
+            Error
+        },
         props: [
             'cpr',
             'name'

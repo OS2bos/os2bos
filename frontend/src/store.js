@@ -16,6 +16,7 @@ import activity from './store-modules/activity.js'
 import payment from './store-modules/payment.js'
 import appropriation from './store-modules/appropriation.js'
 import main_case from './store-modules/case.js'
+import error from './store-modules/error.js'
 
 Vue.use(Vuex)
 
@@ -28,6 +29,7 @@ export default new Vuex.Store({
         activity,
         payment,
         appropriation,
-        main_case
+        main_case,
+        error
     }
 })
