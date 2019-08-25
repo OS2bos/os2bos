@@ -35,6 +35,7 @@
             </p>
         </header>
         <form @submit.prevent="saveChanges()">
+            <error />
             <div class="row">
                 <div class="column">
                     <fieldset v-if="mode === 'create'">
@@ -44,11 +45,12 @@
                     <fieldset>
                         <label class="required" for="fieldSelectAct">Aktivitet</label>
                         <list-picker :dom-id="'fieldSelectAct'" :disabled="disableAct" :selected-id="act.details" @selection="changeActivity" :list="act_details" required />
+                        <error err-key="details" />
                     </fieldset>
                     <fieldset>
                         <label class="required" for="field-startdate">Startdato</label>
                         <input type="date" id="field-startdate" v-model="act.start_date" :max="current_end_date" @change="setMinMaxDates()" required>
-                        <error v-if="errors && errors.start_date" :msgs="errors.start_date" />
+                        <error err-key="start_date" />
                     </fieldset>
                     <fieldset>
                         <label for="field-enddate">Slutdato</label>
@@ -104,8 +106,7 @@
                 pay: {},
                 act_details: null,
                 current_start_date: null,
-                current_end_date: null,
-                errors: null
+                current_end_date: null
             }
         },
         computed: {
@@ -204,7 +205,7 @@
                         this.$router.push(`/appropriation/${ this.appropriation.id }`)
                         this.$store.dispatch('fetchActivity', res.data.id)
                     })
-                    .catch(err => this.handleError(err))
+                    .catch(err => this.$store.dispatch('parseErrorOutput', err))
 
                 } else {
                     // PATCHING an activity
@@ -214,11 +215,8 @@
                         this.$router.push(`/appropriation/${ this.appropriation.id }`)
                         this.$store.dispatch('fetchActivity', res.data.id)
                     })
-                    .catch(err => this.handleError(err))
+                    .catch(err => this.$store.dispatch('parseErrorOutput', err))
                 }
-            },
-            handleError: function(error) {
-                this.errors = Error.methods.handleError(error)
             },
             cancel: function() {
                 if (this.mode !== 'create') {

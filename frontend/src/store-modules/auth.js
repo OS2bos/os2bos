@@ -67,7 +67,7 @@ const actions = {
             })
         })
         .catch(err => {
-            notify('Log ind fejlede', 'error', err)
+            store.dispatch('parseErrorOutput', err)
             dispatch('clearAuth')
         })
     },
@@ -89,7 +89,7 @@ const actions = {
                 dispatch('setTimer')
             })
             .catch(err => {
-                notify('Refresh login fejlede', 'error', err)
+                console.log(err)
                 dispatch('clearAuth')
             })
         }
@@ -111,9 +111,7 @@ const actions = {
                 dispatch('postLogin')
                 dispatch('refreshToken')
             })
-            .catch(err => {
-                console.log(err)
-            })
+            .catch(err => store.dispatch('parseErrorOutput', err))
         } else {
             dispatch('clearAuth')
         }

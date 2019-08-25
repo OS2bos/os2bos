@@ -9,7 +9,7 @@
 <template>
     <section class="payment-method">
         <label class="required">Betalingsmåde</label>
-        <select  v-model="entry.payment_method" required>
+        <select v-model="entry.payment_method" required>
             <option value="INVOICE" v-if="paymentObj.recipient_type === 'COMPANY'">Faktura</option>
             <option value="INTERNAL" v-if="paymentObj.recipient_type === 'INTERNAL'">Intern afregning</option>
             <option value="CASH" v-if="paymentObj.recipient_type === 'PERSON' || paymentObj.recipient_type === 'COMPANY'">
@@ -17,6 +17,7 @@
             </option>
             <option value="SD" v-if="paymentObj.recipient_type === 'PERSON'">SD-løn</option>
         </select>
+        <error err-key="payment_method" />
         <div v-if="entry.payment_method">
             <div v-if="entry.payment_method === 'CASH'">
                 <strong>Kontant udbetaling</strong>
@@ -27,9 +28,9 @@
             </div>
             <fieldset v-if="entry.payment_method === 'SD'">
                 <legend class="required">Skattekort</legend>
-                <input type="radio" id="field-main" name="payment-type" value="1" v-model="entry.payment_method_details" required>
+                <input type="radio" id="field-main" name="payment-type" value="1" v-model="entry.payment_method_details">
                 <label for="field-main">Hovedkort</label>
-                <input type="radio" id="field-secondary" name="payment-type" value="2" v-model="entry.payment_method_details" required>
+                <input type="radio" id="field-secondary" name="payment-type" value="2" v-model="entry.payment_method_details">
                 <label for="field-secondary">Bikort</label>
             </fieldset>
         </div>
@@ -37,8 +38,14 @@
 </template>
 
 <script>
+
+    import Error from '../forms/Error.vue'
+
     export default {
 
+      components: {
+        Error
+      },
       props: [
         'paymentObj'
       ],
