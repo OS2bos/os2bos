@@ -78,7 +78,7 @@
         data: function() {
             return {
                 cas: null,
-                items: null,
+                items: [],
                 status_expired: false
             }
         },
