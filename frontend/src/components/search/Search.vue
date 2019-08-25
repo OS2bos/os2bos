@@ -16,7 +16,6 @@
           v-model="item"
           @update-items="updateItems"
           :min-len="10"
-          
         />
         <span class="danger" v-if="digitsCheck">CPR-nr skal være 10 tegn</span>
     </div>
