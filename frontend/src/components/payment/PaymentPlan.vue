@@ -82,7 +82,8 @@
                     default:
                         num = this.amount * this.freq_factor * this.units
                 }
-                return num
+                let yearly_cost = new Intl.NumberFormat('en-US', { maximumSignificantDigits: 9 } ).format(num)
+                return yearly_cost
             },
             freq_name: function() {
                 switch(this.frequency) {
