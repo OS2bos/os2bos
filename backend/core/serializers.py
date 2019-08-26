@@ -10,7 +10,6 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from django import forms
 
-from datetime import date, timedelta
 from rest_framework import serializers
 
 from drf_writable_nested import WritableNestedModelSerializer
@@ -34,7 +33,6 @@ from core.models import (
     Team,
     FAMILY_DEPT,
 )
-from core.utils import get_next_interval
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -138,7 +136,6 @@ class ActivitySerializer(WritableNestedModelSerializer):
         return queryset
 
     def validate(self, data):
-        today = date.today()
         # Check that start_date is before end_date
         if (
             "end_date" in data

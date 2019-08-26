@@ -1084,24 +1084,9 @@ class Activity(AuditModelMixin, models.Model):
     @property
     def total_cost_this_year(self):
         if self.status == STATUS_GRANTED and self.modified_by.exists():
-            payments = (
-                Payment.objects.filter(payment_schedule__activity=self)
-                .filter(
-                    Q(
-                        date__lt=F(
-                            "payment_schedule__activity__modified_by__start_date"
-                        )
-                    )
-                    | Q(
-                        date__gt=F(
-                            "payment_schedule__activity__modified_by__end_date"
-                        )
-                    )
-                )
-                .exclude(
-                    payment_schedule__payment_type=PaymentSchedule.ONE_TIME_PAYMENT
-                )
-            )
+            payments = Payment.objects.filter(
+                payment_schedule__activity=self
+            ).expected()
         else:
             payments = Payment.objects.filter(payment_schedule__activity=self)
         return payments.in_this_year().amount_sum()
@@ -1109,24 +1094,9 @@ class Activity(AuditModelMixin, models.Model):
     @property
     def total_cost(self):
         if self.status == STATUS_GRANTED and self.modified_by.exists():
-            payments = (
-                Payment.objects.filter(payment_schedule__activity=self)
-                .filter(
-                    Q(
-                        date__lt=F(
-                            "payment_schedule__activity__modified_by__start_date"
-                        )
-                    )
-                    | Q(
-                        date__gt=F(
-                            "payment_schedule__activity__modified_by__end_date"
-                        )
-                    )
-                )
-                .exclude(
-                    payment_schedule__payment_type=PaymentSchedule.ONE_TIME_PAYMENT
-                )
-            )
+            payments = Payment.objects.filter(
+                payment_schedule__activity=self
+            ).expected()
         else:
             payments = Payment.objects.filter(payment_schedule__activity=self)
         return payments.amount_sum()
