@@ -36,7 +36,7 @@
 
       data: function() {
           return {
-            item: '',
+            item: null,
             digitsCheck: false
           }
       },
