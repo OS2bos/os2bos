@@ -12,6 +12,7 @@ import uuid
 from dateutil.relativedelta import relativedelta
 from dateutil import rrule
 
+from django import forms
 from django.db import models, transaction
 from django.db.models import Q, F
 from django.contrib.postgres import fields
@@ -797,17 +798,18 @@ class Appropriation(AuditModelMixin, models.Model):
             for a in self.activities.exclude(status=STATUS_GRANTED):
                 # If a modifies another and is valid, merge -
                 # else just set status = GRANTED.
-                if a.modifies:
-                    if not a.validate_expected():
-                        raise RuntimeError(
-                            _(
-                                "Den justerede ydelse har ikke"
-                                " det korrekte datospænd"
-                            )
-                        )
+                if a.modifies and a.validate_expected():
                     # "Merge" by ending current activity the day
-                    # before the new start_date
-                    a.modifies.end_date = a.start_date - timedelta(days=1)
+                    # before the new start_date or on the same day
+                    # if it is a one_time_payment
+                    if (
+                        a.modifies.payment_plan.payment_type
+                        == PaymentSchedule.ONE_TIME_PAYMENT
+                    ):
+                        a.modifies.payment_plan.payments.all().delete()
+                        a.modifies.end_date = a.start_date
+                    else:
+                        a.modifies.end_date = a.start_date - timedelta(days=1)
                     a.status = STATUS_GRANTED
                     a.modifies.save()
                     a.save()
@@ -992,26 +994,56 @@ class Activity(AuditModelMixin, models.Model):
     def validate_expected(self):
         today = date.today()
         if not self.modifies:
-            return False
-        if self.payment_plan.payment_type == PaymentSchedule.ONE_TIME_PAYMENT:
-            if today < self.modifies.start_date <= self.start_date:
-                return True
-            else:
-                return False
+            raise forms.ValidationError(
+                _("den forventede justering har ingen aktivitet at justere")
+            )
+        is_one_time_payment = (
+            self.payment_plan.payment_type == PaymentSchedule.ONE_TIME_PAYMENT
+        )
+        # the expected with modifies activity should have a start_date
+        # in the span of next payment date to the modified activitys
+        # end_date
+        if is_one_time_payment:
+            next_payment_date = today + timedelta(days=1)
         elif not self.modifies.ongoing:
-            next_payment = get_next_interval(
+            next_payment_date = get_next_interval(
                 self.modifies.start_date, self.payment_plan.payment_frequency
             )
         else:
             next_payment = self.modifies.payment_plan.next_payment
             if not next_payment:
-                return False
-            next_payment = next_payment.date
+                raise forms.ValidationError(
+                    _(
+                        "den bevilgede aktivitet skal have en fremtidig"
+                        " betaling for at man kan lave en"
+                        " forventet justering"
+                    )
+                )
+            next_payment_date = next_payment.date
 
-        if not (
-            today < next_payment <= self.start_date <= self.modifies.end_date
+        if is_one_time_payment:
+            if not today < next_payment_date <= self.start_date:
+                raise forms.ValidationError(
+                    _(
+                        f"den justerede aktivitets startdato skal være i"
+                        f" fremtiden fra næste betalingsdato:"
+                        f" {next_payment_date}"
+                    )
+                )
+        elif not (
+            today
+            < next_payment_date
+            <= self.start_date
+            <= self.modifies.end_date
         ):
-            return False
+            raise forms.ValidationError(
+                _(
+                    f"den justerede aktivitets startdato skal være i"
+                    f" fremtiden i spændet fra næste betalingsdato:"
+                    f" {next_payment_date} til"
+                    f" ydelsens slutdato: {self.modifies.end_date}"
+                )
+            )
         return True
 
     @property
@@ -1052,18 +1084,22 @@ class Activity(AuditModelMixin, models.Model):
     @property
     def total_cost_this_year(self):
         if self.status == STATUS_GRANTED and self.modified_by.exists():
-            payments = Payment.objects.filter(
-                payment_schedule__activity=self
-            ).filter(
-                Q(
-                    date__lt=F(
-                        "payment_schedule__activity__modified_by__start_date"
+            payments = (
+                Payment.objects.filter(payment_schedule__activity=self)
+                .filter(
+                    Q(
+                        date__lt=F(
+                            "payment_schedule__activity__modified_by__start_date"
+                        )
+                    )
+                    | Q(
+                        date__gt=F(
+                            "payment_schedule__activity__modified_by__end_date"
+                        )
                     )
                 )
-                | Q(
-                    date__gt=F(
-                        "payment_schedule__activity__modified_by__end_date"
-                    )
+                .exclude(
+                    payment_schedule__payment_type=PaymentSchedule.ONE_TIME_PAYMENT
                 )
             )
         else:
@@ -1073,18 +1109,22 @@ class Activity(AuditModelMixin, models.Model):
     @property
     def total_cost(self):
         if self.status == STATUS_GRANTED and self.modified_by.exists():
-            payments = Payment.objects.filter(
-                payment_schedule__activity=self
-            ).filter(
-                Q(
-                    date__lt=F(
-                        "payment_schedule__activity__modified_by__start_date"
+            payments = (
+                Payment.objects.filter(payment_schedule__activity=self)
+                .filter(
+                    Q(
+                        date__lt=F(
+                            "payment_schedule__activity__modified_by__start_date"
+                        )
+                    )
+                    | Q(
+                        date__gt=F(
+                            "payment_schedule__activity__modified_by__end_date"
+                        )
                     )
                 )
-                | Q(
-                    date__gt=F(
-                        "payment_schedule__activity__modified_by__end_date"
-                    )
+                .exclude(
+                    payment_schedule__payment_type=PaymentSchedule.ONE_TIME_PAYMENT
                 )
             )
         else:

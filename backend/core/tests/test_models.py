@@ -6,15 +6,16 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-from django.db import IntegrityError
-from django.test import TestCase
-from django.utils import timezone
-from django.core import mail
 from decimal import Decimal
 from datetime import date, timedelta
 from unittest import mock
 
+from django import forms
 from django.contrib.auth import get_user_model
+from django.db import IntegrityError
+from django.test import TestCase
+from django.utils import timezone
+from django.core import mail
 from parameterized import parameterized
 
 from core.tests.testing_utils import (
@@ -358,6 +359,70 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         today = now.date()
         self.assertEqual(appropriation.appropriation_date, today)
 
+    def test_appropriation_grant_on_already_granted_one_time(self):
+        approval_level = ApprovalLevel.objects.create(name="egenkompetence")
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED
+        )
+        now = timezone.now().date()
+        start_date = now + timedelta(days=6)
+        end_date = start_date
+        # create an already granted activity.
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+        )
+        modifies_payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("600.0"),
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+        )
+        modified_start_date = start_date
+        modified_end_date = end_date
+        # let the granted activity be modified by another expected activity.
+        modifies_activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            start_date=modified_start_date,
+            status=STATUS_EXPECTED,
+            end_date=modified_end_date,
+            modifies=activity,
+            payment_plan=modifies_payment_schedule,
+        )
+
+        appropriation.grant(
+            approval_level.id, "note til bevillingsgodkendelse"
+        )
+        activity.refresh_from_db()
+        modifies_activity.refresh_from_db()
+        self.assertEqual(activity.end_date, modified_end_date)
+        # expected status should be granted with the
+        # start_date of the new activity.
+        self.assertEqual(modifies_activity.status, STATUS_GRANTED)
+        self.assertEqual(modifies_activity.start_date, modified_start_date)
+        # the payments of the old activity should be deleted for
+        # a one time payment.
+        self.assertEqual(activity.payment_plan.payments.count(), 0)
+        self.assertEqual(modifies_activity.payment_plan.payments.count(), 1)
+
+        # assert payments are generated correctly.
+        self.assertEqual(
+            modifies_activity.payment_plan.payments.first().amount,
+            Decimal("600.0"),
+        )
+
     def test_appropriation_grant_on_already_granted_daily(self):
         approval_level = ApprovalLevel.objects.create(name="egenkompetence")
         payment_schedule = create_payment_schedule(
@@ -559,7 +624,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             payment_plan=modifies_payment_schedule,
         )
 
-        with self.assertRaises(RuntimeError):
+        with self.assertRaises(forms.ValidationError):
             appropriation.grant(
                 approval_level.id, "note til bevillingsgodkendelse"
             )
@@ -1201,7 +1266,8 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             activity_type=MAIN_ACTIVITY,
             details=main_activity_details,
         )
-        self.assertFalse(expected_activity.validate_expected())
+        with self.assertRaises(forms.ValidationError):
+            expected_activity.validate_expected()
 
     def test_validate_expected_false_same_start_date(self):
         case = create_case(
@@ -1250,7 +1316,8 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             modifies=main_activity,
             details=main_activity_details,
         )
-        self.assertFalse(expected_activity.validate_expected())
+        with self.assertRaises(forms.ValidationError):
+            expected_activity.validate_expected()
 
     def test_validate_expected_false_in_the_past_no_next_payment(self):
         case = create_case(
@@ -1299,7 +1366,8 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             modifies=main_activity,
             details=main_activity_details,
         )
-        self.assertFalse(expected_activity.validate_expected())
+        with self.assertRaises(forms.ValidationError):
+            expected_activity.validate_expected()
 
     def test_validate_expected_true_ongoing_with_next_payment(self):
         case = create_case(

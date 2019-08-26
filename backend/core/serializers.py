@@ -8,7 +8,9 @@
 
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
-from datetime import date
+from django import forms
+
+from datetime import date, timedelta
 from rest_framework import serializers
 
 from drf_writable_nested import WritableNestedModelSerializer
@@ -144,64 +146,32 @@ class ActivitySerializer(WritableNestedModelSerializer):
             and data["start_date"] > data["end_date"]
         ):
             raise serializers.ValidationError(
-                _("startdato skal være inden eller det samme som slutdato")
+                _("startdato skal være før eller identisk med slutdato")
             )
 
         # one time payments should have the same start and end date.
-        if (
+        is_one_time_payment = (
             data["payment_plan"]["payment_type"]
             == PaymentSchedule.ONE_TIME_PAYMENT
-            and not "end_date" in data
-            or data["end_date"] != data["start_date"]
+        )
+        if is_one_time_payment and (
+            "end_date" not in data or data["end_date"] != data["start_date"]
         ):
             raise serializers.ValidationError(
                 _("startdato og slutdato skal være ens for engangsbetaling")
             )
 
         if "modifies" in data and data["modifies"]:
-            modifies = data["modifies"]
-            if (
-                data["payment_plan"]["payment_type"]
-                == PaymentSchedule.ONE_TIME_PAYMENT
-            ):
-                if today < modifies.start_date <= data["start_date"]:
-                    return data
-                else:
-                    raise serializers.ValidationError(
-                        _(
-                            "den bevilgede aktivitet skal have en fremtidig"
-                            " betaling for at man kan lave en"
-                            " forventet justering"
-                        )
-                    )
-            elif not modifies.ongoing:
-                next_payment = get_next_interval(
-                    data["modifies"].start_date,
-                    data["payment_plan"]["payment_frequency"],
-                )
-            else:
-                next_payment = modifies.payment_plan.next_payment
-                if not next_payment:
-                    raise serializers.ValidationError(
-                        _(
-                            "den bevilgede aktivitet skal have en fremtidig"
-                            " betaling for at man kan lave en"
-                            " forventet justering"
-                        )
-                    )
-                next_payment = next_payment.date
-
-            if not (
-                today < next_payment <= data["start_date"] <= modifies.end_date
-            ):
-                raise serializers.ValidationError(
-                    _(
-                        f"den justerede aktivitets startdato skal være i"
-                        f" fremtiden i spændet fra næste betalingsdato:"
-                        f" {next_payment} til"
-                        f" ydelsens slutdato: {modifies.end_date}"
-                    )
-                )
+            # run the validate_expected flow.
+            data_copy = data.copy()
+            data_copy["payment_plan"] = PaymentSchedule(
+                **data_copy.pop("payment_plan")
+            )
+            instance = Activity(**data_copy)
+            try:
+                instance.validate_expected()
+            except forms.ValidationError as e:
+                raise serializers.ValidationError(e.message)
         return data
 
     class Meta:

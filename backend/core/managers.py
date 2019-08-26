@@ -66,26 +66,39 @@ class PaymentQuerySet(models.QuerySet):
         STATUS_GRANTED with GRANTED modified_by
         STATUS_GRANTED with EXPECTED modified_by
          overruled with start_date, end_date both inclusive
+        ONE_TIME_PAYMENT with expected payment should simply be overruled.
         """
-        from core.models import STATUS_EXPECTED, STATUS_GRANTED
+        from core.models import (
+            STATUS_EXPECTED,
+            STATUS_GRANTED,
+            PaymentSchedule,
+        )
 
-        return self.filter(
-            Q(payment_schedule__activity__status=STATUS_GRANTED)
-            | Q(payment_schedule__activity__status=STATUS_EXPECTED)
-        ).exclude(
-            Q(
-                date__gte=F(
-                    "payment_schedule__activity__modified_by__start_date"
-                )
+        return (
+            self.filter(
+                Q(payment_schedule__activity__status=STATUS_GRANTED)
+                | Q(payment_schedule__activity__status=STATUS_EXPECTED)
             )
-            & Q(
-                date__lte=F(
-                    "payment_schedule__activity__modified_by__end_date"
+            .exclude(
+                Q(
+                    date__gte=F(
+                        "payment_schedule__activity__modified_by__start_date"
+                    )
                 )
-            ),
-            payment_schedule__activity__status=STATUS_GRANTED,
-            payment_schedule__activity__modified_by__isnull=False,
-            payment_schedule__activity__modified_by__status=STATUS_EXPECTED,
+                & Q(
+                    date__lte=F(
+                        "payment_schedule__activity__modified_by__end_date"
+                    )
+                ),
+                payment_schedule__activity__status=STATUS_GRANTED,
+                payment_schedule__activity__modified_by__isnull=False,
+                payment_schedule__activity__modified_by__status=STATUS_EXPECTED,
+            )
+            .exclude(
+                payment_schedule__payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+                payment_schedule__activity__modified_by__isnull=False,
+                payment_schedule__activity__modified_by__status=STATUS_EXPECTED,
+            )
         )
 
 

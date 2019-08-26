@@ -63,7 +63,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         serializer.is_valid()
         self.assertEqual(
             serializer.errors["non_field_errors"][0],
-            "startdato skal være før slutdato",
+            "startdato skal være før eller identisk med slutdato",
         )
 
     def test_validate_start_before_end(self):
@@ -74,6 +74,10 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(case=case)
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_frequency=PaymentSchedule.WEEKLY,
+        )
         # start_date < end_date
         data = {
             "start_date": "2018-01-01",
@@ -82,6 +86,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             "status": STATUS_EXPECTED,
             "activity_type": MAIN_ACTIVITY,
             "appropriation": appropriation.pk,
+            "payment_plan": PaymentScheduleSerializer(payment_schedule).data,
         }
         serializer = ActivitySerializer(data=data)
         serializer.is_valid()
@@ -95,6 +100,11 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(case=case)
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_frequency=PaymentSchedule.WEEKLY,
+        )
+
         # no end_date
         data = {
             "start_date": "2018-01-01",
@@ -102,6 +112,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             "status": STATUS_EXPECTED,
             "activity_type": MAIN_ACTIVITY,
             "appropriation": appropriation.pk,
+            "payment_plan": PaymentScheduleSerializer(payment_schedule).data,
         }
         serializer = ActivitySerializer(data=data)
         serializer.is_valid()
