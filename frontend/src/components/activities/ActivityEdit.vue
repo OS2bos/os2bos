@@ -168,7 +168,7 @@
                 let data = {
                     activity_type: this.act.activity_type,
                     start_date: this.act.start_date,
-                    end_date: this.act.end_date,
+                    end_date: this.act.end_date ? this.act.end_date : null,
                     details: this.act.details,
                     note: this.act.note,
                     payment_plan: {
