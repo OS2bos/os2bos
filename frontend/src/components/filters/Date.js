@@ -24,6 +24,24 @@ function json2jsDate(jsondatetime) {
     }
 }
 
+function json2jsEpoch(jsondatetime) {
+    if (jsondatetime) {
+        const dt = new Date(jsondatetime)
+        return dt.getTime()
+    } else {
+        return false
+    }
+}
+
+function epoch2DateStr(epoch) {
+    if (epoch) {
+        const dt = new Date(epoch)
+        return `${ dt.getFullYear() }-${ leadZero(dt.getMonth())}-${ leadZero(dt.getDate()) }`
+    } else {
+        return false
+    }
+}
+
 function leadZero(number) {
     if (number < 10) {
         return `0${ number }`
@@ -41,5 +59,7 @@ function strMonth(month_index) {
 
 export {
     json2js,
-    json2jsDate
+    json2jsDate,
+    json2jsEpoch,
+    epoch2DateStr
 }
