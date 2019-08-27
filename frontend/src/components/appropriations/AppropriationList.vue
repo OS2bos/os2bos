@@ -39,9 +39,9 @@
                     <td>{{ a.note }}</td>
                     <td>{{ displayDate(a.created) }}</td>
                     <td>{{ displayDate(a.modified) }}</td>
-                    <td style="text-align: right">{{ a.total_granted_this_year }} kr</td>
+                    <td style="text-align: right">{{ displayDigits(a.total_granted_this_year) }} kr</td>
                     <template v-if="a.total_expected_this_year > 0 && a.total_expected_this_year !== a.total_granted_this_year">
-                        <td class="expected" style="text-align: right">{{ a.total_expected_this_year }} kr</td>
+                        <td class="expected" style="text-align: right">{{ displayDigits(a.total_expected_this_year) }} kr</td>
                     </template>
                     <td v-else></td>
                     
@@ -53,9 +53,9 @@
                     <td style="border: none;"></td>
                     <td style="border: none;"></td>
                     <td style="text-align: right; border: none;">Samlet</td>
-                    <td style="text-align: right; border: none;"><strong>{{ total_granted }} kr</strong></td>
+                    <td style="text-align: right; border: none;"><strong>{{ displayDigits(total_granted) }} kr</strong></td>
                     <template v-if="has_expected">
-                        <td class="expected" style="text-align: right; border: none;">{{ total_expected }} kr</td>
+                        <td class="expected" style="text-align: right; border: none;">{{ displayDigits(total_expected) }} kr</td>
                     </template>
                     <td style="border: none;" v-else></td>
                 </tr>
@@ -70,6 +70,7 @@
 
     import axios from '../http/Http.js'
     import { json2js } from '../filters/Date.js'
+    import { cost2da } from '../filters/Numbers.js'
     import { sectionId2name, displayStatus } from '../filters/Labels.js'
 
     export default {
@@ -126,6 +127,9 @@
             },
             displayDate: function(dt) {
                 return json2js(dt)
+            },
+            displayDigits: function(num) {
+                return cost2da(num)
             },
             displaySection: function(id) {
                 return sectionId2name(id)

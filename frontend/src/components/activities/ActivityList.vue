@@ -36,7 +36,7 @@
                     <td>{{ a.payment_plan.recipient_id }} - {{ a.payment_plan.recipient_name }}</td>
                     <td>{{ displayDate(a.start_date) }}</td>
                     <td>{{ displayDate(a.end_date) }}</td>
-                    <td style="text-align: right;">{{ a.total_cost_this_year }} kr</td>
+                    <td style="text-align: right;">{{ displayDigits(a.total_cost_this_year) }} kr</td>
                 </tr>
                 <tr>
                     <td></td>
@@ -46,7 +46,7 @@
                     <td></td>
                     <td style="font-weight: bold;">Samlet bevilget</td>
                     <td style="text-align: right; font-weight: bold;">
-                        {{ appropriation.total_granted_this_year }} kr
+                        {{ displayDigits(appropriation.total_granted_this_year) }} kr
                     </td>
                 </tr>
                 <tr v-if="has_expected">
@@ -57,7 +57,7 @@
                     <td></td>
                     <td class="expected">Samlet forventet</td>
                     <td class="expected" style="text-align: right;">
-                        {{ appropriation.total_expected_this_year }} kr
+                        {{ displayDigits(appropriation.total_expected_this_year) }} kr
                     </td>
                 </tr>
             </tbody>
@@ -71,6 +71,7 @@
 
     import axios from '../http/Http.js'
     import { json2jsDate } from '../filters/Date.js'
+    import { cost2da } from '../filters/Numbers.js'
     import { activityId2name, displayStatus } from '../filters/Labels.js'
 
     export default {
@@ -104,6 +105,9 @@
             },
             displayDate: function(dt) {
                 return json2jsDate(dt)
+            },
+            displayDigits: function(num) {
+                return cost2da(num)
             },
             activityId2name: function(id) {
                 return activityId2name(id)
