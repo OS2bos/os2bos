@@ -12,7 +12,7 @@
         
         <label>Vælg år</label>
         <select v-model="current_year">
-            <option v-for="y in years" :value="y">{{ y }}</option>
+            <option v-for="y in years" :value="y" :key="y.id">{{ y }}</option>
         </select>
     
         <table>
@@ -26,16 +26,20 @@
             <tbody>
                 <tr v-for="p in payments_by_year" :key="p.id">
                     <td>{{ displayDate(p.date) }}</td>
-                    <td>{{ p.amount }} kr.</td>
+                    <td>{{ displayDigits(p.amount) }} kr.</td>
                     <td>
                         <span v-if="p.paid === true">Ja</span>
                         <span v-else>Nej</span>
                     </td>
                 </tr>
                 <tr>
-                    <th>I alt pr år</th>
-                    <th>{{ sum }} kr.</th>
                     <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>I alt pr år</th>
+                    <th>{{ displayDigits(sum) }} kr.</th>
                 </tr>
             </tbody>
         </table>
@@ -46,6 +50,7 @@
 <script>
 
     import { json2jsDate } from '../filters/Date.js'
+    import { cost2da } from '../filters/Numbers.js'
 
     export default {
 
@@ -82,6 +87,9 @@
         methods: {
             displayDate: function(dt) {
                 return json2jsDate(dt)
+            },
+            displayDigits: function(num) {
+                return cost2da(num)
             },
             createYearList: function() {
                 this.years.push(this.now.getFullYear() - 1)

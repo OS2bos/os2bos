@@ -75,7 +75,7 @@
                         {{ pay.payment_units }}
                     </dd>
                     <dt>Beløb</dt>
-                    <dd>{{ pay.payment_amount }} kr.</dd>
+                    <dd>{{ displayDigits(pay.payment_amount) }} kr.</dd>
                 </dl>
             </div>
             <div v-if="pay">
@@ -130,6 +130,7 @@
     import ActivityEdit from './ActivityEdit.vue'
     import PaymentSchedule from '../payment/PaymentSchedule.vue'
     import { json2jsDate } from '../filters/Date.js'
+    import { cost2da } from '../filters/Numbers.js'
     import { activityId2name, sectionId2name, displayStatus } from '../filters/Labels.js'
 
     export default {
@@ -189,6 +190,9 @@
             },
             displayDate: function(dt) {
                 return json2jsDate(dt)
+            },
+            displayDigits: function(num) {
+                return cost2da(num)
             },
             activityId2name: function(id) {
                 return activityId2name(id)
