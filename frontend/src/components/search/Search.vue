@@ -58,7 +58,6 @@
           this.$router.push(`/all-cases/${ query }`)
         },
         emptyQuery (query) {
-          query = query || ''
           if (query.length < 10) {
             this.$router.push(`/all-cases/`)
           }
