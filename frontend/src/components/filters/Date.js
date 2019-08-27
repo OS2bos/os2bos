@@ -24,6 +24,15 @@ function json2jsDate(jsondatetime) {
     }
 }
 
+function json2jsEpoch(jsondatetime) {
+    if (jsondatetime) {
+        const dt = new Date(jsondatetime)
+        return dt.getTime()
+    } else {
+        return false
+    }
+}
+
 function leadZero(number) {
     if (number < 10) {
         return `0${ number }`
@@ -41,5 +50,6 @@ function strMonth(month_index) {
 
 export {
     json2js,
-    json2jsDate
+    json2jsDate,
+    json2jsEpoch
 }

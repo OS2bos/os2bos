@@ -10,27 +10,19 @@
     <section :class="`activity-edit activity-${ mode } expected-${ act_status_expected }`">
         <header class="header" v-if="mode === 'create'">
             <h1>
-                <template v-if="act_status_expected">
-                    Tilføj forventet
-                </template>
-                <template v-else>
-                    Tilføj
-                </template>
-                <template v-if="has_main_act">
-                    følgeydelse
-                </template>
-                <template v-else>
-                    hovedydelse
-                </template>
+                <template v-if="act_status_expected">Tilføj forventet</template>
+                <template v-else>Tilføj</template>
+                <template v-if="!appr_main_acts">hovedydelse</template>
+                <template v-else>følgeydelse</template>
             </h1>
         </header>
         <header class="header" v-if="mode === 'edit'">
-            <h1>Redigér Aktivitet</h1>
+            <h1>Redigér Ydelse</h1>
         </header>
         <header class="header" v-if="mode === 'clone'">
             <h1>Opret forventet justering</h1>
             <p>
-                Du er ved at lave en forventet justering til aktiviteten:<br> 
+                Du er ved at lave en forventet justering til ydelsen:<br> 
                 <strong>{{ displayActName(act.details) }}</strong>
             </p>
         </header>
@@ -40,21 +32,32 @@
                 <div class="column">
                     <fieldset v-if="mode === 'create'">
                         <input type="checkbox" id="field-status-expected" v-model="act_status_expected">
-                        <label for="field-status-expected">Opret forventet aktivitet</label>
+                        <label for="field-status-expected">Opret forventet Ydelse</label>
                     </fieldset>
                     <fieldset>
-                        <label class="required" for="fieldSelectAct">Aktivitet</label>
+                        <label class="required" for="fieldSelectAct">Ydelse</label>
                         <list-picker :dom-id="'fieldSelectAct'" :disabled="disableAct" :selected-id="act.details" @selection="changeActivity" :list="act_details" required />
                         <error err-key="details" />
                     </fieldset>
                     <fieldset>
                         <label class="required" for="field-startdate">Startdato</label>
-                        <input type="date" id="field-startdate" v-model="act.start_date" :max="current_end_date" @change="setMinMaxDates()" required>
+                        <input 
+                            type="date" 
+                            id="field-startdate" 
+                            v-model="act.start_date" 
+                            :max="appr_main_acts.end_date"
+                            :min="appr_main_acts.start_date" 
+                            required>
                         <error err-key="start_date" />
                     </fieldset>
                     <fieldset>
                         <label for="field-enddate">Slutdato</label>
-                        <input type="date" id="field-enddate" v-model="act.end_date" :min="current_start_date" @change="setMinMaxDates()">
+                        <input 
+                            type="date" 
+                            id="field-enddate" 
+                            v-model="act.end_date" 
+                            :max="appr_main_acts.end_date"
+                            :min="appr_main_acts.start_date">
                     </fieldset>
                     <fieldset>
                         <label for="field-text">Supplerende information</label>
@@ -113,37 +116,12 @@
             appropriation: function() {
                 return this.$store.getters.getAppropriation
             },
-            disableAct: function () {
-                if (this.act_details < 1) {
-                    return true
-                }
+            appr_main_acts: function() {
+                return this.$store.getters.getAppropriationMainActs
             },
-            has_main_act: function() {
-                if (this.appropriation) {
-                    let act = false
-                    for (let a of this.appropriation.activities) {
-                        if (a.activity_type === 'MAIN_ACTIVITY') {
-                            act = a
-                        }
-                    }
-                    if (act) {
-                        this.act.activity_type = 'SUPPL_ACTIVITY'
-                        this.activityList()
-                        if (!this.act.start_date) {
-                            this.act.start_date = act.start_date
-                        }
-                        if (!this.act.end_date) {
-                            this.act.end_date = act.end_date
-                        }
-                        return true
-                    } else {
-                        this.act.activity_type = 'MAIN_ACTIVITY'
-                        this.activityList()
-                        return false
-                    }
-                    
-                } else {
-                    return null
+            disableAct: function () {
+                if (this.act_details && this.act_details.length < 1) {
+                    return true
                 }
             }
         },
@@ -151,14 +129,6 @@
             changeActivity: function(act) {
                 this.act.details = act
                 this.$store.commit('setActDetail', act)
-            },
-            setMinMaxDates: function() {
-                if (this.act.start_date) {
-                    this.current_start_date = this.act.start_date
-                }
-                if (this.act.end_date) {
-                    this.current_end_date = this.act.end_date
-                }
             },
             displayActName: function(id) {
                 return activityId2name(id)
@@ -183,7 +153,6 @@
                         payment_method_details: parseInt(this.pay.payment_method_details)
                     }
                 }
-
                 if (this.mode === 'create') {
                     data.appropriation = this.$route.params.apprid
                     data.status = this.act_status_expected ? 'EXPECTED' : 'DRAFT'
@@ -227,7 +196,7 @@
             },
             activityList: function() {
                 let actList
-                if (this.act.activity_type === 'MAIN_ACTIVITY') {
+                if (!this.appr_main_acts) {
                     actList = `main_activity_for=${ this.appropriation.section }`
                 } else {
                     actList = `supplementary_activity_for=${ this.appropriation.section }`
@@ -240,10 +209,10 @@
             }
         },
         created: function() {
+            this.activityList()
             if (this.activityObj) {
                 this.act = this.activityObj
                 this.pay = this.act.payment_plan
-                this.activityList()
             }
         }
     }
