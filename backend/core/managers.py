@@ -66,7 +66,7 @@ class PaymentQuerySet(models.QuerySet):
         STATUS_GRANTED with GRANTED modified_by
         STATUS_GRANTED with EXPECTED modified_by
          overruled with start_date, end_date both inclusive
-        ONE_TIME_PAYMENT with expected payment should simply be overruled.
+        ONE_TIME_PAYMENT with EXPECTED modified_by should simply be overruled.
         """
         from core.models import (
             STATUS_EXPECTED,
