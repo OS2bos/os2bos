@@ -12,17 +12,12 @@
         <h1 v-if="create_mode">Opret familierelation</h1>
         <h1 v-else>Redigér familierelation</h1>
         <form @submit.prevent="saveChanges()">
-            <fieldset>
-                <label class="required" for="field-cpr">Cpr-nummer</label>
-                <input id="field-cpr" type="text" v-model="fam.cpr_number" required @input="lookupCPR(fam.cpr_number)">
-            </fieldset>
-            <fieldset>
-                <label class="required" for="field-name">Navn</label>
-                <input id="field-name" type="text" v-model="fam.name" required>
-            </fieldset>
+            <error />
+            <cpr-lookup :cpr.sync="fam.cpr_number" :name.sync="fam.name" />
             <fieldset>
                 <label class="required" for="field-relation">Relation</label>
                 <input id="field-relation" type="text" v-model="fam.relation_type" required>
+                <error err-key="relation_type" />
             </fieldset>
             <fieldset>
                 <label for="field-sbsysid">Relateret SBSYS sag</label>
@@ -40,10 +35,16 @@
 <script>
 
     import axios from '../http/Http.js'
-import router from '../../router.js';
+    import router from '../../router.js'
+    import CprLookup from '../forms/CprLookUp.vue'
+    import Error from '../forms/Error.vue'
 
     export default {
 
+        components: {
+            CprLookup,
+            Error
+        },
         data: function() {
             return {
                 create_mode: false,
@@ -65,18 +66,6 @@ import router from '../../router.js';
                     console.log(err)
                 })
             },
-            lookupCPR: function(cpr_no) {
-                const cpr = cpr_no.replace('-','')
-                if (cpr.length > 9) {
-                    axios.get(`/related_persons/fetch_from_serviceplatformen/?cpr=${ cpr }`)
-                    .then(res => {
-                        this.fam.name = res.data.relations[0].name
-                        this.fam.relation_type = res.data.relations[0].relation_type
-                        this.$forceUpdate()
-                    })
-                    .catch(err => console.log(err))
-                }  
-            },
             saveChanges: function() {
                 if (!this.create_mode) {
                     axios.patch(`/related_persons/${ this.fam.id }/`, {
@@ -88,7 +77,7 @@ import router from '../../router.js';
                     .then(res => {
                         this.$router.push(`/case/${ this.casid }/`)
                     })
-                    .catch(err => console.log(err))
+                    .catch(err => this.$store.dispatch('parseErrorOutput', err))
                 } else {
                     axios.post(`/related_persons/`, {
                         relation_type: this.fam.relation_type,
@@ -100,7 +89,7 @@ import router from '../../router.js';
                     .then(res => {
                         this.$router.push(`/case/${ this.casid }/`)
                     })
-                    .catch(err => console.log(err))
+                    .catch(err => this.$store.dispatch('parseErrorOutput', err))
                 }
             },
             cancel: function() {

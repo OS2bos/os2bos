@@ -26,6 +26,7 @@ ax.interceptors.request.use(
 
 ax.interceptors.response.use(
     function (res) {
+        store.commit('clearErrors')
         spinner.spinOff()
         return res
     },

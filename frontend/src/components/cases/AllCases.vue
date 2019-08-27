@@ -78,7 +78,7 @@
         data: function() {
             return {
                 cas: null,
-                items: null,
+                items: [],
                 status_expired: false
             }
         },
@@ -94,9 +94,10 @@
         },
         methods: {
             update: function() {
-                this.fetchCases(this.$route.params.id)
                 if (this.$route.params.query) {
                     this.displayItems(this.$route.params.query)
+                } else {
+                    this.fetchCases(this.$route.params.id)
                 }
             },
             fetchCases: function(id) {

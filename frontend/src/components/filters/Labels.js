@@ -50,7 +50,7 @@ function sectionId2name(id) {
         let sec = section_list.find(function(element) {
             return element.id === parseInt(id);
         })
-        return `${ sec.paragraph } ${ sec.kle_number } ${ sec.text }`
+        return `${ sec.paragraph } ${ sec.text }`
     } else {
         return 'Ikke tilgængelig'
     }

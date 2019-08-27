@@ -23,12 +23,14 @@
                 <label for="pay-type-4">Pr. døgn</label>
                 <input type="radio" value="PER_KM_PAYMENT" name="pay-type" id="pay-type-5" v-model="entry.payment_type" required>
                 <label for="pay-type-5">Pr. kilometer</label>
+                <error err-key="payment_type" />
             </fieldset>
             <div>
                 <div class="payment-amount-fields">
                     <fieldset v-if="entry.payment_type === 'ONE_TIME_PAYMENT' || entry.payment_type === 'RUNNING_PAYMENT'">
                         <label class="required">Beløb</label>
                         <input v-model="entry.payment_amount" type="number" step="0.01" required> kr
+                        <error err-key="payment_amount" />
                     </fieldset>
                     <fieldset v-if="entry.payment_type && entry.payment_type !== 'ONE_TIME_PAYMENT'">
                         <label class="required" for="pay-freq">Hver</label>
@@ -44,11 +46,14 @@
                             <label class="required" v-if="entry.payment_type === 'PER_DAY_PAYMENT'">betales antal døgn</label>
                             <label class="required" v-if="entry.payment_type === 'PER_KM_PAYMENT'">betales antal kilometer</label>
                             <input v-model="entry.payment_units" type="number" required>
+                            <error err-key="payment_units" />
                         </div>
                         <div>
                             <label class="required">til takst</label>
-                            <input v-model="entry.payment_amount" type="number" step="0.01" required> kr<br>
+                            <input v-model="entry.payment_amount" type="number" step="0.01" required> kr
+                            <error err-key="payment_amount" />
                             <a href="https://www.kl.dk/media/16653/taksttabel_-2019.pdf" target="_blank">Find takster her</a>
+                            
                         </div>
                     </fieldset>
                 </div>
@@ -62,11 +67,13 @@
 <script>
 
     import PaymentPlan from './PaymentPlan.vue'
+    import Error from '../forms/Error.vue'
 
     export default {
 
         components: {
-            PaymentPlan
+            PaymentPlan,
+            Error
         },
         props: [
             'paymentObj'

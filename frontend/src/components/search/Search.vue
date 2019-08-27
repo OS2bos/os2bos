@@ -16,7 +16,7 @@
           v-model="item"
           @update-items="updateItems"
           :min-len="10"
-          
+          @change="emptyQuery"
         />
         <span class="danger" v-if="digitsCheck">CPR-nr skal være 10 tegn</span>
     </div>
@@ -56,6 +56,11 @@
               this.digitsCheck = true
           }
           this.$router.push(`/all-cases/${ query }`)
+        },
+        emptyQuery (query) {
+          if (query.length < 10) {
+            this.$router.push(`/all-cases/`)
+          }
         }
       }
 

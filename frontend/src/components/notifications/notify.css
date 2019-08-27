@@ -14,7 +14,7 @@
     width: 100%;
     height: auto;
     box-sizing: border-box;
-    z-index: 1000;
+    z-index: 9999;
 }
 
 .notification {

@@ -18,6 +18,8 @@
 
 <script>
 
+    import { cost2da } from '../filters/Numbers.js'
+
     export default {
 
         props: [
@@ -38,28 +40,28 @@
 
                 switch(this.type) {
                     case 'ONE_TIME_PAYMENT':
-                        str += `${ this.amount } kr én gang`
+                        str += `${ cost2da(this.amount) } kr én gang`
                         break
                     case 'RUNNING_PAYMENT':
-                        str += `${ this.amount } kr hver ${ this.freq_name }`
+                        str += `${ cost2da(this.amount) } kr hver ${ this.freq_name }`
                         break
                     case 'PER_HOUR_PAYMENT':
                         if (this.units) {
-                            str += `${ this.units } timer á ${ this.amount } kr hver ${ this.freq_name }`
+                            str += `${ this.units } timer á ${ cost2da(this.amount) } kr hver ${ this.freq_name }`
                         } else {
                             str = '-'
                         }
                         break
                     case 'PER_DAY_PAYMENT':
                         if (this.units) {
-                            str += `${ this.units } døgn á ${ this.amount } kr hver ${ this.freq_name }`
+                            str += `${ this.units } døgn á ${ cost2da(this.amount) } kr hver ${ this.freq_name }`
                         } else {
                             str = '-'
                         }
                         break
                     case 'PER_KM_PAYMENT':
                         if (this.units) {
-                            str += `${ this.units } kilometer á ${ this.amount } kr hver ${ this.freq_name }`
+                            str += `${ this.units } kilometer á ${ cost2da(this.amount) } kr hver ${ this.freq_name }`
                         } else {
                             str = '-'
                         }
@@ -82,7 +84,7 @@
                     default:
                         num = this.amount * this.freq_factor * this.units
                 }
-                return num
+                return cost2da(num)
             },
             freq_name: function() {
                 switch(this.frequency) {

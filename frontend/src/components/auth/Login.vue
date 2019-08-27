@@ -10,11 +10,14 @@
 
     <form class="loginform" @submit.prevent="submitForm()">
         <h1>Log ind</h1>
+        <error />
         <fieldset>
             <label for="username">Brugernavn</label>
-            <input type="text" id="username" placeholder="Brugernavn" v-model="username" required autofocus>
+            <input type="text" id="username" placeholder="Brugernavn" v-model="username" autofocus>
+            <error err-key="username" />
             <label for="password">Kodeord</label>
-            <input type="password" id="password" placeholder="Kodeord" v-model="password" required>
+            <input type="password" id="password" placeholder="Kodeord" v-model="password">
+            <error err-key="password" />
         </fieldset>
         <fieldset>
             <input type="submit" value="Log ind">
@@ -26,9 +29,13 @@
 <script>
 
     import axios from '@/components/http/Http.js'
+    import Error from '@/components/forms/Error.vue'
     
     export default {
 
+        components: {
+            Error
+        },
         data: function() {
             return {
                 username: null,

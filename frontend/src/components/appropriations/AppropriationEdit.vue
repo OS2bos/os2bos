@@ -12,11 +12,12 @@
         <h1 v-if="create_mode">Opret bevillingskrivelse</h1>
         <h1 v-else>Redigér bevillingskrivelse</h1>
         <form @submit.prevent="saveChanges()">
+            <error />
             <fieldset>
                 <label class="required" for="field-sbsysid">Foranstaltningssag (SBSYS-sag)</label>
-                <input id="field-sbsysid" type="text" v-model="appr.sbsys_id" required @input="checkKLE(appr.sbsys_id)">
-                <span class="danger" v-if="sbsysCheck">Sagsnummeret svarer ikke til en af de paragraffer, der kan vælges</span>
-                <error v-if="errors && errors.sbsys_id" :msgs="errors.sbsys_id" />
+                <input id="field-sbsysid" type="text" v-model="appr.sbsys_id" @input="checkKLE(appr.sbsys_id)" required>
+                <p class="danger" v-if="sbsysCheck">Sagsnummeret svarer ikke til en af de paragraffer, der kan vælges.</p>
+                <error err-key="sbsys_id" />
             </fieldset>
             <fieldset>
                 <label class="required" for="field-lawref">Bevilling efter §</label>
@@ -60,8 +61,7 @@
                 kle_regex: /\d{2}\.\d{2}\.\d{2}/,
                 sections: null,
                 sbsysCheck: false,
-                disabled: false,
-                errors: null
+                disabled: false
             }
         },
         computed: {
@@ -118,7 +118,7 @@
                     .then(res => {
                         this.$emit('close')
                     })
-                    .catch(err => { this.handleError(err) })
+                    .catch(err => this.$store.dispatch('parseErrorOutput', err))
                 } else {
                     const cas_id = this.$route.params.caseid
                     axios.post(`/appropriations/`, {
@@ -131,11 +131,8 @@
                     .then(res => {
                         this.$router.push(`/appropriation/${ res.data.id }/`)
                     })
-                    .catch(err => { this.handleError(err) })
+                    .catch(err => this.$store.dispatch('parseErrorOutput', err))
                 }
-            },
-            handleError: function(error) {
-                this.errors = Error.methods.handleError(error)
             },
             cancel: function() {
                 if (!this.create_mode) {
