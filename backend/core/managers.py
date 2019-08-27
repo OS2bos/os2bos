@@ -90,14 +90,23 @@ class PaymentQuerySet(models.QuerySet):
                         "payment_schedule__activity__modified_by__end_date"
                     )
                 ),
-                payment_schedule__activity__status=STATUS_GRANTED,
-                payment_schedule__activity__modified_by__isnull=False,
-                payment_schedule__activity__modified_by__status=STATUS_EXPECTED,
+                **{
+                    "payment_schedule__activity" "__status": STATUS_GRANTED,
+                    "payment_schedule__activity"
+                    "__modified_by__isnull": False,
+                    "payment_schedule__activity"
+                    "__modified_by__status": STATUS_EXPECTED,
+                }
             )
             .exclude(
-                payment_schedule__payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
-                payment_schedule__activity__modified_by__isnull=False,
-                payment_schedule__activity__modified_by__status=STATUS_EXPECTED,
+                **{
+                    "payment_schedule__"
+                    "payment_type": PaymentSchedule.ONE_TIME_PAYMENT,
+                    "payment_schedule__activity"
+                    "__modified_by__isnull": False,
+                    "payment_schedule__activity"
+                    "__modified_by__status": STATUS_EXPECTED,
+                }
             )
         )
 

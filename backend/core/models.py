@@ -800,8 +800,9 @@ class Appropriation(AuditModelMixin, models.Model):
                 # else just set status = GRANTED.
                 if a.modifies and a.validate_expected():
                     # "Merge" by ending current activity the day
-                    # before the new start_date or on the same day
-                    # if it is a one_time_payment
+                    # before the new start_date.
+                    # In case of a one_time_payment we end the on the same day
+                    # and delete all payments for the old one.
                     if (
                         a.modifies.payment_plan.payment_type
                         == PaymentSchedule.ONE_TIME_PAYMENT
