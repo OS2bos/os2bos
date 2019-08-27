@@ -33,6 +33,15 @@ function json2jsEpoch(jsondatetime) {
     }
 }
 
+function epoch2DateStr(epoch) {
+    if (epoch) {
+        const dt = new Date(epoch)
+        return `${ dt.getFullYear() }-${ leadZero(dt.getMonth())}-${ leadZero(dt.getDate()) }`
+    } else {
+        return false
+    }
+}
+
 function leadZero(number) {
     if (number < 10) {
         return `0${ number }`
@@ -51,5 +60,6 @@ function strMonth(month_index) {
 export {
     json2js,
     json2jsDate,
-    json2jsEpoch
+    json2jsEpoch,
+    epoch2DateStr
 }

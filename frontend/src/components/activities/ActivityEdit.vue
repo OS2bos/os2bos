@@ -10,8 +10,8 @@
     <section :class="`activity-edit activity-${ mode } expected-${ act_status_expected }`">
         <header class="header" v-if="mode === 'create'">
             <h1>
-                <template v-if="act_status_expected">Tilføj forventet</template>
-                <template v-else>Tilføj</template>
+                <template v-if="act_status_expected">Tilføj forventet </template>
+                <template v-else>Tilføj </template>
                 <template v-if="!appr_main_acts">hovedydelse</template>
                 <template v-else>følgeydelse</template>
             </h1>
@@ -40,24 +40,34 @@
                         <error err-key="details" />
                     </fieldset>
                     <fieldset>
-                        <label class="required" for="field-startdate">Startdato</label>
+                        <label class="required" for="field-startdate">
+                            Startdato
+                            <span v-if="startDateSet">
+                                - tidligst {{ startDateSet }}
+                            </span>
+                        </label>
                         <input 
                             type="date" 
                             id="field-startdate" 
                             v-model="act.start_date" 
-                            :max="appr_main_acts.end_date"
-                            :min="appr_main_acts.start_date" 
+                            :max="startDateSet"
+                            :min="endDateSet" 
                             required>
                         <error err-key="start_date" />
                     </fieldset>
                     <fieldset>
-                        <label for="field-enddate">Slutdato</label>
+                        <label for="field-enddate">
+                            Slutdato
+                            <span v-if="endDateSet">
+                                - senest {{ endDateSet }}
+                            </span>
+                        </label>
                         <input 
                             type="date" 
                             id="field-enddate" 
                             v-model="act.end_date" 
-                            :max="appr_main_acts.end_date"
-                            :min="appr_main_acts.start_date">
+                            :max="startDateSet"
+                            :min="endDateSet">
                     </fieldset>
                     <fieldset>
                         <label for="field-text">Supplerende information</label>
@@ -87,7 +97,9 @@
     import PaymentReceiverEdit from '../payment/PaymentReceiverEdit.vue'
     import PaymentEdit from '../payment/PaymentEdit.vue'
     import { activityId2name } from '../filters/Labels.js'
+    import { epoch2DateStr } from '../filters/Date.js'
     import Error from '../forms/Error.vue'
+    
 
     export default {
 
@@ -123,9 +135,41 @@
                 if (this.act_details && this.act_details.length < 1) {
                     return true
                 }
+            },
+            startDateSet: function() {
+                if (this.act.activity_type !== 'MAIN_ACTIVITY') {
+                    return epoch2DateStr(appr_main_acts.start_date)
+                } else {
+                    return false
+                }
+            },
+            endDateSet: function() {
+                if (this.act.activity_type !== 'MAIN_ACTIVITY') {
+                    return epoch2DateStr(appr_main_acts.end_date)
+                } else {
+                    return false
+                }
+            }
+        },
+        watch: {
+            activityObj: function() {
+                this.update()
             }
         },
         methods: {
+            update: function() {
+                if (this.activityObj) {
+                    this.act = this.activityObj
+                    this.pay = this.act.payment_plan
+                } else {
+                    if (!this.appr_main_acts) {
+                        this.act.activity_type = 'MAIN_ACTIVITY'
+                    } else {
+                        this.act.activity_type = 'SUPPL_ACTIVITY'
+                    }
+                }
+                this.activityList()
+            },
             changeActivity: function(act) {
                 this.act.details = act
                 this.$store.commit('setActDetail', act)
@@ -196,7 +240,7 @@
             },
             activityList: function() {
                 let actList
-                if (!this.appr_main_acts) {
+                if (this.act.activity_type === 'MAIN_ACTIVITY') {
                     actList = `main_activity_for=${ this.appropriation.section }`
                 } else {
                     actList = `supplementary_activity_for=${ this.appropriation.section }`
@@ -209,11 +253,7 @@
             }
         },
         created: function() {
-            this.activityList()
-            if (this.activityObj) {
-                this.act = this.activityObj
-                this.pay = this.act.payment_plan
-            }
+            this.update()
         }
     }
     
