@@ -36,30 +36,19 @@ const actions = {
             function checkForArray(err_obj) {
                 if (Array.isArray(err_obj)) {
                     return true
-                } else {
-                    for (let e in err_obj) {
-                        checkForArray(err_obj[e])
-                    }
                 }
             }
 
             function checkForString(err_obj) {
                 if (typeof err_obj === 'string') {
                     return true
-                } else {
-                    for (let e in err_obj) {
-                        checkForArray(err_obj[e])
-                    }
                 }
             }
 
             function cycleErrKeys(err_obj) {
-                
-                
                 for (let err in err_obj) {
                     if (checkForString(err_obj[err])) {
                         notify(err_obj[err], 'error')
-                        return true
                     } else if (checkForArray(err_obj[err])) {
                         commit('addError', {
                             err_key: err,
@@ -68,7 +57,6 @@ const actions = {
                         for (let e in err_obj[err]) {
                             notify(err_obj[err][e], 'error')
                         }
-                        return true
                     } else {
                         cycleErrKeys(err_obj[err])
                     }
