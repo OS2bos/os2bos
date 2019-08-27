@@ -1418,6 +1418,56 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         self.assertTrue(expected_activity.validate_expected())
 
+    def test_validate_expected_false_one_time_with_invalid_start_date(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED, section=section
+        )
+        main_activity_details = ActivityDetails.objects.create(
+            name="Betaling til andre kommuner/region for specialtandpleje",
+            activity_id="010001",
+            max_tolerance_in_dkk=5000,
+            max_tolerance_in_percent=10,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+        )
+        start_date = date.today()
+        end_date = date.today()
+        main_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+            details=main_activity_details,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("700.0"),
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+        )
+        start_date = date.today()
+        end_date = date.today()
+        expected_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=STATUS_EXPECTED,
+            activity_type=MAIN_ACTIVITY,
+            modifies=main_activity,
+            details=main_activity_details,
+        )
+        with self.assertRaises(forms.ValidationError):
+            expected_activity.validate_expected()
+
 
 class AccountTestCase(TestCase):
     def test_account_str(self):
