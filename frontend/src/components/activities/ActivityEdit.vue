@@ -50,8 +50,8 @@
                             type="date" 
                             id="field-startdate" 
                             v-model="act.start_date" 
-                            :max="startDateSet"
-                            :min="endDateSet" 
+                            :max="endDateSet"
+                            :min="startDateSet" 
                             required>
                         <error err-key="start_date" />
                     </fieldset>
@@ -66,8 +66,8 @@
                             type="date" 
                             id="field-enddate" 
                             v-model="act.end_date" 
-                            :max="startDateSet"
-                            :min="endDateSet">
+                            :max="endDateSet"
+                            :min="startDateSet">
                     </fieldset>
                     <fieldset>
                         <label for="field-text">Supplerende information</label>
@@ -138,14 +138,14 @@
             },
             startDateSet: function() {
                 if (this.act.activity_type !== 'MAIN_ACTIVITY') {
-                    return epoch2DateStr(appr_main_acts.start_date)
+                    return epoch2DateStr(this.appr_main_acts.start_date)
                 } else {
                     return false
                 }
             },
             endDateSet: function() {
                 if (this.act.activity_type !== 'MAIN_ACTIVITY') {
-                    return epoch2DateStr(appr_main_acts.end_date)
+                    return epoch2DateStr(this.appr_main_acts.end_date)
                 } else {
                     return false
                 }
