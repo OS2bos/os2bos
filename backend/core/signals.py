@@ -47,7 +47,12 @@ def generate_payments_on_pre_save(sender, instance, **kwargs):
         return
 
     vat_factor = instance.vat_factor
-    if instance.payment_plan.payments.exists():
+
+    if created:
+        instance.payment_plan.generate_payments(
+            instance.start_date, instance.end_date, vat_factor
+        )
+    elif instance.payment_plan.payments.exists():
         # If status is either STATUS_DRAFT or STATUS_EXPECTED or
         # the activity was just granted we delete and
         # regenerate payments.
@@ -63,7 +68,3 @@ def generate_payments_on_pre_save(sender, instance, **kwargs):
             instance.payment_plan.synchronize_payments(
                 instance.start_date, instance.end_date, vat_factor
             )
-    elif created:
-        instance.payment_plan.generate_payments(
-            instance.start_date, instance.end_date, vat_factor
-        )
