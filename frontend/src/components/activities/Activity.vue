@@ -133,6 +133,7 @@
     import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
     import { activityId2name, sectionId2name, displayStatus } from '../filters/Labels.js'
+    import store from '../../store.js'
 
     export default {
 
@@ -146,6 +147,15 @@
                 show_edit: false,
                 edit_mode: 'edit'
             }
+        },
+        beforeRouteEnter: function(to, from, next) {
+            store.commit('clearActivity')
+            store.dispatch('fetchActivity', to.params.actId)
+            .then(() => next())
+        },
+        beforeRouteUpdate: function(to, from, next) {
+            store.dispatch('fetchActivity', to.params.actId)
+            .then(() => next())
         },
         computed: {
             act: function() {
@@ -188,6 +198,7 @@
         methods: {
             reload: function() {
                 this.show_edit =  false
+                this.$store.dispatch('fetchActivity', this.$route.params.actId)
             },
             displayDate: function(dt) {
                 return json2jsDate(dt)
@@ -215,9 +226,6 @@
                     })
                     .catch(err => this.$store.dispatch('parseErrorOutput', err))
             }
-        },
-        created: function() {
-            this.$store.dispatch('fetchActivity', this.$route.params.id)
         }
     }
     

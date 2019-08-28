@@ -21,6 +21,9 @@ const getters = {
 const mutations = {
     setCase (state, main_case) {
         state.main_case = main_case
+    },
+    clearCase (state) {
+        state.main_case = null
     }
 }
 
