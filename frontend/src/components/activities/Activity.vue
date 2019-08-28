@@ -16,7 +16,7 @@
             </h1>
             <button v-if="act.status !== 'GRANTED'" @click="show_edit = !show_edit" class="act-edit-btn">Redigér</button>
             <button v-if="act.status === 'GRANTED'" @click="createExpected()" class="act-edit-btn">+ Lav forventet justering</button>
-            <button class="act-delete-btn" @click="createExpected()"><i class="material-icons">delete</i></button>
+            <button class="act-delete-btn" @click="deleteActivity()"><i class="material-icons">delete</i></button>
         </header>
 
         <div v-if="show_edit">
@@ -207,6 +207,13 @@
             createExpected: function() {                
                 this.edit_mode = 'clone'
                 this.show_edit =  true
+            },
+            deleteActivity: function() {
+                axios.delete(`/activities/`, this.appr.id)
+                    .then(res => {
+                        this.$router.push(`/appropriation/${ this.appropriation.id }`)
+                    })
+                    .catch(err => this.$store.dispatch('parseErrorOutput', err))
             }
         },
         created: function() {
