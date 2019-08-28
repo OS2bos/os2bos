@@ -45,6 +45,9 @@ const mutations = {
     },
     clearActivity (state) {
         state.activity = null
+    },
+    clearActivities (state) {
+        state.activity_list = null
     }
 }
 
