@@ -16,6 +16,7 @@
             </h1>
             <button v-if="act.status !== 'GRANTED'" @click="show_edit = !show_edit" class="act-edit-btn">Redigér</button>
             <button v-if="act.status === 'GRANTED'" @click="createExpected()" class="act-edit-btn">+ Lav forventet justering</button>
+            <button class="act-delete-btn" @click="createExpected()"><i class="material-icons">delete</i></button>
         </header>
 
         <div v-if="show_edit">
@@ -234,6 +235,16 @@
 
     .activity .act-edit-btn {
         margin: 0 1rem;
+    }
+
+    .activity .act-delete-btn {
+        margin: 0 1rem;
+        border: solid .125rem var(--danger)
+    }
+
+    .act-delete-btn .material-icons {
+        font-size: 1.5rem;
+        color: var(--danger);
     }
 
     .activity-info {
