@@ -14,7 +14,6 @@ import CaseEdit from './components/cases/CaseEdit.vue'
 import FamilyOverviewEdit from './components/familyoverview/FamilyOverviewEdit.vue'
 import Assessment from './components/assessments/Assessment.vue'
 import AppropriationEdit from './components/appropriations/AppropriationEdit.vue'
-import Activity from './components/activities/Activity.vue'
 import ActivityEdit from './components/activities/ActivityEdit.vue'
 import PaymentSchedule from './components/payment/PaymentSchedule.vue'
 import Login from './components/auth/Login.vue'
@@ -83,9 +82,9 @@ const router = new Router({
             component: AppropriationEdit
         },
         {
-            path: '/activity/:id',
+            path: '/activity/:actId',
             name: 'activity',
-            component: Activity
+            component: () => import(/* webpackChunkName: "activity" */ './components/activities/Activity.vue')
         },
         {
             path: '/appropriation/:apprid/activity-create/',

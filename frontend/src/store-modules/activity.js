@@ -42,6 +42,9 @@ const mutations = {
     },
     setActDetail (state, act_detail) {
         state.activity_detail = act_detail
+    },
+    clearActivity (state) {
+        state.activity = null
     }
 }
 
