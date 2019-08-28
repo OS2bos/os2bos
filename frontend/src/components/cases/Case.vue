@@ -100,6 +100,7 @@
     import FamilyOverview from '../familyoverview/FamilyOverview.vue'
     import axios from '../http/Http.js'
     import { municipalityId2name, districtId2name, displayEffort, userId2name, teamId2name } from '../filters/Labels.js'
+    import store from '../../store.js'
 
     export default {
 
@@ -108,11 +109,21 @@
             Appropriations,
             FamilyOverview
         },
-        
         data: function() {
             return {
                 edit_mode: false
             }
+        },
+        beforeRouteEnter: function(to, from, next) {
+            store.commit('clearCase')
+            store.dispatch('fetchCase', to.params.caseId)
+            .then(() => next())
+        },
+        // when route changes and this component is already rendered,
+        // the logic will be slightly different.
+        beforeRouteUpdate: function(to, from, next) {
+            store.dispatch('fetchCase', to.params.caseId)
+            .then(() => next())
         },
         computed: {
             cas: function() {
@@ -150,12 +161,9 @@
             }
         },
         methods: {
-            update: function() {
-                this.$store.dispatch('fetchCase', this.$route.params.id)
-            },
             reload: function() {
                 this.edit_mode =  false
-                this.update()
+                this.$store.dispatch('fetchCase', this.$route.params.caseId)
             },
             displayMuniName: function(id) {
                 return municipalityId2name(id)
@@ -172,11 +180,7 @@
             displayTeamName: function(id) {
                 return teamId2name(id)
             }
-        },
-        created: function() {
-            this.update()
         }
-        
     }
     
 </script>

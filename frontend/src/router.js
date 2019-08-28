@@ -38,7 +38,7 @@ const router = new Router({
             component: Cases
         },
         {
-            path: '/case/:id',
+            path: '/case/:caseId',
             name: 'case',
             component: Case
         },
