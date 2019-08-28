@@ -118,6 +118,62 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         serializer.is_valid()
         self.assertEqual(serializer.errors, {})
 
+    def test_validate_monthly_starts_on_first(self):
+        activity_details = ActivityDetails.objects.create(
+            max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_frequency=PaymentSchedule.MONTHLY,
+        )
+
+        # no end_date
+        data = {
+            "start_date": "2018-01-01",
+            "details": activity_details.pk,
+            "status": STATUS_EXPECTED,
+            "activity_type": MAIN_ACTIVITY,
+            "appropriation": appropriation.pk,
+            "payment_plan": PaymentScheduleSerializer(payment_schedule).data,
+        }
+        serializer = ActivitySerializer(data=data)
+        is_valid = serializer.is_valid()
+        self.assertTrue(is_valid)
+
+    def test_validate_monthly_does_not_start_on_first(self):
+        activity_details = ActivityDetails.objects.create(
+            max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_frequency=PaymentSchedule.MONTHLY,
+        )
+
+        # start_date not on the first.
+        data = {
+            "start_date": "2018-01-02",
+            "details": activity_details.pk,
+            "status": STATUS_EXPECTED,
+            "activity_type": MAIN_ACTIVITY,
+            "appropriation": appropriation.pk,
+            "payment_plan": PaymentScheduleSerializer(payment_schedule).data,
+        }
+        serializer = ActivitySerializer(data=data)
+        is_valid = serializer.is_valid()
+        self.assertFalse(is_valid)
+        self.assertEqual(
+            serializer.errors["non_field_errors"][0],
+            "startdato og slutdato for månedlige betalinger være den 1.",
+        )
+
     def test_validate_expected_success(self):
         payment_schedule = create_payment_schedule(
             payment_amount=Decimal("500.0"),
