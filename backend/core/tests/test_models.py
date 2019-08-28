@@ -122,7 +122,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(case=case)
-        activity = create_activity(
+        create_activity(
             case=case,
             appropriation=appropriation,
             start_date=start_date,
