@@ -10,13 +10,10 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Cases from './components/cases/Cases.vue'
 import AllCases from './components/cases/AllCases.vue'
-import Case from './components/cases/Case.vue'
 import CaseEdit from './components/cases/CaseEdit.vue'
 import FamilyOverviewEdit from './components/familyoverview/FamilyOverviewEdit.vue'
 import Assessment from './components/assessments/Assessment.vue'
-import Appropriation from './components/appropriations/Appropriation.vue'
 import AppropriationEdit from './components/appropriations/AppropriationEdit.vue'
-import Activity from './components/activities/Activity.vue'
 import ActivityEdit from './components/activities/ActivityEdit.vue'
 import PaymentSchedule from './components/payment/PaymentSchedule.vue'
 import Login from './components/auth/Login.vue'
@@ -38,9 +35,9 @@ const router = new Router({
             component: Cases
         },
         {
-            path: '/case/:id',
+            path: '/case/:caseId',
             name: 'case',
-            component: Case
+            component: () => import(/* webpackChunkName: "case" */ './components/cases/Case.vue')
         },
         {
             path: '/case-create/',
@@ -74,9 +71,10 @@ const router = new Router({
             component: Assessment
         },
         {
-            path: '/appropriation/:id',
+            path: '/appropriation/:apprId',
             name: 'appropriation',
-            component: Appropriation
+            component: () => import(/* webpackChunkName: "appropriation" */ './components/appropriations/Appropriation.vue')
+            
         },
         {
             path: '/case/:caseid/appropriation-create/',
@@ -84,9 +82,9 @@ const router = new Router({
             component: AppropriationEdit
         },
         {
-            path: '/activity/:id',
+            path: '/activity/:actId',
             name: 'activity',
-            component: Activity
+            component: () => import(/* webpackChunkName: "activity" */ './components/activities/Activity.vue')
         },
         {
             path: '/appropriation/:apprid/activity-create/',

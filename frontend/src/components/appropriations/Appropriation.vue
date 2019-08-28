@@ -92,6 +92,7 @@
     import Approval from './Approval.vue'
     import { json2jsDate } from '../filters/Date.js'
     import { municipalityId2name, districtId2name, sectionId2name, displayStatus, userId2name, approvalId2name } from '../filters/Labels.js'
+    import store from '../../store.js'
 
     export default {
 
@@ -105,6 +106,15 @@
                 show_edit: false,
                 showModal: false
             }
+        },
+        beforeRouteEnter: function(to, from, next) {
+            store.commit('clearAppropriation')
+            store.dispatch('fetchAppropriation', to.params.apprId)
+            .then(() => next())
+        },
+        beforeRouteUpdate: function(to, from, next) {
+            store.dispatch('fetchAppropriation', to.params.apprId)
+            .then(() => next())
         },
         computed: {
             cas: function() {
@@ -126,10 +136,7 @@
             update: function() {
                 this.show_edit =  false
                 this.showModal = false
-                this.$store.dispatch('fetchAppropriation', this.$route.params.id)
-            },
-            reload: function() {
-                this.show_edit =  false
+                this.$store.dispatch('fetchAppropriation', this.$route.params.apprId)
             },
             displayDate: function(date) {
                 return json2jsDate(date)
@@ -177,9 +184,6 @@
             displayApprovalName: function(id) {
                 return approvalId2name(id)
             }
-        },
-        created: function() {
-            this.update()
         }
     }
     

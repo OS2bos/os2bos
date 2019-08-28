@@ -116,7 +116,10 @@
                 return displayStatus(status)
             }
         },
-       created: function() {
+        beforeCreate: function() {
+            this.$store.commit('clearActivities')
+        },
+        created: function() {
             this.update()
         }
     }
