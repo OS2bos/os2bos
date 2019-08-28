@@ -15,7 +15,6 @@
                 <tr>
                     <th>Status</th>
                     <th>Ydelse</th>
-                    <th>Supplerende information</th>
                     <th>Udbetales til</th>
                     <th>Start</th>
                     <th>Slut</th>
@@ -24,7 +23,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="a in acts" :key="a.id" :class="{ 'expected-row': a.status === 'EXPECTED', 'adjustment-row': a.modifies }">
+                <tr v-for="a in acts" :key="a.id" :class="{ 'expected-row': a.status === 'EXPECTED', 'adjustment-row': a.modifies }" :title="a.note">
                     <td>
                         <div class="mini-label" v-html="statusLabel(a.status)"></div>
                     </td>
@@ -33,15 +32,16 @@
                         <router-link :to="`/activity/${ a.id }`">{{ activityId2name(a.details) }}</router-link>
                         <span v-if="a.activity_type === 'MAIN_ACTIVITY'" class="act-label">Hovedydelse</span>
                     </td>
-                    <td>{{ a.note }}</td>
                     <td>{{ a.payment_plan.recipient_id }} - {{ a.payment_plan.recipient_name }}</td>
                     <td class="nowrap">{{ displayDate(a.start_date) }}</td>
                     <td class="nowrap">{{ displayDate(a.end_date) }}</td>
-                    <td  class="nowrap" style="text-align: right;">{{ displayDigits(a.total_cost_this_year) }} kr</td>
-                    <td  class="nowrap expected" style="text-align: right;">{{ displayDigits(a.total_expected_this_year) }} kr</td>
+                    <td v-if="a.status === 'GRANTED'" class="nowrap" style="text-align: right;">{{ displayDigits(a.total_cost_this_year) }} kr</td>
+                    <td v-if="a.status === 'DRAFT'" class="nowrap" style="text-align: right; opacity: 0.5;">{{ displayDigits(a.total_cost_this_year) }} kr</td>
+                    <td v-else></td>
+                    <td v-if="a.status === 'EXPECTED'" class="nowrap expected" style="text-align: right;">{{ displayDigits(a.total_cost_this_year) }} kr</td>
+                    <td v-else></td>
                 </tr>
                 <tr>
-                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
