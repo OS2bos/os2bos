@@ -119,8 +119,6 @@
             store.dispatch('fetchCase', to.params.caseId)
             .then(() => next())
         },
-        // when route changes and this component is already rendered,
-        // the logic will be slightly different.
         beforeRouteUpdate: function(to, from, next) {
             store.dispatch('fetchCase', to.params.caseId)
             .then(() => next())

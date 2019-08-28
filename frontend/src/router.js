@@ -74,7 +74,7 @@ const router = new Router({
             component: Assessment
         },
         {
-            path: '/appropriation/:id',
+            path: '/appropriation/:apprId',
             name: 'appropriation',
             component: Appropriation
         },
