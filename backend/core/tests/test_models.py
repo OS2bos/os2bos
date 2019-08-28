@@ -213,7 +213,55 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
 
         self.assertEqual(
-            activity.appropriation.total_expected_this_year, Decimal("5300")
+            appropriation.total_expected_this_year, Decimal("5300")
+        )
+
+    def test_total_expected_within_start_end_range(self):
+        # generate a start and end span of 10 days
+        now = timezone.now()
+        start_date = now + timedelta(days=1)
+        end_date = now + timedelta(days=10)
+
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        # create a granted activity
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_amount=Decimal("700"),
+        )
+        modified_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+            payment_plan=payment_schedule,
+        )
+        # create an expected activity with a (start, end)
+        # within the span of the activity it modifies
+        modified_start_date = now + timedelta(days=3)
+        modified_end_date = now + timedelta(days=6)
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_amount=Decimal("500"),
+        )
+        create_activity(
+            case,
+            appropriation,
+            start_date=modified_start_date,
+            end_date=modified_end_date,
+            status=STATUS_EXPECTED,
+            activity_type=MAIN_ACTIVITY,
+            payment_plan=payment_schedule,
+            modifies=modified_activity,
+        )
+        self.assertEqual(
+            appropriation.total_expected_this_year, Decimal("3400")
         )
 
     def test_total_expected_full_year(self):
@@ -1718,7 +1766,7 @@ class PaymentScheduleTestCase(TestCase):
         payment_schedule.generate_payments(start_date, None)
 
         self.assertIsNotNone(payment_schedule.payments)
-        self.assertEqual(payment_schedule.payments.count(), 25)
+        self.assertEqual(payment_schedule.payments.count(), 24)
 
     def test_synchronize_payments_no_end_needs_further_payments(self):
         # Test the case where end is unbounded and payments are generated till
@@ -1733,7 +1781,7 @@ class PaymentScheduleTestCase(TestCase):
         end_date = None
         # Initial call to generate payments will generate 24 payments.
         payment_schedule.generate_payments(start_date, end_date)
-        self.assertEqual(len(payment_schedule.payments.all()), 25)
+        self.assertEqual(len(payment_schedule.payments.all()), 24)
 
         # Now we are in the future and we need to generate new payments
         # because end is still unbounded
@@ -1742,7 +1790,7 @@ class PaymentScheduleTestCase(TestCase):
             date_mock.max.month = 12
             date_mock.max.day = 31
             payment_schedule.synchronize_payments(start_date, end_date)
-        self.assertEqual(payment_schedule.payments.count(), 37)
+        self.assertEqual(payment_schedule.payments.count(), 36)
 
     def test_synchronize_payments_new_end_date_in_past(self):
         # Test the case where we generate payments for an unbounded end
@@ -1757,7 +1805,7 @@ class PaymentScheduleTestCase(TestCase):
 
         payment_schedule.generate_payments(start_date, end_date)
 
-        self.assertEqual(len(payment_schedule.payments.all()), 25)
+        self.assertEqual(len(payment_schedule.payments.all()), 24)
 
         new_end_date = date(year=2019, month=6, day=1)
         payment_schedule.synchronize_payments(start_date, new_end_date)
@@ -1776,7 +1824,7 @@ class PaymentScheduleTestCase(TestCase):
         # Generate payments till 2020-12-1
         payment_schedule.generate_payments(start_date, end_date)
 
-        self.assertEqual(len(payment_schedule.payments.all()), 25)
+        self.assertEqual(len(payment_schedule.payments.all()), 24)
 
         new_end_date = date(year=2021, month=2, day=1)
         payment_schedule.synchronize_payments(start_date, new_end_date)

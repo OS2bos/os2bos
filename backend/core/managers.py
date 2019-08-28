@@ -58,15 +58,12 @@ class PaymentQuerySet(models.QuerySet):
 
     def expected(self):
         """
-        Filter out the expected payments.
-        Thus payments that has the following properties:
+        This includes granted and expected status payments where we exclude
+        the granted which has an expected in its place.
 
-        STATUS_GRANTED with no EXPECTED modified_by
-        STATUS_EXPECTED with no modifies
-        STATUS_GRANTED with GRANTED modified_by
-        STATUS_GRANTED with EXPECTED modified_by
-         overruled with start_date, end_date both inclusive
-        ONE_TIME_PAYMENT with EXPECTED modified_by should simply be overruled.
+        For one time payments we exclude the old granted payment.
+        For recurring payments we only exclude the old granted payments
+        ocurring at or after the start_date of the expected activity.
         """
         from core.models import (
             STATUS_EXPECTED,
@@ -83,11 +80,6 @@ class PaymentQuerySet(models.QuerySet):
                 Q(
                     date__gte=F(
                         "payment_schedule__activity__modified_by__start_date"
-                    )
-                )
-                & Q(
-                    date__lte=F(
-                        "payment_schedule__activity__modified_by__end_date"
                     )
                 ),
                 **{
