@@ -20,6 +20,7 @@
                     <th>Start</th>
                     <th>Slut</th>
                     <th style="text-align: right;">Udgift i år</th>
+                    <th style="text-align: right;">Forventet udgift i år</th>
                 </tr>
             </thead>
             <tbody>
@@ -34,9 +35,10 @@
                     </td>
                     <td>{{ a.note }}</td>
                     <td>{{ a.payment_plan.recipient_id }} - {{ a.payment_plan.recipient_name }}</td>
-                    <td>{{ displayDate(a.start_date) }}</td>
-                    <td>{{ displayDate(a.end_date) }}</td>
-                    <td style="text-align: right;">{{ displayDigits(a.total_cost_this_year) }} kr</td>
+                    <td class="nowrap">{{ displayDate(a.start_date) }}</td>
+                    <td class="nowrap">{{ displayDate(a.end_date) }}</td>
+                    <td  class="nowrap" style="text-align: right;">{{ displayDigits(a.total_cost_this_year) }} kr</td>
+                    <td  class="nowrap expected" style="text-align: right;">{{ displayDigits(a.total_expected_this_year) }} kr</td>
                 </tr>
                 <tr>
                     <td></td>
@@ -44,19 +46,11 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td style="font-weight: bold;">Samlet bevilget</td>
-                    <td style="text-align: right; font-weight: bold;">
+                    <td style="font-weight: bold;">I alt</td>
+                    <td class="nowrap" style="text-align: right; font-weight: bold;">
                         {{ displayDigits(appropriation.total_granted_this_year) }} kr
                     </td>
-                </tr>
-                <tr v-if="has_expected">
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td class="expected">Samlet forventet</td>
-                    <td class="expected" style="text-align: right;">
+                    <td class="nowrap expected" style="text-align: right;">
                         {{ displayDigits(appropriation.total_expected_this_year) }} kr
                     </td>
                 </tr>
@@ -143,9 +137,12 @@
         margin: 0 0 1rem;
     }
 
-    .activities .expected-row > td,
     .activities .expected {
-        background-color: hsl(var(--color3), 80%, 80%); 
+        color: hsl(var(--color3), 100%, 50%);
+    }
+
+    .activities .nowrap {
+        white-space: nowrap;
     }
 
     .activities .adjustment-row > td {
