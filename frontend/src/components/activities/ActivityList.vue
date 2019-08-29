@@ -11,7 +11,9 @@
     <section class="activities">
         <header style="display: flex; flex-flow: row nowrap; align-items: center; margin: 2rem 0;">
             <h2 style="padding: 0;">Bevilgede ydelser</h2>
-            <button class="activities-create-btn" title="Ny aktivitet" @click="$router.push(`/appropriation/${ apprId }/activity-create/`)" style="margin: 0 1rem;">+ Tilføj ydelse</button>
+            <button class="activities-create-btn" title="Ny aktivitet" @click="$router.push(`/appropriation/${ apprId }/activity-create/`)" style="margin: 0 1rem;">
+                + Tilføj ydelse
+            </button>
         </header>
         <table>
             <thead>
@@ -87,13 +89,6 @@
             acts: function() {
                 return this.$store.getters.getActivities
             },
-            has_expected: function() {
-                if (this.appropriation.total_expected_this_year > 0 && this.appropriation.total_granted_this_year !== this.appropriation.total_expected_this_year) {
-                    return true
-                } else {
-                    return false
-                }
-            },
             no_acts: function() {
                 if (!this.main_acts && !this.suppl_acts) {
                     return true
@@ -119,23 +114,58 @@
             },
             splitActList: function(act_list) {
 
-                function sortActsByModifier(act_list) {
-                    let new_list = act_list.sort(function(a,b) {
-                        if (b.modifies === a.id) {
+                function sortActsByModifier(list) {
+
+                    let modifiers = list.filter(function(act) {
+                            return act.modifies !== null
+                        }),
+                        modified = list.filter(function(act) {
+                            return act.modifies === null
+                        }),
+                        new_list = Array.from(modified)
+
+                    console.log('----')
+                    console.log(modifiers)
+                    
+                    for (let m in modifiers) {
+                        let idx = modified.findIndex(function(mod) {
+                            return modifiers[m].modifies === mod.id
+                        })
+                        if (idx > -1) {
+                            new_list.splice(idx, 0, modifiers[m])
+                        }
+                    }
+
+                    console.log(modified)
+                    console.log('----')
+
+                    return new_list
+                }
+
+                function sortActsByDate(list) {
+                    let new_list = list.sort(function(a,b) {
+                        const a_start = new Date(a.start_date).getTime(),
+                              b_start = new Date(b.start_date).getTime()
+                        if (b_start > a_start) {
                             return -1
-                        } else if (a.modifies === null) {
-                            return 0
-                        } else {
+                        } else if (b_start < a_start) {
                             return 1
+                        } else {
+                            return 0
                         }
                     })
                     return new_list
                 }
 
-                let main_acts = act_list.filter(act => act.activity_type === 'MAIN_ACTIVITY'),
-                    sec_acts = act_list.filter(act => act.activity_type === 'SUPPL_ACTIVITY')
-                this.main_acts = sortActsByModifier(main_acts)
-                this.suppl_acts = sortActsByModifier(sec_acts)    
+                let mains = sortActsByModifier( act_list.filter(function(act) { 
+                        return act.activity_type === 'MAIN_ACTIVITY' 
+                    }) ),
+                    suppls = sortActsByModifier( act_list.filter(function(act) {
+                        return act.activity_type === 'SUPPL_ACTIVITY'
+                    }) )
+                
+                this.main_acts = mains
+                this.suppl_acts = suppls
             }
         },
         beforeCreate: function() {
