@@ -257,11 +257,7 @@
                 this.show_edit =  true
             },
             preDeleteCheck: function() {
-                 if (this.appr.activities.length > 0) {
-                    this.showModal = true
-                } else {
-                    alert('Fejl')
-                }
+                this.showModal = true
             },
             deleteActivity: function() {
                 axios.delete(`/activities/${ this.$route.params.actId }`)
