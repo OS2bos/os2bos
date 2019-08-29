@@ -62,8 +62,8 @@
                     
                 </tr>
                 <tr>
-                    <td colspan="5">
-                        <button disabled>Godkendt valgte</button>
+                    <td colspan="5" style="padding-left: 0;">
+                        <button disabled>✔ Godkendt valgte</button>
                     </td>
                     <td class="right"><strong>I alt</strong></td>
                     <td class="nowrap right">
