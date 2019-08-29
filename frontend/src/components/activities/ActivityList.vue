@@ -14,8 +14,8 @@
             <thead>
                 <tr>
                     <th style="width: 4.5rem;">
-                        <input type="checkbox" id="check-all">
-                        <label for="check-all"></label>
+                        <input type="checkbox" id="check-all" disabled>
+                        <label class="disabled" for="check-all"></label>
                     </th>
                     <th style="width: 5.5rem;">Status</th>
                     <th>Ydelse</th>
@@ -33,8 +33,8 @@
             <tbody>
                 <tr v-for="a in acts" :key="a.id" :class="{ 'expected-row': a.status === 'EXPECTED', 'adjustment-row': a.modifies }" :title="a.note">
                     <td style="width: 4.5rem;">
-                        <input type="checkbox" :id="`check-${ a.id }`">
-                        <label :for="`check-${ a.id }`"></label>
+                        <input type="checkbox" :id="`check-${ a.id }`" disabled>
+                        <label class="disabled" :for="`check-${ a.id }`"></label>
                     </td>
                     <td style="width: 5.5rem;">
                         <div class="mini-label" v-html="statusLabel(a.status)"></div>
