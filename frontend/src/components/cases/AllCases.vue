@@ -21,18 +21,10 @@
         <table v-if="items.length > 0">
             <thead>
                 <tr>
-                    <th>
-                        Status
-                    </th>
-                    <th>
-                        SBSYS-hovedsag
-                    </th> 
-                    <th>
-                        Borger
-                    </th>
-                    <th>
-                        Ændret
-                    </th>
+                    <th>Status</th>
+                    <th>SBSYS-hovedsag</th> 
+                    <th>Borger</th>
+                    <th>Ændret</th>
                 </tr>
             </thead>
             <tbody>

@@ -16,19 +16,19 @@
         <table class="appropriation-list" v-if="apprs && apprs.length > 0">
             <thead>
                 <tr>
-                    <th>Status</th>
+                    <th style="width: 5.5rem;">Status</th>
                     <th>Foranstaltningssag</th>
                     <th>Bevillingsparagraf</th>
                     <th>Supplerende information</th>
                     <th>Oprettet</th>
                     <th>Senest ændret</th>
-                    <th style="text-align: right">Udgift i år</th>
-                    <th style="text-align: right">Forventet udgift i år</th>
+                    <th class="right">Udgift i år</th>
+                    <th class="right">Forventet udgift i år</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="a in apprs" :key="a.id">
-                    <td><div v-html="statusLabel(a.status)"></div></td>
+                    <td style="width: 5.5rem;"><div  class="mini-label" v-html="statusLabel(a.status)"></div></td>
                     <td>    
                         <i class="material-icons">folder_open</i>
                         <router-link :to="`/appropriation/${ a.id }`">
@@ -36,7 +36,7 @@
                         </router-link>
                     </td>
                     <td>§ {{ displaySection(a.section) }}</td>
-                    <td>{{ a.note }}</td>
+                    <td class="truncate">{{ a.note }}</td>
                     <td class="nowrap">{{ displayDate(a.created) }}</td>
                     <td class="nowrap">{{ displayDate(a.modified) }}</td>
                     <td class="right nowrap">{{ displayDigits(a.total_granted_this_year) }} kr</td>

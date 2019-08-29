@@ -13,17 +13,17 @@
         <table v-if="acts && acts.length > 0">
             <thead>
                 <tr>
-                    <th>
+                    <th style="width: 4.5rem;">
                         <input type="checkbox" id="check-all">
                         <label for="check-all"></label>
                     </th>
-                    <th>Status</th>
+                    <th style="width: 5.5rem;">Status</th>
                     <th>Ydelse</th>
                     <th>Udbetales til</th>
                     <th>Start</th>
                     <th>Slut</th>
-                    <th style="text-align: right;">Udgift i år</th>
-                    <th style="text-align: right;">Forventet udgift i år</th>
+                    <th class="right">Udgift i år</th>
+                    <th class="right">Forventet udgift i år</th>
                 </tr>
                 <tr>
                     <th colspan="7" class="table-heading">Ydelser</th>
@@ -32,18 +32,18 @@
             </thead>
             <tbody>
                 <tr v-for="a in acts" :key="a.id" :class="{ 'expected-row': a.status === 'EXPECTED', 'adjustment-row': a.modifies }" :title="a.note">
-                    <td>
+                    <td style="width: 4.5rem;">
                         <input type="checkbox" :id="`check-${ a.id }`">
                         <label :for="`check-${ a.id }`"></label>
                     </td>
-                    <td>
+                    <td style="width: 5.5rem;">
                         <div class="mini-label" v-html="statusLabel(a.status)"></div>
                     </td>
                     <td>
                         <router-link :to="`/activity/${ a.id }`">{{ activityId2name(a.details) }}</router-link>
                         <span v-if="a.activity_type === 'MAIN_ACTIVITY'" class="act-label">Hovedydelse</span>
                     </td>
-                    <td>
+                    <td class="truncate">
                         {{ a.payment_plan.recipient_name }}
                         <span v-if="a.payment_plan.recipient_type === 'COMPANY'">
                             CVR

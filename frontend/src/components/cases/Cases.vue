@@ -16,24 +16,16 @@
         <table v-if="cas.length > 0">
             <thead>
                 <tr>
-                    <th>
-                        Status
-                    </th>
-                    <th>
-                        SBSYS-hovedsag
-                    </th> 
-                    <th>
-                        Borger
-                    </th>
-                    <th>
-                        Ændret
-                    </th>
+                    <th style="width: 5.5rem;">Status</th>
+                    <th>SBSYS-hovedsag</th> 
+                    <th>Borger</th>
+                    <th>Ændret</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="c in cas" :key="c.id">
-                    <td>
-                        <span class="status-active" v-if="c.expired === false">Aktiv</span>
+                    <td style="width: 5.5rem;">
+                        <span class="label-GRANTED mini-label" v-if="c.expired === false">Aktiv</span>
                     </td>
                     <td>
                         <i class="material-icons">folder_shared</i>
@@ -118,12 +110,6 @@
 
     .cases .create {
         margin: 0 2rem;
-    }
-
-    .cases .status-active {
-        background-color: var(--success);
-        color: white;
-        padding: .25rem;
     }
 
 </style>
