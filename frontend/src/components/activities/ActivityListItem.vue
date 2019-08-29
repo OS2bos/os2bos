@@ -10,7 +10,6 @@
         </td>
         <td>
             <router-link :to="`/activity/${ data.id }`">{{ activityId2name(data.details) }}</router-link>
-            <span v-if="data.activity_type === 'MAIN_ACTIVITY'" class="act-label"><br>Hovedydelse</span>
         </td>
         <td>
             {{ data.payment_plan.recipient_name }}

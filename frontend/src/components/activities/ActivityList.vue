@@ -9,7 +9,10 @@
 <template>
 
     <section class="activities">
-        <button class="activities-create-btn" title="Ny aktivitet" @click="$router.push(`/appropriation/${ apprId }/activity-create/`)">+ Tilføj ydelse</button>
+        <header style="display: flex; flex-flow: row nowrap; align-items: center; margin: 2rem 0;">
+            <h2 style="padding: 0;">Bevilgede ydelser</h2>
+            <button class="activities-create-btn" title="Ny aktivitet" @click="$router.push(`/appropriation/${ apprId }/activity-create/`)" style="margin: 0 1rem;">+ Tilføj ydelse</button>
+        </header>
         <table>
             <thead>
                 <tr>
@@ -71,9 +74,18 @@
         props: [
             'apprId'
         ],
+        data: function() {
+            return {
+                main_acts: null,
+                suppl_acts: null,
+            }
+        },
         computed: {
             appropriation: function() {
                 return this.$store.getters.getAppropriation
+            },
+            acts: function() {
+                return this.$store.getters.getActivities
             },
             has_expected: function() {
                 if (this.appropriation.total_expected_this_year > 0 && this.appropriation.total_granted_this_year !== this.appropriation.total_expected_this_year) {
@@ -82,21 +94,20 @@
                     return false
                 }
             },
-            main_acts: function() {
-                return this.$store.getters.getMainActivities
-            },
-            suppl_acts: function() {
-                return this.$store.getters.getSupplActivities
-            },
             no_acts: function() {
                 if (!this.main_acts && !this.suppl_acts) {
                     return true
+                } else {
+                    return false
                 }
             }
         },
         watch: {
             apprId: function() {
                 this.update()
+            },
+            acts: function() {
+                this.splitActList(this.acts)
             }
         },
         methods: {
@@ -105,6 +116,26 @@
             },
             displayDigits: function(num) {
                 return cost2da(num)
+            },
+            splitActList: function(act_list) {
+
+                function sortActsByModifier(act_list) {
+                    let new_list = act_list.sort(function(a,b) {
+                        if (b.modifies === a.id) {
+                            return -1
+                        } else if (a.modifies === null) {
+                            return 0
+                        } else {
+                            return 1
+                        }
+                    })
+                    return new_list
+                }
+
+                let main_acts = act_list.filter(act => act.activity_type === 'MAIN_ACTIVITY'),
+                    sec_acts = act_list.filter(act => act.activity_type === 'SUPPL_ACTIVITY')
+                this.main_acts = sortActsByModifier(main_acts)
+                this.suppl_acts = sortActsByModifier(sec_acts)    
             }
         },
         beforeCreate: function() {
@@ -138,6 +169,10 @@
         opacity: .66;
         font-size: .85rem;
         margin: 0 1rem;
+    }
+
+    .activities input[type="checkbox"] + label {
+        margin: 0;
     }
 
     .activities tr:last-child td {

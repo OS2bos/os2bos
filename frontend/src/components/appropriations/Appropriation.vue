@@ -75,7 +75,6 @@
             </template>
 
             <div class="sagsbev appr-grid-box">
-                <h2>Der bevilges:</h2>
                 <activity-list :appr-id="appr.id" />
             </div>
 
