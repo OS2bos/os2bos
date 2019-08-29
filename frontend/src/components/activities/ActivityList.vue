@@ -13,50 +13,63 @@
         <table v-if="acts && acts.length > 0">
             <thead>
                 <tr>
-                    <th>Status</th>
+                    <th style="width: 4.5rem;">
+                        <input type="checkbox" id="check-all" disabled>
+                        <label class="disabled" for="check-all"></label>
+                    </th>
+                    <th style="width: 5.5rem;">Status</th>
                     <th>Ydelse</th>
-                    <th>Supplerende information</th>
                     <th>Udbetales til</th>
                     <th>Start</th>
                     <th>Slut</th>
-                    <th style="text-align: right;">Udgift i år</th>
+                    <th class="right">Udgift i år</th>
+                    <th class="right">Forventet udgift i år</th>
+                </tr>
+                <tr>
+                    <th colspan="7" class="table-heading">Ydelser</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="a in acts" :key="a.id" :class="{ 'expected-row': a.status === 'EXPECTED', 'adjustment-row': a.modifies }">
-                    <td>
+                <tr v-for="a in acts" :key="a.id" :class="{ 'expected-row': a.status === 'EXPECTED', 'adjustment-row': a.modifies }" :title="a.note">
+                    <td style="width: 4.5rem;">
+                        <input type="checkbox" :id="`check-${ a.id }`" disabled>
+                        <label class="disabled" :for="`check-${ a.id }`"></label>
+                    </td>
+                    <td style="width: 5.5rem;">
                         <div class="mini-label" v-html="statusLabel(a.status)"></div>
                     </td>
                     <td>
-                        <span v-if="a.modifies" class="act-label"><i class="material-icons">subdirectory_arrow_right</i></span>
                         <router-link :to="`/activity/${ a.id }`">{{ activityId2name(a.details) }}</router-link>
-                        <span v-if="a.activity_type === 'MAIN_ACTIVITY'" class="act-label">Hovedydelse</span>
+                        <span v-if="a.activity_type === 'MAIN_ACTIVITY'" class="act-label"><br>Hovedydelse</span>
                     </td>
-                    <td>{{ a.note }}</td>
-                    <td>{{ a.payment_plan.recipient_id }} - {{ a.payment_plan.recipient_name }}</td>
-                    <td>{{ displayDate(a.start_date) }}</td>
-                    <td>{{ displayDate(a.end_date) }}</td>
-                    <td style="text-align: right;">{{ displayDigits(a.total_cost_this_year) }} kr</td>
+                    <td>
+                        {{ a.payment_plan.recipient_name }}
+                        <span v-if="a.payment_plan.recipient_type === 'COMPANY'">
+                            CVR
+                        </span>
+                        {{ a.payment_plan.recipient_id }}
+                    </td>
+                    <td class="nowrap">{{ displayDate(a.start_date) }}</td>
+                    <td class="nowrap">{{ displayDate(a.end_date) }}</td>
+                    <td class="nowrap right">
+                        <span v-if="a.status === 'GRANTED'">{{ displayDigits(a.total_cost_this_year) }} kr</span>
+                        <span v-if="a.status === 'DRAFT'" class="dim">{{ displayDigits(a.total_cost_this_year) }} kr</span>
+                    </td>
+                    <td class="nowrap right">
+                        <span v-if="a.status === 'EXPECTED'" class="expected">{{ displayDigits(a.total_cost_this_year) }} kr</span>
+                    </td>
+                    
                 </tr>
                 <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td style="font-weight: bold;">Samlet bevilget</td>
-                    <td style="text-align: right; font-weight: bold;">
-                        {{ displayDigits(appropriation.total_granted_this_year) }} kr
+                    <td colspan="5" style="padding-left: 0;">
+                        <button disabled>✔ Godkendt valgte</button>
                     </td>
-                </tr>
-                <tr v-if="has_expected">
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td class="expected">Samlet forventet</td>
-                    <td class="expected" style="text-align: right;">
+                    <td class="right"><strong>I alt</strong></td>
+                    <td class="nowrap right">
+                        <strong>{{ displayDigits(appropriation.total_granted_this_year) }} kr</strong>
+                    </td>
+                    <td class="nowrap expected right">
                         {{ displayDigits(appropriation.total_expected_this_year) }} kr
                     </td>
                 </tr>
@@ -143,19 +156,15 @@
         margin: 0 0 1rem;
     }
 
-    .activities .expected-row > td,
-    .activities .expected {
-        background-color: hsl(var(--color3), 80%, 80%); 
-    }
-
-    .activities .adjustment-row > td {
-        border-top: none;
-    }
-
     .activities .act-label {
         opacity: .66;
         font-size: .85rem;
         margin: 0 1rem;
+    }
+
+    .activities tr:last-child td {
+        background-color: var(--grey0);
+        padding-top: 1.5rem;
     }
 
 </style>

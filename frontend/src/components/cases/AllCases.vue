@@ -21,25 +21,21 @@
         <table v-if="items.length > 0">
             <thead>
                 <tr>
-                    <th>
-                        Status
-                    </th>
-                    <th>
-                        SBSYS-hovedsag nr.
-                    </th> 
-                    <th>
-                        Borger
-                    </th>
-                    <th>
-                        Ændret
-                    </th>
+                    <th style="width: 5.5rem;">Status</th>
+                    <th>SBSYS-hovedsag</th> 
+                    <th>Borger</th>
+                    <th>Ændret</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="i in items" :key="i.id">
-                    <td>
-                        <span class="status-expired" v-if="i.expired === true">Udgået</span>
-                        <span class="status-active" v-if="i.expired === false">Aktiv</span>
+                    <td style="width: 5.5rem;">
+                        <div class="mini-label" v-if="c.expired === false">
+                            <span class="label label-GRANTED">Aktiv</span>
+                        </div>
+                        <div class="mini-label" v-if="c.expired === true">
+                            <span class="label label-DISCONTINUED">Udgået</span>
+                        </div>
                     </td>
                     <td>
                         <i class="material-icons">folder_shared</i>
@@ -48,9 +44,9 @@
                         </router-link>
                     </td>
                     <td>
-                        {{ i.cpr_number }} - {{ i.name }}
+                        {{ i.cpr_number }}, {{ i.name }}
                     </td>
-                    <td>
+                    <td class="nowrap">
                         {{ displayDate(i.modified) }}
                     </td>
                 </tr>
@@ -67,7 +63,7 @@
 
 <script>
     import axios from '../http/Http.js'
-    import { json2js } from '../filters/Date.js'
+    import { json2jsDate } from '../filters/Date.js'
     import Search from '../search/Search.vue'
 
     export default {
@@ -108,7 +104,7 @@
                 .catch(err => console.log(err))
             },
             displayDate: function(dt) {
-                return json2js(dt)
+                return json2jsDate(dt)
             }, 
             displayItems: function() {
                 axios.get(`/cases/?cpr_number=${ this.$route.params.query }`)

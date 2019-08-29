@@ -16,24 +16,18 @@
         <table v-if="cas.length > 0">
             <thead>
                 <tr>
-                    <th>
-                        Status
-                    </th>
-                    <th>
-                        SBSYS-hovedsag nr.
-                    </th> 
-                    <th>
-                        Borger
-                    </th>
-                    <th>
-                        Ændret
-                    </th>
+                    <th style="width: 5.5rem;">Status</th>
+                    <th>SBSYS-hovedsag</th> 
+                    <th>Borger</th>
+                    <th>Ændret</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="c in cas" :key="c.id">
-                    <td>
-                        <span class="status-active" v-if="c.expired === false">Aktiv</span>
+                    <td style="width: 5.5rem;">
+                        <div class="mini-label" v-if="c.expired === false">
+                            <span class="label label-GRANTED">Aktiv</span>
+                        </div>
                     </td>
                     <td>
                         <i class="material-icons">folder_shared</i>
@@ -42,9 +36,9 @@
                         </router-link>
                     </td>
                     <td>
-                        {{ c.cpr_number }} - {{ c.name }}
+                        {{ c.cpr_number }}, {{ c.name }}
                     </td>
-                    <td>
+                    <td class="nowrap">
                         {{ displayDate(c.modified) }}
                     </td>
                 </tr>
@@ -60,7 +54,7 @@
 <script>
 
     import axios from '../http/Http.js'
-    import { json2js } from '../filters/Date.js'
+    import { json2jsDate } from '../filters/Date.js'
 
     export default {
 
@@ -93,7 +87,7 @@
                 }
             },
             displayDate: function(dt) {
-                return json2js(dt)
+                return json2jsDate(dt)
             }
         },
         created: function() {
@@ -118,12 +112,6 @@
 
     .cases .create {
         margin: 0 2rem;
-    }
-
-    .cases .status-active {
-        background-color: var(--success);
-        color: white;
-        padding: .25rem;
     }
 
 </style>

@@ -9,7 +9,8 @@
 table {
     width: 100%;
     border-collapse: collapse;
-    word-wrap: break-word;
+    margin: 1rem 0;
+    table-layout: fixed;
 }
 
 thead,
@@ -18,16 +19,37 @@ tr {
     margin: 0;
 }
 
+tr {
+    border-bottom: solid 3px var(--grey0)
+}
+
 th,
 td {
-    padding: 0.5rem;
     text-align: left;
     margin: 0;
     max-width: 30rem;
+    vertical-align: top;
+    padding: .75rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 th {
-    vertical-align: bottom;
+    font-weight: bold;
+}
+
+td {
+    background-color: var(--grey1);
+}
+
+th:first-child,
+td:first-child {
+    padding-left: 1.5rem;
+}
+
+th:last-child,
+td:last-child {
+    padding-right: 1.5rem;
 }
 
 
@@ -52,10 +74,11 @@ th {
     th,
     td {
         display: inline-block;
-        
-        &:first-child {
-            font-weight: bold;
-        }
+        vertical-align: top;
+    }
+
+    td.first-child {
+        font-weight: bold;
     }
     
 }

@@ -36,7 +36,7 @@ function json2jsEpoch(jsondatetime) {
 function epoch2DateStr(epoch) {
     if (epoch) {
         const dt = new Date(epoch)
-        return `${ dt.getFullYear() }-${ leadZero(dt.getMonth())}-${ leadZero(dt.getDate()) }`
+        return `${ dt.getFullYear() }-${ leadZero(dt.getMonth()+1)}-${ leadZero(dt.getDate()) }`
     } else {
         return false
     }
