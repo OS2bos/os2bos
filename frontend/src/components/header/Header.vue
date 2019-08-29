@@ -10,10 +10,10 @@
 
     <header>
         <div class="globalheader">
-            <h1 title="Ballerup Bevillingsplatformen">
+            <h1 title="Bevilling og Styring">
                 <router-link to="/" class="header-link">
                     <img class="global-logo" src="/logo.png" alt="" />
-                    <span class="global-brandname">Bevillingsplatformen</span>
+                    <span class="global-brandname">Bevilling og Styring</span>
                 </router-link>
             </h1>
             <div class="row" style="width: auto; align-items: center;">
@@ -90,6 +90,7 @@
         font-size: .9rem;
         letter-spacing: 1px;
         text-transform: uppercase;
+        white-space: nowrap;
     }
 
     .globalheader .globalnav {
