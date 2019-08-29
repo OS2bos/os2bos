@@ -20,7 +20,7 @@
                         Status
                     </th>
                     <th>
-                        SBSYS-hovedsag nr.
+                        SBSYS-hovedsag
                     </th> 
                     <th>
                         Borger
@@ -42,9 +42,9 @@
                         </router-link>
                     </td>
                     <td>
-                        {{ c.cpr_number }} - {{ c.name }}
+                        {{ c.cpr_number }}, {{ c.name }}
                     </td>
-                    <td>
+                    <td class="nowrap">
                         {{ displayDate(c.modified) }}
                     </td>
                 </tr>
@@ -60,7 +60,7 @@
 <script>
 
     import axios from '../http/Http.js'
-    import { json2js } from '../filters/Date.js'
+    import { json2jsDate } from '../filters/Date.js'
 
     export default {
 
@@ -93,7 +93,7 @@
                 }
             },
             displayDate: function(dt) {
-                return json2js(dt)
+                return json2jsDate(dt)
             }
         },
         created: function() {

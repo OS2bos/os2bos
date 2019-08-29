@@ -135,4 +135,24 @@
         flex: 1;
     }
 
+    .table-heading {
+        padding: .5rem 0 1rem 1.5rem;
+    }
+
+    .nowrap {
+        white-space: nowrap;
+    }
+
+    .right {
+        text-align: right;
+    }    
+
+    .dim {
+        opacity: 0.33;
+    }
+
+    .expected {
+        color: hsl(var(--color3), 100%, 50%);
+    }
+
 </style>

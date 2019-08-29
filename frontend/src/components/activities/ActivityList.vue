@@ -52,26 +52,24 @@
                     </td>
                     <td class="nowrap">{{ displayDate(a.start_date) }}</td>
                     <td class="nowrap">{{ displayDate(a.end_date) }}</td>
-                    <template v-if="a.status === 'GRANTED' || a.status === 'DRAFT'">
-                        <td v-if="a.status === 'GRANTED'" class="nowrap" style="text-align: right;">{{ displayDigits(a.total_cost_this_year) }} kr</td>
-                        <td v-if="a.status === 'DRAFT'" class="nowrap" style="text-align: right; opacity: 0.5;">{{ displayDigits(a.total_cost_this_year) }} kr</td>
-                    </template>
-                    <td v-else></td>
-                    <td class="nowrap" style="text-align: right;">
+                    <td class="nowrap right">
+                        <span v-if="a.status === 'GRANTED'">{{ displayDigits(a.total_cost_this_year) }} kr</span>
+                        <span v-if="a.status === 'DRAFT'" class="dim">{{ displayDigits(a.total_cost_this_year) }} kr</span>
+                    </td>
+                    <td class="nowrap right">
                         <span v-if="a.status === 'EXPECTED'" class="expected">{{ displayDigits(a.total_cost_this_year) }} kr</span>
-                        <span v-else style="opacity: .33">{{ displayDigits(a.total_cost_this_year) }} kr</span>
                     </td>
                     
                 </tr>
-                <tr class="action-row">
+                <tr>
                     <td colspan="5">
                         <button>Godkendt valgte</button>
                     </td>
-                    <td style="font-weight: bold; text-align: right;">I alt</td>
-                    <td class="nowrap" style="text-align: right; font-weight: bold;">
-                        {{ displayDigits(appropriation.total_granted_this_year) }} kr
+                    <td class="right"><strong>I alt</strong></td>
+                    <td class="nowrap right">
+                        <strong>{{ displayDigits(appropriation.total_granted_this_year) }} kr</strong>
                     </td>
-                    <td class="nowrap expected" style="text-align: right;">
+                    <td class="nowrap expected right">
                         {{ displayDigits(appropriation.total_expected_this_year) }} kr
                     </td>
                 </tr>
@@ -158,14 +156,6 @@
         margin: 0 0 1rem;
     }
 
-    .activities .expected {
-        color: hsl(var(--color3), 100%, 50%);
-    }
-
-    .activities .nowrap {
-        white-space: nowrap;
-    }
-
     .activities .act-label {
         opacity: .66;
         font-size: .85rem;
@@ -175,10 +165,6 @@
     .activities tr:last-child td {
         background-color: var(--grey0);
         padding-top: 1.5rem;
-    }
-
-    .activities .table-heading {
-        padding: .5rem 0 1rem 1.5rem;
     }
 
 </style>

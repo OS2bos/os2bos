@@ -25,7 +25,7 @@
                         Status
                     </th>
                     <th>
-                        SBSYS-hovedsag nr.
+                        SBSYS-hovedsag
                     </th> 
                     <th>
                         Borger
@@ -48,9 +48,9 @@
                         </router-link>
                     </td>
                     <td>
-                        {{ i.cpr_number }} - {{ i.name }}
+                        {{ i.cpr_number }}, {{ i.name }}
                     </td>
-                    <td>
+                    <td class="nowrap">
                         {{ displayDate(i.modified) }}
                     </td>
                 </tr>
@@ -67,7 +67,7 @@
 
 <script>
     import axios from '../http/Http.js'
-    import { json2js } from '../filters/Date.js'
+    import { json2jsDate } from '../filters/Date.js'
     import Search from '../search/Search.vue'
 
     export default {
@@ -108,7 +108,7 @@
                 .catch(err => console.log(err))
             },
             displayDate: function(dt) {
-                return json2js(dt)
+                return json2jsDate(dt)
             }, 
             displayItems: function() {
                 axios.get(`/cases/?cpr_number=${ this.$route.params.query }`)

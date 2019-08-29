@@ -17,13 +17,13 @@
             <thead>
                 <tr>
                     <th>Status</th>
-                    <th>Foranstaltningssag nr.</th>
+                    <th>Foranstaltningssag</th>
                     <th>Bevillingsparagraf</th>
                     <th>Supplerende information</th>
                     <th>Oprettet</th>
                     <th>Senest ændret</th>
-                    <th style="text-align: right">Bevilget i år</th>
-                    <th style="text-align: right">Forventet i år</th>
+                    <th style="text-align: right">Udgift i år</th>
+                    <th style="text-align: right">Forventet udgift i år</th>
                 </tr>
             </thead>
             <tbody>
@@ -37,27 +37,24 @@
                     </td>
                     <td>§ {{ displaySection(a.section) }}</td>
                     <td>{{ a.note }}</td>
-                    <td>{{ displayDate(a.created) }}</td>
-                    <td>{{ displayDate(a.modified) }}</td>
-                    <td style="text-align: right">{{ displayDigits(a.total_granted_this_year) }} kr</td>
-                    <template v-if="a.total_expected_this_year > 0 && a.total_expected_this_year !== a.total_granted_this_year">
-                        <td class="expected" style="text-align: right">{{ displayDigits(a.total_expected_this_year) }} kr</td>
-                    </template>
-                    <td v-else></td>
-                    
+                    <td class="nowrap">{{ displayDate(a.created) }}</td>
+                    <td class="nowrap">{{ displayDate(a.modified) }}</td>
+                    <td class="right nowrap">{{ displayDigits(a.total_granted_this_year) }} kr</td>
+                    <td class="expected right nowrap">
+                        <span v-if="a.total_expected_this_year > 0 && a.total_expected_this_year !== a.total_granted_this_year">
+                            {{ displayDigits(a.total_expected_this_year) }} kr
+                        </span>
+                    </td>
                 </tr>
                 <tr>
-                    <td style="border: none;"></td>
-                    <td style="border: none;"></td>
-                    <td style="border: none;"></td>
-                    <td style="border: none;"></td>
-                    <td style="border: none;"></td>
-                    <td style="text-align: right; border: none;">Samlet</td>
-                    <td style="text-align: right; border: none;"><strong>{{ displayDigits(total_granted) }} kr</strong></td>
-                    <template v-if="has_expected">
-                        <td class="expected" style="text-align: right; border: none;">{{ displayDigits(total_expected) }} kr</td>
-                    </template>
-                    <td style="border: none;" v-else></td>
+                    <td colspan="5"></td>
+                    <td class="right">Samlet</td>
+                    <td class="right nowrap"><strong>{{ displayDigits(total_granted) }} kr</strong></td>
+                    <td class="expected right nowrap">
+                        <span v-if="has_expected">
+                            {{ displayDigits(total_expected) }} kr
+                        </span>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -69,7 +66,7 @@
 <script>
 
     import axios from '../http/Http.js'
-    import { json2js } from '../filters/Date.js'
+    import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
     import { sectionId2name, displayStatus } from '../filters/Labels.js'
 
@@ -126,7 +123,7 @@
                 .catch(err => console.log(err))
             },
             displayDate: function(dt) {
-                return json2js(dt)
+                return json2jsDate(dt)
             },
             displayDigits: function(num) {
                 return cost2da(num)
@@ -167,8 +164,9 @@
         color: black;
     }
 
-    .appropriations .expected {
-        background-color: hsl(var(--color3), 80%, 80%); 
+    .appropriations tr:last-child td {
+        background-color: var(--grey0);
+        padding-top: 1.5rem;
     }
 
 </style>
