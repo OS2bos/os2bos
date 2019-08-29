@@ -143,12 +143,6 @@
         white-space: nowrap;
     }
 
-    .truncate {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
     .right {
         text-align: right;
     }    

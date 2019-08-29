@@ -41,9 +41,9 @@
                     </td>
                     <td>
                         <router-link :to="`/activity/${ a.id }`">{{ activityId2name(a.details) }}</router-link>
-                        <span v-if="a.activity_type === 'MAIN_ACTIVITY'" class="act-label">Hovedydelse</span>
+                        <span v-if="a.activity_type === 'MAIN_ACTIVITY'" class="act-label"><br>Hovedydelse</span>
                     </td>
-                    <td class="truncate">
+                    <td>
                         {{ a.payment_plan.recipient_name }}
                         <span v-if="a.payment_plan.recipient_type === 'COMPANY'">
                             CVR

@@ -36,7 +36,7 @@
                         </router-link>
                     </td>
                     <td>§ {{ displaySection(a.section) }}</td>
-                    <td class="truncate">{{ a.note }}</td>
+                    <td class="nowrap">{{ a.note }}</td>
                     <td class="nowrap">{{ displayDate(a.created) }}</td>
                     <td class="nowrap">{{ displayDate(a.modified) }}</td>
                     <td class="right nowrap">{{ displayDigits(a.total_granted_this_year) }} kr</td>

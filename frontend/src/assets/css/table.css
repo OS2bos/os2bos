@@ -30,6 +30,8 @@ td {
     max-width: 30rem;
     vertical-align: top;
     padding: .75rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 th {
