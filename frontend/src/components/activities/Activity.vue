@@ -16,8 +16,42 @@
             </h1>
             <button v-if="act.status !== 'GRANTED'" @click="show_edit = !show_edit" class="act-edit-btn">Redigér</button>
             <button v-if="act.status === 'GRANTED'" @click="createExpected()" class="act-edit-btn">+ Lav forventet justering</button>
-            <button class="act-delete-btn" @click="deleteActivity()"><i class="material-icons">delete</i></button>
+            <button v-if="act.status !== 'GRANTED'" class="act-delete-btn" @click="preDeleteCheck()">Slet</button>
         </header>
+
+        <div v-if="showModal">
+            <form @submit.prevent="deleteActivity()" class="modal-form">
+                <div class="modal-mask">
+                    <div class="modal-wrapper">
+                        <div class="modal-container">
+
+                            <div class="modal-header">
+                                <slot name="header">
+                                    <h1>Slet</h1>
+                                </slot>
+                            </div>
+
+                            <div class="modal-body">
+                                <slot name="body">
+                                    <h3>
+                                        Er du sikker på, at du vil slette denne
+                                        <span v-if="act.status === 'DRAFT'">kladde</span>
+                                        <span v-if="act.status === 'EXPECTED'">forventning</span> ?
+                                    </h3>
+                                </slot>
+                            </div>
+
+                            <div class="modal-footer">
+                                <slot name="footer">
+                                    <button type="button" class="modal-cancel-btn" @click="reload()">Annullér</button>
+                                    <button class="modal-delete-btn" type="submit">Slet</button>
+                                </slot>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
 
         <div v-if="show_edit">
             <activity-edit :activity-obj="act" v-if="show_edit" @save="reload()" @close="show_edit = !show_edit" :mode="edit_mode" />
@@ -134,6 +168,7 @@
     import { cost2da } from '../filters/Numbers.js'
     import { activityId2name, sectionId2name, displayStatus } from '../filters/Labels.js'
     import store from '../../store.js'
+    import notify from '../notifications/Notify.js'
 
     export default {
 
@@ -145,7 +180,8 @@
             return {
                 payments: null,
                 show_edit: false,
-                edit_mode: 'edit'
+                edit_mode: 'edit',
+                showModal: false
             }
         },
         beforeRouteEnter: function(to, from, next) {
@@ -197,6 +233,7 @@
         },
         methods: {
             reload: function() {
+                this.showModal = false
                 this.show_edit =  false
                 this.$store.dispatch('fetchActivity', this.$route.params.actId)
             },
@@ -219,12 +256,20 @@
                 this.edit_mode = 'clone'
                 this.show_edit =  true
             },
+            preDeleteCheck: function() {
+                 if (this.appr.activities.length > 0) {
+                    this.showModal = true
+                } else {
+                    alert('Fejl')
+                }
+            },
             deleteActivity: function() {
-                axios.delete(`/activities/`, this.appr.id)
-                    .then(res => {
-                        this.$router.push(`/appropriation/${ this.appropriation.id }`)
-                    })
-                    .catch(err => this.$store.dispatch('parseErrorOutput', err))
+                axios.delete(`/activities/${ this.$route.params.actId }`)
+                .then(res => {
+                    this.$router.push(`/appropriation/${ this.appr.id }`)
+                    notify('Ydelse slettet', 'success')
+                })
+                .catch(err => this.$store.dispatch('parseErrorOutput', err))
             }
         }
     }
@@ -253,13 +298,13 @@
     }
 
     .activity .act-delete-btn {
-        margin: 0 1rem;
-        border: solid .125rem var(--danger)
+        margin: 0;
+        border: solid .125rem var(--danger);
+        color: var(--danger);
     }
 
-    .act-delete-btn .material-icons {
-        font-size: 1.5rem;
-        color: var(--danger);
+    .activity .act-delete-btn:active {
+        background-color: var(--danger);
     }
 
     .activity-info {
@@ -273,6 +318,18 @@
 
      .payment-schedule {
         margin: 1rem;
+    }
+
+    .modal-delete-btn {
+        float: right;
+        margin-left: 0.5rem;
+        background-color: transparent;
+        color: var(--danger);
+        border-color: var(--danger);
+    }
+
+    .modal-delete-btn:active {
+        background-color: var(--danger);
     }
 
 </style>
