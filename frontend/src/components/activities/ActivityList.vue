@@ -10,7 +10,7 @@
 
     <section class="activities">
         <button class="activities-create-btn" title="Ny aktivitet" @click="$router.push(`/appropriation/${ apprId }/activity-create/`)">+ Tilføj ydelse</button>
-        <table v-if="acts && acts.length > 0">
+        <table>
             <thead>
                 <tr>
                     <th style="width: 4.5rem;">
@@ -25,42 +25,18 @@
                     <th class="right">Udgift i år</th>
                     <th class="right">Forventet udgift i år</th>
                 </tr>
-                <tr>
-                    <th colspan="7" class="table-heading">Ydelser</th>
-                    <th></th>
-                </tr>
             </thead>
             <tbody>
-                <tr v-for="a in acts" :key="a.id" :class="{ 'expected-row': a.status === 'EXPECTED', 'adjustment-row': a.modifies }" :title="a.note">
-                    <td style="width: 4.5rem;">
-                        <input type="checkbox" :id="`check-${ a.id }`" disabled>
-                        <label class="disabled" :for="`check-${ a.id }`"></label>
-                    </td>
-                    <td style="width: 5.5rem;">
-                        <div class="mini-label" v-html="statusLabel(a.status)"></div>
-                    </td>
-                    <td>
-                        <router-link :to="`/activity/${ a.id }`">{{ activityId2name(a.details) }}</router-link>
-                        <span v-if="a.activity_type === 'MAIN_ACTIVITY'" class="act-label"><br>Hovedydelse</span>
-                    </td>
-                    <td>
-                        {{ a.payment_plan.recipient_name }}
-                        <span v-if="a.payment_plan.recipient_type === 'COMPANY'">
-                            CVR
-                        </span>
-                        {{ a.payment_plan.recipient_id }}
-                    </td>
-                    <td class="nowrap">{{ displayDate(a.start_date) }}</td>
-                    <td class="nowrap">{{ displayDate(a.end_date) }}</td>
-                    <td class="nowrap right">
-                        <span v-if="a.status === 'GRANTED'">{{ displayDigits(a.total_cost_this_year) }} kr</span>
-                        <span v-if="a.status === 'DRAFT'" class="dim">{{ displayDigits(a.total_cost_this_year) }} kr</span>
-                    </td>
-                    <td class="nowrap right">
-                        <span v-if="a.status === 'EXPECTED'" class="expected">{{ displayDigits(a.total_cost_this_year) }} kr</span>
-                    </td>
-                    
+                <tr>
+                    <th colspan="7" class="table-heading" style="padding-top: 0;">Hovedydelse</th>
+                    <th></th>
                 </tr>
+                <act-list-item v-for="a in main_acts" :data="a" :key="a.id" />
+                <tr>
+                    <th colspan="7" class="table-heading">Følgeydelser</th>
+                    <th></th>
+                </tr>
+                <act-list-item v-for="a in suppl_acts" :data="a" :key="a.id" />
                 <tr>
                     <td colspan="5" style="padding-left: 0;">
                         <button disabled>✔ Godkendt valgte</button>
@@ -75,7 +51,7 @@
                 </tr>
             </tbody>
         </table>
-        <p v-if="!acts || acts.length < 1">Der er endnu ingen ydelser</p>
+        <p v-if="no_acts">Der er endnu ingen ydelser</p>
     </section>
 
 </template>
@@ -83,12 +59,15 @@
 <script>
 
     import axios from '../http/Http.js'
-    import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
-    import { activityId2name, displayStatus } from '../filters/Labels.js'
+    import { displayStatus } from '../filters/Labels.js'
+    import ActListItem from './ActivityListItem.vue'
 
     export default {
 
+        components: {
+            ActListItem
+        },
         props: [
             'apprId'
         ],
@@ -103,8 +82,16 @@
                     return false
                 }
             },
-            acts: function() {
-                return this.$store.getters.getActivities
+            main_acts: function() {
+                return this.$store.getters.getMainActivities
+            },
+            suppl_acts: function() {
+                return this.$store.getters.getSupplActivities
+            },
+            no_acts: function() {
+                if (!this.main_acts && !this.suppl_acts) {
+                    return true
+                }
             }
         },
         watch: {
@@ -116,17 +103,8 @@
             update: function() {
                 this.$store.dispatch('fetchActivities', this.apprId)
             },
-            displayDate: function(dt) {
-                return json2jsDate(dt)
-            },
             displayDigits: function(num) {
                 return cost2da(num)
-            },
-            activityId2name: function(id) {
-                return activityId2name(id)
-            },
-            statusLabel: function(status) {
-                return displayStatus(status)
             }
         },
         beforeCreate: function() {

@@ -11,6 +11,8 @@ import axios from '../components/http/Http.js'
 const state = {
     activity: null,
     activity_list: null,
+    main_activity_list: null,
+    suppl_activity_list: null,
     activity_detail: null,
     activity_details: null
 }
@@ -18,6 +20,12 @@ const state = {
 const getters = {
     getActivities (state) {
         return state.activity_list ? state.activity_list : false
+    },
+    getMainActivities (state) {
+        return state.main_activity_list ? state.main_activity_list : false
+    },
+    getSupplActivities (state) {
+        return state.suppl_activity_list ? state.suppl_activity_list : false
     },
     getActivity (state) {
         return state.activity ? state.activity : false
@@ -33,6 +41,12 @@ const getters = {
 const mutations = {
     setActivityList (state, activities) {
         state.activity_list = activities
+    },
+    setMainActivityList (state, activities) {
+        state.main_activity_list = activities
+    },
+    setSupplActivityList (state, activities) {
+        state.suppl_activity_list = activities
     },
     setActivity (state, activity) {
         state.activity = activity
@@ -54,43 +68,36 @@ const mutations = {
 const actions = {
     fetchActivities: function({commit}, appropriation_id) {
 
-        function sortActs(act_list) {
-
-            let sorted_list = [],
-                main_acts = act_list.filter(act => act.activity_type === 'MAIN_ACTIVITY'),
+        function sortActsByType(act_list) {
+            let main_acts = act_list.filter(act => act.activity_type === 'MAIN_ACTIVITY'),
                 sec_acts = act_list.filter(act => act.activity_type === 'SUPPL_ACTIVITY')
+            commit('setMainActivityList', sortActsByModifier(main_acts))
+            commit('setSupplActivityList', sortActsByModifier(sec_acts))
+        }
 
-            function sortByModifier(list) {
-                let new_list = list.sort(function(a,b) {
-                    if (b.modifies === a.id) {
-                        return -1
-                    } else if (a.modifies === null) {
-                        return 0
-                    } else {
-                        return 1
-                    }
-                })
-                return new_list
-            }
-
-            main_acts = sortByModifier(main_acts)
-            sec_acts = sortByModifier(sec_acts)
-
-            sorted_list = main_acts.concat(sec_acts)
-            return sorted_list
-
+        function sortActsByModifier(act_list) {
+            let new_list = act_list.sort(function(a,b) {
+                if (b.modifies === a.id) {
+                    return -1
+                } else if (a.modifies === null) {
+                    return 0
+                } else {
+                    return 1
+                }
+            })
+            return new_list
         }
 
         if (appropriation_id) {
             return axios.get(`/activities/?appropriation=${ appropriation_id }`)
             .then(res => {
-                commit('setActivityList', sortActs(res.data))
+                sortActsByType(res.data)
             })
             .catch(err => console.log(err))
         } else {
             return axios.get(`/activities/`)
             .then(res => {
-                commit('setActivityList', sortActs(res.data))
+                sortActsByType(res.data)
             })
             .catch(err => console.log(err))
         }
