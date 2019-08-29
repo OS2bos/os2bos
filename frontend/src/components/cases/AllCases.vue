@@ -21,7 +21,7 @@
         <table v-if="items.length > 0">
             <thead>
                 <tr>
-                    <th>Status</th>
+                    <th style="width: 5.5rem;">Status</th>
                     <th>SBSYS-hovedsag</th> 
                     <th>Borger</th>
                     <th>Ændret</th>
@@ -29,9 +29,13 @@
             </thead>
             <tbody>
                 <tr v-for="i in items" :key="i.id">
-                    <td>
-                        <span class="status-expired" v-if="i.expired === true">Udgået</span>
-                        <span class="status-active" v-if="i.expired === false">Aktiv</span>
+                    <td style="width: 5.5rem;">
+                        <div class="mini-label" v-if="c.expired === false">
+                            <span class="label label-GRANTED">Aktiv</span>
+                        </div>
+                        <div class="mini-label" v-if="c.expired === true">
+                            <span class="label label-DISCONTINUED">Udgået</span>
+                        </div>
                     </td>
                     <td>
                         <i class="material-icons">folder_shared</i>

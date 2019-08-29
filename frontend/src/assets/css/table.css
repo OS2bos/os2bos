@@ -9,7 +9,6 @@
 table {
     width: 100%;
     border-collapse: collapse;
-    word-wrap: break-word;
     margin: 1rem 0;
     table-layout: fixed;
 }

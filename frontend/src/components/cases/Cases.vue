@@ -25,7 +25,9 @@
             <tbody>
                 <tr v-for="c in cas" :key="c.id">
                     <td style="width: 5.5rem;">
-                        <span class="label-GRANTED mini-label" v-if="c.expired === false">Aktiv</span>
+                        <div class="mini-label" v-if="c.expired === false">
+                            <span class="label label-GRANTED">Aktiv</span>
+                        </div>
                     </td>
                     <td>
                         <i class="material-icons">folder_shared</i>
