@@ -10,6 +10,7 @@ table {
     width: 100%;
     border-collapse: collapse;
     word-wrap: break-word;
+    margin: 1rem 0;
 }
 
 thead,
@@ -24,11 +25,11 @@ tr {
 
 th,
 td {
-    padding: .5rem .75rem;
     text-align: left;
     margin: 0;
     max-width: 30rem;
     vertical-align: top;
+    padding: .75rem;
 }
 
 th {
@@ -37,6 +38,16 @@ th {
 
 td {
     background-color: var(--grey1);
+}
+
+th:first-child,
+td:first-child {
+    padding-left: 1.5rem;
+}
+
+th:last-child,
+td:last-child {
+    padding-right: 1.5rem;
 }
 
 

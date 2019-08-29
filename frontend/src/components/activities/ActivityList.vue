@@ -26,7 +26,8 @@
                     <th style="text-align: right;">Forventet udgift i år</th>
                 </tr>
                 <tr>
-                    <th colspan="8">Ydelser</th>
+                    <th colspan="7" class="table-heading">Ydelser</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -62,7 +63,7 @@
                     </td>
                     
                 </tr>
-                <tr>
+                <tr class="action-row">
                     <td colspan="5">
                         <button>Godkendt valgte</button>
                     </td>
@@ -172,7 +173,12 @@
     }
 
     .activities tr:last-child td {
-        background-color: var(--grey0)
+        background-color: var(--grey0);
+        padding-top: 1.5rem;
+    }
+
+    .activities .table-heading {
+        padding: .5rem 0 1rem 1.5rem;
     }
 
 </style>
