@@ -13,6 +13,10 @@
         <table v-if="acts && acts.length > 0">
             <thead>
                 <tr>
+                    <th>
+                        <input type="checkbox" id="check-all">
+                        <label for="check-all"></label>
+                    </th>
                     <th>Status</th>
                     <th>Ydelse</th>
                     <th>Udbetales til</th>
@@ -21,32 +25,48 @@
                     <th style="text-align: right;">Udgift i år</th>
                     <th style="text-align: right;">Forventet udgift i år</th>
                 </tr>
+                <tr>
+                    <th colspan="8">Ydelser</th>
+                </tr>
             </thead>
             <tbody>
                 <tr v-for="a in acts" :key="a.id" :class="{ 'expected-row': a.status === 'EXPECTED', 'adjustment-row': a.modifies }" :title="a.note">
                     <td>
+                        <input type="checkbox" :id="`check-${ a.id }`">
+                        <label :for="`check-${ a.id }`"></label>
+                    </td>
+                    <td>
                         <div class="mini-label" v-html="statusLabel(a.status)"></div>
                     </td>
                     <td>
-                        <span v-if="a.modifies" class="act-label"><i class="material-icons">subdirectory_arrow_right</i></span>
                         <router-link :to="`/activity/${ a.id }`">{{ activityId2name(a.details) }}</router-link>
                         <span v-if="a.activity_type === 'MAIN_ACTIVITY'" class="act-label">Hovedydelse</span>
                     </td>
-                    <td>{{ a.payment_plan.recipient_id }} - {{ a.payment_plan.recipient_name }}</td>
+                    <td>
+                        {{ a.payment_plan.recipient_name }}
+                        <span v-if="a.payment_plan.recipient_type === 'COMPANY'">
+                            CVR
+                        </span>
+                        {{ a.payment_plan.recipient_id }}
+                    </td>
                     <td class="nowrap">{{ displayDate(a.start_date) }}</td>
                     <td class="nowrap">{{ displayDate(a.end_date) }}</td>
-                    <td v-if="a.status === 'GRANTED'" class="nowrap" style="text-align: right;">{{ displayDigits(a.total_cost_this_year) }} kr</td>
-                    <td v-if="a.status === 'DRAFT'" class="nowrap" style="text-align: right; opacity: 0.5;">{{ displayDigits(a.total_cost_this_year) }} kr</td>
+                    <template v-if="a.status === 'GRANTED' || a.status === 'DRAFT'">
+                        <td v-if="a.status === 'GRANTED'" class="nowrap" style="text-align: right;">{{ displayDigits(a.total_cost_this_year) }} kr</td>
+                        <td v-if="a.status === 'DRAFT'" class="nowrap" style="text-align: right; opacity: 0.5;">{{ displayDigits(a.total_cost_this_year) }} kr</td>
+                    </template>
                     <td v-else></td>
-                    <td v-if="a.status === 'EXPECTED'" class="nowrap expected" style="text-align: right;">{{ displayDigits(a.total_cost_this_year) }} kr</td>
-                    <td v-else></td>
+                    <td class="nowrap" style="text-align: right;">
+                        <span v-if="a.status === 'EXPECTED'" class="expected">{{ displayDigits(a.total_cost_this_year) }} kr</span>
+                        <span v-else style="opacity: .33">{{ displayDigits(a.total_cost_this_year) }} kr</span>
+                    </td>
+                    
                 </tr>
                 <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td style="font-weight: bold;">I alt</td>
+                    <td colspan="5">
+                        <button>Godkendt valgte</button>
+                    </td>
+                    <td style="font-weight: bold; text-align: right;">I alt</td>
                     <td class="nowrap" style="text-align: right; font-weight: bold;">
                         {{ displayDigits(appropriation.total_granted_this_year) }} kr
                     </td>
@@ -145,14 +165,14 @@
         white-space: nowrap;
     }
 
-    .activities .adjustment-row > td {
-        border-top: none;
-    }
-
     .activities .act-label {
         opacity: .66;
         font-size: .85rem;
         margin: 0 1rem;
+    }
+
+    .activities tr:last-child td {
+        background-color: var(--grey0)
     }
 
 </style>
