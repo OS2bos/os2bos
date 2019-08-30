@@ -36,12 +36,16 @@
                     <th colspan="7" class="table-heading" style="padding-top: 0;">Hovedydelse</th>
                     <th></th>
                 </tr>
-                <act-list-item v-for="a in main_acts" :data="a" :key="a.id" />
+                <template v-for="chunk in main_acts">
+                    <act-list-item v-for="a in chunk" :data="a" :key="a.id" />
+                </template>
                 <tr>
                     <th colspan="7" class="table-heading">Følgeydelser</th>
                     <th></th>
                 </tr>
-                <act-list-item v-for="a in suppl_acts" :data="a" :key="a.id" />
+                <template v-for="chunk in suppl_acts">
+                    <act-list-item v-for="a in chunk" :data="a" :key="a.id" />
+                </template>
                 <tr>
                     <td colspan="5" style="padding-left: 0;">
                         <button disabled>✔ Godkendt valgte</button>
@@ -79,7 +83,7 @@
         data: function() {
             return {
                 main_acts: null,
-                suppl_acts: null,
+                suppl_acts: null
             }
         },
         computed: {
@@ -90,11 +94,7 @@
                 return this.$store.getters.getActivities
             },
             no_acts: function() {
-                if (!this.main_acts && !this.suppl_acts) {
-                    return true
-                } else {
-                    return false
-                }
+                return true
             }
         },
         watch: {
@@ -114,58 +114,61 @@
             },
             splitActList: function(act_list) {
 
-                function sortActsByModifier(list) {
+                let chunks = []
 
-                    let modifiers = list.filter(function(act) {
-                            return act.modifies !== null
-                        }),
-                        modified = list.filter(function(act) {
-                            return act.modifies === null
-                        }),
-                        new_list = Array.from(modified)
-
-                    console.log('----')
-                    console.log(modifiers)
-                    
-                    for (let m in modifiers) {
-                        let idx = modified.findIndex(function(mod) {
-                            return modifiers[m].modifies === mod.id
-                        })
-                        if (idx > -1) {
-                            new_list.splice(idx, 0, modifiers[m])
-                        }
-                    }
-
-                    console.log(modified)
-                    console.log('----')
-
-                    return new_list
-                }
-
-                function sortActsByDate(list) {
-                    let new_list = list.sort(function(a,b) {
-                        const a_start = new Date(a.start_date).getTime(),
-                              b_start = new Date(b.start_date).getTime()
-                        if (b_start > a_start) {
-                            return -1
-                        } else if (b_start < a_start) {
-                            return 1
-                        } else {
-                            return 0
-                        }
+                function addModifierAct(chunk, id) {
+                    let modifier = act_list.find(function(a) {
+                        return a.modifies === id
                     })
-                    return new_list
+                    if (modifier) {
+                        chunk.push(modifier)
+                        addModifierAct(chunk, modifier.id)
+                    } else {
+                        chunks.push(chunk)
+                    }   
                 }
 
-                let mains = sortActsByModifier( act_list.filter(function(act) { 
-                        return act.activity_type === 'MAIN_ACTIVITY' 
-                    }) ),
-                    suppls = sortActsByModifier( act_list.filter(function(act) {
-                        return act.activity_type === 'SUPPL_ACTIVITY'
-                    }) )
+                // Group activities together by 'modifies'
+                for (let act of act_list) {
+                    if (act.modifies === null) {
+                        let chunk = [act]
+                        addModifierAct(chunk, act.id)
+                    }
+                }
+
+                // Add meta activity to chunks of modified activities
+                for (let c in chunks) {
+                    let chunk = chunks[c]
+                    if (chunk.length < 2) {
+                        // Do nothing
+                    } else {
+                        for (let act of chunk) {
+                            act.group = `group-${ c }`
+                        }
+                        let meta_act = {
+                            id: `group-${ c }`,
+                            is_meta: true,
+                            status: chunk[0].status,
+                            start_date: chunk[0].start_date,
+                            end_date: chunk[0].end_date,
+                            activity_type: chunk[0].activity_type,
+                            total_cost_this_year: chunk[0].total_cost_this_year,
+                            details: chunk[0].details,
+                            payment_plan: chunk[0].payment_plan,
+                            note: `group-${ c }`
+                        }
+                        chunk.unshift(meta_act)
+                    }
+                }
+
+                // Split list of chunks into main and supplementary lists
+                this.main_acts = chunks.filter(function(c) {
+                    return c[0].activity_type === 'MAIN_ACTIVITY'
+                })
+                this.suppl_acts = chunks.filter(function(c) {
+                    return c[0].activity_type === 'SUPPL_ACTIVITY'
+                })
                 
-                this.main_acts = mains
-                this.suppl_acts = suppls
             }
         },
         beforeCreate: function() {
