@@ -119,9 +119,7 @@
                 act: {},
                 act_status_expected: false,
                 pay: {},
-                act_details: null,
-                current_start_date: null,
-                current_end_date: null
+                act_details: null
             }
         },
         computed: {
@@ -137,18 +135,30 @@
                 }
             },
             startDateSet: function() {
-                if (this.act.activity_type !== 'MAIN_ACTIVITY') {
+                if (this.act.activity_type !== 'MAIN_ACTIVITY' && this.mode !== 'clone') {
                     return epoch2DateStr(this.appr_main_acts.start_date)
-                } else {
-                    return false
                 }
+                if (this.mode === 'clone' && this.act.activity_type !== 'MAIN_ACTIVITY') {
+                    this.act.start_date = null
+                    return epoch2DateStr(this.appr_main_acts.start_date)
+                }
+                if (this.mode === 'clone' && this.act.activity_type === 'MAIN_ACTIVITY') {
+                    this.act.start_date = null
+                }
+                return false
             },
             endDateSet: function() {
-                if (this.act.activity_type !== 'MAIN_ACTIVITY') {
+                if (this.act.activity_type !== 'MAIN_ACTIVITY' && this.mode !== 'clone') {
                     return epoch2DateStr(this.appr_main_acts.end_date)
-                } else {
-                    return false
                 }
+                if (this.mode === 'clone' && this.act.activity_type !== 'MAIN_ACTIVITY') {
+                    this.act.end_date = null
+                    return epoch2DateStr(this.appr_main_acts.end_date)
+                }
+                if (this.mode === 'clone' && this.act.activity_type === 'MAIN_ACTIVITY') {
+                    this.act.end_date = null
+                }
+                return false
             }
         },
         watch: {
