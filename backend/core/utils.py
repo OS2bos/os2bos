@@ -9,6 +9,7 @@
 import os
 import logging
 import requests
+from dateutil.relativedelta import relativedelta
 
 from django.template.loader import get_template
 from django.core.mail import EmailMessage
@@ -26,8 +27,26 @@ from weasyprint.fonts import FontConfiguration
 
 from service_person_stamdata_udvidet import get_citizen
 
-
 logger = logging.getLogger(__name__)
+
+
+def get_next_interval(from_date, payment_frequency):
+    """
+    Calculate the next date based on a start date and payment frequency.
+    """
+    from core.models import PaymentSchedule
+
+    if payment_frequency == PaymentSchedule.DAILY:
+        new_start = from_date + relativedelta(days=1)
+    elif payment_frequency == PaymentSchedule.WEEKLY:
+        new_start = from_date + relativedelta(weeks=1)
+    elif payment_frequency == PaymentSchedule.BIWEEKLY:
+        new_start = from_date + relativedelta(weeks=2)
+    elif payment_frequency == PaymentSchedule.MONTHLY:
+        new_start = from_date.replace(day=1) + relativedelta(months=1)
+    else:
+        raise ValueError(_("ukendt betalingsfrekvens"))
+    return new_start
 
 
 def get_person_info(cpr):
