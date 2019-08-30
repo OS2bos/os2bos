@@ -1,38 +1,39 @@
 <template>
     
-    <tr class="act-list-item" 
-        :class="{ [data.group]: data.group, 'meta-row': data.is_meta, 'sub-row': data.group }" 
-        :title="data.note" 
-        @click="data.is_meta ? toggleGroup(data.id) : false">
+    <tr v-if="visible"
+        class="act-list-item" 
+        :class="{ [act.group]: act.group, 'meta-row': act.is_meta, 'sub-row': act.group }" 
+        :title="act.note" 
+        @click="act.is_meta ? toggleGroup(act.id) : false">
         <td style="width: 4.5rem;">
-            <template v-if="!data.is_meta">
-                <input type="checkbox" :id="`check-${ data.id }`" disabled>
-                <label class="disabled" :for="`check-${ data.id }`"></label>
+            <template v-if="!act.is_meta">
+                <input type="checkbox" :id="`check-${ act.id }`" disabled>
+                <label class="disabled" :for="`check-${ act.id }`"></label>
             </template>
-            <div v-else class="dropdown-arrow">▼</div>
+            <div v-else class="dropdown-arrow" :class="{'toggled': toggled}">▼</div>
         </td>
         <td style="width: 5.5rem;">
-            <div class="mini-label" v-html="statusLabel(data.status)"></div>
+            <div class="mini-label" v-html="statusLabel(act.status)"></div>
         </td>
         <td>
-            <router-link v-if="!data.is_meta" :to="`/activity/${ data.id }`">{{ activityId2name(data.details) }}</router-link>
-            <span v-else>{{ activityId2name(data.details) }}</span>
+            <router-link v-if="!act.is_meta" :to="`/activity/${ act.id }`">{{ activityId2name(act.details) }}</router-link>
+            <span v-else>{{ activityId2name(act.details) }}</span>
         </td>
         <td>
-            {{ data.payment_plan.recipient_name }}
-            <span v-if="data.payment_plan.recipient_type === 'COMPANY'">
+            {{ act.payment_plan.recipient_name }}
+            <span v-if="act.payment_plan.recipient_type === 'COMPANY'">
                 CVR
             </span>
-            {{ data.payment_plan.recipient_id }}
+            {{ act.payment_plan.recipient_id }}
         </td>
-        <td class="nowrap">{{ displayDate(data.start_date) }}</td>
-        <td class="nowrap">{{ displayDate(data.end_date) }}</td>
+        <td class="nowrap">{{ displayDate(act.start_date) }}</td>
+        <td class="nowrap">{{ displayDate(act.end_date) }}</td>
         <td class="nowrap right">
-            <span v-if="data.status === 'GRANTED'">{{ displayDigits(data.total_cost_this_year) }} kr</span>
-            <span v-if="data.status === 'DRAFT'" class="dim">{{ displayDigits(data.total_cost_this_year) }} kr</span>
+            <span v-if="act.status === 'GRANTED'">{{ displayDigits(act.total_cost_this_year) }} kr</span>
+            <span v-if="act.status === 'DRAFT'" class="dim">{{ displayDigits(act.total_cost_this_year) }} kr</span>
         </td>
         <td class="nowrap right">
-            <span v-if="data.status === 'EXPECTED'" class="expected">{{ displayDigits(data.total_cost_this_year) }} kr</span>
+            <span v-if="act.status === 'EXPECTED'" class="expected">{{ displayDigits(act.total_cost_this_year) }} kr</span>
         </td>
     </tr>
 
@@ -47,10 +48,11 @@
     export default {
     
         props: [
-            'data'
+            'act'
         ],
         data: function() {
             return {
+                visible: true,
                 toggled: false
             }
         },
@@ -68,10 +70,14 @@
                 return activityId2name(id)
             },
             toggleGroup: function(group_id) {
-                // identify who is in group
+                this.$emit('toggle', group_id)
+            }
+        },
+        created: function() {
+            if (this.act.group) {
+                this.visible = false
             }
         }
-        
     }
 
 </script>
@@ -82,18 +88,18 @@
         cursor: pointer;
     }
 
-    .act-list-item.sub-row {
-        
-    }
-
     .act-list-item.sub-row td {
         background-color: hsl(var(--color1), 66%, 92%);
     }
 
     .act-list-item .dropdown-arrow {
         line-height: 1;
-        height: 1rem;
-        width: 1rem;
+        height: 1.5rem;
+        width: 1.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
         text-align: center;
         transition: transform .5s;
     }

@@ -37,14 +37,24 @@
                     <th></th>
                 </tr>
                 <template v-for="chunk in main_acts">
-                    <act-list-item v-for="a in chunk" :data="a" :key="a.id" />
+                    <act-list-item 
+                        v-for="a in chunk"
+                        :ref="a.group ? a.group : a.id"
+                        :act="a" 
+                        :key="a.id"
+                        @toggle="toggleHandler" />
                 </template>
                 <tr>
                     <th colspan="7" class="table-heading">Følgeydelser</th>
                     <th></th>
                 </tr>
                 <template v-for="chunk in suppl_acts">
-                    <act-list-item v-for="a in chunk" :data="a" :key="a.id" />
+                    <act-list-item 
+                        v-for="a in chunk"
+                        :ref="a.group ? a.group : a.id"
+                        :act="a" 
+                        :key="a.id"
+                        @toggle="toggleHandler" />
                 </template>
                 <tr>
                     <td colspan="5" style="padding-left: 0;">
@@ -143,10 +153,10 @@
                         // Do nothing
                     } else {
                         for (let act of chunk) {
-                            act.group = `group-${ c }`
+                            act.group = `group${ c }`
                         }
                         let meta_act = {
-                            id: `group-${ c }`,
+                            id: `group${ c }`,
                             is_meta: true,
                             status: chunk[0].status,
                             start_date: chunk[0].start_date,
@@ -155,7 +165,7 @@
                             total_cost_this_year: chunk[0].total_cost_this_year,
                             details: chunk[0].details,
                             payment_plan: chunk[0].payment_plan,
-                            note: `group-${ c }`
+                            note: ''
                         }
                         chunk.unshift(meta_act)
                     }
@@ -169,6 +179,16 @@
                     return c[0].activity_type === 'SUPPL_ACTIVITY'
                 })
                 
+            },
+            toggleHandler: function(toggl_id) {     
+                for (let comp of this.$refs[toggl_id]) {
+                    if (comp.act.is_meta) {
+                        comp.toggled = !comp.toggled
+                    } else {
+                        comp.visible = !comp.visible
+                    }
+                    
+                }
             }
         },
         beforeCreate: function() {
