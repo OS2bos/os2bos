@@ -101,7 +101,7 @@
         align-items: center;
         overflow: hidden;
         text-align: center;
-        transition: transform .5s;
+        transition: transform .25s;
     }
 
     .act-list-item .dropdown-arrow.toggled {
