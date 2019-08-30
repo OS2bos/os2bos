@@ -531,6 +531,9 @@ class Case(AuditModelMixin, models.Model):
         verbose_name=_("skaleringstrappe"),
         choices=[(i, i) for i in range(1, 11)],
     )
+    assessment_comment = models.TextField(
+        verbose_name=_("supplerende oplysninger til vurdering"), blank=True
+    )
     refugee_integration = models.BooleanField(
         verbose_name=_("integrationsindsatsen"), default=False
     )

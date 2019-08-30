@@ -45,7 +45,7 @@
 
         <fieldset>
             <label for="textArea">Supplerende information til vurdering</label>
-            <textarea maxlength="100" id="textArea" v-model="cas.history_change_reason" @change="updateNote()"></textarea>
+            <textarea maxlength="100" id="textArea" v-model="cas.assessment_comment" @change="updateNote()"></textarea>
         </fieldset>
 
     </div>
@@ -70,7 +70,7 @@
                 cas: {
                     effort_step: null,
                     scaling_step: null,
-                    history_change_reason: null
+                    assessment_comment: null
                 },
                 create_mode: false
             }
@@ -88,7 +88,7 @@
             },
             updateNote: function() {
                 this.$emit('assessment', {
-                    history_change_reason: this.cas.history_change_reason
+                    assessment_comment: this.cas.assessment_comment
                 })
             }
         },

@@ -89,17 +89,6 @@ class CaseViewSet(AuditViewSet):
         team = current_user.team
         serializer.save(case_worker=current_user, team=team)
 
-    def perform_update(self, serializer):
-        # save history_change_reason for the Case used for assessments.
-        change_reason = None
-        if (
-            "history_change_reason" in self.request.data
-            and self.request.data["history_change_reason"]
-        ):
-            change_reason = self.request.data.pop("history_change_reason")
-
-        serializer.save(changeReason=change_reason)
-
     @action(detail=True, methods=["get"])
     def history(self, request, pk=None):
         """
