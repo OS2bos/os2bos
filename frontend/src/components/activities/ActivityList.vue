@@ -104,7 +104,11 @@
                 return this.$store.getters.getActivities
             },
             no_acts: function() {
-                return true
+                if (this.acts.length < 1) {
+                    return true
+                } else {
+                    return false
+                }
             }
         },
         watch: {
