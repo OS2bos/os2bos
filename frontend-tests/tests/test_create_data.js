@@ -13,25 +13,25 @@ const testdata = {
     },
     act1: {
         type: 1,
-        act_detail: 'Kvindekrisecentre',
+        act_detail: 'Psykologhjælp til børn',
         start: '2019-08-01',
         end: '2020-12-31',
         note: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        amount: '3095,50',
+        amount: '3095.50',
         payee_id: '78362883763',
         payee_name: 'Fiktivt Firma ApS'
     },
     act2: {
-        type: 1,
+        type: 0,
         start: '2019-11-01',
         end: '2020-03-31',
         note: 'En lille note',
-        amount: '595,95',
+        amount: '595.95',
         payee_id: '8923',
         payee_name: 'Testbevillingscentralen A/S'
     },
     act3: {
-        type: 2,
+        type: 1,
         start: '2019-11-01',
         end: '2020-03-31',
         note: 'En anden lille note',
@@ -117,5 +117,19 @@ test('Create Activity', async t => {
         .navigateTo('http://localhost:8080/#/')
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
-        .expect(Selector('.activities table tr:first-child td a').innerText).contains(testdata.act1.act_detail)
+        .expect(Selector('.activities table tr.act-list-item td a').innerText).contains(testdata.act1.act_detail)
+})
+
+test('Approve appropriation', async t => {
+    
+    await loginAsUngeraadgiver(t)
+
+    await t
+        .click(Selector('a').withText(testdata.case1.name))
+        .click(Selector('a').withText(testdata.appr1.name))
+        .click(Selector('button').withText('Godkend'))
+        .click('#inputRadio1')
+        .typeText('#field-text', 'Godkendt grundet svære og særligt tvingende omstændigheder')
+        .click(Selector('button').withText('Godkend'))
+        .expect(Selector('.sagsstatus .label').innerText).contains('bevilget')
 })
