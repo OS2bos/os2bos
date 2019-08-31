@@ -123,13 +123,13 @@ async function createActivity(t, act_data) {
         .click('#pay-type-2')
         .typeText('#field-amount-1', act_data.amount)
         .click('#pay-freq')
-        .click(Selector('#pay-freq option').nth(1))
+        .click(Selector('#pay-freq option').nth(0))
         .click('#field-payee')
-        .click(Selector('#field-payee option').nth(2))
+        .click(Selector('#field-payee option').nth(1))
         .typeText('#field-payee-id', act_data.payee_id)
         .typeText('#field-payee-name', act_data.payee_name)
         .click('#field-pay-method')
-        .click(Selector('#field-pay-method option').nth(1))
+        .click(Selector('#field-pay-method option').nth(0))
         .click(Selector('input').withAttribute('type', 'submit'))
 }
 

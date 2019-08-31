@@ -6,11 +6,11 @@
         :title="act.note" 
         @click="act.is_meta ? toggleGroup(act.id) : false">
         <td style="width: 4.5rem;">
-            <template v-if="!act.is_meta">
+            <template v-if="!act.is_meta && act.status !== 'GRANTED'">
                 <input type="checkbox" :id="`check-${ act.id }`" disabled>
                 <label class="disabled" :for="`check-${ act.id }`"></label>
             </template>
-            <div v-else class="dropdown-arrow" :class="{'toggled': toggled}">▼</div>
+            <div v-if="act.is_meta" class="dropdown-arrow" :class="{'toggled': toggled}">▼</div>
         </td>
         <td style="width: 5.5rem;">
             <div class="mini-label" v-html="statusLabel(act.status)"></div>
@@ -29,11 +29,15 @@
         <td class="nowrap">{{ displayDate(act.start_date) }}</td>
         <td class="nowrap">{{ displayDate(act.end_date) }}</td>
         <td class="nowrap right">
-            <span v-if="act.status === 'GRANTED'">{{ displayDigits(act.total_cost_this_year) }} kr</span>
-            <span v-if="act.status === 'DRAFT'" class="dim">{{ displayDigits(act.total_cost_this_year) }} kr</span>
+            <span v-if="act.is_meta">{{ displayDigits(act.total_approved) }} kr</span>
+            <template v-else>
+                <span v-if="act.status === 'GRANTED'">{{ displayDigits(act.total_cost_this_year) }} kr</span>
+                <span v-if="act.status === 'DRAFT'" class="dim">{{ displayDigits(act.total_cost_this_year) }} kr</span>
+            </template>
         </td>
         <td class="nowrap right">
-            <span v-if="act.status === 'EXPECTED'" class="expected">{{ displayDigits(act.total_cost_this_year) }} kr</span>
+            <span v-if="act.is_meta" class="expected">{{ displayDigits(act.total_expected) }} kr</span>
+            <span v-if="!act.is_meta && act.status === 'EXPECTED'" class="expected">{{ displayDigits(act.total_cost_this_year) }} kr</span>
         </td>
     </tr>
 
