@@ -8,6 +8,7 @@
 
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
+from django import forms
 
 from rest_framework import serializers
 
@@ -142,8 +143,45 @@ class ActivitySerializer(WritableNestedModelSerializer):
             and data["start_date"] > data["end_date"]
         ):
             raise serializers.ValidationError(
-                _("startdato skal være før slutdato")
+                _("startdato skal være før eller identisk med slutdato")
             )
+
+        # one time payments should have the same start and end date.
+        is_one_time_payment = (
+            data["payment_plan"]["payment_type"]
+            == PaymentSchedule.ONE_TIME_PAYMENT
+        )
+        if is_one_time_payment and (
+            "end_date" not in data or data["end_date"] != data["start_date"]
+        ):
+            raise serializers.ValidationError(
+                _("startdato og slutdato skal være ens for engangsbetaling")
+            )
+
+        # monthly payments should start and end at the 1st.
+        is_monthly_payment = (
+            data["payment_plan"]["payment_frequency"]
+            == PaymentSchedule.MONTHLY
+        )
+        if is_monthly_payment and (
+            not data["start_date"].day == 1
+            or ("end_date" in data and not data["end_date"].day == 1)
+        ):
+            raise serializers.ValidationError(
+                _("startdato og slutdato for månedlige betalinger være den 1.")
+            )
+
+        if "modifies" in data and data["modifies"]:
+            # run the validate_expected flow.
+            data_copy = data.copy()
+            data_copy["payment_plan"] = PaymentSchedule(
+                **data_copy.pop("payment_plan")
+            )
+            instance = Activity(**data_copy)
+            try:
+                instance.validate_expected()
+            except forms.ValidationError as e:
+                raise serializers.ValidationError(e.message)
         return data
 
     class Meta:

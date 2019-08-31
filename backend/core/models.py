@@ -9,11 +9,12 @@
 from datetime import date, timedelta
 from decimal import Decimal
 import uuid
-
-from dateutil import rrule
 from dateutil.relativedelta import relativedelta
-from django.db import models
-from django.db.models import Q
+from dateutil import rrule
+
+from django import forms
+from django.db import models, transaction
+from django.db.models import Q, F
 from django.contrib.postgres import fields
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
@@ -23,7 +24,7 @@ from django_audit_fields.models import AuditModelMixin
 from simple_history.models import HistoricalRecords
 
 from core.managers import PaymentQuerySet, CaseQuerySet
-from core.utils import send_appropriation
+from core.utils import send_appropriation, get_next_interval
 
 # Target group - definitions and choice list.
 FAMILY_DEPT = "FAMILY_DEPT"
@@ -240,6 +241,17 @@ class PaymentSchedule(models.Model):
     )
     payment_id = models.UUIDField(default=uuid.uuid4, editable=False)
 
+    @property
+    def next_payment(self):
+        today = date.today()
+        upcoming_payments = self.payments.filter(date__gt=today).order_by(
+            "date"
+        )
+        if not upcoming_payments.exists():
+            return None
+        else:
+            return upcoming_payments.first()
+
     @staticmethod
     def is_payment_and_recipient_allowed(payment_method, recipient_type):
         allowed = {
@@ -293,7 +305,6 @@ class PaymentSchedule(models.Model):
                 rrule.WEEKLY, dtstart=start, until=end, interval=2
             )
         elif self.payment_frequency == self.MONTHLY:
-            # If monthly, choose the first day of the month.
             rrule_frequency = rrule.rrule(
                 rrule.MONTHLY, dtstart=start, until=end, bymonthday=1
             )
@@ -359,16 +370,9 @@ class PaymentSchedule(models.Model):
             return
         # The new start_date should be based on the newest payment date
         # and the payment frequency.
-        if self.payment_frequency == PaymentSchedule.DAILY:
-            new_start = newest_payment.date + relativedelta(days=1)
-        elif self.payment_frequency == PaymentSchedule.WEEKLY:
-            new_start = newest_payment.date + relativedelta(weeks=1)
-        elif self.payment_frequency == PaymentSchedule.BIWEEKLY:
-            new_start = newest_payment.date + relativedelta(weeks=2)
-        elif self.payment_frequency == PaymentSchedule.MONTHLY:
-            new_start = newest_payment.date + relativedelta(months=1)
-        else:
-            raise ValueError(_("ukendt betalingsfrekvens"))
+        new_start = get_next_interval(
+            newest_payment.date, self.payment_frequency
+        )
 
         # Handle the case where an end_date is set in the future
         # after already having generated payments with no end_date.
@@ -695,6 +699,7 @@ class Appropriation(AuditModelMixin, models.Model):
         Retrieve total amount granted this year for payments related to
         this Appropriation (both main and supplementary activities).
         """
+
         granted_activities = self.activities.all().filter(
             status=STATUS_GRANTED
         )
@@ -715,16 +720,15 @@ class Appropriation(AuditModelMixin, models.Model):
         if it modifies another activity.
         """
 
-        all_activities = self.activities.filter(
-            Q(status=STATUS_GRANTED, modified_by__isnull=True)
-            | Q(status=STATUS_EXPECTED)
+        activities = self.activities.filter(
+            Q(status=STATUS_GRANTED) | Q(status=STATUS_EXPECTED)
         )
-
-        this_years_payments = Payment.objects.filter(
-            payment_schedule__activity__in=all_activities
-        ).in_this_year()
-
-        return this_years_payments.amount_sum()
+        return (
+            Payment.objects.filter(payment_schedule__activity__in=activities)
+            .expected()
+            .in_this_year()
+            .amount_sum()
+        )
 
     @property
     def total_expected_full_year(self):
@@ -735,6 +739,7 @@ class Appropriation(AuditModelMixin, models.Model):
         all_activities = self.activities.filter(
             Q(status=STATUS_GRANTED, modified_by__isnull=True)
             | Q(status=STATUS_EXPECTED)
+            | Q(status=STATUS_GRANTED, modified_by__status=STATUS_GRANTED)
         )
         return sum(
             activity.total_cost_full_year for activity in all_activities
@@ -759,6 +764,7 @@ class Appropriation(AuditModelMixin, models.Model):
         # TODO:
         pass  # pragma: no cover
 
+    @transaction.atomic
     def grant(self, approval_level, approval_note):
         """Grant this app - change state and all Activities to GRANTED."""
         if self.status in [self.STATUS_DRAFT, self.STATUS_BUDGETED]:
@@ -787,15 +793,24 @@ class Appropriation(AuditModelMixin, models.Model):
             self.approval_note = approval_note
             self.appropriation_date = timezone.now().date()
             self.save()
+
             # Now go through the activities.
             for a in self.activities.exclude(status=STATUS_GRANTED):
-                # If a modifies another, merge -
+                # If a modifies another and is valid, merge -
                 # else just set status = GRANTED.
-                if a.modifies:
-                    # "Merge" by ending current activity today
-                    # and granting the new one from tomorrow.
-                    a.modifies.end_date = date.today()
-                    a.start_date = date.today() + timedelta(days=1)
+                if a.modifies and a.validate_expected():
+                    # "Merge" by ending current activity the day
+                    # before the new start_date.
+                    # In case of a one_time_payment we end the on the same day
+                    # and delete all payments for the old one.
+                    if (
+                        a.modifies.payment_plan.payment_type
+                        == PaymentSchedule.ONE_TIME_PAYMENT
+                    ):
+                        a.modifies.payment_plan.payments.all().delete()
+                        a.modifies.end_date = a.start_date
+                    else:
+                        a.modifies.end_date = a.start_date - timedelta(days=1)
                     a.status = STATUS_GRANTED
                     a.modifies.save()
                     a.save()
@@ -902,6 +917,11 @@ class Activity(AuditModelMixin, models.Model):
         verbose_name = _("aktivitet")
         verbose_name_plural = _("aktiviteter")
         constraints = [
+            # Activity start_date should come before end_date.
+            models.CheckConstraint(
+                check=Q(start_date__lte=F("end_date")),
+                name="end_date_after_start_date",
+            ),
             # Appropriation can only have a single main activity
             # that does not have an expected activity.
             models.UniqueConstraint(
@@ -909,7 +929,7 @@ class Activity(AuditModelMixin, models.Model):
                 condition=Q(activity_type=MAIN_ACTIVITY)
                 & Q(modifies__isnull=True),
                 name="unique_main_activity",
-            )
+            ),
         ]
 
     details = models.ForeignKey(
@@ -972,6 +992,68 @@ class Activity(AuditModelMixin, models.Model):
         status_str = self.get_status_display()
         return f"{self.details} - {activity_type_str} - {status_str}"
 
+    def validate_expected(self):
+        today = date.today()
+        if not self.modifies:
+            raise forms.ValidationError(
+                _("den forventede justering har ingen aktivitet at justere")
+            )
+        is_one_time_payment = (
+            self.payment_plan.payment_type == PaymentSchedule.ONE_TIME_PAYMENT
+        )
+        # the expected with modifies activity should have a start_date
+        # in the span of next payment date to the modified activitys
+        # end_date
+        if is_one_time_payment:
+            next_payment_date = today + timedelta(days=1)
+        elif not self.modifies.ongoing:
+            next_payment_date = get_next_interval(
+                self.modifies.start_date, self.payment_plan.payment_frequency
+            )
+        else:
+            next_payment = self.modifies.payment_plan.next_payment
+            if not next_payment:
+                raise forms.ValidationError(
+                    _(
+                        "den bevilgede aktivitet skal have en fremtidig"
+                        " betaling for at man kan lave en"
+                        " forventet justering"
+                    )
+                )
+            next_payment_date = next_payment.date
+
+        if is_one_time_payment:
+            if not today < next_payment_date <= self.start_date:
+                raise forms.ValidationError(
+                    _(
+                        f"den justerede aktivitets startdato skal være i"
+                        f" fremtiden fra næste betalingsdato:"
+                        f" {next_payment_date}"
+                    )
+                )
+        elif not (
+            today
+            < next_payment_date
+            <= self.start_date
+            <= self.modifies.end_date
+        ):
+            raise forms.ValidationError(
+                _(
+                    f"den justerede aktivitets startdato skal være i"
+                    f" fremtiden i spændet fra næste betalingsdato:"
+                    f" {next_payment_date} til"
+                    f" ydelsens slutdato: {self.modifies.end_date}"
+                )
+            )
+        return True
+
+    @property
+    def ongoing(self):
+        today = date.today()
+        return self.start_date <= today and (
+            not self.end_date or self.end_date > today
+        )
+
     @property
     def account(self):
         if self.activity_type == MAIN_ACTIVITY:
@@ -1002,16 +1084,22 @@ class Activity(AuditModelMixin, models.Model):
 
     @property
     def total_cost_this_year(self):
-        now = timezone.now()
-        payments = Payment.objects.filter(
-            payment_schedule__activity=self
-        ).filter(date__year=now.year)
-
-        return payments.amount_sum()
+        if self.status == STATUS_GRANTED and self.modified_by.exists():
+            payments = Payment.objects.filter(
+                payment_schedule__activity=self
+            ).expected()
+        else:
+            payments = Payment.objects.filter(payment_schedule__activity=self)
+        return payments.in_this_year().amount_sum()
 
     @property
     def total_cost(self):
-        payments = Payment.objects.filter(payment_schedule__activity=self)
+        if self.status == STATUS_GRANTED and self.modified_by.exists():
+            payments = Payment.objects.filter(
+                payment_schedule__activity=self
+            ).expected()
+        else:
+            payments = Payment.objects.filter(payment_schedule__activity=self)
         return payments.amount_sum()
 
     @property

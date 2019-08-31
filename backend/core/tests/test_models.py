@@ -6,15 +6,16 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-from django.db import IntegrityError
-from django.test import TestCase
-from django.utils import timezone
-from django.core import mail
 from decimal import Decimal
 from datetime import date, timedelta
 from unittest import mock
 
+from django import forms
 from django.contrib.auth import get_user_model
+from django.db import IntegrityError
+from django.test import TestCase
+from django.utils import timezone
+from django.core import mail
 from parameterized import parameterized
 
 from core.tests.testing_utils import (
@@ -108,10 +109,10 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
 
     def test_total_expected_this_year(self):
-        # generate a start and end span of 10 days
+        # generate a start and end span of 3 days
         now = timezone.now()
-        start_date = date(year=now.year, month=1, day=1)
-        end_date = date(year=now.year, month=1, day=10)
+        start_date = now
+        end_date = now + timedelta(days=2)
         # create main activity with GRANTED.
         payment_schedule = create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
@@ -121,7 +122,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(case=case)
-        activity = create_activity(
+        create_activity(
             case=case,
             appropriation=appropriation,
             start_date=start_date,
@@ -155,16 +156,112 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         create_activity(
             case,
             appropriation,
-            start_date=start_date,
+            start_date=start_date + timedelta(days=1),
             end_date=end_date,
             status=STATUS_EXPECTED,
             activity_type=SUPPL_ACTIVITY,
             payment_plan=payment_schedule,
             modifies=supplementary_activity,
         )
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+        )
+        # create a DRAFT supplementary activity which should not be counted.
+        create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            status=STATUS_DRAFT,
+            activity_type=SUPPL_ACTIVITY,
+            payment_plan=payment_schedule,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+        )
+        # create a GRANTED supplementary activity which has
+        # modified another that is also GRANTED.
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+        )
+        supplementary_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=start_date,
+            status=STATUS_GRANTED,
+            activity_type=SUPPL_ACTIVITY,
+            payment_plan=payment_schedule,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_amount=Decimal("700"),
+        )
+        create_activity(
+            case,
+            appropriation,
+            start_date=start_date + timedelta(days=1),
+            end_date=end_date,
+            status=STATUS_GRANTED,
+            activity_type=SUPPL_ACTIVITY,
+            payment_plan=payment_schedule,
+            modifies=supplementary_activity,
+        )
 
         self.assertEqual(
-            activity.appropriation.total_expected_this_year, Decimal("12000")
+            appropriation.total_expected_this_year, Decimal("5300")
+        )
+
+    def test_total_expected_within_start_end_range(self):
+        # generate a start and end span of 10 days
+        now = timezone.now()
+        start_date = now + timedelta(days=1)
+        end_date = now + timedelta(days=10)
+
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        # create a granted activity
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_amount=Decimal("700"),
+        )
+        modified_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+            payment_plan=payment_schedule,
+        )
+        # create an expected activity with a (start, end)
+        # within the span of the activity it modifies
+        modified_start_date = now + timedelta(days=3)
+        modified_end_date = now + timedelta(days=6)
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_amount=Decimal("500"),
+        )
+        create_activity(
+            case,
+            appropriation,
+            start_date=modified_start_date,
+            end_date=modified_end_date,
+            status=STATUS_EXPECTED,
+            activity_type=MAIN_ACTIVITY,
+            payment_plan=payment_schedule,
+            modifies=modified_activity,
+        )
+        self.assertEqual(
+            appropriation.total_expected_this_year, Decimal("3400")
         )
 
     def test_total_expected_full_year(self):
@@ -310,6 +407,70 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         today = now.date()
         self.assertEqual(appropriation.appropriation_date, today)
 
+    def test_appropriation_grant_on_already_granted_one_time(self):
+        approval_level = ApprovalLevel.objects.create(name="egenkompetence")
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED
+        )
+        now = timezone.now().date()
+        start_date = now + timedelta(days=6)
+        end_date = start_date
+        # create an already granted activity.
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+        )
+        modifies_payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("600.0"),
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+        )
+        modified_start_date = start_date
+        modified_end_date = end_date
+        # let the granted activity be modified by another expected activity.
+        modifies_activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            start_date=modified_start_date,
+            status=STATUS_EXPECTED,
+            end_date=modified_end_date,
+            modifies=activity,
+            payment_plan=modifies_payment_schedule,
+        )
+
+        appropriation.grant(
+            approval_level.id, "note til bevillingsgodkendelse"
+        )
+        activity.refresh_from_db()
+        modifies_activity.refresh_from_db()
+        self.assertEqual(activity.end_date, modified_end_date)
+        # expected status should be granted with the
+        # start_date of the new activity.
+        self.assertEqual(modifies_activity.status, STATUS_GRANTED)
+        self.assertEqual(modifies_activity.start_date, modified_start_date)
+        # the payments of the old activity should be deleted for
+        # a one time payment.
+        self.assertEqual(activity.payment_plan.payments.count(), 0)
+        self.assertEqual(modifies_activity.payment_plan.payments.count(), 1)
+
+        # assert payments are generated correctly.
+        self.assertEqual(
+            modifies_activity.payment_plan.payments.first().amount,
+            Decimal("600.0"),
+        )
+
     def test_appropriation_grant_on_already_granted_daily(self):
         approval_level = ApprovalLevel.objects.create(name="egenkompetence")
         payment_schedule = create_payment_schedule(
@@ -339,14 +500,16 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             payment_amount=Decimal("600.0"),
             payment_frequency=PaymentSchedule.DAILY,
         )
+        modified_start_date = now + timedelta(days=1)
+        modified_end_date = end_date + timedelta(days=6)
         # let the granted activity be modified by another expected activity.
         modifies_activity = create_activity(
             case=case,
             appropriation=appropriation,
             activity_type=MAIN_ACTIVITY,
-            start_date=start_date,
+            start_date=modified_start_date,
             status=STATUS_EXPECTED,
-            end_date=end_date + timedelta(days=6),
+            end_date=modified_end_date,
             modifies=activity,
             payment_plan=modifies_payment_schedule,
         )
@@ -356,26 +519,28 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
         activity.refresh_from_db()
         modifies_activity.refresh_from_db()
-        # the old activity should expire today.
-        self.assertEqual(activity.end_date, timezone.now().date())
-        # expected status should be granted with a start_date of tomorrow.
-        self.assertEqual(modifies_activity.status, STATUS_GRANTED)
+        # the old activity should expire the day before
+        # the start_date of the new one.
         self.assertEqual(
-            modifies_activity.start_date,
-            timezone.now().date() + timedelta(days=1),
+            activity.end_date, modified_start_date - timedelta(days=1)
         )
-        # the payments of the old activity should expire today or before.
+        # expected status should be granted with the
+        # start_date of the new activity.
+        self.assertEqual(modifies_activity.status, STATUS_GRANTED)
+        self.assertEqual(modifies_activity.start_date, modified_start_date)
+        # the payments of the old activity should expire
+        # before the new end_date.
         activity_payments = activity.payment_plan.payments
         self.assertTrue(
             activity_payments.order_by("date").first().date
-            <= timezone.now().date()
+            < modified_start_date
         )
         # the payments of the new activity should start after today.
         modifies_payments = modifies_activity.payment_plan.payments
 
         self.assertTrue(
             modifies_payments.order_by("date").first().date
-            > timezone.now().date()
+            >= modified_start_date
         )
         # assert payments are generated correctly.
         self.assertSequenceEqual(
@@ -415,14 +580,16 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             payment_amount=Decimal("600.0"),
             payment_frequency=PaymentSchedule.WEEKLY,
         )
+        modified_start_date = start_date + timedelta(days=7)
+        modified_end_date = end_date + timedelta(days=12)
         # let the granted activity be modified by another expected activity.
         modifies_activity = create_activity(
             case=case,
             appropriation=appropriation,
             activity_type=MAIN_ACTIVITY,
-            start_date=start_date,
+            start_date=modified_start_date,
             status=STATUS_EXPECTED,
-            end_date=end_date + timedelta(days=12),
+            end_date=modified_end_date,
             modifies=activity,
             payment_plan=modifies_payment_schedule,
         )
@@ -432,26 +599,26 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
         activity.refresh_from_db()
         modifies_activity.refresh_from_db()
-        # the old activity should expire today.
-        self.assertEqual(activity.end_date, timezone.now().date())
-        # expected status should be granted with a start_date of tomorrow.
-        self.assertEqual(modifies_activity.status, STATUS_GRANTED)
+        # the old activity should expire the day before
+        # the start_date of the new one.
         self.assertEqual(
-            modifies_activity.start_date,
-            timezone.now().date() + timedelta(days=1),
+            activity.end_date, modified_start_date - timedelta(days=1)
         )
+        # expected status should be granted with the new start_date.
+        self.assertEqual(modifies_activity.status, STATUS_GRANTED)
+        self.assertEqual(modifies_activity.start_date, modified_start_date)
         # the payments of the old activity should expire today or before.
         activity_payments = activity.payment_plan.payments
         self.assertTrue(
             activity_payments.order_by("date").first().date
-            <= timezone.now().date()
+            < modified_start_date
         )
         # the payments of the new activity should start today or after.
         modifies_payments = modifies_activity.payment_plan.payments
 
         self.assertTrue(
             modifies_payments.order_by("date").first().date
-            > timezone.now().date()
+            >= modified_start_date
         )
         # assert payments are generated correctly.
         self.assertSequenceEqual(
@@ -461,6 +628,54 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             ],
             [start_date + timedelta(days=7 * x) for x in range(5)],
         )
+
+    def test_appropriation_grant_validate_expected_false(self):
+        approval_level = ApprovalLevel.objects.create(name="egenkompetence")
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_frequency=PaymentSchedule.WEEKLY,
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED
+        )
+        now = timezone.now().date()
+        start_date = now - timedelta(days=6)
+        end_date = now + timedelta(days=12)
+        # create an already granted activity.
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+        )
+        modifies_payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("600.0"),
+            payment_frequency=PaymentSchedule.WEEKLY,
+        )
+        modified_start_date = start_date
+        modified_end_date = end_date + timedelta(days=12)
+        # expected activity has an invalid start_date.
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            start_date=modified_start_date,
+            status=STATUS_EXPECTED,
+            end_date=modified_end_date,
+            modifies=activity,
+            payment_plan=modifies_payment_schedule,
+        )
+
+        with self.assertRaises(forms.ValidationError):
+            appropriation.grant(
+                approval_level.id, "note til bevillingsgodkendelse"
+            )
 
 
 class ServiceProviderTestCase(TestCase):
@@ -1019,6 +1234,288 @@ class ActivityTestCase(TestCase, BasicTestMixin):
 
         self.assertIsNone(main_activity.account)
 
+    def test_validate_expected_true(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED, section=section
+        )
+        main_activity_details = ActivityDetails.objects.create(
+            name="Betaling til andre kommuner/region for specialtandpleje",
+            activity_id="010001",
+            max_tolerance_in_dkk=5000,
+            max_tolerance_in_percent=10,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_frequency=PaymentSchedule.DAILY,
+        )
+        start_date = date.today()
+        end_date = date.today() + timedelta(days=7)
+        main_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+            details=main_activity_details,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("700.0"),
+            payment_frequency=PaymentSchedule.DAILY,
+        )
+        start_date = start_date + timedelta(days=1)
+        end_date = date.today() + timedelta(days=14)
+        expected_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=STATUS_EXPECTED,
+            activity_type=MAIN_ACTIVITY,
+            modifies=main_activity,
+            details=main_activity_details,
+        )
+        self.assertTrue(expected_activity.validate_expected())
+
+    def test_validate_expected_false_no_modifies(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED, section=section
+        )
+        main_activity_details = ActivityDetails.objects.create(
+            name="Betaling til andre kommuner/region for specialtandpleje",
+            activity_id="010001",
+            max_tolerance_in_dkk=5000,
+            max_tolerance_in_percent=10,
+        )
+
+        start_date = date.today()
+        end_date = date.today() + timedelta(days=7)
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("700.0"),
+            payment_frequency=PaymentSchedule.DAILY,
+        )
+        expected_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=STATUS_EXPECTED,
+            activity_type=MAIN_ACTIVITY,
+            details=main_activity_details,
+        )
+        with self.assertRaises(forms.ValidationError):
+            expected_activity.validate_expected()
+
+    def test_validate_expected_false_same_start_date(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED, section=section
+        )
+        main_activity_details = ActivityDetails.objects.create(
+            name="Betaling til andre kommuner/region for specialtandpleje",
+            activity_id="010001",
+            max_tolerance_in_dkk=5000,
+            max_tolerance_in_percent=10,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_frequency=PaymentSchedule.DAILY,
+        )
+        start_date = date.today()
+        end_date = date.today() + timedelta(days=7)
+        main_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+            details=main_activity_details,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("700.0"),
+            payment_frequency=PaymentSchedule.DAILY,
+        )
+        start_date = start_date
+        end_date = date.today() + timedelta(days=14)
+        expected_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=STATUS_EXPECTED,
+            activity_type=MAIN_ACTIVITY,
+            modifies=main_activity,
+            details=main_activity_details,
+        )
+        with self.assertRaises(forms.ValidationError):
+            expected_activity.validate_expected()
+
+    def test_validate_expected_false_in_the_past_no_next_payment(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED, section=section
+        )
+        main_activity_details = ActivityDetails.objects.create(
+            name="Betaling til andre kommuner/region for specialtandpleje",
+            activity_id="010001",
+            max_tolerance_in_dkk=5000,
+            max_tolerance_in_percent=10,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_frequency=PaymentSchedule.WEEKLY,
+        )
+        start_date = date.today() - timedelta(days=3)
+        end_date = date.today() + timedelta(days=2)
+        main_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+            details=main_activity_details,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("700.0"),
+            payment_frequency=PaymentSchedule.WEEKLY,
+        )
+        start_date = date.today() - timedelta(days=3)
+        end_date = date.today() + timedelta(days=2)
+        expected_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=STATUS_EXPECTED,
+            activity_type=MAIN_ACTIVITY,
+            modifies=main_activity,
+            details=main_activity_details,
+        )
+        with self.assertRaises(forms.ValidationError):
+            expected_activity.validate_expected()
+
+    def test_validate_expected_true_ongoing_with_next_payment(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED, section=section
+        )
+        main_activity_details = ActivityDetails.objects.create(
+            name="Betaling til andre kommuner/region for specialtandpleje",
+            activity_id="010001",
+            max_tolerance_in_dkk=5000,
+            max_tolerance_in_percent=10,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_frequency=PaymentSchedule.DAILY,
+        )
+        start_date = date.today() + timedelta(days=2)
+        end_date = date.today() + timedelta(days=4)
+        main_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+            details=main_activity_details,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("700.0"),
+            payment_frequency=PaymentSchedule.DAILY,
+        )
+        start_date = date.today() + timedelta(days=3)
+        end_date = date.today() + timedelta(days=6)
+        expected_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=STATUS_EXPECTED,
+            activity_type=MAIN_ACTIVITY,
+            modifies=main_activity,
+            details=main_activity_details,
+        )
+        self.assertTrue(expected_activity.validate_expected())
+
+    def test_validate_expected_false_one_time_with_invalid_start_date(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED, section=section
+        )
+        main_activity_details = ActivityDetails.objects.create(
+            name="Betaling til andre kommuner/region for specialtandpleje",
+            activity_id="010001",
+            max_tolerance_in_dkk=5000,
+            max_tolerance_in_percent=10,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+        )
+        start_date = date.today()
+        end_date = date.today()
+        main_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+            details=main_activity_details,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("700.0"),
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+        )
+        start_date = date.today()
+        end_date = date.today()
+        expected_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=STATUS_EXPECTED,
+            activity_type=MAIN_ACTIVITY,
+            modifies=main_activity,
+            details=main_activity_details,
+        )
+        with self.assertRaises(forms.ValidationError):
+            expected_activity.validate_expected()
+
 
 class AccountTestCase(TestCase):
     def test_account_str(self):
@@ -1264,7 +1761,7 @@ class PaymentScheduleTestCase(TestCase):
             payment_amount=Decimal("100"),
         )
         start_date = date(year=2019, month=1, day=1)
-        # Start in January and no end should generate 24 monthly payments
+        # Start in January and no end should generate 25 monthly payments
         # (till end of next year)
         payment_schedule.generate_payments(start_date, None)
 
@@ -1459,6 +1956,35 @@ class PaymentScheduleTestCase(TestCase):
                 recipient_type=recipient_type,
                 payment_method=payment_method,
             )
+
+    def test_next_payment_none(self):
+        payment_schedule = create_payment_schedule(
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=PaymentSchedule.WEEKLY,
+            payment_amount=Decimal("100"),
+        )
+        start_date = date(year=2019, month=1, day=1)
+        end_date = date(year=2019, month=3, day=1)
+        # generates payments in the past.
+        payment_schedule.generate_payments(start_date, end_date)
+
+        self.assertEqual(payment_schedule.next_payment, None)
+
+    def test_next_payment(self):
+        payment_schedule = create_payment_schedule(
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=PaymentSchedule.WEEKLY,
+            payment_amount=Decimal("100"),
+        )
+        start_date = date.today()
+        end_date = date.today() + timedelta(days=7)
+        # generates payments in the past.
+        payment_schedule.generate_payments(start_date, end_date)
+
+        self.assertEqual(
+            payment_schedule.next_payment.date,
+            date.today() + timedelta(days=7),
+        )
 
     def test_str(self):
         payment_schedule = create_payment_schedule()
