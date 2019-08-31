@@ -71,7 +71,7 @@
                     </fieldset>
                     <fieldset>
                         <label for="field-text">Supplerende information</label>
-                        <textarea v-model="act.note"></textarea>
+                        <textarea id="field-text" v-model="act.note"></textarea>
                     </fieldset>
                     <hr>
                     <payment-amount-edit :payment-obj="pay" />

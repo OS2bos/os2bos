@@ -10,6 +10,34 @@ const testdata = {
     appr1: {
         name: 'xx.xx.xx-yy-testbevilling',
         section: 'SEL-109 Botilbud, kriseramte kvinder'
+    },
+    act1: {
+        type: 1,
+        act_detail: 'Kvindekrisecentre',
+        start: '2019-08-01',
+        end: '2020-12-31',
+        note: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+        amount: '3095,50',
+        payee_id: '78362883763',
+        payee_name: 'Fiktivt Firma ApS'
+    },
+    act2: {
+        type: 1,
+        start: '2019-11-01',
+        end: '2020-03-31',
+        note: 'En lille note',
+        amount: '595,95',
+        payee_id: '8923',
+        payee_name: 'Testbevillingscentralen A/S'
+    },
+    act3: {
+        type: 2,
+        start: '2019-11-01',
+        end: '2020-03-31',
+        note: 'En anden lille note',
+        amount: '150',
+        payee_id: '8937-2342-2342',
+        payee_name: 'TESTiT A/S'
     }
 }
 
@@ -21,7 +49,6 @@ test('Create Case', async t => {
     await loginAsUngeraadgiver(t)
     
     await t
-        .navigateTo('http://localhost:8080/#/')
         .click(Selector('button').withText('+ Tilknyt hovedsag'))
         .typeText('#field-sbsys-id', testdata.case1.name)
         .typeText('#field-cpr', '000000-0000')
@@ -42,7 +69,6 @@ test('Create Appropriation', async t => {
     await loginAsUngeraadgiver(t)
 
     await t
-        .navigateTo('http://localhost:8080/#/')
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('.appropriation-create-btn'))
         .typeText('#field-sbsysid', testdata.appr1.name)
@@ -54,6 +80,27 @@ test('Create Appropriation', async t => {
         .expect(Selector('.appropriation-list tr:first-child td a').innerText).contains(testdata.appr1.name)
 })
 
+async function createActivity(t, act_data) {
+    await t
+        .click(Selector('.activities-create-btn'))
+        .click('#fieldSelectAct')
+        .click(Selector('#fieldSelectAct option').nth(act_data.type))
+        .typeText('#field-startdate', act_data.start)
+        .typeText('#field-enddate', act_data.end)
+        .typeText('#field-text', act_data.note)
+        .click('#pay-type-2')
+        .typeText('#field-amount-1', act_data.amount)
+        .click('#pay-freq')
+        .click(Selector('#pay-freq option').nth(1))
+        .click('#field-payee')
+        .click(Selector('#field-payee option').nth(2))
+        .typeText('#field-payee-id', act_data.payee_id)
+        .typeText('#field-payee-name', act_data.payee_name)
+        .click('#field-pay-method')
+        .click(Selector('#field-pay-method option').nth(1))
+        .click(Selector('input').withAttribute('type', 'submit'))
+}
+
 test('Create Activity', async t => {
     
     await loginAsUngeraadgiver(t)
@@ -61,16 +108,14 @@ test('Create Activity', async t => {
     await t
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector('.activities-create-btn'))
-        .click('#fieldSelectAct')
-        .click(Selector('#fieldSelectAct option').nth(1))
-        .typeText('#field-startdate', '2019-08-21')
-        
-        /*
-        .typeText('#field-sbsysid', 'xx.xx.xx-yy-testbevilling')
-        .click('#field-lawref')
-        .click(Selector('#field-lawref option').nth(1))
-        .click(Selector('input').withAttribute('type', 'submit'))
-        .expect(Selector('.appropriation-header h1').innerText).contains('Bevillingsskrivelse')
-        */      
+    
+    await createActivity(t, testdata.act1)
+    await createActivity(t, testdata.act2)
+    await createActivity(t, testdata.act3)
+
+    await t
+        .navigateTo('http://localhost:8080/#/')
+        .click(Selector('a').withText(testdata.case1.name))
+        .click(Selector('a').withText(testdata.appr1.name))
+        .expect(Selector('.activities table tr:first-child td a').innerText).contains(testdata.act1.act_detail)
 })
