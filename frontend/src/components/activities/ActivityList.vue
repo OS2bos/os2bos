@@ -9,8 +9,13 @@
 <template>
 
     <section class="activities">
-        <button class="activities-create-btn" title="Ny aktivitet" @click="$router.push(`/appropriation/${ apprId }/activity-create/`)">+ Tilføj ydelse</button>
-        <table v-if="acts && acts.length > 0">
+        <header style="display: flex; flex-flow: row nowrap; align-items: center; margin: 2rem 0;">
+            <h2 style="padding: 0;">Bevilgede ydelser</h2>
+            <button class="activities-create-btn" title="Ny aktivitet" @click="$router.push(`/appropriation/${ apprId }/activity-create/`)" style="margin: 0 1rem;">
+                + Tilføj ydelse
+            </button>
+        </header>
+        <table>
             <thead>
                 <tr>
                     <th style="width: 4.5rem;">
@@ -25,42 +30,32 @@
                     <th class="right">Udgift i år</th>
                     <th class="right">Forventet udgift i år</th>
                 </tr>
-                <tr>
-                    <th colspan="7" class="table-heading">Ydelser</th>
-                    <th></th>
-                </tr>
             </thead>
             <tbody>
-                <tr v-for="a in acts" :key="a.id" :class="{ 'expected-row': a.status === 'EXPECTED', 'adjustment-row': a.modifies }" :title="a.note">
-                    <td style="width: 4.5rem;">
-                        <input type="checkbox" :id="`check-${ a.id }`" disabled>
-                        <label class="disabled" :for="`check-${ a.id }`"></label>
-                    </td>
-                    <td style="width: 5.5rem;">
-                        <div class="mini-label" v-html="statusLabel(a.status)"></div>
-                    </td>
-                    <td>
-                        <router-link :to="`/activity/${ a.id }`">{{ activityId2name(a.details) }}</router-link>
-                        <span v-if="a.activity_type === 'MAIN_ACTIVITY'" class="act-label"><br>Hovedydelse</span>
-                    </td>
-                    <td>
-                        {{ a.payment_plan.recipient_name }}
-                        <span v-if="a.payment_plan.recipient_type === 'COMPANY'">
-                            CVR
-                        </span>
-                        {{ a.payment_plan.recipient_id }}
-                    </td>
-                    <td class="nowrap">{{ displayDate(a.start_date) }}</td>
-                    <td class="nowrap">{{ displayDate(a.end_date) }}</td>
-                    <td class="nowrap right">
-                        <span v-if="a.status === 'GRANTED'">{{ displayDigits(a.total_cost_this_year) }} kr</span>
-                        <span v-if="a.status === 'DRAFT'" class="dim">{{ displayDigits(a.total_cost_this_year) }} kr</span>
-                    </td>
-                    <td class="nowrap right">
-                        <span v-if="a.status === 'EXPECTED'" class="expected">{{ displayDigits(a.total_cost_this_year) }} kr</span>
-                    </td>
-                    
+                <tr>
+                    <th colspan="7" class="table-heading" style="padding-top: 0;">Hovedydelse</th>
+                    <th></th>
                 </tr>
+                <template v-for="chunk in main_acts">
+                    <act-list-item 
+                        v-for="a in chunk"
+                        :ref="a.group ? a.group : a.id"
+                        :act="a" 
+                        :key="a.id"
+                        @toggle="toggleHandler" />
+                </template>
+                <tr>
+                    <th colspan="7" class="table-heading">Følgeydelser</th>
+                    <th></th>
+                </tr>
+                <template v-for="chunk in suppl_acts">
+                    <act-list-item 
+                        v-for="a in chunk"
+                        :ref="a.group ? a.group : a.id"
+                        :act="a" 
+                        :key="a.id"
+                        @toggle="toggleHandler" />
+                </template>
                 <tr>
                     <td colspan="5" style="padding-left: 0;">
                         <button disabled>✔ Godkendt valgte</button>
@@ -75,7 +70,7 @@
                 </tr>
             </tbody>
         </table>
-        <p v-if="!acts || acts.length < 1">Der er endnu ingen ydelser</p>
+        <p v-if="no_acts">Der er endnu ingen ydelser</p>
     </section>
 
 </template>
@@ -83,50 +78,167 @@
 <script>
 
     import axios from '../http/Http.js'
-    import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
-    import { activityId2name, displayStatus } from '../filters/Labels.js'
+    import { displayStatus } from '../filters/Labels.js'
+    import ActListItem from './ActivityListItem.vue'
 
     export default {
 
+        components: {
+            ActListItem
+        },
         props: [
             'apprId'
         ],
+        data: function() {
+            return {
+                main_acts: null,
+                suppl_acts: null
+            }
+        },
         computed: {
             appropriation: function() {
                 return this.$store.getters.getAppropriation
             },
-            has_expected: function() {
-                if (this.appropriation.total_expected_this_year > 0 && this.appropriation.total_granted_this_year !== this.appropriation.total_expected_this_year) {
+            acts: function() {
+                return this.$store.getters.getActivities
+            },
+            no_acts: function() {
+                if (this.acts.length < 1) {
                     return true
                 } else {
                     return false
                 }
-            },
-            acts: function() {
-                return this.$store.getters.getActivities
             }
         },
         watch: {
             apprId: function() {
                 this.update()
+            },
+            acts: function() {
+                this.splitActList(this.acts)
             }
         },
         methods: {
             update: function() {
                 this.$store.dispatch('fetchActivities', this.apprId)
             },
-            displayDate: function(dt) {
-                return json2jsDate(dt)
-            },
             displayDigits: function(num) {
                 return cost2da(num)
             },
-            activityId2name: function(id) {
-                return activityId2name(id)
+            splitActList: function(act_list) {
+
+                let chunks = []
+
+                function addModifierAct(chunk, id) {
+                    let modifier = act_list.find(function(a) {
+                        return a.modifies === id
+                    })
+                    if (modifier) {
+                        chunk.push(modifier)
+                        addModifierAct(chunk, modifier.id)
+                    } else {
+                        chunks.push(chunk)
+                    }   
+                }
+
+                // Group activities together by 'modifies'
+                for (let act of act_list) {
+                    if (act.modifies === null) {
+                        let chunk = [act]
+                        addModifierAct(chunk, act.id)
+                    }
+                }
+
+                function getBestDate(arr, criteria) {
+                    let best_date = null
+                    for (let a in arr) {
+                        const date = new Date( arr[a][`${ criteria}_date`] ).getTime()
+                        if (criteria === 'start') {
+                            if (!best_date || date < best_date) {
+                                best_date = date
+                            }
+                        } else {
+                            if (!best_date || date > best_date) {
+                                best_date = date
+                            }
+                        }
+                    }
+                    return best_date
+                }
+
+                function checkExpected(arr) {
+                    return arr.find(function(a) {
+                        return a.status === 'EXPECTED'
+                    }) ? 'EXPECTED' : arr[0].status
+                }
+
+                function calcCost(arr) {
+                    let costs = {
+                        draft: 0,
+                        approved: 0,
+                        expected: 0
+                    }
+                    for (let a of arr) {
+                        if (a.status === 'GRANTED') {
+                            costs.approved = costs.approved + a.total_cost_this_year
+                        } else if (a.status === 'EXPECTED') {
+                            costs.expected = costs.expected + a.total_cost_this_year
+                        } else {
+                            costs.draft = costs.draft + a.total_cost_this_year
+                        }
+                    }
+                    costs.expected = costs.expected + costs.approved
+                    return costs
+                }
+
+                // Add meta activity to chunks of modified activities
+                for (let c in chunks) {
+                    let chunk = chunks[c]
+                    const clength = chunk.length,
+                          last_chunk = chunk[clength -1]
+
+                    if (clength < 2) {
+                        // Do nothing
+                    } else {
+                        for (let act of chunk) {
+                            act.group = `group${ c }`
+                        }
+                        let meta_act = {
+                            id: `group${ c }`,
+                            is_meta: true,
+                            status: checkExpected(chunk),
+                            start_date: getBestDate(chunk,'start'),
+                            end_date: getBestDate(chunk,'end'),
+                            activity_type: last_chunk.activity_type,
+                            total_approved: calcCost(chunk).approved,
+                            total_expected: calcCost(chunk).expected,
+                            details: last_chunk.details,
+                            payment_plan: last_chunk.payment_plan,
+                            note: last_chunk.note
+                        }
+                        chunk.unshift(meta_act)
+                    }
+                }
+
+                // Split list of chunks into main and supplementary lists
+                this.main_acts = chunks.filter(function(c) {
+                    return c[0].activity_type === 'MAIN_ACTIVITY'
+                })
+                this.suppl_acts = chunks.filter(function(c) {
+                    return c[0].activity_type === 'SUPPL_ACTIVITY'
+                })
+                
             },
-            statusLabel: function(status) {
-                return displayStatus(status)
+            toggleHandler: function(toggl_id) {     
+                for (let comp of this.$refs[toggl_id]) {
+                    if (comp.act.is_meta) {
+                        comp.toggled = !comp.toggled
+                    } else {
+                        comp.visible = !comp.visible
+                    }
+                    
+                }
             }
         },
         beforeCreate: function() {
@@ -160,6 +272,10 @@
         opacity: .66;
         font-size: .85rem;
         margin: 0 1rem;
+    }
+
+    .activities input[type="checkbox"] + label {
+        margin: 0;
     }
 
     .activities tr:last-child td {

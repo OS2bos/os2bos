@@ -39,7 +39,7 @@
 
                             <fieldset>
                                 <label for="field-text">Evt. bemærkning</label>
-                                <textarea v-model="appro.approval_note"></textarea>
+                                <textarea id="field-text" v-model="appro.approval_note"></textarea>
                             </fieldset>
                         </slot>
                     </div>
