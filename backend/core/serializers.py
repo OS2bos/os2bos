@@ -160,7 +160,8 @@ class ActivitySerializer(WritableNestedModelSerializer):
 
         # monthly payments should start and end at the 1st.
         is_monthly_payment = (
-            data["payment_plan"]["payment_frequency"]
+            "payment_frequency" in data["payment_plan"]
+            and data["payment_plan"]["payment_frequency"]
             == PaymentSchedule.MONTHLY
         )
         if is_monthly_payment and (
