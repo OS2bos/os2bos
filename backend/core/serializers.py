@@ -173,7 +173,10 @@ class ActivitySerializer(WritableNestedModelSerializer):
             )
         ):
             raise serializers.ValidationError(
-                _("startdato og slutdato for månedlige betalinger være den 1.")
+                _(
+                    "startdato og slutdato for månedlige "
+                    "betalinger skal være den 1."
+                )
             )
 
         if "modifies" in data and data["modifies"]:
