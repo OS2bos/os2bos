@@ -63,7 +63,11 @@ const actions = {
                 }
             }
             
-            cycleErrKeys(err.response.data)
+            if (typeof(err.response.data) === 'object') {
+                cycleErrKeys(err.response.data)
+            } else {
+                notify(err.response.data, 'error')
+            }
 
         } else if (err.request) {
             notify(err.request.responseText, 'error')
