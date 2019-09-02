@@ -165,7 +165,11 @@ class ActivitySerializer(WritableNestedModelSerializer):
         )
         if is_monthly_payment and (
             not data["start_date"].day == 1
-            or ("end_date" in data and not data["end_date"].day == 1)
+            or (
+                "end_date" in data
+                and data["end_date"]
+                and not data["end_date"].day == 1
+            )
         ):
             raise serializers.ValidationError(
                 _("startdato og slutdato for månedlige betalinger være den 1.")
