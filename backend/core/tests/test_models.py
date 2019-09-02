@@ -1717,7 +1717,6 @@ class PaymentScheduleTestCase(TestCase):
             (PaymentSchedule.INTERNAL, INVOICE),
             (PaymentSchedule.PERSON, INTERNAL),
             (PaymentSchedule.PERSON, INVOICE),
-            (PaymentSchedule.COMPANY, CASH),
             (PaymentSchedule.COMPANY, SD),
             (PaymentSchedule.COMPANY, INTERNAL),
         ]
