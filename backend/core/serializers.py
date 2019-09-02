@@ -64,14 +64,14 @@ class HistoricalCaseSerializer(serializers.ModelSerializer):
         model = HistoricalCase
         # include history_date (date saved),
         # history_user (user responsible for saving),
-        # and history_change_reason (reason for change).
+        # and assessment comment (optional, additional info).
         fields = (
             "case_worker",
             "effort_step",
             "scaling_step",
+            "assessment_comment",
             "history_date",
             "history_user",
-            "history_change_reason",
         )
 
 

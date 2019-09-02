@@ -207,8 +207,8 @@
                 if (assessment.effort_step) {
                     this.cas.effort_step = assessment.effort_step
                 }
-                if (assessment.history_change_reason) {
-                    this.cas.history_change_reason = assessment.history_change_reason
+                if (assessment.assessment_comment) {
+                    this.cas.assessment_comment = assessment.assessment_comment
                 }
             },
             saveChanges: function() {
@@ -231,7 +231,7 @@
                 if (this.assessment_changes) {
                     data.scaling_step = this.cas.scaling_step
                     data.effort_step = this.cas.effort_step
-                    data.history_change_reason = this.cas.history_change_reason
+                    data.assessment_comment = this.cas.assessment_comment
                 }
                 if (!this.create_mode) {
                     axios.patch(`/cases/${ this.cas.id }/`, data)

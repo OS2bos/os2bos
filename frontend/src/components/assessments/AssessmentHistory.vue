@@ -42,7 +42,7 @@
                         {{ h.scaling_step }}
                     </td>
                     <td>
-                        {{ h.history_change_reason }}
+                        {{ h.assessment_comment }}
                     </td>
                     <td>
                         {{ displayDate(h.history_date) }}
