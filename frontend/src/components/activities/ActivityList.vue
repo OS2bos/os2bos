@@ -128,7 +128,8 @@
             },
             splitActList: function(act_list) {
 
-                let chunks = []
+                let chunks = [],
+                    unsorted_suppl_acts = []
 
                 function addModifierAct(chunk, id) {
                     let modifier = act_list.find(function(a) {
@@ -225,8 +226,21 @@
                 this.main_acts = chunks.filter(function(c) {
                     return c[0].activity_type === 'MAIN_ACTIVITY'
                 })
-                this.suppl_acts = chunks.filter(function(c) {
+                unsorted_suppl_acts = chunks.filter(function(c) {
                     return c[0].activity_type === 'SUPPL_ACTIVITY'
+                })
+
+                // Sort supplementary list by start date
+                this.suppl_acts = unsorted_suppl_acts.sort(function(a,b) {
+                    const a_start_date = new Date(a[0].start_date).getTime(),
+                          b_start_date = new Date(b[0].start_date).getTime()
+                    if (a_start_date > b_start_date) {
+                        return 1
+                    } else if (b_start_date > a_start_date) {
+                        return -1
+                    } else {
+                        return 0
+                    }
                 })
                 
             },
