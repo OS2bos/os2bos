@@ -257,7 +257,7 @@ class PaymentSchedule(models.Model):
         allowed = {
             PaymentSchedule.INTERNAL: [INTERNAL],
             PaymentSchedule.PERSON: [CASH, SD],
-            PaymentSchedule.COMPANY: [INVOICE],
+            PaymentSchedule.COMPANY: [INVOICE, CASH],
         }
         return payment_method in allowed[recipient_type]
 
