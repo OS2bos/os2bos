@@ -8,8 +8,8 @@
 
 <template>
     <section class="payment-receiver">
-        <label class="required">Betalingsmodtager</label>
-        <select v-model="entry.recipient_type" required>
+        <label class="required" for="field-payee">Betalingsmodtager</label>
+        <select v-model="entry.recipient_type" required id="field-payee">
             <option value="INTERNAL">Intern</option>
             <option value="COMPANY">Firma</option>
             <option value="PERSON">Person</option>

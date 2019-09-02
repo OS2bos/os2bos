@@ -136,7 +136,7 @@
     }
 
     .table-heading {
-        padding: .5rem 0 1rem 1.5rem;
+        padding: 1.25rem 0 .75rem 1.5rem;
     }
 
     .nowrap {

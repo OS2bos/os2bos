@@ -18,7 +18,7 @@ $unit: 1rem;
 
     /* Greys */
     --grey0: hsl(0, 0%, 100%);
-    --grey1: hsl(0, 0%, 90%);
+    --grey1: #eee;
     --grey2: hsl(0, 0%, 80%);
     --grey3: hsl(0, 0%, 70%);
     --grey4: hsl(0, 0%, 60%);
