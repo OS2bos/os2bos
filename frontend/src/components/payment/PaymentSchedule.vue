@@ -38,7 +38,7 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <th>I alt pr år</th>
+                    <th>I alt pr valgte år</th>
                     <th>{{ displayDigits(sum) }} kr.</th>
                 </tr>
             </tbody>
@@ -79,7 +79,7 @@
             sum: function() {
                 if (this.payments_by_year) {
                     return this.payments_by_year.reduce(function(total, payment) {
-                        return total += parseInt(payment.amount)
+                        return total += parseFloat(payment.amount)
                     }, 0)
                 }
             }
