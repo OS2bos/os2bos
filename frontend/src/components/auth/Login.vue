@@ -13,10 +13,10 @@
         <error />
         <fieldset>
             <label for="username">Brugernavn</label>
-            <input type="text" id="username" placeholder="Brugernavn" v-model="username" autofocus>
+            <input type="text" id="username" placeholder="Brugernavn" v-model="username" autofocus required>
             <error err-key="username" />
             <label for="password">Kodeord</label>
-            <input type="password" id="password" placeholder="Kodeord" v-model="password">
+            <input type="password" id="password" placeholder="Kodeord" v-model="password" required>
             <error err-key="password" />
         </fieldset>
         <fieldset>

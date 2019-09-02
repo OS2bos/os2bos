@@ -8,6 +8,8 @@
 <template>
 
     <div class="cpr-lookup">
+
+        <error />
         
         <fieldset>
             <label class="required" for="field-cpr">CPR-nr</label>
@@ -82,7 +84,7 @@
                         this.$emit('update:cpr', cpr)
                         this.$emit('update:name', res.data.name)
                     })
-                    .catch(err => console.log(err))
+                    .catch(err => this.$store.dispatch('parseErrorOutput', err))
                 }  
             }
         },
