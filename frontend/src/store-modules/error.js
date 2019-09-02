@@ -21,7 +21,6 @@ const getters = {
 const mutations = {
     addError (state, err_obj) {
         state.errors[err_obj.err_key] = err_obj.err_msgs
-        console.log('new state', state.errors)
     },
     clearErrors (state) {
         state.errors = {}
