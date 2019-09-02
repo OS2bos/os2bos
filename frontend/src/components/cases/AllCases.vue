@@ -30,10 +30,10 @@
             <tbody>
                 <tr v-for="i in items" :key="i.id">
                     <td style="width: 5.5rem;">
-                        <div class="mini-label" v-if="c.expired === false">
+                        <div class="mini-label" v-if="i.expired === false">
                             <span class="label label-GRANTED">Aktiv</span>
                         </div>
-                        <div class="mini-label" v-if="c.expired === true">
+                        <div class="mini-label" v-if="i.expired === true">
                             <span class="label label-DISCONTINUED">Udgået</span>
                         </div>
                     </td>
