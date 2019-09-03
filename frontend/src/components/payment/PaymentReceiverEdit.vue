@@ -32,13 +32,11 @@
                 <label class="required" v-if="entry.recipient_type === 'COMPANY'" for="field-payee-id">
                     CVR-nr
                 </label>
-                <label class="required" v-if="entry.recipient_type === 'PERSON'" for="field-payee-id">
-                    CPR-nr
-                </label>
-                <input type="text" id="field-payee-id" v-model="entry.recipient_id" required>
+                <input v-if="entry.recipient_type !== 'PERSON'" type="text" id="field-payee-id" v-model="entry.recipient_id" required>
+                <cpr-lookup v-if="entry.recipient_type === 'PERSON'" :cpr.sync="entry.recipient_id" :name.sync="entry.recipient_name" />
                 <error err-key="recipient_id" />
             </fieldset>
-            <fieldset>
+            <fieldset v-if="entry.recipient_type !== 'PERSON'">
                 <label class="required" for="field-payee-name">Navn</label>
                 <input type="text" id="field-payee-name" v-model="entry.recipient_name" required>
                 <error err-key="recipient_name" />
@@ -50,11 +48,13 @@
 <script>
 
     import Error from '../forms/Error.vue'
+    import CprLookup from '../forms/CprLookUp.vue'
 
     export default {
 
         components: {
-            Error
+            Error,
+            CprLookup
         },
         props: [
             'paymentObj'
