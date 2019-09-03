@@ -9,7 +9,7 @@
 import notify from '../components/notifications/Notify.js'
 
 const state = {
-    errors: {}
+    errors: null
 }
 
 const getters = {
@@ -20,11 +20,13 @@ const getters = {
 
 const mutations = {
     addError (state, err_obj) {
+        if (state.errors === null) {
+            state.errors = {}
+        } 
         state.errors[err_obj.err_key] = err_obj.err_msgs
     },
     clearErrors (state) {
-        console.log('cleared')
-        state.errors = {}
+        state.errors = null
     }
 }
 

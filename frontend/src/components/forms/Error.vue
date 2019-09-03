@@ -7,7 +7,7 @@
 
 <template>
 
-    <div class="danger error">
+    <div class="danger error" v-if="errors">
 
         <p class="error-msg" v-for="e in errors[errKey]" v-if="errors[errKey]">
             {{ e }}
