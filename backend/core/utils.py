@@ -184,7 +184,7 @@ def send_appropriation(appropriation):
 
     # Send as email
     msg = EmailMessage()
-    msg.subject = "SBSYS-journalisering"
+    msg.subject = "Bevillingsskrivelse"
     msg.body = ""
     msg.from_email = config.DEFAULT_FROM_EMAIL
     msg.to = [config.SBSYS_EMAIL]
