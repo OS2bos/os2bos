@@ -43,6 +43,8 @@
         },
         computed: {
             errors: function() {
+                console.log('got errors')
+                console.log(this.$store.getters.getErrors)
                 return this.$store.getters.getErrors
             }
         }

@@ -19,8 +19,11 @@
             <thead>
                 <tr>
                     <th style="width: 4.5rem;">
+                        <!-- Unhide, when feature for individual approval is in place -->
+                        <!--
                         <input type="checkbox" id="check-all" disabled>
                         <label class="disabled" for="check-all"></label>
+                        -->
                     </th>
                     <th style="width: 5.5rem;">Status</th>
                     <th>Ydelse</th>
@@ -33,7 +36,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <th colspan="7" class="table-heading" style="padding-top: 0;">Hovedydelse</th>
+                    <th colspan="7" class="table-heading" style="padding-top: .5rem;">Hovedydelse</th>
                     <th></th>
                 </tr>
                 <template v-for="chunk in main_acts">
@@ -58,7 +61,8 @@
                 </template>
                 <tr>
                     <td colspan="5" style="padding-left: 0;">
-                        <button disabled>✔ Godkendt valgte</button>
+                        <!-- Unhide, when feature for individual approval is in place -->
+                        <!-- <button disabled>✔ Godkendt valgte</button> -->
                     </td>
                     <td class="right"><strong>I alt</strong></td>
                     <td class="nowrap right">

@@ -19,6 +19,8 @@
                 v-model="instance_cpr" 
                 @input="lookupCPR(instance_cpr)"
                 maxlength="11" minlength="10"
+                pattern="[0-9-]{10,11}"
+                title="Det indtastede skal være et gyldigt personnummer"
                 required>
             <error err-key="cpr_number" />
         </fieldset>

@@ -9,6 +9,7 @@
 import axios from 'axios'
 import spinner from '../spinner/Spinner.js'
 import store from '../../store.js'
+import notify from '../notifications/Notify.js'
 
 const ax = axios.create({
     baseURL: '/api'
@@ -20,13 +21,16 @@ ax.interceptors.request.use(
         return config
     },
     function (err) {
+        if (!error.status) {
+            // network error
+            notify('Der er et problem med netværket', 'error')
+        }
         return Promise.reject(err)
     }
 )
 
 ax.interceptors.response.use(
     function (res) {
-        store.commit('clearErrors')
         spinner.spinOff()
         return res
     },
