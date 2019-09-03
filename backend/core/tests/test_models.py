@@ -37,6 +37,7 @@ from core.models import (
     ApprovalLevel,
     Team,
     PaymentSchedule,
+    PaymentMethodDetails,
     ServiceProvider,
     CASH,
     SD,
@@ -1563,6 +1564,12 @@ class PaymentTestCase(TestCase):
             amount=Decimal("500.0"),
         )
         self.assertEqual(str(payment), "Person - Test - 2019-01-01 - 500.0")
+
+
+class PaymentMethodDetailsTestCase(TestCase):
+    def test_str(self):
+        pmd = PaymentMethodDetails.objects.create(tax_card="Hovedkort")
+        self.assertEqual(str(pmd), "Hovedkort")
 
 
 class PaymentScheduleTestCase(TestCase):
