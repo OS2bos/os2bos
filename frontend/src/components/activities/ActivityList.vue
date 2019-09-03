@@ -47,7 +47,7 @@
                         :key="a.id"
                         @toggle="toggleHandler" />
                 </template>
-                <tr v-if="suppl_acts">
+                <tr v-if="suppl_acts.length > 0">
                     <th colspan="7" class="table-heading">Følgeydelser</th>
                     <th></th>
                 </tr>
