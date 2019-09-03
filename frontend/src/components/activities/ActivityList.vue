@@ -19,11 +19,8 @@
             <thead>
                 <tr>
                     <th style="width: 4.5rem;">
-                        <!-- Unhide, when feature for individual approval is in place -->
-                        <!--
-                        <input type="checkbox" id="check-all" disabled>
+                        <input type="checkbox" id="check-all" @change="selectAll">
                         <label class="disabled" for="check-all"></label>
-                        -->
                     </th>
                     <th style="width: 5.5rem;">Status</th>
                     <th>Ydelse</th>
@@ -43,14 +40,14 @@
                     <act-list-item 
                         v-for="a in chunk"
                         :ref="a.group ? a.group : a.id"
-                        :act="a" 
+                        :act="a"
                         :key="a.id"
-                        @toggle="toggleHandler" />
+                        @toggle="toggleHandler"
+                        @check="a.checked = !a.checked" />
                 </template>
                 <tr v-if="suppl_acts && suppl_acts.length > 0">
                     <th></th>
                     <th colspan="7" class="table-heading">Følgeydelser</th>
-                    
                 </tr>
                 <template v-for="chunk in suppl_acts">
                     <act-list-item 
@@ -58,12 +55,12 @@
                         :ref="a.group ? a.group : a.id"
                         :act="a" 
                         :key="a.id"
-                        @toggle="toggleHandler" />
+                        @toggle="toggleHandler"
+                        @check="a.checked = !a.checked" />
                 </template>
                 <tr>
                     <td colspan="5" style="padding-left: 0;">
-                        <!-- Unhide, when feature for individual approval is in place -->
-                        <!-- <button disabled>✔ Godkendt valgte</button> -->
+                        <button>✔ Godkendt valgte</button>
                     </td>
                     <td class="right"><strong>I alt</strong></td>
                     <td class="nowrap right">
@@ -99,8 +96,7 @@
         ],
         data: function() {
             return {
-                main_acts: null,
-                suppl_acts: null
+                chunks: []
             }
         },
         computed: {
@@ -116,6 +112,31 @@
                 } else {
                     return false
                 }
+            },
+            main_acts: function() {
+                
+                    return this.chunks.filter(function(c) {
+                        return c[0].activity_type === 'MAIN_ACTIVITY'
+                    })
+                
+            },
+            suppl_acts: function() {
+                let unsorted_suppl_acts = this.chunks.filter(function(c) {
+                    return c[0].activity_type === 'SUPPL_ACTIVITY'
+                })
+                // Sort supplementary list by start date
+                unsorted_suppl_acts.sort(function(a,b) {
+                    const a_start_date = new Date(a[0].start_date).getTime(),
+                          b_start_date = new Date(b[0].start_date).getTime()
+                    if (a_start_date > b_start_date) {
+                        return 1
+                    } else if (b_start_date > a_start_date) {
+                        return -1
+                    } else {
+                        return 0
+                    }
+                })
+                return unsorted_suppl_acts
             }
         },
         watch: {
@@ -133,76 +154,70 @@
             displayDigits: function(num) {
                 return cost2da(num)
             },
-            splitActList: function(act_list) {
-
-                let chunks = [],
-                    unsorted_suppl_acts = []
-
-                function addModifierAct(chunk, id) {
-                    let modifier = act_list.find(function(a) {
-                        return a.modifies === id
-                    })
-                    if (modifier) {
-                        chunk.push(modifier)
-                        addModifierAct(chunk, modifier.id)
+            addModifierAct(chunk, id, act_list) {
+                let modifier = act_list.find(function(a) {
+                    return a.modifies === id
+                })
+                if (modifier) {
+                    chunk.push(modifier)
+                    this.addModifierAct(chunk, modifier.id, act_list)
+                } else {
+                    this.chunks.push(chunk)
+                }   
+            },
+            getBestDate(arr, criteria) {
+                let best_date = null
+                for (let a in arr) {
+                    const date = new Date( arr[a][`${ criteria}_date`] ).getTime()
+                    if (criteria === 'start') {
+                        if (!best_date || date < best_date) {
+                            best_date = date
+                        }
                     } else {
-                        chunks.push(chunk)
-                    }   
+                        if (!best_date || date > best_date) {
+                            best_date = date
+                        }
+                    }
                 }
+                return best_date
+            },
+            checkExpected(arr) {
+                return arr.find(function(a) {
+                    return a.status === 'EXPECTED'
+                }) ? 'EXPECTED' : arr[0].status
+            },
+            calcCost(arr) {
+                let costs = {
+                    draft: 0,
+                    approved: 0,
+                    expected: 0
+                }
+                for (let a of arr) {
+                    if (a.status === 'GRANTED') {
+                        costs.approved = costs.approved + a.total_cost_this_year
+                    } else if (a.status === 'EXPECTED') {
+                        costs.expected = costs.expected + a.total_cost_this_year
+                    } else {
+                        costs.draft = costs.draft + a.total_cost_this_year
+                    }
+                }
+                costs.expected = null // TODO: Calculate correct expected or get from backend
+                return costs
+            },
+            splitActList: function(act_list) {
 
                 // Group activities together by 'modifies'
                 for (let act of act_list) {
+                    act.checked = false
                     if (act.modifies === null) {
                         let chunk = [act]
-                        addModifierAct(chunk, act.id)
+                        this.addModifierAct(chunk, act.id, act_list)
                     }
-                }
-
-                function getBestDate(arr, criteria) {
-                    let best_date = null
-                    for (let a in arr) {
-                        const date = new Date( arr[a][`${ criteria}_date`] ).getTime()
-                        if (criteria === 'start') {
-                            if (!best_date || date < best_date) {
-                                best_date = date
-                            }
-                        } else {
-                            if (!best_date || date > best_date) {
-                                best_date = date
-                            }
-                        }
-                    }
-                    return best_date
-                }
-
-                function checkExpected(arr) {
-                    return arr.find(function(a) {
-                        return a.status === 'EXPECTED'
-                    }) ? 'EXPECTED' : arr[0].status
-                }
-
-                function calcCost(arr) {
-                    let costs = {
-                        draft: 0,
-                        approved: 0,
-                        expected: 0
-                    }
-                    for (let a of arr) {
-                        if (a.status === 'GRANTED') {
-                            costs.approved = costs.approved + a.total_cost_this_year
-                        } else if (a.status === 'EXPECTED') {
-                            costs.expected = costs.expected + a.total_cost_this_year
-                        } else {
-                            costs.draft = costs.draft + a.total_cost_this_year
-                        }
-                    }
-                    costs.expected = null // TODO: Calculate correct expected or get from backend
-                    return costs
                 }
 
                 // Add meta activity to chunks of modified activities
-                for (let c in chunks) {
-                    let chunk = chunks[c]
+                for (let c in this.chunks) {
+                    let chunk = this.chunks[c]
                     const clength = chunk.length,
                           last_chunk = chunk[clength -1]
 
@@ -215,12 +230,12 @@
                         let meta_act = {
                             id: `group${ c }`,
                             is_meta: true,
-                            status: checkExpected(chunk),
-                            start_date: getBestDate(chunk,'start'),
-                            end_date: getBestDate(chunk,'end'),
+                            status: this.checkExpected(chunk),
+                            start_date: this.getBestDate(chunk,'start'),
+                            end_date: this.getBestDate(chunk,'end'),
                             activity_type: last_chunk.activity_type,
-                            total_approved: calcCost(chunk).approved,
-                            total_expected: calcCost(chunk).expected,
+                            total_approved: this.calcCost(chunk).approved,
+                            total_expected: this.calcCost(chunk).expected,
                             details: last_chunk.details,
                             payment_plan: last_chunk.payment_plan,
                             note: last_chunk.note
@@ -228,28 +243,6 @@
                         chunk.unshift(meta_act)
                     }
                 }
-
-                // Split list of chunks into main and supplementary lists
-                this.main_acts = chunks.filter(function(c) {
-                    return c[0].activity_type === 'MAIN_ACTIVITY'
-                })
-                unsorted_suppl_acts = chunks.filter(function(c) {
-                    return c[0].activity_type === 'SUPPL_ACTIVITY'
-                })
-
-                // Sort supplementary list by start date
-                this.suppl_acts = unsorted_suppl_acts.sort(function(a,b) {
-                    const a_start_date = new Date(a[0].start_date).getTime(),
-                          b_start_date = new Date(b[0].start_date).getTime()
-                    if (a_start_date > b_start_date) {
-                        return 1
-                    } else if (b_start_date > a_start_date) {
-                        return -1
-                    } else {
-                        return 0
-                    }
-                })
-                
             },
             toggleHandler: function(toggl_id) {     
                 for (let comp of this.$refs[toggl_id]) {
@@ -257,10 +250,21 @@
                         comp.toggled = !comp.toggled
                     } else {
                         comp.visible = !comp.visible
-                    }
-                    
+                    }       
                 }
+            },
+            setChecked: function(event, arrs) {
+                for (let arr of arrs) {
+                    for (let a of arr) {
+                        console.log('updating ', a.checked, ' to ', event.target.checked)
+                        a.checked = event.target.checked
+                    }
+                }
+            },
+            selectAll: function(ev) {
+                this.setChecked(ev, this.chunks)
             }
+
         },
         beforeCreate: function() {
             this.$store.commit('clearActivities')
