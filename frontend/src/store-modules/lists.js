@@ -114,10 +114,7 @@ const actions = {
         .then(() => {
             // Nothing yet
         })
-        .catch(err => {
-            console.log('something went wrong')
-        })
-        
+        .catch(err => console.log(err))   
     }
 }
 

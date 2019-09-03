@@ -8,6 +8,8 @@
 <template>
 
     <div class="cpr-lookup">
+
+        <error />
         
         <fieldset>
             <label class="required" for="field-cpr">CPR-nr</label>
@@ -26,8 +28,8 @@
         <fieldset>
             <label class="required" for="field-name">Navn</label>
             <input 
-                id="field-name" 
-                type="text" 
+                id="field-name"
+                type="text"
                 v-model="instance_name"
                 @input="$emit('update:name', instance_name)"
                 required>
@@ -42,6 +44,7 @@
 
     import axios from '../http/Http.js'
     import Error from '../forms/Error.vue'
+    import notify from '../notifications/Notify';
 
     export default {
 
@@ -84,7 +87,11 @@
                         this.$emit('update:cpr', cpr)
                         this.$emit('update:name', res.data.name)
                     })
-                    .catch(err => console.log(err))
+                    .catch(err => {
+                        this.$emit('update:cpr', cpr)
+                        notify('Der skete en fejl ved opslag af CPR', 'error')
+                        this.$store.dispatch('parseErrorOutput', err)
+                    })
                 }  
             }
         },
