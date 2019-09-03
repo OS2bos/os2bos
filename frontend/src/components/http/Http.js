@@ -8,7 +8,6 @@
 
 import axios from 'axios'
 import spinner from '../spinner/Spinner.js'
-import store from '../../store.js'
 import notify from '../notifications/Notify.js'
 
 const ax = axios.create({
