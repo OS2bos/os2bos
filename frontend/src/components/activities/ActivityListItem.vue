@@ -39,7 +39,7 @@
             </template>
         </td>
         <td class="nowrap right">
-            <span v-if="act.is_meta" class="expected">{{ displayDigits(act.total_expected) }} kr</span>
+            <span v-if="act.is_meta">Se detaljer &hellip;</span>
             <span v-if="!act.is_meta && act.status === 'EXPECTED'" class="expected">{{ displayDigits(act.total_cost_this_year) }} kr</span>
         </td>
     </tr>

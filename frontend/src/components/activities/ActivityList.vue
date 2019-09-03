@@ -36,8 +36,8 @@
             </thead>
             <tbody>
                 <tr>
-                    <th colspan="7" class="table-heading" style="padding-top: .5rem;">Hovedydelse</th>
                     <th></th>
+                    <th colspan="7" class="table-heading" style="padding-top: .5rem;">Hovedydelse</th>
                 </tr>
                 <template v-for="chunk in main_acts">
                     <act-list-item 
@@ -47,9 +47,10 @@
                         :key="a.id"
                         @toggle="toggleHandler" />
                 </template>
-                <tr v-if="suppl_acts.length > 0">
-                    <th colspan="7" class="table-heading">Følgeydelser</th>
+                <tr v-if="suppl_acts && suppl_acts.length > 0">
                     <th></th>
+                    <th colspan="7" class="table-heading">Følgeydelser</th>
+                    
                 </tr>
                 <template v-for="chunk in suppl_acts">
                     <act-list-item 
@@ -69,7 +70,9 @@
                         <strong>{{ displayDigits(appropriation.total_granted_this_year) }} kr</strong>
                     </td>
                     <td class="nowrap expected right">
-                        {{ displayDigits(appropriation.total_expected_this_year) }} kr
+                        <span v-if="appropriation.total_expected_this_year !== appropriation.total_granted_this_year">
+                            {{ displayDigits(appropriation.total_expected_this_year) }} kr
+                        </span>
                     </td>
                 </tr>
             </tbody>
@@ -193,7 +196,7 @@
                             costs.draft = costs.draft + a.total_cost_this_year
                         }
                     }
-                    costs.expected = costs.expected + costs.approved
+                    costs.expected = null // TODO: Calculate correct expected or get from backend
                     return costs
                 }
 
@@ -299,6 +302,10 @@
     .activities tr:last-child td {
         background-color: var(--grey0);
         padding-top: 1.5rem;
+    }
+
+    .activities .table-heading {
+        padding-left: .75rem;
     }
 
 </style>
