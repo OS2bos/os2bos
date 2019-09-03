@@ -212,6 +212,7 @@
                 }
             },
             saveChanges: function() {
+                this.$store.commit('clearErrors')
                 let cpr = this.cas.cpr_number
                 let data = {
                     sbsys_id: this.cas.sbsys_id,

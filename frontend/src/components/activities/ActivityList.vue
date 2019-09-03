@@ -15,7 +15,7 @@
                 + Tilføj ydelse
             </button>
         </header>
-        <table>
+        <table v-if="!no_acts">
             <thead>
                 <tr>
                     <th style="width: 4.5rem;">
@@ -47,7 +47,7 @@
                         :key="a.id"
                         @toggle="toggleHandler" />
                 </template>
-                <tr>
+                <tr v-if="suppl_acts.length > 0">
                     <th colspan="7" class="table-heading">Følgeydelser</th>
                     <th></th>
                 </tr>
