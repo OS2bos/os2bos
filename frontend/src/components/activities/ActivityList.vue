@@ -42,6 +42,7 @@
                         :ref="a.group ? a.group : a.id"
                         :act="a"
                         :key="a.id"
+                        :checked="a.checked"
                         @toggle="toggleHandler"
                         @check="a.checked = !a.checked" />
                 </template>
@@ -55,6 +56,7 @@
                         :ref="a.group ? a.group : a.id"
                         :act="a" 
                         :key="a.id"
+                        :checked="a.checked"
                         @toggle="toggleHandler"
                         @check="a.checked = !a.checked" />
                 </template>
@@ -256,13 +258,20 @@
             setChecked: function(event, arrs) {
                 for (let arr of arrs) {
                     for (let a of arr) {
-                        console.log('updating ', a.checked, ' to ', event.target.checked)
                         a.checked = event.target.checked
                     }
                 }
             },
             selectAll: function(ev) {
                 this.setChecked(ev, this.chunks)
+                this.notifyWhenChecked()
+            },
+            notifyWhenChecked: function() {
+                for (let c of this.chunks) {
+                    for (let el of c) {
+                        console.log('id ', el.id, ' is now ', el.checked)
+                    }
+                }
             }
 
         },
