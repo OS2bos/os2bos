@@ -23,13 +23,13 @@ const mutations = {
         state.errors[err_obj.err_key] = err_obj.err_msgs
     },
     clearErrors (state) {
+        console.log('cleared')
         state.errors = {}
     }
 }
 
 const actions = {
     parseErrorOutput: function({ commit }, err) {
-        commit('clearErrors')
         if (err.response) {
 
             function checkForArray(err_obj) {
