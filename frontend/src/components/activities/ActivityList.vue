@@ -46,7 +46,7 @@
                         @toggle="toggleHandler"
                         @check="a.checked = !a.checked" />
                 </template>
-                <tr v-if="suppl_acts && suppl_acts.length > 0">
+                <tr v-if="suppl_acts.length > 0">
                     <th></th>
                     <th colspan="7" class="table-heading">Følgeydelser</th>
                 </tr>
@@ -104,6 +104,8 @@
         data: function() {
             return {
                 chunks: [],
+                main_acts: [],
+                suppl_acts: [],
                 approvable_acts: [],
                 diag_open: false
             }
@@ -121,31 +123,6 @@
                 } else {
                     return false
                 }
-            },
-            main_acts: function() {
-                
-                    return this.chunks.filter(function(c) {
-                        return c[0].activity_type === 'MAIN_ACTIVITY'
-                    })
-                
-            },
-            suppl_acts: function() {
-                let unsorted_suppl_acts = this.chunks.filter(function(c) {
-                    return c[0].activity_type === 'SUPPL_ACTIVITY'
-                })
-                // Sort supplementary list by start date
-                unsorted_suppl_acts.sort(function(a,b) {
-                    const a_start_date = new Date(a[0].start_date).getTime(),
-                          b_start_date = new Date(b[0].start_date).getTime()
-                    if (a_start_date > b_start_date) {
-                        return 1
-                    } else if (b_start_date > a_start_date) {
-                        return -1
-                    } else {
-                        return 0
-                    }
-                })
-                return unsorted_suppl_acts
             }
         },
         watch: {
@@ -236,15 +213,16 @@
                         for (let act of chunk) {
                             act.group = `group${ c }`
                         }
-                        let meta_act = {
+                        let costs = this.calcCost(chunk),
+                            meta_act = {
                             id: `group${ c }`,
                             is_meta: true,
                             status: this.checkExpected(chunk),
                             start_date: this.getBestDate(chunk,'start'),
                             end_date: this.getBestDate(chunk,'end'),
                             activity_type: last_chunk.activity_type,
-                            total_approved: this.calcCost(chunk).approved,
-                            total_expected: this.calcCost(chunk).expected,
+                            total_approved: costs.approved,
+                            total_expected: costs.expected,
                             details: last_chunk.details,
                             payment_plan: last_chunk.payment_plan,
                             note: last_chunk.note
@@ -252,6 +230,28 @@
                         chunk.unshift(meta_act)
                     }
                 }
+
+                // Populate main and supplementary activities lists
+                this.main_acts = this.chunks.filter(function(c) {
+                    return c[0].activity_type === 'MAIN_ACTIVITY'
+                })
+                let unsorted_suppl_acts = this.chunks.filter(function(c) {
+                    return c[0].activity_type === 'SUPPL_ACTIVITY'
+                })
+
+                // Sort supplementary list by start date
+                unsorted_suppl_acts.sort(function(a,b) {
+                    const a_start_date = new Date(a[0].start_date).getTime(),
+                          b_start_date = new Date(b[0].start_date).getTime()
+                    if (a_start_date > b_start_date) {
+                        return 1
+                    } else if (b_start_date > a_start_date) {
+                        return -1
+                    } else {
+                        return 0
+                    }
+                })
+                this.suppl_acts = unsorted_suppl_acts
             },
             toggleHandler: function(toggl_id) {     
                 for (let comp of this.$refs[toggl_id]) {
@@ -262,22 +262,31 @@
                     }       
                 }
             },
-            setAllChecked: function(event) {
-                for (let arr of this.chunks) {
+            checkAllInList: function(check_val, list) {
+                for (let arr of list) {
                     for (let a of arr) {
-                        a.checked = event.target.checked
-                    }
-                }
-            },
-            initPreApprove: function() {
-                this.approvable_acts = []
-                for (let arr of this.chunks) {
-                    for (let a of arr) {
-                        if (a.checked === true && a.status !== 'GRANTED') {
+                        a.checked = check_val
+                        if (a.checked && a.status !== 'GRANTED' && !a.is_meta) {
                             this.approvable_acts.push(a)
                         }
                     }
                 }
+            },
+            checkOneInList: function(check_val, act) {
+                act.checked = check_val        
+                if (act.checked && act.status !== 'GRANTED' && !act.is_meta) {
+                    this.approvable_acts.push(act)
+                }
+                 
+            },
+            setAllChecked: function(event) {
+                this.checkAllInList(event.target.checked, this.main_acts)
+                this.checkAllInList(event.target.checked, this.suppl_acts)
+                if (!event.target.checked) {
+                    this.approvable_acts = []
+                }
+            },
+            initPreApprove: function() {
                 this.diag_open = true
             }
         },
