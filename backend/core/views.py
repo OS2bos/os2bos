@@ -118,7 +118,9 @@ class AppropriationViewSet(AuditViewSet):
         activity_pks = request.data.get("activities", [])
         try:
             activities = Activity.objects.filter(pk__in=activity_pks)
-            appropriation.grant(approval_level, approval_note, activities)
+            appropriation.grant(
+                activities, approval_level, approval_note, request.user
+            )
             # Success!
             response = Response("OK", status.HTTP_200_OK)
         except Exception as e:
