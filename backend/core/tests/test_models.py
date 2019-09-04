@@ -827,6 +827,21 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             date(year=2019, month=1, day=1),
         )
 
+    def test_grant_already_granted(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        payment_schedule = create_payment_schedule()
+        activity = create_activity(
+            case,
+            appropriation,
+            payment_plan=payment_schedule,
+            status=STATUS_GRANTED,
+        )
+        activity.grant("level", "note", "user")
+        self.assertEqual(activity.status, STATUS_GRANTED)
+
     def test_regenerate_payments_on_draft_save(self):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
