@@ -957,7 +957,8 @@ class Activity(AuditModelMixin, models.Model):
         "Grant this activity - update payment info as needed." ""
 
         if self.status == STATUS_GRANTED:
-            return RuntimeError(_("denne ydelse er allerede bevilget"))
+            # Nothing to see here.
+            return
 
         self.appropriation_date = timezone.now().date()
         self.approval_level = approval_level
