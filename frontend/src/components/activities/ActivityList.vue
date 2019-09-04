@@ -19,7 +19,7 @@
             <thead>
                 <tr>
                     <th style="width: 4.5rem;">
-                        <input type="checkbox" id="check-all" @change="selectAll">
+                        <input type="checkbox" id="check-all" @change="setAllChecked">
                         <label class="disabled" for="check-all"></label>
                     </th>
                     <th style="width: 5.5rem;">Status</th>
@@ -62,7 +62,7 @@
                 </template>
                 <tr>
                     <td colspan="5" style="padding-left: 0;">
-                        <button>✔ Godkendt valgte</button>
+                        <button @click="initPreApprove()">✔ Godkendt valgte</button>
                     </td>
                     <td class="right"><strong>I alt</strong></td>
                     <td class="nowrap right">
@@ -98,7 +98,8 @@
         ],
         data: function() {
             return {
-                chunks: []
+                chunks: [],
+                approvable_acts: []
             }
         },
         computed: {
@@ -255,25 +256,26 @@
                     }       
                 }
             },
-            setChecked: function(event, arrs) {
-                for (let arr of arrs) {
+            setAllChecked: function(event) {
+                console.log('checking all ', event.target.checked)
+                for (let arr of this.chunks) {
                     for (let a of arr) {
                         a.checked = event.target.checked
                     }
                 }
             },
-            selectAll: function(ev) {
-                this.setChecked(ev, this.chunks)
-                this.notifyWhenChecked()
-            },
-            notifyWhenChecked: function() {
-                for (let c of this.chunks) {
-                    for (let el of c) {
-                        console.log('id ', el.id, ' is now ', el.checked)
+            initPreApprove: function() {
+                this.approvable_acts = []
+                for (let arr of this.chunks) {
+                    for (let a of arr) {
+                        if (a.checked === true && a.status !== 'GRANTED') {
+                            this.approvable_acts.push(a)
+                        }
                     }
                 }
+                console.log('ready for approval')
+                console.log(this.approvable_acts)
             }
-
         },
         beforeCreate: function() {
             this.$store.commit('clearActivities')
