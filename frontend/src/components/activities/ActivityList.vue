@@ -77,6 +77,9 @@
             </tbody>
         </table>
         <p v-if="no_acts">Der er endnu ingen ydelser</p>
+
+        <approval-diag :appr-id="apprId" :acts="approvable_acts" v-if="diag_open" @close="diag_open = false" />
+
     </section>
 
 </template>
@@ -87,11 +90,13 @@
     import { cost2da } from '../filters/Numbers.js'
     import { displayStatus } from '../filters/Labels.js'
     import ActListItem from './ActivityListItem.vue'
+    import ApprovalDiag from './Approval.vue'
 
     export default {
 
         components: {
-            ActListItem
+            ActListItem,
+            ApprovalDiag
         },
         props: [
             'apprId'
@@ -99,7 +104,8 @@
         data: function() {
             return {
                 chunks: [],
-                approvable_acts: []
+                approvable_acts: [],
+                diag_open: false
             }
         },
         computed: {
@@ -273,6 +279,7 @@
                         }
                     }
                 }
+                this.diag_open = true
                 console.log('ready for approval')
                 console.log(this.approvable_acts)
             }
