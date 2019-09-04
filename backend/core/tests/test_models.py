@@ -1568,7 +1568,7 @@ class PaymentTestCase(TestCase):
 
 class PaymentMethodDetailsTestCase(TestCase):
     def test_str(self):
-        pmd = PaymentMethodDetails.objects.create(tax_card="Hovedkort")
+        pmd = PaymentMethodDetails.objects.create(tax_card="MAIN_CARD")
         self.assertEqual(str(pmd), "Hovedkort")
 
 
