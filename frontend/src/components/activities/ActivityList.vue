@@ -62,7 +62,7 @@
                 </template>
                 <tr>
                     <td colspan="5" style="padding-left: 0;">
-                        <button @click="initPreApprove()">✔ Godkendt valgte</button>
+                        <button @click="initPreApprove()" :disabled="approvable_acts < 1">✔ Godkendt valgte</button>
                     </td>
                     <td class="right"><strong>I alt</strong></td>
                     <td class="nowrap right">
@@ -263,7 +263,6 @@
                 }
             },
             setAllChecked: function(event) {
-                console.log('checking all ', event.target.checked)
                 for (let arr of this.chunks) {
                     for (let a of arr) {
                         a.checked = event.target.checked
@@ -280,8 +279,6 @@
                     }
                 }
                 this.diag_open = true
-                console.log('ready for approval')
-                console.log(this.approvable_acts)
             }
         },
         beforeCreate: function() {
