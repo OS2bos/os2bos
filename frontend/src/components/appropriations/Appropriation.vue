@@ -86,7 +86,6 @@
     import axios from '../http/Http.js'
     import ActivityList from '../activities/ActivityList.vue'
     import AppropriationEdit from './AppropriationEdit.vue'
-    import Approval from './Approval.vue'
     import { json2jsDate } from '../filters/Date.js'
     import { municipalityId2name, districtId2name, sectionId2name, displayStatus, userId2name, approvalId2name } from '../filters/Labels.js'
     import store from '../../store.js'
@@ -95,8 +94,7 @@
 
         components: {
             ActivityList,
-            AppropriationEdit,
-            Approval
+            AppropriationEdit
         },
         data: function() {
             return {
