@@ -111,16 +111,15 @@ class AppropriationViewSet(AuditViewSet):
 
     @action(detail=True, methods=["patch"])
     def grant(self, request, pk=None):
-        """Grant this appropriation."""
+        """Grant the specified activities on this appropriation."""
         appropriation = self.get_object()
         approval_level = request.data.get("approval_level", None)
         approval_note = request.data.get("approval_note", "")
-
+        activity_pks = request.data.get("activities", [])
         try:
-            appropriation.grant(approval_level, approval_note)
-            # Success, set approval user.
-            appropriation.approval_user = request.user
-            appropriation.save()
+            activities = Activity.objects.filter(pk__in=activity_pks)
+            appropriation.grant(approval_level, approval_note, activities)
+            # Success!
             response = Response("OK", status.HTTP_200_OK)
         except Exception as e:
             response = Response(
