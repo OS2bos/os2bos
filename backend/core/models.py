@@ -980,8 +980,10 @@ class Activity(AuditModelMixin, models.Model):
                 self.modifies.end_date = self.start_date
             else:
                 self.modifies.end_date = self.start_date - timedelta(days=1)
-                self.status = STATUS_GRANTED
-                self.modifies.save()
+            # In all cases ...
+            self.modifies.save()
+            self.status = STATUS_GRANTED
+            self.save()
 
     def validate_expected(self):
         today = date.today()

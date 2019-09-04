@@ -401,12 +401,18 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             payment_plan=payment_schedule,
         )
 
+        user = get_user_model().objects.create(username="Anders And")
         appropriation.grant(
-            approval_level.id, "note til bevillingsgodkendelse"
+            appropriation.activities.exclude(status=STATUS_GRANTED),
+            approval_level.id,
+            "note til bevillingsgodkendelse",
+            user,
         )
 
         today = now.date()
-        self.assertEqual(appropriation.appropriation_date, today)
+        self.assertEqual(
+            appropriation.activities.first().appropriation_date, today
+        )
 
     def test_appropriation_grant_on_already_granted_one_time(self):
         approval_level = ApprovalLevel.objects.create(name="egenkompetence")
@@ -451,8 +457,12 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             payment_plan=modifies_payment_schedule,
         )
 
+        user = get_user_model().objects.create(username="Anders And")
         appropriation.grant(
-            approval_level.id, "note til bevillingsgodkendelse"
+            appropriation.activities.exclude(status=STATUS_GRANTED),
+            approval_level.id,
+            "note til bevillingsgodkendelse",
+            user,
         )
         activity.refresh_from_db()
         modifies_activity.refresh_from_db()
@@ -515,8 +525,12 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             payment_plan=modifies_payment_schedule,
         )
 
+        user = get_user_model().objects.create(username="Anders And")
         appropriation.grant(
-            approval_level.id, "note til bevillingsgodkendelse"
+            [modifies_activity],
+            approval_level.id,
+            "note til bevillingsgodkendelse",
+            user,
         )
         activity.refresh_from_db()
         modifies_activity.refresh_from_db()
@@ -595,8 +609,12 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             payment_plan=modifies_payment_schedule,
         )
 
+        user = get_user_model().objects.create(username="Anders And")
         appropriation.grant(
-            approval_level.id, "note til bevillingsgodkendelse"
+            appropriation.activities.exclude(status=STATUS_GRANTED),
+            approval_level.id,
+            "note til bevillingsgodkendelse",
+            user,
         )
         activity.refresh_from_db()
         modifies_activity.refresh_from_db()
@@ -673,9 +691,13 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             payment_plan=modifies_payment_schedule,
         )
 
+        user = get_user_model().objects.create(username="Anders And")
         with self.assertRaises(forms.ValidationError):
             appropriation.grant(
-                approval_level.id, "note til bevillingsgodkendelse"
+                appropriation.activities.exclude(status=STATUS_GRANTED),
+                approval_level.id,
+                "note til bevillingsgodkendelse",
+                user,
             )
 
 
