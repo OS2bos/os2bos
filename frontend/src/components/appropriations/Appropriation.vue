@@ -15,8 +15,6 @@
             </div>
             <div>
                 <button @click="show_edit = !show_edit" class="appr-edit-btn">Redigér</button>
-                <button @click="preApprovalCheck()" class="approval-btn">Godkend</button>
-                <approval :approval-obj="appr" v-if="showModal" @close="update()"></approval>
             </div>
         </header>
 
@@ -102,8 +100,7 @@
         },
         data: function() {
             return {
-                show_edit: false,
-                showModal: false
+                show_edit: false
             }
         },
         beforeRouteEnter: function(to, from, next) {
@@ -139,13 +136,6 @@
             },
             displayDate: function(date) {
                 return json2jsDate(date)
-            },
-            preApprovalCheck: function() {
-                if (this.appr.activities.length > 0) {
-                    this.showModal = true
-                } else {
-                    alert('Der er ikke valgt nogen aktiviteter endnu')
-                }
             },
             updateBreadCrumb: function() {
                 if (this.cas && this.appr) {
