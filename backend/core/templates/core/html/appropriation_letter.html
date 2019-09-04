@@ -327,6 +327,8 @@
                                 <td>
                                     {% if appropriation.main_activity.payment_plan.payment_frequency == "MONTHLY" %}
                                         Månedlig
+                                    {% if appropriation.main_activity.payment_plan.payment_frequency == "BIWEEKLY" %}
+                                        Hver 2. uge
                                     {% elif appropriation.main_activity.payment_plan.payment_frequency == "WEEKLY" %}
                                         Ugentlig
                                     {% elif appropriation.main_activity.payment_plan.payment_frequency == "DAILY" %}
@@ -459,6 +461,8 @@
                                     <td>
                                         {% if a.payment_plan.payment_frequency == "MONTHLY" %}
                                             Månedlig
+                                        {% if a.payment_plan.payment_frequency == "BIWEEKLY" %}
+                                            Hver 2. uge
                                         {% elif a.payment_plan.payment_frequency == "WEEKLY" %}
                                             Ugentlig
                                         {% elif a.payment_plan.payment_frequency == "DAILY" %}
