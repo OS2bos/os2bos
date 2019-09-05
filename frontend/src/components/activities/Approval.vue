@@ -58,25 +58,29 @@
                             <error />
 
                             <div class="row">
-                                <fieldset style="padding-right: 1rem;">
-                                    <legend>Bevilling foretaget på følgende niveau</legend>
-                                    <input id="inputRadio1" type="radio" value="5" v-model="appr.approval_level" name="approval-group" required>
-                                    <label for="inputRadio1">Afsnitsleder</label>
-                                    <input id="inputRadio2" type="radio" value="1" v-model="appr.approval_level" name="approval-group" required>
-                                    <label for="inputRadio2">Egenkompetence</label>
-                                    <input id="inputRadio3" type="radio" value="3" v-model="appr.approval_level" name="approval-group" required>
-                                    <label for="inputRadio3">Fagspecialist</label>
-                                    <input id="inputRadio4" type="radio" value="4" v-model="appr.approval_level" name="approval-group" required>
-                                    <label for="inputRadio4">Teamleder</label>
-                                    <input id="inputRadio5" type="radio" value="2" v-model="appr.approval_level" name="approval-group" required>
-                                    <label for="inputRadio5">Teammøde</label>
-                                    <input id="inputRadio6" type="radio" value="6" v-model="appr.approval_level" name="approval-group" required>
-                                    <label for="inputRadio6">Ungdomskriminalitetsnævnet</label>
-                                </fieldset>
-                                <fieldset style="padding-left: 1rem; width: 50%;">
-                                    <label for="field-text">Evt. bemærkning</label>
-                                    <textarea id="field-text" v-model="appr.approval_note"></textarea>
-                                </fieldset>
+                                <div style="width: 50%; padding-top: 1rem;">
+                                    <fieldset style="padding-right: 1rem;">
+                                        <legend>Bevilling foretaget på følgende niveau</legend>
+                                        <input id="inputRadio1" type="radio" value="5" v-model="appr.approval_level" name="approval-group" required>
+                                        <label for="inputRadio1">Afsnitsleder</label>
+                                        <input id="inputRadio2" type="radio" value="1" v-model="appr.approval_level" name="approval-group" required>
+                                        <label for="inputRadio2">Egenkompetence</label>
+                                        <input id="inputRadio3" type="radio" value="3" v-model="appr.approval_level" name="approval-group" required>
+                                        <label for="inputRadio3">Fagspecialist</label>
+                                        <input id="inputRadio4" type="radio" value="4" v-model="appr.approval_level" name="approval-group" required>
+                                        <label for="inputRadio4">Teamleder</label>
+                                        <input id="inputRadio5" type="radio" value="2" v-model="appr.approval_level" name="approval-group" required>
+                                        <label for="inputRadio5">Teammøde</label>
+                                        <input id="inputRadio6" type="radio" value="6" v-model="appr.approval_level" name="approval-group" required>
+                                        <label for="inputRadio6">Ungdomskriminalitetsnævnet</label>
+                                    </fieldset>
+                                </div>
+                                <div style="width: 50%;">
+                                    <fieldset style="padding-left: 1rem; ">
+                                        <label for="field-text">Evt. bemærkning</label>
+                                        <textarea id="field-text" v-model="appr.approval_note" style="height: 14rem;"></textarea>
+                                    </fieldset>
+                                </div>
                             </div>
 
                         </slot>
@@ -169,14 +173,3 @@
     }
     
 </script>
-
-<style>
-
-    .approval .modal-container {
-        max-width: 90vw;
-        max-height: 90vh;
-        overflow-x: hidden;
-        overflow-y: auto;
-    }
-
-</style>

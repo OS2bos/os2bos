@@ -181,10 +181,17 @@
         border-radius: 2px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
         transition: all .3s ease;
+        max-height: 90vh;
+        max-width: 90vh;
+        overflow-y: hidden;
+        display: flex;
+        flex-flow: column nowrap;
     }
 
     .modal-body {
         margin: 0.5rem 0;
+        flex: 0 1 auto;
+        overflow: scroll;
     }
 
     .modal-confirm-btn {
