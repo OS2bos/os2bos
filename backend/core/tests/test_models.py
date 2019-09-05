@@ -48,6 +48,7 @@ from core.models import (
     STATUS_GRANTED,
     STATUS_EXPECTED,
     STATUS_DRAFT,
+    STATUS_DISCONTINUED,
 )
 
 
@@ -107,6 +108,35 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         self.assertEqual(
             activity.appropriation.total_granted_this_year, Decimal("10000")
         )
+
+    def test_appropriation_status(self):
+
+        now = timezone.now()
+        start_date = date(year=now.year, month=1, day=1)
+        end_date = date(year=now.year + 1, month=1, day=10)
+
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+
+        self.assertEqual(appropriation.status, STATUS_DRAFT)
+
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+
+        self.assertEqual(appropriation.status, STATUS_GRANTED)
+
+        activity.end_date = date.today() - timedelta(1)
+        activity.save()
+
+        self.assertEqual(appropriation.status, STATUS_DISCONTINUED)
 
     def test_total_expected_this_year(self):
         # generate a start and end span of 3 days
