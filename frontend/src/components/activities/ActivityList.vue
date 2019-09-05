@@ -44,7 +44,7 @@
                         :key="a.id"
                         :checked="a.checked"
                         @toggle="toggleHandler"
-                        @check="a.checked = !a.checked" />
+                        @check="checkOneInList(a, ...arguments)" />
                 </template>
                 <tr v-if="suppl_acts.length > 0">
                     <th></th>
@@ -58,7 +58,7 @@
                         :key="a.id"
                         :checked="a.checked"
                         @toggle="toggleHandler"
-                        @check="a.checked = !a.checked" />
+                        @check="checkOneInList(a, ...arguments)" />
                 </template>
                 <tr>
                     <td colspan="5" style="padding-left: 0;">
@@ -272,12 +272,9 @@
                     }
                 }
             },
-            checkOneInList: function(check_val, act) {
-                act.checked = check_val        
-                if (act.checked && act.status !== 'GRANTED' && !act.is_meta) {
-                    this.approvable_acts.push(act)
-                }
-                 
+            checkOneInList: function(act, check_val) {
+                console.log(act)
+                console.log(check_val)
             },
             setAllChecked: function(event) {
                 this.checkAllInList(event.target.checked, this.main_acts)

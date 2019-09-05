@@ -7,7 +7,7 @@
         @click="act.is_meta ? toggleGroup(act.id) : false">
         <td style="width: 4.5rem;">
             <template v-if="!act.is_meta && act.status !== 'GRANTED'">
-                <input type="checkbox" :id="`check-${ act.id }`" v-model="act.checked" @change="$emit('check', is_checked)">
+                <input type="checkbox" :id="`check-${ act.id }`" v-model="is_checked" @change="$emit('check', is_checked)">
                 <label class="disabled" :for="`check-${ act.id }`"></label>
             </template>
             <div v-if="act.is_meta" class="dropdown-arrow" :class="{'toggled': toggled}">▼</div>
@@ -85,6 +85,7 @@
             }
         },
         created: function() {
+            this.is_checked = this.checked
             if (this.act.group) {
                 this.visible = false
             }
