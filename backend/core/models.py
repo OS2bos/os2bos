@@ -127,6 +127,9 @@ class PaymentMethodDetails(models.Model):
         choices=tax_card_choices,
     )
 
+    def __str__(self):
+        return f"{self.get_tax_card_display()}"
+
 
 class User(AbstractUser):
     class Meta:
