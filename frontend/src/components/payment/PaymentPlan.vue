@@ -93,6 +93,11 @@
                         this.month_factor = 1
                         return 'måned'
                         break
+                    case 'BIWEEKLY':
+                        this.freq_factor = 26
+                        this.month_factor = 2
+                        return '2. uge'
+                        break
                     case 'WEEKLY':
                         this.freq_factor = 52
                         this.month_factor = 4
