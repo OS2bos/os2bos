@@ -137,6 +137,7 @@
                 this.update()
             },
             acts: function() {
+                this.chunks = []
                 this.splitActList(this.acts)
             }
         },

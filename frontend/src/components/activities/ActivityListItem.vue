@@ -17,7 +17,7 @@
         </td>
         <td>
             <router-link v-if="!act.is_meta" :to="`/activity/${ act.id }`">{{ activityId2name(act.details) }}</router-link>
-            <span v-else>{{ activityId2name(act.details) }}</span> {{checked}} | {{is_checked}}
+            <span v-else>{{ activityId2name(act.details) }}</span>
         </td>
         <td>
             {{ act.payment_plan.recipient_name }}
