@@ -286,9 +286,69 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         self.assertEqual(
             serializer.errors["non_field_errors"][0],
             f"den justerede aktivitets startdato skal være i fremtiden"
-            f" i spændet fra næste betalingsdato: "
+            f" fra næste betalingsdato: "
             f"{now + timedelta(days=1)}"
             f" til ydelsens slutdato: {end_date}",
+        )
+
+    def test_validate_expected_no_modifies_end_date(self):
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_frequency=PaymentSchedule.WEEKLY,
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(
+            case=case, status=Appropriation.STATUS_GRANTED
+        )
+        now = timezone.now().date()
+        start_date = now - timedelta(days=7)
+        details, unused = ActivityDetails.objects.get_or_create(
+            activity_id="000000",
+            name="Test aktivitet",
+            max_tolerance_in_percent=10,
+            max_tolerance_in_dkk=1000,
+        )
+        # create an already granted activity with no end_date.
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=start_date,
+            end_date=None,
+            details=details,
+            payment_plan=payment_schedule,
+        )
+        modifies_payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("600.0"),
+            payment_frequency=PaymentSchedule.WEEKLY,
+        )
+        modified_start_date = start_date + timedelta(days=1)
+        # let the granted activity be modified by another expected activity.
+        data = {
+            "case": case.id,
+            "appropriation": appropriation.id,
+            "start_date": modified_start_date,
+            "status": STATUS_EXPECTED,
+            "activity_type": MAIN_ACTIVITY,
+            "end_date": None,
+            "modifies": activity.id,
+            "details": details.id,
+            "payment_plan": PaymentScheduleSerializer(
+                modifies_payment_schedule
+            ).data,
+        }
+        serializer = ActivitySerializer(data=data)
+        is_valid = serializer.is_valid()
+
+        self.assertFalse(is_valid)
+        self.assertEqual(
+            serializer.errors["non_field_errors"][0],
+            f"den justerede aktivitets startdato skal være i fremtiden"
+            f" fra næste betalingsdato: "
+            f"{now + timedelta(days=7)}",
         )
 
     def test_validate_expected_no_next_payment(self):
