@@ -19,6 +19,7 @@
             <button v-if="act.status !== 'GRANTED'" class="act-delete-btn" @click="preDeleteCheck()">Slet</button>
         </header>
 
+        <!-- Delete activity modal -->
         <div v-if="showModal">
             <form @submit.prevent="deleteActivity()" class="modal-form">
                 <div class="modal-mask">
