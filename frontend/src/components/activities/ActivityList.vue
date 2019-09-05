@@ -19,11 +19,8 @@
             <thead>
                 <tr>
                     <th style="width: 4.5rem;">
-                        <!-- Unhide, when feature for individual approval is in place -->
-                        <!--
-                        <input type="checkbox" id="check-all" disabled>
+                        <input type="checkbox" id="check-all" @change="setAllChecked">
                         <label class="disabled" for="check-all"></label>
-                        -->
                     </th>
                     <th style="width: 5.5rem;">Status</th>
                     <th>Ydelse</th>
@@ -43,14 +40,15 @@
                     <act-list-item 
                         v-for="a in chunk"
                         :ref="a.group ? a.group : a.id"
-                        :act="a" 
+                        :act="a"
                         :key="a.id"
-                        @toggle="toggleHandler" />
+                        :checked="a.checked"
+                        @toggle="toggleHandler"
+                        @check="checkOneInList(a, ...arguments)" />
                 </template>
-                <tr v-if="suppl_acts && suppl_acts.length > 0">
+                <tr v-if="suppl_acts.length > 0">
                     <th></th>
                     <th colspan="7" class="table-heading">Følgeydelser</th>
-                    
                 </tr>
                 <template v-for="chunk in suppl_acts">
                     <act-list-item 
@@ -58,12 +56,13 @@
                         :ref="a.group ? a.group : a.id"
                         :act="a" 
                         :key="a.id"
-                        @toggle="toggleHandler" />
+                        :checked="a.checked"
+                        @toggle="toggleHandler"
+                        @check="checkOneInList(a, ...arguments)" />
                 </template>
-                <tr>
+                <tr class="lastrow">
                     <td colspan="5" style="padding-left: 0;">
-                        <!-- Unhide, when feature for individual approval is in place -->
-                        <!-- <button disabled>✔ Godkendt valgte</button> -->
+                        <button @click="initPreApprove()" :disabled="!approve_available">✔ Godkendt valgte</button>
                     </td>
                     <td class="right"><strong>I alt</strong></td>
                     <td class="nowrap right">
@@ -78,6 +77,9 @@
             </tbody>
         </table>
         <p v-if="no_acts">Der er endnu ingen ydelser</p>
+
+        <approval-diag :appr-id="apprId" :acts="approvable_acts" v-if="diag_open" @close="diag_open = false" />
+
     </section>
 
 </template>
@@ -88,19 +90,24 @@
     import { cost2da } from '../filters/Numbers.js'
     import { displayStatus } from '../filters/Labels.js'
     import ActListItem from './ActivityListItem.vue'
+    import ApprovalDiag from './Approval.vue'
 
     export default {
 
         components: {
-            ActListItem
+            ActListItem,
+            ApprovalDiag
         },
         props: [
             'apprId'
         ],
         data: function() {
             return {
-                main_acts: null,
-                suppl_acts: null
+                chunks: [],
+                main_acts: [],
+                suppl_acts: [],
+                approvable_acts: [],
+                diag_open: false
             }
         },
         computed: {
@@ -112,6 +119,13 @@
             },
             no_acts: function() {
                 if (this.acts.length < 1) {
+                    return true
+                } else {
+                    return false
+                }
+            },
+            approve_available: function() {
+                if (this.approvable_acts.length > 0) {
                     return true
                 } else {
                     return false
@@ -133,76 +147,70 @@
             displayDigits: function(num) {
                 return cost2da(num)
             },
-            splitActList: function(act_list) {
-
-                let chunks = [],
-                    unsorted_suppl_acts = []
-
-                function addModifierAct(chunk, id) {
-                    let modifier = act_list.find(function(a) {
-                        return a.modifies === id
-                    })
-                    if (modifier) {
-                        chunk.push(modifier)
-                        addModifierAct(chunk, modifier.id)
+            addModifierAct(chunk, id, act_list) {
+                let modifier = act_list.find(function(a) {
+                    return a.modifies === id
+                })
+                if (modifier) {
+                    chunk.push(modifier)
+                    this.addModifierAct(chunk, modifier.id, act_list)
+                } else {
+                    this.chunks.push(chunk)
+                }   
+            },
+            getBestDate(arr, criteria) {
+                let best_date = null
+                for (let a in arr) {
+                    const date = new Date( arr[a][`${ criteria}_date`] ).getTime()
+                    if (criteria === 'start') {
+                        if (!best_date || date < best_date) {
+                            best_date = date
+                        }
                     } else {
-                        chunks.push(chunk)
-                    }   
+                        if (!best_date || date > best_date) {
+                            best_date = date
+                        }
+                    }
                 }
+                return best_date
+            },
+            checkExpected(arr) {
+                return arr.find(function(a) {
+                    return a.status === 'EXPECTED'
+                }) ? 'EXPECTED' : arr[0].status
+            },
+            calcCost(arr) {
+                let costs = {
+                    draft: 0,
+                    approved: 0,
+                    expected: 0
+                }
+                for (let a of arr) {
+                    if (a.status === 'GRANTED') {
+                        costs.approved = costs.approved + a.total_cost_this_year
+                    } else if (a.status === 'EXPECTED') {
+                        costs.expected = costs.expected + a.total_cost_this_year
+                    } else {
+                        costs.draft = costs.draft + a.total_cost_this_year
+                    }
+                }
+                costs.expected = null // TODO: Calculate correct expected or get from backend
+                return costs
+            },
+            splitActList: function(act_list) {
 
                 // Group activities together by 'modifies'
                 for (let act of act_list) {
+                    act.checked = false
                     if (act.modifies === null) {
                         let chunk = [act]
-                        addModifierAct(chunk, act.id)
+                        this.addModifierAct(chunk, act.id, act_list)
                     }
-                }
-
-                function getBestDate(arr, criteria) {
-                    let best_date = null
-                    for (let a in arr) {
-                        const date = new Date( arr[a][`${ criteria}_date`] ).getTime()
-                        if (criteria === 'start') {
-                            if (!best_date || date < best_date) {
-                                best_date = date
-                            }
-                        } else {
-                            if (!best_date || date > best_date) {
-                                best_date = date
-                            }
-                        }
-                    }
-                    return best_date
-                }
-
-                function checkExpected(arr) {
-                    return arr.find(function(a) {
-                        return a.status === 'EXPECTED'
-                    }) ? 'EXPECTED' : arr[0].status
-                }
-
-                function calcCost(arr) {
-                    let costs = {
-                        draft: 0,
-                        approved: 0,
-                        expected: 0
-                    }
-                    for (let a of arr) {
-                        if (a.status === 'GRANTED') {
-                            costs.approved = costs.approved + a.total_cost_this_year
-                        } else if (a.status === 'EXPECTED') {
-                            costs.expected = costs.expected + a.total_cost_this_year
-                        } else {
-                            costs.draft = costs.draft + a.total_cost_this_year
-                        }
-                    }
-                    costs.expected = null // TODO: Calculate correct expected or get from backend
-                    return costs
                 }
 
                 // Add meta activity to chunks of modified activities
-                for (let c in chunks) {
-                    let chunk = chunks[c]
+                for (let c in this.chunks) {
+                    let chunk = this.chunks[c]
                     const clength = chunk.length,
                           last_chunk = chunk[clength -1]
 
@@ -212,15 +220,16 @@
                         for (let act of chunk) {
                             act.group = `group${ c }`
                         }
-                        let meta_act = {
+                        let costs = this.calcCost(chunk),
+                            meta_act = {
                             id: `group${ c }`,
                             is_meta: true,
-                            status: checkExpected(chunk),
-                            start_date: getBestDate(chunk,'start'),
-                            end_date: getBestDate(chunk,'end'),
+                            status: this.checkExpected(chunk),
+                            start_date: this.getBestDate(chunk,'start'),
+                            end_date: this.getBestDate(chunk,'end'),
                             activity_type: last_chunk.activity_type,
-                            total_approved: calcCost(chunk).approved,
-                            total_expected: calcCost(chunk).expected,
+                            total_approved: costs.approved,
+                            total_expected: costs.expected,
                             details: last_chunk.details,
                             payment_plan: last_chunk.payment_plan,
                             note: last_chunk.note
@@ -229,16 +238,16 @@
                     }
                 }
 
-                // Split list of chunks into main and supplementary lists
-                this.main_acts = chunks.filter(function(c) {
+                // Populate main and supplementary activities lists
+                this.main_acts = this.chunks.filter(function(c) {
                     return c[0].activity_type === 'MAIN_ACTIVITY'
                 })
-                unsorted_suppl_acts = chunks.filter(function(c) {
+                let unsorted_suppl_acts = this.chunks.filter(function(c) {
                     return c[0].activity_type === 'SUPPL_ACTIVITY'
                 })
 
                 // Sort supplementary list by start date
-                this.suppl_acts = unsorted_suppl_acts.sort(function(a,b) {
+                unsorted_suppl_acts.sort(function(a,b) {
                     const a_start_date = new Date(a[0].start_date).getTime(),
                           b_start_date = new Date(b[0].start_date).getTime()
                     if (a_start_date > b_start_date) {
@@ -249,7 +258,7 @@
                         return 0
                     }
                 })
-                
+                this.suppl_acts = unsorted_suppl_acts
             },
             toggleHandler: function(toggl_id) {     
                 for (let comp of this.$refs[toggl_id]) {
@@ -257,9 +266,42 @@
                         comp.toggled = !comp.toggled
                     } else {
                         comp.visible = !comp.visible
-                    }
-                    
+                    }       
                 }
+            },
+            checkAllInList: function(check_val, list) {
+                for (let arr of list) {
+                    for (let a of arr) {
+                        a.checked = check_val
+                        if (a.checked && a.status !== 'GRANTED' && !a.is_meta) {
+                            this.approvable_acts.push(a)
+                        }
+                    }
+                }
+            },
+            checkOneInList: function(act, check_val) {
+                const pre_checked_act = this.approvable_acts.findIndex(function(a) {
+                    return a.id === act.id
+                })
+                if (check_val) {
+                    if (pre_checked_act < 0) {
+                        this.approvable_acts.push(act)
+                    }
+                } else {
+                    if (pre_checked_act >= 0) {
+                        this.approvable_acts.splice(pre_checked_act, 1)
+                    }
+                }
+            },
+            setAllChecked: function(event) {
+                this.checkAllInList(event.target.checked, this.main_acts)
+                this.checkAllInList(event.target.checked, this.suppl_acts)
+                if (!event.target.checked) {
+                    this.approvable_acts = []
+                }
+            },
+            initPreApprove: function() {
+                this.diag_open = true
             }
         },
         beforeCreate: function() {
@@ -299,7 +341,7 @@
         margin: 0;
     }
 
-    .activities tr:last-child td {
+    .activities tr.lastrow td {
         background-color: var(--grey0);
         padding-top: 1.5rem;
     }

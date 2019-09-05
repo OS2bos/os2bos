@@ -7,11 +7,8 @@
         @click="act.is_meta ? toggleGroup(act.id) : false">
         <td style="width: 4.5rem;">
             <template v-if="!act.is_meta && act.status !== 'GRANTED'">
-                <!-- Unhide, when feature for individual approval is in place -->
-                <!--     
-                <input type="checkbox" :id="`check-${ act.id }`" disabled>
+                <input type="checkbox" :id="`check-${ act.id }`" v-model="is_checked" @change="$emit('check', is_checked)">
                 <label class="disabled" :for="`check-${ act.id }`"></label>
-                -->
             </template>
             <div v-if="act.is_meta" class="dropdown-arrow" :class="{'toggled': toggled}">▼</div>
         </td>
@@ -20,7 +17,7 @@
         </td>
         <td>
             <router-link v-if="!act.is_meta" :to="`/activity/${ act.id }`">{{ activityId2name(act.details) }}</router-link>
-            <span v-else>{{ activityId2name(act.details) }}</span>
+            <span v-else>{{ activityId2name(act.details) }}</span> {{checked}} | {{is_checked}}
         </td>
         <td>
             {{ act.payment_plan.recipient_name }}
@@ -55,12 +52,19 @@
     export default {
     
         props: [
-            'act'
+            'act',
+            'checked'
         ],
         data: function() {
             return {
                 visible: true,
-                toggled: false
+                toggled: false,
+                is_checked: false
+            }
+        },
+        watch: {
+            checked: function() {
+                this.is_checked = this.checked
             }
         },
         methods: {
@@ -81,6 +85,7 @@
             }
         },
         created: function() {
+            this.is_checked = this.checked
             if (this.act.group) {
                 this.visible = false
             }

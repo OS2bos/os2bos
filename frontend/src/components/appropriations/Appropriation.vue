@@ -15,8 +15,6 @@
             </div>
             <div>
                 <button @click="show_edit = !show_edit" class="appr-edit-btn">Redigér</button>
-                <button @click="preApprovalCheck()" class="approval-btn">Godkend</button>
-                <approval :approval-obj="appr" v-if="showModal" @close="update()"></approval>
             </div>
         </header>
 
@@ -88,7 +86,6 @@
     import axios from '../http/Http.js'
     import ActivityList from '../activities/ActivityList.vue'
     import AppropriationEdit from './AppropriationEdit.vue'
-    import Approval from './Approval.vue'
     import { json2jsDate } from '../filters/Date.js'
     import { municipalityId2name, districtId2name, sectionId2name, displayStatus, userId2name, approvalId2name } from '../filters/Labels.js'
     import store from '../../store.js'
@@ -97,13 +94,11 @@
 
         components: {
             ActivityList,
-            AppropriationEdit,
-            Approval
+            AppropriationEdit
         },
         data: function() {
             return {
-                show_edit: false,
-                showModal: false
+                show_edit: false
             }
         },
         beforeRouteEnter: function(to, from, next) {
@@ -139,13 +134,6 @@
             },
             displayDate: function(date) {
                 return json2jsDate(date)
-            },
-            preApprovalCheck: function() {
-                if (this.appr.activities.length > 0) {
-                    this.showModal = true
-                } else {
-                    alert('Der er ikke valgt nogen aktiviteter endnu')
-                }
             },
             updateBreadCrumb: function() {
                 if (this.cas && this.appr) {
