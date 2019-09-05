@@ -60,9 +60,9 @@
                         @toggle="toggleHandler"
                         @check="checkOneInList(a, ...arguments)" />
                 </template>
-                <tr>
+                <tr class="lastrow">
                     <td colspan="5" style="padding-left: 0;">
-                        <button @click="initPreApprove()" :disabled="approvable_acts < 1">✔ Godkendt valgte</button>
+                        <button @click="initPreApprove()" :disabled="!approve_available">✔ Godkendt valgte</button>
                     </td>
                     <td class="right"><strong>I alt</strong></td>
                     <td class="nowrap right">
@@ -119,6 +119,13 @@
             },
             no_acts: function() {
                 if (this.acts.length < 1) {
+                    return true
+                } else {
+                    return false
+                }
+            },
+            approve_available: function() {
+                if (this.approvable_acts.length > 0) {
                     return true
                 } else {
                     return false
@@ -273,8 +280,18 @@
                 }
             },
             checkOneInList: function(act, check_val) {
-                console.log(act)
-                console.log(check_val)
+                const pre_checked_act = this.approvable_acts.findIndex(function(a) {
+                    return a.id === act.id
+                })
+                if (check_val) {
+                    if (pre_checked_act < 0) {
+                        this.approvable_acts.push(act)
+                    }
+                } else {
+                    if (pre_checked_act >= 0) {
+                        this.approvable_acts.splice(pre_checked_act, 1)
+                    }
+                }
             },
             setAllChecked: function(event) {
                 this.checkAllInList(event.target.checked, this.main_acts)
@@ -324,7 +341,7 @@
         margin: 0;
     }
 
-    .activities tr:last-child td {
+    .activities tr.lastrow td {
         background-color: var(--grey0);
         padding-top: 1.5rem;
     }
