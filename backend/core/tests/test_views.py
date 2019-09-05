@@ -15,7 +15,6 @@ from django.utils import timezone
 
 from core.models import (
     ApprovalLevel,
-    Appropriation,
     PaymentSchedule,
     MAIN_ACTIVITY,
     SUPPL_ACTIVITY,
@@ -343,9 +342,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        appropriation = create_appropriation(
-            sbsys_id="XXX-YYY", case=case
-        )
+        appropriation = create_appropriation(sbsys_id="XXX-YYY", case=case)
         create_activity(
             case,
             appropriation,
@@ -367,9 +364,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        appropriation = create_appropriation(
-            sbsys_id="XXX-YYY", case=case
-        )
+        appropriation = create_appropriation(sbsys_id="XXX-YYY", case=case)
         start_date = timezone.now().date()
         payment_schedule = create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
@@ -426,9 +421,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        appropriation = create_appropriation(
-            sbsys_id="XXX-YYY", case=case
-        )
+        appropriation = create_appropriation(sbsys_id="XXX-YYY", case=case)
         activity = create_activity(  # noqa - it *will* be used.
             case,
             appropriation,

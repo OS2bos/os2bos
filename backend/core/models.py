@@ -655,14 +655,14 @@ class Appropriation(AuditModelMixin, models.Model):
 
     @property
     def status(self):
-       if not self.activities.exists() or not self.main_activity:
-           return STATUS_DRAFT
-       # We now know that there is at least one activity and a main activity.
-       today = timezone.now().date()
-       if self.main_activity.end_date < today:
-           return STATUS_DISCONTINUED
-       # Now, the status should follow the main activity's status.
-       return self.main_activity.status
+        if not self.activities.exists() or not self.main_activity:
+            return STATUS_DRAFT
+        # We now know that there is at least one activity and a main activity.
+        today = timezone.now().date()
+        if self.main_activity.end_date < today:
+            return STATUS_DISCONTINUED
+        # Now, the status should follow the main activity's status.
+        return self.main_activity.status
 
     case = models.ForeignKey(
         Case,
@@ -1118,9 +1118,7 @@ class Activity(AuditModelMixin, models.Model):
     @property
     def triggers_payment_email(self):
         # If activity or appropriation is not granted we don't send an email.
-        if (
-            not self.status == STATUS_GRANTED
-        ):
+        if not self.status == STATUS_GRANTED:
             return False
 
         # Don't trigger the email if the payment plan does not exist
