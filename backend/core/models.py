@@ -608,7 +608,6 @@ class Section(models.Model):
         verbose_name_plural = _("paragraffer")
 
     paragraph = models.CharField(max_length=128, verbose_name=_("paragraf"))
-    kle_number = models.CharField(max_length=128, verbose_name=_("KLE-nummer"))
     text = models.TextField(verbose_name=_("forklarende tekst"))
     allowed_for_family_target_group = models.BooleanField(
         verbose_name=_("tilladt for familieafdelingen"), default=False
@@ -623,9 +622,6 @@ class Section(models.Model):
     )
     law_text_name = models.CharField(
         max_length=128, verbose_name=_("lov tekst navn")
-    )
-    sbsys_template_id = models.CharField(
-        max_length=128, verbose_name=_("SBSYS skabelon-id"), blank=True
     )
 
     def __str__(self):
@@ -888,6 +884,7 @@ class ActivityDetails(models.Model):
         related_name="main_activities",
         verbose_name=_("hovedaktivitet for paragraffer"),
         blank=True,
+        through="SectionInfo",
     )
     supplementary_activity_for = models.ManyToManyField(
         Section,
@@ -912,6 +909,19 @@ class ActivityDetails(models.Model):
 
     def __str__(self):
         return f"{self.activity_id} - {self.name}"
+
+
+class SectionInfo(models.Model):
+    """For a main activity, KLE no. and SBSYS ID for the relevant sections."""
+
+    activity_details = models.ForeignKey(
+        ActivityDetails, on_delete=models.CASCADE
+    )
+    section = models.ForeignKey(Section, on_delete=models.CASCADE)
+    kle_number = models.CharField(max_length=128, verbose_name=_("KLE-nummer"))
+    sbsys_template_id = models.CharField(
+        max_length=128, verbose_name=_("SBSYS skabelon-id"), blank=True
+    )
 
 
 class Activity(AuditModelMixin, models.Model):
