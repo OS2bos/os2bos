@@ -87,6 +87,10 @@
                             val: 'Måned'
                         },
                         {
+                            key: 'BIWEEKLY',
+                            val: '2. uge'
+                        },
+                        {
                             key: 'WEEKLY',
                             val: 'Uge'
                         },
