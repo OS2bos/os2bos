@@ -183,7 +183,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED
+            case=case
         )
         now = timezone.now().date()
         start_date = now - timedelta(days=6)
@@ -238,7 +238,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED
+            case=case
         )
         now = timezone.now().date()
         start_date = now - timedelta(days=6)
@@ -300,7 +300,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED
+            case=case
         )
         start_date = date.today() - timedelta(days=3)
         end_date = date.today() + timedelta(days=2)
@@ -360,7 +360,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED
+            case=case
         )
         start_date = date.today() + timedelta(days=2)
         end_date = date.today() + timedelta(days=4)
@@ -415,7 +415,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED
+            case=case
         )
         start_date = date.today()
         end_date = date.today() + timedelta(days=1)
@@ -453,7 +453,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED
+            case=case
         )
         start_date = date.today()
         end_date = date.today()

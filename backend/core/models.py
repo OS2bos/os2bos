@@ -76,6 +76,8 @@ type_choices = (
 STATUS_DRAFT = "DRAFT"
 STATUS_EXPECTED = "EXPECTED"
 STATUS_GRANTED = "GRANTED"
+STATUS_DISCONTINUED = "DISCONTINUED"
+
 status_choices = (
     (STATUS_DRAFT, _("kladde")),
     (STATUS_EXPECTED, _("forventet")),
@@ -651,20 +653,16 @@ class Appropriation(AuditModelMixin, models.Model):
         verbose_name=_("paragraf"),
     )
 
-    # Status - definitions and choice list.
-    STATUS_DRAFT = "DRAFT"
-    STATUS_BUDGETED = "BUDGETED"
-    STATUS_GRANTED = "GRANTED"
-    STATUS_DISCONTINUED = "DISCONTINUED"
-    status_choices = (
-        (STATUS_DRAFT, _("kladde")),
-        (STATUS_BUDGETED, _("disponeret")),
-        (STATUS_GRANTED, _("bevilget")),
-        (STATUS_DISCONTINUED, _("udgået")),
-    )
-    status = models.CharField(
-        verbose_name=_("status"), max_length=16, choices=status_choices
-    )
+    @property
+    def status(self):
+       if not self.activities.exists() or not self.main_activity:
+           return STATUS_DRAFT
+       # We now know that there is at least one activity and a main activity.
+       today = timezone.now().date()
+       if self.main_activity.end_date < today:
+           return STATUS_DISCONTINUED
+       # Now, the status should follow the main activity's status.
+       return self.main_activity.status
 
     case = models.ForeignKey(
         Case,
@@ -1122,7 +1120,6 @@ class Activity(AuditModelMixin, models.Model):
         # If activity or appropriation is not granted we don't send an email.
         if (
             not self.status == STATUS_GRANTED
-            or not self.appropriation.status == Appropriation.STATUS_GRANTED
         ):
             return False
 

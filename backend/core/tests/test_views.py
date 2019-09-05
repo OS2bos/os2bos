@@ -344,7 +344,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(
-            sbsys_id="XXX-YYY", case=case, status=Appropriation.STATUS_DRAFT
+            sbsys_id="XXX-YYY", case=case
         )
         create_activity(
             case,
@@ -368,7 +368,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(
-            sbsys_id="XXX-YYY", case=case, status=Appropriation.STATUS_GRANTED
+            sbsys_id="XXX-YYY", case=case
         )
         start_date = timezone.now().date()
         payment_schedule = create_payment_schedule(
@@ -427,7 +427,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(
-            sbsys_id="XXX-YYY", case=case, status=Appropriation.STATUS_DRAFT
+            sbsys_id="XXX-YYY", case=case
         )
         activity = create_activity(  # noqa - it *will* be used.
             case,

@@ -386,7 +386,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_DRAFT
+            case=case
         )
         now = timezone.now()
         start_date = now + timedelta(days=6)
@@ -424,7 +424,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED
+            case=case
         )
         now = timezone.now().date()
         start_date = now + timedelta(days=6)
@@ -492,7 +492,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED
+            case=case
         )
         now = timezone.now().date()
         start_date = now - timedelta(days=6)
@@ -576,7 +576,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED
+            case=case
         )
         now = timezone.now().date()
         start_date = now - timedelta(days=6)
@@ -658,7 +658,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED
+            case=case
         )
         now = timezone.now().date()
         start_date = now - timedelta(days=6)
@@ -1023,16 +1023,18 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED
+            case=case
         )
-        create_activity(
+        activity = create_activity(
             case,
             appropriation,
             start_date=start_date,
             end_date=end_date,
             payment_plan=payment_schedule,
             status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
         )
+
         self.assertEqual(len(mail.outbox), 1)
         email_message = mail.outbox[0]
         self.assertIn("Aktivitet oprettet", email_message.subject)
@@ -1049,7 +1051,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED
+            case=case
         )
         activity = create_activity(
             case,
@@ -1076,7 +1078,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED
+            case=case
         )
         # Should send a payment deleted email as status is GRANTED.
         activity = create_activity(
@@ -1086,6 +1088,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             end_date=end_date,
             payment_plan=payment_schedule,
             status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
         )
         activity.delete()
         self.assertEqual(len(mail.outbox), 2)
@@ -1104,7 +1107,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_DRAFT
+            case=case
         )
         activity = create_activity(
             case,
@@ -1127,7 +1130,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED
+            case=case
         )
         activity = create_activity(
             case,
@@ -1147,7 +1150,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED
+            case=case
         )
         # Generate an activity with no payment plan.
         activity = create_activity(
@@ -1169,7 +1172,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         section = create_section()
         appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED, section=section
+            case=case,  section=section
         )
 
         activity = create_activity(
@@ -1197,7 +1200,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         section = create_section()
         appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED, section=section
+            case=case, section=section
         )
         main_activity_details = ActivityDetails.objects.create(
             name="Betaling til andre kommuner/region for specialtandpleje",
@@ -1250,7 +1253,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         section = create_section()
         appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED, section=section
+            case=case, section=section
         )
         main_activity_details = ActivityDetails.objects.create(
             name="Betaling til andre kommuner/region for specialtandpleje",
@@ -1278,7 +1281,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         section = create_section()
         appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED, section=section
+            case=case, section=section
         )
         main_activity_details = ActivityDetails.objects.create(
             name="Betaling til andre kommuner/region for specialtandpleje",
@@ -1327,7 +1330,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         section = create_section()
         appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED, section=section
+            case=case, section=section
         )
         main_activity_details = ActivityDetails.objects.create(
             name="Betaling til andre kommuner/region for specialtandpleje",
@@ -1361,7 +1364,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         section = create_section()
         appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED, section=section
+            case=case, section=section
         )
         main_activity_details = ActivityDetails.objects.create(
             name="Betaling til andre kommuner/region for specialtandpleje",
@@ -1411,7 +1414,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         section = create_section()
         appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED, section=section
+            case=case, section=section
         )
         main_activity_details = ActivityDetails.objects.create(
             name="Betaling til andre kommuner/region for specialtandpleje",
@@ -1461,7 +1464,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         section = create_section()
         appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED, section=section
+            case=case, section=section
         )
         main_activity_details = ActivityDetails.objects.create(
             name="Betaling til andre kommuner/region for specialtandpleje",
@@ -1510,7 +1513,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         section = create_section()
         appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED, section=section
+            case=case, section=section
         )
         main_activity_details = ActivityDetails.objects.create(
             name="Betaling til andre kommuner/region for specialtandpleje",
