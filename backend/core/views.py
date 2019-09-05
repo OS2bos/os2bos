@@ -117,7 +117,11 @@ class AppropriationViewSet(AuditViewSet):
         approval_note = request.data.get("approval_note", "")
         activity_pks = request.data.get("activities", [])
         try:
-            activities = Activity.objects.filter(pk__in=activity_pks)
+            activities = appropriation.activities.filter(pk__in=activity_pks)
+            if len(activities) != len(activity_pks):
+                raise RuntimeError(
+                    _("Du kan kun godkende ydelser på den samme bevilling")
+                )
             appropriation.grant(
                 activities, approval_level, approval_note, request.user
             )

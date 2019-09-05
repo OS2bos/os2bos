@@ -880,7 +880,7 @@ class Activity(AuditModelMixin, models.Model):
 
     approval_level = models.ForeignKey(
         ApprovalLevel,
-        related_name="appropriations",
+        related_name="approved_activities",
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -891,7 +891,7 @@ class Activity(AuditModelMixin, models.Model):
     )
     approval_user = models.ForeignKey(
         User,
-        related_name="approved_appropriations",
+        related_name="approved_activities",
         null=True,
         blank=True,
         on_delete=models.PROTECT,
