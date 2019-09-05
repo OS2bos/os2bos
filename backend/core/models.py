@@ -748,8 +748,13 @@ class Appropriation(AuditModelMixin, models.Model):
     @transaction.atomic
     def grant(self, activities, approval_level, approval_note, approval_user):
         """Grant all the given Activities."""
+
+        # Please specify approval level.
         if approval_level is None:
             raise RuntimeError(_("Angiv venligst bevillingskompetence"))
+        # Can't approve nothing
+        if not activities:
+            raise RuntimeError(_("Angiv mindst én aktivitet"))
 
         approval_level = ApprovalLevel.objects.get(id=approval_level)
 
