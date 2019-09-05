@@ -25,20 +25,10 @@
         <div class="appr-grid" v-if="cas">
 
             <template v-if="!show_edit">
-                <div class="sagsstatus appr-grid-box">
-                    <p>
-                        <span v-html="statusLabel(appr.status)" style="display: inline-block; margin: .5rem .25rem 0 0;"></span>
-                        <template v-if="appr.approval_level"> 
-                            af {{ displayApprovalName(appr.approval_level) }}, 
-                            {{ displayDate(appr.appropriation_date) }}
-                        </template>
-                        <span v-if="appr.approval_note && appr.approval_note !== ''">med bemærkningen:<br> <em>{{ appr.approval_note }}</em></span>
-                    </p>
-                </div>
 
                 <div class="sagsbeh appr-grid-box">
                     <dl>
-                        <dt>SBSYS-hovedsag nr.</dt>
+                        <dt>SBSYS-hovedsag</dt>
                         <dd>{{ cas.sbsys_id }}</dd>
                         <dt>Foranstaltningssag (SBSYS)</dt>
                         <dd>{{ appr.sbsys_id}}</dd>
@@ -167,9 +157,6 @@
             },
             displayUserName: function(id) {
                 return userId2name(id)
-            },
-            displayApprovalName: function(id) {
-                return approvalId2name(id)
             }
         }
     }

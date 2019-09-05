@@ -64,6 +64,18 @@
                 <dd>
                     <div v-html="statusLabel(act.status)"></div>
                 </dd>
+                <template v-if="act.status === 'GRANTED'">
+                    <dt>
+                        Godkendt af
+                    </dt>
+                    <dd>
+                        <p>
+                            <em>{{ displayUserName(act.approval_user) }}</em> d. {{ displayDate(act.appropriation_date) }}<br>
+                            ({{ displayApprLevel(act.approval_level) }} kompetence)
+                        </p>
+                        <p v-if="act.approval_note">Note: {{ act.approval_note }}</p>
+                    </dd>
+                </template>
                 <dt>
                     Type
                 </dt>
@@ -168,7 +180,7 @@
     import PaymentSchedule from '../payment/PaymentSchedule.vue'
     import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
-    import { activityId2name, sectionId2name, displayStatus } from '../filters/Labels.js'
+    import { activityId2name, sectionId2name, displayStatus, userId2name, approvalId2name } from '../filters/Labels.js'
     import store from '../../store.js'
     import notify from '../notifications/Notify.js'
 
@@ -253,6 +265,12 @@
             },
             statusLabel: function(status) {
                 return displayStatus(status)
+            },
+            displayUserName: function(user_id) {
+                return userId2name(user_id)
+            },
+            displayApprLevel: function(appr_lvl_id) {
+                return approvalId2name(appr_lvl_id)
             },
             createExpected: function() {                
                 this.edit_mode = 'clone'
