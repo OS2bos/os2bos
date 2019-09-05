@@ -32,7 +32,20 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="act in act_list" :key="act.id">
+                                    <tr v-if="main_act_list.length > 0">
+                                        <th colspan="5">Hovedydelse</th>
+                                    </tr>
+                                    <tr v-for="act in main_act_list" :key="act.id">
+                                        <td><span v-html="displayStatus(act.status)"></span> </td>
+                                        <td>{{ activityId2name(act.details) }}</td>
+                                        <td>{{ displayDate(act.start_date) }} - {{ displayDate(act.end_date) }}</td>
+                                        <td class="right">{{ displayDigits(act.total_cost_this_year) }} kr</td>
+                                        <td class="right">{{ displayDigits(act.total_cost_full_year) }} kr</td>
+                                    </tr>
+                                    <tr v-if="suppl_act_list.length > 0">
+                                        <th colspan="5">Følgeydelser</th>
+                                    </tr>
+                                    <tr v-for="act in suppl_act_list" :key="act.id">
                                         <td><span v-html="displayStatus(act.status)"></span> </td>
                                         <td>{{ activityId2name(act.details) }}</td>
                                         <td>{{ displayDate(act.start_date) }} - {{ displayDate(act.end_date) }}</td>
@@ -107,6 +120,16 @@
         computed: {
             act_list: function() {
                 return this.acts
+            },
+            main_act_list: function() {
+                return this.acts.filter(function(a) {
+                    return a.activity_type === 'MAIN_ACTIVITY'
+                })
+            },
+            suppl_act_list: function() {
+                return this.acts.filter(function(a) {
+                    return a.activity_type === 'SUPPL_ACTIVITY'
+                })
             }
         },
         methods: {
