@@ -130,7 +130,7 @@
                 let data = {
                     approval_level: this.appr.approval_level,
                     approval_note: this.appr.approval_note,
-                    list_of_acts: approvable_acts
+                    activities: approvable_acts
                 }
                 axios.patch(`/appropriations/${ this.apprId }/grant/`, data)
                 .then(() => {
