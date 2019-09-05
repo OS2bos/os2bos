@@ -360,6 +360,32 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         )
         self.assertEqual(response.status_code, 200)
 
+    def test_grant_wrong_activity(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation1 = create_appropriation(sbsys_id="XXX-YYY", case=case)
+        appropriation2 = create_appropriation(sbsys_id="YYY-XXX", case=case)
+        activity = create_activity(
+            case,
+            appropriation2,
+            end_date=date(year=2020, month=12, day=24),
+            activity_type=MAIN_ACTIVITY,
+        )
+        url = reverse("appropriation-grant", kwargs={"pk": appropriation1.pk})
+        self.client.login(username=self.username, password=self.password)
+        approval_level, _ = ApprovalLevel.objects.get_or_create(
+            name="egenkompetence"
+        )
+        json = {
+            "approval_level": approval_level.id,
+            "activities": [activity.pk],
+        }
+        response = self.client.patch(
+            url, json, content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 400)
+
     def test_grant_granted(self):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
