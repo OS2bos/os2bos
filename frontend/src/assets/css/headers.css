@@ -1,0 +1,54 @@
+/* Copyright (C) 2019 Magenta ApS, http://magenta.dk.
+ * Contact: info@magenta.dk.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0;
+    padding: 1rem 0;
+    font-weight: normal;
+    font-style: normal;
+    line-height: 1.2;
+    color: var(--grey9);
+}
+
+h1 {
+    font-size: 1.5rem;
+    line-height: 1.25;
+}
+
+h2 {
+    font-size: 1.25rem;
+    line-height: 1.153;
+}
+
+h3 {
+    font-size: 1.125rem;
+    line-height: 1.136;
+}
+
+h4 {
+    font-size: 1rem;
+    line-height: 1.111;
+}
+
+h5 {
+    font-size: .75rem;
+    line-height: 1.333;
+    text-transform: uppercase;
+}
+
+h6 {
+    font-size: .5rem;
+    line-height: 2;
+    text-transform: uppercase;
+    font-weight: bold;
+}

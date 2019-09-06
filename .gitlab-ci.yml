@@ -1,0 +1,7 @@
+# The configuration of CI is at https://git.magenta.dk/labs/master-ci. All
+# changes should be made there.
+
+include:
+  - project: 'labs/master-ci'
+    ref: master
+    file: '/project/bevilingsplatform.yml'

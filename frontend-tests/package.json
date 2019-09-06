@@ -1,0 +1,14 @@
+{
+  "name": "frontend-tests",
+  "version": "1.0.0",
+  "description": "A suite of tests for the bevillingsplatform frontend. Tests are isolated from the frontend src. This way they can be run independently of the development server and corresponding docker container.",
+  "scripts": {
+    "test": "./node_modules/.bin/testcafe chrome tests/*.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MPL-2.0",
+  "devDependencies": {
+    "testcafe": "^1.4.1"
+  }
+}

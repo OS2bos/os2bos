@@ -1,0 +1,33 @@
+<!-- Copyright (C) 2019 Magenta ApS, http://magenta.dk.
+   - Contact: info@magenta.dk.
+   -
+   - This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<os2formsFormular>
+
+    <OS2FormsId>99999</OS2FormsId>
+
+    <SBSYSJournalisering>
+
+        <PrimaerPartCprNummer>{{appropriation.case.cpr_number}}</PrimaerPartCprNummer>
+
+        <PrimaerPartCvrNummer></PrimaerPartCvrNummer>
+
+        <KLe>{{appropriation.section.kle_number}}</KLe>
+
+        <SagSkabelonId>{{appropriation.section.sbsys_template_id}}</SagSkabelonId>
+
+    </SBSYSJournalisering>
+
+    <DigitalForsendelse>
+
+        <MaaSendesTilDFF>nej</MaaSendesTilDFF>
+
+    </DigitalForsendelse>
+
+</os2formsFormular>

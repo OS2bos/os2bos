@@ -1,0 +1,45 @@
+/* Copyright (C) 2019 Magenta ApS, http://magenta.dk.
+ * Contact: info@magenta.dk.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+$media-medium: 45rem;
+$media-large: 60rem;
+$unit: 1rem;
+
+:root {
+
+    --color1: 222;
+    --color2: 129;
+    --color3: 40;
+    --color4: 1;
+
+    /* Greys */
+    --grey0: hsl(0, 0%, 100%);
+    --grey1: #eee;
+    --grey2: hsl(0, 0%, 80%);
+    --grey3: hsl(0, 0%, 70%);
+    --grey4: hsl(0, 0%, 60%);
+    --grey5: hsl(0, 0%, 50%);
+    --grey6: hsl(0, 0%, 40%);
+    --grey7: hsl(0, 0%, 30%);
+    --grey8: hsl(0, 0%, 20%);
+    --grey9: hsl(0, 0%, 10%);
+    --grey10: hsl(0, 0%, 0%);
+
+    --primary: hsl(var(--color1), 83%, 31%); /* Blue */
+    --success: hsl(var(--color2), 46%, 59%); /* Green */
+    --warning: hsl(var(--color3), 71%, 64%); /* Orange */
+    --danger: hsl(var(--color4), 100%, 69%); /* Red */
+
+    --font: 'Arial', sans-serif;
+
+    --unit: 1rem;
+
+    --break-small: 30rem;
+    --break-medium: 45rem;
+    --break-large: 60rem;
+
+}

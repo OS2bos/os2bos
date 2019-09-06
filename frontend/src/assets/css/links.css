@@ -1,0 +1,20 @@
+/* Copyright (C) 2019 Magenta ApS, http://magenta.dk.
+ * Contact: info@magenta.dk.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+
+a,
+a:link,
+a:visited {
+    color: var(--primary);
+    text-decoration: none;
+    border-bottom: solid 1px hsl(var(--color1), 50%, 66%);
+}
+a:hover,
+a:active {
+    color: hsl(var(--color1), 50%, 18%);
+    border-color: hsl(var(--color1), 50%, 33%);
+}

@@ -1,0 +1,93 @@
+/* Copyright (C) 2019 Magenta ApS, http://magenta.dk.
+ * Contact: info@magenta.dk.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    table-layout: fixed;
+}
+
+thead,
+tbody,
+tr {
+    margin: 0;
+}
+
+tr {
+    border-bottom: solid 3px var(--grey0)
+}
+
+th,
+td {
+    text-align: left;
+    margin: 0;
+    max-width: 30rem;
+    vertical-align: top;
+    padding: .75rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+th {
+    font-weight: bold;
+}
+
+td {
+    background-color: var(--grey1);
+}
+
+th:first-child,
+td:first-child {
+    padding-left: 1.5rem;
+}
+
+th:last-child,
+td:last-child {
+    padding-right: 1.5rem;
+}
+
+
+@media screen and (max-width: $media-medium) {
+    
+    table,
+    tbody {
+        display: block;
+    }
+    
+    thead {
+        display: none;
+    }
+    
+    tr {
+        display: flex;
+        flex-flow: row wrap;
+        margin: 0 0 0.125rem;
+        background-color: var(--grey1);
+    }
+    
+    th,
+    td {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    td.first-child {
+        font-weight: bold;
+    }
+    
+}
+
+
+@media screen and (min-width: $media-medium) {
+    
+    td {
+        border-top: solid 1px var(--grey1);
+    }
+    
+}

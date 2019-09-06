@@ -1,0 +1,56 @@
+[
+    {
+        "pk": 76,
+        "case": {
+            "pk": 2
+        },
+        "sbsys_id": "27.27.27-GX-9999-17-leil-19",
+        "activities": {
+            "main_law_ref": "§45 Ledsagerordning",
+            "main_activity_name": "Ledsager",
+            "activities_count": 3
+        },
+        "status": "ny",
+        "payment": {
+            "total_amount": 1400
+        },
+        "created_date": "2019-05-07T09:57:35+02:00",
+        "modified_date": "2019-05-07T09:57:35+02:00" 
+    },
+    {
+        "pk": 15,
+        "case": {
+            "pk": 2
+        },
+        "sbsys_id": "27.27.27-GX-9999-17-leil-20",
+        "activities": {
+            "main_law_ref": "§45 Ledsagerordning",
+            "main_activity_name": "Ledsager",
+            "activities_count": 3
+        },
+        "status": "Forventet",
+        "payment": {
+            "total_amount": 25000
+        },
+        "created_date": "2019-05-07T09:57:35+02:00",
+        "modified_date": "2019-05-07T09:57:35+02:00"
+    },
+    {
+        "pk": 97,
+        "case": {
+            "pk": 2
+        },
+        "sbsys_id": "27.27.27-GX-9999-17-leil-32",
+        "activities": {
+            "main_law_ref": "§45 Ledsagerordning",
+            "main_activity_name": "Buskort",
+            "activities_count": 1
+        },
+        "status": "Bevilget", 
+        "payment": {
+            "total_amount": 23695
+        },
+        "created_date": "2019-05-07T09:57:35+02:00",
+        "modified_date": "2019-05-07T09:57:35+02:00"
+    }
+]
