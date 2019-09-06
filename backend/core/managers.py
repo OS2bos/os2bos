@@ -139,5 +139,6 @@ class CaseQuerySet(models.QuerySet):
                     "appropriations__activities", filter=main_q
                 )
             )
+            .exclude(expired_main_activities_count=0, main_activities_count=0)
             .filter(expired_main_activities_count=F("main_activities_count"))
         ).distinct()
