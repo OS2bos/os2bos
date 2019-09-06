@@ -208,6 +208,9 @@
                         payment_method_details: parseInt(this.pay.payment_method_details)
                     }
                 }
+                if (this.pay.payment_type === 'ONE_TIME_PAYMENT') {
+                    data.payment_plan.payment_frequency = null
+                }
                 if (this.mode === 'create') {
                     data.appropriation = this.$route.params.apprid
                     data.status = this.act_status_expected ? 'EXPECTED' : 'DRAFT'
