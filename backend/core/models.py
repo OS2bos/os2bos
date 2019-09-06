@@ -914,11 +914,16 @@ class ActivityDetails(models.Model):
 class SectionInfo(models.Model):
     """For a main activity, KLE no. and SBSYS ID for the relevant sections."""
 
+    class Meta:
+        db_table = 'core_activitydetails_main_activity_for'
+
     activity_details = models.ForeignKey(
         ActivityDetails, on_delete=models.CASCADE
     )
     section = models.ForeignKey(Section, on_delete=models.CASCADE)
-    kle_number = models.CharField(max_length=128, verbose_name=_("KLE-nummer"))
+
+    kle_number = models.CharField(max_length=128,
+            verbose_name=_("KLE-nummer"), blank=True)
     sbsys_template_id = models.CharField(
         max_length=128, verbose_name=_("SBSYS skabelon-id"), blank=True
     )
