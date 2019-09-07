@@ -1023,6 +1023,9 @@ class Activity(AuditModelMixin, models.Model):
         return f"{self.details} - {activity_type_str} - {status_str}"
 
     def validate_expected(self):
+        """
+        Validate this is a correct expected activity.
+        """
         today = date.today()
         if not self.modifies:
             raise forms.ValidationError(
@@ -1062,17 +1065,23 @@ class Activity(AuditModelMixin, models.Model):
                     )
                 )
         elif not (
-            today
-            < next_payment_date
-            <= self.start_date
-            <= self.modifies.end_date
+            today < next_payment_date <= self.start_date
+            and (
+                self.start_date <= self.modifies.end_date
+                if self.modifies.end_date
+                else True
+            )
         ):
+            to_end_date_str = (
+                f" til ydelsens slutdato: {self.modifies.end_date}"
+                if self.modifies.end_date
+                else ""
+            )
             raise forms.ValidationError(
                 _(
                     f"den justerede aktivitets startdato skal være i"
-                    f" fremtiden i spændet fra næste betalingsdato:"
-                    f" {next_payment_date} til"
-                    f" ydelsens slutdato: {self.modifies.end_date}"
+                    f" fremtiden fra næste betalingsdato: {next_payment_date}"
+                    f"{to_end_date_str}"
                 )
             )
         return True
