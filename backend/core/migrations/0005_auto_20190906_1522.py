@@ -21,14 +21,6 @@ class Migration(migrations.Migration):
                     'db_table': 'core_activitydetails_main_activity_for',
                     },
                 ),
-            migrations.RemoveField(
-                model_name='section',
-                name='kle_number',
-                ),
-            migrations.RemoveField(
-                model_name='section',
-                name='sbsys_template_id',
-                ),
             migrations.AlterField(
                 model_name='activitydetails',
                 name='main_activity_for',
@@ -37,12 +29,12 @@ class Migration(migrations.Migration):
             migrations.AddField(
                 model_name='sectioninfo',
                 name='activity_details',
-                field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.ActivityDetails'),
+                field=models.ForeignKey(db_column="activitydetails_id", on_delete=django.db.models.deletion.CASCADE, to='core.ActivityDetails'),
                 ),
             migrations.AddField(
                 model_name='sectioninfo',
                 name='section',
-                field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.Section'),
+                field=models.ForeignKey(db_column="section_id", on_delete=django.db.models.deletion.CASCADE, to='core.Section'),
                 ),
             ])
         ]

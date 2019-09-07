@@ -623,6 +623,10 @@ class Section(models.Model):
     law_text_name = models.CharField(
         max_length=128, verbose_name=_("lov tekst navn")
     )
+    kle_number = models.CharField(max_length=128, verbose_name=_("KLE-nummer"))
+    sbsys_template_id = models.CharField(
+        max_length=128, verbose_name=_("SBSYS skabelon-id"), blank=True
+    )
 
     def __str__(self):
         return f"{self.paragraph} - {self.kle_number}"
