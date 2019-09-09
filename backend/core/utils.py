@@ -168,6 +168,12 @@ def send_activity_expired_email(activity):
 def send_appropriation(appropriation):
     """Generate PDF and XML files from appropriation and send them to SBSYS."""
     render_context = {"appropriation": appropriation}
+    # Get SBSYS template and KLE number from main activity.
+    section_info = appropriation.main_activity.details.sectioninfo_set.get(
+        section=appropriation.section
+    )
+    render_context["kle_number"] = section_info.kle_number
+    render_context["sbsys_template_id"] = section_info.sbsys_template_id
     # Generate os2forms.xml
     xml_template = get_template(settings.SBSYS_XML_TEMPLATE)
     xml_data = xml_template.render(context=render_context)
