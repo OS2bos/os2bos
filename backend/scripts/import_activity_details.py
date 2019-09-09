@@ -92,7 +92,8 @@ with open("aktiviteter.csv") as csvfile:
                     activity_details=details_obj,
                     section=main_activity_for,
                     kle_number=kle_number,
-                    sbsys_template_id=sbsys_id)
+                    sbsys_template_id=sbsys_id,
+                )
 
         for paragraph in section_supplementary_dict[details_obj.activity_id]:
             supplementary_activity_for = Section.objects.filter(
