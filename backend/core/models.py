@@ -753,6 +753,21 @@ class Appropriation(AuditModelMixin, models.Model):
         # Please specify approval level.
         if approval_level is None:
             raise RuntimeError(_("Angiv venligst bevillingskompetence"))
+        # In order to approve, you need a main activity.
+        if not self.main_activity:
+            raise RuntimeError(
+                _("Kan ikke godkende en bevilling uden en hovedydelse")
+            )
+        # In order to approve, you must specify a section:
+        if not self.section:
+            raise RuntimeError(_("Angiv venligst en paragraf"))
+        # Make sure that the main activity is valid for this appropriation.
+        if not (
+            self.main_activity.details in self.section.main_activities.all()
+        ):
+            raise RuntimeError(
+                _("Denne ydelse kan ikke bevilges på den angivne paragraf")
+            )
         # Can't approve nothing
         if not activities:
             raise RuntimeError(_("Angiv mindst én aktivitet"))

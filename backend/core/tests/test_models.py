@@ -414,11 +414,12 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        appropriation = create_appropriation(case=case)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
         now = timezone.now()
         start_date = now + timedelta(days=6)
         end_date = now + timedelta(days=12)
-        create_activity(
+        activity = create_activity(
             case=case,
             appropriation=appropriation,
             activity_type=MAIN_ACTIVITY,
@@ -427,7 +428,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             end_date=end_date,
             payment_plan=payment_schedule,
         )
-
+        activity.details.main_activity_for.add(section)
         user = get_user_model().objects.create(username="Anders And")
         appropriation.grant(
             appropriation.activities.exclude(status=STATUS_GRANTED),
@@ -450,7 +451,8 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        appropriation = create_appropriation(case=case)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
         now = timezone.now().date()
         start_date = now + timedelta(days=6)
         end_date = start_date
@@ -464,6 +466,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             end_date=end_date,
             payment_plan=payment_schedule,
         )
+        activity.details.main_activity_for.add(section)
         modifies_payment_schedule = create_payment_schedule(
             payment_amount=Decimal("600.0"),
             payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
@@ -516,7 +519,8 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        appropriation = create_appropriation(case=case)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
         now = timezone.now().date()
         start_date = now - timedelta(days=6)
         end_date = now + timedelta(days=12)
@@ -530,6 +534,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             end_date=end_date,
             payment_plan=payment_schedule,
         )
+        activity.details.main_activity_for.add(section)
         modifies_payment_schedule = create_payment_schedule(
             payment_amount=Decimal("600.0"),
             payment_frequency=PaymentSchedule.DAILY,
@@ -598,7 +603,8 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        appropriation = create_appropriation(case=case)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
         now = timezone.now().date()
         start_date = now - timedelta(days=6)
         end_date = now + timedelta(days=12)
@@ -612,6 +618,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             end_date=end_date,
             payment_plan=payment_schedule,
         )
+        activity.details.main_activity_for.add(section)
         modifies_payment_schedule = create_payment_schedule(
             payment_amount=Decimal("600.0"),
             payment_frequency=PaymentSchedule.WEEKLY,
@@ -678,7 +685,8 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        appropriation = create_appropriation(case=case)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
         now = timezone.now().date()
         start_date = now - timedelta(days=6)
         end_date = now + timedelta(days=12)
@@ -692,6 +700,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             end_date=end_date,
             payment_plan=payment_schedule,
         )
+        section.main_activities.add(activity.details)
         modifies_payment_schedule = create_payment_schedule(
             payment_amount=Decimal("600.0"),
             payment_frequency=PaymentSchedule.WEEKLY,
