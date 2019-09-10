@@ -163,6 +163,7 @@
                 .then(() => {
                     notify('Bevilling godkendt', 'success')
                     this.$store.dispatch('fetchActivities', this.apprId)
+                    this.$store.dispatch('fetchAppropriation', this.apprId)
                     this.$emit('close')
                 })
                 .catch(err => {
