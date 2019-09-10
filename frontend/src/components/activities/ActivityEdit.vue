@@ -188,8 +188,6 @@
                 return activityId2name(id)
             },
             saveChanges: function() {
-                
-                this.$store.commit('clearErrors')
                 let data = {
                     activity_type: this.act.activity_type,
                     start_date: this.act.start_date,
@@ -268,6 +266,7 @@
         },
         created: function() {
             this.update()
+            this.$store.commit('clearErrors')
         }
     }
     
