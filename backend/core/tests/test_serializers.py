@@ -294,9 +294,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED
-        )
+        appropriation = create_appropriation(case=case)
         now = timezone.now().date()
         start_date = now - timedelta(days=7)
         details, unused = ActivityDetails.objects.get_or_create(
