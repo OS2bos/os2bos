@@ -6,7 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 
-fieldset {
+ fieldset {
     display: block;
     padding: 1rem 0;
     border: none;
@@ -90,55 +90,61 @@ input[type="checkbox"] {
     width: 1px;
     overflow: hidden;
     clip: rect(1px, 1px, 1px, 1px);
-    
-    & + label {
-        position: relative;
-        display: block;
+}
+
+input[type="radio"] + label,
+input[type="checkbox"] + label {    
+    position: relative;
+    display: block;
         margin: 0 0 .5rem;
-    }
-    & + label::before {
-        content: '';
-        display: inline-block;
-        width: 1rem;
-        height: 1rem;
-        background-color: var(--grey0);
-        border: solid .125rem var(--grey3);
-        margin-right: 0.25rem;
-        padding: 0.25rem;
-        line-height: 1;
-        vertical-align: middle;
-        text-align: center;
-    }
-    &:focus + label {
-        box-shadow: 0 0.25rem 0.25rem var(--grey5);
-    }
-    &:checked + label::before {
-        color: var(--grey0);
-        background-color: var(--primary);
-        border-color: var(--primary);
-    }
-    &:disabled + label {
-        color: var(--grey5);
-    }
-    &:disabled + label::before {
-        background-color: var(--grey2);
-        border-color: var(--grey2);
-    }
 }
 
-input[type="checkbox"] {
-    
-    &:checked + label::before {
-        content: '✔';
-    }
+input[type="radio"] + label::before,
+input[type="checkbox"] + label::before {
+    content: '';
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    background-color: var(--grey0);
+    border: solid .125rem var(--grey3);
+    margin-right: 0.25rem;
+    padding: 0.25rem;
+    line-height: 1;
+    vertical-align: middle;
+    text-align: center;
 }
 
-input[type="radio"] {
-    
-    & + label::before {
-        border-radius: 50%;
-    }
-    &:checked + label::before {
-        content: '';
-    }
+input[type="radio"]:focus + label,
+input[type="checkbox"]:focus + label {
+    box-shadow: 0 0.25rem 0.25rem var(--grey5);
+}
+
+input[type="radio"]:checked + label::before,
+input[type="checkbox"]:checked + label::before {
+    color: var(--grey0);
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+input[type="radio"]:disabled + label,
+input[type="checkbox"]:disabled + label {
+    color: var(--grey5);
+}
+
+input[type="radio"]:disabled + label::before,
+input[type="checkbox"]:disabled + label::before {
+    background-color: var(--grey2);
+    border-color: var(--grey2);
+}
+
+input[type="checkbox"]:checked + label::before {
+    content: '✔';
+}
+
+input[type="radio"] + label::before {    
+    border-radius: 50%;
+}
+
+input[type="radio"]:checked + label::before {
+    content: '';
 }

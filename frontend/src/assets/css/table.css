@@ -53,7 +53,7 @@ td:last-child {
 }
 
 
-@media screen and (max-width: $media-medium) {
+@media screen and (max-width: 45rem) {
     
     table,
     tbody {
@@ -84,7 +84,7 @@ td:last-child {
 }
 
 
-@media screen and (min-width: $media-medium) {
+@media screen and (min-width: 45rem) {
     
     td {
         border-top: solid 1px var(--grey1);
