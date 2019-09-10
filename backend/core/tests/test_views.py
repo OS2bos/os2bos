@@ -15,7 +15,6 @@ from django.utils import timezone
 
 from core.models import (
     ApprovalLevel,
-    Appropriation,
     PaymentSchedule,
     MAIN_ACTIVITY,
     SUPPL_ACTIVITY,
@@ -343,9 +342,32 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        appropriation = create_appropriation(
-            sbsys_id="XXX-YYY", case=case, status=Appropriation.STATUS_DRAFT
+        appropriation = create_appropriation(sbsys_id="XXX-YYY", case=case)
+        activity = create_activity(
+            case,
+            appropriation,
+            end_date=date(year=2020, month=12, day=24),
+            activity_type=MAIN_ACTIVITY,
         )
+        url = reverse("appropriation-grant", kwargs={"pk": appropriation.pk})
+        self.client.login(username=self.username, password=self.password)
+        approval_level, _ = ApprovalLevel.objects.get_or_create(
+            name="egenkompetence"
+        )
+        json = {
+            "approval_level": approval_level.id,
+            "activities": [activity.pk],
+        }
+        response = self.client.patch(
+            url, json, content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_grant_no_activities(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(sbsys_id="XXX-YYY", case=case)
         create_activity(
             case,
             appropriation,
@@ -361,29 +383,29 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         response = self.client.patch(
             url, json, content_type="application/json"
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
 
-    def test_grant_discontinued(self):
+    def test_grant_wrong_activity(self):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        appropriation = create_appropriation(
-            sbsys_id="XXX-YYY",
-            case=case,
-            status=Appropriation.STATUS_DISCONTINUED,
-        )
-        activity = create_activity(  # noqa - it *will* be used.
+        appropriation1 = create_appropriation(sbsys_id="XXX-YYY", case=case)
+        appropriation2 = create_appropriation(sbsys_id="YYY-XXX", case=case)
+        activity = create_activity(
             case,
-            appropriation,
+            appropriation2,
             end_date=date(year=2020, month=12, day=24),
             activity_type=MAIN_ACTIVITY,
         )
-        url = reverse("appropriation-grant", kwargs={"pk": appropriation.pk})
+        url = reverse("appropriation-grant", kwargs={"pk": appropriation1.pk})
         self.client.login(username=self.username, password=self.password)
         approval_level, _ = ApprovalLevel.objects.get_or_create(
             name="egenkompetence"
         )
-        json = {"approval_level": approval_level.id, "approval_note": "Hej!"}
+        json = {
+            "approval_level": approval_level.id,
+            "activities": [activity.pk],
+        }
         response = self.client.patch(
             url, json, content_type="application/json"
         )
@@ -393,15 +415,13 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        appropriation = create_appropriation(
-            sbsys_id="XXX-YYY", case=case, status=Appropriation.STATUS_GRANTED
-        )
+        appropriation = create_appropriation(sbsys_id="XXX-YYY", case=case)
         start_date = timezone.now().date()
         payment_schedule = create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
         )
-        activity = create_activity(  # noqa - it *will* be used.
+        activity = create_activity(
             case,
             appropriation,
             start_date=start_date,
@@ -414,7 +434,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             payment_frequency=PaymentSchedule.DAILY,
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
         )
-        modifying_activity = create_activity(  # noqa - it *will* be used.
+        modifying_activity = create_activity(
             case,
             appropriation,
             start_date=start_date + timedelta(days=1),
@@ -428,7 +448,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             payment_frequency=PaymentSchedule.DAILY,
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
         )
-        draft_activity = create_activity(  # noqa - it *will* be used.
+        draft_activity = create_activity(
             case,
             appropriation,
             start_date=start_date,
@@ -442,7 +462,11 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         approval_level, _ = ApprovalLevel.objects.get_or_create(
             name="egenkompetence"
         )
-        json = {"approval_level": approval_level.id, "approval_note": "HEJ!"}
+        json = {
+            "approval_level": approval_level.id,
+            "approval_note": "HEJ!",
+            "activities": [modifying_activity.pk, draft_activity.pk],
+        }
         response = self.client.patch(
             url, json, content_type="application/json"
         )
@@ -452,10 +476,8 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        appropriation = create_appropriation(
-            sbsys_id="XXX-YYY", case=case, status=Appropriation.STATUS_DRAFT
-        )
-        activity = create_activity(  # noqa - it *will* be used.
+        appropriation = create_appropriation(sbsys_id="XXX-YYY", case=case)
+        activity = create_activity(
             case,
             appropriation,
             end_date=date(year=2020, month=12, day=24),
@@ -463,26 +485,11 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         )
         url = reverse("appropriation-grant", kwargs={"pk": appropriation.pk})
         self.client.login(username=self.username, password=self.password)
-        json = {"approval_note": "Hello!"}
+        json = {"approval_note": "Hello!", "activities": [activity.pk]}
         response = self.client.patch(
             url, json, content_type="application/json"
         )
         self.assertEqual(response.status_code, 400)
-
-    def test_grant_granted_no_approval_note_or_level(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
-        appropriation = create_appropriation(
-            sbsys_id="XXX-YYY", case=case, status=Appropriation.STATUS_GRANTED
-        )
-        url = reverse("appropriation-grant", kwargs={"pk": appropriation.pk})
-        self.client.login(username=self.username, password=self.password)
-        json = {}
-        response = self.client.patch(
-            url, json, content_type="application/json"
-        )
-        self.assertEqual(response.status_code, 200)
 
 
 class TestPaymentScheduleViewSet(AuthenticatedTestCase):

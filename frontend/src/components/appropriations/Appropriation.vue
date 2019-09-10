@@ -15,8 +15,6 @@
             </div>
             <div>
                 <button @click="show_edit = !show_edit" class="appr-edit-btn">Redigér</button>
-                <button @click="preApprovalCheck()" class="approval-btn">Godkend</button>
-                <approval :approval-obj="appr" v-if="showModal" @close="update()"></approval>
             </div>
         </header>
 
@@ -27,20 +25,10 @@
         <div class="appr-grid" v-if="cas">
 
             <template v-if="!show_edit">
-                <div class="sagsstatus appr-grid-box">
-                    <p>
-                        <span v-html="statusLabel(appr.status)" style="display: inline-block; margin: .5rem .25rem 0 0;"></span>
-                        <template v-if="appr.approval_level"> 
-                            af {{ displayApprovalName(appr.approval_level) }}, 
-                            {{ displayDate(appr.appropriation_date) }}
-                        </template>
-                        <span v-if="appr.approval_note && appr.approval_note !== ''">med bemærkningen:<br> <em>{{ appr.approval_note }}</em></span>
-                    </p>
-                </div>
 
                 <div class="sagsbeh appr-grid-box">
                     <dl>
-                        <dt>SBSYS-hovedsag nr.</dt>
+                        <dt>SBSYS-hovedsag</dt>
                         <dd>{{ cas.sbsys_id }}</dd>
                         <dt>Foranstaltningssag (SBSYS)</dt>
                         <dd>{{ appr.sbsys_id}}</dd>
@@ -88,7 +76,6 @@
     import axios from '../http/Http.js'
     import ActivityList from '../activities/ActivityList.vue'
     import AppropriationEdit from './AppropriationEdit.vue'
-    import Approval from './Approval.vue'
     import { json2jsDate } from '../filters/Date.js'
     import { municipalityId2name, districtId2name, sectionId2name, displayStatus, userId2name, approvalId2name } from '../filters/Labels.js'
     import store from '../../store.js'
@@ -97,13 +84,11 @@
 
         components: {
             ActivityList,
-            AppropriationEdit,
-            Approval
+            AppropriationEdit
         },
         data: function() {
             return {
-                show_edit: false,
-                showModal: false
+                show_edit: false
             }
         },
         beforeRouteEnter: function(to, from, next) {
@@ -140,13 +125,6 @@
             displayDate: function(date) {
                 return json2jsDate(date)
             },
-            preApprovalCheck: function() {
-                if (this.appr.activities.length > 0) {
-                    this.showModal = true
-                } else {
-                    alert('Der er ikke valgt nogen aktiviteter endnu')
-                }
-            },
             updateBreadCrumb: function() {
                 if (this.cas && this.appr) {
                     this.$store.commit('setBreadcrumb', [
@@ -179,9 +157,6 @@
             },
             displayUserName: function(id) {
                 return userId2name(id)
-            },
-            displayApprovalName: function(id) {
-                return approvalId2name(id)
             }
         }
     }

@@ -21,7 +21,6 @@ from core.models import (
     STATUS_EXPECTED,
     STATUS_GRANTED,
     PaymentSchedule,
-    Appropriation,
 )
 from core.tests.testing_utils import (
     BasicTestMixin,
@@ -182,9 +181,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED
-        )
+        appropriation = create_appropriation(case=case)
         now = timezone.now().date()
         start_date = now - timedelta(days=6)
         end_date = now + timedelta(days=12)
@@ -237,9 +234,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED
-        )
+        appropriation = create_appropriation(case=case)
         now = timezone.now().date()
         start_date = now - timedelta(days=6)
         end_date = now + timedelta(days=12)
@@ -359,9 +354,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED
-        )
+        appropriation = create_appropriation(case=case)
         start_date = date.today() - timedelta(days=3)
         end_date = date.today() + timedelta(days=2)
         details, unused = ActivityDetails.objects.get_or_create(
@@ -419,9 +412,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED
-        )
+        appropriation = create_appropriation(case=case)
         start_date = date.today() + timedelta(days=2)
         end_date = date.today() + timedelta(days=4)
         details, unused = ActivityDetails.objects.get_or_create(
@@ -474,9 +465,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED
-        )
+        appropriation = create_appropriation(case=case)
         start_date = date.today()
         end_date = date.today() + timedelta(days=1)
         details, unused = ActivityDetails.objects.get_or_create(
@@ -512,9 +501,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        appropriation = create_appropriation(
-            case=case, status=Appropriation.STATUS_GRANTED
-        )
+        appropriation = create_appropriation(case=case)
         start_date = date.today()
         end_date = date.today()
         details, unused = ActivityDetails.objects.get_or_create(
