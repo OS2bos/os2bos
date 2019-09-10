@@ -161,10 +161,10 @@ test('Approve appropriation', async t => {
         .click(Selector('a').withText(testdata.appr1.name))
         .click('#check-all')
         .click(Selector('button').withText('Godkendt valgte'))
-        .click(Selector('label').withAttribute('for','#inputRadio1'))
+        .click(Selector('label').withAttribute('for','inputRadio1'))
         .typeText('#field-text', 'Godkendt grundet svære og særligt tvingende omstændigheder')
         .click(Selector('button').withText('Godkend'))
-        .expect(Selector('.sagsstatus .label').innerText).contains('Bevilget')
+        .expect(Selector('.mini-label .label-GRANTED')).ok()
 })
 
 test('Add adjustment activities', async t => {
