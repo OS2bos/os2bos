@@ -17,7 +17,7 @@ const testdata = {
         type: 1,
         act_detail: 'Psykologhjælp til børn',
         start: '2019-08-01',
-        end: '2020-12-31',
+        end: '2020-12-01',
         note: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
         amount: '3095.50',
         payee_id: '78362883763',
@@ -26,7 +26,7 @@ const testdata = {
     act2: {
         type: 0,
         start: '2019-11-01',
-        end: '2020-03-31',
+        end: '2020-03-01',
         note: 'En lille note',
         amount: '595.95',
         payee_id: '8923',
@@ -35,7 +35,7 @@ const testdata = {
     act3: {
         type: 1,
         start: '2019-11-01',
-        end: '2020-03-31',
+        end: '2020-03-01',
         note: 'En anden lille note',
         amount: '150',
         payee_id: '8937-2342-2342',
@@ -45,7 +45,7 @@ const testdata = {
         expected_type: 'adjustment',
         type: 1,
         start: '2019-10-01',
-        end: '2020-12-31',
+        end: '2020-12-01',
         note: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
         amount: '3595.50',
         payee_id: '78362883763',
@@ -55,7 +55,7 @@ const testdata = {
         expected_type: 'expectation',
         type: 1,
         start: '2019-09-01',
-        end: '2020-06-31',
+        end: '2020-06-01',
         note: 'En anden lille note',
         amount: '9.95',
         payee_id: '8937-2342-2342',
@@ -159,11 +159,12 @@ test('Approve appropriation', async t => {
     await t
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector('button').withText('Godkend'))
-        .click('#inputRadio1')
+        .click('#check-all')
+        .click(Selector('button').withText('Godkendt valgte'))
+        .click(Selector('label').withAttribute('for','inputRadio1'))
         .typeText('#field-text', 'Godkendt grundet svære og særligt tvingende omstændigheder')
         .click(Selector('button').withText('Godkend'))
-        .expect(Selector('.sagsstatus .label').innerText).contains('Bevilget')
+        .expect(Selector('.mini-label .label-GRANTED')).ok()
 })
 
 test('Add adjustment activities', async t => {
