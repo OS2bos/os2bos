@@ -982,6 +982,9 @@ class Activity(AuditModelMixin, models.Model):
             payment_type = self.modifies.payment_plan.payment_type
             if payment_type == PaymentSchedule.ONE_TIME_PAYMENT:
                 self.modifies.payment_plan.payments.all().delete()
+                self.modifies.start_date = self.start_date
+                # With one time payments, end date and start date must
+                # always be the same.
                 self.modifies.end_date = self.start_date
             else:
                 self.modifies.end_date = self.start_date - timedelta(days=1)
