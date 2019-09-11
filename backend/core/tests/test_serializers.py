@@ -488,6 +488,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         is_valid = serializer.is_valid()
         self.assertFalse(is_valid)
 
+
 class CaseSerializerTestCase(TestCase, BasicTestMixin):
     @classmethod
     def setUpTestData(cls):
