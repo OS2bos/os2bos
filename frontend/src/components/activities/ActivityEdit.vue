@@ -43,7 +43,7 @@
                         <label class="required" for="field-startdate">
                             Startdato
                             <span v-if="startDateSet">
-                                - tidligst {{ startDateSet }}
+                                - tidligst {{ displayDate(startDateSet) }}
                             </span>
                         </label>
                         <input 
@@ -59,7 +59,7 @@
                         <label for="field-enddate">
                             Slutdato
                             <span v-if="endDateSet">
-                                - senest {{ endDateSet }}
+                                - senest {{ displayDate(endDateSet) }}
                             </span>
                         </label>
                         <input 
@@ -98,6 +98,7 @@
     import PaymentEdit from '../payment/PaymentEdit.vue'
     import { activityId2name } from '../filters/Labels.js'
     import { epoch2DateStr } from '../filters/Date.js'
+    import { json2jsDate } from '../filters/Date.js'
     import Error from '../forms/Error.vue'
     
 
@@ -186,6 +187,9 @@
             },
             displayActName: function(id) {
                 return activityId2name(id)
+            },
+            displayDate: function(dt) {
+                return json2jsDate(dt)
             },
             saveChanges: function() {
                 let data = {
