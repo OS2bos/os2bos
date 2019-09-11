@@ -19,18 +19,19 @@
                 <div class="column">
                     <fieldset>
                         <label class="required" for="field-sbsys-id">SBSYS Hovedsag:</label>
-                        <input id="field-sbsys-id" type="search" v-model="cas.sbsys_id" required>
+                        <input id="field-sbsys-id" type="text" v-model="cas.sbsys_id" required>
                         <p class="danger" v-if="sbsysCheck">Sagsnummeret indeholder ikke et gyldigt KLE-nummer.</p>
                         <error err-key="sbsys_id" />
                     </fieldset>
                     
                     <div>
-                        <h3 style="padding-bottom: 0;">Sagspart:</h3>
+                        <h3 style="padding-bottom: 0; font-weight: bold; font-size: 1rem;">Sagspart:</h3>
                         <cpr-lookup :cpr.sync="cas.cpr_number" :name.sync="cas.name" />
                     </div>
 
                     <fieldset>
-                        <h3>Kommune:</h3>
+                        <legend>Kommune:</legend>
+
                         <label class="required" for="selectField1">Betalingskommune:</label>
                         <list-picker 
                             :dom-id="'selectField1'" 
@@ -38,9 +39,7 @@
                             @selection="changeMuni($event, 'paying_municipality')" 
                             :list="municipalities" 
                             :default="42" />
-                    </fieldset>
-
-                    <fieldset>
+                    
                         <label class="required" for="selectField2">Handlekommune:</label>
                         <list-picker 
                             :dom-id="'selectField2'" 
@@ -48,9 +47,7 @@
                             @selection="changeMuni($event, 'acting_municipality')" 
                             :list="municipalities" 
                             :default="42" />
-                    </fieldset>
-
-                    <fieldset>
+                    
                         <label class="required" for="selectField3">Bopælsskommune:</label>
                         <list-picker 
                             :dom-id="'selectField3'" 
@@ -67,11 +64,11 @@
                         <input id="inputRadio2" type="radio" value="DISABILITY_DEPT" v-model="cas.target_group" name="target-group" required>
                         <label for="inputRadio2">Handicapafdelingen</label>
                         <error err-key="target_group" />
-                    </fieldset>
-
-                    <fieldset v-if="cas.target_group === 'FAMILY_DEPT'">
-                        <label class="required" for="selectField4">Skoledistrikt (nuværende eller oprindeligt)</label>
-                        <list-picker :dom-id="'selectField4'" :selected-id="cas.district" @selection="changeDistrict" :list="districts" required />
+                    
+                        <template v-if="cas.target_group === 'FAMILY_DEPT'">
+                            <label class="required" for="selectField4">Skoledistrikt (nuværende eller oprindeligt)</label>
+                            <list-picker :dom-id="'selectField4'" :selected-id="cas.district" @selection="changeDistrict" :list="districts" required />
+                        </template>
                     </fieldset>
 
                     <fieldset>

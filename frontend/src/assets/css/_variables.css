@@ -38,4 +38,7 @@
     --break-medium: 45rem;
     --break-large: 60rem;
 
+    --shadow-dim: 0 .125rem .25rem var(--grey4);
+    --shadow-dark: 0 .25rem .5rem var(--grey4);
+
 }
