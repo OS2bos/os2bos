@@ -64,7 +64,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
         appropriation = create_appropriation(section=section, case=case)
 
-        self.assertEqual(str(appropriation), "13212 - ABL-105-2 - 27.45.04")
+        self.assertEqual(str(appropriation), "13212 - ABL-105-2")
 
     def test_total_granted_this_year(self):
         # generate a start and end span of 10 days
@@ -848,7 +848,7 @@ class SectionTestCase(TestCase):
     def test_section_str(self):
         section = create_section()
 
-        self.assertEqual(str(section), "ABL-105-2 - 27.45.04")
+        self.assertEqual(str(section), "ABL-105-2")
 
 
 class ActivityDetailsTestCase(TestCase):

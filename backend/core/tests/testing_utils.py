@@ -183,19 +183,11 @@ def create_payment(
     return payment
 
 
-def create_section(
-    paragraph="ABL-105-2",
-    kle_number="27.45.04",
-    allowed_for_steps=None,
-    **kwargs,
-):
+def create_section(paragraph="ABL-105-2", allowed_for_steps=None, **kwargs):
     if not allowed_for_steps:
         allowed_for_steps = []
     section = Section.objects.create(
-        paragraph=paragraph,
-        kle_number=kle_number,
-        allowed_for_steps=allowed_for_steps,
-        **kwargs,
+        paragraph=paragraph, allowed_for_steps=allowed_for_steps, **kwargs
     )
     return section
 
