@@ -14,7 +14,7 @@
             <h1 v-else>Redigér hovedsag</h1>
             
             <error />
-            
+
             <div class="row">
                 <div class="column">
                     <fieldset>
@@ -26,7 +26,7 @@
                     
                     <div>
                         <h3 style="padding-bottom: 0;">Sagspart:</h3>
-                        <cpr-lookup :cpr.sync="cas.cpr_number" :name.sync="cas.name" />
+                        <cpr-lookup :cpr.sync="cas.cpr_number" :name.sync="cas.name" :relations.sync="relations" />
                     </div>
 
                     <fieldset>
@@ -140,7 +140,8 @@
             return {
                 cas: {},
                 create_mode: true,
-                assessment_changes: false
+                assessment_changes: false,
+                relations: null
             }
         },
         computed: {
