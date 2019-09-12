@@ -182,20 +182,17 @@
             },
             calcCost(arr) {
                 let costs = {
-                    draft: 0,
                     approved: 0,
                     expected: 0
                 }
                 for (let a of arr) {
-                    if (a.status === 'GRANTED') {
-                        costs.approved = costs.approved + a.total_cost_this_year
-                    } else if (a.status === 'EXPECTED') {
-                        costs.expected = costs.expected + a.total_cost_this_year
-                    } else {
-                        costs.draft = costs.draft + a.total_cost_this_year
+                    if (a.total_granted_this_year) {
+                        costs.approved = costs.approved + a.total_granted_this_year
+                    }
+                    if (a.total_expected_this_year) {
+                        costs.expected = costs.expected + a.total_expected_this_year
                     }
                 }
-                costs.expected = null // TODO: Calculate correct expected or get from backend
                 return costs
             },
             splitActList: function(act_list) {
@@ -223,18 +220,18 @@
                         }
                         let costs = this.calcCost(chunk),
                             meta_act = {
-                            id: `group${ c }`,
-                            is_meta: true,
-                            status: this.checkExpected(chunk),
-                            start_date: this.getBestDate(chunk,'start'),
-                            end_date: this.getBestDate(chunk,'end'),
-                            activity_type: last_chunk.activity_type,
-                            total_approved: costs.approved,
-                            total_expected: costs.expected,
-                            details: last_chunk.details,
-                            payment_plan: last_chunk.payment_plan,
-                            note: last_chunk.note
-                        }
+                                id: `group${ c }`,
+                                is_meta: true,
+                                status: this.checkExpected(chunk),
+                                start_date: this.getBestDate(chunk,'start'),
+                                end_date: this.getBestDate(chunk,'end'),
+                                activity_type: last_chunk.activity_type,
+                                approved: costs.approved,
+                                expected: costs.expected,
+                                details: last_chunk.details,
+                                payment_plan: last_chunk.payment_plan,
+                                note: last_chunk.note
+                            }
                         chunk.unshift(meta_act)
                     }
                 }

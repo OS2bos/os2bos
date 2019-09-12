@@ -29,15 +29,12 @@
         <td class="nowrap">{{ displayDate(act.start_date) }}</td>
         <td class="nowrap">{{ displayDate(act.end_date) }}</td>
         <td class="nowrap right">
-            <span v-if="act.is_meta">{{ displayDigits(act.total_approved) }} kr</span>
-            <template v-else>
-                <span v-if="act.status === 'GRANTED'">{{ displayDigits(act.total_cost_this_year) }} kr</span>
-                <span v-if="act.status === 'DRAFT'" class="dim">{{ displayDigits(act.total_cost_this_year) }} kr</span>
-            </template>
+            {{ displayCost(act, 'granted') }}
         </td>
         <td class="nowrap right">
-            <span v-if="act.is_meta">Se detaljer &hellip;</span>
-            <span v-if="!act.is_meta && act.status === 'EXPECTED'" class="expected">{{ displayDigits(act.total_cost_this_year) }} kr</span>
+            <span :class="act.status === 'DRAFT' ? 'dim' : 'expected'">
+                {{ displayCost(act, 'expected') }}
+            </span>
         </td>
     </tr>
 
@@ -82,6 +79,29 @@
             },
             toggleGroup: function(group_id) {
                 this.$emit('toggle', group_id)
+            },
+            displayCost: function(act, column) {
+                if (act.is_meta) {
+                    if (column === 'granted') {
+                        if (act.approved !== 0) {
+                            return `${ this.displayDigits(act.approved) } kr`
+                        }
+                    } else {
+                        if (act.expected !== act.approved) {
+                            return `${ this.displayDigits(act.expected) } kr`
+                        }
+                    }
+                } else {
+                    if (column === 'granted') {
+                        if (act.status === 'GRANTED') {
+                            return `${ this.displayDigits(act.total_granted_this_year) } kr`
+                        }
+                    } else {
+                        if (act.total_expected_this_year !== act.total_granted_this_year) {
+                            return `${ this.displayDigits(act.total_expected_this_year) } kr`
+                        }
+                    }
+                }
             }
         },
         created: function() {
