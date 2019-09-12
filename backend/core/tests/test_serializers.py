@@ -143,36 +143,6 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         is_valid = serializer.is_valid()
         self.assertTrue(is_valid)
 
-    def test_validate_monthly_does_not_start_on_first(self):
-        activity_details = ActivityDetails.objects.create(
-            max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
-        )
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
-        appropriation = create_appropriation(case=case)
-        payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("500.0"),
-            payment_frequency=PaymentSchedule.MONTHLY,
-        )
-
-        # start_date not on the first.
-        data = {
-            "start_date": "2018-01-02",
-            "details": activity_details.pk,
-            "status": STATUS_EXPECTED,
-            "activity_type": MAIN_ACTIVITY,
-            "appropriation": appropriation.pk,
-            "payment_plan": PaymentScheduleSerializer(payment_schedule).data,
-        }
-        serializer = ActivitySerializer(data=data)
-        is_valid = serializer.is_valid()
-        self.assertFalse(is_valid)
-        self.assertEqual(
-            serializer.errors["non_field_errors"][0],
-            "startdato og slutdato for månedlige betalinger skal være den 1.",
-        )
-
     def test_validate_expected_success(self):
         payment_schedule = create_payment_schedule(
             payment_amount=Decimal("500.0"),
@@ -454,42 +424,6 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         is_valid = serializer.is_valid()
         self.assertTrue(is_valid)
 
-    def test_validate_one_time_payment_has_different_start_end_date(self):
-        payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("500.0"),
-            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
-            payment_frequency="",
-        )
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
-        appropriation = create_appropriation(case=case)
-        start_date = date.today()
-        end_date = date.today() + timedelta(days=1)
-        details, unused = ActivityDetails.objects.get_or_create(
-            activity_id="000000",
-            name="Test aktivitet",
-            max_tolerance_in_percent=10,
-            max_tolerance_in_dkk=1000,
-        )
-        data = {
-            "case": case.id,
-            "appropriation": appropriation.id,
-            "start_date": start_date,
-            "status": STATUS_EXPECTED,
-            "activity_type": MAIN_ACTIVITY,
-            "end_date": end_date,
-            "details": details.id,
-            "payment_plan": PaymentScheduleSerializer(payment_schedule).data,
-        }
-        serializer = ActivitySerializer(data=data)
-        is_valid = serializer.is_valid()
-        self.assertFalse(is_valid)
-        self.assertEqual(
-            serializer.errors["non_field_errors"][0],
-            "startdato og slutdato skal være ens for engangsbetaling",
-        )
-
     def test_validate_one_time_payment_with_payment_frequency(self):
         payment_schedule = create_payment_schedule(
             payment_amount=Decimal("500.0"),
@@ -521,6 +455,38 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         serializer = ActivitySerializer(data=data)
         is_valid = serializer.is_valid()
         self.assertTrue(is_valid)
+
+    def test_validate_one_time_payment_different_dates(self):
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            payment_frequency="",
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        start_date = date.today()
+        end_date = date.today() + timedelta(days=1)
+        details, unused = ActivityDetails.objects.get_or_create(
+            activity_id="000000",
+            name="Test aktivitet",
+            max_tolerance_in_percent=10,
+            max_tolerance_in_dkk=1000,
+        )
+        data = {
+            "case": case.id,
+            "appropriation": appropriation.id,
+            "start_date": start_date,
+            "status": STATUS_EXPECTED,
+            "activity_type": MAIN_ACTIVITY,
+            "end_date": end_date,
+            "details": details.id,
+            "payment_plan": PaymentScheduleSerializer(payment_schedule).data,
+        }
+        serializer = ActivitySerializer(data=data)
+        is_valid = serializer.is_valid()
+        self.assertFalse(is_valid)
 
 
 class CaseSerializerTestCase(TestCase, BasicTestMixin):

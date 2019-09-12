@@ -5,10 +5,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-$media-medium: 45rem;
-$media-large: 60rem;
-$unit: 1rem;
-
 :root {
 
     --color1: 222;
@@ -41,5 +37,8 @@ $unit: 1rem;
     --break-small: 30rem;
     --break-medium: 45rem;
     --break-large: 60rem;
+
+    --shadow-dim: 0 .125rem .25rem var(--grey4);
+    --shadow-dark: 0 .25rem .5rem var(--grey4);
 
 }

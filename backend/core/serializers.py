@@ -158,27 +158,6 @@ class ActivitySerializer(WritableNestedModelSerializer):
                 _("startdato og slutdato skal være ens for engangsbetaling")
             )
 
-        # monthly payments should start and end at the 1st.
-        is_monthly_payment = (
-            "payment_frequency" in data["payment_plan"]
-            and data["payment_plan"]["payment_frequency"]
-            == PaymentSchedule.MONTHLY
-        )
-        if is_monthly_payment and (
-            not data["start_date"].day == 1
-            or (
-                "end_date" in data
-                and data["end_date"]
-                and not data["end_date"].day == 1
-            )
-        ):
-            raise serializers.ValidationError(
-                _(
-                    "startdato og slutdato for månedlige "
-                    "betalinger skal være den 1."
-                )
-            )
-
         if "modifies" in data and data["modifies"]:
             # run the validate_expected flow.
             data_copy = data.copy()

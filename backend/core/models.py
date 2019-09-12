@@ -311,8 +311,15 @@ class PaymentSchedule(models.Model):
                 rrule.WEEKLY, dtstart=start, until=end, interval=2
             )
         elif self.payment_frequency == self.MONTHLY:
+            monthly_date = start.day
+            if monthly_date > 28:
+                monthly_date = [d for d in range(28, monthly_date + 1)]
             rrule_frequency = rrule.rrule(
-                rrule.MONTHLY, dtstart=start, until=end, bymonthday=1
+                rrule.MONTHLY,
+                dtstart=start,
+                until=end,
+                bymonthday=monthly_date,
+                bysetpos=-1,
             )
         else:
             raise ValueError(_("ukendt betalingsfrekvens"))
@@ -1017,6 +1024,9 @@ class Activity(AuditModelMixin, models.Model):
             payment_type = self.modifies.payment_plan.payment_type
             if payment_type == PaymentSchedule.ONE_TIME_PAYMENT:
                 self.modifies.payment_plan.payments.all().delete()
+                self.modifies.start_date = self.start_date
+                # With one time payments, end date and start date must
+                # always be the same.
                 self.modifies.end_date = self.start_date
             else:
                 self.modifies.end_date = self.start_date - timedelta(days=1)

@@ -17,6 +17,8 @@
 
         <app-footer />
 
+        <browser-check />
+
     </div>
 </template>
 
@@ -24,12 +26,14 @@
 
     import AppHeader from './components/header/Header.vue'
     import AppFooter from './components/footer/Footer.vue'
+    import BrowserCheck from './components/browsercheck/Browsercheck.vue'
 
     export default {
 
         components: {
             AppHeader,
-            AppFooter
+            AppFooter,
+            BrowserCheck
         },
         created: function() {
             this.$store.dispatch('autoLogin')
@@ -152,7 +156,7 @@
     }
 
     .expected {
-        color: hsl(var(--color3), 100%, 50%);
+        color: hsl(var(--color3), 100%, 40%);
     }
 
     /* modal box */
