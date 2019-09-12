@@ -98,13 +98,3 @@
     }
     
 </script>
-
-<style>
-
-    .assessment {
-        margin: 0 0 1.5rem;
-        padding: .5rem;
-        border: solid 1px var(--grey2);
-    }
-
-</style>
