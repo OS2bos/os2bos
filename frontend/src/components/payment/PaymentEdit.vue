@@ -7,7 +7,8 @@
 
 
 <template>
-    <section class="payment-method">
+    <fieldset class="payment-method">
+        <legend>Hvordan skal det betales?</legend>
         <label class="required" for="field-pay-method">Betalingsmåde</label>
         <select v-model="entry.payment_method" required id="field-pay-method">
             <option value="INVOICE" v-if="paymentObj.recipient_type === 'COMPANY'">Faktura</option>
@@ -18,23 +19,25 @@
             <option value="SD" v-if="paymentObj.recipient_type === 'PERSON'">SD-løn</option>
         </select>
         <error err-key="payment_method" />
-        <div v-if="entry.payment_method">
+        <div v-if="entry.payment_method" style="margin-top: 1rem;">
             <div v-if="entry.payment_method === 'CASH'">
-                <strong>Kontant udbetaling</strong>
+                <p>
+                    <strong>Kontant udbetaling</strong>
+                </p>
                 <p>
                 Vær opmærksom på at beløbet udbetales til modtagerens Nem-konto. <br>
                 Det er ikke muligt at udbetale til et kontonummer.
                 </p>
             </div>
-            <fieldset v-if="entry.payment_method === 'SD'">
+            <template v-if="entry.payment_method === 'SD'">
                 <legend class="required">Skattekort</legend>
                 <input type="radio" id="field-main" name="payment-type" value="1" v-model="entry.payment_method_details">
                 <label for="field-main">Hovedkort</label>
                 <input type="radio" id="field-secondary" name="payment-type" value="2" v-model="entry.payment_method_details">
                 <label for="field-secondary">Bikort</label>
-            </fieldset>
+            </template>
         </div>
-    </section>
+    </fieldset>
 </template>
 
 <script>
@@ -43,43 +46,35 @@
 
     export default {
 
-      components: {
-        Error
-      },
-      props: [
-        'paymentObj'
-      ],
-      data: function() {
-        return {
-          entry: {
-            payment_method: null,
-            payment_method_details: null
-          }
-        }
-      },
-      watch: {
-        paymentObj: function() {
-          this.entry = this.paymentObj
+        components: {
+            Error
         },
-        entry: {
-          handler (newVal) {
-            this.$emit('update', this.entry)
-          },
-          deep: true
+        props: [
+            'paymentObj'
+        ],
+        data: function() {
+            return {
+                entry: {
+                    payment_method: null,
+                    payment_method_details: null
+                }
+            }
+        },
+        watch: {
+            paymentObj: function() {
+                this.entry = this.paymentObj
+            },
+            entry: {
+                handler (newVal) {
+                    this.$emit('update', this.entry)
+                },
+                deep: true
+            }
+        },
+        created: function() {
+            if (this.paymentObj) {
+                this.entry = this.paymentObj
+            }
         }
-      },
-      created: function() {
-        if (this.paymentObj) {
-          this.entry = this.paymentObj
-        }
-      }
     }
 </script>
-
-<style>
-
-    .payment-method {
-        margin: 1rem 0;
-    }
-
-</style>

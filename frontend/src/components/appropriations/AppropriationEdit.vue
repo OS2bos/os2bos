@@ -9,8 +9,10 @@
 <template>
 
     <article class="appropriation-edit">
-        <h1 v-if="create_mode">Opret bevillingskrivelse</h1>
-        <h1 v-else>Redigér bevillingskrivelse</h1>
+        <header class="appropriation-edit-header">
+            <h1 v-if="create_mode">Opret bevillingskrivelse</h1>
+            <h1 v-else>Redigér bevillingskrivelse</h1>
+        </header>
         <form @submit.prevent="saveChanges()">
             <error />
             <fieldset>
@@ -18,20 +20,18 @@
                 <input id="field-sbsysid" type="text" v-model="appr.sbsys_id" @input="checkKLE(appr.sbsys_id)" required>
                 <p class="danger" v-if="sbsysCheck">Sagsnummeret svarer ikke til en af de paragraffer, der kan vælges.</p>
                 <error err-key="sbsys_id" />
-            </fieldset>
-            <fieldset>
+            
                 <label class="required" for="field-lawref">Bevilling efter §</label>
                 <select id="field-lawref" class="listpicker" v-model="appr.section" required>
                     <option v-for="s in sections" :value="s.id" :key="s.id">
                         {{ s.paragraph }} {{ s.text }}
                     </option>
                 </select>
-            </fieldset>
-            <fieldset>
+
                 <label for="field-text">Supplerende information</label>
                 <textarea v-model="appr.note"></textarea>
             </fieldset>
-            <fieldset>
+            <fieldset class="form-actions">
                 <input type="submit" value="Gem">
                 <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
             </fieldset>
@@ -156,7 +156,20 @@
 <style>
 
     .appropriation-edit {
-        margin: 1rem;
+        margin: 1rem 2rem;
+    }
+
+    .appropriation-edit .appropriation-edit-header {
+        background-color: var(--grey2);
+        padding: .5rem 2rem;
+    }
+
+    .appropriation-edit form {
+        padding: 1rem 2rem 0;
+    }
+
+    .appropriation-edit .form-actions {
+        padding: 0 0 2rem;
     }
 
     .appropriation-edit .cancel-btn {

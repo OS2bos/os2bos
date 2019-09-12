@@ -36,7 +36,7 @@ const testdata = {
     },
     act1: {
         type: 1,
-        act_detail: 'Kvindekrisecentre',
+        act_detail: 'Psykologhjælp til børn',
         start: str1mth,
         end: str10mth,
         note: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',

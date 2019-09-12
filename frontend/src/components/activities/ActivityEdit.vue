@@ -8,88 +8,94 @@
 
 <template>
     <section :class="`activity-edit activity-${ mode } expected-${ act_status_expected }`">
-        <header class="header" v-if="mode === 'create'">
-            <h1>
-                <template v-if="act_status_expected">Tilføj forventet </template>
-                <template v-else>Tilføj </template>
-                <template v-if="!appr_main_acts">hovedydelse</template>
-                <template v-else>følgeydelse</template>
-            </h1>
-        </header>
-        <header class="header" v-if="mode === 'edit'">
-            <h1>Redigér Ydelse</h1>
-        </header>
-        <header class="header" v-if="mode === 'clone'">
-            <h1>Opret forventet justering</h1>
-            <p>
-                Du er ved at lave en forventet justering til ydelsen:<br> 
-                <strong>{{ displayActName(act.details) }}</strong>
-            </p>
-        </header>
         <form @submit.prevent="saveChanges()">
-            <error />
-            <div class="row">
-                <div class="column">
-                    <fieldset v-if="mode === 'create'">
-                        <input type="checkbox" id="field-status-expected" v-model="act_status_expected">
-                        <label for="field-status-expected">Opret forventet Ydelse</label>
-                    </fieldset>
-                    <fieldset>
-                        <label class="required" for="fieldSelectAct">Ydelse</label>
-                        <list-picker :dom-id="'fieldSelectAct'" :disabled="disableAct" :selected-id="act.details" @selection="changeActivity" :list="act_details" required />
-                        <error err-key="details" />
-                    </fieldset>
-                    <fieldset>
-                        <label class="required" for="field-startdate">
-                            Startdato
-                            <span v-if="startDateSet">
-                                - tidligst {{ displayDate(startDateSet) }}
-                            </span>
-                        </label>
-                        <input 
-                            type="date" 
-                            id="field-startdate" 
-                            v-model="act.start_date" 
-                            :max="endDateSet"
-                            :min="startDateSet" 
-                            pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
-                            placeholder="åååå-mm-dd"
-                            title="Dato skal skrives som åååå-mm-dd"
-                            required>
-                        <error err-key="start_date" />
-                    </fieldset>
-                    <fieldset>
-                        <label for="field-enddate">
-                            Slutdato
-                            <span v-if="endDateSet">
-                                - senest {{ displayDate(endDateSet) }}
-                            </span>
-                        </label>
-                        <input 
-                            type="date" 
-                            id="field-enddate" 
-                            v-model="act.end_date" 
-                            :max="endDateSet"
-                            :min="startDateSet"
-                            pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
-                            placeholder="åååå-mm-dd"
-                            title="Dato skal skrives som åååå-mm-dd">
-                    </fieldset>
-                    <fieldset>
-                        <label for="field-text">Supplerende information</label>
-                        <textarea id="field-text" v-model="act.note"></textarea>
-                    </fieldset>
-                    <hr>
-                    <payment-amount-edit :payment-obj="pay" />
-                    <payment-receiver-edit :payment-obj="pay" />
-                    <payment-edit :payment-obj="pay" />
-                    <hr>
-                    <fieldset>
-                        <input type="submit" value="Gem" :disabled="disableAct">
-                        <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
-                    </fieldset>
+            <header class="header activity-edit-header"> 
+
+                <h1 v-if="mode === 'create'">
+                    <template v-if="act_status_expected">Tilføj forventet </template>
+                    <template v-else>Tilføj </template>
+                    <template v-if="!appr_main_acts">hovedydelse</template>
+                    <template v-else>følgeydelse</template>
+                </h1>
+                <h1 v-if="mode === 'edit'">Redigér Ydelse</h1>
+                <div v-if="mode === 'clone'">
+                    <h1>Opret forventet justering</h1>
+                    <p>
+                        Du er ved at lave en forventet justering til ydelsen:<br> 
+                        <strong>{{ displayActName(act.details) }}</strong>
+                    </p>
                 </div>
+
+                <fieldset v-if="mode === 'create'" style="margin: 0 0 0 2rem;">
+                    <input type="checkbox" id="field-status-expected" v-model="act_status_expected">
+                    <label for="field-status-expected" style="margin: 0;">Opret forventet Ydelse</label>
+                </fieldset>
+
+            </header>
+        
+            <error />
+
+            <div class="grid row">
+                    
+                <fieldset class="payment-basic row-item">
+                    <label class="required" for="fieldSelectAct">Ydelse</label>
+                    <list-picker :dom-id="'fieldSelectAct'" :disabled="disableAct" :selected-id="act.details" @selection="changeActivity" :list="act_details" required />
+                    <error err-key="details" />
+                    <label class="required" for="field-startdate">
+                        Startdato
+                        <span v-if="startDateSet">
+                            - tidligst {{ displayDate(startDateSet) }}
+                        </span>
+                    </label>
+                    <input 
+                        type="date" 
+                        id="field-startdate" 
+                        v-model="act.start_date" 
+                        :max="endDateSet"
+                        :min="startDateSet" 
+                        pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
+                        placeholder="åååå-mm-dd"
+                        title="Dato skal skrives som åååå-mm-dd"
+                        required>
+                    <error err-key="start_date" />
+                
+                    <label for="field-enddate">
+                        Slutdato
+                        <span v-if="endDateSet">
+                            - senest {{ displayDate(endDateSet) }}
+                        </span>
+                    </label>
+                    <input 
+                        type="date" 
+                        id="field-enddate" 
+                        v-model="act.end_date" 
+                        :max="endDateSet"
+                        :min="startDateSet"
+                        pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
+                        placeholder="åååå-mm-dd"
+                        title="Dato skal skrives som åååå-mm-dd">
+                
+                    <label for="field-text">Supplerende information</label>
+                    <textarea id="field-text" v-model="act.note"></textarea>
+                </fieldset>
+
+                <div class="row-item">
+                    <payment-amount-edit :payment-obj="pay" />
+                </div>
+                <div class="row-item">
+                    <payment-receiver-edit :payment-obj="pay" class="row-item" />
+                </div>
+                <div class="row-item">
+                    <payment-edit :payment-obj="pay" class="row-item" />
+                </div>
+
             </div>
+
+            <fieldset class="form-actions">
+                <input type="submit" value="Gem" :disabled="disableAct">
+                <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
+            </fieldset>
+
         </form>
     </section>
 
@@ -267,7 +273,7 @@
                 } else {
                     actList = `supplementary_activity_for=${ this.appropriation.section }`
                 }
-                axios.get(`/activity_details?${ actList }`)
+                axios.get(`/activity_details/?${ actList }`)
                 .then(res => {
                     this.act_details = res.data
                 })
@@ -285,13 +291,16 @@
 <style>
 
     .activity-edit {
-        margin: 1rem;
+        margin: 1rem 2rem 2rem;
         background-color: var(--grey1);
     }
 
-    .activity-edit > header {
+    .activity-edit .activity-edit-header {
         background-color: var(--grey2);
-        padding: 1rem;
+        padding: .5rem 2rem;
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
     }
 
     .activity-edit.activity-clone,
@@ -299,13 +308,39 @@
         background-color: hsl(40, 90%, 80%);
     }
 
-    .activity-edit.activity-clone > header,
-    .activity-edit.expected-true > header {
+    .activity-edit.activity-clone .activity-edit-header,
+    .activity-edit.expected-true .activity-edit-header {
         background-color: hsl(40, 90%, 70%);
     }
 
     .activity-edit form {
         background-color: transparent;
+        padding: 0;
+    }
+
+    .activity-edit .row-item {
+        margin: 0;
+        padding: 1rem 2rem 2rem;
+        border: solid 1px var(--grey2);
+    }
+
+    .activity-edit .grid .payment-amount > * {
+        flex: 0 1 15rem;
+        padding: 0; 
+        margin: 0;
+        border: none;
+    }
+
+    .activity-edit .payment-receiver,
+    .activity-edit .payment-method {
+        max-width: 30rem;
+        border: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .activity-edit .form-actions {
+        padding: 2rem 2rem 0;
     }
 
     .activity-edit .cancel-btn {

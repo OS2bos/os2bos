@@ -132,6 +132,10 @@
         width: 100%;
     }
 
+    .row-item {
+        flex: 1 0 30rem;
+    }
+
     .column {
         display: flex;
         flex-direction: column;
