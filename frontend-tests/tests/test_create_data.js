@@ -3,6 +3,27 @@
 import { Selector } from 'testcafe'
 import { loginAsUngeraadgiver } from '../utils/logins.js'
 
+function leadZero(number) {
+    if (number < 10) {
+        return `0${ number }`
+    } else {
+        return number
+    }
+}
+
+function makeDateStr(date, offset) {
+    let new_date = new Date(date.setMonth(date.getMonth() + offset + 1))
+    return `${new_date.getFullYear()}-${leadZero(new_date.getMonth() + 1)}-01`
+}
+
+let today = new Date()
+
+let str1mth = makeDateStr(today, 1),
+    str2mth = makeDateStr(today, 2),
+    str5mth = makeDateStr(today, 5),
+    str10mth = makeDateStr(today, 10),
+    str15mth = makeDateStr(today, 15)
+    
 const testdata = {
     case1: {
         id: 1,
@@ -15,9 +36,9 @@ const testdata = {
     },
     act1: {
         type: 1,
-        act_detail: 'Psykologhjælp til børn',
-        start: '2019-08-01',
-        end: '2020-12-01',
+        act_detail: 'Kvindekrisecentre',
+        start: str1mth,
+        end: str10mth,
         note: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
         amount: '3095.50',
         payee_id: '78362883763',
@@ -25,8 +46,8 @@ const testdata = {
     },
     act2: {
         type: 0,
-        start: '2019-11-01',
-        end: '2020-03-01',
+        start: str2mth,
+        end: str5mth,
         note: 'En lille note',
         amount: '595.95',
         payee_id: '8923',
@@ -34,8 +55,8 @@ const testdata = {
     },
     act3: {
         type: 1,
-        start: '2019-11-01',
-        end: '2020-03-01',
+        start: str5mth,
+        end: str10mth,
         note: 'En anden lille note',
         amount: '150',
         payee_id: '8937-2342-2342',
@@ -44,8 +65,8 @@ const testdata = {
     act4: {
         expected_type: 'adjustment',
         type: 1,
-        start: '2019-10-01',
-        end: '2020-12-01',
+        start: str2mth,
+        end: str15mth,
         note: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
         amount: '3595.50',
         payee_id: '78362883763',
@@ -54,8 +75,8 @@ const testdata = {
     act5: {
         expected_type: 'expectation',
         type: 1,
-        start: '2019-09-01',
-        end: '2020-06-01',
+        start: str2mth,
+        end: str5mth,
         note: 'En anden lille note',
         amount: '9.95',
         payee_id: '8937-2342-2342',
@@ -83,7 +104,7 @@ test('Create Case', async t => {
         .click(Selector('#field-skaleringstrappe option').withText('10'))
         .click(Selector('input').withAttribute('type', 'submit'))
         .navigateTo('http://localhost:8080/#/')
-        .expect(Selector('.cases table tr td a').innerText).contains(testdata.case1.name)
+        .expect(Selector('.cases table a').withText(testdata.case1.name)).ok()
 })
 
 test('Create Appropriation', async t => {
@@ -149,7 +170,7 @@ test('Create Activity', async t => {
         .navigateTo('http://localhost:8080/#/')
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
-        .expect(Selector('.activities table tr.act-list-item td a').innerText).contains(testdata.act1.act_detail)
+        .expect(Selector('.activities table tr.act-list-item a')).ok()
 })
 
 test('Approve appropriation', async t => {
