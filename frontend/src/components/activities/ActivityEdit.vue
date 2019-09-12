@@ -79,7 +79,7 @@
                     <textarea id="field-text" v-model="act.note"></textarea>
                 </fieldset>
 
-                <div class="row-item">
+                <div class="row-item" style="margin: 0; padding: 0;">
                     <payment-amount-edit :payment-obj="pay" />
                 </div>
                 <div class="row-item">
@@ -324,10 +324,12 @@
         border: solid 1px var(--grey2);
     }
 
+    .activity-edit select {
+        width: 100%;
+    }
+
     .activity-edit .grid .payment-amount > * {
         flex: 0 1 15rem;
-        padding: 0; 
-        margin: 0;
         border: none;
     }
 
@@ -340,7 +342,7 @@
     }
 
     .activity-edit .form-actions {
-        padding: 2rem 2rem 0;
+        padding: 2rem 2rem 2rem;
     }
 
     .activity-edit .cancel-btn {

@@ -9,7 +9,7 @@
 <template>
     <section class="familyoverview">
         <header class="familyoverview-header">
-            <h1>Familieoversigt</h1>
+            <h2>Familieoversigt</h2>
             <button class="familyoverview-create-btn" @click="$router.push(`/case/${ caseId }/familyoverview-create/`)">+ Opret familierelation</button>
         </header>
         <table class="familyoverview-list" v-if="fam && fam.length > 0">
@@ -81,10 +81,6 @@
 </script>
 
 <style>
-
-    .familyoverview {
-        margin: 2rem 0;
-    }
 
     .familyoverview-header {
         display: flex;

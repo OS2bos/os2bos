@@ -9,7 +9,7 @@
 <template>
 
     <section class="payment-amount row">
-        <fieldset>
+        <fieldset class="payment-amount-types">
             <legend class="required" style="margin-bottom: .75rem;">Hvordan skal det betales?</legend>
             <input type="radio" value="ONE_TIME_PAYMENT" name="pay-type" id="pay-type-1" v-model="entry.payment_type" required>
             <label for="pay-type-1">Engangsudgift</label>
@@ -56,7 +56,7 @@
                 </p>
             </template>
         </fieldset>
-        <div style="margin-top: 1rem;">
+        <div class="payment-amount-plan">
             <payment-plan v-if="entry.payment_amount" :amount="entry.payment_amount" :units="entry.payment_units" :type="entry.payment_type" :frequency="entry.payment_frequency" />
         </div>
     </section>
@@ -129,6 +129,16 @@
 </script>
 
 <style>
+
+    .payment-amount {
+        padding: 0 1rem 1rem;
+    }
+
+    .payment-amount .payment-amount-types,
+    .payment-amount .payment-amount-fields,
+    .payment-amount .payment-amount-plan {
+        margin: 1rem;
+    }
 
     .payment-amount .payment-plan {
         border: solid .25rem hsl(40, 90%, 70%);
