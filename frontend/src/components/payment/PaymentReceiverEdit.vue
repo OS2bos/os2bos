@@ -7,7 +7,8 @@
 
 
 <template>
-    <section class="payment-receiver">
+    <fieldset class="payment-receiver">
+        <legend>Hvem skal have betaling?</legend>
         <label class="required" for="field-payee">Betalingsmodtager</label>
         <select v-model="entry.recipient_type" required id="field-payee">
             <option value="INTERNAL">Intern</option>
@@ -15,34 +16,37 @@
             <option value="PERSON">Person</option>
         </select>
         <error err-key="recipient_type" />
-        <fieldset v-if="entry.recipient_type === 'COMPANY' && service_providers">
+
+        <template v-if="entry.recipient_type === 'COMPANY' && service_providers">
             <label>Mulige leverandører</label>
             <select v-model="service_provider">
                 <option v-for="s in service_providers" :key="s.id" :value="s">
                     {{ s.name }}
                 </option>
             </select>
-        </fieldset>
+        </template>
 
         <template v-if="entry.recipient_type">
-            <fieldset>
-                <label class="required" v-if="entry.recipient_type === 'INTERNAL'" for="field-payee-id">
-                    Reference
-                </label>
-                <label class="required" v-if="entry.recipient_type === 'COMPANY'" for="field-payee-id">
-                    CVR-nr
-                </label>
-                <input v-if="entry.recipient_type !== 'PERSON'" type="text" id="field-payee-id" v-model="entry.recipient_id" required>
-                <cpr-lookup v-if="entry.recipient_type === 'PERSON'" :cpr.sync="entry.recipient_id" :name.sync="entry.recipient_name" />
-                <error err-key="recipient_id" />
-            </fieldset>
-            <fieldset v-if="entry.recipient_type !== 'PERSON'">
+            
+            <label class="required" v-if="entry.recipient_type === 'INTERNAL'" for="field-payee-id">
+                Reference
+            </label>
+            <label class="required" v-if="entry.recipient_type === 'COMPANY'" for="field-payee-id">
+                CVR-nr
+            </label>
+            <input v-if="entry.recipient_type !== 'PERSON'" type="text" id="field-payee-id" v-model="entry.recipient_id" required>
+            
+            <cpr-lookup v-if="entry.recipient_type === 'PERSON'" :cpr.sync="entry.recipient_id" :name.sync="entry.recipient_name" />
+            
+            <error err-key="recipient_id" />
+        
+            <template v-if="entry.recipient_type !== 'PERSON'">
                 <label class="required" for="field-payee-name">Navn</label>
                 <input type="text" id="field-payee-name" v-model="entry.recipient_name" required>
                 <error err-key="recipient_name" />
-            </fieldset>
+            </template>
         </template>
-    </section>
+    </fieldset>
 </template>
 
 <script>
@@ -122,7 +126,7 @@
 <style>
 
     .payment-receiver {
-        margin: 1rem 0;
+        
     }
 
 </style>
