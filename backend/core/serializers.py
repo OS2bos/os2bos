@@ -125,7 +125,7 @@ class PaymentScheduleSerializer(serializers.ModelSerializer):
 class ActivitySerializer(WritableNestedModelSerializer):
     monthly_payment_plan = serializers.ReadOnlyField()
     total_cost = serializers.ReadOnlyField()
-    # total_cost_this_year = serializers.ReadOnlyField()
+    total_cost_this_year = serializers.ReadOnlyField()
     total_cost_full_year = serializers.ReadOnlyField()
     total_granted_this_year = serializers.ReadOnlyField()
     total_expected_this_year = serializers.ReadOnlyField()
