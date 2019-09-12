@@ -9,7 +9,7 @@
 
     <div class="cpr-lookup">
 
-        <error />
+        <error v-if="$route.name !== 'case-create'" />
         
         <fieldset>
             <label class="required" for="field-cpr">CPR-nr</label>
