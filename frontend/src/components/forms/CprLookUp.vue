@@ -84,6 +84,7 @@
                         this.instance_name = res.data.name
                         this.$emit('update:cpr', cpr)
                         this.$emit('update:name', res.data.name)
+                        this.$emit('update:relations', res.data.relations)
                     })
                     .catch(err => {
                         this.$emit('update:cpr', cpr)
