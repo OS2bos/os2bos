@@ -97,7 +97,7 @@
                             return `${ this.displayDigits(act.total_granted_this_year) } kr`
                         }
                     } else {
-                        if (act.total_expected_this_year !== act.total_granted_this_year) {
+                        if (act.total_expected_this_year === 0 || act.total_expected_this_year !== act.total_granted_this_year) {
                             return `${ this.displayDigits(act.total_expected_this_year) } kr`
                         }
                     }
