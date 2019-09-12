@@ -273,7 +273,7 @@
                 } else {
                     actList = `supplementary_activity_for=${ this.appropriation.section }`
                 }
-                axios.get(`/activity_details?${ actList }`)
+                axios.get(`/activity_details/?${ actList }`)
                 .then(res => {
                     this.act_details = res.data
                 })
