@@ -11,9 +11,9 @@
     <div class="assessment">
     
         <h2 v-if="!create_mode">Opdatér vurdering</h2>
-        <h2 v-else>Vurdering</h2>
 
         <fieldset>
+            <legend>Vurdering</legend>
             <label class="required" for="field-indsatstrappe">Indsatstrappen</label>
             <select id="field-indsatstrappe" v-model="cas.effort_step" @change="updateEffort()" required>
                 <option value="STEP_ONE">Trin 1 - Tidlig indsats i almenområdet</option>
@@ -24,9 +24,7 @@
                 <option value="STEP_SIX">Trin 6 - Anbringelse i institutionstilbud</option>
             </select>
             <error err-key="effort_step" />
-        </fieldset>
-
-        <fieldset>
+        
             <label class="required" for="field-skaleringstrappe">Skaleringstrappen</label>
             <select id="field-skaleringstrappe" v-model="cas.scaling_step" @change="updateScaling()" required>
                 <option value="10">10</option>
@@ -41,9 +39,7 @@
                 <option value="1">1</option>
             </select>
             <error err-key="scaling_step" />
-        </fieldset>
-
-        <fieldset>
+        
             <label for="textArea">Supplerende information til vurdering</label>
             <textarea maxlength="100" id="textArea" v-model="cas.assessment_comment" @change="updateNote()"></textarea>
         </fieldset>
@@ -106,9 +102,9 @@
 <style>
 
     .assessment {
-        margin: 0;
+        margin: 0 0 1.5rem;
         padding: .5rem;
-        background-color: var(--grey2);
+        border: solid 1px var(--grey2);
     }
 
 </style>

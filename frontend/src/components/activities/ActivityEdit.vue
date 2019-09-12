@@ -43,7 +43,7 @@
                         <label class="required" for="field-startdate">
                             Startdato
                             <span v-if="startDateSet">
-                                - tidligst {{ startDateSet }}
+                                - tidligst {{ displayDate(startDateSet) }}
                             </span>
                         </label>
                         <input 
@@ -52,6 +52,9 @@
                             v-model="act.start_date" 
                             :max="endDateSet"
                             :min="startDateSet" 
+                            pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
+                            placeholder="åååå-mm-dd"
+                            title="Dato skal skrives som åååå-mm-dd"
                             required>
                         <error err-key="start_date" />
                     </fieldset>
@@ -59,7 +62,7 @@
                         <label for="field-enddate">
                             Slutdato
                             <span v-if="endDateSet">
-                                - senest {{ endDateSet }}
+                                - senest {{ displayDate(endDateSet) }}
                             </span>
                         </label>
                         <input 
@@ -67,7 +70,10 @@
                             id="field-enddate" 
                             v-model="act.end_date" 
                             :max="endDateSet"
-                            :min="startDateSet">
+                            :min="startDateSet"
+                            pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
+                            placeholder="åååå-mm-dd"
+                            title="Dato skal skrives som åååå-mm-dd">
                     </fieldset>
                     <fieldset>
                         <label for="field-text">Supplerende information</label>
@@ -98,6 +104,7 @@
     import PaymentEdit from '../payment/PaymentEdit.vue'
     import { activityId2name } from '../filters/Labels.js'
     import { epoch2DateStr } from '../filters/Date.js'
+    import { json2jsDate } from '../filters/Date.js'
     import Error from '../forms/Error.vue'
     
 
@@ -186,6 +193,9 @@
             },
             displayActName: function(id) {
                 return activityId2name(id)
+            },
+            displayDate: function(dt) {
+                return json2jsDate(dt)
             },
             saveChanges: function() {
                 let data = {

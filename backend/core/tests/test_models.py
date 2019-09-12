@@ -1652,6 +1652,18 @@ class PaymentScheduleTestCase(TestCase):
                 date(year=2019, month=1, day=1),
                 1,
             ),
+            (
+                PaymentSchedule.MONTHLY,
+                date(year=2020, month=1, day=31),
+                date(year=2022, month=1, day=1),
+                24,
+            ),
+            (
+                PaymentSchedule.MONTHLY,
+                date(year=2020, month=1, day=30),
+                date(year=2020, month=3, day=31),
+                3,
+            ),
         ]
     )
     def test_create_rrule_frequency(self, frequency, start, end, expected):

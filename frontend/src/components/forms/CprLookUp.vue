@@ -23,9 +23,7 @@
                 title="Det indtastede skal være et gyldigt personnummer"
                 required>
             <error err-key="cpr_number" />
-        </fieldset>
-
-        <fieldset>
+            
             <label class="required" for="field-name">Navn</label>
             <input 
                 id="field-name"
