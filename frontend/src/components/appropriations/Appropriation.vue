@@ -10,17 +10,11 @@
 
     <section class="appropriation" v-if="appr">
         <header class="appropriation-header">
-            <div>
-                <h1 style="display: inline-block;">Bevillingsskrivelse</h1>
-            </div>
-            <div>
-                <button @click="show_edit = !show_edit" class="appr-edit-btn">Redigér</button>
-            </div>
+            <h1 style="display: inline-block;">Bevillingsskrivelse</h1>
+            <button @click="show_edit = !show_edit" class="appr-edit-btn">Redigér</button>
         </header>
 
-        <div v-if="show_edit">
-            <appropriation-edit :appr-obj="appr" v-if="show_edit" @close="update()" />
-        </div>
+        <appropriation-edit :appr-obj="appr" v-if="show_edit" @close="update()" />
 
         <div class="appr-grid" v-if="cas">
 
@@ -28,12 +22,12 @@
 
                 <div class="sagsbeh appr-grid-box">
                     <dl>
+                        <dt>Foranstaltningssag</dt>
+                        <dd>{{ appr.sbsys_id}}</dd>
                         <dt>SBSYS-hovedsag</dt>
                         <dd>{{ cas.sbsys_id }}</dd>
-                        <dt>Foranstaltningssag (SBSYS)</dt>
-                        <dd>{{ appr.sbsys_id}}</dd>
-                        <dt>Sagsbehandler</dt>
-                        <dd>{{ displayUserName(cas.case_worker) }}</dd>
+                        <dt>Sagspart</dt>
+                        <dd>{{ cas.cpr_number }}, {{ cas.name }}</dd>
                         <template v-if="appr.note">
                             <dt>Supplerende oplysninger</dt>
                             <dd>{{ appr.note }}</dd>
@@ -43,8 +37,8 @@
 
                 <div class="sagspart appr-grid-box">
                     <dl>
-                        <dt>Sagspart</dt>
-                        <dd>{{ cas.cpr_number }}, {{ cas.name }}</dd>
+                        <dt>Sagsbehandler</dt>
+                        <dd>{{ displayUserName(cas.case_worker) }}</dd>
                         <dt>Betalingskommune</dt>
                         <dd>{{ displayMuniName(cas.paying_municipality) }}</dd>
                         <dt>Handlekommune</dt>
@@ -173,7 +167,11 @@
         display: flex;
         flex-flow: row nowrap;
         align-items: center;
-        justify-content: space-between;
+    }
+
+    .appropriation .appropriation-edit {
+        width: auto;
+        margin: 1rem 0 2rem;
     }
 
     .appropriation-header .material-icons {

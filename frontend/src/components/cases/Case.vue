@@ -20,72 +20,75 @@
             </div>
         </header>
 
-        <div class="case-info" v-if="!edit_mode">
-            <dl>
-                <dt>Sagspart (CPR, navn)</dt>
-                <dd>
-                    {{ cas.cpr_number }}, {{ cas.name }}
-                </dd>
-                <dt>Indsatstrappen</dt>
-                <dd>{{ displayEffortName(cas.effort_step) }}</dd>
-                <dt>Skaleringstrappe</dt>
-                <dd style="display: flex; flex-flow: row nowrap; justify-content: space-between; align-items: center;">
-                    <span>{{ cas.scaling_step }}</span>
-                    <router-link :to="`/case/${ cas.id }/assessment`">Se vurderinger</router-link>
-                </dd>
-            </dl>
-            <dl>
-                <dt>Målgruppe</dt>
-                <dd>
-                    <span v-if="cas.target_group === 'DISABILITY_DEPT'">
-                        Handicapafdelingen
-                    </span>
-                    <span v-if="cas.target_group === 'FAMILY_DEPT'">
-                        Familieafdelingen
-                    </span>
-                </dd>
-                <template v-if="cas.target_group === 'FAMILY_DEPT'">
-                    <dt>Skoledistrikt</dt>
-                    <dd>{{ displayDistrictName(cas.district) }}</dd>
-                </template>
-                <template v-if="cas.cross_department_measure || cas.refugee_integration">
-                    <dt>Indsatser</dt>
-                    <dd>
-                        <div v-if="cas.cross_department_measure">
-                            Tværgående ungeindsats
-                        </div>
-                        <div v-if="cas.refugee_integration">
-                            Integrationsindsatsen
-                        </div>
-                    </dd>
-                </template>
-                <template v-if="cas.note">
-                    <dt>Supplerende oplysninger</dt>
-                    <dd>{{ cas.note }}</dd>
-                </template>
-            </dl>
-            <dl>
-                <dt>Sagsbehander</dt>
-                <dd>{{ displayUserName(cas.case_worker) }}</dd>
-                <dt>Team</dt>
-                <dd>{{ displayTeamName(cas.team).name }}</dd>
-                <dt>Leder</dt>
-                <dd>{{ displayUserName( displayTeamName(cas.team).leader ) }}</dd>
-            </dl>
-            <dl>
-                <dt>Betalingskommune</dt>
-                <dd>{{ displayMuniName(cas.paying_municipality) }}</dd>
-                <dt>Handlekommune</dt>
-                <dd>{{ displayMuniName(cas.acting_municipality) }}</dd>
-                <dt>Bopælsskommune</dt>
-                <dd>{{ displayMuniName(cas.residence_municipality) }}</dd>
-            </dl>
-
-        </div>
-
         <case-edit :case-obj="cas" v-if="edit_mode" @close="reload()" />
 
-        <family-overview :case-id="cas.id" />
+        <div class="row" v-if="!edit_mode">
+            <div class="case-info row-item">
+                <dl>
+                    <dt>Sagspart (CPR, navn)</dt>
+                    <dd>
+                        {{ cas.cpr_number }}, {{ cas.name }}
+                    </dd>
+                    <dt>Indsatstrappen</dt>
+                    <dd>{{ displayEffortName(cas.effort_step) }}</dd>
+                    <dt>Skaleringstrappe</dt>
+                    <dd style="display: flex; flex-flow: row nowrap; justify-content: space-between; align-items: center;">
+                        <span>{{ cas.scaling_step }}</span>
+                        <router-link :to="`/case/${ cas.id }/assessment`">Se vurderinger</router-link>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>Målgruppe</dt>
+                    <dd>
+                        <span v-if="cas.target_group === 'DISABILITY_DEPT'">
+                            Handicapafdelingen
+                        </span>
+                        <span v-if="cas.target_group === 'FAMILY_DEPT'">
+                            Familieafdelingen
+                        </span>
+                    </dd>
+                    <template v-if="cas.target_group === 'FAMILY_DEPT'">
+                        <dt>Skoledistrikt</dt>
+                        <dd>{{ displayDistrictName(cas.district) }}</dd>
+                    </template>
+                    <template v-if="cas.cross_department_measure || cas.refugee_integration">
+                        <dt>Indsatser</dt>
+                        <dd>
+                            <div v-if="cas.cross_department_measure">
+                                Tværgående ungeindsats
+                            </div>
+                            <div v-if="cas.refugee_integration">
+                                Integrationsindsatsen
+                            </div>
+                        </dd>
+                    </template>
+                    <template v-if="cas.note">
+                        <dt>Supplerende oplysninger</dt>
+                        <dd>{{ cas.note }}</dd>
+                    </template>
+                </dl>
+                <dl>
+                    <dt>Sagsbehander</dt>
+                    <dd>{{ displayUserName(cas.case_worker) }}</dd>
+                    <dt>Team</dt>
+                    <dd>{{ displayTeamName(cas.team).name }}</dd>
+                    <dt>Leder</dt>
+                    <dd>{{ displayUserName( displayTeamName(cas.team).leader ) }}</dd>
+                </dl>
+                <dl>
+                    <dt>Betalingskommune</dt>
+                    <dd>{{ displayMuniName(cas.paying_municipality) }}</dd>
+                    <dt>Handlekommune</dt>
+                    <dd>{{ displayMuniName(cas.acting_municipality) }}</dd>
+                    <dt>Bopælsskommune</dt>
+                    <dd>{{ displayMuniName(cas.residence_municipality) }}</dd>
+                </dl>
+
+            </div>
+            
+            <family-overview :case-id="cas.id" class="row-item" />
+            
+        </div>
 
         <appropriations :case-id="cas.id" />
 
@@ -189,10 +192,14 @@
         margin: 1rem 2rem;
     }
 
-    .case-header {
+    .case .case-header {
         display: flex;
         flex-flow: row nowrap;
         align-items: center;
+    }
+
+    .case .row {
+        align-items: stretch;
     }
 
     .case .actions {
@@ -214,6 +221,13 @@
         justify-content: start;
         background-color: var(--grey1);
         padding: 1.5rem 2rem 2rem;
+        margin: 0 0 2rem;
+    }
+
+    .case .familyoverview {
+        margin: 0 0 2rem;
+        border: solid 1px var(--grey2);
+        padding: 1rem 2rem;
     }
 
 </style>

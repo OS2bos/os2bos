@@ -8,10 +8,10 @@
 
 <template>
 
-    <article class="appropriation-edit">
+    <section class="appropriation-edit">
         <header class="appropriation-edit-header">
             <h1 v-if="create_mode">Opret bevillingskrivelse</h1>
-            <h1 v-else>Redigér bevillingskrivelse</h1>
+            <h2 v-else>Redigér bevillingskrivelse</h2>
         </header>
         <form @submit.prevent="saveChanges()">
             <error />
@@ -36,7 +36,7 @@
                 <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
             </fieldset>
         </form>
-    </article>
+    </section>
 
 </template>
 
@@ -156,7 +156,7 @@
 <style>
 
     .appropriation-edit {
-        margin: 1rem 2rem;
+        margin: 1rem auto;
     }
 
     .appropriation-edit .appropriation-edit-header {

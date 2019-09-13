@@ -54,7 +54,7 @@
         display: flex;
         flex-flow: column nowrap;
         width: 100%;
-        min-width: 60rem;
+        min-width: 1024px;
         height: 100%;
     }
 
