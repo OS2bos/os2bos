@@ -8,7 +8,7 @@
 
 <template>
     <fieldset class="payment-payee">
-        <legend>Hvem skal have betaling?</legend>
+        <legend>Hvem skal betales?</legend>
         <label class="required" for="field-payee">Betalingsmodtager</label>
         
         <select v-model="p.recipient_type" required id="field-payee">
@@ -49,7 +49,7 @@
             </template>
 
         </template>
-        
+
     </fieldset>
 </template>
 

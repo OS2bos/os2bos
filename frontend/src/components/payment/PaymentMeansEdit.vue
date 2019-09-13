@@ -12,7 +12,7 @@
 
         <legend>Hvordan skal det betales?</legend>
         <label class="required" for="field-pay-method">Betalingsmåde</label>
-        <select v-model="p.payment_method" required id="field-pay-method">
+        <select v-model="p.payment_method" required id="field-pay-method" :disabled="!p.recipient_type">
             <option value="INVOICE" v-if="p.recipient_type === 'COMPANY'">Faktura</option>
             <option value="INTERNAL" v-if="p.recipient_type === 'INTERNAL'">Intern afregning</option>
             <option value="CASH" v-if="p.recipient_type === 'PERSON' || p.recipient_type === 'COMPANY'">

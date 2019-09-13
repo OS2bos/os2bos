@@ -10,7 +10,7 @@
 
     <fieldset class="payment-types">
 
-        <legend class="required" style="margin-bottom: .75rem;">Hvor ofte skal det betales?</legend>
+        <legend class="required" style="margin-bottom: .75rem;">Hvor ofte og hvor meget?</legend>
 
         <error err-key="payment_type" />
 
@@ -54,6 +54,12 @@
             },
             p: {
                 handler (newVal) {
+
+                    // Enforce payment type specific rules
+                    if (newVal.payment_type === 'ONE_TIME_PAYMENT') {
+                        this.p.payment_frequency = null
+                    }
+
                     this.$emit('update:pay', this.p)
                 },
                 deep: true
