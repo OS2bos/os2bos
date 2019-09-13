@@ -49,7 +49,7 @@
             section {
                 page-break-inside: avoid;
                 border-top: solid 1px #ccc;
-                padding: 20pt 0;
+                padding: 10pt 0;
             }
 
             header {
@@ -178,28 +178,6 @@
                 <p class="align-right">Foranstaltningssag<br> <strong>{{appropriation.sbsys_id}}</strong></p>
             </header>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th class="align-right">Godkendt dato</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong class="approval-stamp" style="vertical-align: middle;">Godkendt</strong> ved {{ appropriation.approval_level.name }}</td>
-                        <td class="align-right" style="vertical-align: middle;">{{ appropriation.modified }}</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            {% if appropriation.approval_note %}
-            <dl>
-                <dt>Bemærkning til godkendelse</dt>
-                <dd><em>{{ appropriation.approval_note }}</em></dd>
-            </dl>
-            {% endif %}
-
             <table id="case-info-primary" class="bordered">
                 <thead>
                     <tr>
@@ -251,11 +229,38 @@
             </dl>
 
             <h2>Det bevilges:</h2>
+            
             <section>
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th class="align-right">Godkendelsesdato</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong class="approval-stamp" style="vertical-align: middle;">Godkendt</strong> ved {{ appropriation.main_activity.approval_level.name }}</td>
+                            <td class="align-right" style="vertical-align: middle;">{{ appropriation.main_activity.modified }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            
+                {% if appropriation.main_activity.approval_note %}
+                <dl>
+                    <dt>Bemærkning til godkendelse</dt>
+                    <dd><em>{{ appropriation.main_activity.approval_note }}</em></dd>
+                </dl>
+                {% endif %}
+
                 <h3>{{ appropriation.main_activity.details.name }} <span class="muted">Hovedydelse</span></h3>
                 {% if appropriation.main_activity.note %}
-                    <p>{{ appropriation.main_activity.note }}</p>
+                    <dl>
+                        <dt>Supplerende information</dt>
+                        <dd><em>{{ appropriation.main_activity.note }}</em></dd>
+                    </dl>
                 {% endif %}
+
                 <table style="width: auto">
                     <thead>
                         <tr>
@@ -386,10 +391,36 @@
 
             {% for a in appropriation.supplementary_activities %}
                 <section>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th class="align-right">Godkendelsesdato</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong class="approval-stamp" style="vertical-align: middle;">Godkendt</strong> ved {{ a.approval_level.name }}</td>
+                                <td class="align-right" style="vertical-align: middle;">{{ a.modified }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                
+                    {% if a.approval_note %}
+                    <dl>
+                        <dt>Bemærkning til godkendelse</dt>
+                        <dd><em>{{ a.approval_note }}</em></dd>
+                    </dl>
+                    {% endif %}
+
                     <h3>{{ a.details.name }} <span class="muted">Følgeydelse</span></h3>
                     {% if a.note %}
-                        <p>{{ a.note }}</p>
+                        <dl>
+                            <dt>Supplerende information</dt>
+                            <dd><em>{{ a.note }}</em></dd>
+                        </dl>
                     {% endif %}
+
                     <table style="width: auto">
                         <thead>
                             <tr>
