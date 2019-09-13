@@ -961,6 +961,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             start_date=start_date,
             end_date=end_date,
             payment_plan=payment_schedule,
+            status=STATUS_GRANTED,
         )
         self.assertEqual(activity.total_cost_this_year, Decimal("7500"))
         start_date = start_date + timedelta(days=1)
@@ -977,7 +978,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         self.assertTrue(expected_activity.validate_expected())
 
-        self.assertEqual(activity.total_cost_this_year, Decimal("7500"))
+        self.assertEqual(activity.total_cost_this_year, Decimal("500"))
 
     def test_total_granted_this_year_zero_for_draft(self):
         now = timezone.now()
