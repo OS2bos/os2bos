@@ -396,18 +396,6 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
         self.assertEqual(appropriation.activities.count(), 2)
 
-    def test_supplementary_activities(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
-        appropriation = create_appropriation(case=case)
-        activity = create_activity(
-            case, appropriation, activity_type=SUPPL_ACTIVITY
-        )
-        self.assertEqual(
-            activity, next(appropriation.supplementary_activities)
-        )
-
     def test_appropriation_grant_sets_appropriation_date(self):
         approval_level = ApprovalLevel.objects.create(name="egenkompetence")
         payment_schedule = create_payment_schedule()
@@ -913,12 +901,30 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         appropriation = create_appropriation(case=case)
         payment_schedule = create_payment_schedule()
-        # 10 days, daily payments of 500.
+        # 15 days, daily payments of 500.
         activity = create_activity(
-            case, appropriation, payment_plan=payment_schedule
+            case,
+            appropriation,
+            payment_plan=payment_schedule,
+            start_date=date.today(),
+            end_date=date.today() + timedelta(days=14),
         )
+        self.assertEqual(activity.total_cost, Decimal("7500"))
+        start_date = date.today() + timedelta(days=1)
+        end_date = date.today() + timedelta(days=10)
+        expected_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=create_payment_schedule(),
+            status=STATUS_EXPECTED,
+            activity_type=MAIN_ACTIVITY,
+            modifies=activity,
+        )
+        self.assertTrue(expected_activity.validate_expected())
 
-        self.assertEqual(activity.total_cost, Decimal("5000"))
+        self.assertEqual(activity.total_cost, Decimal("7500"))
 
     def test_total_cost_spanning_years(self):
         case = create_case(
@@ -955,8 +961,24 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             start_date=start_date,
             end_date=end_date,
             payment_plan=payment_schedule,
+            status=STATUS_GRANTED,
         )
         self.assertEqual(activity.total_cost_this_year, Decimal("7500"))
+        start_date = start_date + timedelta(days=1)
+        end_date = start_date + timedelta(days=10)
+        expected_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=create_payment_schedule(),
+            status=STATUS_EXPECTED,
+            activity_type=MAIN_ACTIVITY,
+            modifies=activity,
+        )
+        self.assertTrue(expected_activity.validate_expected())
+
+        self.assertEqual(activity.total_cost_this_year, Decimal("500"))
 
     def test_total_granted_this_year_zero_for_draft(self):
         now = timezone.now()

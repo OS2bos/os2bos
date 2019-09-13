@@ -9,6 +9,8 @@
 import os
 import logging
 import requests
+import datetime
+
 from dateutil.relativedelta import relativedelta
 
 from django.template.loader import get_template
@@ -26,6 +28,8 @@ from weasyprint import HTML
 from weasyprint.fonts import FontConfiguration
 
 from service_person_stamdata_udvidet import get_citizen
+
+import core.models
 
 logger = logging.getLogger(__name__)
 
@@ -167,7 +171,23 @@ def send_activity_expired_email(activity):
 
 def send_appropriation(appropriation):
     """Generate PDF and XML files from appropriation and send them to SBSYS."""
-    render_context = {"appropriation": appropriation}
+
+    today = datetime.date.today()
+    approved_main_activities = appropriation.activities.filter(
+        activity_type=core.models.MAIN_ACTIVITY,
+        status=core.models.STATUS_GRANTED,
+        end_date__gte=today,
+    )
+    approved_suppl_activities = appropriation.activities.filter(
+        activity_type=core.models.SUPPL_ACTIVITY,
+        status=core.models.STATUS_GRANTED,
+        end_date__gte=today,
+    )
+    render_context = {
+        "appropriation": appropriation,
+        "main_activities": approved_main_activities,
+        "supplementary_activities": approved_suppl_activities,
+    }
     # Generate os2forms.xml
     xml_template = get_template(settings.SBSYS_XML_TEMPLATE)
     xml_data = xml_template.render(context=render_context)
