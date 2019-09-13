@@ -253,8 +253,9 @@
             <h2>Det bevilges:</h2>
             <section>
                 <h3>{{ appropriation.main_activity.details.name }} <span class="muted">Hovedydelse</span></h3>
-                {% if appropriation.main_activity.note %}
-                    <p>{{ appropriation.main_activity.note }}</p>
+                {% for act in main_activities %}
+                {% if act.note %}
+                    <p>{{ act.note }}</p>
                 {% endif %}
                 <table style="width: auto">
                     <thead>
@@ -265,8 +266,8 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{{ appropriation.main_activity.start_date }}</td>
-                            <td>{{ appropriation.main_activity.end_date|default_if_none:"" }}</td>
+                            <td>{{ act.start_date }}</td>
+                            <td>{{ act.end_date|default_if_none:"" }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -274,7 +275,7 @@
                     <thead>
                         <tr>
                             <th>Afregningsenhed</th>
-                            {% if appropriation.main_activity.payment_plan.payment_type == "RUNNING_PAYMENT" or appropriation.main_activity.payment_plan.payment_type == "ONE_TIME_PAYMENT" %}
+                            {% if act.payment_plan.payment_type == "RUNNING_PAYMENT" or appropriation.main_activity.payment_plan.payment_type == "ONE_TIME_PAYMENT" %}
                                 <th class="align-right">
                                     Beløb
                                 </th>
@@ -284,18 +285,18 @@
                                 </th>
                                 <th>
                                     Antal
-                                    {% if appropriation.main_activity.payment_plan.payment_type == "PER_KM_PAYMENT" %}
+                                    {% if act.payment_type == "PER_KM_PAYMENT" %}
                                         km
-                                    {% elif appropriation.main_activity.payment_plan.payment_type == "PER_HOUR_PAYMENT" %}
+                                    {% elif act.payment_type == "PER_HOUR_PAYMENT" %}
                                         timer
-                                    {% elif appropriation.main_activity.payment_plan.payment_type == "PER_DAY_PAYMENT" %}
+                                    {% elif act.payment_type == "PER_DAY_PAYMENT" %}
                                         døgn
                                     {% else %}
                                         -
                                     {% endif %}
                                 </th>
                             {% endif %}
-                            {% if appropriation.main_activity.payment_plan.payment_type != "ONE_TIME_PAYMENT"%}
+                            {% if act.payment_type != "ONE_TIME_PAYMENT"%}
                                 <th>Betalingsfrekvens</th>
                             {% endif %}
                             <th class="align-right">Omkostninger, indeværende år</th>
@@ -305,86 +306,87 @@
                     <tbody>
                         <tr>
                             <td>
-                                {% if appropriation.main_activity.payment_plan.payment_type == "RUNNING_PAYMENT" %}
+                                {% if act.payment_type == "RUNNING_PAYMENT" %}
                                     Løbende betaling
-                                {% elif appropriation.main_activity.payment_plan.payment_type == "PER_DAY_PAYMENT" %}
+                                {% elif act.payment_type == "PER_DAY_PAYMENT" %}
                                     Betaling pr. døgn
-                                {% elif appropriation.main_activity.payment_plan.payment_type == "PER_KM_PAYMENT" %}
+                                {% elif act.payment_type == "PER_KM_PAYMENT" %}
                                     Betaling pr. kilometer
-                                {% elif appropriation.main_activity.payment_plan.payment_type == "PER_HOUR_PAYMENT" %}
+                                {% elif act.payment_type == "PER_HOUR_PAYMENT" %}
                                     Betaling pr. time
-                                {% elif appropriation.main_activity.payment_plan.payment_type == "ONE_TIME_PAYMENT" %}
+                                {% elif act.payment_type == "ONE_TIME_PAYMENT" %}
                                     Enkeltbetaling
                                 {% else %}
                                     -
                                 {% endif %}
                             </td>
-                            <td class="align-right">{{ appropriation.main_activity.payment_plan.payment_amount }} kr</td>
-                            {% if appropriation.main_activity.payment_plan.payment_type != "RUNNING_PAYMENT" and appropriation.main_activity.payment_plan.payment_type != "ONE_TIME_PAYMENT" %}
-                                <td>{{ appropriation.main_activity.payment_plan.payment_units }}</td>
+                            <td class="align-right">{{ act.payment_plan.payment_amount }} kr</td>
+                            {% if act.payment_plan.payment_type != "RUNNING_PAYMENT" and act.payment_plan.payment_type != "ONE_TIME_PAYMENT" %}
+                                <td>{{ act.payment_plan.payment_units }}</td>
                             {% endif %}                            
                             {% if appropriation.main_activity.payment_plan.payment_type != "ONE_TIME_PAYMENT"%}
                                 <td>
-                                    {% if appropriation.main_activity.payment_plan.payment_frequency == "MONTHLY" %}
+                                    {% if act.payment_plan.payment_frequency == "MONTHLY" %}
                                         Månedlig
-                                    {% elif appropriation.main_activity.payment_plan.payment_frequency == "BIWEEKLY" %}
+                                    {% elif act.payment_plan.payment_frequency == "BIWEEKLY" %}
                                         Hver 2. uge
-                                    {% elif appropriation.main_activity.payment_plan.payment_frequency == "WEEKLY" %}
+                                    {% elif act.payment_plan.payment_frequency == "WEEKLY" %}
                                         Ugentlig
-                                    {% elif appropriation.main_activity.payment_plan.payment_frequency == "DAILY" %}
+                                    {% elif act.payment_plan.payment_frequency == "DAILY" %}
                                         Daglig
                                     {% else %}
                                         -
                                     {% endif %}
                                 </td>
                             {% endif %}
-                            <td class="align-right">{{ appropriation.main_activity.total_cost_this_year }} kr</td>
-                            <td class="align-right"><strong>{{ appropriation.main_activity.total_cost }} kr</strong></td>
+                            <td class="align-right">{{ act.total_granted_this_year }} kr</td>
+                            <td class="align-right"><strong>{{ act.total_cost }} kr</strong></td>
                         </tr>
                     </tbody>
                 </table>
                 <dl>
                     <dt>Betales til</dt>
                     <dd>
-                        {% if appropriation.main_activity.payment_plan.recipient_type == "COMPANY" %}
+                        {% if act.payment_plan.recipient_type == "COMPANY" %}
                             Firma
-                        {% elif appropriation.main_activity.payment_plan.recipient_type == "PERSON" %}
+                        {% elif act.payment_plan.recipient_type == "PERSON" %}
                             Person
-                        {% elif appropriation.main_activity.payment_plan.recipient_type == "INTERNAL" %}
+                        {% elif activity.payment_plan.recipient_type == "INTERNAL" %}
                             Intern
                         {% else %}
                             -
                         {% endif %}
                         <br>
-                        {{ appropriation.main_activity.payment_plan.recipient_name }}<br>
-                        {% if appropriation.main_activity.payment_plan.recipient_type == appropriation.main_activity.payment_plan.PERSON %}
+                        {{ act.payment_plan.recipient_name }}<br>
+                        {% if act.payment_plan.recipient_type == act.payment_plan.PERSON %}
                             <span>CPR-nr. </span>
-                        {% elif appropriation.main_activity.payment_plan.recipient_type == appropriation.main_activity.payment_plan.COMPANY %}
+                        {% elif act.payment_plan.recipient_type == act.payment_plan.COMPANY %}
                             <span>CVR-nr. </span>
                         {% else %}
                             <span>Reference </span>
                         {% endif %}
-                        {{ appropriation.main_activity.payment_plan.recipient_id }}<br>
+                        {{ act.payment_plan.recipient_id }}<br>
                         Betales via 
-                        {% if appropriation.main_activity.payment_plan.payment_method == "INVOICE" %}
+                        {% if act.payment_plan.payment_method == "INVOICE" %}
                             faktura
-                        {% elif appropriation.main_activity.payment_plan.payment_method == "SD" %}
+                        {% elif act.main_activity.payment_plan.payment_method == "SD" %}
                             SD-løn
-                        {% elif appropriation.main_activity.payment_plan.payment_method == "INTERNAL" %}
+                        {% elif act.payment_plan.payment_method == "INTERNAL" %}
                             intern afregning
-                        {% elif appropriation.main_activity.payment_plan.payment_method == "CASH" %}
+                        {% elif act.payment_plan.payment_method == "CASH" %}
                             betaling
                         {% else %}
                             -
                         {% endif %}   
-                        {% if appropriation.main_activity.payment_plan.payment_method_details %}
-                            <br>{{ appropriation.main_activity.payment_plan.payment_method_details }}
+                        {% if act.payment_plan.payment_method_details %}
+                            <br>{{ act.payment_plan.payment_method_details }}
                         {% endif %} 
                     </dd>
                 </dl>
+                {% endfor %}
             </section>
 
-            {% for a in appropriation.supplementary_activities %}
+            {% for a in supplementary_activities %}
                 <section>
                     <h3>{{ a.details.name }} <span class="muted">Følgeydelse</span></h3>
                     {% if a.note %}
