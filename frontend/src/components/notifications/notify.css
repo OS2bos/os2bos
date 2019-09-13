@@ -58,7 +58,7 @@
 }
 
 .notification.notification-error .msg::before { 
-    content: '⚠'
+    content: '⚠';
 }
 
 .notification .remove-alert {

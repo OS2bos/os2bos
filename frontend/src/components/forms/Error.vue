@@ -14,13 +14,13 @@
         </p>
         
         <template v-if="errKey === ''">
-            <p class="error-msg" v-for="e in errors.detail" v-if="errors.detail">
+            <p class="error-msg error-generic" v-for="e in errors.detail" v-if="errors.detail">
                 {{ e }}
             </p>
-            <p class="error-msg" v-for="e in errors.non_field_errors" v-if="errors.non_field_errors">
+            <p class="error-msg error-generic" v-for="e in errors.non_field_errors" v-if="errors.non_field_errors">
                 {{ e }}
             </p>
-            <p class="error-msg" v-for="e in errors.errors" v-if="errors.errors">
+            <p class="error-msg error-generic" v-for="e in errors.errors" v-if="errors.errors">
                 {{ e }}
             </p>
         </template>
@@ -55,6 +55,20 @@
 
     .error-msg {
         margin: .25rem 0;
+    }
+
+    .error-msg.error-generic {
+        background-color: var(--danger);
+        color: var(--grey0);
+        padding: 1rem 2rem;
+        margin: 0;
+    }
+
+    .error-msg.error-generic::before {
+        content: '⚠';
+        display: inline-block;
+        margin: 0 .25rem 0 0;
+        font-size: 1.25rem;
     }
 
 </style>

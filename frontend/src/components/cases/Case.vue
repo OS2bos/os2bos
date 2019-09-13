@@ -23,19 +23,26 @@
         <case-edit :case-obj="cas" v-if="edit_mode" @close="reload()" />
 
         <div class="row" v-if="!edit_mode">
-            <div class="case-info row-item">
+            <div class="case-info case-info-grid row-item">
                 <dl>
                     <dt>Sagspart (CPR, navn)</dt>
                     <dd>
                         {{ cas.cpr_number }}, {{ cas.name }}
                     </dd>
+                
                     <dt>Indsatstrappen</dt>
                     <dd>{{ displayEffortName(cas.effort_step) }}</dd>
+                
                     <dt>Skaleringstrappe</dt>
-                    <dd style="display: flex; flex-flow: row nowrap; justify-content: space-between; align-items: center;">
-                        <span>{{ cas.scaling_step }}</span>
-                        <router-link :to="`/case/${ cas.id }/assessment`">Se vurderinger</router-link>
+                    <dd>
+                        {{ cas.scaling_step }}
+                        <router-link :to="`/case/${ cas.id }/assessment`" style="margin-left: 1rem;">Se vurderinger</router-link>
                     </dd>
+
+                    <template v-if="cas.note">
+                        <dt>Supplerende oplysninger</dt>
+                        <dd>{{ cas.note }}</dd>
+                    </template>
                 </dl>
                 <dl>
                     <dt>Målgruppe</dt>
@@ -47,10 +54,12 @@
                             Familieafdelingen
                         </span>
                     </dd>
+
                     <template v-if="cas.target_group === 'FAMILY_DEPT'">
                         <dt>Skoledistrikt</dt>
                         <dd>{{ displayDistrictName(cas.district) }}</dd>
                     </template>
+
                     <template v-if="cas.cross_department_measure || cas.refugee_integration">
                         <dt>Indsatser</dt>
                         <dd>
@@ -62,26 +71,27 @@
                             </div>
                         </dd>
                     </template>
-                    <template v-if="cas.note">
-                        <dt>Supplerende oplysninger</dt>
-                        <dd>{{ cas.note }}</dd>
-                    </template>
                 </dl>
                 <dl>
                     <dt>Sagsbehander</dt>
                     <dd>{{ displayUserName(cas.case_worker) }}</dd>
+                
                     <dt>Team</dt>
                     <dd>{{ displayTeamName(cas.team).name }}</dd>
+                
                     <dt>Leder</dt>
                     <dd>{{ displayUserName( displayTeamName(cas.team).leader ) }}</dd>
                 </dl>
                 <dl>
                     <dt>Betalingskommune</dt>
                     <dd>{{ displayMuniName(cas.paying_municipality) }}</dd>
+                
                     <dt>Handlekommune</dt>
                     <dd>{{ displayMuniName(cas.acting_municipality) }}</dd>
+                
                     <dt>Bopælsskommune</dt>
                     <dd>{{ displayMuniName(cas.residence_municipality) }}</dd>
+
                 </dl>
 
             </div>
@@ -214,14 +224,17 @@
         font-size: 3rem;
     }
 
-    .case-info {
-        display: grid; 
-        grid-template-columns: auto auto auto auto;
-        grid-gap: 3rem;
-        justify-content: start;
+    .case-info-grid {
+        display: flex;
+        flex-flow: row wrap;
         background-color: var(--grey1);
-        padding: 1.5rem 2rem 2rem;
+        padding: 1.5rem 0 0;
         margin: 0 0 2rem;
+    }
+
+    .case-info-grid dl {
+        margin: 0 2rem 2rem;
+        flex: 0 1 auto;
     }
 
     .case .familyoverview {
