@@ -1679,7 +1679,7 @@ class PaymentScheduleTestCase(TestCase):
             ),
             (
                 PaymentSchedule.MONTHLY,
-                date(year=2020, month=1, day=30),
+                date(year=2020, month=1, day=1),
                 date(year=2020, month=3, day=31),
                 3,
             ),
