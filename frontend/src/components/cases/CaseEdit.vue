@@ -7,10 +7,10 @@
 
 
 <template>
-    <section class="case">
+    <section class="case-edit">
         <form @submit.prevent="saveChanges()">
             
-            <header class="case-header">
+            <header class="case-edit-header">
                 <h1 v-if="create_mode">Tilknyt hovedsag</h1>
                 <h1 v-else>Redigér hovedsag</h1>
             </header>
@@ -283,22 +283,22 @@
 
 <style>
 
-    .case form {
+    .case-edit form {
         padding: 0;
     }
 
-    .case .case-header {
+    .case-edit .case-edit-header {
         background-color: var(--grey2);
         padding: .5rem 2rem;
     }
 
-    .case .row-item {
+    .case-edit .row-item {
         margin: 0;
         padding: 1rem 2rem 2rem;
         border: solid 1px var(--grey2);
     }
 
-    .case .form-actions {
+    .case-edit .form-actions {
         padding: 2rem;
     }
 
@@ -306,7 +306,7 @@
         margin-top: 0.5rem;
     }
 
-    .case .cancel-btn {
+    .case-edit .cancel-btn {
         margin-left: 0.5rem;
         background-color: transparent;
         color: var(--primary);

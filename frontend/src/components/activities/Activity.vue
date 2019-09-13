@@ -166,9 +166,9 @@
             </div>
 
         </div>
-        <div class="payment-schedule" v-if="!show_edit">
-            <payment-schedule :payments="pay.payments" />
-        </div>
+        
+        <payment-schedule :payments="pay.payments" v-if="!show_edit" />
+        
     </section>
 
 </template>
@@ -295,7 +295,7 @@
 <style>
 
     .activity {
-        margin: 1rem;
+        margin: 1rem 2rem 2rem;
     }
 
     .activity-header {
@@ -313,14 +313,27 @@
         margin: 0 1rem;
     }
 
-    .activity .act-delete-btn {
+    .activity .act-delete-btn,
+    .modal-delete-btn {
         margin: 0;
-        border: solid .125rem var(--danger);
+        border-color: var(--danger);
         color: var(--danger);
+        background-color: transparent;
+    }
+    .modal-delete-btn {
+        float: right;
+        margin-left: 0.5rem;
     }
 
-    .activity .act-delete-btn:active {
+    .activity .act-delete-btn:focus,
+    .activity .act-delete-btn:hover,
+    .activity .act-delete-btn:active,
+    .modal-delete-btn:focus,
+    .modal-delete-btn:hover,
+    .modal-delete-btn:active {
         background-color: var(--danger);
+        color: var(--grey0);
+        border-color: var(--danger);
     }
 
     .activity-info {
@@ -334,18 +347,6 @@
 
      .payment-schedule {
         margin: 1rem;
-    }
-
-    .modal-delete-btn {
-        float: right;
-        margin-left: 0.5rem;
-        background-color: transparent;
-        color: var(--danger);
-        border-color: var(--danger);
-    }
-
-    .modal-delete-btn:active {
-        background-color: var(--danger);
     }
 
 </style>

@@ -15,11 +15,11 @@ from dateutil import rrule
 from django import forms
 from django.db import models, transaction
 from django.db.models import Q, F
-from django.contrib.postgres import fields
+from django.contrib.postgres import fields as postgres_fields
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django_audit_fields.models import AuditModelMixin
 from simple_history.models import HistoricalRecords
 
@@ -217,6 +217,14 @@ class PaymentSchedule(models.Model):
         null=True,
         blank=True,
     )
+    # This field only applies to monthly payments.
+    # It may be replaced by a more general way of handling payment dates
+    # independently of the activity's start date.
+    payment_day_of_month = models.IntegerField(
+        verbose_name=_("betales d."),
+        default=1,
+        validators=[MinValueValidator(1), MaxValueValidator(31)],
+    )
 
     ONE_TIME_PAYMENT = "ONE_TIME_PAYMENT"
     RUNNING_PAYMENT = "RUNNING_PAYMENT"
@@ -311,7 +319,7 @@ class PaymentSchedule(models.Model):
                 rrule.WEEKLY, dtstart=start, until=end, interval=2
             )
         elif self.payment_frequency == self.MONTHLY:
-            monthly_date = start.day
+            monthly_date = self.payment_day_of_month
             if monthly_date > 28:
                 monthly_date = [d for d in range(28, monthly_date + 1)]
             rrule_frequency = rrule.rrule(
@@ -626,7 +634,7 @@ class Section(models.Model):
     allowed_for_disability_target_group = models.BooleanField(
         verbose_name=_("tilladt for handicapafdelingen"), default=False
     )
-    allowed_for_steps = fields.ArrayField(
+    allowed_for_steps = postgres_fields.ArrayField(
         models.CharField(max_length=128, choices=effort_steps_choices),
         size=6,
         verbose_name=_("tilladt for trin i indsatstrappen"),
@@ -1108,6 +1116,18 @@ class Activity(AuditModelMixin, models.Model):
         else:
             payments = Payment.objects.filter(payment_schedule__activity=self)
         return payments.in_this_year().amount_sum()
+
+    @property
+    def total_granted_this_year(self):
+        if self.status == STATUS_GRANTED:
+            payments = Payment.objects.filter(payment_schedule__activity=self)
+            return payments.in_this_year().amount_sum
+        else:
+            return Decimal(0)
+
+    @property
+    def total_expected_this_year(self):
+        return self.total_cost_this_year
 
     @property
     def total_cost(self):

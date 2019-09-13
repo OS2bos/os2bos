@@ -14,21 +14,19 @@
             <h1 v-else>Redigér familierelation</h1>
         </header>
         <form @submit.prevent="saveChanges()">
+
             <error />
-            <div class="row">
-                <div class="row-item">
-                    <cpr-lookup :cpr.sync="fam.cpr_number" :name.sync="fam.name" />
-                </div>
-                <div class="row-item">
-                    <fieldset>
-                        <label class="required" for="field-relation">Relation</label>
-                        <input id="field-relation" type="text" v-model="fam.relation_type" required>
-                        <error err-key="relation_type" />
-                        <label for="field-sbsysid">Relateret SBSYS sag</label>
-                        <input id="field-sbsysid" type="text" v-model="fam.related_case">
-                    </fieldset>
-                </div>
-            </div>
+            
+            <cpr-lookup :cpr.sync="fam.cpr_number" :name.sync="fam.name" />
+        
+            <fieldset>
+                <label class="required" for="field-relation">Relation</label>
+                <input id="field-relation" type="text" v-model="fam.relation_type" required>
+                <error err-key="relation_type" />
+                <label for="field-sbsysid">Relateret SBSYS sag</label>
+                <input id="field-sbsysid" type="text" v-model="fam.related_case">
+            </fieldset>
+                
             <fieldset class="form-actions">
                 <input type="submit" value="Gem">
                 <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
@@ -119,7 +117,8 @@
 <style>
 
     .familyoverview-edit {
-        margin: 1rem;
+        margin: 1rem auto;
+        min-width: 20rem;
         width: auto;
     }
 
@@ -130,18 +129,15 @@
 
     .familyoverview-edit form {
         margin: 0;
-        padding: 0;
+        padding: 1rem 2rem;
     }
 
-    .familyoverview-edit .row-item {
-        flex: 1 0 20rem;
-        margin: 0;
-        padding: 1rem 2rem 2rem;
-        border: solid 1px var(--grey2);
+    .familyoverview-edit input[type="text"] {
+        width: 100%;
     }
 
     .familyoverview-edit .form-actions {
-        padding: 2rem;
+        margin: 2rem 0 1rem;
     }
 
     .familyoverview-edit .cancel-btn {
