@@ -1820,6 +1820,20 @@ class PaymentScheduleTestCase(TestCase):
 
         self.assertEqual(payment_schedule.payments.count(), 10)
 
+    def test_generate_payments_with_monthly_date(self):
+        payment_schedule = create_payment_schedule(
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_amount=Decimal("100"),
+            payment_day_of_month=31,
+        )
+        start_date = date(year=2019, month=1, day=1)
+        end_date = date(year=2020, month=1, day=1)
+
+        payment_schedule.generate_payments(start_date, end_date)
+
+        self.assertEqual(payment_schedule.payments.count(), 12)
+
     def test_generate_payments_no_end_date(self):
         payment_schedule = create_payment_schedule(
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
