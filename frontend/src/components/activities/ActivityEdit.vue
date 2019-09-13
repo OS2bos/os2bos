@@ -80,13 +80,18 @@
                 </fieldset>
 
                 <div class="row-item" style="margin: 0; padding: 0;">
-                    <payment-amount-edit :payment-obj="pay" />
+                    <pay-type-edit :pay.sync="pay" />
+                    <pay-freq-edit :pay.sync="pay" />
+                    <pay-amount-edit :pay.sync="pay" />
+                    <pay-plan v-if="pay.payment_amount" :amount="pay.payment_amount" :units="pay.payment_units" :type="pay.payment_type" :frequency="pay.payment_frequency" />
                 </div>
+
                 <div class="row-item">
-                    <payment-receiver-edit :payment-obj="pay" class="row-item" />
+                    <pay-payee-edit :pay.sync="pay" />
                 </div>
+
                 <div class="row-item">
-                    <payment-edit :payment-obj="pay" class="row-item" />
+                    <pay-mean-edit :pay.sync="pay" />
                 </div>
 
             </div>
@@ -104,24 +109,29 @@
 <script>
 
     import axios from '../http/Http.js'
-    import ListPicker from '../forms/ListPicker.vue'
-    import PaymentAmountEdit from '../payment/PaymentAmountEdit.vue'
-    import PaymentReceiverEdit from '../payment/PaymentReceiverEdit.vue'
-    import PaymentEdit from '../payment/PaymentEdit.vue'
     import { activityId2name } from '../filters/Labels.js'
     import { epoch2DateStr } from '../filters/Date.js'
     import { json2jsDate } from '../filters/Date.js'
     import Error from '../forms/Error.vue'
-    
+    import ListPicker from '../forms/ListPicker.vue'
+    import PayTypeEdit from '../payment/PaymentTypeEdit.vue'
+    import PayFreqEdit from '../payment/PaymentFrequencyEdit.vue'
+    import PayAmountEdit from '../payment/PaymentAmountEdit.vue'
+    import PayPayeeEdit from '../payment/PaymentPayeeEdit.vue'
+    import PayMeanEdit from '../payment/PaymentMeansEdit.vue'
+    import PayPlan from '../payment/PaymentPlan.vue'
 
     export default {
 
         components: {
+            Error,
             ListPicker,
-            PaymentAmountEdit,
-            PaymentReceiverEdit,
-            PaymentEdit,
-            Error
+            PayTypeEdit,
+            PayFreqEdit,
+            PayAmountEdit,
+            PayMeanEdit,
+            PayPayeeEdit,
+            PayPlan
         },
         props: [
             'mode', // Can be either 'create', 'edit', or 'clone'
