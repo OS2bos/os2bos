@@ -1110,6 +1110,18 @@ class Activity(AuditModelMixin, models.Model):
         return payments.in_this_year().amount_sum()
 
     @property
+    def total_granted_this_year(self):
+        if self.status == STATUS_GRANTED:
+            payments = Payment.objects.filter(payment_schedule__activity=self)
+            return payments.in_this_year().amount_sum
+        else:
+            return Decimal(0)
+
+    @property
+    def total_expected_this_year(self):
+        return self.total_cost_this_year
+
+    @property
     def total_cost(self):
         if self.status == STATUS_GRANTED and self.modified_by.exists():
             payments = Payment.objects.filter(

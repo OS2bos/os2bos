@@ -958,6 +958,25 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         self.assertEqual(activity.total_cost_this_year, Decimal("7500"))
 
+    def test_total_granted_this_year_zero_for_draft(self):
+        now = timezone.now()
+        payment_schedule = create_payment_schedule()
+        start_date = date(year=now.year, month=12, day=1)
+        end_date = date(year=now.year, month=12, day=15)
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=STATUS_DRAFT,
+        )
+        self.assertEqual(activity.total_granted_this_year, Decimal(0))
+
     def test_total_cost_this_year_spanning_years(self):
         now = timezone.now()
         payment_schedule = create_payment_schedule()
