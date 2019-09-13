@@ -10,7 +10,7 @@
 
     <section class="appropriations">
         <header class="appropriations-header">
-            <h1>Bevillingsskrivelser</h1>
+            <h2>Bevillingsskrivelser</h2>
             <button class="appropriation-create-btn" @click="$router.push(`/case/${ caseId }/appropriation-create/`)">+ Opret bevillingsskrivelse</button>
         </header>
         <table class="appropriation-list" v-if="apprs && apprs.length > 0">
@@ -145,7 +145,7 @@
 <style>
 
     .appropriations {
-        margin: 2rem 0;
+        margin: 0 0 2rem;
     }
 
     .appropriations-header {

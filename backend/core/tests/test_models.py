@@ -1051,6 +1051,25 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         self.assertEqual(activity.total_cost_this_year, Decimal("7500"))
 
+    def test_total_granted_this_year_zero_for_draft(self):
+        now = timezone.now()
+        payment_schedule = create_payment_schedule()
+        start_date = date(year=now.year, month=12, day=1)
+        end_date = date(year=now.year, month=12, day=15)
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=STATUS_DRAFT,
+        )
+        self.assertEqual(activity.total_granted_this_year, Decimal(0))
+
     def test_total_cost_this_year_spanning_years(self):
         now = timezone.now()
         payment_schedule = create_payment_schedule()
@@ -1753,7 +1772,7 @@ class PaymentScheduleTestCase(TestCase):
             ),
             (
                 PaymentSchedule.MONTHLY,
-                date(year=2020, month=1, day=30),
+                date(year=2020, month=1, day=1),
                 date(year=2020, month=3, day=31),
                 3,
             ),
@@ -1893,6 +1912,20 @@ class PaymentScheduleTestCase(TestCase):
         payment_schedule.generate_payments(start_date, end_date)
 
         self.assertEqual(payment_schedule.payments.count(), 10)
+
+    def test_generate_payments_with_monthly_date(self):
+        payment_schedule = create_payment_schedule(
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_amount=Decimal("100"),
+            payment_day_of_month=31,
+        )
+        start_date = date(year=2019, month=1, day=1)
+        end_date = date(year=2020, month=1, day=1)
+
+        payment_schedule.generate_payments(start_date, end_date)
+
+        self.assertEqual(payment_schedule.payments.count(), 12)
 
     def test_generate_payments_no_end_date(self):
         payment_schedule = create_payment_schedule(

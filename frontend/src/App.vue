@@ -54,7 +54,7 @@
         display: flex;
         flex-flow: column nowrap;
         width: 100%;
-        min-width: 60rem;
+        min-width: 1024px;
         height: 100%;
     }
 
@@ -130,6 +130,10 @@
         flex-direction: row;
         flex-wrap: wrap;
         width: 100%;
+    }
+
+    .row-item {
+        flex: 1 0 30rem;
     }
 
     .column {

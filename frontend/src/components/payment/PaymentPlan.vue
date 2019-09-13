@@ -8,11 +8,11 @@
 
 <template>
 
-    <article class="payment-plan">
-        <h1>Forventet udgift</h1>
+    <div class="payment-plan">
+        <h3>Forventet udgift</h3>
         <p>{{ abstract }}</p>
-        <p v-if="yearly_cost">Det er <strong>{{ yearly_cost }} kr</strong> pr. år</p>
-    </article>
+        <p v-if="yearly_cost">Det er ca. <strong>{{ yearly_cost }} kr</strong> pr. år</p>
+    </div>
 
 </template>
 
@@ -120,9 +120,14 @@
 
 <style>
 
-    .payment-plan h1 {
+    .payment-plan {
+        white-space: nowrap;
+        padding: 1rem 2rem;
+    }
+
+    .payment-plan h3 {
         font-size: 1.25rem;
-        padding-top: 0;
+        padding-top: .25rem;
     }
 
 </style>

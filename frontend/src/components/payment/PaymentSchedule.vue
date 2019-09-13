@@ -107,7 +107,7 @@
 <style>
 
     .payment_schedule {
-        margin: 1rem;
+        margin: 2rem 0;
     }
 
     .payment_schedule-header {
