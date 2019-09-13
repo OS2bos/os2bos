@@ -599,7 +599,7 @@ def forwards(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0006_auto_20190906_1541')
+        ('core', '0008_auto_20190906_1541')
     ]
 
     operations = [

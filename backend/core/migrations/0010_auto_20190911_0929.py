@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0007_import_sbsys_data'),
+        ('core', '0009_import_sbsys_data'),
     ]
 
     operations = [
