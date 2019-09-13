@@ -19,7 +19,7 @@
             <thead>
                 <tr>
                     <th style="width: 4.5rem;">
-                        <input type="checkbox" id="check-all" @change="setAllChecked">
+                        <input type="checkbox" id="check-all" @change="setAllChecked" v-model="check_all_approvable">
                         <label class="disabled" for="check-all"></label>
                     </th>
                     <th style="width: 5.5rem;">Status</th>
@@ -78,7 +78,7 @@
         </table>
         <p v-if="no_acts">Der er endnu ingen ydelser</p>
 
-        <approval-diag :appr-id="apprId" :acts="approvable_acts" v-if="diag_open" @close="diag_open = false" />
+        <approval-diag :appr-id="apprId" :acts="approvable_acts" v-if="diag_open" @close="diag_open = false" @approve="check_all_approvable = false" />
 
     </section>
 
@@ -106,6 +106,7 @@
                 chunks: [],
                 main_acts: [],
                 suppl_acts: [],
+                check_all_approvable: false,
                 approvable_acts: [],
                 diag_open: false
             }
