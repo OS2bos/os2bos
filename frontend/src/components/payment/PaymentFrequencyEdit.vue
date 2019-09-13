@@ -8,25 +8,28 @@
 
 <template>
 
-    <fieldset class="payment-frequencies" v-if="p.payment_type && p.payment_type !== 'ONE_TIME_PAYMENT'">
+    <fieldset class="payment-frequencies row" v-if="p.payment_type && p.payment_type !== 'ONE_TIME_PAYMENT'">
 
-        <label class="required" for="pay-freq">Hver</label>
-        <select v-model="p.payment_frequency" id="pay-freq" required>
-            <option v-for="o in choices.frequency_options" :key="o.key" :value="o.key">
-                {{ o.val }}
-            </option>
-        </select>
-        <error err-key="payment_frequency" />
+        <div>
+            <label class="required" for="pay-freq">Hver</label>
+            <select v-model="p.payment_frequency" id="pay-freq" required>
+                <option v-for="o in choices.frequency_options" :key="o.key" :value="o.key">
+                    {{ o.val }}
+                </option>
+            </select>
+            <error err-key="payment_frequency" />
+        </div>
 
-        <template v-if="p.payment_frequency === 'MONTHLY'">
-            <label class="required" for="pay-day-of-month">Betalingsdag d.</label>
+        <div v-if="p.payment_frequency === 'MONTHLY'" style="margin-left: .5rem;">
+            <label class="required" for="pay-day-of-month">den</label>
             <select v-model="p.payment_day_of_month" id="pay-day-of-month" required>
                 <option v-for="o in choices.date_options" :value="o" :key="o">
                     {{ o }}.
                 </option>
             </select>
-        </template>
-        <error err-key="payment_day_of_month" />
+            <error err-key="payment_day_of_month" />
+        </div>
+        
 
     </fieldset>
 
