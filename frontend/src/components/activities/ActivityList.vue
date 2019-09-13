@@ -292,11 +292,9 @@
                 }
             },
             setAllChecked: function(event) {
+                this.approvable_acts = []
                 this.checkAllInList(event.target.checked, this.main_acts)
                 this.checkAllInList(event.target.checked, this.suppl_acts)
-                if (!event.target.checked) {
-                    this.approvable_acts = []
-                }
             },
             initPreApprove: function() {
                 this.diag_open = true
