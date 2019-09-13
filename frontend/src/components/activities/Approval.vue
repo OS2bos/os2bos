@@ -165,6 +165,7 @@
                     this.$store.dispatch('fetchActivities', this.apprId)
                     this.$store.dispatch('fetchAppropriation', this.apprId)
                     this.$emit('close')
+                    this.$emit('approve')
                 })
                 .catch(err => {
                     this.$store.dispatch('parseErrorOutput', err)
