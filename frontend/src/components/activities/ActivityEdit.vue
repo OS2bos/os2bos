@@ -58,7 +58,6 @@
                             :min="startDateSet" 
                             pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
                             placeholder="åååå-mm-dd"
-                            title="Dato skal skrives som åååå-mm-dd"
                             required>
                         <error err-key="start_date" />
                     
@@ -75,8 +74,7 @@
                             :max="endDateSet"
                             :min="startDateSet"
                             pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
-                            placeholder="åååå-mm-dd"
-                            title="Dato skal skrives som åååå-mm-dd">
+                            placeholder="åååå-mm-dd">
                     
                         <label for="field-text">Supplerende information</label>
                         <textarea id="field-text" v-model="act.note" style="height: 8rem;"></textarea>
