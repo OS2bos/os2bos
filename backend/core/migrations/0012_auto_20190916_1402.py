@@ -6,7 +6,7 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [("core", "0011_add_default_team_to_case_and_users")]
+    dependencies = [("core", "0011_add_default_team_to_case")]
 
     operations = [
         migrations.AlterField(
@@ -18,14 +18,5 @@ class Migration(migrations.Migration):
                 to="core.Team",
                 verbose_name="team",
             ),
-        ),
-        migrations.AlterField(
-            model_name="user",
-            name="team",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.PROTECT,
-                related_name="users",
-                to="core.Team",
-            ),
-        ),
+        )
     ]
