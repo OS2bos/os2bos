@@ -182,7 +182,6 @@
     }
 
     .modal-container {
-        max-width: 40rem;
         margin: 0px auto;
         padding: 3rem 3.5rem;
         background-color: var(--grey0);
@@ -191,7 +190,6 @@
         transition: all .3s ease;
         max-height: 90vh;
         max-width: 90vh;
-        overflow-y: hidden;
         display: flex;
         flex-flow: column nowrap;
     }
