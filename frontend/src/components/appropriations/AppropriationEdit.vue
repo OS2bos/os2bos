@@ -106,7 +106,6 @@
                 }                
             },
             saveChanges: function() {
-                this.$store.commit('clearErrors')
                 if (!this.create_mode) {
                     axios.patch(`/appropriations/${ this.appr.id }/`, {
                         sbsys_id: this.appr.sbsys_id,
@@ -148,6 +147,7 @@
                 this.create_mode = false
                 this.appr = this.apprObj
             }
+            this.$store.commit('clearErrors')
         }
     }
     
