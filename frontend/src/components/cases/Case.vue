@@ -35,7 +35,7 @@
                 
                     <dt>Skaleringstrappe</dt>
                     <dd>
-                        {{ cas.scaling_step }}
+                        {{ cas.scaling_step }}<br>
                         <router-link :to="`/case/${ cas.id }/assessment`" style="margin-left: 1rem;">Se vurderinger</router-link>
                     </dd>
 
