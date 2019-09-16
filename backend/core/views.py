@@ -32,6 +32,10 @@ from core.models import (
     ServiceProvider,
     PaymentMethodDetails,
     ApprovalLevel,
+    STATUS_DELETED,
+    STATUS_DRAFT,
+    STATUS_GRANTED,
+    STATUS_EXPECTED,
 )
 
 from core.serializers import (
@@ -140,9 +144,31 @@ class ActivityViewSet(AuditViewSet):
     filterset_fields = "__all__"
 
     def get_queryset(self):
-        queryset = Activity.objects.all()
+        queryset = Activity.objects.exclude(status=STATUS_DELETED)
         queryset = self.get_serializer_class().setup_eager_loading(queryset)
         return queryset
+
+    def perform_destroy(self, serializer):
+        activity = self.get_object()
+
+        try:
+            if activity.status == STATUS_DRAFT:
+                activity.delete()
+            elif activity.status == STATUS_GRANTED:
+                raise RuntimeError(
+                    _("Du kan ikke slette en bevilget ydelse.")
+                )
+
+            elif activity.status == STATUS_EXPECTED:
+                activity.status = STATUS_DELETED
+                activity.save()
+            # Success!
+            response = Response("OK", status.HTTP_200_OK)
+        except Exception as e:
+            response = Response(
+                {"errors": [str(e)]}, status.HTTP_400_BAD_REQUEST
+            )
+        return response
 
 
 class PaymentMethodDetailsViewSet(AuditViewSet):
