@@ -747,6 +747,15 @@ class Appropriation(AuditModelMixin, models.Model):
             return f.first()
 
     @property
+    def section_info(self):
+        if self.main_activity and self.section:
+            si_filter = self.main_activity.details.sectioninfo_set.filter(
+                section=self.section
+            )
+            if si_filter.exists():
+                return si_filter.first()
+
+    @property
     def payment_plan(self):
         # TODO:
         pass  # pragma: no cover
@@ -873,6 +882,9 @@ class SectionInfo(models.Model):
     """For a main activity, KLE no. and SBSYS ID for the relevant sections."""
 
     class Meta:
+        # For info about why we do this, see
+        # https://code.djangoproject.com/ticket/23034, especially
+        # comment #9.
         db_table = "core_activitydetails_main_activity_for"
 
     activity_details = models.ForeignKey(

@@ -190,9 +190,7 @@ def send_appropriation(appropriation):
     }
 
     # Get SBSYS template and KLE number from main activity.
-    section_info = appropriation.main_activity.details.sectioninfo_set.get(
-        section=appropriation.section
-    )
+    section_info = appropriation.section_info
     render_context["kle_number"] = section_info.kle_number
     render_context["sbsys_template_id"] = section_info.sbsys_template_id
 

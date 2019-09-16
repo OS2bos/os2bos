@@ -10,6 +10,13 @@ class Migration(migrations.Migration):
         ('core', '0006_paymentschedule_payment_day_of_month'),
     ]
 
+    # NOTE: It's currently not possible to add a through class (with
+    # extra field) to an existing ManyToManyField. That is due to what
+    # is arguably a bug in Django. See the relevant ticket:
+    # https://code.djangoproject.com/ticket/23034
+    # The workaround below, using ``SeparateDatabaseAndState`` and
+    # reusing the name of the intermediate DB table for the through
+    # field, is inspired by comment #9 in the above ticket.
     operations = [
         migrations.SeparateDatabaseAndState(state_operations=[
             migrations.CreateModel(
