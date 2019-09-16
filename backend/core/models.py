@@ -140,11 +140,7 @@ class User(AbstractUser):
         verbose_name_plural = _("brugere")
 
     team = models.ForeignKey(
-        "Team",
-        on_delete=models.PROTECT,
-        related_name="users",
-        # Don't allow creation of users with no team through user interface.
-        blank=False,
+        "Team", on_delete=models.PROTECT, related_name="users"
     )
 
 
