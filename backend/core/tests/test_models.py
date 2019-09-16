@@ -66,6 +66,27 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
 
         self.assertEqual(str(appropriation), "13212 - ABL-105-2")
 
+    def test_section_info_is_none(self):
+        section = create_section()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(section=section, case=case)
+        si = appropriation.section_info
+        self.assertEqual(si, None)
+        now = timezone.now()
+        start_date = date(year=now.year, month=1, day=1)
+        end_date = date(year=now.year, month=1, day=10)
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED)
+        si = appropriation.section_info
+        self.assertEqual(si, None)
+
     def test_total_granted_this_year(self):
         # generate a start and end span of 10 days
         now = timezone.now()
