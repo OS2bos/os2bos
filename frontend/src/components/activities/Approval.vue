@@ -58,9 +58,9 @@
                             <error />
 
                             <div class="row">
-                                <div style="width: 50%; padding-top: 1rem;">
-                                    <fieldset style="padding-right: 1rem;">
-                                        <legend>Bevilling foretaget på følgende niveau</legend>
+                                <div style="width: 50%;">
+                                    <fieldset style="display: block;">
+                                        <legend style="margin-bottom: .75rem">Bevilling foretaget på følgende niveau</legend>
                                         <input id="inputRadio1" type="radio" value="5" v-model="appr.approval_level" name="approval-group" required>
                                         <label for="inputRadio1">Afsnitsleder</label>
                                         <input id="inputRadio2" type="radio" value="1" v-model="appr.approval_level" name="approval-group" required>
@@ -76,7 +76,7 @@
                                     </fieldset>
                                 </div>
                                 <div style="width: 50%;">
-                                    <fieldset style="padding-left: 1rem; ">
+                                    <fieldset style="margin-top: .25rem; display: block;">
                                         <label for="field-text">Evt. bemærkning</label>
                                         <textarea id="field-text" v-model="appr.approval_note" style="height: 14rem;"></textarea>
                                     </fieldset>
@@ -175,3 +175,13 @@
     }
     
 </script>
+
+<style>
+
+    .approval .modal-container {
+        overflow-x: hidden;
+        overflow-y: auto;
+        min-width: 50rem;
+    }
+
+</style>
