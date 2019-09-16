@@ -23,6 +23,7 @@ def initialize():
     initialize_school_districts()
     initialize_sections()
     initialize_activity_details()
+    initialize_section_infos()
     initialize_accounts()
     initialize_service_providers()
     initialize_users()
@@ -60,6 +61,15 @@ def initialize_activity_details():
 
     """
     call_command("loaddata", "activitydetails.json", app_label="core")
+
+
+def initialize_section_infos():
+    """Initialize all the relevant section infos.
+
+    Data should be the output of manage.py dumpdata core.sectioninfos
+
+    """
+    call_command("loaddata", "sectioninfos.json", app_label="core")
 
 
 def initialize_accounts():

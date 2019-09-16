@@ -64,7 +64,29 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
         appropriation = create_appropriation(section=section, case=case)
 
-        self.assertEqual(str(appropriation), "13212 - ABL-105-2 - 27.45.04")
+        self.assertEqual(str(appropriation), "13212 - ABL-105-2")
+
+    def test_section_info_is_none(self):
+        section = create_section()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(section=section, case=case)
+        si = appropriation.section_info
+        self.assertEqual(si, None)
+        now = timezone.now()
+        start_date = date(year=now.year, month=1, day=1)
+        end_date = date(year=now.year, month=1, day=10)
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        si = appropriation.section_info
+        self.assertEqual(si, None)
 
     def test_total_granted_this_year(self):
         # generate a start and end span of 10 days
@@ -402,11 +424,12 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        appropriation = create_appropriation(case=case)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
         now = timezone.now()
         start_date = now + timedelta(days=6)
         end_date = now + timedelta(days=12)
-        create_activity(
+        activity = create_activity(
             case=case,
             appropriation=appropriation,
             activity_type=MAIN_ACTIVITY,
@@ -415,7 +438,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             end_date=end_date,
             payment_plan=payment_schedule,
         )
-
+        activity.details.main_activity_for.add(section)
         user = get_user_model().objects.create(username="Anders And")
         appropriation.grant(
             appropriation.activities.exclude(status=STATUS_GRANTED),
@@ -438,7 +461,8 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        appropriation = create_appropriation(case=case)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
         now = timezone.now().date()
         start_date = now + timedelta(days=6)
         end_date = start_date
@@ -452,6 +476,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             end_date=end_date,
             payment_plan=payment_schedule,
         )
+        activity.details.main_activity_for.add(section)
         modifies_payment_schedule = create_payment_schedule(
             payment_amount=Decimal("600.0"),
             payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
@@ -504,7 +529,8 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        appropriation = create_appropriation(case=case)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
         now = timezone.now().date()
         start_date = now - timedelta(days=6)
         end_date = now + timedelta(days=12)
@@ -518,6 +544,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             end_date=end_date,
             payment_plan=payment_schedule,
         )
+        activity.details.main_activity_for.add(section)
         modifies_payment_schedule = create_payment_schedule(
             payment_amount=Decimal("600.0"),
             payment_frequency=PaymentSchedule.DAILY,
@@ -586,7 +613,8 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        appropriation = create_appropriation(case=case)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
         now = timezone.now().date()
         start_date = now - timedelta(days=6)
         end_date = now + timedelta(days=12)
@@ -600,6 +628,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             end_date=end_date,
             payment_plan=payment_schedule,
         )
+        activity.details.main_activity_for.add(section)
         modifies_payment_schedule = create_payment_schedule(
             payment_amount=Decimal("600.0"),
             payment_frequency=PaymentSchedule.WEEKLY,
@@ -666,7 +695,8 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        appropriation = create_appropriation(case=case)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
         now = timezone.now().date()
         start_date = now - timedelta(days=6)
         end_date = now + timedelta(days=12)
@@ -680,6 +710,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             end_date=end_date,
             payment_plan=payment_schedule,
         )
+        section.main_activities.add(activity.details)
         modifies_payment_schedule = create_payment_schedule(
             payment_amount=Decimal("600.0"),
             payment_frequency=PaymentSchedule.WEEKLY,
@@ -705,6 +736,90 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
                 approval_level.id,
                 "note til bevillingsgodkendelse",
                 user,
+            )
+
+    def test_appropriation_grant_error_no_main_activity(self):
+        approval_level = ApprovalLevel.objects.create(name="egenkompetence")
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+        now = timezone.now().date()
+        start_date = now - timedelta(days=6)
+        end_date = now + timedelta(days=12)
+        # create an already granted activity.
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=SUPPL_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=start_date,
+            end_date=end_date,
+        )
+
+        user = get_user_model().objects.create(username="Anders And")
+        with self.assertRaises(RuntimeError):
+            appropriation.grant(
+                [activity],
+                approval_level.id,
+                "note til bevillingsgodkendelse",
+                user,
+            )
+
+    def test_appropriation_grant_error_invalid_main_activity(self):
+        approval_level = ApprovalLevel.objects.create(name="egenkompetence")
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+        now = timezone.now().date()
+        start_date = now - timedelta(days=6)
+        end_date = now + timedelta(days=12)
+        # create an already granted activity.
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=start_date,
+            end_date=end_date,
+        )
+
+        user = get_user_model().objects.create(username="Anders And")
+        with self.assertRaises(RuntimeError):
+            appropriation.grant(
+                [activity],
+                approval_level.id,
+                "note til bevillingsgodkendelse",
+                user,
+            )
+
+    def test_appropriation_grant_error_no_activities(self):
+        approval_level = ApprovalLevel.objects.create(name="egenkompetence")
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+        now = timezone.now().date()
+        start_date = now - timedelta(days=6)
+        end_date = now + timedelta(days=12)
+        # create an already granted activity.
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=start_date,
+            end_date=end_date,
+        )
+        section.main_activities.add(activity.details)
+        user = get_user_model().objects.create(username="Anders And")
+        with self.assertRaises(RuntimeError):
+            appropriation.grant(
+                [], approval_level.id, "note til bevillingsgodkendelse", user
             )
 
 
@@ -743,7 +858,7 @@ class SectionTestCase(TestCase):
     def test_section_str(self):
         section = create_section()
 
-        self.assertEqual(str(section), "ABL-105-2 - 27.45.04")
+        self.assertEqual(str(section), "ABL-105-2")
 
 
 class ActivityDetailsTestCase(TestCase):

@@ -27,6 +27,7 @@ from core.tests.testing_utils import (
     AuthenticatedTestCase,
     BasicTestMixin,
     create_case,
+    create_section,
     create_case_as_json,
     create_appropriation,
     create_activity,
@@ -342,13 +343,17 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        appropriation = create_appropriation(sbsys_id="XXX-YYY", case=case)
+        section = create_section()
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
         activity = create_activity(
             case,
             appropriation,
             end_date=date(year=2020, month=12, day=24),
             activity_type=MAIN_ACTIVITY,
         )
+        section.main_activities.add(activity.details)
         url = reverse("appropriation-grant", kwargs={"pk": appropriation.pk})
         self.client.login(username=self.username, password=self.password)
         approval_level, _ = ApprovalLevel.objects.get_or_create(
@@ -415,7 +420,10 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        appropriation = create_appropriation(sbsys_id="XXX-YYY", case=case)
+        section = create_section()
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
         start_date = timezone.now().date()
         payment_schedule = create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
@@ -430,6 +438,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             activity_type=MAIN_ACTIVITY,
             payment_plan=payment_schedule,
         )
+        section.main_activities.add(activity.details)
         payment_schedule = create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
             payment_type=PaymentSchedule.RUNNING_PAYMENT,

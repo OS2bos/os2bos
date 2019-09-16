@@ -626,7 +626,6 @@ class Section(models.Model):
         verbose_name_plural = _("paragraffer")
 
     paragraph = models.CharField(max_length=128, verbose_name=_("paragraf"))
-    kle_number = models.CharField(max_length=128, verbose_name=_("KLE-nummer"))
     text = models.TextField(verbose_name=_("forklarende tekst"))
     allowed_for_family_target_group = models.BooleanField(
         verbose_name=_("tilladt for familieafdelingen"), default=False
@@ -642,12 +641,9 @@ class Section(models.Model):
     law_text_name = models.CharField(
         max_length=128, verbose_name=_("lov tekst navn")
     )
-    sbsys_template_id = models.CharField(
-        max_length=128, verbose_name=_("SBSYS skabelon-id"), blank=True
-    )
 
     def __str__(self):
-        return f"{self.paragraph} - {self.kle_number}"
+        return f"{self.paragraph}"
 
 
 class Appropriation(AuditModelMixin, models.Model):
@@ -751,6 +747,15 @@ class Appropriation(AuditModelMixin, models.Model):
             return f.first()
 
     @property
+    def section_info(self):
+        if self.main_activity and self.section:
+            si_filter = self.main_activity.details.sectioninfo_set.filter(
+                section=self.section
+            )
+            if si_filter.exists():
+                return si_filter.first()
+
+    @property
     def payment_plan(self):
         # TODO:
         pass  # pragma: no cover
@@ -762,6 +767,21 @@ class Appropriation(AuditModelMixin, models.Model):
         # Please specify approval level.
         if approval_level is None:
             raise RuntimeError(_("Angiv venligst bevillingskompetence"))
+        # In order to approve, you need a main activity.
+        if not self.main_activity:
+            raise RuntimeError(
+                _("Kan ikke godkende en bevilling uden en hovedydelse")
+            )
+        # In order to approve, you must specify a section:
+        if not self.section:
+            raise RuntimeError(_("Angiv venligst en paragraf"))
+        # Make sure that the main activity is valid for this appropriation.
+        if not (
+            self.main_activity.details in self.section.main_activities.all()
+        ):
+            raise RuntimeError(
+                _("Denne ydelse kan ikke bevilges på den angivne paragraf")
+            )
         # Can't approve nothing
         if not activities:
             raise RuntimeError(_("Angiv mindst én aktivitet"))
@@ -831,6 +851,7 @@ class ActivityDetails(models.Model):
         related_name="main_activities",
         verbose_name=_("hovedaktivitet for paragraffer"),
         blank=True,
+        through="SectionInfo",
     )
     supplementary_activity_for = models.ManyToManyField(
         Section,
@@ -855,6 +876,32 @@ class ActivityDetails(models.Model):
 
     def __str__(self):
         return f"{self.activity_id} - {self.name}"
+
+
+class SectionInfo(models.Model):
+    """For a main activity, KLE no. and SBSYS ID for the relevant sections."""
+
+    class Meta:
+        # For info about why we do this, see
+        # https://code.djangoproject.com/ticket/23034, especially
+        # comment #9.
+        db_table = "core_activitydetails_main_activity_for"
+
+    activity_details = models.ForeignKey(
+        ActivityDetails,
+        on_delete=models.CASCADE,
+        db_column="activitydetails_id",
+    )
+    section = models.ForeignKey(
+        Section, on_delete=models.CASCADE, db_column="section_id"
+    )
+
+    kle_number = models.CharField(
+        max_length=128, verbose_name=_("KLE-nummer"), blank=True
+    )
+    sbsys_template_id = models.CharField(
+        max_length=128, verbose_name=_("SBSYS skabelon-id"), blank=True
+    )
 
 
 class Activity(AuditModelMixin, models.Model):
