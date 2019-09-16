@@ -12,33 +12,23 @@
             <h2>Familieoversigt</h2>
             <button class="familyoverview-create-btn" @click="$router.push(`/case/${ caseId }/familyoverview-create/`)">+ Opret familierelation</button>
         </header>
-        <table class="familyoverview-list" v-if="fam && fam.length > 0">
-            <thead>
-                <tr>
-                    <th>Relation</th>
-                    <th>Person</th>
-                    <th>Relateret sag</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="f in fam" :key="f.id">
-                    <td style="text-transform: capitalize;">{{ f.relation_type }}</td>
-                    <td>
-                        <p class="person-info">
-                            <router-link :to="`/case/${ caseId }/familyoverview-edit/${ f.id }`">
-                                {{ f.cpr_number }}
-                            </router-link>  
-                            <router-link :to="`/case/${ caseId }/familyoverview-edit/${ f.id }`">
-                                {{ f.name }}
-                            </router-link>  
-                        </p>
-                    </td>
-                    <td>
-                        {{ f.related_case }}
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <ul class="familyoverview-list list" v-if="fam && fam.length > 0">
+            <li v-for="f in fam" :key="f.id" class="familyoverview-list-item">
+                <dl>
+                    <dt class="relation">{{ f.relation_type }}</dt>
+                    <dd class="person">
+                        {{ f.cpr_number }},
+                        <router-link :to="`/case/${ caseId }/familyoverview-edit/${ f.id }`">
+                            {{ f.name }}
+                        </router-link>
+                    </dd>
+                </dl>
+                <dl v-if="f.related_case" style="margin-left: 1rem;">
+                    <dt>Relateret sag</dt>
+                    <dd>{{ f.related_case }}</dd>
+                </dl>
+            </li>
+        </ul>
         <p v-if="!fam || fam.length < 1">Der er endnu ingen relationer</p>
     </section>
 
@@ -86,6 +76,10 @@
 
 <style>
 
+    .familyoverview {
+        max-width: 40rem;
+    }
+
     .familyoverview-header {
         display: flex;
         flex-flow: row nowrap;
@@ -93,18 +87,23 @@
         justify-content: flex-start;
     }
 
-    .familyoverview-list th,
-    .familyoverview-list td {
-        padding: .5rem 1rem;
+    .familyoverview-list {
+        margin-top: 1rem;
     }
 
-    .familyoverview-list .person-info {
+    .familyoverview-list .relation {
+        display: inline-block;
+        text-transform: capitalize;
+        min-width: 6rem;
+    }
+
+    .familyoverview .familyoverview-list-item {
         display: flex;
-        flex-flow: row wrap;
-    }
+        flex-flow: row nowrap;
+        background-color: var(--grey1);
+        padding: .25rem 1rem .5rem;
+        margin: 0 0 .125rem;
 
-    .familyoverview-list .person-info a:first-child {
-        margin-right: .5rem;
     }
 
     .familyoverview-create-btn {

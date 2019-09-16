@@ -283,8 +283,12 @@
 
 <style>
 
+    .case-edit {
+        margin: 1rem 2rem;
+    }
+
     .case-edit form {
-        padding: 0;
+        padding: 0;   
     }
 
     .case-edit .case-edit-header {
