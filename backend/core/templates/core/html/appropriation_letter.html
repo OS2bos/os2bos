@@ -230,6 +230,7 @@
 
             <h2>Det bevilges:</h2>
             
+            {% for a in main_activities %}
             <section>
                 <table>
                     <thead>
@@ -240,25 +241,24 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><strong class="approval-stamp" style="vertical-align: middle;">Godkendt</strong> ved {{ appropriation.main_activity.approval_level.name }}</td>
-                            <td class="align-right" style="vertical-align: middle;">{{ appropriation.main_activity.modified }}</td>
+                            <td><strong class="approval-stamp" style="vertical-align: middle;">Godkendt</strong> ved {{ a.approval_level.name }}</td>
+                            <td class="align-right" style="vertical-align: middle;">{{ a.modified }}</td>
                         </tr>
                     </tbody>
                 </table>
             
-                {% if appropriation.main_activity.approval_note %}
+                {% if a.approval_note %}
                 <dl>
                     <dt>Bemærkning til godkendelse</dt>
-                    <dd><em>{{ appropriation.main_activity.approval_note }}</em></dd>
+                    <dd><em>{{ a.approval_note }}</em></dd>
                 </dl>
                 {% endif %}
 
-                <h3>{{ appropriation.main_activity.details.name }} <span class="muted">Hovedydelse</span></h3>
-                {% for act in main_activities %}
-                {% if act.note %}
+                <h3>{{ a.details.name }} <span class="muted">Hovedydelse</span></h3>
+                {% if a.note %}
                     <dl>
                         <dt>Supplerende information</dt>
-                        <dd><em>{{ act.note }}</em></dd>
+                        <dd><em>{{ a.note }}</em></dd>
                     </dl>
                 {% endif %}
 
@@ -271,8 +271,8 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{{ act.start_date }}</td>
-                            <td>{{ act.end_date|default_if_none:"" }}</td>
+                            <td>{{ a.start_date }}</td>
+                            <td>{{ a.end_date|default_if_none:"" }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -280,7 +280,7 @@
                     <thead>
                         <tr>
                             <th>Afregningsenhed</th>
-                            {% if act.payment_plan.payment_type == "RUNNING_PAYMENT" or appropriation.main_activity.payment_plan.payment_type == "ONE_TIME_PAYMENT" %}
+                            {% if a.payment_plan.payment_type == "RUNNING_PAYMENT" or a.payment_plan.payment_type == "ONE_TIME_PAYMENT" %}
                                 <th class="align-right">
                                     Beløb
                                 </th>
@@ -290,18 +290,18 @@
                                 </th>
                                 <th>
                                     Antal
-                                    {% if act.payment_type == "PER_KM_PAYMENT" %}
+                                    {% if a.payment_plan.payment_type == "PER_KM_PAYMENT" %}
                                         km
-                                    {% elif act.payment_type == "PER_HOUR_PAYMENT" %}
+                                    {% elif a.payment_plan.payment_type == "PER_HOUR_PAYMENT" %}
                                         timer
-                                    {% elif act.payment_type == "PER_DAY_PAYMENT" %}
+                                    {% elif a.payment_plan.payment_type == "PER_DAY_PAYMENT" %}
                                         døgn
                                     {% else %}
                                         -
                                     {% endif %}
                                 </th>
                             {% endif %}
-                            {% if act.payment_type != "ONE_TIME_PAYMENT"%}
+                            {% if a.payment_plan.payment_type != "ONE_TIME_PAYMENT"%}
                                 <th>Betalingsfrekvens</th>
                             {% endif %}
                             <th class="align-right">Omkostninger, indeværende år</th>
@@ -311,85 +311,85 @@
                     <tbody>
                         <tr>
                             <td>
-                                {% if act.payment_type == "RUNNING_PAYMENT" %}
+                                {% if a.payment_plan.payment_type == "RUNNING_PAYMENT" %}
                                     Løbende betaling
-                                {% elif act.payment_type == "PER_DAY_PAYMENT" %}
+                                {% elif a.payment_plan.payment_type == "PER_DAY_PAYMENT" %}
                                     Betaling pr. døgn
-                                {% elif act.payment_type == "PER_KM_PAYMENT" %}
+                                {% elif a.payment_plan.payment_type == "PER_KM_PAYMENT" %}
                                     Betaling pr. kilometer
-                                {% elif act.payment_type == "PER_HOUR_PAYMENT" %}
+                                {% elif a.payment_plan.payment_type == "PER_HOUR_PAYMENT" %}
                                     Betaling pr. time
-                                {% elif act.payment_type == "ONE_TIME_PAYMENT" %}
+                                {% elif a.payment_plan.payment_type == "ONE_TIME_PAYMENT" %}
                                     Enkeltbetaling
                                 {% else %}
                                     -
                                 {% endif %}
                             </td>
-                            <td class="align-right">{{ act.payment_plan.payment_amount }} kr</td>
-                            {% if act.payment_plan.payment_type != "RUNNING_PAYMENT" and act.payment_plan.payment_type != "ONE_TIME_PAYMENT" %}
-                                <td>{{ act.payment_plan.payment_units }}</td>
+                            <td class="align-right">{{ a.payment_plan.payment_amount }} kr</td>
+                            {% if a.payment_plan.payment_type != "RUNNING_PAYMENT" and a.payment_plan.payment_type != "ONE_TIME_PAYMENT" %}
+                                <td>{{ a.payment_plan.payment_units }}</td>
                             {% endif %}                            
-                            {% if appropriation.main_activity.payment_plan.payment_type != "ONE_TIME_PAYMENT"%}
+                            {% if a.payment_plan.payment_type != "ONE_TIME_PAYMENT"%}
                                 <td>
-                                    {% if act.payment_plan.payment_frequency == "MONTHLY" %}
+                                    {% if a.payment_plan.payment_frequency == "MONTHLY" %}
                                         Månedlig
-                                    {% elif act.payment_plan.payment_frequency == "BIWEEKLY" %}
+                                    {% elif a.payment_plan.payment_frequency == "BIWEEKLY" %}
                                         Hver 2. uge
-                                    {% elif act.payment_plan.payment_frequency == "WEEKLY" %}
+                                    {% elif a.payment_plan.payment_frequency == "WEEKLY" %}
                                         Ugentlig
-                                    {% elif act.payment_plan.payment_frequency == "DAILY" %}
+                                    {% elif a.payment_plan.payment_frequency == "DAILY" %}
                                         Daglig
                                     {% else %}
                                         -
                                     {% endif %}
                                 </td>
                             {% endif %}
-                            <td class="align-right">{{ act.total_granted_this_year }} kr</td>
-                            <td class="align-right"><strong>{{ act.total_cost }} kr</strong></td>
+                            <td class="align-right">{{ a.total_granted_this_year }} kr</td>
+                            <td class="align-right"><strong>{{ a.total_cost }} kr</strong></td>
                         </tr>
                     </tbody>
                 </table>
                 <dl>
                     <dt>Betales til</dt>
                     <dd>
-                        {% if act.payment_plan.recipient_type == "COMPANY" %}
+                        {% if a.payment_plan.recipient_type == "COMPANY" %}
                             Firma
-                        {% elif act.payment_plan.recipient_type == "PERSON" %}
+                        {% elif a.payment_plan.recipient_type == "PERSON" %}
                             Person
-                        {% elif activity.payment_plan.recipient_type == "INTERNAL" %}
+                        {% elif a.payment_plan.recipient_type == "INTERNAL" %}
                             Intern
                         {% else %}
                             -
                         {% endif %}
                         <br>
-                        {{ act.payment_plan.recipient_name }}<br>
-                        {% if act.payment_plan.recipient_type == act.payment_plan.PERSON %}
+                        {{ a.payment_plan.recipient_name }}<br>
+                        {% if a.payment_plan.recipient_type == a.payment_plan.PERSON %}
                             <span>CPR-nr. </span>
-                        {% elif act.payment_plan.recipient_type == act.payment_plan.COMPANY %}
+                        {% elif a.payment_plan.recipient_type == a.payment_plan.COMPANY %}
                             <span>CVR-nr. </span>
                         {% else %}
                             <span>Reference </span>
                         {% endif %}
-                        {{ act.payment_plan.recipient_id }}<br>
+                        {{ a.payment_plan.recipient_id }}<br>
                         Betales via 
-                        {% if act.payment_plan.payment_method == "INVOICE" %}
+                        {% if a.payment_plan.payment_method == "INVOICE" %}
                             faktura
-                        {% elif act.main_activity.payment_plan.payment_method == "SD" %}
+                        {% elif a.main_activity.payment_plan.payment_method == "SD" %}
                             SD-løn
-                        {% elif act.payment_plan.payment_method == "INTERNAL" %}
+                        {% elif a.payment_plan.payment_method == "INTERNAL" %}
                             intern afregning
-                        {% elif act.payment_plan.payment_method == "CASH" %}
+                        {% elif a.payment_plan.payment_method == "CASH" %}
                             betaling
                         {% else %}
                             -
                         {% endif %}   
-                        {% if act.payment_plan.payment_method_details %}
-                            <br>{{ act.payment_plan.payment_method_details }}
+                        {% if a.payment_plan.payment_method_details %}
+                            <br>{{ a.payment_plan.payment_method_details }}
                         {% endif %} 
                     </dd>
                 </dl>
-                {% endfor %}
             </section>
+            {% endfor %}
 
             {% for a in supplementary_activities %}
                 <section>
