@@ -35,58 +35,64 @@
         
             <error />
 
-            <div class="grid row">
-                    
-                <fieldset class="payment-basic row-item">
-                    <label class="required" for="fieldSelectAct">Ydelse</label>
-                    <list-picker :dom-id="'fieldSelectAct'" :disabled="disableAct" :selected-id="act.details" @selection="changeActivity" :list="act_details" required />
-                    <error err-key="details" />
-                    <label class="required" for="field-startdate">
-                        Startdato
-                        <span v-if="startDateSet">
-                            - tidligst {{ displayDate(startDateSet) }}
-                        </span>
-                    </label>
-                    <input 
-                        type="date" 
-                        id="field-startdate" 
-                        v-model="act.start_date" 
-                        :max="endDateSet"
-                        :min="startDateSet" 
-                        pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
-                        placeholder="åååå-mm-dd"
-                        title="Dato skal skrives som åååå-mm-dd"
-                        required>
-                    <error err-key="start_date" />
-                
-                    <label for="field-enddate">
-                        Slutdato
-                        <span v-if="endDateSet">
-                            - senest {{ displayDate(endDateSet) }}
-                        </span>
-                    </label>
-                    <input 
-                        type="date" 
-                        id="field-enddate" 
-                        v-model="act.end_date" 
-                        :max="endDateSet"
-                        :min="startDateSet"
-                        pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
-                        placeholder="åååå-mm-dd"
-                        title="Dato skal skrives som åååå-mm-dd">
-                
-                    <label for="field-text">Supplerende information</label>
-                    <textarea id="field-text" v-model="act.note"></textarea>
-                </fieldset>
+            <div class="row">
+                        
+                <div class="row-item">
+                    <fieldset class="payment-basic">
+                        <legend>Hvad skal betales?</legend>
 
-                <div class="row-item" style="margin: 0; padding: 0;">
-                    <payment-amount-edit :payment-obj="pay" />
+                        <label class="required" for="fieldSelectAct">Ydelse</label>
+                        <list-picker :dom-id="'fieldSelectAct'" :disabled="disableAct" :selected-id="act.details" @selection="changeActivity" :list="act_details" required />
+                        <error err-key="details" />
+                        <label class="required" for="field-startdate">
+                            Startdato
+                            <span v-if="startDateSet">
+                                - tidligst {{ displayDate(startDateSet) }}
+                            </span>
+                        </label>
+                        <input 
+                            type="date" 
+                            id="field-startdate" 
+                            v-model="act.start_date" 
+                            :max="endDateSet"
+                            :min="startDateSet" 
+                            pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
+                            placeholder="åååå-mm-dd"
+                            title="Dato skal skrives som åååå-mm-dd"
+                            required>
+                        <error err-key="start_date" />
+                    
+                        <label for="field-enddate">
+                            Slutdato
+                            <span v-if="endDateSet">
+                                - senest {{ displayDate(endDateSet) }}
+                            </span>
+                        </label>
+                        <input 
+                            type="date" 
+                            id="field-enddate" 
+                            v-model="act.end_date" 
+                            :max="endDateSet"
+                            :min="startDateSet"
+                            pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
+                            placeholder="åååå-mm-dd"
+                            title="Dato skal skrives som åååå-mm-dd">
+                    
+                        <label for="field-text">Supplerende information</label>
+                        <textarea id="field-text" v-model="act.note" style="height: 8rem;"></textarea>
+                    </fieldset>
                 </div>
+
                 <div class="row-item">
-                    <payment-receiver-edit :payment-obj="pay" class="row-item" />
+                    <pay-type-edit :pay.sync="pay" />
+                    <pay-freq-edit :pay.sync="pay" />
+                    <pay-amount-edit :pay.sync="pay" />
+                    <pay-plan v-if="pay.payment_amount" :amount="pay.payment_amount" :units="pay.payment_units" :type="pay.payment_type" :frequency="pay.payment_frequency" />
                 </div>
+
                 <div class="row-item">
-                    <payment-edit :payment-obj="pay" class="row-item" />
+                    <pay-payee-edit :pay.sync="pay" />
+                    <pay-mean-edit :pay.sync="pay" />
                 </div>
 
             </div>
@@ -104,24 +110,29 @@
 <script>
 
     import axios from '../http/Http.js'
-    import ListPicker from '../forms/ListPicker.vue'
-    import PaymentAmountEdit from '../payment/PaymentAmountEdit.vue'
-    import PaymentReceiverEdit from '../payment/PaymentReceiverEdit.vue'
-    import PaymentEdit from '../payment/PaymentEdit.vue'
     import { activityId2name } from '../filters/Labels.js'
     import { epoch2DateStr } from '../filters/Date.js'
     import { json2jsDate } from '../filters/Date.js'
     import Error from '../forms/Error.vue'
-    
+    import ListPicker from '../forms/ListPicker.vue'
+    import PayTypeEdit from '../payment/PaymentTypeEdit.vue'
+    import PayFreqEdit from '../payment/PaymentFrequencyEdit.vue'
+    import PayAmountEdit from '../payment/PaymentAmountEdit.vue'
+    import PayPayeeEdit from '../payment/PaymentPayeeEdit.vue'
+    import PayMeanEdit from '../payment/PaymentMeansEdit.vue'
+    import PayPlan from '../payment/PaymentPlan.vue'
 
     export default {
 
         components: {
+            Error,
             ListPicker,
-            PaymentAmountEdit,
-            PaymentReceiverEdit,
-            PaymentEdit,
-            Error
+            PayTypeEdit,
+            PayFreqEdit,
+            PayAmountEdit,
+            PayMeanEdit,
+            PayPayeeEdit,
+            PayPlan
         },
         props: [
             'mode', // Can be either 'create', 'edit', or 'clone'
@@ -210,20 +221,10 @@
                     end_date: this.act.end_date ? this.act.end_date : null,
                     details: this.act.details,
                     note: this.act.note,
-                    payment_plan: {
-                        recipient_type: this.pay.recipient_type,
-                        recipient_id: this.pay.recipient_id,
-                        recipient_name: this.pay.recipient_name,
-                        payment_method: this.pay.payment_method,
-                        payment_frequency: this.pay.payment_frequency,
-                        payment_type: this.pay.payment_type,
-                        payment_units: this.pay.payment_units,
-                        payment_amount: this.pay.payment_amount,
-                        payment_method_details: parseInt(this.pay.payment_method_details)
-                    }
+                    payment_plan: this.pay
                 }
                 if (this.pay.payment_type === 'ONE_TIME_PAYMENT') {
-                    data.payment_plan.payment_frequency = null
+                    data.end_date = data.start_date
                 }
                 if (this.mode === 'create') {
                     data.appropriation = this.$route.params.apprid
@@ -328,17 +329,26 @@
         width: 100%;
     }
 
-    .activity-edit .grid .payment-amount > * {
+    .activity-edit .payment-amount > * {
         flex: 0 1 15rem;
         border: none;
     }
 
-    .activity-edit .payment-receiver,
-    .activity-edit .payment-method {
+    .activity-edit .payment-payee,
+    .activity-edit .payment-means {
         max-width: 30rem;
         border: none;
         margin: 0;
         padding: 0;
+    }
+
+    .activity-edit .payment-means {
+        margin-top: 1rem;
+    }
+
+    .activity-edit .payment-plan {
+        border: solid .25rem hsl(40, 90%, 70%);
+        background-color: hsl(40, 90%, 80%);
     }
 
     .activity-edit .form-actions {

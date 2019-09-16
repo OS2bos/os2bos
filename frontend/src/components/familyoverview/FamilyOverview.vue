@@ -16,20 +16,24 @@
             <thead>
                 <tr>
                     <th>Relation</th>
-                    <th>Borger</th>
+                    <th>Person</th>
                     <th>Relateret sag</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="f in fam" :key="f.id">
-                    <td>{{ f.relation_type }}</td>
+                    <td style="text-transform: capitalize;">{{ f.relation_type }}</td>
                     <td>
-                        <router-link :to="`/case/${ caseId }/familyoverview-edit/${ f.id }`">
-                            {{ f.cpr_number }} - {{ f.name }}
-                        </router-link>        
+                        <p class="person-info">
+                            <router-link :to="`/case/${ caseId }/familyoverview-edit/${ f.id }`">
+                                {{ f.cpr_number }}
+                            </router-link>  
+                            <router-link :to="`/case/${ caseId }/familyoverview-edit/${ f.id }`">
+                                {{ f.name }}
+                            </router-link>  
+                        </p>
                     </td>
                     <td>
-                        <span v-if="!f.related_case">-</span>
                         {{ f.related_case }}
                     </td>
                 </tr>
@@ -87,6 +91,20 @@
         flex-flow: row nowrap;
         align-items: center;
         justify-content: flex-start;
+    }
+
+    .familyoverview-list th,
+    .familyoverview-list td {
+        padding: .5rem 1rem;
+    }
+
+    .familyoverview-list .person-info {
+        display: flex;
+        flex-flow: row wrap;
+    }
+
+    .familyoverview-list .person-info a:first-child {
+        margin-right: .5rem;
     }
 
     .familyoverview-create-btn {

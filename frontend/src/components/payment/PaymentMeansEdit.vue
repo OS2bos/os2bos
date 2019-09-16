@@ -7,20 +7,22 @@
 
 
 <template>
-    <fieldset class="payment-method">
+
+    <fieldset class="payment-means">
+
         <legend>Hvordan skal det betales?</legend>
         <label class="required" for="field-pay-method">Betalingsmåde</label>
-        <select v-model="entry.payment_method" required id="field-pay-method">
-            <option value="INVOICE" v-if="paymentObj.recipient_type === 'COMPANY'">Faktura</option>
-            <option value="INTERNAL" v-if="paymentObj.recipient_type === 'INTERNAL'">Intern afregning</option>
-            <option value="CASH" v-if="paymentObj.recipient_type === 'PERSON' || paymentObj.recipient_type === 'COMPANY'">
+        <select v-model="p.payment_method" required id="field-pay-method" :disabled="!p.recipient_type">
+            <option value="INVOICE" v-if="p.recipient_type === 'COMPANY'">Faktura</option>
+            <option value="INTERNAL" v-if="p.recipient_type === 'INTERNAL'">Intern afregning</option>
+            <option value="CASH" v-if="p.recipient_type === 'PERSON' || p.recipient_type === 'COMPANY'">
               Betaling
             </option>
-            <option value="SD" v-if="paymentObj.recipient_type === 'PERSON'">SD-løn</option>
+            <option value="SD" v-if="p.recipient_type === 'PERSON'">SD-løn</option>
         </select>
         <error err-key="payment_method" />
-        <div v-if="entry.payment_method" style="margin-top: 1rem;">
-            <div v-if="entry.payment_method === 'CASH'">
+        <div v-if="p.payment_method" style="margin-top: 1rem;">
+            <div v-if="p.payment_method === 'CASH'">
                 <p>
                     <strong>Kontant udbetaling</strong>
                 </p>
@@ -29,15 +31,18 @@
                 Det er ikke muligt at udbetale til et kontonummer.
                 </p>
             </div>
-            <template v-if="entry.payment_method === 'SD'">
+
+            <template v-if="p.payment_method === 'SD'">
                 <legend class="required">Skattekort</legend>
-                <input type="radio" id="field-main" name="payment-type" value="1" v-model="entry.payment_method_details">
+                <input type="radio" id="field-main" name="payment-type" value="1" v-model="p.payment_method_details">
                 <label for="field-main">Hovedkort</label>
-                <input type="radio" id="field-secondary" name="payment-type" value="2" v-model="entry.payment_method_details">
+                <input type="radio" id="field-secondary" name="payment-type" value="2" v-model="p.payment_method_details">
                 <label for="field-secondary">Bikort</label>
             </template>
+
         </div>
     </fieldset>
+
 </template>
 
 <script>
@@ -50,30 +55,30 @@
             Error
         },
         props: [
-            'paymentObj'
+            'pay'
         ],
         data: function() {
             return {
-                entry: {
+                p: {
                     payment_method: null,
                     payment_method_details: null
                 }
             }
         },
         watch: {
-            paymentObj: function() {
-                this.entry = this.paymentObj
+            pay: function() {
+                this.p = this.pay
             },
-            entry: {
+            p: {
                 handler (newVal) {
-                    this.$emit('update', this.entry)
+                    this.$emit('update', this.p)
                 },
                 deep: true
             }
         },
         created: function() {
-            if (this.paymentObj) {
-                this.entry = this.paymentObj
+            if (this.pay) {
+                this.p = this.pay
             }
         }
     }

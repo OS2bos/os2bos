@@ -747,12 +747,6 @@ class Appropriation(AuditModelMixin, models.Model):
             return f.first()
 
     @property
-    def supplementary_activities(self):
-        """Return all non-main activities."""
-        f = self.activities.filter(activity_type=SUPPL_ACTIVITY)
-        return (a for a in f)
-
-    @property
     def payment_plan(self):
         # TODO:
         pass  # pragma: no cover
