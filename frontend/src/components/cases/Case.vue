@@ -35,7 +35,7 @@
                 
                     <dt>Skaleringstrappe</dt>
                     <dd>
-                        {{ cas.scaling_step }}
+                        {{ cas.scaling_step }}<br>
                         <router-link :to="`/case/${ cas.id }/assessment`" style="margin-left: 1rem;">Se vurderinger</router-link>
                     </dd>
 
@@ -208,6 +208,10 @@
         align-items: center;
     }
 
+    .case .case-edit {
+        margin: 1rem 0 2rem;
+    }
+
     .case .row {
         align-items: stretch;
     }
@@ -225,11 +229,13 @@
     }
 
     .case-info-grid {
+        align-content: flex-start;
+        align-items: flex-start;
+        background-color: var(--grey1);
         display: flex;
         flex-flow: row wrap;
-        background-color: var(--grey1);
-        padding: 1.5rem 0 0;
         margin: 0 0 2rem;
+        padding: 1.5rem 0 0;
     }
 
     .case-info-grid dl {

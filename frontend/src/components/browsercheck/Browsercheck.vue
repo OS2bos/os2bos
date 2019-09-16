@@ -62,7 +62,7 @@
         height: 100%;
         overflow: auto;
         padding: 4rem 2rem;
-        background-color: var(--grey1);
+        background-color: #eee;
         z-index: 1000;
         display: flex;
         flex-flow: column nowrap;
@@ -83,7 +83,7 @@
         #browsercheck {
             box-shadow: 0 -.5rem 0 hsla(0,0%,0%,.3);
             top: auto;
-            height: auto;     
+            height: auto;  
         }        
 
     }
