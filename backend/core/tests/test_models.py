@@ -83,7 +83,8 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             start_date=start_date,
             end_date=end_date,
             activity_type=MAIN_ACTIVITY,
-            status=STATUS_GRANTED)
+            status=STATUS_GRANTED,
+        )
         si = appropriation.section_info
         self.assertEqual(si, None)
 
