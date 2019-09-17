@@ -33,6 +33,7 @@ from core.models import (
     Municipality,
     SchoolDistrict,
     ActivityDetails,
+    Activity,
     Account,
     ApprovalLevel,
     Team,
@@ -565,7 +566,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
 
         user = get_user_model().objects.create(username="Anders And")
         appropriation.grant(
-            [modifies_activity],
+            Activity.objects.filter(pk=modifies_activity.pk),
             approval_level.id,
             "note til bevillingsgodkendelse",
             user,
