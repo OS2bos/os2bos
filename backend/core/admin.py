@@ -68,7 +68,7 @@ class ActivityDetailsAdmin(admin.ModelAdmin):
 @admin.register(Section)
 class SectionAdmin(admin.ModelAdmin):
     form = SectionForm
-    search_fields = ("paragraph", "kle_number")
+    search_fields = ("paragraph",)
 
 
 @admin.register(ServiceProvider)
