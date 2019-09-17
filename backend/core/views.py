@@ -156,7 +156,7 @@ class ActivityViewSet(AuditViewSet):
             elif activity.status == STATUS_GRANTED:
                 raise RuntimeError(_("Du kan ikke slette en bevilget ydelse."))
 
-            elif activity.status == STATUS_EXPECTED:
+            else:
                 activity.status = STATUS_DELETED
                 activity.save()
             # Success!
