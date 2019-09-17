@@ -35,7 +35,6 @@ from core.models import (
     STATUS_DELETED,
     STATUS_DRAFT,
     STATUS_GRANTED,
-    STATUS_EXPECTED,
 )
 
 from core.serializers import (
