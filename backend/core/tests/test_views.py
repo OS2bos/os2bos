@@ -569,9 +569,15 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
         )
         url = reverse("activity-detail", kwargs={"pk": activity1.pk})
         self.client.login(username=self.username, password=self.password)
-
+        # First, check the activity is there.
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        # Delete.
         response = self.client.delete(url)
         self.assertEqual(response.status_code, 204)
+        # Now check the activity is gone gone gone!
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
         activity2 = create_activity(
             case=case,
             appropriation=appropriation,
@@ -582,8 +588,15 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
             payment_plan=create_payment_schedule(),
         )
         url = reverse("activity-detail", kwargs={"pk": activity2.pk})
+        # Check it's there.
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        # Delete.
         response = self.client.delete(url)
         self.assertEqual(response.status_code, 204)
+        # Check it's gone.
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
         activity3 = create_activity(
             case=case,
             appropriation=appropriation,
@@ -594,5 +607,9 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
             payment_plan=create_payment_schedule(),
         )
         url = reverse("activity-detail", kwargs={"pk": activity3.pk})
+        # Delete.
         response = self.client.delete(url)
         self.assertEqual(response.status_code, 400)
+        # Check it's still there.
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)

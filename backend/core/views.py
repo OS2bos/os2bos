@@ -148,22 +148,19 @@ class ActivityViewSet(AuditViewSet):
         queryset = self.get_serializer_class().setup_eager_loading(queryset)
         return queryset
 
-    def perform_destroy(self, serializer):
+    def destroy(self, request, *args, **kwargs):
         activity = self.get_object()
-
         try:
             if activity.status == STATUS_DRAFT:
                 activity.delete()
             elif activity.status == STATUS_GRANTED:
-                raise RuntimeError(
-                    _("Du kan ikke slette en bevilget ydelse.")
-                )
+                raise RuntimeError(_("Du kan ikke slette en bevilget ydelse."))
 
             elif activity.status == STATUS_EXPECTED:
                 activity.status = STATUS_DELETED
                 activity.save()
             # Success!
-            response = Response("OK", status.HTTP_200_OK)
+            response = Response("OK", status.HTTP_204_NO_CONTENT)
         except Exception as e:
             response = Response(
                 {"errors": [str(e)]}, status.HTTP_400_BAD_REQUEST
