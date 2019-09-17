@@ -228,9 +228,15 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         json = create_case_as_json(
             self.case_worker, self.team, self.municipality, self.district
         )
+        # team should be set on the user and also saved on the case.
+        self.user.team = self.team
+        self.user.save()
+
         self.client.login(username=self.username, password=self.password)
         response = self.client.post(url, json)
+
         self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json()["team"], self.team.id)
 
     def test_get_expired_filter(self):
         url = reverse("case-list")
