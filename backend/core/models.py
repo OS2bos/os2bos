@@ -786,6 +786,38 @@ class Appropriation(AuditModelMixin, models.Model):
         if not activities:
             raise RuntimeError(_("Angiv mindst én aktivitet"))
 
+        # If the main activity is being approved, impose its end dates
+        # on the other activities.
+        if activities.filter(activity_type=MAIN_ACTIVITY).exists():
+            main_activity = activities.filter(
+                activity_type=MAIN_ACTIVITY
+            ).first()
+            # Update the end date for all supplementary activities that
+            # don't have an end date less than the main activities'.
+            if not main_activity.end_date:
+                # Sanity check, this must already be checked by front end.
+                raise RuntimeError(
+                    _(
+                        "Kan ikke godkende en hovedydelse"
+                        " uden start- og slutdato"
+                    )
+                )
+            self.activities.filter(activity_type=SUPPL_ACTIVITY).exclude(
+                end_date__lte=main_activity.end_date
+            ).update(end_date=main_activity.end_date)
+        else:
+            # No main activity. We're only allowed to do this if the
+            # main activity is already approved.
+            if not self.activities.exists(
+                activity_type=MAIN_ACTIVITY, status=STATUS_GRANTED
+            ):
+                raise RuntimeError(
+                    _(
+                        "Kan ikke godkende følgeydelser, før"
+                        " hovedydelsen er godkendt."
+                    )
+                )
+
         approval_level = ApprovalLevel.objects.get(id=approval_level)
 
         for a in activities:
