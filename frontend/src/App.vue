@@ -197,7 +197,7 @@
     .modal-body {
         margin: 0.5rem 0;
         flex: 0 1 auto;
-        overflow: scroll;
+        overflow: auto;
     }
 
     .modal-confirm-btn {

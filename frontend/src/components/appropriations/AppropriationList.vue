@@ -28,7 +28,7 @@
             </thead>
             <tbody>
                 <tr v-for="a in apprs" :key="a.id">
-                    <td style="width: 5.5rem;"><div  class="mini-label" v-html="statusLabel(a.status)"></div></td>
+                    <td style="width: 5.5rem;"><div  class="mini-label" v-html="statusLabel(a)"></div></td>
                     <td>    
                         <i class="material-icons">folder_open</i>
                         <router-link :to="`/appropriation/${ a.id }`">
@@ -131,8 +131,19 @@
             displaySection: function(id) {
                 return sectionId2name(id)
             },
-            statusLabel: function(status) {
-                return displayStatus(status)
+            statusLabel: function(appr) {
+                let label = 'DRAFT'
+                for (let act in appr.activities) {
+                    if (appr.activities[act].status === 'GRANTED') {
+                        label = 'GRANTED'
+                    }
+                }
+                for (let act in appr.activities) {
+                    if (appr.activities[act].status === 'EXPECTED') {
+                        label = 'EXPECTED'
+                    }
+                }
+                return displayStatus(label)
             }
         },
         created: function() {
