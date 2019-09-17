@@ -76,6 +76,7 @@ type_choices = (
 STATUS_DRAFT = "DRAFT"
 STATUS_EXPECTED = "EXPECTED"
 STATUS_GRANTED = "GRANTED"
+STATUS_DELETED = "DELETED"
 # Below, a "virtual" status only relevant for appropriations.
 STATUS_EXPIRED = "EXPIRED"
 

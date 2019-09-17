@@ -553,3 +553,69 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()[0]["id"], activity.id)
+
+    def test_delete(self):
+        now = timezone.now().date()
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        activity1 = create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=now - timedelta(days=6),
+            end_date=now + timedelta(days=6),
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_DRAFT,
+            payment_plan=payment_schedule,
+        )
+        url = reverse("activity-detail", kwargs={"pk": activity1.pk})
+        self.client.login(username=self.username, password=self.password)
+        # First, check the activity is there.
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        # Delete.
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, 204)
+        # Now check the activity is gone gone gone!
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+        activity2 = create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=now - timedelta(days=6),
+            end_date=now + timedelta(days=6),
+            activity_type=SUPPL_ACTIVITY,
+            status=STATUS_EXPECTED,
+            payment_plan=create_payment_schedule(),
+        )
+        url = reverse("activity-detail", kwargs={"pk": activity2.pk})
+        # Check it's there.
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        # Delete.
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, 204)
+        # Check it's gone.
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+        activity3 = create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=now - timedelta(days=6),
+            end_date=now + timedelta(days=6),
+            activity_type=SUPPL_ACTIVITY,
+            status=STATUS_GRANTED,
+            payment_plan=create_payment_schedule(),
+        )
+        url = reverse("activity-detail", kwargs={"pk": activity3.pk})
+        # Delete.
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, 400)
+        # Check it's still there.
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
