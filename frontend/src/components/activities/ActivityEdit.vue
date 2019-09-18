@@ -227,13 +227,14 @@
                 if (this.mode === 'create') {
                     data.appropriation = this.$route.params.apprid
                     data.status = this.act_status_expected ? 'EXPECTED' : 'DRAFT'
+                    data.payment_plan.id = null
                 } else if (this.mode === 'clone') {
                     data.appropriation = this.activityObj.appropriation
                     data.modifies = this.act.id
                     data.status = 'EXPECTED'
+                    data.payment_plan.id = null
                 } else {
                     data.id = this.act.id
-                    data.payment_plan.id = this.act.payment_plan.id
                     data.appropriation = this.activityObj.appropriation
                 }
 
