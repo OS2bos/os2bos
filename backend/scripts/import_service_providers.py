@@ -37,7 +37,3 @@ with open("leverandoerer.csv") as csvfile:
             )
         except decimal.InvalidOperation:
             print(cvr, name, vat_factor)
-        except ServiceProvider.MultipleObjectsReturned:
-            pass
-        except DataError as e:
-            print(e)
