@@ -812,9 +812,9 @@ class Appropriation(AuditModelMixin, models.Model):
         else:
             # No main activity. We're only allowed to do this if the
             # main activity is already approved.
-            if not self.activities.exists(
+            if not self.activities.filter(
                 activity_type=MAIN_ACTIVITY, status=STATUS_GRANTED
-            ):
+            ).exists():
                 raise RuntimeError(
                     _(
                         "Kan ikke godkende følgeydelser, før"
