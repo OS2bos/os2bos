@@ -786,8 +786,12 @@ class Appropriation(AuditModelMixin, models.Model):
         if not activities:
             raise RuntimeError(_("Angiv mindst én aktivitet"))
 
+        # The activities come in as a queryset. Save a copy as a list to
+        # be able to append, please.
+        activity_list = list(activities)
         # If the main activity is being approved, impose its end dates
         # on the other activities.
+
         if activities.filter(activity_type=MAIN_ACTIVITY).exists():
             main_activity = activities.filter(
                 activity_type=MAIN_ACTIVITY
@@ -808,7 +812,7 @@ class Appropriation(AuditModelMixin, models.Model):
                             # We're already granting this.
                             pass
                         else:
-                            activities |= models.Q(activity=a)
+                            activity_list.append(a)
         else:
             # No main activity. We're only allowed to do this if the
             # main activity is already approved.

@@ -789,10 +789,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         suppl_activity.refresh_from_db()
         # the old activity should expire the day before
         # the start_date of the new one.
-        self.assertEqual(
-            suppl_activity.end_date, modified_end_date
-        )
-
+        self.assertEqual(suppl_activity.end_date, modified_end_date)
 
     def test_appropriation_grant_validate_expected_false(self):
         approval_level = ApprovalLevel.objects.create(name="egenkompetence")
