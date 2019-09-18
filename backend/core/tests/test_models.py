@@ -876,7 +876,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             case=case,
             appropriation=appropriation,
             activity_type=SUPPL_ACTIVITY,
-            status=STATUS_GRANTED,
+            status=STATUS_EXPECTED,
             start_date=start_date,
             end_date=end_date,
         )
@@ -884,7 +884,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         user = get_user_model().objects.create(username="Anders And")
         with self.assertRaises(RuntimeError):
             appropriation.grant(
-                [activity],
+                appropriation.activities.filter(pk=activity.pk),
                 approval_level.id,
                 "note til bevillingsgodkendelse",
                 user,
@@ -913,7 +913,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         user = get_user_model().objects.create(username="Anders And")
         with self.assertRaises(RuntimeError):
             appropriation.grant(
-                [activity],
+                appropriation.activities.filter(pk=activity.pk),
                 approval_level.id,
                 "note til bevillingsgodkendelse",
                 user,

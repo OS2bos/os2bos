@@ -808,10 +808,7 @@ class Appropriation(AuditModelMixin, models.Model):
                         # If we're not already granting a modification
                         # of this activity, we need to re-grant it.
                         # it.
-                        if a.modified_by and a.modified_by in activities:
-                            # We're already granting this.
-                            pass
-                        else:
+                        if not (a.modified_by and a.modified_by in activities):
                             activity_list.append(a)
         else:
             # No main activity. We're only allowed to do this if the
