@@ -21,6 +21,10 @@
                     <div class="modal-body">
                         <slot name="body">
 
+                            <p v-if="warning" class="dialog-warning">
+                                {{ warning }}
+                            </p>
+
                             <table>
                                 <thead>
                                     <tr>
@@ -114,7 +118,8 @@
         },
         props: [
             'acts',
-            'apprId'
+            'apprId',
+            'warning'
         ],
         data: function() {
             return {
@@ -182,6 +187,19 @@
         overflow-x: hidden;
         overflow-y: auto;
         min-width: 50rem;
+    }
+
+    .approval .dialog-warning {
+        background-color: var(--warning);
+        padding: 1rem 2rem;
+    }
+
+    .approval .dialog-warning::before {
+        content: '⚠';
+        display: block;
+        float: left;
+        font-size: 2rem;
+        padding: 0 1rem 0 0;
     }
 
 </style>
