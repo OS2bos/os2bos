@@ -332,7 +332,7 @@
                             {% if a.payment_plan.payment_type != "ONE_TIME_PAYMENT"%}
                                 <td>
                                     {% if a.payment_plan.payment_frequency == "MONTHLY" %}
-                                        Månedlig
+                                        Månedlig den {{a.payment_plan.payment_day_of_month}}.
                                     {% elif a.payment_plan.payment_frequency == "BIWEEKLY" %}
                                         Hver 2. uge
                                     {% elif a.payment_plan.payment_frequency == "WEEKLY" %}
@@ -493,7 +493,7 @@
                                 {% if a.payment_plan.payment_type != "ONE_TIME_PAYMENT"%}
                                     <td>
                                         {% if a.payment_plan.payment_frequency == "MONTHLY" %}
-                                            Månedlig
+                                            Månedlig  den {{a.payment_plan.payment_day_of_month}}.
                                         {% elif a.payment_plan.payment_frequency == "BIWEEKLY" %}
                                             Hver 2. uge
                                         {% elif a.payment_plan.payment_frequency == "WEEKLY" %}

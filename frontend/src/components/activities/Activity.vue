@@ -113,7 +113,7 @@
                         <div v-if="pay.payment_frequency === 'DAILY'">Dagligt</div>
                         <div v-if="pay.payment_frequency === 'WEEKLY'">Ugentligt</div>
                         <div v-if="pay.payment_frequency === 'BIWEEKLY'">Hver 2. uge</div>
-                        <div v-if="pay.payment_frequency === 'MONTHLY'">Månedligt</div>
+                        <div v-if="pay.payment_frequency === 'MONTHLY'">Månedligt den {{pay.payment_day_of_month}}.</div>
                     </dd>
                     <dt>
                         <div v-if="pay.payment_type === 'PER_HOUR_PAYMENT'">Timer</div>
