@@ -750,7 +750,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             appropriation=appropriation,
             activity_type=SUPPL_ACTIVITY,
             start_date=suppl_start_date,
-            status=STATUS_GRANTED,
+            status=STATUS_EXPECTED,
             end_date=suppl_end_date,
             payment_plan=suppl_payment_schedule,
         )
@@ -767,9 +767,9 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             payment_frequency=PaymentSchedule.WEEKLY,
         )
         modified_start_date = start_date + timedelta(days=7)
-        modified_end_date = end_date + timedelta(days=12)
+        modified_end_date = start_date + timedelta(days=365)
         # let the granted activity be modified by another expected activity.
-        modifies_activity = create_activity(
+        new_main_activity = create_activity(
             case=case,
             appropriation=appropriation,
             activity_type=MAIN_ACTIVITY,
@@ -779,9 +779,8 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             modifies=main_activity,
             payment_plan=modifies_payment_schedule,
         )
-        user = get_user_model().objects.create(username="Anders And")
         appropriation.grant(
-            appropriation.activities.filter(pk=modifies_activity.pk),
+            appropriation.activities.filter(pk=new_main_activity.pk),
             approval_level.id,
             "note til bevillingsgodkendelse",
             user,
@@ -790,6 +789,25 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         # the old activity should expire the day before
         # the start_date of the new one.
         self.assertEqual(suppl_activity.end_date, modified_end_date)
+        new_modified_end_date = modified_end_date - timedelta(3)
+        modifies_again = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            start_date=modified_start_date + timedelta(days=7),
+            status=STATUS_EXPECTED,
+            end_date=new_modified_end_date,
+            modifies=new_main_activity,
+            payment_plan=create_payment_schedule(),
+        )
+        appropriation.grant(
+            appropriation.activities.filter(pk=modifies_again.pk),
+            approval_level.id,
+            "note til bevillingsgodkendelse",
+            user,
+        )
+        suppl_activity.refresh_from_db()
+        self.assertEqual(suppl_activity.end_date, new_modified_end_date)
 
     def test_appropriation_grant_validate_expected_false(self):
         approval_level = ApprovalLevel.objects.create(name="egenkompetence")
