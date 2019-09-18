@@ -25,6 +25,7 @@ from core.models import (
     Payment,
     SchoolDistrict,
     Section,
+    SectionInfo,
     ActivityDetails,
     Account,
     HistoricalCase,
@@ -228,6 +229,12 @@ class SchoolDistrictSerializer(serializers.ModelSerializer):
 class SectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Section
+        fields = "__all__"
+
+
+class SectionInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SectionInfo
         fields = "__all__"
 
 
