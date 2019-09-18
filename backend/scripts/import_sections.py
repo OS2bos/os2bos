@@ -57,7 +57,8 @@ with open("paragraffer.csv") as csvfile:
         # SUL - Sundhedsloven
         # STU - Lov om ungdomsuddannelse for unge med særlige behov
         Section.objects.update_or_create(
-            **{
+            paragraph=key,
+            defaults={
                 "paragraph": key,
                 "text": text,
                 "law_text_name": law_text_name,
@@ -66,5 +67,5 @@ with open("paragraffer.csv") as csvfile:
                 "allowed_for_family_target_group": "Familieafdeling"
                 in target_groups,
                 "allowed_for_steps": steps_list,
-            }
+            },
         )

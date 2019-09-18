@@ -10,7 +10,7 @@
 This script imports ActivityDetails from the CBUR "Klassifikationer"
 spreadsheet.
 
-Currently this requires the sheet "Aktiviteter v2" be saved
+Currently this requires the sheet "Aktiviteter" be saved
 as "aktiviteter.csv" in the current directory.
 
 NOTE: This requires the Section models to have been populated first.
@@ -57,10 +57,12 @@ with open("aktiviteter.csv") as csvfile:
 
         try:
             ad, created = ActivityDetails.objects.update_or_create(
-                name=name,
                 activity_id=activity_id,
-                max_tolerance_in_percent=tolerance_percent,
-                max_tolerance_in_dkk=tolerance_dkk,
+                defaults={
+                    "name": name,
+                    "max_tolerance_in_percent": tolerance_percent,
+                    "max_tolerance_in_dkk": tolerance_dkk,
+                },
             )
         except Exception as e:
             print(f"Import of activity {activity_id} failed: {e}")
@@ -91,8 +93,10 @@ with open("aktiviteter.csv") as csvfile:
                 SectionInfo.objects.update_or_create(
                     activity_details=details_obj,
                     section=main_activity_for,
-                    kle_number=kle_number,
-                    sbsys_template_id=sbsys_id,
+                    defaults={
+                        "kle_number": kle_number,
+                        "sbsys_template_id": sbsys_id,
+                    },
                 )
 
         for paragraph in section_supplementary_dict[details_obj.activity_id]:

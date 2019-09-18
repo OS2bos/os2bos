@@ -57,9 +57,9 @@ with open("aktiviteter.csv") as csvfile:
             )
         section = Section.objects.get(paragraph=paragraph)
 
-        Account.objects.create(
+        Account.objects.update_or_create(
             main_activity=main_activity_details,
             supplementary_activity=supplementary_activity_details,
             section=section,
-            number=account_number,
+            defaults={"number": account_number},
         )

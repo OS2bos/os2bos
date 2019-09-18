@@ -903,6 +903,9 @@ class SectionInfo(models.Model):
         max_length=128, verbose_name=_("SBSYS skabelon-id"), blank=True
     )
 
+    def __str__(self):
+        return f"{self.activity_details} - {self.section}"
+
 
 class Activity(AuditModelMixin, models.Model):
     """An activity is a specific service provided within an appropriation."""
