@@ -25,9 +25,11 @@ from core.tests.testing_utils import (
     create_appropriation,
     create_case,
     create_section,
+    create_activity_details,
     create_payment,
     create_account,
     create_service_provider,
+    create_section_info,
 )
 from core.models import (
     Municipality,
@@ -2320,3 +2322,16 @@ class CaseTestCase(TestCase, BasicTestMixin):
         )
 
         self.assertTrue(case.expired)
+
+
+class SectionInfoTestCase(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_str(self):
+        details = create_activity_details()
+        section = create_section()
+        section_info = create_section_info(details, section)
+
+        self.assertEqual(str(section_info), f"{details} - {section}")
