@@ -453,6 +453,32 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             appropriation.activities.first().appropriation_date, today
         )
 
+    def test_appropriation_grant_no_end_date(self):
+        approval_level = ApprovalLevel.objects.create(name="egenkompetence")
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+        now = timezone.now()
+        start_date = now + timedelta(days=6)
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_DRAFT,
+            start_date=start_date,
+            end_date=None,
+        )
+        activity.details.main_activity_for.add(section)
+        user = get_user_model().objects.create(username="Anders And")
+        appropriation.grant(
+            appropriation.activities.exclude(status=STATUS_GRANTED),
+            approval_level.id,
+            "note til bevillingsgodkendelse",
+            user,
+        )
+
     def test_appropriation_grant_on_already_granted_one_time(self):
         approval_level = ApprovalLevel.objects.create(name="egenkompetence")
         payment_schedule = create_payment_schedule(

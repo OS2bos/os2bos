@@ -794,17 +794,21 @@ class Appropriation(AuditModelMixin, models.Model):
             ).first()
             # Update the end date for all supplementary activities that
             # don't have an end date less than the main activities'.
-            if not main_activity.end_date:
-                # Sanity check, this must already be checked by front end.
-                raise RuntimeError(
-                    _(
-                        "Kan ikke godkende en hovedydelse"
-                        " uden start- og slutdato"
-                    )
-                )
-            self.activities.filter(activity_type=SUPPL_ACTIVITY).exclude(
-                end_date__lte=main_activity.end_date
-            ).update(end_date=main_activity.end_date)
+            if main_activity.end_date:
+                for a in self.activities.filter(
+                    activity_type=SUPPL_ACTIVITY
+                ).exclude(end_date__lte=main_activity.end_date):
+                    a.end_date = main_activity.end_date
+                    a.save()
+                    if a.status == STATUS_GRANTED:
+                        # If we're not already granting a modification
+                        # of this activity, we need to re-grant it.
+                        # it.
+                        if a.modified_by and a.modified_by in activities:
+                            # We're already granting this.
+                            pass
+                        else:
+                            activities |= models.Q(activity=a)
         else:
             # No main activity. We're only allowed to do this if the
             # main activity is already approved.
