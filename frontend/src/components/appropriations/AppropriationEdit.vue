@@ -57,7 +57,6 @@
             return {
                 appr: {},
                 create_mode: true,
-                kle: null,
                 kle_regex: /\d{2}\.\d{2}\.\d{2}/,
                 sections: null,
                 sbsysCheck: false
@@ -92,16 +91,24 @@
                 this.appr.section = section_id
             },
             checkKLE: function(input) {
+                let kle = input.match(this.kle_regex)
                 this.sbsysCheck = false
-                this.kle = input.match(this.kle_regex)
-                if (this.kle) {
-                    let sections = this.all_sections.filter(s => s.kle_number === this.kle[0])
-                    if (sections.length === 1) {
-                        this.appr.section = sections[0].id
-                    } else if (sections.length === 0) {
-                        this.sbsysCheck = true
-                    }
+                if (kle) {
+                    axios.get(`/sectioninfos/?kle_number=${ kle[0] }`)
+                    .then(res => {
+                        if (res.data.length === 1) {
+                            this.appr.section = res.data[0].section
+                            this.$forceUpdate()
+                        } else if (res.data.length === 0) {
+                            this.appr.section = null
+                            this.sbsysCheck = true
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
                 } else {
+                    this.sbsysCheck = true
                     return false
                 }                
             },
