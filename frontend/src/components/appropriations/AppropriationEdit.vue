@@ -98,7 +98,9 @@
                     .then(res => {
                         if (res.data.length === 1) {
                             this.appr.section = res.data[0].section
+                            this.$forceUpdate()
                         } else if (res.data.length === 0) {
+                            this.appr.section = null
                             this.sbsysCheck = true
                         }
                     })
@@ -106,6 +108,7 @@
                         console.log(err)
                     })
                 } else {
+                    this.sbsysCheck = true
                     return false
                 }                
             },
