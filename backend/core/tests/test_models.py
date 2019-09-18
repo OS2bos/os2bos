@@ -890,6 +890,45 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
                 user,
             )
 
+    def test_appropriation_grant_error_no_approved_main_activity(self):
+        approval_level = ApprovalLevel.objects.create(name="egenkompetence")
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+        now = timezone.now().date()
+        start_date = now - timedelta(days=6)
+        end_date = now + timedelta(days=12)
+        # Create a main activity
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_EXPECTED,
+            start_date=start_date,
+            end_date=end_date,
+        )
+        activity.details.main_activity_for.add(section)
+        # create an already granted activity.
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=SUPPL_ACTIVITY,
+            status=STATUS_EXPECTED,
+            start_date=start_date,
+            end_date=end_date,
+        )
+
+        user = get_user_model().objects.create(username="Anders And")
+        with self.assertRaises(RuntimeError):
+            appropriation.grant(
+                appropriation.activities.filter(pk=activity.pk),
+                approval_level.id,
+                "note til bevillingsgodkendelse",
+                user,
+            )
+
     def test_appropriation_grant_error_invalid_main_activity(self):
         approval_level = ApprovalLevel.objects.create(name="egenkompetence")
         case = create_case(
