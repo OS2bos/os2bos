@@ -92,12 +92,10 @@
             },
             checkKLE: function(input) {
                 let kle = input.match(this.kle_regex)
-                console.log('kle', kle)
                 this.sbsysCheck = false
                 if (kle) {
                     axios.get(`/sectioninfos/?kle_number=${ kle[0] }`)
                     .then(res => {
-                        console.log('got sectioninfo', res.data)
                         if (res.data.length === 1) {
                             this.appr.section = res.data[0].section
                         } else if (res.data.length === 0) {
