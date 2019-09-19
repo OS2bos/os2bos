@@ -29,7 +29,7 @@
                 </select>
 
                 <label for="field-text">Supplerende information</label>
-                <textarea v-model="appr.note"></textarea>
+                <textarea id="field-text" v-model="appr.note"></textarea>
             </fieldset>
             <fieldset class="form-actions">
                 <input type="submit" value="Gem">

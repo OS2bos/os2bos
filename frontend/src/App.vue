@@ -11,7 +11,7 @@
 
         <app-header />
         
-        <main>
+        <main id="app-main">
             <router-view/>
         </main>
 
