@@ -179,9 +179,12 @@
 <style>
 
     .approval .modal-container {
+        min-width: 50rem;
+    }
+
+    .approval .modal-body {
         overflow-x: hidden;
         overflow-y: auto;
-        min-width: 50rem;
     }
 
 </style>

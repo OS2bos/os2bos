@@ -16,7 +16,8 @@ function makeDateStr(date, offset) {
     return `${new_date.getFullYear()}-${leadZero(new_date.getMonth() + 1)}-01`
 }
 
-let today = new Date()
+let today = new Date(),
+    rand = Math.floor(Math.random() * 100 )
 
 let str1mth = makeDateStr(today, 1),
     str2mth = makeDateStr(today, 2),
@@ -27,11 +28,11 @@ let str1mth = makeDateStr(today, 1),
 const testdata = {
     case1: {
         id: 1,
-        name: 'xx.xx.xx-testsag'
+        name: `xx.xx.xx-${ rand }-yy`
     },
     appr1: {
         id: 1,
-        name: 'xx.xx.xx-yy-testbevilling',
+        name: `xx.xx.xx-${ rand }-bevil${ rand }`,
         section: 'SEL-109 Botilbud, kriseramte kvinder'
     },
     act1: {
@@ -144,7 +145,9 @@ async function createActivity(t, act_data) {
         .click('#pay-type-2')
         .typeText('#field-amount-1', act_data.amount)
         .click('#pay-freq')
-        .click(Selector('#pay-freq option').nth(0))
+        .click(Selector('#pay-freq option').withAttribute('value', 'MONTHLY'))
+        .click('#pay-day-of-month')
+        .click(Selector('#pay-day-of-month option').nth(1))
         .click('#field-payee')
         .click(Selector('#field-payee option').nth(1))
         .typeText('#field-payee-id', act_data.payee_id)
