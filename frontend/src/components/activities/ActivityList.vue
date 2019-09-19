@@ -78,7 +78,13 @@
         </table>
         <p v-if="no_acts">Der er endnu ingen ydelser</p>
 
-        <approval-diag :appr-id="apprId" :acts="approvable_acts" v-if="diag_open" @close="diag_open = false" @approve="check_all_approvable = false" />
+        <approval-diag 
+            v-if="diag_open" 
+            :appr-id="apprId" 
+            :acts="approvable_acts"
+            :warning="diag_approval_warning"
+            @close="diag_open = false" 
+            @approve="check_all_approvable = false" />
 
     </section>
 
@@ -89,6 +95,7 @@
     import axios from '../http/Http.js'
     import { cost2da } from '../filters/Numbers.js'
     import { displayStatus } from '../filters/Labels.js'
+    import { json2jsEpoch } from '../filters/Date.js'
     import ActListItem from './ActivityListItem.vue'
     import ApprovalDiag from './Approval.vue'
 
@@ -108,7 +115,8 @@
                 suppl_acts: [],
                 check_all_approvable: false,
                 approvable_acts: [],
-                diag_open: false
+                diag_open: false,
+                diag_approval_warning: null
             }
         },
         computed: {
@@ -298,6 +306,22 @@
                 this.checkAllInList(event.target.checked, this.suppl_acts)
             },
             initPreApprove: function() {
+
+                // Logic to warn users about to shorten main activity running time
+                // ... and thereby automatically shorten supplementary activities too
+                this.diag_approval_warning = null
+                const approvable_main_act = this.approvable_acts.find(function(act) {
+                    return act.status === 'EXPECTED' && act.activity_type === 'MAIN_ACTIVITY'
+                })
+                if (approvable_main_act) {
+                    const approvable_modifies = this.main_acts[0].find(activity => {
+                        return activity.id === approvable_main_act.modifies
+                    })
+                    if (json2jsEpoch(approvable_main_act.end_date) < json2jsEpoch(approvable_modifies.end_date)) {
+                        this.diag_approval_warning = 'Hvis du godkender, at hovedydelsen får kortere løbetid, kan det også ændre løbetiden for følgeydelserne.'
+                    }
+                }
+                
                 this.diag_open = true
             }
         },

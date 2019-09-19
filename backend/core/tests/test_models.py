@@ -33,6 +33,7 @@ from core.models import (
     Municipality,
     SchoolDistrict,
     ActivityDetails,
+    Activity,
     Account,
     ApprovalLevel,
     Team,
@@ -452,6 +453,32 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             appropriation.activities.first().appropriation_date, today
         )
 
+    def test_appropriation_grant_no_end_date(self):
+        approval_level = ApprovalLevel.objects.create(name="egenkompetence")
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+        now = timezone.now()
+        start_date = now + timedelta(days=6)
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_DRAFT,
+            start_date=start_date,
+            end_date=None,
+        )
+        activity.details.main_activity_for.add(section)
+        user = get_user_model().objects.create(username="Anders And")
+        appropriation.grant(
+            appropriation.activities.exclude(status=STATUS_GRANTED),
+            approval_level.id,
+            "note til bevillingsgodkendelse",
+            user,
+        )
+
     def test_appropriation_grant_on_already_granted_one_time(self):
         approval_level = ApprovalLevel.objects.create(name="egenkompetence")
         payment_schedule = create_payment_schedule(
@@ -565,7 +592,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
 
         user = get_user_model().objects.create(username="Anders And")
         appropriation.grant(
-            [modifies_activity],
+            Activity.objects.filter(pk=modifies_activity.pk),
             approval_level.id,
             "note til bevillingsgodkendelse",
             user,
@@ -686,6 +713,102 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             [start_date + timedelta(days=7 * x) for x in range(5)],
         )
 
+    def test_appropriation_grant_on_modifies_suppl_date(self):
+        approval_level = ApprovalLevel.objects.create(name="egenkompetence")
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_frequency=PaymentSchedule.WEEKLY,
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+        now = timezone.now().date()
+        start_date = now - timedelta(days=6)
+        end_date = None
+        # create an already granted activity.
+        main_activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+        )
+        main_activity.details.main_activity_for.add(section)
+        suppl_payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("50.0"),
+            payment_frequency=PaymentSchedule.WEEKLY,
+        )
+        suppl_start_date = start_date + timedelta(days=7)
+        suppl_end_date = None
+        # let the granted activity be modified by another expected activity.
+        suppl_activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=SUPPL_ACTIVITY,
+            start_date=suppl_start_date,
+            status=STATUS_EXPECTED,
+            end_date=suppl_end_date,
+            payment_plan=suppl_payment_schedule,
+        )
+
+        user = get_user_model().objects.create(username="Anders And")
+        appropriation.grant(
+            appropriation.activities.exclude(status=STATUS_GRANTED),
+            approval_level.id,
+            "note til bevillingsgodkendelse",
+            user,
+        )
+        modifies_payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_frequency=PaymentSchedule.WEEKLY,
+        )
+        modified_start_date = start_date + timedelta(days=7)
+        modified_end_date = start_date + timedelta(days=365)
+        # let the granted activity be modified by another expected activity.
+        new_main_activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            start_date=modified_start_date,
+            status=STATUS_EXPECTED,
+            end_date=modified_end_date,
+            modifies=main_activity,
+            payment_plan=modifies_payment_schedule,
+        )
+        appropriation.grant(
+            appropriation.activities.filter(pk=new_main_activity.pk),
+            approval_level.id,
+            "note til bevillingsgodkendelse",
+            user,
+        )
+        suppl_activity.refresh_from_db()
+        # the old activity should expire the day before
+        # the start_date of the new one.
+        self.assertEqual(suppl_activity.end_date, modified_end_date)
+        new_modified_end_date = modified_end_date - timedelta(3)
+        modifies_again = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            start_date=modified_start_date + timedelta(days=7),
+            status=STATUS_EXPECTED,
+            end_date=new_modified_end_date,
+            modifies=new_main_activity,
+            payment_plan=create_payment_schedule(),
+        )
+        appropriation.grant(
+            appropriation.activities.filter(pk=modifies_again.pk),
+            approval_level.id,
+            "note til bevillingsgodkendelse",
+            user,
+        )
+        suppl_activity.refresh_from_db()
+        self.assertEqual(suppl_activity.end_date, new_modified_end_date)
+
     def test_appropriation_grant_validate_expected_false(self):
         approval_level = ApprovalLevel.objects.create(name="egenkompetence")
         payment_schedule = create_payment_schedule(
@@ -753,7 +876,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             case=case,
             appropriation=appropriation,
             activity_type=SUPPL_ACTIVITY,
-            status=STATUS_GRANTED,
+            status=STATUS_EXPECTED,
             start_date=start_date,
             end_date=end_date,
         )
@@ -761,7 +884,46 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         user = get_user_model().objects.create(username="Anders And")
         with self.assertRaises(RuntimeError):
             appropriation.grant(
-                [activity],
+                appropriation.activities.filter(pk=activity.pk),
+                approval_level.id,
+                "note til bevillingsgodkendelse",
+                user,
+            )
+
+    def test_appropriation_grant_error_no_approved_main_activity(self):
+        approval_level = ApprovalLevel.objects.create(name="egenkompetence")
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+        now = timezone.now().date()
+        start_date = now - timedelta(days=6)
+        end_date = now + timedelta(days=12)
+        # Create a main activity
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_EXPECTED,
+            start_date=start_date,
+            end_date=end_date,
+        )
+        activity.details.main_activity_for.add(section)
+        # create an already granted activity.
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=SUPPL_ACTIVITY,
+            status=STATUS_EXPECTED,
+            start_date=start_date,
+            end_date=end_date,
+        )
+
+        user = get_user_model().objects.create(username="Anders And")
+        with self.assertRaises(RuntimeError):
+            appropriation.grant(
+                appropriation.activities.filter(pk=activity.pk),
                 approval_level.id,
                 "note til bevillingsgodkendelse",
                 user,
@@ -790,7 +952,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         user = get_user_model().objects.create(username="Anders And")
         with self.assertRaises(RuntimeError):
             appropriation.grant(
-                [activity],
+                appropriation.activities.filter(pk=activity.pk),
                 approval_level.id,
                 "note til bevillingsgodkendelse",
                 user,

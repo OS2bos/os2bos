@@ -786,9 +786,47 @@ class Appropriation(AuditModelMixin, models.Model):
         if not activities:
             raise RuntimeError(_("Angiv mindst én aktivitet"))
 
+        # The activities come in as a queryset. Save a copy as a list to
+        # be able to append, please.
+        to_be_granted = list(activities)
+        # If the main activity is being approved, impose its end dates
+        # on the other activities.
+
+        if activities.filter(activity_type=MAIN_ACTIVITY).exists():
+            main_activity = activities.filter(
+                activity_type=MAIN_ACTIVITY
+            ).first()
+            # Update the end date for all supplementary activities that
+            # don't have an end date less than the main activities'.
+            if main_activity.end_date:
+                for a in self.activities.filter(
+                    activity_type=SUPPL_ACTIVITY
+                ).exclude(end_date__lte=main_activity.end_date):
+                    a.end_date = main_activity.end_date
+                    a.save()
+                    if a.status == STATUS_GRANTED:
+                        # If we're not already granting a modification
+                        # of this activity, we need to re-grant it.
+                        if not (
+                            a.modified_by and a.modified_by in activities
+                        ):  # pragma: no cover
+                            to_be_granted.append(a)
+        else:
+            # No main activity. We're only allowed to do this if the
+            # main activity is already approved.
+            if not self.activities.filter(
+                activity_type=MAIN_ACTIVITY, status=STATUS_GRANTED
+            ).exists():
+                raise RuntimeError(
+                    _(
+                        "Kan ikke godkende følgeydelser, før"
+                        " hovedydelsen er godkendt."
+                    )
+                )
+
         approval_level = ApprovalLevel.objects.get(id=approval_level)
 
-        for a in activities:
+        for a in to_be_granted:
             a.grant(approval_level, approval_note, approval_user)
 
         # Everything went fine, we can send to SBSYS.
