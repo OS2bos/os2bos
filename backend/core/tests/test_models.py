@@ -1123,7 +1123,9 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             payment_plan=payment_schedule,
             status=STATUS_GRANTED,
         )
-        activity.grant("level", "note", "user")
+        approval_level = ApprovalLevel.objects.create(name="egenkompetence")
+        user = get_user_model().objects.create(username="Anders And")
+        activity.grant(approval_level, "note", user)
         self.assertEqual(activity.status, STATUS_GRANTED)
 
     def test_regenerate_payments_on_draft_save(self):
