@@ -1118,33 +1118,12 @@ class Activity(AuditModelMixin, models.Model):
                 )
             next_payment_date = next_payment.date
 
-        if is_one_time_payment:
-            if not today < next_payment_date <= self.start_date:
-                raise forms.ValidationError(
-                    _(
-                        f"den justerede aktivitets startdato skal være i"
-                        f" fremtiden fra næste betalingsdato:"
-                        f" {next_payment_date}"
-                    )
-                )
-        elif not (
-            today < next_payment_date <= self.start_date
-            and (
-                self.start_date <= self.modifies.end_date
-                if self.modifies.end_date
-                else True
-            )
-        ):
-            to_end_date_str = (
-                f" til ydelsens slutdato: {self.modifies.end_date}"
-                if self.modifies.end_date
-                else ""
-            )
+        if self.modifies.end_date and self.start_date > self.modifies.end_date:
+
             raise forms.ValidationError(
                 _(
-                    f"den justerede aktivitets startdato skal være i"
-                    f" fremtiden fra næste betalingsdato: {next_payment_date}"
-                    f"{to_end_date_str}"
+                    f"den justerede aktivitets startdato skal være før"
+                    f"ydelsens slutdato: {self.modifies.end_date}"
                 )
             )
         return True

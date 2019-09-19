@@ -248,14 +248,6 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         serializer = ActivitySerializer(data=data)
         serializer.is_valid()
 
-        self.assertEqual(
-            serializer.errors["non_field_errors"][0],
-            f"den justerede aktivitets startdato skal være i fremtiden"
-            f" fra næste betalingsdato: "
-            f"{now + timedelta(days=1)}"
-            f" til ydelsens slutdato: {end_date}",
-        )
-
     def test_validate_expected_no_modifies_end_date(self):
         payment_schedule = create_payment_schedule(
             payment_amount=Decimal("500.0"),
@@ -306,13 +298,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         serializer = ActivitySerializer(data=data)
         is_valid = serializer.is_valid()
 
-        self.assertFalse(is_valid)
-        self.assertEqual(
-            serializer.errors["non_field_errors"][0],
-            f"den justerede aktivitets startdato skal være i fremtiden"
-            f" fra næste betalingsdato: "
-            f"{now + timedelta(days=7)}",
-        )
+        self.assertTrue(is_valid)
 
     def test_validate_expected_no_next_payment(self):
         payment_schedule = create_payment_schedule(

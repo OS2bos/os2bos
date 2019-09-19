@@ -809,58 +809,6 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         suppl_activity.refresh_from_db()
         self.assertEqual(suppl_activity.end_date, new_modified_end_date)
 
-    def test_appropriation_grant_validate_expected_false(self):
-        approval_level = ApprovalLevel.objects.create(name="egenkompetence")
-        payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("500.0"),
-            payment_frequency=PaymentSchedule.WEEKLY,
-        )
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
-        section = create_section()
-        appropriation = create_appropriation(case=case, section=section)
-        now = timezone.now().date()
-        start_date = now - timedelta(days=6)
-        end_date = now + timedelta(days=12)
-        # create an already granted activity.
-        activity = create_activity(
-            case=case,
-            appropriation=appropriation,
-            activity_type=MAIN_ACTIVITY,
-            status=STATUS_GRANTED,
-            start_date=start_date,
-            end_date=end_date,
-            payment_plan=payment_schedule,
-        )
-        section.main_activities.add(activity.details)
-        modifies_payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("600.0"),
-            payment_frequency=PaymentSchedule.WEEKLY,
-        )
-        modified_start_date = start_date
-        modified_end_date = end_date + timedelta(days=12)
-        # expected activity has an invalid start_date.
-        create_activity(
-            case=case,
-            appropriation=appropriation,
-            activity_type=MAIN_ACTIVITY,
-            start_date=modified_start_date,
-            status=STATUS_EXPECTED,
-            end_date=modified_end_date,
-            modifies=activity,
-            payment_plan=modifies_payment_schedule,
-        )
-
-        user = get_user_model().objects.create(username="Anders And")
-        with self.assertRaises(forms.ValidationError):
-            appropriation.grant(
-                appropriation.activities.exclude(status=STATUS_GRANTED),
-                approval_level.id,
-                "note til bevillingsgodkendelse",
-                user,
-            )
-
     def test_appropriation_grant_error_no_main_activity(self):
         approval_level = ApprovalLevel.objects.create(name="egenkompetence")
         case = create_case(
@@ -1720,8 +1668,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             modifies=main_activity,
             details=main_activity_details,
         )
-        with self.assertRaises(forms.ValidationError):
-            expected_activity.validate_expected()
+        expected_activity.validate_expected()
 
     def test_validate_expected_false_in_the_past_no_next_payment(self):
         case = create_case(
@@ -1863,8 +1810,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             modifies=main_activity,
             details=main_activity_details,
         )
-        with self.assertRaises(forms.ValidationError):
-            expected_activity.validate_expected()
+        expected_activity.validate_expected()
 
 
 class AccountTestCase(TestCase):
