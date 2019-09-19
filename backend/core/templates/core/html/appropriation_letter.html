@@ -374,7 +374,7 @@
                         Betales via 
                         {% if a.payment_plan.payment_method == "INVOICE" %}
                             faktura
-                        {% elif a.main_activity.payment_plan.payment_method == "SD" %}
+                        {% elif a.payment_plan.payment_method == "SD" %}
                             SD-løn
                         {% elif a.payment_plan.payment_method == "INTERNAL" %}
                             intern afregning
