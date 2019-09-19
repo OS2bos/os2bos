@@ -2,6 +2,7 @@
 
 import { Selector } from 'testcafe'
 import { loginAsUngeraadgiver } from '../utils/logins.js'
+import { createActivity } from '../utils/crud.js'
 
 function leadZero(number) {
     if (number < 10) {
@@ -82,6 +83,15 @@ const testdata = {
         amount: '9.95',
         payee_id: '8937-2342-2342',
         payee_name: 'TESTiT A/S'
+    },
+    act6: {
+        type: 1,
+        start: str2mth,
+        end: str5mth,
+        note: 'Denne ydelse vil blive slettet',
+        amount: '999.95',
+        payee_id: '8937-2342-2342',
+        payee_name: 'TESTiT A/S'
     }
 }
 
@@ -124,40 +134,7 @@ test('Create Appropriation', async t => {
         .expect(Selector('.appropriation-list tr:first-child td a').innerText).contains(testdata.appr1.name)
 })
 
-async function createActivity(t, act_data) {
-
-    if (act_data.expected_type === 'adjustment') {
-        await t.click(Selector('.act-edit-btn'))
-    } else {
-        await t.click(Selector('.activities-create-btn'))
-    }
-
-    if (act_data.expected_type === 'expectation') {
-        await t.click(Selector('label').withAttribute('for', 'field-status-expected'))
-    }
-
-    await t
-        .click('#fieldSelectAct')
-        .click(Selector('#fieldSelectAct option').nth(act_data.type))
-        .typeText('#field-startdate', act_data.start)
-        .typeText('#field-enddate', act_data.end)
-        .typeText('#field-text', act_data.note)
-        .click('#pay-type-2')
-        .typeText('#field-amount-1', act_data.amount)
-        .click('#pay-freq')
-        .click(Selector('#pay-freq option').withAttribute('value', 'MONTHLY'))
-        .click('#pay-day-of-month')
-        .click(Selector('#pay-day-of-month option').nth(1))
-        .click('#field-payee')
-        .click(Selector('#field-payee option').nth(1))
-        .typeText('#field-payee-id', act_data.payee_id)
-        .typeText('#field-payee-name', act_data.payee_name)
-        .click('#field-pay-method')
-        .click(Selector('#field-pay-method option').nth(0))
-        .click(Selector('input').withAttribute('type', 'submit'))
-}
-
-test('Create Activity', async t => {
+test('Create activity', async t => {
     
     await loginAsUngeraadgiver(t)
 
@@ -210,4 +187,27 @@ test('Add adjustment activities', async t => {
     await createActivity(t, testdata.act5)
     
     await t.expect(Selector('.label-EXPECTED')).ok()
+})
+
+test('Create and delete activity', async t => {
+    
+    await loginAsUngeraadgiver(t)
+
+    await t
+        .click(Selector('a').withText(testdata.case1.name))
+        .click(Selector('a').withText(testdata.appr1.name))
+    
+    await createActivity(t, testdata.act6)
+
+    await t
+        .navigateTo('http://localhost:8080/#/')
+        .click(Selector('a').withText(testdata.case1.name))
+        .click(Selector('a').withText(testdata.appr1.name))
+        .click(Selector('a').withText(testdata.act6.name))
+        .click(Selector(`tr[title="${ testdata.act6.note }"] a`))
+        .expect(Selector('.label-DRAFT')).ok()
+        .click(Selector('.act-delete-btn').nth(1))
+        .click('button[type="submit"]')
+        .expect(Selector('h1').withText('Bevillingsskrivelse')).ok()
+        .expect(Selector(`tr[title="${ testdata.act6.note }"] a`)).notOk()
 })
