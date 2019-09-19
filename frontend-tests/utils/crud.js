@@ -1,3 +1,5 @@
+import { Selector } from 'testcafe'
+
 async function createActivity(t, act_data) {
 
     if (act_data.expected_type === 'adjustment') {
