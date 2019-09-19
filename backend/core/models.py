@@ -788,7 +788,7 @@ class Appropriation(AuditModelMixin, models.Model):
 
         # The activities come in as a queryset. Save a copy as a list to
         # be able to append, please.
-        activity_list = list(activities)
+        to_be_granted = list(activities)
         # If the main activity is being approved, impose its end dates
         # on the other activities.
 
@@ -807,11 +807,10 @@ class Appropriation(AuditModelMixin, models.Model):
                     if a.status == STATUS_GRANTED:
                         # If we're not already granting a modification
                         # of this activity, we need to re-grant it.
-                        # it.
                         if not (
                             a.modified_by and a.modified_by in activities
                         ):  # pragma: no cover
-                            activity_list.append(a)
+                            to_be_granted.append(a)
         else:
             # No main activity. We're only allowed to do this if the
             # main activity is already approved.
@@ -827,7 +826,7 @@ class Appropriation(AuditModelMixin, models.Model):
 
         approval_level = ApprovalLevel.objects.get(id=approval_level)
 
-        for a in activities:
+        for a in to_be_granted:
             a.grant(approval_level, approval_note, approval_user)
 
         # Everything went fine, we can send to SBSYS.
