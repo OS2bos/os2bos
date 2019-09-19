@@ -1054,20 +1054,18 @@ class Activity(AuditModelMixin, models.Model):
     def grant(self, approval_level, approval_note, approval_user):
         "Grant this activity - update payment info as needed." ""
 
-        if self.status == STATUS_GRANTED:
-            # Nothing to see here.
-            return
-
         self.appropriation_date = timezone.now().date()
         self.approval_level = approval_level
         self.approval_note = approval_note
         self.approval_user = approval_user
 
-        if not self.modifies:
+        if self.status == STATUS_GRANTED:
+            # Re-granting - nothing more to do.
+            pass
+        elif not self.modifies:
             # Simple case: Just set status.
             self.status = STATUS_GRANTED
-            self.save()
-        elif self.validate_expected():
+        elif self.validate_expected():  # pragma: no cover
             # "Merge" by ending current activity the day before the new
             # start_date.
             #
@@ -1085,7 +1083,7 @@ class Activity(AuditModelMixin, models.Model):
             # In all cases ...
             self.modifies.save()
             self.status = STATUS_GRANTED
-            self.save()
+        self.save()
 
     def validate_expected(self):
         """
