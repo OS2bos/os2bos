@@ -97,18 +97,18 @@
     }
 
     .label-DRAFT {
-        background-color: var(--grey6);
-        color: var(--grey0);
+        background-color: var(--grey2);
+        color: var(--grey7);
     }
 
     .label-BUDGETED {
         background-color: var(--warning);
-        color: var(--grey0);
+        color: hsl(var(--color3), 100%, 20%);
     }
 
     .label-EXPECTED {
         background-color: var(--warning);
-        color: hsl(var(--color3), 100%, 31%);
+        color: hsl(var(--color3), 100%, 20%);
     }
 
     .label-GRANTED {
