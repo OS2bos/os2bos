@@ -1670,7 +1670,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         expected_activity.validate_expected()
 
-    def test_validate_expected_false_in_the_past_no_next_payment(self):
+    def test_validate_expected_true_in_the_past_no_next_payment(self):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
@@ -1715,8 +1715,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             modifies=main_activity,
             details=main_activity_details,
         )
-        with self.assertRaises(forms.ValidationError):
-            expected_activity.validate_expected()
+        expected_activity.validate_expected()
 
     def test_validate_expected_true_ongoing_with_next_payment(self):
         case = create_case(

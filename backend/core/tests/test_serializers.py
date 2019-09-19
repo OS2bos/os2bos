@@ -351,13 +351,6 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         serializer = ActivitySerializer(data=data)
         serializer.is_valid()
 
-        self.assertEqual(
-            serializer.errors["non_field_errors"][0],
-            "den bevilgede aktivitet skal have en fremtidig"
-            " betaling for at man kan lave en"
-            " forventet justering",
-        )
-
     def test_validate_expected_true_ongoing_with_next_payment(self):
         payment_schedule = create_payment_schedule(
             payment_amount=Decimal("500.0"),
