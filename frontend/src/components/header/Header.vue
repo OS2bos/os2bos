@@ -15,7 +15,7 @@
                 <span class="global-brandname">Bevilling og Styring</span>
             </router-link>
             <div class="row" style="width: auto; align-items: center;">
-                <nav v-if="auth" class="globalnav">
+                <nav id="globalnav" v-if="auth" class="globalnav" aria-label="Hovedmenu">
                     <router-link to="/my-cases/">Mine sager</router-link>
                     <router-link to="/all-cases/">Find sag</router-link>
                     <!-- <router-link to="/data-view/">Find ydelse</router-link> -->

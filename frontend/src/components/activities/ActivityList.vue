@@ -20,7 +20,7 @@
                 <tr>
                     <th style="width: 4.5rem;">
                         <input type="checkbox" id="check-all" @change="setAllChecked" v-model="check_all_approvable">
-                        <label class="disabled" for="check-all"></label>
+                        <label class="disabled" for="check-all" title="Vælg alle"></label>
                     </th>
                     <th style="width: 5.5rem;">Status</th>
                     <th>Ydelse</th>

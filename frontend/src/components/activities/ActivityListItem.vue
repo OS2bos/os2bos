@@ -8,7 +8,7 @@
         <td style="width: 4.5rem;">
             <template v-if="!act.is_meta && act.status !== 'GRANTED'">
                 <input type="checkbox" :id="`check-${ act.id }`" v-model="is_checked" @change="$emit('check', is_checked)">
-                <label class="disabled" :for="`check-${ act.id }`"></label>
+                <label class="disabled" :for="`check-${ act.id }`" :title="`Udvælg ydelse ${ act.id }`"></label>
             </template>
             <div v-if="act.is_meta" class="dropdown-arrow" :class="{'toggled': toggled}">▼</div>
         </td>
