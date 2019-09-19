@@ -1065,7 +1065,7 @@ class Activity(AuditModelMixin, models.Model):
         elif not self.modifies:
             # Simple case: Just set status.
             self.status = STATUS_GRANTED
-        elif self.validate_expected():
+        elif self.validate_expected():  # pragma: no cover
             # "Merge" by ending current activity the day before the new
             # start_date.
             #
