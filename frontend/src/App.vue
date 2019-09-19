@@ -11,7 +11,7 @@
 
         <app-header />
         
-        <main>
+        <main id="app-main">
             <router-view/>
         </main>
 
@@ -92,33 +92,33 @@
     }
 
     .mini-label .label {
-        padding: .124rem .25rem;
+        padding: .15rem .5rem;
         font-size: .85rem;
     }
 
     .label-DRAFT {
-        background-color: var(--grey3);
-        color: white;
+        background-color: var(--grey2);
+        color: var(--grey7);
     }
 
     .label-BUDGETED {
         background-color: var(--warning);
-        color: white;
+        color: hsl(var(--color3), 100%, 20%);
     }
 
     .label-EXPECTED {
         background-color: var(--warning);
-        color: white;
+        color: hsl(var(--color3), 100%, 20%);
     }
 
     .label-GRANTED {
         background-color: var(--success);
-        color: white;
+        color: var(--grey0);
     }
 
     .label-DISCONTINUED {
         background-color: var(--danger);
-        color: white;
+        color: var(--grey0);
     }
 
     .danger {
@@ -156,7 +156,7 @@
     }    
 
     .dim {
-        opacity: 0.33;
+        opacity: .6;
     }
 
     .expected {

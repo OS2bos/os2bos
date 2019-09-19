@@ -10,8 +10,8 @@
 
     <section class="payment_schedule">
         
-        <label>Vælg år</label>
-        <select v-model="current_year">
+        <label for="field-year-picker">Vælg år</label>
+        <select id="field-year-picker" v-model="current_year">
             <option v-for="y in years" :value="y" :key="y.id">{{ y }}</option>
         </select>
     

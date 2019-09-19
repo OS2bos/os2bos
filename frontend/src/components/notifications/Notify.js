@@ -24,14 +24,13 @@ function notify(message, type, response) {
     if (!document.querySelector('.notification-container')) {
         notify_container = document.createElement('div')
         notify_container.className = 'notification-container'
-        document.body.appendChild(notify_container)
+        document.getElementById('app-main').appendChild(notify_container)
     } else {
         notify_container = document.querySelector('.notification-container')
     }
 
     // Create notification
-    let msg = `${message}`,
-        classes = 'notification'
+    let msg = `${message}`
     if (response) {
         const keys = Object.keys(response)
         for (let k in keys) {   

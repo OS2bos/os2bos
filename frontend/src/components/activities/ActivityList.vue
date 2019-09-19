@@ -18,11 +18,11 @@
         <table v-if="!no_acts">
             <thead>
                 <tr>
-                    <th style="width: 4.5rem;">
+                    <th style="width: 3.5rem; padding: .5rem 0 0 1.25rem;">
                         <input type="checkbox" id="check-all" @change="setAllChecked" v-model="check_all_approvable">
-                        <label class="disabled" for="check-all"></label>
+                        <label class="disabled" for="check-all" title="Vælg alle"></label>
                     </th>
-                    <th style="width: 5.5rem;">Status</th>
+                    <th style="width: 6rem;">Status</th>
                     <th>Ydelse</th>
                     <th>Udbetales til</th>
                     <th>Start</th>

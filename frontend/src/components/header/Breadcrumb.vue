@@ -18,7 +18,7 @@
         </p>
     -->
 
-    <nav class="breadcrumb" v-if="bc.length > 0">
+    <nav id="breadcrumb" class="breadcrumb" v-if="bc.length > 0" aria-label="Brødkrummesti">
         <p v-for="(b, key) in bc" :class="`crumb crumb-${key}`" :key="b[0]">
             <i v-if="key !== 0" class="material-icons">subdirectory_arrow_right</i>
             <i v-if="key === 0" class="material-icons">home</i>

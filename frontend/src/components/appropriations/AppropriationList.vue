@@ -16,7 +16,7 @@
         <table class="appropriation-list" v-if="apprs && apprs.length > 0">
             <thead>
                 <tr>
-                    <th style="width: 5.5rem;">Status</th>
+                    <th style="width: 6rem;">Status</th>
                     <th>Foranstaltningssag</th>
                     <th>Bevillingsparagraf</th>
                     <th>Supplerende information</th>
@@ -28,7 +28,7 @@
             </thead>
             <tbody>
                 <tr v-for="a in apprs" :key="a.id">
-                    <td style="width: 5.5rem;"><div  class="mini-label" v-html="statusLabel(a)"></div></td>
+                    <td style="width: 6rem;"><div  class="mini-label" v-html="statusLabel(a)"></div></td>
                     <td>    
                         <i class="material-icons">folder_open</i>
                         <router-link :to="`/appropriation/${ a.id }`">

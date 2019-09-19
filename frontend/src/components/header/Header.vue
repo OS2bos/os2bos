@@ -10,14 +10,12 @@
 
     <header>
         <div class="globalheader">
-            <h1 title="Bevilling og Styring">
-                <router-link to="/" class="header-link">
-                    <img class="global-logo" src="/logo.png" alt="" />
-                    <span class="global-brandname">Bevilling og Styring</span>
-                </router-link>
-            </h1>
+            <router-link to="/" class="header-link" title="Bevilling og Styring">
+                <img class="global-logo" src="/logo.png" alt="" />
+                <span class="global-brandname">Bevilling og Styring</span>
+            </router-link>
             <div class="row" style="width: auto; align-items: center;">
-                <nav v-if="auth" class="globalnav">
+                <nav id="globalnav" v-if="auth" class="globalnav" aria-label="Hovedmenu">
                     <router-link to="/my-cases/">Mine sager</router-link>
                     <router-link to="/all-cases/">Find sag</router-link>
                     <!-- <router-link to="/data-view/">Find ydelse</router-link> -->
@@ -60,12 +58,6 @@
         align-items: center;
         padding: 2rem;
         background-color: var(--grey0);
-    }
-
-    .globalheader > h1 {
-        margin: 0;
-        padding: 0;
-        display: block;
     }
 
     .header-link {

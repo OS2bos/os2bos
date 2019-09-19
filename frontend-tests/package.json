@@ -10,6 +10,8 @@
   "author": "",
   "license": "MPL-2.0",
   "devDependencies": {
-    "testcafe": "^1.4.1"
+    "axe-core": "^3.3.2",
+    "axe-testcafe": "^3.0.0",
+    "testcafe": "^1.5.0"
   }
 }

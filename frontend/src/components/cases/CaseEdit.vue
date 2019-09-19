@@ -27,10 +27,10 @@
                         <error err-key="sbsys_id" />
                     </fieldset>
                     
-                    <div>
-                        <h3 style="padding-bottom: 0; font-weight: bold; font-size: 1rem;">Sagspart:</h3>
+                    <fieldset>
+                        <legend>Sagspart:</legend>
                         <cpr-lookup :cpr.sync="cas.cpr_number" :name.sync="cas.name" :relations.sync="relations"/>
-                    </div>
+                    </fieldset>
                 </div>
 
                 <div class="row-item">

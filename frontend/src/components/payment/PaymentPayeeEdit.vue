@@ -38,7 +38,9 @@
             </label>
             <input v-if="p.recipient_type !== 'PERSON'" type="text" id="field-payee-id" v-model="p.recipient_id" required>
             
-            <cpr-lookup v-if="p.recipient_type === 'PERSON'" :cpr.sync="p.recipient_id" :name.sync="p.recipient_name" />
+            <fieldset v-if="p.recipient_type === 'PERSON'">
+                <cpr-lookup :cpr.sync="p.recipient_id" :name.sync="p.recipient_name" />
+            </fieldset>
             
             <error err-key="recipient_id" />
         

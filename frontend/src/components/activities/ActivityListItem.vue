@@ -5,14 +5,14 @@
         :class="{ [act.group]: act.group, 'meta-row': act.is_meta, 'sub-row': act.group }" 
         :title="act.note" 
         @click="act.is_meta ? toggleGroup(act.id) : false">
-        <td style="width: 4.5rem;">
+        <td style="width: 3.5rem; padding: .5rem 0 0 1.25rem;">
             <template v-if="!act.is_meta && act.status !== 'GRANTED'">
                 <input type="checkbox" :id="`check-${ act.id }`" v-model="is_checked" @change="$emit('check', is_checked)">
-                <label class="disabled" :for="`check-${ act.id }`"></label>
+                <label class="disabled" :for="`check-${ act.id }`" title="Udvælg denne ydelse"></label>
             </template>
             <div v-if="act.is_meta" class="dropdown-arrow" :class="{'toggled': toggled}">▼</div>
         </td>
-        <td style="width: 5.5rem;">
+        <td style="width: 6rem;">
             <div class="mini-label" v-html="statusLabel(act.status)"></div>
         </td>
         <td>
