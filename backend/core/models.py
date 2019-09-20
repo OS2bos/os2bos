@@ -814,18 +814,27 @@ class Appropriation(AuditModelMixin, models.Model):
         else:
             # No main activity. We're only allowed to do this if the
             # main activity is already approved.
-            if not self.activities.filter(
+            granted_main_activities = self.activities.filter(
                 activity_type=MAIN_ACTIVITY, status=STATUS_GRANTED
-            ).exists():
+            )
+            if not granted_main_activities.exists():
                 raise RuntimeError(
                     _(
                         "Kan ikke godkende følgeydelser, før"
                         " hovedydelsen er godkendt."
                     )
                 )
-
+            # Set end date to the highest end date of all granted main
+            # activities.
+            granted_end_dates = [a.end_date for a in granted_main_activities]
+            end_date = (
+                None if None in granted_end_dates else max(granted_end_dates)
+            )
+            for a in to_be_granted:
+                if a.end_date is None or (end_date and a.end_date < end_date):
+                    a.end_date = end_date
+                    a.save()
         approval_level = ApprovalLevel.objects.get(id=approval_level)
-
         for a in to_be_granted:
             a.grant(approval_level, approval_note, approval_user)
 
