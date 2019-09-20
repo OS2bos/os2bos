@@ -62,7 +62,8 @@ with open("aktiviteter.csv") as csvfile:
                 )
             except ActivityDetails.DoesNotExist:
                 print(
-                    f"ActivityDetails with id: {activity_id} or {main_activity} does not exist"
+                    f"ActivityDetails with id: {activity_id}"
+                    f"or {main_activity} does not exist"
                 )
                 continue
         section = Section.objects.get(paragraph=paragraph)
