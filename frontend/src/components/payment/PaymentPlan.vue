@@ -9,7 +9,7 @@
 <template>
 
     <div class="payment-plan">
-        <h3>Forventet udgift</h3>
+        <p style="font-size: 1.5rem;">Forventet udgift</p>
         <p>{{ abstract }}</p>
         <p v-if="yearly_cost">Det er ca. <strong>{{ yearly_cost }} kr</strong> pr. år</p>
     </div>

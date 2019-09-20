@@ -169,10 +169,7 @@ test('Create activities', async t => {
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
 
-    console.log('selector')
-    console.log(Selector('.activities table tr.act-list-item a').nth(0).innerText)
-    
-    testdata.act1.act_detail = Selector('.activities table tr.act-list-item a').nth(0).innerText
+    testdata.act1.act_detail = await Selector('.activities table tr.act-list-item a').nth(0).innerText
 
     await t
         .expect(Selector('.activities table tr.act-list-item a')).ok()
