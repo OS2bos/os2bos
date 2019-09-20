@@ -25,9 +25,11 @@ from core.tests.testing_utils import (
     create_appropriation,
     create_case,
     create_section,
+    create_activity_details,
     create_payment,
     create_account,
     create_service_provider,
+    create_section_info,
 )
 from core.models import (
     Municipality,
@@ -477,6 +479,50 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             approval_level.id,
             "note til bevillingsgodkendelse",
             user,
+        )
+
+    def test_appropriation_suppl_doesnt_cut_date(self):
+        approval_level = ApprovalLevel.objects.create(name="egenkompetence")
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+        now = timezone.now()
+        start_date = now + timedelta(days=6)
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_DRAFT,
+            start_date=start_date,
+            end_date=None,
+        )
+        activity.details.main_activity_for.add(section)
+        user = get_user_model().objects.create(username="Anders And")
+        appropriation.grant(
+            appropriation.activities.exclude(status=STATUS_GRANTED),
+            approval_level.id,
+            "note til bevillingsgodkendelse",
+            user,
+        )
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=SUPPL_ACTIVITY,
+            status=STATUS_DRAFT,
+            start_date=start_date,
+            end_date=start_date + timedelta(days=2),
+        )
+        appropriation.grant(
+            appropriation.activities.filter(pk=activity.pk),
+            approval_level.id,
+            "note til bevillingsgodkendelse",
+            user,
+        )
+        activity.refresh_from_db()
+        self.assertEqual(
+            activity.end_date, (start_date + timedelta(days=2)).date()
         )
 
     def test_appropriation_grant_on_already_granted_one_time(self):
@@ -2429,3 +2475,16 @@ class CaseTestCase(TestCase, BasicTestMixin):
         )
 
         self.assertTrue(case.expired)
+
+
+class SectionInfoTestCase(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_str(self):
+        details = create_activity_details()
+        section = create_section()
+        section_info = create_section_info(details, section)
+
+        self.assertEqual(str(section_info), f"{details} - {section}")

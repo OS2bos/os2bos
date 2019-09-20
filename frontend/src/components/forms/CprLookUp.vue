@@ -7,7 +7,7 @@
 
 <template>
 
-    <fieldset class="cpr-lookup">
+    <div class="cpr-lookup">
 
         <label class="required" for="field-cpr">CPR-nr</label>
         <input 
@@ -30,7 +30,7 @@
             required>
         <error err-key="name" />
         
-    </fieldset>
+    </div>
 
 </template>
 

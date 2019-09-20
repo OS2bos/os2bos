@@ -44,22 +44,33 @@ with open("aktiviteter.csv") as csvfile:
         # if no main activity column is present
         # we know the row is a main activity.
         if not main_activity:
-            main_activity_details = ActivityDetails.objects.get(
-                activity_id=activity_id
-            )
-            supplementary_activity_details = None
+            try:
+                main_activity_details = ActivityDetails.objects.get(
+                    activity_id=activity_id
+                )
+                supplementary_activity_details = None
+            except ActivityDetails.DoesNotExist:
+                print(f"ActivityDetails with id: {activity_id} does not exist")
+                continue
         else:
-            main_activity_details = ActivityDetails.objects.get(
-                activity_id=main_activity
-            )
-            supplementary_activity_details = ActivityDetails.objects.get(
-                activity_id=activity_id
-            )
+            try:
+                main_activity_details = ActivityDetails.objects.get(
+                    activity_id=main_activity
+                )
+                supplementary_activity_details = ActivityDetails.objects.get(
+                    activity_id=activity_id
+                )
+            except ActivityDetails.DoesNotExist:
+                print(
+                    f"ActivityDetails with id: {activity_id}"
+                    f"or {main_activity} does not exist"
+                )
+                continue
         section = Section.objects.get(paragraph=paragraph)
 
-        Account.objects.create(
+        Account.objects.update_or_create(
             main_activity=main_activity_details,
             supplementary_activity=supplementary_activity_details,
             section=section,
-            number=account_number,
+            defaults={"number": account_number},
         )

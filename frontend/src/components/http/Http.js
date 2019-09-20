@@ -9,6 +9,7 @@
 import axios from 'axios'
 import spinner from '../spinner/Spinner.js'
 import notify from '../notifications/Notify.js'
+import store from '../../store.js'
 
 const ax = axios.create({
     baseURL: '/api'
@@ -35,6 +36,10 @@ ax.interceptors.response.use(
     },
     function (err) {
         spinner.spinOff()
+        if (err.response.data.code === 'token_not_valid') {
+            notify('Du er automtatisk blevet logget ud', 'error')
+            store.dispatch('clearAuth')
+        }
         return Promise.reject(err)
     }
 )

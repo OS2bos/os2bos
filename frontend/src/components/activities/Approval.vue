@@ -194,6 +194,7 @@
 
     .approval .dialog-warning {
         background-color: var(--warning);
+        color: hsl(var(--color3), 100%, 20%);
         padding: 1rem 2rem;
     }
 

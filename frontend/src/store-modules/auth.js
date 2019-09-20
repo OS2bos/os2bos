@@ -72,11 +72,11 @@ const actions = {
         })
     },
     setTimer: function({dispatch}) {
-        setTimeout(() => {
+        setInterval(() => {
             dispatch('refreshToken')
         }, 270000);
     },
-    postLogin: function({dispatch}) {
+    postLogin: function() {
         router.push('/')
     },
     refreshToken: function({commit, dispatch, state}) {
@@ -86,7 +86,6 @@ const actions = {
             })
             .then(res => {
                 commit('setAccessToken', res.data.access)
-                dispatch('setTimer')
             })
             .catch(err => {
                 console.log(err)

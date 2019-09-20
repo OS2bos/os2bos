@@ -17,7 +17,9 @@
 
             <error />
             
-            <cpr-lookup :cpr.sync="fam.cpr_number" :name.sync="fam.name" />
+            <fieldset>
+                <cpr-lookup :cpr.sync="fam.cpr_number" :name.sync="fam.name" />
+            </fieldset>
         
             <fieldset>
                 <label class="required" for="field-relation">Relation</label>

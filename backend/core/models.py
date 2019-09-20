@@ -814,18 +814,27 @@ class Appropriation(AuditModelMixin, models.Model):
         else:
             # No main activity. We're only allowed to do this if the
             # main activity is already approved.
-            if not self.activities.filter(
+            granted_main_activities = self.activities.filter(
                 activity_type=MAIN_ACTIVITY, status=STATUS_GRANTED
-            ).exists():
+            )
+            if not granted_main_activities.exists():
                 raise RuntimeError(
                     _(
                         "Kan ikke godkende følgeydelser, før"
                         " hovedydelsen er godkendt."
                     )
                 )
-
+            # Set end date to the highest end date of all granted main
+            # activities.
+            granted_end_dates = [a.end_date for a in granted_main_activities]
+            end_date = (
+                None if None in granted_end_dates else max(granted_end_dates)
+            )
+            for a in to_be_granted:
+                if a.end_date is None or (end_date and a.end_date > end_date):
+                    a.end_date = end_date
+                    a.save()
         approval_level = ApprovalLevel.objects.get(id=approval_level)
-
         for a in to_be_granted:
             a.grant(approval_level, approval_note, approval_user)
 
@@ -920,19 +929,13 @@ class SectionInfo(models.Model):
     """For a main activity, KLE no. and SBSYS ID for the relevant sections."""
 
     class Meta:
-        # For info about why we do this, see
-        # https://code.djangoproject.com/ticket/23034, especially
-        # comment #9.
-        db_table = "core_activitydetails_main_activity_for"
+        verbose_name = _("paragraf-info")
+        verbose_name_plural = _("paragraf-info")
 
     activity_details = models.ForeignKey(
-        ActivityDetails,
-        on_delete=models.CASCADE,
-        db_column="activitydetails_id",
+        ActivityDetails, on_delete=models.CASCADE
     )
-    section = models.ForeignKey(
-        Section, on_delete=models.CASCADE, db_column="section_id"
-    )
+    section = models.ForeignKey(Section, on_delete=models.CASCADE)
 
     kle_number = models.CharField(
         max_length=128, verbose_name=_("KLE-nummer"), blank=True
@@ -940,6 +943,9 @@ class SectionInfo(models.Model):
     sbsys_template_id = models.CharField(
         max_length=128, verbose_name=_("SBSYS skabelon-id"), blank=True
     )
+
+    def __str__(self):
+        return f"{self.activity_details} - {self.section}"
 
 
 class Activity(AuditModelMixin, models.Model):
