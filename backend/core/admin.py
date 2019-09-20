@@ -28,6 +28,7 @@ from core.models import (
     Team,
     User,
     ApprovalLevel,
+    SectionInfo,
 )
 
 for klass in (
@@ -43,6 +44,7 @@ for klass in (
     Account,
     Team,
     ApprovalLevel,
+    SectionInfo,
 ):
     admin.site.register(klass, admin.ModelAdmin)
 

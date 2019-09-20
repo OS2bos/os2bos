@@ -25,6 +25,7 @@ from core.models import (
     Payment,
     ServiceProvider,
     Section,
+    SectionInfo,
     Account,
     SD,
     FAMILY_DEPT,
@@ -130,6 +131,21 @@ def create_payment_schedule(
     return payment_schedule
 
 
+def create_activity_details(
+    activity_id="000000",
+    name="Test aktivitet",
+    max_tolerance_in_percent=10,
+    max_tolerance_in_dkk=1000,
+):
+    details, unused = ActivityDetails.objects.get_or_create(
+        activity_id=activity_id,
+        name=name,
+        max_tolerance_in_percent=max_tolerance_in_percent,
+        max_tolerance_in_dkk=max_tolerance_in_dkk,
+    )
+    return details
+
+
 def create_activity(
     case,
     appropriation,
@@ -139,12 +155,7 @@ def create_activity(
     **kwargs,
 ):
     if "details" not in kwargs:
-        details, unused = ActivityDetails.objects.get_or_create(
-            activity_id="000000",
-            name="Test aktivitet",
-            max_tolerance_in_percent=10,
-            max_tolerance_in_dkk=1000,
-        )
+        details = create_activity_details()
     else:
         details = kwargs.pop("details")
 
@@ -212,3 +223,15 @@ def create_service_provider(cvr_number, name):
     )
 
     return service_provider
+
+
+def create_section_info(
+    details, section, kle_number="27.18.02", sbsys_template_id="900"
+):
+    section_info = SectionInfo.objects.create(
+        activity_details=details,
+        section=section,
+        kle_number=kle_number,
+        sbsys_template_id=sbsys_template_id,
+    )
+    return section_info
