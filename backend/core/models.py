@@ -1089,10 +1089,39 @@ class Activity(AuditModelMixin, models.Model):
         """
         Validate this is a correct expected activity.
         """
+        today = date.today()
+
         if not self.modifies:
             raise forms.ValidationError(
                 _("den forventede justering har ingen ydelse at justere")
             )
+
+        # Check that past payments are not affected by this
+        # modification.
+        if self.start_date < today:
+            first_modified_payment_date = get_next_interval(
+                self.start_date,
+                self.payment_plan.payment_frequency
+            )
+            first_original_payment_date = get_next_interval(
+                self.start_date,
+                self.modifies.payment_plan.payment_frequency)
+
+            if first_original_payment_date < today:
+                raise forms.ValidationError(
+                    _(
+                        "den forventede justering ændrer en betaling før"
+                        " dags dato"
+                    )
+                )
+
+            if first_modified_payment_date < today:
+                raise forms.ValidationError(
+                    _(
+                        "den forventede justering opretter en ny betaling"
+                        " før dags dato"
+                    )
+                )
 
         if self.modifies.end_date and self.start_date > self.modifies.end_date:
 
