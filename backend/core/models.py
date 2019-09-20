@@ -1100,12 +1100,11 @@ class Activity(AuditModelMixin, models.Model):
         # modification.
         if self.start_date < today:
             first_modified_payment_date = get_next_interval(
-                self.start_date,
-                self.payment_plan.payment_frequency
+                self.start_date, self.payment_plan.payment_frequency
             )
             first_original_payment_date = get_next_interval(
-                self.start_date,
-                self.modifies.payment_plan.payment_frequency)
+                self.start_date, self.modifies.payment_plan.payment_frequency
+            )
 
             if first_original_payment_date < today:
                 raise forms.ValidationError(
