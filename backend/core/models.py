@@ -882,19 +882,13 @@ class SectionInfo(models.Model):
     """For a main activity, KLE no. and SBSYS ID for the relevant sections."""
 
     class Meta:
-        # For info about why we do this, see
-        # https://code.djangoproject.com/ticket/23034, especially
-        # comment #9.
-        db_table = "core_activitydetails_main_activity_for"
+        verbose_name = _("paragraf-info")
+        verbose_name_plural = _("paragraf-info")
 
     activity_details = models.ForeignKey(
-        ActivityDetails,
-        on_delete=models.CASCADE,
-        db_column="activitydetails_id",
+        ActivityDetails, on_delete=models.CASCADE
     )
-    section = models.ForeignKey(
-        Section, on_delete=models.CASCADE, db_column="section_id"
-    )
+    section = models.ForeignKey(Section, on_delete=models.CASCADE)
 
     kle_number = models.CharField(
         max_length=128, verbose_name=_("KLE-nummer"), blank=True
