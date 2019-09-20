@@ -1111,22 +1111,7 @@ class Activity(AuditModelMixin, models.Model):
                 )
             )
 
-        if self.modifies.end_date and self.start_date > self.modifies.end_date:
-
-            raise forms.ValidationError(
-                _(
-                    f"den justerede aktivitets startdato skal være før"
-                    f"ydelsens slutdato: {self.modifies.end_date}"
-                )
-            )
         return True
-
-    @property
-    def ongoing(self):
-        today = date.today()
-        return self.start_date <= today and (
-            not self.end_date or self.end_date > today
-        )
 
     @property
     def account(self):
