@@ -48,12 +48,12 @@
 }
 
 .notification.success {
-    background-color: hsl(var(--color2), 66%, 30%);
+    background-color: var(--success);
     color: var(--grey0);
 }
 
 .notification.notification-error {
-    background-color: hsl(var(--color4), 100%, 39%);
+    background-color: var(--danger);
     color: var(--grey0);
 }
 

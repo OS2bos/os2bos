@@ -28,17 +28,17 @@
 
                             <div class="modal-header">
                                 <slot name="header">
-                                    <h1>Slet</h1>
+                                    <h2>Slet</h2>
                                 </slot>
                             </div>
 
                             <div class="modal-body">
                                 <slot name="body">
-                                    <h3>
+                                    <p>
                                         Er du sikker på, at du vil slette denne
                                         <span v-if="act.status === 'DRAFT'">kladde</span>
                                         <span v-if="act.status === 'EXPECTED'">forventning</span> ?
-                                    </h3>
+                                    </p>
                                 </slot>
                             </div>
 

@@ -5,6 +5,12 @@ import { loginAsUngeraadgiver } from '../utils/logins.js'
 import { createActivity } from '../utils/crud.js'
 import { axe } from '../utils/axe.js'
 
+// Enable display of console logs in terminal
+export default async function () {
+    const { error } = await t.getBrowserConsoleMessages();
+    await t.expect(error[0]).notOk();
+}
+
 function leadZero(number) {
     if (number < 10) {
         return `0${ number }`
@@ -39,7 +45,6 @@ const testdata = {
     },
     act1: {
         type: 1,
-        act_detail: 'Psykologhjælp til børn',
         start: str1mth,
         end: str10mth,
         note: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
@@ -121,7 +126,7 @@ test('Create Case', async t => {
         .click(Selector('input').withAttribute('type', 'submit'))
         .navigateTo('http://localhost:8080/#/')
     
-    //await axe(t)
+    await axe(t)
 
     await t
         .expect(Selector('.cases table a').withText(testdata.case1.name)).ok()
@@ -151,7 +156,7 @@ test('Create Appropriation', async t => {
         .expect(Selector('.appropriation-list tr:first-child td a').innerText).contains(testdata.appr1.name)
 })
 
-test('Create activity', async t => {
+test('Create activities', async t => {
     
     await loginAsUngeraadgiver(t)
 
@@ -167,6 +172,13 @@ test('Create activity', async t => {
         .navigateTo('http://localhost:8080/#/')
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
+
+    console.log('selector')
+    console.log(Selector('.activities table tr.act-list-item a').nth(0).innerText.value)
+    
+    testdata.act1.act_detail = Selector('.activities table tr.act-list-item a').nth(0).innerText.value
+
+    await t
         .expect(Selector('.activities table tr.act-list-item a')).ok()
 })
 
