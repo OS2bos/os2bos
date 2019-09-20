@@ -831,7 +831,7 @@ class Appropriation(AuditModelMixin, models.Model):
                 None if None in granted_end_dates else max(granted_end_dates)
             )
             for a in to_be_granted:
-                if a.end_date is None or (end_date and a.end_date < end_date):
+                if a.end_date is None or (end_date and a.end_date > end_date):
                     a.end_date = end_date
                     a.save()
         approval_level = ApprovalLevel.objects.get(id=approval_level)
