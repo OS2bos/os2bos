@@ -258,7 +258,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         )
         appropriation = create_appropriation(case=case)
         now = timezone.now().date()
-        start_date = now - timedelta(days=7)
+        start_date = now + timedelta(1)
         details, unused = ActivityDetails.objects.get_or_create(
             activity_id="000000",
             name="Test aktivitet",
