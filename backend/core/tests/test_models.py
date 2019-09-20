@@ -518,6 +518,10 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             "note til bevillingsgodkendelse",
             user,
         )
+        activity.refresh_from_db()
+        self.assertEqual(
+            activity.end_date, (start_date + timedelta(days=2)).date()
+        )
 
     def test_appropriation_grant_on_already_granted_one_time(self):
         approval_level = ApprovalLevel.objects.create(name="egenkompetence")
