@@ -4,12 +4,7 @@ import { Selector } from 'testcafe'
 import { loginAsUngeraadgiver } from '../utils/logins.js'
 import { createActivity } from '../utils/crud.js'
 import { axe } from '../utils/axe.js'
-
-// Enable display of console logs in terminal
-export default async function () {
-    const { error } = await t.getBrowserConsoleMessages();
-    await t.expect(error[0]).notOk();
-}
+import logs from '../utils/logs.js'
 
 function leadZero(number) {
     if (number < 10) {
@@ -103,6 +98,7 @@ const testdata = {
 
 fixture `Create some data`// declare the fixture
     .page `http://localhost:8080/#/my-cases/`  // specify the start page
+    .afterEach(() => logs())
 
 test('Create Case', async t => {
 
@@ -174,9 +170,9 @@ test('Create activities', async t => {
         .click(Selector('a').withText(testdata.appr1.name))
 
     console.log('selector')
-    console.log(Selector('.activities table tr.act-list-item a').nth(0).innerText.value)
+    console.log(Selector('.activities table tr.act-list-item a').nth(0).innerText)
     
-    testdata.act1.act_detail = Selector('.activities table tr.act-list-item a').nth(0).innerText.value
+    testdata.act1.act_detail = Selector('.activities table tr.act-list-item a').nth(0).innerText
 
     await t
         .expect(Selector('.activities table tr.act-list-item a')).ok()
