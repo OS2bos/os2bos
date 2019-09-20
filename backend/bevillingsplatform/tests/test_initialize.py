@@ -13,6 +13,7 @@ from core.models import (
     Municipality,
     SchoolDistrict,
     Section,
+    SectionInfo,
     Account,
     ActivityDetails,
     PaymentMethodDetails,
@@ -38,12 +39,17 @@ class InitializeTestCase(TestCase):
     def test_initialize_generates_activity_details(self):
         initialize()
         details_count = ActivityDetails.objects.count()
-        self.assertEqual(details_count, 86)
+        self.assertEqual(details_count, 82)
+
+    def test_initialize_generates_section_infos(self):
+        initialize()
+        section_infos = SectionInfo.objects.count()
+        self.assertEqual(section_infos, 96)
 
     def test_initialize_generates_accounts(self):
         initialize()
         accounts_count = Account.objects.count()
-        self.assertEqual(accounts_count, 889)
+        self.assertEqual(accounts_count, 882)
 
     def test_initialize_generates_payment_method_details(self):
         initialize()
