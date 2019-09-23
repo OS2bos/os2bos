@@ -246,7 +246,9 @@ class PaymentSchedule(models.Model):
     )
     # number of units to pay, ie. XX kilometres or hours
     payment_units = models.DecimalField(
-        verbose_name=_("betalingsenheder"), blank=True, null=True,
+        verbose_name=_("betalingsenheder"),
+        blank=True,
+        null=True,
         max_digits=14,
         decimal_places=2,
         validators=[MinValueValidator(Decimal("0.01"))],
