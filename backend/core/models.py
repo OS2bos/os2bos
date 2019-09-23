@@ -1096,71 +1096,22 @@ class Activity(AuditModelMixin, models.Model):
         Validate this is a correct expected activity.
         """
         today = date.today()
+
         if not self.modifies:
             raise forms.ValidationError(
                 _("den forventede justering har ingen ydelse at justere")
             )
-        is_one_time_payment = (
-            self.payment_plan.payment_type == PaymentSchedule.ONE_TIME_PAYMENT
-        )
-        # the expected with modifies activity should have a start_date
-        # in the span of next payment date to the modified activitys
-        # end_date
-        if is_one_time_payment:
-            next_payment_date = today + timedelta(days=1)
-        elif not self.modifies.ongoing:
-            next_payment_date = get_next_interval(
-                self.modifies.start_date, self.payment_plan.payment_frequency
-            )
-        else:
-            next_payment = self.modifies.payment_plan.next_payment
-            if not next_payment:
-                raise forms.ValidationError(
-                    _(
-                        "den bevilgede aktivitet skal have en fremtidig"
-                        " betaling for at man kan lave en"
-                        " forventet justering"
-                    )
-                )
-            next_payment_date = next_payment.date
 
-        if is_one_time_payment:
-            if not today < next_payment_date <= self.start_date:
-                raise forms.ValidationError(
-                    _(
-                        f"den justerede aktivitets startdato skal være i"
-                        f" fremtiden fra næste betalingsdato:"
-                        f" {next_payment_date}"
-                    )
-                )
-        elif not (
-            today < next_payment_date <= self.start_date
-            and (
-                self.start_date <= self.modifies.end_date
-                if self.modifies.end_date
-                else True
-            )
-        ):
-            to_end_date_str = (
-                f" til ydelsens slutdato: {self.modifies.end_date}"
-                if self.modifies.end_date
-                else ""
-            )
+        # Check that this modification is in the future.
+        if self.start_date < today:
             raise forms.ValidationError(
                 _(
-                    f"den justerede aktivitets startdato skal være i"
-                    f" fremtiden fra næste betalingsdato: {next_payment_date}"
-                    f"{to_end_date_str}"
+                    "den forventede justerings startdato skal"
+                    " være i fremtiden"
                 )
             )
-        return True
 
-    @property
-    def ongoing(self):
-        today = date.today()
-        return self.start_date <= today and (
-            not self.end_date or self.end_date > today
-        )
+        return True
 
     @property
     def account(self):
