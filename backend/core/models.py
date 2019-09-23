@@ -251,7 +251,7 @@ class PaymentSchedule(models.Model):
         null=True,
         max_digits=14,
         decimal_places=2,
-        validators=[MinValueValidator(Decimal("0.01"))],
+        validators=[MinValueValidator(Decimal("0.00"))],
     )
     payment_amount = models.DecimalField(
         max_digits=14,
