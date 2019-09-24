@@ -86,7 +86,6 @@ ENTRYPOINT ["/code/docker/docker-entrypoint.sh"]
 CMD ["gunicorn", \
   "-b", "0.0.0.0:5000", \
   "--workers", "2", \
-  "--threads", "4", \
   "--access-logfile", "/log/access.log", \
   "--worker-tmp-dir", "/dev/shm", \
   "bevillingsplatform.wsgi"]
