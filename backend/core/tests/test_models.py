@@ -408,8 +408,10 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
         self.assertEqual(appropriation.granted_from_date, start_date)
         self.assertEqual(appropriation.granted_to_date, end_date)
-
-        self.assertEqual(activity, appropriation.main_activity)
+        activity.status = STATUS_DRAFT
+        activity.save()
+        self.assertEqual(appropriation.granted_from_date, None)
+        self.assertEqual(appropriation.granted_to_date, None)
 
     def test_constraint_on_more_than_one_main_activity(self):
         case = create_case(
