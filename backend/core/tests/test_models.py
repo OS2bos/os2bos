@@ -390,6 +390,27 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
 
         self.assertEqual(activity, appropriation.main_activity)
 
+    def test_start_and_end_dates(self):
+        now = timezone.now()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        start_date = date(year=now.year, month=1, day=1)
+        end_date = date(year=now.year, month=1, day=10)
+        activity = create_activity(
+            case,
+            appropriation,
+            activity_type=MAIN_ACTIVITY,
+            start_date=start_date,
+            end_date=end_date,
+            status=STATUS_GRANTED,
+        )
+        self.assertEqual(appropriation.granted_from_date, start_date)
+        self.assertEqual(appropriation.granted_to_date, end_date)
+
+        self.assertEqual(activity, appropriation.main_activity)
+
     def test_constraint_on_more_than_one_main_activity(self):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
