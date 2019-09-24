@@ -84,8 +84,5 @@ USER bev:bev
 EXPOSE 5000
 ENTRYPOINT ["/code/docker/docker-entrypoint.sh"]
 CMD ["gunicorn", \
-  "-b", "0.0.0.0:5000", \
-  "--workers", "2", \
-  "--access-logfile", "/log/access.log", \
-  "--worker-tmp-dir", "/dev/shm", \
+  "--config", "/code/docker/gunicorn-settings.py", \
   "bevillingsplatform.wsgi"]
