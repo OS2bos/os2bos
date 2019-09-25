@@ -176,13 +176,12 @@ def send_appropriation(appropriation):
     approved_main_activities = appropriation.activities.filter(
         activity_type=core.models.MAIN_ACTIVITY,
         status=core.models.STATUS_GRANTED,
-        end_date__gte=today,
-    )
+    ).exclude(end_date__lt=today)
     approved_suppl_activities = appropriation.activities.filter(
         activity_type=core.models.SUPPL_ACTIVITY,
         status=core.models.STATUS_GRANTED,
-        end_date__gte=today,
-    )
+    ).exclude(end_date__lt=today)
+
     render_context = {
         "appropriation": appropriation,
         "main_activities": approved_main_activities,
