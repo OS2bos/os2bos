@@ -47,21 +47,21 @@
                         break
                     case 'PER_HOUR_PAYMENT':
                         if (this.units) {
-                            str += `${ this.units } timer á ${ cost2da(this.amount) } kr hver ${ this.freq_name }`
+                            str += `${ cost2da(this.units) } timer á ${ cost2da(this.amount) } kr hver ${ this.freq_name }`
                         } else {
                             str = '-'
                         }
                         break
                     case 'PER_DAY_PAYMENT':
                         if (this.units) {
-                            str += `${ this.units } døgn á ${ cost2da(this.amount) } kr hver ${ this.freq_name }`
+                            str += `${ cost2da(this.units) } døgn á ${ cost2da(this.amount) } kr hver ${ this.freq_name }`
                         } else {
                             str = '-'
                         }
                         break
                     case 'PER_KM_PAYMENT':
                         if (this.units) {
-                            str += `${ this.units } kilometer á ${ cost2da(this.amount) } kr hver ${ this.freq_name }`
+                            str += `${ cost2da(this.units) } kilometer á ${ cost2da(this.amount) } kr hver ${ this.freq_name }`
                         } else {
                             str = '-'
                         }

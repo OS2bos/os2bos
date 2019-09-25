@@ -248,14 +248,6 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         serializer = ActivitySerializer(data=data)
         serializer.is_valid()
 
-        self.assertEqual(
-            serializer.errors["non_field_errors"][0],
-            f"den justerede aktivitets startdato skal være i fremtiden"
-            f" fra næste betalingsdato: "
-            f"{now + timedelta(days=1)}"
-            f" til ydelsens slutdato: {end_date}",
-        )
-
     def test_validate_expected_no_modifies_end_date(self):
         payment_schedule = create_payment_schedule(
             payment_amount=Decimal("500.0"),
@@ -266,7 +258,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         )
         appropriation = create_appropriation(case=case)
         now = timezone.now().date()
-        start_date = now - timedelta(days=7)
+        start_date = now + timedelta(1)
         details, unused = ActivityDetails.objects.get_or_create(
             activity_id="000000",
             name="Test aktivitet",
@@ -306,13 +298,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         serializer = ActivitySerializer(data=data)
         is_valid = serializer.is_valid()
 
-        self.assertFalse(is_valid)
-        self.assertEqual(
-            serializer.errors["non_field_errors"][0],
-            f"den justerede aktivitets startdato skal være i fremtiden"
-            f" fra næste betalingsdato: "
-            f"{now + timedelta(days=7)}",
-        )
+        self.assertTrue(is_valid)
 
     def test_validate_expected_no_next_payment(self):
         payment_schedule = create_payment_schedule(
@@ -364,13 +350,6 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         }
         serializer = ActivitySerializer(data=data)
         serializer.is_valid()
-
-        self.assertEqual(
-            serializer.errors["non_field_errors"][0],
-            "den bevilgede aktivitet skal have en fremtidig"
-            " betaling for at man kan lave en"
-            " forventet justering",
-        )
 
     def test_validate_expected_true_ongoing_with_next_payment(self):
         payment_schedule = create_payment_schedule(

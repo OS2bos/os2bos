@@ -121,7 +121,7 @@
                         <div v-if="pay.payment_type === 'PER_KM_PAYMENT'">Kilometer</div>
                     </dt>
                     <dd v-if="pay.payment_type === 'PER_HOUR_PAYMENT' || pay.payment_type === 'PER_DAY_PAYMENT' || pay.payment_type === 'PER_KM_PAYMENT'">
-                        {{ pay.payment_units }}
+                        {{ displayDigits(pay.payment_units) }}
                     </dd>
                     <dt>Beløb</dt>
                     <dd>{{ displayDigits(pay.payment_amount) }} kr.</dd>
