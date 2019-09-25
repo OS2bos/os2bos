@@ -692,6 +692,36 @@ class Appropriation(AuditModelMixin, models.Model):
     )
 
     @property
+    def granted_from_date(self):
+        """Retrieve the start date of the main activity, if granted."""
+        # The appropriation start date is the start date of the first
+        # main activity.
+        f = self.activities.filter(
+            activity_type=MAIN_ACTIVITY,
+            modifies__isnull=True,
+            status=STATUS_GRANTED,
+        )
+        if f.exists():
+            # There should be only one - count on that.
+            activity = f.first()
+            return activity.start_date
+
+    @property
+    def granted_to_date(self):
+        """Retrieve the end date of the main activity, if granted."""
+        # The appropriation start date is the start date of the first
+        # main activity.
+        f = self.activities.filter(
+            activity_type=MAIN_ACTIVITY,
+            modified_by__isnull=True,
+            status=STATUS_GRANTED,
+        )
+        if f.exists():
+            # There should be only one - count on that.
+            activity = f.first()
+            return activity.end_date
+
+    @property
     def total_granted_this_year(self):
         """
         Retrieve total amount granted this year for payments related to
@@ -746,7 +776,10 @@ class Appropriation(AuditModelMixin, models.Model):
     @property
     def main_activity(self):
         """Return main activity, if any."""
-        f = self.activities.filter(activity_type=MAIN_ACTIVITY)
+        # We define the main activity as the *first* main activity.
+        f = self.activities.filter(
+            activity_type=MAIN_ACTIVITY, modifies__isnull=True
+        )
         if f.exists():
             # Invariant: There is only one main activity.
             return f.first()
