@@ -35,12 +35,12 @@ target_group_choices = (
 )
 
 # Effort steps - definitions and choice list.
-STEP_ONE = "STEP_ONE"
-STEP_TWO = "STEP_TWO"
-STEP_THREE = "STEP_THREE"
-STEP_FOUR = "STEP_FOUR"
-STEP_FIVE = "STEP_FIVE"
-STEP_SIX = "STEP_SIX"
+STEP_ONE = 1
+STEP_TWO = 2
+STEP_THREE = 3
+STEP_FOUR = 4
+STEP_FIVE = 5
+STEP_SIX = 6
 
 effort_steps_choices = (
     (STEP_ONE, _("Trin 1: Tidlig indsats i almenområdet")),
@@ -548,7 +548,7 @@ class Case(AuditModelMixin, models.Model):
         verbose_name=_("målgruppe"),
         choices=target_group_choices,
     )
-    effort_step = models.CharField(
+    effort_step = models.PositiveSmallIntegerField(
         max_length=128,
         choices=effort_steps_choices,
         verbose_name=_("indsatstrappe"),
