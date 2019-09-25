@@ -549,9 +549,7 @@ class Case(AuditModelMixin, models.Model):
         choices=target_group_choices,
     )
     effort_step = models.PositiveSmallIntegerField(
-        max_length=128,
-        choices=effort_steps_choices,
-        verbose_name=_("indsatstrappe"),
+        choices=effort_steps_choices, verbose_name=_("indsatstrappe")
     )
     scaling_step = models.PositiveSmallIntegerField(
         verbose_name=_("skaleringstrappe"),
@@ -639,7 +637,7 @@ class Section(models.Model):
         verbose_name=_("tilladt for handicapafdelingen"), default=False
     )
     allowed_for_steps = postgres_fields.ArrayField(
-        models.CharField(max_length=128, choices=effort_steps_choices),
+        models.PositiveSmallIntegerField(choices=effort_steps_choices),
         size=6,
         verbose_name=_("tilladt for trin i indsatstrappen"),
     )
