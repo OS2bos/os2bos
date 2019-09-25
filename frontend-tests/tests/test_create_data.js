@@ -118,7 +118,7 @@ test('Create Case', async t => {
         .click('#field-indsatstrappe')
         .click(Selector('#field-indsatstrappe option').withText('Trin 3 - Hjemmebaserede indsatser'))
         .click('#field-skaleringstrappe')
-        .click(Selector('#field-skaleringstrappe option').withText('10'))
+        .click(Selector('#field-skaleringstrappe option').withText('5'))
         .click(Selector('input').withAttribute('type', 'submit'))
         .navigateTo('http://localhost:8080/#/')
     
