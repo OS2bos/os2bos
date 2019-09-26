@@ -1,4 +1,5 @@
 import { Selector } from 'testcafe'
+import { axe } from '../utils/axe.js'
 
 async function createActivity(t, act_data) {
 
@@ -11,6 +12,8 @@ async function createActivity(t, act_data) {
     if (act_data.expected_type === 'expectation') {
         await t.click(Selector('label').withAttribute('for', 'field-status-expected'))
     }
+
+    await axe(t)
 
     await t
         .click('#fieldSelectAct')

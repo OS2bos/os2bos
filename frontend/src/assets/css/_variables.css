@@ -26,9 +26,9 @@
     --grey10: hsl(0, 0%, 0%);
 
     --primary: hsl(var(--color1), 83%, 31%); /* Blue */
-    --success: hsl(var(--color2), 83%, 31%); /* Green */
+    --success: hsl(var(--color2), 83%, 25%); /* Green */
     --warning: hsl(var(--color3), 83%, 61%); /* Orange */
-    --danger: hsl(var(--color4), 100%, 41%); /* Red */
+    --danger: hsl(var(--color4), 100%, 31%); /* Red */
 
     --font: 'Arial', sans-serif;
 
