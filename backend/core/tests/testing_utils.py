@@ -29,6 +29,7 @@ from core.models import (
     Account,
     SD,
     FAMILY_DEPT,
+    STEP_ONE,
 )
 
 
@@ -62,7 +63,7 @@ def create_case(
     district,
     sbsys_id="13212",
     scaling_step=1,
-    effort_step="STEP_ONE",
+    effort_step=STEP_ONE,
     target_group=FAMILY_DEPT,
 ):
 
@@ -96,7 +97,7 @@ def create_case_as_json(
         "case_worker": case_worker.id,
         "team": team.id,
         "scaling_step": 1,
-        "effort_step": "STEP_ONE",
+        "effort_step": STEP_ONE,
         "district": district.id,
         "paying_municipality": municipality.id,
         "acting_municipality": municipality.id,
