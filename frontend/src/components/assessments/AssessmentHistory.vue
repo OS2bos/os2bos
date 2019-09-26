@@ -35,10 +35,10 @@
                         <i class="material-icons">account_circle</i>
                         {{ displayUserName(h.case_worker) }}
                     </td>
-                    <td :class="`step-effort-${h.effort_step}`">
+                    <td :class="`step-${h.effort_step}`">
                         {{ displayEffortName(h.effort_step) }}
                     </td>
-                    <td :class="`step-scale-${h.scaling_step}`">
+                    <td :class="`step-${h.scaling_step}`">
                         {{ h.scaling_step }}
                     </td>
                     <td>
@@ -104,69 +104,52 @@
 
 <style>
 
-    
-    .assessment-history .step-effort-1 {
+    .assessment-history .step-STEP_ONE {
         color: hsl(100, 100%, 33%);   
     }
 
-    .assessment-history .step-effort-2 {
+    .assessment-history .step-STEP_TWO {
         color: hsl(80, 100%, 33%);   
     }
 
-    .assessment-history .step-effort-3 {
+    .assessment-history .step-STEP_THREE {
         color: hsl(60, 100%, 33%);   
     }
 
-    .assessment-history .step-effort-4 {
+    .assessment-history .step-STEP_FOUR {
         color: hsl(40, 100%, 33%);   
     }
 
-    .assessment-history .step-effort-5 {
+    .assessment-history .step-STEP_FIVE {
         color: hsl(20, 100%, 33%);   
     }
 
-    .assessment-history .step-effort-6 {
+    .assessment-history .step-STEP_SIX {
         color: hsl(0, 100%, 33%);   
     }
 
-    .assessment-history .step-scale-1 {
-        color: hsl(0, 100%, 33%);   
-    }
-
-    .assessment-history .step-scale-2 {
-        color: hsl(20, 100%, 33%);   
-    }
-
-    .assessment-history .step-scale-3 {
-        color: hsl(30, 100%, 33%);   
-    }
-
-    .assessment-history .step-scale-4 {
-        color: hsl(40, 100%, 33%);   
-    }
-
-    .assessment-history .step-scale-5 {
-        color: hsl(50, 100%, 33%);   
-    }
-
-    .assessment-history .step-scale-6 {
-        color: hsl(60, 100%, 33%);   
-    }
-
-    .assessment-history .step-scale-7 {
-        color: hsl(70, 100%, 33%);   
-    }
-
-    .assessment-history .step-scale-8 {
-        color: hsl(80, 100%, 33%);   
-    }
-
-    .assessment-history .step-scale-9 {
-        color: hsl(90, 100%, 33%);   
-    }
-
-    .assessment-history .step-scale-10 {
+    .assessment-history .step-1 {
         color: hsl(100, 100%, 33%);   
+    }
+
+    .assessment-history .step-2 {
+        color: hsl(80, 100%, 33%);   
+    }
+
+    .assessment-history .step-3 {
+        color: hsl(60, 100%, 33%);   
+    }
+
+    .assessment-history .step-4 {
+        color: hsl(40, 100%, 33%);   
+    }
+
+    .assessment-history .step-5 {
+        color: hsl(20, 100%, 33%);   
+    }
+
+    .assessment-history .step-6 {
+        color: hsl(0, 100%, 33%);   
     }
 
 </style>
