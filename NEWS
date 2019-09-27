@@ -1,3 +1,40 @@
+* Version 1.0.0, 2019-09-27
+
+First production release. New in this version:
+
+* KLE number and SBYS template info moved from Section to new
+  SectionInfo class in the ManyToMany relation.
+* Activities are granted individually, not all at once for each
+  appropriation.
+* Missing logo fixed/supplied.
+* Various GUI and UX improvements.
+* Prevent expected changes from starting in the past.
+* Make user supply day of month for monthly payments - handle month end
+  correctly.
+* Browser compatibility fixes.
+* Fix missing update of family relations.
+* Improved handling of backend error messages.
+* New API fields for expected and granted totals for activities.
+* Appropriation PDF nicified and adapted to the new approval scheme.
+* SBSYS integration (os2forms.xml) fixed.
+* Cases *must* have a team, this field is now non-nullable.
+* Activities with status EXPECTED are now soft-deleted.
+* Status label for appropriations fixed.
+* Wrong validation of KLE numbers fixed.
+* Stop date of supplementary activities must be no later than stop date
+  of main activity.
+* End-to-end tests for accessibility added.
+* Classifications updated, now production ready.
+* Bad validation that expectation must be after next payment date
+  removed.
+* Allow units to be charged, e.g. dates, to be a decimal number.
+* Gunicorn is now run single-threaded.
+* Updates to Docker configuration.
+* It is now possible to make expectations for the entire appropriation
+  period even though the main activity is split.
+* DB representation of effort steps (Indsatstrappe) changed to integer.
+
+
 * Version 0.5.0, 2019-09-05
 
 New in this version:
