@@ -11,11 +11,13 @@
 
         <app-header />
         
-        <main>
+        <main id="app-main">
             <router-view/>
         </main>
 
         <app-footer />
+
+        <browser-check />
 
     </div>
 </template>
@@ -24,12 +26,14 @@
 
     import AppHeader from './components/header/Header.vue'
     import AppFooter from './components/footer/Footer.vue'
+    import BrowserCheck from './components/browsercheck/Browsercheck.vue'
 
     export default {
 
         components: {
             AppHeader,
-            AppFooter
+            AppFooter,
+            BrowserCheck
         },
         created: function() {
             this.$store.dispatch('autoLogin')
@@ -50,7 +54,7 @@
         display: flex;
         flex-flow: column nowrap;
         width: 100%;
-        min-width: 60rem;
+        min-width: 1024px;
         height: 100%;
     }
 
@@ -88,33 +92,33 @@
     }
 
     .mini-label .label {
-        padding: .124rem .25rem;
+        padding: .15rem .5rem;
         font-size: .85rem;
     }
 
     .label-DRAFT {
-        background-color: var(--grey3);
-        color: white;
+        background-color: var(--grey2);
+        color: var(--grey7);
     }
 
     .label-BUDGETED {
         background-color: var(--warning);
-        color: white;
+        color: hsl(var(--color3), 100%, 20%);
     }
 
     .label-EXPECTED {
         background-color: var(--warning);
-        color: white;
+        color: hsl(var(--color3), 100%, 20%);
     }
 
     .label-GRANTED {
         background-color: var(--success);
-        color: white;
+        color: var(--grey0);
     }
 
     .label-DISCONTINUED {
         background-color: var(--danger);
-        color: white;
+        color: var(--grey0);
     }
 
     .danger {
@@ -126,6 +130,10 @@
         flex-direction: row;
         flex-wrap: wrap;
         width: 100%;
+    }
+
+    .row-item {
+        flex: 1 0 30rem;
     }
 
     .column {
@@ -148,11 +156,11 @@
     }    
 
     .dim {
-        opacity: 0.33;
+        opacity: .6;
     }
 
     .expected {
-        color: hsl(var(--color3), 100%, 50%);
+        color: hsl(var(--color3), 100%, 40%);
     }
 
     /* modal box */
@@ -174,17 +182,22 @@
     }
 
     .modal-container {
-        max-width: 40rem;
         margin: 0px auto;
         padding: 3rem 3.5rem;
         background-color: var(--grey0);
         border-radius: 2px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
         transition: all .3s ease;
+        max-height: 90vh;
+        max-width: 90vh;
+        display: flex;
+        flex-flow: column nowrap;
     }
 
     .modal-body {
         margin: 0.5rem 0;
+        flex: 0 1 auto;
+        overflow: auto;
     }
 
     .modal-confirm-btn {

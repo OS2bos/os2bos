@@ -15,7 +15,6 @@ from django.utils import timezone
 
 from core.models import (
     ApprovalLevel,
-    Appropriation,
     PaymentSchedule,
     MAIN_ACTIVITY,
     SUPPL_ACTIVITY,
@@ -28,6 +27,7 @@ from core.tests.testing_utils import (
     AuthenticatedTestCase,
     BasicTestMixin,
     create_case,
+    create_section,
     create_case_as_json,
     create_appropriation,
     create_activity,
@@ -228,9 +228,15 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         json = create_case_as_json(
             self.case_worker, self.team, self.municipality, self.district
         )
+        # team should be set on the user and also saved on the case.
+        self.user.team = self.team
+        self.user.save()
+
         self.client.login(username=self.username, password=self.password)
         response = self.client.post(url, json)
+
         self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json()["team"], self.team.id)
 
     def test_get_expired_filter(self):
         url = reverse("case-list")
@@ -343,9 +349,36 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
+        section = create_section()
         appropriation = create_appropriation(
-            sbsys_id="XXX-YYY", case=case, status=Appropriation.STATUS_DRAFT
+            sbsys_id="XXX-YYY", case=case, section=section
         )
+        activity = create_activity(
+            case,
+            appropriation,
+            end_date=date(year=2020, month=12, day=24),
+            activity_type=MAIN_ACTIVITY,
+        )
+        section.main_activities.add(activity.details)
+        url = reverse("appropriation-grant", kwargs={"pk": appropriation.pk})
+        self.client.login(username=self.username, password=self.password)
+        approval_level, _ = ApprovalLevel.objects.get_or_create(
+            name="egenkompetence"
+        )
+        json = {
+            "approval_level": approval_level.id,
+            "activities": [activity.pk],
+        }
+        response = self.client.patch(
+            url, json, content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_grant_no_activities(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(sbsys_id="XXX-YYY", case=case)
         create_activity(
             case,
             appropriation,
@@ -361,29 +394,29 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         response = self.client.patch(
             url, json, content_type="application/json"
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
 
-    def test_grant_discontinued(self):
+    def test_grant_wrong_activity(self):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        appropriation = create_appropriation(
-            sbsys_id="XXX-YYY",
-            case=case,
-            status=Appropriation.STATUS_DISCONTINUED,
-        )
-        activity = create_activity(  # noqa - it *will* be used.
+        appropriation1 = create_appropriation(sbsys_id="XXX-YYY", case=case)
+        appropriation2 = create_appropriation(sbsys_id="YYY-XXX", case=case)
+        activity = create_activity(
             case,
-            appropriation,
+            appropriation2,
             end_date=date(year=2020, month=12, day=24),
             activity_type=MAIN_ACTIVITY,
         )
-        url = reverse("appropriation-grant", kwargs={"pk": appropriation.pk})
+        url = reverse("appropriation-grant", kwargs={"pk": appropriation1.pk})
         self.client.login(username=self.username, password=self.password)
         approval_level, _ = ApprovalLevel.objects.get_or_create(
             name="egenkompetence"
         )
-        json = {"approval_level": approval_level.id, "approval_note": "Hej!"}
+        json = {
+            "approval_level": approval_level.id,
+            "activities": [activity.pk],
+        }
         response = self.client.patch(
             url, json, content_type="application/json"
         )
@@ -393,15 +426,16 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
+        section = create_section()
         appropriation = create_appropriation(
-            sbsys_id="XXX-YYY", case=case, status=Appropriation.STATUS_GRANTED
+            sbsys_id="XXX-YYY", case=case, section=section
         )
         start_date = timezone.now().date()
         payment_schedule = create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
         )
-        activity = create_activity(  # noqa - it *will* be used.
+        activity = create_activity(
             case,
             appropriation,
             start_date=start_date,
@@ -410,11 +444,12 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             activity_type=MAIN_ACTIVITY,
             payment_plan=payment_schedule,
         )
+        section.main_activities.add(activity.details)
         payment_schedule = create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
         )
-        modifying_activity = create_activity(  # noqa - it *will* be used.
+        modifying_activity = create_activity(
             case,
             appropriation,
             start_date=start_date + timedelta(days=1),
@@ -428,7 +463,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             payment_frequency=PaymentSchedule.DAILY,
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
         )
-        draft_activity = create_activity(  # noqa - it *will* be used.
+        draft_activity = create_activity(
             case,
             appropriation,
             start_date=start_date,
@@ -442,7 +477,11 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         approval_level, _ = ApprovalLevel.objects.get_or_create(
             name="egenkompetence"
         )
-        json = {"approval_level": approval_level.id, "approval_note": "HEJ!"}
+        json = {
+            "approval_level": approval_level.id,
+            "approval_note": "HEJ!",
+            "activities": [modifying_activity.pk, draft_activity.pk],
+        }
         response = self.client.patch(
             url, json, content_type="application/json"
         )
@@ -452,10 +491,8 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        appropriation = create_appropriation(
-            sbsys_id="XXX-YYY", case=case, status=Appropriation.STATUS_DRAFT
-        )
-        activity = create_activity(  # noqa - it *will* be used.
+        appropriation = create_appropriation(sbsys_id="XXX-YYY", case=case)
+        activity = create_activity(
             case,
             appropriation,
             end_date=date(year=2020, month=12, day=24),
@@ -463,26 +500,11 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         )
         url = reverse("appropriation-grant", kwargs={"pk": appropriation.pk})
         self.client.login(username=self.username, password=self.password)
-        json = {"approval_note": "Hello!"}
+        json = {"approval_note": "Hello!", "activities": [activity.pk]}
         response = self.client.patch(
             url, json, content_type="application/json"
         )
         self.assertEqual(response.status_code, 400)
-
-    def test_grant_granted_no_approval_note_or_level(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
-        appropriation = create_appropriation(
-            sbsys_id="XXX-YYY", case=case, status=Appropriation.STATUS_GRANTED
-        )
-        url = reverse("appropriation-grant", kwargs={"pk": appropriation.pk})
-        self.client.login(username=self.username, password=self.password)
-        json = {}
-        response = self.client.patch(
-            url, json, content_type="application/json"
-        )
-        self.assertEqual(response.status_code, 200)
 
 
 class TestPaymentScheduleViewSet(AuthenticatedTestCase):
@@ -531,3 +553,69 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()[0]["id"], activity.id)
+
+    def test_delete(self):
+        now = timezone.now().date()
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        activity1 = create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=now - timedelta(days=6),
+            end_date=now + timedelta(days=6),
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_DRAFT,
+            payment_plan=payment_schedule,
+        )
+        url = reverse("activity-detail", kwargs={"pk": activity1.pk})
+        self.client.login(username=self.username, password=self.password)
+        # First, check the activity is there.
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        # Delete.
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, 204)
+        # Now check the activity is gone gone gone!
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+        activity2 = create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=now - timedelta(days=6),
+            end_date=now + timedelta(days=6),
+            activity_type=SUPPL_ACTIVITY,
+            status=STATUS_EXPECTED,
+            payment_plan=create_payment_schedule(),
+        )
+        url = reverse("activity-detail", kwargs={"pk": activity2.pk})
+        # Check it's there.
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        # Delete.
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, 204)
+        # Check it's gone.
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+        activity3 = create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=now - timedelta(days=6),
+            end_date=now + timedelta(days=6),
+            activity_type=SUPPL_ACTIVITY,
+            status=STATUS_GRANTED,
+            payment_plan=create_payment_schedule(),
+        )
+        url = reverse("activity-detail", kwargs={"pk": activity3.pk})
+        # Delete.
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, 400)
+        # Check it's still there.
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)

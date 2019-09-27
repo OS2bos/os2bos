@@ -9,21 +9,27 @@
 <template>
 
     <article class="familyoverview-edit">
-        <h1 v-if="create_mode">Opret familierelation</h1>
-        <h1 v-else>Redigér familierelation</h1>
+        <header class="familyoverview-edit-header">
+            <h1 v-if="create_mode">Opret familierelation</h1>
+            <h1 v-else>Redigér familierelation</h1>
+        </header>
         <form @submit.prevent="saveChanges()">
+
             <error />
-            <cpr-lookup :cpr.sync="fam.cpr_number" :name.sync="fam.name" />
+            
+            <fieldset>
+                <cpr-lookup :cpr.sync="fam.cpr_number" :name.sync="fam.name" />
+            </fieldset>
+        
             <fieldset>
                 <label class="required" for="field-relation">Relation</label>
                 <input id="field-relation" type="text" v-model="fam.relation_type" required>
                 <error err-key="relation_type" />
-            </fieldset>
-            <fieldset>
                 <label for="field-sbsysid">Relateret SBSYS sag</label>
                 <input id="field-sbsysid" type="text" v-model="fam.related_case">
             </fieldset>
-            <fieldset>
+                
+            <fieldset class="form-actions">
                 <input type="submit" value="Gem">
                 <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
             </fieldset>
@@ -104,6 +110,7 @@
             } else {
                 this.create_mode = true
             }
+            this.$store.commit('clearErrors')
         }
     }
     
@@ -112,7 +119,27 @@
 <style>
 
     .familyoverview-edit {
-        margin: 1rem;
+        margin: 1rem auto;
+        min-width: 20rem;
+        width: auto;
+    }
+
+    .familyoverview-edit .familyoverview-edit-header {
+        background-color: var(--grey2);
+        padding: .5rem 2rem;
+    }
+
+    .familyoverview-edit form {
+        margin: 0;
+        padding: 1rem 2rem;
+    }
+
+    .familyoverview-edit input[type="text"] {
+        width: 100%;
+    }
+
+    .familyoverview-edit .form-actions {
+        margin: 2rem 0 1rem;
     }
 
     .familyoverview-edit .cancel-btn {

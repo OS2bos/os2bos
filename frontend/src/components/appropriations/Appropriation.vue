@@ -10,42 +10,24 @@
 
     <section class="appropriation" v-if="appr">
         <header class="appropriation-header">
-            <div>
-                <h1 style="display: inline-block;">Bevillingsskrivelse</h1>
-            </div>
-            <div>
-                <button @click="show_edit = !show_edit" class="appr-edit-btn">Redigér</button>
-                <button @click="preApprovalCheck()" class="approval-btn">Godkend</button>
-                <approval :approval-obj="appr" v-if="showModal" @close="update()"></approval>
-            </div>
+            <h1 style="display: inline-block;">Bevillingsskrivelse</h1>
+            <button @click="show_edit = !show_edit" class="appr-edit-btn">Redigér</button>
         </header>
 
-        <div v-if="show_edit">
-            <appropriation-edit :appr-obj="appr" v-if="show_edit" @close="update()" />
-        </div>
+        <appropriation-edit :appr-obj="appr" v-if="show_edit" @close="update()" />
 
         <div class="appr-grid" v-if="cas">
 
             <template v-if="!show_edit">
-                <div class="sagsstatus appr-grid-box">
-                    <p>
-                        <span v-html="statusLabel(appr.status)" style="display: inline-block; margin: .5rem .25rem 0 0;"></span>
-                        <template v-if="appr.approval_level"> 
-                            af {{ displayApprovalName(appr.approval_level) }}, 
-                            {{ displayDate(appr.appropriation_date) }}
-                        </template>
-                        <span v-if="appr.approval_note && appr.approval_note !== ''">med bemærkningen:<br> <em>{{ appr.approval_note }}</em></span>
-                    </p>
-                </div>
 
                 <div class="sagsbeh appr-grid-box">
                     <dl>
-                        <dt>SBSYS-hovedsag nr.</dt>
-                        <dd>{{ cas.sbsys_id }}</dd>
-                        <dt>Foranstaltningssag (SBSYS)</dt>
+                        <dt>Foranstaltningssag</dt>
                         <dd>{{ appr.sbsys_id}}</dd>
-                        <dt>Sagsbehandler</dt>
-                        <dd>{{ displayUserName(cas.case_worker) }}</dd>
+                        <dt>SBSYS-hovedsag</dt>
+                        <dd>{{ cas.sbsys_id }}</dd>
+                        <dt>Sagspart</dt>
+                        <dd>{{ cas.cpr_number }}, {{ cas.name }}</dd>
                         <template v-if="appr.note">
                             <dt>Supplerende oplysninger</dt>
                             <dd>{{ appr.note }}</dd>
@@ -55,8 +37,8 @@
 
                 <div class="sagspart appr-grid-box">
                     <dl>
-                        <dt>Sagspart</dt>
-                        <dd>{{ cas.cpr_number }}, {{ cas.name }}</dd>
+                        <dt>Sagsbehandler</dt>
+                        <dd>{{ displayUserName(cas.case_worker) }}</dd>
                         <dt>Betalingskommune</dt>
                         <dd>{{ displayMuniName(cas.paying_municipality) }}</dd>
                         <dt>Handlekommune</dt>
@@ -88,7 +70,6 @@
     import axios from '../http/Http.js'
     import ActivityList from '../activities/ActivityList.vue'
     import AppropriationEdit from './AppropriationEdit.vue'
-    import Approval from './Approval.vue'
     import { json2jsDate } from '../filters/Date.js'
     import { municipalityId2name, districtId2name, sectionId2name, displayStatus, userId2name, approvalId2name } from '../filters/Labels.js'
     import store from '../../store.js'
@@ -97,13 +78,11 @@
 
         components: {
             ActivityList,
-            AppropriationEdit,
-            Approval
+            AppropriationEdit
         },
         data: function() {
             return {
-                show_edit: false,
-                showModal: false
+                show_edit: false
             }
         },
         beforeRouteEnter: function(to, from, next) {
@@ -140,13 +119,6 @@
             displayDate: function(date) {
                 return json2jsDate(date)
             },
-            preApprovalCheck: function() {
-                if (this.appr.activities.length > 0) {
-                    this.showModal = true
-                } else {
-                    alert('Der er ikke valgt nogen aktiviteter endnu')
-                }
-            },
             updateBreadCrumb: function() {
                 if (this.cas && this.appr) {
                     this.$store.commit('setBreadcrumb', [
@@ -179,9 +151,6 @@
             },
             displayUserName: function(id) {
                 return userId2name(id)
-            },
-            displayApprovalName: function(id) {
-                return approvalId2name(id)
             }
         }
     }
@@ -198,7 +167,11 @@
         display: flex;
         flex-flow: row nowrap;
         align-items: center;
-        justify-content: space-between;
+    }
+
+    .appropriation .appropriation-edit {
+        width: auto;
+        margin: 1rem 0 2rem;
     }
 
     .appropriation-header .material-icons {

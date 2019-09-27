@@ -18,9 +18,9 @@
 
         <PrimaerPartCvrNummer></PrimaerPartCvrNummer>
 
-        <KLe>{{appropriation.section.kle_number}}</KLe>
+        <KLe>{{kle_number}}</KLe>
 
-        <SagSkabelonId>{{appropriation.section.sbsys_template_id}}</SagSkabelonId>
+        <SagSkabelonId>{{sbsys_template_id}}</SagSkabelonId>
 
     </SBSYSJournalisering>
 

@@ -10,13 +10,13 @@
 
     <section class="appropriations">
         <header class="appropriations-header">
-            <h1>Bevillingsskrivelser</h1>
+            <h2>Bevillingsskrivelser</h2>
             <button class="appropriation-create-btn" @click="$router.push(`/case/${ caseId }/appropriation-create/`)">+ Opret bevillingsskrivelse</button>
         </header>
         <table class="appropriation-list" v-if="apprs && apprs.length > 0">
             <thead>
                 <tr>
-                    <th style="width: 5.5rem;">Status</th>
+                    <th style="width: 6rem;">Status</th>
                     <th>Foranstaltningssag</th>
                     <th>Bevillingsparagraf</th>
                     <th>Supplerende information</th>
@@ -28,7 +28,7 @@
             </thead>
             <tbody>
                 <tr v-for="a in apprs" :key="a.id">
-                    <td style="width: 5.5rem;"><div  class="mini-label" v-html="statusLabel(a.status)"></div></td>
+                    <td style="width: 6rem;"><div  class="mini-label" v-html="statusLabel(a)"></div></td>
                     <td>    
                         <i class="material-icons">folder_open</i>
                         <router-link :to="`/appropriation/${ a.id }`">
@@ -131,8 +131,19 @@
             displaySection: function(id) {
                 return sectionId2name(id)
             },
-            statusLabel: function(status) {
-                return displayStatus(status)
+            statusLabel: function(appr) {
+                let label = 'DRAFT'
+                for (let act in appr.activities) {
+                    if (appr.activities[act].status === 'GRANTED') {
+                        label = 'GRANTED'
+                    }
+                }
+                for (let act in appr.activities) {
+                    if (appr.activities[act].status === 'EXPECTED') {
+                        label = 'EXPECTED'
+                    }
+                }
+                return displayStatus(label)
             }
         },
         created: function() {
@@ -145,7 +156,7 @@
 <style>
 
     .appropriations {
-        margin: 2rem 0;
+        margin: 0 0 2rem;
     }
 
     .appropriations-header {

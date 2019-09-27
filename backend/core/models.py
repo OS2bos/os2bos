@@ -15,11 +15,11 @@ from dateutil import rrule
 from django import forms
 from django.db import models, transaction
 from django.db.models import Q, F
-from django.contrib.postgres import fields
+from django.contrib.postgres import fields as postgres_fields
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django_audit_fields.models import AuditModelMixin
 from simple_history.models import HistoricalRecords
 
@@ -35,12 +35,12 @@ target_group_choices = (
 )
 
 # Effort steps - definitions and choice list.
-STEP_ONE = "STEP_ONE"
-STEP_TWO = "STEP_TWO"
-STEP_THREE = "STEP_THREE"
-STEP_FOUR = "STEP_FOUR"
-STEP_FIVE = "STEP_FIVE"
-STEP_SIX = "STEP_SIX"
+STEP_ONE = 1
+STEP_TWO = 2
+STEP_THREE = 3
+STEP_FOUR = 4
+STEP_FIVE = 5
+STEP_SIX = 6
 
 effort_steps_choices = (
     (STEP_ONE, _("Trin 1: Tidlig indsats i almenområdet")),
@@ -76,6 +76,10 @@ type_choices = (
 STATUS_DRAFT = "DRAFT"
 STATUS_EXPECTED = "EXPECTED"
 STATUS_GRANTED = "GRANTED"
+STATUS_DELETED = "DELETED"
+# Below, a "virtual" status only relevant for appropriations.
+STATUS_EXPIRED = "EXPIRED"
+
 status_choices = (
     (STATUS_DRAFT, _("kladde")),
     (STATUS_EXPECTED, _("forventet")),
@@ -214,6 +218,14 @@ class PaymentSchedule(models.Model):
         null=True,
         blank=True,
     )
+    # This field only applies to monthly payments.
+    # It may be replaced by a more general way of handling payment dates
+    # independently of the activity's start date.
+    payment_day_of_month = models.IntegerField(
+        verbose_name=_("betales d."),
+        default=1,
+        validators=[MinValueValidator(1), MaxValueValidator(31)],
+    )
 
     ONE_TIME_PAYMENT = "ONE_TIME_PAYMENT"
     RUNNING_PAYMENT = "RUNNING_PAYMENT"
@@ -233,8 +245,13 @@ class PaymentSchedule(models.Model):
         choices=payment_type_choices,
     )
     # number of units to pay, ie. XX kilometres or hours
-    payment_units = models.PositiveIntegerField(
-        verbose_name=_("betalingsenheder"), blank=True, null=True
+    payment_units = models.DecimalField(
+        verbose_name=_("betalingsenheder"),
+        blank=True,
+        null=True,
+        max_digits=14,
+        decimal_places=2,
+        validators=[MinValueValidator(Decimal("0.00"))],
     )
     payment_amount = models.DecimalField(
         max_digits=14,
@@ -308,8 +325,15 @@ class PaymentSchedule(models.Model):
                 rrule.WEEKLY, dtstart=start, until=end, interval=2
             )
         elif self.payment_frequency == self.MONTHLY:
+            monthly_date = self.payment_day_of_month
+            if monthly_date > 28:
+                monthly_date = [d for d in range(28, monthly_date + 1)]
             rrule_frequency = rrule.rrule(
-                rrule.MONTHLY, dtstart=start, until=end, bymonthday=1
+                rrule.MONTHLY,
+                dtstart=start,
+                until=end,
+                bymonthday=monthly_date,
+                bysetpos=-1,
             )
         else:
             raise ValueError(_("ukendt betalingsfrekvens"))
@@ -491,7 +515,6 @@ class Case(AuditModelMixin, models.Model):
         verbose_name=_("team"),
         related_name="cases",
         on_delete=models.PROTECT,
-        null=True,
         blank=True,
     )
     district = models.ForeignKey(
@@ -525,10 +548,8 @@ class Case(AuditModelMixin, models.Model):
         verbose_name=_("målgruppe"),
         choices=target_group_choices,
     )
-    effort_step = models.CharField(
-        max_length=128,
-        choices=effort_steps_choices,
-        verbose_name=_("indsatstrappe"),
+    effort_step = models.PositiveSmallIntegerField(
+        choices=effort_steps_choices, verbose_name=_("indsatstrappe")
     )
     scaling_step = models.PositiveSmallIntegerField(
         verbose_name=_("skaleringstrappe"),
@@ -608,7 +629,6 @@ class Section(models.Model):
         verbose_name_plural = _("paragraffer")
 
     paragraph = models.CharField(max_length=128, verbose_name=_("paragraf"))
-    kle_number = models.CharField(max_length=128, verbose_name=_("KLE-nummer"))
     text = models.TextField(verbose_name=_("forklarende tekst"))
     allowed_for_family_target_group = models.BooleanField(
         verbose_name=_("tilladt for familieafdelingen"), default=False
@@ -616,20 +636,17 @@ class Section(models.Model):
     allowed_for_disability_target_group = models.BooleanField(
         verbose_name=_("tilladt for handicapafdelingen"), default=False
     )
-    allowed_for_steps = fields.ArrayField(
-        models.CharField(max_length=128, choices=effort_steps_choices),
+    allowed_for_steps = postgres_fields.ArrayField(
+        models.PositiveSmallIntegerField(choices=effort_steps_choices),
         size=6,
         verbose_name=_("tilladt for trin i indsatstrappen"),
     )
     law_text_name = models.CharField(
         max_length=128, verbose_name=_("lov tekst navn")
     )
-    sbsys_template_id = models.CharField(
-        max_length=128, verbose_name=_("SBSYS skabelon-id"), blank=True
-    )
 
     def __str__(self):
-        return f"{self.paragraph} - {self.kle_number}"
+        return f"{self.paragraph}"
 
 
 class Appropriation(AuditModelMixin, models.Model):
@@ -651,44 +668,17 @@ class Appropriation(AuditModelMixin, models.Model):
         verbose_name=_("paragraf"),
     )
 
-    # Status - definitions and choice list.
-    STATUS_DRAFT = "DRAFT"
-    STATUS_BUDGETED = "BUDGETED"
-    STATUS_GRANTED = "GRANTED"
-    STATUS_DISCONTINUED = "DISCONTINUED"
-    status_choices = (
-        (STATUS_DRAFT, _("kladde")),
-        (STATUS_BUDGETED, _("disponeret")),
-        (STATUS_GRANTED, _("bevilget")),
-        (STATUS_DISCONTINUED, _("udgået")),
-    )
-    status = models.CharField(
-        verbose_name=_("status"), max_length=16, choices=status_choices
-    )
+    @property
+    def status(self):
+        if not self.activities.exists() or not self.main_activity:
+            return STATUS_DRAFT
+        # We now know that there is at least one activity and a main activity.
+        today = timezone.now().date()
+        if self.main_activity.end_date < today:
+            return STATUS_EXPIRED
+        # Now, the status should follow the main activity's status.
+        return self.main_activity.status
 
-    approval_level = models.ForeignKey(
-        ApprovalLevel,
-        related_name="appropriations",
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        verbose_name=_("bevillingsniveau"),
-    )
-    approval_note = models.TextField(
-        verbose_name=_("evt. bemærkning"), blank=True
-    )
-    approval_user = models.ForeignKey(
-        User,
-        related_name="approved_appropriations",
-        null=True,
-        blank=True,
-        on_delete=models.PROTECT,
-        verbose_name=_("bevilget af bruger"),
-    )
-
-    appropriation_date = models.DateField(
-        verbose_name=_("bevillingsdato"), null=True, blank=True
-    )
     case = models.ForeignKey(
         Case,
         on_delete=models.CASCADE,
@@ -698,6 +688,36 @@ class Appropriation(AuditModelMixin, models.Model):
     note = models.TextField(
         verbose_name=_("supplerende oplysninger"), blank=True
     )
+
+    @property
+    def granted_from_date(self):
+        """Retrieve the start date of the main activity, if granted."""
+        # The appropriation start date is the start date of the first
+        # main activity.
+        f = self.activities.filter(
+            activity_type=MAIN_ACTIVITY,
+            modifies__isnull=True,
+            status=STATUS_GRANTED,
+        )
+        if f.exists():
+            # There should be only one - count on that.
+            activity = f.first()
+            return activity.start_date
+
+    @property
+    def granted_to_date(self):
+        """Retrieve the end date of the main activity, if granted."""
+        # The appropriation start date is the start date of the first
+        # main activity.
+        f = self.activities.filter(
+            activity_type=MAIN_ACTIVITY,
+            modified_by__isnull=True,
+            status=STATUS_GRANTED,
+        )
+        if f.exists():
+            # There should be only one - count on that.
+            activity = f.first()
+            return activity.end_date
 
     @property
     def total_granted_this_year(self):
@@ -754,16 +774,22 @@ class Appropriation(AuditModelMixin, models.Model):
     @property
     def main_activity(self):
         """Return main activity, if any."""
-        f = self.activities.filter(activity_type=MAIN_ACTIVITY)
+        # We define the main activity as the *first* main activity.
+        f = self.activities.filter(
+            activity_type=MAIN_ACTIVITY, modifies__isnull=True
+        )
         if f.exists():
             # Invariant: There is only one main activity.
             return f.first()
 
     @property
-    def supplementary_activities(self):
-        """Return all non-main activities."""
-        f = self.activities.filter(activity_type=SUPPL_ACTIVITY)
-        return (a for a in f)
+    def section_info(self):
+        if self.main_activity and self.section:
+            si_filter = self.main_activity.details.sectioninfo_set.filter(
+                section=self.section
+            )
+            if si_filter.exists():
+                return si_filter.first()
 
     @property
     def payment_plan(self):
@@ -771,63 +797,83 @@ class Appropriation(AuditModelMixin, models.Model):
         pass  # pragma: no cover
 
     @transaction.atomic
-    def grant(self, approval_level, approval_note):
-        """Grant this app - change state and all Activities to GRANTED."""
-        if self.status in [self.STATUS_DRAFT, self.STATUS_BUDGETED]:
-            # This hasn't been granted yet.
-            if approval_level is None:
-                raise RuntimeError(_("Angiv venligst bevillingskompetence"))
+    def grant(self, activities, approval_level, approval_note, approval_user):
+        """Grant all the given Activities."""
 
-            approval_level = ApprovalLevel.objects.get(id=approval_level)
-            self.approval_level = approval_level
-            self.approval_note = approval_note
-            self.appropriation_date = timezone.now().date()
-            self.status = STATUS_GRANTED
-            for a in self.activities.all():
-                # We could do this with an update, but we need to activate the
-                # save() method on each activity.
-                a.status = STATUS_GRANTED
-                a.save()
-            self.save()
-        elif self.status == STATUS_GRANTED:
-            # Grant all non-granted activities.
-            # Merge and delete expectations that modify other activities.
-            if approval_level:
-                self.approval_level = ApprovalLevel.objects.get(
-                    id=approval_level
-                )
-            self.approval_note = approval_note
-            self.appropriation_date = timezone.now().date()
-            self.save()
-
-            # Now go through the activities.
-            for a in self.activities.exclude(status=STATUS_GRANTED):
-                # If a modifies another and is valid, merge -
-                # else just set status = GRANTED.
-                if a.modifies and a.validate_expected():
-                    # "Merge" by ending current activity the day
-                    # before the new start_date.
-                    # In case of a one_time_payment we end the on the same day
-                    # and delete all payments for the old one.
-                    if (
-                        a.modifies.payment_plan.payment_type
-                        == PaymentSchedule.ONE_TIME_PAYMENT
-                    ):
-                        a.modifies.payment_plan.payments.all().delete()
-                        a.modifies.end_date = a.start_date
-                    else:
-                        a.modifies.end_date = a.start_date - timedelta(days=1)
-                    a.status = STATUS_GRANTED
-                    a.modifies.save()
-                    a.save()
-                else:
-                    a.status = STATUS_GRANTED
-                    a.save()
-
-        else:
+        # Please specify approval level.
+        if approval_level is None:
+            raise RuntimeError(_("Angiv venligst bevillingskompetence"))
+        # In order to approve, you need a main activity.
+        if not self.main_activity:
             raise RuntimeError(
-                _("Kan ikke bevilge en udløbet foranstaltning.")
+                _("Kan ikke godkende en bevilling uden en hovedydelse")
             )
+        # In order to approve, you must specify a section:
+        if not self.section:
+            raise RuntimeError(_("Angiv venligst en paragraf"))
+        # Make sure that the main activity is valid for this appropriation.
+        if not (
+            self.main_activity.details in self.section.main_activities.all()
+        ):
+            raise RuntimeError(
+                _("Denne ydelse kan ikke bevilges på den angivne paragraf")
+            )
+        # Can't approve nothing
+        if not activities:
+            raise RuntimeError(_("Angiv mindst én aktivitet"))
+
+        # The activities come in as a queryset. Save a copy as a list to
+        # be able to append, please.
+        to_be_granted = list(activities)
+        # If the main activity is being approved, impose its end dates
+        # on the other activities.
+
+        if activities.filter(activity_type=MAIN_ACTIVITY).exists():
+            main_activity = activities.filter(
+                activity_type=MAIN_ACTIVITY
+            ).first()
+            # Update the end date for all supplementary activities that
+            # don't have an end date less than the main activities'.
+            if main_activity.end_date:
+                for a in self.activities.filter(
+                    activity_type=SUPPL_ACTIVITY
+                ).exclude(end_date__lte=main_activity.end_date):
+                    a.end_date = main_activity.end_date
+                    a.save()
+                    if a.status == STATUS_GRANTED:
+                        # If we're not already granting a modification
+                        # of this activity, we need to re-grant it.
+                        if not (
+                            a.modified_by and a.modified_by in activities
+                        ):  # pragma: no cover
+                            to_be_granted.append(a)
+        else:
+            # No main activity. We're only allowed to do this if the
+            # main activity is already approved.
+            granted_main_activities = self.activities.filter(
+                activity_type=MAIN_ACTIVITY, status=STATUS_GRANTED
+            )
+            if not granted_main_activities.exists():
+                raise RuntimeError(
+                    _(
+                        "Kan ikke godkende følgeydelser, før"
+                        " hovedydelsen er godkendt."
+                    )
+                )
+            # Set end date to the highest end date of all granted main
+            # activities.
+            granted_end_dates = [a.end_date for a in granted_main_activities]
+            end_date = (
+                None if None in granted_end_dates else max(granted_end_dates)
+            )
+            for a in to_be_granted:
+                if a.end_date is None or (end_date and a.end_date > end_date):
+                    a.end_date = end_date
+                    a.save()
+        approval_level = ApprovalLevel.objects.get(id=approval_level)
+        for a in to_be_granted:
+            a.grant(approval_level, approval_note, approval_user)
+
         # Everything went fine, we can send to SBSYS.
         send_appropriation(self)
 
@@ -888,6 +934,7 @@ class ActivityDetails(models.Model):
         related_name="main_activities",
         verbose_name=_("hovedaktivitet for paragraffer"),
         blank=True,
+        through="SectionInfo",
     )
     supplementary_activity_for = models.ManyToManyField(
         Section,
@@ -912,6 +959,29 @@ class ActivityDetails(models.Model):
 
     def __str__(self):
         return f"{self.activity_id} - {self.name}"
+
+
+class SectionInfo(models.Model):
+    """For a main activity, KLE no. and SBSYS ID for the relevant sections."""
+
+    class Meta:
+        verbose_name = _("paragraf-info")
+        verbose_name_plural = _("paragraf-info")
+
+    activity_details = models.ForeignKey(
+        ActivityDetails, on_delete=models.CASCADE
+    )
+    section = models.ForeignKey(Section, on_delete=models.CASCADE)
+
+    kle_number = models.CharField(
+        max_length=128, verbose_name=_("KLE-nummer"), blank=True
+    )
+    sbsys_template_id = models.CharField(
+        max_length=128, verbose_name=_("SBSYS skabelon-id"), blank=True
+    )
+
+    def __str__(self):
+        return f"{self.activity_details} - {self.section}"
 
 
 class Activity(AuditModelMixin, models.Model):
@@ -946,6 +1016,30 @@ class Activity(AuditModelMixin, models.Model):
 
     status = models.CharField(
         verbose_name=_("status"), max_length=128, choices=status_choices
+    )
+
+    approval_level = models.ForeignKey(
+        ApprovalLevel,
+        related_name="approved_activities",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        verbose_name=_("bevillingsniveau"),
+    )
+    approval_note = models.TextField(
+        verbose_name=_("evt. bemærkning"), blank=True
+    )
+    approval_user = models.ForeignKey(
+        User,
+        related_name="approved_activities",
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        verbose_name=_("bevilget af bruger"),
+    )
+
+    appropriation_date = models.DateField(
+        verbose_name=_("bevillingsdato"), null=True, blank=True
     )
 
     start_date = models.DateField(verbose_name=_("startdato"))
@@ -998,76 +1092,62 @@ class Activity(AuditModelMixin, models.Model):
         status_str = self.get_status_display()
         return f"{self.details} - {activity_type_str} - {status_str}"
 
+    @transaction.atomic
+    def grant(self, approval_level, approval_note, approval_user):
+        "Grant this activity - update payment info as needed." ""
+
+        self.appropriation_date = timezone.now().date()
+        self.approval_level = approval_level
+        self.approval_note = approval_note
+        self.approval_user = approval_user
+
+        if self.status == STATUS_GRANTED:
+            # Re-granting - nothing more to do.
+            pass
+        elif not self.modifies:
+            # Simple case: Just set status.
+            self.status = STATUS_GRANTED
+        elif self.validate_expected():  # pragma: no cover
+            # "Merge" by ending current activity the day before the new
+            # start_date.
+            #
+            # In case of a one_time_payment we end the on the same day and
+            # delete all payments for the old one.
+            payment_type = self.modifies.payment_plan.payment_type
+            if payment_type == PaymentSchedule.ONE_TIME_PAYMENT:
+                self.modifies.payment_plan.payments.all().delete()
+                self.modifies.start_date = self.start_date
+                # With one time payments, end date and start date must
+                # always be the same.
+                self.modifies.end_date = self.start_date
+            else:
+                self.modifies.end_date = self.start_date - timedelta(days=1)
+            # In all cases ...
+            self.modifies.save()
+            self.status = STATUS_GRANTED
+        self.save()
+
     def validate_expected(self):
         """
         Validate this is a correct expected activity.
         """
         today = date.today()
+
         if not self.modifies:
             raise forms.ValidationError(
-                _("den forventede justering har ingen aktivitet at justere")
+                _("den forventede justering har ingen ydelse at justere")
             )
-        is_one_time_payment = (
-            self.payment_plan.payment_type == PaymentSchedule.ONE_TIME_PAYMENT
-        )
-        # the expected with modifies activity should have a start_date
-        # in the span of next payment date to the modified activitys
-        # end_date
-        if is_one_time_payment:
-            next_payment_date = today + timedelta(days=1)
-        elif not self.modifies.ongoing:
-            next_payment_date = get_next_interval(
-                self.modifies.start_date, self.payment_plan.payment_frequency
-            )
-        else:
-            next_payment = self.modifies.payment_plan.next_payment
-            if not next_payment:
-                raise forms.ValidationError(
-                    _(
-                        "den bevilgede aktivitet skal have en fremtidig"
-                        " betaling for at man kan lave en"
-                        " forventet justering"
-                    )
-                )
-            next_payment_date = next_payment.date
 
-        if is_one_time_payment:
-            if not today < next_payment_date <= self.start_date:
-                raise forms.ValidationError(
-                    _(
-                        f"den justerede aktivitets startdato skal være i"
-                        f" fremtiden fra næste betalingsdato:"
-                        f" {next_payment_date}"
-                    )
-                )
-        elif not (
-            today < next_payment_date <= self.start_date
-            and (
-                self.start_date <= self.modifies.end_date
-                if self.modifies.end_date
-                else True
-            )
-        ):
-            to_end_date_str = (
-                f" til ydelsens slutdato: {self.modifies.end_date}"
-                if self.modifies.end_date
-                else ""
-            )
+        # Check that this modification is in the future.
+        if self.start_date < today:
             raise forms.ValidationError(
                 _(
-                    f"den justerede aktivitets startdato skal være i"
-                    f" fremtiden fra næste betalingsdato: {next_payment_date}"
-                    f"{to_end_date_str}"
+                    "den forventede justerings startdato skal"
+                    " være i fremtiden"
                 )
             )
-        return True
 
-    @property
-    def ongoing(self):
-        today = date.today()
-        return self.start_date <= today and (
-            not self.end_date or self.end_date > today
-        )
+        return True
 
     @property
     def account(self):
@@ -1108,6 +1188,18 @@ class Activity(AuditModelMixin, models.Model):
         return payments.in_this_year().amount_sum()
 
     @property
+    def total_granted_this_year(self):
+        if self.status == STATUS_GRANTED:
+            payments = Payment.objects.filter(payment_schedule__activity=self)
+            return payments.in_this_year().amount_sum
+        else:
+            return Decimal(0)
+
+    @property
+    def total_expected_this_year(self):
+        return self.total_cost_this_year
+
+    @property
     def total_cost(self):
         if self.status == STATUS_GRANTED and self.modified_by.exists():
             payments = Payment.objects.filter(
@@ -1141,10 +1233,7 @@ class Activity(AuditModelMixin, models.Model):
     @property
     def triggers_payment_email(self):
         # If activity or appropriation is not granted we don't send an email.
-        if (
-            not self.status == STATUS_GRANTED
-            or not self.appropriation.status == Appropriation.STATUS_GRANTED
-        ):
+        if not self.status == STATUS_GRANTED:
             return False
 
         # Don't trigger the email if the payment plan does not exist

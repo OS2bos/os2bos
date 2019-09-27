@@ -27,11 +27,15 @@ from core.models import (
     SchoolDistrict,
     Team,
     Section,
+    SectionInfo,
     ActivityDetails,
     Account,
     ServiceProvider,
     PaymentMethodDetails,
     ApprovalLevel,
+    STATUS_DELETED,
+    STATUS_DRAFT,
+    STATUS_GRANTED,
 )
 
 from core.serializers import (
@@ -45,6 +49,7 @@ from core.serializers import (
     SchoolDistrictSerializer,
     TeamSerializer,
     SectionSerializer,
+    SectionInfoSerializer,
     ActivityDetailsSerializer,
     AccountSerializer,
     UserSerializer,
@@ -111,16 +116,21 @@ class AppropriationViewSet(AuditViewSet):
 
     @action(detail=True, methods=["patch"])
     def grant(self, request, pk=None):
-        """Grant this appropriation."""
+        """Grant the specified activities on this appropriation."""
         appropriation = self.get_object()
         approval_level = request.data.get("approval_level", None)
         approval_note = request.data.get("approval_note", "")
-
+        activity_pks = request.data.get("activities", [])
         try:
-            appropriation.grant(approval_level, approval_note)
-            # Success, set approval user.
-            appropriation.approval_user = request.user
-            appropriation.save()
+            activities = appropriation.activities.filter(pk__in=activity_pks)
+            if len(activities) != len(activity_pks):
+                raise RuntimeError(
+                    _("Du kan kun godkende ydelser på den samme bevilling")
+                )
+            appropriation.grant(
+                activities, approval_level, approval_note, request.user
+            )
+            # Success!
             response = Response("OK", status.HTTP_200_OK)
         except Exception as e:
             response = Response(
@@ -135,9 +145,28 @@ class ActivityViewSet(AuditViewSet):
     filterset_fields = "__all__"
 
     def get_queryset(self):
-        queryset = Activity.objects.all()
+        queryset = Activity.objects.exclude(status=STATUS_DELETED)
         queryset = self.get_serializer_class().setup_eager_loading(queryset)
         return queryset
+
+    def destroy(self, request, *args, **kwargs):
+        activity = self.get_object()
+        try:
+            if activity.status == STATUS_DRAFT:
+                activity.delete()
+            elif activity.status == STATUS_GRANTED:
+                raise RuntimeError(_("Du kan ikke slette en bevilget ydelse."))
+
+            else:
+                activity.status = STATUS_DELETED
+                activity.save()
+            # Success!
+            response = Response("OK", status.HTTP_204_NO_CONTENT)
+        except Exception as e:
+            response = Response(
+                {"errors": [str(e)]}, status.HTTP_400_BAD_REQUEST
+            )
+        return response
 
 
 class PaymentMethodDetailsViewSet(AuditViewSet):
@@ -236,6 +265,12 @@ class SectionViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Section.objects.all()
     serializer_class = SectionSerializer
     filterset_class = AllowedForStepsFilter
+
+
+class SectionInfoViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = SectionInfo.objects.all()
+    serializer_class = SectionInfoSerializer
+    filterset_fields = "__all__"
 
 
 class ActivityDetailsViewSet(viewsets.ReadOnlyModelViewSet):

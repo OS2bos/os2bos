@@ -7,7 +7,7 @@
 
 
 teams = [
-    ("S-DIG", "admin", ["admin"]),
+    ("S-DIG", "admin", ["admin", "heidi"]),
     ("Ungerådgivning", "ungeleder", ["ungeleder", "ungeraadgiver"]),
     (
         "Familierådgivning",

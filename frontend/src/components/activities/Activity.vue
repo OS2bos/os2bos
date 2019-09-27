@@ -19,6 +19,7 @@
             <button v-if="act.status !== 'GRANTED'" class="act-delete-btn" @click="preDeleteCheck()">Slet</button>
         </header>
 
+        <!-- Delete activity modal -->
         <div v-if="showModal">
             <form @submit.prevent="deleteActivity()" class="modal-form">
                 <div class="modal-mask">
@@ -63,6 +64,18 @@
                 <dd>
                     <div v-html="statusLabel(act.status)"></div>
                 </dd>
+                <template v-if="act.status === 'GRANTED'">
+                    <dt>
+                        Godkendt af
+                    </dt>
+                    <dd>
+                        <p>
+                            <em>{{ displayUserName(act.approval_user) }}</em> d. {{ displayDate(act.appropriation_date) }}<br>
+                            ({{ displayApprLevel(act.approval_level) }} kompetence)
+                        </p>
+                        <p v-if="act.approval_note">Note: {{ act.approval_note }}</p>
+                    </dd>
+                </template>
                 <dt>
                     Type
                 </dt>
@@ -99,7 +112,8 @@
                     <dd>
                         <div v-if="pay.payment_frequency === 'DAILY'">Dagligt</div>
                         <div v-if="pay.payment_frequency === 'WEEKLY'">Ugentligt</div>
-                        <div v-if="pay.payment_frequency === 'MONTHLY'">Månedligt</div>
+                        <div v-if="pay.payment_frequency === 'BIWEEKLY'">Hver 2. uge</div>
+                        <div v-if="pay.payment_frequency === 'MONTHLY'">Månedligt den {{pay.payment_day_of_month}}.</div>
                     </dd>
                     <dt>
                         <div v-if="pay.payment_type === 'PER_HOUR_PAYMENT'">Timer</div>
@@ -107,7 +121,7 @@
                         <div v-if="pay.payment_type === 'PER_KM_PAYMENT'">Kilometer</div>
                     </dt>
                     <dd v-if="pay.payment_type === 'PER_HOUR_PAYMENT' || pay.payment_type === 'PER_DAY_PAYMENT' || pay.payment_type === 'PER_KM_PAYMENT'">
-                        {{ pay.payment_units }}
+                        {{ displayDigits(pay.payment_units) }}
                     </dd>
                     <dt>Beløb</dt>
                     <dd>{{ displayDigits(pay.payment_amount) }} kr.</dd>
@@ -152,9 +166,9 @@
             </div>
 
         </div>
-        <div class="payment-schedule" v-if="!show_edit">
-            <payment-schedule :payments="pay.payments" />
-        </div>
+        
+        <payment-schedule :payments="pay.payments" v-if="!show_edit" />
+        
     </section>
 
 </template>
@@ -166,7 +180,7 @@
     import PaymentSchedule from '../payment/PaymentSchedule.vue'
     import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
-    import { activityId2name, sectionId2name, displayStatus } from '../filters/Labels.js'
+    import { activityId2name, sectionId2name, displayStatus, userId2name, approvalId2name } from '../filters/Labels.js'
     import store from '../../store.js'
     import notify from '../notifications/Notify.js'
 
@@ -252,6 +266,12 @@
             statusLabel: function(status) {
                 return displayStatus(status)
             },
+            displayUserName: function(user_id) {
+                return userId2name(user_id)
+            },
+            displayApprLevel: function(appr_lvl_id) {
+                return approvalId2name(appr_lvl_id)
+            },
             createExpected: function() {                
                 this.edit_mode = 'clone'
                 this.show_edit =  true
@@ -275,7 +295,7 @@
 <style>
 
     .activity {
-        margin: 1rem;
+        margin: 1rem 2rem 2rem;
     }
 
     .activity-header {
@@ -293,14 +313,27 @@
         margin: 0 1rem;
     }
 
-    .activity .act-delete-btn {
+    .activity .act-delete-btn,
+    .modal-delete-btn {
         margin: 0;
-        border: solid .125rem var(--danger);
+        border-color: var(--danger);
         color: var(--danger);
+        background-color: transparent;
+    }
+    .modal-delete-btn {
+        float: right;
+        margin-left: 0.5rem;
     }
 
-    .activity .act-delete-btn:active {
+    .activity .act-delete-btn:focus,
+    .activity .act-delete-btn:hover,
+    .activity .act-delete-btn:active,
+    .modal-delete-btn:focus,
+    .modal-delete-btn:hover,
+    .modal-delete-btn:active {
         background-color: var(--danger);
+        color: var(--grey0);
+        border-color: var(--danger);
     }
 
     .activity-info {
@@ -314,18 +347,6 @@
 
      .payment-schedule {
         margin: 1rem;
-    }
-
-    .modal-delete-btn {
-        float: right;
-        margin-left: 0.5rem;
-        background-color: transparent;
-        color: var(--danger);
-        border-color: var(--danger);
-    }
-
-    .modal-delete-btn:active {
-        background-color: var(--danger);
     }
 
 </style>

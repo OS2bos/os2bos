@@ -31,8 +31,9 @@ with open("leverandoerer.csv") as csvfile:
             else 100.00
         )
         try:
-            ServiceProvider.objects.create(
-                cvr_number=cvr, name=name, vat_factor=vat_factor
+            ServiceProvider.objects.update_or_create(
+                cvr_number=cvr,
+                defaults={"name": name, "vat_factor": vat_factor},
             )
         except decimal.InvalidOperation:
             print(cvr, name, vat_factor)

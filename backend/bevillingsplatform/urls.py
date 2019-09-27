@@ -49,6 +49,7 @@ router.register(r"municipalities", views.MunicipalityViewSet)
 router.register(r"school_districts", views.SchoolDistrictViewSet)
 router.register(r"teams", views.TeamViewSet)
 router.register(r"sections", views.SectionViewSet)
+router.register(r"sectioninfos", views.SectionInfoViewSet)
 router.register(r"activity_details", views.ActivityDetailsViewSet)
 router.register(r"service_providers", views.ServiceProviderViewSet)
 router.register(r"approval_levels", views.ApprovalLevelViewSet)
@@ -82,7 +83,7 @@ urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 _frontend_root = settings.STATIC_ROOT + "/frontend"
 urlpatterns += [
     re_path(
-        r"^(?P<path>(?:(?:js|css|img)\/.*|favicon.ico|logo.svg))$",
+        r"^(?P<path>(?:(?:js|css|img)\/.*|favicon.ico|logo.png))$",
         serve,
         kwargs={"document_root": _frontend_root},
     ),

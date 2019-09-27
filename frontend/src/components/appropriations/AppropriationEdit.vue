@@ -8,9 +8,11 @@
 
 <template>
 
-    <article class="appropriation-edit">
-        <h1 v-if="create_mode">Opret bevillingskrivelse</h1>
-        <h1 v-else>Redigér bevillingskrivelse</h1>
+    <section class="appropriation-edit">
+        <header class="appropriation-edit-header">
+            <h1 v-if="create_mode">Opret bevillingskrivelse</h1>
+            <h2 v-else>Redigér bevillingskrivelse</h2>
+        </header>
         <form @submit.prevent="saveChanges()">
             <error />
             <fieldset>
@@ -18,25 +20,23 @@
                 <input id="field-sbsysid" type="text" v-model="appr.sbsys_id" @input="checkKLE(appr.sbsys_id)" required>
                 <p class="danger" v-if="sbsysCheck">Sagsnummeret svarer ikke til en af de paragraffer, der kan vælges.</p>
                 <error err-key="sbsys_id" />
-            </fieldset>
-            <fieldset>
+            
                 <label class="required" for="field-lawref">Bevilling efter §</label>
                 <select id="field-lawref" class="listpicker" v-model="appr.section" required>
                     <option v-for="s in sections" :value="s.id" :key="s.id">
                         {{ s.paragraph }} {{ s.text }}
                     </option>
                 </select>
-            </fieldset>
-            <fieldset>
+
                 <label for="field-text">Supplerende information</label>
-                <textarea v-model="appr.note"></textarea>
+                <textarea id="field-text" v-model="appr.note"></textarea>
             </fieldset>
-            <fieldset>
+            <fieldset class="form-actions">
                 <input type="submit" value="Gem">
                 <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
             </fieldset>
         </form>
-    </article>
+    </section>
 
 </template>
 
@@ -57,7 +57,6 @@
             return {
                 appr: {},
                 create_mode: true,
-                kle: null,
                 kle_regex: /\d{2}\.\d{2}\.\d{2}/,
                 sections: null,
                 sbsysCheck: false
@@ -92,21 +91,28 @@
                 this.appr.section = section_id
             },
             checkKLE: function(input) {
+                let kle = input.match(this.kle_regex)
                 this.sbsysCheck = false
-                this.kle = input.match(this.kle_regex)
-                if (this.kle) {
-                    let sections = this.all_sections.filter(s => s.kle_number === this.kle[0])
-                    if (sections.length === 1) {
-                        this.appr.section = sections[0].id
-                    } else if (sections.length === 0) {
-                        this.sbsysCheck = true
-                    }
+                if (kle) {
+                    axios.get(`/sectioninfos/?kle_number=${ kle[0] }`)
+                    .then(res => {
+                        if (res.data.length === 1) {
+                            this.appr.section = res.data[0].section
+                            this.$forceUpdate()
+                        } else if (res.data.length === 0) {
+                            this.appr.section = null
+                            this.sbsysCheck = true
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
                 } else {
+                    this.sbsysCheck = true
                     return false
                 }                
             },
             saveChanges: function() {
-                this.$store.commit('clearErrors')
                 if (!this.create_mode) {
                     axios.patch(`/appropriations/${ this.appr.id }/`, {
                         sbsys_id: this.appr.sbsys_id,
@@ -148,6 +154,7 @@
                 this.create_mode = false
                 this.appr = this.apprObj
             }
+            this.$store.commit('clearErrors')
         }
     }
     
@@ -156,7 +163,20 @@
 <style>
 
     .appropriation-edit {
-        margin: 1rem;
+        margin: 1rem auto;
+    }
+
+    .appropriation-edit .appropriation-edit-header {
+        background-color: var(--grey2);
+        padding: .5rem 2rem;
+    }
+
+    .appropriation-edit form {
+        padding: 1rem 2rem 0;
+    }
+
+    .appropriation-edit .form-actions {
+        padding: 0 0 2rem;
     }
 
     .appropriation-edit .cancel-btn {
