@@ -183,6 +183,8 @@ class AppropriationSerializer(serializers.ModelSerializer):
     total_granted_this_year = serializers.ReadOnlyField()
     total_expected_this_year = serializers.ReadOnlyField()
     total_expected_full_year = serializers.ReadOnlyField()
+    granted_from_date = serializers.ReadOnlyField()
+    granted_to_date = serializers.ReadOnlyField()
 
     activities = ActivitySerializer(many=True, read_only=True)
 

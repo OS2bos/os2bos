@@ -122,22 +122,22 @@ function displayStatus(status) {
 function displayEffort(effort_step) {
     let effort_str = ''
     switch(effort_step) {
-        case 'STEP_ONE':
+        case 1:
             effort_str = 'Trin 1 - Tidlig indsats i almenområdet'
             break
-        case 'STEP_TWO':
+        case 2:
             effort_str = 'Trin 2 - Forebyggelse'
             break
-        case 'STEP_THREE':
+        case 3:
             effort_str = 'Trin 3 - Hjemmebaserede indsatser'
             break
-        case 'STEP_FOUR':
+        case 4:
             effort_str = 'Trin 4 - Anbringelse i slægt eller netværk'
             break
-        case 'STEP_FIVE':
+        case 5:
             effort_str = 'Trin 5 - Anbringelse i forskellige typer af plejefamilier'
             break
-        case 'STEP_SIX':
+        case 6:
             effort_str = 'Trin 6 - Anbringelse i institutionstilbud'
             break
         default:

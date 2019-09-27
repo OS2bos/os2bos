@@ -158,11 +158,11 @@
             },
             startDateSet: function() {
                 if (this.act.activity_type !== 'MAIN_ACTIVITY' && this.mode !== 'clone') {
-                    return epoch2DateStr(this.appr_main_acts.start_date)
+                    return epoch2DateStr(this.appropriation.granted_from_date)
                 }
                 if (this.mode === 'clone' && this.act.activity_type !== 'MAIN_ACTIVITY') {
                     this.act.start_date = null
-                    return epoch2DateStr(this.appr_main_acts.start_date)
+                    return epoch2DateStr(this.appropriation.granted_from_date)
                 }
                 if (this.mode === 'clone' && this.act.activity_type === 'MAIN_ACTIVITY') {
                     this.act.start_date = null
@@ -171,11 +171,11 @@
             },
             endDateSet: function() {
                 if (this.act.activity_type !== 'MAIN_ACTIVITY' && this.mode !== 'clone') {
-                    return epoch2DateStr(this.appr_main_acts.end_date)
+                    return epoch2DateStr(this.appropriation.granted_to_date)
                 }
                 if (this.mode === 'clone' && this.act.activity_type !== 'MAIN_ACTIVITY') {
                     this.act.end_date = null
-                    return epoch2DateStr(this.appr_main_acts.end_date)
+                    return epoch2DateStr(this.appropriation.granted_to_date)
                 }
                 if (this.mode === 'clone' && this.act.activity_type === 'MAIN_ACTIVITY') {
                     this.act.end_date = null

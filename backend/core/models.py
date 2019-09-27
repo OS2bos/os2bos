@@ -35,12 +35,12 @@ target_group_choices = (
 )
 
 # Effort steps - definitions and choice list.
-STEP_ONE = "STEP_ONE"
-STEP_TWO = "STEP_TWO"
-STEP_THREE = "STEP_THREE"
-STEP_FOUR = "STEP_FOUR"
-STEP_FIVE = "STEP_FIVE"
-STEP_SIX = "STEP_SIX"
+STEP_ONE = 1
+STEP_TWO = 2
+STEP_THREE = 3
+STEP_FOUR = 4
+STEP_FIVE = 5
+STEP_SIX = 6
 
 effort_steps_choices = (
     (STEP_ONE, _("Trin 1: Tidlig indsats i almenområdet")),
@@ -548,10 +548,8 @@ class Case(AuditModelMixin, models.Model):
         verbose_name=_("målgruppe"),
         choices=target_group_choices,
     )
-    effort_step = models.CharField(
-        max_length=128,
-        choices=effort_steps_choices,
-        verbose_name=_("indsatstrappe"),
+    effort_step = models.PositiveSmallIntegerField(
+        choices=effort_steps_choices, verbose_name=_("indsatstrappe")
     )
     scaling_step = models.PositiveSmallIntegerField(
         verbose_name=_("skaleringstrappe"),
@@ -639,7 +637,7 @@ class Section(models.Model):
         verbose_name=_("tilladt for handicapafdelingen"), default=False
     )
     allowed_for_steps = postgres_fields.ArrayField(
-        models.CharField(max_length=128, choices=effort_steps_choices),
+        models.PositiveSmallIntegerField(choices=effort_steps_choices),
         size=6,
         verbose_name=_("tilladt for trin i indsatstrappen"),
     )
@@ -690,6 +688,36 @@ class Appropriation(AuditModelMixin, models.Model):
     note = models.TextField(
         verbose_name=_("supplerende oplysninger"), blank=True
     )
+
+    @property
+    def granted_from_date(self):
+        """Retrieve the start date of the main activity, if granted."""
+        # The appropriation start date is the start date of the first
+        # main activity.
+        f = self.activities.filter(
+            activity_type=MAIN_ACTIVITY,
+            modifies__isnull=True,
+            status=STATUS_GRANTED,
+        )
+        if f.exists():
+            # There should be only one - count on that.
+            activity = f.first()
+            return activity.start_date
+
+    @property
+    def granted_to_date(self):
+        """Retrieve the end date of the main activity, if granted."""
+        # The appropriation start date is the start date of the first
+        # main activity.
+        f = self.activities.filter(
+            activity_type=MAIN_ACTIVITY,
+            modified_by__isnull=True,
+            status=STATUS_GRANTED,
+        )
+        if f.exists():
+            # There should be only one - count on that.
+            activity = f.first()
+            return activity.end_date
 
     @property
     def total_granted_this_year(self):
@@ -746,7 +774,10 @@ class Appropriation(AuditModelMixin, models.Model):
     @property
     def main_activity(self):
         """Return main activity, if any."""
-        f = self.activities.filter(activity_type=MAIN_ACTIVITY)
+        # We define the main activity as the *first* main activity.
+        f = self.activities.filter(
+            activity_type=MAIN_ACTIVITY, modifies__isnull=True
+        )
         if f.exists():
             # Invariant: There is only one main activity.
             return f.first()
