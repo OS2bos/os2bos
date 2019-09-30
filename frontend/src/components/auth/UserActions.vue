@@ -11,7 +11,7 @@
     <div class="useractions" v-if="auth">
         <p style="margin: 0 1rem;">
             <strong>
-                {{ user.username }}
+                {{ user.first_name }} {{ user.last_name }} ({{ user.username }})
             </strong>
             <br>
             {{ team.name }}
