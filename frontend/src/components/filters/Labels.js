@@ -62,7 +62,7 @@ function userId2name(id) {
         let user = user_list.find(function(u) {
             return u.id === parseInt(id);
         })
-        return user.username
+        return user.fullname
     } else {
         return 'Ikke tilgængelig'
     }

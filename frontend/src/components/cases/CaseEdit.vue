@@ -96,7 +96,7 @@
                         
                         <template v-if="!create_mode">
                             <label class="required" for="selectCaseWorker">Sagsbehandler</label>
-                            <list-picker :dom-id="'selectCaseWorker'" :selected-id="cas.case_worker" @selection="changeCaseWorker" :list="users" display-key="username" />
+                            <list-picker :dom-id="'selectCaseWorker'" :selected-id="cas.case_worker" @selection="changeCaseWorker" :list="users" display-key="fullname" />
                             <dl v-if="cas.team_data">
                                 <dt>Team</dt>
                                 <dd>{{ cas.team_data.name }}</dd>
