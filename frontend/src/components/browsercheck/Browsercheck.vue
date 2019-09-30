@@ -9,7 +9,7 @@
             Nogle funktioner vil ikke fungere for dig.
         </p>
         <p>
-            Vi anbefaler, at du opdaterer din browser eller bruger en nyere browser, <a href="https://www.mozilla.org/da/firefox/new/" title="Hent og installér Firefox">f.eks. Firefox.</a>
+            Vi anbefaler, at du anvender Chrome.
         </p>
         <p>
             <button @click="setGotIt()" id="accept">Jeg forstår</button>

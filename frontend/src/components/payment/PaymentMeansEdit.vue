@@ -34,9 +34,9 @@
 
             <template v-if="p.payment_method === 'SD'">
                 <legend class="required">Skattekort</legend>
-                <input type="radio" id="field-main" name="payment-type" value="1" v-model="p.payment_method_details">
+                <input type="radio" id="field-main" name="payment-type" value="1" v-model="p.payment_method_details" required>
                 <label for="field-main">Hovedkort</label>
-                <input type="radio" id="field-secondary" name="payment-type" value="2" v-model="p.payment_method_details">
+                <input type="radio" id="field-secondary" name="payment-type" value="2" v-model="p.payment_method_details" required>
                 <label for="field-secondary">Bikort</label>
             </template>
 

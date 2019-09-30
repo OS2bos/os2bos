@@ -36,11 +36,11 @@
                 <error err-key="payment_amount" />
             </div>
 
-            <p style="margin-top: .75rem;">
-                <a href="https://www.kl.dk/media/16653/taksttabel_-2019.pdf" target="_blank">Find takster her</a>
-            </p>
-
         </template>
+
+        <p style="margin-top: .75rem;">
+            <a href="https://www.kl.dk/media/16653/taksttabel_-2019.pdf" target="_blank">Find takster her</a>
+        </p>
 
     </fieldset>
 
