@@ -116,6 +116,7 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach((to, from) => {
     store.commit('setBreadcrumb', [])
+    store.commit('clearErrors')
 })
 
 export default router

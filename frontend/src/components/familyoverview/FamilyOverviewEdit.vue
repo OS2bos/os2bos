@@ -73,7 +73,6 @@
                 })
             },
             saveChanges: function() {
-                this.$store.commit('clearErrors')
                 if (!this.create_mode) {
                     axios.patch(`/related_persons/${ this.fam.id }/`, {
                         relation_type: this.fam.relation_type,
@@ -110,7 +109,6 @@
             } else {
                 this.create_mode = true
             }
-            this.$store.commit('clearErrors')
         }
     }
     
