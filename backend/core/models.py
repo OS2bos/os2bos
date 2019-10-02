@@ -872,6 +872,7 @@ class Appropriation(AuditModelMixin, models.Model):
                     a.save()
         approval_level = ApprovalLevel.objects.get(id=approval_level)
         for a in to_be_granted:
+            a.refresh_from_db()
             a.grant(approval_level, approval_note, approval_user)
 
         # Everything went fine, we can send to SBSYS.
