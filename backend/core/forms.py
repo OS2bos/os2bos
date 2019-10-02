@@ -13,9 +13,10 @@ from core.models import effort_steps_choices
 
 
 class SectionForm(forms.ModelForm):
-    allowed_for_steps = forms.MultipleChoiceField(
+    allowed_for_steps = forms.TypedMultipleChoiceField(
         widget=forms.CheckboxSelectMultiple(),
         choices=effort_steps_choices,
         required=False,
         label=_("Tilladt for trin i indsatstrappen"),
+        coerce=int,
     )
