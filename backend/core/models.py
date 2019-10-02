@@ -1191,7 +1191,7 @@ class Activity(AuditModelMixin, models.Model):
     def total_granted_this_year(self):
         if self.status == STATUS_GRANTED:
             payments = Payment.objects.filter(payment_schedule__activity=self)
-            return payments.in_this_year().amount_sum
+            return payments.in_this_year().amount_sum()
         else:
             return Decimal(0)
 

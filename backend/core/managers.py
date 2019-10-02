@@ -100,6 +100,7 @@ class PaymentQuerySet(models.QuerySet):
                     "__modified_by__status": STATUS_EXPECTED,
                 }
             )
+            .distinct()
         )
 
 
