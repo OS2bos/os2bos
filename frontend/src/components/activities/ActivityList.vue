@@ -83,7 +83,7 @@
             :appr-id="apprId" 
             :acts="approvable_acts"
             :warning="diag_approval_warning"
-            @close="diag_open = false" 
+            @close="closeDialog()" 
             @approve="check_all_approvable = false" />
 
     </section>
@@ -154,6 +154,10 @@
             update: function() {
                 this.$store.dispatch('fetchActivities', this.apprId)
             },
+            closeDialog: function() {
+                this.diag_open = false
+                this.approvable_acts = []
+            },
             displayDigits: function(num) {
                 return cost2da(num)
             },
@@ -166,7 +170,7 @@
                     this.addModifierAct(chunk, modifier.id, act_list)
                 } else {
                     this.chunks.push(chunk)
-                }   
+                }
             },
             getBestDate(arr, criteria) {
                 let best_date = null
