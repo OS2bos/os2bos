@@ -1180,9 +1180,18 @@ class Activity(AuditModelMixin, models.Model):
     @property
     def total_cost_this_year(self):
         if self.status == STATUS_GRANTED and self.modified_by.exists():
+            modified_by_activities = self.get_all_modified_by()
+            min_date = (
+                Payment.objects.filter(
+                    payment_schedule__activity__in=modified_by_activities
+                )
+                .order_by("-date")
+                .first()
+                .date
+            )
             payments = Payment.objects.filter(
                 payment_schedule__activity=self
-            ).expected()
+            ).expected(min_date)
         else:
             payments = Payment.objects.filter(payment_schedule__activity=self)
         return payments.in_this_year().amount_sum()
@@ -1202,9 +1211,18 @@ class Activity(AuditModelMixin, models.Model):
     @property
     def total_cost(self):
         if self.status == STATUS_GRANTED and self.modified_by.exists():
+            modified_by_activities = self.get_all_modified_by()
+            min_date = (
+                Payment.objects.filter(
+                    payment_schedule__activity__in=modified_by_activities
+                )
+                .order_by("-date")
+                .first()
+                .date
+            )
             payments = Payment.objects.filter(
                 payment_schedule__activity=self
-            ).expected()
+            ).expected(min_date)
         else:
             payments = Payment.objects.filter(payment_schedule__activity=self)
         return payments.amount_sum()
@@ -1250,6 +1268,20 @@ class Activity(AuditModelMixin, models.Model):
         if self.service_provider:
             vat_factor = self.service_provider.vat_factor
         return vat_factor
+
+    def get_all_modified_by(self):
+        """
+        Retrieve all modified_by objects recursively.
+        """
+        r = []
+        if self.modified_by.exists():
+            r.append(
+                self.modified_by.prefetch_related(
+                    "payment_plan__payments"
+                ).first()
+            )
+            return r + self.modified_by.first().get_all_modified_by()
+        return r
 
 
 class RelatedPerson(models.Model):

@@ -56,7 +56,7 @@ class PaymentQuerySet(models.QuerySet):
             .annotate(amount=Sum("amount"))
         )
 
-    def expected(self):
+    def expected(self, min_start_date):
         """
         This includes granted and expected status payments where we exclude
         the granted which has an expected in its place.
@@ -77,11 +77,7 @@ class PaymentQuerySet(models.QuerySet):
                 | Q(payment_schedule__activity__status=STATUS_EXPECTED)
             )
             .exclude(
-                Q(
-                    date__gte=F(
-                        "payment_schedule__activity__modified_by__start_date"
-                    )
-                ),
+                Q(date__gte=min_start_date),
                 **{
                     "payment_schedule__activity" "__status": STATUS_GRANTED,
                     "payment_schedule__activity"
