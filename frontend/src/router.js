@@ -20,9 +20,14 @@ const router = new Router({
             component: () => import(/* webpackPreload: true */ './components/cases/Cases.vue')
         },
         {
+            path: '/cases/',
+            name: 'cases',
+            component: () => import(/* webpackChunkName: "cases" */ './components/cases/CaseSearch.vue')
+        },
+        {
             path: '/my-cases/',
             name: 'my-caces',
-            component: () => import(/* webpackChunkName: "cases" */ './components/cases/Cases.vue')
+            component: () => import(/* webpackChunkName: "mycases" */ './components/cases/Cases.vue')
         },
         {
             path: '/case/:caseId',
@@ -82,6 +87,16 @@ const router = new Router({
             name: 'activity-create',
             component: () => import(/* webpackChunkName: "activityedit" */ './components/activities/ActivityEdit.vue'),
             props: { mode: 'create' }
+        },
+        {
+            path: '/payments/',
+            name: 'payments',
+            component: () => import(/* webpackChunkName: "payments" */ './components/payments/PaymentSearch.vue')
+        },
+        {
+            path: '/payment/:payId',
+            name: 'payment',
+            component: () => import(/* webpackChunkName: "payment" */ './components/payments/Payment.vue')
         },
         {
             path: '/paymentschedule/',

@@ -9,6 +9,7 @@
 <template>
 
     <select :id="domId" class="listpicker" @change="emitChange" v-model="selection" :required="required">
+        <option :value="null">Ingen</option>
         <option v-for="l in list" :value="l.id" :key="l.id">
             {{ l[displayKey] }}
         </option>
