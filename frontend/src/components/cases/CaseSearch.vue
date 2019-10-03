@@ -7,6 +7,10 @@
             <table v-if="cases.length > 0">
                 <thead>
                     <tr>
+                        <th style="width: 4.5rem;">
+                            <input type="checkbox" id="field-select-all">
+                            <label for="field-select-all" title="Vælg alle"></label>
+                        </th>
                         <th style="width: 6rem;">Status</th>
                         <th>SBSYS-hovedsag</th> 
                         <th>Borger</th>
@@ -15,6 +19,10 @@
                 </thead>
                 <tbody>
                     <tr v-for="c in cases" :key="c.id">
+                        <td style="width: 4.5rem;">
+                            <input type="checkbox" :id="`field-select-${ c.id }`">
+                            <label title="Vælg alle" :for="`field-select-${ c.id }`"></label>
+                        </td>
                         <td style="width: 6rem;">
                             <div class="mini-label" v-if="c.expired === false">
                                 <span class="label label-GRANTED">Aktiv</span>
@@ -48,11 +56,13 @@
                     <label for="field-cpr">CPR-nr</label>
                     <input type="search" @input="changeCpr()" id="field-cpr" v-model="field_cpr">
 
-                    <label>Team</label>
-                    <select>
-                        <option>Team A</option>
-                        <option>Team B</option>
-                    </select>
+                    <label for="field-team">Team</label>
+                    <list-picker 
+                        :dom-id="'field-team'" 
+                        :selected-id="field_team"
+                        :list="teams"
+                        @selection="changeTeam"
+                        display-key="name" />
                 
                     <label for="field-case-worker">Sagsbehandler</label>
                     <list-picker 
@@ -90,6 +100,7 @@
             return {
                 field_cpr: null,
                 field_case_worker: null,
+                field_team: null,
                 field_expired: false
             }
         },
@@ -99,6 +110,9 @@
             },
             users: function() {
                 return this.$store.getters.getUsers
+            },
+            teams: function() {
+                return this.$store.getters.getTeams
             }
         },
         methods: {
@@ -117,6 +131,10 @@
             },
             changeWorker: function(worker_id) {
                 this.$route.query.case_worker = worker_id
+                this.update()
+            },
+            changeTeam: function(team_id) {
+                this.$route.query.team = team_id
                 this.update()
             },
             changeExpired: function() {
