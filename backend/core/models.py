@@ -848,7 +848,7 @@ class Appropriation(AuditModelMixin, models.Model):
                     raise RuntimeError(
                         _(
                             "Denne bevilling har følgeydelser, der starter "
-                            "efter hovedydelsens slutdato. Slet venligst"
+                            "efter hovedydelsens slutdato. Slet venligst "
                             "disse eller ryk slutdatoen frem."
                         )
                     )
