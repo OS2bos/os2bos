@@ -1295,21 +1295,25 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             status=STATUS_GRANTED,
         )
         self.assertEqual(activity.total_cost_this_year, Decimal("7500"))
-        start_date = date(year=now.year, month=12, day=16)
-        end_date = date(year=now.year, month=12, day=18)
+        start_date = date(year=now.year, month=12, day=15)
+        end_date = date(year=now.year, month=12, day=15)
         expected_activity = create_activity(
             case,
             appropriation,
             start_date=start_date,
             end_date=end_date,
             payment_plan=create_payment_schedule(),
-            status=STATUS_EXPECTED,
+            status=STATUS_GRANTED,
             activity_type=MAIN_ACTIVITY,
             modifies=activity,
         )
         self.assertTrue(expected_activity.validate_expected())
+        self.assertEqual(activity.total_cost_this_year, Decimal("7000"))
+        self.assertEqual(
+            expected_activity.total_cost_this_year, Decimal("500")
+        )
 
-        start_date = date(year=now.year, month=12, day=2)
+        start_date = date(year=now.year, month=12, day=1)
         end_date = date(year=now.year, month=12, day=15)
         expected_activity_another_level = create_activity(
             case,
@@ -1322,9 +1326,79 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             modifies=expected_activity,
         )
         self.assertTrue(expected_activity_another_level.validate_expected())
-        breakpoint()
+        self.assertEqual(activity.total_cost_this_year, Decimal("0"))
+        self.assertEqual(expected_activity.total_cost_this_year, Decimal("0"))
+        self.assertEqual(
+            expected_activity_another_level.total_cost_this_year,
+            Decimal("7500"),
+        )
 
+    def test_total_cost_this_year_multiple_levels_one_time(self):
+        now = timezone.now()
+        payment_schedule = create_payment_schedule(
+            payment_frequency=None,
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+        )
+        start_date = date(year=now.year, month=12, day=1)
+        end_date = date(year=now.year, month=12, day=1)
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=STATUS_GRANTED,
+        )
         self.assertEqual(activity.total_cost_this_year, Decimal("500"))
+        start_date = date(year=now.year, month=12, day=2)
+        end_date = date(year=now.year, month=12, day=2)
+        expected_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=create_payment_schedule(
+                payment_frequency=None,
+                payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+                payment_amount=Decimal("600"),
+            ),
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+            modifies=activity,
+        )
+        self.assertTrue(expected_activity.validate_expected())
+        self.assertEqual(activity.total_cost_this_year, Decimal("0"))
+        self.assertEqual(
+            expected_activity.total_cost_this_year, Decimal("600")
+        )
+
+        start_date = date(year=now.year, month=12, day=3)
+        end_date = date(year=now.year, month=12, day=3)
+        expected_activity_another_level = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=create_payment_schedule(
+                payment_frequency=None,
+                payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+                payment_amount=Decimal("700"),
+            ),
+            status=STATUS_EXPECTED,
+            activity_type=MAIN_ACTIVITY,
+            modifies=expected_activity,
+        )
+        self.assertTrue(expected_activity_another_level.validate_expected())
+        self.assertEqual(activity.total_cost_this_year, Decimal("0"))
+        self.assertEqual(expected_activity.total_cost_this_year, Decimal("0"))
+        self.assertEqual(
+            expected_activity_another_level.total_cost_this_year,
+            Decimal("700"),
+        )
 
     def test_total_granted_this_year_zero_for_draft(self):
         now = timezone.now()
