@@ -1176,22 +1176,28 @@ class Activity(AuditModelMixin, models.Model):
     @property
     def total_cost_this_year(self):
         if self.status == STATUS_GRANTED and self.modified_by.exists():
-            # Find the earliest payment date in the chain of
-            # modified_by activities and exclude from that point and onwards.
-            modified_by_activities = self.get_all_modified_by_activities()
-            min_date = (
-                Payment.objects.filter(
-                    payment_schedule__activity__in=modified_by_activities
+            # one time payments are always overruled entirely.
+            if (
+                self.payment_plan.payment_type
+                == PaymentSchedule.ONE_TIME_PAYMENT
+            ):
+                payments = Payment.objects.none()
+            else:
+                # Find the earliest payment date in the chain of
+                # modified_by activities and exclude from that point
+                # and onwards.
+                modified_by_activities = self.get_all_modified_by_activities()
+                min_date = (
+                    Payment.objects.filter(
+                        payment_schedule__activity__in=modified_by_activities
+                    )
+                    .order_by("date")
+                    .first()
+                    .date
                 )
-                .order_by("date")
-                .first()
-                .date
-            )
-            payments = (
-                Payment.objects.filter(payment_schedule__activity=self)
-                .exclude(date__gte=min_date)
-                .expected()
-            )
+                payments = Payment.objects.filter(
+                    payment_schedule__activity=self
+                ).exclude(date__gte=min_date)
         else:
             payments = Payment.objects.filter(payment_schedule__activity=self)
         return payments.in_this_year().amount_sum()
@@ -1211,22 +1217,28 @@ class Activity(AuditModelMixin, models.Model):
     @property
     def total_cost(self):
         if self.status == STATUS_GRANTED and self.modified_by.exists():
-            # Find the earliest payment date in the chain of
-            # modified_by activities and exclude from that point and onwards.
-            modified_by_activities = self.get_all_modified_by_activities()
-            min_date = (
-                Payment.objects.filter(
-                    payment_schedule__activity__in=modified_by_activities
+            # one time payments are always overruled entirely.
+            if (
+                self.payment_plan.payment_type
+                == PaymentSchedule.ONE_TIME_PAYMENT
+            ):
+                payments = Payment.objects.none()
+            else:
+                # Find the earliest payment date in the chain of
+                # modified_by activities and exclude from that point
+                # and onwards.
+                modified_by_activities = self.get_all_modified_by_activities()
+                min_date = (
+                    Payment.objects.filter(
+                        payment_schedule__activity__in=modified_by_activities
+                    )
+                    .order_by("date")
+                    .first()
+                    .date
                 )
-                .order_by("date")
-                .first()
-                .date
-            )
-            payments = (
-                Payment.objects.filter(payment_schedule__activity=self)
-                .exclude(date__gte=min_date)
-                .expected()
-            )
+                payments = Payment.objects.filter(
+                    payment_schedule__activity=self
+                ).exclude(date__gte=min_date)
         else:
             payments = Payment.objects.filter(payment_schedule__activity=self)
         return payments.amount_sum()

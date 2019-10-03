@@ -21,9 +21,10 @@ from django.db.models.functions import (
 
 class PaymentQuerySet(models.QuerySet):
     def amount_sum(self):
-        return self.aggregate(amount_sum=Coalesce(Sum("amount"), 0))[
-            "amount_sum"
-        ]
+        return (
+            self.aggregate(amount_sum=Coalesce(Sum("amount"), 0))["amount_sum"]
+            or 0
+        )
 
     def in_this_year(self):
         now = timezone.now()
@@ -54,52 +55,6 @@ class PaymentQuerySet(models.QuerySet):
             .values("date_month")
             .order_by("date_month")
             .annotate(amount=Sum("amount"))
-        )
-
-    def expected(self):
-        """
-        This includes granted and expected status payments where we exclude
-        the granted which has an expected in its place.
-
-        For one time payments we exclude the old granted payment.
-        For recurring payments we only exclude the old granted payments
-        ocurring at or after the start_date of the expected activity.
-        """
-        from core.models import (
-            STATUS_EXPECTED,
-            STATUS_GRANTED,
-            PaymentSchedule,
-        )
-
-        return (
-            self.filter(
-                Q(payment_schedule__activity__status=STATUS_GRANTED)
-                | Q(payment_schedule__activity__status=STATUS_EXPECTED)
-            )
-            .exclude(
-                Q(
-                    date__gte=F(
-                        "payment_schedule__activity"
-                        "__modified_by__start_date"
-                    )
-                ),
-                **{
-                    "payment_schedule__activity" "__status": STATUS_GRANTED,
-                    "payment_schedule__activity"
-                    "__modified_by__isnull": False,
-                    "payment_schedule__activity"
-                    "__modified_by__status": STATUS_EXPECTED,
-                }
-            )
-            .exclude(
-                **{
-                    "payment_schedule__"
-                    "payment_type": PaymentSchedule.ONE_TIME_PAYMENT,
-                    "payment_schedule__activity"
-                    "__modified_by__isnull": False,
-                }
-            )
-            .distinct()
         )
 
 
