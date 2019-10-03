@@ -1122,6 +1122,11 @@ class Activity(AuditModelMixin, models.Model):
                 # always be the same.
                 self.modifies.end_date = self.start_date
             else:
+                if self.start_date <= self.modifies.start_date:
+                    old_activity = self.modifies
+                    self.modifies = self.modifies.modifies
+                    old_activity.delete()
+                # self.start_date > self.modifies.start_date
                 self.modifies.end_date = self.start_date - timedelta(days=1)
             # In all cases ...
             self.modifies.save()
