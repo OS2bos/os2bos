@@ -92,12 +92,6 @@ class PaymentQuerySet(models.QuerySet):
                 }
             )
             .exclude(
-                Q(
-                    payment_schedule__activity__modified_by__status=STATUS_EXPECTED
-                )
-                | Q(
-                    payment_schedule__activity__modified_by__status=STATUS_GRANTED
-                ),
                 **{
                     "payment_schedule__"
                     "payment_type": PaymentSchedule.ONE_TIME_PAYMENT,

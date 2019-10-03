@@ -1180,6 +1180,8 @@ class Activity(AuditModelMixin, models.Model):
     @property
     def total_cost_this_year(self):
         if self.status == STATUS_GRANTED and self.modified_by.exists():
+            # Find the smallest start_date in the chain of modified activities
+            # and exclude from that point and onwards.
             modified_by_activities = self.get_all_modified_by_activities()
             min_date = (
                 Payment.objects.filter(
@@ -1213,6 +1215,8 @@ class Activity(AuditModelMixin, models.Model):
     @property
     def total_cost(self):
         if self.status == STATUS_GRANTED and self.modified_by.exists():
+            # Find the smallest start_date in the chain of modified activities
+            # and exclude from that point and onwards.
             modified_by_activities = self.get_all_modified_by_activities()
             min_date = (
                 Payment.objects.filter(
