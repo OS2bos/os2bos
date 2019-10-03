@@ -749,7 +749,7 @@ class Appropriation(AuditModelMixin, models.Model):
         activities = self.activities.filter(
             Q(status=STATUS_GRANTED) | Q(status=STATUS_EXPECTED)
         )
-        return sum([a.total_expected_this_year for a in activities])
+        return sum(a.total_expected_this_year for a in activities)
 
     @property
     def total_expected_full_year(self):
