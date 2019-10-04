@@ -1,0 +1,29 @@
+textarea {
+    background-color: var(--grey0);
+    border: solid 1px var(--grey3);
+    color: var(--grey10);
+    display: inline-block;
+    font: inherit;
+    letter-spacing: inherit;
+    max-width: 35rem;
+    min-height: 6rem;
+    padding: 0.25rem 0.5rem;
+    text-overflow: ellipsis;
+    width: 100%;
+    word-spacing: inherit;
+}
+
+textarea:focus,
+textarea:hover {
+    outline: none;
+    border-color: var(--grey4);
+    box-shadow: var(--shadow-dark);
+}
+
+textarea[readonly],
+textarea:disabled {
+    background-color: var(--grey2);
+    color: var(--grey4);
+    border-color: var(--grey2);
+    box-shadow: none;
+}

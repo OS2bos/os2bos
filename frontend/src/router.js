@@ -8,16 +8,6 @@
 
 import Vue from 'vue'
 import Router from 'vue-router'
-import Cases from './components/cases/Cases.vue'
-import AllCases from './components/cases/AllCases.vue'
-import CaseEdit from './components/cases/CaseEdit.vue'
-import FamilyOverviewEdit from './components/familyoverview/FamilyOverviewEdit.vue'
-import Assessment from './components/assessments/Assessment.vue'
-import AppropriationEdit from './components/appropriations/AppropriationEdit.vue'
-import ActivityEdit from './components/activities/ActivityEdit.vue'
-import PaymentSchedule from './components/payment/PaymentSchedule.vue'
-import Login from './components/auth/Login.vue'
-import Page404 from './components/http/Page404.vue'
 import store from './store.js'
 
 Vue.use(Router)
@@ -27,12 +17,12 @@ const router = new Router({
         {
             path: '/',
             name: 'home',
-            component: Cases
+            component: () => import(/* webpackPreload: true */ './components/cases/Cases.vue')
         },
         {
             path: '/my-cases/',
             name: 'my-caces',
-            component: Cases
+            component: () => import(/* webpackChunkName: "cases" */ './components/cases/Cases.vue')
         },
         {
             path: '/case/:caseId',
@@ -42,33 +32,34 @@ const router = new Router({
         {
             path: '/case-create/',
             name: 'case-create',
-            component: CaseEdit
+            component: () => import(/* webpackChunkName: "caseedit" */ './components/cases/CaseEdit.vue')
         },
         {
             path: '/all-cases/:query',
             name: 'some-cases',
-            component: AllCases
+            component: () => import(/* webpackChunkName: "allcases" */ './components/cases/AllCases.vue')
         },
         {
             path: '/all-cases/',
             name: 'all-cases',
-            component: AllCases
+            component: () => import(/* webpackChunkName: "allcases" */ './components/cases/AllCases.vue')
         },
         {
             path: '/case/:casid/familyoverview-create/',
             name: 'familyoverview-create',
-            component: FamilyOverviewEdit
+            component: () => import(/* webpackChunkName: "familyoverview" */ './components/familyoverview/FamilyOverviewEdit.vue')
         },
         {
             path: '/case/:casid/familyoverview-edit/:famid',
             name: 'familyoverview-edit',
-            component: FamilyOverviewEdit
+            component: () => import(/* webpackChunkName: "familyoverview" */ './components/familyoverview/FamilyOverviewEdit.vue')
         },
         {
             path: '/assessment/:id',
             path: '/case/:id/assessment',
             name: 'assessment',
-            component: Assessment
+            component: () => import(/* webpackChunkName: "assessment" */ './components/assessments/Assessment.vue')
+            
         },
         {
             path: '/appropriation/:apprId',
@@ -79,7 +70,7 @@ const router = new Router({
         {
             path: '/case/:caseid/appropriation-create/',
             name: 'appropriation-create',
-            component: AppropriationEdit
+            component: () => import(/* webpackChunkName: "appropriationedit" */ './components/appropriations/AppropriationEdit.vue')
         },
         {
             path: '/activity/:actId',
@@ -89,28 +80,24 @@ const router = new Router({
         {
             path: '/appropriation/:apprid/activity-create/',
             name: 'activity-create',
-            component: ActivityEdit,
+            component: () => import(/* webpackChunkName: "activityedit" */ './components/activities/ActivityEdit.vue'),
             props: { mode: 'create' }
         },
         {
             path: '/paymentschedule/',
             name: 'paymentschedule',
-            component: PaymentSchedule
+            component: () => import(/* webpackChunkName: "paymentschedule" */ './components/payment/PaymentSchedule.vue')
         },
         {
             path: '/login',
             name: 'login',
-            component: Login
-            // route level code-splitting
-            // this generates a separate chunk (about.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
-            //component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+            component: () => import(/* webpackPreload: true */ './components/auth/Login.vue')
         },
         {
-            // This route must declared last
+            // 404 page. This route must declared last
             path: '*',
             name: 'page404',
-            component: Page404
+            component: () => import(/* webpackPreload: true */ './components/http/Page404.vue')
         }
     ]
 })
@@ -129,6 +116,7 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach((to, from) => {
     store.commit('setBreadcrumb', [])
+    store.commit('clearErrors')
 })
 
 export default router

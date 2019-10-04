@@ -59,6 +59,7 @@
 
     .loginform {
         margin: 2rem auto;
+        padding: 1rem 3rem;
         max-width: 30rem;
     }
 

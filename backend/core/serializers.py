@@ -25,6 +25,7 @@ from core.models import (
     Payment,
     SchoolDistrict,
     Section,
+    SectionInfo,
     ActivityDetails,
     Account,
     HistoricalCase,
@@ -38,7 +39,7 @@ from core.models import (
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ("id", "username", "cases", "team")
+        fields = ("id", "username", "first_name", "last_name", "cases", "team")
 
 
 class CaseSerializer(serializers.ModelSerializer):
@@ -127,6 +128,8 @@ class ActivitySerializer(WritableNestedModelSerializer):
     total_cost = serializers.ReadOnlyField()
     total_cost_this_year = serializers.ReadOnlyField()
     total_cost_full_year = serializers.ReadOnlyField()
+    total_granted_this_year = serializers.ReadOnlyField()
+    total_expected_this_year = serializers.ReadOnlyField()
 
     payment_plan = PaymentScheduleSerializer(partial=True, required=False)
 
@@ -158,27 +161,6 @@ class ActivitySerializer(WritableNestedModelSerializer):
                 _("startdato og slutdato skal være ens for engangsbetaling")
             )
 
-        # monthly payments should start and end at the 1st.
-        is_monthly_payment = (
-            "payment_frequency" in data["payment_plan"]
-            and data["payment_plan"]["payment_frequency"]
-            == PaymentSchedule.MONTHLY
-        )
-        if is_monthly_payment and (
-            not data["start_date"].day == 1
-            or (
-                "end_date" in data
-                and data["end_date"]
-                and not data["end_date"].day == 1
-            )
-        ):
-            raise serializers.ValidationError(
-                _(
-                    "startdato og slutdato for månedlige "
-                    "betalinger skal være den 1."
-                )
-            )
-
         if "modifies" in data and data["modifies"]:
             # run the validate_expected flow.
             data_copy = data.copy()
@@ -201,6 +183,8 @@ class AppropriationSerializer(serializers.ModelSerializer):
     total_granted_this_year = serializers.ReadOnlyField()
     total_expected_this_year = serializers.ReadOnlyField()
     total_expected_full_year = serializers.ReadOnlyField()
+    granted_from_date = serializers.ReadOnlyField()
+    granted_to_date = serializers.ReadOnlyField()
 
     activities = ActivitySerializer(many=True, read_only=True)
 
@@ -247,6 +231,12 @@ class SchoolDistrictSerializer(serializers.ModelSerializer):
 class SectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Section
+        fields = "__all__"
+
+
+class SectionInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SectionInfo
         fields = "__all__"
 
 

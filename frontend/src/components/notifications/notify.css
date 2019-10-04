@@ -58,7 +58,7 @@
 }
 
 .notification.notification-error .msg::before { 
-    content: '⚠'
+    content: '⚠';
 }
 
 .notification .remove-alert {
@@ -66,6 +66,7 @@
     padding: .75rem 1rem;
     margin: 0;
     border: none;
+    height: auto;
 }
 
 .notification .remove-alert::before {
@@ -88,6 +89,7 @@
         min-width: 20rem;
         max-width: 100%;
         right: 0;
+        border-radius: 0 0 0 .125rem;
     }
 
 }

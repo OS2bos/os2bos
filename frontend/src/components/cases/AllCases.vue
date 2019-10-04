@@ -21,7 +21,7 @@
         <table v-if="items.length > 0">
             <thead>
                 <tr>
-                    <th style="width: 5.5rem;">Status</th>
+                    <th style="width: 6rem;">Status</th>
                     <th>SBSYS-hovedsag</th> 
                     <th>Borger</th>
                     <th>Ændret</th>
@@ -29,7 +29,7 @@
             </thead>
             <tbody>
                 <tr v-for="i in items" :key="i.id">
-                    <td style="width: 5.5rem;">
+                    <td style="width: 6rem;">
                         <div class="mini-label" v-if="i.expired === false">
                             <span class="label label-GRANTED">Aktiv</span>
                         </div>

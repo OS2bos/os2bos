@@ -5,17 +5,14 @@
         :class="{ [act.group]: act.group, 'meta-row': act.is_meta, 'sub-row': act.group }" 
         :title="act.note" 
         @click="act.is_meta ? toggleGroup(act.id) : false">
-        <td style="width: 4.5rem;">
+        <td style="width: 3.5rem; padding: .5rem 0 0 1.25rem;">
             <template v-if="!act.is_meta && act.status !== 'GRANTED'">
-                <!-- Unhide, when feature for individual approval is in place -->
-                <!--     
-                <input type="checkbox" :id="`check-${ act.id }`" disabled>
-                <label class="disabled" :for="`check-${ act.id }`"></label>
-                -->
+                <input type="checkbox" :id="`check-${ act.id }`" v-model="is_checked" @change="$emit('check', is_checked)">
+                <label class="disabled" :for="`check-${ act.id }`" title="Udvælg denne ydelse"></label>
             </template>
             <div v-if="act.is_meta" class="dropdown-arrow" :class="{'toggled': toggled}">▼</div>
         </td>
-        <td style="width: 5.5rem;">
+        <td style="width: 6rem;">
             <div class="mini-label" v-html="statusLabel(act.status)"></div>
         </td>
         <td>
@@ -32,15 +29,12 @@
         <td class="nowrap">{{ displayDate(act.start_date) }}</td>
         <td class="nowrap">{{ displayDate(act.end_date) }}</td>
         <td class="nowrap right">
-            <span v-if="act.is_meta">{{ displayDigits(act.total_approved) }} kr</span>
-            <template v-else>
-                <span v-if="act.status === 'GRANTED'">{{ displayDigits(act.total_cost_this_year) }} kr</span>
-                <span v-if="act.status === 'DRAFT'" class="dim">{{ displayDigits(act.total_cost_this_year) }} kr</span>
-            </template>
+            {{ displayCost(act, 'granted') }}
         </td>
         <td class="nowrap right">
-            <span v-if="act.is_meta">Se detaljer &hellip;</span>
-            <span v-if="!act.is_meta && act.status === 'EXPECTED'" class="expected">{{ displayDigits(act.total_cost_this_year) }} kr</span>
+            <span :class="act.status === 'DRAFT' ? 'dim' : 'expected'">
+                {{ displayCost(act, 'expected') }}
+            </span>
         </td>
     </tr>
 
@@ -55,12 +49,19 @@
     export default {
     
         props: [
-            'act'
+            'act',
+            'checked'
         ],
         data: function() {
             return {
                 visible: true,
-                toggled: false
+                toggled: false,
+                is_checked: false
+            }
+        },
+        watch: {
+            checked: function() {
+                this.is_checked = this.checked
             }
         },
         methods: {
@@ -78,9 +79,33 @@
             },
             toggleGroup: function(group_id) {
                 this.$emit('toggle', group_id)
+            },
+            displayCost: function(act, column) {
+                if (act.is_meta) {
+                    if (column === 'granted') {
+                        if (act.approved !== 0) {
+                            return `${ this.displayDigits(act.approved) } kr`
+                        }
+                    } else {
+                        if (act.expected !== act.approved) {
+                            return `${ this.displayDigits(act.expected) } kr`
+                        }
+                    }
+                } else {
+                    if (column === 'granted') {
+                        if (act.status === 'GRANTED') {
+                            return `${ this.displayDigits(act.total_granted_this_year) } kr`
+                        }
+                    } else {
+                        if (act.total_expected_this_year === 0 || act.total_expected_this_year !== act.total_granted_this_year) {
+                            return `${ this.displayDigits(act.total_expected_this_year) } kr`
+                        }
+                    }
+                }
             }
         },
         created: function() {
+            this.is_checked = this.checked
             if (this.act.group) {
                 this.visible = false
             }

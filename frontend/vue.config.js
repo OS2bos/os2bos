@@ -23,5 +23,12 @@ module.exports = {
     devServer: {
         proxy: proxySettings,
         disableHostCheck: true,
+    },
+    configureWebpack: config => {
+        if (process.env.NODE_ENV === 'production') {
+            config.performance = {
+                hints: 'warning'
+            }
+        }
     }
 };

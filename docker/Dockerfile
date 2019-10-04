@@ -36,7 +36,8 @@ LABEL org.opencontainers.image.title="Bevillingsplatform" \
 # https://docs.python.org/3/using/cmdline.html#cmdoption-u
 ENV PYTHONUNBUFFERED=1 \
   BEV_SYSTEM_CONFIG_PATH=/code/docker/docker-settings.ini \
-  BEV_USER_CONFIG_PATH=/user-settings.ini
+  BEV_USER_CONFIG_PATH=/user-settings.ini \
+  IPYTHONDIR=/tmp/.ipython
 
 
 WORKDIR /code/
@@ -84,9 +85,5 @@ USER bev:bev
 EXPOSE 5000
 ENTRYPOINT ["/code/docker/docker-entrypoint.sh"]
 CMD ["gunicorn", \
-  "-b", "0.0.0.0:5000", \
-  "--workers", "2", \
-  "--threads", "4", \
-  "--access-logfile", "/log/access.log", \
-  "--worker-tmp-dir", "/dev/shm", \
+  "--config", "/code/docker/gunicorn-settings.py", \
   "bevillingsplatform.wsgi"]

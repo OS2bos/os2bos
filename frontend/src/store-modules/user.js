@@ -54,7 +54,11 @@ const actions = {
     fetchUsers: function({commit}) {
         return axios.get('/users/')
         .then(res => {
-            commit('setUsers', res.data)
+            let users = res.data
+            users.map(user => {
+                user.fullname = `${ user.first_name } ${ user.last_name } (${ user.username })`
+            })
+            commit('setUsers', users)
         })
         .catch(err => console.log(err))
     },

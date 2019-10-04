@@ -25,9 +25,11 @@ from core.models import (
     Payment,
     ServiceProvider,
     Section,
+    SectionInfo,
     Account,
     SD,
     FAMILY_DEPT,
+    STEP_ONE,
 )
 
 
@@ -40,7 +42,7 @@ class AuthenticatedTestCase(TestCase):
     def setUp(self):
         self.username = "user"
         self.password = "s1kr3t"
-        User.objects.create_user(
+        self.user = User.objects.create_user(
             self.username, f"{self.username}@company.com", self.password
         )
 
@@ -61,7 +63,7 @@ def create_case(
     district,
     sbsys_id="13212",
     scaling_step=1,
-    effort_step="STEP_ONE",
+    effort_step=STEP_ONE,
     target_group=FAMILY_DEPT,
 ):
 
@@ -95,7 +97,7 @@ def create_case_as_json(
         "case_worker": case_worker.id,
         "team": team.id,
         "scaling_step": 1,
-        "effort_step": "STEP_ONE",
+        "effort_step": STEP_ONE,
         "district": district.id,
         "paying_municipality": municipality.id,
         "acting_municipality": municipality.id,
@@ -114,6 +116,7 @@ def create_payment_schedule(
     payment_method=SD,
     recipient_id="0205891234",
     recipient_name="Jens Testersen",
+    payment_day_of_month=1,
 ):
     payment_schedule = PaymentSchedule.objects.create(
         payment_amount=payment_amount,
@@ -124,8 +127,24 @@ def create_payment_schedule(
         payment_method=payment_method,
         recipient_id=recipient_id,
         recipient_name=recipient_name,
+        payment_day_of_month=payment_day_of_month,
     )
     return payment_schedule
+
+
+def create_activity_details(
+    activity_id="000000",
+    name="Test aktivitet",
+    max_tolerance_in_percent=10,
+    max_tolerance_in_dkk=1000,
+):
+    details, unused = ActivityDetails.objects.get_or_create(
+        activity_id=activity_id,
+        name=name,
+        max_tolerance_in_percent=max_tolerance_in_percent,
+        max_tolerance_in_dkk=max_tolerance_in_dkk,
+    )
+    return details
 
 
 def create_activity(
@@ -137,12 +156,7 @@ def create_activity(
     **kwargs,
 ):
     if "details" not in kwargs:
-        details, unused = ActivityDetails.objects.get_or_create(
-            activity_id="000000",
-            name="Test aktivitet",
-            max_tolerance_in_percent=10,
-            max_tolerance_in_dkk=1000,
-        )
+        details = create_activity_details()
     else:
         details = kwargs.pop("details")
 
@@ -183,19 +197,11 @@ def create_payment(
     return payment
 
 
-def create_section(
-    paragraph="ABL-105-2",
-    kle_number="27.45.04",
-    allowed_for_steps=None,
-    **kwargs,
-):
+def create_section(paragraph="ABL-105-2", allowed_for_steps=None, **kwargs):
     if not allowed_for_steps:
         allowed_for_steps = []
     section = Section.objects.create(
-        paragraph=paragraph,
-        kle_number=kle_number,
-        allowed_for_steps=allowed_for_steps,
-        **kwargs,
+        paragraph=paragraph, allowed_for_steps=allowed_for_steps, **kwargs
     )
     return section
 
@@ -218,3 +224,15 @@ def create_service_provider(cvr_number, name):
     )
 
     return service_provider
+
+
+def create_section_info(
+    details, section, kle_number="27.18.02", sbsys_template_id="900"
+):
+    section_info = SectionInfo.objects.create(
+        activity_details=details,
+        section=section,
+        kle_number=kle_number,
+        sbsys_template_id=sbsys_template_id,
+    )
+    return section_info

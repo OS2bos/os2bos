@@ -72,11 +72,11 @@ const actions = {
         })
     },
     setTimer: function({dispatch}) {
-        setTimeout(() => {
+        setInterval(() => {
             dispatch('refreshToken')
         }, 270000);
     },
-    postLogin: function({dispatch}) {
+    postLogin: function() {
         router.push('/')
     },
     refreshToken: function({commit, dispatch, state}) {
@@ -86,7 +86,6 @@ const actions = {
             })
             .then(res => {
                 commit('setAccessToken', res.data.access)
-                dispatch('setTimer')
             })
             .catch(err => {
                 console.log(err)
@@ -102,14 +101,15 @@ const actions = {
         if (refreshtoken) {
             commit('setAccessToken', accesstoken)
             commit('setRefreshToken', refreshtoken)
-            dispatch('fetchLists')
-            .then(res => {
-                let user = rootState.user.users.find(function(u) {
-                    return u.id === user_id
+            dispatch('refreshToken')
+            .then(() => {
+                dispatch('fetchLists').then(() => {
+                    let user = rootState.user.users.find(function(u) {
+                        return u.id === user_id
+                    })
+                    commit('setUser', user)
                 })
-                commit('setUser', user)
                 dispatch('postLogin')
-                dispatch('refreshToken')
             })
             .catch(err => store.dispatch('parseErrorOutput', err))
         } else {

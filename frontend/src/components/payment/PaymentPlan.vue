@@ -8,11 +8,11 @@
 
 <template>
 
-    <article class="payment-plan">
-        <h1>Forventet udgift</h1>
+    <div class="payment-plan">
+        <p style="font-size: 1.5rem;">Forventet udgift</p>
         <p>{{ abstract }}</p>
-        <p v-if="yearly_cost">Det er <strong>{{ yearly_cost }} kr</strong> pr. år</p>
-    </article>
+        <p v-if="yearly_cost">Det er ca. <strong>{{ yearly_cost }} kr</strong> pr. år</p>
+    </div>
 
 </template>
 
@@ -47,21 +47,21 @@
                         break
                     case 'PER_HOUR_PAYMENT':
                         if (this.units) {
-                            str += `${ this.units } timer á ${ cost2da(this.amount) } kr hver ${ this.freq_name }`
+                            str += `${ cost2da(this.units) } timer á ${ cost2da(this.amount) } kr hver ${ this.freq_name }`
                         } else {
                             str = '-'
                         }
                         break
                     case 'PER_DAY_PAYMENT':
                         if (this.units) {
-                            str += `${ this.units } døgn á ${ cost2da(this.amount) } kr hver ${ this.freq_name }`
+                            str += `${ cost2da(this.units) } døgn á ${ cost2da(this.amount) } kr hver ${ this.freq_name }`
                         } else {
                             str = '-'
                         }
                         break
                     case 'PER_KM_PAYMENT':
                         if (this.units) {
-                            str += `${ this.units } kilometer á ${ cost2da(this.amount) } kr hver ${ this.freq_name }`
+                            str += `${ cost2da(this.units) } kilometer á ${ cost2da(this.amount) } kr hver ${ this.freq_name }`
                         } else {
                             str = '-'
                         }
@@ -93,6 +93,11 @@
                         this.month_factor = 1
                         return 'måned'
                         break
+                    case 'BIWEEKLY':
+                        this.freq_factor = 26
+                        this.month_factor = 2
+                        return '2. uge'
+                        break
                     case 'WEEKLY':
                         this.freq_factor = 52
                         this.month_factor = 4
@@ -115,9 +120,14 @@
 
 <style>
 
-    .payment-plan h1 {
+    .payment-plan {
+        white-space: nowrap;
+        padding: 1rem 2rem;
+    }
+
+    .payment-plan h3 {
         font-size: 1.25rem;
-        padding-top: 0;
+        padding-top: .25rem;
     }
 
 </style>

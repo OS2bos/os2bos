@@ -10,12 +10,12 @@
 This script imports ActivityDetails from the CBUR "Klassifikationer"
 spreadsheet.
 
-Currently this requires the sheet "Aktiviteter v2" be saved
+Currently this requires the sheet "Aktiviteter" be saved
 as "aktiviteter.csv" in the current directory.
 
 NOTE: This requires the Section models to have been populated first.
 """
-from core.models import ActivityDetails, Section
+from core.models import ActivityDetails, Section, SectionInfo
 from collections import defaultdict
 import csv
 
@@ -27,6 +27,7 @@ with open("aktiviteter.csv") as csvfile:
     main_activity_dict = defaultdict(set)
     section_main_dict = defaultdict(set)
     section_supplementary_dict = defaultdict(set)
+    kle_and_sbsys_dict = {}
     for row in rows[1:]:
         activity_id = row[0]
         if not activity_id:
@@ -41,6 +42,12 @@ with open("aktiviteter.csv") as csvfile:
         main_activity_on = row[4]
         if main_activity_on:
             section_main_dict[activity_id].add(main_activity_on)
+            kle_number = row[6] or ""
+            sbsys_id = row[7] or ""
+            kle_and_sbsys_dict[activity_id, main_activity_on] = (
+                kle_number,
+                sbsys_id,
+            )
         suppl_activity_on = row[5]
         if suppl_activity_on:
             section_supplementary_dict[activity_id].add(suppl_activity_on)
@@ -50,10 +57,12 @@ with open("aktiviteter.csv") as csvfile:
 
         try:
             ad, created = ActivityDetails.objects.update_or_create(
-                name=name,
                 activity_id=activity_id,
-                max_tolerance_in_percent=tolerance_percent,
-                max_tolerance_in_dkk=tolerance_dkk,
+                defaults={
+                    "name": name,
+                    "max_tolerance_in_percent": tolerance_percent,
+                    "max_tolerance_in_dkk": tolerance_dkk,
+                },
             )
         except Exception as e:
             print(f"Import of activity {activity_id} failed: {e}")
@@ -72,11 +81,23 @@ with open("aktiviteter.csv") as csvfile:
                 related_details = related_details.first()
                 details_obj.main_activities.add(related_details)
 
+        # This is to make the switch to the new "through" model
+        details_obj.main_activity_for.clear()
         for paragraph in section_main_dict[details_obj.activity_id]:
             main_activity_for = Section.objects.filter(paragraph=paragraph)
             if main_activity_for.exists():
                 main_activity_for = main_activity_for.first()
-                details_obj.main_activity_for.add(main_activity_for)
+                kle_number, sbsys_id = kle_and_sbsys_dict[
+                    details_obj.activity_id, paragraph
+                ]
+                SectionInfo.objects.update_or_create(
+                    activity_details=details_obj,
+                    section=main_activity_for,
+                    defaults={
+                        "kle_number": kle_number,
+                        "sbsys_template_id": sbsys_id,
+                    },
+                )
 
         for paragraph in section_supplementary_dict[details_obj.activity_id]:
             supplementary_activity_for = Section.objects.filter(

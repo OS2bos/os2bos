@@ -9,32 +9,26 @@
 <template>
     <section class="familyoverview">
         <header class="familyoverview-header">
-            <h1>Familieoversigt</h1>
+            <h2>Familieoversigt</h2>
             <button class="familyoverview-create-btn" @click="$router.push(`/case/${ caseId }/familyoverview-create/`)">+ Opret familierelation</button>
         </header>
-        <table class="familyoverview-list" v-if="fam && fam.length > 0">
-            <thead>
-                <tr>
-                    <th>Relation</th>
-                    <th>Borger</th>
-                    <th>Relateret sag</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="f in fam" :key="f.id">
-                    <td>{{ f.relation_type }}</td>
-                    <td>
+        <ul class="familyoverview-list list" v-if="fam && fam.length > 0">
+            <li v-for="f in fam" :key="f.id" class="familyoverview-list-item">
+                <dl>
+                    <dt class="relation">{{ f.relation_type }}</dt>
+                    <dd class="person">
+                        {{ f.cpr_number }},
                         <router-link :to="`/case/${ caseId }/familyoverview-edit/${ f.id }`">
-                            {{ f.cpr_number }} - {{ f.name }}
-                        </router-link>        
-                    </td>
-                    <td>
-                        <span v-if="!f.related_case">-</span>
-                        {{ f.related_case }}
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                            {{ f.name }}
+                        </router-link>
+                    </dd>
+                </dl>
+                <dl v-if="f.related_case" style="margin-left: 1rem;">
+                    <dt>Relateret sag</dt>
+                    <dd>{{ f.related_case }}</dd>
+                </dl>
+            </li>
+        </ul>
         <p v-if="!fam || fam.length < 1">Der er endnu ingen relationer</p>
     </section>
 
@@ -83,7 +77,7 @@
 <style>
 
     .familyoverview {
-        margin: 2rem 0;
+        max-width: 40rem;
     }
 
     .familyoverview-header {
@@ -91,6 +85,25 @@
         flex-flow: row nowrap;
         align-items: center;
         justify-content: flex-start;
+    }
+
+    .familyoverview-list {
+        margin-top: 1rem;
+    }
+
+    .familyoverview-list .relation {
+        display: inline-block;
+        text-transform: capitalize;
+        min-width: 6rem;
+    }
+
+    .familyoverview .familyoverview-list-item {
+        display: flex;
+        flex-flow: row nowrap;
+        background-color: var(--grey1);
+        padding: .25rem 1rem .5rem;
+        margin: 0 0 .125rem;
+
     }
 
     .familyoverview-create-btn {
