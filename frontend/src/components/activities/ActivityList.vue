@@ -162,14 +162,16 @@
                 return cost2da(num)
             },
             addModifierAct(chunk, id, act_list) {
-                let modifier = act_list.find(function(a) {
+                let modifiers = act_list.filter(function(a) {
                     return a.modifies === id
                 })
-                if (modifier) {
-                    chunk.push(modifier)
-                    this.addModifierAct(chunk, modifier.id, act_list)
+                if (modifiers.length > 0) {
+                    for (let m in modifiers) {
+                        chunk.push(modifiers[m])
+                        this.addModifierAct(chunk, modifiers[m].id, act_list)
+                    }
                 } else {
-                    this.chunks.push(chunk)
+                    return chunk
                 }
             },
             getBestDate(arr, criteria) {
@@ -216,9 +218,10 @@
                     if (act.modifies === null) {
                         let chunk = [act]
                         this.addModifierAct(chunk, act.id, act_list)
+                        this.chunks.push(chunk)
                     }
                 }
-
+                
                 // Add meta activity to chunks of modified activities
                 for (let c in this.chunks) {
                     let chunk = this.chunks[c]
