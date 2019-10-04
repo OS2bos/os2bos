@@ -749,12 +749,7 @@ class Appropriation(AuditModelMixin, models.Model):
         activities = self.activities.filter(
             Q(status=STATUS_GRANTED) | Q(status=STATUS_EXPECTED)
         )
-        return (
-            Payment.objects.filter(payment_schedule__activity__in=activities)
-            .expected()
-            .in_this_year()
-            .amount_sum()
-        )
+        return sum(a.total_expected_this_year for a in activities)
 
     @property
     def total_expected_full_year(self):
@@ -1181,9 +1176,28 @@ class Activity(AuditModelMixin, models.Model):
     @property
     def total_cost_this_year(self):
         if self.status == STATUS_GRANTED and self.modified_by.exists():
-            payments = Payment.objects.filter(
-                payment_schedule__activity=self
-            ).expected()
+            # one time payments are always overruled entirely.
+            if (
+                self.payment_plan.payment_type
+                == PaymentSchedule.ONE_TIME_PAYMENT
+            ):
+                payments = Payment.objects.none()
+            else:
+                # Find the earliest payment date in the chain of
+                # modified_by activities and exclude from that point
+                # and onwards.
+                modified_by_activities = self.get_all_modified_by_activities()
+                min_date = (
+                    Payment.objects.filter(
+                        payment_schedule__activity__in=modified_by_activities
+                    )
+                    .order_by("date")
+                    .first()
+                    .date
+                )
+                payments = Payment.objects.filter(
+                    payment_schedule__activity=self
+                ).exclude(date__gte=min_date)
         else:
             payments = Payment.objects.filter(payment_schedule__activity=self)
         return payments.in_this_year().amount_sum()
@@ -1192,7 +1206,7 @@ class Activity(AuditModelMixin, models.Model):
     def total_granted_this_year(self):
         if self.status == STATUS_GRANTED:
             payments = Payment.objects.filter(payment_schedule__activity=self)
-            return payments.in_this_year().amount_sum
+            return payments.in_this_year().amount_sum()
         else:
             return Decimal(0)
 
@@ -1203,9 +1217,28 @@ class Activity(AuditModelMixin, models.Model):
     @property
     def total_cost(self):
         if self.status == STATUS_GRANTED and self.modified_by.exists():
-            payments = Payment.objects.filter(
-                payment_schedule__activity=self
-            ).expected()
+            # one time payments are always overruled entirely.
+            if (
+                self.payment_plan.payment_type
+                == PaymentSchedule.ONE_TIME_PAYMENT
+            ):
+                payments = Payment.objects.none()
+            else:
+                # Find the earliest payment date in the chain of
+                # modified_by activities and exclude from that point
+                # and onwards.
+                modified_by_activities = self.get_all_modified_by_activities()
+                min_date = (
+                    Payment.objects.filter(
+                        payment_schedule__activity__in=modified_by_activities
+                    )
+                    .order_by("date")
+                    .first()
+                    .date
+                )
+                payments = Payment.objects.filter(
+                    payment_schedule__activity=self
+                ).exclude(date__gte=min_date)
         else:
             payments = Payment.objects.filter(payment_schedule__activity=self)
         return payments.amount_sum()
@@ -1251,6 +1284,22 @@ class Activity(AuditModelMixin, models.Model):
         if self.service_provider:
             vat_factor = self.service_provider.vat_factor
         return vat_factor
+
+    def get_all_modified_by_activities(self):
+        """
+        Retrieve all modified_by objects recursively.
+        """
+        r = []
+        if self.modified_by.exists():
+            r.append(
+                self.modified_by.prefetch_related(
+                    "payment_plan__payments"
+                ).first()
+            )
+            return (
+                r + self.modified_by.first().get_all_modified_by_activities()
+            )
+        return r
 
 
 class RelatedPerson(models.Model):
