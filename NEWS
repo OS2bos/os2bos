@@ -1,3 +1,22 @@
+* Version 1.1.0, 2019-10-04
+
+New in this version:
+
+* Fixed approval button when there's nothing to approve.
+* Fixed missing activities from appropriation PDF.
+* Fix spelling error in logout message.
+* For payment to a person with SDLøn, tax card is mandatory.
+* Use user first_name and last_name instead of initials for Sagsbehandler dropdown.
+* Fix stop dates on supplementary activities.
+* Fix link to rates document.
+* Correctly calculate the expected amount for expected activities.
+* Correct forms for modifying effort steps (Indsatstrappe) in Djang Admin.
+* Clear frontend errors correctly.
+* Rearrange autologin scripts in frontend.
+* Change recommended browser text.
+* Suppress not writeable warning from ipython.
+
+
 * Version 1.0.0, 2019-09-27
 
 First production release. New in this version:
