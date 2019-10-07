@@ -830,6 +830,23 @@ class Appropriation(AuditModelMixin, models.Model):
             # Update the end date for all supplementary activities that
             # don't have an end date less than the main activities'.
             if main_activity.end_date:
+                # The end date must not be later than any supplementary
+                # activity's start date.
+                if (
+                    self.activities.filter(
+                        start_date__gt=main_activity.end_date,
+                        activity_type=SUPPL_ACTIVITY,
+                    )
+                    .exclude(status=STATUS_DELETED)
+                    .exists()
+                ):
+                    raise RuntimeError(
+                        _(
+                            "Denne bevilling har følgeydelser, der starter "
+                            "efter hovedydelsens slutdato. Slet venligst "
+                            "disse eller ryk slutdatoen frem."
+                        )
+                    )
                 for a in self.activities.filter(
                     activity_type=SUPPL_ACTIVITY
                 ).exclude(end_date__lte=main_activity.end_date):
@@ -1117,9 +1134,18 @@ class Activity(AuditModelMixin, models.Model):
                 # always be the same.
                 self.modifies.end_date = self.start_date
             else:
-                self.modifies.end_date = self.start_date - timedelta(days=1)
+                if self.start_date <= self.modifies.start_date:
+                    old_activity = self.modifies
+                    self.modifies = self.modifies.modifies
+                    old_activity.delete()
+                # self.start_date > self.modifies.start_date or is None
+                if self.modifies:
+                    self.modifies.end_date = self.start_date - timedelta(
+                        days=1
+                    )
             # In all cases ...
-            self.modifies.save()
+            if self.modifies:
+                self.modifies.save()
             self.status = STATUS_GRANTED
         self.save()
 
