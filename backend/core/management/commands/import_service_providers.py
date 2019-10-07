@@ -21,11 +21,11 @@ class Command(BaseCommand):
     spreadsheet.
 
     Currently this requires the sheet "Leverandør" be saved
-    as "leverandoerer.csv" in the current directory.
+    as "serviceproviders.csv" in the current directory.
     """
 
     def handle(self, *args, **options):
-        with open("leverandoerer.csv") as csvfile:
+        with open("serviceproviders.csv") as csvfile:
             reader = csv.reader(csvfile)
             rows = [row for row in reader]
             for row in rows[1:]:

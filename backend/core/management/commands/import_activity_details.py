@@ -30,14 +30,14 @@ class Command(BaseCommand):
     spreadsheet.
 
     Currently this requires the sheet "Aktiviteter" be saved
-    as "aktiviteter.csv" in the current directory.
+    as "activities.csv" in the current directory.
 
     NOTE: This requires the Section models AND
     the ActivityDetails to have been populated first.
     """
 
     def handle(self, *args, **options):
-        with open("aktiviteter.csv") as csvfile:
+        with open("activities.csv") as csvfile:
             reader = csv.reader(csvfile)
             rows = [row for row in reader]
             # dict with (activity_id, set of main activity ids) pairs.

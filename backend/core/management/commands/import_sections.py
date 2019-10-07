@@ -18,11 +18,11 @@ class Command(BaseCommand):
     This script imports Sections from the CBUR "Klassifikationer" spreadsheet.
 
     Currently this requires the sheet "Paragraffer" be saved
-    as "paragraffer.csv" in the current directory.
+    as "paragraphs.csv" in the current directory.
     """
 
     def handle(self, *args, **options):
-        with open("paragraffer.csv") as csvfile:
+        with open("paragraphs.csv") as csvfile:
             reader = csv.reader(csvfile)
             rows = [row for row in reader]
             for row in rows[1:]:

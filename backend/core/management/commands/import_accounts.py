@@ -19,14 +19,22 @@ class Command(BaseCommand):
     spreadsheet.
 
     Currently this requires the sheet "Aktiviteter" be saved
-    as "aktiviteter.csv" in the current directory.
+    as "activities.csv" in the current directory.
 
     NOTE: This requires the Section models AND
     the ActivityDetails to have been populated first.
     """
 
+    def add_arguments(self, parser):
+        parser.add_arguments(
+            "-p",
+            "--path",
+            type=str,
+            help="set the path to read the activities.csv file",
+        )
+
     def handle(self, *args, **options):
-        with open("aktiviteter.csv") as csvfile:
+        with open("activities.csv") as csvfile:
             reader = csv.reader(csvfile)
             rows = [row for row in reader]
             for row in rows[1:]:
