@@ -65,7 +65,7 @@ class Command(BaseCommand):
                         main_activity_details = ActivityDetails.objects.get(
                             activity_id=activity_id
                         )
-                        supplementary_activity_details = None
+                        suppl_activity_details = None
                     except ActivityDetails.DoesNotExist:
                         print(
                             f"ActivityDetails with id: {activity_id}"
@@ -77,7 +77,7 @@ class Command(BaseCommand):
                         main_activity_details = ActivityDetails.objects.get(
                             activity_id=main_activity
                         )
-                        supplementary_activity_details = ActivityDetails.objects.get(
+                        suppl_activity_details = ActivityDetails.objects.get(
                             activity_id=activity_id
                         )
                     except ActivityDetails.DoesNotExist:
@@ -90,7 +90,7 @@ class Command(BaseCommand):
 
                 Account.objects.update_or_create(
                     main_activity=main_activity_details,
-                    supplementary_activity=supplementary_activity_details,
+                    supplementary_activity=suppl_activity_details,
                     section=section,
                     defaults={"number": account_number},
                 )

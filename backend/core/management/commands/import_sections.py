@@ -54,14 +54,13 @@ class Command(BaseCommand):
                     "SEL": "Serviceloven",
                     "ABL": "Andelsboligloven",
                     "SUL": "Sundhedsloven",
-                    "STU": "Lov om ungdomsuddannelse for unge med særlige behov",
+                    "STU": (
+                        "Lov om ungdomsuddannelse for "
+                        "unge med særlige behov"
+                    ),
                 }
                 law_text_name = law_dict.get(key.split("-")[0], "")
 
-                target_group_dict = {
-                    "Familieafdeling": "FAMILY_DEPT",
-                    "Handicap": "DISABILITY_DEPT",
-                }
                 # SFL - Skatteforvaltningsloven
                 # LAB - Lov om beskæftigelsesindsatsen
                 # AKL - Aktivloven
