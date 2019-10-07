@@ -24,10 +24,20 @@ with open("aktiviteter.csv") as csvfile:
     models_list = []
     rows = [row for row in reader]
     # dict with (activity_id, set of main activity ids) pairs.
+    # containing which supplementary activities can have which main activities.
     main_activity_dict = defaultdict(set)
+
+    # dict with (main activity_id) -> (paragraph)
+    # containing which sections an activity can be main activity for.
     section_main_dict = defaultdict(set)
+
+    # dict with (supplementary activity_id) -> (paragraph)
+    # containing which sections an activity can be supplementary activity for.
     section_supplementary_dict = defaultdict(set)
+
+    # dict with (activity_id, paragraph) -> (kle_number, sbsys_id)
     kle_and_sbsys_dict = {}
+
     for row in rows[1:]:
         activity_id = row[0]
         if not activity_id:

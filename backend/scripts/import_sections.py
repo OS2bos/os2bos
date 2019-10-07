@@ -23,17 +23,20 @@ with open("paragraffer.csv") as csvfile:
         key = row[3]
         text = row[4]
 
-        action_tracks = [x.strip() for x in row[11].split(",") if x != ""]
+        action_steps = [x.strip() for x in row[11].split(",") if x != ""]
         target_groups = [x.strip() for x in row[12].split(",") if x != ""]
-        tracks_to_steps_dict = {
-            "Spor 1": [models.STEP_ONE, models.STEP_TWO],
-            "Spor 2": [models.STEP_THREE],
-            "Spor 3": [models.STEP_FOUR, models.STEP_FIVE, models.STEP_SIX],
+        steps_dict = {
+            "Trin 1": models.STEP_ONE,
+            "Trin 2": models.STEP_TWO,
+            "Trin 3": models.STEP_THREE,
+            "Trin 4": models.STEP_FOUR,
+            "Trin 5": models.STEP_FIVE,
+            "Trin 6": models.STEP_SIX,
         }
         steps_list = []
-        if action_tracks:
-            for track in action_tracks:
-                steps_list.extend(tracks_to_steps_dict[track])
+        if action_steps:
+            for step in action_steps:
+                steps_list.append(steps_dict[step])
         law_dict = {
             "SFL": "Skatteforvaltningsloven",
             "LAB": "Lov om beskæftigelsesindsatsen",
