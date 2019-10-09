@@ -23,9 +23,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path, include
+from django.conf.urls import url
 from django.conf.urls.static import static
 from django.conf import settings
 from django.views.static import serve
+
+import django_saml2_auth
 
 from rest_framework import routers
 from rest_framework_simplejwt.views import (
@@ -57,6 +60,25 @@ router.register(r"users", views.UserViewSet)
 router.register(r"accounts", views.AccountViewSet)
 
 urlpatterns = [
+    # These are the SAML2 related URLs. You can change
+    # "^saml2_auth/" regex to
+    # any path you want, like "^sso_auth/", "^sso_login/", etc.
+    # (required)
+    url(r'^api/saml2_auth/', include('django_saml2_auth.urls')),
+
+    # The following line will replace the default user login with
+    # SAML2 (optional)
+    # If you want to specific the after-login-redirect-URL, use
+    # parameter "?next=/the/path/you/want"
+    # with this view.
+    url(r'^api/accounts/login/$', django_saml2_auth.views.signin),
+
+    # The following line will replace the admin login with SAML2
+    # (optional)
+    # If you want to specific the after-login-redirect-URL, use
+    # parameter "?next=/the/path/you/want"
+    # with this view.
+    url(r'^api/admin/login/$', django_saml2_auth.views.signin),
     path("api/admin/", admin.site.urls),
     path("api/auth/", include("rest_framework.urls")),
     path(
