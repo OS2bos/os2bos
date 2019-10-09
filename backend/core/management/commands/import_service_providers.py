@@ -10,6 +10,7 @@ import decimal
 from decimal import Decimal
 import csv
 
+from django.db import transaction
 from django.core.management.base import BaseCommand
 
 from core.models import ServiceProvider
@@ -32,6 +33,7 @@ class Command(BaseCommand):
             help="set the path to read the serviceproviders.csv file",
         )
 
+    @transaction.atomic
     def handle(self, *args, **options):
         path = options["path"]
         # if no path is given use a default relative path.

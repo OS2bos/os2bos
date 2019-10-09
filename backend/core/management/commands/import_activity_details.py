@@ -19,6 +19,7 @@ import os
 from collections import defaultdict
 import csv
 
+from django.db import transaction
 from django.core.management.base import BaseCommand
 
 from core.models import ActivityDetails, Section, SectionInfo
@@ -44,6 +45,7 @@ class Command(BaseCommand):
             help="set the path to read the activities.csv file",
         )
 
+    @transaction.atomic
     def handle(self, *args, **options):
         path = options["path"]
         # if no path is given use a default relative path.
