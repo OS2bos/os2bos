@@ -15,7 +15,7 @@ as "aktiviteter.csv" in the current directory.
 
 NOTE: This requires the Section models to have been populated first.
 """
-
+import os
 from collections import defaultdict
 import csv
 
@@ -30,14 +30,28 @@ class Command(BaseCommand):
     spreadsheet.
 
     Currently this requires the sheet "Aktiviteter" be saved
-    as "activities.csv" in the current directory.
+    as "activities.csv".
 
     NOTE: This requires the Section models AND
     the ActivityDetails to have been populated first.
     """
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "-p",
+            "--path",
+            type=str,
+            help="set the path to read the activities.csv file",
+        )
+
     def handle(self, *args, **options):
-        with open("activities.csv") as csvfile:
+        path = options["path"]
+        # if no path is given use a default relative path.
+        if not path:
+            path = os.path.join(
+                os.path.dirname(__file__), "..", "..", "data", "activities.csv"
+            )
+        with open(path) as csvfile:
             reader = csv.reader(csvfile)
             rows = [row for row in reader]
             # dict with (activity_id, set of main activity ids) pairs.

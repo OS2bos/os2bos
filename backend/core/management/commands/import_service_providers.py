@@ -5,7 +5,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-
+import os
 import decimal
 from decimal import Decimal
 import csv
@@ -21,11 +21,29 @@ class Command(BaseCommand):
     spreadsheet.
 
     Currently this requires the sheet "Leverandør" be saved
-    as "serviceproviders.csv" in the current directory.
+    as "serviceproviders.csv".
     """
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "-p",
+            "--path",
+            type=str,
+            help="set the path to read the serviceproviders.csv file",
+        )
+
     def handle(self, *args, **options):
-        with open("serviceproviders.csv") as csvfile:
+        path = options["path"]
+        # if no path is given use a default relative path.
+        if not path:
+            path = os.path.join(
+                os.path.dirname(__file__),
+                "..",
+                "..",
+                "data",
+                "serviceproviders.csv",
+            )
+        with open(path) as csvfile:
             reader = csv.reader(csvfile)
             rows = [row for row in reader]
             for row in rows[1:]:

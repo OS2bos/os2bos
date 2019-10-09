@@ -5,7 +5,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-
+import os
 import csv
 
 from django.core.management.base import BaseCommand
@@ -19,14 +19,14 @@ class Command(BaseCommand):
     spreadsheet.
 
     Currently this requires the sheet "Aktiviteter" be saved
-    as "activities.csv" in the current directory.
+    as "activities.csv".
 
     NOTE: This requires the Section models AND
     the ActivityDetails to have been populated first.
     """
 
     def add_arguments(self, parser):
-        parser.add_arguments(
+        parser.add_argument(
             "-p",
             "--path",
             type=str,
@@ -34,7 +34,13 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        with open("activities.csv") as csvfile:
+        path = options["path"]
+        # if no path is given use a default relative path.
+        if not path:
+            path = os.path.join(
+                os.path.dirname(__file__), "..", "..", "data", "activities.csv"
+            )
+        with open(path) as csvfile:
             reader = csv.reader(csvfile)
             rows = [row for row in reader]
             for row in rows[1:]:

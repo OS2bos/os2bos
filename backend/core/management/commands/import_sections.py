@@ -5,7 +5,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-
+import os
 import csv
 
 from django.core.management.base import BaseCommand
@@ -18,11 +18,25 @@ class Command(BaseCommand):
     This script imports Sections from the CBUR "Klassifikationer" spreadsheet.
 
     Currently this requires the sheet "Paragraffer" be saved
-    as "paragraphs.csv" in the current directory.
+    as "paragraphs.csv".
     """
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "-p",
+            "--path",
+            type=str,
+            help="set the path to read the paragraphs.csv file",
+        )
+
     def handle(self, *args, **options):
-        with open("paragraphs.csv") as csvfile:
+        path = options["path"]
+        # if no path is given use a default relative path.
+        if not path:
+            path = os.path.join(
+                os.path.dirname(__file__), "..", "..", "data", "paragraphs.csv"
+            )
+        with open(path) as csvfile:
             reader = csv.reader(csvfile)
             rows = [row for row in reader]
             for row in rows[1:]:
