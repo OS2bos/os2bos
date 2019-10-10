@@ -64,21 +64,19 @@ urlpatterns = [
     # "^saml2_auth/" regex to
     # any path you want, like "^sso_auth/", "^sso_login/", etc.
     # (required)
-    url(r'^api/saml2_auth/', include('django_saml2_auth.urls')),
-
+    url(r"^api/saml2_auth/", include("django_saml2_auth.urls")),
     # The following line will replace the default user login with
     # SAML2 (optional)
     # If you want to specific the after-login-redirect-URL, use
     # parameter "?next=/the/path/you/want"
     # with this view.
-    url(r'^api/accounts/login/$', django_saml2_auth.views.signin),
-
+    url(r"^api/accounts/login/$", django_saml2_auth.views.signin),
     # The following line will replace the admin login with SAML2
     # (optional)
     # If you want to specific the after-login-redirect-URL, use
     # parameter "?next=/the/path/you/want"
     # with this view.
-    url(r'^api/admin/login/$', django_saml2_auth.views.signin),
+    url(r"^api/admin/login/$", django_saml2_auth.views.signin),
     path("api/admin/", admin.site.urls),
     path("api/auth/", include("rest_framework.urls")),
     path(

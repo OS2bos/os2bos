@@ -312,14 +312,15 @@ SBSYS_XML_TEMPLATE = "core/xml/os2forms.xml"
 SAML2_AUTH = {
     # Metadata is required, choose either remote url or local
     # file path
-    'METADATA_AUTO_CONF_URL': 'http://idp:8080/simplesaml/saml2/idp/metadata.php',
-    'CREATE_USER': 'TRUE',
-    'ASSERTION_URL': 'http://cbur1:8080',
-    'ENTITY_ID': 'http://cbur1:8080',
-    'ATTRIBUTES_MAP': {
-        'email': 'email',
-        'username': 'username',
-        'first_name': 'first_name',
-        'last_name': 'last_name',
+    "METADATA_AUTO_CONF_URL": "http://cbur:8081/simplesaml/"
+    "saml2/idp/metadata.php",
+    "CREATE_USER": "TRUE",
+    "ASSERTION_URL": "http://cbur:8080",
+    "ENTITY_ID": "http://cbur:8080",
+    "ATTRIBUTES_MAP": {
+        "email": "email",
+        "username": "username",
+        "first_name": "first_name",
+        "last_name": "last_name",
     },
 }
