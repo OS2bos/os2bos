@@ -74,6 +74,14 @@ services:
       - maildomain=magenta.dk
       - smtp_user=bev:bev
 
+  idp:
+    image: kristophjunge/test-saml-idp
+    hostname: idp
+    env_file:
+      - dev-environment/idp.env
+    ports:
+      - 8081:8080
+      - 8443:8443
   # The following service is to copy the scripts needed to initialize the
   # database with user and extensions to a volume. It is not needed when the
   # volume `./docker/postgres-initdb.d/:/docker-entrypoint-initdb.d` is bound in
