@@ -176,17 +176,10 @@
             },
             getBestDate(arr, criteria) {
                 let best_date = null
-                for (let a in arr) {
-                    const date = new Date( arr[a][`${ criteria}_date`] ).getTime()
-                    if (criteria === 'start') {
-                        if (!best_date || date < best_date) {
-                            best_date = date
-                        }
-                    } else {
-                        if (!best_date || date > best_date) {
-                            best_date = date
-                        }
-                    }
+                if (criteria === 'start') {
+                    best_date = arr[0].start_date
+                } else {
+                    best_date = arr[arr.length - 1].end_date
                 }
                 return best_date
             },
