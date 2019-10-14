@@ -1216,17 +1216,22 @@ class Activity(AuditModelMixin, models.Model):
                 # modified_by activities and exclude from that point
                 # and onwards.
                 modified_by_activities = self.get_all_modified_by_activities()
-                min_date = (
+                min_payment = (
                     Payment.objects.filter(
                         payment_schedule__activity__in=modified_by_activities
                     )
                     .order_by("date")
                     .first()
-                    .date
                 )
-                payments = Payment.objects.filter(
-                    payment_schedule__activity=self
-                ).exclude(date__gte=min_date)
+                if not min_payment:
+                    payments = Payment.objects.filter(
+                        payment_schedule__activity=self
+                    )
+                else:
+                    min_date = min_payment.date
+                    payments = Payment.objects.filter(
+                        payment_schedule__activity=self
+                    ).exclude(date__gte=min_date)
         else:
             payments = Payment.objects.filter(payment_schedule__activity=self)
         return payments.in_this_year().amount_sum()
@@ -1257,17 +1262,22 @@ class Activity(AuditModelMixin, models.Model):
                 # modified_by activities and exclude from that point
                 # and onwards.
                 modified_by_activities = self.get_all_modified_by_activities()
-                min_date = (
+                min_payment = (
                     Payment.objects.filter(
                         payment_schedule__activity__in=modified_by_activities
                     )
                     .order_by("date")
                     .first()
-                    .date
                 )
-                payments = Payment.objects.filter(
-                    payment_schedule__activity=self
-                ).exclude(date__gte=min_date)
+                if not min_payment:
+                    payments = Payment.objects.filter(
+                        payment_schedule__activity=self
+                    )
+                else:
+                    min_date = min_payment.date
+                    payments = Payment.objects.filter(
+                        payment_schedule__activity=self
+                    ).exclude(date__gte=min_date)
         else:
             payments = Payment.objects.filter(payment_schedule__activity=self)
         return payments.amount_sum()

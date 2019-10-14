@@ -1292,6 +1292,46 @@ class ActivityTestCase(TestCase, BasicTestMixin):
 
         self.assertEqual(activity.total_cost, Decimal("16000"))
 
+    def test_total_cost_no_payments(self):
+        now = timezone.now()
+        payment_schedule = create_payment_schedule()
+        start_date = date(year=now.year, month=12, day=1)
+        end_date = date(year=now.year, month=12, day=1)
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        # create an activity with daily payments of 500.
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=STATUS_GRANTED,
+        )
+        self.assertEqual(activity.total_cost_this_year, Decimal("500"))
+        start_date = date(year=now.year, month=12, day=2)
+        end_date = date(year=now.year, month=12, day=2)
+        # create an expected activity with no payments.
+        expected_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=create_payment_schedule(
+                payment_amount=Decimal("600")
+            ),
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+            modifies=activity,
+        )
+        # remove the payments
+        expected_activity.payment_plan.payments.all().delete()
+        self.assertTrue(expected_activity.validate_expected())
+        self.assertEqual(activity.total_cost, Decimal("500"))
+        self.assertEqual(expected_activity.total_cost, Decimal("0"))
+
     def test_total_cost_this_year(self):
         now = timezone.now()
         payment_schedule = create_payment_schedule()
@@ -1460,6 +1500,46 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             expected_activity_another_level.total_cost_this_year,
             Decimal("700"),
         )
+
+    def test_total_cost_this_year_no_payments(self):
+        now = timezone.now()
+        payment_schedule = create_payment_schedule()
+        start_date = date(year=now.year, month=12, day=1)
+        end_date = date(year=now.year, month=12, day=1)
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        # create an activity with daily payments of 500.
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=STATUS_GRANTED,
+        )
+        self.assertEqual(activity.total_cost_this_year, Decimal("500"))
+        start_date = date(year=now.year, month=12, day=2)
+        end_date = date(year=now.year, month=12, day=2)
+        # create an expected activity with no payments.
+        expected_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=create_payment_schedule(
+                payment_amount=Decimal("600")
+            ),
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+            modifies=activity,
+        )
+        # remove the payments
+        expected_activity.payment_plan.payments.all().delete()
+        self.assertTrue(expected_activity.validate_expected())
+        self.assertEqual(activity.total_cost_this_year, Decimal("500"))
+        self.assertEqual(expected_activity.total_cost_this_year, Decimal("0"))
 
     def test_total_granted_this_year_zero_for_draft(self):
         now = timezone.now()
