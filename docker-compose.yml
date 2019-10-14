@@ -49,6 +49,8 @@ services:
     depends_on:
       - db
       - postfix
+    environment:
+      - PUBLIC_HOST_NAME=${PUBLIC_HOST_NAME}
     # If you want to reach the django image directly (as opposed through the
     # `vue-cli-service serve` proxy), expose it with:
     #ports:
@@ -77,11 +79,15 @@ services:
   idp:
     image: kristophjunge/test-saml-idp
     hostname: idp
-    env_file:
-      - dev-environment/idp.env
+    environment:
+      - SIMPLESAMLPHP_SP_ENTITY_ID=http://${PUBLIC_HOST_NAME}:8080
+      - SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE=http://${PUBLIC_HOST_NAME}:8080/api/saml2_auth/acs/
+      - SIMPLESAMLPHP_SP_SINGLE_LOGOUT_SERVICE=http://localhost/simplesaml/module.php/saml/sp/saml2-logout.php/test-sp
     ports:
       - 8081:8080
       - 8443:8443
+    volumes:
+      - ./backend/scripts/authsources.php:/var/www/simplesamlphp/config/authsources.php
   # The following service is to copy the scripts needed to initialize the
   # database with user and extensions to a volume. It is not needed when the
   # volume `./docker/postgres-initdb.d/:/docker-entrypoint-initdb.d` is bound in
