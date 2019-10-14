@@ -254,10 +254,7 @@ class PaymentSchedule(models.Model):
         validators=[MinValueValidator(Decimal("0.00"))],
     )
     payment_amount = models.DecimalField(
-        max_digits=14,
-        decimal_places=2,
-        verbose_name=_("beløb"),
-        validators=[MinValueValidator(Decimal("0.01"))],
+        max_digits=14, decimal_places=2, verbose_name=_("beløb")
     )
     payment_id = models.UUIDField(default=uuid.uuid4, editable=False)
 
