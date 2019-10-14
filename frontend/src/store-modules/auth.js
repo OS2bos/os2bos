@@ -103,6 +103,7 @@ const actions = {
             commit('setRefreshToken', refreshtoken)
             dispatch('refreshToken')
             .then(() => {
+                dispatch('setTimer')
                 dispatch('fetchLists').then(() => {
                     let user = rootState.user.users.find(function(u) {
                         return u.id === user_id
