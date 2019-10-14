@@ -1273,6 +1273,24 @@ class ActivityTestCase(TestCase, BasicTestMixin):
 
         self.assertEqual(activity.total_cost, Decimal("7500"))
 
+    def test_total_cost_negative_amount(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("-500")
+        )
+        # 15 days, daily payments of -500.
+        activity = create_activity(
+            case,
+            appropriation,
+            payment_plan=payment_schedule,
+            start_date=date.today(),
+            end_date=date.today() + timedelta(days=14),
+        )
+        self.assertEqual(activity.total_cost, Decimal("-7500"))
+
     def test_total_cost_spanning_years(self):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -1631,6 +1649,32 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         expected = [
             {"date_month": "2019-12", "amount": Decimal("15500")},
             {"date_month": "2020-01", "amount": Decimal("500")},
+        ]
+        self.assertEqual(
+            [entry for entry in activity.monthly_payment_plan], expected
+        )
+
+    def test_monthly_payment_plan_negative_amounts(self):
+        start_date = date(year=2019, month=12, day=1)
+        end_date = date(year=2020, month=1, day=1)
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("-500")
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        # 32 days, daily payments of 500.
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+        )
+        expected = [
+            {"date_month": "2019-12", "amount": Decimal("-15500")},
+            {"date_month": "2020-01", "amount": Decimal("-500")},
         ]
         self.assertEqual(
             [entry for entry in activity.monthly_payment_plan], expected
