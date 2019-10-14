@@ -1330,6 +1330,11 @@ class Activity(AuditModelMixin, models.Model):
             )
         return r
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        # Trigger an appropriation save to update the "modified" field.
+        self.appropriation.save()
+
 
 class RelatedPerson(models.Model):
     """A person related to a Case, e.g. as a parent or sibling."""

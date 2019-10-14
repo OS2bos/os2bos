@@ -2018,6 +2018,14 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         expected_activity.validate_expected()
 
+    def test_activity_save_updates_appropriation_modified(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        activity = create_activity(case=case, appropriation=appropriation)
+        self.assertGreaterEqual(appropriation.modified, activity.modified)
+
 
 class AccountTestCase(TestCase):
     def test_account_str(self):
