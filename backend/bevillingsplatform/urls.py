@@ -77,6 +77,9 @@ urlpatterns = [
     # parameter "?next=/the/path/you/want"
     # with this view.
     url(r"^api/admin/login/$", django_saml2_auth.views.signin),
+    # The following line will replace the default admin user logout with
+    # the signout page (optional)
+    url(r'^api/admin/logout/$', django_saml2_auth.views.signout),
     path("api/admin/", admin.site.urls),
     path("api/auth/", include("rest_framework.urls")),
     path(
