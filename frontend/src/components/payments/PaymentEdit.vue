@@ -7,7 +7,7 @@
                 <span v-if="payment.paid">Ja</span>
                 <span v-else>Nej</span>
             </dd>
-            <template v-if="payment.paid">
+            <template v-if="payment.paid || payment.automatic">
                 <dt>Beløb</dt>
                 <dd>
                     (Faktisk betalt beløb)
@@ -18,7 +18,7 @@
                 </dd>
             </template>
         </dl>
-        <form @submit.prevent="pay()" v-if="!payment.paid">
+        <form @submit.prevent="pay()" v-if="!payment.paid && !payment.automatic">
             <fieldset>
             
                 <label for="field-amount" class="required">Betal beløb</label>
@@ -64,7 +64,7 @@
                 if (confirm(`Er du sikker på, at du vil sende ${ this.paid_amount } kr til betaling?`)) {
                     
                     this.$store.dispatch('updatePayment', data)
-                    
+
                 }
             }
         }
