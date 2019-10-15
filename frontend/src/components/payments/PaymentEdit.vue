@@ -18,15 +18,21 @@
                 </dd>
             </template>
         </dl>
-        <form @submit.prevent="" v-if="!payment.paid">
+        <form @submit.prevent="pay()" v-if="!payment.paid">
             <fieldset>
             
-                <label for="field-amount">Betal beløb</label>
-                <input type="number" step="0.01" v-model="paid_amount" id="field-amount">
+                <label for="field-amount" class="required">Betal beløb</label>
+                <input type="number" step="0.01" v-model="paid_amount" id="field-amount" required>
                 
-                <label for="field-date">Betal dato</label>
-                <input type="date" v-model="paid_date" id="field-date">
-                
+                <label for="field-date" class="required">Betal dato</label>
+                <input type="date" v-model="paid_date" id="field-date" required>
+
+                <label for="field-note">Referencetekst</label>
+                <input type="text" v-model="paid_note" id="field-note">
+
+            </fieldset>
+            <fieldset>
+                <input type="submit" value="Betal" :disabled="paid_amount && paid_date ? false : true">
             </fieldset>
         </form>
 
@@ -36,17 +42,30 @@
 
 <script>
 
+    import axios from '../http/Http.js'
+    import notify from '../notifications/Notify.js'
+
     export default {
         
         data: function() {
             return {
                 paid_amount: null,
-                paid_date: null
+                paid_date: null,
+                paid_note: null
             }
         },
         computed: {
             payment: function() {
                 return this.$store.getters.getPayment
+            }
+        },
+        methods:{
+            pay: function() {
+                if (confirm(`Er du sikker på, at du vil sende ${ this.paid_amount } kr til betaling?`)) {
+                    
+                    this.$store.dispatch('updatePayment', data)
+                    
+                }
             }
         }
 
