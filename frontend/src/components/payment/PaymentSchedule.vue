@@ -9,19 +9,19 @@
 <template>
 
     <section class="payment_schedule">
-        
-        <label for="field-year-picker">Vælg år</label>
+
+        <label for="field-year-picker">Vis betalinger fra år</label>
         <select id="field-year-picker" v-model="current_year">
             <option v-for="y in years" :value="y" :key="y.id">{{ y }}</option>
         </select>
-    
+        
         <table>
             <thead>
                 <tr>
                     <th>Betaling nr</th>
                     <th>Dato</th>
                     <th>Betalt</th>
-                    <th>Beløb</th>
+                    <th class="right">Beløb</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,11 +32,11 @@
                         <span v-if="p.paid === true">Ja</span>
                         <span v-else>Nej</span>
                     </td>
-                    <td>{{ displayDigits(p.amount) }} kr.</td>
+                    <td class="right">{{ displayDigits(p.amount) }} kr.</td>
                 </tr>
                 <tr>
                     <th colspan="3" class="right">I alt pr valgte år</th>
-                    <th>{{ displayDigits(sum) }} kr.</th>
+                    <th class="right">{{ displayDigits(sum) }} kr.</th>
                 </tr>
             </tbody>
         </table>

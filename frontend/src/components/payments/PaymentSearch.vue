@@ -1,3 +1,10 @@
+<!-- Copyright (C) 2019 Magenta ApS, http://magenta.dk.
+   - Contact: info@magenta.dk.
+   -
+   - This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
+
 <template>
     
     <div class="payment-search">
@@ -21,7 +28,7 @@
                         <td> 00003872 </td>
                         <td> 000000-0000 </td>
                         <td>
-                            {{ p.date }} 
+                            {{ displayDate(p.date) }}
                             <span class="dim" style="white-space: nowrap;">(Evt. betalt dato)</span>
                         </td>
                         <td>
@@ -29,7 +36,7 @@
                             <span v-else>Nej</span>
                         </td>
                         <td class="right">
-                            {{ p.amount }} kr
+                            {{ displayDigits(p.amount) }} kr
                             <span class="dim" style="white-space: nowrap;">(Evt. betalt beløb)</span>
                         </td>
                     </tr>
@@ -76,6 +83,9 @@
 
 <script>
 
+    import { json2jsDate } from '../filters/Date.js'
+    import { cost2da } from '../filters/Numbers.js'
+
     export default {
         
         data: function() {
@@ -95,6 +105,12 @@
             changeId: function() {
                 this.$route.query.id = this.field_id
                 this.update()
+            },
+            displayDate: function(dt) {
+                return json2jsDate(dt)
+            },
+            displayDigits: function(num) {
+                return cost2da(num)
             }
         },
         created: function() {
