@@ -18,27 +18,25 @@
         <table>
             <thead>
                 <tr>
-                    <th>Nøgle</th>
+                    <th>Betaling nr</th>
                     <th>Dato</th>
-                    <th>Beløb</th>
                     <th>Betalt</th>
-                    
+                    <th>Beløb</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="p in payments_by_year" :key="p.id">
-                    <td><router-link :to="`/payment/${ p.id }/`">Betaling {{ p.id }}</router-link></td>
+                    <td><router-link :to="`/payment/${ p.id }/`">Betaling #{{ p.id }}</router-link></td>
                     <td>{{ displayDate(p.date) }}</td>
-                    <td>{{ displayDigits(p.amount) }} kr.</td>
                     <td>
                         <span v-if="p.paid === true">Ja</span>
                         <span v-else>Nej</span>
                     </td>
+                    <td>{{ displayDigits(p.amount) }} kr.</td>
                 </tr>
                 <tr>
-                    <th colspan="2" class="right">I alt pr valgte år</th>
+                    <th colspan="3" class="right">I alt pr valgte år</th>
                     <th>{{ displayDigits(sum) }} kr.</th>
-                    <th></th>
                 </tr>
             </tbody>
         </table>

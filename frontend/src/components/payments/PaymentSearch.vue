@@ -7,25 +7,38 @@
             <table v-if="payments.length > 0">
                 <thead>
                     <tr>
-                        <th>Nøgle</th>
-                        <th>Beløb</th>
+                        <th>Betaling nr</th>
+                        <th>Betalingsnøgle</th>
+                        <th>Hovedsag CPR</th>
                         <th>Betalingsdato</th>
                         <th>Betalt</th>
+                        <th class="right">Beløb</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="p in payments" :key="p.id">
-                        <td><router-link :to="`/payment/${ p.id }/`">Betaling {{ p.id }}</router-link></td>
-                        <td>{{ p.amount }}</td>
-                        <td>{{ p.date }}</td>
-                        <td>{{ p.paid }}</td>
+                        <td><router-link :to="`/payment/${ p.id }/`">Betaling #{{ p.id }}</router-link></td>
+                        <td> 00003872 </td>
+                        <td> 000000-0000 </td>
+                        <td>
+                            {{ p.date }} 
+                            <span class="dim" style="white-space: nowrap;">(Evt. betalt dato)</span>
+                        </td>
+                        <td>
+                            <span v-if="p.paid">Ja</span>
+                            <span v-else>Nej</span>
+                        </td>
+                        <td class="right">
+                            {{ p.amount }} kr
+                            <span class="dim" style="white-space: nowrap;">(Evt. betalt beløb)</span>
+                        </td>
                     </tr>
                 </tbody>
             </table>
             <p v-if="payments.length < 1">
                 Kunne ikke finde nogen sager
             </p>
-            <button class="more">Vis flere <i class="material-icons">keyboard_arrow_down</i></button>
+            <button class="more">Vis flere</button>
         </div>
 
         <div class="payment-search-filters">
@@ -36,8 +49,23 @@
                     <input @input="changeId()" type="text" v-model="field_id">
                 </fieldset>
                 <fieldset>
-                    <label>Kontostreng</label>
-                    <input @input="changeAccount()" type="text" v-model="field_account">
+                    <legend>Tidsrum</legend>
+                    <label>fra dato</label>
+                    <input type="date">
+                    <label>til dato</label>
+                    <input type="date">
+                </fieldset>
+                <fieldset>
+                    <input type="radio" id="field-paid-1" checked name="field-paid">
+                    <label for="field-paid-1">Betalte og ubetalte</label>
+                    <input type="radio" id="field-paid-2" name="field-paid">
+                    <label for="field-paid-2">Kun betalte</label>
+                    <input type="radio" id="field-paid-3" name="field-paid">
+                    <label for="field-paid-3">Kun ubetalte</label>
+                </fieldset>
+                <fieldset>
+                    <label>Hovedsag CPR</label>
+                    <input type="text">
                 </fieldset>
             </form>
         </div>
@@ -52,8 +80,7 @@
         
         data: function() {
             return {
-                field_id: null,
-                field_account: null
+                field_id: null
             }
         },
         computed: {
@@ -67,10 +94,6 @@
             },
             changeId: function() {
                 this.$route.query.id = this.field_id
-                this.update()
-            },
-            changeAccount: function() {
-                this.$route.query.account = this.field_account
                 this.update()
             }
         },
@@ -108,6 +131,10 @@
     .payment-search-filters h2,
     .payment-search-filters form {
         padding: 0;
+    }
+
+    .payment-search .more {
+        width: 100%;
     }
 
 </style>

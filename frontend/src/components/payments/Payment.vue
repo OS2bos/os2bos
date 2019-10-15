@@ -3,15 +3,24 @@
     <div class="payment">
 
         <div>
-            <h1>Betaling {{ payment.id }}</h1>
+            <nav class="payment-nav">
+                <router-link to="">
+                    <i class="material-icons">arrow_upward</i>
+                    Ydelse xxx
+                </router-link>
+            </nav>
+            <h1>Betaling #{{ payment.id }}</h1>
             <router-link :to="`/payment/${ payment.id }/edit/`"></router-link>
             <dl>
-                <dt>Beløb</dt>
+                <dt>Betalingsnøgle</dt>
+                <dd>00023897</dd>
+                
+                <dt>Beløb, planlagt</dt>
                 <dd>{{ payment.amount }} kr</dd>
-                <dt>Betalingsdato</dt>
+                <dt>Betalingsdato, planlagt</dt>
                 <dd>{{ payment.date }}</dd>
-                <dt>Betalt</dt>
-                <dd>{{ payment.paid }}</dd>
+                <dt>Kontostreng</dt>
+                <dd>xxxx-2389237-dlihseg-xxx</dd>
             </dl>
         </div>
 
@@ -60,12 +69,21 @@
 
     .payment {
         padding: 2rem;
-        display: flex;
-        flex-flow: row nowrap;
+        margin: 2rem auto;
+    }
+
+    .payment .payment-nav {
+        background-color: var(--grey1);
+    }
+
+    .payment .payment-nav > a {
+        border-bottom: none;
+        padding: .5rem 1rem;
+        display: block;
     }
 
     .payment .payment-edit {
-        margin-left: 2rem;
+        margin: 1rem 0 0;
     }
 
 </style>
