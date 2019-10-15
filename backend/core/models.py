@@ -749,12 +749,7 @@ class Appropriation(AuditModelMixin, models.Model):
         activities = self.activities.filter(
             Q(status=STATUS_GRANTED) | Q(status=STATUS_EXPECTED)
         )
-        return (
-            Payment.objects.filter(payment_schedule__activity__in=activities)
-            .expected()
-            .in_this_year()
-            .amount_sum()
-        )
+        return sum(a.total_expected_this_year for a in activities)
 
     @property
     def total_expected_full_year(self):
@@ -835,6 +830,23 @@ class Appropriation(AuditModelMixin, models.Model):
             # Update the end date for all supplementary activities that
             # don't have an end date less than the main activities'.
             if main_activity.end_date:
+                # The end date must not be later than any supplementary
+                # activity's start date.
+                if (
+                    self.activities.filter(
+                        start_date__gt=main_activity.end_date,
+                        activity_type=SUPPL_ACTIVITY,
+                    )
+                    .exclude(status=STATUS_DELETED)
+                    .exists()
+                ):
+                    raise RuntimeError(
+                        _(
+                            "Denne bevilling har følgeydelser, der starter "
+                            "efter hovedydelsens slutdato. Slet venligst "
+                            "disse eller ryk slutdatoen frem."
+                        )
+                    )
                 for a in self.activities.filter(
                     activity_type=SUPPL_ACTIVITY
                 ).exclude(end_date__lte=main_activity.end_date):
@@ -1122,9 +1134,21 @@ class Activity(AuditModelMixin, models.Model):
                 # always be the same.
                 self.modifies.end_date = self.start_date
             else:
-                self.modifies.end_date = self.start_date - timedelta(days=1)
+                while (
+                    self.modifies is not None
+                    and self.start_date <= self.modifies.start_date
+                ):
+                    old_activity = self.modifies
+                    self.modifies = self.modifies.modifies
+                    old_activity.delete()
+                # self.start_date > self.modifies.start_date or is None
+                if self.modifies:
+                    self.modifies.end_date = self.start_date - timedelta(
+                        days=1
+                    )
             # In all cases ...
-            self.modifies.save()
+            if self.modifies:
+                self.modifies.save()
             self.status = STATUS_GRANTED
         self.save()
 
@@ -1181,9 +1205,33 @@ class Activity(AuditModelMixin, models.Model):
     @property
     def total_cost_this_year(self):
         if self.status == STATUS_GRANTED and self.modified_by.exists():
-            payments = Payment.objects.filter(
-                payment_schedule__activity=self
-            ).expected()
+            # one time payments are always overruled entirely.
+            if (
+                self.payment_plan.payment_type
+                == PaymentSchedule.ONE_TIME_PAYMENT
+            ):
+                payments = Payment.objects.none()
+            else:
+                # Find the earliest payment date in the chain of
+                # modified_by activities and exclude from that point
+                # and onwards.
+                modified_by_activities = self.get_all_modified_by_activities()
+                min_payment = (
+                    Payment.objects.filter(
+                        payment_schedule__activity__in=modified_by_activities
+                    )
+                    .order_by("date")
+                    .first()
+                )
+                if not min_payment:
+                    payments = Payment.objects.filter(
+                        payment_schedule__activity=self
+                    )
+                else:
+                    min_date = min_payment.date
+                    payments = Payment.objects.filter(
+                        payment_schedule__activity=self
+                    ).exclude(date__gte=min_date)
         else:
             payments = Payment.objects.filter(payment_schedule__activity=self)
         return payments.in_this_year().amount_sum()
@@ -1192,7 +1240,7 @@ class Activity(AuditModelMixin, models.Model):
     def total_granted_this_year(self):
         if self.status == STATUS_GRANTED:
             payments = Payment.objects.filter(payment_schedule__activity=self)
-            return payments.in_this_year().amount_sum
+            return payments.in_this_year().amount_sum()
         else:
             return Decimal(0)
 
@@ -1203,9 +1251,33 @@ class Activity(AuditModelMixin, models.Model):
     @property
     def total_cost(self):
         if self.status == STATUS_GRANTED and self.modified_by.exists():
-            payments = Payment.objects.filter(
-                payment_schedule__activity=self
-            ).expected()
+            # one time payments are always overruled entirely.
+            if (
+                self.payment_plan.payment_type
+                == PaymentSchedule.ONE_TIME_PAYMENT
+            ):
+                payments = Payment.objects.none()
+            else:
+                # Find the earliest payment date in the chain of
+                # modified_by activities and exclude from that point
+                # and onwards.
+                modified_by_activities = self.get_all_modified_by_activities()
+                min_payment = (
+                    Payment.objects.filter(
+                        payment_schedule__activity__in=modified_by_activities
+                    )
+                    .order_by("date")
+                    .first()
+                )
+                if not min_payment:
+                    payments = Payment.objects.filter(
+                        payment_schedule__activity=self
+                    )
+                else:
+                    min_date = min_payment.date
+                    payments = Payment.objects.filter(
+                        payment_schedule__activity=self
+                    ).exclude(date__gte=min_date)
         else:
             payments = Payment.objects.filter(payment_schedule__activity=self)
         return payments.amount_sum()
@@ -1251,6 +1323,27 @@ class Activity(AuditModelMixin, models.Model):
         if self.service_provider:
             vat_factor = self.service_provider.vat_factor
         return vat_factor
+
+    def get_all_modified_by_activities(self):
+        """
+        Retrieve all modified_by objects recursively.
+        """
+        r = []
+        if self.modified_by.exists():
+            r.append(
+                self.modified_by.prefetch_related(
+                    "payment_plan__payments"
+                ).first()
+            )
+            return (
+                r + self.modified_by.first().get_all_modified_by_activities()
+            )
+        return r
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        # Trigger an appropriation save to update the "modified" field.
+        self.appropriation.save()
 
 
 class RelatedPerson(models.Model):

@@ -44,12 +44,12 @@ class InitializeTestCase(TestCase):
     def test_initialize_generates_section_infos(self):
         initialize()
         section_infos = SectionInfo.objects.count()
-        self.assertEqual(section_infos, 99)
+        self.assertEqual(section_infos, 86)
 
     def test_initialize_generates_accounts(self):
         initialize()
         accounts_count = Account.objects.count()
-        self.assertEqual(accounts_count, 882)
+        self.assertEqual(accounts_count, 883)
 
     def test_initialize_generates_payment_method_details(self):
         initialize()

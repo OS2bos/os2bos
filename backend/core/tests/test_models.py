@@ -548,6 +548,57 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             activity.end_date, (start_date + timedelta(days=2)).date()
         )
 
+    def test_grant_no_stop_before_suppl_start(self):
+        approval_level = ApprovalLevel.objects.create(name="egenkompetence")
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+        now = timezone.now()
+        start_date = now + timedelta(days=6)
+        main_activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_DRAFT,
+            start_date=start_date,
+            end_date=None,
+        )
+        main_activity.details.main_activity_for.add(section)
+        user = get_user_model().objects.create(username="Anders And")
+        appropriation.grant(
+            appropriation.activities.exclude(status=STATUS_GRANTED),
+            approval_level.id,
+            "note til bevillingsgodkendelse",
+            user,
+        )
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=SUPPL_ACTIVITY,
+            status=STATUS_DRAFT,
+            start_date=start_date + timedelta(days=10),
+            end_date=None,
+        )
+        appropriation.grant(
+            appropriation.activities.filter(pk=activity.pk),
+            approval_level.id,
+            "note til bevillingsgodkendelse",
+            user,
+        )
+        main_activity.refresh_from_db()
+        main_activity.end_date = start_date + timedelta(days=5)
+        main_activity.save()
+
+        with self.assertRaises(RuntimeError):
+            appropriation.grant(
+                appropriation.activities.filter(pk=main_activity.pk),
+                approval_level.id,
+                "note til bevillingsgodkendelse",
+                user,
+            )
+
     def test_appropriation_grant_on_already_granted_one_time(self):
         approval_level = ApprovalLevel.objects.create(name="egenkompetence")
         payment_schedule = create_payment_schedule(
@@ -1241,6 +1292,46 @@ class ActivityTestCase(TestCase, BasicTestMixin):
 
         self.assertEqual(activity.total_cost, Decimal("16000"))
 
+    def test_total_cost_no_payments(self):
+        now = timezone.now()
+        payment_schedule = create_payment_schedule()
+        start_date = date(year=now.year, month=12, day=1)
+        end_date = date(year=now.year, month=12, day=1)
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        # create an activity with daily payments of 500.
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=STATUS_GRANTED,
+        )
+        self.assertEqual(activity.total_cost_this_year, Decimal("500"))
+        start_date = date(year=now.year, month=12, day=2)
+        end_date = date(year=now.year, month=12, day=2)
+        # create an expected activity with no payments.
+        expected_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=create_payment_schedule(
+                payment_amount=Decimal("600")
+            ),
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+            modifies=activity,
+        )
+        # remove the payments
+        expected_activity.payment_plan.payments.all().delete()
+        self.assertTrue(expected_activity.validate_expected())
+        self.assertEqual(activity.total_cost, Decimal("500"))
+        self.assertEqual(expected_activity.total_cost, Decimal("0"))
+
     def test_total_cost_this_year(self):
         now = timezone.now()
         payment_schedule = create_payment_schedule()
@@ -1260,8 +1351,8 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             status=STATUS_GRANTED,
         )
         self.assertEqual(activity.total_cost_this_year, Decimal("7500"))
-        start_date = start_date + timedelta(days=1)
-        end_date = start_date + timedelta(days=10)
+        start_date = date(year=now.year, month=12, day=2)
+        end_date = date(year=now.year, month=12, day=11)
         expected_activity = create_activity(
             case,
             appropriation,
@@ -1275,6 +1366,180 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         self.assertTrue(expected_activity.validate_expected())
 
         self.assertEqual(activity.total_cost_this_year, Decimal("500"))
+
+    def test_total_cost_this_year_multiple_levels(self):
+        now = timezone.now()
+        payment_schedule = create_payment_schedule()
+        start_date = date(year=now.year, month=12, day=1)
+        end_date = date(year=now.year, month=12, day=15)
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        # create an activity with a span of 15 days and daily payments of 500.
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=STATUS_GRANTED,
+        )
+        self.assertEqual(activity.total_cost_this_year, Decimal("7500"))
+        start_date = date(year=now.year, month=12, day=15)
+        end_date = date(year=now.year, month=12, day=15)
+        # create an expected activity that overrides
+        # the last day of the previous activity.
+        expected_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=create_payment_schedule(),
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+            modifies=activity,
+        )
+        self.assertTrue(expected_activity.validate_expected())
+        # The total cost of the original activity should be 500 less.
+        self.assertEqual(activity.total_cost_this_year, Decimal("7000"))
+        self.assertEqual(
+            expected_activity.total_cost_this_year, Decimal("500")
+        )
+
+        start_date = date(year=now.year, month=12, day=1)
+        end_date = date(year=now.year, month=12, day=15)
+        # create an expected activity that overrides the full period.
+        expected_activity_another_level = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=create_payment_schedule(
+                payment_amount=Decimal("600")
+            ),
+            status=STATUS_EXPECTED,
+            activity_type=MAIN_ACTIVITY,
+            modifies=expected_activity,
+        )
+        self.assertTrue(expected_activity_another_level.validate_expected())
+        #
+        self.assertEqual(activity.total_cost_this_year, Decimal("0"))
+        self.assertEqual(expected_activity.total_cost_this_year, Decimal("0"))
+        self.assertEqual(
+            expected_activity_another_level.total_cost_this_year,
+            Decimal("9000"),
+        )
+
+    def test_total_cost_this_year_multiple_levels_one_time(self):
+        now = timezone.now()
+        payment_schedule = create_payment_schedule(
+            payment_frequency=None,
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+        )
+        start_date = date(year=now.year, month=12, day=1)
+        end_date = date(year=now.year, month=12, day=1)
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        # create an activity with a one time payment of 500.
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=STATUS_GRANTED,
+        )
+        self.assertEqual(activity.total_cost_this_year, Decimal("500"))
+        start_date = date(year=now.year, month=12, day=2)
+        end_date = date(year=now.year, month=12, day=2)
+        # create an expected activity that overrides the previous with 600.
+        expected_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=create_payment_schedule(
+                payment_frequency=None,
+                payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+                payment_amount=Decimal("600"),
+            ),
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+            modifies=activity,
+        )
+        self.assertTrue(expected_activity.validate_expected())
+        self.assertEqual(activity.total_cost_this_year, Decimal("0"))
+        self.assertEqual(
+            expected_activity.total_cost_this_year, Decimal("600")
+        )
+
+        start_date = date(year=now.year, month=12, day=3)
+        end_date = date(year=now.year, month=12, day=3)
+        # create an expected activity that overrides the previous with 700.
+        expected_activity_another_level = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=create_payment_schedule(
+                payment_frequency=None,
+                payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+                payment_amount=Decimal("700"),
+            ),
+            status=STATUS_EXPECTED,
+            activity_type=MAIN_ACTIVITY,
+            modifies=expected_activity,
+        )
+        self.assertTrue(expected_activity_another_level.validate_expected())
+        self.assertEqual(activity.total_cost_this_year, Decimal("0"))
+        self.assertEqual(expected_activity.total_cost_this_year, Decimal("0"))
+        self.assertEqual(
+            expected_activity_another_level.total_cost_this_year,
+            Decimal("700"),
+        )
+
+    def test_total_cost_this_year_no_payments(self):
+        now = timezone.now()
+        payment_schedule = create_payment_schedule()
+        start_date = date(year=now.year, month=12, day=1)
+        end_date = date(year=now.year, month=12, day=1)
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        # create an activity with daily payments of 500.
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=payment_schedule,
+            status=STATUS_GRANTED,
+        )
+        self.assertEqual(activity.total_cost_this_year, Decimal("500"))
+        start_date = date(year=now.year, month=12, day=2)
+        end_date = date(year=now.year, month=12, day=2)
+        # create an expected activity with no payments.
+        expected_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            payment_plan=create_payment_schedule(
+                payment_amount=Decimal("600")
+            ),
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+            modifies=activity,
+        )
+        # remove the payments
+        expected_activity.payment_plan.payments.all().delete()
+        self.assertTrue(expected_activity.validate_expected())
+        self.assertEqual(activity.total_cost_this_year, Decimal("500"))
+        self.assertEqual(expected_activity.total_cost_this_year, Decimal("0"))
 
     def test_total_granted_this_year_zero_for_draft(self):
         now = timezone.now()
@@ -1832,6 +2097,14 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             details=main_activity_details,
         )
         expected_activity.validate_expected()
+
+    def test_activity_save_updates_appropriation_modified(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        activity = create_activity(case=case, appropriation=appropriation)
+        self.assertGreaterEqual(appropriation.modified, activity.modified)
 
 
 class AccountTestCase(TestCase):

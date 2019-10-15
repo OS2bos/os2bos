@@ -275,6 +275,7 @@
                 this.cas = this.caseObj
                 this.fetchTeamInfo()
             }
+            this.$store.commit('clearErrors')
         }
     }
     

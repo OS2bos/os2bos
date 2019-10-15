@@ -162,29 +162,24 @@
                 return cost2da(num)
             },
             addModifierAct(chunk, id, act_list) {
-                let modifier = act_list.find(function(a) {
+                let modifiers = act_list.filter(function(a) {
                     return a.modifies === id
                 })
-                if (modifier) {
-                    chunk.push(modifier)
-                    this.addModifierAct(chunk, modifier.id, act_list)
+                if (modifiers.length > 0) {
+                    for (let m in modifiers) {
+                        chunk.push(modifiers[m])
+                        this.addModifierAct(chunk, modifiers[m].id, act_list)
+                    }
                 } else {
-                    this.chunks.push(chunk)
+                    return chunk
                 }
             },
             getBestDate(arr, criteria) {
                 let best_date = null
-                for (let a in arr) {
-                    const date = new Date( arr[a][`${ criteria}_date`] ).getTime()
-                    if (criteria === 'start') {
-                        if (!best_date || date < best_date) {
-                            best_date = date
-                        }
-                    } else {
-                        if (!best_date || date > best_date) {
-                            best_date = date
-                        }
-                    }
+                if (criteria === 'start') {
+                    best_date = arr[0].start_date
+                } else {
+                    best_date = arr[arr.length - 1].end_date
                 }
                 return best_date
             },
@@ -216,9 +211,10 @@
                     if (act.modifies === null) {
                         let chunk = [act]
                         this.addModifierAct(chunk, act.id, act_list)
+                        this.chunks.push(chunk)
                     }
                 }
-
+                
                 // Add meta activity to chunks of modified activities
                 for (let c in this.chunks) {
                     let chunk = this.chunks[c]
