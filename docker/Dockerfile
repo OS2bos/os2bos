@@ -61,6 +61,8 @@ RUN set -ex \
   && install -o bev -g bev -d /static \
   && install -o bev -g bev -d /log
 
+# Set default root password in case you need to edit something.
+RUN echo "root:Docker" | chpasswd
 
 # Install requirements
 COPY backend/requirements.txt /code/backend/requirements.txt

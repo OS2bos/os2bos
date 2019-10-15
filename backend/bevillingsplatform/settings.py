@@ -332,4 +332,6 @@ SAML2_AUTH = {
         "first_name": "first_name",
         "last_name": "last_name",
     },
+    "USE_JWT": True,
+    "FRONTEND_URL": f"http://{PUBLIC_HOST_NAME}:8080/#/",
 }
