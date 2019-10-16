@@ -35,7 +35,7 @@ const mutations = {
         if (token === null) {
             sessionStorage.removeItem('bevaccesstoken')
         } else {
-            axios.defaults.headers.common['Authorization'] = `Bearer ${ token }`
+            axios.defaults.headers.common['Authorization'] = `Token ${ token }`
             sessionStorage.setItem('bevaccesstoken', token)
         }
         state.accesstoken = token
@@ -51,13 +51,13 @@ const mutations = {
 }
 
 const actions = {
-    registerAuth: function({commit, dispatch}, authdata) {
+    registerAuth: function({commit, dispatch, rootState}, authdata) {
         commit('setAccessToken', authdata.token)
         commit('setUID', authdata.uid)
         dispatch('fetchLists')
         .then(() => {
             let user = rootState.user.users.find(function(u) {
-                return u.id === authData.uid
+                return u.id === authdata.uid
             })
             commit('setUser', user)
             notify('Du er logget ind', 'success')
