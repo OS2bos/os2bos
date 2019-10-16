@@ -9,7 +9,6 @@
 import axios from '../components/http/Http.js'
 import router from '../router.js'
 import notify from '../components/notifications/Notify.js'
-import store from '../store.js';
 
 
 const state = {
@@ -41,6 +40,7 @@ const mutations = {
 
 const actions = {
     registerAuth: function({commit, dispatch, rootState}, authdata) {
+        axios.defaults.headers.common['Authorization'] = `Token ${ authdata.token }`
         commit('setAccessToken', authdata.token)
         commit('setUID', authdata.uid)
         dispatch('fetchLists')
