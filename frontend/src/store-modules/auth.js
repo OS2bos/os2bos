@@ -14,36 +14,58 @@ import store from '../store.js';
 
 const state = {
     accesstoken: null,
-    refreshtoken: null
+    uid: null
 }
 
 const getters = {
     getAuth (state) {
-        return state.accesstoken ? true : false
+        if (state.accesstoken && state.uid) {
+            return {
+                token: state.accesstoken,
+                uid: state.uid
+            }
+        } else {
+            return false
+        }
     }
 }
 
 const mutations = {
     setAccessToken (state, token) {
         if (token === null) {
-            sessionStorage.removeItem('accesstoken')
+            sessionStorage.removeItem('bevaccesstoken')
         } else {
             axios.defaults.headers.common['Authorization'] = `Bearer ${ token }`
-            sessionStorage.setItem('accesstoken', token)
+            sessionStorage.setItem('bevaccesstoken', token)
         }
         state.accesstoken = token
     },
-    setRefreshToken (state, token) {
-        if (token === null) {
-            sessionStorage.removeItem('refreshtoken')
+    setUID (state, uid) {
+        if (uid === null) {
+            sessionStorage.removeItem('bevuid')
         } else {
-            sessionStorage.setItem('refreshtoken', token)
+            sessionStorage.setItem('bevuid', uid)
         }
-        state.refreshtoken = token
+        state.uid = uid
     }
 }
 
 const actions = {
+    registerAuth: function({commit, dispatch}, authdata) {
+        commit('setAccessToken', authdata.token)
+        commit('setUID', authdata.uid)
+        dispatch('fetchLists')
+        .then(() => {
+            let user = rootState.user.users.find(function(u) {
+                return u.id === authData.uid
+            })
+            commit('setUser', user)
+            notify('Du er logget ind', 'success')
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    },
     login: function({commit, dispatch, rootState}, authData) {
         axios.post('/token/', {
             username: authData.username,
@@ -96,7 +118,7 @@ const actions = {
     autoLogin: function({commit, dispatch, rootState}) {
         // check for tokens in session storage and refresh session
         const refreshtoken = sessionStorage.getItem('refreshtoken')
-        const accesstoken = sessionStorage.getItem('accesstoken')
+        const accesstoken = sessionStorage.getItem('bevaccesstoken')
         const user_id = parseInt(sessionStorage.getItem('userid'))
         if (refreshtoken) {
             commit('setAccessToken', accesstoken)
