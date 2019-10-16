@@ -29,7 +29,6 @@ from weasyprint.fonts import FontConfiguration
 
 from service_person_stamdata_udvidet import get_citizen
 
-import core.models
 
 logger = logging.getLogger(__name__)
 
