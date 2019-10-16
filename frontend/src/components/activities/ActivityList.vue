@@ -62,7 +62,7 @@
                 </template>
                 <tr class="lastrow">
                     <td colspan="5" style="padding-left: 0;">
-                        <button @click="initPreApprove()" :disabled="!approve_available">✔ Godkendt valgte</button>
+                        <button @click="initPreApprove()" :disabled="approvable_acts.length < 1">✔ Godkendt valgte</button>
                     </td>
                     <td class="right"><strong>I alt</strong></td>
                     <td class="nowrap right">
@@ -83,8 +83,7 @@
             :appr-id="apprId" 
             :acts="approvable_acts"
             :warning="diag_approval_warning"
-            @close="closeDialog()" 
-            @approve="check_all_approvable = false" />
+            @close="closeDialog()" />
 
     </section>
 
@@ -132,13 +131,6 @@
                 } else {
                     return false
                 }
-            },
-            approve_available: function() {
-                if (this.approvable_acts.length > 0) {
-                    return true
-                } else {
-                    return false
-                }
             }
         },
         watch: {
@@ -156,6 +148,10 @@
             },
             closeDialog: function() {
                 this.diag_open = false
+                const checkboxes = document.querySelectorAll('input[type="checkbox"]')
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false
+                })
                 this.approvable_acts = []
             },
             displayDigits: function(num) {
