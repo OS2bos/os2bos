@@ -32,20 +32,9 @@ const getters = {
 
 const mutations = {
     setAccessToken (state, token) {
-        if (token === null) {
-            sessionStorage.removeItem('bevaccesstoken')
-        } else {
-            axios.defaults.headers.common['Authorization'] = `Token ${ token }`
-            sessionStorage.setItem('bevaccesstoken', token)
-        }
         state.accesstoken = token
     },
     setUID (state, uid) {
-        if (uid === null) {
-            sessionStorage.removeItem('bevuid')
-        } else {
-            sessionStorage.setItem('bevuid', uid)
-        }
         state.uid = uid
     }
 }
@@ -57,7 +46,7 @@ const actions = {
         dispatch('fetchLists')
         .then(() => {
             let user = rootState.user.users.find(function(u) {
-                return u.id === authdata.uid
+                return u.id === parseInt(authdata.uid)
             })
             commit('setUser', user)
             notify('Du er logget ind', 'success')
@@ -66,86 +55,13 @@ const actions = {
             console.log(err)
         })
     },
-    login: function({commit, dispatch, rootState}, authData) {
-        axios.post('/token/', {
-            username: authData.username,
-            password: authData.password
-        })
-        .then(res => {
-            commit('setAccessToken', res.data.access)
-            commit('setRefreshToken', res.data.refresh)
-            dispatch('setTimer')
-            dispatch('fetchLists')
-            .then(() => {
-                let user = rootState.user.users.find(function(u) {
-                    return u.username === authData.username
-                })
-                commit('setUser', user)
-                notify('Du er logget ind', 'success')
-                dispatch('postLogin')
-            })
-            .catch(err => {
-                console.log(err)
-            })
-        })
-        .catch(err => {
-            store.dispatch('parseErrorOutput', err)
-            dispatch('clearAuth')
-        })
-    },
-    setTimer: function({dispatch}) {
-        setInterval(() => {
-            dispatch('refreshToken')
-        }, 270000);
-    },
-    postLogin: function() {
-        router.push('/')
-    },
-    refreshToken: function({commit, dispatch, state}) {
-        if (state.refreshtoken) {    
-            axios.post('/token/refresh/', {
-                refresh: state.refreshtoken
-            })
-            .then(res => {
-                commit('setAccessToken', res.data.access)
-            })
-            .catch(err => {
-                console.log(err)
-                dispatch('clearAuth')
-            })
-        }
-    },
-    autoLogin: function({commit, dispatch, rootState}) {
-        // check for tokens in session storage and refresh session
-        const refreshtoken = sessionStorage.getItem('refreshtoken')
-        const accesstoken = sessionStorage.getItem('bevaccesstoken')
-        const user_id = parseInt(sessionStorage.getItem('userid'))
-        if (refreshtoken) {
-            commit('setAccessToken', accesstoken)
-            commit('setRefreshToken', refreshtoken)
-            dispatch('refreshToken')
-            .then(() => {
-                dispatch('setTimer')
-                dispatch('fetchLists').then(() => {
-                    let user = rootState.user.users.find(function(u) {
-                        return u.id === user_id
-                    })
-                    commit('setUser', user)
-                })
-                dispatch('postLogin')
-            })
-            .catch(err => store.dispatch('parseErrorOutput', err))
-        } else {
-            dispatch('clearAuth')
-        }
-    },
     logout: function({dispatch}) {
         dispatch('clearAuth')
         notify('Du er logget ud')
     },
     clearAuth: function ({commit}) {
         commit('setAccessToken', null)
-        commit('setRefreshToken', null)
+        commit('setUID', null)
         commit('setUser', null)
         router.replace('/login')
     }

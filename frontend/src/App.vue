@@ -36,7 +36,7 @@
             BrowserCheck
         },
         created: function() {
-            //this.$store.dispatch('autoLogin')
+            
         }
         
     }

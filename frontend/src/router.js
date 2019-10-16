@@ -99,17 +99,14 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
     if (store.getters.getAuth) {
-        console.log('we are authenticated')
         // If we are authenticated, just proceed
         next()
     } else if (to.query.token && to.query.uid) {
-        // came right from login, set login credentials
-        console.log('we just got a token')
+        // We have been redirected from SSO login, set login credentials
         store.dispatch('registerAuth', to.query)
         next()
     } else {
-        // try to login
-        console.log('trying to log in')
+        // Try to login
         window.location = '/api/accounts/login/'
     }
 })
