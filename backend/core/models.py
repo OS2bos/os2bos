@@ -1012,11 +1012,12 @@ class Activity(AuditModelMixin, models.Model):
                 name="end_date_after_start_date",
             ),
             # Appropriation can only have a single main activity
-            # that does not have an expected activity.
+            # that does not have an expected activity and is not deleted.
             models.UniqueConstraint(
                 fields=["appropriation"],
                 condition=Q(activity_type=MAIN_ACTIVITY)
-                & Q(modifies__isnull=True),
+                & Q(modifies__isnull=True)
+                & ~Q(status=STATUS_DELETED),
                 name="unique_main_activity",
             ),
         ]

@@ -33,6 +33,7 @@ from core.models import (
     ApprovalLevel,
     Team,
     FAMILY_DEPT,
+    STATUS_DELETED,
 )
 
 
@@ -186,12 +187,19 @@ class AppropriationSerializer(serializers.ModelSerializer):
     granted_from_date = serializers.ReadOnlyField()
     granted_to_date = serializers.ReadOnlyField()
 
-    activities = ActivitySerializer(many=True, read_only=True)
+    activities = serializers.SerializerMethodField()
 
     @staticmethod
     def setup_eager_loading(queryset):
         queryset = queryset.prefetch_related("activities")
         return queryset
+
+    def get_activities(self, appropriation):
+        activities = appropriation.activities.exclude(status=STATUS_DELETED)
+        serializer = ActivitySerializer(
+            instance=activities, many=True, read_only=True
+        )
+        return serializer.data
 
     class Meta:
         model = Appropriation
