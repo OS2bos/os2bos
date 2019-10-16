@@ -44,10 +44,7 @@
         },
         methods: {
             submitForm: function() {
-                this.$store.dispatch('login', {
-                    username: this.username,
-                    password: this.password
-                })
+                // There is presently no login feature beyond SSO
             }
         }
 
