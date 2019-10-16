@@ -5,17 +5,22 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('core', '0001_initial'),
-    ]
+    dependencies = [("core", "0001_initial")]
 
     operations = [
         migrations.RemoveConstraint(
-            model_name='activity',
-            name='unique_main_activity',
+            model_name="activity", name="unique_main_activity"
         ),
         migrations.AddConstraint(
-            model_name='activity',
-            constraint=models.UniqueConstraint(condition=models.Q(('activity_type', 'MAIN_ACTIVITY'), ('modifies__isnull', True), models.Q(_negated=True, status='DELETED')), fields=('appropriation',), name='unique_main_activity'),
+            model_name="activity",
+            constraint=models.UniqueConstraint(
+                condition=models.Q(
+                    ("activity_type", "MAIN_ACTIVITY"),
+                    ("modifies__isnull", True),
+                    models.Q(_negated=True, status="DELETED"),
+                ),
+                fields=("appropriation",),
+                name="unique_main_activity",
+            ),
         ),
     ]
