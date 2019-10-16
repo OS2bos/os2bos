@@ -40,7 +40,7 @@ const mutations = {
 
 const actions = {
     registerAuth: function({commit, dispatch, rootState}, authdata) {
-        axios.defaults.headers.common['Authorization'] = `Token ${ authdata.token }`
+        axios.defaults.headers.common['Authentication'] = `Token ${ authdata.token }`
         commit('setAccessToken', authdata.token)
         commit('setUID', authdata.uid)
         dispatch('fetchLists')
