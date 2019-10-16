@@ -169,18 +169,39 @@ def send_activity_expired_email(activity):
     send_activity_email(subject, template, activity)
 
 
-def send_appropriation(appropriation):
-    """Generate PDF and XML files from appropriation and send them to SBSYS."""
+def send_appropriation(appropriation, included_activities=None):
+    """Generate PDF and XML files from appropriation and send them to SBSYS.
+
+    Parameters:
+    appropriation: the Appropriation from which to generate the PDF and XML.
+    included_activities: Activities which should be explicitly included.
+    """
+    from core.models import (
+        Activity,
+        MAIN_ACTIVITY,
+        SUPPL_ACTIVITY,
+        STATUS_GRANTED,
+    )
+
+    if included_activities is None:
+        included_activities = Activity.objects.none()
 
     today = datetime.date.today()
-    approved_main_activities = appropriation.activities.filter(
-        activity_type=core.models.MAIN_ACTIVITY,
-        status=core.models.STATUS_GRANTED,
-    ).exclude(end_date__lt=today)
-    approved_suppl_activities = appropriation.activities.filter(
-        activity_type=core.models.SUPPL_ACTIVITY,
-        status=core.models.STATUS_GRANTED,
-    ).exclude(end_date__lt=today)
+    approved_main_activities = (
+        appropriation.activities.filter(
+            activity_type=MAIN_ACTIVITY, status=STATUS_GRANTED
+        )
+        .exclude(end_date__lt=today)
+        .union(included_activities.filter(activity_type=MAIN_ACTIVITY))
+    )
+
+    approved_suppl_activities = (
+        appropriation.activities.filter(
+            activity_type=SUPPL_ACTIVITY, status=STATUS_GRANTED
+        )
+        .exclude(end_date__lt=today)
+        .union(included_activities.filter(activity_type=SUPPL_ACTIVITY))
+    )
 
     render_context = {
         "appropriation": appropriation,

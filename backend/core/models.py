@@ -871,7 +871,11 @@ class Appropriation(AuditModelMixin, models.Model):
             a.grant(approval_level, approval_note, approval_user)
 
         # Everything went fine, we can send to SBSYS.
-        send_appropriation(self)
+        # Convert back to queryset.
+        activities_queryset = Activity.objects.filter(
+            id__in=(a.id for a in to_be_granted)
+        )
+        send_appropriation(self, activities_queryset)
 
     def __str__(self):
         return f"{self.sbsys_id} - {self.section}"
