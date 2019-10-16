@@ -10,7 +10,7 @@ from django.core.management import call_command
 
 from core.data.municipalities import municipalities
 from core.data.school_districts import school_districts
-from core.models import Municipality, SchoolDistrict, Team, User
+from core.models import Municipality, SchoolDistrict
 
 
 def initialize():
