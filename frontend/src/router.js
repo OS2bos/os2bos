@@ -84,11 +84,6 @@ const router = new Router({
             component: () => import(/* webpackChunkName: "paymentschedule" */ './components/payment/PaymentSchedule.vue')
         },
         {
-            path: '/login',
-            name: 'login',
-            component: () => import(/* webpackChunkName: "login" */ './components/auth/Login.vue')
-        },
-        {
             // 404 page. This route must declared last
             path: '*',
             name: 'page404',
@@ -104,7 +99,7 @@ router.beforeEach((to, from, next) => {
     } else if (to.query.token && to.query.uid) {
         // We have been redirected from SSO login, set login credentials
         store.dispatch('registerAuth', to.query)
-        next()
+        router.push('/')
     } else {
         // Try to login
         window.location = '/api/accounts/login/'

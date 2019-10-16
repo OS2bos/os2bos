@@ -49,21 +49,10 @@ const actions = {
                 return u.id === parseInt(authdata.uid)
             })
             commit('setUser', user)
-            notify('Du er logget ind', 'success')
         })
         .catch(err => {
             console.log(err)
         })
-    },
-    logout: function({dispatch}) {
-        dispatch('clearAuth')
-        notify('Du er logget ud')
-    },
-    clearAuth: function ({commit}) {
-        commit('setAccessToken', null)
-        commit('setUID', null)
-        commit('setUser', null)
-        router.replace('/login')
     }
 }
 
