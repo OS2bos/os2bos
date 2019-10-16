@@ -233,7 +233,7 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",
     ),
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        # "rest_framework_simplejwt.authentication.JWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ),
 }
@@ -325,7 +325,7 @@ SAML2_AUTH = {
         "SUPERUSER_STATUS": False,
     },
     "ASSERTION_URL": f"http://{PUBLIC_HOST_NAME}:8080",
-    "ENTITY_ID": f"http://{PUBLIC_HOST_NAME}:8080",
+    "ENTITY_ID": f"http://{PUBLIC_HOST_NAME}:8080/api/saml2_auth/acs/",
     "ATTRIBUTES_MAP": {
         "email": "email",
         "username": "username",
