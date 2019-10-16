@@ -10,7 +10,6 @@ from django.core.management import call_command
 
 from core.data.municipalities import municipalities
 from core.data.school_districts import school_districts
-from core.data.teams import teams
 from core.models import Municipality, SchoolDistrict, Team, User
 
 
@@ -27,7 +26,6 @@ def initialize():
     initialize_accounts()
     initialize_service_providers()
     initialize_users()
-    initialize_teams()
     initialize_approval_levels()
     initialize_payment_method_details()
 
@@ -106,14 +104,3 @@ def initialize_school_districts():
     """Initialize all the school districts for Ballerup."""
     for name in school_districts:
         SchoolDistrict.objects.get_or_create(name=name)
-
-
-def initialize_teams():
-    """Initialize all the school districts for Ballerup."""
-    for (name, team_leader, members) in teams:
-        leader = User.objects.get(username=team_leader)
-        team, _ = Team.objects.get_or_create(name=name, leader=leader)
-        for name in members:
-            user = User.objects.get(username=name)
-            user.team = team
-            user.save()
