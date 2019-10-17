@@ -892,7 +892,7 @@ class Appropriation(AuditModelMixin, models.Model):
             a.grant(approval_level, approval_note, approval_user)
 
         # Everything went fine, we can send to SBSYS.
-        send_appropriation(self)
+        send_appropriation(self, to_be_granted)
 
     def __str__(self):
         return f"{self.sbsys_id} - {self.section}"

@@ -5,13 +5,34 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-
+from datetime import timedelta
 from unittest import mock
 
-from django.test import TestCase, override_settings
 import requests
+from django.test import TestCase, override_settings
+from django.utils import timezone
 
-from core.utils import get_cpr_data, get_person_info, get_cpr_data_mock
+from core.models import (
+    Activity,
+    MAIN_ACTIVITY,
+    SUPPL_ACTIVITY,
+    PaymentSchedule,
+    STATUS_GRANTED,
+)
+from core.utils import (
+    get_cpr_data,
+    get_person_info,
+    get_cpr_data_mock,
+    send_appropriation,
+)
+from core.tests.testing_utils import (
+    BasicTestMixin,
+    create_case,
+    create_appropriation,
+    create_activity,
+    create_section,
+    create_payment_schedule,
+)
 
 
 class GetCPRDataTestCase(TestCase):
@@ -117,3 +138,107 @@ class GetPersonInfoTestCase(TestCase):
 
         self.assertIn("relationer", result)
         self.assertIn("efternavn", result)
+
+
+class SendAppropriationTestCase(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    @mock.patch("core.utils.HTML")
+    @mock.patch("core.utils.EmailMessage")
+    @mock.patch("core.utils.get_template")
+    def test_send_appropriation(
+        self, get_template_mock, html_mock, message_mock
+    ):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+
+        now = timezone.now().date()
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=now - timedelta(days=5),
+            end_date=now + timedelta(days=5),
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        section.main_activities.add(activity.details)
+        payment_schedule = create_payment_schedule(
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT
+        )
+        one_time_activity = create_activity(
+            case,
+            appropriation,
+            start_date=now - timedelta(days=5),
+            end_date=now - timedelta(days=5),
+            activity_type=SUPPL_ACTIVITY,
+            payment_plan=payment_schedule,
+            status=STATUS_GRANTED,
+        )
+        send_appropriation(
+            appropriation, Activity.objects.filter(pk=one_time_activity.pk)
+        )
+        # Retrieve the mocked template.render call.
+        render_call_args = get_template_mock.return_value.render.call_args[1]
+        # Assert the activities was part of the call to render.
+        self.assertCountEqual(
+            [activity], render_call_args["context"]["main_activities"]
+        )
+        self.assertCountEqual(
+            [one_time_activity],
+            render_call_args["context"]["supplementary_activities"],
+        )
+
+    @mock.patch("core.utils.HTML")
+    @mock.patch("core.utils.EmailMessage")
+    @mock.patch("core.utils.get_template")
+    def test_send_appropriation_no_included(
+        self, get_template_mock, html_mock, message_mock
+    ):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+
+        now = timezone.now().date()
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=now - timedelta(days=5),
+            end_date=now + timedelta(days=5),
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        section.main_activities.add(activity.details)
+        payment_schedule = create_payment_schedule(
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT
+        )
+        create_activity(
+            case,
+            appropriation,
+            start_date=now - timedelta(days=5),
+            end_date=now - timedelta(days=5),
+            activity_type=SUPPL_ACTIVITY,
+            payment_plan=payment_schedule,
+            status=STATUS_GRANTED,
+        )
+        send_appropriation(appropriation)
+        # Retrieve the mocked template.render call.
+        render_call_args = get_template_mock.return_value.render.call_args[1]
+        # Assert the activities was part of the call to render.
+
+        self.assertCountEqual(
+            [activity], render_call_args["context"]["main_activities"]
+        )
+        self.assertCountEqual(
+            [], render_call_args["context"]["supplementary_activities"]
+        )
