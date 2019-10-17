@@ -7,9 +7,9 @@
 
 
 <template>
-    <fieldset class="payment-payee">
+    <fieldset class="payment-payee-company">
 
-        <template v-if="p.recipient_type === 'COMPANY' && service_providers">
+        <template v-if="service_providers">
             <label>Mulige leverandører</label>
             <select v-model="service_provider">
                 <option v-for="s in service_providers" :key="s.id" :value="s">
@@ -18,23 +18,18 @@
             </select>
         </template>
 
-        <template v-if="p.recipient_type">
+        <label class="required" for="field-payee-id">CVR-nr</label>
+        <input type="text" id="field-payee-id" v-model="p.recipient_id" required>
+        <error err-key="recipient_id" />
 
-          <label class="required" v-if="p.recipient_type === 'COMPANY'" for="field-payee-id">
-              CVR-nr
-          </label>
-          <error err-key="recipient_id" />
-
-          <template>
-              <label class="required" for="field-payee-name">Navn</label>
-              <input type="text" id="field-payee-name" v-model="p.recipient_name" required>
-              <error err-key="recipient_name" />
-          </template>
-
-          <label class="required" for="field-pay-method">Betalingsmåde</label>
-          <p><b>Faktura</b></p>
-
+        <template>
+            <label class="required" for="field-payee-name">Navn</label>
+            <input type="text" id="field-payee-name" v-model="p.recipient_name" required>
+            <error err-key="recipient_name" />
         </template>
+
+        <label class="required" for="field-pay-method">Betalingsmåde</label>
+        <p><b>Faktura</b></p>
 
     </fieldset>
 </template>
@@ -54,9 +49,9 @@
         data: function() {
             return {
                 p: {
-                    recipient_type: null,
                     recipient_id: null,
-                    recipient_name: null
+                    recipient_name: null,
+                    payment_method: 'INVOICE'
                 },
                 service_provider: null
             }
