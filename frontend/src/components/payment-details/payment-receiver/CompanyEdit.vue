@@ -21,11 +21,11 @@
         </template>
 
         <label class="required" for="field-payee-id">CVR-nr</label>
-        <input type="text" id="field-payee-id" v-model="p.recipient_id" required>
+        <input type="text" id="field-payee-id" v-model="p_recipient_id" required>
         <error err-key="recipient_id" />
     
         <label class="required" for="field-payee-name">Navn</label>
-        <input type="text" id="field-payee-name" v-model="p.recipient_name" required>
+        <input type="text" id="field-payee-name" v-model="p_recipient_name" required>
         <error err-key="recipient_name" />
 
     </fieldset>
@@ -40,15 +40,10 @@
         components: {
             Error
         },
-        props: [
-            'pay'
-        ],
         data: function() {
             return {
-                p: {
-                    recipient_id: null,
-                    recipient_name: null
-                },
+                p_recipient_id: null,
+                p_recipient_name: null,
                 service_provider: null
             }
         },
@@ -76,27 +71,45 @@
                 } else {
                     return false
                 }
+            },
+            recipient_id: function() {
+                return this.$store.getters.getPaymentRecipientId
+            },
+            recipient_name: function() {
+                return this.$store.getters.getPaymentRecipientName
             }
         },
         watch: {
-            pay: function() {
-                this.p = this.pay
+            recipient_id: function() {
+                this.p_recipient_id = this.recipient_id
             },
-            p: {
-                handler () {
-                    this.p.payment_method = 'INVOICE'
-                    this.$emit('update', this.p)
-                },
-                deep: true
+            recipient_name: function() {
+                this.p_recipient_name = this.recipient_name
+            },
+            p_recipient_id: function() {
+                this.$store.commit('setPaymentRecipientId', this.p_recipient_id)
+                this.commitData()
+            },
+            p_recipient_name: function() {
+                this.$store.commit('setPaymentRecipientName', this.p_recipient_name)
+                this.commitData()
             },
             service_provider: function() {
-                this.p.recipient_id = this.service_provider.cvr_number
-                this.p.recipient_name = this.service_provider.name
+                this.p_recipient_id = this.service_provider.cvr_number
+                this.p_recipient_name = this.service_provider.name
+            },
+        }, 
+        methods: {
+            commitData: function() {
+                this.$store.commit('setPaymentMethod', 'INVOICE')
             }
         },
         created: function() {
-            if (this.pay) {
-                this.p = this.pay
+            if (this.recipient_id) {
+                this.p_recipient_id = this.recipient_id
+            }
+            if (this.recipient_name) {
+                this.p_recipient_name = this.recipient_name
             }
         }
 

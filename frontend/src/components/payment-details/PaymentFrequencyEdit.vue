@@ -75,20 +75,35 @@
             }
         },
         computed: {
-            payment: function() {
-                return this.$store.getters.getPayment
+            freq: function() {
+                return this.$store.getters.getPaymentFreq
+            },
+            dom: function() {
+                return this.$store.getters.getPaymentDOM
             }
         },
         watch: {
-            payment: function() {
-                this.p_payment_frequency = this.payment.payment_frequency
-                this.p_payment_day_of_month = this.payment.payment_day_of_month
+            freq: function() {
+                this.p_payment_frequency = this.freq
+            },
+            dom: function() {
+                this.p_payment_day_of_month = this.dom
             },
             p_payment_frequency: function() {
                 this.$store.commit('setPaymentFreq', this.p_payment_frequency)
             },
             p_payment_day_of_month: function() {
                 this.$store.commit('setPaymentDayOfMonth', this.p_payment_day_of_month)
+            }
+        },
+        created: function() {
+            if (this.freq) {
+                this.p_payment_frequency = this.freq
+            } else {
+                this.$store.commit('setPaymentFreq', 'MONTHLY')
+            }
+            if (this.dom) {
+                this.p_payment_day_of_month = this.dom
             }
         }
 

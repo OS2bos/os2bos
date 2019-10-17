@@ -84,11 +84,6 @@ const router = new Router({
             props: { mode: 'create' }
         },
         {
-            path: '/paymentschedule/',
-            name: 'paymentschedule',
-            component: () => import(/* webpackChunkName: "paymentschedule" */ './components/payment/PaymentSchedule.vue')
-        },
-        {
             path: '/login',
             name: 'login',
             component: () => import(/* webpackPreload: true */ './components/auth/Login.vue')

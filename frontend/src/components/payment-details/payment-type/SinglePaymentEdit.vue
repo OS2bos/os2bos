@@ -11,7 +11,7 @@
     <fieldset class="payment-type-single">
 
         <label class="required" for="field-amount-1">Beløb</label>
-        <input v-model="p_amount" type="number" step="0.01" required id="field-amount-1" @input="update()"> kr
+        <input v-model="p_amount" type="number" step="0.01" required id="field-amount-1"> kr
         <error err-key="payment_amount" />
 
     </fieldset>
@@ -33,19 +33,22 @@
             }
         },
         computed: {
-            payment: function() {
-                return this.$store.getters.getPayment
+            amount: function() {
+                return this.$store.getters.getPaymentAmount
             }
         },
         watch: {
             payment: function() {
-                this.p_amount = this.payment.payment_amount
-            }
-        },
-        methods: {
-            update: function() {
+                this.p_amount = this.amount
+            },
+            p_amount: function() {
                 this.$store.commit('setPaymentFreq', null)
                 this.$store.commit('setPaymentAmount', this.p_amount)
+            }
+        },
+        created: function() {
+            if (this.amount) {
+                this.p_amount = this.amount
             }
         }
 

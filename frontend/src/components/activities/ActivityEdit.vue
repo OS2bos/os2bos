@@ -83,34 +83,11 @@
 
                 <div class="row-item">
                     <pay-type-edit />
-                    <pay-type-single-edit v-if="payment.payment_type === 'ONE_TIME_PAYMENT'" />
-                    <pay-type-recurring-edit v-if="payment.payment_type === 'RUNNING_PAYMENT'" />
-                    <pay-type-pr-hour-edit v-if="payment.payment_type === 'PER_HOUR_PAYMENT'" />
-                    <pay-type-pr-km-edit v-if="payment.payment_type === 'PER_KM_PAYMENT'" />
-                    <pay-type-pr-day-edit v-if="payment.payment_type === 'PER_DAY_PAYMENT'" />
-                    <pay-plan v-if="payment.payment_amount" :amount="payment.payment_amount" :units="payment.payment_units" :type="payment.payment_type" :frequency="payment.payment_frequency" />
+                    <pay-plan v-if="payment.payment_amount" />
                 </div>
 
                 <div class="row-item">
-                    <fieldset class="payment-payee">
-                        <legend>Hvem skal betales?</legend>
-                        <label class="required" for="field-payee">Betalingsmodtager</label>
-                        
-                        <select v-model="pay.recipient_type" required id="field-payee">
-                            <option value="INTERNAL">Intern</option>
-                            <option value="COMPANY">Firma</option>
-                            <option value="PERSON">Person</option>
-                        </select>
-                        <error err-key="recipient_type" />
-
-                        <template v-if="pay.recipient_type">
-                            <payee-company v-if="pay.recipient_type === 'COMPANY'" :pay.sync="pay"/>
-
-                            <payee-internal v-if="pay.recipient_type === 'INTERNAL'" :pay.sync="pay" />
-
-                            <payee-person v-if="pay.recipient_type === 'PERSON'" :pay.sync="pay" />
-                        </template>
-                    </fieldset>
+                    <payment-receiver-edit />
                 </div>
 
             </div>
@@ -133,16 +110,9 @@
     import { json2jsDate } from '../filters/Date.js'
     import Error from '../forms/Error.vue'
     import ListPicker from '../forms/ListPicker.vue'
-    import PayTypeEdit from '../payment/payment-type/PaymentTypeEdit.vue'
-    import PayTypeSingleEdit from '../payment/payment-type/SinglePaymentEdit.vue'
-    import PayTypeRecurringEdit from '../payment/payment-type/RecurringEdit.vue'
-    import PayTypePrKmEdit from '../payment/payment-type/PrKilometerEdit.vue'
-    import PayTypePrHourEdit from '../payment/payment-type/PrHourEdit.vue'
-    import PayTypePrDayEdit from '../payment/payment-type/PrDayEdit.vue'
-    import PayPlan from '../payment/PaymentPlan.vue'
-    import PayeeCompany from '../payment/payment-receiver/CompanyEdit.vue'
-    import PayeeInternal from '../payment/payment-receiver/InternalEdit.vue'
-    import PayeePerson from '../payment/payment-receiver/PersonEdit.vue'
+    import PayTypeEdit from '../payment-details/payment-type/PaymentTypeEdit.vue'
+    import PayPlan from '../payment-details/PaymentPlan.vue'
+    import PaymentReceiverEdit from '../payment-details/payment-receiver/PaymentReceiverEdit.vue'
 
     export default {
 
@@ -150,15 +120,8 @@
             Error,
             ListPicker,
             PayTypeEdit,
-            PayTypeSingleEdit,
-            PayTypeRecurringEdit,
-            PayTypePrKmEdit,
-            PayTypePrHourEdit,
-            PayTypePrDayEdit,
             PayPlan,
-            PayeeCompany,
-            PayeeInternal,
-            PayeePerson
+            PaymentReceiverEdit
         },
         props: [
             'mode', // Can be either 'create', 'edit', or 'clone'
@@ -168,7 +131,6 @@
             return {
                 act: {},
                 act_status_expected: false,
-                pay: {},
                 act_details: null
             }
         },
@@ -223,7 +185,6 @@
             update: function() {
                 if (this.activityObj) {
                     this.act = this.activityObj
-                    this.pay = this.act.payment_plan
                     this.$store.commit('setPayment', this.act.payment_plan)
                 } else {
                     if (!this.appr_main_acts) {
@@ -254,7 +215,7 @@
                     payment_plan: this.payment
                 }
                 if (this.payment.payment_type === 'ONE_TIME_PAYMENT') {
-                    //data.end_date = data.start_date
+                    data.end_date = data.start_date
                 }
                 if (this.mode === 'create') {
                     data.appropriation = this.$route.params.apprid

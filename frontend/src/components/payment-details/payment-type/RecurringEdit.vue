@@ -41,17 +41,21 @@
             }
         },
         computed: {
-            payment: function() {
-                return this.$store.getters.getPayment
+            amount: function() {
+                return this.$store.getters.getPaymentAmount
             }
         },
         watch: {
-            payment: function() {
-                this.p_amount = this.payment.payment_amount
+            amount: function() {
+                this.p_amount = this.amount
             },
             p_amount: function() {
-                this.$store.commit('setPaymentFreq', null)
                 this.$store.commit('setPaymentAmount', this.p_amount)
+            }
+        },
+        created: function() {
+            if (this.amount) {
+                this.p_amount = this.amount
             }
         }
 
