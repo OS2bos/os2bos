@@ -257,6 +257,7 @@ class PaymentSchedule(models.Model):
         max_digits=14, decimal_places=2, verbose_name=_("beløb")
     )
     payment_id = models.UUIDField(default=uuid.uuid4, editable=False)
+    fictive = models.BooleanField(default=False, verbose_name=_("fiktiv"))
 
     @property
     def next_payment(self):
