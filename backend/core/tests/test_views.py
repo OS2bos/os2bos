@@ -422,6 +422,54 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         )
         self.assertEqual(response.status_code, 400)
 
+    @mock.patch("core.models.send_appropriation")
+    def test_grant_one_time_in_past_included(self, send_appropriation_mock):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+
+        now = timezone.now().date()
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=now - timedelta(days=5),
+            end_date=now + timedelta(days=5),
+            activity_type=MAIN_ACTIVITY,
+        )
+        section.main_activities.add(activity.details)
+        payment_schedule = create_payment_schedule(
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT
+        )
+        one_time_activity = create_activity(
+            case,
+            appropriation,
+            start_date=now - timedelta(days=5),
+            end_date=now - timedelta(days=5),
+            activity_type=SUPPL_ACTIVITY,
+            payment_plan=payment_schedule,
+        )
+        url = reverse("appropriation-grant", kwargs={"pk": appropriation.pk})
+        self.client.login(username=self.username, password=self.password)
+        approval_level, _ = ApprovalLevel.objects.get_or_create(
+            name="egenkompetence"
+        )
+        json = {
+            "approval_level": approval_level.id,
+            "activities": [activity.pk, one_time_activity.pk],
+        }
+        response = self.client.patch(
+            url, json, content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+        # Assert one_time_activity was sent in call to send_appropriation.
+        self.assertIn(
+            one_time_activity, send_appropriation_mock.call_args[0][1]
+        )
+
     def test_grant_granted(self):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district

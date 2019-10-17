@@ -254,10 +254,7 @@ class PaymentSchedule(models.Model):
         validators=[MinValueValidator(Decimal("0.00"))],
     )
     payment_amount = models.DecimalField(
-        max_digits=14,
-        decimal_places=2,
-        verbose_name=_("beløb"),
-        validators=[MinValueValidator(Decimal("0.01"))],
+        max_digits=14, decimal_places=2, verbose_name=_("beløb")
     )
     payment_id = models.UUIDField(default=uuid.uuid4, editable=False)
 
@@ -457,12 +454,19 @@ class Payment(models.Model):
         choices=payment_method_choices,
     )
     amount = models.DecimalField(
+        max_digits=14, decimal_places=2, verbose_name=_("beløb")
+    )
+    paid_amount = models.DecimalField(
         max_digits=14,
         decimal_places=2,
-        verbose_name=_("beløb"),
-        validators=[MinValueValidator(Decimal("0.01"))],
+        verbose_name=_("betalt beløb"),
+        null=True,
+        blank=True,
     )
     paid = models.BooleanField(default=False, verbose_name=_("betalt"))
+    paid_date = models.DateField(
+        verbose_name=_("betalt på dato"), null=True, blank=True
+    )
 
     payment_schedule = models.ForeignKey(
         PaymentSchedule,
@@ -888,7 +892,7 @@ class Appropriation(AuditModelMixin, models.Model):
             a.grant(approval_level, approval_note, approval_user)
 
         # Everything went fine, we can send to SBSYS.
-        send_appropriation(self)
+        send_appropriation(self, to_be_granted)
 
     def __str__(self):
         return f"{self.sbsys_id} - {self.section}"
@@ -1012,11 +1016,12 @@ class Activity(AuditModelMixin, models.Model):
                 name="end_date_after_start_date",
             ),
             # Appropriation can only have a single main activity
-            # that does not have an expected activity.
+            # that does not have an expected activity and is not deleted.
             models.UniqueConstraint(
                 fields=["appropriation"],
                 condition=Q(activity_type=MAIN_ACTIVITY)
-                & Q(modifies__isnull=True),
+                & Q(modifies__isnull=True)
+                & ~Q(status=STATUS_DELETED),
                 name="unique_main_activity",
             ),
         ]

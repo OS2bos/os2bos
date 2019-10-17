@@ -29,7 +29,7 @@ from weasyprint.fonts import FontConfiguration
 
 from service_person_stamdata_udvidet import get_citizen
 
-import core.models
+import core.models as models
 
 logger = logging.getLogger(__name__)
 
@@ -169,18 +169,42 @@ def send_activity_expired_email(activity):
     send_activity_email(subject, template, activity)
 
 
-def send_appropriation(appropriation):
-    """Generate PDF and XML files from appropriation and send them to SBSYS."""
+def send_appropriation(appropriation, included_activities=None):
+    """Generate PDF and XML files from appropriation and send them to SBSYS.
+
+    Parameters:
+    appropriation: the Appropriation from which to generate the PDF and XML.
+    included_activities: Activities which should be explicitly included.
+    """
+
+    if included_activities is None:
+        included_activities_qs = models.Activity.objects.none()
+    else:
+        # Convert to queryset.
+        included_activities_qs = models.Activity.objects.filter(
+            id__in=(a.id for a in included_activities)
+        )
 
     today = datetime.date.today()
-    approved_main_activities = appropriation.activities.filter(
-        activity_type=core.models.MAIN_ACTIVITY,
-        status=core.models.STATUS_GRANTED,
-    ).exclude(end_date__lt=today)
-    approved_suppl_activities = appropriation.activities.filter(
-        activity_type=core.models.SUPPL_ACTIVITY,
-        status=core.models.STATUS_GRANTED,
-    ).exclude(end_date__lt=today)
+    approved_main_activities = (
+        appropriation.activities.filter(
+            activity_type=models.MAIN_ACTIVITY, status=models.STATUS_GRANTED
+        )
+        .exclude(end_date__lt=today)
+        .union(
+            included_activities_qs.filter(activity_type=models.MAIN_ACTIVITY)
+        )
+    )
+
+    approved_suppl_activities = (
+        appropriation.activities.filter(
+            activity_type=models.SUPPL_ACTIVITY, status=models.STATUS_GRANTED
+        )
+        .exclude(end_date__lt=today)
+        .union(
+            included_activities_qs.filter(activity_type=models.SUPPL_ACTIVITY)
+        )
+    )
 
     render_context = {
         "appropriation": appropriation,
