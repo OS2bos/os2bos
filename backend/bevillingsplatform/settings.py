@@ -28,7 +28,6 @@ logger = logging.getLogger(__name__)
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-PUBLIC_HOST_NAME = os.getenv("PUBLIC_HOST_NAME", "localhost")
 
 config = configparser.ConfigParser()
 config["settings"] = {}
@@ -78,10 +77,6 @@ SECRET_KEY = settings.get("SECRET_KEY", fallback="Not.a.secret")
 DEBUG = settings.getboolean("DEBUG", fallback=False)
 
 ALLOWED_HOSTS = settings.get("ALLOWED_HOSTS", fallback="").split(",")
-
-if PUBLIC_HOST_NAME not in ALLOWED_HOSTS:
-    ALLOWED_HOSTS.append(PUBLIC_HOST_NAME)
-
 
 # Application definition
 
@@ -316,16 +311,15 @@ SBSYS_XML_TEMPLATE = "core/xml/os2forms.xml"
 SAML2_AUTH = {
     # Metadata is required, choose either remote url or local
     # file path
-    "METADATA_AUTO_CONF_URL": f"http://{PUBLIC_HOST_NAME}:8081/simplesaml/"
-    "saml2/idp/metadata.php",
+    "METADATA_AUTO_CONF_URL": settings.get("SAML_METADATA_URL"),
     "CREATE_USER": "TRUE",
     "NEW_USER_PROFILE": {
         "ACTIVE_STATUS": True,
         "STAFF_STATUS": False,
         "SUPERUSER_STATUS": False,
     },
-    "ASSERTION_URL": f"http://{PUBLIC_HOST_NAME}:8080",
-    "ENTITY_ID": f"http://{PUBLIC_HOST_NAME}:8080/api/saml2_auth/acs/",
+    "ASSERTION_URL": settings.get("SAML_PUBLIC_HOST"),
+    "ENTITY_ID": settings.get("SAML_PUBLIC_HOST") + "/api/saml2_auth/acs/",
     "ATTRIBUTES_MAP": {
         "email": "email",
         "username": "username",
@@ -333,5 +327,5 @@ SAML2_AUTH = {
         "last_name": "last_name",
     },
     "USE_JWT": True,
-    "FRONTEND_URL": f"http://{PUBLIC_HOST_NAME}:8080/#/",
+    "FRONTEND_URL": settings.get("SAML_PUBLIC_HOST") + "#/",
 }

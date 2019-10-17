@@ -6,17 +6,26 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 
-let proxySettings = null;
+let proxySettings = {};
 
 if (process.env.API_SERVER) {
-    let server = {
+    console.log("Enabled API_SERVER proxy on: " + process.env.API_SERVER);
+    proxySettings["/api"] = {
         target: process.env.API_SERVER,
         secure: false,
     };
+}
 
-    proxySettings = {
-        "/api": server,
+if (process.env.IDP_SERVER) {
+    console.log("Enabled IDP_SERVER proxy on: " + process.env.IDP_SERVER);
+    proxySettings["/simplesaml"] = {
+        target: process.env.IDP_SERVER,
+        secure: false,
     };
+}
+
+if(Object.keys(proxySettings).length === 0 ) {
+    proxySettings = null;
 }
 
 module.exports = {
