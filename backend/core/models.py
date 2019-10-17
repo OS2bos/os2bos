@@ -454,12 +454,19 @@ class Payment(models.Model):
         choices=payment_method_choices,
     )
     amount = models.DecimalField(
+        max_digits=14, decimal_places=2, verbose_name=_("beløb")
+    )
+    paid_amount = models.DecimalField(
         max_digits=14,
         decimal_places=2,
-        verbose_name=_("beløb"),
-        validators=[MinValueValidator(Decimal("0.01"))],
+        verbose_name=_("betalt beløb"),
+        null=True,
+        blank=True,
     )
     paid = models.BooleanField(default=False, verbose_name=_("betalt"))
+    paid_date = models.DateField(
+        verbose_name=_("betalt på dato"), null=True, blank=True
+    )
 
     payment_schedule = models.ForeignKey(
         PaymentSchedule,
