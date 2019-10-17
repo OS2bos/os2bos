@@ -26,8 +26,16 @@ const getters = {
 
 const mutations = {
     setPayment (state, payment) {
-        console.log('setting new payment', payment)
         state.payment = payment
+    },
+    setPaymentType (state, type) {
+        state.payment.payment_type = type
+    },
+    setPaymentAmount (state, amount) {
+        state.payment.payment_amount = amount
+    },
+    setPaymentFreq (state, freq) {
+        state.payment.payment_frequency = freq
     },
     setPaymentSchedule (state, payment_schedule) {
         state.payment_schedule = payment_schedule

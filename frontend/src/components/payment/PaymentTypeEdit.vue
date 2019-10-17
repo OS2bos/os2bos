@@ -14,17 +14,15 @@
 
         <error err-key="payment_type" />
 
-        {{ payment }}
-
-        <input type="radio" value="ONE_TIME_PAYMENT" name="pay-type" id="pay-type-1" v-model="p.payment_type" required>
+        <input type="radio" value="ONE_TIME_PAYMENT" name="pay-type" id="pay-type-1" v-model="p_type" required>
         <label for="pay-type-1">Engangsudgift</label>
-        <input type="radio" value="RUNNING_PAYMENT" name="pay-type" id="pay-type-2" v-model="p.payment_type" required>
+        <input type="radio" value="RUNNING_PAYMENT" name="pay-type" id="pay-type-2" v-model="p_type" required>
         <label for="pay-type-2">Fast beløb, løbende</label>
-        <input type="radio" value="PER_HOUR_PAYMENT" name="pay-type" id="pay-type-3" v-model="p.payment_type" required>
+        <input type="radio" value="PER_HOUR_PAYMENT" name="pay-type" id="pay-type-3" v-model="p_type" required>
         <label for="pay-type-3">Pr. time</label>
-        <input type="radio" value="PER_DAY_PAYMENT" name="pay-type" id="pay-type-4" v-model="p.payment_type" required>
+        <input type="radio" value="PER_DAY_PAYMENT" name="pay-type" id="pay-type-4" v-model="p_type" required>
         <label for="pay-type-4">Pr. døgn</label>
-        <input type="radio" value="PER_KM_PAYMENT" name="pay-type" id="pay-type-5" v-model="p.payment_type" required>
+        <input type="radio" value="PER_KM_PAYMENT" name="pay-type" id="pay-type-5" v-model="p_type" required>
         <label for="pay-type-5">Pr. kilometer</label>
 
         <p style="margin-top: .75rem;">
@@ -46,9 +44,7 @@
         },
         data: function() {
             return {
-                p: {
-                    payment_type: 'RUNNING_PAYMENT' // default is running payment
-                }
+                p_type:  'RUNNING_PAYMENT' // default is running payment
             }
         },
         computed: {
@@ -58,17 +54,11 @@
         },
         watch: {
             payment: function() {
-                this.p = this.payment
+                this.p_type = this.payment.payment_type
             },
-            p: {
-                handler: function(new_p) {
-                    this.$store.commit('setPayment', new_p)
-                },
-                deep: true
+            p_type: function() {
+                this.$store.commit('setPaymentType', this.p_type)
             }
-        },
-        created: function() {
-            
         }
 
     }
