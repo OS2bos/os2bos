@@ -134,9 +134,9 @@
     import PayFreqEdit from '../payment/PaymentFrequencyEdit.vue'
     import PayAmountEdit from '../payment/PaymentAmountEdit.vue'
     import PayPlan from '../payment/PaymentPlan.vue'
-    import PayeeCompany from '../payment/PaymentPayeeCompany.vue'
-    import PayeeInternal from '../payment/PaymentPayeeInternal.vue'
-    import PayeePerson from '../payment/PaymentPayeePerson.vue'
+    import PayeeCompany from '../payment/payment-receiver/Company.vue'
+    import PayeeInternal from '../payment/payment-receiver/Internal.vue'
+    import PayeePerson from '../payment/payment-receiver/PayeePerson.vue'
 
     export default {
 

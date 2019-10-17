@@ -47,8 +47,8 @@
 
 <script>
 
-    import Error from '../forms/Error.vue'
-    import CprLookup from '../forms/CprLookUp.vue'
+    import Error from '../../forms/Error.vue'
+    import CprLookup from '../../forms/CprLookUp.vue'
 
     export default {
 
