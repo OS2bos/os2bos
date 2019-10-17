@@ -88,7 +88,7 @@
                     <pay-type-pr-hour-edit v-if="payment.payment_type === 'PER_HOUR_PAYMENT'" />
                     <pay-type-pr-km-edit v-if="payment.payment_type === 'PER_KM_PAYMENT'" />
                     <pay-type-pr-day-edit v-if="payment.payment_type === 'PER_DAY_PAYMENT'" />
-                    <pay-plan v-if="pay.payment_amount" :amount="pay.payment_amount" :units="pay.payment_units" :type="pay.payment_type" :frequency="pay.payment_frequency" />
+                    <pay-plan v-if="payment.payment_amount" :amount="payment.payment_amount" :units="payment.payment_units" :type="payment.payment_type" :frequency="payment.payment_frequency" />
                 </div>
 
                 <div class="row-item">
@@ -133,7 +133,7 @@
     import { json2jsDate } from '../filters/Date.js'
     import Error from '../forms/Error.vue'
     import ListPicker from '../forms/ListPicker.vue'
-    import PayTypeEdit from '../payment/PaymentTypeEdit.vue'
+    import PayTypeEdit from '../payment/payment-type/PaymentTypeEdit.vue'
     import PayTypeSingleEdit from '../payment/payment-type/SinglePaymentEdit.vue'
     import PayTypeRecurringEdit from '../payment/payment-type/RecurringEdit.vue'
     import PayTypePrKmEdit from '../payment/payment-type/PrKilometerEdit.vue'
@@ -251,10 +251,10 @@
                     end_date: this.act.end_date ? this.act.end_date : null,
                     details: this.act.details,
                     note: this.act.note,
-                    payment_plan: this.pay
+                    payment_plan: this.payment
                 }
-                if (this.pay.payment_type === 'ONE_TIME_PAYMENT') {
-                    data.end_date = data.start_date
+                if (this.payment.payment_type === 'ONE_TIME_PAYMENT') {
+                    //data.end_date = data.start_date
                 }
                 if (this.mode === 'create') {
                     data.appropriation = this.$route.params.apprid

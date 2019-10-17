@@ -8,22 +8,26 @@
 
 <template>
 
-    <fieldset class="payment-type-pr-day">
+    <div class="payment-type-pr-day">
 
         <freq-edit />
 
-        <div style="margin-right: .5rem;">
-            <label class="required" for="field-amount-2">Antal Døgn</label>
-            <input v-model="p.payment_units" type="number" step="0.01" required id="field-amount-2">
-            <error err-key="payment_units" />
-        </div>
-        <div>
-            <label class="required" for="field-rate">Takst</label>
-            <input v-model="p.payment_amount" type="number" step="0.01" required id="field-rate"> kr
-            <error err-key="payment_amount" />
-        </div>
+        <fieldset>
 
-    </fieldset>
+            <div style="margin-right: .5rem;">
+                <label class="required" for="field-amount-2">Antal Døgn</label>
+                <input v-model="p.payment_units" type="number" step="0.01" required id="field-amount-2">
+                <error err-key="payment_units" />
+            </div>
+            <div>
+                <label class="required" for="field-rate">Takst</label>
+                <input v-model="p.payment_amount" type="number" step="0.01" required id="field-rate"> kr
+                <error err-key="payment_amount" />
+            </div>
+
+        </fieldset>
+
+    </div>
 
 </template>
 

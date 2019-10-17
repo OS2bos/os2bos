@@ -37,6 +37,9 @@ const mutations = {
     setPaymentFreq (state, freq) {
         state.payment.payment_frequency = freq
     },
+    setPaymentDayOfMonth (state, day_of_month) {
+        state.payment.payment_day_of_month = day_of_month
+    },
     setPaymentSchedule (state, payment_schedule) {
         state.payment_schedule = payment_schedule
     }

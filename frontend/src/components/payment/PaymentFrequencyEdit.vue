@@ -12,7 +12,7 @@
 
         <div>
             <label class="required" for="pay-freq">Hver</label>
-            <select v-model="p.payment_frequency" id="pay-freq" required>
+            <select v-model="p_payment_frequency" id="pay-freq" required>
                 <option v-for="o in choices.frequency_options" :key="o.key" :value="o.key">
                     {{ o.val }}
                 </option>
@@ -20,9 +20,9 @@
             <error err-key="payment_frequency" />
         </div>
 
-        <div v-if="p.payment_frequency === 'MONTHLY'" style="margin-left: .5rem;">
+        <div v-if="p_payment_frequency === 'MONTHLY'" style="margin-left: .5rem;">
             <label class="required" for="pay-day-of-month">den</label>
-            <select v-model="p.payment_day_of_month" id="pay-day-of-month" required>
+            <select v-model="p_payment_day_of_month" id="pay-day-of-month" required>
                 <option v-for="o in choices.date_options" :value="o" :key="o">
                     {{ o }}.
                 </option>
@@ -30,7 +30,6 @@
             <error err-key="payment_day_of_month" />
         </div>
         
-
     </fieldset>
 
 </template>
@@ -46,9 +45,8 @@
         },
         data: function() {
             return {
-                p: {
-                    payment_frequency: 'MONTHLY' // default is running payment
-                },
+                p_payment_frequency: 'MONTHLY', // default is running payment
+                p_payment_day_of_month: null,
                 choices: {
                     frequency_options: [
                         {
@@ -83,13 +81,14 @@
         },
         watch: {
             payment: function() {
-                this.p = this.payment
+                this.p_payment_frequency = this.payment.payment_frequency
+                this.p_payment_day_of_month = this.payment.payment_day_of_month
             },
-            p: {
-                handler (newVal) {
-                    this.$store.commit('setPayment', this.p)
-                },
-                deep: true
+            p_payment_frequency: function() {
+                this.$store.commit('setPaymentFreq', this.p_payment_frequency)
+            },
+            p_payment_day_of_month: function() {
+                this.$store.commit('setPaymentDayOfMonth', this.p_payment_day_of_month)
             }
         }
 

@@ -35,7 +35,7 @@
 
 <script>
 
-    import Error from '../forms/Error.vue'
+    import Error from '../../forms/Error.vue'
 
     export default {
 
