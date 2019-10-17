@@ -9,16 +9,26 @@
 import axios from '../components/http/Http.js'
 
 const state = {
+    payment: {
+        payment_type: 'RUNNING_PAYMENT'
+    },
     payment_schedule: null
 }
 
 const getters = {
+    getPayment (state) {
+        return state.payment
+    },
     getPaymentSchedule (state) {
         return state.payment_schedule ? state.payment_schedule : false
     }
 }
 
 const mutations = {
+    setPayment (state, payment) {
+        console.log('setting new payment', payment)
+        state.payment = payment
+    },
     setPaymentSchedule (state, payment_schedule) {
         state.payment_schedule = payment_schedule
     }

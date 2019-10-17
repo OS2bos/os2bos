@@ -24,7 +24,6 @@
             <div style="margin-right: .5rem;">
                 <label class="required" for="field-amount-2" v-if="p.payment_type === 'PER_HOUR_PAYMENT'">betales antal timer</label>
                 <label class="required" for="field-amount-2" v-if="p.payment_type === 'PER_DAY_PAYMENT'">betales antal døgn</label>
-                <label class="required" for="field-amount-2" v-if="p.payment_type === 'PER_KM_PAYMENT'">betales antal kilometer</label>
                 <input v-model="p.payment_units" type="number" step="0.01" required id="field-amount-2">
                 
                 <error err-key="payment_units" />

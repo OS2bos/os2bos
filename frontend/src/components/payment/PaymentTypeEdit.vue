@@ -14,6 +14,8 @@
 
         <error err-key="payment_type" />
 
+        {{ payment }}
+
         <input type="radio" value="ONE_TIME_PAYMENT" name="pay-type" id="pay-type-1" v-model="p.payment_type" required>
         <label for="pay-type-1">Engangsudgift</label>
         <input type="radio" value="RUNNING_PAYMENT" name="pay-type" id="pay-type-2" v-model="p.payment_type" required>
@@ -24,6 +26,10 @@
         <label for="pay-type-4">Pr. døgn</label>
         <input type="radio" value="PER_KM_PAYMENT" name="pay-type" id="pay-type-5" v-model="p.payment_type" required>
         <label for="pay-type-5">Pr. kilometer</label>
+
+        <p style="margin-top: .75rem;">
+            <a href="https://www.kl.dk/media/16653/taksttabel_-2019.pdf" target="_blank">Find takster her</a>
+        </p>
 
     </fieldset>
 
@@ -38,9 +44,6 @@
         components: {
             Error
         },
-        props: [
-            'pay'
-        ],
         data: function() {
             return {
                 p: {
@@ -48,27 +51,24 @@
                 }
             }
         },
+        computed: {
+            payment: function() {
+                return this.$store.getters.getPayment
+            }
+        },
         watch: {
-            pay: function() {
-                this.p = this.pay
+            payment: function() {
+                this.p = this.payment
             },
             p: {
-                handler (newVal) {
-
-                    // Enforce payment type specific rules
-                    if (newVal.payment_type === 'ONE_TIME_PAYMENT') {
-                        this.p.payment_frequency = null
-                    }
-
-                    this.$emit('update:pay', this.p)
+                handler: function(new_p) {
+                    this.$store.commit('setPayment', new_p)
                 },
                 deep: true
             }
         },
         created: function() {
-            if (this.pay) {
-                this.p = this.pay
-            }
+            
         }
 
     }

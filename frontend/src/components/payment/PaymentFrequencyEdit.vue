@@ -8,7 +8,7 @@
 
 <template>
 
-    <fieldset class="payment-frequencies row" v-if="p.payment_type && p.payment_type !== 'ONE_TIME_PAYMENT'">
+    <fieldset class="payment-frequencies row">
 
         <div>
             <label class="required" for="pay-freq">Hver</label>
@@ -44,13 +44,10 @@
         components: {
             Error
         },
-        props: [
-            'pay'
-        ],
         data: function() {
             return {
                 p: {
-                    payment_frequency: 'RUNNING_PAYMENT' // default is running payment
+                    payment_frequency: 'MONTHLY' // default is running payment
                 },
                 choices: {
                     frequency_options: [
@@ -79,20 +76,20 @@
                 }
             }
         },
+        computed: {
+            payment: function() {
+                return this.$store.getters.getPayment
+            }
+        },
         watch: {
-            pay: function() {
-                this.p = this.pay
+            payment: function() {
+                this.p = this.payment
             },
             p: {
                 handler (newVal) {
-                    this.$emit('update:pay', this.p)
+                    this.$store.commit('setPayment', this.p)
                 },
                 deep: true
-            }
-        },
-        created: function() {
-            if (this.pay) {
-                this.p = this.pay
             }
         }
 

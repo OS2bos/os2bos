@@ -82,9 +82,12 @@
                 </div>
 
                 <div class="row-item">
-                    <pay-type-edit :pay.sync="pay" />
-                    <pay-freq-edit :pay.sync="pay" />
-                    <pay-amount-edit :pay.sync="pay" />
+                    <pay-type-edit />
+                    <pay-type-single-edit v-if="payment.payment_type === 'ONE_TIME_PAYMENT'" />
+                    <pay-type-recurring-edit v-if="payment.payment_type === 'RUNNING_PAYMENT'" />
+                    <pay-type-pr-hour-edit v-if="payment.payment_type === 'PER_HOUR_PAYMENT'" />
+                    <pay-type-pr-km-edit v-if="payment.payment_type === 'PER_KM_PAYMENT'" />
+                    <pay-type-pr-day-edit v-if="payment.payment_type === 'PER_DAY_PAYMENT'" />
                     <pay-plan v-if="pay.payment_amount" :amount="pay.payment_amount" :units="pay.payment_units" :type="pay.payment_type" :frequency="pay.payment_frequency" />
                 </div>
 
@@ -131,8 +134,11 @@
     import Error from '../forms/Error.vue'
     import ListPicker from '../forms/ListPicker.vue'
     import PayTypeEdit from '../payment/PaymentTypeEdit.vue'
-    import PayFreqEdit from '../payment/PaymentFrequencyEdit.vue'
-    import PayAmountEdit from '../payment/PaymentAmountEdit.vue'
+    import PayTypeSingleEdit from '../payment/payment-type/SinglePaymentEdit.vue'
+    import PayTypeRecurringEdit from '../payment/payment-type/RecurringEdit.vue'
+    import PayTypePrKmEdit from '../payment/payment-type/PrKilometerEdit.vue'
+    import PayTypePrHourEdit from '../payment/payment-type/PrHourEdit.vue'
+    import PayTypePrDayEdit from '../payment/payment-type/PrDayEdit.vue'
     import PayPlan from '../payment/PaymentPlan.vue'
     import PayeeCompany from '../payment/payment-receiver/CompanyEdit.vue'
     import PayeeInternal from '../payment/payment-receiver/InternalEdit.vue'
@@ -144,8 +150,11 @@
             Error,
             ListPicker,
             PayTypeEdit,
-            PayFreqEdit,
-            PayAmountEdit,
+            PayTypeSingleEdit,
+            PayTypeRecurringEdit,
+            PayTypePrKmEdit,
+            PayTypePrHourEdit,
+            PayTypePrDayEdit,
             PayPlan,
             PayeeCompany,
             PayeeInternal,
@@ -200,6 +209,9 @@
                     this.act.end_date = null
                 }
                 return false
+            },
+            payment: function() {
+                return this.$store.getters.getPayment
             }
         },
         watch: {
@@ -212,6 +224,7 @@
                 if (this.activityObj) {
                     this.act = this.activityObj
                     this.pay = this.act.payment_plan
+                    this.$store.commit('setPayment', this.act.payment_plan)
                 } else {
                     if (!this.appr_main_acts) {
                         this.act.activity_type = 'MAIN_ACTIVITY'
