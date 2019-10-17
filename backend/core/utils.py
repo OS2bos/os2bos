@@ -29,6 +29,7 @@ from weasyprint.fonts import FontConfiguration
 
 from service_person_stamdata_udvidet import get_citizen
 
+import core.models as models
 
 logger = logging.getLogger(__name__)
 
@@ -175,31 +176,34 @@ def send_appropriation(appropriation, included_activities=None):
     appropriation: the Appropriation from which to generate the PDF and XML.
     included_activities: Activities which should be explicitly included.
     """
-    from core.models import (
-        Activity,
-        MAIN_ACTIVITY,
-        SUPPL_ACTIVITY,
-        STATUS_GRANTED,
-    )
 
     if included_activities is None:
-        included_activities = Activity.objects.none()
+        included_activities_qs = models.Activity.objects.none()
+    else:
+        # Convert to queryset.
+        included_activities_qs = models.Activity.objects.filter(
+            id__in=(a.id for a in included_activities)
+        )
 
     today = datetime.date.today()
     approved_main_activities = (
         appropriation.activities.filter(
-            activity_type=MAIN_ACTIVITY, status=STATUS_GRANTED
+            activity_type=models.MAIN_ACTIVITY, status=models.STATUS_GRANTED
         )
         .exclude(end_date__lt=today)
-        .union(included_activities.filter(activity_type=MAIN_ACTIVITY))
+        .union(
+            included_activities_qs.filter(activity_type=models.MAIN_ACTIVITY)
+        )
     )
 
     approved_suppl_activities = (
         appropriation.activities.filter(
-            activity_type=SUPPL_ACTIVITY, status=STATUS_GRANTED
+            activity_type=models.SUPPL_ACTIVITY, status=models.STATUS_GRANTED
         )
         .exclude(end_date__lt=today)
-        .union(included_activities.filter(activity_type=SUPPL_ACTIVITY))
+        .union(
+            included_activities_qs.filter(activity_type=models.SUPPL_ACTIVITY)
+        )
     )
 
     render_context = {
