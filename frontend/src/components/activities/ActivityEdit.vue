@@ -89,8 +89,25 @@
                 </div>
 
                 <div class="row-item">
-                    <pay-payee-edit :pay.sync="pay" />
-                    <pay-mean-edit :pay.sync="pay" />
+                    <fieldset class="payment-payee">
+                        <legend>Hvem skal betales?</legend>
+                        <label class="required" for="field-payee">Betalingsmodtager</label>
+                        
+                        <select v-model="pay.recipient_type" required id="field-payee">
+                            <option value="INTERNAL">Intern</option>
+                            <option value="COMPANY">Firma</option>
+                            <option value="PERSON">Person</option>
+                        </select>
+                        <error err-key="recipient_type" />
+
+                        <template v-if="pay.recipient_type">
+                            <payee-company v-if="pay.recipient_type === 'COMPANY'" :pay.sync="pay"/>
+
+                            <payee-internal v-if="pay.recipient_type === 'INTERNAL'" :pay.sync="pay" />
+
+                            <payee-person v-if="pay.recipient_type === 'PERSON'" :pay.sync="pay" />
+                        </template>
+                    </fieldset>
                 </div>
 
             </div>
@@ -116,9 +133,10 @@
     import PayTypeEdit from '../payment/PaymentTypeEdit.vue'
     import PayFreqEdit from '../payment/PaymentFrequencyEdit.vue'
     import PayAmountEdit from '../payment/PaymentAmountEdit.vue'
-    import PayPayeeEdit from '../payment/PaymentPayeeEdit.vue'
-    import PayMeanEdit from '../payment/PaymentMeansEdit.vue'
     import PayPlan from '../payment/PaymentPlan.vue'
+    import PayeeCompany from '../payment/payment-receiver/CompanyEdit.vue'
+    import PayeeInternal from '../payment/payment-receiver/InternalEdit.vue'
+    import PayeePerson from '../payment/payment-receiver/PersonEdit.vue'
 
     export default {
 
@@ -128,9 +146,10 @@
             PayTypeEdit,
             PayFreqEdit,
             PayAmountEdit,
-            PayMeanEdit,
-            PayPayeeEdit,
-            PayPlan
+            PayPlan,
+            PayeeCompany,
+            PayeeInternal,
+            PayeePerson
         },
         props: [
             'mode', // Can be either 'create', 'edit', or 'clone'

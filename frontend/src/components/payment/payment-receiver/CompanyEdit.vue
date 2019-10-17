@@ -7,19 +7,11 @@
 
 
 <template>
-    <fieldset class="payment-payee">
-        <legend>Hvem skal betales?</legend>
-        <label class="required" for="field-payee">Betalingsmodtager</label>
-        
-        <select v-model="p.recipient_type" required id="field-payee">
-            <option value="INTERNAL">Intern</option>
-            <option value="COMPANY">Firma</option>
-            <option value="PERSON">Person</option>
-        </select>
+    <fieldset class="payment-payee-company" style="margin-top: 1rem;">
 
-        <error err-key="recipient_type" />
+        <p>Betales via faktura</p>
 
-        <template v-if="p.recipient_type === 'COMPANY' && service_providers">
+        <template v-if="service_providers">
             <label>Mulige leverandører</label>
             <select v-model="service_provider">
                 <option v-for="s in service_providers" :key="s.id" :value="s">
@@ -28,43 +20,25 @@
             </select>
         </template>
 
-        <template v-if="p.recipient_type">
-            
-            <label class="required" v-if="p.recipient_type === 'INTERNAL'" for="field-payee-id">
-                Reference
-            </label>
-            <label class="required" v-if="p.recipient_type === 'COMPANY'" for="field-payee-id">
-                CVR-nr
-            </label>
-            <input v-if="p.recipient_type !== 'PERSON'" type="text" id="field-payee-id" v-model="p.recipient_id" required>
-            
-            <fieldset v-if="p.recipient_type === 'PERSON'">
-                <cpr-lookup :cpr.sync="p.recipient_id" :name.sync="p.recipient_name" />
-            </fieldset>
-            
-            <error err-key="recipient_id" />
-        
-            <template v-if="p.recipient_type !== 'PERSON'">
-                <label class="required" for="field-payee-name">Navn</label>
-                <input type="text" id="field-payee-name" v-model="p.recipient_name" required>
-                <error err-key="recipient_name" />
-            </template>
-
-        </template>
+        <label class="required" for="field-payee-id">CVR-nr</label>
+        <input type="text" id="field-payee-id" v-model="p.recipient_id" required>
+        <error err-key="recipient_id" />
+    
+        <label class="required" for="field-payee-name">Navn</label>
+        <input type="text" id="field-payee-name" v-model="p.recipient_name" required>
+        <error err-key="recipient_name" />
 
     </fieldset>
 </template>
 
 <script>
 
-    import Error from '../forms/Error.vue'
-    import CprLookup from '../forms/CprLookUp.vue'
+    import Error from '../../forms/Error.vue'
 
     export default {
 
         components: {
-            Error,
-            CprLookup
+            Error
         },
         props: [
             'pay'
@@ -72,7 +46,6 @@
         data: function() {
             return {
                 p: {
-                    recipient_type: null,
                     recipient_id: null,
                     recipient_name: null
                 },
@@ -111,6 +84,7 @@
             },
             p: {
                 handler () {
+                    this.p.payment_method = 'INVOICE'
                     this.$emit('update', this.p)
                 },
                 deep: true
