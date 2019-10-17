@@ -9,26 +9,25 @@
 <template>
     <fieldset class="payment-payee-person">
 
-          <div>
+        <div>
             <cpr-lookup :cpr.sync="p.recipient_id" :name.sync="p.recipient_name" />
-          </div>
+        </div>
 
-          <label><b>Hvordan skal det betales?</b></label>
-          <label class="required" for="field-pay-method">Betalingsmåde</label>
-          <select v-model="p.payment_method" required id="field-pay-method">
+        <label class="required" for="field-pay-method">Betalingsmåde</label>
+        <select v-model="p.payment_method" required id="field-pay-method">
             <option value="CASH">Betaling</option>
             <option value="SD">SD-løn</option>
-          </select>
-          <error err-key="payment_method" />
+        </select>
+        <error err-key="payment_method" />
 
-          <div v-if="p.payment_method" style="margin-top: 1rem;">
+        <div v-if="p.payment_method" style="margin-top: 1rem;">
             <div v-if="p.payment_method === 'CASH'">
                 <p>
                     <strong>Kontant udbetaling</strong>
                 </p>
                 <p>
-                Vær opmærksom på at beløbet udbetales til modtagerens Nem-konto. <br>
-                Det er ikke muligt at udbetale til et kontonummer.
+                    Vær opmærksom på at beløbet udbetales til modtagerens Nem-konto.<br>
+                    Det er ikke muligt at udbetale til et kontonummer.
                 </p>
             </div>
 
@@ -40,7 +39,7 @@
                 <label for="field-secondary">Bikort</label>
             </template>
 
-          </div>
+        </div>
 
     </fieldset>
 </template>

@@ -7,7 +7,9 @@
 
 
 <template>
-    <fieldset class="payment-payee-company">
+    <fieldset class="payment-payee-company" style="margin-top: 1rem;">
+
+        <p>Betales via faktura</p>
 
         <template v-if="service_providers">
             <label>Mulige leverandører</label>
@@ -21,15 +23,10 @@
         <label class="required" for="field-payee-id">CVR-nr</label>
         <input type="text" id="field-payee-id" v-model="p.recipient_id" required>
         <error err-key="recipient_id" />
-
-        <template>
-            <label class="required" for="field-payee-name">Navn</label>
-            <input type="text" id="field-payee-name" v-model="p.recipient_name" required>
-            <error err-key="recipient_name" />
-        </template>
-
-        <label class="required" for="field-pay-method">Betalingsmåde</label>
-        <p><b>Faktura</b></p>
+    
+        <label class="required" for="field-payee-name">Navn</label>
+        <input type="text" id="field-payee-name" v-model="p.recipient_name" required>
+        <error err-key="recipient_name" />
 
     </fieldset>
 </template>
@@ -50,8 +47,7 @@
             return {
                 p: {
                     recipient_id: null,
-                    recipient_name: null,
-                    payment_method: 'INVOICE'
+                    recipient_name: null
                 },
                 service_provider: null
             }
@@ -88,6 +84,7 @@
             },
             p: {
                 handler () {
+                    this.p.payment_method = 'INVOICE'
                     this.$emit('update', this.p)
                 },
                 deep: true
