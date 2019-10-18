@@ -82,6 +82,9 @@ const router = new Router({
             path: '/paymentschedule/',
             name: 'paymentschedule',
             component: () => import(/* webpackChunkName: "paymentschedule" */ './components/payment/PaymentSchedule.vue')
+            path: '/login',
+            name: 'login',
+            component: () => import(/* webpackPreload: true */ './components/auth/Login.vue')
         },
         {
             // 404 page. This route must declared last
