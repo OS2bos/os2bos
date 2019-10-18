@@ -23,9 +23,9 @@
 
         </fieldset>
 
-        <payee-company v-if="recipient_type === 'COMPANY'" />
-        <payee-internal v-if="recipient_type === 'INTERNAL'" />
-        <payee-person v-if="recipient_type === 'PERSON'" />
+        <payee-company v-if="p_recipient_type === 'COMPANY'" />
+        <payee-internal v-if="p_recipient_type === 'INTERNAL'" />
+        <payee-person v-if="p_recipient_type === 'PERSON'" />
 
     </div>
 
