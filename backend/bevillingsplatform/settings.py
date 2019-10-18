@@ -325,6 +325,10 @@ SAML2_AUTH = {
         "first_name": "first_name",
         "last_name": "last_name",
     },
+    "TRIGGER": {
+        "CREATE_USER": "core.utils.saml_create_user",
+        "BEFORE_LOGIN": "core.utils.saml_before_login",
+    },
     "USE_JWT": True,
     "FRONTEND_URL": settings.get("SAML_PUBLIC_HOST") + "#/",
 }
