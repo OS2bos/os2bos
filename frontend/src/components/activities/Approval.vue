@@ -92,7 +92,7 @@
 
                     <div class="modal-footer">
                         <slot name="footer">
-                            <button type="button" class="modal-cancel-btn" @click="$emit('close')">Annullér</button>
+                            <button type="button" class="modal-cancel-btn" @click="closeDiag()">Annullér</button>
                             <button class="modal-confirm-btn" type="submit">Godkend</button>
                         </slot>
                     </div>
@@ -154,6 +154,9 @@
             displayDigits: function(num) {
                 return cost2da(num)
             },
+            closeDiag: function() {
+                this.$emit('close')
+            },
             saveChanges: function() {
                 let approvable_acts = []
                 for (let a of this.act_list) {
@@ -169,8 +172,7 @@
                     notify('Bevilling godkendt', 'success')
                     this.$store.dispatch('fetchActivities', this.apprId)
                     this.$store.dispatch('fetchAppropriation', this.apprId)
-                    this.$emit('close')
-                    this.$emit('approve')
+                    this.closeDiag()
                 })
                 .catch(err => {
                     this.$store.dispatch('parseErrorOutput', err)
