@@ -257,7 +257,7 @@ def saml_before_login(user_data):
         user = models.User.objects.get(username=username)
         try:
             team = models.Team.objects.get(name=team_name)
-        except:
+        except Exception:
             # Team not found, create.
             team = models.Team(name=team_name, leader=user)
             team.save()
@@ -276,7 +276,7 @@ def saml_create_user(user_data):
         user = models.User.objects.get(username=username)
         try:
             team = models.Team.objects.get(name=team_name)
-        except:
+        except Exception:
             # Team not found, create.
             team = models.Team(name=team_name, leader=user)
             team.save()
