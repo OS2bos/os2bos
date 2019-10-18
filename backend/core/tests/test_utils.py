@@ -266,3 +266,8 @@ class SamlLoginTestcase(TestCase, BasicTestMixin):
         team = Team.objects.get(name=team_name)
         self.assertEqual(team.name, "S-DIG")
         saml_create_user(user_data)
+
+    def test_no_team(self):
+        user_data = {"username": ["dummy"]}
+        saml_before_login(user_data)
+        saml_create_user(user_data)
