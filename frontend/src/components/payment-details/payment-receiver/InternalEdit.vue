@@ -10,7 +10,7 @@
 
     <fieldset class="payment-payee-internal" style="margin-top: 1rem;">
 
-        <p>Betales ved intern afregning</p>
+        <p><strong>Betales ved intern afregning</strong></p>
 
         <label class="required" for="field-payee-id">Reference</label>
         <input type="text" id="field-payee-id" v-model="p_recipient_id" required>

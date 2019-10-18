@@ -9,7 +9,7 @@
 <template>
     <fieldset class="payment-payee-company" style="margin-top: 1rem;">
 
-        <p>Betales via faktura</p>
+        <p><strong>Betales via faktura</strong></p>
 
         <template v-if="service_providers">
             <label>Mulige leverandører</label>
