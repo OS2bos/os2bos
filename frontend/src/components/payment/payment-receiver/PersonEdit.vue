@@ -7,28 +7,27 @@
 
 
 <template>
+    <fieldset class="payment-payee-person">
 
-    <fieldset class="payment-means">
+        <div>
+            <cpr-lookup :cpr.sync="p.recipient_id" :name.sync="p.recipient_name" />
+        </div>
 
-        <legend>Hvordan skal det betales?</legend>
         <label class="required" for="field-pay-method">Betalingsmåde</label>
-        <select v-model="p.payment_method" required id="field-pay-method" :disabled="!p.recipient_type">
-            <option value="INVOICE" v-if="p.recipient_type === 'COMPANY'">Faktura</option>
-            <option value="INTERNAL" v-if="p.recipient_type === 'INTERNAL'">Intern afregning</option>
-            <option value="CASH" v-if="p.recipient_type === 'PERSON' || p.recipient_type === 'COMPANY'">
-              Betaling
-            </option>
-            <option value="SD" v-if="p.recipient_type === 'PERSON'">SD-løn</option>
+        <select v-model="p.payment_method" required id="field-pay-method">
+            <option value="CASH">Betaling</option>
+            <option value="SD">SD-løn</option>
         </select>
         <error err-key="payment_method" />
+
         <div v-if="p.payment_method" style="margin-top: 1rem;">
             <div v-if="p.payment_method === 'CASH'">
                 <p>
                     <strong>Kontant udbetaling</strong>
                 </p>
                 <p>
-                Vær opmærksom på at beløbet udbetales til modtagerens Nem-konto. <br>
-                Det er ikke muligt at udbetale til et kontonummer.
+                    Vær opmærksom på at beløbet udbetales til modtagerens Nem-konto.<br>
+                    Det er ikke muligt at udbetale til et kontonummer.
                 </p>
             </div>
 
@@ -41,18 +40,20 @@
             </template>
 
         </div>
-    </fieldset>
 
+    </fieldset>
 </template>
 
 <script>
 
-    import Error from '../forms/Error.vue'
+    import Error from '../../forms/Error.vue'
+    import CprLookup from '../../forms/CprLookUp.vue'
 
     export default {
 
         components: {
-            Error
+            Error,
+            CprLookup
         },
         props: [
             'pay'
@@ -60,6 +61,8 @@
         data: function() {
             return {
                 p: {
+                    recipient_id: null,
+                    recipient_name: null,
                     payment_method: null,
                     payment_method_details: null
                 }
@@ -70,7 +73,7 @@
                 this.p = this.pay
             },
             p: {
-                handler (newVal) {
+                handler () {
                     this.$emit('update', this.p)
                 },
                 deep: true
@@ -81,5 +84,7 @@
                 this.p = this.pay
             }
         }
+
     }
+
 </script>
