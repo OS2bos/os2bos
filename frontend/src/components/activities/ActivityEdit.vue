@@ -230,6 +230,7 @@
                     data.id = this.act.id
                     data.appropriation = this.activityObj.appropriation
                 }
+                this.$store.commit('clearPayment')
 
                 if (this.mode === 'create' || this.mode === 'clone') {
                     // POSTING an activity
@@ -253,6 +254,7 @@
                 }
             },
             cancel: function() {
+                this.$store.commit('clearPayment')
                 if (this.mode !== 'create') {
                     this.$emit('close')
                 } else {

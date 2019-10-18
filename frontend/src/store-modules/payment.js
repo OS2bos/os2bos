@@ -91,6 +91,12 @@ const mutations = {
     },
     setPaymentSchedule (state, payment_schedule) {
         state.payment_schedule = payment_schedule
+    },
+    clearPayment (state) {
+        state.payment =  {
+            payment_type: 'RUNNING_PAYMENT',
+            payment_frequency: 'MONTHLY'
+        }
     }
 }
 
