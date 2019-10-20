@@ -257,7 +257,7 @@ def saml_before_login(user_data):
         user = models.User.objects.get(username=username)
         try:
             team = models.Team.objects.get(name=team_name)
-        except Exception:
+        except models.Team.DoesNotExist:
             # Team not found, create.
             team = models.Team(name=team_name, leader=user)
             team.save()
@@ -266,6 +266,7 @@ def saml_before_login(user_data):
             user.save()
 
 
+@transaction.atomic
 def saml_create_user(user_data):
     "Hook called after userdata is received from IdP, before login."
     if "team" in user_data:
@@ -276,7 +277,7 @@ def saml_create_user(user_data):
         user = models.User.objects.get(username=username)
         try:
             team = models.Team.objects.get(name=team_name)
-        except Exception:
+        except models.Team.DoesNotExist:
             # Team not found, create.
             team = models.Team(name=team_name, leader=user)
             team.save()
