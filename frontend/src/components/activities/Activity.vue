@@ -177,7 +177,7 @@
 
     import axios from '../http/Http.js'
     import ActivityEdit from './ActivityEdit.vue'
-    import PaymentSchedule from '../payment/PaymentSchedule.vue'
+    import PaymentSchedule from '../payments/PaymentList.vue'
     import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
     import { activityId2name, sectionId2name, displayStatus, userId2name, approvalId2name } from '../filters/Labels.js'

@@ -8,11 +8,11 @@
 
 <template>
 
-    <fieldset class="payment-frequencies row" v-if="p.payment_type && p.payment_type !== 'ONE_TIME_PAYMENT'">
+    <fieldset class="payment-frequencies row">
 
         <div>
             <label class="required" for="pay-freq">Hver</label>
-            <select v-model="p.payment_frequency" id="pay-freq" required>
+            <select v-model="p_payment_frequency" id="pay-freq" required>
                 <option v-for="o in choices.frequency_options" :key="o.key" :value="o.key">
                     {{ o.val }}
                 </option>
@@ -20,9 +20,9 @@
             <error err-key="payment_frequency" />
         </div>
 
-        <div v-if="p.payment_frequency === 'MONTHLY'" style="margin-left: .5rem;">
+        <div v-if="p_payment_frequency === 'MONTHLY'" style="margin-left: .5rem;">
             <label class="required" for="pay-day-of-month">den</label>
-            <select v-model="p.payment_day_of_month" id="pay-day-of-month" required>
+            <select v-model="p_payment_day_of_month" id="pay-day-of-month" required>
                 <option v-for="o in choices.date_options" :value="o" :key="o">
                     {{ o }}.
                 </option>
@@ -30,7 +30,6 @@
             <error err-key="payment_day_of_month" />
         </div>
         
-
     </fieldset>
 
 </template>
@@ -44,14 +43,10 @@
         components: {
             Error
         },
-        props: [
-            'pay'
-        ],
         data: function() {
             return {
-                p: {
-                    payment_frequency: 'RUNNING_PAYMENT' // default is running payment
-                },
+                p_payment_frequency: 'MONTHLY', // default is running payment
+                p_payment_day_of_month: null,
                 choices: {
                     frequency_options: [
                         {
@@ -79,20 +74,36 @@
                 }
             }
         },
-        watch: {
-            pay: function() {
-                this.p = this.pay
+        computed: {
+            freq: function() {
+                return this.$store.getters.getPaymentFreq
             },
-            p: {
-                handler (newVal) {
-                    this.$emit('update:pay', this.p)
-                },
-                deep: true
+            dom: function() {
+                return this.$store.getters.getPaymentDOM
+            }
+        },
+        watch: {
+            freq: function() {
+                this.p_payment_frequency = this.freq
+            },
+            dom: function() {
+                this.p_payment_day_of_month = this.dom
+            },
+            p_payment_frequency: function() {
+                this.$store.commit('setPaymentFreq', this.p_payment_frequency)
+            },
+            p_payment_day_of_month: function() {
+                this.$store.commit('setPaymentDayOfMonth', this.p_payment_day_of_month)
             }
         },
         created: function() {
-            if (this.pay) {
-                this.p = this.pay
+            if (this.freq) {
+                this.p_payment_frequency = this.freq
+            } else {
+                this.$store.commit('setPaymentFreq', 'MONTHLY')
+            }
+            if (this.dom) {
+                this.p_payment_day_of_month = this.dom
             }
         }
 

@@ -86,7 +86,7 @@ services:
       - SIMPLESAMLPHP_SP_ENTITY_ID=http://localhost:8080/api/saml2_auth/acs/
       - SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE=http://localhost:8080/api/saml2_auth/acs/
     volumes:
-      - ./backend/core/data/authsources.php:/var/www/simplesamlphp/config/authsources.php
+      - ./dev-environment/authsources.php:/var/www/simplesamlphp/config/authsources.php
 
   # The following service is to copy the scripts needed to initialize the
   # database with user and extensions to a volume. It is not needed when the
