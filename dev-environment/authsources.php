@@ -13,7 +13,8 @@ $config = array(
             'email' => 'user2@example.com',
             'username' => 'admin',
             'first_name' => 'IT',
-            'last_name' => 'Guy'
+            'last_name' => 'Guy',
+            'bos_profile' => 'admin'
         ),
         'familieleder:sagsbehandler' => array(
             'uid' => array('2'),

@@ -65,6 +65,9 @@ from core.mixins import AuditMixin
 
 from core.authentication import CsrfExemptSessionAuthentication
 
+from core.permissions import IsUserAllowed
+
+
 # Working models, read/write
 
 
@@ -84,6 +87,7 @@ class CaseFilter(filters.FilterSet):
 
 class AuditViewSet(AuditMixin, viewsets.ModelViewSet):
     authentication_classes = (CsrfExemptSessionAuthentication,)
+    permission_classes = (IsUserAllowed,)
 
 
 class CaseViewSet(AuditViewSet):
