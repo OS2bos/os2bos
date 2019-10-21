@@ -75,9 +75,9 @@
         },
         methods: {
             update: function() {
-                this.fetchCases(this.$route.params.id)
+                this.fetchCases()
             },
-            fetchCases: function(id) {
+            fetchCases: function() {
                 if (this.user) {
                     axios.get(`/cases/?case_worker=${ this.user.id }&expired=false`)
                     .then(res => {

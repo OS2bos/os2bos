@@ -39,7 +39,6 @@ ENV PYTHONUNBUFFERED=1 \
   BEV_USER_CONFIG_PATH=/user-settings.ini \
   IPYTHONDIR=/tmp/.ipython
 
-
 WORKDIR /code/
 COPY backend/sys-requirements.txt sys-requirements.txt
 RUN set -ex \
@@ -60,7 +59,6 @@ RUN set -ex \
   # create folders at easily mountable paths for output from django
   && install -o bev -g bev -d /static \
   && install -o bev -g bev -d /log
-
 
 # Install requirements
 COPY backend/requirements.txt /code/backend/requirements.txt
