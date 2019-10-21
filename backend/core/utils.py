@@ -255,12 +255,9 @@ def saml_before_login(user_data):
         [team_name] = user_data["team"]
         # This is safe, user exists.
         user = models.User.objects.get(username=username)
-        try:
-            team = models.Team.objects.get(name=team_name)
-        except models.Team.DoesNotExist:
-            # Team not found, create.
-            team = models.Team(name=team_name, leader=user)
-            team.save()
+        team, _ = models.Team.objects.get_or_create(
+            name=team_name, defaults={"leader": user}
+        )
         if team != user.team:
             user.team = team
             user.save()
@@ -275,11 +272,8 @@ def saml_create_user(user_data):
         [team_name] = user_data["team"]
         # This is safe, user exists.
         user = models.User.objects.get(username=username)
-        try:
-            team = models.Team.objects.get(name=team_name)
-        except models.Team.DoesNotExist:
-            # Team not found, create.
-            team = models.Team(name=team_name, leader=user)
-            team.save()
+        team, _ = models.Team.objects.get_or_create(
+            name=team_name, defaults={"leader": user}
+        )
         user.team = team
         user.save()
