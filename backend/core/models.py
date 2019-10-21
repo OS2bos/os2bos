@@ -8,7 +8,6 @@
 
 from datetime import date, timedelta
 from decimal import Decimal
-import uuid
 from dateutil.relativedelta import relativedelta
 from dateutil import rrule
 
@@ -1160,6 +1159,7 @@ class Activity(AuditModelMixin, models.Model):
                 self.payment_plan.payment_id = (
                     self.modifies.payment_plan.payment_id
                 )
+                self.payment_plan.save()
             self.status = STATUS_GRANTED
         self.save()
 
