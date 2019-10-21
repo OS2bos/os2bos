@@ -45,7 +45,7 @@
             <p v-if="payments.length < 1">
                 Kunne ikke finde nogen sager
             </p>
-            <button class="more">Vis flere</button>
+            <button v-if="payments.length > 1" class="more">Vis flere</button>
         </div>
 
         <div class="payment-search-filters">
