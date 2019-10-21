@@ -256,7 +256,9 @@ class PaymentSchedule(models.Model):
     payment_amount = models.DecimalField(
         max_digits=14, decimal_places=2, verbose_name=_("beløb")
     )
-    payment_id = models.UUIDField(default=uuid.uuid4, editable=False)
+    payment_id = models.PositiveIntegerField(
+        editable=False, verbose_name=_("betalings-ID"), blank=True, null=True
+    )
 
     @property
     def next_payment(self):
@@ -1154,6 +1156,10 @@ class Activity(AuditModelMixin, models.Model):
             # In all cases ...
             if self.modifies:
                 self.modifies.save()
+                # set the payment_id corresponding to the modifies payment_id.
+                self.payment_plan.payment_id = (
+                    self.modifies.payment_plan.payment_id
+                )
             self.status = STATUS_GRANTED
         self.save()
 
