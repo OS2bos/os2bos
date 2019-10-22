@@ -13,7 +13,7 @@
         <template v-if="p.payment_type === 'ONE_TIME_PAYMENT' || p.payment_type === 'RUNNING_PAYMENT'">
 
             <label class="required" for="field-amount-1">Beløb</label>
-            <input v-model="p.payment_amount" type="number" step="0.01" required id="field-amount-1"> kr
+            <input v-model="p.payment_amount" type="number" step="0.01" required id="field-amount-1"> kr.
             
             <error err-key="payment_amount" />
 
@@ -31,7 +31,7 @@
             </div>
             <div>
                 <label class="required" for="field-rate">til takst</label>
-                <input v-model="p.payment_amount" type="number" step="0.01" required id="field-rate"> kr
+                <input v-model="p.payment_amount" type="number" step="0.01" required id="field-rate"> kr.
 
                 <error err-key="payment_amount" />
             </div>

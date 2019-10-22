@@ -23,7 +23,7 @@
                 <dd>00023897</dd>
                 
                 <dt>Beløb, planlagt</dt>
-                <dd>{{ payment.amount }} kr</dd>
+                <dd>{{ payment.amount }} kr.</dd>
                 <dt>Betalingsdato, planlagt</dt>
                 <dd>{{ payment.date }}</dd>
                 <dt>Kontostreng</dt>
