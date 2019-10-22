@@ -90,6 +90,10 @@ class AuditViewSet(AuditMixin, viewsets.ModelViewSet):
     permission_classes = (IsUserAllowed,)
 
 
+class ReadOnlyViewset(viewsets.ReadOnlyModelViewSet):
+    permission_classes = (IsUserAllowed,)
+
+
 class CaseViewSet(AuditViewSet):
     queryset = Case.objects.all()
     serializer_class = CaseSerializer
@@ -238,17 +242,17 @@ class RelatedPersonViewSet(AuditViewSet):
 # Master data, read only.
 
 
-class MunicipalityViewSet(viewsets.ReadOnlyModelViewSet):
+class MunicipalityViewSet(ReadOnlyViewset):
     queryset = Municipality.objects.all()
     serializer_class = MunicipalitySerializer
 
 
-class SchoolDistrictViewSet(viewsets.ReadOnlyModelViewSet):
+class SchoolDistrictViewSet(ReadOnlyViewset):
     queryset = SchoolDistrict.objects.all()
     serializer_class = SchoolDistrictSerializer
 
 
-class TeamViewSet(viewsets.ReadOnlyModelViewSet):
+class TeamViewSet(ReadOnlyViewset):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
 
@@ -267,40 +271,40 @@ class AllowedForStepsFilter(filters.FilterSet):
         fields = "__all__"
 
 
-class SectionViewSet(viewsets.ReadOnlyModelViewSet):
+class SectionViewSet(ReadOnlyViewset):
     queryset = Section.objects.all()
     serializer_class = SectionSerializer
     filterset_class = AllowedForStepsFilter
 
 
-class SectionInfoViewSet(viewsets.ReadOnlyModelViewSet):
+class SectionInfoViewSet(ReadOnlyViewset):
     queryset = SectionInfo.objects.all()
     serializer_class = SectionInfoSerializer
     filterset_fields = "__all__"
 
 
-class ActivityDetailsViewSet(viewsets.ReadOnlyModelViewSet):
+class ActivityDetailsViewSet(ReadOnlyViewset):
     queryset = ActivityDetails.objects.all()
     serializer_class = ActivityDetailsSerializer
     filterset_fields = "__all__"
 
 
-class AccountViewSet(viewsets.ReadOnlyModelViewSet):
+class AccountViewSet(ReadOnlyViewset):
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
     filterset_fields = "__all__"
 
 
-class UserViewSet(viewsets.ReadOnlyModelViewSet):
+class UserViewSet(ReadOnlyViewset):
     queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
 
 
-class ServiceProviderViewSet(viewsets.ReadOnlyModelViewSet):
+class ServiceProviderViewSet(ReadOnlyViewset):
     queryset = ServiceProvider.objects.all()
     serializer_class = ServiceProviderSerializer
 
 
-class ApprovalLevelViewSet(viewsets.ReadOnlyModelViewSet):
+class ApprovalLevelViewSet(ReadOnlyViewset):
     queryset = ApprovalLevel.objects.all()
     serializer_class = ApprovalLevelSerializer
