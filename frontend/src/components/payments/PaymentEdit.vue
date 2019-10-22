@@ -84,7 +84,7 @@
 
     import axios from '../http/Http.js'
     import notify from '../notifications/Notify.js'
-    import payment from '../../store-modules/payment.js';
+    import payment from '../../store-modules/payment.js'
 
     export default {
         
@@ -112,12 +112,14 @@
             pay: function() {
                 let data = {
                     paid_amount: this.paid_amount,
-                    paid_date: this.paid_date
-                    // paid_note: this.paid_note
+                    paid_date: this.paid_date,
+                    note: this.paid_note
                 }
-                this.$store.dispatch('fetchPayment', data)
+                axios.patch(`/payments/${ this.payment.id }/`, data)
                 .then(res => {
-                    this.$router.push(`/payments/${ this.payment.id }/`)
+                    this.$store.dispatch('fetchPayment', res.data.id)
+                    this.$router.push(`/payment/${ this.payment.id }/`)
+                    this.showModal = false
                 })
                 .catch(err => this.$store.dispatch('parseErrorOutput', err))
             }
