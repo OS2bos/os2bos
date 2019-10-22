@@ -1196,6 +1196,49 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         activity.grant(approval_level, "note", user)
         self.assertEqual(activity.status, STATUS_GRANTED)
 
+    def test_grant_on_expected_modifies_sets_payment_schedule_payment_id(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        payment_schedule = create_payment_schedule()
+        activity = create_activity(
+            case,
+            appropriation,
+            payment_plan=payment_schedule,
+            start_date=date.today(),
+            end_date=date.today() + timedelta(days=3),
+            status=STATUS_GRANTED,
+        )
+
+        self.assertEqual(
+            activity.payment_plan.payment_id, activity.payment_plan.id
+        )
+
+        payment_schedule = create_payment_schedule()
+        expected_activity = create_activity(
+            case,
+            appropriation,
+            payment_plan=payment_schedule,
+            start_date=date.today() + timedelta(days=1),
+            end_date=date.today() + timedelta(days=5),
+            status=STATUS_EXPECTED,
+            modifies=activity,
+        )
+        approval_level = ApprovalLevel.objects.create(name="egenkompetence")
+        user = get_user_model().objects.create(username="Anders And")
+
+        self.assertEqual(
+            expected_activity.payment_plan.payment_id,
+            expected_activity.payment_plan.id,
+        )
+
+        expected_activity.grant(approval_level, "note", user)
+        self.assertEqual(
+            activity.payment_plan.payment_id,
+            expected_activity.payment_plan.payment_id,
+        )
+
     def test_regenerate_payments_on_draft_save(self):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -2650,6 +2693,15 @@ class PaymentScheduleTestCase(TestCase):
             payment_schedule.next_payment.date,
             date.today() + timedelta(days=7),
         )
+
+    def test_payment_schedule_save_generates_payment_id(self):
+        payment_schedule = create_payment_schedule(
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=PaymentSchedule.WEEKLY,
+            payment_amount=Decimal("100"),
+        )
+
+        self.assertEqual(payment_schedule.payment_id, payment_schedule.id)
 
     def test_str(self):
         payment_schedule = create_payment_schedule()
