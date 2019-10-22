@@ -9,6 +9,7 @@
 import axios from '../components/http/Http.js'
 
 const state = {
+    payments: null,
     payment: {
         payment_type: 'RUNNING_PAYMENT',
         payment_frequency: 'MONTHLY'
@@ -19,6 +20,9 @@ const state = {
 const getters = {
     getPayment (state) {
         return state.payment
+    },
+    getPayments (state) {
+        return state.payments ? state.payments : false
     },
     getPaymentType (state) {
         return state.payment.payment_type ? state.payment.payment_type : false
@@ -52,18 +56,15 @@ const getters = {
     },
     getPaymentSchedule (state) {
         return state.payment_schedule ? state.payment_schedule : false
-    },
-    getPayments (state) {
-        return state.payments ? state.payments : false
-    },
-    getPayment (state) {
-        return state.payment ? state.payment : false
     }
 }
 
 const mutations = {
     setPayment (state, payment) {
         state.payment = payment
+    },
+    setPayments (state, payments) {
+        state.payments = payments
     },
     setPaymentType (state, type) {
         state.payment.payment_type = type
