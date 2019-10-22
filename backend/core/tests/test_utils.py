@@ -250,16 +250,25 @@ class SendAppropriationTestCase(TestCase, BasicTestMixin):
 
 class SamlLoginTestcase(TestCase, BasicTestMixin):
     def test_saml_before_login(self):
-        user_data = {"team": ["S-DIG"], "username": ["dummy"]}
+        user_data = {
+            "team": ["S-DIG"],
+            "username": ["dummy"],
+            "bos_profile": ["grant"],
+        }
         User.objects.create_user("dummy", "dummy", profile="grant")
         saml_before_login(user_data)
         [team_name] = user_data["team"]
         team = Team.objects.get(name=team_name)
         self.assertEqual(team.name, "S-DIG")
+        user_data["bos_profile"] = ["admin"]
         saml_before_login(user_data)
 
     def test_saml_create_user(self):
-        user_data = {"team": ["S-DIG"], "username": ["dummy"]}
+        user_data = {
+            "team": ["S-DIG"],
+            "username": ["dummy"],
+            "bos_profile": ["grant"],
+        }
         User.objects.create_user("dummy", "dummy", profile="grant")
         saml_create_user(user_data)
         [team_name] = user_data["team"]
