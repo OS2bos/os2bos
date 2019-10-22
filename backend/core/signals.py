@@ -26,6 +26,9 @@ from core.utils import (
 def set_payment_id_on_paymentschedule_save(
     sender, instance, created, **kwargs
 ):
+    """
+    Set the payment_id as the PaymentSchedule ID on creation.
+    """
     if created:
         instance.payment_id = instance.id
         instance.save()

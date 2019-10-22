@@ -1155,7 +1155,9 @@ class Activity(AuditModelMixin, models.Model):
             # In all cases ...
             if self.modifies:
                 self.modifies.save()
-                # set the payment_id corresponding to the modifies payment_id.
+                # When an expected activity that has a modifies is granted,
+                # we change the expected activitys payment_id to be that of
+                # the modifies activity.
                 self.payment_plan.payment_id = (
                     self.modifies.payment_plan.payment_id
                 )
