@@ -500,14 +500,14 @@ class Payment(models.Model):
             self.payment_method == PaymentSchedule.PERSON
             and self.recipient_type == CASH
         ):
-            kind = config.ACCOUNT_NUMBER_KIND
             department = config.ACCOUNT_NUMBER_DEPARTMENT
+            kind = config.ACCOUNT_NUMBER_KIND
         else:
-            kind = "XXX"
             department = "XXX"
+            kind = "XXX"
 
         account = self.payment_schedule.activity.account
-        return department + account + kind
+        return f"{department}-{account}-{kind}"
 
     def __str__(self):
         recipient_type_str = self.get_recipient_type_display()
