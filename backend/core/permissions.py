@@ -19,8 +19,7 @@ class IsUserAllowed(permissions.BasePermission):
         if profile == User.READONLY:
             return request.method in permissions.SAFE_METHODS
         elif profile == User.EDIT:
-            # TODO: Find out how to figure out if this is a GRANT
-            return True
+            return view.get_view_name() != "Grant"
         elif profile in [User.GRANT, User.ADMIN]:
             # This user can do everything in the frontend.
             return True
