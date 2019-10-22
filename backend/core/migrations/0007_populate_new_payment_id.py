@@ -13,6 +13,8 @@ def populate_payment_id(apps, schema_editor):
     )
     for payment_schedule in modified_by_payment_schedules:
         modified_by = payment_schedule.activity.modified_by
+        # As long as a modified_by exists we set the payment_id
+        # to the original one.
         while modified_by.exists():
             modified_by_activity = modified_by.first()
             modified_by_payment_schedule = modified_by_activity.payment_plan
