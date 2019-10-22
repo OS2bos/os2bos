@@ -25,7 +25,7 @@
                 </dd>
             </template>
         </dl>
-        <form @submit.prevent="pay()" v-if="!payment.paid && !payment.automatic">
+        <form @submit.prevent="prePayCheck()" v-if="!payment.paid && !payment.automatic">
             <fieldset>
             
                 <label for="field-amount" class="required">Betal beløb</label>
@@ -43,6 +43,39 @@
             </fieldset>
         </form>
 
+        <!-- Submit payment modal -->
+        <div v-if="showModal">
+            <form @submit.prevent="pay()" class="modal-form">
+                <div class="modal-mask">
+                    <div class="modal-wrapper">
+                        <div class="modal-container">
+
+                            <div class="modal-header">
+                                <slot name="header">
+                                    <h2>Betaling</h2>
+                                </slot>
+                            </div>
+
+                            <div class="modal-body">
+                                <slot name="body">
+                                    <p>
+                                        Er du sikker på, at du vil sende {{ paid_amount }} kr. til betaling?
+                                    </p>
+                                </slot>
+                            </div>
+
+                            <div class="modal-footer">
+                                <slot name="footer">
+                                    <button type="button" class="modal-cancel-btn" @click="reload()">Annullér</button>
+                                    <button class="modal-confirm-btn" type="submit">Godkend</button>
+                                </slot>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
     </div>
 
 </template>
@@ -51,14 +84,17 @@
 
     import axios from '../http/Http.js'
     import notify from '../notifications/Notify.js'
+    import payment from '../../store-modules/payment.js';
 
     export default {
         
         data: function() {
             return {
+                id: payment.id,
                 paid_amount: null,
                 paid_date: null,
-                paid_note: null
+                paid_note: null,
+                showModal: false
             }
         },
         computed: {
@@ -67,12 +103,23 @@
             }
         },
         methods:{
+            reload: function() {
+                this.showModal = false
+            },
+            prePayCheck: function() {
+                this.showModal = true
+            },
             pay: function() {
-                if (confirm(`Er du sikker på, at du vil sende ${ this.paid_amount } kr til betaling?`)) {
-                    
-                    this.$store.dispatch('updatePayment', data)
-
+                let data = {
+                    paid_amount: this.paid_amount,
+                    paid_date: this.paid_date
+                    // paid_note: this.paid_note
                 }
+                this.$store.dispatch('fetchPayment', data)
+                .then(res => {
+                    this.$router.push(`/payments/${ this.payment.id }/`)
+                })
+                .catch(err => this.$store.dispatch('parseErrorOutput', err))
             }
         }
 
