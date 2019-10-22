@@ -16,13 +16,8 @@ const router = new Router({
     routes: [
         {
             path: '/',
-            name: 'home',
+            name: 'my-cases',
             component: () => import(/* webpackPreload: true */ './components/cases/Cases.vue')
-        },
-        {
-            path: '/my-cases/',
-            name: 'my-caces',
-            component: () => import(/* webpackChunkName: "cases" */ './components/cases/Cases.vue')
         },
         {
             path: '/case/:caseId',
@@ -84,11 +79,6 @@ const router = new Router({
             props: { mode: 'create' }
         },
         {
-            path: '/login',
-            name: 'login',
-            component: () => import(/* webpackPreload: true */ './components/auth/Login.vue')
-        },
-        {
             // 404 page. This route must declared last
             path: '*',
             name: 'page404',
@@ -98,14 +88,16 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-    if (to.name === 'login') {
+    if (store.getters.getAuth) {
+        // If we are authenticated, just proceed
         next()
-    } else if (sessionStorage.getItem('accesstoken')) {
-        next()
+    } else if (to.query.token && to.query.uid) {
+        // We have been redirected from SSO login, set login credentials
+        store.dispatch('registerAuth', to.query)
+        router.push('/')
     } else {
-        next({
-            path: '/login'
-        }) 
+        // Try to login
+        window.location = '/api/accounts/login/'
     }
 })
 

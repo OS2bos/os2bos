@@ -63,6 +63,8 @@ from core.utils import get_person_info
 
 from core.mixins import AuditMixin
 
+from core.authentication import CsrfExemptSessionAuthentication
+
 # Working models, read/write
 
 
@@ -81,7 +83,7 @@ class CaseFilter(filters.FilterSet):
 
 
 class AuditViewSet(AuditMixin, viewsets.ModelViewSet):
-    pass
+    authentication_classes = (CsrfExemptSessionAuthentication,)
 
 
 class CaseViewSet(AuditViewSet):

@@ -21,6 +21,7 @@ from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.utils.translation import gettext_lazy as _
 from django.utils.html import strip_tags
+from django.db import transaction
 
 from constance import config
 
@@ -243,3 +244,36 @@ def send_appropriation(appropriation, included_activities=None):
     ]
 
     msg.send()
+
+
+@transaction.atomic
+def saml_before_login(user_data):
+    "Hook called after user is created in DB, before login."
+    if "team" in user_data:
+        # SAML data comes as lists with one element.
+        [username] = user_data["username"]
+        [team_name] = user_data["team"]
+        # This is safe, user exists.
+        user = models.User.objects.get(username=username)
+        team, _ = models.Team.objects.get_or_create(
+            name=team_name, defaults={"leader": user}
+        )
+        if team != user.team:
+            user.team = team
+            user.save()
+
+
+@transaction.atomic
+def saml_create_user(user_data):
+    "Hook called after userdata is received from IdP, before login."
+    if "team" in user_data:
+        # SAML data comes as lists with one element.
+        [username] = user_data["username"]
+        [team_name] = user_data["team"]
+        # This is safe, user exists.
+        user = models.User.objects.get(username=username)
+        team, _ = models.Team.objects.get_or_create(
+            name=team_name, defaults={"leader": user}
+        )
+        user.team = team
+        user.save()
