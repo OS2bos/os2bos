@@ -21,28 +21,32 @@ $config = array(
             'email' => 'user2@example.com',
             'username' => 'familieleder',
             'first_name' => 'Familie',
-            'last_name' => 'Leder'
+            'last_name' => 'Leder',
+            'bos_profile' => 'grant'
         ),
         'familieraadgiver:sagsbehandler' => array(
             'uid' => array('3'),
             'email' => 'user2@example.com',
             'username' => 'familieraadgiver',
             'first_name' => 'Familie',
-            'last_name' => 'Raadgiver'
+            'last_name' => 'Raadgiver',
+            'bos_profile' => 'edit'
         ),
         'ungeleder:sagsbehandler' => array(
             'uid' => array('4'),
             'email' => 'user2@example.com',
             'username' => 'ungeleder',
             'first_name' => 'Unge',
-            'last_name' => 'Leder'
+            'last_name' => 'Leder',
+            'bos_profile' => 'readonly'
         ),
         'ungeraadgiver:sagsbehandler' => array(
             'uid' => array('5'),
             'email' => 'user2@example.com',
             'username' => 'ungeraadgiver',
             'first_name' => 'Unge',
-            'last_name' => 'Raadgiver'
+            'last_name' => 'Raadgiver',
+            'bos_profile' => ''
         ),
     ),
 
