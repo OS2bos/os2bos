@@ -300,6 +300,14 @@ CONSTANCE_CONFIG = {
         ),
         _("fra-email"),
     ),
+    "ACCOUNT_NUMBER_DEPARTMENT": (
+        settings.get("ACCOUNT_NUMBER_DEPARTMENT", fallback="01005"),
+        _("Kontostreng afdeling"),
+    ),
+    "ACCOUNT_NUMBER_KIND": (
+        settings.get("ACCOUNT_NUMBER_KIND", fallback="529"),
+        _("Kontostreng art"),
+    ),
 }
 CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
 

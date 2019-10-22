@@ -22,6 +22,7 @@ from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django_audit_fields.models import AuditModelMixin
 from simple_history.models import HistoricalRecords
+from constance import config
 
 from core.managers import PaymentQuerySet, CaseQuerySet
 from core.utils import send_appropriation, get_next_interval
@@ -468,6 +469,12 @@ class Payment(models.Model):
         verbose_name=_("betalt på dato"), null=True, blank=True
     )
 
+    saved_account = models.CharField(
+        max_length=128,
+        verbose_name=_("gemt kontostreng"),
+        null=True,
+        blank=True,
+    )
     payment_schedule = models.ForeignKey(
         PaymentSchedule,
         on_delete=models.CASCADE,
@@ -483,6 +490,24 @@ class Payment(models.Model):
                 _("ugyldig betalingsmetode for betalingsmodtager")
             )
         super().save(*args, **kwargs)
+
+    @property
+    def account(self):
+        if self.saved_account:
+            return self.saved_account
+
+        if (
+            self.payment_method == PaymentSchedule.PERSON
+            and self.recipient_type == CASH
+        ):
+            kind = config.ACCOUNT_NUMBER_KIND
+            department = config.ACCOUNT_NUMBER_DEPARTMENT
+        else:
+            kind = "XXX"
+            department = "XXX"
+
+        account = self.payment_schedule.activity.account
+        return department + account + kind
 
     def __str__(self):
         recipient_type_str = self.get_recipient_type_display()
