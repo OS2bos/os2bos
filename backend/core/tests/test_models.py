@@ -1210,7 +1210,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             end_date=date.today() + timedelta(days=3),
             status=STATUS_GRANTED,
         )
-
+        # Assert payment_id corresponds to payment_plan ID.
         self.assertEqual(
             activity.payment_plan.payment_id, activity.payment_plan.id
         )
@@ -1228,11 +1228,14 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         approval_level = ApprovalLevel.objects.create(name="egenkompetence")
         user = get_user_model().objects.create(username="Anders And")
 
+        # Assert payment_id corresponds to payment_plan ID.
         self.assertEqual(
             expected_activity.payment_plan.payment_id,
             expected_activity.payment_plan.id,
         )
 
+        # Grant the expected modifies activity, payment_id should now
+        # correspond to the original payment_id.
         expected_activity.grant(approval_level, "note", user)
         self.assertEqual(
             activity.payment_plan.payment_id,
