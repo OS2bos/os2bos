@@ -57,6 +57,20 @@
         watch: {
             p_id: function() {
                 this.update()
+            },
+            payment: function() {
+                if (this.payment) {
+                    this.$store.commit('setBreadcrumb', [
+                        {
+                            link: '/payments',
+                            title: 'Betalinger'
+                        },
+                        {
+                            link: false,
+                            title: `Betaling ${ this.payment.id }`
+                        }
+                    ])
+                }
             }
         },
         methods: {
