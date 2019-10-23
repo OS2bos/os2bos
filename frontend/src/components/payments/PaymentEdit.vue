@@ -90,7 +90,6 @@
         
         data: function() {
             return {
-                id: payment.id,
                 paid_amount: null,
                 paid_date: null,
                 paid_note: null,
@@ -118,8 +117,9 @@
                 axios.patch(`/payments/${ this.payment.id }/`, data)
                 .then(res => {
                     this.$store.dispatch('fetchPayment', res.data.id)
-                    this.$router.push(`/payment/${ this.payment.id }/`)
+                    this.$router.push(`/payments/`)
                     this.showModal = false
+                    notify('Betaling godkendt', 'success')
                 })
                 .catch(err => this.$store.dispatch('parseErrorOutput', err))
             }
