@@ -86,13 +86,29 @@ class HistoricalCaseSerializer(serializers.ModelSerializer):
 
 
 class PaymentSerializer(serializers.ModelSerializer):
+    account = serializers.ReadOnlyField()
+
     class Meta:
         model = Payment
-        fields = "__all__"
+        fields = (
+            "id",
+            "date",
+            "recipient_type",
+            "recipient_id",
+            "recipient_name",
+            "payment_method",
+            "amount",
+            "paid_amount",
+            "paid",
+            "paid_date",
+            "payment_schedule",
+            "account",
+        )
 
 
 class PaymentScheduleSerializer(serializers.ModelSerializer):
     payments = PaymentSerializer(many=True, read_only=True)
+    account = serializers.ReadOnlyField()
 
     @staticmethod
     def setup_eager_loading(queryset):
