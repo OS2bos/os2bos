@@ -470,10 +470,7 @@ class Payment(models.Model):
     )
 
     saved_account = models.CharField(
-        max_length=128,
-        verbose_name=_("gemt kontostreng"),
-        null=True,
-        blank=True,
+        max_length=128, verbose_name=_("gemt kontostreng"), blank=True
     )
     payment_schedule = models.ForeignKey(
         PaymentSchedule,
