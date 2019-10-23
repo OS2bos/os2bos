@@ -90,20 +90,7 @@ class PaymentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Payment
-        fields = (
-            "id",
-            "date",
-            "recipient_type",
-            "recipient_id",
-            "recipient_name",
-            "payment_method",
-            "amount",
-            "paid_amount",
-            "paid",
-            "paid_date",
-            "payment_schedule",
-            "account",
-        )
+        exclude = ("saved_account",)
 
 
 class PaymentScheduleSerializer(serializers.ModelSerializer):
