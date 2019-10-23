@@ -40,7 +40,15 @@ from core.models import (
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ("id", "username", "first_name", "last_name", "cases", "team")
+        fields = (
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "cases",
+            "team",
+            "profile",
+        )
 
 
 class CaseSerializer(serializers.ModelSerializer):
