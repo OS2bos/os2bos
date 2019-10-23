@@ -495,17 +495,19 @@ class Payment(models.Model):
             return self.saved_account
 
         if (
-            self.payment_method == PaymentSchedule.PERSON
-            and self.recipient_type == CASH
+            self.recipient_type == PaymentSchedule.PERSON
+            and self.payment_method == CASH
         ):
             department = config.ACCOUNT_NUMBER_DEPARTMENT
             kind = config.ACCOUNT_NUMBER_KIND
         else:
+            # Set department and kind to 'XXX'
+            # to signify they are not used.
             department = "XXX"
             kind = "XXX"
 
         account = self.payment_schedule.activity.account
-        return f"{department}-{account}-{kind}"
+        return f"{department}-{account.number}-{kind}"
 
     def __str__(self):
         recipient_type_str = self.get_recipient_type_display()
