@@ -8,12 +8,30 @@
 
 from django.db.models.signals import pre_save, post_save, post_delete
 from django.dispatch import receiver
-from core.models import Activity, STATUS_GRANTED, STATUS_EXPECTED, STATUS_DRAFT
+from core.models import (
+    Activity,
+    PaymentSchedule,
+    STATUS_GRANTED,
+    STATUS_EXPECTED,
+    STATUS_DRAFT,
+)
 from core.utils import (
     send_activity_created_email,
     send_activity_updated_email,
     send_activity_expired_email,
 )
+
+
+@receiver(post_save, sender=PaymentSchedule)
+def set_payment_id_on_paymentschedule_save(
+    sender, instance, created, **kwargs
+):
+    """
+    Set the payment_id as the PaymentSchedule ID on creation.
+    """
+    if created:
+        instance.payment_id = instance.id
+        instance.save()
 
 
 @receiver(post_save, sender=Activity)
