@@ -43,7 +43,10 @@ class AuthenticatedTestCase(TestCase):
         self.username = "user"
         self.password = "s1kr3t"
         self.user = User.objects.create_user(
-            self.username, f"{self.username}@company.com", self.password
+            self.username,
+            f"{self.username}@company.com",
+            self.password,
+            profile="grant",
         )
 
 
