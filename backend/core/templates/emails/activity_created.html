@@ -28,6 +28,7 @@
     <p>Kontering: Ingen </p>
 {% endif %}
 <p>BetalingsID: {{ activity.payment_plan.payment_id }}</p>
+<p>Fiktiv: {{ activity.payment_plan.fictive|yesno:"ja, nej" }}</p>
 
 <h1>Betalingsmodtager</h1>
 <p>CPR/CVR: {{ activity.payment_plan.recipient_id }}</p>
