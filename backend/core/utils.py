@@ -243,3 +243,55 @@ def send_appropriation(appropriation, included_activities=None):
     ]
 
     msg.send()
+
+
+def saml_before_login(user_data):
+    "Hook called after userdata is received from IdP, before login."
+    user_changed = False
+    [username] = user_data["username"]
+    user = models.User.objects.get(username=username)
+    if "team" in user_data:
+        # SAML data comes as lists with one element.
+        [team_name] = user_data["team"]
+        # This is safe, user exists.
+        team, _ = models.Team.objects.get_or_create(
+            name=team_name, defaults={"leader": user}
+        )
+        if team != user.team:
+            user.team = team
+            user_changed = True
+    if "bos_profile" in user_data:
+        [profile] = user_data["bos_profile"]
+        if profile != user.profile:
+            user.profile = profile
+            is_admin = profile == models.User.ADMIN
+            # Admin status is controlled by these flags.
+            user.is_staff = user.is_superuser = is_admin
+            user_changed = True
+    if user_changed:
+        user.save()
+
+
+def saml_create_user(user_data):
+    "Hook called after user is created in DB, before login."
+    user_changed = False
+    [username] = user_data["username"]
+    user = models.User.objects.get(username=username)
+    if "team" in user_data:
+        # SAML data comes as lists with one element.
+        [team_name] = user_data["team"]
+        # This is safe, user exists.
+        team, _ = models.Team.objects.get_or_create(
+            name=team_name, defaults={"leader": user}
+        )
+        user.team = team
+        user_changed = True
+    if "bos_profile" in user_data:
+        [profile] = user_data["bos_profile"]
+        user.profile = profile
+        is_admin = profile == models.User.ADMIN
+        # Admin status is controlled by these flags.
+        user.is_staff = user.is_superuser = is_admin
+        user_changed = True
+    if user_changed:
+        user.save()

@@ -313,7 +313,7 @@
                     const approvable_modifies = this.main_acts[0].find(activity => {
                         return activity.id === approvable_main_act.modifies
                     })
-                    if (json2jsEpoch(approvable_main_act.end_date) < json2jsEpoch(approvable_modifies.end_date)) {
+                    if (approvable_modifies && json2jsEpoch(approvable_main_act.end_date) < json2jsEpoch(approvable_modifies.end_date)) {
                         this.diag_approval_warning = 'Hvis du godkender, at hovedydelsen får kortere løbetid, kan det også ændre løbetiden for følgeydelserne.'
                     }
                 }
