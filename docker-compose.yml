@@ -83,7 +83,7 @@ services:
       context: dev-environment/test-saml-idp
     environment:
       - SIMPLESAMLPHP_BASEURLPATH=http://localhost:8080/simplesaml/
-      - SIMPLESAMLPHP_SP_ENTITY_ID=http://localhost:8080/api/saml2_auth/acs/
+      - SIMPLESAMLPHP_SP_ENTITY_ID=http://localhost:8080
       - SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE=http://localhost:8080/api/saml2_auth/acs/
     volumes:
       - ./dev-environment/authsources.php:/var/www/simplesamlphp/config/authsources.php
