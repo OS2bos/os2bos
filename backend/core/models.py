@@ -275,6 +275,7 @@ class PaymentSchedule(models.Model):
     payment_amount = models.DecimalField(
         max_digits=14, decimal_places=2, verbose_name=_("beløb")
     )
+    fictive = models.BooleanField(default=False, verbose_name=_("fiktiv"))
     payment_id = models.PositiveIntegerField(
         editable=False, verbose_name=_("betalings-ID"), blank=True, null=True
     )
