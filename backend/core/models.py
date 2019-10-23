@@ -8,7 +8,6 @@
 
 from datetime import date, timedelta
 from decimal import Decimal
-import uuid
 from dateutil.relativedelta import relativedelta
 from dateutil import rrule
 
@@ -149,6 +148,26 @@ class User(AbstractUser):
         blank=False,
     )
 
+    # Different permission levels for user profile.
+
+    READONLY = "readonly"
+    EDIT = "edit"
+    GRANT = "grant"
+    ADMIN = "admin"
+
+    profile_choices = (
+        (READONLY, _("Kun læse")),
+        (EDIT, _("Læse og skrive")),
+        (GRANT, _("Bevilge")),
+        (ADMIN, _("Admin")),
+    )
+    profile = models.CharField(
+        max_length=128,
+        verbose_name=(_("brugerprofil")),
+        choices=profile_choices,
+        blank=True,
+    )
+
 
 class Team(models.Model):
     """Represents a team in the administration."""
@@ -256,7 +275,9 @@ class PaymentSchedule(models.Model):
     payment_amount = models.DecimalField(
         max_digits=14, decimal_places=2, verbose_name=_("beløb")
     )
-    payment_id = models.UUIDField(default=uuid.uuid4, editable=False)
+    payment_id = models.PositiveIntegerField(
+        editable=False, verbose_name=_("betalings-ID"), blank=True, null=True
+    )
 
     @property
     def next_payment(self):
@@ -1155,6 +1176,13 @@ class Activity(AuditModelMixin, models.Model):
             # In all cases ...
             if self.modifies:
                 self.modifies.save()
+                # When an expected activity that has a modifies is granted,
+                # we change the expected activitys payment_id to be that of
+                # the modifies activity.
+                self.payment_plan.payment_id = (
+                    self.modifies.payment_plan.payment_id
+                )
+                self.payment_plan.save()
             self.status = STATUS_GRANTED
         self.save()
 
