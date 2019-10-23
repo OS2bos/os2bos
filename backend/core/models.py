@@ -436,6 +436,23 @@ class PaymentSchedule(models.Model):
         if not end and (newest_payment.date < today + relativedelta(months=6)):
             self.generate_payments(new_start, end, vat_factor)
 
+    @property
+    def account(self):
+        if (
+            self.recipient_type == PaymentSchedule.PERSON
+            and self.payment_method == CASH
+        ):
+            department = config.ACCOUNT_NUMBER_DEPARTMENT
+            kind = config.ACCOUNT_NUMBER_KIND
+        else:
+            # Set department and kind to 'XXX'
+            # to signify they are not used.
+            department = "XXX"
+            kind = "XXX"
+
+        account = self.activity.account
+        return f"{department}-{account.number}-{kind}"
+
     def __str__(self):
         recipient_type_str = self.get_recipient_type_display()
         payment_frequency_str = self.get_payment_frequency_display()
@@ -515,20 +532,7 @@ class Payment(models.Model):
         if self.saved_account:
             return self.saved_account
 
-        if (
-            self.recipient_type == PaymentSchedule.PERSON
-            and self.payment_method == CASH
-        ):
-            department = config.ACCOUNT_NUMBER_DEPARTMENT
-            kind = config.ACCOUNT_NUMBER_KIND
-        else:
-            # Set department and kind to 'XXX'
-            # to signify they are not used.
-            department = "XXX"
-            kind = "XXX"
-
-        account = self.payment_schedule.activity.account
-        return f"{department}-{account.number}-{kind}"
+        return self.payment_schedule.account
 
     def __str__(self):
         recipient_type_str = self.get_recipient_type_display()
