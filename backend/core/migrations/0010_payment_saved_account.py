@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name="payment",
-            name="saved_account",
+            name="saved_account_string",
             field=models.CharField(
                 blank=True, max_length=128, verbose_name="gemt kontostreng"
             ),

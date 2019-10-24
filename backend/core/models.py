@@ -437,7 +437,7 @@ class PaymentSchedule(models.Model):
             self.generate_payments(new_start, end, vat_factor)
 
     @property
-    def account(self):
+    def account_string(self):
         if (
             self.recipient_type == PaymentSchedule.PERSON
             and self.payment_method == CASH
@@ -509,7 +509,7 @@ class Payment(models.Model):
     )
     note = models.TextField(verbose_name=_("note"), blank=True)
 
-    saved_account = models.CharField(
+    saved_account_string = models.CharField(
         max_length=128, verbose_name=_("gemt kontostreng"), blank=True
     )
     payment_schedule = models.ForeignKey(
@@ -530,10 +530,10 @@ class Payment(models.Model):
 
     @property
     def account(self):
-        if self.saved_account:
-            return self.saved_account
+        if self.saved_account_string:
+            return self.saved_account_string
 
-        return self.payment_schedule.account
+        return self.payment_schedule.account_string
 
     def __str__(self):
         recipient_type_str = self.get_recipient_type_display()

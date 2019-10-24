@@ -301,11 +301,11 @@ CONSTANCE_CONFIG = {
         _("fra-email"),
     ),
     "ACCOUNT_NUMBER_DEPARTMENT": (
-        settings.get("ACCOUNT_NUMBER_DEPARTMENT", fallback="01005"),
+        settings.get("ACCOUNT_NUMBER_DEPARTMENT", fallback="12345"),
         _("Kontostreng afdeling"),
     ),
     "ACCOUNT_NUMBER_KIND": (
-        settings.get("ACCOUNT_NUMBER_KIND", fallback="529"),
+        settings.get("ACCOUNT_NUMBER_KIND", fallback="123"),
         _("Kontostreng art"),
     ),
 }

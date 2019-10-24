@@ -2274,7 +2274,7 @@ class PaymentTestCase(TestCase, BasicTestMixin):
         # Account should come from ACCOUNT_NUMBER_DEPARTMENT,
         # the account of the activity, and ACCOUNT_NUMBER_KIND.
         self.assertEqual(
-            payment.account,
+            payment.account_string,
             f"{config.ACCOUNT_NUMBER_DEPARTMENT}-"
             f"{account.number}-"
             f"{config.ACCOUNT_NUMBER_KIND}",
@@ -2305,10 +2305,10 @@ class PaymentTestCase(TestCase, BasicTestMixin):
             payment_schedule=payment_schedule,
             date=date(year=2019, month=1, day=1),
             amount=Decimal("500.0"),
-            saved_account="123-1234-123",
+            saved_account_string="123-1234-123",
         )
         # Account should come from the saved account.
-        self.assertEqual(payment.account, "123-1234-123")
+        self.assertEqual(payment.account_string, "123-1234-123")
 
     def test_payment_account_with_unset_department_and_kind(self):
         payment_schedule = create_payment_schedule(
@@ -2338,7 +2338,7 @@ class PaymentTestCase(TestCase, BasicTestMixin):
             date=date(year=2019, month=1, day=1),
             amount=Decimal("500.0"),
         )
-        self.assertEqual(payment.account, "XXX-12345-XXX")
+        self.assertEqual(payment.account_string, "XXX-12345-XXX")
 
     def test_payment_str(self):
         payment_schedule = create_payment_schedule()
