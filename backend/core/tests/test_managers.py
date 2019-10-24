@@ -52,6 +52,30 @@ class PaymentQuerySetTestCase(TestCase):
 
         self.assertEqual(Payment.objects.amount_sum(), Decimal("1150"))
 
+    def test_amount_sum_paid_amount_overrides(self):
+        payment_schedule = create_payment_schedule()
+        create_payment(payment_schedule, amount=Decimal("1000"))
+        create_payment(
+            payment_schedule, amount=Decimal("100"), paid_amount=Decimal("150")
+        )
+        create_payment(
+            payment_schedule, amount=Decimal("50"), paid_amount=Decimal("250")
+        )
+
+        self.assertEqual(Payment.objects.amount_sum(), Decimal("1400"))
+
+    def test_strict_amount_sum_paid_amount_does_not_override(self):
+        payment_schedule = create_payment_schedule()
+        create_payment(payment_schedule, amount=Decimal("1000"))
+        create_payment(
+            payment_schedule, amount=Decimal("100"), paid_amount=Decimal("150")
+        )
+        create_payment(
+            payment_schedule, amount=Decimal("50"), paid_amount=Decimal("250")
+        )
+
+        self.assertEqual(Payment.objects.strict_amount_sum(), Decimal("1150"))
+
     def test_group_by_monthly_amounts(self):
         payment_schedule = create_payment_schedule()
         create_payment(

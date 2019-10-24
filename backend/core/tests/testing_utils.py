@@ -188,6 +188,7 @@ def create_payment(
     recipient_type=PaymentSchedule.PERSON,
     payment_method=SD,
     saved_account_string="",
+    paid_amount=None,
 ):
     payment = Payment.objects.create(
         recipient_id="Test",
@@ -198,6 +199,7 @@ def create_payment(
         amount=amount,
         payment_schedule=payment_schedule,
         saved_account_string=saved_account_string,
+        paid_amount=paid_amount,
     )
     return payment
 

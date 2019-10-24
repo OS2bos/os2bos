@@ -8,7 +8,17 @@
 
 from django.utils import timezone
 from django.db import models
-from django.db.models import Sum, CharField, Value, Q, F, Count
+from django.db.models import (
+    Case,
+    When,
+    Sum,
+    CharField,
+    DecimalField,
+    Value,
+    Q,
+    F,
+    Count,
+)
 from django.db.models.functions import (
     Coalesce,
     Cast,
@@ -20,9 +30,29 @@ from django.db.models.functions import (
 
 
 class PaymentQuerySet(models.QuerySet):
-    def amount_sum(self):
+    def strict_amount_sum(self):
         return (
             self.aggregate(amount_sum=Coalesce(Sum("amount"), 0))["amount_sum"]
+            or 0
+        )
+
+    def amount_sum(self):
+        return (
+            self.aggregate(
+                amount_sum=Coalesce(
+                    Sum(
+                        Case(
+                            When(
+                                paid_amount__isnull=False, then="paid_amount"
+                            ),
+                            When(amount__isnull=False, then="amount"),
+                        ),
+                        default="amount",
+                        output_field=DecimalField(),
+                    ),
+                    0,
+                )
+            )["amount_sum"]
             or 0
         )
 
