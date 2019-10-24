@@ -21,6 +21,7 @@ from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django_audit_fields.models import AuditModelMixin
 from simple_history.models import HistoricalRecords
+from constance import config
 
 from core.managers import PaymentQuerySet, CaseQuerySet
 from core.utils import send_appropriation, get_next_interval
@@ -435,6 +436,23 @@ class PaymentSchedule(models.Model):
         if not end and (newest_payment.date < today + relativedelta(months=6)):
             self.generate_payments(new_start, end, vat_factor)
 
+    @property
+    def account_string(self):
+        if (
+            self.recipient_type == PaymentSchedule.PERSON
+            and self.payment_method == CASH
+        ):
+            department = config.ACCOUNT_NUMBER_DEPARTMENT
+            kind = config.ACCOUNT_NUMBER_KIND
+        else:
+            # Set department and kind to 'XXX'
+            # to signify they are not used.
+            department = "XXX"
+            kind = "XXX"
+
+        account = self.activity.account
+        return f"{department}-{account.number}-{kind}"
+
     def __str__(self):
         recipient_type_str = self.get_recipient_type_display()
         payment_frequency_str = self.get_payment_frequency_display()
@@ -491,6 +509,9 @@ class Payment(models.Model):
     )
     note = models.TextField(verbose_name=_("note"), blank=True)
 
+    saved_account_string = models.CharField(
+        max_length=128, verbose_name=_("gemt kontostreng"), blank=True
+    )
     payment_schedule = models.ForeignKey(
         PaymentSchedule,
         on_delete=models.CASCADE,
@@ -506,6 +527,13 @@ class Payment(models.Model):
                 _("ugyldig betalingsmetode for betalingsmodtager")
             )
         super().save(*args, **kwargs)
+
+    @property
+    def account_string(self):
+        if self.saved_account_string:
+            return self.saved_account_string
+
+        return self.payment_schedule.account_string
 
     def __str__(self):
         recipient_type_str = self.get_recipient_type_display()

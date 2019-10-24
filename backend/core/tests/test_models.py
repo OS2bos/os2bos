@@ -17,6 +17,7 @@ from django.test import TestCase
 from django.utils import timezone
 from django.core import mail
 from parameterized import parameterized
+from constance import config
 
 from core.tests.testing_utils import (
     BasicTestMixin,
@@ -2234,13 +2235,119 @@ class ApprovalLevelTestCase(TestCase):
         self.assertEqual(str(approval_level), f"{approval_level.name}")
 
 
-class PaymentTestCase(TestCase):
+class PaymentTestCase(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_payment_account_default(self):
+        # Create a PaymentSchedule with PERSON, CASH
+        payment_schedule = create_payment_schedule(
+            payment_method=CASH, recipient_type=PaymentSchedule.PERSON
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+
+        activity = create_activity(
+            case,
+            appropriation,
+            payment_plan=payment_schedule,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+        )
+        account = create_account(
+            main_activity=activity.details,
+            supplementary_activity=None,
+            section=section,
+            number="12345",
+        )
+        payment = create_payment(
+            payment_schedule=payment_schedule,
+            date=date(year=2019, month=1, day=1),
+            amount=Decimal("500.0"),
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+        )
+        # Account should come from ACCOUNT_NUMBER_DEPARTMENT,
+        # the account of the activity, and ACCOUNT_NUMBER_KIND.
+        self.assertEqual(
+            payment.account_string,
+            f"{config.ACCOUNT_NUMBER_DEPARTMENT}-"
+            f"{account.number}-"
+            f"{config.ACCOUNT_NUMBER_KIND}",
+        )
+
+    def test_payment_account_already_saved(self):
+        payment_schedule = create_payment_schedule()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+
+        activity = create_activity(
+            case,
+            appropriation,
+            payment_plan=payment_schedule,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+        )
+        create_account(
+            main_activity=activity.details,
+            supplementary_activity=None,
+            section=section,
+            number="12345",
+        )
+        payment = create_payment(
+            payment_schedule=payment_schedule,
+            date=date(year=2019, month=1, day=1),
+            amount=Decimal("500.0"),
+            saved_account_string="123-1234-123",
+        )
+        # Account should come from the saved account.
+        self.assertEqual(payment.account_string, "123-1234-123")
+
+    def test_payment_account_with_unset_department_and_kind(self):
+        payment_schedule = create_payment_schedule(
+            payment_method=SD, recipient_type=PaymentSchedule.PERSON
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+
+        activity = create_activity(
+            case,
+            appropriation,
+            payment_plan=payment_schedule,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+        )
+        create_account(
+            main_activity=activity.details,
+            supplementary_activity=None,
+            section=section,
+            number="12345",
+        )
+        payment = create_payment(
+            payment_schedule=payment_schedule,
+            date=date(year=2019, month=1, day=1),
+            amount=Decimal("500.0"),
+        )
+        self.assertEqual(payment.account_string, "XXX-12345-XXX")
+
     def test_payment_str(self):
         payment_schedule = create_payment_schedule()
         payment = create_payment(
             payment_schedule=payment_schedule,
             date=date(year=2019, month=1, day=1),
             amount=Decimal("500.0"),
+            payment_method=SD,
+            recipient_type=PaymentSchedule.PERSON,
         )
         self.assertEqual(str(payment), "Person - Test - 2019-01-01 - 500.0")
 
