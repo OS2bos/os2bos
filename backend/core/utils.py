@@ -295,3 +295,99 @@ def saml_create_user(user_data):
         user_changed = True
     if user_changed:
         user.save()
+
+
+# Economy integration releated stuff - for the time being, only PRISM.
+# TODO: At some point, factor out customer specific third party integrations.
+
+
+def format_prism_record(payment, line_no):
+    """Format a single record, i.e., a single line, for PRISM.
+
+    Note, this follows documentation provided by Ballerup Kommune based on
+    KMD's interface specification GQ311001Q for financial records (transaction
+    type G69).
+    """
+    # Note, the fields that are hard coded *never* change.
+    # We specify them below, but for clarity we hard code them in the actual
+    # output.
+    """
+    reg_location = '000'
+    interface_type = 'G69'
+    org_type = "01"
+    post_type = "NOR"
+    line_format = "FLYD"
+    """
+
+    org_unit = 151  # TODO: Move to settings.
+    # Line number is given as 5 chars with leading zeroes, or unit as 4 chars
+    # with leading zeroes, as per the specification.
+    header = f"000G69{line_no:05d}{org_unit:04d}01NORFLYD"
+
+    # Now the actual posting fields. These are marked with a leading '&' and
+    # must come in increasing order by field number.
+
+    """
+    103 - machine number. What? Maybe payment ID will do. Number, 5 chars
+    with leading zeroes.
+
+    104 - "ekspeditionsløbenr". What? Number, 7 chars with leading zeroes.
+
+    110 - posting date, format 'YYYYMMDD'
+
+    111 - account number. Account string for this payment. Number, 10 chars.
+
+    112 - amount. Number, 12 chars with leading zeroes + 1 trailing char for
+    the sign ('+' or ' ' for plus, '-' for minus - the latter is not relevant
+    here).
+
+    113 - debit or credit; 'D' for debit, 'K' for credit. Will always be 'D'.
+
+    114 - fiscal year. Use the fiscal year of the date parameter.
+
+    117 - udbetalingshenvisningsnummer - date + machine number + expedition
+    number.
+
+    132 - recipient number code - always '02' for CPR number.
+
+    133 - recipient - 10 digits, CPR number.
+
+    153 - posting text.
+    """
+
+    fields = {
+        "103": f"{payment.payment_schedule.payment_id:05d}",
+        "104": f"{payment.pk:07d}",
+        "110": f"{payment.date.strftime('%Y%m%d')}",
+        "112": f"{int(payment.amount*100):12d} ",
+        "113": "D",
+        "114": f"{payment.date.year}",
+        "132": "02",
+        "133": payment.recipient_id,
+        "153": f"{payment.payment_schedule.activity.details}"[35],
+    }
+    fields["117"] = fields["110"] + fields["103"] + fields["104"]
+
+    field_string = "".join(
+        f"&{field_no}{fields[field_no]}" for field_no in sorted(fields)
+    )
+    # Record id header followed by field string.
+    return header + field_string
+
+
+def send_records_to_prism(writer, date=None):
+    """Send relevant payments to PRISM."""
+
+    # Default to payments due TODAY.
+    if not date:
+        date = datetime.date.today()
+
+    due_payments = models.Payment.objects.filter(
+        date=date,
+        recipient_type=models.PaymentSchedule.PERSON,
+        payment_method=models.CASH,
+        paid=False,
+    )
+    for i, p in enumerate(due_payments):
+        record = format_prism_record(p, i + 1)
+        writer(record)
