@@ -27,7 +27,7 @@
                 <dt>Betalingsdato, planlagt</dt>
                 <dd>{{ payment.date }}</dd>
                 <dt>Kontostreng</dt>
-                <dd>xxxx-2389237-dlihseg-xxx</dd>
+                <dd>{{ payment.account_string }}</dd>
             </dl>
         </div>
 
