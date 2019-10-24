@@ -31,12 +31,18 @@ from django.db.models.functions import (
 
 class PaymentQuerySet(models.QuerySet):
     def strict_amount_sum(self):
+        """
+        Sum over Payments amount.
+        """
         return (
             self.aggregate(amount_sum=Coalesce(Sum("amount"), 0))["amount_sum"]
             or 0
         )
 
     def amount_sum(self):
+        """
+        Sum over Payments with paid_amount overruling amount.
+        """
         return (
             self.aggregate(
                 amount_sum=Coalesce(
@@ -57,6 +63,9 @@ class PaymentQuerySet(models.QuerySet):
         )
 
     def in_this_year(self):
+        """
+        Filter Payments only in the current year.
+        """
         now = timezone.now()
         return self.filter(date__year=now.year)
 
