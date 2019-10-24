@@ -28,16 +28,19 @@
                         <td> 00003872 </td>
                         <td> 000000-0000 </td>
                         <td>
-                            {{ displayDate(p.date) }}
-                            <span v-if="p.paid_date" class="dim" style="white-space: nowrap;">{{ displayDate(p.paid_date) }}</span>
+                            {{ displayDate(p.date) }}<br>
+                            <span v-if="p.paid_date" class="dim" style="white-space: nowrap;">
+                            Betalt dato {{ displayDate(p.paid_date) }}
+                            </span>
                         </td>
                         <td>
                             <span v-if="p.paid">Ja</span>
                             <span v-else>Nej</span>
                         </td>
                         <td class="right">
-                            {{ displayDigits(p.amount) }} kr.
-                            <span v-if="p.paid_amount" class="dim" style="white-space: nowrap;">{{ displayDigits(p.paid_amount) }} kr.</span>
+                            {{ displayDigits(p.amount) }} kr.<br>
+                            <span v-if="p.paid_amount" class="dim" style="white-space: nowrap;">
+                            Betalt beløb {{ displayDigits(p.paid_amount) }} kr.</span>
                         </td>
                     </tr>
                 </tbody>
@@ -48,7 +51,7 @@
             <button v-if="payments.length > 1" class="more">Vis flere</button>
         </div>
 
-        <div class="payment-search-filters">
+        <!-- <div class="payment-search-filters">
             <h2>Filtre</h2>
             <form>
                 <fieldset>
@@ -75,7 +78,7 @@
                     <input type="text">
                 </fieldset>
             </form>
-        </div>
+        </div> -->
 
     </div>
 
