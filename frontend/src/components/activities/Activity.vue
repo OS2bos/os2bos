@@ -162,11 +162,16 @@
                         <dt>Skattekort</dt>
                         <dd>Bikort</dd>
                     </template>
+                    <template v-if="pay.fictive">
+                        <dt>Betaling</dt>
+                        <dd>Fiktiv</dd>
+                    </template>
                 </dl>
             </div>
 
         </div>
         
+        <h2 style="padding: 2rem 0 0;">Betalingsnøgle 0000023746</h2>
         <payment-schedule :payments="pay.payments" v-if="!show_edit" />
         
     </section>
@@ -345,8 +350,8 @@
         padding: 1.5rem 2rem 2rem;
     }
 
-     .payment-schedule {
-        margin: 1rem;
+    .activity .payment_schedule {
+        margin: 0 0 1rem;
     }
 
 </style>

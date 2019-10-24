@@ -326,7 +326,7 @@ SAML2_AUTH = {
         "SUPERUSER_STATUS": False,
     },
     "ASSERTION_URL": settings.get("SAML_PUBLIC_HOST"),
-    "ENTITY_ID": settings.get("SAML_PUBLIC_HOST") + "/api/saml2_auth/acs/",
+    "ENTITY_ID": settings.get("SAML_PUBLIC_HOST"),
     "ATTRIBUTES_MAP": {
         "email": "email",
         "username": "username",

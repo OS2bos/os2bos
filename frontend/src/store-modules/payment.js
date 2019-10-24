@@ -9,6 +9,7 @@
 import axios from '../components/http/Http.js'
 
 const state = {
+    payments: null,
     payment: {
         payment_type: 'RUNNING_PAYMENT',
         payment_frequency: 'MONTHLY'
@@ -19,6 +20,9 @@ const state = {
 const getters = {
     getPayment (state) {
         return state.payment
+    },
+    getPayments (state) {
+        return state.payments ? state.payments : false
     },
     getPaymentType (state) {
         return state.payment.payment_type ? state.payment.payment_type : false
@@ -58,6 +62,9 @@ const getters = {
 const mutations = {
     setPayment (state, payment) {
         state.payment = payment
+    },
+    setPayments (state, payments) {
+        state.payments = payments
     },
     setPaymentType (state, type) {
         state.payment.payment_type = type
@@ -105,6 +112,28 @@ const actions = {
         axios.get(`/payment_schedules/${ payment_id }/`)
         .then(res => {
             commit('setPaymentSchedule', res.data)
+        })
+        .catch(err => console.log(err))
+    },
+    fetchPayments: function({commit}, queryObj) {
+        let q = ''
+        if (queryObj) {
+            for (let param in queryObj) {
+                if (queryObj[param] !== null) {
+                    q = q + `${ param }=${ queryObj[param] }&`
+                }
+            }
+        }
+        axios.get(`/payments/?${ q }`)
+        .then(res => {
+            commit('setPayments', res.data)
+        })
+        .catch(err => console.log(err))
+    },
+    fetchPayment: function({commit}, payment_id) {
+        axios.get(`/payments/${ payment_id }`)
+        .then(res => {
+            commit('setPayment', res.data)
         })
         .catch(err => console.log(err))
     }

@@ -507,6 +507,7 @@ class Payment(models.Model):
     paid_date = models.DateField(
         verbose_name=_("betalt på dato"), null=True, blank=True
     )
+    note = models.TextField(verbose_name=_("note"), blank=True)
 
     saved_account = models.CharField(
         max_length=128, verbose_name=_("gemt kontostreng"), blank=True
