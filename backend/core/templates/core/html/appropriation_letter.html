@@ -277,7 +277,7 @@
                             <td>{{ a.start_date }}</td>
                             <td>{{ a.end_date|default_if_none:"-" }}</td>
                             {% if a.payment_plan.fictive %}
-                                <td>Fiktiv</td>
+                                <td><strong>Fiktiv</strong></td>
                             {% endif %}
                         </tr>
                     </tbody>
@@ -444,7 +444,7 @@
                                 <td>{{ a.start_date }}</td>
                                 <td>{{ a.end_date|default_if_none:"" }}</td>
                                 {% if a.payment_plan.fictive %}
-                                    <td>Fiktiv</td>
+                                    <td><strong>Fiktiv</strong></td>
                                 {% endif %}
                             </tr>
                         </tbody>
