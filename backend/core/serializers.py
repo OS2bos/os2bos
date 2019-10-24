@@ -86,6 +86,10 @@ class HistoricalCaseSerializer(serializers.ModelSerializer):
 
 
 class PaymentSerializer(serializers.ModelSerializer):
+    payment_id = serializers.ReadOnlyField(
+        source="payment_schedule.payment_id", default=None
+    )
+
     class Meta:
         model = Payment
         fields = "__all__"
