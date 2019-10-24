@@ -529,7 +529,7 @@ class Payment(models.Model):
         super().save(*args, **kwargs)
 
     @property
-    def account(self):
+    def account_string(self):
         if self.saved_account_string:
             return self.saved_account_string
 

@@ -86,14 +86,14 @@ class HistoricalCaseSerializer(serializers.ModelSerializer):
 
 
 class PaymentSerializer(serializers.ModelSerializer):
-    account = serializers.ReadOnlyField()
+    account_string = serializers.ReadOnlyField()
     payment_id = serializers.ReadOnlyField(
         source="payment_schedule.payment_id", default=None
     )
 
     class Meta:
         model = Payment
-        exclude = ("saved_account",)
+        exclude = ("saved_account_string",)
 
 
 class PaymentScheduleSerializer(serializers.ModelSerializer):
