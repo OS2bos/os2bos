@@ -162,6 +162,10 @@
                         <dt>Skattekort</dt>
                         <dd>Bikort</dd>
                     </template>
+                    <template v-if="pay.fictive">
+                        <dt>Betaling</dt>
+                        <dd>Fiktiv</dd>
+                    </template>
                 </dl>
             </div>
 
