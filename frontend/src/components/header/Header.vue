@@ -18,7 +18,7 @@
                 <nav id="globalnav" v-if="auth" class="globalnav" aria-label="Hovedmenu">
                     <router-link to="/">Mine sager</router-link>
                     <router-link to="/all-cases/">Find sag</router-link>
-                    <!-- <router-link to="/data-view/">Find ydelse</router-link> -->
+                    <router-link to="/payments/">Betalinger</router-link>
                 </nav>
                 <user-actions />
             </div>

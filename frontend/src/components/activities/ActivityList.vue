@@ -66,11 +66,11 @@
                     </td>
                     <td class="right"><strong>I alt</strong></td>
                     <td class="nowrap right">
-                        <strong>{{ displayDigits(appropriation.total_granted_this_year) }} kr</strong>
+                        <strong>{{ displayDigits(appropriation.total_granted_this_year) }} kr.</strong>
                     </td>
                     <td class="nowrap expected right">
                         <span v-if="appropriation.total_expected_this_year !== appropriation.total_granted_this_year">
-                            {{ displayDigits(appropriation.total_expected_this_year) }} kr
+                            {{ displayDigits(appropriation.total_expected_this_year) }} kr.
                         </span>
                     </td>
                 </tr>

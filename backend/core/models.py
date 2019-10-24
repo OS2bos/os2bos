@@ -489,6 +489,7 @@ class Payment(models.Model):
     paid_date = models.DateField(
         verbose_name=_("betalt på dato"), null=True, blank=True
     )
+    note = models.TextField(verbose_name=_("note"), blank=True)
 
     payment_schedule = models.ForeignKey(
         PaymentSchedule,

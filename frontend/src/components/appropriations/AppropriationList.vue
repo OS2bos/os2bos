@@ -39,10 +39,10 @@
                     <td class="nowrap">{{ a.note }}</td>
                     <td class="nowrap">{{ displayDate(a.created) }}</td>
                     <td class="nowrap">{{ displayDate(a.modified) }}</td>
-                    <td class="right nowrap">{{ displayDigits(a.total_granted_this_year) }} kr</td>
+                    <td class="right nowrap">{{ displayDigits(a.total_granted_this_year) }} kr.</td>
                     <td class="expected right nowrap">
                         <span v-if="a.total_expected_this_year > 0 && a.total_expected_this_year !== a.total_granted_this_year">
-                            {{ displayDigits(a.total_expected_this_year) }} kr
+                            {{ displayDigits(a.total_expected_this_year) }} kr.
                         </span>
                     </td>
                 </tr>
@@ -52,7 +52,7 @@
                     <td class="right nowrap"><strong>{{ displayDigits(total_granted) }} kr</strong></td>
                     <td class="expected right nowrap">
                         <span v-if="has_expected">
-                            {{ displayDigits(total_expected) }} kr
+                            {{ displayDigits(total_expected) }} kr.
                         </span>
                     </td>
                 </tr>
