@@ -20,7 +20,7 @@
             <router-link :to="`/payment/${ payment.id }/edit/`"></router-link>
             <dl>
                 <dt>Betalingsnøgle</dt>
-                <dd>00023897</dd>
+                <dd>{{ payment.payment_id }}</dd>
                 
                 <dt>Beløb, planlagt</dt>
                 <dd>{{ payment.amount }} kr.</dd>
