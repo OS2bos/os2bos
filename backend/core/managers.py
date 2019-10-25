@@ -30,6 +30,20 @@ from django.db.models.functions import (
 
 
 class PaymentQuerySet(models.QuerySet):
+    # Case for using paid_date if available, else date.
+    use_paid_date_first_case = Case(
+        When(paid_date__isnull=False, then="paid_date"),
+        When(date__isnull=False, then="date"),
+        default="date",
+    )
+    # Case for using paid_amount if available, else amount.
+    use_paid_amount_first_case = Case(
+        When(paid_amount__isnull=False, then="paid_amount"),
+        When(amount__isnull=False, then="amount"),
+        default="amount",
+        output_field=DecimalField(),
+    )
+
     def strict_amount_sum(self):
         """
         Sum over Payments amount.
@@ -43,16 +57,9 @@ class PaymentQuerySet(models.QuerySet):
         """
         Sum over Payments with paid_amount overruling amount.
         """
-        use_paid_amount_first_case = Case(
-            When(paid_amount__isnull=False, then="paid_amount"),
-            When(amount__isnull=False, then="amount"),
-            default="amount",
-            output_field=DecimalField(),
-        )
-
         return (
             self.aggregate(
-                amount_sum=Coalesce(Sum(use_paid_amount_first_case), 0)
+                amount_sum=Coalesce(Sum(self.use_paid_amount_first_case), 0)
             )["amount_sum"]
             or 0
         )
@@ -77,26 +84,18 @@ class PaymentQuerySet(models.QuerySet):
             {'date_month': '2019-08', 'amount': Decimal('1500.00')}
         ]
         """
-        use_paid_date_first_case = Case(
-            When(paid_date__isnull=False, then="paid_date"),
-            When(date__isnull=False, then="date"),
-            default="date",
-        )
-        use_paid_amount_first_case = Case(
-            When(paid_amount__isnull=False, then="paid_amount"),
-            When(amount__isnull=False, then="amount"),
-            default="amount",
-            output_field=DecimalField(),
-        )
 
         return (
             self.annotate(
                 date_month=Concat(
-                    Cast(ExtractYear(use_paid_date_first_case), CharField()),
+                    Cast(
+                        ExtractYear(self.use_paid_date_first_case), CharField()
+                    ),
                     Value("-", CharField()),
                     LPad(
                         Cast(
-                            ExtractMonth(use_paid_date_first_case), CharField()
+                            ExtractMonth(self.use_paid_date_first_case),
+                            CharField(),
                         ),
                         2,
                         fill_text=Value("0"),
@@ -105,7 +104,7 @@ class PaymentQuerySet(models.QuerySet):
             )
             .values("date_month")
             .order_by("date_month")
-            .annotate(amount=Sum(use_paid_amount_first_case))
+            .annotate(amount=Sum(self.use_paid_amount_first_case))
         )
 
 
