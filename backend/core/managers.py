@@ -62,7 +62,10 @@ class PaymentQuerySet(models.QuerySet):
         Filter Payments only in the current year.
         """
         now = timezone.now()
-        return self.filter(date__year=now.year)
+
+        return self.exclude(
+            ~Q(paid_date__year=now.year), paid_date__isnull=False
+        ).exclude(~Q(date__year=now.year), paid_date__isnull=True)
 
     def group_by_monthly_amounts(self):
         """

@@ -44,6 +44,32 @@ class PaymentQuerySetTestCase(TestCase):
 
         self.assertNotIn(payment, Payment.objects.in_this_year())
 
+    def test_in_this_year_true_paid_date(self):
+        now = timezone.now()
+        payment_schedule = create_payment_schedule()
+        payment = create_payment(
+            payment_schedule,
+            date=date(year=now.year - 1, month=12, day=31),
+            paid_date=date(year=now.year, month=1, day=1),
+            paid_amount=Decimal("500.0"),
+            paid=True,
+        )
+
+        self.assertIn(payment, Payment.objects.in_this_year())
+
+    def test_in_this_year_false_paid_date(self):
+        now = timezone.now()
+        payment_schedule = create_payment_schedule()
+        payment = create_payment(
+            payment_schedule,
+            date=date(year=now.year - 1, month=1, day=1),
+            paid_date=date(year=now.year - 1, month=1, day=1),
+            paid_amount=Decimal("500.0"),
+            paid=True,
+        )
+
+        self.assertNotIn(payment, Payment.objects.in_this_year())
+
     def test_amount_sum(self):
         payment_schedule = create_payment_schedule()
         create_payment(payment_schedule, amount=Decimal("1000"))
