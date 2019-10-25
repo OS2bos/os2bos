@@ -526,6 +526,16 @@ class Payment(models.Model):
             raise ValueError(
                 _("ugyldig betalingsmetode for betalingsmodtager")
             )
+
+        paid_fields = (
+            self.paid,
+            self.paid_date is not None,
+            self.paid_amount is not None,
+        )
+        if any(paid_fields) and not all(paid_fields):
+            raise ValueError(
+                _("ved en betalt betaling skal alle betalingsfelter sættes")
+            )
         super().save(*args, **kwargs)
 
     @property
