@@ -29,14 +29,12 @@ from core.tests.testing_utils import (
     create_appropriation,
     create_payment_schedule,
     create_activity,
-    create_payment,
 )
 from core.serializers import (
     ActivitySerializer,
     CaseSerializer,
     PaymentScheduleSerializer,
     AppropriationSerializer,
-    PaymentSerializer,
 )
 
 
