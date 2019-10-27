@@ -171,7 +171,9 @@
 
         </div>
         
-        <h2 style="padding: 2rem 0 0;">Betalingsnøgle 0000023746</h2>
+        <h2 style="padding: 2rem 0 0;">
+            Betalingsnøgle {{ pay.payment_id }}
+        </h2>
         <payment-schedule :payments="pay.payments" v-if="!show_edit" />
         
     </section>
