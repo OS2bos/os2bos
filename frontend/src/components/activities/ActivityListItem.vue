@@ -16,8 +16,11 @@
             <div class="mini-label" v-html="statusLabel(act.status)"></div>
         </td>
         <td>
-            <router-link v-if="!act.is_meta" :to="`/activity/${ act.id }`">{{ activityId2name(act.details) }}</router-link>
+            <router-link v-if="!act.is_meta" :to="`/activity/${ act.id }`">
+                {{ activityId2name(act.details) }}<br>
+            </router-link>
             <span v-else>{{ activityId2name(act.details) }}</span>
+            <span class="dim" v-if="act.payment_plan.fictive">(Fiktiv)</span>
         </td>
         <td>
             {{ act.payment_plan.recipient_name }}
