@@ -23,6 +23,12 @@
                 <dd>
                     {{ displayDate(payment.paid_date) }}
                 </dd>
+                <template v-if="payment.note">
+                    <dt>Referencetekst</dt>
+                    <dd>
+                        {{ payment.note }}
+                    </dd>
+                </template>
             </template>
         </dl>
         <form @submit.prevent="prePayCheck()">
