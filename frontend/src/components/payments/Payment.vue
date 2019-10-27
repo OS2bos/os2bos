@@ -23,9 +23,9 @@
                 <dd>{{ payment.payment_id }}</dd>
                 
                 <dt>Beløb, planlagt</dt>
-                <dd>{{ payment.amount }} kr.</dd>
+                <dd>{{ displayDigits(payment.amount) }} kr.</dd>
                 <dt>Betalingsdato, planlagt</dt>
-                <dd>{{ payment.date }}</dd>
+                <dd>{{ displayDate(payment.date) }}</dd>
                 <dt>Kontostreng</dt>
                 <dd>{{ payment.account_string }}</dd>
             </dl>
@@ -40,6 +40,8 @@
 <script>
 
     import PaymentEdit from './PaymentEdit.vue'
+    import { json2jsDate } from '../filters/Date.js'
+    import { cost2da } from '../filters/Numbers.js'
 
     export default {
         
@@ -74,6 +76,12 @@
             }
         },
         methods: {
+            displayDate: function(dt) {
+                return json2jsDate(dt)
+            },
+            displayDigits: function(num) {
+                return cost2da(num)
+            },
             update: function() {
                 this.$store.dispatch('fetchPayment', this.p_id)
             }
