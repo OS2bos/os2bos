@@ -62,7 +62,7 @@ class PaymentQuerySetTestCase(TestCase):
         payment_schedule = create_payment_schedule()
         payment = create_payment(
             payment_schedule,
-            date=date(year=now.year - 1, month=1, day=1),
+            date=date(year=now.year, month=1, day=1),
             paid_date=date(year=now.year - 1, month=1, day=1),
             paid_amount=Decimal("500.0"),
             paid=True,
