@@ -34,9 +34,6 @@
             AppHeader,
             AppFooter,
             BrowserCheck
-        },
-        created: function() {
-            
         }
         
     }
