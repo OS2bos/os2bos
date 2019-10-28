@@ -329,3 +329,5 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
 
         send_records_to_prism(writer=my_writer)
         self.assertEqual(len(records), 1)
+        send_records_to_prism(writer=my_writer, date=end_date)
+        self.assertEqual(len(records), 2)
