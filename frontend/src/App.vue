@@ -12,7 +12,11 @@
         <app-header />
         
         <main id="app-main">
-            <router-view/>
+            <router-view v-if="auth" />
+            <article v-else class="noaccess">
+                <h1>Du har ikke adgang hertil</h1>
+                <p>Noget gik galt, eller du mangler de rigtige rettigheder.</p>
+            </article>
         </main>
 
         <app-footer />
@@ -34,6 +38,11 @@
             AppHeader,
             AppFooter,
             BrowserCheck
+        },
+        computed: {
+            auth: function() {
+                return this.$store.getters.getAuth
+            }
         }
         
     }
@@ -57,6 +66,11 @@
 
     #app > main {
         flex: 1 0 auto;
+    }
+
+    .noaccess {
+        width: 30rem;
+        height: 20rem;
     }
 
     .list {
