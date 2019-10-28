@@ -14,9 +14,11 @@
                 <i class="material-icons">style</i>
                 Udgift til {{ activityId2name(act.details) }}
             </h1>
-            <button v-if="act.status !== 'GRANTED'" @click="show_edit = !show_edit" class="act-edit-btn">Redigér</button>
-            <button v-if="act.status === 'GRANTED'" @click="createExpected()" class="act-edit-btn">+ Lav forventet justering</button>
-            <button v-if="act.status !== 'GRANTED'" class="act-delete-btn" @click="preDeleteCheck()">Slet</button>
+            <template v-if="permissionCheck === true">
+                <button v-if="act.status !== 'GRANTED'" @click="show_edit = !show_edit" class="act-edit-btn">Redigér</button>
+                <button v-if="act.status === 'GRANTED'" @click="createExpected()" class="act-edit-btn">+ Lav forventet justering</button>
+                <button v-if="act.status !== 'GRANTED'" class="act-delete-btn" @click="preDeleteCheck()">Slet</button>
+            </template>
         </header>
 
         <!-- Delete activity modal -->
@@ -188,8 +190,11 @@
     import { activityId2name, sectionId2name, displayStatus, userId2name, approvalId2name } from '../filters/Labels.js'
     import store from '../../store.js'
     import notify from '../notifications/Notify.js'
+    import UserRights from '../mixins/UserRights.js'
 
     export default {
+
+        mixins: [UserRights],
 
         components: {
             ActivityEdit,
