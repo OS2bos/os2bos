@@ -2340,6 +2340,57 @@ class PaymentTestCase(TestCase, BasicTestMixin):
         )
         self.assertEqual(payment.account_string, "XXX-12345-XXX")
 
+    def test_save_not_all_paid_fields_set(self):
+        payment_schedule = create_payment_schedule()
+
+        with self.assertRaises(ValueError):
+            create_payment(
+                payment_schedule=payment_schedule,
+                date=date(year=2019, month=1, day=1),
+                amount=Decimal("500.0"),
+                paid=True,
+            )
+
+    def test_save_is_paid_paid_date_not_set(self):
+        payment_schedule = create_payment_schedule()
+
+        with self.assertRaises(ValueError):
+            create_payment(
+                payment_schedule=payment_schedule,
+                date=date(year=2019, month=1, day=1),
+                amount=Decimal("500.0"),
+                paid=True,
+                paid_amount=Decimal("500.0"),
+            )
+
+    def test_save_is_paid_paid_amount_not_set(self):
+        today = timezone.now().date()
+
+        payment_schedule = create_payment_schedule()
+
+        with self.assertRaises(ValueError):
+            create_payment(
+                payment_schedule=payment_schedule,
+                date=date(year=2019, month=1, day=1),
+                amount=Decimal("500.0"),
+                paid=True,
+                paid_date=today,
+            )
+
+    def test_save_is_paid_paid_not_set(self):
+        today = timezone.now().date()
+
+        payment_schedule = create_payment_schedule()
+
+        with self.assertRaises(ValueError):
+            create_payment(
+                payment_schedule=payment_schedule,
+                date=date(year=2019, month=1, day=1),
+                amount=Decimal("500.0"),
+                paid_date=today,
+                paid_amount=Decimal("500"),
+            )
+
     def test_payment_str(self):
         payment_schedule = create_payment_schedule()
         payment = create_payment(
