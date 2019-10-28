@@ -11,7 +11,7 @@
     <section class="activities">
         <header style="display: flex; flex-flow: row nowrap; align-items: center; margin: 2rem 0;">
             <h2 style="padding: 0;">Bevilgede ydelser</h2>
-            <button v-if="permissionCheck === true && this.user.profile !== 'edit'" class="activities-create-btn" title="Ny aktivitet" @click="$router.push(`/appropriation/${ apprId }/activity-create/`)" style="margin: 0 1rem;">
+            <button v-if="permissionCheck === true" class="activities-create-btn" title="Ny aktivitet" @click="$router.push(`/appropriation/${ apprId }/activity-create/`)" style="margin: 0 1rem;">
                 + Tilføj ydelse
             </button>
         </header>
