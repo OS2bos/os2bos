@@ -6,6 +6,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from datetime import timedelta
+from decimal import Decimal
 from unittest import mock
 
 import requests
@@ -18,6 +19,7 @@ from core.models import (
     SUPPL_ACTIVITY,
     PaymentSchedule,
     STATUS_GRANTED,
+    CASH,
     User,
     Team,
 )
@@ -28,6 +30,7 @@ from core.utils import (
     send_appropriation,
     saml_before_login,
     saml_create_user,
+    send_records_to_prism,
 )
 from core.tests.testing_utils import (
     BasicTestMixin,
@@ -281,3 +284,48 @@ class SamlLoginTestcase(TestCase, BasicTestMixin):
         user_data = {"username": ["dummy"]}
         saml_before_login(user_data)
         saml_create_user(user_data)
+
+
+class SendToPrismTestCase(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_format_prism_financial_record(self):
+        # Create a payment that is due today
+        now = timezone.now()
+        start_date = now - timedelta(days=1)
+        end_date = now + timedelta(days=1)
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+        )
+        # Create an activity etc which is required.
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            payment_plan=payment_schedule,
+        )
+        # This will generate three payments on the payment plan, and one
+        # of them will be for today.
+        records = []
+
+        def my_writer(record):
+            records.append(record)
+
+        send_records_to_prism(writer=my_writer)
+        self.assertEqual(len(records), 1)

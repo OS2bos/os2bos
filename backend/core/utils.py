@@ -301,7 +301,7 @@ def saml_create_user(user_data):
 # TODO: At some point, factor out customer specific third party integrations.
 
 
-def format_prism_record(payment, line_no):
+def format_prism_financial_record(payment, line_no):
     """Format a single record, i.e., a single line, for PRISM.
 
     Note, this follows documentation provided by Ballerup Kommune based on
@@ -320,6 +320,7 @@ def format_prism_record(payment, line_no):
     """
 
     org_unit = 151  # TODO: Move to settings.
+    machine_no = 482
     # Line number is given as 5 chars with leading zeroes, or unit as 4 chars
     # with leading zeroes, as per the specification.
     header = f"000G69{line_no:05d}{org_unit:04d}01NORFLYD"
@@ -328,10 +329,11 @@ def format_prism_record(payment, line_no):
     # must come in increasing order by field number.
 
     """
-    103 - machine number. What? Maybe payment ID will do. Number, 5 chars
-    with leading zeroes.
+    103 - machine number. Here, always '00482'. Number, 5 chars with leading
+    zeroes.
 
-    104 - "ekspeditionsløbenr". What? Number, 7 chars with leading zeroes.
+    104 - "ekspeditionsløbenr". Enumerating each posting, 1, 2, ... Number, 7
+    chars with leading zeroes. In this case, the same as "line_no".
 
     110 - posting date, format 'YYYYMMDD'
 
@@ -356,15 +358,15 @@ def format_prism_record(payment, line_no):
     """
 
     fields = {
-        "103": f"{payment.payment_schedule.payment_id:05d}",
-        "104": f"{payment.pk:07d}",
+        "103": f"{machine_no:05d}",
+        "104": f"{line_no:07d}",
         "110": f"{payment.date.strftime('%Y%m%d')}",
-        "112": f"{int(payment.amount*100):12d} ",
+        "112": f"{int(payment.amount*100):012d} ",
         "113": "D",
         "114": f"{payment.date.year}",
         "132": "02",
         "133": payment.recipient_id,
-        "153": f"{payment.payment_schedule.activity.details}"[35],
+        "153": f"{payment.payment_schedule.activity.details}"[:35],
     }
     fields["117"] = fields["110"] + fields["103"] + fields["104"]
 
@@ -389,5 +391,5 @@ def send_records_to_prism(writer, date=None):
         paid=False,
     )
     for i, p in enumerate(due_payments):
-        record = format_prism_record(p, i + 1)
-        writer(record)
+        record = format_prism_financial_record(p, i + 1)
+        writer(f"{p.pk}: {record}")
