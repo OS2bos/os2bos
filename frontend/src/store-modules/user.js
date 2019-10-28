@@ -7,7 +7,6 @@
 
 
 import axios from '../components/http/Http.js'
-import notify from '../components/notifications/Notify.js'
 
 const state = {
     users: null,
