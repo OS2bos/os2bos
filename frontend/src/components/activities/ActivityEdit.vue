@@ -270,7 +270,7 @@
                 if (this.act.activity_type === 'MAIN_ACTIVITY') {
                     actList = `main_activity_for=${ this.appropriation.section }`
                 } else {
-                    actList = `supplementary_activity_for=${ this.appropriation.section }`
+                    actList = `supplementary_activity_for=${ this.appropriation.section }&main_activities=${ this.appr_main_acts.activities[0].details }`
                 }
                 axios.get(`/activity_details/?${ actList }`)
                 .then(res => {
