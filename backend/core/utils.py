@@ -300,9 +300,13 @@ def saml_create_user(user_data):
 # Economy integration releated stuff - for the time being, only PRISM.
 # TODO: At some point, factor out customer specific third party integrations.
 
+# TODO: Move to settings.
+PRISM_ORG_UNIT = 151
+PRISM_MACHINE_NO = 482
 
-def format_prism_financial_record(payment, line_no):
-    """Format a single record, i.e., a single line, for PRISM.
+
+def format_prism_financial_record(payment, line_no, record_no):
+    """Format a single financial record for PRISM, on a single line.
 
     Note, this follows documentation provided by Ballerup Kommune based on
     KMD's interface specification GQ311001Q for financial records (transaction
@@ -319,11 +323,9 @@ def format_prism_financial_record(payment, line_no):
     line_format = "FLYD"
     """
 
-    org_unit = 151  # TODO: Move to settings.
-    machine_no = 482
     # Line number is given as 5 chars with leading zeroes, or unit as 4 chars
     # with leading zeroes, as per the specification.
-    header = f"000G69{line_no:05d}{org_unit:04d}01NORFLYD"
+    header = f"000G69{line_no:05d}{PRISM_ORG_UNIT:04d}01NORFLYD"
 
     # Now the actual posting fields. These are marked with a leading '&' and
     # must come in increasing order by field number.
@@ -333,7 +335,7 @@ def format_prism_financial_record(payment, line_no):
     zeroes.
 
     104 - "ekspeditionsløbenr". Enumerating each posting, 1, 2, ... Number, 7
-    chars with leading zeroes. In this case, the same as "line_no".
+    chars with leading zeroes. The "record_no" parameter.
 
     110 - posting date, format 'YYYYMMDD'
 
@@ -358,17 +360,78 @@ def format_prism_financial_record(payment, line_no):
     """
 
     fields = {
-        "103": f"{machine_no:05d}",
-        "104": f"{line_no:07d}",
+        "103": f"{PRISM_MACHINE_NO:05d}",
+        "104": f"{record_no:07d}",
         "110": f"{payment.date.strftime('%Y%m%d')}",
         "112": f"{int(payment.amount*100):012d} ",
         "113": "D",
         "114": f"{payment.date.year}",
         "132": "02",
-        "133": payment.recipient_id,
+        "133": f"{payment.recipient_id}",
         "153": f"{payment.payment_schedule.activity.details}"[:35],
     }
     fields["117"] = fields["110"] + fields["103"] + fields["104"]
+
+    field_string = "".join(
+        f"&{field_no}{fields[field_no]}" for field_no in sorted(fields)
+    )
+    # Record id header followed by field string.
+    return header + field_string
+
+
+def format_prism_payment_record(payment, line_no, record_no):
+    """Format a single payment record for PRISM, on a single line.
+
+    Note, this follows documentation provided by Ballerup Kommune based on
+    KMD's interface specification GF200001Q for creditor records
+    (transaction type G68).
+    """
+    # First, we format the header.
+    # The header has the following hard coded fields:
+    """
+    reg_location = '000'
+    interface_type = 'G68'
+    transaction_type = "01"
+    line_format = "1"
+    """
+    header = f"000G68{line_no:05d}{PRISM_ORG_UNIT:04d}011"
+
+    # Now the mandatory fields. In the file, they are preceded with "&"
+    # and must come in non-decreasing order.
+    """
+    02 - org unit, municipality number - 4 digits with leading zeroes.
+
+    03 - organisation type, always given as '00'. 2 digits.
+
+    07 - ID for the payment. 18 digits with leading zeroes.
+
+    08 - amount. 11 digits with leading zeroes.
+
+    09 - sign. '+' for larger than zero, '-' for less. Always '+'.
+
+    10 - ident. code. '02' for CPR number and payment to person.
+
+    11 - payee. CPR number - 10 digits.
+
+    12 - date. 8 digits, 'YYYYMMDD'.
+
+    16 - posteringshenvisningsnummer. As 117 in the finance records -
+    date + machine number + record number - 8 chars + 5 chars + 7 chars.
+
+    40 - posting text.
+    """
+    fields = {
+        "02": f"{PRISM_ORG_UNIT:04d}",
+        "03": "00",
+        "07": f"{payment.payment_schedule.payment_id:018d}",
+        "08": f"{int(payment.amount*100):011d}",
+        "09": "+",
+        "10": "02",
+        "11": f"{payment.recipient_id}",
+        "12": f"{payment.date.strftime('%Y%m%d')}",
+        "40": f"{payment.payment_schedule.activity.details}"[:80],
+    }
+    fields["16"] = f"{fields['12']}{PRISM_MACHINE_NO:05d}{record_no:07d}"
 
     field_string = "".join(
         f"&{field_no}{fields[field_no]}" for field_no in sorted(fields)
@@ -390,6 +453,10 @@ def send_records_to_prism(writer, date=None):
         payment_method=models.CASH,
         paid=False,
     )
-    for i, p in enumerate(due_payments):
-        record = format_prism_financial_record(p, i + 1)
-        writer(f"{p.pk}: {record}")
+    for i, p in enumerate(due_payments, 1):
+        record = format_prism_financial_record(
+            p, line_no=2 * i - 1, record_no=i
+        )
+        writer(record)
+        record = format_prism_payment_record(p, line_no=2 * i, record_no=i)
+        writer(record)

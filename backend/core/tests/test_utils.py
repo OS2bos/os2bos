@@ -328,6 +328,11 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
             records.append(record)
 
         send_records_to_prism(writer=my_writer)
-        self.assertEqual(len(records), 1)
-        send_records_to_prism(writer=my_writer, date=end_date)
         self.assertEqual(len(records), 2)
+        send_records_to_prism(writer=my_writer, date=end_date)
+        self.assertEqual(len(records), 4)
+        payment_reference = records[0].split("&117")[1][:20]
+        finance_reference = records[1].split("&16")[1][:20]
+        # These references is what links the two records.
+        # This is a simple sanity check.
+        self.assertEqual(payment_reference, finance_reference)
