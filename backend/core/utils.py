@@ -470,9 +470,11 @@ def generate_records_for_prism(due_payments):
 
 def process_payments_for_date(date=None):
 
+    # Not configurable - this is mapped through Docker.
+    output_dir = "/prisme"
     if not date:
         date = datetime.datetime.now()
-    filename = f"{date.strftime('%Y%m%d')}_{date.microsecond}.prisme"
+    filename = f"{output_dir}/{date.strftime('%Y%m%d')}_{date.microsecond}"
     payments = due_payments_for_prism(date)
     if payments.count() == 0:
         # No payments

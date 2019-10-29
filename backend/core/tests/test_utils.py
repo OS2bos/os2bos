@@ -32,6 +32,7 @@ from core.utils import (
     saml_create_user,
     generate_records_for_prism,
     due_payments_for_prism,
+    process_payments_for_date,
 )
 from core.tests.testing_utils import (
     BasicTestMixin,
@@ -334,3 +335,42 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         # These references is what links the two records.
         # This is a simple sanity check.
         self.assertEqual(payment_reference, finance_reference)
+
+    def test_process_payments_for_date(self):
+        # Create a payment that is due today
+        now = timezone.now()
+        start_date = now - timedelta(days=1)
+        end_date = now + timedelta(days=1)
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+        )
+        # Create an activity etc which is required.
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            payment_plan=payment_schedule,
+        )
+        # Check that there's unpaid payments for today.
+        due_payments = due_payments_for_prism(start_date)
+        self.assertEqual(due_payments.count(), 1)
+
+        process_payments_for_date(date=start_date)
+
+        # Check that there's NO unpaid payments for today.
+        due_payments = due_payments_for_prism(start_date)
+        self.assertEqual(due_payments.count(), 0)
