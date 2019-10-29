@@ -16,7 +16,7 @@
                     <tr>
                         <th>Betaling nr</th>
                         <th>Betalingsnøgle</th>
-                        <th>Hovedsag CPR</th>
+                        <th>CPR nr</th>
                         <th>Betalingsdato</th>
                         <th>Betalt</th>
                         <th class="right">Beløb</th>

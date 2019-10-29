@@ -14,7 +14,7 @@
                 <span v-if="payment.paid">Ja</span>
                 <span v-else>Nej</span>
             </dd>
-            <template v-if="payment.paid_amount && payment.paid_date">
+            <template v-if="paymentlock">
                 <dt>Betalt beløb</dt>
                 <dd>
                     {{ displayDigits(payment.paid_amount) }} kr.
@@ -31,7 +31,7 @@
                 </template>
             </template>
         </dl>
-        <form @submit.prevent="prePayCheck()">
+        <form @submit.prevent="prePayCheck()" v-if="!paymentlock">
             <fieldset>
                 <label for="field-amount" class="required">Betal beløb</label>
                 <input type="number" step="0.01" v-model="paid.paid_amount" id="field-amount" required>
@@ -102,7 +102,8 @@
                     paid_date: null,
                     note: null
                 },
-                showModal: false
+                showModal: false,
+                paymentlock: true
             }
         },
         computed: {
@@ -126,6 +127,9 @@
                 if (this.paid) {
                     this.paid = this.payment
                 }
+                if (!this.payment.paid_amount && !this.payment.paid_date) {
+                    this.paymentlock = false
+                }
             },
             reload: function() {
                 this.showModal = false
@@ -137,14 +141,16 @@
                 let data = {
                     paid_amount: this.paid.paid_amount,
                     paid_date: this.paid.paid_date,
-                    note: this.paid.note
+                    note: this.paid.note,
+                    paid: true
                 }
                 axios.patch(`/payments/${ this.payment.id }/`, data)
                 .then(res => {
-                    this.$router.push(`/payment/${ this.payment.id }`)
+                    this.$router.push(`/payments/`)
                     this.$store.dispatch('fetchPayment', res.data.id)
                     this.showModal = false
                     notify('Betaling godkendt', 'success')
+                    this.update()
                 })
                 .catch(err => this.$store.dispatch('parseErrorOutput', err))
             }
