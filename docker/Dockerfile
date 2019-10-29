@@ -58,6 +58,7 @@ RUN set -ex \
   && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/man/?? /usr/share/man/??_* \
   # create folders at easily mountable paths for output from django
   && install -o bev -g bev -d /static \
+  && install -o bev -g bev -d /prisme \
   && install -o bev -g bev -d /log
 
 # Install requirements

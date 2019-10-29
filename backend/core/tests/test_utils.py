@@ -30,7 +30,8 @@ from core.utils import (
     send_appropriation,
     saml_before_login,
     saml_create_user,
-    send_records_to_prism,
+    generate_records_for_prism,
+    due_payments_for_prism,
 )
 from core.tests.testing_utils import (
     BasicTestMixin,
@@ -322,15 +323,12 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         )
         # This will generate three payments on the payment plan, and one
         # of them will be for today.
-        records = []
-
-        def my_writer(record):
-            records.append(record)
-
-        send_records_to_prism(writer=my_writer)
+        due_payments = due_payments_for_prism(now)
+        records = generate_records_for_prism(due_payments)
         self.assertEqual(len(records), 2)
-        send_records_to_prism(writer=my_writer, date=end_date)
-        self.assertEqual(len(records), 4)
+        due_payments = due_payments_for_prism(end_date)
+        records = generate_records_for_prism(due_payments)
+        self.assertEqual(len(records), 2)
         payment_reference = records[0].split("&117")[1][:20]
         finance_reference = records[1].split("&16")[1][:20]
         # These references is what links the two records.

@@ -10,6 +10,7 @@ import os
 import logging
 import requests
 import datetime
+import itertools
 
 from dateutil.relativedelta import relativedelta
 
@@ -440,23 +441,43 @@ def format_prism_payment_record(payment, line_no, record_no):
     return header + field_string
 
 
-def send_records_to_prism(writer, date=None):
-    """Send relevant payments to PRISM."""
+def due_payments_for_prism(date):
+    "Return payments which are due today and should be sent to PRISM."
 
-    # Default to payments due TODAY.
-    if not date:
-        date = datetime.date.today()
-
-    due_payments = models.Payment.objects.filter(
+    return models.Payment.objects.filter(
         date=date,
         recipient_type=models.PaymentSchedule.PERSON,
         payment_method=models.CASH,
         paid=False,
     )
-    for i, p in enumerate(due_payments, 1):
-        record = format_prism_financial_record(
-            p, line_no=2 * i - 1, record_no=i
+
+
+def generate_records_for_prism(due_payments):
+    """Send relevant payments to PRISM."""
+
+    prism_records = (
+        (
+            format_prism_financial_record(p, line_no=2 * i - 1, record_no=i),
+            format_prism_payment_record(p, line_no=2 * i, record_no=i),
         )
-        writer(record)
-        record = format_prism_payment_record(p, line_no=2 * i, record_no=i)
-        writer(record)
+        for i, p in enumerate(due_payments, 1)
+    )
+    # Flatten for easier handling.
+    prism_records = list(itertools.chain(*prism_records))
+
+    return prism_records
+
+
+def process_payments_for_date(date=None):
+
+    if not date:
+        date = datetime.datetime.now()
+    filename = f"{date.strftime('%Y%m%d')}_{date.microsecond}.prisme"
+    payments = due_payments_for_prism(date)
+    if payments.count() == 0:
+        # No payments
+        return
+    prism_records = generate_records_for_prism(payments)
+    with open(filename, "w") as f:
+        f.write("\n".join(prism_records))
+    payments.update(paid=True)
