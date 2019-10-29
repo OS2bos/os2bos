@@ -28,19 +28,21 @@
                         <td> {{ p.payment_id }} </td>
                         <td> 000000-0000 </td>
                         <td>
-                            {{ displayDate(p.date) }}<br>
-                            <span v-if="p.paid_date" class="dim" style="white-space: nowrap;">
-                            Betalt dato {{ displayDate(p.paid_date) }}
+                            <span v-if="p.paid_date" style="white-space: nowrap;">
+                                {{ displayDate(p.paid_date) }}, planlagt
+                            </span><br>
+                             <span class="dim" style="white-space: nowrap;">
+                                {{ displayDate(p.date) }}
                             </span>
                         </td>
                         <td>
-                            <span v-if="p.paid">Ja</span>
-                            <span v-else>Nej</span>
+                            <span v-if="p.paid"><i class="material-icons">check</i></span>
+                            <span v-else>-</span>
                         </td>
                         <td class="right">
-                            {{ displayDigits(p.amount) }} kr.<br>
-                            <span v-if="p.paid_amount" class="dim" style="white-space: nowrap;">
-                            Betalt beløb {{ displayDigits(p.paid_amount) }} kr.</span>
+                            <span v-if="p.paid_amount" style="white-space: nowrap;">
+                            Planlagt {{ displayDigits(p.paid_amount) }} kr.</span><br>
+                            <span class="dim" style="white-space: nowrap;">{{ displayDigits(p.amount) }} kr.</span>
                         </td>
                     </tr>
                 </tbody>

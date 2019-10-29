@@ -19,7 +19,7 @@
             <thead>
                 <tr>
                     <th>Betaling nr</th>
-                    <th>Dato</th>
+                    <th>Betalingsdato</th>
                     <th>Betalt</th>
                     <th class="right">Beløb</th>
                 </tr>
@@ -27,16 +27,22 @@
             <tbody>
                 <tr v-for="p in payments_by_year" :key="p.id">
                     <td><router-link :to="`/payment/${ p.id }/`">Betaling #{{ p.id }}</router-link></td>
-                    <td>{{ displayDate(p.date) }}</td>
                     <td>
-                        <span v-if="p.paid === true">Ja</span>
-                        <span v-else>Nej</span>
+                        <span v-if="p.paid_date">{{ displayDate(p.paid_date) }}, planlagt<br></span>
+                        <span class="dim" style="white-space: nowrap;">{{ displayDate(p.date) }}</span>
                     </td>
-                    <td class="right">{{ displayDigits(p.amount) }} kr.</td>
+                    <td>
+                        <span v-if="p.paid === true"><i class="material-icons">check</i></span>
+                        <span v-else>-</span>
+                    </td>
+                    <td class="right">
+                        <span v-if="p.paid_amount">Planlagt {{ displayDigits(p.paid_amount) }} kr.<br></span>
+                        <span class="dim" style="white-space: nowrap;">{{ displayDigits(p.amount) }} kr.</span>
+                    </td>
                 </tr>
                 <tr>
-                    <th colspan="3" class="right">I alt pr valgte år</th>
-                    <th class="right">{{ displayDigits(sum) }} kr.</th>
+                    <th colspan="3" class="right dim">I alt pr valgte år</th>
+                    <th class="right dim">{{ displayDigits(sum) }} kr.</th>
                 </tr>
             </tbody>
         </table>
