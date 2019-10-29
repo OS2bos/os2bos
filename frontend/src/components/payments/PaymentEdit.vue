@@ -31,22 +31,24 @@
                 </template>
             </template>
         </dl>
-        <form @submit.prevent="prePayCheck()" v-if="!paymentlock">
-            <fieldset>
-                <label for="field-amount" class="required">Betal beløb</label>
-                <input type="number" step="0.01" v-model="paid.paid_amount" id="field-amount" required>
+        <template v-if="permissionCheck === true">
+            <form @submit.prevent="prePayCheck()" v-if="!paymentlock">
+                <fieldset>
+                    <label for="field-amount" class="required">Betal beløb</label>
+                    <input type="number" step="0.01" v-model="paid.paid_amount" id="field-amount" required>
 
-                <label for="field-date" class="required">Betal dato</label>
-                <input type="date" v-model="paid.paid_date" id="field-date" required>
+                    <label for="field-date" class="required">Betal dato</label>
+                    <input type="date" v-model="paid.paid_date" id="field-date" required>
 
-                <label for="field-note">Referencetekst</label>
-                <input type="text" v-model="paid.note" id="field-note">
-            </fieldset>
+                    <label for="field-note">Referencetekst</label>
+                    <input type="text" v-model="paid.note" id="field-note">
+                </fieldset>
 
-            <fieldset>
-                <input type="submit" value="Betal" :disabled="paid.paid_amount && paid.paid_date ? false : true">
-            </fieldset>
-        </form>
+                <fieldset>
+                    <input type="submit" value="Betal" :disabled="paid.paid_amount && paid.paid_date ? false : true">
+                </fieldset>
+            </form>
+        </template>
 
         <!-- Submit payment modal -->
         <div v-if="showModal">
@@ -92,8 +94,11 @@
     import payment from '../../store-modules/payment.js'
     import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
+    import UserRights from '../mixins/UserRights.js'
 
     export default {
+
+        mixins: [UserRights],
         
         data: function() {
             return {

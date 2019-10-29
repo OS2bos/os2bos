@@ -102,7 +102,6 @@ const actions = {
     },
     fetchLists: function({dispatch}) {
         return Promise.all([
-            dispatch('fetchUsers'),
             dispatch('fetchTeams'),
             dispatch('fetchMunis'),
             dispatch('fetchDistricts'),
@@ -114,7 +113,9 @@ const actions = {
         .then(() => {
             // Nothing yet
         })
-        .catch(err => console.log(err))   
+        .catch(err => {
+            console.log(err)
+        })   
     }
 }
 

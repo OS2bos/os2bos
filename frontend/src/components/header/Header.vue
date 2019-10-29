@@ -19,6 +19,7 @@
                     <router-link to="/">Mine sager</router-link>
                     <router-link to="/all-cases/">Find sag</router-link>
                     <router-link to="/payments/">Betalinger</router-link>
+                    <a v-if="user.profile === 'admin'" href="/api/admin/">Administration</a>
                 </nav>
                 <user-actions />
             </div>
@@ -42,6 +43,9 @@
         computed: {
             auth: function() {
                 return this.$store.getters.getAuth
+            },
+            user: function() {
+                return this.$store.getters.getUser
             }
         }
 
