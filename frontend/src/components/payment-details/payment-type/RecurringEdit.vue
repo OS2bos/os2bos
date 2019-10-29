@@ -50,7 +50,6 @@
                 this.p_amount = this.amount
             },
             p_amount: function() {
-                console.log('setting amount')
                 this.$store.commit('setPaymentAmount', this.p_amount)
             }
         },
