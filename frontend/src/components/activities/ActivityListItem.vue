@@ -7,7 +7,7 @@
         @click="act.is_meta ? toggleGroup(act.id) : false">
         <td style="width: 3.5rem; padding: .5rem 0 0 1.25rem;">
             <template v-if="!act.is_meta && act.status !== 'GRANTED'">
-                <input type="checkbox" :id="`check-${ act.id }`" v-model="is_checked" @change="$emit('check', is_checked)">
+                <input v-if="permissionCheck === true && this.user.profile !== 'edit'" type="checkbox" :id="`check-${ act.id }`" v-model="is_checked" @change="$emit('check', is_checked)">
                 <label class="disabled" :for="`check-${ act.id }`" title="Udvælg denne ydelse"></label>
             </template>
             <div v-if="act.is_meta" class="dropdown-arrow" :class="{'toggled': toggled}">▼</div>
@@ -45,8 +45,11 @@
     import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
     import { activityId2name, displayStatus } from '../filters/Labels.js'
+    import UserRights from '../mixins/UserRights.js'
 
     export default {
+
+        mixins: [UserRights],
     
         props: [
             'act',

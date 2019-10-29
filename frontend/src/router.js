@@ -60,7 +60,6 @@ const router = new Router({
             path: '/appropriation/:apprId',
             name: 'appropriation',
             component: () => import(/* webpackChunkName: "appropriation" */ './components/appropriations/Appropriation.vue')
-            
         },
         {
             path: '/case/:caseid/appropriation-create/',
@@ -92,7 +91,7 @@ const router = new Router({
             // 404 page. This route must declared last
             path: '*',
             name: 'page404',
-            component: () => import(/* webpackPreload: true */ './components/http/Page404.vue')
+            component: () => import(/* webpackChunkName: "page404" */ './components/http/Page404.vue')
         }
     ]
 })
@@ -104,7 +103,7 @@ router.beforeEach((to, from, next) => {
     } else if (to.query.token && to.query.uid) {
         // We have been redirected from SSO login, set login credentials
         store.dispatch('registerAuth', to.query)
-        router.push('/')
+        next()
     } else {
         // Try to login
         window.location = '/api/accounts/login/'

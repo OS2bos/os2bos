@@ -7,7 +7,6 @@
 
 
 import axios from '../components/http/Http.js'
-import router from '../router.js'
 import notify from '../components/notifications/Notify.js'
 
 
@@ -40,18 +39,38 @@ const mutations = {
 
 const actions = {
     registerAuth: function({commit, dispatch, rootState}, authdata) {
+
+        // First check if we can access API at all.
         axios.defaults.headers.common['Authentication'] = `Token ${ authdata.token }`
-        commit('setAccessToken', authdata.token)
-        commit('setUID', authdata.uid)
-        dispatch('fetchLists')
-        .then(() => {
-            let user = rootState.user.users.find(function(u) {
-                return u.id === parseInt(authdata.uid)
+        axios.get('/users/')
+        .then(res => {
+
+            // Why not use the users data now that we have it
+            let users = res.data
+            users.map(user => {
+                user.fullname = `${ user.first_name } ${ user.last_name } (${ user.username })`
             })
-            commit('setUser', user)
+            commit('setUsers', users)
+
+            // Set up user auth data
+            commit('setAccessToken', authdata.token)
+            commit('setUID', authdata.uid)
+
+            // Fetch remaining info
+            dispatch('fetchLists')
+            .then(() => {
+                let user = rootState.user.users.find(function(u) {
+                    return u.id === parseInt(authdata.uid)
+                })
+                commit('setUser', user)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+
         })
         .catch(err => {
-            console.log(err)
+            notify('Adgang nægtet', 'error')
         })
     }
 }
