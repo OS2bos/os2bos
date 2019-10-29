@@ -44,6 +44,32 @@ class PaymentQuerySetTestCase(TestCase):
 
         self.assertNotIn(payment, Payment.objects.in_this_year())
 
+    def test_in_this_year_true_paid_date(self):
+        now = timezone.now()
+        payment_schedule = create_payment_schedule()
+        payment = create_payment(
+            payment_schedule,
+            date=date(year=now.year - 1, month=12, day=31),
+            paid_date=date(year=now.year, month=1, day=1),
+            paid_amount=Decimal("500.0"),
+            paid=True,
+        )
+
+        self.assertIn(payment, Payment.objects.in_this_year())
+
+    def test_in_this_year_false_paid_date(self):
+        now = timezone.now()
+        payment_schedule = create_payment_schedule()
+        payment = create_payment(
+            payment_schedule,
+            date=date(year=now.year, month=1, day=1),
+            paid_date=date(year=now.year - 1, month=1, day=1),
+            paid_amount=Decimal("500.0"),
+            paid=True,
+        )
+
+        self.assertNotIn(payment, Payment.objects.in_this_year())
+
     def test_amount_sum(self):
         payment_schedule = create_payment_schedule()
         create_payment(payment_schedule, amount=Decimal("1000"))
@@ -51,6 +77,48 @@ class PaymentQuerySetTestCase(TestCase):
         create_payment(payment_schedule, amount=Decimal("50"))
 
         self.assertEqual(Payment.objects.amount_sum(), Decimal("1150"))
+
+    def test_amount_sum_paid_amount_overrides(self):
+        today = timezone.now().date()
+        payment_schedule = create_payment_schedule()
+        create_payment(payment_schedule, amount=Decimal("1000"))
+        create_payment(
+            payment_schedule,
+            amount=Decimal("100"),
+            paid_amount=Decimal("150"),
+            paid=True,
+            paid_date=today,
+        )
+        create_payment(
+            payment_schedule,
+            amount=Decimal("50"),
+            paid_amount=Decimal("250"),
+            paid=True,
+            paid_date=today,
+        )
+
+        self.assertEqual(Payment.objects.amount_sum(), Decimal("1400"))
+
+    def test_strict_amount_sum_paid_amount_does_not_override(self):
+        today = timezone.now().date()
+        payment_schedule = create_payment_schedule()
+        create_payment(payment_schedule, amount=Decimal("1000"))
+        create_payment(
+            payment_schedule,
+            amount=Decimal("100"),
+            paid_amount=Decimal("150"),
+            paid=True,
+            paid_date=today,
+        )
+        create_payment(
+            payment_schedule,
+            amount=Decimal("50"),
+            paid_amount=Decimal("250"),
+            paid=True,
+            paid_date=today,
+        )
+
+        self.assertEqual(Payment.objects.strict_amount_sum(), Decimal("1150"))
 
     def test_group_by_monthly_amounts(self):
         payment_schedule = create_payment_schedule()
@@ -74,6 +142,36 @@ class PaymentQuerySetTestCase(TestCase):
             {"date_month": "2019-01", "amount": Decimal("1000")},
             {"date_month": "2019-02", "amount": Decimal("100")},
             {"date_month": "2019-03", "amount": Decimal("50")},
+        ]
+        self.assertEqual(
+            [entry for entry in Payment.objects.group_by_monthly_amounts()],
+            expected,
+        )
+
+    def test_group_by_monthly_amounts_paid(self):
+        payment_schedule = create_payment_schedule()
+        create_payment(
+            payment_schedule,
+            amount=Decimal("1000"),
+            paid_amount=Decimal("1200"),
+            date=date(year=2019, month=1, day=1),
+            paid_date=date(year=2019, month=3, day=1),
+            paid=True,
+        )
+        create_payment(
+            payment_schedule,
+            amount=Decimal("100"),
+            date=date(year=2019, month=2, day=1),
+        )
+        create_payment(
+            payment_schedule,
+            amount=Decimal("50"),
+            date=date(year=2019, month=3, day=1),
+        )
+
+        expected = [
+            {"date_month": "2019-02", "amount": Decimal("100")},
+            {"date_month": "2019-03", "amount": Decimal("1250")},
         ]
         self.assertEqual(
             [entry for entry in Payment.objects.group_by_monthly_amounts()],
