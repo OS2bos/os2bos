@@ -7,6 +7,7 @@
 
 
 import axios from '../components/http/Http.js'
+import Vue from 'vue'
 
 const state = {
     payments: null,
@@ -67,34 +68,34 @@ const mutations = {
         state.payments = payments
     },
     setPaymentType (state, type) {
-        state.payment.payment_type = type
+        Vue.set(state.payment, 'payment_type', type)
     },
     setPaymentAmount (state, amount) {
-        state.payment.payment_amount = amount
+        Vue.set(state.payment, 'payment_amount', amount)
     },
     setPaymentUnits (state, units) {
-        state.payment.payment_units = units
+        Vue.set(state.payment, 'payment_units', units)
     },
     setPaymentFreq (state, freq) {
-        state.payment.payment_frequency = freq
+        Vue.set(state.payment, 'payment_frequency', freq)
     },
     setPaymentDayOfMonth (state, day_of_month) {
-        state.payment.payment_day_of_month = day_of_month
+        Vue.set(state.payment, 'payment_day_of_month', day_of_month)
     },
     setPaymentRecipientType (state, type) {
-        state.payment.recipient_type = type
+        Vue.set(state.payment, 'recipient_type', type)
     },
     setPaymentRecipientId (state, id) {
-        state.payment.recipient_id = id
+        Vue.set(state.payment, 'recipient_id', id)
     },
     setPaymentRecipientName (state, name) {
-        state.payment.recipient_name = name
+        Vue.set(state.payment, 'recipient_name', name)
     },
     setPaymentMethod (state, method) {
-        state.payment.payment_method = method
+        Vue.set(state.payment, 'payment_method', method)
     },
     setPaymentMethodDetails (state, details) {
-        state.payment.payment_method_details = details
+        Vue.set(state.payment, 'payment_method_details', details)
     },
     setPaymentSchedule (state, payment_schedule) {
         state.payment_schedule = payment_schedule
