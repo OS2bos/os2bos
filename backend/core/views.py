@@ -193,9 +193,41 @@ class PaymentScheduleViewSet(AuditViewSet):
         return queryset
 
 
+class CaseFilter(filters.FilterSet):
+    class Meta:
+        model = Case
+        fields = {"cpr_number": ["exact"]}
+
+
+class PaymentScheduleFilter(filters.FilterSet):
+    class Meta:
+        model = PaymentSchedule
+        fields = {"payment_id": ["exact"]}
+
+
+class PaymentFilter(filters.FilterSet):
+    payment_schedule = filters.RelatedFilter(
+        PaymentScheduleFilter,
+        field_name="payment_schedule",
+        queryset=PaymentSchedule.objects.all(),
+    )
+    case = filters.RelatedFilter(
+        CaseFilter,
+        field_name="payment_schedule__activity__appropriation__case",
+        queryset=Case.objects.all(),
+    )
+
+    class Meta:
+        model = Payment
+        fields = "__all__"
+
+
 class PaymentViewSet(AuditViewSet):
-    queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
+    queryset = Payment.objects.all()
+
+    filter_class = PaymentFilter
+    filterset_fields = "__all__"
 
 
 class RelatedPersonViewSet(AuditViewSet):
