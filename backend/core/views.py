@@ -214,6 +214,7 @@ class PaymentFilter(filters.FilterSet):
     case = filters.RelatedFilter(
         CaseFilter,
         field_name="payment_schedule__activity__appropriation__case",
+        label=Case._meta.verbose_name.title(),
         queryset=Case.objects.all(),
     )
 
