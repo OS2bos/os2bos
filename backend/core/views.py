@@ -14,7 +14,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 
-from rest_framework_filters import rest_framework as filters
+import rest_framework_filters as filters
 
 from core.models import (
     Case,
