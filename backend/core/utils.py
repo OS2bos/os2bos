@@ -488,9 +488,32 @@ def process_payments_for_date(date=None):
     if payments.count() == 0:
         # No payments
         return
-    prism_records = generate_records_for_prism(payments)
     with open(filename, "w") as f:
+        # Generate and write preamble.
+
+        """
+        The fields given below never change and are hard coded in the
+        actual string:
+
+        hdisp = " "  # Blank, must be there.
+        media_type = '6'  # Don't ask.
+        evolbr = f"      "  # 6 blanks - once again, don't ask.
+        mixed = "1"
+        """
+        trans_code = "Z300"  # From KMD's documentation: "start identification"
+        user_number = f"{PRISM_ORG_UNIT:04d}"  # Org unit.
+        day_of_year = today.timetuple().tm_yday  # Day of year.
+
+        preamble_string = f"{trans_code} {user_number}6 {day_of_year}1"
+        f.write(f"{preamble_string}\n")
+        # Generate and write the records.
+        prism_records = generate_records_for_prism(payments)
         f.write("\n".join(prism_records))
+
+        # Generate and write the final line.
+        cslutd = "SLUTD"  # Don't ask.
+        fantrec = f"{len(prism_records):05d}"
+        f.write(f"\n{cslutd}{fantrec}\n")
     # Register all payments as paid.
     for p in payments:
         p.paid = True
