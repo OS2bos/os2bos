@@ -40,7 +40,15 @@ from core.models import (
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ("id", "username", "first_name", "last_name", "cases", "team")
+        fields = (
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "cases",
+            "team",
+            "profile",
+        )
 
 
 class CaseSerializer(serializers.ModelSerializer):
@@ -78,13 +86,19 @@ class HistoricalCaseSerializer(serializers.ModelSerializer):
 
 
 class PaymentSerializer(serializers.ModelSerializer):
+    account_string = serializers.ReadOnlyField()
+    payment_id = serializers.ReadOnlyField(
+        source="payment_schedule.payment_id", default=None
+    )
+
     class Meta:
         model = Payment
-        fields = "__all__"
+        exclude = ("saved_account_string",)
 
 
 class PaymentScheduleSerializer(serializers.ModelSerializer):
     payments = PaymentSerializer(many=True, read_only=True)
+    account = serializers.ReadOnlyField()
 
     @staticmethod
     def setup_eager_loading(queryset):

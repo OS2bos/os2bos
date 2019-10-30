@@ -267,12 +267,18 @@
                         <tr>
                             <th>Startdato</th>
                             <th>Slutdato</th>
+                            {% if a.payment_plan.fictive %}
+                                <th>Betaling</th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>{{ a.start_date }}</td>
-                            <td>{{ a.end_date|default_if_none:"" }}</td>
+                            <td>{{ a.end_date|default_if_none:"-" }}</td>
+                            {% if a.payment_plan.fictive %}
+                                <td><strong>Fiktiv</strong></td>
+                            {% endif %}
                         </tr>
                     </tbody>
                 </table>
@@ -428,12 +434,18 @@
                             <tr>
                                 <th>Startdato</th>
                                 <th>Slutdato</th>
+                                {% if a.payment_plan.fictive %}
+                                    <th>Betaling</th>
+                                {% endif %}
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>{{ a.start_date }}</td>
                                 <td>{{ a.end_date|default_if_none:"" }}</td>
+                                {% if a.payment_plan.fictive %}
+                                    <td><strong>Fiktiv</strong></td>
+                                {% endif %}
                             </tr>
                         </tbody>
                     </table>

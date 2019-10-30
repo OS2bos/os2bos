@@ -11,7 +11,7 @@
     <section class="activities">
         <header style="display: flex; flex-flow: row nowrap; align-items: center; margin: 2rem 0;">
             <h2 style="padding: 0;">Bevilgede ydelser</h2>
-            <button class="activities-create-btn" title="Ny aktivitet" @click="$router.push(`/appropriation/${ apprId }/activity-create/`)" style="margin: 0 1rem;">
+            <button v-if="permissionCheck === true" class="activities-create-btn" title="Ny aktivitet" @click="$router.push(`/appropriation/${ apprId }/activity-create/`)" style="margin: 0 1rem;">
                 + Tilføj ydelse
             </button>
         </header>
@@ -19,7 +19,7 @@
             <thead>
                 <tr>
                     <th style="width: 3.5rem; padding: .5rem 0 0 1.25rem;">
-                        <input type="checkbox" id="check-all" @change="setAllChecked" v-model="check_all_approvable">
+                        <input v-if="permissionCheck === true && this.user.profile !== 'edit'" type="checkbox" id="check-all" @change="setAllChecked" v-model="check_all_approvable">
                         <label class="disabled" for="check-all" title="Vælg alle"></label>
                     </th>
                     <th style="width: 6rem;">Status</th>
@@ -62,15 +62,15 @@
                 </template>
                 <tr class="lastrow">
                     <td colspan="5" style="padding-left: 0;">
-                        <button @click="initPreApprove()" :disabled="approvable_acts.length < 1">✔ Godkendt valgte</button>
+                        <button v-if="permissionCheck === true && this.user.profile !== 'edit'" @click="initPreApprove()" :disabled="approvable_acts.length < 1">✔ Godkendt valgte</button>
                     </td>
                     <td class="right"><strong>I alt</strong></td>
                     <td class="nowrap right">
-                        <strong>{{ displayDigits(appropriation.total_granted_this_year) }} kr</strong>
+                        <strong>{{ displayDigits(appropriation.total_granted_this_year) }} kr.</strong>
                     </td>
                     <td class="nowrap expected right">
                         <span v-if="appropriation.total_expected_this_year !== appropriation.total_granted_this_year">
-                            {{ displayDigits(appropriation.total_expected_this_year) }} kr
+                            {{ displayDigits(appropriation.total_expected_this_year) }} kr.
                         </span>
                     </td>
                 </tr>
@@ -97,8 +97,11 @@
     import { json2jsEpoch } from '../filters/Date.js'
     import ActListItem from './ActivityListItem.vue'
     import ApprovalDiag from './Approval.vue'
+    import UserRights from '../mixins/UserRights.js'
 
     export default {
+
+        mixins: [UserRights],
 
         components: {
             ActListItem,
@@ -172,17 +175,10 @@
             },
             getBestDate(arr, criteria) {
                 let best_date = null
-                for (let a in arr) {
-                    const date = new Date( arr[a][`${ criteria}_date`] ).getTime()
-                    if (criteria === 'start') {
-                        if (!best_date || date < best_date) {
-                            best_date = date
-                        }
-                    } else {
-                        if (!best_date || date > best_date) {
-                            best_date = date
-                        }
-                    }
+                if (criteria === 'start') {
+                    best_date = arr[0].start_date
+                } else {
+                    best_date = arr[arr.length - 1].end_date
                 }
                 return best_date
             },

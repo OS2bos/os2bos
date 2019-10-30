@@ -11,7 +11,7 @@
     <div class="payment-plan">
         <p style="font-size: 1.5rem;">Forventet udgift</p>
         <p>{{ abstract }}</p>
-        <p v-if="yearly_cost">Det er ca. <strong>{{ yearly_cost }} kr</strong> pr. år</p>
+        <p v-if="yearly_cost">Det er ca. <strong>{{ yearly_cost }} kr.</strong> pr. år</p>
     </div>
 
 </template>
@@ -22,12 +22,6 @@
 
     export default {
 
-        props: [
-            'amount',
-            'units',
-            'type',
-            'frequency'
-        ],
         data: function() {
             return {
                 freq_factor: 0,
@@ -35,33 +29,36 @@
             }
         },
         computed: {
+            payment: function() {
+                return this.$store.getters.getPayment
+            },
             abstract: function() {
                 let str = 'Udgiften bliver '
 
-                switch(this.type) {
+                switch(this.payment.payment_type) {
                     case 'ONE_TIME_PAYMENT':
-                        str += `${ cost2da(this.amount) } kr én gang`
+                        str += `${ cost2da(this.payment.payment_amount) } kr én gang`
                         break
                     case 'RUNNING_PAYMENT':
-                        str += `${ cost2da(this.amount) } kr hver ${ this.freq_name }`
+                        str += `${ cost2da(this.payment.payment_amount) } kr hver ${ this.freq_name }`
                         break
                     case 'PER_HOUR_PAYMENT':
-                        if (this.units) {
-                            str += `${ cost2da(this.units) } timer á ${ cost2da(this.amount) } kr hver ${ this.freq_name }`
+                        if (this.payment.payment_units) {
+                            str += `${ cost2da(this.payment.payment_units) } timer á ${ cost2da(this.payment.payment_amount) } kr hver ${ this.freq_name }`
                         } else {
                             str = '-'
                         }
                         break
                     case 'PER_DAY_PAYMENT':
-                        if (this.units) {
-                            str += `${ cost2da(this.units) } døgn á ${ cost2da(this.amount) } kr hver ${ this.freq_name }`
+                        if (this.payment.payment_units) {
+                            str += `${ cost2da(this.payment.payment_units) } døgn á ${ cost2da(this.payment.payment_amount) } kr hver ${ this.freq_name }`
                         } else {
                             str = '-'
                         }
                         break
                     case 'PER_KM_PAYMENT':
-                        if (this.units) {
-                            str += `${ cost2da(this.units) } kilometer á ${ cost2da(this.amount) } kr hver ${ this.freq_name }`
+                        if (this.payment.payment_units) {
+                            str += `${ cost2da(this.payment.payment_units) } kilometer á ${ cost2da(this.payment.payment_amount) } kr hver ${ this.freq_name }`
                         } else {
                             str = '-'
                         }
@@ -74,20 +71,20 @@
             },
             yearly_cost: function() {
                 let num = 0
-                switch(this.type) {
+                switch(this.payment.payment_type) {
                     case 'ONE_TIME_PAYMENT':
-                        num = this.amount
+                        num = this.payment.payment_amount
                         break
                     case 'RUNNING_PAYMENT':
-                        num = this.amount * this.freq_factor
+                        num = this.payment.payment_amount * this.freq_factor
                         break
                     default:
-                        num = this.amount * this.freq_factor * this.units
+                        num = this.payment.payment_amount * this.freq_factor * this.payment.payment_units
                 }
                 return cost2da(num)
             },
             freq_name: function() {
-                switch(this.frequency) {
+                switch(this.payment.payment_frequency) {
                     case 'MONTHLY':
                         this.freq_factor = 12
                         this.month_factor = 1

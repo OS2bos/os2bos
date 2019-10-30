@@ -16,7 +16,6 @@
             <br>
             {{ team.name }}
         </p>
-        <button @click="logout()">Log ud</button>
     </div>
 
 </template>
@@ -43,11 +42,6 @@
             },
             team: function() {
                 return this.$store.getters.getTeam
-            }
-        },
-        methods: {
-            logout: function() {
-                this.$store.dispatch('logout')
             }
         }
 

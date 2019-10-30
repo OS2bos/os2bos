@@ -16,6 +16,7 @@ services:
       # `vue-cli-service serve` will proxy request to `/api` to this endpoint.
       # Defined in `frontend/vue.config.js`.
       - API_SERVER=http://bev:5000
+      - IDP_SERVER=http://idp:8080
     # To reload on file changes, we mount the current folder into `/code`.
     # However we do not want node_modules on the host machine, so we create an
     # additional volume for it.
@@ -49,6 +50,7 @@ services:
     depends_on:
       - db
       - postfix
+      - idp
     # If you want to reach the django image directly (as opposed through the
     # `vue-cli-service serve` proxy), expose it with:
     #ports:
@@ -73,6 +75,18 @@ services:
     environment:
       - maildomain=magenta.dk
       - smtp_user=bev:bev
+
+  idp:
+    # We use a image from kristophjunge/docker-test-saml-idp with the extra
+    # ability to define a custom `baseurlpath`.
+    build:
+      context: dev-environment/test-saml-idp
+    environment:
+      - SIMPLESAMLPHP_BASEURLPATH=http://localhost:8080/simplesaml/
+      - SIMPLESAMLPHP_SP_ENTITY_ID=http://localhost:8080
+      - SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE=http://localhost:8080/api/saml2_auth/acs/
+    volumes:
+      - ./dev-environment/authsources.php:/var/www/simplesamlphp/config/authsources.php
 
   # The following service is to copy the scripts needed to initialize the
   # database with user and extensions to a volume. It is not needed when the

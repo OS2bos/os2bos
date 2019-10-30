@@ -43,7 +43,10 @@ class AuthenticatedTestCase(TestCase):
         self.username = "user"
         self.password = "s1kr3t"
         self.user = User.objects.create_user(
-            self.username, f"{self.username}@company.com", self.password
+            self.username,
+            f"{self.username}@company.com",
+            self.password,
+            profile="grant",
         )
 
 
@@ -184,6 +187,10 @@ def create_payment(
     amount=Decimal("500"),
     recipient_type=PaymentSchedule.PERSON,
     payment_method=SD,
+    saved_account_string="",
+    paid_amount=None,
+    paid_date=None,
+    paid=False,
 ):
     payment = Payment.objects.create(
         recipient_id="Test",
@@ -193,6 +200,10 @@ def create_payment(
         date=date,
         amount=amount,
         payment_schedule=payment_schedule,
+        saved_account_string=saved_account_string,
+        paid_amount=paid_amount,
+        paid_date=paid_date,
+        paid=paid,
     )
     return payment
 

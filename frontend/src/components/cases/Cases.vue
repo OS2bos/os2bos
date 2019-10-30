@@ -11,7 +11,7 @@
     <section class="cases" v-if="cas">
         <header class="cases-header">
             <h1>Mine sager</h1>
-            <button class="create" @click="$router.push('/case-create/')">+ Tilknyt hovedsag</button>
+            <button v-if="permissionCheck === true" class="create" @click="$router.push('/case-create/')">+ Tilknyt hovedsag</button>
         </header>
         <table v-if="cas.length > 0">
             <thead>
@@ -55,8 +55,11 @@
 
     import axios from '../http/Http.js'
     import { json2jsDate } from '../filters/Date.js'
+    import UserRights from '../mixins/UserRights.js'
 
     export default {
+
+        mixins: [UserRights],
 
         data: function() {
             return {
@@ -75,9 +78,9 @@
         },
         methods: {
             update: function() {
-                this.fetchCases(this.$route.params.id)
+                this.fetchCases()
             },
-            fetchCases: function(id) {
+            fetchCases: function() {
                 if (this.user) {
                     axios.get(`/cases/?case_worker=${ this.user.id }&expired=false`)
                     .then(res => {

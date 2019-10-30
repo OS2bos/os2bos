@@ -78,7 +78,6 @@ DEBUG = settings.getboolean("DEBUG", fallback=False)
 
 ALLOWED_HOSTS = settings.get("ALLOWED_HOSTS", fallback="").split(",")
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -95,6 +94,7 @@ INSTALLED_APPS = [
     "constance",
     "constance.backends.database",
     "core.apps.CoreConfig",
+    "django_saml2_auth",
 ]
 
 MIDDLEWARE = [
@@ -228,7 +228,6 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",
     ),
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ),
 }
@@ -301,9 +300,43 @@ CONSTANCE_CONFIG = {
         ),
         _("fra-email"),
     ),
+    "ACCOUNT_NUMBER_DEPARTMENT": (
+        settings.get("ACCOUNT_NUMBER_DEPARTMENT", fallback="12345"),
+        _("Kontostreng afdeling"),
+    ),
+    "ACCOUNT_NUMBER_KIND": (
+        settings.get("ACCOUNT_NUMBER_KIND", fallback="123"),
+        _("Kontostreng art"),
+    ),
 }
 CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
 
 
 SBSYS_APPROPRIATION_TEMPLATE = "core/html/appropriation_letter.html"
 SBSYS_XML_TEMPLATE = "core/xml/os2forms.xml"
+
+SAML2_AUTH = {
+    # Metadata is required, choose either remote url or local
+    # file path
+    "METADATA_AUTO_CONF_URL": settings.get("SAML_METADATA_URL"),
+    "CREATE_USER": "TRUE",
+    "NEW_USER_PROFILE": {
+        "ACTIVE_STATUS": True,
+        "STAFF_STATUS": False,
+        "SUPERUSER_STATUS": False,
+    },
+    "ASSERTION_URL": settings.get("SAML_PUBLIC_HOST"),
+    "ENTITY_ID": settings.get("SAML_PUBLIC_HOST"),
+    "ATTRIBUTES_MAP": {
+        "email": "email",
+        "username": "username",
+        "first_name": "first_name",
+        "last_name": "last_name",
+    },
+    "TRIGGER": {
+        "CREATE_USER": "core.utils.saml_create_user",
+        "BEFORE_LOGIN": "core.utils.saml_before_login",
+    },
+    "USE_JWT": True,
+    "FRONTEND_URL": settings.get("SAML_PUBLIC_HOST") + "#/",
+}
