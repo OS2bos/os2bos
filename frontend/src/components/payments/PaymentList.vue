@@ -29,7 +29,7 @@
                     <td><router-link :to="`/payment/${ p.id }/`">Betaling #{{ p.id }}</router-link></td>
                     <td>
                         <span v-if="p.paid_date">{{ displayDate(p.paid_date) }}<br></span>
-                        <span class="dim" style="white-space: nowrap;">{{ displayDate(p.date) }}, planlagt</span>
+                        <span class="dim" style="white-space: nowrap;">{{ displayDate(p.date) }}</span>
                     </td>
                     <td>
                         <span v-if="p.paid === true"><i class="material-icons">check</i></span>
@@ -37,7 +37,7 @@
                     </td>
                     <td class="right">
                         <span v-if="p.paid_amount">{{ displayDigits(p.paid_amount) }} kr.<br></span>
-                        <span class="dim" style="white-space: nowrap;">planlagt {{ displayDigits(p.amount) }} kr.</span>
+                        <span class="dim" style="white-space: nowrap;">{{ displayDigits(p.amount) }} kr.</span>
                     </td>
                 </tr>
                 <tr>
@@ -82,7 +82,11 @@
             sum: function() {
                 if (this.payments_by_year) {
                     return this.payments_by_year.reduce(function(total, payment) {
-                        return total += parseFloat(payment.amount)
+                        if (payment.paid_amount) {
+                            return total += parseFloat(payment.paid_amount)
+                        } else {
+                            return total += parseFloat(payment.amount)
+                        }
                     }, 0)
                 }
             }
