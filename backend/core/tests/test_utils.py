@@ -405,3 +405,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
 
         # Also process for today
         process_payments_for_date()
+
+        # Repeat the previous processing to have an example with no due
+        # payments.
+        process_payments_for_date()
