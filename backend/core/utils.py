@@ -309,11 +309,11 @@ PRISM_MACHINE_NO = 482
 def format_prism_financial_record(payment, line_no, record_no):
     """Format a single financial record for PRISM, on a single line.
 
-    Note, this follows documentation provided by Ballerup Kommune based on
+    This follows documentation provided by Ballerup Kommune based on
     KMD's interface specification GQ311001Q for financial records (transaction
     type G69).
     """
-    # Note, the fields that are hard coded *never* change.
+    # The fields that are hard coded *never* change.
     # We specify them below, but for clarity we hard code them in the actual
     # output.
     """
@@ -324,7 +324,7 @@ def format_prism_financial_record(payment, line_no, record_no):
     line_format = "FLYD"
     """
 
-    # Line number is given as 5 chars with leading zeroes, or unit as 4 chars
+    # Line number is given as 5 chars with leading zeroes, org unit as 4 chars
     # with leading zeroes, as per the specification.
     header = f"000G69{line_no:05d}{PRISM_ORG_UNIT:04d}01NORFLYD"
 
@@ -383,7 +383,7 @@ def format_prism_financial_record(payment, line_no, record_no):
 def format_prism_payment_record(payment, line_no, record_no):
     """Format a single payment record for PRISM, on a single line.
 
-    Note, this follows documentation provided by Ballerup Kommune based on
+    This follows documentation provided by Ballerup Kommune based on
     KMD's interface specification GF200001Q for creditor records
     (transaction type G68).
     """
@@ -453,7 +453,7 @@ def due_payments_for_prism(date):
 
 
 def generate_records_for_prism(due_payments):
-    """Send relevant payments to PRISM."""
+    """Generate the list of records for writing to PRISM file."""
 
     prism_records = (
         (
@@ -469,11 +469,14 @@ def generate_records_for_prism(due_payments):
 
 
 def process_payments_for_date(date=None):
+    """Process payments and output a file for PRISME."""
 
-    # Not configurable - this is mapped through Docker.
+    # The output directory is not configurable - this is mapped through Docker.
     output_dir = "/prisme"
     if not date:
         date = datetime.datetime.now()
+    # The microseconds are included to avoid accidentally overwriting today's
+    # file.
     filename = f"{output_dir}/{date.strftime('%Y%m%d')}_{date.microsecond}"
     payments = due_payments_for_prism(date)
     if payments.count() == 0:
