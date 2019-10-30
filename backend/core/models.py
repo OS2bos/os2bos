@@ -450,6 +450,11 @@ class PaymentSchedule(models.Model):
             department = "XXX"
             kind = "XXX"
 
+        # We cannot return an account string when there is no
+        # activity or account.
+        if not hasattr(self, "activity") or not self.activity.account:
+            return ""
+
         account = self.activity.account
         return f"{department}-{account.number}-{kind}"
 

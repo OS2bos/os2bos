@@ -30,11 +30,12 @@ def set_saved_account_string_on_payment_save(
     """
     Set the saved_account_string on Payment save.
     """
-    if not hasattr(instance, "payment_schedule") or not hasattr(
-        instance.payment_schedule, "activity"
+
+    if (
+        instance.paid
+        and not instance.saved_account_string
+        and instance.account_string
     ):
-        return
-    if instance.paid and not instance.saved_account_string:
         instance.saved_account_string = instance.account_string
         instance.save()
 
