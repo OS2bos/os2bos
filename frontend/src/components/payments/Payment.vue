@@ -8,30 +8,35 @@
 <template>
     
     <div class="payment">
+        <nav class="payment-nav">
+            <router-link to="">
+                <i class="material-icons">arrow_upward</i>
+                Ydelse xxx
+            </router-link>
+        </nav>
+        <h1>
+            Betaling #{{ payment.id }}
+            <span v-if="payment.paid" class="dim">- betalt</span>
+        </h1>
 
-        <div>
-            <nav class="payment-nav">
-                <router-link to="">
-                    <i class="material-icons">arrow_upward</i>
-                    Ydelse xxx
-                </router-link>
-            </nav>
-            <h1>Betaling #{{ payment.id }}</h1>
+        <div class="row">
             <router-link :to="`/payment/${ payment.id }/edit/`"></router-link>
-            <dl>
+            <dl class="info">
                 <dt>Betalingsnøgle</dt>
                 <dd>{{ payment.payment_id }}</dd>
                 
                 <dt>Beløb, planlagt</dt>
-                <dd>{{ displayDigits(payment.amount) }} kr.</dd>
+                <dd class="dim">{{ displayDigits(payment.amount) }} kr.</dd>
                 <dt>Betalingsdato, planlagt</dt>
-                <dd>{{ displayDate(payment.date) }}</dd>
+                <dd class="dim">{{ displayDate(payment.date) }}</dd>
                 <dt>Kontostreng</dt>
                 <dd>{{ payment.account_string }}</dd>
             </dl>
+
+            <payment-edit />
+
         </div>
 
-        <payment-edit />
 
     </div>
 
@@ -111,8 +116,8 @@
         display: block;
     }
 
-    .payment .payment-edit {
-        margin: 1rem 0 0;
+    .payment .info {
+        padding: 0rem 1rem;
     }
 
 </style>

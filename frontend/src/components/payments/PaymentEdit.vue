@@ -9,11 +9,6 @@
     
     <div class="payment-edit">
         <dl>
-            <dt>Betalt</dt>
-            <dd>
-                <span v-if="payment.paid">Ja</span>
-                <span v-else>Nej</span>
-            </dd>
             <template v-if="paymentlock">
                 <dt>Betalt beløb</dt>
                 <dd>
@@ -170,12 +165,11 @@
 <style>
 
     .payment-edit {
-        padding: 1rem 2rem;
-        background-color: var(--grey1);
+        padding: 0rem 2rem;
     }
 
     .payment-edit form {
-        padding: 0;
+        padding: 1rem;
     }
 
 </style>
