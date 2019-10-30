@@ -90,6 +90,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_extensions",
     "django_filters",
+    "rest_framework_filters",
     "simple_history",
     "constance",
     "constance.backends.database",
@@ -222,7 +223,7 @@ SERVICEPLATFORM_CERTIFICATE_PATH = settings.get(
 
 REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": (
-        "django_filters.rest_framework.DjangoFilterBackend",
+        "rest_framework_filters.backends.RestFrameworkFilterBackend",
     ),
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
