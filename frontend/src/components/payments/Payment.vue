@@ -69,7 +69,7 @@
                         },
                         {
                             link: false,
-                            title: `Betaling ${ this.payment.id }`
+                            title: `Betaling ${ this.p_id }`
                         }
                     ])
                 }

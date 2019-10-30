@@ -28,16 +28,16 @@
                 <tr v-for="p in payments_by_year" :key="p.id">
                     <td><router-link :to="`/payment/${ p.id }/`">Betaling #{{ p.id }}</router-link></td>
                     <td>
-                        <span v-if="p.paid_date">{{ displayDate(p.paid_date) }}, planlagt<br></span>
-                        <span class="dim" style="white-space: nowrap;">{{ displayDate(p.date) }}</span>
+                        <span v-if="p.paid_date">{{ displayDate(p.paid_date) }}<br></span>
+                        <span class="dim" style="white-space: nowrap;">{{ displayDate(p.date) }}, planlagt</span>
                     </td>
                     <td>
                         <span v-if="p.paid === true"><i class="material-icons">check</i></span>
                         <span v-else>-</span>
                     </td>
                     <td class="right">
-                        <span v-if="p.paid_amount">Planlagt {{ displayDigits(p.paid_amount) }} kr.<br></span>
-                        <span class="dim" style="white-space: nowrap;">{{ displayDigits(p.amount) }} kr.</span>
+                        <span v-if="p.paid_amount">{{ displayDigits(p.paid_amount) }} kr.<br></span>
+                        <span class="dim" style="white-space: nowrap;">planlagt {{ displayDigits(p.amount) }} kr.</span>
                     </td>
                 </tr>
                 <tr>

@@ -29,10 +29,10 @@
                         <td> 000000-0000 </td>
                         <td>
                             <span v-if="p.paid_date" style="white-space: nowrap;">
-                                {{ displayDate(p.paid_date) }}, planlagt<br>
+                                {{ displayDate(p.paid_date) }}<br>
                             </span>
                              <span class="dim" style="white-space: nowrap;">
-                                {{ displayDate(p.date) }}
+                                {{ displayDate(p.date) }}, planlagt
                             </span>
                         </td>
                         <td>
@@ -41,8 +41,11 @@
                         </td>
                         <td class="right">
                             <span v-if="p.paid_amount" style="white-space: nowrap;">
-                            Planlagt {{ displayDigits(p.paid_amount) }} kr.<br></span>
-                            <span class="dim" style="white-space: nowrap;">{{ displayDigits(p.amount) }} kr.</span>
+                                {{ displayDigits(p.paid_amount) }} kr.<br>
+                            </span>
+                            <span class="dim" style="white-space: nowrap;">
+                                planlagt {{ displayDigits(p.amount) }} kr.
+                            </span>
                         </td>
                     </tr>
                 </tbody>
