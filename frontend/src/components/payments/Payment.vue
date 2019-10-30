@@ -9,9 +9,9 @@
     
     <div class="payment">
         <nav class="payment-nav">
-            <router-link to="">
+            <router-link :to="`/activity/${ payment.activity__id }`">
                 <i class="material-icons">arrow_upward</i>
-                Ydelse xxx
+                {{ activityId2name(payment.activity__details__id) }}
             </router-link>
         </nav>
         <h1>
@@ -23,7 +23,7 @@
             <router-link :to="`/payment/${ payment.id }/edit/`"></router-link>
             <dl class="info">
                 <dt>Betalingsnøgle</dt>
-                <dd>{{ payment.payment_id }}</dd>
+                <dd>{{ payment.payment_schedule__payment_id }}</dd>
                 
                 <dt>Beløb, planlagt</dt>
                 <dd class="dim">{{ displayDigits(payment.amount) }} kr.</dd>
@@ -47,6 +47,7 @@
     import PaymentEdit from './PaymentEdit.vue'
     import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
+    import { activityId2name } from '../filters/Labels.js'
 
     export default {
         
@@ -81,6 +82,9 @@
             }
         },
         methods: {
+            activityId2name: function(id) {
+                return activityId2name(id)
+            },
             displayDate: function(dt) {
                 return json2jsDate(dt)
             },

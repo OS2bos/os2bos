@@ -25,8 +25,8 @@
                 <tbody>
                     <tr v-for="p in payments" :key="p.id">
                         <td><router-link :to="`/payment/${ p.id }/`">Betaling #{{ p.id }}</router-link></td>
-                        <td> {{ p.payment_id }} </td>
-                        <td> 000000-0000 </td>
+                        <td> {{ p.payment_schedule__payment_id }} </td>
+                        <td> {{ p.case__cpr_number }} </td>
                         <td>
                             <span v-if="p.paid_date" style="white-space: nowrap;">
                                 {{ displayDate(p.paid_date) }}<br>
