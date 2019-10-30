@@ -28,7 +28,7 @@ def set_saved_account_string_on_payment_save(
     sender, instance, created, **kwargs
 ):
     """
-    Set the payment_id as the PaymentSchedule ID on creation.
+    Set the saved_account_string on Payment save.
     """
     if not hasattr(instance, "payment_schedule") or not hasattr(
         instance.payment_schedule, "activity"
