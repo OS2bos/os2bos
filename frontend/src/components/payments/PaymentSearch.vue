@@ -32,7 +32,7 @@
                                 {{ displayDate(p.paid_date) }}<br>
                             </span>
                              <span class="dim" style="white-space: nowrap;">
-                                {{ displayDate(p.date) }}, planlagt
+                                {{ displayDate(p.date) }}
                             </span>
                         </td>
                         <td>
@@ -44,7 +44,7 @@
                                 {{ displayDigits(p.paid_amount) }} kr.<br>
                             </span>
                             <span class="dim" style="white-space: nowrap;">
-                                planlagt {{ displayDigits(p.amount) }} kr.
+                                {{ displayDigits(p.amount) }} kr.
                             </span>
                         </td>
                     </tr>
