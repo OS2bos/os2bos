@@ -205,6 +205,12 @@ class PaymentScheduleFilter(filters.FilterSet):
         fields = {"payment_id": ["exact"]}
 
 
+class ActivityFilter(filters.FilterSet):
+    class Meta:
+        model = Activity
+        fields = {"status": ["exact"]}
+
+
 class PaymentFilter(filters.FilterSet):
     payment_schedule = filters.RelatedFilter(
         PaymentScheduleFilter,
@@ -216,6 +222,12 @@ class PaymentFilter(filters.FilterSet):
         field_name="payment_schedule__activity__appropriation__case",
         label=Case._meta.verbose_name.title(),
         queryset=Case.objects.all(),
+    )
+    activity = filters.RelatedFilter(
+        ActivityFilter,
+        field_name="payment_schedule__activity",
+        label=Activity._meta.verbose_name.title(),
+        queryset=Activity.objects.all(),
     )
 
     class Meta:
