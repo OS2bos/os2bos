@@ -22,6 +22,7 @@ from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.utils.translation import gettext_lazy as _
 from django.utils.html import strip_tags
+from django.db import transaction
 
 from constance import config
 
@@ -364,6 +365,7 @@ def format_prism_financial_record(payment, line_no, record_no):
         "103": f"{PRISM_MACHINE_NO:05d}",
         "104": f"{record_no:07d}",
         "110": f"{payment.date.strftime('%Y%m%d')}",
+        "111": f"{payment.account_string}",
         "112": f"{int(payment.amount*100):012d} ",
         "113": "D",
         "114": f"{payment.date.year}",
@@ -468,12 +470,15 @@ def generate_records_for_prism(due_payments):
     return prism_records
 
 
+@transaction.atomic
 def process_payments_for_date(date=None):
 
     # Not configurable - this is mapped through Docker.
     output_dir = "/prisme"
     if not date:
-        date = datetime.datetime.now()
+        date = datetime.date.today()
+    today = datetime.date.today()
+
     filename = f"{output_dir}/{date.strftime('%Y%m%d')}_{date.microsecond}"
     payments = due_payments_for_prism(date)
     if payments.count() == 0:
@@ -482,4 +487,9 @@ def process_payments_for_date(date=None):
     prism_records = generate_records_for_prism(payments)
     with open(filename, "w") as f:
         f.write("\n".join(prism_records))
-    payments.update(paid=True)
+    # Register all payments as paid.
+    for p in payments:
+        p.paid = True
+        p.paid_amount = p.amount
+        p.paid_date = today
+        p.save()

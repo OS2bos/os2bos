@@ -22,6 +22,8 @@ from core.models import (
     CASH,
     User,
     Team,
+    Account,
+    ActivityDetails,
 )
 from core.utils import (
     get_cpr_data,
@@ -313,6 +315,18 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
         )
+        main_activity_details = ActivityDetails.objects.create(
+            name="Betaling til andre kommuner/region for specialtandpleje",
+            activity_id="010001",
+            max_tolerance_in_dkk=5000,
+            max_tolerance_in_percent=10,
+        )
+        Account.objects.create(
+            number="123456",
+            section=section,
+            main_activity=main_activity_details,
+            supplementary_activity=None,
+        )
         create_activity(
             case,
             appropriation,
@@ -321,6 +335,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
             payment_plan=payment_schedule,
+            details=main_activity_details,
         )
         # This will generate three payments on the payment plan, and one
         # of them will be for today.
@@ -356,6 +371,18 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
         )
+        main_activity_details = ActivityDetails.objects.create(
+            name="Betaling til andre kommuner/region for specialtandpleje",
+            activity_id="010001",
+            max_tolerance_in_dkk=5000,
+            max_tolerance_in_percent=10,
+        )
+        Account.objects.create(
+            number="123456",
+            section=section,
+            main_activity=main_activity_details,
+            supplementary_activity=None,
+        )
         create_activity(
             case,
             appropriation,
@@ -364,6 +391,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
             payment_plan=payment_schedule,
+            details=main_activity_details,
         )
         # Check that there's unpaid payments for today.
         due_payments = due_payments_for_prism(start_date)
