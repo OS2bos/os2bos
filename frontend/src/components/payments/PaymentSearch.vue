@@ -11,45 +11,49 @@
 
         <div class="payment-search-list">
             <h1>Betalinger</h1>
-            <table v-if="payments.length > 0">
-                <thead>
-                    <tr>
-                        <th>Betaling nr</th>
-                        <th>Betalingsnøgle</th>
-                        <th>CPR nr</th>
-                        <th>Betalingsdato</th>
-                        <th>Betalt</th>
-                        <th class="right">Beløb</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="p in payments" :key="p.id">
-                        <td><router-link :to="`/payment/${ p.id }/`">Betaling #{{ p.id }}</router-link></td>
-                        <td> {{ p.payment_schedule__payment_id }} </td>
-                        <td> {{ p.case__cpr_number }} </td>
-                        <td>
-                            <span v-if="p.paid_date" style="white-space: nowrap;">
-                                {{ displayDate(p.paid_date) }}<br>
-                            </span>
-                             <span class="dim" style="white-space: nowrap;">
-                                {{ displayDate(p.date) }}
-                            </span>
-                        </td>
-                        <td>
-                            <span v-if="p.paid"><i class="material-icons">check</i></span>
-                            <span v-else>-</span>
-                        </td>
-                        <td class="right">
-                            <span v-if="p.paid_amount" style="white-space: nowrap;">
-                                {{ displayDigits(p.paid_amount) }} kr.<br>
-                            </span>
-                            <span class="dim" style="white-space: nowrap;">
-                                {{ displayDigits(p.amount) }} kr.
-                            </span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <template>
+                <table v-if="payments.length > 0">
+                    <thead>
+                        <tr>
+                            <th>Betaling nr</th>
+                            <th>Betalingsnøgle</th>
+                            <th>CPR nr</th>
+                            <th>Betalingsdato</th>
+                            <th>Betalt</th>
+                            <th class="right">Beløb</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="p in payments" :key="p.id">
+                            <template v-if="p.activity__status === 'GRANTED'">
+                            <td><router-link :to="`/payment/${ p.id }/`">Betaling #{{ p.id }}</router-link></td>
+                            <td> {{ p.payment_schedule__payment_id }} </td>
+                            <td> {{ p.case__cpr_number }} </td>
+                            <td>
+                                <span v-if="p.paid_date" style="white-space: nowrap;">
+                                    {{ displayDate(p.paid_date) }}<br>
+                                </span>
+                                <span class="dim" style="white-space: nowrap;">
+                                    {{ displayDate(p.date) }}
+                                </span>
+                            </td>
+                            <td>
+                                <span v-if="p.paid"><i class="material-icons">check</i></span>
+                                <span v-else>-</span>
+                            </td>
+                            <td class="right">
+                                <span v-if="p.paid_amount" style="white-space: nowrap;">
+                                    {{ displayDigits(p.paid_amount) }} kr.<br>
+                                </span>
+                                <span class="dim" style="white-space: nowrap;">
+                                    {{ displayDigits(p.amount) }} kr.
+                                </span>
+                            </td>
+                            </template>
+                        </tr>
+                    </tbody>
+                </table>
+            </template>
             <p v-if="payments.length < 1">
                 Kunne ikke finde nogen sager
             </p>

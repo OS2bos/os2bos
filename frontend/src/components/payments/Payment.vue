@@ -8,7 +8,7 @@
 <template>
     
     <div class="payment">
-        <nav class="payment-nav">
+        <nav class="payment-nav" v-if="payment.activity__details__id">
             <router-link :to="`/activity/${ payment.activity__id }`">
                 <i class="material-icons">arrow_upward</i>
                 {{ activityId2name(payment.activity__details__id) }}
