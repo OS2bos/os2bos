@@ -87,8 +87,20 @@ class HistoricalCaseSerializer(serializers.ModelSerializer):
 
 class PaymentSerializer(serializers.ModelSerializer):
     account_string = serializers.ReadOnlyField()
-    payment_id = serializers.ReadOnlyField(
+    payment_schedule__payment_id = serializers.ReadOnlyField(
         source="payment_schedule.payment_id", default=None
+    )
+    case__cpr_number = serializers.ReadOnlyField(
+        source="payment_schedule.activity.appropriation.case.cpr_number"
+    )
+    activity__id = serializers.ReadOnlyField(
+        source="payment_schedule.activity.id"
+    )
+    activity__status = serializers.ReadOnlyField(
+        source="payment_schedule.activity.status"
+    )
+    activity__details__id = serializers.ReadOnlyField(
+        source="payment_schedule.activity.details.id"
     )
 
     class Meta:
