@@ -1,3 +1,16 @@
+* Version 1.1.1, 2019-10-30
+
+Hotfix release.
+
+New in this version:
+
+* Deleted main activity no longer blocks for creating a new main activity.
+* Granted activities are now explicitly included in the appropration PDF.
+* Fix activities still being checked for granting when closing the grant dialog.
+* Fix not being able to grant an expected main activity.
+* Fix invalid XML in OS2forms.xml.
+* Add missing constraint for creating supplementary activities based on allowed main activities.
+
 * Version 1.1.0, 2019-10-04
 
 New in this version:
