@@ -11,6 +11,7 @@ from django.dispatch import receiver
 from core.models import (
     Activity,
     PaymentSchedule,
+    Payment,
     STATUS_GRANTED,
     STATUS_EXPECTED,
     STATUS_DRAFT,
@@ -20,6 +21,22 @@ from core.utils import (
     send_activity_updated_email,
     send_activity_expired_email,
 )
+
+
+@receiver(post_save, sender=Payment)
+def set_saved_account_string_on_payment_save(
+    sender, instance, created, **kwargs
+):
+    """
+    Set the payment_id as the PaymentSchedule ID on creation.
+    """
+    if not hasattr(instance, "payment_schedule") or not hasattr(
+        instance.payment_schedule, "activity"
+    ):
+        return
+    if instance.paid and not instance.saved_account_string:
+        instance.saved_account_string = instance.account_string
+        instance.save()
 
 
 @receiver(post_save, sender=PaymentSchedule)
