@@ -399,6 +399,9 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
 
         process_payments_for_date(date=start_date)
 
-        # Check that there's NO unpaid payments for today.
+        # Check that there's NO unpaid payments for that date.
         due_payments = due_payments_for_prism(start_date)
         self.assertEqual(due_payments.count(), 0)
+
+        # Also process for today
+        process_payments_for_date()
