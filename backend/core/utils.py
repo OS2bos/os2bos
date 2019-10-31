@@ -497,14 +497,14 @@ def process_payments_for_date(date=None):
 
         hdisp = " "  # Blank, must be there.
         media_type = '6'  # Don't ask.
-        evolbr = f"      "  # 6 blanks - once again, don't ask.
+        evolbr = "      "  # 6 blanks - once again, don't ask.
         mixed = "1"
         """
         trans_code = "Z300"  # From KMD's documentation: "start identification"
         user_number = f"{config.PRISM_ORG_UNIT:04d}"  # Org unit.
         day_of_year = today.timetuple().tm_yday  # Day of year.
 
-        preamble_string = f"{trans_code} {user_number}6 {day_of_year}1"
+        preamble_string = f"{trans_code} {user_number}6      {day_of_year}1"
         f.write(f"{preamble_string}\n")
         # Generate and write the records.
         prism_records = generate_records_for_prism(payments)
