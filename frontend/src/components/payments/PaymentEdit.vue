@@ -113,6 +113,9 @@
         },
         watch: {
             payment: function() {
+                if (!this.payment.paid_amount && !this.payment.paid_date) {
+                    this.paymentlock = false
+                }
                 this.update()
             }
         },
@@ -126,9 +129,6 @@
             update: function() {
                 if (this.paid) {
                     this.paid = this.payment
-                }
-                if (!this.payment.paid_amount && !this.payment.paid_date) {
-                    this.paymentlock = false
                 }
             },
             reload: function() {
@@ -146,11 +146,10 @@
                 }
                 axios.patch(`/payments/${ this.payment.id }/`, data)
                 .then(res => {
-                    this.$router.push(`/payments/`)
                     this.$store.dispatch('fetchPayment', res.data.id)
                     this.showModal = false
                     notify('Betaling godkendt', 'success')
-                    this.update()
+                    this.$router.push(`/payments/`)
                 })
                 .catch(err => this.$store.dispatch('parseErrorOutput', err))
             }

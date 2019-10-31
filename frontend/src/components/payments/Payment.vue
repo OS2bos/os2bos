@@ -16,7 +16,7 @@
         </nav>
         <h1>
             Betaling #{{ payment.id }}
-            <span v-if="payment.paid" class="dim">- betalt</span>
+            <span v-if="payment.paid">- betalt</span>
         </h1>
 
         <div class="row">
