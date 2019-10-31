@@ -6,6 +6,9 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+import sys
+from datetime import datetime
+
 from django.core.management.base import BaseCommand
 
 from core.utils import process_payments_for_date
@@ -14,6 +17,20 @@ from core.utils import process_payments_for_date
 class Command(BaseCommand):
     help = "Exports payments due TODAY to PRISME."
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "-d", "--date", default=None, help=("Export payments for date")
+        )
+
     def handle(self, *args, **options):
         """Call export function and that's it!"""
-        process_payments_for_date()
+        date = options["date"]
+        if not date:
+            process_payments_for_date()
+        else:
+            try:
+                date = datetime.strptime(date, "%Y%m%d")
+            except ValueError:
+                print("Please enter date as 'YYYYMMDD'.")
+                sys.exit()
+            process_payments_for_date(date)

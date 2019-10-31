@@ -302,10 +302,6 @@ def saml_create_user(user_data):
 # Economy integration releated stuff - for the time being, only PRISM.
 # TODO: At some point, factor out customer specific third party integrations.
 
-# TODO: Move to settings.
-PRISM_ORG_UNIT = 151
-PRISM_MACHINE_NO = 482
-
 
 def format_prism_financial_record(payment, line_no, record_no):
     """Format a single financial record for PRISM, on a single line.
@@ -327,7 +323,7 @@ def format_prism_financial_record(payment, line_no, record_no):
 
     # Line number is given as 5 chars with leading zeroes, org unit as 4 chars
     # with leading zeroes, as per the specification.
-    header = f"000G69{line_no:05d}{PRISM_ORG_UNIT:04d}01NORFLYD"
+    header = f"000G69{line_no:05d}{config.PRISM_ORG_UNIT:04d}01NORFLYD"
 
     # Now the actual posting fields. These are marked with a leading '&' and
     # must come in increasing order by field number.
@@ -362,7 +358,7 @@ def format_prism_financial_record(payment, line_no, record_no):
     """
 
     fields = {
-        "103": f"{PRISM_MACHINE_NO:05d}",
+        "103": f"{config.PRISM_MACHINE_NO:05d}",
         "104": f"{record_no:07d}",
         "110": f"{payment.date.strftime('%Y%m%d')}",
         "111": f"{payment.account_string}",
@@ -397,7 +393,7 @@ def format_prism_payment_record(payment, line_no, record_no):
     transaction_type = "01"
     line_format = "1"
     """
-    header = f"000G68{line_no:05d}{PRISM_ORG_UNIT:04d}011"
+    header = f"000G68{line_no:05d}{config.PRISM_ORG_UNIT:04d}011"
 
     # Now the mandatory fields. In the file, they are preceded with "&"
     # and must come in non-decreasing order.
@@ -424,7 +420,7 @@ def format_prism_payment_record(payment, line_no, record_no):
     40 - posting text.
     """
     fields = {
-        "02": f"{PRISM_ORG_UNIT:04d}",
+        "02": f"{config.PRISM_ORG_UNIT:04d}",
         "03": "00",
         "07": f"{payment.payment_schedule.payment_id:018d}",
         "08": f"{int(payment.amount*100):011d}",
@@ -434,7 +430,9 @@ def format_prism_payment_record(payment, line_no, record_no):
         "12": f"{payment.date.strftime('%Y%m%d')}",
         "40": f"{payment.payment_schedule.activity.details}"[:80],
     }
-    fields["16"] = f"{fields['12']}{PRISM_MACHINE_NO:05d}{record_no:07d}"
+    fields[
+        "16"
+    ] = f"{fields['12']}{config.PRISM_MACHINE_NO:05d}{record_no:07d}"
 
     field_string = "".join(
         f"&{field_no}{fields[field_no]}" for field_no in sorted(fields)
@@ -451,6 +449,7 @@ def due_payments_for_prism(date):
         recipient_type=models.PaymentSchedule.PERSON,
         payment_method=models.CASH,
         paid=False,
+        payment_schedule__activity__status=models.STATUS_GRANTED,
     )
 
 
@@ -501,7 +500,7 @@ def process_payments_for_date(date=None):
         mixed = "1"
         """
         trans_code = "Z300"  # From KMD's documentation: "start identification"
-        user_number = f"{PRISM_ORG_UNIT:04d}"  # Org unit.
+        user_number = f"{config.PRISM_ORG_UNIT:04d}"  # Org unit.
         day_of_year = today.timetuple().tm_yday  # Day of year.
 
         preamble_string = f"{trans_code} {user_number}6 {day_of_year}1"

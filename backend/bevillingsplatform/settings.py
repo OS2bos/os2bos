@@ -309,6 +309,8 @@ CONSTANCE_CONFIG = {
         settings.get("ACCOUNT_NUMBER_KIND", fallback="123"),
         _("Kontostreng art"),
     ),
+    "PRISM_ORG_UNIT": (settings.get("PRISM_ORG_UNIT", fallback=0), int),
+    "PRISM_MACHINE_NO": (settings.get("PRISM_MACHINE_NO", fallback=0), int),
 }
 CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
 
