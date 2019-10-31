@@ -8,6 +8,7 @@
 <template>
     
     <div class="payment-edit">
+        <error />
         <dl>
             <template v-if="paymentlock">
                 <dt>Betalt beløb</dt>
@@ -26,7 +27,7 @@
                 </template>
             </template>
         </dl>
-        <template v-if="permissionCheck === true">
+        <template v-if="permissionCheck === true && this.payment.activity__status === 'GRANTED'">
             <form @submit.prevent="prePayCheck()" v-if="!paymentlock">
                 <fieldset>
                     <label for="field-amount" class="required">Betal beløb</label>
@@ -90,11 +91,14 @@
     import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
     import UserRights from '../mixins/UserRights.js'
+    import Error from '../forms/Error.vue'
 
     export default {
 
+        components: {
+            Error
+        },
         mixins: [UserRights],
-        
         data: function() {
             return {
                 paid: {
