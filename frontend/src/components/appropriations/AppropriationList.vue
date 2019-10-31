@@ -11,7 +11,7 @@
     <section class="appropriations">
         <header class="appropriations-header">
             <h2>Bevillingsskrivelser</h2>
-            <button class="appropriation-create-btn" @click="$router.push(`/case/${ caseId }/appropriation-create/`)">+ Opret bevillingsskrivelse</button>
+            <button v-if="permissionCheck === true" class="appropriation-create-btn" @click="$router.push(`/case/${ caseId }/appropriation-create/`)">+ Opret bevillingsskrivelse</button>
         </header>
         <table class="appropriation-list" v-if="apprs && apprs.length > 0">
             <thead>
@@ -69,8 +69,11 @@
     import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
     import { sectionId2name, displayStatus } from '../filters/Labels.js'
+    import UserRights from '../mixins/UserRights.js'
 
     export default {
+
+        mixins: [UserRights],
 
         props: [
             'caseId'
