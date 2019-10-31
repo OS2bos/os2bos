@@ -60,12 +60,12 @@
             <button v-if="payments.length > 1" class="more">Vis flere</button>
         </div>
 
-        <!-- <div class="payment-search-filters">
+        <div class="payment-search-filters">
             <h2>Filtre</h2>
             <form>
                 <fieldset>
                     <label>Betalingsnøgle</label>
-                    <input @input="changeId()" type="text" v-model="field_id">
+                    <input @input="changeId()" type="text" v-model="payment_schedule__payment_id">
                 </fieldset>
                 <fieldset>
                     <legend>Tidsrum</legend>
@@ -87,7 +87,7 @@
                     <input type="text">
                 </fieldset>
             </form>
-        </div> -->
+        </div>
 
     </div>
 
@@ -102,7 +102,7 @@
         
         data: function() {
             return {
-                field_id: null
+                payment_schedule__payment_id: null
             }
         },
         computed: {
@@ -115,7 +115,7 @@
                 this.$store.dispatch('fetchPayments', this.$route.query)
             },
             changeId: function() {
-                this.$route.query.id = this.field_id
+                this.$route.query.id = this.payment_schedule__payment_id
                 this.update()
             },
             displayDate: function(dt) {
