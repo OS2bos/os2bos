@@ -10,7 +10,7 @@
     <section class="familyoverview">
         <header class="familyoverview-header">
             <h2>Familieoversigt</h2>
-            <button class="familyoverview-create-btn" @click="$router.push(`/case/${ caseId }/familyoverview-create/`)">+ Opret familierelation</button>
+            <button v-if="permissionCheck === true" class="familyoverview-create-btn" @click="$router.push(`/case/${ caseId }/familyoverview-create/`)">+ Opret familierelation</button>
         </header>
         <ul class="familyoverview-list list" v-if="fam && fam.length > 0">
             <li v-for="f in fam" :key="f.id" class="familyoverview-list-item">
@@ -18,9 +18,10 @@
                     <dt class="relation">{{ f.relation_type }}</dt>
                     <dd class="person">
                         {{ f.cpr_number }},
-                        <router-link :to="`/case/${ caseId }/familyoverview-edit/${ f.id }`">
+                        <router-link v-if="permissionCheck === true" :to="`/case/${ caseId }/familyoverview-edit/${ f.id }`">
                             {{ f.name }}
                         </router-link>
+                        <span v-if="permissionCheck === false">{{ f.name }}</span>
                     </dd>
                 </dl>
                 <dl v-if="f.related_case" style="margin-left: 1rem;">
@@ -38,8 +39,11 @@
 
     import axios from '../http/Http.js'
     import FamilyOverviewEdit from './FamilyOverviewEdit.vue'
+    import UserRights from '../mixins/UserRights.js'
 
     export default {
+
+        mixins: [UserRights],
 
          components: {
              FamilyOverviewEdit
