@@ -483,7 +483,7 @@ def process_payments_for_date(date=None):
 
     # The microseconds are included to avoid accidentally overwriting today's
     # file.
-    filename = f"{output_dir}/{date.strftime('%Y%m%d')}_{date.microsecond}"
+    filename = f"{output_dir}/{date.strftime('%Y%m%d')}_{today.microsecond}"
     payments = due_payments_for_prism(date)
     if not payments.exists():
         # No payments
