@@ -9,38 +9,38 @@
     
     <div class="payment-edit">
         <dl>
-            <dt>Betalt</dt>
-            <dd>
-                <span v-if="payment.paid">Ja</span>
-                <span v-else>Nej</span>
-            </dd>
-            <template v-if="payment.paid || payment.automatic">
-                <dt>Beløb</dt>
+            <template v-if="paymentlock">
+                <dt>Betalt beløb</dt>
                 <dd>
-                    (Faktisk betalt beløb)
+                    {{ displayDigits(payment.paid_amount) }} kr.
                 </dd>
-                <dt>Dato</dt>
+                <dt>Betalt dato</dt>
                 <dd>
-                    (Faktisk betalingsdato)
+                    {{ displayDate(payment.paid_date) }}
                 </dd>
+                <template v-if="payment.note">
+                    <dt>Referencetekst</dt>
+                    <dd>
+                        {{ payment.note }}
+                    </dd>
+                </template>
             </template>
         </dl>
         <template v-if="permissionCheck === true">
-            <form @submit.prevent="prePayCheck()" v-if="!payment.paid && !payment.automatic">
+            <form @submit.prevent="prePayCheck()" v-if="!paymentlock">
                 <fieldset>
-                
                     <label for="field-amount" class="required">Betal beløb</label>
-                    <input type="number" step="0.01" v-model="paid_amount" id="field-amount" required>
-                    
+                    <input type="number" step="0.01" v-model="paid.paid_amount" id="field-amount" required>
+
                     <label for="field-date" class="required">Betal dato</label>
-                    <input type="date" v-model="paid_date" id="field-date" required>
+                    <input type="date" v-model="paid.paid_date" id="field-date" required>
 
                     <label for="field-note">Referencetekst</label>
-                    <input type="text" v-model="paid_note" id="field-note">
-
+                    <input type="text" v-model="paid.note" id="field-note">
                 </fieldset>
+
                 <fieldset>
-                    <input type="submit" value="Betal" :disabled="paid_amount && paid_date ? false : true">
+                    <input type="submit" value="Betal" :disabled="paid.paid_amount && paid.paid_date ? false : true">
                 </fieldset>
             </form>
         </template>
@@ -61,7 +61,7 @@
                             <div class="modal-body">
                                 <slot name="body">
                                     <p>
-                                        Er du sikker på, at du vil sende {{ paid_amount }} kr. til betaling?
+                                        Er du sikker på, at du vil sende {{ paid.paid_amount }} kr. til betaling?
                                     </p>
                                 </slot>
                             </div>
@@ -87,6 +87,8 @@
     import axios from '../http/Http.js'
     import notify from '../notifications/Notify.js'
     import payment from '../../store-modules/payment.js'
+    import { json2jsDate } from '../filters/Date.js'
+    import { cost2da } from '../filters/Numbers.js'
     import UserRights from '../mixins/UserRights.js'
 
     export default {
@@ -95,10 +97,13 @@
         
         data: function() {
             return {
-                paid_amount: null,
-                paid_date: null,
-                paid_note: null,
-                showModal: false
+                paid: {
+                    paid_amount: null,
+                    paid_date: null,
+                    note: null
+                },
+                showModal: false,
+                paymentlock: true
             }
         },
         computed: {
@@ -106,7 +111,26 @@
                 return this.$store.getters.getPayment
             }
         },
+        watch: {
+            payment: function() {
+                if (!this.payment.paid_amount && !this.payment.paid_date) {
+                    this.paymentlock = false
+                }
+                this.update()
+            }
+        },
         methods:{
+            displayDate: function(dt) {
+                return json2jsDate(dt)
+            },
+            displayDigits: function(num) {
+                return cost2da(num)
+            },
+            update: function() {
+                if (this.paid) {
+                    this.paid = this.payment
+                }
+            },
             reload: function() {
                 this.showModal = false
             },
@@ -115,21 +139,24 @@
             },
             pay: function() {
                 let data = {
-                    paid_amount: this.paid_amount,
-                    paid_date: this.paid_date,
-                    note: this.paid_note
+                    paid_amount: this.paid.paid_amount,
+                    paid_date: this.paid.paid_date,
+                    note: this.paid.note,
+                    paid: true
                 }
                 axios.patch(`/payments/${ this.payment.id }/`, data)
                 .then(res => {
                     this.$store.dispatch('fetchPayment', res.data.id)
-                    this.$router.push(`/payments/`)
                     this.showModal = false
                     notify('Betaling godkendt', 'success')
+                    this.$router.push(`/payments/`)
                 })
                 .catch(err => this.$store.dispatch('parseErrorOutput', err))
             }
+        },
+        created: function() {
+            this.update()
         }
-
     }
 
 </script>
@@ -137,12 +164,11 @@
 <style>
 
     .payment-edit {
-        padding: 1rem 2rem;
-        background-color: var(--grey1);
+        padding: 0rem 2rem;
     }
 
     .payment-edit form {
-        padding: 0;
+        padding: 1rem;
     }
 
 </style>
