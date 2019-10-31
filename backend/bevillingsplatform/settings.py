@@ -233,6 +233,7 @@ REST_FRAMEWORK = {
     ),
 }
 
+PRISM_OUTPUT_DIR = settings.get("LOG_DIR", fallback="/prisme")
 LOG_DIR = settings.get("LOG_DIR", fallback="/log")
 # Logging
 LOGGING = {

@@ -475,7 +475,7 @@ def process_payments_for_date(date=None):
     """Process payments and output a file for PRISME."""
 
     # The output directory is not configurable - this is mapped through Docker.
-    output_dir = "/prisme"
+    output_dir = settings.PRISM_OUTPUT_DIR
     # Date = today if not given. We need "today" to set payment date.
     today = datetime.datetime.now()
     if not date:
@@ -485,7 +485,7 @@ def process_payments_for_date(date=None):
     # file.
     filename = f"{output_dir}/{date.strftime('%Y%m%d')}_{date.microsecond}"
     payments = due_payments_for_prism(date)
-    if payments.count() == 0:
+    if not payments.exists():
         # No payments
         return
     with open(filename, "w") as f:
