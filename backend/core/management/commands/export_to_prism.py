@@ -15,7 +15,7 @@ from core.utils import process_payments_for_date
 
 
 class Command(BaseCommand):
-    help = "Exports payments due TODAY to PRISME."
+    help = "Exports payments due today or on the give date to PRISME."
 
     def add_arguments(self, parser):
         parser.add_argument(
