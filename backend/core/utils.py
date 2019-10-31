@@ -451,6 +451,7 @@ def due_payments_for_prism(date):
         paid=False,
         payment_schedule__activity__status=models.STATUS_GRANTED,
         payment_schedule__fictive=False,
+        amount__gt=0,
     )
 
 
