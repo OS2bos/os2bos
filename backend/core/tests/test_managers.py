@@ -29,7 +29,11 @@ from core.models import (
 )
 
 
-class PaymentQuerySetTestCase(TestCase):
+class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
     def test_in_this_year_true(self):
         payment_schedule = create_payment_schedule()
         payment = create_payment(payment_schedule)
@@ -45,8 +49,19 @@ class PaymentQuerySetTestCase(TestCase):
         self.assertNotIn(payment, Payment.objects.in_this_year())
 
     def test_in_this_year_true_paid_date(self):
-        now = timezone.now()
         payment_schedule = create_payment_schedule()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            payment_plan=payment_schedule,
+        )
+        now = timezone.now()
         payment = create_payment(
             payment_schedule,
             date=date(year=now.year - 1, month=12, day=31),
@@ -58,8 +73,19 @@ class PaymentQuerySetTestCase(TestCase):
         self.assertIn(payment, Payment.objects.in_this_year())
 
     def test_in_this_year_false_paid_date(self):
-        now = timezone.now()
         payment_schedule = create_payment_schedule()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            payment_plan=payment_schedule,
+        )
+        now = timezone.now()
         payment = create_payment(
             payment_schedule,
             date=date(year=now.year, month=1, day=1),
@@ -79,46 +105,52 @@ class PaymentQuerySetTestCase(TestCase):
         self.assertEqual(Payment.objects.amount_sum(), Decimal("1150"))
 
     def test_amount_sum_paid_amount_overrides(self):
-        today = timezone.now().date()
         payment_schedule = create_payment_schedule()
-        create_payment(payment_schedule, amount=Decimal("1000"))
-        create_payment(
-            payment_schedule,
-            amount=Decimal("100"),
-            paid_amount=Decimal("150"),
-            paid=True,
-            paid_date=today,
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
         )
-        create_payment(
-            payment_schedule,
-            amount=Decimal("50"),
-            paid_amount=Decimal("250"),
-            paid=True,
-            paid_date=today,
+        appropriation = create_appropriation(case=case)
+        # Default 10 days of 500DKK.
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            payment_plan=payment_schedule,
         )
 
-        self.assertEqual(Payment.objects.amount_sum(), Decimal("1400"))
+        # mark last payment paid with 1000.
+        last_payment = Payment.objects.last()
+        last_payment.paid = True
+        last_payment.paid_date = date(year=2019, month=1, day=10)
+        last_payment.paid_amount = Decimal(1000)
+        last_payment.save()
+
+        self.assertEqual(Payment.objects.amount_sum(), Decimal("5500"))
 
     def test_strict_amount_sum_paid_amount_does_not_override(self):
-        today = timezone.now().date()
         payment_schedule = create_payment_schedule()
-        create_payment(payment_schedule, amount=Decimal("1000"))
-        create_payment(
-            payment_schedule,
-            amount=Decimal("100"),
-            paid_amount=Decimal("150"),
-            paid=True,
-            paid_date=today,
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
         )
-        create_payment(
-            payment_schedule,
-            amount=Decimal("50"),
-            paid_amount=Decimal("250"),
-            paid=True,
-            paid_date=today,
+        appropriation = create_appropriation(case=case)
+        # Default 10 days of 500DKK.
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            payment_plan=payment_schedule,
         )
 
-        self.assertEqual(Payment.objects.strict_amount_sum(), Decimal("1150"))
+        # mark last payment paid with 700.
+        last_payment = Payment.objects.last()
+        last_payment.paid = True
+        last_payment.paid_date = date(year=2019, month=1, day=10)
+        last_payment.paid_amount = Decimal(700)
+        last_payment.save()
+
+        self.assertEqual(Payment.objects.strict_amount_sum(), Decimal("5000"))
 
     def test_group_by_monthly_amounts(self):
         payment_schedule = create_payment_schedule()
@@ -150,28 +182,32 @@ class PaymentQuerySetTestCase(TestCase):
 
     def test_group_by_monthly_amounts_paid(self):
         payment_schedule = create_payment_schedule()
-        create_payment(
-            payment_schedule,
-            amount=Decimal("1000"),
-            paid_amount=Decimal("1200"),
-            date=date(year=2019, month=1, day=1),
-            paid_date=date(year=2019, month=3, day=1),
-            paid=True,
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
         )
-        create_payment(
-            payment_schedule,
-            amount=Decimal("100"),
-            date=date(year=2019, month=2, day=1),
+        appropriation = create_appropriation(case=case)
+        # 4 payments of 500DKK.
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            payment_plan=payment_schedule,
+            start_date=date(year=2019, month=2, day=27),
+            end_date=date(year=2019, month=3, day=2),
         )
-        create_payment(
-            payment_schedule,
-            amount=Decimal("50"),
-            date=date(year=2019, month=3, day=1),
-        )
+        # mark last payment paid with 700.
+        last_payment = Payment.objects.last()
+        last_payment.paid = True
+        last_payment.paid_date = date(year=2019, month=3, day=1)
+        last_payment.paid_amount = Decimal(700)
+        last_payment.save()
 
+        # Expected are two payments in February of 500
+        # and two payments in March of 500 and 700.
         expected = [
-            {"date_month": "2019-02", "amount": Decimal("100")},
-            {"date_month": "2019-03", "amount": Decimal("1250")},
+            {"date_month": "2019-02", "amount": Decimal("1000")},
+            {"date_month": "2019-03", "amount": Decimal("1200")},
         ]
         self.assertEqual(
             [entry for entry in Payment.objects.group_by_monthly_amounts()],
