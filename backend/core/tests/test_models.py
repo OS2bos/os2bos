@@ -2437,6 +2437,21 @@ class PaymentTestCase(TestCase, BasicTestMixin):
                 paid_amount=Decimal("500"),
             )
 
+    def test_save_is_paid_with_schedule_not_allowing(self):
+        today = timezone.now().date()
+
+        payment_schedule = create_payment_schedule()
+
+        with self.assertRaises(ValueError):
+            create_payment(
+                payment_schedule=payment_schedule,
+                date=date(year=2019, month=1, day=1),
+                amount=Decimal("500.0"),
+                paid=True,
+                paid_date=today,
+                paid_amount=Decimal("500"),
+            )
+
     def test_payment_str(self):
         payment_schedule = create_payment_schedule()
         payment = create_payment(
