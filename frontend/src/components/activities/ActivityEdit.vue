@@ -235,7 +235,6 @@
                     data.id = this.act.id
                     data.appropriation = this.activityObj.appropriation
                 }
-                this.$store.commit('clearPayment')
 
                 if (this.mode === 'create' || this.mode === 'clone') {
                     // POSTING an activity
@@ -244,6 +243,7 @@
                     .then(res => {
                         this.$router.push(`/appropriation/${ this.appropriation.id }`)
                         this.$store.dispatch('fetchActivity', res.data.id)
+                        this.$store.commit('clearPayment')
                     })
                     .catch(err => this.$store.dispatch('parseErrorOutput', err))
 
@@ -254,6 +254,7 @@
                     .then(res => {
                         this.$router.push(`/appropriation/${ this.appropriation.id }`)
                         this.$store.dispatch('fetchActivity', res.data.id)
+                        this.$store.commit('clearPayment')
                     })
                     .catch(err => this.$store.dispatch('parseErrorOutput', err))
                 }

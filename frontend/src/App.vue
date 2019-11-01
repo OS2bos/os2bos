@@ -14,8 +14,8 @@
         <main id="app-main">
             <router-view v-if="auth" />
             <article v-else class="noaccess">
-                <h1>Du har ikke adgang hertil</h1>
-                <p>Noget gik galt, eller du mangler de rigtige rettigheder.</p>
+                <h1>Adgang nægtet</h1>
+                <p>Måske mangler du de rigtige rettigheder for at se denne side.</p>
             </article>
         </main>
 
