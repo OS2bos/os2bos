@@ -9,7 +9,7 @@
 
     <div class="payment-modal">
 
-        <button @click="openPaymentDiag">Betaling #{{ this.pId }}</button>
+        <button class="payment-link" @click="openPaymentDiag">Betaling #{{ this.pId }}</button>
 
         <div class="modal-mask" v-if="show_modal">
             <div class="modal-wrapper">
@@ -53,3 +53,23 @@
     }
 
 </script>
+
+<style>
+
+    .payment-modal .payment-link {
+        border-width: 0 0 1px 0;
+        border-radius: 0;
+        box-shadow: none;
+        background-color: transparent;
+        padding: 0;
+        height: auto;
+        font-size: 1rem;
+    }
+
+    .payment-modal .payment-link:hover,
+    .payment-modal .payment-link:active {
+        color: var(--grey10);
+        border-color: var(--grey10);
+    }
+
+</style>
