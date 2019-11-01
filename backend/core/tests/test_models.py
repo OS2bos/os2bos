@@ -2389,7 +2389,10 @@ class PaymentTestCase(TestCase, BasicTestMixin):
     def test_save_not_all_paid_fields_set(self):
         payment_schedule = create_payment_schedule()
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(
+            ValueError,
+            msg="ved en betalt betaling skal alle betalingsfelter sættes",
+        ):
             create_payment(
                 payment_schedule=payment_schedule,
                 date=date(year=2019, month=1, day=1),
@@ -2400,7 +2403,10 @@ class PaymentTestCase(TestCase, BasicTestMixin):
     def test_save_is_paid_paid_date_not_set(self):
         payment_schedule = create_payment_schedule()
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(
+            ValueError,
+            msg="ved en betalt betaling skal alle betalingsfelter sættes",
+        ):
             create_payment(
                 payment_schedule=payment_schedule,
                 date=date(year=2019, month=1, day=1),
@@ -2414,7 +2420,10 @@ class PaymentTestCase(TestCase, BasicTestMixin):
 
         payment_schedule = create_payment_schedule()
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(
+            ValueError,
+            msg="ved en betalt betaling skal alle betalingsfelter sættes",
+        ):
             create_payment(
                 payment_schedule=payment_schedule,
                 date=date(year=2019, month=1, day=1),
@@ -2428,7 +2437,10 @@ class PaymentTestCase(TestCase, BasicTestMixin):
 
         payment_schedule = create_payment_schedule()
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(
+            ValueError,
+            msg="En betaling kan kun betales hvis dens aktivitet er bevilget",
+        ):
             create_payment(
                 payment_schedule=payment_schedule,
                 date=date(year=2019, month=1, day=1),
