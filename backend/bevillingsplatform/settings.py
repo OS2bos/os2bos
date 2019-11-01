@@ -233,8 +233,11 @@ REST_FRAMEWORK = {
     ),
 }
 
-LOG_DIR = settings.get("LOG_DIR", fallback="/log")
+# Output directory for integration with KMD Prisme.
+PRISM_OUTPUT_DIR = settings.get("PRISM_OUTPUT_DIR", fallback="/prisme")
+
 # Logging
+LOG_DIR = settings.get("LOG_DIR", fallback="/log")
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -308,6 +311,16 @@ CONSTANCE_CONFIG = {
     "ACCOUNT_NUMBER_KIND": (
         settings.get("ACCOUNT_NUMBER_KIND", fallback="123"),
         _("Kontostreng art"),
+    ),
+    "PRISM_ORG_UNIT": (
+        settings.get("PRISM_ORG_UNIT", fallback=0),
+        _("Kommune-nummer"),
+        int,
+    ),
+    "PRISM_MACHINE_NO": (
+        settings.get("PRISM_MACHINE_NO", fallback=0),
+        _("Maskin-nummer til PRISME"),
+        int,
     ),
 }
 CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
