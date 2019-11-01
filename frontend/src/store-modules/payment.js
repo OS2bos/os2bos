@@ -104,7 +104,8 @@ const mutations = {
     clearPayment (state) {
         state.payment =  {
             payment_type: 'RUNNING_PAYMENT',
-            payment_frequency: 'MONTHLY'
+            payment_frequency: 'MONTHLY',
+            payment_amount: 0
         }
     }
 }
