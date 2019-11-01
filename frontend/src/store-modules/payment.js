@@ -13,7 +13,8 @@ const state = {
     payments: null,
     payment: {
         payment_type: 'RUNNING_PAYMENT',
-        payment_frequency: 'MONTHLY'
+        payment_frequency: 'MONTHLY',
+        payment_amount: 0
     },
     payment_schedule: null
 }
@@ -26,16 +27,16 @@ const getters = {
         return state.payments ? state.payments : false
     },
     getPaymentType (state) {
-        return state.payment.payment_type ? state.payment.payment_type : false
+        return state.payment.payment_type
     },
     getPaymentAmount (state) {
-        return state.payment.payment_amount ? state.payment.payment_amount : false
+        return state.payment.payment_amount
     },
     getPaymentUnits (state) {
         return state.payment.payment_units ? state.payment.payment_units : false
     },
     getPaymentFreq (state) {
-        return state.payment.payment_frequency ? state.payment.payment_frequency : false
+        return state.payment.payment_frequency
     },
     getPaymentDOM (state) {
         return state.payment.payment_day_of_month ? state.payment.payment_day_of_month : false
