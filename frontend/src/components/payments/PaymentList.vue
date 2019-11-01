@@ -26,7 +26,9 @@
             </thead>
             <tbody>
                 <tr v-for="p in payments_by_year" :key="p.id">
-                    <td><router-link :to="`/payment/${ p.id }/`">Betaling #{{ p.id }}</router-link></td>
+                    <td>
+                        <payment-modal :p-id="p.id" @update="update()"/>
+                    </td>
                     <td>
                         <span v-if="p.paid_date">{{ displayDate(p.paid_date) }}<br></span>
                         <span class="dim" style="white-space: nowrap;">{{ displayDate(p.date) }}</span>
@@ -46,6 +48,7 @@
                 </tr>
             </tbody>
         </table>
+
     </section>
 
 </template>
@@ -54,9 +57,13 @@
 
     import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
+    import PaymentModal from './PaymentModal.vue'
 
     export default {
 
+        components: {
+            PaymentModal
+        },
         props: [
             'payments'
         ],
@@ -77,7 +84,6 @@
                 } else {
                     return false
                 }
-                
             },
             sum: function() {
                 if (this.payments_by_year) {
@@ -92,6 +98,10 @@
             }
         },
         methods: {
+            update: function() {
+                console.log(this.$route)
+                this.$router.push(this.$route.fullPath)  
+            },
             displayDate: function(dt) {
                 return json2jsDate(dt)
             },

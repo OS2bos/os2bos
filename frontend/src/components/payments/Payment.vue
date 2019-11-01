@@ -7,36 +7,121 @@
 
 <template>
     
-    <div class="payment">
-        <nav class="payment-nav" v-if="payment.activity__details__id">
-            <router-link :to="`/activity/${ payment.activity__id }`">
-                <i class="material-icons">arrow_upward</i>
-                {{ activityId2name(payment.activity__details__id) }}
-            </router-link>
-        </nav>
-        <h1>
-            Betaling #{{ payment.id }}
-            <span v-if="payment.paid">- betalt</span>
-        </h1>
+    <div class="payment modal-container">
 
-        <div class="row">
-            <router-link :to="`/payment/${ payment.id }/edit/`"></router-link>
-            <dl class="info">
-                <dt>Betalingsnøgle</dt>
-                <dd>{{ payment.payment_schedule__payment_id }}</dd>
-                
-                <dt>Beløb, planlagt</dt>
-                <dd class="dim">{{ displayDigits(payment.amount) }} kr.</dd>
-                <dt>Betalingsdato, planlagt</dt>
-                <dd class="dim">{{ displayDate(payment.date) }}</dd>
-                <dt>Kontostreng</dt>
-                <dd>{{ payment.account_string }}</dd>
-            </dl>
-
-            <payment-edit />
-
+        <div class="modal-header">
+            <h2>
+                <router-link v-if="payment.activity__details__id" 
+                             :to="`/activity/${ payment.activity__id }`"
+                             class="payment-title-link">
+                    <i class="material-icons">arrow_back</i>
+                    {{ activityId2name(payment.activity__details__id) }}
+                </router-link>
+                <span class="payment-title">
+                    <span v-if="payment.paid" class="label label-GRANTED" title="Betalt">
+                        <i class="material-icons" style="width: 1.5rem;">checkmark</i>
+                    </span>
+                    Betaling #{{ payment.id }}
+                </span>
+            </h2>
+                        
         </div>
 
+        <div class="modal-body">
+            
+            <div class="row">
+
+                <dl class="info" style="width: 50%;">
+                    <dt>Betalingsnøgle</dt>
+                    <dd>{{ payment.payment_schedule__payment_id }}</dd>
+                    <dt>Beløb, planlagt</dt>
+                    <dd class="dim">{{ displayDigits(payment.amount) }} kr.</dd>
+                    <dt>Betalingsdato, planlagt</dt>
+                    <dd class="dim">{{ displayDate(payment.date) }}</dd>
+                    <dt>Kontostreng</dt>
+                    <dd>{{ payment.account_string ? payment.account_string : 'ukendt' }}</dd>
+                </dl>
+
+                <div class="payment-edit" style="width: 50%;">
+                    <dl>
+                        <template v-if="paymentlock">
+                            <dt>Betalt beløb</dt>
+                            <dd>
+                                {{ displayDigits(payment.paid_amount) }} kr.
+                            </dd>
+                            <dt>Betalt dato</dt>
+                            <dd>
+                                {{ displayDate(payment.paid_date) }}
+                            </dd>
+                            <template v-if="payment.note">
+                                <dt>Referencetekst</dt>
+                                <dd>
+                                    {{ payment.note }}
+                                </dd>
+                            </template>
+                        </template>
+                    </dl>
+                    <template v-if="permissionCheck === true && this.payment.activity__status === 'GRANTED'">
+                        <form @submit.prevent="prePayCheck()" v-if="!paymentlock">
+                            <error />
+                            <fieldset>
+                                <label for="field-amount" class="required">Betal beløb</label>
+                                <input type="number" step="0.01" v-model="paid.paid_amount" id="field-amount" required>
+
+                                <label for="field-date" class="required">Betal dato</label>
+                                <input type="date" v-model="paid.paid_date" id="field-date" required>
+
+                                <label for="field-note">Referencetekst</label>
+                                <input type="text" v-model="paid.note" id="field-note">
+                                <error err-key="note" />
+                            </fieldset>
+                        </form>
+                    </template>
+                </div>
+
+            </div>
+
+            <!-- Submit payment modal -->
+            <div v-if="showModal">
+                <form @submit.prevent="pay()" class="modal-form">
+                    <div class="modal-mask">
+                        <div class="modal-wrapper">
+                            <div class="modal-container">
+
+                                <div class="modal-header">
+                                    <slot name="header">
+                                        <h2>Betaling</h2>
+                                    </slot>
+                                </div>
+
+                                <div class="modal-body">
+                                    <slot name="body">
+                                        <p>
+                                            Er du sikker på, at du vil sende {{ paid.paid_amount }} kr. til betaling?
+                                        </p>
+                                    </slot>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <slot name="footer">
+                                        <button type="button" class="modal-cancel-btn" @click="reload()">Annullér</button>
+                                        <button class="modal-confirm-btn" type="submit">Godkend</button>
+                                    </slot>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+        </div>
+
+        <div class="modal-footer">
+            
+            <button v-if="!paymentlock" type="button" :disabled="paid.paid_amount && paid.paid_date ? false : true" @click="pay()">Betal</button>
+            <button type="button" class="modal-cancel-btn" @click="closeDiag()">Luk</button>
+        
+        </div>
 
     </div>
 
@@ -44,15 +129,32 @@
 
 <script>
 
-    import PaymentEdit from './PaymentEdit.vue'
+    import axios from '../http/Http.js'
+    import Error from '../forms/Error.vue'
+    import UserRights from '../mixins/UserRights.js'
+    import notify from '../notifications/Notify.js'
     import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
     import { activityId2name } from '../filters/Labels.js'
 
     export default {
-        
+
         components: {
-            PaymentEdit
+            Error
+        },
+        mixins: [
+            UserRights
+        ],
+        data: function() {
+            return {
+                paid: {
+                    paid_amount: null,
+                    paid_date: null,
+                    note: null
+                },
+                showModal: false,
+                paymentlock: true
+            }
         },
         computed: {
             p_id: function() {
@@ -67,17 +169,10 @@
                 this.update()
             },
             payment: function() {
-                if (this.payment) {
-                    this.$store.commit('setBreadcrumb', [
-                        {
-                            link: '/payments',
-                            title: 'Betalinger'
-                        },
-                        {
-                            link: false,
-                            title: `Betaling ${ this.p_id }`
-                        }
-                    ])
+                if (!this.payment.paid_amount && !this.payment.paid_date) {
+                    this.paymentlock = false
+                } else {
+                    this.paymentlock = true
                 }
             }
         },
@@ -93,6 +188,32 @@
             },
             update: function() {
                 this.$store.dispatch('fetchPayment', this.p_id)
+            },
+            reload: function() {
+                this.showModal = false
+            },
+            prePayCheck: function() {
+                this.showModal = true
+            },
+            pay: function() {
+                let data = {
+                    paid_amount: this.paid.paid_amount,
+                    paid_date: this.paid.paid_date,
+                    note: this.paid.note ? this.paid.note : '',
+                    paid: true
+                }
+                axios.patch(`/payments/${ this.payment.id }/`, data)
+                .then(res => {
+                    this.showModal = false
+                    notify('Betaling godkendt', 'success')
+                    this.$emit('closepaymentdiag')
+                    this.update()
+                    this.$emit('update')
+                })
+                .catch(err => this.$store.dispatch('parseErrorOutput', err))
+            },
+            closeDiag: function() {
+                this.$emit('close')
             }
         },
         created: function() {
@@ -110,18 +231,41 @@
         margin: 2rem auto;
     }
 
-    .payment .payment-nav {
-        background-color: var(--grey1);
+    .payment.modal-container {
+        padding: 2rem;
+        width: 35rem;
+        max-width: 90vw;
     }
 
-    .payment .payment-nav > a {
-        border-bottom: none;
+    .payment .modal-footer {
+        text-align: right;
+    }
+
+    .payment .modal-header > h2 {
+        padding: 0;
+    }
+    
+    .payment .modal-body {
+        margin: 1rem 0;
+    }
+
+    .payment .payment-title-link {
+        display: block;
+        font-size: 1rem;
+        background-color: var(--grey1);
         padding: .5rem 1rem;
+        border: none;
+        margin: 0;
+    }
+
+    .payment .payment-title {
+        margin-top: 1rem;
         display: block;
     }
 
-    .payment .info {
-        padding: 0rem 1rem;
+    .payment .is-paid {
+        float: right;
+        font-size: 1rem;
     }
 
 </style>
