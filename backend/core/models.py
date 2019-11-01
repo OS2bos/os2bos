@@ -302,6 +302,15 @@ class PaymentSchedule(models.Model):
         return payment_method in allowed[recipient_type]
 
     @property
+    def can_be_paid(self):
+        if (
+            hasattr(self, "activity")
+            and self.activity.status == STATUS_GRANTED
+        ):
+            return True
+        return False
+
+    @property
     def triggers_payment_email(self):
         """
         Trigger a payment email only in the (recipient_type->payment_method)
@@ -540,6 +549,14 @@ class Payment(models.Model):
         if any(paid_fields) and not all(paid_fields):
             raise ValueError(
                 _("ved en betalt betaling skal alle betalingsfelter sættes")
+            )
+
+        if self.paid and not self.payment_schedule.can_be_paid:
+            raise ValueError(
+                _(
+                    "En betaling kan kun betales "
+                    "hvis dens aktivitet er bevilget"
+                )
             )
         super().save(*args, **kwargs)
 
