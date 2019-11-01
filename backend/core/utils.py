@@ -311,19 +311,21 @@ def format_prism_financial_record(payment, line_no, record_no):
     type G69).
     """
     # The fields that are hard coded *never* change.
-    # We specify them below, but for clarity we hard code them in the actual
-    # output.
-    """
-    reg_location = '000'
-    interface_type = 'G69'
+    # We specify them as variables below, but in reality we might as
+    # well hardcode them in the actual output.
+
+    reg_location = "000"
+    interface_type = "G69"
     org_type = "01"
     post_type = "NOR"
     line_format = "FLYD"
-    """
 
     # Line number is given as 5 chars with leading zeroes, org unit as 4 chars
     # with leading zeroes, as per the specification.
-    header = f"000G69{line_no:05d}{config.PRISM_ORG_UNIT:04d}01NORFLYD"
+    header = (
+        f"{reg_location}{interface_type}{line_no:05d}"
+        + f"{config.PRISM_ORG_UNIT:04d}{org_type}{post_type}{line_format}"
+    )
 
     # Now the actual posting fields. These are marked with a leading '&' and
     # must come in increasing order by field number.
@@ -386,14 +388,18 @@ def format_prism_payment_record(payment, line_no, record_no):
     (transaction type G68).
     """
     # First, we format the header.
-    # The header has the following hard coded fields:
-    """
-    reg_location = '000'
-    interface_type = 'G68'
+    # The header has the following fields that never change and might as
+    # well be hard coded:
+
+    reg_location = "000"
+    interface_type = "G68"
     transaction_type = "01"
     line_format = "1"
-    """
-    header = f"000G68{line_no:05d}{config.PRISM_ORG_UNIT:04d}011"
+
+    header = (
+        f"{reg_location}{interface_type}{line_no:05d}"
+        + f"{config.PRISM_ORG_UNIT:04d}{transaction_type}{line_format}"
+    )
 
     # Now the mandatory fields. In the file, they are preceded with "&"
     # and must come in non-decreasing order.
@@ -419,6 +425,7 @@ def format_prism_payment_record(payment, line_no, record_no):
 
     40 - posting text.
     """
+
     fields = {
         "02": f"{config.PRISM_ORG_UNIT:04d}",
         "03": "00",
@@ -493,19 +500,23 @@ def process_payments_for_date(date=None):
         # Generate and write preamble.
 
         """
-        The fields given below never change and are hard coded in the
-        actual string:
+        The fields given below never change and might as well be hard coded in
+        the output:
+        """
 
         hdisp = " "  # Blank, must be there.
-        media_type = '6'  # Don't ask.
+        media_type = "6"  # Don't ask.
         evolbr = "      "  # 6 blanks - once again, don't ask.
         mixed = "1"
-        """
-        trans_code = "Z300"  # From KMD's documentation: "start identification"
+        trans_code = "Z300"  # Identifies transaction start.
+
         user_number = f"{config.PRISM_ORG_UNIT:04d}"  # Org unit.
         day_of_year = today.timetuple().tm_yday  # Day of year.
 
-        preamble_string = f"{trans_code} {user_number}6      {day_of_year}1"
+        preamble_string = (
+            f"{trans_code}{hdisp}{user_number}{media_type}{evolbr}"
+            + f"{day_of_year}{mixed}"
+        )
         f.write(f"{preamble_string}\n")
         # Generate and write the records.
         prism_records = generate_records_for_prism(payments)

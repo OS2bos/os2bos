@@ -233,9 +233,11 @@ REST_FRAMEWORK = {
     ),
 }
 
-PRISM_OUTPUT_DIR = settings.get("LOG_DIR", fallback="/prisme")
-LOG_DIR = settings.get("LOG_DIR", fallback="/log")
+# Output directory for integration with KMD Prisme.
+PRISM_OUTPUT_DIR = settings.get("PRISM_OUTPUT_DIR", fallback="/prisme")
+
 # Logging
+LOG_DIR = settings.get("LOG_DIR", fallback="/log")
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
