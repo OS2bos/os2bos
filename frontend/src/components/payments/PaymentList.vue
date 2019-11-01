@@ -99,8 +99,7 @@
         },
         methods: {
             update: function() {
-                console.log(this.$route)
-                this.$router.push(this.$route.fullPath)  
+                // Do something to update list of payments
             },
             displayDate: function(dt) {
                 return json2jsDate(dt)
