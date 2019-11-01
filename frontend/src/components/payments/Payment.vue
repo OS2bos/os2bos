@@ -11,13 +11,13 @@
 
         <div class="modal-header">
             <h2>
-                <router-link v-if="payment.activity__details__id" 
-                             :to="`/activity/${ payment.activity__id }`"
-                             class="payment-title-link"
-                             @click="showModal = false">
+                <button v-if="payment.activity__id" 
+                        class="payment-title-link" 
+                        @click="navToLink(`/activity/${ payment.activity__id }`)">
                     <i class="material-icons">arrow_back</i>
                     {{ activityId2name(payment.activity__details__id) }}
-                </router-link>
+                </button>
+                
                 <span class="payment-title">
                     <span v-if="payment.paid" class="label label-GRANTED" title="Betalt">
                         <i class="material-icons" style="width: 1.5rem;">checkmark</i>
@@ -215,6 +215,10 @@
             },
             closeDiag: function() {
                 this.$emit('close')
+            },
+            navToLink: function(path) {
+                this.$emit('close')
+                this.$router.push(path)
             }
         },
         created: function() {
@@ -257,6 +261,16 @@
         padding: .5rem 1rem;
         border: none;
         margin: 0;
+        font-size: 1rem;
+        box-shadow: none;
+        height: auto;
+        width: 100%;
+        text-align: left;
+    }
+
+    .payment .payment-title-link:hover,
+    .payment .payment-title-link:active {
+        color: var(--grey10);
     }
 
     .payment .payment-title {
