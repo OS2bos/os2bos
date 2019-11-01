@@ -65,7 +65,7 @@
             PaymentModal
         },
         props: [
-            'payments'
+            'pId'
         ],
         data: function() {
             return {
@@ -75,6 +75,9 @@
             }
         },
         computed: {
+            payments: function() {
+                return this.$store.getters.getPaymentSchedule.payments
+            },
             payments_by_year: function() {
                 if (this.payments) {
                     let payms = this.payments.filter(payment => {
@@ -99,7 +102,7 @@
         },
         methods: {
             update: function() {
-                // Do something to update list of payments
+                this.$store.dispatch('fetchPaymentSchedule', this.pId)
             },
             displayDate: function(dt) {
                 return json2jsDate(dt)

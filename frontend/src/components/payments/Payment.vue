@@ -13,7 +13,8 @@
             <h2>
                 <router-link v-if="payment.activity__details__id" 
                              :to="`/activity/${ payment.activity__id }`"
-                             class="payment-title-link">
+                             class="payment-title-link"
+                             @click="showModal = false">
                     <i class="material-icons">arrow_back</i>
                     {{ activityId2name(payment.activity__details__id) }}
                 </router-link>
