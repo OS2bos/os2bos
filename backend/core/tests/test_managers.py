@@ -86,7 +86,6 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
             payment_plan=payment_schedule,
         )
         now = timezone.now()
-        payment_schedule = create_payment_schedule()
         payment = create_payment(
             payment_schedule,
             date=date(year=now.year, month=1, day=1),
