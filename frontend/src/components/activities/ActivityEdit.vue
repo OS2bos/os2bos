@@ -188,6 +188,7 @@
         },
         methods: {
             update: function() {
+                this.$store.commit('clearPayment')
                 if (this.activityObj) {
                     this.act = this.activityObj
                     this.$store.commit('setPayment', this.act.payment_plan)
