@@ -31,6 +31,7 @@ from core.tests.testing_utils import (
     create_account,
     create_service_provider,
     create_section_info,
+    create_related_person,
 )
 from core.models import (
     Municipality,
@@ -39,6 +40,7 @@ from core.models import (
     Activity,
     Account,
     ApprovalLevel,
+    RelatedPerson,
     Team,
     PaymentSchedule,
     PaymentMethodDetails,
@@ -3067,3 +3069,21 @@ class SectionInfoTestCase(TestCase, BasicTestMixin):
         section_info = create_section_info(details, section)
 
         self.assertEqual(str(section_info), f"{details} - {section}")
+
+
+class RelatedPersonTestCase(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_str(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        related_person = create_related_person(case)
+        self.assertEqual(
+            str(related_person),
+            f"{related_person.name} - "
+            f"{related_person.cpr_number} - "
+            f"{related_person.main_case}",
+        )
