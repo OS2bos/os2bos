@@ -30,6 +30,11 @@ const router = new Router({
             component: () => import(/* webpackChunkName: "caseedit" */ './components/cases/CaseEdit.vue')
         },
         {
+            path: '/cases/',
+            name: 'cases',
+            component: () => import(/* webpackChunkName: "cases" */ './components/cases/Cases_2.vue')
+        },
+        {
             path: '/all-cases/:query',
             name: 'some-cases',
             component: () => import(/* webpackChunkName: "allcases" */ './components/cases/AllCases.vue')
