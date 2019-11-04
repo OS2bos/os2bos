@@ -230,13 +230,13 @@ class PaymentFilter(filters.FilterSet):
         queryset=Activity.objects.all(),
     )
 
-    date__gt = filters.DateFilter(
-        field_name="date",
+    paid_date__gt = filters.DateFilter(
+        field_name="paid_date",
         lookup_expr="gt",
         label=_("Betalingsdato større end"),
     )
-    date__lt = filters.DateFilter(
-        field_name="date",
+    paid_date__lt = filters.DateFilter(
+        field_name="paid_date",
         lookup_expr="lt",
         label=_("Betalingsdato mindre end"),
     )
