@@ -7,12 +7,16 @@
 
 
 import sys
+import logging
+
 from datetime import datetime
 
 from django.core.management.base import BaseCommand
 
 from core.utils import process_payments_for_date
 
+
+logger = logging.getLogger(__name__)
 
 class Command(BaseCommand):
     help = "Exports payments due today or on the give date to PRISME."

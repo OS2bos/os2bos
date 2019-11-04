@@ -532,3 +532,5 @@ def process_payments_for_date(date=None):
         p.paid_amount = p.amount
         p.paid_date = today
         p.save()
+    # Return filename for info and verification.
+    return filename
