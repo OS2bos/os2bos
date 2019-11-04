@@ -40,7 +40,6 @@ from core.models import (
     Activity,
     Account,
     ApprovalLevel,
-    RelatedPerson,
     Team,
     PaymentSchedule,
     PaymentMethodDetails,
