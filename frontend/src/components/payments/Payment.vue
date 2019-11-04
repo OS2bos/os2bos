@@ -119,7 +119,7 @@
 
         <div class="modal-footer">
             
-            <button v-if="!paymentlock" type="button" :disabled="paid.paid_amount && paid.paid_date ? false : true" @click="pay()">Betal</button>
+            <button v-if="!paymentlock && this.payment.activity__status === 'GRANTED'" type="button" :disabled="paid.paid_amount && paid.paid_date ? false : true" @click="pay()">Betal</button>
             <button type="button" class="modal-cancel-btn" @click="closeDiag()">Luk</button>
         
         </div>
