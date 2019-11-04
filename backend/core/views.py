@@ -231,12 +231,12 @@ class PaymentFilter(filters.FilterSet):
     )
 
     date__gt = filters.DateFilter(
-        field_name="date",
+        field_name="paid_date",
         lookup_expr="gt",
         label=_("Betalingsdato større end"),
     )
     date__lt = filters.DateFilter(
-        field_name="date",
+        field_name="paid_date",
         lookup_expr="lt",
         label=_("Betalingsdato mindre end"),
     )
