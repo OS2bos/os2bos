@@ -88,7 +88,7 @@
 
                 <div class="row-item">
                     <pay-type-edit />
-                    <pay-plan v-if="payment.payment_amount" />
+                    <pay-plan />
                 </div>
 
                 <div class="row-item">
@@ -188,6 +188,7 @@
         },
         methods: {
             update: function() {
+                this.$store.commit('clearPayment')
                 if (this.activityObj) {
                     this.act = this.activityObj
                     this.$store.commit('setPayment', this.act.payment_plan)

@@ -26,7 +26,9 @@
                     <tbody>
                         <tr v-for="p in payments" :key="p.id">
                             <template v-if="p.activity__status === 'GRANTED'">
-                            <td><router-link :to="`/payment/${ p.id }/`">Betaling #{{ p.id }}</router-link></td>
+                            <td>
+                                <payment-modal :p-id="p.id" @update="update()"/>
+                            </td>
                             <td> {{ p.payment_schedule__payment_id }} </td>
                             <td> {{ p.case__cpr_number }} </td>
                             <td>
@@ -57,7 +59,9 @@
             <p v-if="payments.length < 1">
                 Kunne ikke finde nogen sager
             </p>
-            <button v-if="payments.length > 1" class="more">Vis flere</button>
+
+            <!-- <button v-if="payments.length > 1" class="more">Vis flere</button> -->
+
         </div>
 
         <!-- <div class="payment-search-filters">
@@ -97,9 +101,13 @@
 
     import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
+    import PaymentModal from './PaymentModal.vue'
 
     export default {
         
+        components: {
+            PaymentModal
+        },
         data: function() {
             return {
                 field_id: null
