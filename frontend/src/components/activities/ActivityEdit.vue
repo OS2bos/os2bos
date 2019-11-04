@@ -88,7 +88,7 @@
 
                 <div class="row-item">
                     <pay-type-edit />
-                    <pay-plan v-if="payment.payment_amount" />
+                    <pay-plan />
                 </div>
 
                 <div class="row-item">
