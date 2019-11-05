@@ -55,5 +55,5 @@ input[type="reset"]:disabled {
     cursor: default;
     background-color: transparent;
     border-color: var(--grey2);
-    color: var(--grey4);
+    color: var(--grey2);
 }
