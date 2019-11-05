@@ -304,6 +304,12 @@ CONSTANCE_CONFIG = {
         ),
         _("fra-email"),
     ),
+    "DEFAULT_TEAM_NAME": (
+        settings.get(
+            "DEFAULT_TEAM_NAME", fallback="Afventer tildeling af team"
+        ),
+        _("første team for nye brugere"),
+    ),
     "ACCOUNT_NUMBER_DEPARTMENT": (
         settings.get("ACCOUNT_NUMBER_DEPARTMENT", fallback="12345"),
         _("Kontostreng afdeling"),
