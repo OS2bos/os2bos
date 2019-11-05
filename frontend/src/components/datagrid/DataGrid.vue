@@ -10,11 +10,12 @@
     <div class="datagrid-container">
 
         <form class="datagrid-filter" @submit.prevent>
-            <label for="filter-field">Find:</label>
+            <label for="filter-field" title="Find i liste"></label>
             <input type="search"
                    name="query" 
                    v-model="filterKey"
-                   id="filter-field">
+                   id="filter-field"
+                   placeholder="Find i liste ...">
         </form>
     
         <table class="datagrid">
@@ -218,16 +219,24 @@
     }
 
     .datagrid-filter {
+        border-top: solid 1px var(--grey1);
+        background-color: transparent;
         display: flex;
         flex-flow: row nowrap;
         align-items: center;
         justify-content: flex-end;
-        padding: .5rem 1.5rem;
+        padding: .5rem 0;
         margin: 0;
     }
 
     .datagrid-filter label {
         margin: 0 .5rem 0 0;
+    }
+
+    .datagrid-filter input {
+        width: 8.5rem;
+        padding: .125rem .5rem;
+        border-color: var(--grey1);
     }
 
 </style>

@@ -9,44 +9,22 @@
 <template>
 
     <section class="cases" v-if="cas">
+
         <header class="cases-header">
             <h1>Mine sager</h1>
             <button v-if="permissionCheck === true" class="create" @click="$router.push('/case-create/')">+ Tilknyt hovedsag</button>
         </header>
-        <table v-if="cas.length > 0">
-            <thead>
-                <tr>
-                    <th style="width: 6rem;">Status</th>
-                    <th>SBSYS-hovedsag</th> 
-                    <th>Borger</th>
-                    <th>Ændret</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="c in cas" :key="c.id">
-                    <td style="width: 6rem;">
-                        <div class="mini-label" v-if="c.expired === false">
-                            <span class="label label-GRANTED">Aktiv</span>
-                        </div>
-                    </td>
-                    <td>
-                        <i class="material-icons">folder_shared</i>
-                        <router-link :to="`/case/${ c.id }`">
-                            {{ c.sbsys_id }}
-                        </router-link>
-                    </td>
-                    <td>
-                        {{ c.cpr_number }}, {{ c.name }}
-                    </td>
-                    <td class="nowrap">
-                        {{ displayDate(c.modified) }}
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div v-if="cas.length > 0">
+            <data-grid ref="data-grid"
+                        :data-list="cas"
+                        :columns="columns"
+                        :selectable="false" />
+        </div>
+
         <p v-if="cas.length < 1">
             Der er ikke tilknyttet nogen sager
         </p>
+
     </section>
 
 </template>
@@ -54,16 +32,45 @@
 <script>
 
     import axios from '../http/Http.js'
-    import { json2jsDate } from '../filters/Date.js'
+    import { json2js } from '../filters/Date.js'
     import UserRights from '../mixins/UserRights.js'
+    import DataGrid from '../datagrid/DataGrid.vue'
 
     export default {
 
         mixins: [UserRights],
-
+        components: {
+            DataGrid
+        },
         data: function() {
             return {
-                cas: null
+                cas: null,
+                columns: [
+                    {
+                        key: 'expired',
+                        title: 'Status',
+                        display_func: this.displayStatus
+                    },
+                    {
+                        key: 'sbsys_id',
+                        title: 'SBSYS ID',
+                        display_func: this.displayID,
+                        clickable: true
+                    },
+                    {
+                        key: 'cpr_number',
+                        title: 'CPR nr.',
+                    },
+                    {
+                        key: 'name',
+                        title: 'Navn',
+                    },
+                    {
+                        key: 'modified',
+                        title: 'Ændret',
+                        display_func: this.displayDate
+                    }
+                ]
             }
         },
         computed: {
@@ -89,8 +96,21 @@
                     .catch(err => console.log(err))
                 }
             },
-            displayDate: function(dt) {
-                return json2jsDate(dt)
+            displayID: function(d) {
+                let to = `#/case/${ d.id }/`
+                return `<a href="${ to }">${ d.sbsys_id }</a>`
+            },
+            displayDate: function(d) {
+                return json2js(d.modified)
+            },
+            displayStatus: function(d) {
+                if (!d.expired) {
+                    return `
+                        <div class="mini-label">
+                            <span class="label label-GRANTED">Aktiv</span>
+                        </div>
+                    `
+                }   
             }
         },
         created: function() {
@@ -114,7 +134,7 @@
     }
 
     .cases .create {
-        margin: 0 2rem;
+        margin: 0 0 0 1.5rem;
     }
 
 </style>
