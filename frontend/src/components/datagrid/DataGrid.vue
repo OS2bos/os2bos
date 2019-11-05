@@ -38,7 +38,12 @@
                            title="Vælg"></label>
                 </td>
                 <td v-for="c in columns" :key="c.key">
-                    {{ d[c.key] }}
+                    <template v-if="c.display_func">
+                        <span v-html="c.display_func(d[c.key])"></span>
+                    </template>
+                    <template v-else>
+                        {{ d[c.key] }}
+                    </template>
                 </td>
             </tr>
         </tbody>

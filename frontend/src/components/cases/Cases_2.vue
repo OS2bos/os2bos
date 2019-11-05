@@ -23,6 +23,7 @@
 
     import axios from '../http/Http.js'
     import DataGrid from '../datagrid/DataGrid.vue'
+    import { json2js } from '../filters/Date.js'
 
     export default {
 
@@ -35,8 +36,9 @@
                 selected_cases: [],
                 columns: [
                     {
-                        key: 'status',
+                        key: 'expired',
                         title: 'Status',
+                        display_func: this.displayStatus
                     },
                     {
                         key: 'sbsys_id',
@@ -53,6 +55,7 @@
                     {
                         key: 'modified',
                         title: 'Ændret',
+                        display_func: this.displayDate
                     }
                 ]
             }
@@ -70,6 +73,20 @@
             },
             updateSelectedCases: function(selections) {
                 this.selected_cases = selections
+            },
+            displayDate: function(dt) {
+                return json2js(dt)
+            },
+            displayStatus: function(status) {
+                if (!status) {
+                    return `
+                        <div class="mini-label">
+                            <span class="label label-GRANTED">Aktiv</span>
+                        </div>
+                    `
+                }
+                
+                
             }
         },
         created: function() {
