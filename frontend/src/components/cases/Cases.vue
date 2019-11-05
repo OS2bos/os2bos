@@ -258,7 +258,7 @@
         order: 1;
         background-color: var(--grey1);
         padding: 1rem;
-        margin: 2.9rem 2rem 0 0;
+        margin: 2.9rem 2rem 3.9rem 0;
     }
 
     .case-search-filters h2,
