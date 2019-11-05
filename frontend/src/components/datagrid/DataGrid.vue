@@ -7,47 +7,61 @@
 
 <template>
 
-    <table class="datagrid">
-        
-        <thead>
-            <tr>
-                <th>
-                    <input type="checkbox" 
-                           id="datagrid-select-all"
-                           @change="toggleAll($event.target.checked)">
-                    <label for="datagrid-select-all" 
-                           title="Vælg alle"></label>
-                </th>
-                <th v-for="c in columns" 
-                    :key="c.key"
-                    @click="sortBy(c.key)"
-                    :class="{ active: sortKey == c.key }">
-                    {{ c.title }}
-                    <span class="arrow" :class="sortOrders[c.key] > 0 ? 'asc' : 'dsc'"></span>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="d in filteredData" :key="d.id">
-                <td>
-                    <input type="checkbox"
-                           :id="`datagrid-select-${ d.id }`"
-                           @change="selectEntry($event.target.checked, d)"
-                           class="datagrid-single-checkbox">
-                    <label :for="`datagrid-select-${ d.id }`"
-                           title="Vælg"></label>
-                </td>
-                <td v-for="c in columns" :key="c.key">
-                    <template v-if="c.display_func">
-                        <span v-html="c.display_func(d[c.key])"></span>
-                    </template>
-                    <template v-else>
-                        {{ d[c.key] }}
-                    </template>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="datagrid-container">
+
+        <form class="datagrid-filter" @submit.prevent>
+            <label for="filter-field">Find</label>
+            <input type="search"
+                   name="query" 
+                   v-model="filterKey"
+                   id="filter-field">
+        </form>
+    
+        <table class="datagrid">
+            
+            <thead>
+                <tr>
+                    <th>
+                        <input type="checkbox" 
+                            id="datagrid-select-all"
+                            @change="toggleAll($event.target.checked)">
+                        <label for="datagrid-select-all" 
+                            title="Vælg alle"
+                            style="margin: 0;">
+                        </label>
+                    </th>
+                    <th v-for="c in columns" 
+                        :key="c.key"
+                        @click="sortBy(c.key)"
+                        :class="{ active: sortKey == c.key }">
+                        {{ c.title }}
+                        <span class="arrow" :class="sortOrders[c.key] > 0 ? 'asc' : 'dsc'"></span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="d in filteredData" :key="d.id">
+                    <td>
+                        <input type="checkbox"
+                            :id="`datagrid-select-${ d.id }`"
+                            @change="selectEntry($event.target.checked, d)"
+                            class="datagrid-single-checkbox">
+                        <label :for="`datagrid-select-${ d.id }`"
+                            title="Vælg"></label>
+                    </td>
+                    <td v-for="c in columns" :key="c.key">
+                        <template v-if="c.display_func">
+                            <span v-html="c.display_func(d)"></span>
+                        </template>
+                        <template v-else>
+                            {{ d[c.key] }}
+                        </template>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
 
 </template>
 
@@ -57,8 +71,7 @@
 
         props: {
             dataList: Array,
-            columns: Array,
-            filterKey: String
+            columns: Array
         },
         data: function () {
             var sortOrders = {}
@@ -68,14 +81,23 @@
             return {
                 sortKey: '',
                 sortOrders: sortOrders,
-                selection: []
+                selection: [],
+                filterKey: ''
             }
         },
         computed: {
             filteredData: function () {
                 var sortKey = this.sortKey
+                var filterKey = this.filterKey && this.filterKey.toLowerCase()
                 var order = this.sortOrders[sortKey] || 1
                 var list = this.dataList
+                if (filterKey) {
+                    list = list.filter(function (row) {
+                        return Object.keys(row).some(function (key) {
+                            return String(row[key]).toLowerCase().indexOf(filterKey) > -1
+                        })
+                    })
+                }
                 if (sortKey) {
                     list = list.slice().sort(function (a, b) {
                         a = a[sortKey]
@@ -125,6 +147,14 @@
 
 <style>
 
+    .datagrid-container {
+        margin: 1rem 0;
+    }
+
+    .datagrid {
+        margin-top: 0;
+    }
+
     .datagrid th {
         background-color: var(--grey6);
         color: var(--grey2);
@@ -162,6 +192,19 @@
         border-left: 4px solid transparent;
         border-right: 4px solid transparent;
         border-top: 4px solid #fff;
+    }
+
+    .datagrid-filter {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: flex-end;
+        padding: .5rem 2rem;
+        margin: 0;
+    }
+
+    .datagrid-filter label {
+        margin: 0 .5rem 0 0;
     }
 
 </style>

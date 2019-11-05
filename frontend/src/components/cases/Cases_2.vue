@@ -43,6 +43,7 @@
                     {
                         key: 'sbsys_id',
                         title: 'SBSYS ID',
+                        display_func: this.displayID
                     },
                     {
                         key: 'cpr_number',
@@ -74,11 +75,15 @@
             updateSelectedCases: function(selections) {
                 this.selected_cases = selections
             },
-            displayDate: function(dt) {
-                return json2js(dt)
+            displayID: function(d) {
+                let to = `#/case/${ d.id }/`
+                return `<a href="${ to }">${ d.sbsys_id }</a>`
             },
-            displayStatus: function(status) {
-                if (!status) {
+            displayDate: function(d) {
+                return json2js(d.modified)
+            },
+            displayStatus: function(d) {
+                if (!d.expired) {
                     return `
                         <div class="mini-label">
                             <span class="label label-GRANTED">Aktiv</span>
