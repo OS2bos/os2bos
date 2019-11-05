@@ -6,6 +6,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
+import os
 import sys
 import logging
 
@@ -13,10 +14,11 @@ from datetime import datetime
 
 from django.core.management.base import BaseCommand
 
-from core.utils import process_payments_for_date
+from core.utils import export_prism_payments_for_date
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("bevillingsplatform.export_to_prism")
+
 
 class Command(BaseCommand):
     help = "Exports payments due today or on the give date to PRISME."
@@ -29,12 +31,26 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         """Call export function and that's it!"""
         date = options["date"]
-        if not date:
-            process_payments_for_date()
-        else:
+        if date is not None:
             try:
                 date = datetime.strptime(date, "%Y%m%d")
             except ValueError:
                 print("Please enter date as 'YYYYMMDD'.")
+                logger.error("Invalid date input format")
                 sys.exit()
-            process_payments_for_date(date)
+        try:
+            prism_file = export_prism_payments_for_date(date)
+            # This is just a sanity check, if we arrive here everything will
+            # have worked out or an exception would have been thrown.
+            if prism_file is None:
+                logger.info("No records found for export to PRISME.")
+            elif os.path.isfile(prism_file):
+                logger.info(
+                    f"Success: PRISME records were exported to {prism_file}"
+                )
+            else:
+                logger.error("Export of records to PRISME failed!")
+        except Exception as e:
+            logger.exception(
+                f"An exception occurred during export to PRISME: {e}"
+            )

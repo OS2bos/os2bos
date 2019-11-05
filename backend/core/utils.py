@@ -450,7 +450,6 @@ def format_prism_payment_record(payment, line_no, record_no):
 
 def due_payments_for_prism(date):
     "Return payments which are due today and should be sent to PRISM."
-
     return models.Payment.objects.filter(
         date=date,
         recipient_type=models.PaymentSchedule.PERSON,
@@ -479,7 +478,7 @@ def generate_records_for_prism(due_payments):
 
 
 @transaction.atomic
-def process_payments_for_date(date=None):
+def export_prism_payments_for_date(date=None):
     """Process payments and output a file for PRISME."""
 
     # The output directory is not configurable - this is mapped through Docker.

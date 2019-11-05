@@ -238,6 +238,7 @@ PRISM_OUTPUT_DIR = settings.get("PRISM_OUTPUT_DIR", fallback="/prisme")
 
 # Logging
 LOG_DIR = settings.get("LOG_DIR", fallback="/log")
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -256,6 +257,14 @@ LOGGING = {
                 "AUDIT_LOG_FILE", fallback=os.path.join(LOG_DIR, "audit.log")
             ),
         },
+        "export_to_prism": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": settings.get(
+                "PRISM_LOG_FILE",
+                fallback=os.path.join(LOG_DIR, "export_to_prism.log"),
+            ),
+        },
     },
     "loggers": {
         "django": {
@@ -265,6 +274,12 @@ LOGGING = {
         },
         "bevillingsplatform.audit": {
             "handlers": ["audit"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        "bevillingsplatform.export_to_prism": {
+            "handlers": ["export_to_prism"],
+            "format": "%(asctime)s %(message)s",
             "level": "INFO",
             "propagate": True,
         },
