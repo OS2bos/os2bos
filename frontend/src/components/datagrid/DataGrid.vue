@@ -47,7 +47,9 @@
                             @change="selectEntry($event.target.checked, d)"
                             class="datagrid-single-checkbox">
                         <label :for="`datagrid-select-${ d.id }`"
-                            title="Vælg"></label>
+                               title="Vælg"
+                               style="margin: 0;">
+                        </label>
                     </td>
                     <template v-for="c in columns">
                         <td v-if="c.display_func" v-html="c.display_func(d)" :key="c.key" :class="c.clickable ? 'datagrid-td-action' : ''"></td>
@@ -162,6 +164,7 @@
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
+        vertical-align: middle;
     }
 
     .datagrid th.active {
