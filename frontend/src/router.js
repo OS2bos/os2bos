@@ -17,7 +17,12 @@ const router = new Router({
         {
             path: '/',
             name: 'my-cases',
-            component: () => import(/* webpackPreload: true */ './components/cases/Cases.vue')
+            component: () => import(/* webpackPreload: true */ './components/cases/MyCases.vue')
+        },
+        {
+            path: '/cases/',
+            name: 'cases',
+            component: () => import(/* webpackChunkName: "cases" */ './components/cases/Cases.vue')
         },
         {
             path: '/case/:caseId',
@@ -28,21 +33,6 @@ const router = new Router({
             path: '/case-create/',
             name: 'case-create',
             component: () => import(/* webpackChunkName: "caseedit" */ './components/cases/CaseEdit.vue')
-        },
-        {
-            path: '/cases/',
-            name: 'cases',
-            component: () => import(/* webpackChunkName: "cases" */ './components/cases/Cases_2.vue')
-        },
-        {
-            path: '/all-cases/:query',
-            name: 'some-cases',
-            component: () => import(/* webpackChunkName: "allcases" */ './components/cases/AllCases.vue')
-        },
-        {
-            path: '/all-cases/',
-            name: 'all-cases',
-            component: () => import(/* webpackChunkName: "allcases" */ './components/cases/AllCases.vue')
         },
         {
             path: '/case/:casid/familyoverview-create/',

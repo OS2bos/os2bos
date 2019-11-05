@@ -156,7 +156,7 @@
 
     .datagrid th {
         background-color: var(--grey0);
-        color: var(--grey7);
+        color: var(--grey10);
         cursor: pointer;
         -webkit-user-select: none;
         -moz-user-select: none;
@@ -165,7 +165,7 @@
     }
 
     .datagrid th.active {
-        color: var(--grey10);
+        color: var(--grey6);
     }
 
     .datagrid th.active .arrow {
@@ -193,6 +193,10 @@
         border-top: 4px solid var(--grey10);
     }
 
+    .datagrid td {
+        vertical-align: middle;
+    }
+
     .datagrid .datagrid-td-action {
         padding: 0;
     }
@@ -201,11 +205,13 @@
         display: block;
         border: none;
         padding: .75rem;
+        border-radius: .125rem;
+        transition: padding .33s;
     }
 
     .datagrid td a:hover,
     .datagrid td a:active {
-        background-color: var(--grey2);
+        padding-left: 1.25rem;
     }
 
     .datagrid-filter {
@@ -213,7 +219,7 @@
         flex-flow: row nowrap;
         align-items: center;
         justify-content: flex-end;
-        padding: .5rem 2rem;
+        padding: .5rem 1.5rem;
         margin: 0;
     }
 
