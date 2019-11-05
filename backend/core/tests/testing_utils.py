@@ -27,6 +27,7 @@ from core.models import (
     Section,
     SectionInfo,
     Account,
+    RelatedPerson,
     SD,
     FAMILY_DEPT,
     STEP_ONE,
@@ -247,3 +248,10 @@ def create_section_info(
         sbsys_template_id=sbsys_template_id,
     )
     return section_info
+
+
+def create_related_person(main_case, name="Jens Jensen", relation_type="far"):
+    related_person = RelatedPerson.objects.create(
+        main_case=main_case, name=name, relation_type=relation_type
+    )
+    return related_person

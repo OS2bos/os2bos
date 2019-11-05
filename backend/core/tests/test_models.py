@@ -31,6 +31,7 @@ from core.tests.testing_utils import (
     create_account,
     create_service_provider,
     create_section_info,
+    create_related_person,
 )
 from core.models import (
     Municipality,
@@ -2340,10 +2341,59 @@ class PaymentTestCase(TestCase, BasicTestMixin):
         )
         self.assertEqual(payment.account_string, "XXX-12345-XXX")
 
+    def test_payment_save_account_string_saved(self):
+        payment_schedule = create_payment_schedule()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+
+        activity = create_activity(
+            case,
+            appropriation,
+            payment_plan=payment_schedule,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+        )
+        account = create_account(
+            main_activity=activity.details,
+            supplementary_activity=None,
+            section=section,
+            number="12345",
+        )
+        payment = create_payment(
+            payment_schedule=payment_schedule,
+            date=date(year=2019, month=1, day=1),
+            amount=Decimal("500.0"),
+        )
+
+        # Account should come from the saved account while not paid.
+        self.assertEqual(payment.account_string, "XXX-12345-XXX")
+        self.assertEqual(payment.saved_account_string, "")
+
+        # Set payment paid which should save the saved_account_string
+        payment.paid = True
+        payment.paid_date = date(year=2019, month=1, day=1)
+        payment.paid_amount = Decimal("500.0")
+        payment.save()
+        payment.refresh_from_db()
+        self.assertEqual(payment.saved_account_string, "XXX-12345-XXX")
+
+        # Change account number
+        account.number = "67890"
+        account.save()
+
+        # Payment account_string should use the saved_account_string
+        self.assertEqual(payment.account_string, "XXX-12345-XXX")
+
     def test_save_not_all_paid_fields_set(self):
         payment_schedule = create_payment_schedule()
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(
+            ValueError,
+            msg="ved en betalt betaling skal alle betalingsfelter sættes",
+        ):
             create_payment(
                 payment_schedule=payment_schedule,
                 date=date(year=2019, month=1, day=1),
@@ -2354,7 +2404,10 @@ class PaymentTestCase(TestCase, BasicTestMixin):
     def test_save_is_paid_paid_date_not_set(self):
         payment_schedule = create_payment_schedule()
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(
+            ValueError,
+            msg="ved en betalt betaling skal alle betalingsfelter sættes",
+        ):
             create_payment(
                 payment_schedule=payment_schedule,
                 date=date(year=2019, month=1, day=1),
@@ -2368,7 +2421,10 @@ class PaymentTestCase(TestCase, BasicTestMixin):
 
         payment_schedule = create_payment_schedule()
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(
+            ValueError,
+            msg="ved en betalt betaling skal alle betalingsfelter sættes",
+        ):
             create_payment(
                 payment_schedule=payment_schedule,
                 date=date(year=2019, month=1, day=1),
@@ -2382,11 +2438,29 @@ class PaymentTestCase(TestCase, BasicTestMixin):
 
         payment_schedule = create_payment_schedule()
 
+        with self.assertRaises(
+            ValueError,
+            msg="En betaling kan kun betales hvis dens aktivitet er bevilget",
+        ):
+            create_payment(
+                payment_schedule=payment_schedule,
+                date=date(year=2019, month=1, day=1),
+                amount=Decimal("500.0"),
+                paid_date=today,
+                paid_amount=Decimal("500"),
+            )
+
+    def test_save_is_paid_with_schedule_not_allowing(self):
+        today = timezone.now().date()
+
+        payment_schedule = create_payment_schedule()
+
         with self.assertRaises(ValueError):
             create_payment(
                 payment_schedule=payment_schedule,
                 date=date(year=2019, month=1, day=1),
                 amount=Decimal("500.0"),
+                paid=True,
                 paid_date=today,
                 paid_amount=Decimal("500"),
             )
@@ -2994,3 +3068,21 @@ class SectionInfoTestCase(TestCase, BasicTestMixin):
         section_info = create_section_info(details, section)
 
         self.assertEqual(str(section_info), f"{details} - {section}")
+
+
+class RelatedPersonTestCase(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_str(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        related_person = create_related_person(case)
+        self.assertEqual(
+            str(related_person),
+            f"{related_person.name} - "
+            f"{related_person.cpr_number} - "
+            f"{related_person.main_case}",
+        )

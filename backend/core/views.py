@@ -14,8 +14,6 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 
-import rest_framework_filters as filters
-
 from core.models import (
     Case,
     Appropriation,
@@ -58,7 +56,7 @@ from core.serializers import (
     PaymentMethodDetailsSerializer,
     ApprovalLevelSerializer,
 )
-
+from core.filters import CaseFilter, PaymentFilter, AllowedForStepsFilter
 from core.utils import get_person_info
 
 from core.mixins import AuditMixin
@@ -69,20 +67,6 @@ from core.permissions import IsUserAllowed
 
 
 # Working models, read/write
-
-
-class CaseFilter(filters.FilterSet):
-    expired = filters.BooleanFilter(method="filter_expired", label=_("Udgået"))
-
-    class Meta:
-        model = Case
-        fields = "__all__"
-
-    def filter_expired(self, queryset, name, value):
-        if value:
-            return queryset.expired()
-        else:
-            return queryset.ongoing()
 
 
 class AuditViewSet(AuditMixin, viewsets.ModelViewSet):
@@ -193,59 +177,6 @@ class PaymentScheduleViewSet(AuditViewSet):
         return queryset
 
 
-class CaseFilter(filters.FilterSet):
-    class Meta:
-        model = Case
-        fields = {"cpr_number": ["exact"]}
-
-
-class PaymentScheduleFilter(filters.FilterSet):
-    class Meta:
-        model = PaymentSchedule
-        fields = {"payment_id": ["exact"]}
-
-
-class ActivityFilter(filters.FilterSet):
-    class Meta:
-        model = Activity
-        fields = {"status": ["exact"]}
-
-
-class PaymentFilter(filters.FilterSet):
-    payment_schedule = filters.RelatedFilter(
-        PaymentScheduleFilter,
-        field_name="payment_schedule",
-        queryset=PaymentSchedule.objects.all(),
-    )
-    case = filters.RelatedFilter(
-        CaseFilter,
-        field_name="payment_schedule__activity__appropriation__case",
-        label=Case._meta.verbose_name.title(),
-        queryset=Case.objects.all(),
-    )
-    activity = filters.RelatedFilter(
-        ActivityFilter,
-        field_name="payment_schedule__activity",
-        label=Activity._meta.verbose_name.title(),
-        queryset=Activity.objects.all(),
-    )
-
-    date__gt = filters.DateFilter(
-        field_name="date",
-        lookup_expr="gt",
-        label=_("Betalingsdato større end"),
-    )
-    date__lt = filters.DateFilter(
-        field_name="date",
-        lookup_expr="lt",
-        label=_("Betalingsdato mindre end"),
-    )
-
-    class Meta:
-        model = Payment
-        fields = "__all__"
-
-
 class PaymentViewSet(AuditViewSet):
     serializer_class = PaymentSerializer
     queryset = Payment.objects.all()
@@ -311,20 +242,6 @@ class SchoolDistrictViewSet(ReadOnlyViewset):
 class TeamViewSet(ReadOnlyViewset):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
-
-
-class CharInFilter(filters.BaseInFilter, filters.CharFilter):
-    pass
-
-
-class AllowedForStepsFilter(filters.FilterSet):
-    allowed_for_steps = CharInFilter(
-        field_name="allowed_for_steps", lookup_expr="contains"
-    )
-
-    class Meta:
-        model = Section
-        fields = "__all__"
 
 
 class SectionViewSet(ReadOnlyViewset):

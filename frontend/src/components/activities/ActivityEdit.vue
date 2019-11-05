@@ -30,9 +30,10 @@
                     <input type="checkbox" id="field-status-expected" v-model="act_status_expected">
                     <label for="field-status-expected" style="margin: 0;">Opret forventet Ydelse</label>
                 </fieldset>
+                
                 <fieldset style="margin: 0 0 0 2rem;">
                     <input type="checkbox" id="field-fictive" v-model="payment.fictive">
-                    <label for="field-fictive" style="margin: 0;">Opret fiktiv Betaling</label>
+                    <label for="field-fictive" style="margin: 0;">Fiktiv Betaling</label>
                 </fieldset>
 
             </header>
@@ -87,7 +88,7 @@
 
                 <div class="row-item">
                     <pay-type-edit />
-                    <pay-plan v-if="payment.payment_amount" />
+                    <pay-plan />
                 </div>
 
                 <div class="row-item">
@@ -187,6 +188,7 @@
         },
         methods: {
             update: function() {
+                this.$store.commit('clearPayment')
                 if (this.activityObj) {
                     this.act = this.activityObj
                     this.$store.commit('setPayment', this.act.payment_plan)
@@ -234,7 +236,6 @@
                     data.id = this.act.id
                     data.appropriation = this.activityObj.appropriation
                 }
-                this.$store.commit('clearPayment')
 
                 if (this.mode === 'create' || this.mode === 'clone') {
                     // POSTING an activity
@@ -243,6 +244,7 @@
                     .then(res => {
                         this.$router.push(`/appropriation/${ this.appropriation.id }`)
                         this.$store.dispatch('fetchActivity', res.data.id)
+                        this.$store.commit('clearPayment')
                     })
                     .catch(err => this.$store.dispatch('parseErrorOutput', err))
 
@@ -253,6 +255,7 @@
                     .then(res => {
                         this.$router.push(`/appropriation/${ this.appropriation.id }`)
                         this.$store.dispatch('fetchActivity', res.data.id)
+                        this.$store.commit('clearPayment')
                     })
                     .catch(err => this.$store.dispatch('parseErrorOutput', err))
                 }
