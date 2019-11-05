@@ -29,7 +29,6 @@ $config = array(
             'username' => 'familieraadgiver',
             'first_name' => 'Familie',
             'last_name' => 'Raadgiver',
-            'team' => 'Familierådgivning',
             'bos_profile' => 'edit'
         ),
         'ungeleder:sagsbehandler' => array(
@@ -37,7 +36,6 @@ $config = array(
             'username' => 'ungeleder',
             'first_name' => 'Unge',
             'last_name' => 'Leder',
-            'team' => 'Ungerådgivning',
             'bos_profile' => 'readonly'
         ),
         'ungeraadgiver:sagsbehandler' => array(
@@ -45,7 +43,6 @@ $config = array(
             'username' => 'ungeraadgiver',
             'first_name' => 'Unge',
             'last_name' => 'Raadgiver',
-            'team' => 'Ungerådgivning',
             'bos_profile' => ''
         ),
         'heidi:heidi' => array(
@@ -53,7 +50,6 @@ $config = array(
             'username' => 'heidi',
             'first_name' => 'Heidi',
             'last_name' => 'Engelhardt Bebe',
-            'team' => 'S-DIG',
             'bos_profile' => 'admin'
         ),
     ),
