@@ -260,11 +260,17 @@ LOGGING = {
         "export_to_prism": {
             "level": "INFO",
             "class": "logging.FileHandler",
+            "formatter": "verbose",
             "filename": settings.get(
                 "PRISM_LOG_FILE",
                 fallback=os.path.join(LOG_DIR, "export_to_prism.log"),
             ),
         },
+    },
+    "formatters": {
+        "verbose": {
+            "format": "%(levelname)s %(asctime)s %(module)s: %(message)s"
+        }
     },
     "loggers": {
         "django": {
@@ -279,7 +285,6 @@ LOGGING = {
         },
         "bevillingsplatform.export_to_prism": {
             "handlers": ["export_to_prism"],
-            "format": "%(asctime)s %(message)s",
             "level": "INFO",
             "propagate": True,
         },
