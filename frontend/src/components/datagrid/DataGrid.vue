@@ -5,7 +5,6 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
 
-
 <template>
 
     <table class="datagrid">
@@ -17,7 +16,6 @@
                     <label for="datagrid-select-all" title="Vælg alle"></label>
                 </th>
                 <th v-for="key in columns"
-                    :key="key"
                     @click="sortBy(key)"
                     :class="{ active: sortKey == key }">
                     {{ key | capitalize }}
@@ -26,15 +24,15 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="entry in filteredData" :key="entry.sbsys_id" @click="rowAction(entry)">
-                <td @click.stop="">
-                    <input type="checkbox" 
-                           :id="`datagrid-select-${ entry.sbsys_id }`" 
+            <tr v-for="entry in filteredData" @click="rowAction(entry)" :key="entry.id">
+                <td @click.stop>
+                    <input type="checkbox"
+                           :id="`datagrid-select-${ entry.sbsys_id }`"
                            @change="selectEntry($event, entry)">
-                    <label :for="`datagrid-select-${ entry.sbsys_id }`" 
+                    <label :for="`datagrid-select-${ entry.sbsys_id }`"
                            title="Vælg alle"></label>
                 </td>
-                <td v-for="key in columns" :key="key">
+                <td v-for="key in columns">
                     {{ entry[key] }}
                 </td>
             </tr>
@@ -48,9 +46,8 @@
     export default {
 
         props: {
-            list: Array,
-            columns: Array,
-            filterKey: String
+            dataList: Array,
+            columns: Array
         },
         data: function () {
             var sortOrders = {}
@@ -66,16 +63,8 @@
         computed: {
             filteredData: function () {
                 var sortKey = this.sortKey
-                var filterKey = this.filterKey && this.filterKey.toLowerCase()
                 var order = this.sortOrders[sortKey] || 1
-                var list = this.list
-                if (filterKey) {
-                    list = list.filter(function (row) {
-                        return Object.keys(row).some(function (key) {
-                            return String(row[key]).toLowerCase().indexOf(filterKey) > -1
-                        })
-                    })
-                }
+                var list = this.dataList
                 if (sortKey) {
                     list = list.slice().sort(function (a, b) {
                         a = a[sortKey]
@@ -97,12 +86,11 @@
                 this.sortOrders[key] = this.sortOrders[key] * -1
             },
             selectEntry: function(ev, entry) {
-                const checked = ev.target.checked
-                let idx = this.selection.findIndex(function(el) {
-                    return el.sbsys_id = entry.sbsys_id
+                let checked = ev.target.checked
+                let idx = this.selection.findIndex(function(s) {
+                    return s.id = entry.id
                 })
                 if (!checked && idx >= 0) {
-                    console.log(idx)
                     this.selection.splice(idx,1)
                 }
                 if (checked && idx < 0) {

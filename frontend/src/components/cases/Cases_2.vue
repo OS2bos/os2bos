@@ -9,14 +9,8 @@
 <template>
 
     <div>
-        Cases
-
-        {{ cases }}
-        
-        <data-grid v-if="cases" 
-                   :list="cases" 
-                   :columns="['status', 'sbsys_id', 'cpr_number', 'name', 'modified']" 
-                   filterKey=""
+        <data-grid :data-list="cases"
+                   :columns="['status', 'sbsys_id', 'cpr_number', 'name', 'modified']"
                    @selection="updateSelectedCases" 
                    @row-action="navToCase" />
 
@@ -38,7 +32,7 @@
         },
         data: function() {
             return {
-                cases: null,
+                cases: [],
                 selected_cases: []
             }
         },  
