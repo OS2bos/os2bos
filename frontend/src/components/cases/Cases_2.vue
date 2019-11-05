@@ -10,12 +10,11 @@
 
     <div>
         <data-grid :data-list="cases"
-                   :columns="['status', 'sbsys_id', 'cpr_number', 'name', 'modified']"
-                   @selection="updateSelectedCases" 
-                   @row-action="navToCase" />
+                   :columns="columns"
+                   @selection="updateSelectedCases" />
 
         {{ selected_cases }}
-        
+
     </div>
 
 </template>
@@ -33,7 +32,29 @@
         data: function() {
             return {
                 cases: [],
-                selected_cases: []
+                selected_cases: [],
+                columns: [
+                    {
+                        key: 'status',
+                        title: 'Status',
+                    },
+                    {
+                        key: 'sbsys_id',
+                        title: 'SBSYS ID',
+                    },
+                    {
+                        key: 'cpr_number',
+                        title: 'CPR nr.',
+                    },
+                    {
+                        key: 'name',
+                        title: 'Navn',
+                    },
+                    {
+                        key: 'modified',
+                        title: 'Ændret',
+                    }
+                ]
             }
         },  
         methods: {
@@ -49,9 +70,6 @@
             },
             updateSelectedCases: function(selections) {
                 this.selected_cases = selections
-            },
-            navToCase: function(entry) {
-                this.$router.push(`/case/${ entry.id }/`)
             }
         },
         created: function() {

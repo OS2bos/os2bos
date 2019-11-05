@@ -12,28 +12,33 @@
         <thead>
             <tr>
                 <th>
-                    <input type="checkbox" id="datagrid-select-all">
-                    <label for="datagrid-select-all" title="Vælg alle"></label>
+                    <input type="checkbox" 
+                           id="datagrid-select-all"
+                           @change="toggleAll($event.target.checked)">
+                    <label for="datagrid-select-all" 
+                           title="Vælg alle"></label>
                 </th>
-                <th v-for="key in columns"
-                    @click="sortBy(key)"
-                    :class="{ active: sortKey == key }">
-                    {{ key | capitalize }}
-                    <span class="arrow" :class="sortOrders[key] > 0 ? 'asc' : 'dsc'"></span>
+                <th v-for="c in columns" 
+                    :key="c.key"
+                    @click="sortBy(c.key)"
+                    :class="{ active: sortKey == c.key }">
+                    {{ c.title }}
+                    <span class="arrow" :class="sortOrders[c.key] > 0 ? 'asc' : 'dsc'"></span>
                 </th>
             </tr>
         </thead>
         <tbody>
-            <tr v-for="entry in filteredData" @click="rowAction(entry)" :key="entry.id">
-                <td @click.stop>
+            <tr v-for="d in filteredData" :key="d.id">
+                <td>
                     <input type="checkbox"
-                           :id="`datagrid-select-${ entry.sbsys_id }`"
-                           @change="selectEntry($event, entry)">
-                    <label :for="`datagrid-select-${ entry.sbsys_id }`"
-                           title="Vælg alle"></label>
+                           :id="`datagrid-select-${ d.id }`"
+                           @change="selectEntry($event.target.checked, d)"
+                           class="datagrid-single-checkbox">
+                    <label :for="`datagrid-select-${ d.id }`"
+                           title="Vælg"></label>
                 </td>
-                <td v-for="key in columns">
-                    {{ entry[key] }}
+                <td v-for="c in columns" :key="c.key">
+                    {{ d[c.key] }}
                 </td>
             </tr>
         </tbody>
@@ -47,12 +52,13 @@
 
         props: {
             dataList: Array,
-            columns: Array
+            columns: Array,
+            filterKey: String
         },
         data: function () {
             var sortOrders = {}
-            this.columns.forEach(function (key) {
-                sortOrders[key] = 1
+            this.columns.forEach(function (c) {
+            sortOrders[c.key] = 1
             })
             return {
                 sortKey: '',
@@ -75,20 +81,29 @@
                 return list
             }
         },
-        filters: {
-            capitalize: function(str) {
-                return str.charAt(0).toUpperCase() + str.slice(1)
-            }
-        },
         methods: {
             sortBy: function(key) {
                 this.sortKey = key
                 this.sortOrders[key] = this.sortOrders[key] * -1
             },
-            selectEntry: function(ev, entry) {
-                let checked = ev.target.checked
+            toggleAll(check) {
+                let checkboxes = document.querySelectorAll('.datagrid-single-checkbox')
+                if (check) {
+                    checkboxes.forEach(function(node) {
+                        node.checked = true
+                    })
+                    this.selection = this.dataList.slice(0, this.dataList.length + 1)
+                } else {
+                    checkboxes.forEach(function(node) {
+                        node.checked = false
+                    })
+                    this.selection = []
+                }
+                this.$emit('selection', this.selection)
+            },
+            selectEntry: function(checked, entry) {
                 let idx = this.selection.findIndex(function(s) {
-                    return s.id = entry.id
+                    return s.id === entry.id
                 })
                 if (!checked && idx >= 0) {
                     this.selection.splice(idx,1)
@@ -97,9 +112,6 @@
                     this.selection.push(entry)
                 }
                 this.$emit('selection', this.selection)
-            },
-            rowAction: function(entry) {
-                this.$emit('row-action', entry)
             }
         }
     }
@@ -107,10 +119,6 @@
 </script>
 
 <style>
-
-    .datagrid {
-        
-    }
 
     .datagrid th {
         background-color: var(--grey6);
