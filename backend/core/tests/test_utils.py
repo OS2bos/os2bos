@@ -34,7 +34,7 @@ from core.utils import (
     saml_create_user,
     generate_records_for_prism,
     due_payments_for_prism,
-    process_payments_for_date,
+    export_prism_payments_for_date,
 )
 from core.tests.testing_utils import (
     BasicTestMixin,
@@ -351,7 +351,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         # This is a simple sanity check.
         self.assertEqual(payment_reference, finance_reference)
 
-    def test_process_payments_for_date(self):
+    def test_export_prism_payments_for_date(self):
         # Create a payment that is due today
         now = timezone.now()
         start_date = now - timedelta(days=1)
@@ -397,15 +397,15 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         due_payments = due_payments_for_prism(start_date)
         self.assertEqual(due_payments.count(), 1)
 
-        process_payments_for_date(date=start_date)
+        export_prism_payments_for_date(date=start_date)
 
         # Check that there's NO unpaid payments for that date.
         due_payments = due_payments_for_prism(start_date)
         self.assertEqual(due_payments.count(), 0)
 
         # Also process for today
-        process_payments_for_date()
+        export_prism_payments_for_date()
 
         # Repeat the previous processing to have an example with no due
         # payments.
-        process_payments_for_date()
+        export_prism_payments_for_date()
