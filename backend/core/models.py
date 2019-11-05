@@ -1069,9 +1069,13 @@ class SectionInfo(models.Model):
         verbose_name_plural = _("paragraf-info")
 
     activity_details = models.ForeignKey(
-        ActivityDetails, on_delete=models.CASCADE
+        ActivityDetails,
+        on_delete=models.CASCADE,
+        verbose_name=_("aktivitetsdetalje"),
     )
-    section = models.ForeignKey(Section, on_delete=models.CASCADE)
+    section = models.ForeignKey(
+        Section, on_delete=models.CASCADE, verbose_name=_("paragraf")
+    )
 
     kle_number = models.CharField(
         max_length=128, verbose_name=_("KLE-nummer"), blank=True
@@ -1481,6 +1485,9 @@ class RelatedPerson(models.Model):
             for (k, v) in data.items()
             if k in converter_dict
         }
+
+    def __str__(self):
+        return f"{self.name} - {self.cpr_number} - {self.main_case}"
 
 
 class Account(models.Model):
