@@ -10,7 +10,7 @@
     <div class="datagrid-container">
 
         <form class="datagrid-filter" @submit.prevent>
-            <label for="filter-field">Find</label>
+            <label for="filter-field">Find:</label>
             <input type="search"
                    name="query" 
                    v-model="filterKey"
