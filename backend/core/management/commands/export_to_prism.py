@@ -36,7 +36,9 @@ class Command(BaseCommand):
                 date = datetime.strptime(date, "%Y%m%d")
             except ValueError:
                 print("Please enter date as 'YYYYMMDD'.")
-                logger.error("Invalid date input format")
+                logger.error(
+                    f"Invalid date input {date} - should parse as 'YYYYMMDD'"
+                )
                 sys.exit()
         try:
             prism_file = export_prism_payments_for_date(date)
