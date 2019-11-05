@@ -188,13 +188,13 @@
     .datagrid .arrow.asc {
         border-left: 4px solid transparent;
         border-right: 4px solid transparent;
-        border-bottom: 4px solid var(--grey10);
+        border-bottom: 4px solid var(--grey6);
     }
 
     .datagrid .arrow.dsc {
         border-left: 4px solid transparent;
         border-right: 4px solid transparent;
-        border-top: 4px solid var(--grey10);
+        border-top: 4px solid var(--grey6);
     }
 
     .datagrid td {
