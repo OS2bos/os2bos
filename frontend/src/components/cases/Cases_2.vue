@@ -11,7 +11,8 @@
     <div>
         <data-grid :data-list="cases"
                    :columns="columns"
-                   @selection="updateSelectedCases" />
+                   @selection="updateSelectedCases"
+                   :selectable="true" />
 
         {{ selected_cases }}
 
@@ -43,7 +44,8 @@
                     {
                         key: 'sbsys_id',
                         title: 'SBSYS ID',
-                        display_func: this.displayID
+                        display_func: this.displayID,
+                        clickable: true
                     },
                     {
                         key: 'cpr_number',

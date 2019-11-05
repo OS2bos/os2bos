@@ -21,7 +21,7 @@
             
             <thead>
                 <tr>
-                    <th>
+                    <th v-if="selectable">
                         <input type="checkbox" 
                             id="datagrid-select-all"
                             @change="toggleAll($event.target.checked)">
@@ -41,7 +41,7 @@
             </thead>
             <tbody>
                 <tr v-for="d in filteredData" :key="d.id">
-                    <td>
+                    <td v-if="selectable">
                         <input type="checkbox"
                             :id="`datagrid-select-${ d.id }`"
                             @change="selectEntry($event.target.checked, d)"
@@ -49,14 +49,12 @@
                         <label :for="`datagrid-select-${ d.id }`"
                             title="Vælg"></label>
                     </td>
-                    <td v-for="c in columns" :key="c.key">
-                        <template v-if="c.display_func">
-                            <span v-html="c.display_func(d)"></span>
-                        </template>
-                        <template v-else>
+                    <template v-for="c in columns">
+                        <td v-if="c.display_func" v-html="c.display_func(d)" :key="c.key" :class="c.clickable ? 'datagrid-td-action' : ''"></td>
+                        <td v-if="!c.display_func" :key="c.key">
                             {{ d[c.key] }}
-                        </template>
-                    </td>
+                        </td>
+                    </template>
                 </tr>
             </tbody>
         </table>
@@ -71,7 +69,8 @@
 
         props: {
             dataList: Array,
-            columns: Array
+            columns: Array,
+            selectable: Boolean
         },
         data: function () {
             var sortOrders = {}
@@ -148,7 +147,7 @@
 <style>
 
     .datagrid-container {
-        margin: 1rem 0;
+        margin: 0 0 1rem;
     }
 
     .datagrid {
@@ -156,8 +155,8 @@
     }
 
     .datagrid th {
-        background-color: var(--grey6);
-        color: var(--grey2);
+        background-color: var(--grey0);
+        color: var(--grey7);
         cursor: pointer;
         -webkit-user-select: none;
         -moz-user-select: none;
@@ -166,7 +165,7 @@
     }
 
     .datagrid th.active {
-        color: #fff;
+        color: var(--grey10);
     }
 
     .datagrid th.active .arrow {
@@ -185,13 +184,28 @@
     .datagrid .arrow.asc {
         border-left: 4px solid transparent;
         border-right: 4px solid transparent;
-        border-bottom: 4px solid #fff;
+        border-bottom: 4px solid var(--grey10);
     }
 
     .datagrid .arrow.dsc {
         border-left: 4px solid transparent;
         border-right: 4px solid transparent;
-        border-top: 4px solid #fff;
+        border-top: 4px solid var(--grey10);
+    }
+
+    .datagrid .datagrid-td-action {
+        padding: 0;
+    }
+
+    .datagrid .datagrid-td-action a {
+        display: block;
+        border: none;
+        padding: .75rem;
+    }
+
+    .datagrid td a:hover,
+    .datagrid td a:active {
+        background-color: var(--grey2);
     }
 
     .datagrid-filter {
