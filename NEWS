@@ -1,3 +1,23 @@
+* Version 2.0.0, 2019-11-06
+
+New in this version:
+
+* Implement SAML SSO login.
+* Implement user rights levels.
+* Add preliminary Prism file generation.
+* Implement GUI for editing payments.
+* Add support for "fictive" payments.
+* Add support for negative and zero payments.
+* Add support for paid amounts and paid date for payments.
+* Update payment summation to include paid amounts when able.
+* Add new payment ID for payment plans.
+* Add account strings for payments.
+* Add API filtering for several endpoints.
+* Remove the "udbetaling til firma" payment option.
+* Fix a bug when creating an activity.
+* Fix redirect when setting a payment paid.
+* Add missing verbose names in Django admin.
+
 * Version 1.1.1, 2019-10-30
 
 Hotfix release.
