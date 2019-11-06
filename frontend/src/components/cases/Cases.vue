@@ -105,6 +105,7 @@
     import { json2js } from '../filters/Date.js'
     import ListPicker from '../forms/ListPicker.vue'
     import DialogBox from '../dialog/Dialog.vue'
+    import notify from '../notifications/Notify.js'
 
     export default {
 
@@ -211,7 +212,19 @@
             },
             moveCases: function() {
                 // PATCH with this.diag_field_case_worker
-                console.log('new case worker id', this.diag_field_case_worker)
+                let promises = []
+                for (let s in this.selected_cases) {
+                    let prom = axios.patch(`/cases/${ this.selected_cases[s].id }/`, {case_worker: this.diag_field_case_worker})
+                    promises.push(prom)
+                }
+                Promise.all(promises)
+                .then(res => {
+                    notify(`${ promises.length } sager blev flyttet`, 'success')
+                })
+                .catch(err => {
+                    notify('Noget gik galt under flytning af sager', 'error')
+                })
+
                 this.postDiagCleanUp()
             },
             closeMoveDiag: function() {
