@@ -7,16 +7,24 @@
 
 <template>
 
-    <div class="datagrid-container">
+    <section class="datagrid-container">
 
-        <form class="datagrid-filter" @submit.prevent>
-            <label for="filter-field" title="Find i liste"></label>
-            <input type="search"
-                   name="query" 
-                   v-model="filterKey"
-                   id="filter-field"
-                   placeholder="Find i liste ...">
-        </form>
+        <header class="datagrid-header">
+
+            <div>
+                <slot name="datagrid-header"></slot>
+            </div>
+
+            <form class="datagrid-filter" @submit.prevent>
+                <label for="filter-field" title="Find i liste"></label>
+                <input type="search"
+                    name="query" 
+                    v-model="filterKey"
+                    id="filter-field"
+                    placeholder="Find i liste ...">
+            </form>
+
+        </header>
     
         <table class="datagrid">
             
@@ -60,11 +68,11 @@
                         </td>
                     </template>
                 </tr>
-                <slot name="footer-row"></slot>
+                <slot name="datagrid-table-footer"></slot>
             </tbody>
         </table>
 
-    </div>
+    </section>
 
 </template>
 
@@ -220,8 +228,13 @@
         padding-left: 1.25rem;
     }
 
+    .datagrid-header {
+        display: grid;
+        grid-template-columns: auto auto;
+        margin: 1rem 0;
+    }
+
     .datagrid-filter {
-        border-top: solid 1px var(--grey1);
         background-color: transparent;
         display: flex;
         flex-flow: row nowrap;

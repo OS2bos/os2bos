@@ -11,14 +11,19 @@
     <div class="case-search">
         
         <div class="case-search-list">
-            <h1 style="padding-top: 0;">Sager</h1>
 
             <div v-if="cases.length > 0">
                 <data-grid ref="data-grid"
                            :data-list="cases"
                            :columns="columns"
                            @selection="updateSelectedCases"
-                           :selectable="true" />
+                           :selectable="true">
+
+                    <div slot="datagrid-header">
+                        <h1 style="padding: 0 0 0 1.33rem;">Find sager</h1>
+                    </div>
+
+                </data-grid>
 
                 <button :disabled="selected_cases.length < 1" 
                         class="case-search-move-btn"
@@ -281,8 +286,8 @@
     .case-search-filters {
         order: 1;
         background-color: var(--grey1);
-        padding: 1.5rem 1rem;
-        margin: 2.9rem 1.25rem 3.9rem 0;
+        padding: 1.5rem 1rem 0;
+        margin: 7.5rem 1.25rem 0 0;
     }
 
     .case-search-filters h2,

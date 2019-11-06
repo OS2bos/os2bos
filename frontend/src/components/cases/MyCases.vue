@@ -10,15 +10,18 @@
 
     <section class="cases" v-if="cas">
 
-        <header class="cases-header">
-            <h1>Mine sager</h1>
-            <button v-if="permissionCheck === true" class="create" @click="$router.push('/case-create/')">+ Tilknyt hovedsag</button>
-        </header>
         <div v-if="cas.length > 0">
             <data-grid ref="data-grid"
                         :data-list="cas"
                         :columns="columns"
-                        :selectable="false" />
+                        :selectable="false">
+
+                <div slot="datagrid-header" class="cases-header">
+                    <h1 style="padding: 0 0 0 1.33rem;">Mine sager</h1>
+                    <button v-if="permissionCheck === true" class="create" @click="$router.push('/case-create/')">+ Tilknyt hovedsag</button>
+                </div>
+
+            </data-grid>
         </div>
 
         <p v-if="cas.length < 1">

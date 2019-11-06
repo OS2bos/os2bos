@@ -9,18 +9,19 @@
 <template>
 
     <section class="appropriations">
-        <header class="appropriations-header">
-            <h2>Bevillingsskrivelser</h2>
-            <button v-if="permissionCheck === true" class="appropriation-create-btn" @click="$router.push(`/case/${ caseId }/appropriation-create/`)">+ Opret bevillingsskrivelse</button>
-        </header>
 
         <data-grid v-if="apprs.length > 0"
                    ref="data-grid"
                    :data-list="apprs"
                    :columns="columns"
                    :selectable="false">
+            
+            <div slot="datagrid-header" class="appropriations-header">
+                <h2 style="padding: 0 0 0 1.33rem;">Bevillingsskrivelser</h2>
+                <button v-if="permissionCheck === true" class="appropriation-create-btn" @click="$router.push(`/case/${ caseId }/appropriation-create/`)">+ Opret bevillingsskrivelse</button>
+            </div>
 
-            <tr slot="footer-row" class="summary">
+            <tr slot="datagrid-table-footer" class="summary">
                 <td colspan="5"></td>
                 <td class="right">Samlet</td>
                 <td class="right nowrap"><strong>{{ displayDigits(total_granted) }} kr</strong></td>
@@ -71,8 +72,7 @@
                         key: 'sbsys_id',
                         title: 'Foranstaltningssag',
                         display_func: this.displayID,
-                        class: 'datagrid-action nowrap',
-                        title: 'sbsys_id'
+                        class: 'datagrid-action nowrap'
                     },
                     {
                         key: 'section',
