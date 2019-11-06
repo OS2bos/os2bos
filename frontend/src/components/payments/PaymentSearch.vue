@@ -74,7 +74,7 @@
                 <fieldset>
                     <legend>Tidsrum</legend>
                     <label>Fra dato</label>
-                    <input type="date" v-model="q.paid_date__gtpaid_date__gt">
+                    <input type="date" v-model="q.paid_date__gt">
                     <label>Til dato</label>
                     <input type="date" v-model="q.paid_date__lt">
                 </fieldset>
