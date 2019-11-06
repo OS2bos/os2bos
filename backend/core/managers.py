@@ -18,6 +18,7 @@ from django.db.models import (
     Q,
     F,
     Count,
+    Q,
 )
 from django.db.models.functions import (
     Coalesce,
@@ -43,6 +44,12 @@ class PaymentQuerySet(models.QuerySet):
         default="amount",
         output_field=DecimalField(),
     )
+
+    def paid_date_or_date_gte(self, date):
+        return self.filter(Q(paid_date__gte=date) | Q(date__gte=date))
+
+    def paid_date_or_date_lte(self, date):
+        return self.filter(Q(paid_date__lte=date) | Q(date__lte=date))
 
     def strict_amount_sum(self):
         """
