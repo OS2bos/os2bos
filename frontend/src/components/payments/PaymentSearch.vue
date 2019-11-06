@@ -56,8 +56,8 @@
                     </tbody>
                 </table>
             </template>
-            <p v-if="payments.length < 1">
-                Kunne ikke finde nogen sager
+            <p v-if="payments.length < 1 && payments.activity__status !== 'GRANTED'">
+                Kunne ikke finde nogen betalinger
             </p>
 
             <!-- <button v-if="payments.length > 1" class="more">Vis flere</button> -->
@@ -66,29 +66,29 @@
 
         <div class="payment-search-filters">
             <h2>Filtre</h2>
-            <form>
+            <form @input="changeId()">
                 <fieldset>
                     <label>Betalingsnøgle</label>
-                    <input @input="changeId()" type="text" v-model="payment_schedule__payment_id">
+                    <input type="text" v-model="q.payment_schedule__payment_id">
                 </fieldset>
                 <fieldset>
                     <legend>Tidsrum</legend>
-                    <label>fra dato</label>
-                    <input type="date">
-                    <label>til dato</label>
-                    <input type="date">
+                    <label>Fra dato</label>
+                    <input type="date" v-model="q.paid_date__gtpaid_date__gt">
+                    <label>Til dato</label>
+                    <input type="date" v-model="q.paid_date__lt">
                 </fieldset>
                 <fieldset>
-                    <input type="radio" id="field-paid-1" checked name="field-paid">
+                    <input type="radio" id="field-paid-1" checked name="field-paid" v-model="q.paid">
                     <label for="field-paid-1">Betalte og ubetalte</label>
-                    <input type="radio" id="field-paid-2" name="field-paid">
+                    <input type="radio" id="field-paid-2" name="field-paid" value="true" v-model="q.paid">
                     <label for="field-paid-2">Kun betalte</label>
-                    <input type="radio" id="field-paid-3" name="field-paid">
+                    <input type="radio" id="field-paid-3" name="field-paid" value="false" v-model="q.paid">
                     <label for="field-paid-3">Kun ubetalte</label>
                 </fieldset>
                 <fieldset>
                     <label>Hovedsag CPR</label>
-                    <input type="text">
+                    <input type="text" v-model="q.case__cpr_number">
                 </fieldset>
             </form>
         </div>
@@ -110,7 +110,13 @@
         },
         data: function() {
             return {
-                payment_schedule__payment_id: null
+                q: {
+                    payment_schedule__payment_id: null,
+                    paid_date__gt: null,
+                    paid_date__lt: null,
+                    case__cpr_number: null,
+                    paid: null
+                }
             }
         },
         computed: {
@@ -120,10 +126,10 @@
         },
         methods: {
             update: function() {
-                this.$store.dispatch('fetchPayments', this.$route.query)
+                this.$store.dispatch('fetchPayments', this.$route.params.query)
             },
-            changeId: function() {
-                this.$route.query.id = this.payment_schedule__payment_id
+            changeId: function(query) {
+                this.$route.params.query = this.q
                 this.update()
             },
             displayDate: function(dt) {
