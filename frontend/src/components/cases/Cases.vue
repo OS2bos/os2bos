@@ -34,23 +34,27 @@
 
             <dialog-box v-if="show_modal">
                 <div slot="header">
-                    <h2>Flyt sager</h2>
+                    <h2>Flyt sager til en medarbejder</h2>
                 </div>
                 <div slot="body">
-                    
-                    <ul>
-                        <li v-for="c in selected_cases" :key="c.id">
-                            {{ c.sbsys_id }}
-                        </li>
-                    </ul>
-
-                    <label for="diag-field-case-worker">Sagsbehandler</label>
-                    <list-picker 
-                        :dom-id="'diag-field-case-worker'"
-                        :list="users"
-                        @selection="diagChangeWorker"
-                        display-key="fullname" />
-
+                    <div class="row" style="justify-content: space-between;">
+                        <div class="move-cases-list">
+                            <p>Sager, der vil blive flyttet:</p>
+                            <ul>
+                                <li v-for="c in selected_cases" :key="c.id">
+                                    Hovedsag {{ c.sbsys_id }}
+                                </li>
+                            </ul>
+                        </div>
+                        <fieldset class="move-cases-field">
+                            <label for="diag-field-case-worker">Vælg medarbejder</label>
+                            <list-picker 
+                                :dom-id="'diag-field-case-worker'"
+                                :list="users"
+                                @selection="diagChangeWorker"
+                                display-key="fullname" />
+                        </fieldset>
+                    </div>
                 </div>
                 <div slot="footer">
                     <button @click="moveCases()">Flyt</button>
@@ -284,6 +288,10 @@
         display: flex;
         align-items: center;
         padding: .125rem .66rem;
+    }
+    
+    .move-cases-field label {
+        margin-top: 0;
     }
 
 </style>
