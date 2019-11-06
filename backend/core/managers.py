@@ -18,7 +18,6 @@ from django.db.models import (
     Q,
     F,
     Count,
-    Q,
 )
 from django.db.models.functions import (
     Coalesce,
