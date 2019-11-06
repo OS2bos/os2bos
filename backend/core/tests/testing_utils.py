@@ -27,6 +27,7 @@ from core.models import (
     Section,
     SectionInfo,
     Account,
+    RelatedPerson,
     SD,
     FAMILY_DEPT,
     STEP_ONE,
@@ -43,7 +44,10 @@ class AuthenticatedTestCase(TestCase):
         self.username = "user"
         self.password = "s1kr3t"
         self.user = User.objects.create_user(
-            self.username, f"{self.username}@company.com", self.password
+            self.username,
+            f"{self.username}@company.com",
+            self.password,
+            profile="grant",
         )
 
 
@@ -184,6 +188,10 @@ def create_payment(
     amount=Decimal("500"),
     recipient_type=PaymentSchedule.PERSON,
     payment_method=SD,
+    saved_account_string="",
+    paid_amount=None,
+    paid_date=None,
+    paid=False,
 ):
     payment = Payment.objects.create(
         recipient_id="Test",
@@ -193,6 +201,10 @@ def create_payment(
         date=date,
         amount=amount,
         payment_schedule=payment_schedule,
+        saved_account_string=saved_account_string,
+        paid_amount=paid_amount,
+        paid_date=paid_date,
+        paid=paid,
     )
     return payment
 
@@ -236,3 +248,10 @@ def create_section_info(
         sbsys_template_id=sbsys_template_id,
     )
     return section_info
+
+
+def create_related_person(main_case, name="Jens Jensen", relation_type="far"):
+    related_person = RelatedPerson.objects.create(
+        main_case=main_case, name=name, relation_type=relation_type
+    )
+    return related_person

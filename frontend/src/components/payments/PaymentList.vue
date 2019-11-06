@@ -9,40 +9,46 @@
 <template>
 
     <section class="payment_schedule">
-        
-        <label for="field-year-picker">Vælg år</label>
+
+        <label for="field-year-picker">Vis betalinger fra år</label>
         <select id="field-year-picker" v-model="current_year">
             <option v-for="y in years" :value="y" :key="y.id">{{ y }}</option>
         </select>
-    
+        
         <table>
             <thead>
                 <tr>
-                    <th>Dato</th>
-                    <th>Beløb</th>
+                    <th>Betaling nr</th>
+                    <th>Betalingsdato</th>
                     <th>Betalt</th>
+                    <th class="right">Beløb</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="p in payments_by_year" :key="p.id">
-                    <td>{{ displayDate(p.date) }}</td>
-                    <td>{{ displayDigits(p.amount) }} kr.</td>
                     <td>
-                        <span v-if="p.paid === true">Ja</span>
-                        <span v-else>Nej</span>
+                        <payment-modal :p-id="p.id" @update="update()"/>
+                    </td>
+                    <td>
+                        <span v-if="p.paid_date">{{ displayDate(p.paid_date) }}<br></span>
+                        <span class="dim" style="white-space: nowrap;">{{ displayDate(p.date) }}</span>
+                    </td>
+                    <td>
+                        <span v-if="p.paid === true"><i class="material-icons">check</i></span>
+                        <span v-else>-</span>
+                    </td>
+                    <td class="right">
+                        <span v-if="p.paid_amount">{{ displayDigits(p.paid_amount) }} kr.<br></span>
+                        <span class="dim" style="white-space: nowrap;">{{ displayDigits(p.amount) }} kr.</span>
                     </td>
                 </tr>
                 <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th>I alt pr valgte år</th>
-                    <th>{{ displayDigits(sum) }} kr.</th>
+                    <th colspan="3" class="right dim">I alt pr valgte år</th>
+                    <th class="right dim">{{ displayDigits(sum) }} kr.</th>
                 </tr>
             </tbody>
         </table>
+
     </section>
 
 </template>
@@ -51,11 +57,15 @@
 
     import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
+    import PaymentModal from './PaymentModal.vue'
 
     export default {
 
+        components: {
+            PaymentModal
+        },
         props: [
-            'payments'
+            'pId'
         ],
         data: function() {
             return {
@@ -65,6 +75,9 @@
             }
         },
         computed: {
+            payments: function() {
+                return this.$store.getters.getPaymentSchedule.payments
+            },
             payments_by_year: function() {
                 if (this.payments) {
                     let payms = this.payments.filter(payment => {
@@ -74,17 +87,23 @@
                 } else {
                     return false
                 }
-                
             },
             sum: function() {
                 if (this.payments_by_year) {
                     return this.payments_by_year.reduce(function(total, payment) {
-                        return total += parseFloat(payment.amount)
+                        if (payment.paid_amount) {
+                            return total += parseFloat(payment.paid_amount)
+                        } else {
+                            return total += parseFloat(payment.amount)
+                        }
                     }, 0)
                 }
             }
         },
         methods: {
+            update: function() {
+                this.$store.dispatch('fetchPaymentSchedule', this.pId)
+            },
             displayDate: function(dt) {
                 return json2jsDate(dt)
             },

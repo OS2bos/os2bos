@@ -11,7 +11,7 @@
     <section class="appropriations">
         <header class="appropriations-header">
             <h2>Bevillingsskrivelser</h2>
-            <button class="appropriation-create-btn" @click="$router.push(`/case/${ caseId }/appropriation-create/`)">+ Opret bevillingsskrivelse</button>
+            <button v-if="permissionCheck === true" class="appropriation-create-btn" @click="$router.push(`/case/${ caseId }/appropriation-create/`)">+ Opret bevillingsskrivelse</button>
         </header>
         <table class="appropriation-list" v-if="apprs && apprs.length > 0">
             <thead>
@@ -39,10 +39,10 @@
                     <td class="nowrap">{{ a.note }}</td>
                     <td class="nowrap">{{ displayDate(a.created) }}</td>
                     <td class="nowrap">{{ displayDate(a.modified) }}</td>
-                    <td class="right nowrap">{{ displayDigits(a.total_granted_this_year) }} kr</td>
+                    <td class="right nowrap">{{ displayDigits(a.total_granted_this_year) }} kr.</td>
                     <td class="expected right nowrap">
                         <span v-if="a.total_expected_this_year > 0 && a.total_expected_this_year !== a.total_granted_this_year">
-                            {{ displayDigits(a.total_expected_this_year) }} kr
+                            {{ displayDigits(a.total_expected_this_year) }} kr.
                         </span>
                     </td>
                 </tr>
@@ -52,7 +52,7 @@
                     <td class="right nowrap"><strong>{{ displayDigits(total_granted) }} kr</strong></td>
                     <td class="expected right nowrap">
                         <span v-if="has_expected">
-                            {{ displayDigits(total_expected) }} kr
+                            {{ displayDigits(total_expected) }} kr.
                         </span>
                     </td>
                 </tr>
@@ -69,8 +69,11 @@
     import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
     import { sectionId2name, displayStatus } from '../filters/Labels.js'
+    import UserRights from '../mixins/UserRights.js'
 
     export default {
+
+        mixins: [UserRights],
 
         props: [
             'caseId'

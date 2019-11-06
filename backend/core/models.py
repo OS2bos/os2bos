@@ -8,7 +8,6 @@
 
 from datetime import date, timedelta
 from decimal import Decimal
-import uuid
 from dateutil.relativedelta import relativedelta
 from dateutil import rrule
 
@@ -22,6 +21,7 @@ from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django_audit_fields.models import AuditModelMixin
 from simple_history.models import HistoricalRecords
+from constance import config
 
 from core.managers import PaymentQuerySet, CaseQuerySet
 from core.utils import send_appropriation, get_next_interval
@@ -149,6 +149,26 @@ class User(AbstractUser):
         blank=False,
     )
 
+    # Different permission levels for user profile.
+
+    READONLY = "readonly"
+    EDIT = "edit"
+    GRANT = "grant"
+    ADMIN = "admin"
+
+    profile_choices = (
+        (READONLY, _("Kun læse")),
+        (EDIT, _("Læse og skrive")),
+        (GRANT, _("Bevilge")),
+        (ADMIN, _("Admin")),
+    )
+    profile = models.CharField(
+        max_length=128,
+        verbose_name=(_("brugerprofil")),
+        choices=profile_choices,
+        blank=True,
+    )
+
 
 class Team(models.Model):
     """Represents a team in the administration."""
@@ -254,12 +274,12 @@ class PaymentSchedule(models.Model):
         validators=[MinValueValidator(Decimal("0.00"))],
     )
     payment_amount = models.DecimalField(
-        max_digits=14,
-        decimal_places=2,
-        verbose_name=_("beløb"),
-        validators=[MinValueValidator(Decimal("0.01"))],
+        max_digits=14, decimal_places=2, verbose_name=_("beløb")
     )
-    payment_id = models.UUIDField(default=uuid.uuid4, editable=False)
+    fictive = models.BooleanField(default=False, verbose_name=_("fiktiv"))
+    payment_id = models.PositiveIntegerField(
+        editable=False, verbose_name=_("betalings-ID"), blank=True, null=True
+    )
 
     @property
     def next_payment(self):
@@ -280,6 +300,15 @@ class PaymentSchedule(models.Model):
             PaymentSchedule.COMPANY: [INVOICE, CASH],
         }
         return payment_method in allowed[recipient_type]
+
+    @property
+    def can_be_paid(self):
+        if (
+            hasattr(self, "activity")
+            and self.activity.status == STATUS_GRANTED
+        ):
+            return True
+        return False
 
     @property
     def triggers_payment_email(self):
@@ -416,6 +445,28 @@ class PaymentSchedule(models.Model):
         if not end and (newest_payment.date < today + relativedelta(months=6)):
             self.generate_payments(new_start, end, vat_factor)
 
+    @property
+    def account_string(self):
+        if (
+            self.recipient_type == PaymentSchedule.PERSON
+            and self.payment_method == CASH
+        ):
+            department = config.ACCOUNT_NUMBER_DEPARTMENT
+            kind = config.ACCOUNT_NUMBER_KIND
+        else:
+            # Set department and kind to 'XXX'
+            # to signify they are not used.
+            department = "XXX"
+            kind = "XXX"
+
+        # We cannot return an account string when there is no
+        # activity or account.
+        if not hasattr(self, "activity") or not self.activity.account:
+            return ""
+
+        account = self.activity.account
+        return f"{department}-{account.number}-{kind}"
+
     def __str__(self):
         recipient_type_str = self.get_recipient_type_display()
         payment_frequency_str = self.get_payment_frequency_display()
@@ -457,13 +508,24 @@ class Payment(models.Model):
         choices=payment_method_choices,
     )
     amount = models.DecimalField(
+        max_digits=14, decimal_places=2, verbose_name=_("beløb")
+    )
+    paid_amount = models.DecimalField(
         max_digits=14,
         decimal_places=2,
-        verbose_name=_("beløb"),
-        validators=[MinValueValidator(Decimal("0.01"))],
+        verbose_name=_("betalt beløb"),
+        null=True,
+        blank=True,
     )
     paid = models.BooleanField(default=False, verbose_name=_("betalt"))
+    paid_date = models.DateField(
+        verbose_name=_("betalt på dato"), null=True, blank=True
+    )
+    note = models.TextField(verbose_name=_("note"), blank=True)
 
+    saved_account_string = models.CharField(
+        max_length=128, verbose_name=_("gemt kontostreng"), blank=True
+    )
     payment_schedule = models.ForeignKey(
         PaymentSchedule,
         on_delete=models.CASCADE,
@@ -478,7 +540,32 @@ class Payment(models.Model):
             raise ValueError(
                 _("ugyldig betalingsmetode for betalingsmodtager")
             )
+
+        paid_fields = (
+            self.paid,
+            self.paid_date is not None,
+            self.paid_amount is not None,
+        )
+        if any(paid_fields) and not all(paid_fields):
+            raise ValueError(
+                _("ved en betalt betaling skal alle betalingsfelter sættes")
+            )
+
+        if self.paid and not self.payment_schedule.can_be_paid:
+            raise ValueError(
+                _(
+                    "En betaling kan kun betales "
+                    "hvis dens aktivitet er bevilget"
+                )
+            )
         super().save(*args, **kwargs)
+
+    @property
+    def account_string(self):
+        if self.saved_account_string:
+            return self.saved_account_string
+
+        return self.payment_schedule.account_string
 
     def __str__(self):
         recipient_type_str = self.get_recipient_type_display()
@@ -566,9 +653,9 @@ class Case(AuditModelMixin, models.Model):
     )
     note = models.TextField(verbose_name=_("note"), blank=True)
 
-    # We only need to store historical records of
-    # effort_step, scaling_step, case_worker,
-    # thus we can exclude everything else.
+    # We only need to store historical records of effort_step, scaling_step,
+    # case_worker, assessment_comment, team, thus we can exclude everything
+    # else.
     history = HistoricalRecords(
         excluded_fields=[
             "refugee_integration",
@@ -830,6 +917,23 @@ class Appropriation(AuditModelMixin, models.Model):
             # Update the end date for all supplementary activities that
             # don't have an end date less than the main activities'.
             if main_activity.end_date:
+                # The end date must not be later than any supplementary
+                # activity's start date.
+                if (
+                    self.activities.filter(
+                        start_date__gt=main_activity.end_date,
+                        activity_type=SUPPL_ACTIVITY,
+                    )
+                    .exclude(status=STATUS_DELETED)
+                    .exists()
+                ):
+                    raise RuntimeError(
+                        _(
+                            "Denne bevilling har følgeydelser, der starter "
+                            "efter hovedydelsens slutdato. Slet venligst "
+                            "disse eller ryk slutdatoen frem."
+                        )
+                    )
                 for a in self.activities.filter(
                     activity_type=SUPPL_ACTIVITY
                 ).exclude(end_date__lte=main_activity.end_date):
@@ -965,9 +1069,13 @@ class SectionInfo(models.Model):
         verbose_name_plural = _("paragraf-info")
 
     activity_details = models.ForeignKey(
-        ActivityDetails, on_delete=models.CASCADE
+        ActivityDetails,
+        on_delete=models.CASCADE,
+        verbose_name=_("aktivitetsdetalje"),
     )
-    section = models.ForeignKey(Section, on_delete=models.CASCADE)
+    section = models.ForeignKey(
+        Section, on_delete=models.CASCADE, verbose_name=_("paragraf")
+    )
 
     kle_number = models.CharField(
         max_length=128, verbose_name=_("KLE-nummer"), blank=True
@@ -1118,9 +1226,28 @@ class Activity(AuditModelMixin, models.Model):
                 # always be the same.
                 self.modifies.end_date = self.start_date
             else:
-                self.modifies.end_date = self.start_date - timedelta(days=1)
+                while (
+                    self.modifies is not None
+                    and self.start_date <= self.modifies.start_date
+                ):
+                    old_activity = self.modifies
+                    self.modifies = self.modifies.modifies
+                    old_activity.delete()
+                # self.start_date > self.modifies.start_date or is None
+                if self.modifies:
+                    self.modifies.end_date = self.start_date - timedelta(
+                        days=1
+                    )
             # In all cases ...
-            self.modifies.save()
+            if self.modifies:
+                self.modifies.save()
+                # When an expected activity that has a modifies is granted,
+                # we change the expected activitys payment_id to be that of
+                # the modifies activity.
+                self.payment_plan.payment_id = (
+                    self.modifies.payment_plan.payment_id
+                )
+                self.payment_plan.save()
             self.status = STATUS_GRANTED
         self.save()
 
@@ -1188,17 +1315,22 @@ class Activity(AuditModelMixin, models.Model):
                 # modified_by activities and exclude from that point
                 # and onwards.
                 modified_by_activities = self.get_all_modified_by_activities()
-                min_date = (
+                min_payment = (
                     Payment.objects.filter(
                         payment_schedule__activity__in=modified_by_activities
                     )
                     .order_by("date")
                     .first()
-                    .date
                 )
-                payments = Payment.objects.filter(
-                    payment_schedule__activity=self
-                ).exclude(date__gte=min_date)
+                if not min_payment:
+                    payments = Payment.objects.filter(
+                        payment_schedule__activity=self
+                    )
+                else:
+                    min_date = min_payment.date
+                    payments = Payment.objects.filter(
+                        payment_schedule__activity=self
+                    ).exclude(date__gte=min_date)
         else:
             payments = Payment.objects.filter(payment_schedule__activity=self)
         return payments.in_this_year().amount_sum()
@@ -1229,17 +1361,22 @@ class Activity(AuditModelMixin, models.Model):
                 # modified_by activities and exclude from that point
                 # and onwards.
                 modified_by_activities = self.get_all_modified_by_activities()
-                min_date = (
+                min_payment = (
                     Payment.objects.filter(
                         payment_schedule__activity__in=modified_by_activities
                     )
                     .order_by("date")
                     .first()
-                    .date
                 )
-                payments = Payment.objects.filter(
-                    payment_schedule__activity=self
-                ).exclude(date__gte=min_date)
+                if not min_payment:
+                    payments = Payment.objects.filter(
+                        payment_schedule__activity=self
+                    )
+                else:
+                    min_date = min_payment.date
+                    payments = Payment.objects.filter(
+                        payment_schedule__activity=self
+                    ).exclude(date__gte=min_date)
         else:
             payments = Payment.objects.filter(payment_schedule__activity=self)
         return payments.amount_sum()
@@ -1302,6 +1439,11 @@ class Activity(AuditModelMixin, models.Model):
             )
         return r
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        # Trigger an appropriation save to update the "modified" field.
+        self.appropriation.save()
+
 
 class RelatedPerson(models.Model):
     """A person related to a Case, e.g. as a parent or sibling."""
@@ -1343,6 +1485,9 @@ class RelatedPerson(models.Model):
             for (k, v) in data.items()
             if k in converter_dict
         }
+
+    def __str__(self):
+        return f"{self.name} - {self.cpr_number} - {self.main_case}"
 
 
 class Account(models.Model):

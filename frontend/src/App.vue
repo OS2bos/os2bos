@@ -12,7 +12,11 @@
         <app-header />
         
         <main id="app-main">
-            <router-view/>
+            <router-view v-if="auth" />
+            <article v-else class="noaccess">
+                <h1>Adgang nægtet</h1>
+                <p>Måske mangler du de rigtige rettigheder for at se denne side.</p>
+            </article>
         </main>
 
         <app-footer />
@@ -35,8 +39,10 @@
             AppFooter,
             BrowserCheck
         },
-        created: function() {
-            this.$store.dispatch('autoLogin')
+        computed: {
+            auth: function() {
+                return this.$store.getters.getAuth
+            }
         }
         
     }
@@ -60,6 +66,11 @@
 
     #app > main {
         flex: 1 0 auto;
+    }
+
+    .noaccess {
+        width: 30rem;
+        height: 20rem;
     }
 
     .list {

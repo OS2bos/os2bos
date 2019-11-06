@@ -9,16 +9,23 @@
 import axios from '../components/http/Http.js'
 
 const state = {
+    cases: null,
     main_case: null
 }
 
 const getters = {
+    getCases (state) {
+        return state.cases ? state.cases : false
+    },
     getCase (state) {
         return state.main_case ? state.main_case : false
     }
 }
 
 const mutations = {
+    setCases (state, cases) {
+        state.cases = cases
+    },
     setCase (state, main_case) {
         state.main_case = main_case
     },
@@ -28,6 +35,21 @@ const mutations = {
 }
 
 const actions = {
+    fetchCases: function({commit}, queryObj) {
+        let q = ''
+        if (queryObj) {
+            for (let param in queryObj) {
+                if (queryObj[param] !== null) {
+                    q = q + `${ param }=${ queryObj[param] }&`
+                }
+            }
+        }
+        axios.get(`/cases/?${ q }`)
+        .then(res => {
+            commit('setCases', res.data)
+        })
+        .catch(err => console.log(err))
+    },
     fetchCase: function({commit}, cas_id) {
         axios.get(`/cases/${ cas_id }/`)
         .then(res => {

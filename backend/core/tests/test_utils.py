@@ -6,6 +6,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from datetime import timedelta
+from decimal import Decimal
 from unittest import mock
 
 import requests
@@ -18,12 +19,22 @@ from core.models import (
     SUPPL_ACTIVITY,
     PaymentSchedule,
     STATUS_GRANTED,
+    CASH,
+    User,
+    Team,
+    Account,
+    ActivityDetails,
 )
 from core.utils import (
     get_cpr_data,
     get_person_info,
     get_cpr_data_mock,
     send_appropriation,
+    saml_before_login,
+    saml_create_user,
+    generate_records_for_prism,
+    due_payments_for_prism,
+    export_prism_payments_for_date,
 )
 from core.tests.testing_utils import (
     BasicTestMixin,
@@ -242,3 +253,159 @@ class SendAppropriationTestCase(TestCase, BasicTestMixin):
         self.assertCountEqual(
             [], render_call_args["context"]["supplementary_activities"]
         )
+
+
+class SamlLoginTestcase(TestCase, BasicTestMixin):
+    def test_saml_before_login(self):
+        user_data = {
+            "team": ["S-DIG"],
+            "username": ["dummy"],
+            "bos_profile": ["grant"],
+        }
+        User.objects.create_user("dummy", "dummy", profile="grant")
+        saml_before_login(user_data)
+        [team_name] = user_data["team"]
+        team = Team.objects.get(name=team_name)
+        self.assertEqual(team.name, "S-DIG")
+        user_data["bos_profile"] = ["admin"]
+        saml_before_login(user_data)
+
+    def test_saml_create_user(self):
+        user_data = {
+            "team": ["S-DIG"],
+            "username": ["dummy"],
+            "bos_profile": ["grant"],
+        }
+        User.objects.create_user("dummy", "dummy", profile="grant")
+        saml_create_user(user_data)
+        [team_name] = user_data["team"]
+        team = Team.objects.get(name=team_name)
+        self.assertEqual(team.name, "S-DIG")
+        saml_create_user(user_data)
+
+    def test_no_team(self):
+        User.objects.create_user("dummy", "dummy", profile="grant")
+        user_data = {"username": ["dummy"]}
+        saml_before_login(user_data)
+        saml_create_user(user_data)
+
+
+class SendToPrismTestCase(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_format_prism_financial_record(self):
+        # Create a payment that is due today
+        now = timezone.now()
+        start_date = now - timedelta(days=1)
+        end_date = now + timedelta(days=1)
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+        )
+        # Create an activity etc which is required.
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        main_activity_details = ActivityDetails.objects.create(
+            name="Betaling til andre kommuner/region for specialtandpleje",
+            activity_id="010001",
+            max_tolerance_in_dkk=5000,
+            max_tolerance_in_percent=10,
+        )
+        Account.objects.create(
+            number="123456",
+            section=section,
+            main_activity=main_activity_details,
+            supplementary_activity=None,
+        )
+        create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            payment_plan=payment_schedule,
+            details=main_activity_details,
+        )
+        # This will generate three payments on the payment plan, and one
+        # of them will be for today.
+        due_payments = due_payments_for_prism(now)
+        records = generate_records_for_prism(due_payments)
+        self.assertEqual(len(records), 2)
+        due_payments = due_payments_for_prism(end_date)
+        records = generate_records_for_prism(due_payments)
+        self.assertEqual(len(records), 2)
+        payment_reference = records[0].split("&117")[1][:20]
+        finance_reference = records[1].split("&16")[1][:20]
+        # These references is what links the two records.
+        # This is a simple sanity check.
+        self.assertEqual(payment_reference, finance_reference)
+
+    def test_export_prism_payments_for_date(self):
+        # Create a payment that is due today
+        now = timezone.now()
+        start_date = now - timedelta(days=1)
+        end_date = now + timedelta(days=1)
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+        )
+        # Create an activity etc which is required.
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        main_activity_details = ActivityDetails.objects.create(
+            name="Betaling til andre kommuner/region for specialtandpleje",
+            activity_id="010001",
+            max_tolerance_in_dkk=5000,
+            max_tolerance_in_percent=10,
+        )
+        Account.objects.create(
+            number="123456",
+            section=section,
+            main_activity=main_activity_details,
+            supplementary_activity=None,
+        )
+        create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            payment_plan=payment_schedule,
+            details=main_activity_details,
+        )
+        # Check that there's unpaid payments for today.
+        due_payments = due_payments_for_prism(start_date)
+        self.assertEqual(due_payments.count(), 1)
+
+        export_prism_payments_for_date(date=start_date)
+
+        # Check that there's NO unpaid payments for that date.
+        due_payments = due_payments_for_prism(start_date)
+        self.assertEqual(due_payments.count(), 0)
+
+        # Also process for today
+        export_prism_payments_for_date()
+
+        # Repeat the previous processing to have an example with no due
+        # payments.
+        export_prism_payments_for_date()

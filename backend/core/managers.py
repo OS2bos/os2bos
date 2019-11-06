@@ -8,7 +8,17 @@
 
 from django.utils import timezone
 from django.db import models
-from django.db.models import Sum, CharField, Value, Q, F, Count
+from django.db.models import (
+    Case,
+    When,
+    Sum,
+    CharField,
+    DecimalField,
+    Value,
+    Q,
+    F,
+    Count,
+)
 from django.db.models.functions import (
     Coalesce,
     Cast,
@@ -20,15 +30,49 @@ from django.db.models.functions import (
 
 
 class PaymentQuerySet(models.QuerySet):
-    def amount_sum(self):
+    # Case for using paid_date if available, else date.
+    date_case = Case(
+        When(paid_date__isnull=False, then="paid_date"),
+        When(date__isnull=False, then="date"),
+        default="date",
+    )
+    # Case for using paid_amount if available, else amount.
+    amount_case = Case(
+        When(paid_amount__isnull=False, then="paid_amount"),
+        When(amount__isnull=False, then="amount"),
+        default="amount",
+        output_field=DecimalField(),
+    )
+
+    def strict_amount_sum(self):
+        """
+        Sum over Payments amount.
+        """
         return (
             self.aggregate(amount_sum=Coalesce(Sum("amount"), 0))["amount_sum"]
             or 0
         )
 
+    def amount_sum(self):
+        """
+        Sum over Payments with paid_amount overruling amount.
+        """
+        return (
+            self.aggregate(amount_sum=Coalesce(Sum(self.amount_case), 0))[
+                "amount_sum"
+            ]
+            or 0
+        )
+
     def in_this_year(self):
+        """
+        Filter Payments only in the current year.
+        """
         now = timezone.now()
-        return self.filter(date__year=now.year)
+
+        return self.exclude(
+            ~Q(paid_date__year=now.year), paid_date__isnull=False
+        ).exclude(~Q(date__year=now.year), paid_date__isnull=True)
 
     def group_by_monthly_amounts(self):
         """
@@ -40,13 +84,14 @@ class PaymentQuerySet(models.QuerySet):
             {'date_month': '2019-08', 'amount': Decimal('1500.00')}
         ]
         """
+
         return (
             self.annotate(
                 date_month=Concat(
-                    Cast(ExtractYear("date"), CharField()),
+                    Cast(ExtractYear(self.date_case), CharField()),
                     Value("-", CharField()),
                     LPad(
-                        Cast(ExtractMonth("date"), CharField()),
+                        Cast(ExtractMonth(self.date_case), CharField()),
                         2,
                         fill_text=Value("0"),
                     ),
@@ -54,7 +99,7 @@ class PaymentQuerySet(models.QuerySet):
             )
             .values("date_month")
             .order_by("date_month")
-            .annotate(amount=Sum("amount"))
+            .annotate(amount=Sum(self.amount_case))
         )
 
 

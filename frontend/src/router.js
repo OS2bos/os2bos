@@ -16,13 +16,8 @@ const router = new Router({
     routes: [
         {
             path: '/',
-            name: 'home',
+            name: 'my-cases',
             component: () => import(/* webpackPreload: true */ './components/cases/Cases.vue')
-        },
-        {
-            path: '/my-cases/',
-            name: 'my-caces',
-            component: () => import(/* webpackChunkName: "cases" */ './components/cases/Cases.vue')
         },
         {
             path: '/case/:caseId',
@@ -65,7 +60,6 @@ const router = new Router({
             path: '/appropriation/:apprId',
             name: 'appropriation',
             component: () => import(/* webpackChunkName: "appropriation" */ './components/appropriations/Appropriation.vue')
-            
         },
         {
             path: '/case/:caseid/appropriation-create/',
@@ -84,33 +78,35 @@ const router = new Router({
             props: { mode: 'create' }
         },
         {
-            path: '/paymentschedule/',
-            name: 'paymentschedule',
-            component: () => import(/* webpackChunkName: "paymentschedule" */ './components/payment/PaymentSchedule.vue')
+            path: '/payments/',
+            name: 'payments',
+            component: () => import(/* webpackChunkName: "payments" */ './components/payments/PaymentSearch.vue')
         },
         {
-            path: '/login',
-            name: 'login',
-            component: () => import(/* webpackPreload: true */ './components/auth/Login.vue')
+            path: '/payment/:payId',
+            name: 'payment',
+            component: () => import(/* webpackChunkName: "payment" */ './components/payments/Payment.vue')
         },
         {
             // 404 page. This route must declared last
             path: '*',
             name: 'page404',
-            component: () => import(/* webpackPreload: true */ './components/http/Page404.vue')
+            component: () => import(/* webpackChunkName: "page404" */ './components/http/Page404.vue')
         }
     ]
 })
 
 router.beforeEach((to, from, next) => {
-    if (to.name === 'login') {
+    if (store.getters.getAuth) {
+        // If we are authenticated, just proceed
         next()
-    } else if (sessionStorage.getItem('accesstoken')) {
+    } else if (to.query.token && to.query.uid) {
+        // We have been redirected from SSO login, set login credentials
+        store.dispatch('registerAuth', to.query)
         next()
     } else {
-        next({
-            path: '/login'
-        }) 
+        // Try to login
+        window.location = '/api/accounts/login/'
     }
 })
 

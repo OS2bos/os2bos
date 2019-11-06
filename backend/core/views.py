@@ -14,8 +14,6 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 
-from django_filters import rest_framework as filters
-
 from core.models import (
     Case,
     Appropriation,
@@ -58,30 +56,26 @@ from core.serializers import (
     PaymentMethodDetailsSerializer,
     ApprovalLevelSerializer,
 )
-
+from core.filters import CaseFilter, PaymentFilter, AllowedForStepsFilter
 from core.utils import get_person_info
 
 from core.mixins import AuditMixin
 
+from core.authentication import CsrfExemptSessionAuthentication
+
+from core.permissions import IsUserAllowed
+
+
 # Working models, read/write
 
 
-class CaseFilter(filters.FilterSet):
-    expired = filters.BooleanFilter(method="filter_expired", label=_("Udgået"))
-
-    class Meta:
-        model = Case
-        fields = "__all__"
-
-    def filter_expired(self, queryset, name, value):
-        if value:
-            return queryset.expired()
-        else:
-            return queryset.ongoing()
-
-
 class AuditViewSet(AuditMixin, viewsets.ModelViewSet):
-    pass
+    authentication_classes = (CsrfExemptSessionAuthentication,)
+    permission_classes = (IsUserAllowed,)
+
+
+class ReadOnlyViewset(viewsets.ReadOnlyModelViewSet):
+    permission_classes = (IsUserAllowed,)
 
 
 class CaseViewSet(AuditViewSet):
@@ -184,8 +178,11 @@ class PaymentScheduleViewSet(AuditViewSet):
 
 
 class PaymentViewSet(AuditViewSet):
-    queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
+    queryset = Payment.objects.all()
+
+    filter_class = PaymentFilter
+    filterset_fields = "__all__"
 
 
 class RelatedPersonViewSet(AuditViewSet):
@@ -232,69 +229,55 @@ class RelatedPersonViewSet(AuditViewSet):
 # Master data, read only.
 
 
-class MunicipalityViewSet(viewsets.ReadOnlyModelViewSet):
+class MunicipalityViewSet(ReadOnlyViewset):
     queryset = Municipality.objects.all()
     serializer_class = MunicipalitySerializer
 
 
-class SchoolDistrictViewSet(viewsets.ReadOnlyModelViewSet):
+class SchoolDistrictViewSet(ReadOnlyViewset):
     queryset = SchoolDistrict.objects.all()
     serializer_class = SchoolDistrictSerializer
 
 
-class TeamViewSet(viewsets.ReadOnlyModelViewSet):
+class TeamViewSet(ReadOnlyViewset):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
 
 
-class CharInFilter(filters.BaseInFilter, filters.CharFilter):
-    pass
-
-
-class AllowedForStepsFilter(filters.FilterSet):
-    allowed_for_steps = CharInFilter(
-        field_name="allowed_for_steps", lookup_expr="contains"
-    )
-
-    class Meta:
-        model = Section
-        fields = "__all__"
-
-
-class SectionViewSet(viewsets.ReadOnlyModelViewSet):
+class SectionViewSet(ReadOnlyViewset):
     queryset = Section.objects.all()
     serializer_class = SectionSerializer
     filterset_class = AllowedForStepsFilter
 
 
-class SectionInfoViewSet(viewsets.ReadOnlyModelViewSet):
+class SectionInfoViewSet(ReadOnlyViewset):
     queryset = SectionInfo.objects.all()
     serializer_class = SectionInfoSerializer
     filterset_fields = "__all__"
 
 
-class ActivityDetailsViewSet(viewsets.ReadOnlyModelViewSet):
+class ActivityDetailsViewSet(ReadOnlyViewset):
     queryset = ActivityDetails.objects.all()
     serializer_class = ActivityDetailsSerializer
     filterset_fields = "__all__"
 
 
-class AccountViewSet(viewsets.ReadOnlyModelViewSet):
+class AccountViewSet(ReadOnlyViewset):
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
     filterset_fields = "__all__"
 
 
-class UserViewSet(viewsets.ReadOnlyModelViewSet):
+class UserViewSet(ReadOnlyViewset):
     queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
 
 
-class ServiceProviderViewSet(viewsets.ReadOnlyModelViewSet):
+class ServiceProviderViewSet(ReadOnlyViewset):
     queryset = ServiceProvider.objects.all()
     serializer_class = ServiceProviderSerializer
 
 
-class ApprovalLevelViewSet(viewsets.ReadOnlyModelViewSet):
+class ApprovalLevelViewSet(ReadOnlyViewset):
     queryset = ApprovalLevel.objects.all()
     serializer_class = ApprovalLevelSerializer

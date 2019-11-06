@@ -35,11 +35,6 @@ const mutations = {
         state.users = users
     },
     setUser (state, user) {
-        if (user === null || user === undefined) {
-            sessionStorage.removeItem('userid')
-        } else {
-            sessionStorage.setItem('userid', user.id)
-        }
         state.user = user
     },
     setTeams (state, teams) {
@@ -60,7 +55,9 @@ const actions = {
             })
             commit('setUsers', users)
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+            console.log(err)
+        })
     },
     fetchUser: async function({commit, state, dispatch}, user_id) {
         if (state.users) {

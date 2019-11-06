@@ -78,7 +78,6 @@ DEBUG = settings.getboolean("DEBUG", fallback=False)
 
 ALLOWED_HOSTS = settings.get("ALLOWED_HOSTS", fallback="").split(",")
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -91,10 +90,12 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_extensions",
     "django_filters",
+    "rest_framework_filters",
     "simple_history",
     "constance",
     "constance.backends.database",
     "core.apps.CoreConfig",
+    "django_saml2_auth",
 ]
 
 MIDDLEWARE = [
@@ -222,19 +223,22 @@ SERVICEPLATFORM_CERTIFICATE_PATH = settings.get(
 
 REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": (
-        "django_filters.rest_framework.DjangoFilterBackend",
+        "rest_framework_filters.backends.RestFrameworkFilterBackend",
     ),
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
     ),
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ),
 }
 
-LOG_DIR = settings.get("LOG_DIR", fallback="/log")
+# Output directory for integration with KMD Prisme.
+PRISM_OUTPUT_DIR = settings.get("PRISM_OUTPUT_DIR", fallback="/prisme")
+
 # Logging
+LOG_DIR = settings.get("LOG_DIR", fallback="/log")
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -253,6 +257,20 @@ LOGGING = {
                 "AUDIT_LOG_FILE", fallback=os.path.join(LOG_DIR, "audit.log")
             ),
         },
+        "export_to_prism": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "formatter": "verbose",
+            "filename": settings.get(
+                "PRISM_LOG_FILE",
+                fallback=os.path.join(LOG_DIR, "export_to_prism.log"),
+            ),
+        },
+    },
+    "formatters": {
+        "verbose": {
+            "format": "%(levelname)s %(asctime)s %(module)s: %(message)s"
+        }
     },
     "loggers": {
         "django": {
@@ -262,6 +280,11 @@ LOGGING = {
         },
         "bevillingsplatform.audit": {
             "handlers": ["audit"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        "bevillingsplatform.export_to_prism": {
+            "handlers": ["export_to_prism"],
             "level": "INFO",
             "propagate": True,
         },
@@ -301,9 +324,59 @@ CONSTANCE_CONFIG = {
         ),
         _("fra-email"),
     ),
+    "DEFAULT_TEAM_NAME": (
+        settings.get(
+            "DEFAULT_TEAM_NAME", fallback="Afventer tildeling af team"
+        ),
+        _("første team for nye brugere"),
+    ),
+    "ACCOUNT_NUMBER_DEPARTMENT": (
+        settings.get("ACCOUNT_NUMBER_DEPARTMENT", fallback="12345"),
+        _("Kontostreng afdeling"),
+    ),
+    "ACCOUNT_NUMBER_KIND": (
+        settings.get("ACCOUNT_NUMBER_KIND", fallback="123"),
+        _("Kontostreng art"),
+    ),
+    "PRISM_ORG_UNIT": (
+        settings.get("PRISM_ORG_UNIT", fallback=0),
+        _("Kommune-nummer"),
+        int,
+    ),
+    "PRISM_MACHINE_NO": (
+        settings.get("PRISM_MACHINE_NO", fallback=0),
+        _("Maskin-nummer til PRISME"),
+        int,
+    ),
 }
 CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
 
 
 SBSYS_APPROPRIATION_TEMPLATE = "core/html/appropriation_letter.html"
 SBSYS_XML_TEMPLATE = "core/xml/os2forms.xml"
+
+SAML2_AUTH = {
+    # Metadata is required, choose either remote url or local
+    # file path
+    "METADATA_AUTO_CONF_URL": settings.get("SAML_METADATA_URL"),
+    "CREATE_USER": "TRUE",
+    "NEW_USER_PROFILE": {
+        "ACTIVE_STATUS": True,
+        "STAFF_STATUS": False,
+        "SUPERUSER_STATUS": False,
+    },
+    "ASSERTION_URL": settings.get("SAML_PUBLIC_HOST"),
+    "ENTITY_ID": settings.get("SAML_PUBLIC_HOST"),
+    "ATTRIBUTES_MAP": {
+        "email": "email",
+        "username": "username",
+        "first_name": "first_name",
+        "last_name": "last_name",
+    },
+    "TRIGGER": {
+        "CREATE_USER": "core.utils.saml_create_user",
+        "BEFORE_LOGIN": "core.utils.saml_before_login",
+    },
+    "USE_JWT": True,
+    "FRONTEND_URL": settings.get("SAML_PUBLIC_HOST") + "#/",
+}

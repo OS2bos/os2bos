@@ -36,10 +36,6 @@ ax.interceptors.response.use(
     },
     function (err) {
         spinner.spinOff()
-        if (err.response.data.code === 'token_not_valid') {
-            notify('Du er automatisk blevet logget ud', 'error')
-            store.dispatch('clearAuth')
-        }
         return Promise.reject(err)
     }
 )

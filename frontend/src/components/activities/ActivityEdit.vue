@@ -30,6 +30,11 @@
                     <input type="checkbox" id="field-status-expected" v-model="act_status_expected">
                     <label for="field-status-expected" style="margin: 0;">Opret forventet Ydelse</label>
                 </fieldset>
+                
+                <fieldset style="margin: 0 0 0 2rem;">
+                    <input type="checkbox" id="field-fictive" v-model="payment.fictive">
+                    <label for="field-fictive" style="margin: 0;">Fiktiv Betaling</label>
+                </fieldset>
 
             </header>
         
@@ -82,15 +87,12 @@
                 </div>
 
                 <div class="row-item">
-                    <pay-type-edit :pay.sync="pay" />
-                    <pay-freq-edit :pay.sync="pay" />
-                    <pay-amount-edit :pay.sync="pay" />
-                    <pay-plan v-if="pay.payment_amount" :amount="pay.payment_amount" :units="pay.payment_units" :type="pay.payment_type" :frequency="pay.payment_frequency" />
+                    <pay-type-edit />
+                    <pay-plan />
                 </div>
 
                 <div class="row-item">
-                    <pay-payee-edit :pay.sync="pay" />
-                    <pay-mean-edit :pay.sync="pay" />
+                    <payment-receiver-edit />
                 </div>
 
             </div>
@@ -113,12 +115,9 @@
     import { json2jsDate } from '../filters/Date.js'
     import Error from '../forms/Error.vue'
     import ListPicker from '../forms/ListPicker.vue'
-    import PayTypeEdit from '../payment/PaymentTypeEdit.vue'
-    import PayFreqEdit from '../payment/PaymentFrequencyEdit.vue'
-    import PayAmountEdit from '../payment/PaymentAmountEdit.vue'
-    import PayPayeeEdit from '../payment/PaymentPayeeEdit.vue'
-    import PayMeanEdit from '../payment/PaymentMeansEdit.vue'
-    import PayPlan from '../payment/PaymentPlan.vue'
+    import PayTypeEdit from '../payment-details/payment-type/PaymentTypeEdit.vue'
+    import PayPlan from '../payment-details/PaymentPlan.vue'
+    import PaymentReceiverEdit from '../payment-details/payment-receiver/PaymentReceiverEdit.vue'
 
     export default {
 
@@ -126,11 +125,8 @@
             Error,
             ListPicker,
             PayTypeEdit,
-            PayFreqEdit,
-            PayAmountEdit,
-            PayMeanEdit,
-            PayPayeeEdit,
-            PayPlan
+            PayPlan,
+            PaymentReceiverEdit
         },
         props: [
             'mode', // Can be either 'create', 'edit', or 'clone'
@@ -140,7 +136,6 @@
             return {
                 act: {},
                 act_status_expected: false,
-                pay: {},
                 act_details: null
             }
         },
@@ -181,6 +176,9 @@
                     this.act.end_date = null
                 }
                 return false
+            },
+            payment: function() {
+                return this.$store.getters.getPayment
             }
         },
         watch: {
@@ -190,9 +188,10 @@
         },
         methods: {
             update: function() {
+                this.$store.commit('clearPayment')
                 if (this.activityObj) {
                     this.act = this.activityObj
-                    this.pay = this.act.payment_plan
+                    this.$store.commit('setPayment', this.act.payment_plan)
                 } else {
                     if (!this.appr_main_acts) {
                         this.act.activity_type = 'MAIN_ACTIVITY'
@@ -219,9 +218,9 @@
                     end_date: this.act.end_date ? this.act.end_date : null,
                     details: this.act.details,
                     note: this.act.note,
-                    payment_plan: this.pay
+                    payment_plan: this.payment
                 }
-                if (this.pay.payment_type === 'ONE_TIME_PAYMENT') {
+                if (this.payment.payment_type === 'ONE_TIME_PAYMENT') {
                     data.end_date = data.start_date
                 }
                 if (this.mode === 'create') {
@@ -245,6 +244,7 @@
                     .then(res => {
                         this.$router.push(`/appropriation/${ this.appropriation.id }`)
                         this.$store.dispatch('fetchActivity', res.data.id)
+                        this.$store.commit('clearPayment')
                     })
                     .catch(err => this.$store.dispatch('parseErrorOutput', err))
 
@@ -255,11 +255,13 @@
                     .then(res => {
                         this.$router.push(`/appropriation/${ this.appropriation.id }`)
                         this.$store.dispatch('fetchActivity', res.data.id)
+                        this.$store.commit('clearPayment')
                     })
                     .catch(err => this.$store.dispatch('parseErrorOutput', err))
                 }
             },
             cancel: function() {
+                this.$store.commit('clearPayment')
                 if (this.mode !== 'create') {
                     this.$emit('close')
                 } else {

@@ -11,7 +11,7 @@
     <section class="appropriation" v-if="appr">
         <header class="appropriation-header">
             <h1 style="display: inline-block;">Bevillingsskrivelse</h1>
-            <button @click="show_edit = !show_edit" class="appr-edit-btn">Redigér</button>
+            <button v-if="permissionCheck === true" @click="show_edit = !show_edit" class="appr-edit-btn">Redigér</button>
         </header>
 
         <appropriation-edit :appr-obj="appr" v-if="show_edit" @close="update()" />
@@ -73,8 +73,11 @@
     import { json2jsDate } from '../filters/Date.js'
     import { municipalityId2name, districtId2name, sectionId2name, displayStatus, userId2name, approvalId2name } from '../filters/Labels.js'
     import store from '../../store.js'
+    import UserRights from '../mixins/UserRights.js'
 
     export default {
+
+        mixins: [UserRights],
 
         components: {
             ActivityList,
