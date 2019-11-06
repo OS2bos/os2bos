@@ -55,7 +55,7 @@
                         key: 'sbsys_id',
                         title: 'SBSYS ID',
                         display_func: this.displayID,
-                        clickable: true
+                        class: 'datagrid-action'
                     },
                     {
                         key: 'cpr_number',
@@ -98,18 +98,14 @@
             },
             displayID: function(d) {
                 let to = `#/case/${ d.id }/`
-                return `<a href="${ to }">${ d.sbsys_id }</a>`
+                return `<a href="${ to }"><i class="material-icons">folder_shared</i> ${ d.sbsys_id }</a>`
             },
             displayDate: function(d) {
                 return json2js(d.modified)
             },
             displayStatus: function(d) {
                 if (!d.expired) {
-                    return `
-                        <div class="mini-label">
-                            <span class="label label-GRANTED">Aktiv</span>
-                        </div>
-                    `
+                    return `<div class="mini-label"><span class="label label-GRANTED">Aktiv</span></div>`
                 }   
             }
         },

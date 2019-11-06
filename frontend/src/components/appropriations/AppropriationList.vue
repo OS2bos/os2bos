@@ -13,52 +13,28 @@
             <h2>Bevillingsskrivelser</h2>
             <button v-if="permissionCheck === true" class="appropriation-create-btn" @click="$router.push(`/case/${ caseId }/appropriation-create/`)">+ Opret bevillingsskrivelse</button>
         </header>
-        <table class="appropriation-list" v-if="apprs && apprs.length > 0">
-            <thead>
-                <tr>
-                    <th style="width: 6rem;">Status</th>
-                    <th>Foranstaltningssag</th>
-                    <th>Bevillingsparagraf</th>
-                    <th>Supplerende information</th>
-                    <th>Oprettet</th>
-                    <th>Senest ændret</th>
-                    <th class="right">Udgift i år</th>
-                    <th class="right">Forventet udgift i år</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="a in apprs" :key="a.id">
-                    <td style="width: 6rem;"><div  class="mini-label" v-html="statusLabel(a)"></div></td>
-                    <td>    
-                        <i class="material-icons">folder_open</i>
-                        <router-link :to="`/appropriation/${ a.id }`">
-                            {{ a.sbsys_id }} 
-                        </router-link>
-                    </td>
-                    <td>§ {{ displaySection(a.section) }}</td>
-                    <td class="nowrap">{{ a.note }}</td>
-                    <td class="nowrap">{{ displayDate(a.created) }}</td>
-                    <td class="nowrap">{{ displayDate(a.modified) }}</td>
-                    <td class="right nowrap">{{ displayDigits(a.total_granted_this_year) }} kr.</td>
-                    <td class="expected right nowrap">
-                        <span v-if="a.total_expected_this_year > 0 && a.total_expected_this_year !== a.total_granted_this_year">
-                            {{ displayDigits(a.total_expected_this_year) }} kr.
-                        </span>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="5"></td>
-                    <td class="right">Samlet</td>
-                    <td class="right nowrap"><strong>{{ displayDigits(total_granted) }} kr</strong></td>
-                    <td class="expected right nowrap">
-                        <span v-if="has_expected">
-                            {{ displayDigits(total_expected) }} kr.
-                        </span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <p v-if="!apprs || apprs.length < 1">Der er endnu ingen bevillingsskrivelser</p>
+
+        <data-grid v-if="apprs.length > 0"
+                   ref="data-grid"
+                   :data-list="apprs"
+                   :columns="columns"
+                   :selectable="false">
+
+            <tr slot="footer-row" class="summary">
+                <td colspan="5"></td>
+                <td class="right">Samlet</td>
+                <td class="right nowrap"><strong>{{ displayDigits(total_granted) }} kr</strong></td>
+                <td class="expected right nowrap">
+                    <span v-if="has_expected">
+                        {{ displayDigits(total_expected) }} kr.
+                    </span>
+                </td>
+            </tr>
+
+        </data-grid>
+
+        <p v-if="apprs.length < 1">Der er endnu ingen bevillingsskrivelser</p>
+
     </section>
 
 </template>
@@ -70,17 +46,70 @@
     import { cost2da } from '../filters/Numbers.js'
     import { sectionId2name, displayStatus } from '../filters/Labels.js'
     import UserRights from '../mixins/UserRights.js'
+    import DataGrid from '../datagrid/DataGrid.vue'
 
     export default {
 
         mixins: [UserRights],
-
+        components: {
+            DataGrid
+        },
         props: [
             'caseId'
         ],
         data: function() {
             return {
-                apprs: null   
+                apprs: [],
+                columns: [
+                    {
+                        key: 'status',
+                        title: 'Status',
+                        display_func: this.statusLabel,
+                        class: 'mini-label'
+                    },
+                    {
+                        key: 'sbsys_id',
+                        title: 'Foranstaltningssag',
+                        display_func: this.displayID,
+                        class: 'datagrid-action nowrap',
+                        title: 'sbsys_id'
+                    },
+                    {
+                        key: 'section',
+                        title: 'Bevillingsparagraf',
+                        display_func: this.displaySection,
+                        class: 'nowrap'
+                    },
+                    {
+                        key: 'note',
+                        title: 'Supplerende info',
+                        class: 'nowrap'
+                    },
+                    {
+                        key: 'created',
+                        title: 'Oprettet',
+                        display_func: this.displayCreatedDate,
+                        class: 'nowrap'
+                    },
+                    {
+                        key: 'modified',
+                        title: 'Senest ændret',
+                        display_func: this.displayModifiedDate,
+                        class: 'nowrap'
+                    },
+                    {
+                        key: 'total_granted_this_year',
+                        title: 'Udgift i år',
+                        display_func: this.displayGranted,
+                        class: 'right nowrap'
+                    },
+                    {
+                        key: 'total_expected_this_year',
+                        title: 'Forventet udgift i år',
+                        display_func: this.displayExpected,
+                        class: 'expected right nowrap'
+                    }
+                ]
             }
         },
         computed: {
@@ -125,14 +154,25 @@
                 })
                 .catch(err => console.log(err))
             },
-            displayDate: function(dt) {
-                return json2jsDate(dt)
+            displayCreatedDate: function(appr) {
+                return json2jsDate(appr.created)
+            },
+            displayModifiedDate: function(appr) {
+                return json2jsDate(appr.modified)
             },
             displayDigits: function(num) {
                 return cost2da(num)
             },
-            displaySection: function(id) {
-                return sectionId2name(id)
+            displayGranted: function(appr) {
+                return `${ cost2da(appr.total_granted_this_year) } kr.`
+            },
+            displayExpected: function(appr) {
+                if (appr.total_expected_this_year > 0 && appr.total_expected_this_year !== appr.total_granted_this_year) {
+                    return `${ cost2da(appr.total_expected_this_year) } kr.`
+                }
+            },
+            displaySection: function(appr) {
+                return `§ ${ sectionId2name(appr.section) }`
             },
             statusLabel: function(appr) {
                 let label = 'DRAFT'
@@ -147,6 +187,10 @@
                     }
                 }
                 return displayStatus(label)
+            },
+            displayID: function(d) {
+                let to = `#/appropriation/${ d.id }/`
+                return `<a href="${ to }"><i class="material-icons">folder_open</i> ${ d.sbsys_id }</a>`
             }
         },
         created: function() {
@@ -178,7 +222,7 @@
         color: black;
     }
 
-    .appropriations tr:last-child td {
+    .appropriations tr.summary td {
         background-color: var(--grey0);
         padding-top: 1.5rem;
     }

@@ -34,7 +34,7 @@
                     <th v-for="c in columns" 
                         :key="c.key"
                         @click="sortBy(c.key)"
-                        :class="{ active: sortKey == c.key }">
+                        :class="`${ c.class ? c.class : '' }${ sortKey === c.key ? ' active' : '' }`">
                         {{ c.title }}
                         <span class="arrow" :class="sortOrders[c.key] > 0 ? 'asc' : 'dsc'"></span>
                     </th>
@@ -53,12 +53,14 @@
                         </label>
                     </td>
                     <template v-for="c in columns">
-                        <td v-if="c.display_func" v-html="c.display_func(d)" :key="c.key" :class="c.clickable ? 'datagrid-td-action' : ''"></td>
-                        <td v-if="!c.display_func" :key="c.key">
-                            {{ d[c.key] }}
+                        <td v-html="c.display_func ? c.display_func(d) : d[c.key]" 
+                            :key="c.key" 
+                            :class="c.class"
+                            :title="c.display_func ? c.display_func(d) : d[c.key]">
                         </td>
                     </template>
                 </tr>
+                <slot name="footer-row"></slot>
             </tbody>
         </table>
 
@@ -78,7 +80,7 @@
         data: function () {
             var sortOrders = {}
             this.columns.forEach(function (c) {
-            sortOrders[c.key] = 1
+                sortOrders[c.key] = 1
             })
             return {
                 sortKey: '',
@@ -201,11 +203,11 @@
         vertical-align: middle;
     }
 
-    .datagrid .datagrid-td-action {
+    .datagrid td.datagrid-action {
         padding: 0;
     }
 
-    .datagrid .datagrid-td-action a {
+    .datagrid td.datagrid-action a {
         display: block;
         border: none;
         padding: .75rem;
