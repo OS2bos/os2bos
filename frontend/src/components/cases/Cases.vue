@@ -69,6 +69,9 @@
             <form @submit.prevent>
                 <fieldset>
 
+                    <label for="field-sbsysid">SBSYS ID</label>
+                    <input type="search" @input="changeSBSYS()" id="field-sbsysid" v-model="field_sbsys">
+
                     <label for="field-cpr">CPR-nr</label>
                     <input type="search" @input="changeCpr()" id="field-cpr" v-model="field_cpr">
 
@@ -121,6 +124,7 @@
         data: function() {
             return {
                 selected_cases: [],
+                field_sbsys: null,
                 field_cpr: null,
                 field_case_worker: null,
                 field_team: null,
@@ -188,6 +192,10 @@
                         </div>
                     `
                 }   
+            },
+            changeSBSYS: function() {
+                this.$route.query.sbsys_id = this.field_sbsys
+                this.update()
             },
             changeCpr: function() {
                 let cpr = this.field_cpr.replace('-','')
@@ -289,7 +297,7 @@
         align-items: center;
         padding: .125rem .66rem;
     }
-    
+
     .move-cases-field label {
         margin-top: 0;
     }
