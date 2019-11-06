@@ -74,12 +74,12 @@
                 <fieldset>
                     <legend>Tidsrum</legend>
                     <label>Fra dato</label>
-                    <input type="date" v-model="q.paid_date__gt">
+                    <input type="date" v-model="q.paid_date_or_date__gte">
                     <label>Til dato</label>
-                    <input type="date" v-model="q.paid_date__lt">
+                    <input type="date" v-model="q.paid_date_or_date__lte">
                 </fieldset>
                 <fieldset>
-                    <input type="radio" id="field-paid-1" checked name="field-paid" v-model="q.paid">
+                    <input type="radio" id="field-paid-1" checked name="field-paid" value="" v-model="q.paid">
                     <label for="field-paid-1">Betalte og ubetalte</label>
                     <input type="radio" id="field-paid-2" name="field-paid" value="true" v-model="q.paid">
                     <label for="field-paid-2">Kun betalte</label>
@@ -112,8 +112,8 @@
             return {
                 q: {
                     payment_schedule__payment_id: null,
-                    paid_date__gt: null,
-                    paid_date__lt: null,
+                    paid_date_or_date__gte: null,
+                    paid_date_or_date__lte: null,
                     case__cpr_number: null,
                     paid: null
                 }
