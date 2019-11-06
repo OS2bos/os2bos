@@ -171,9 +171,6 @@
         background-color: var(--grey0);
         color: var(--grey10);
         cursor: pointer;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
         user-select: none;
         vertical-align: middle;
     }
@@ -192,7 +189,7 @@
         width: 0;
         height: 0;
         margin-left: 5px;
-        opacity: 0.66;
+        opacity: 0.5;
     }
 
     .datagrid .arrow.asc {
