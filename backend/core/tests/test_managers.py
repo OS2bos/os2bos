@@ -72,6 +72,138 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
 
         self.assertIn(payment, Payment.objects.in_this_year())
 
+    def test_paid_date_or_date_gte(self):
+        payment_schedule = create_payment_schedule()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            payment_plan=payment_schedule,
+        )
+        now = timezone.now()
+
+        # should be included
+        paid_date_gte_payment = create_payment(
+            payment_schedule,
+            date=date(year=now.year - 1, month=12, day=31),
+            paid_date=date(year=now.year, month=1, day=1),
+            paid_amount=Decimal("500.0"),
+            paid=True,
+        )
+
+        # should be included
+        date_gte_payment = create_payment(
+            payment_schedule, date=date(year=now.year, month=1, day=1)
+        )
+
+        # should not be included
+        paid_date_lt_payment = create_payment(
+            payment_schedule, date=date(year=now.year - 1, month=12, day=31)
+        )
+
+        # should not be included
+        date_lt_payment = create_payment(
+            payment_schedule, date=date(year=now.year - 1, month=12, day=31)
+        )
+
+        self.assertIn(
+            paid_date_gte_payment,
+            Payment.objects.paid_date_or_date_gte(
+                date(year=now.year, month=1, day=1)
+            ),
+        )
+
+        self.assertIn(
+            date_gte_payment,
+            Payment.objects.paid_date_or_date_gte(
+                date(year=now.year, month=1, day=1)
+            ),
+        )
+        self.assertNotIn(
+            paid_date_lt_payment,
+            Payment.objects.paid_date_or_date_gte(
+                date(year=now.year, month=1, day=1)
+            ),
+        )
+
+        self.assertNotIn(
+            date_lt_payment,
+            Payment.objects.paid_date_or_date_gte(
+                date(year=now.year, month=1, day=1)
+            ),
+        )
+
+    def test_paid_date_or_date_lte(self):
+        payment_schedule = create_payment_schedule()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            payment_plan=payment_schedule,
+        )
+        now = timezone.now()
+
+        # should be included
+        paid_date_lte_payment = create_payment(
+            payment_schedule,
+            date=date(year=now.year - 1, month=12, day=31),
+            paid_date=date(year=now.year, month=1, day=1),
+            paid_amount=Decimal("500.0"),
+            paid=True,
+        )
+
+        # should be included
+        date_lte_payment = create_payment(
+            payment_schedule, date=date(year=now.year, month=1, day=1)
+        )
+
+        # should not be included
+        paid_date_gt_payment = create_payment(
+            payment_schedule, date=date(year=now.year - 1, month=12, day=31)
+        )
+
+        # should not be included
+        date_gt_payment = create_payment(
+            payment_schedule, date=date(year=now.year - 1, month=12, day=31)
+        )
+
+        self.assertIn(
+            paid_date_lte_payment,
+            Payment.objects.paid_date_or_date_lte(
+                date(year=now.year, month=1, day=1)
+            ),
+        )
+
+        self.assertIn(
+            date_lte_payment,
+            Payment.objects.paid_date_or_date_gte(
+                date(year=now.year, month=1, day=1)
+            ),
+        )
+        self.assertNotIn(
+            paid_date_gt_payment,
+            Payment.objects.paid_date_or_date_gte(
+                date(year=now.year, month=1, day=1)
+            ),
+        )
+
+        self.assertNotIn(
+            date_gt_payment,
+            Payment.objects.paid_date_or_date_gte(
+                date(year=now.year, month=1, day=1)
+            ),
+        )
+
     def test_in_this_year_false_paid_date(self):
         payment_schedule = create_payment_schedule()
         case = create_case(
