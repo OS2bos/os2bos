@@ -66,29 +66,29 @@
 
         <div class="payment-search-filters">
             <h2>Filtre</h2>
-            <form @input="changeId()">
+            <form>
                 <fieldset>
                     <label>Betalingsnøgle</label>
-                    <input type="text" v-model="q.payment_schedule__payment_id">
+                    <input @input="changeId()" type="text" v-model="q.payment_schedule__payment_id">
                 </fieldset>
                 <fieldset>
                     <legend>Tidsrum</legend>
                     <label>Fra dato</label>
-                    <input type="date" v-model="q.paid_date_or_date__gte">
+                    <input @input="changeId()" type="date" v-model="q.paid_date_or_date__gte">
                     <label>Til dato</label>
-                    <input type="date" v-model="q.paid_date_or_date__lte">
+                    <input @input="changeId()" type="date" v-model="q.paid_date_or_date__lte">
                 </fieldset>
                 <fieldset>
-                    <input type="radio" id="field-paid-1" checked name="field-paid" value="" v-model="q.paid">
+                    <input type="radio" id="field-paid-1" checked name="field-paid" value="" v-model="paid">
                     <label for="field-paid-1">Betalte og ubetalte</label>
-                    <input type="radio" id="field-paid-2" name="field-paid" value="true" v-model="q.paid">
+                    <input type="radio" id="field-paid-2" name="field-paid" value="true" v-model="paid">
                     <label for="field-paid-2">Kun betalte</label>
-                    <input type="radio" id="field-paid-3" name="field-paid" value="false" v-model="q.paid">
+                    <input type="radio" id="field-paid-3" name="field-paid" value="false" v-model="paid">{{paid}}
                     <label for="field-paid-3">Kun ubetalte</label>
                 </fieldset>
                 <fieldset>
                     <label>Hovedsag CPR</label>
-                    <input type="text" v-model="q.case__cpr_number">
+                    <input @input="changeId()" type="text" v-model="q.case__cpr_number">
                 </fieldset>
             </form>
         </div>
@@ -116,12 +116,20 @@
                     paid_date_or_date__lte: null,
                     case__cpr_number: null,
                     paid: null
-                }
+                },
+                paid: null
             }
         },
         computed: {
             payments: function() {
                 return this.$store.getters.getPayments
+            }
+        },
+        watch: {
+            paid: function() {
+                this.q.paid = this.paid
+                this.$route.params.query = this.q
+                this.update()
             }
         },
         methods: {
