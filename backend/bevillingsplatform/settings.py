@@ -232,6 +232,8 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.SessionAuthentication",
     ),
+    # Let each view determine whether pagination should be used or not.
+    "DEFAULT_PAGINATION_CLASS": None,
     "PAGE_SIZE": 50,
 }
 
