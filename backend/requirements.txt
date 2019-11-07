@@ -22,3 +22,4 @@ django-constance[database]==2.4.0
 drf-writable-nested==0.5.1
 django-saml2-auth==2.2.1
 pysaml2==4.8.0
+django-mailer==2.0
