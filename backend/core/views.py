@@ -178,14 +178,10 @@ class PaymentScheduleViewSet(AuditViewSet):
         return queryset
 
 
-class PaymentPagination(PageNumberPagination):
-    page_size = 50
-
-
 class PaymentViewSet(AuditViewSet):
     serializer_class = PaymentSerializer
     queryset = Payment.objects.all()
-    pagination_class = PaymentPagination
+    pagination_class = PageNumberPagination
 
     filter_class = PaymentFilter
     filterset_fields = "__all__"
