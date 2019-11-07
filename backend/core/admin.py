@@ -50,12 +50,16 @@ for klass in (
 
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
-    readonly_fields = ("payment_id",)
+    readonly_fields = ("payment_id", "account_string")
 
     def payment_id(self, obj):
         return obj.payment_schedule.payment_id
 
+    def account_string(self, obj):
+        return obj.account_string
+
     payment_id.short_description = _("betalings-ID")
+    account_string.short_description = _("kontostreng")
 
 
 @admin.register(PaymentSchedule)
