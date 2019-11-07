@@ -5,7 +5,6 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from decimal import Decimal
 from unittest import mock
 from datetime import date, timedelta
 
@@ -33,7 +32,6 @@ from core.tests.testing_utils import (
     create_appropriation,
     create_activity,
     create_payment_schedule,
-    create_payment,
 )
 from core.models import STEP_ONE, STEP_THREE, STEP_FIVE
 
