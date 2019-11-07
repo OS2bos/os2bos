@@ -83,7 +83,7 @@
                     <label for="field-paid-1">Betalte og ubetalte</label>
                     <input type="radio" id="field-paid-2" name="field-paid" value="true" v-model="paid">
                     <label for="field-paid-2">Kun betalte</label>
-                    <input type="radio" id="field-paid-3" name="field-paid" value="false" v-model="paid">{{paid}}
+                    <input type="radio" id="field-paid-3" name="field-paid" value="false" v-model="paid">
                     <label for="field-paid-3">Kun ubetalte</label>
                 </fieldset>
                 <fieldset>
