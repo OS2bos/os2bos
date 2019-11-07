@@ -7,8 +7,9 @@
 
 
 from django.contrib.auth import get_user_model
-
+from django.db import transaction
 from django.utils.translation import gettext_lazy as _
+
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -96,6 +97,34 @@ class CaseViewSet(AuditViewSet):
         case = self.get_object()
         serializer = HistoricalCaseSerializer(case.history.all(), many=True)
         return Response(serializer.data)
+
+    @transaction.atomic
+    @action(detail=False, methods=["patch"])
+    def change_case_worker(self, request):
+        case_pks = request.data.get("case_pks", [])
+        case_worker_id = request.data.get("case_worker", None)
+        if not case_pks or case_worker_id:
+            return Response(
+                {
+                    "errors": [
+                        _("case_pks eller case_worker_id argument mangler")
+                    ]
+                },
+                status.HTTP_400_BAD_REQUEST,
+            )
+        user_qs = get_user_model().objects.filter(id=case_worker_id)
+        if not user_qs.exists():
+            return Response(
+                {"errors": [_("bruger med case_worker_id findes ikke")]},
+                status.HTTP_400_BAD_REQUEST,
+            )
+        user = user_qs.first()
+        cases = Case.objects.filter(pk__in=case_pks)
+        for case in cases:
+            case.case_worker = user
+            case.save()
+        CaseSerializer = self.get_serializer_class()
+        return Response(CaseSerializer(cases, many=True).data)
 
 
 class AppropriationViewSet(AuditViewSet):
