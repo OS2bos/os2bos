@@ -255,3 +255,8 @@ def create_related_person(main_case, name="Jens Jensen", relation_type="far"):
         main_case=main_case, name=name, relation_type=relation_type
     )
     return related_person
+
+
+def create_user(username):
+    user = User.objects.create(username=username)
+    return user

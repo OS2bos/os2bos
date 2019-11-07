@@ -101,21 +101,28 @@ class CaseViewSet(AuditViewSet):
     @transaction.atomic
     @action(detail=False, methods=["patch"])
     def change_case_worker(self, request):
+        """
+        Change the case_worker of several Cases.
+
+        Parameters:
+        case_pks: A list of case pks.
+        case_worker_pk: the case worker pk to change to.
+        """
         case_pks = request.data.get("case_pks", [])
-        case_worker_id = request.data.get("case_worker", None)
-        if not case_pks or case_worker_id:
+        case_worker_pk = request.data.get("case_worker_pk", None)
+        if not case_pks or not case_worker_pk:
             return Response(
                 {
                     "errors": [
-                        _("case_pks eller case_worker_id argument mangler")
+                        _("case_pks eller case_worker_pk argument mangler")
                     ]
                 },
                 status.HTTP_400_BAD_REQUEST,
             )
-        user_qs = get_user_model().objects.filter(id=case_worker_id)
+        user_qs = get_user_model().objects.filter(id=case_worker_pk)
         if not user_qs.exists():
             return Response(
-                {"errors": [_("bruger med case_worker_id findes ikke")]},
+                {"errors": [_("bruger med case_worker_pk findes ikke")]},
                 status.HTTP_400_BAD_REQUEST,
             )
         user = user_qs.first()
