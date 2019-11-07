@@ -64,7 +64,12 @@ class PaymentAdmin(admin.ModelAdmin):
 
 @admin.register(PaymentSchedule)
 class PaymentScheduleAdmin(admin.ModelAdmin):
-    readonly_fields = ("payment_id",)
+    readonly_fields = ("payment_id", "account_string")
+
+    def account_string(self, obj):
+        return obj.account_string
+
+    account_string.short_description = _("kontostreng")
 
 
 @admin.register(User)
