@@ -69,14 +69,14 @@
             <form>
                 <fieldset>
                     <label>Betalingsnøgle</label>
-                    <input @input="changeId()" type="text" v-model="q.payment_schedule__payment_id">
+                    <input @input="changeQuery()" type="text" v-model="q.payment_schedule__payment_id">
                 </fieldset>
                 <fieldset>
                     <legend>Tidsrum</legend>
                     <label>Fra dato</label>
-                    <input @input="changeId()" type="date" v-model="q.paid_date_or_date__gte">
+                    <input @input="changeQuery()" type="date" v-model="q.paid_date_or_date__gte">
                     <label>Til dato</label>
-                    <input @input="changeId()" type="date" v-model="q.paid_date_or_date__lte">
+                    <input @input="changeQuery()" type="date" v-model="q.paid_date_or_date__lte">
                 </fieldset>
                 <fieldset>
                     <input type="radio" id="field-paid-1" checked name="field-paid" value="" v-model="paid">
@@ -88,7 +88,7 @@
                 </fieldset>
                 <fieldset>
                     <label>Hovedsag CPR</label>
-                    <input @input="changeId()" type="text" v-model="q.case__cpr_number">
+                    <input @input="changeQuery()" type="text" v-model="q.case__cpr_number">
                 </fieldset>
             </form>
         </div>
@@ -136,7 +136,7 @@
             update: function() {
                 this.$store.dispatch('fetchPayments', this.$route.params.query)
             },
-            changeId: function(query) {
+            changeQuery: function() {
                 this.$route.params.query = this.q
                 this.update()
             },
