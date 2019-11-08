@@ -69,26 +69,26 @@
             <form>
                 <fieldset>
                     <label>Betalingsnøgle</label>
-                    <input @input="changeQuery()" type="text" v-model="q.payment_schedule__payment_id">
+                    <input @input="update()" type="text" v-model="$route.query.payment_schedule__payment_id">
                 </fieldset>
                 <fieldset>
                     <legend>Tidsrum</legend>
                     <label>Fra dato</label>
-                    <input @input="changeQuery()" type="date" v-model="q.paid_date_or_date__gte">
+                    <input @input="update()" type="date" v-model="$route.query.paid_date_or_date__gte">
                     <label>Til dato</label>
-                    <input @input="changeQuery()" type="date" v-model="q.paid_date_or_date__lte">
+                    <input @input="update()" type="date" v-model="$route.query.paid_date_or_date__lte">
                 </fieldset>
                 <fieldset>
-                    <input type="radio" id="field-paid-1" checked name="field-paid" value="" v-model="paid">
+                    <input type="radio" id="field-paid-1" checked name="field-paid" :value="null" v-model="$route.query.paid" @change="update()">
                     <label for="field-paid-1">Betalte og ubetalte</label>
-                    <input type="radio" id="field-paid-2" name="field-paid" value="true" v-model="paid">
+                    <input type="radio" id="field-paid-2" name="field-paid" :value="true" v-model="$route.query.paid" @change="update()">
                     <label for="field-paid-2">Kun betalte</label>
-                    <input type="radio" id="field-paid-3" name="field-paid" value="false" v-model="paid">
+                    <input type="radio" id="field-paid-3" name="field-paid" :value="false" v-model="$route.query.paid" @change="update()">
                     <label for="field-paid-3">Kun ubetalte</label>
                 </fieldset>
                 <fieldset>
                     <label>Hovedsag CPR</label>
-                    <input @input="changeQuery()" type="text" v-model="q.case__cpr_number">
+                    <input @input="update()" type="text" v-model="$route.query.case__cpr_number">
                 </fieldset>
             </form>
         </div>
@@ -110,35 +110,25 @@
         },
         data: function() {
             return {
-                q: {
-                    payment_schedule__payment_id: null,
-                    paid_date_or_date__gte: null,
-                    paid_date_or_date__lte: null,
-                    case__cpr_number: null,
-                    paid: null
-                },
-                paid: null
+                
             }
         },
         computed: {
             payments: function() {
                 return this.$store.getters.getPayments
+            },
+            query: function() {
+                return this.$route.query
             }
         },
         watch: {
-            paid: function() {
-                this.q.paid = this.paid
-                this.$route.query.q = this.q
+            query: function() {
                 this.update()
             }
         },
         methods: {
             update: function() {
-                this.$store.dispatch('fetchPayments', this.$route.query.q)
-            },
-            changeQuery: function() {
-                this.$route.query.q = this.q
-                this.update()
+                this.$store.dispatch('fetchPayments', this.$route.query)
             },
             displayDate: function(dt) {
                 return json2jsDate(dt)
@@ -174,8 +164,8 @@
     .payment-search-filters {
         order: 1;
         background-color: var(--grey1);
-        padding: 1rem;
-        margin-right: 2rem;
+        padding: 1.5rem 1rem .5rem;
+        margin: 0 2rem 1rem 0;
     }
 
     .payment-search-filters h2,
