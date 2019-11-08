@@ -128,16 +128,16 @@
         watch: {
             paid: function() {
                 this.q.paid = this.paid
-                this.$route.params.query = this.q
+                this.$route.query.q = this.q
                 this.update()
             }
         },
         methods: {
             update: function() {
-                this.$store.dispatch('fetchPayments', this.$route.params.query)
+                this.$store.dispatch('fetchPayments', this.$route.query.q)
             },
             changeQuery: function() {
-                this.$route.params.query = this.q
+                this.$route.query.q = this.q
                 this.update()
             },
             displayDate: function(dt) {
