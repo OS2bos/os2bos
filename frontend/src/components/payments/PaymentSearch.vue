@@ -56,7 +56,7 @@
                     </tbody>
                 </table>
             </template>
-            <p v-if="payments.length < 1 && payments.activity__status !== 'GRANTED'">
+            <p v-if="payments.length < 1">
                 Kunne ikke finde nogen betalinger
             </p>
 
