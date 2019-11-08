@@ -108,11 +108,6 @@
         components: {
             PaymentModal
         },
-        data: function() {
-            return {
-                
-            }
-        },
         computed: {
             payments: function() {
                 return this.$store.getters.getPayments
