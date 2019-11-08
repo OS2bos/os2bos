@@ -9,25 +9,23 @@
 <template>
 
     <section class="cases" v-if="cas">
+    
+        <data-grid ref="data-grid"
+                    :data-list="cas"
+                    :columns="columns"
+                    :selectable="false">
 
-        <div v-if="cas.length > 0">
-            <data-grid ref="data-grid"
-                        :data-list="cas"
-                        :columns="columns"
-                        :selectable="false">
+            <div slot="datagrid-header" class="cases-header">
+                <h1 style="padding: 0;">Mine sager</h1>
+                <button v-if="permissionCheck === true" class="create" @click="$router.push('/case-create/')">+ Tilknyt hovedsag</button>
+            </div>
 
-                <div slot="datagrid-header" class="cases-header">
-                    <h1 style="padding: 0 0 0 1.33rem;">Mine sager</h1>
-                    <button v-if="permissionCheck === true" class="create" @click="$router.push('/case-create/')">+ Tilknyt hovedsag</button>
-                </div>
+            <p slot="datagrid-footer" v-if="cas.length < 1">
+                Der er ikke tilknyttet nogen sager
+            </p>
 
-            </data-grid>
-        </div>
-
-        <p v-if="cas.length < 1">
-            Der er ikke tilknyttet nogen sager
-        </p>
-
+        </data-grid>
+    
     </section>
 
 </template>
@@ -52,7 +50,8 @@
                     {
                         key: 'expired',
                         title: 'Status',
-                        display_func: this.displayStatus
+                        display_func: this.displayStatus,
+                        class: 'datagrid-td-status'
                     },
                     {
                         key: 'sbsys_id',
@@ -134,6 +133,14 @@
 
     .cases .create {
         margin: 0 0 0 1.5rem;
+    }
+
+    .datagrid-td-status {
+        width: 8rem;
+    }
+
+    th.datagrid-td-status {
+        padding-left: 1rem;
     }
 
 </style>

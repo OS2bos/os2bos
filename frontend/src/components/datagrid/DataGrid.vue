@@ -21,16 +21,17 @@
                     name="query" 
                     v-model="filterKey"
                     id="filter-field"
-                    placeholder="Find i liste ...">
+                    placeholder="Find i liste ..."
+                    :disabled="dataList.length < 1 ? true : false">
             </form>
 
         </header>
     
-        <table class="datagrid">
+        <table class="datagrid" v-if="dataList.length > 0">
             
             <thead>
                 <tr>
-                    <th v-if="selectable">
+                    <th v-if="selectable" style="width: 4.5rem;">
                         <input type="checkbox" 
                             id="datagrid-select-all"
                             @change="toggleAll($event.target.checked)">
@@ -42,15 +43,15 @@
                     <th v-for="c in columns" 
                         :key="c.key"
                         @click="sortBy(c.key)"
-                        :class="`${ c.class ? c.class : '' }${ sortKey === c.key ? ' active' : '' }`">
-                        {{ c.title }}
+                        :class="`datagrid-filter-th ${ c.class ? c.class : '' }${ sortKey === c.key ? ' active' : '' }`">
                         <span class="arrow" :class="sortOrders[c.key] > 0 ? 'asc' : 'dsc'"></span>
+                        {{ c.title }}
                     </th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="d in filteredData" :key="d.id">
-                    <td v-if="selectable">
+                    <td v-if="selectable" style="width: 4.5rem;">
                         <input type="checkbox"
                             :id="`datagrid-select-${ d.id }`"
                             @change="selectEntry($event.target.checked, d)"
@@ -71,6 +72,8 @@
                 <slot name="datagrid-table-footer"></slot>
             </tbody>
         </table>
+
+        <slot name="datagrid-footer"></slot>
 
     </section>
 
@@ -175,6 +178,10 @@
         vertical-align: middle;
     }
 
+    .datagrid-filter-th {
+        padding-left: 0;
+    }
+
     .datagrid th.active {
         color: var(--grey6);
     }
@@ -188,7 +195,7 @@
         vertical-align: middle;
         width: 0;
         height: 0;
-        margin-left: 5px;
+        margin: 0 .25rem 0 .66rem;
         opacity: 0.5;
     }
 

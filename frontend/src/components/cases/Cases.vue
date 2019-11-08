@@ -12,30 +12,30 @@
         
         <div class="case-search-list">
 
-            <div v-if="cases.length > 0">
-                <data-grid ref="data-grid"
-                           :data-list="cases"
-                           :columns="columns"
-                           @selection="updateSelectedCases"
-                           :selectable="true">
+            <data-grid v-if="cases"
+                       ref="data-grid"
+                       :data-list="cases"
+                       :columns="columns"
+                       @selection="updateSelectedCases"
+                       :selectable="true">
 
-                    <div slot="datagrid-header">
-                        <h1 style="padding: 0 0 0 1.33rem;">Find sager</h1>
-                    </div>
+                <div slot="datagrid-header">
+                    <h1 style="padding: 0;">Find sager</h1>
+                </div>
 
-                </data-grid>
+                <p slot="datagrid-footer" v-if="cases.length < 1">
+                    Kan ikke finde nogen sager, der matcher de valgte kriterier
+                </p>
 
-                <button :disabled="selected_cases.length < 1" 
-                        class="case-search-move-btn"
-                        @click="show_modal = true">
-                    <i class="material-icons">forward</i>
-                    Flyt sager
-                </button>
-            </div>
+            </data-grid>
 
-            <p v-if="cases.length < 1">
-                Kan ikke finde nogen sager, der matcher de valgte kriterier
-            </p>
+            <button v-if="cases.length > 0"
+                    :disabled="selected_cases.length < 1" 
+                    class="case-search-move-btn"
+                    @click="show_modal = true">
+                <i class="material-icons">forward</i>
+                Flyt sager
+            </button>            
 
             <dialog-box v-if="show_modal">
                 <div slot="header">
@@ -140,7 +140,8 @@
                     {
                         key: 'expired',
                         title: 'Status',
-                        display_func: this.displayStatus
+                        display_func: this.displayStatus,
+                        class: 'datagrid-td-status'
                     },
                     {
                         key: 'sbsys_id',
@@ -173,6 +174,14 @@
             },
             teams: function() {
                 return this.$store.getters.getTeams
+            },
+            query: function() {
+                return this.$route.query
+            }
+        },
+        watch: {
+            query: function() {
+                this.update()
             }
         },
         methods: {
@@ -228,21 +237,23 @@
                 this.diag_field_case_worker = worker_id
             },
             moveCases: function() {
-                // PATCH with this.diag_field_case_worker
-                let promises = []
-                for (let s in this.selected_cases) {
-                    let prom = axios.patch(`/cases/${ this.selected_cases[s].id }/`, {case_worker: this.diag_field_case_worker})
-                    promises.push(prom)
-                }
-                Promise.all(promises)
+                let pks = []
+                this.selected_cases.forEach(function(cas) {
+                    pks.push(cas.id)
+                })
+                axios.patch('/cases/change_case_worker/', {
+                    case_pks: pks,
+                    case_worker_pk: this.diag_field_case_worker
+
+                })
                 .then(res => {
-                    notify(`${ promises.length } sager blev flyttet`, 'success')
+                    notify(`${ pks.length } sager blev flyttet`, 'success')
+                    this.postDiagCleanUp()
                 })
                 .catch(err => {
                     notify('Noget gik galt under flytning af sager', 'error')
+                    this.postDiagCleanUp()
                 })
-
-                this.postDiagCleanUp()
             },
             closeMoveDiag: function() {
                 this.postDiagCleanUp()
@@ -277,6 +288,7 @@
 
     .case-search-list {
         order: 2;
+        flex-grow: 1;
     }
 
     .case-search-list .more .material-icons {
@@ -287,7 +299,7 @@
         order: 1;
         background-color: var(--grey1);
         padding: 1.5rem 1rem 0;
-        margin: 7.5rem 1.25rem 0 0;
+        margin: 1.25rem 1.25rem 0 0;
     }
 
     .case-search-filters h2,
@@ -304,6 +316,10 @@
 
     .move-cases-field label {
         margin-top: 0;
+    }
+
+    .datagrid-td-status {
+        width: 8rem;
     }
 
 </style>

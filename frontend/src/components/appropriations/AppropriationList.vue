@@ -10,14 +10,13 @@
 
     <section class="appropriations">
 
-        <data-grid v-if="apprs.length > 0"
-                   ref="data-grid"
+        <data-grid ref="data-grid"
                    :data-list="apprs"
                    :columns="columns"
                    :selectable="false">
             
             <div slot="datagrid-header" class="appropriations-header">
-                <h2 style="padding: 0 0 0 1.33rem;">Bevillingsskrivelser</h2>
+                <h2 style="padding: 0;">Bevillingsskrivelser</h2>
                 <button v-if="permissionCheck === true" class="appropriation-create-btn" @click="$router.push(`/case/${ caseId }/appropriation-create/`)">+ Opret bevillingsskrivelse</button>
             </div>
 
@@ -32,9 +31,11 @@
                 </td>
             </tr>
 
-        </data-grid>
+            <p slot="datagrid-footer" v-if="apprs.length < 1">
+                Der er endnu ingen bevillingsskrivelser
+            </p>
 
-        <p v-if="apprs.length < 1">Der er endnu ingen bevillingsskrivelser</p>
+        </data-grid>
 
     </section>
 
@@ -66,7 +67,7 @@
                         key: 'status',
                         title: 'Status',
                         display_func: this.statusLabel,
-                        class: 'mini-label'
+                        class: 'mini-label datagrid-td-status'
                     },
                     {
                         key: 'sbsys_id',
@@ -225,6 +226,14 @@
     .appropriations tr.summary td {
         background-color: var(--grey0);
         padding-top: 1.5rem;
+    }
+
+    .datagrid-td-status {
+        width: 8rem;
+    }
+
+    th.datagrid-td-status {
+        padding-left: 1rem;
     }
 
 </style>
