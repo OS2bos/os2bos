@@ -13,7 +13,6 @@ from datetime import datetime
 
 from django.db import transaction
 from django.core.management.base import BaseCommand
-
 from core.models import Payment
 
 logger = logging.getLogger("bevillingsplatform.mark_fictive_payments_paid")
@@ -34,6 +33,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         """Mark fictive payments paid for the given date."""
         date = options["date"]
+
         if date is not None:
             try:
                 date = datetime.strptime(date, "%Y%m%d")
