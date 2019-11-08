@@ -7,7 +7,6 @@
 
 
 import os
-import sys
 import logging
 
 from datetime import datetime
@@ -52,7 +51,7 @@ class Command(BaseCommand):
                 )
             else:
                 logger.error("Export of records to PRISME failed!")
-        except Exception as e:
+        except Exception:
             logger.exception(
                 f"An exception occurred during export to PRISME: {e}"
             )
