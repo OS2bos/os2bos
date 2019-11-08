@@ -18,7 +18,6 @@
                 <nav id="globalnav" v-if="auth" class="globalnav" aria-label="Hovedmenu">
                     <router-link to="/">Mine sager</router-link>
                     <router-link to="/cases/">Find sager</router-link>
-                    <router-link to="/cases/?expired=true">Test Find sager</router-link>
                     <router-link to="/payments/">Betalinger</router-link>
                     <a v-if="user.profile === 'admin'" href="/api/admin/">Administration</a>
                 </nav>

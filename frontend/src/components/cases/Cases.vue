@@ -75,23 +75,25 @@
                 <fieldset>
 
                     <label for="field-sbsysid">SBSYS ID</label>
-                    <input type="search" @input="changeSBSYS()" id="field-sbsysid" v-model="field_sbsys">
+                    <input type="search" @input="update()" id="field-sbsysid" v-model="$route.query.sbsys_id">
 
                     <label for="field-cpr">CPR-nr</label>
-                    <input type="search" @input="changeCpr()" id="field-cpr" v-model="field_cpr">
+                    <input type="search" @input="changeCpr" id="field-cpr" v-model="$route.query.cpr_number">
 
                     <label for="field-team">Team</label>
                     <list-picker 
+                        v-if="teams"
                         :dom-id="'field-team'" 
-                        :selected-id="field_team"
+                        :selected-id="$route.query.team"
                         :list="teams"
                         @selection="changeTeam"
                         display-key="name" />
                 
                     <label for="field-case-worker">Sagsbehandler</label>
                     <list-picker 
+                        v-if="users"
                         :dom-id="'field-case-worker'" 
-                        :selected-id="field_case_worker"
+                        :selected-id="$route.query.case_worker"
                         :list="users"
                         @selection="changeWorker"
                         display-key="fullname" />
@@ -99,7 +101,7 @@
                 </fieldset>
                 <fieldset>
 
-                    <input type="checkbox" v-model="field_expired" id="field-expired" @change="changeExpired()">
+                    <input type="checkbox" v-model="$route.query.expired" id="field-expired" @change="update()">
                     <label for="field-expired">Kun udgåede sager</label>
 
                 </fieldset>
@@ -118,6 +120,7 @@
     import ListPicker from '../forms/ListPicker.vue'
     import DialogBox from '../dialog/Dialog.vue'
     import notify from '../notifications/Notify.js'
+    import CaseFilters from '../mixins/CaseFilters.js'
 
     export default {
 
@@ -126,14 +129,12 @@
             ListPicker,
             DialogBox
         },
+        mixins: [
+            CaseFilters
+        ],
         data: function() {
             return {
                 selected_cases: [],
-                field_sbsys: null,
-                field_cpr: null,
-                field_case_worker: null,
-                field_team: null,
-                field_expired: false,
                 show_modal: false,
                 diag_field_case_worker: null,
                 columns: [
@@ -174,20 +175,9 @@
             },
             teams: function() {
                 return this.$store.getters.getTeams
-            },
-            query: function() {
-                return this.$route.query
-            }
-        },
-        watch: {
-            query: function() {
-                this.update()
             }
         },
         methods: {
-            update: function() {
-                this.$store.dispatch('fetchCases', this.$route.query)
-            },
             updateSelectedCases: function(selections) {
                 this.selected_cases = selections
             },
@@ -200,38 +190,8 @@
             },
             displayStatus: function(d) {
                 if (!d.expired) {
-                    return `
-                        <div class="mini-label">
-                            <span class="label label-GRANTED">Aktiv</span>
-                        </div>
-                    `
+                    return `<div class="mini-label"><span class="label label-GRANTED">Aktiv</span></div>`
                 }   
-            },
-            changeSBSYS: function() {
-                this.$route.query.sbsys_id = this.field_sbsys
-                this.update()
-            },
-            changeCpr: function() {
-                let cpr = this.field_cpr.replace('-','')
-                if (cpr.length === 10) {
-                    this.$route.query.cpr_number = cpr
-                    this.update()
-                } else if (!cpr) {
-                    this.$route.query.cpr_number = ''
-                    this.update()
-                }
-            },
-            changeWorker: function(worker_id) {
-                this.$route.query.case_worker = worker_id
-                this.update()
-            },
-            changeTeam: function(team_id) {
-                this.$route.query.team = team_id
-                this.update()
-            },
-            changeExpired: function() {
-                this.$route.query.expired = this.field_expired
-                this.update()
             },
             diagChangeWorker: function(worker_id) {
                 this.diag_field_case_worker = worker_id
