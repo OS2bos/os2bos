@@ -32,6 +32,7 @@ from core.tests.testing_utils import (
     create_appropriation,
     create_activity,
     create_payment_schedule,
+    create_user,
 )
 from core.models import STEP_ONE, STEP_THREE, STEP_FIVE
 
@@ -369,6 +370,74 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         data = {"expired": True}
         response = self.client.get(url, data)
         self.assertEqual(len(response.json()), 0)
+
+    def test_change_case_worker(self):
+        url = reverse("case-change-case-worker")
+        self.client.login(username=self.username, password=self.password)
+
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        new_case_worker = create_user(username="Jens Tester")
+        data = {"case_pks": [case.pk], "case_worker_pk": new_case_worker.pk}
+        response = self.client.patch(
+            url, data=data, content_type="application/json"
+        )
+
+        case.refresh_from_db()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()[0]["id"], case.id)
+        self.assertEqual(case.case_worker, new_case_worker)
+
+    def test_change_case_worker_missing_case_pks(self):
+        url = reverse("case-change-case-worker")
+        self.client.login(username=self.username, password=self.password)
+
+        new_case_worker = create_user(username="Jens Tester")
+        data = {"case_worker_pk": new_case_worker.pk}
+        response = self.client.patch(
+            url, data=data, content_type="application/json"
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json()["errors"],
+            ["case_pks eller case_worker_pk argument mangler"],
+        )
+
+    def test_change_case_worker_missing_case_worker_pk(self):
+        url = reverse("case-change-case-worker")
+        self.client.login(username=self.username, password=self.password)
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        data = {"case_pks": [case.pk]}
+        response = self.client.patch(
+            url, data=data, content_type="application/json"
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json()["errors"],
+            ["case_pks eller case_worker_pk argument mangler"],
+        )
+
+    def test_change_case_worker_non_existant_case_worker(self):
+        url = reverse("case-change-case-worker")
+        self.client.login(username=self.username, password=self.password)
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        data = {"case_pks": [case.pk], "case_worker_pk": 999}
+        response = self.client.patch(
+            url, data=data, content_type="application/json"
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json()["errors"],
+            ["bruger med case_worker_pk findes ikke"],
+        )
 
 
 class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):

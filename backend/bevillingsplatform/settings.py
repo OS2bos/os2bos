@@ -96,6 +96,7 @@ INSTALLED_APPS = [
     "constance.backends.database",
     "core.apps.CoreConfig",
     "django_saml2_auth",
+    "mailer",
 ]
 
 MIDDLEWARE = [
@@ -292,13 +293,14 @@ LOGGING = {
 }
 
 # Email settings
-EMAIL_BACKEND = settings.get(
-    "EMAIL_BACKEND", fallback="django.core.mail.backends.smtp.EmailBackend"
-)
+EMAIL_BACKEND = "mailer.backend.DbBackend"
 EMAIL_HOST_USER = settings.get("EMAIL_HOST_USER", fallback="")
 EMAIL_HOST_PASSWORD = settings.get("EMAIL_HOST_PASSWORD", fallback="")
 EMAIL_HOST = settings.get("EMAIL_HOST", fallback="")
 EMAIL_PORT = settings.getint("EMAIL_PORT", fallback=25)
+
+# Django-mailer setting
+MAILER_LOCK_PATH = settings.get("MAILER_LOCK_PATH", fallback="/tmp/send_mail")
 
 # We use Constance for being able to set live settings
 # (settings on the fly from Django admin).
