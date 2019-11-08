@@ -6,7 +6,6 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-import os
 import sys
 import logging
 from datetime import datetime
@@ -54,7 +53,7 @@ class Command(BaseCommand):
                 payment.paid_date = date
                 payment.save()
 
-        except Exception as e:
+        except Exception:
             logger.exception(
                 "An exception occurred during marking payments fictive."
             )
