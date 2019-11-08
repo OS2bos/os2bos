@@ -101,8 +101,12 @@
                 </fieldset>
                 <fieldset>
 
-                    <input type="checkbox" v-model="$route.query.expired" id="field-expired" @change="update()">
-                    <label for="field-expired">Kun udgåede sager</label>
+                    <input type="radio" v-model="$route.query.expired" id="field-expired-1" @change="update()" :value="null">
+                    <label for="field-expired-1">Aktive og udgåede sager</label>
+                    <input type="radio" v-model="$route.query.expired" id="field-expired-2" @change="update()" :value="false">
+                    <label for="field-expired-2">Kun aktive sager</label>
+                    <input type="radio" v-model="$route.query.expired" id="field-expired-3" @change="update()" :value="true">
+                    <label for="field-expired-3">Kun udgåede sager</label>
 
                 </fieldset>
             </form>
