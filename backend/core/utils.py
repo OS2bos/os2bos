@@ -276,27 +276,27 @@ def saml_before_login(user_data):
 
 def saml_create_user(user_data):
     "Hook called after user is created in DB, before login."
-    user_changed = False
     [username] = user_data["username"]
     user = models.User.objects.get(username=username)
     if "team" in user_data:
         # SAML data comes as lists with one element.
         [team_name] = user_data["team"]
-        # This is safe, user exists.
-        team, _ = models.Team.objects.get_or_create(
-            name=team_name, defaults={"leader": user}
-        )
-        user.team = team
-        user_changed = True
+    else:
+        team_name = config.DEFAULT_TEAM_NAME
+
+    # This is safe, user exists.
+    team, _ = models.Team.objects.get_or_create(
+        name=team_name, defaults={"leader": user}
+    )
+    user.team = team
+
     if "bos_profile" in user_data:
         [profile] = user_data["bos_profile"]
         user.profile = profile
         is_admin = profile == models.User.ADMIN
         # Admin status is controlled by these flags.
         user.is_staff = user.is_superuser = is_admin
-        user_changed = True
-    if user_changed:
-        user.save()
+    user.save()
 
 
 # Economy integration releated stuff - for the time being, only PRISM.
@@ -450,7 +450,6 @@ def format_prism_payment_record(payment, line_no, record_no):
 
 def due_payments_for_prism(date):
     "Return payments which are due today and should be sent to PRISM."
-
     return models.Payment.objects.filter(
         date=date,
         recipient_type=models.PaymentSchedule.PERSON,
@@ -479,7 +478,7 @@ def generate_records_for_prism(due_payments):
 
 
 @transaction.atomic
-def process_payments_for_date(date=None):
+def export_prism_payments_for_date(date=None):
     """Process payments and output a file for PRISME."""
 
     # The output directory is not configurable - this is mapped through Docker.
@@ -532,3 +531,5 @@ def process_payments_for_date(date=None):
         p.paid_amount = p.amount
         p.paid_date = today
         p.save()
+    # Return filename for info and verification.
+    return filename

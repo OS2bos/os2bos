@@ -8,6 +8,7 @@
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.utils.translation import gettext_lazy as _
 
 from core.forms import SectionForm
 
@@ -33,9 +34,7 @@ from core.models import (
 
 for klass in (
     Municipality,
-    PaymentSchedule,
     PaymentMethodDetails,
-    Payment,
     Case,
     Appropriation,
     Activity,
@@ -47,6 +46,30 @@ for klass in (
     SectionInfo,
 ):
     admin.site.register(klass, admin.ModelAdmin)
+
+
+@admin.register(Payment)
+class PaymentAdmin(admin.ModelAdmin):
+    readonly_fields = ("payment_id", "account_string")
+
+    def payment_id(self, obj):
+        return obj.payment_schedule.payment_id
+
+    def account_string(self, obj):
+        return obj.account_string
+
+    payment_id.short_description = _("betalings-ID")
+    account_string.short_description = _("kontostreng")
+
+
+@admin.register(PaymentSchedule)
+class PaymentScheduleAdmin(admin.ModelAdmin):
+    readonly_fields = ("payment_id", "account_string")
+
+    def account_string(self, obj):
+        return obj.account_string
+
+    account_string.short_description = _("kontostreng")
 
 
 @admin.register(User)

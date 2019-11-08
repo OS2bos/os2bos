@@ -96,6 +96,7 @@ INSTALLED_APPS = [
     "constance.backends.database",
     "core.apps.CoreConfig",
     "django_saml2_auth",
+    "mailer",
 ]
 
 MIDDLEWARE = [
@@ -238,6 +239,7 @@ PRISM_OUTPUT_DIR = settings.get("PRISM_OUTPUT_DIR", fallback="/prisme")
 
 # Logging
 LOG_DIR = settings.get("LOG_DIR", fallback="/log")
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -256,6 +258,20 @@ LOGGING = {
                 "AUDIT_LOG_FILE", fallback=os.path.join(LOG_DIR, "audit.log")
             ),
         },
+        "export_to_prism": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "formatter": "verbose",
+            "filename": settings.get(
+                "PRISM_LOG_FILE",
+                fallback=os.path.join(LOG_DIR, "export_to_prism.log"),
+            ),
+        },
+    },
+    "formatters": {
+        "verbose": {
+            "format": "%(levelname)s %(asctime)s %(module)s: %(message)s"
+        }
     },
     "loggers": {
         "django": {
@@ -268,17 +284,23 @@ LOGGING = {
             "level": "INFO",
             "propagate": True,
         },
+        "bevillingsplatform.export_to_prism": {
+            "handlers": ["export_to_prism"],
+            "level": "INFO",
+            "propagate": True,
+        },
     },
 }
 
 # Email settings
-EMAIL_BACKEND = settings.get(
-    "EMAIL_BACKEND", fallback="django.core.mail.backends.smtp.EmailBackend"
-)
+EMAIL_BACKEND = "mailer.backend.DbBackend"
 EMAIL_HOST_USER = settings.get("EMAIL_HOST_USER", fallback="")
 EMAIL_HOST_PASSWORD = settings.get("EMAIL_HOST_PASSWORD", fallback="")
 EMAIL_HOST = settings.get("EMAIL_HOST", fallback="")
 EMAIL_PORT = settings.getint("EMAIL_PORT", fallback=25)
+
+# Django-mailer setting
+MAILER_LOCK_PATH = settings.get("MAILER_LOCK_PATH", fallback="/tmp/send_mail")
 
 # We use Constance for being able to set live settings
 # (settings on the fly from Django admin).
@@ -303,6 +325,12 @@ CONSTANCE_CONFIG = {
             fallback="admin@bevillingsplatform-test.magenta.dk",
         ),
         _("fra-email"),
+    ),
+    "DEFAULT_TEAM_NAME": (
+        settings.get(
+            "DEFAULT_TEAM_NAME", fallback="Afventer tildeling af team"
+        ),
+        _("første team for nye brugere"),
     ),
     "ACCOUNT_NUMBER_DEPARTMENT": (
         settings.get("ACCOUNT_NUMBER_DEPARTMENT", fallback="12345"),
