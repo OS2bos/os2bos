@@ -5,7 +5,6 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-
 from unittest import mock
 from datetime import date, timedelta
 
@@ -16,6 +15,7 @@ from django.utils import timezone
 from core.models import (
     ApprovalLevel,
     PaymentSchedule,
+    Payment,
     MAIN_ACTIVITY,
     SUPPL_ACTIVITY,
     STATUS_GRANTED,
@@ -668,6 +668,78 @@ class TestPaymentScheduleViewSet(AuthenticatedTestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()[0]["id"], payment_schedule.id)
+
+
+class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_get_payment_date_or_date__gte_filter(self):
+        payment_schedule = create_payment_schedule()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        now = timezone.now()
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            payment_plan=payment_schedule,
+            start_date=date(year=now.year, month=1, day=1),
+            end_date=date(year=now.year, month=1, day=1),
+        )
+
+        url = reverse("payment-list")
+        self.client.login(username=self.username, password=self.password)
+
+        cutoff_date = date(year=now.year, month=1, day=5)
+        response = self.client.get(
+            url, data={"paid_date_or_date__gte": f"{cutoff_date}"}
+        )
+        ids_list = [payment["id"] for payment in response.json()]
+        self.assertEqual(response.status_code, 200)
+        self.assertSequenceEqual(
+            ids_list,
+            Payment.objects.paid_date_or_date_gte(cutoff_date).values_list(
+                "id", flat=True
+            ),
+        )
+
+    def test_get_payment_date_or_date__lte_filter(self):
+        payment_schedule = create_payment_schedule()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+
+        now = timezone.now()
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            payment_plan=payment_schedule,
+            start_date=date(year=now.year, month=1, day=1),
+            end_date=date(year=now.year, month=1, day=1),
+        )
+
+        url = reverse("payment-list")
+        self.client.login(username=self.username, password=self.password)
+        cutoff_date = date(year=now.year, month=1, day=5)
+        response = self.client.get(
+            url, data={"paid_date_or_date__lte": f"{cutoff_date}"}
+        )
+        ids_list = [payment["id"] for payment in response.json()]
+        self.assertEqual(response.status_code, 200)
+        self.assertSequenceEqual(
+            ids_list,
+            Payment.objects.paid_date_or_date_lte(cutoff_date).values_list(
+                "id", flat=True
+            ),
+        )
 
 
 class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):

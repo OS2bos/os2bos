@@ -57,41 +57,41 @@
                 </table>
             </template>
             <p v-if="payments.length < 1">
-                Kunne ikke finde nogen sager
+                Kunne ikke finde nogen betalinger
             </p>
 
             <!-- <button v-if="payments.length > 1" class="more">Vis flere</button> -->
 
         </div>
 
-        <!-- <div class="payment-search-filters">
+        <div class="payment-search-filters">
             <h2>Filtre</h2>
             <form>
                 <fieldset>
                     <label>Betalingsnøgle</label>
-                    <input @input="changeId()" type="text" v-model="field_id">
+                    <input @input="update()" type="text" v-model="$route.query.payment_schedule__payment_id">
                 </fieldset>
                 <fieldset>
                     <legend>Tidsrum</legend>
-                    <label>fra dato</label>
-                    <input type="date">
-                    <label>til dato</label>
-                    <input type="date">
+                    <label>Fra dato</label>
+                    <input @input="update()" type="date" v-model="$route.query.paid_date_or_date__gte">
+                    <label>Til dato</label>
+                    <input @input="update()" type="date" v-model="$route.query.paid_date_or_date__lte">
                 </fieldset>
                 <fieldset>
-                    <input type="radio" id="field-paid-1" checked name="field-paid">
+                    <input type="radio" id="field-paid-1" checked name="field-paid" :value="null" v-model="$route.query.paid" @change="update()">
                     <label for="field-paid-1">Betalte og ubetalte</label>
-                    <input type="radio" id="field-paid-2" name="field-paid">
+                    <input type="radio" id="field-paid-2" name="field-paid" :value="true" v-model="$route.query.paid" @change="update()">
                     <label for="field-paid-2">Kun betalte</label>
-                    <input type="radio" id="field-paid-3" name="field-paid">
+                    <input type="radio" id="field-paid-3" name="field-paid" :value="false" v-model="$route.query.paid" @change="update()">
                     <label for="field-paid-3">Kun ubetalte</label>
                 </fieldset>
                 <fieldset>
                     <label>Hovedsag CPR</label>
-                    <input type="text">
+                    <input @input="update()" type="text" v-model="$route.query.case__cpr_number">
                 </fieldset>
             </form>
-        </div> -->
+        </div>
 
     </div>
 
@@ -108,23 +108,22 @@
         components: {
             PaymentModal
         },
-        data: function() {
-            return {
-                field_id: null
-            }
-        },
         computed: {
             payments: function() {
                 return this.$store.getters.getPayments
+            },
+            query: function() {
+                return this.$route.query
+            }
+        },
+        watch: {
+            query: function() {
+                this.update()
             }
         },
         methods: {
             update: function() {
                 this.$store.dispatch('fetchPayments', this.$route.query)
-            },
-            changeId: function() {
-                this.$route.query.id = this.field_id
-                this.update()
             },
             displayDate: function(dt) {
                 return json2jsDate(dt)
@@ -160,8 +159,8 @@
     .payment-search-filters {
         order: 1;
         background-color: var(--grey1);
-        padding: 1rem;
-        margin-right: 2rem;
+        padding: 1.5rem 1rem .5rem;
+        margin: 0 2rem 1rem 0;
     }
 
     .payment-search-filters h2,

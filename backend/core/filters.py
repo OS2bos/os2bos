@@ -56,16 +56,42 @@ class PaymentFilter(filters.FilterSet):
         queryset=Activity.objects.all(),
     )
 
-    paid_date__gt = filters.DateFilter(
+    paid_date__gte = filters.DateFilter(
         field_name="paid_date",
-        lookup_expr="gt",
-        label=_("Betalingsdato større end"),
+        lookup_expr="gte",
+        label=_("Betalingsdato større eller lig med"),
     )
-    paid_date__lt = filters.DateFilter(
+    paid_date__lte = filters.DateFilter(
         field_name="paid_date",
-        lookup_expr="lt",
-        label=_("Betalingsdato mindre end"),
+        lookup_expr="lte",
+        label=_("Betalingsdato mindre eller lig med"),
     )
+
+    date__gte = filters.DateFilter(
+        field_name="date",
+        lookup_expr="gte",
+        label=_("Dato større eller lig med"),
+    )
+    date__lte = filters.DateFilter(
+        field_name="date",
+        lookup_expr="lte",
+        label=_("Dato mindre eller lig med"),
+    )
+
+    paid_date_or_date__gte = filters.DateFilter(
+        method="filter_paid_date_or_date_gte",
+        label=_("Betalingsdato eller Dato større eller lig med"),
+    )
+    paid_date_or_date__lte = filters.DateFilter(
+        method="filter_paid_date_or_date_lte",
+        label=_("Betalingsdato eller Dato mindre eller lig med"),
+    )
+
+    def filter_paid_date_or_date_gte(self, queryset, name, value):
+        return queryset.paid_date_or_date_gte(value)
+
+    def filter_paid_date_or_date_lte(self, queryset, name, value):
+        return queryset.paid_date_or_date_lte(value)
 
     class Meta:
         model = Payment
