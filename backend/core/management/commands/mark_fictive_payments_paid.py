@@ -48,14 +48,15 @@ class Command(BaseCommand):
             payments = Payment.objects.filter(
                 date=date, payment_schedule__fictive=True, paid=False
             )
-
+            payment_ids = list(payments.values_list("id", flat=True))
             for payment in payments:
                 payment.paid = True
                 payment.paid_amount = payment.amount
                 payment.paid_date = date
                 payment.save()
             logger.info(
-                f"{payments.count()} payment(s) were marked paid on {date}"
+                f"{payments.count()} payment(s) with ids: "
+                f"{payment_ids} were marked paid on {date}"
             )
         except Exception:
             logger.exception(
