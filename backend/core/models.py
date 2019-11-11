@@ -34,6 +34,18 @@ target_group_choices = (
     (DISABILITY_DEPT, _("handicapafdelingen")),
 )
 
+# Payment methods and choice list.
+CASH = "CASH"
+SD = "SD"
+INVOICE = "INVOICE"
+INTERNAL = "INTERNAL"
+payment_method_choices = (
+    (CASH, _("Udbetaling")),
+    (SD, _("SD-LØN")),
+    (INVOICE, _("Faktura")),
+    (INTERNAL, _("Intern afregning")),
+)
+
 # Effort steps - definitions and choice list.
 STEP_ONE = 1
 STEP_TWO = 2
@@ -49,18 +61,6 @@ effort_steps_choices = (
     (STEP_FOUR, _("Trin 4: Anbringelse i slægt eller netværk")),
     (STEP_FIVE, _("Trin 5: Anbringelse i forskellige typer af plejefamilier")),
     (STEP_SIX, _("Trin 6: Anbringelse i institutionstilbud")),
-)
-
-# Payment methods and choice list.
-CASH = "CASH"
-SD = "SD"
-INVOICE = "INVOICE"
-INTERNAL = "INTERNAL"
-payment_method_choices = (
-    (CASH, _("Udbetaling")),
-    (SD, _("SD-LØN")),
-    (INVOICE, _("Faktura")),
-    (INTERNAL, _("Intern afregning")),
 )
 
 
@@ -111,6 +111,17 @@ class SchoolDistrict(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+
+class EffortStep(models.Model):
+    """Evaluation step for grading the effort deemed necessary in a case."""
+
+    class Meta:
+        verbose_name = _("indsatstrappetrin")
+        verbose_name_plural = _("indsatstrappe")
+
+    name = models.CharField(max_length=128, verbose_name=_("navn"))
+    number = models.PositiveIntegerField(verbose_name="Nummer", unique=True)
 
 
 class PaymentMethodDetails(models.Model):
@@ -635,8 +646,11 @@ class Case(AuditModelMixin, models.Model):
         verbose_name=_("målgruppe"),
         choices=target_group_choices,
     )
-    effort_step = models.PositiveSmallIntegerField(
-        choices=effort_steps_choices, verbose_name=_("indsatstrappe")
+    effort_step = models.ForeignKey(
+        EffortStep,
+        verbose_name=_("indsatstrappe"),
+        on_delete=models.PROTECT,
+        null=True,
     )
     scaling_step = models.PositiveSmallIntegerField(
         verbose_name=_("skaleringstrappe"),
