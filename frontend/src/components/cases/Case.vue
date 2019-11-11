@@ -73,7 +73,7 @@
                     </template>
                 </dl>
                 <dl>
-                    <dt>Sagsbehander</dt>
+                    <dt>Sagsbehandler</dt>
                     <dd>{{ displayUserName(cas.case_worker) }}</dd>
                 
                     <dt>Team</dt>

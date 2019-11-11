@@ -13,17 +13,17 @@
     --color4: 1;
 
     /* Greys */
-    --grey0: hsl(0, 0%, 100%);
-    --grey1: #eee;
-    --grey2: hsl(0, 0%, 80%);
-    --grey3: hsl(0, 0%, 70%);
-    --grey4: hsl(0, 0%, 60%);
-    --grey5: hsl(0, 0%, 50%);
-    --grey6: hsl(0, 0%, 40%);
-    --grey7: hsl(0, 0%, 30%);
-    --grey8: hsl(0, 0%, 20%);
-    --grey9: hsl(0, 0%, 10%);
-    --grey10: hsl(0, 0%, 0%);
+    --grey0: hsl(var(--color1), 0%, 100%);
+    --grey1: hsl(var(--color1), 5%, 95%);
+    --grey2: hsl(var(--color1), 5%, 85%);
+    --grey3: hsl(var(--color1), 20%, 75%);
+    --grey4: hsl(var(--color1), 20%, 65%);
+    --grey5: hsl(var(--color1), 30%, 55%);
+    --grey6: hsl(var(--color1), 30%, 45%);
+    --grey7: hsl(var(--color1), 40%, 35%);
+    --grey8: hsl(var(--color1), 40%, 25%);
+    --grey9: hsl(var(--color1), 50%, 15%);
+    --grey10: hsl(var(--color1), 50%, 0%);
 
     --primary: hsl(var(--color1), 83%, 31%); /* Blue */
     --success: hsl(var(--color2), 83%, 25%); /* Green */

@@ -6,8 +6,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 
-import store from '../../store.js'
-
 export default {
   computed: {
     user: function() {
