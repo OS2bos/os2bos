@@ -46,6 +46,29 @@ class TestMarkFictivePaymentsPaid(TestCase, BasicTestMixin):
         self.assertEqual(payment.paid_date, today)
         self.assertEqual(payment.paid_amount, payment.amount)
 
+    def test_mark_fictive_payments_paid_no_arg(self):
+        payment_schedule = create_payment_schedule(fictive=True)
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            payment_plan=payment_schedule,
+        )
+        today = timezone.now().date()
+        payment = create_payment(payment_schedule, date=today)
+
+        call_command("mark_fictive_payments_paid")
+
+        payment.refresh_from_db()
+        self.assertTrue(payment.paid)
+        self.assertEqual(payment.paid_date, today)
+        self.assertEqual(payment.paid_amount, payment.amount)
+
     @mock.patch("core.management.commands.mark_fictive_payments_paid.logger")
     def test_mark_fictive_payments_paid_wrong_date(self, logger_mock):
         payment_schedule = create_payment_schedule(fictive=True)

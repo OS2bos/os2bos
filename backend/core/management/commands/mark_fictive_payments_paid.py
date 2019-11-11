@@ -25,21 +25,25 @@ class Command(BaseCommand):
             "-d",
             "--date",
             help=("Mark payments fictive for date"),
-            required=True,
+            default=None,
         )
 
     @transaction.atomic
     def handle(self, *args, **options):
         """Mark fictive payments paid for the given date."""
         date = options["date"]
-        try:
-            date = datetime.strptime(date, "%Y%m%d")
-        except ValueError:
-            print("Please enter date as 'YYYYMMDD'.")
-            logger.error(
-                f"Invalid date input {date} - should parse as 'YYYYMMDD'"
-            )
-            sys.exit()
+        if date is not None:
+            try:
+                date = datetime.strptime(date, "%Y%m%d").date()
+            except ValueError:
+                print("Please enter date as 'YYYYMMDD'.")
+                logger.error(
+                    f"Invalid date input {date} - should parse as 'YYYYMMDD'"
+                )
+                sys.exit()
+        else:
+            date = datetime.now().date()
+
         try:
             payments = Payment.objects.filter(
                 date=date, payment_schedule__fictive=True, paid=False
@@ -50,7 +54,9 @@ class Command(BaseCommand):
                 payment.paid_amount = payment.amount
                 payment.paid_date = date
                 payment.save()
-
+            logger.info(
+                f"{payments.count()} payment(s) were marked paid on {date}"
+            )
         except Exception:
             logger.exception(
                 "An exception occurred during marking payments fictive."
