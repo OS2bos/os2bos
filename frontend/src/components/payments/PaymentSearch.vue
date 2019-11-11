@@ -11,9 +11,9 @@
 
         <div class="payment-search-list">
             <h1>Betalinger</h1>
-            <span v-if="results">{{payments.results.length}} af {{payments.count}}</span>
+            <span v-if="results">{{results.length}} af {{payments.count}}</span>
             <template>
-                <table v-if="payments.results.length > 0">
+                <table v-if="results.length > 0">
                     <thead>
                         <tr>
                             <th>Betaling nr</th>
@@ -25,7 +25,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="p in pay" :key="p.id">
+                        <tr v-for="p in results" :key="p.id">
                             <template v-if="p.activity__status === 'GRANTED'">
                             <td>
                                 <payment-modal :p-id="p.id" @update="update()"/>
@@ -57,11 +57,11 @@
                     </tbody>
                 </table>
             </template>
-            <p v-if="payments.results.length < 1">
+            <p v-if="results.length < 1">
                 Kunne ikke finde nogen betalinger
             </p>
 
-            <button v-if="payments.results.length > 1" class="more" @click="loadResults()">Vis flere</button>
+            <button v-if="results.length > 1" class="more" @click="loadResults()">Vis flere</button>
 
         </div>
 
@@ -141,15 +141,7 @@
         },
         methods: {
             loadResults: function() {
-                return axios.get(`/payments/?${ this.payments.next }`)
-                .then(res => {
-                    this.next = res.data.next
-                    let r = this.pay
-                    for (let result of res.data.results) {
-                        r.push(result)
-                    }
-                    commit('setPayments', res.data)
-                })
+                this.$store.dispatch('fetchMorePayments')
             },
             update: function() {
                 this.$store.dispatch('fetchPayments', this.$route.query.q)

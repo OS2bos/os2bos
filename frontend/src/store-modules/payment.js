@@ -133,6 +133,19 @@ const actions = {
         })
         .catch(err => console.log(err))
     },
+    fetchMorePayments: function({commit, state}) {
+        axios.get(state.payments.next)
+        .then(res => {
+            let data = res.data
+            let results = state.payments.results
+            for (let result of res.data.results) {
+                results.push(result)
+            }
+            data.results = results
+            commit('setPayments', data)
+        })
+        .catch(err => console.log(err))
+    },
     fetchPayment: function({commit}, payment_id) {
         axios.get(`/payments/${ payment_id }`)
         .then(res => {
