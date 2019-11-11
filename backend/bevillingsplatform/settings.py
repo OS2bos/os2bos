@@ -78,6 +78,9 @@ DEBUG = settings.getboolean("DEBUG", fallback=False)
 
 ALLOWED_HOSTS = settings.get("ALLOWED_HOSTS", fallback="").split(",")
 
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 # Application definition
 
 INSTALLED_APPS = [
