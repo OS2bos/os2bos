@@ -384,4 +384,7 @@ SAML2_AUTH = {
     },
     "USE_JWT": True,
     "FRONTEND_URL": settings.get("SAML_PUBLIC_HOST") + "#/",
+    "CERT_FILE": "",
+    "KEY_FILE": "",
+    "AUTHN_REQUESTS_SIGNED": False,
 }
