@@ -267,6 +267,17 @@ LOGGING = {
                 fallback=os.path.join(LOG_DIR, "export_to_prism.log"),
             ),
         },
+        "mark_fictive_payments_paid": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "formatter": "verbose",
+            "filename": settings.get(
+                "FICTIVE_PAYMENTS_LOG_FILE",
+                fallback=os.path.join(
+                    LOG_DIR, "mark_fictive_payments_paid.log"
+                ),
+            ),
+        },
     },
     "formatters": {
         "verbose": {
@@ -286,6 +297,11 @@ LOGGING = {
         },
         "bevillingsplatform.export_to_prism": {
             "handlers": ["export_to_prism"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        "bevillingsplatform.mark_fictive_payments_paid": {
+            "handlers": ["mark_fictive_payments_paid"],
             "level": "INFO",
             "propagate": True,
         },
