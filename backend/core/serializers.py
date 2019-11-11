@@ -102,6 +102,9 @@ class PaymentSerializer(serializers.ModelSerializer):
     activity__details__id = serializers.ReadOnlyField(
         source="payment_schedule.activity.details.id"
     )
+    payment_schedule__fictive = serializers.ReadOnlyField(
+        source="payment_schedule.fictive"
+    )
 
     class Meta:
         model = Payment
