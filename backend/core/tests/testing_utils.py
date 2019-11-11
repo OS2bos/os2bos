@@ -121,6 +121,7 @@ def create_payment_schedule(
     recipient_id="0205891234",
     recipient_name="Jens Testersen",
     payment_day_of_month=1,
+    fictive=False,
 ):
     payment_schedule = PaymentSchedule.objects.create(
         payment_amount=payment_amount,
@@ -132,6 +133,7 @@ def create_payment_schedule(
         recipient_id=recipient_id,
         recipient_name=recipient_name,
         payment_day_of_month=payment_day_of_month,
+        fictive=fictive,
     )
     return payment_schedule
 
