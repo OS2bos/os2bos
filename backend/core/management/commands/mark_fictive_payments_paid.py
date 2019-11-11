@@ -22,26 +22,21 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            "-d",
-            "--date",
-            default=None,
-            help=("Mark payments fictive for date"),
+            "-d", "--date", help=("Mark payments fictive for date")
         )
 
     @transaction.atomic
     def handle(self, *args, **options):
         """Mark fictive payments paid for the given date."""
         date = options["date"]
-
-        if date is not None:
-            try:
-                date = datetime.strptime(date, "%Y%m%d")
-            except ValueError:
-                print("Please enter date as 'YYYYMMDD'.")
-                logger.error(
-                    f"Invalid date input {date} - should parse as 'YYYYMMDD'"
-                )
-                sys.exit()
+        try:
+            date = datetime.strptime(date, "%Y%m%d")
+        except ValueError:
+            print("Please enter date as 'YYYYMMDD'.")
+            logger.error(
+                f"Invalid date input {date} - should parse as 'YYYYMMDD'"
+            )
+            sys.exit()
         try:
             payments = Payment.objects.filter(
                 date=date, payment_schedule__fictive=True, paid=False
