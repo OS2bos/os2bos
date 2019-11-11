@@ -22,7 +22,10 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            "-d", "--date", help=("Mark payments fictive for date")
+            "-d",
+            "--date",
+            help=("Mark payments fictive for date"),
+            required=True,
         )
 
     @transaction.atomic
