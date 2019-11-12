@@ -105,6 +105,15 @@ class PaymentSerializer(serializers.ModelSerializer):
     payment_schedule__fictive = serializers.ReadOnlyField(
         source="payment_schedule.fictive"
     )
+    is_payable_manually = serializers.SerializerMethodField()
+
+    def get_is_payable_manually(self, obj):
+        return (
+            obj.is_paid_manually_editable(
+                obj.payment_method, obj.recipient_type
+            )
+            and not obj.payment_schedule.fictive
+        )
 
     def validate(self, data):
         payment_method = (
