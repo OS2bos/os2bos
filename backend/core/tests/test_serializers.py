@@ -29,12 +29,14 @@ from core.tests.testing_utils import (
     create_appropriation,
     create_payment_schedule,
     create_activity,
+    create_payment,
 )
 from core.serializers import (
     ActivitySerializer,
     CaseSerializer,
     PaymentScheduleSerializer,
     AppropriationSerializer,
+    PaymentSerializer,
 )
 
 
@@ -633,5 +635,33 @@ class PaymentScheduleSerializerTestCase(TestCase, BasicTestMixin):
         self.assertFalse(serializer.is_valid())
         self.assertEqual(
             "ugyldig betalingsmetode for betalingsmodtager",
+            serializer.errors["non_field_errors"][0],
+        )
+
+
+class PaymentSerializerTestCase(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_validate_error_paid_not_allowed(self):
+        payment_schedule = create_payment_schedule(
+            payment_method=CASH, recipient_type=PaymentSchedule.PERSON
+        )
+        payment = create_payment(
+            payment_schedule,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+        )
+        today = date.today()
+        data = PaymentSerializer(payment).data
+        data["paid"] = True
+        data["paid_amount"] = Decimal("100.0")
+        data["paid_date"] = today
+
+        serializer = PaymentSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertEqual(
+            "Denne betaling må ikke markeres betalt manuelt",
             serializer.errors["non_field_errors"][0],
         )

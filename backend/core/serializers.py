@@ -114,16 +114,16 @@ class PaymentSerializer(serializers.ModelSerializer):
             data.get("recipient_type", None) or self.instance.recipient_type
         )
         paid = data.get("paid", None) or self.instance.paid
+        payment_schedule = (
+            data.get("payment_schedule", None)
+            or self.instance.payment_schedule
+        )
 
-        paid_editable = self.instance.is_paid_manually_editable(
+        paid_editable = self.Meta.model.is_paid_manually_editable(
             payment_method, recipient_type
         )
 
-        if (
-            paid
-            and not paid_editable
-            or self.instance.payment_schedule.fictive
-        ):
+        if paid and (not paid_editable or payment_schedule.fictive):
             raise serializers.ValidationError(
                 _("Denne betaling må ikke markeres betalt manuelt")
             )
