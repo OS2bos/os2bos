@@ -2,7 +2,7 @@ from django.utils.translation import gettext_lazy as _
 
 import rest_framework_filters as filters
 
-from core.models import Case, PaymentSchedule, Activity, Payment, Section
+from core.models import (Case, PaymentSchedule, Activity, Payment, Section, EffortStep)
 
 
 class CaseFilter(filters.FilterSet):
@@ -98,13 +98,17 @@ class PaymentFilter(filters.FilterSet):
         fields = "__all__"
 
 
-class CharInFilter(filters.BaseInFilter, filters.CharFilter):
-    pass
+class EffortStepFilter(filters.FilterSet):
+    class Meta:
+        model = EffortStep
+        fields = {'number': ['exact']}
 
 
 class AllowedForStepsFilter(filters.FilterSet):
-    allowed_for_steps = CharInFilter(
-        field_name="allowed_for_steps", lookup_expr="contains"
+    allowed_for_steps = filters.RelatedFilter(
+        EffortStepFilter,
+        field_name="allowed_for_steps",
+        queryset=Section.objects.all(),
     )
 
     class Meta:
