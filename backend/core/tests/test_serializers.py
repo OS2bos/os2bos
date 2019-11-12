@@ -17,6 +17,7 @@ from core.models import (
     FAMILY_DEPT,
     DISABILITY_DEPT,
     CASH,
+    INTERNAL,
     MAIN_ACTIVITY,
     STATUS_EXPECTED,
     STATUS_GRANTED,
@@ -652,6 +653,30 @@ class PaymentSerializerTestCase(TestCase, BasicTestMixin):
             payment_schedule,
             recipient_type=PaymentSchedule.PERSON,
             payment_method=CASH,
+        )
+        today = date.today()
+        data = PaymentSerializer(payment).data
+        data["paid"] = True
+        data["paid_amount"] = Decimal("100.0")
+        data["paid_date"] = today
+
+        serializer = PaymentSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertEqual(
+            "Denne betaling må ikke markeres betalt manuelt",
+            serializer.errors["non_field_errors"][0],
+        )
+
+    def test_validate_error_paid_not_allowed_fictive(self):
+        payment_schedule = create_payment_schedule(
+            payment_method=INTERNAL,
+            recipient_type=PaymentSchedule.INTERNAL,
+            fictive=True,
+        )
+        payment = create_payment(
+            payment_schedule,
+            recipient_type=PaymentSchedule.INTERNAL,
+            payment_method=INTERNAL,
         )
         today = date.today()
         data = PaymentSerializer(payment).data
