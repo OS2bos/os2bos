@@ -588,7 +588,7 @@ class Payment(models.Model):
         Determine whether it is payable manually (in the frontend).
         """
         return (
-            self.is_paid_allowed_for_payment_and_recipient(
+            self.paid_allowed_for_payment_and_recipient(
                 self.payment_method, self.recipient_type
             )
             and not self.payment_schedule.fictive

@@ -105,7 +105,7 @@ class PaymentSerializer(serializers.ModelSerializer):
     payment_schedule__fictive = serializers.ReadOnlyField(
         source="payment_schedule.fictive"
     )
-    is_payable_manually = serializers.ReadOnlyField()
+    is_payable_manually = serializers.ReadOnlyField(default=False)
 
     def validate(self, data):
         payment_method = (
