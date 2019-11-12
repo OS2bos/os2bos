@@ -67,9 +67,11 @@ def create_case(
     district,
     sbsys_id="13212",
     scaling_step=1,
-    effort_step=EffortStep.objects.get(number=1),
+    effort_step=1,
     target_group=FAMILY_DEPT,
 ):
+
+    effort_step = EffortStep.objects.get(number=effort_step)
 
     case = Case.objects.create(
         sbsys_id=sbsys_id,
