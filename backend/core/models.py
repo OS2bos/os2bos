@@ -105,6 +105,9 @@ class EffortStep(models.Model):
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     number = models.PositiveIntegerField(verbose_name="Nummer", unique=True)
 
+    def __str__(self):
+        return f"{self.name}"
+
 
 class PaymentMethodDetails(models.Model):
     """ Contains extra information about a payment method."""

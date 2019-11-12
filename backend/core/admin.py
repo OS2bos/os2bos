@@ -28,6 +28,7 @@ from core.models import (
     User,
     ApprovalLevel,
     SectionInfo,
+    EffortStep,
 )
 
 for klass in (
@@ -42,6 +43,7 @@ for klass in (
     Team,
     ApprovalLevel,
     SectionInfo,
+    EffortStep,
 ):
     admin.site.register(klass, admin.ModelAdmin)
 
