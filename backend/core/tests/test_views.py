@@ -36,6 +36,7 @@ from core.tests.testing_utils import (
     create_user,
 )
 
+
 class TestRelatedPersonsViewSet(AuthenticatedTestCase):
     def test_fetch_from_serviceplatformen_no_cpr(self):
         reverse_url = reverse("relatedperson-fetch-from-serviceplatformen")

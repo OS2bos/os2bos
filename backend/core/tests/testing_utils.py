@@ -214,9 +214,7 @@ def create_payment(
 def create_section(paragraph="ABL-105-2", allowed_for_steps=None, **kwargs):
     if not allowed_for_steps:
         allowed_for_steps = []
-    section = Section.objects.create(
-        paragraph=paragraph, **kwargs
-    )
+    section = Section.objects.create(paragraph=paragraph, **kwargs)
     for step in allowed_for_steps:
         section.allowed_for_steps.add(EffortStep.objects.get(number=step))
     return section
