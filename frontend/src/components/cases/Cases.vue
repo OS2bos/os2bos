@@ -17,7 +17,7 @@
                        :data-list="cases"
                        :columns="columns"
                        @selection="updateSelectedCases"
-                       :selectable="true">
+                       :selectable="permissionCheck">
 
                 <div slot="datagrid-header">
                     <h1 style="padding: 0;">Find sager</h1>
@@ -29,7 +29,7 @@
 
             </data-grid>
 
-            <button v-if="cases.length > 0"
+            <button v-if="cases.length > 0 && permissionCheck"
                     :disabled="selected_cases.length < 1" 
                     class="case-search-move-btn"
                     @click="show_modal = true">
@@ -125,6 +125,7 @@
     import DialogBox from '../dialog/Dialog.vue'
     import notify from '../notifications/Notify.js'
     import CaseFilters from '../mixins/CaseFilters.js'
+    import UserRights from '../mixins/UserRights.js'
 
     export default {
 
@@ -134,7 +135,8 @@
             DialogBox
         },
         mixins: [
-            CaseFilters
+            CaseFilters,
+            UserRights
         ],
         data: function() {
             return {
