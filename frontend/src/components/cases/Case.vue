@@ -163,7 +163,7 @@
                 } else {
                     this.$store.commit('setBreadcrumb', [
                         {
-                            link: '/all-cases',
+                            link: '/cases/',
                             title: 'Alle sager'
                         },
                         {
