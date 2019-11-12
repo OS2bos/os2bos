@@ -14,7 +14,6 @@ from dateutil import rrule
 from django import forms
 from django.db import models, transaction
 from django.db.models import Q, F
-from django.contrib.postgres import fields as postgres_fields
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
@@ -44,23 +43,6 @@ payment_method_choices = (
     (SD, _("SD-LØN")),
     (INVOICE, _("Faktura")),
     (INTERNAL, _("Intern afregning")),
-)
-
-# Effort steps - definitions and choice list.
-STEP_ONE = 1
-STEP_TWO = 2
-STEP_THREE = 3
-STEP_FOUR = 4
-STEP_FIVE = 5
-STEP_SIX = 6
-
-effort_steps_choices = (
-    (STEP_ONE, _("Trin 1: Tidlig indsats i almenområdet")),
-    (STEP_TWO, _("Trin 2: Forebyggelse")),
-    (STEP_THREE, _("Trin 3: Hjemmebaserede indsatser")),
-    (STEP_FOUR, _("Trin 4: Anbringelse i slægt eller netværk")),
-    (STEP_FIVE, _("Trin 5: Anbringelse i forskellige typer af plejefamilier")),
-    (STEP_SIX, _("Trin 6: Anbringelse i institutionstilbud")),
 )
 
 
@@ -737,10 +719,11 @@ class Section(models.Model):
     allowed_for_disability_target_group = models.BooleanField(
         verbose_name=_("tilladt for handicapafdelingen"), default=False
     )
-    allowed_for_steps = postgres_fields.ArrayField(
-        models.PositiveSmallIntegerField(choices=effort_steps_choices),
-        size=6,
+    allowed_for_steps = models.ManyToManyField(
+        EffortStep,
+        related_name="sections",
         verbose_name=_("tilladt for trin i indsatstrappen"),
+        blank=True,
     )
     law_text_name = models.CharField(
         max_length=128, verbose_name=_("lov tekst navn")

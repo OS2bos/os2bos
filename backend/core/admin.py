@@ -10,8 +10,6 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
 
-from core.forms import SectionForm
-
 from core.models import (
     Municipality,
     PaymentSchedule,
@@ -92,7 +90,6 @@ class ActivityDetailsAdmin(admin.ModelAdmin):
 
 @admin.register(Section)
 class SectionAdmin(admin.ModelAdmin):
-    form = SectionForm
     search_fields = ("paragraph",)
 
 
