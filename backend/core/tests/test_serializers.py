@@ -645,6 +645,24 @@ class PaymentSerializerTestCase(TestCase, BasicTestMixin):
     def setUpTestData(cls):
         cls.basic_setup()
 
+    def test_validate_paid_success(self):
+        payment_schedule = create_payment_schedule(
+            payment_method=INTERNAL, recipient_type=PaymentSchedule.INTERNAL
+        )
+        payment = create_payment(
+            payment_schedule,
+            recipient_type=PaymentSchedule.INTERNAL,
+            payment_method=INTERNAL,
+        )
+        today = date.today()
+        data = PaymentSerializer(payment).data
+        data["paid"] = True
+        data["paid_amount"] = Decimal("100.0")
+        data["paid_date"] = today
+
+        serializer = PaymentSerializer(data=data)
+        self.assertTrue(serializer.is_valid())
+
     def test_validate_error_paid_not_allowed(self):
         payment_schedule = create_payment_schedule(
             payment_method=CASH, recipient_type=PaymentSchedule.PERSON
