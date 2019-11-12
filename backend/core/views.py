@@ -217,7 +217,7 @@ class PaymentViewSet(AuditViewSet):
     serializer_class = PaymentSerializer
     queryset = Payment.objects.all()
 
-    filter_class = PaymentFilter
+    filterset_class = PaymentFilter
     filterset_fields = "__all__"
 
 
