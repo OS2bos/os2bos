@@ -851,3 +851,15 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
         # Check it's still there.
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
+
+
+class TestSectionViewSet(AuthenticatedTestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_allowed_for_steps_filter(self):
+        url = reverse("section-list") + "?allowed_for_steps=1"
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
