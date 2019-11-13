@@ -12,7 +12,7 @@ from datetime import datetime
 
 from django.db import transaction
 from django.core.management.base import BaseCommand
-from core.models import Payment
+from core.models import Payment, STATUS_GRANTED
 
 logger = logging.getLogger("bevillingsplatform.mark_fictive_payments_paid")
 
@@ -46,7 +46,10 @@ class Command(BaseCommand):
 
         try:
             payments = Payment.objects.filter(
-                date=date, payment_schedule__fictive=True, paid=False
+                date=date,
+                payment_schedule__fictive=True,
+                paid=False,
+                payment_schedule__activity__status=STATUS_GRANTED,
             )
             payment_ids = list(payments.values_list("id", flat=True))
             for payment in payments:

@@ -319,7 +319,7 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
         )
         appropriation = create_appropriation(case=case)
         # 4 payments of 500DKK.
-        create_activity(
+        activity = create_activity(
             case=case,
             appropriation=appropriation,
             activity_type=MAIN_ACTIVITY,
@@ -328,8 +328,10 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
             start_date=date(year=2019, month=2, day=27),
             end_date=date(year=2019, month=3, day=2),
         )
-        # mark last payment paid with 700.
-        last_payment = Payment.objects.last()
+        # Mark one March payment paid with 700.
+        last_payment = activity.payment_plan.payments.get(
+            date=date(year=2019, month=3, day=2)
+        )
         last_payment.paid = True
         last_payment.paid_date = date(year=2019, month=3, day=1)
         last_payment.paid_amount = Decimal(700)
@@ -341,7 +343,7 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
             {"date_month": "2019-02", "amount": Decimal("1000")},
             {"date_month": "2019-03", "amount": Decimal("1200")},
         ]
-        self.assertEqual(
+        self.assertCountEqual(
             [entry for entry in Payment.objects.group_by_monthly_amounts()],
             expected,
         )
