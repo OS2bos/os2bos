@@ -32,6 +32,7 @@ from core.models import (
     ServiceProvider,
     PaymentMethodDetails,
     ApprovalLevel,
+    EffortStep,
     STATUS_DELETED,
     STATUS_DRAFT,
     STATUS_GRANTED,
@@ -56,6 +57,7 @@ from core.serializers import (
     ServiceProviderSerializer,
     PaymentMethodDetailsSerializer,
     ApprovalLevelSerializer,
+    EffortStepSerializer,
 )
 from core.filters import CaseFilter, PaymentFilter, AllowedForStepsFilter
 from core.utils import get_person_info
@@ -317,3 +319,8 @@ class ServiceProviderViewSet(ReadOnlyViewset):
 class ApprovalLevelViewSet(ReadOnlyViewset):
     queryset = ApprovalLevel.objects.all()
     serializer_class = ApprovalLevelSerializer
+
+
+class EffortStepViewSet(ReadOnlyViewset):
+    queryset = EffortStep.objects.all()
+    serializer_class = EffortStepSerializer
