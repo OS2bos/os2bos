@@ -3,7 +3,6 @@
 import { Selector } from 'testcafe'
 import { login } from '../utils/logins.js'
 import { createActivity } from '../utils/crud.js'
-import { axe } from '../utils/axe.js'
 import logs from '../utils/logs.js'
 
 function leadZero(number) {
@@ -106,10 +105,6 @@ test('Create Case', async t => {
     
     await t
         .click(Selector('button').withText('+ Tilknyt hovedsag'))
-
-    await axe(t)
-
-    await t
         .typeText('#field-sbsys-id', testdata.case1.name)
         .typeText('#field-cpr', '000000-0000')
         .click(Selector('label').withAttribute('for', 'inputRadio1'))
@@ -121,10 +116,6 @@ test('Create Case', async t => {
         .click(Selector('#field-skaleringstrappe option').withText('5'))
         .click(Selector('input').withAttribute('type', 'submit'))
         .navigateTo('http://localhost:8080/#/')
-    
-    await axe(t)
-
-    await t
         .expect(Selector('.cases table a').withText(testdata.case1.name)).ok()
 })
 
@@ -135,21 +126,13 @@ test('Create Appropriation', async t => {
     await t
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('.appropriation-create-btn'))
-    
-    await axe(t)
-
-    await t
         .typeText('#field-sbsysid', testdata.appr1.name)
         .click('#field-lawref')
         .click(Selector('#field-lawref option').withText(testdata.appr1.section))
         .click(Selector('input').withAttribute('type', 'submit'))
         .navigateTo('http://localhost:8080/#/')
         .click(Selector('a').withText(testdata.case1.name))
-    
-    await axe(t)
-
-    await t
-        .expect(Selector('.appropriation-list tr:first-child td a').innerText).contains(testdata.appr1.name)
+        .expect(Selector('.datagrid-action a').innerText).contains(testdata.appr1.name)
 })
 
 test('Create activities', async t => {
@@ -184,10 +167,6 @@ test('Approve appropriation', async t => {
         .click(Selector('a').withText(testdata.appr1.name))
         .click('#check-all')
         .click(Selector('button').withText('Godkendt valgte'))
-    
-    await axe(t)
-
-    await t
         .click(Selector('label').withAttribute('for','inputRadio1'))
         .typeText('#field-text', 'Godkendt grundet svære og særligt tvingende omstændigheder')
         .click('button[type="submit"]')
@@ -230,10 +209,6 @@ test('Create and delete activity', async t => {
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
         .click(Selector(`tr[title="${ testdata.act6.note }"] a`))
-    
-    await axe(t)
-
-    await t
         .expect(Selector('.label-DRAFT')).ok()
         .click(Selector('.act-delete-btn'))
         .click('button[type="submit"]')
