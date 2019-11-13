@@ -1,7 +1,7 @@
 // Testing with Testcafe : https://devexpress.github.io/testcafe/documentation/getting-started/
 
 import { Selector } from 'testcafe'
-import { loginAsUngeraadgiver } from '../utils/logins.js'
+import { login } from '../utils/logins.js'
 import { createActivity } from '../utils/crud.js'
 import { axe } from '../utils/axe.js'
 import logs from '../utils/logs.js'
@@ -97,12 +97,12 @@ const testdata = {
 }
 
 fixture `Create some data`// declare the fixture
-    .page `http://localhost:8080/#/my-cases/`  // specify the start page
+    .page `http://localhost:8080/#/`  // specify the start page
     .afterEach(() => logs())
 
 test('Create Case', async t => {
 
-    await loginAsUngeraadgiver(t)
+    await login(t)
     
     await t
         .click(Selector('button').withText('+ Tilknyt hovedsag'))
@@ -130,7 +130,7 @@ test('Create Case', async t => {
 
 test('Create Appropriation', async t => {
 
-    await loginAsUngeraadgiver(t)
+    await login(t)
 
     await t
         .click(Selector('a').withText(testdata.case1.name))
@@ -154,7 +154,7 @@ test('Create Appropriation', async t => {
 
 test('Create activities', async t => {
     
-    await loginAsUngeraadgiver(t)
+    await login(t)
 
     await t
         .click(Selector('a').withText(testdata.case1.name))
@@ -177,7 +177,7 @@ test('Create activities', async t => {
 
 test('Approve appropriation', async t => {
     
-    await loginAsUngeraadgiver(t)
+    await login(t)
 
     await t
         .click(Selector('a').withText(testdata.case1.name))
@@ -196,7 +196,7 @@ test('Approve appropriation', async t => {
 
 test('Add adjustment activities', async t => {
     
-    await loginAsUngeraadgiver(t)
+    await login(t)
     
     await t
         .click(Selector('a').withText(testdata.case1.name))
@@ -217,7 +217,7 @@ test('Add adjustment activities', async t => {
 
 test('Create and delete activity', async t => {
     
-    await loginAsUngeraadgiver(t)
+    await login(t)
 
     await t
         .click(Selector('a').withText(testdata.case1.name))
