@@ -15,7 +15,7 @@
                         class="payment-title-link" 
                         @click="navToLink(`/activity/${ payment.activity__id }`)">
                     <i class="material-icons">arrow_back</i>
-                    {{ activityId2name(payment.activity__details__id) }}
+                    Udgift til {{ activityId2name(payment.activity__details__id) }}
                 </button>
                 
                 <span class="payment-title">
@@ -23,6 +23,8 @@
                         <i class="material-icons" style="width: 1.5rem;">checkmark</i>
                     </span>
                     Betaling #{{ payment.id }}
+                    <span v-if="payment.payment_schedule__fictive" class="dim">(Fiktiv)</span>
+                    <span v-if="payment.paid_amount" class="dim">(Betalt)</span>
                 </span>
             </h2>
                         
@@ -48,26 +50,24 @@
                 </dl>
 
                 <div class="payment-edit" style="width: 50%;">
-                    <dl>
-                        <template v-if="paymentlock">
-                            <dt>Betalt beløb</dt>
+                    <dl v-if="paymentlock">
+                        <dt>Betalt beløb</dt>
+                        <dd>
+                            {{ displayDigits(payment.paid_amount) }} kr.
+                        </dd>
+                        <dt>Betalt dato</dt>
+                        <dd>
+                            {{ displayDate(payment.paid_date) }}
+                        </dd>
+                        <template v-if="payment.note">
+                            <dt>Referencetekst</dt>
                             <dd>
-                                {{ displayDigits(payment.paid_amount) }} kr.
+                                {{ payment.note }}
                             </dd>
-                            <dt>Betalt dato</dt>
-                            <dd>
-                                {{ displayDate(payment.paid_date) }}
-                            </dd>
-                            <template v-if="payment.note">
-                                <dt>Referencetekst</dt>
-                                <dd>
-                                    {{ payment.note }}
-                                </dd>
-                            </template>
                         </template>
                     </dl>
                     <template v-if="permissionCheck === true && this.payment.activity__status === 'GRANTED'">
-                        <form @submit.prevent="prePayCheck()" v-if="!paymentlock">
+                        <form @submit.prevent="prePayCheck()" v-if="!paymentlock && payment.is_payable_manually">
                             <error />
                             <fieldset>
                                 <label for="field-amount" class="required">Betal beløb</label>
@@ -174,7 +174,7 @@
                 this.update()
             },
             payment: function() {
-                if (!this.payment.paid_amount && !this.payment.paid_date) {
+                if (!this.payment.paid_amount && !this.payment.paid_date && this.payment.is_payable_manually) {
                     this.paymentlock = false
                 } else {
                     this.paymentlock = true
