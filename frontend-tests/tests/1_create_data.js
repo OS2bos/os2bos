@@ -47,7 +47,7 @@ const testdata = {
         payee_name: 'Fiktivt Firma ApS'
     },
     act2: {
-        type: 0,
+        type: 1,
         start: str2mth,
         end: str5mth,
         note: 'En lille note',
@@ -97,11 +97,10 @@ const testdata = {
 
 fixture `Create some data`// declare the fixture
     .page `http://localhost:8080/#/`  // specify the start page
+    .beforeEach(async t => { await login(t) })
     .afterEach(() => logs())
 
 test('Create Case', async t => {
-
-    await login(t)
     
     await t
         .click(Selector('button').withText('+ Tilknyt hovedsag'))
@@ -121,8 +120,6 @@ test('Create Case', async t => {
 
 test('Create Appropriation', async t => {
 
-    await login(t)
-
     await t
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('.appropriation-create-btn'))
@@ -136,8 +133,6 @@ test('Create Appropriation', async t => {
 })
 
 test('Create activities', async t => {
-    
-    await login(t)
 
     await t
         .click(Selector('a').withText(testdata.case1.name))
@@ -159,8 +154,6 @@ test('Create activities', async t => {
 })
 
 test('Approve appropriation', async t => {
-    
-    await login(t)
 
     await t
         .click(Selector('a').withText(testdata.case1.name))
@@ -174,8 +167,6 @@ test('Approve appropriation', async t => {
 })
 
 test('Add adjustment activities', async t => {
-    
-    await login(t)
     
     await t
         .click(Selector('a').withText(testdata.case1.name))
@@ -195,8 +186,6 @@ test('Add adjustment activities', async t => {
 })
 
 test('Create and delete activity', async t => {
-    
-    await login(t)
 
     await t
         .click(Selector('a').withText(testdata.case1.name))
