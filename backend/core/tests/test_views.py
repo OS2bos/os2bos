@@ -859,7 +859,7 @@ class TestSectionViewSet(AuthenticatedTestCase, BasicTestMixin):
         cls.basic_setup()
 
     def test_allowed_for_steps_filter(self):
-        url = reverse("section-list") + "?allowed_for_steps=1"
+        url = reverse("section-list")
         self.client.login(username=self.username, password=self.password)
-        response = self.client.get(url)
+        response = self.client.get(url, data={"allowed_for_steps": 1})
         self.assertEqual(response.status_code, 200)
