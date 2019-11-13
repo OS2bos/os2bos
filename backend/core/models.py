@@ -294,6 +294,10 @@ class PaymentSchedule(models.Model):
 
     @staticmethod
     def is_payment_and_recipient_allowed(payment_method, recipient_type):
+        """
+        Determine whether a specific combination of payment_method
+        and recipient_type is allowed.
+        """
         allowed = {
             PaymentSchedule.INTERNAL: [INTERNAL],
             PaymentSchedule.PERSON: [CASH, SD],
@@ -559,6 +563,20 @@ class Payment(models.Model):
                 )
             )
         super().save(*args, **kwargs)
+
+    @staticmethod
+    def is_paid_manually_editable(payment_method, recipient_type):
+        """
+        Determine whether "paid" can be manually set.
+        """
+        disallowed = {PaymentSchedule.PERSON: [CASH, SD]}
+
+        if (
+            recipient_type in disallowed
+            and payment_method in disallowed[recipient_type]
+        ):
+            return False
+        return True
 
     @property
     def account_string(self):

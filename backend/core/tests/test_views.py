@@ -270,6 +270,16 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         response = self.client.post(url, json)
         self.assertEqual(response.status_code, 403)
 
+    def test_no_login(self):
+        url = reverse("case-list")
+        # Anonymous user
+        json = create_case_as_json(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        self.user = None
+        response = self.client.post(url, json)
+        self.assertEqual(response.status_code, 403)
+
     def test_get_expired_filter(self):
         url = reverse("case-list")
         self.client.login(username=self.username, password=self.password)

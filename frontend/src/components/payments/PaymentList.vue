@@ -28,6 +28,7 @@
                 <tr v-for="p in payments_by_year" :key="p.id">
                     <td>
                         <payment-modal :p-id="p.id" @update="update()"/>
+                        <span class="dim" v-if="p.payment_schedule__fictive">(Fiktiv)</span>
                     </td>
                     <td>
                         <span v-if="p.paid_date">{{ displayDate(p.paid_date) }}<br></span>

@@ -219,7 +219,7 @@ class PaymentViewSet(AuditViewSet):
     queryset = Payment.objects.order_by("-id")
     pagination_class = PageNumberPagination
 
-    filter_class = PaymentFilter
+    filterset_class = PaymentFilter
     filterset_fields = "__all__"
 
 

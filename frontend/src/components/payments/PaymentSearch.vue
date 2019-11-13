@@ -29,6 +29,7 @@
                             <template v-if="p.activity__status === 'GRANTED'">
                             <td>
                                 <payment-modal :p-id="p.id" @update="update()"/>
+                                <span class="dim" v-if="p.payment_schedule__fictive">(Fiktiv)</span>
                             </td>
                             <td> {{ p.payment_schedule__payment_id }} </td>
                             <td> {{ p.case__cpr_number }} </td>
