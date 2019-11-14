@@ -158,6 +158,11 @@ class User(AbstractUser):
 
     @classmethod
     def max_profile(cls, perms):
+        """Sometimes IdPs can send more than one profile when using SAML.
+
+        For the time being, we choose to uphold the most far-reaching
+        permission profile."""
+
         permission_score = {
             cls.READONLY: 0,
             cls.EDIT: 1,
@@ -166,11 +171,9 @@ class User(AbstractUser):
         }
         if not perms:
             return ""
-        max_score = -1
-        for p in perms:
-            if permission_score.get(p, -1) > max_score:
-                max_score = permission_score[p]
-        # Reverse score list to get max permission.
+
+        max_score = max(permission_score.get(p, -1) for p in perms)
+
         return {v: k for k, v in permission_score.items()}.get(max_score, "")
 
     profile_choices = (
