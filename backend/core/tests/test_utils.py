@@ -289,6 +289,26 @@ class SamlLoginTestcase(TestCase, BasicTestMixin):
         saml_before_login(user_data)
         saml_create_user(user_data)
 
+    def test_more_profiles(self):
+        # This relates to a bug where we received more than one bos_profile and
+        # duly crashed.
+        user_data = {
+            "team": ["S-DIG"],
+            "username": ["dummy"],
+            "bos_profile": ["grant", "edit"],
+        }
+        user = User.objects.create_user("dummy", "dummy", profile="readonly")
+        saml_before_login(user_data)
+        user.refresh_from_db()
+        self.assertEqual(user.profile, "grant")
+
+        user_data["bos_profile"].append("admin")
+        user_data["username"] = ["dummy1"]
+        user = User.objects.create_user("dummy1", "dummy1", profile="readonly")
+        saml_create_user(user_data)
+        user.refresh_from_db()
+        self.assertEqual(user.profile, "admin")
+
 
 class SendToPrismTestCase(TestCase, BasicTestMixin):
     @classmethod

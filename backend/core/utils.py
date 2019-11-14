@@ -263,7 +263,7 @@ def saml_before_login(user_data):
             user.team = team
             user_changed = True
     if "bos_profile" in user_data:
-        [profile] = user_data["bos_profile"]
+        profile = models.User.max_profile(user_data["bos_profile"])
         if profile != user.profile:
             user.profile = profile
             is_admin = profile == models.User.ADMIN
@@ -291,7 +291,7 @@ def saml_create_user(user_data):
     user.team = team
 
     if "bos_profile" in user_data:
-        [profile] = user_data["bos_profile"]
+        profile = models.User.max_profile(user_data["bos_profile"])
         user.profile = profile
         is_admin = profile == models.User.ADMIN
         # Admin status is controlled by these flags.

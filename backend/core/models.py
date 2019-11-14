@@ -156,6 +156,23 @@ class User(AbstractUser):
     GRANT = "grant"
     ADMIN = "admin"
 
+    @classmethod
+    def max_profile(cls, perms):
+        permission_score = {
+            cls.READONLY: 0,
+            cls.EDIT: 1,
+            cls.GRANT: 2,
+            cls.ADMIN: 3,
+        }
+        if not perms:
+            return ""
+        max_score = -1
+        for p in perms:
+            if permission_score.get(p, -1) > max_score:
+                max_score = permission_score[p]
+        # Reverse score list to get max permission.
+        return {v: k for k, v in permission_score.items()}.get(max_score, "")
+
     profile_choices = (
         (READONLY, _("Kun læse")),
         (EDIT, _("Læse og skrive")),
