@@ -127,7 +127,7 @@ const actions = {
                 }
             }
         }
-        axios.get(`/payments/?${ q }`)
+        axios.get(`/payments/?${ q }&activity__status=GRANTED`)
         .then(res => {
             commit('setPayments', res.data)
         })
