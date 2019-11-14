@@ -127,9 +127,22 @@ const actions = {
                 }
             }
         }
-        axios.get(`/payments/?${ q }`)
+        axios.get(`/payments/?${ q }&activity__status=GRANTED`)
         .then(res => {
             commit('setPayments', res.data)
+        })
+        .catch(err => console.log(err))
+    },
+    fetchMorePayments: function({commit, state}) {
+        axios.get(state.payments.next)
+        .then(res => {
+            let data = res.data
+            let results = state.payments.results
+            for (let result of res.data.results) {
+                results.push(result)
+            }
+            data.results = results
+            commit('setPayments', data)
         })
         .catch(err => console.log(err))
     },

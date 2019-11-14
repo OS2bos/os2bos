@@ -32,6 +32,7 @@ from core.models import (
     ServiceProvider,
     ApprovalLevel,
     Team,
+    EffortStep,
     FAMILY_DEPT,
     STATUS_DELETED,
 )
@@ -105,6 +106,7 @@ class PaymentSerializer(serializers.ModelSerializer):
     payment_schedule__fictive = serializers.ReadOnlyField(
         source="payment_schedule.fictive"
     )
+    is_payable_manually = serializers.ReadOnlyField(default=False)
 
     def validate(self, data):
         payment_method = (
@@ -119,11 +121,15 @@ class PaymentSerializer(serializers.ModelSerializer):
             or self.instance.payment_schedule
         )
 
-        paid_editable = self.Meta.model.is_paid_manually_editable(
+        paid_allowed = self.Meta.model.paid_allowed_for_payment_and_recipient(
             payment_method, recipient_type
         )
 
-        if paid and (not paid_editable or payment_schedule.fictive):
+        if paid and (
+            not paid_allowed
+            or payment_schedule.fictive
+            or not payment_schedule.can_be_paid
+        ):
             raise serializers.ValidationError(
                 _("Denne betaling må ikke markeres betalt manuelt")
             )
@@ -321,4 +327,10 @@ class ServiceProviderSerializer(serializers.ModelSerializer):
 class ApprovalLevelSerializer(serializers.ModelSerializer):
     class Meta:
         model = ApprovalLevel
+        fields = "__all__"
+
+
+class EffortStepSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EffortStep
         fields = "__all__"

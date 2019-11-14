@@ -44,6 +44,7 @@ from core.models import (
     PaymentSchedule,
     PaymentMethodDetails,
     ServiceProvider,
+    EffortStep,
     CASH,
     SD,
     INVOICE,
@@ -3086,3 +3087,14 @@ class RelatedPersonTestCase(TestCase, BasicTestMixin):
             f"{related_person.cpr_number} - "
             f"{related_person.main_case}",
         )
+
+
+class EffortStepTestCase(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_str(self):
+        effort_step = EffortStep.objects.create(name="Name", number=127)
+
+        self.assertEqual(str(effort_step), "Name")

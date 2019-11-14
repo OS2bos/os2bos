@@ -11,8 +11,9 @@
 
         <div class="payment-search-list">
             <h1>Betalinger</h1>
-            <template>
-                <table v-if="payments.length > 0">
+            <template v-if="results">
+            <span>{{results.length}} af {{payments.count}}</span>
+                <table v-if="results.length > 0">
                     <thead>
                         <tr>
                             <th>Betaling nr</th>
@@ -24,8 +25,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="p in payments" :key="p.id">
-                            <template v-if="p.activity__status === 'GRANTED'">
+                        <tr v-for="p in results" :key="p.id">
                             <td>
                                 <payment-modal :p-id="p.id" @update="update()"/>
                                 <span class="dim" v-if="p.payment_schedule__fictive">(Fiktiv)</span>
@@ -52,16 +52,15 @@
                                     {{ displayDigits(p.amount) }} kr.
                                 </span>
                             </td>
-                            </template>
                         </tr>
                     </tbody>
                 </table>
-            </template>
-            <p v-if="payments.length < 1">
-                Kunne ikke finde nogen betalinger
-            </p>
+                <p class="nopays" v-if="results.length < 1">
+                    Kunne ikke finde nogen betalinger
+                </p>
 
-            <!-- <button v-if="payments.length > 1" class="more">Vis flere</button> -->
+                <button v-if="results.length > 1" :disabled="disableBtn" class="more" @click="loadResults()">Vis flere</button>
+            </template>
 
         </div>
 
@@ -113,8 +112,16 @@
             payments: function() {
                 return this.$store.getters.getPayments
             },
+            results: function() {
+                return this.payments.results
+            },
             query: function() {
                 return this.$route.query
+            },
+            disableBtn: function () {
+                if (this.payments.next === null) {
+                    return true
+                }
             }
         },
         watch: {
@@ -123,6 +130,9 @@
             }
         },
         methods: {
+            loadResults: function() {
+                this.$store.dispatch('fetchMorePayments')
+            },
             update: function() {
                 this.$store.dispatch('fetchPayments', this.$route.query)
             },
@@ -171,6 +181,10 @@
 
     .payment-search .more {
         width: 100%;
+    }
+
+    .nopays {
+        margin: 1rem 0;
     }
 
 </style>

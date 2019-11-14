@@ -30,7 +30,7 @@ from core.models import (
     RelatedPerson,
     SD,
     FAMILY_DEPT,
-    STEP_ONE,
+    EffortStep,
 )
 
 
@@ -67,9 +67,11 @@ def create_case(
     district,
     sbsys_id="13212",
     scaling_step=1,
-    effort_step=STEP_ONE,
+    effort_step=1,
     target_group=FAMILY_DEPT,
 ):
+
+    effort_step = EffortStep.objects.get(number=effort_step)
 
     case = Case.objects.create(
         sbsys_id=sbsys_id,
@@ -101,7 +103,7 @@ def create_case_as_json(
         "case_worker": case_worker.id,
         "team": team.id,
         "scaling_step": 1,
-        "effort_step": STEP_ONE,
+        "effort_step": 1,
         "district": district.id,
         "paying_municipality": municipality.id,
         "acting_municipality": municipality.id,
@@ -214,9 +216,9 @@ def create_payment(
 def create_section(paragraph="ABL-105-2", allowed_for_steps=None, **kwargs):
     if not allowed_for_steps:
         allowed_for_steps = []
-    section = Section.objects.create(
-        paragraph=paragraph, allowed_for_steps=allowed_for_steps, **kwargs
-    )
+    section = Section.objects.create(paragraph=paragraph, **kwargs)
+    for step in allowed_for_steps:
+        section.allowed_for_steps.add(EffortStep.objects.get(number=step))
     return section
 
 

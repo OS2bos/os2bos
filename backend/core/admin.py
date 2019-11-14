@@ -10,8 +10,6 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
 
-from core.forms import SectionForm
-
 from core.models import (
     Municipality,
     PaymentSchedule,
@@ -30,6 +28,7 @@ from core.models import (
     User,
     ApprovalLevel,
     SectionInfo,
+    EffortStep,
 )
 
 for klass in (
@@ -44,6 +43,7 @@ for klass in (
     Team,
     ApprovalLevel,
     SectionInfo,
+    EffortStep,
 ):
     admin.site.register(klass, admin.ModelAdmin)
 
@@ -92,7 +92,6 @@ class ActivityDetailsAdmin(admin.ModelAdmin):
 
 @admin.register(Section)
 class SectionAdmin(admin.ModelAdmin):
-    form = SectionForm
     search_fields = ("paragraph",)
 
 
