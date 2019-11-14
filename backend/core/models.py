@@ -303,6 +303,10 @@ class PaymentSchedule(models.Model):
 
     @property
     def can_be_paid(self):
+        """
+        Determine whether the PaymentSchedule allows
+        the underlying Payments to be paid.
+        """
         if (
             hasattr(self, "activity")
             and self.activity.status == STATUS_GRANTED
@@ -481,7 +485,7 @@ class PaymentSchedule(models.Model):
 
 
 class Payment(models.Model):
-    """Represents an amount paid to a supplier - amount, recpient, date.
+    """Represents an amount paid to a supplier - amount, recipient, date.
 
     These may be entered manually, but ideally they should be imported
     from an accounts payable system."""
@@ -562,7 +566,7 @@ class Payment(models.Model):
         super().save(*args, **kwargs)
 
     @staticmethod
-    def is_paid_manually_editable(payment_method, recipient_type):
+    def paid_allowed_for_payment_and_recipient(payment_method, recipient_type):
         """
         Determine whether "paid" can be manually set.
         """
@@ -574,6 +578,19 @@ class Payment(models.Model):
         ):
             return False
         return True
+
+    @property
+    def is_payable_manually(self):
+        """
+        Determine whether it is payable manually (in the frontend).
+        """
+        return (
+            self.paid_allowed_for_payment_and_recipient(
+                self.payment_method, self.recipient_type
+            )
+            and not self.payment_schedule.fictive
+            and self.payment_schedule.can_be_paid
+        )
 
     @property
     def account_string(self):
