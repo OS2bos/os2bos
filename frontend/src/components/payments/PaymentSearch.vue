@@ -57,7 +57,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <p v-if="results.length < 1">
+                <p class="nopays" v-if="results.length < 1">
                     Kunne ikke finde nogen betalinger
                 </p>
 
@@ -179,6 +179,10 @@
 
     .payment-search .more {
         width: 100%;
+    }
+
+    .nopays {
+        margin: 1rem 0;
     }
 
 </style>
