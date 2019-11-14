@@ -310,21 +310,6 @@ class PaymentSchedule(models.Model):
             return True
         return False
 
-    @property
-    def triggers_payment_email(self):
-        """
-        Trigger a payment email only in the (recipient_type->payment_method)
-        case of Internal->Internal or Person->SD.
-        """
-        if (
-            self.recipient_type == self.INTERNAL
-            and self.payment_method == INTERNAL
-        ) or (
-            self.recipient_type == self.PERSON and self.payment_method == SD
-        ):
-            return True
-        return False
-
     def save(self, *args, **kwargs):
         if not self.is_payment_and_recipient_allowed(
             self.payment_method, self.recipient_type
@@ -1430,8 +1415,6 @@ class Activity(AuditModelMixin, models.Model):
         # Don't trigger the email if the payment plan does not exist
         # or does not need a payment email to trigger.
         if not hasattr(self, "payment_plan") or not self.payment_plan:
-            return False
-        if not self.payment_plan.triggers_payment_email:
             return False
         return True
 
