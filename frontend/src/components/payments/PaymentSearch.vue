@@ -26,7 +26,6 @@
                     </thead>
                     <tbody>
                         <tr v-for="p in results" :key="p.id">
-                            <template v-if="p.activity__status === 'GRANTED'">
                             <td>
                                 <payment-modal :p-id="p.id" @update="update()"/>
                                 <span class="dim" v-if="p.payment_schedule__fictive">(Fiktiv)</span>
@@ -53,7 +52,6 @@
                                     {{ displayDigits(p.amount) }} kr.
                                 </span>
                             </td>
-                            </template>
                         </tr>
                     </tbody>
                 </table>
@@ -61,7 +59,7 @@
                     Kunne ikke finde nogen betalinger
                 </p>
 
-                <button v-if="results.length > 1" class="more" @click="loadResults()">Vis flere</button>
+                <button v-if="results.length > 1" :disabled="disableBtn" class="more" @click="loadResults()">Vis flere</button>
             </template>
 
         </div>
@@ -120,6 +118,11 @@
             },
             query: function() {
                 return this.$route.query
+            },
+            disableBtn: function () {
+                if (this.payments.next === null) {
+                    return true
+                }
             }
         },
         watch: {
