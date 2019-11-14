@@ -711,7 +711,7 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
         response = self.client.get(
             url, data={"paid_date_or_date__gte": f"{cutoff_date}"}
         )
-        ids_list = [payment["id"] for payment in response.json()]
+        ids_list = [payment["id"] for payment in response.json()["results"]]
         self.assertEqual(response.status_code, 200)
         self.assertSequenceEqual(
             ids_list,
@@ -744,7 +744,7 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
         response = self.client.get(
             url, data={"paid_date_or_date__lte": f"{cutoff_date}"}
         )
-        ids_list = [payment["id"] for payment in response.json()]
+        ids_list = [payment["id"] for payment in response.json()["results"]]
         self.assertEqual(response.status_code, 200)
         self.assertSequenceEqual(
             ids_list,

@@ -13,6 +13,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
 
 from core.models import (
@@ -217,7 +218,8 @@ class PaymentScheduleViewSet(AuditViewSet):
 
 class PaymentViewSet(AuditViewSet):
     serializer_class = PaymentSerializer
-    queryset = Payment.objects.all()
+    queryset = Payment.objects.order_by("-id")
+    pagination_class = PageNumberPagination
 
     filterset_class = PaymentFilter
     filterset_fields = "__all__"
