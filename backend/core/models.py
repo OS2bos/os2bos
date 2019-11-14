@@ -152,6 +152,26 @@ class User(AbstractUser):
     GRANT = "grant"
     ADMIN = "admin"
 
+    @classmethod
+    def max_profile(cls, perms):
+        """Sometimes IdPs can send more than one profile when using SAML.
+
+        For the time being, we choose to uphold the most far-reaching
+        permission profile."""
+
+        permission_score = {
+            cls.READONLY: 0,
+            cls.EDIT: 1,
+            cls.GRANT: 2,
+            cls.ADMIN: 3,
+        }
+        if not perms:
+            return ""
+
+        max_score = max(permission_score.get(p, -1) for p in perms)
+
+        return {v: k for k, v in permission_score.items()}.get(max_score, "")
+
     profile_choices = (
         (READONLY, _("Kun læse")),
         (EDIT, _("Læse og skrive")),
