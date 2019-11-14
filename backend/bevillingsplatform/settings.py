@@ -78,7 +78,14 @@ DEBUG = settings.getboolean("DEBUG", fallback=False)
 
 ALLOWED_HOSTS = settings.get("ALLOWED_HOSTS", fallback="").split(",")
 
-USE_X_FORWARDED_HOST = settings.get("USE_X_FORWARDED_HOST", fallback=False)
+USE_X_FORWARDED_HOST = settings.getboolean(
+    "USE_X_FORWARDED_HOST", fallback=False
+)
+SECURE_PROXY_SSL_HEADER = (
+    tuple(settings.get("SECURE_PROXY_SSL_HEADER", fallback=None).split(","))
+    if settings.get("SECURE_PROXY_SSL_HEADER", fallback=None)
+    else None
+)
 
 # Application definition
 
