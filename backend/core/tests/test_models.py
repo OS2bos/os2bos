@@ -1826,27 +1826,6 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         activity.delete()
         self.assertEqual(len(mail.outbox), 0)
 
-    def test_deleted_payment_email_person_cash_should_not_send(self):
-        start_date = date(year=2019, month=12, day=1)
-        end_date = date(year=2020, month=1, day=1)
-        payment_schedule = create_payment_schedule(
-            payment_method=CASH, recipient_type=PaymentSchedule.PERSON
-        )
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
-        appropriation = create_appropriation(case=case)
-        activity = create_activity(
-            case,
-            appropriation,
-            start_date=start_date,
-            end_date=end_date,
-            payment_plan=payment_schedule,
-            status=STATUS_GRANTED,
-        )
-        activity.delete()
-        self.assertEqual(len(mail.outbox), 0)
-
     def test_deleted_payment_email_no_payment_plan_should_not_send(self):
         start_date = date(year=2019, month=12, day=1)
         end_date = date(year=2020, month=1, day=1)
