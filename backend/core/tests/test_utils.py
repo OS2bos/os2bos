@@ -308,6 +308,11 @@ class SamlLoginTestcase(TestCase, BasicTestMixin):
         saml_create_user(user_data)
         user.refresh_from_db()
         self.assertEqual(user.profile, "admin")
+        # Test the case with no user profiles given
+        user_data["bos_profile"] = []
+        saml_before_login(user_data)
+        user.refresh_from_db()
+        self.assertEqual(user.profile, "")
 
 
 class SendToPrismTestCase(TestCase, BasicTestMixin):

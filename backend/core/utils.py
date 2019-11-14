@@ -250,11 +250,11 @@ def send_appropriation(appropriation, included_activities=None):
 def saml_before_login(user_data):
     "Hook called after userdata is received from IdP, before login."
     user_changed = False
-    [username] = user_data["username"]
+    username = user_data["username"][0]
     user = models.User.objects.get(username=username)
     if "team" in user_data:
         # SAML data comes as lists with one element.
-        [team_name] = user_data["team"]
+        team_name = user_data["team"][0]
         # This is safe, user exists.
         team, _ = models.Team.objects.get_or_create(
             name=team_name, defaults={"leader": user}
@@ -276,11 +276,11 @@ def saml_before_login(user_data):
 
 def saml_create_user(user_data):
     "Hook called after user is created in DB, before login."
-    [username] = user_data["username"]
+    username = user_data["username"][0]
     user = models.User.objects.get(username=username)
     if "team" in user_data:
         # SAML data comes as lists with one element.
-        [team_name] = user_data["team"]
+        team_name = user_data["team"][0]
     else:
         team_name = config.DEFAULT_TEAM_NAME
 
