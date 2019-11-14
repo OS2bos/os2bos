@@ -102,7 +102,6 @@
     import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
     import PaymentModal from './PaymentModal.vue'
-    import axios from '../http/Http.js'
 
     export default {
         
