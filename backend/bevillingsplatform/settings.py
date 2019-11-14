@@ -78,6 +78,8 @@ DEBUG = settings.getboolean("DEBUG", fallback=False)
 
 ALLOWED_HOSTS = settings.get("ALLOWED_HOSTS", fallback="").split(",")
 
+USE_X_FORWARDED_HOST = settings.get("USE_X_FORWARDED_HOST", fallback=False)
+
 # Application definition
 
 INSTALLED_APPS = [

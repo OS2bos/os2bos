@@ -828,7 +828,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             >= modified_start_date
         )
         # assert payments are generated correctly.
-        self.assertSequenceEqual(
+        self.assertCountEqual(
             [
                 x.date
                 for x in (activity_payments.all() | modifies_payments.all())

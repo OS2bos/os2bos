@@ -489,6 +489,7 @@ class Payment(models.Model):
     class Meta:
         verbose_name = _("betaling")
         verbose_name_plural = _("betalinger")
+        ordering = (F("paid_date").desc(nulls_last=True), "-date")
 
     objects = PaymentQuerySet.as_manager()
 
