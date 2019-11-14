@@ -32,6 +32,7 @@ from core.models import (
     ServiceProvider,
     ApprovalLevel,
     Team,
+    EffortStep,
     FAMILY_DEPT,
     STATUS_DELETED,
 )
@@ -321,4 +322,10 @@ class ServiceProviderSerializer(serializers.ModelSerializer):
 class ApprovalLevelSerializer(serializers.ModelSerializer):
     class Meta:
         model = ApprovalLevel
+        fields = "__all__"
+
+
+class EffortStepSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EffortStep
         fields = "__all__"

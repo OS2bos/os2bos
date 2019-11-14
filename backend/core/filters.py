@@ -98,15 +98,14 @@ class PaymentFilter(filters.FilterSet):
         fields = "__all__"
 
 
-class CharInFilter(filters.BaseInFilter, filters.CharFilter):
-    pass
-
-
 class AllowedForStepsFilter(filters.FilterSet):
-    allowed_for_steps = CharInFilter(
-        field_name="allowed_for_steps", lookup_expr="contains"
+    allowed_for_steps = filters.NumberFilter(
+        field_name="allowed_for_steps", method="filter_allowed_for_steps"
     )
 
     class Meta:
         model = Section
         fields = "__all__"
+
+    def filter_allowed_for_steps(self, qs, name, value):
+        return qs.filter(allowed_for_steps__number=value)
