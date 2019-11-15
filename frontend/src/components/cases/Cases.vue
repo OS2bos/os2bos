@@ -197,7 +197,10 @@
             displayStatus: function(d) {
                 if (!d.expired) {
                     return `<div class="mini-label"><span class="label label-GRANTED">Aktiv</span></div>`
-                }   
+                }
+                if (d.expired) {
+                    return `<div class="mini-label"><span class="label label-CLOSED">Udgået</span></div>`
+                }
             },
             diagChangeWorker: function(worker_id) {
                 this.diag_field_case_worker = worker_id

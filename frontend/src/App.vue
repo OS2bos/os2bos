@@ -127,6 +127,11 @@
         color: var(--grey0);
     }
 
+    .label-CLOSED {
+        background-color: hsl(var(--color4), 100%, 60%);
+        color: var(--grey0);
+    }
+
     .label-DISCONTINUED {
         background-color: hsl(var(--color4), 50%, 80%);
         color: hsl(var(--color4), 100%, 20%);
