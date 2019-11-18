@@ -39,7 +39,6 @@ for klass in (
     Activity,
     RelatedPerson,
     SchoolDistrict,
-    Account,
     Team,
     ApprovalLevel,
     SectionInfo,
@@ -70,6 +69,16 @@ class PaymentScheduleAdmin(admin.ModelAdmin):
         return obj.account_string
 
     account_string.short_description = _("kontostreng")
+
+
+@admin.register(Account)
+class AccountAdmin(admin.ModelAdmin):
+    readonly_fields = ("number",)
+
+    def number(self, obj):
+        return obj.number
+
+    number.short_description = _("konteringsnummer")
 
 
 @admin.register(User)

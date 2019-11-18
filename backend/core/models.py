@@ -1536,9 +1536,13 @@ class Account(models.Model):
     (main activity, supplementary activity, section) pair.
     """
 
-    number = models.CharField(
-        max_length=128, verbose_name=_("konteringsnummer")
+    main_account_number = models.CharField(
+        max_length=128, verbose_name=_("hovedkontonummer")
     )
+    activity_number = models.CharField(
+        max_length=128, verbose_name=_("aktivitetsnummer"), blank=True
+    )
+
     main_activity = models.ForeignKey(
         ActivityDetails,
         null=False,
@@ -1561,6 +1565,18 @@ class Account(models.Model):
         related_name="accounts",
         verbose_name=_("paragraf"),
     )
+
+    @property
+    def number(self):
+        if not self.activity_number:
+            if self.supplementary_activity:
+                activity_number = self.supplementary_activity.activity_id
+            else:
+                activity_number = self.main_activity.activity_id
+        else:
+            activity_number = self.activity_number
+
+        return f"{self.main_account_number}-{activity_number}"
 
     def __str__(self):
         return (

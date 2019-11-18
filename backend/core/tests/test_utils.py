@@ -22,7 +22,6 @@ from core.models import (
     CASH,
     User,
     Team,
-    Account,
     ActivityDetails,
 )
 from core.utils import (
@@ -42,6 +41,7 @@ from core.tests.testing_utils import (
     create_appropriation,
     create_activity,
     create_section,
+    create_account,
     create_payment_schedule,
 )
 
@@ -346,8 +346,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
             max_tolerance_in_dkk=5000,
             max_tolerance_in_percent=10,
         )
-        Account.objects.create(
-            number="123456",
+        create_account(
             section=section,
             main_activity=main_activity_details,
             supplementary_activity=None,
@@ -402,8 +401,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
             max_tolerance_in_dkk=5000,
             max_tolerance_in_percent=10,
         )
-        Account.objects.create(
-            number="123456",
+        create_account(
             section=section,
             main_activity=main_activity_details,
             supplementary_activity=None,
