@@ -31,8 +31,6 @@ from weasyprint.fonts import FontConfiguration
 
 from service_person_stamdata_udvidet import get_citizen
 
-import core.models as models
-
 logger = logging.getLogger(__name__)
 
 
@@ -179,6 +177,8 @@ def send_appropriation(appropriation, included_activities=None):
     included_activities: Activities which should be explicitly included.
     """
 
+    import core.models as models
+
     if included_activities is None:
         included_activities_qs = models.Activity.objects.none()
     else:
@@ -249,6 +249,9 @@ def send_appropriation(appropriation, included_activities=None):
 
 def saml_before_login(user_data):
     "Hook called after userdata is received from IdP, before login."
+
+    import core.models as models
+
     user_changed = False
     username = user_data["username"][0]
     user = models.User.objects.get(username=username)
@@ -276,6 +279,9 @@ def saml_before_login(user_data):
 
 def saml_create_user(user_data):
     "Hook called after user is created in DB, before login."
+
+    import core.models as models
+
     username = user_data["username"][0]
     user = models.User.objects.get(username=username)
     if "team" in user_data:
@@ -450,6 +456,9 @@ def format_prism_payment_record(payment, line_no, record_no):
 
 def due_payments_for_prism(date):
     "Return payments which are due today and should be sent to PRISM."
+
+    import core.models as models
+
     return models.Payment.objects.filter(
         date=date,
         recipient_type=models.PaymentSchedule.PERSON,
