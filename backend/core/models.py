@@ -1536,9 +1536,13 @@ class Account(models.Model):
     (main activity, supplementary activity, section) pair.
     """
 
-    number = models.CharField(
-        max_length=128, verbose_name=_("konteringsnummer")
+    main_account_number = models.CharField(
+        max_length=128, verbose_name=_("hovedkontonummer"), blank=True
     )
+    activity_number = models.CharField(
+        max_length=128, verbose_name=_("aktivitetsnummer"), blank=True
+    )
+
     main_activity = models.ForeignKey(
         ActivityDetails,
         null=False,
