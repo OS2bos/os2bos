@@ -5,23 +5,27 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('core', '0020_auto_20191112_1048'),
-    ]
+    dependencies = [("core", "0020_auto_20191112_1048")]
 
     operations = [
-        migrations.AlterModelOptions(
-            name='payment',
-            options={'ordering': ('date',), 'verbose_name': 'betaling', 'verbose_name_plural': 'betalinger'},
+        migrations.AddField(
+            model_name="account",
+            name="activity_number",
+            field=models.CharField(
+                blank=True,
+                default="",
+                max_length=128,
+                verbose_name="aktivitetsnummer",
+            ),
         ),
         migrations.AddField(
-            model_name='account',
-            name='activity_number',
-            field=models.CharField(blank=True, default='', max_length=128, verbose_name='aktivitetsnummer'),
-        ),
-        migrations.AddField(
-            model_name='account',
-            name='main_account_number',
-            field=models.CharField(blank=True, default='', max_length=128, verbose_name='hovedkontonummer'),
+            model_name="account",
+            name="main_account_number",
+            field=models.CharField(
+                blank=True,
+                default="",
+                max_length=128,
+                verbose_name="hovedkontonummer",
+            ),
         ),
     ]
