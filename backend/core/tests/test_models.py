@@ -2243,7 +2243,8 @@ class PaymentTestCase(TestCase, BasicTestMixin):
             main_activity=activity.details,
             supplementary_activity=None,
             section=section,
-            number="12345",
+            main_account_number="12345",
+            activity_number="123",
         )
         payment = create_payment(
             payment_schedule=payment_schedule,
@@ -2257,7 +2258,8 @@ class PaymentTestCase(TestCase, BasicTestMixin):
         self.assertEqual(
             payment.account_string,
             f"{config.ACCOUNT_NUMBER_DEPARTMENT}-"
-            f"{account.number}-"
+            f"{account.main_account_number}-"
+            f"{account.activity_number}-"
             f"{config.ACCOUNT_NUMBER_KIND}",
         )
 
@@ -2280,7 +2282,8 @@ class PaymentTestCase(TestCase, BasicTestMixin):
             main_activity=activity.details,
             supplementary_activity=None,
             section=section,
-            number="12345",
+            main_account_number="12345",
+            activity_number="",
         )
         payment = create_payment(
             payment_schedule=payment_schedule,
@@ -2312,14 +2315,15 @@ class PaymentTestCase(TestCase, BasicTestMixin):
             main_activity=activity.details,
             supplementary_activity=None,
             section=section,
-            number="12345",
+            main_account_number="12345",
+            activity_number="1234",
         )
         payment = create_payment(
             payment_schedule=payment_schedule,
             date=date(year=2019, month=1, day=1),
             amount=Decimal("500.0"),
         )
-        self.assertEqual(payment.account_string, "XXX-12345-XXX")
+        self.assertEqual(payment.account_string, "XXX-12345-1234-XXX")
 
     def test_payment_save_account_string_saved(self):
         payment_schedule = create_payment_schedule()
@@ -2340,7 +2344,8 @@ class PaymentTestCase(TestCase, BasicTestMixin):
             main_activity=activity.details,
             supplementary_activity=None,
             section=section,
-            number="12345",
+            main_account_number="12345",
+            activity_number="1234",
         )
         payment = create_payment(
             payment_schedule=payment_schedule,
@@ -2349,7 +2354,7 @@ class PaymentTestCase(TestCase, BasicTestMixin):
         )
 
         # Account should come from the saved account while not paid.
-        self.assertEqual(payment.account_string, "XXX-12345-XXX")
+        self.assertEqual(payment.account_string, "XXX-12345-1234-XXX")
         self.assertEqual(payment.saved_account_string, "")
 
         # Set payment paid which should save the saved_account_string
@@ -2358,14 +2363,15 @@ class PaymentTestCase(TestCase, BasicTestMixin):
         payment.paid_amount = Decimal("500.0")
         payment.save()
         payment.refresh_from_db()
-        self.assertEqual(payment.saved_account_string, "XXX-12345-XXX")
+        self.assertEqual(payment.saved_account_string, "XXX-12345-1234-XXX")
 
-        # Change account number
-        account.number = "67890"
+        # Change account numbers
+        account.main_account_number = "67890"
+        account.activity_number = "6789"
         account.save()
 
         # Payment account_string should use the saved_account_string
-        self.assertEqual(payment.account_string, "XXX-12345-XXX")
+        self.assertEqual(payment.account_string, "XXX-12345-1234-XXX")
 
     def test_save_not_all_paid_fields_set(self):
         payment_schedule = create_payment_schedule()
