@@ -5,7 +5,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [("core", "0022_populate_new_account_fields")]
+    dependencies = [("core", "0023_populate_new_account_fields")]
 
     operations = [
         migrations.RemoveField(model_name="account", name="number"),

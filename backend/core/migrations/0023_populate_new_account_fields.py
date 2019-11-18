@@ -12,6 +12,6 @@ def populate_account_fields(apps, schema_editor):
 
 class Migration(migrations.Migration):
 
-    dependencies = [("core", "0021_auto_20191118_1017")]
+    dependencies = [("core", "0022_auto_20191118_1314")]
 
     operations = [migrations.RunPython(populate_account_fields)]
