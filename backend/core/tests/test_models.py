@@ -2209,6 +2209,69 @@ class AccountTestCase(TestCase):
             f"{section}",
         )
 
+    def test_account_number_with_activity_number(self):
+        section = create_section()
+        main_activity_details = ActivityDetails.objects.create(
+            name="Betaling til andre kommuner/region for specialtandpleje",
+            activity_id="010001",
+            max_tolerance_in_dkk=5000,
+            max_tolerance_in_percent=10,
+        )
+        supplementary_activity_details = ActivityDetails.objects.create(
+            name="Betaling til andre kommuner/region for specialtandpleje",
+            activity_id="010002",
+            max_tolerance_in_dkk=5000,
+            max_tolerance_in_percent=10,
+        )
+        account = Account.objects.create(
+            main_account_number="123456",
+            activity_number="1234",
+            section=section,
+            main_activity=main_activity_details,
+            supplementary_activity=supplementary_activity_details,
+        )
+
+        self.assertEqual(account.number, "123456-1234")
+
+    def test_account_number_with_supplementary_activity(self):
+        section = create_section()
+        main_activity_details = ActivityDetails.objects.create(
+            name="Betaling til andre kommuner/region for specialtandpleje",
+            activity_id="010001",
+            max_tolerance_in_dkk=5000,
+            max_tolerance_in_percent=10,
+        )
+        supplementary_activity_details = ActivityDetails.objects.create(
+            name="Betaling til andre kommuner/region for specialtandpleje",
+            activity_id="010002",
+            max_tolerance_in_dkk=5000,
+            max_tolerance_in_percent=10,
+        )
+        account = Account.objects.create(
+            main_account_number="123456",
+            section=section,
+            main_activity=main_activity_details,
+            supplementary_activity=supplementary_activity_details,
+        )
+
+        self.assertEqual(account.number, "123456-010002")
+
+    def test_account_number_with_only_main_activity(self):
+        section = create_section()
+        main_activity_details = ActivityDetails.objects.create(
+            name="Betaling til andre kommuner/region for specialtandpleje",
+            activity_id="010001",
+            max_tolerance_in_dkk=5000,
+            max_tolerance_in_percent=10,
+        )
+        account = Account.objects.create(
+            main_account_number="123456",
+            section=section,
+            main_activity=main_activity_details,
+        )
+
+        self.assertEqual(account.number, "123456-010001")
+
 
 class ApprovalLevelTestCase(TestCase):
     def test_approvallevel_str(self):
