@@ -30,11 +30,6 @@
                     <input type="checkbox" id="field-status-expected" v-model="act_status_expected">
                     <label for="field-status-expected" style="margin: 0;">Opret forventet Ydelse</label>
                 </fieldset>
-                
-                <fieldset style="margin: 0 0 0 2rem;">
-                    <input type="checkbox" id="field-fictive" v-model="payment.fictive">
-                    <label for="field-fictive" style="margin: 0;">Fiktiv Betaling</label>
-                </fieldset>
 
             </header>
         
@@ -93,6 +88,11 @@
 
                 <div class="row-item">
                     <payment-receiver-edit />
+
+                    <fieldset>
+                        <input type="checkbox" id="field-fictive" v-model="payment.fictive">
+                        <label for="field-fictive">Fiktiv Betaling</label>
+                    </fieldset>
                 </div>
 
             </div>
