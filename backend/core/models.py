@@ -1537,7 +1537,7 @@ class Account(models.Model):
     """
 
     main_account_number = models.CharField(
-        max_length=128, verbose_name=_("hovedkontonummer"), blank=True
+        max_length=128, verbose_name=_("hovedkontonummer")
     )
     activity_number = models.CharField(
         max_length=128, verbose_name=_("aktivitetsnummer"), blank=True

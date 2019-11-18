@@ -6,7 +6,7 @@ def populate_account_fields(apps, schema_editor):
     for account in Account.objects.all():
         number_split = account.number.split("-")
         account.main_account_number = number_split[0]
-        account.activity_numer = number_split[1]
+        account.activity_number = number_split[1]
         account.save()
 
 
