@@ -2195,7 +2195,8 @@ class AccountTestCase(TestCase):
             max_tolerance_in_percent=10,
         )
         account = Account.objects.create(
-            number="123456",
+            main_account_number="123456",
+            activity_number="1234",
             section=section,
             main_activity=main_activity_details,
             supplementary_activity=supplementary_activity_details,
@@ -2203,7 +2204,7 @@ class AccountTestCase(TestCase):
 
         self.assertEqual(
             str(account),
-            f"123456 - {main_activity_details} - "
+            f"123456-1234 - {main_activity_details} - "
             f"{supplementary_activity_details} - "
             f"{section}",
         )
