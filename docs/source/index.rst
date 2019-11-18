@@ -10,8 +10,6 @@ Welcome to the os2BOS documentation
    :maxdepth: 1
    :caption: Contents:
 
-   frontend/index.rst
-   backend/index.rst
 
 Indices and tables
 ==================
