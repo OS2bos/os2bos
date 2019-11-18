@@ -28,7 +28,7 @@
             <div class="row">
 
                 <dl class="info" style="width: 50%;">
-                    <dt>Aktivitet</dt>
+                    <dt>Ydelse</dt>
                     <dd v-if="payment.activity__id">
                         <a @click="navToLink(`/activity/${ payment.activity__id }`)">
                             {{ activityId2name(payment.activity__details__id) }}
