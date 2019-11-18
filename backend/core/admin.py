@@ -78,7 +78,7 @@ class AccountAdmin(admin.ModelAdmin):
     def number(self, obj):
         return obj.number
 
-    number.short_description = _("kontonummer")
+    number.short_description = _("konteringsnummer")
 
 
 @admin.register(User)
