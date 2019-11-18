@@ -73,7 +73,7 @@ class PaymentScheduleAdmin(admin.ModelAdmin):
 
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):
-    readonly_fields = "number"
+    readonly_fields = ("number",)
 
     def number(self, obj):
         return obj.number
