@@ -11,13 +11,6 @@
 
         <div class="modal-header">
             <h2>
-                <button v-if="payment.activity__id" 
-                        class="payment-title-link" 
-                        @click="navToLink(`/activity/${ payment.activity__id }`)">
-                    <i class="material-icons">arrow_back</i>
-                    Udgift til {{ activityId2name(payment.activity__details__id) }}
-                </button>
-                
                 <span class="payment-title">
                     <span v-if="payment.paid" class="label label-GRANTED" title="Betalt">
                         <i class="material-icons" style="width: 1.5rem;">checkmark</i>
@@ -35,6 +28,12 @@
             <div class="row">
 
                 <dl class="info" style="width: 50%;">
+                    <dt>Aktivitet</dt>
+                    <dd v-if="payment.activity__id">
+                        <a @click="navToLink(`/activity/${ payment.activity__id }`)">
+                            {{ activityId2name(payment.activity__details__id) }}
+                        </a>
+                    </dd>
                     <dt>Betalingsnøgle</dt>
                     <dd>{{ payment.payment_schedule__payment_id }}</dd>
                     <dt>Beløb, planlagt</dt>
@@ -174,11 +173,14 @@
                 this.update()
             },
             payment: function() {
-                if (!this.payment.paid_amount && !this.payment.paid_date && this.payment.is_payable_manually) {
-                    this.paymentlock = false
-                } else {
-                    this.paymentlock = true
-                }
+                        if (!this.payment.paid_amount && !this.payment.paid_date && this.payment.is_payable_manually) {
+                            this.paymentlock = false
+                            this.paid.paid_amount = this.payment.amount
+                            this.paid.paid_date = this.payment.date
+                        } else {
+                            this.paymentlock = true
+                        }
+                    
             }
         },
         methods: {
@@ -258,18 +260,8 @@
         margin: 1rem 0;
     }
 
-    .payment .payment-title-link {
-        display: block;
-        font-size: 1rem;
-        background-color: var(--grey1);
-        padding: .5rem 1rem;
-        border: none;
-        margin: 0;
-        font-size: 1rem;
-        box-shadow: none;
-        height: auto;
-        width: 100%;
-        text-align: left;
+    .payment a {
+        cursor: pointer;
     }
 
     .payment .payment-title-link:hover,
