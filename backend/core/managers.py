@@ -84,11 +84,13 @@ class PaymentQuerySet(models.QuerySet):
         """
         Group by monthly amounts.
 
-        The output will look like this:
-        [
-            {'date_month': '2019-07', 'amount': Decimal('3000.00')},
-            {'date_month': '2019-08', 'amount': Decimal('1500.00')}
-        ]
+        The output will look like this::
+
+            [
+                {'date_month': '2019-07', 'amount': Decimal('3000.00')},
+                {'date_month': '2019-08', 'amount': Decimal('1500.00')}
+            ]
+
         """
 
         return (
