@@ -5,23 +5,22 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('core', '0022_populate_new_account_fields'),
-    ]
+    dependencies = [("core", "0022_populate_new_account_fields")]
 
     operations = [
-        migrations.RemoveField(
-            model_name='account',
-            name='number',
+        migrations.RemoveField(model_name="account", name="number"),
+        migrations.AlterField(
+            model_name="account",
+            name="activity_number",
+            field=models.CharField(
+                blank=True, max_length=128, verbose_name="aktivitetsnummer"
+            ),
         ),
         migrations.AlterField(
-            model_name='account',
-            name='activity_number',
-            field=models.CharField(blank=True, max_length=128, verbose_name='aktivitetsnummer'),
-        ),
-        migrations.AlterField(
-            model_name='account',
-            name='main_account_number',
-            field=models.CharField(blank=True, max_length=128, verbose_name='hovedkontonummer'),
+            model_name="account",
+            name="main_account_number",
+            field=models.CharField(
+                max_length=128, verbose_name="hovedkontonummer"
+            ),
         ),
     ]

@@ -1566,6 +1566,18 @@ class Account(models.Model):
         verbose_name=_("paragraf"),
     )
 
+    @property
+    def number(self):
+        if not self.activity_number:
+            if self.supplementary_activity:
+                activity_number = self.supplementary_activity.activity_id
+            else:
+                activity_number = self.main_activity.activity_id
+        else:
+            activity_number = self.activity_number
+
+        return f"{self.main_account_number}-{activity_number}"
+
     def __str__(self):
         return (
             f"{self.number} - "
