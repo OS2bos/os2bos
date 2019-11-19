@@ -1,5 +1,5 @@
-bevillingsplatform package
-==========================
+The ``bevillingsplatform`` package - settings and configuration
+===============================================================
 
 Submodules
 ----------

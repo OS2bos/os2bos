@@ -10,11 +10,8 @@ Welcome to BOS Backend's documentation!
    :maxdepth: 2
    :caption: Contents:
    
-   bevillingsplatform.rst
-   bevillingsplatform.tests.rst
-   core.migrations.rst
    core.rst
-   core.tests.rst
+   bevillingsplatform.rst
    manage.rst
 
 

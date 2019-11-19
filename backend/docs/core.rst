@@ -1,5 +1,5 @@
-core package
-============
+``core`` -the core Django app
+=============================
 
 Submodules
 ----------
