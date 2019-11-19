@@ -79,12 +79,12 @@ DEBUG = settings.getboolean("DEBUG", fallback=False)
 ALLOWED_HOSTS = settings.get("ALLOWED_HOSTS", fallback="").split(",")
 
 USE_X_FORWARDED_HOST = settings.getboolean(
-    "USE_X_FORWARDED_HOST", fallback=False
+    "USE_X_FORWARDED_HOST", fallback=True
 )
 SECURE_PROXY_SSL_HEADER = (
-    tuple(settings.get("SECURE_PROXY_SSL_HEADER", fallback=None).split(","))
-    if settings.get("SECURE_PROXY_SSL_HEADER", fallback=None)
-    else None
+    tuple(settings.get("SECURE_PROXY_SSL_HEADER").split(","))
+    if "SECURE_PROXY_SSL_HEADER" in settings
+    else ("HTTP_X_FORWARDED_PROTO", "https")
 )
 
 
