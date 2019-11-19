@@ -25,4 +25,5 @@ drf-writable-nested==0.5.1
 git+https://github.com/magenta-aps/django-saml2-auth#egg=django-saml2-auth
 pysaml2==4.8.0
 django-mailer==2.0
+parameterized
 
