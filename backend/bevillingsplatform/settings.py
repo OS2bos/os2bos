@@ -414,3 +414,5 @@ SAML2_AUTH = {
     "KEY_FILE": "",
     "AUTHN_REQUESTS_SIGNED": False,
 }
+
+SILENCED_SYSTEM_CHECKS = ["rest_framework.W001"]
