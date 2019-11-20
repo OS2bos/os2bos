@@ -28,7 +28,7 @@ input[type="radio"] + label {
     justify-content: flex-start;
     margin: 0 0 .5rem;
     position: relative;
-    max-width: 14rem;
+    max-width: 16rem;
 }
 
 input[type="radio"] + label::before {
