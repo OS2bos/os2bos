@@ -84,7 +84,7 @@
                     <list-picker 
                         v-if="teams"
                         :dom-id="'field-team'" 
-                        :selected-id="$route.query.team"
+                        :selected-id="query.team"
                         :list="teams"
                         @selection="changeTeam"
                         display-key="name" />
@@ -93,7 +93,7 @@
                     <list-picker 
                         v-if="users"
                         :dom-id="'field-case-worker'" 
-                        :selected-id="$route.query.case_worker"
+                        :selected-id="query.case_worker"
                         :list="users"
                         @selection="changeWorker"
                         display-key="fullname" />
