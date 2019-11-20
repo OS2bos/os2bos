@@ -36,8 +36,23 @@
             <error />
 
             <div class="row">
-                        
+
                 <div class="row-item">
+                    <fieldset>
+                        <dl>
+                            <dt>Foranstaltningssag</dt>
+                            <dd>{{ appropriation.sbsys_id }}</dd>
+
+                            <dt>SBSYS-hovedsag</dt>
+                            <dd>{{ cas.sbsys_id }}</dd>
+
+                            <dt>Sagspart (CPR, navn)</dt>
+                            <dd>
+                                {{ cas.cpr_number }}, {{ cas.name }}
+                            </dd>
+                        </dl>
+                    </fieldset>
+
                     <fieldset class="payment-basic">
                         <legend>Hvad skal betales?</legend>
 
@@ -140,6 +155,9 @@
             }
         },
         computed: {
+            cas: function() {
+                return this.$store.getters.getCase
+            },
             appropriation: function() {
                 return this.$store.getters.getAppropriation
             },
