@@ -12,15 +12,17 @@
 #
 import os
 import sys
+import django
+
 current_dir = os.path.dirname(__file__)
 python_sources = os.path.abspath(os.path.join(current_dir, "..", "..", "backend"))
 sys.path.insert(0, python_sources)
+os.environ["DJANGO_SETTINGS_MODULE"] = "bevillingsplatform.settings"
+os.environ["BEV_SYSTEM_CONFIG_PATH"] = "../doc-settings.ini"
+django.setup()
 
 os.environ["SPHINXBUILDING"] = "YES"
 
-autodoc_mock_imports=[
-    "core.models"
-]
 
 # -- Project information -----------------------------------------------------
 
@@ -35,7 +37,8 @@ author = 'Magenta ApS'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc'
+    'sphinx.ext.autodoc',
+    "sphinx.ext.intersphinx",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
