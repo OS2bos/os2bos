@@ -41,5 +41,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(create_effort_steps, move_effort_steps)
+        migrations.RunPython(create_effort_steps),
+        migrations.RunPython(move_effort_steps),
     ]
