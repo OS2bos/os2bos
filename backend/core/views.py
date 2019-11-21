@@ -7,11 +7,13 @@
 
 
 from django.contrib.auth import get_user_model
-
+from django.db import transaction
 from django.utils.translation import gettext_lazy as _
+
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
 
 from core.models import (
@@ -31,6 +33,7 @@ from core.models import (
     ServiceProvider,
     PaymentMethodDetails,
     ApprovalLevel,
+    EffortStep,
     STATUS_DELETED,
     STATUS_DRAFT,
     STATUS_GRANTED,
@@ -55,6 +58,7 @@ from core.serializers import (
     ServiceProviderSerializer,
     PaymentMethodDetailsSerializer,
     ApprovalLevelSerializer,
+    EffortStepSerializer,
 )
 from core.filters import CaseFilter, PaymentFilter, AllowedForStepsFilter
 from core.utils import get_person_info
@@ -96,6 +100,41 @@ class CaseViewSet(AuditViewSet):
         case = self.get_object()
         serializer = HistoricalCaseSerializer(case.history.all(), many=True)
         return Response(serializer.data)
+
+    @transaction.atomic
+    @action(detail=False, methods=["patch"])
+    def change_case_worker(self, request):
+        """
+        Change the case_worker of several Cases.
+
+        Parameters:
+        case_pks: A list of case pks.
+        case_worker_pk: the case worker pk to change to.
+        """
+        case_pks = request.data.get("case_pks", [])
+        case_worker_pk = request.data.get("case_worker_pk", None)
+        if not case_pks or not case_worker_pk:
+            return Response(
+                {
+                    "errors": [
+                        _("case_pks eller case_worker_pk argument mangler")
+                    ]
+                },
+                status.HTTP_400_BAD_REQUEST,
+            )
+        user_qs = get_user_model().objects.filter(id=case_worker_pk)
+        if not user_qs.exists():
+            return Response(
+                {"errors": [_("bruger med case_worker_pk findes ikke")]},
+                status.HTTP_400_BAD_REQUEST,
+            )
+        user = user_qs.first()
+        cases = Case.objects.filter(pk__in=case_pks)
+        for case in cases:
+            case.case_worker = user
+            case.save()
+        CaseSerializer = self.get_serializer_class()
+        return Response(CaseSerializer(cases, many=True).data)
 
 
 class AppropriationViewSet(AuditViewSet):
@@ -180,8 +219,9 @@ class PaymentScheduleViewSet(AuditViewSet):
 class PaymentViewSet(AuditViewSet):
     serializer_class = PaymentSerializer
     queryset = Payment.objects.all()
+    pagination_class = PageNumberPagination
 
-    filter_class = PaymentFilter
+    filterset_class = PaymentFilter
     filterset_fields = "__all__"
 
 
@@ -281,3 +321,8 @@ class ServiceProviderViewSet(ReadOnlyViewset):
 class ApprovalLevelViewSet(ReadOnlyViewset):
     queryset = ApprovalLevel.objects.all()
     serializer_class = ApprovalLevelSerializer
+
+
+class EffortStepViewSet(ReadOnlyViewset):
+    queryset = EffortStep.objects.all()
+    serializer_class = EffortStepSerializer

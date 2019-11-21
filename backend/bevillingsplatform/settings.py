@@ -78,6 +78,16 @@ DEBUG = settings.getboolean("DEBUG", fallback=False)
 
 ALLOWED_HOSTS = settings.get("ALLOWED_HOSTS", fallback="").split(",")
 
+USE_X_FORWARDED_HOST = settings.getboolean(
+    "USE_X_FORWARDED_HOST", fallback=True
+)
+SECURE_PROXY_SSL_HEADER = (
+    tuple(settings.get("SECURE_PROXY_SSL_HEADER").split(","))
+    if "SECURE_PROXY_SSL_HEADER" in settings
+    else ("HTTP_X_FORWARDED_PROTO", "https")
+)
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -96,6 +106,7 @@ INSTALLED_APPS = [
     "constance.backends.database",
     "core.apps.CoreConfig",
     "django_saml2_auth",
+    "mailer",
 ]
 
 MIDDLEWARE = [
@@ -231,6 +242,9 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.SessionAuthentication",
     ),
+    # Let each view determine whether pagination should be used or not.
+    "DEFAULT_PAGINATION_CLASS": None,
+    "PAGE_SIZE": 50,
 }
 
 # Output directory for integration with KMD Prisme.
@@ -266,6 +280,17 @@ LOGGING = {
                 fallback=os.path.join(LOG_DIR, "export_to_prism.log"),
             ),
         },
+        "mark_fictive_payments_paid": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "formatter": "verbose",
+            "filename": settings.get(
+                "FICTIVE_PAYMENTS_LOG_FILE",
+                fallback=os.path.join(
+                    LOG_DIR, "mark_fictive_payments_paid.log"
+                ),
+            ),
+        },
     },
     "formatters": {
         "verbose": {
@@ -288,17 +313,23 @@ LOGGING = {
             "level": "INFO",
             "propagate": True,
         },
+        "bevillingsplatform.mark_fictive_payments_paid": {
+            "handlers": ["mark_fictive_payments_paid"],
+            "level": "INFO",
+            "propagate": True,
+        },
     },
 }
 
 # Email settings
-EMAIL_BACKEND = settings.get(
-    "EMAIL_BACKEND", fallback="django.core.mail.backends.smtp.EmailBackend"
-)
+EMAIL_BACKEND = "mailer.backend.DbBackend"
 EMAIL_HOST_USER = settings.get("EMAIL_HOST_USER", fallback="")
 EMAIL_HOST_PASSWORD = settings.get("EMAIL_HOST_PASSWORD", fallback="")
 EMAIL_HOST = settings.get("EMAIL_HOST", fallback="")
 EMAIL_PORT = settings.getint("EMAIL_PORT", fallback=25)
+
+# Django-mailer setting
+MAILER_LOCK_PATH = settings.get("MAILER_LOCK_PATH", fallback="/tmp/send_mail")
 
 # We use Constance for being able to set live settings
 # (settings on the fly from Django admin).
@@ -383,3 +414,5 @@ SAML2_AUTH = {
     "KEY_FILE": "",
     "AUTHN_REQUESTS_SIGNED": False,
 }
+
+SILENCED_SYSTEM_CHECKS = ["rest_framework.W001"]

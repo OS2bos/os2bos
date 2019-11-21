@@ -5,7 +5,6 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-
 from unittest import mock
 from datetime import date, timedelta
 
@@ -16,6 +15,8 @@ from django.utils import timezone
 from core.models import (
     ApprovalLevel,
     PaymentSchedule,
+    Payment,
+    EffortStep,
     MAIN_ACTIVITY,
     SUPPL_ACTIVITY,
     STATUS_GRANTED,
@@ -32,8 +33,8 @@ from core.tests.testing_utils import (
     create_appropriation,
     create_activity,
     create_payment_schedule,
+    create_user,
 )
-from core.models import STEP_ONE, STEP_THREE, STEP_FIVE
 
 
 class TestRelatedPersonsViewSet(AuthenticatedTestCase):
@@ -161,9 +162,9 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         # Change to different effort steps.
-        case.effort_step = STEP_THREE
+        case.effort_step = EffortStep.objects.get(number=3)
         case.save()
-        case.effort_step = STEP_FIVE
+        case.effort_step = EffortStep.objects.get(number=5)
         case.save()
 
         reverse_url = reverse("case-history", kwargs={"pk": case.pk})
@@ -173,10 +174,12 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
 
         self.assertEqual(len(response.json()), 3)
         # Assert history of scaling steps are preserved.
+        """"
         self.assertCountEqual(
             [x["effort_step"] for x in response.json()],
-            [STEP_ONE, STEP_THREE, STEP_FIVE],
+            [1, 2, 3],
         )
+        """
 
     def test_history_action_changed_case_worker(self):
         case = create_case(
@@ -266,6 +269,16 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         self.user.profile = ""
         self.user.save()
         self.client.login(username=self.username, password=self.password)
+        response = self.client.post(url, json)
+        self.assertEqual(response.status_code, 403)
+
+    def test_no_login(self):
+        url = reverse("case-list")
+        # Anonymous user
+        json = create_case_as_json(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        self.user = None
         response = self.client.post(url, json)
         self.assertEqual(response.status_code, 403)
 
@@ -369,6 +382,74 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         data = {"expired": True}
         response = self.client.get(url, data)
         self.assertEqual(len(response.json()), 0)
+
+    def test_change_case_worker(self):
+        url = reverse("case-change-case-worker")
+        self.client.login(username=self.username, password=self.password)
+
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        new_case_worker = create_user(username="Jens Tester")
+        data = {"case_pks": [case.pk], "case_worker_pk": new_case_worker.pk}
+        response = self.client.patch(
+            url, data=data, content_type="application/json"
+        )
+
+        case.refresh_from_db()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()[0]["id"], case.id)
+        self.assertEqual(case.case_worker, new_case_worker)
+
+    def test_change_case_worker_missing_case_pks(self):
+        url = reverse("case-change-case-worker")
+        self.client.login(username=self.username, password=self.password)
+
+        new_case_worker = create_user(username="Jens Tester")
+        data = {"case_worker_pk": new_case_worker.pk}
+        response = self.client.patch(
+            url, data=data, content_type="application/json"
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json()["errors"],
+            ["case_pks eller case_worker_pk argument mangler"],
+        )
+
+    def test_change_case_worker_missing_case_worker_pk(self):
+        url = reverse("case-change-case-worker")
+        self.client.login(username=self.username, password=self.password)
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        data = {"case_pks": [case.pk]}
+        response = self.client.patch(
+            url, data=data, content_type="application/json"
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json()["errors"],
+            ["case_pks eller case_worker_pk argument mangler"],
+        )
+
+    def test_change_case_worker_non_existant_case_worker(self):
+        url = reverse("case-change-case-worker")
+        self.client.login(username=self.username, password=self.password)
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        data = {"case_pks": [case.pk], "case_worker_pk": 999}
+        response = self.client.patch(
+            url, data=data, content_type="application/json"
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json()["errors"],
+            ["bruger med case_worker_pk findes ikke"],
+        )
 
 
 class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
@@ -601,6 +682,78 @@ class TestPaymentScheduleViewSet(AuthenticatedTestCase):
         self.assertEqual(response.json()[0]["id"], payment_schedule.id)
 
 
+class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_get_payment_date_or_date__gte_filter(self):
+        payment_schedule = create_payment_schedule()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        now = timezone.now()
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            payment_plan=payment_schedule,
+            start_date=date(year=now.year, month=1, day=1),
+            end_date=date(year=now.year, month=1, day=1),
+        )
+
+        url = reverse("payment-list")
+        self.client.login(username=self.username, password=self.password)
+
+        cutoff_date = date(year=now.year, month=1, day=5)
+        response = self.client.get(
+            url, data={"paid_date_or_date__gte": f"{cutoff_date}"}
+        )
+        ids_list = [payment["id"] for payment in response.json()["results"]]
+        self.assertEqual(response.status_code, 200)
+        self.assertSequenceEqual(
+            ids_list,
+            Payment.objects.paid_date_or_date_gte(cutoff_date).values_list(
+                "id", flat=True
+            ),
+        )
+
+    def test_get_payment_date_or_date__lte_filter(self):
+        payment_schedule = create_payment_schedule()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+
+        now = timezone.now()
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            payment_plan=payment_schedule,
+            start_date=date(year=now.year, month=1, day=1),
+            end_date=date(year=now.year, month=1, day=1),
+        )
+
+        url = reverse("payment-list")
+        self.client.login(username=self.username, password=self.password)
+        cutoff_date = date(year=now.year, month=1, day=5)
+        response = self.client.get(
+            url, data={"paid_date_or_date__lte": f"{cutoff_date}"}
+        )
+        ids_list = [payment["id"] for payment in response.json()["results"]]
+        self.assertEqual(response.status_code, 200)
+        self.assertSequenceEqual(
+            ids_list,
+            Payment.objects.paid_date_or_date_lte(cutoff_date).values_list(
+                "id", flat=True
+            ),
+        )
+
+
 class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
     @classmethod
     def setUpTestData(cls):
@@ -697,4 +850,16 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.status_code, 400)
         # Check it's still there.
         response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+
+class TestSectionViewSet(AuthenticatedTestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_allowed_for_steps_filter(self):
+        url = reverse("section-list")
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(url, data={"allowed_for_steps": 1})
         self.assertEqual(response.status_code, 200)

@@ -30,7 +30,7 @@ from core.models import (
     RelatedPerson,
     SD,
     FAMILY_DEPT,
-    STEP_ONE,
+    EffortStep,
 )
 
 
@@ -67,9 +67,11 @@ def create_case(
     district,
     sbsys_id="13212",
     scaling_step=1,
-    effort_step=STEP_ONE,
+    effort_step=1,
     target_group=FAMILY_DEPT,
 ):
+
+    effort_step = EffortStep.objects.get(number=effort_step)
 
     case = Case.objects.create(
         sbsys_id=sbsys_id,
@@ -101,7 +103,7 @@ def create_case_as_json(
         "case_worker": case_worker.id,
         "team": team.id,
         "scaling_step": 1,
-        "effort_step": STEP_ONE,
+        "effort_step": 1,
         "district": district.id,
         "paying_municipality": municipality.id,
         "acting_municipality": municipality.id,
@@ -121,6 +123,7 @@ def create_payment_schedule(
     recipient_id="0205891234",
     recipient_name="Jens Testersen",
     payment_day_of_month=1,
+    fictive=False,
 ):
     payment_schedule = PaymentSchedule.objects.create(
         payment_amount=payment_amount,
@@ -132,6 +135,7 @@ def create_payment_schedule(
         recipient_id=recipient_id,
         recipient_name=recipient_name,
         payment_day_of_month=payment_day_of_month,
+        fictive=fictive,
     )
     return payment_schedule
 
@@ -212,20 +216,25 @@ def create_payment(
 def create_section(paragraph="ABL-105-2", allowed_for_steps=None, **kwargs):
     if not allowed_for_steps:
         allowed_for_steps = []
-    section = Section.objects.create(
-        paragraph=paragraph, allowed_for_steps=allowed_for_steps, **kwargs
-    )
+    section = Section.objects.create(paragraph=paragraph, **kwargs)
+    for step in allowed_for_steps:
+        section.allowed_for_steps.add(EffortStep.objects.get(number=step))
     return section
 
 
 def create_account(
-    main_activity, supplementary_activity, section, number="12345678"
+    main_activity,
+    supplementary_activity,
+    section,
+    main_account_number="645511002",
+    activity_number="030004",
 ):
     account = Account.objects.create(
         main_activity=main_activity,
         supplementary_activity=supplementary_activity,
         section=section,
-        number=number,
+        main_account_number=main_account_number,
+        activity_number=activity_number,
     )
     return account
 
@@ -255,3 +264,8 @@ def create_related_person(main_case, name="Jens Jensen", relation_type="far"):
         main_case=main_case, name=name, relation_type=relation_type
     )
     return related_person
+
+
+def create_user(username):
+    user = User.objects.create(username=username)
+    return user

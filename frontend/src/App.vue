@@ -90,7 +90,7 @@
 
     .label {
         padding: .25rem .5rem;
-        border-radius: .125rem;
+        border-radius: .25rem;
         display: inline-block;
         text-transform: capitalize;
     }
@@ -108,28 +108,33 @@
     }
 
     .label-DRAFT {
-        background-color: var(--grey2);
-        color: var(--grey7);
+        background-color: hsl(0,0%,80%);
+        color: hsl(0,0%,20%);
     }
 
     .label-BUDGETED {
-        background-color: var(--warning);
-        color: hsl(var(--color3), 100%, 20%);
+        background-color: hsl(var(--color3), 90%, 80%);
+        color: hsl(var(--color3), 90%, 20%);
     }
 
     .label-EXPECTED {
-        background-color: var(--warning);
-        color: hsl(var(--color3), 100%, 20%);
+        background-color: hsl(var(--color3), 90%, 80%);
+        color: hsl(var(--color3), 90%, 20%);
     }
 
     .label-GRANTED {
-        background-color: var(--success);
+        background-color: hsl(var(--color2), 100%, 33%);
+        color: var(--grey0);
+    }
+
+    .label-CLOSED {
+        background-color: hsl(var(--color4), 100%, 60%);
         color: var(--grey0);
     }
 
     .label-DISCONTINUED {
-        background-color: var(--danger);
-        color: var(--grey0);
+        background-color: hsl(var(--color4), 50%, 80%);
+        color: hsl(var(--color4), 100%, 20%);
     }
 
     .danger {

@@ -13,6 +13,7 @@
             <h1>
                 <i class="material-icons">style</i>
                 Udgift til {{ activityId2name(act.details) }}
+                <span v-if="act.payment_plan.fictive" class="dim">(Fiktiv)</span>
             </h1>
             <template v-if="permissionCheck === true">
                 <button v-if="act.status !== 'GRANTED'" @click="show_edit = !show_edit" class="act-edit-btn">Redigér</button>
@@ -87,7 +88,7 @@
                 </dd>
                 <dt>Bevilges efter §</dt>
                 <dd v-if="appr">{{ displaySection(appr.section) }}</dd>
-                <dt>Aktivitet</dt>
+                <dt>Ydelse</dt>
                 <dd>{{ activityId2name(act.details) }}</dd>
                 <dt>Startdato</dt>
                 <dd>{{ displayDate(act.start_date) }}</dd>

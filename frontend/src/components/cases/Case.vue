@@ -73,7 +73,7 @@
                     </template>
                 </dl>
                 <dl>
-                    <dt>Sagsbehander</dt>
+                    <dt>Sagsbehandler</dt>
                     <dd>{{ displayUserName(cas.case_worker) }}</dd>
                 
                     <dt>Team</dt>
@@ -163,7 +163,7 @@
                 } else {
                     this.$store.commit('setBreadcrumb', [
                         {
-                            link: '/all-cases',
+                            link: '/cases/',
                             title: 'Alle sager'
                         },
                         {

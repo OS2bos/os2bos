@@ -44,6 +44,12 @@ class PaymentQuerySet(models.QuerySet):
         output_field=DecimalField(),
     )
 
+    def paid_date_or_date_gte(self, date):
+        return self.filter(Q(paid_date__gte=date) | Q(date__gte=date))
+
+    def paid_date_or_date_lte(self, date):
+        return self.filter(Q(paid_date__lte=date) | Q(date__lte=date))
+
     def strict_amount_sum(self):
         """
         Sum over Payments amount.

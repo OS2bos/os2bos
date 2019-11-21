@@ -15,7 +15,13 @@ class IsUserAllowed(permissions.BasePermission):
 
     def has_permission(self, request, view):
         """Allow depending on operation and user's profile."""
-        profile = request.user.profile
+        try:
+            profile = request.user.profile
+        except AttributeError:
+            # This should not happen except for anonymous Django users
+            # which have no profile and should have no access either.
+            return False
+
         if profile == User.READONLY:
             return request.method in permissions.SAFE_METHODS
         elif profile == User.EDIT:

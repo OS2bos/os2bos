@@ -17,6 +17,7 @@ from core.models import (
     FAMILY_DEPT,
     DISABILITY_DEPT,
     CASH,
+    INTERNAL,
     MAIN_ACTIVITY,
     STATUS_EXPECTED,
     STATUS_GRANTED,
@@ -29,12 +30,14 @@ from core.tests.testing_utils import (
     create_appropriation,
     create_payment_schedule,
     create_activity,
+    create_payment,
 )
 from core.serializers import (
     ActivitySerializer,
     CaseSerializer,
     PaymentScheduleSerializer,
     AppropriationSerializer,
+    PaymentSerializer,
 )
 
 
@@ -633,5 +636,117 @@ class PaymentScheduleSerializerTestCase(TestCase, BasicTestMixin):
         self.assertFalse(serializer.is_valid())
         self.assertEqual(
             "ugyldig betalingsmetode for betalingsmodtager",
+            serializer.errors["non_field_errors"][0],
+        )
+
+
+class PaymentSerializerTestCase(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_validate_paid_success(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        payment_schedule = create_payment_schedule(
+            payment_method=INTERNAL, recipient_type=PaymentSchedule.INTERNAL
+        )
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            payment_plan=payment_schedule,
+            status=STATUS_GRANTED,
+        )
+        payment = create_payment(
+            payment_schedule,
+            recipient_type=PaymentSchedule.INTERNAL,
+            payment_method=INTERNAL,
+        )
+        today = date.today()
+        data = PaymentSerializer(payment).data
+        data["paid"] = True
+        data["paid_amount"] = Decimal("100.0")
+        data["paid_date"] = today
+
+        serializer = PaymentSerializer(data=data)
+        self.assertTrue(serializer.is_valid())
+
+    def test_validate_error_paid_not_allowed(self):
+        payment_schedule = create_payment_schedule(
+            payment_method=CASH, recipient_type=PaymentSchedule.PERSON
+        )
+        payment = create_payment(
+            payment_schedule,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+        )
+        today = date.today()
+        data = PaymentSerializer(payment).data
+        data["paid"] = True
+        data["paid_amount"] = Decimal("100.0")
+        data["paid_date"] = today
+
+        serializer = PaymentSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertEqual(
+            "Denne betaling må ikke markeres betalt manuelt",
+            serializer.errors["non_field_errors"][0],
+        )
+
+    def test_validate_error_paid_not_allowed_fictive(self):
+        payment_schedule = create_payment_schedule(
+            payment_method=INTERNAL,
+            recipient_type=PaymentSchedule.INTERNAL,
+            fictive=True,
+        )
+        payment = create_payment(
+            payment_schedule,
+            recipient_type=PaymentSchedule.INTERNAL,
+            payment_method=INTERNAL,
+        )
+        today = date.today()
+        data = PaymentSerializer(payment).data
+        data["paid"] = True
+        data["paid_amount"] = Decimal("100.0")
+        data["paid_date"] = today
+
+        serializer = PaymentSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertEqual(
+            "Denne betaling må ikke markeres betalt manuelt",
+            serializer.errors["non_field_errors"][0],
+        )
+
+    def test_validate_error_paid_not_allowed_activity_status_not_granted(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        payment_schedule = create_payment_schedule(
+            payment_method=INTERNAL, recipient_type=PaymentSchedule.INTERNAL
+        )
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            payment_plan=payment_schedule,
+            status=STATUS_EXPECTED,
+        )
+        payment = create_payment(
+            payment_schedule,
+            recipient_type=PaymentSchedule.INTERNAL,
+            payment_method=INTERNAL,
+        )
+        today = date.today()
+        data = PaymentSerializer(payment).data
+        data["paid"] = True
+        data["paid_amount"] = Decimal("100.0")
+        data["paid_date"] = today
+
+        serializer = PaymentSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertEqual(
+            "Denne betaling må ikke markeres betalt manuelt",
             serializer.errors["non_field_errors"][0],
         )

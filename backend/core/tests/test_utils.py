@@ -22,7 +22,6 @@ from core.models import (
     CASH,
     User,
     Team,
-    Account,
     ActivityDetails,
 )
 from core.utils import (
@@ -42,6 +41,7 @@ from core.tests.testing_utils import (
     create_appropriation,
     create_activity,
     create_section,
+    create_account,
     create_payment_schedule,
 )
 
@@ -289,6 +289,31 @@ class SamlLoginTestcase(TestCase, BasicTestMixin):
         saml_before_login(user_data)
         saml_create_user(user_data)
 
+    def test_more_profiles(self):
+        # This relates to a bug where we received more than one bos_profile and
+        # duly crashed.
+        user_data = {
+            "team": ["S-DIG"],
+            "username": ["dummy"],
+            "bos_profile": ["grant", "edit"],
+        }
+        user = User.objects.create_user("dummy", "dummy", profile="readonly")
+        saml_before_login(user_data)
+        user.refresh_from_db()
+        self.assertEqual(user.profile, "grant")
+
+        user_data["bos_profile"].append("admin")
+        user_data["username"] = ["dummy1"]
+        user = User.objects.create_user("dummy1", "dummy1", profile="readonly")
+        saml_create_user(user_data)
+        user.refresh_from_db()
+        self.assertEqual(user.profile, "admin")
+        # Test the case with no user profiles given
+        user_data["bos_profile"] = []
+        saml_before_login(user_data)
+        user.refresh_from_db()
+        self.assertEqual(user.profile, "")
+
 
 class SendToPrismTestCase(TestCase, BasicTestMixin):
     @classmethod
@@ -321,8 +346,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
             max_tolerance_in_dkk=5000,
             max_tolerance_in_percent=10,
         )
-        Account.objects.create(
-            number="123456",
+        create_account(
             section=section,
             main_activity=main_activity_details,
             supplementary_activity=None,
@@ -377,8 +401,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
             max_tolerance_in_dkk=5000,
             max_tolerance_in_percent=10,
         )
-        Account.objects.create(
-            number="123456",
+        create_account(
             section=section,
             main_activity=main_activity_details,
             supplementary_activity=None,

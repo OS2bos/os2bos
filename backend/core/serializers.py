@@ -32,6 +32,7 @@ from core.models import (
     ServiceProvider,
     ApprovalLevel,
     Team,
+    EffortStep,
     FAMILY_DEPT,
     STATUS_DELETED,
 )
@@ -102,6 +103,37 @@ class PaymentSerializer(serializers.ModelSerializer):
     activity__details__id = serializers.ReadOnlyField(
         source="payment_schedule.activity.details.id"
     )
+    payment_schedule__fictive = serializers.ReadOnlyField(
+        source="payment_schedule.fictive"
+    )
+    is_payable_manually = serializers.ReadOnlyField(default=False)
+
+    def validate(self, data):
+        payment_method = (
+            data.get("payment_method", None) or self.instance.payment_method
+        )
+        recipient_type = (
+            data.get("recipient_type", None) or self.instance.recipient_type
+        )
+        paid = data.get("paid", None) or self.instance.paid
+        payment_schedule = (
+            data.get("payment_schedule", None)
+            or self.instance.payment_schedule
+        )
+
+        paid_allowed = self.Meta.model.paid_allowed_for_payment_and_recipient(
+            payment_method, recipient_type
+        )
+
+        if paid and (
+            not paid_allowed
+            or payment_schedule.fictive
+            or not payment_schedule.can_be_paid
+        ):
+            raise serializers.ValidationError(
+                _("Denne betaling må ikke markeres betalt manuelt")
+            )
+        return data
 
     class Meta:
         model = Payment
@@ -281,6 +313,8 @@ class ActivityDetailsSerializer(serializers.ModelSerializer):
 
 
 class AccountSerializer(serializers.ModelSerializer):
+    number = serializers.ReadOnlyField()
+
     class Meta:
         model = Account
         fields = "__all__"
@@ -295,4 +329,10 @@ class ServiceProviderSerializer(serializers.ModelSerializer):
 class ApprovalLevelSerializer(serializers.ModelSerializer):
     class Meta:
         model = ApprovalLevel
+        fields = "__all__"
+
+
+class EffortStepSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EffortStep
         fields = "__all__"

@@ -11,8 +11,9 @@
 
         <div class="payment-search-list">
             <h1>Betalinger</h1>
-            <template>
-                <table v-if="payments.length > 0">
+            <template v-if="results">
+            <span>{{results.length}} af {{payments.count}}</span>
+                <table v-if="results.length > 0">
                     <thead>
                         <tr>
                             <th>Betaling nr</th>
@@ -24,10 +25,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="p in payments" :key="p.id">
-                            <template v-if="p.activity__status === 'GRANTED'">
+                        <tr v-for="p in results" :key="p.id">
                             <td>
                                 <payment-modal :p-id="p.id" @update="update()"/>
+                                <span class="dim" v-if="p.payment_schedule__fictive">(Fiktiv)</span>
                             </td>
                             <td> {{ p.payment_schedule__payment_id }} </td>
                             <td> {{ p.case__cpr_number }} </td>
@@ -51,47 +52,46 @@
                                     {{ displayDigits(p.amount) }} kr.
                                 </span>
                             </td>
-                            </template>
                         </tr>
                     </tbody>
                 </table>
-            </template>
-            <p v-if="payments.length < 1">
-                Kunne ikke finde nogen sager
-            </p>
+                <p class="nopays" v-if="results.length < 1">
+                    Kunne ikke finde nogen betalinger
+                </p>
 
-            <!-- <button v-if="payments.length > 1" class="more">Vis flere</button> -->
+                <button v-if="results.length > 1" :disabled="disableBtn" class="more" @click="loadResults()">Vis flere</button>
+            </template>
 
         </div>
 
-        <!-- <div class="payment-search-filters">
+        <div class="payment-search-filters">
             <h2>Filtre</h2>
             <form>
                 <fieldset>
                     <label>Betalingsnøgle</label>
-                    <input @input="changeId()" type="text" v-model="field_id">
+                    <input @input="update()" type="text" v-model="$route.query.payment_schedule__payment_id">
                 </fieldset>
                 <fieldset>
                     <legend>Tidsrum</legend>
-                    <label>fra dato</label>
-                    <input type="date">
-                    <label>til dato</label>
-                    <input type="date">
+                    <label>Fra dato</label>
+                    <input @input="update()" type="date" v-model="$route.query.paid_date_or_date__gte">
+                    <label>Til dato</label>
+                    <input @input="update()" type="date" v-model="$route.query.paid_date_or_date__lte">
                 </fieldset>
                 <fieldset>
-                    <input type="radio" id="field-paid-1" checked name="field-paid">
+                    <input type="radio" id="field-paid-1" checked name="field-paid" :value="null" v-model="$route.query.paid" @change="update()">
                     <label for="field-paid-1">Betalte og ubetalte</label>
-                    <input type="radio" id="field-paid-2" name="field-paid">
+                    <input type="radio" id="field-paid-2" name="field-paid" :value="true" v-model="$route.query.paid" @change="update()">
                     <label for="field-paid-2">Kun betalte</label>
-                    <input type="radio" id="field-paid-3" name="field-paid">
+                    <input type="radio" id="field-paid-3" name="field-paid" :value="false" v-model="$route.query.paid" @change="update()">
                     <label for="field-paid-3">Kun ubetalte</label>
                 </fieldset>
                 <fieldset>
                     <label>Hovedsag CPR</label>
-                    <input type="text">
+                    <input @input="update()" type="text" v-model="$route.query.case__cpr_number">
                 </fieldset>
             </form>
-        </div> -->
+        </div>
 
     </div>
 
@@ -108,23 +108,33 @@
         components: {
             PaymentModal
         },
-        data: function() {
-            return {
-                field_id: null
-            }
-        },
         computed: {
             payments: function() {
                 return this.$store.getters.getPayments
+            },
+            results: function() {
+                return this.payments.results
+            },
+            query: function() {
+                return this.$route.query
+            },
+            disableBtn: function () {
+                if (this.payments.next === null) {
+                    return true
+                }
+            }
+        },
+        watch: {
+            query: function() {
+                this.update()
             }
         },
         methods: {
+            loadResults: function() {
+                this.$store.dispatch('fetchMorePayments')
+            },
             update: function() {
                 this.$store.dispatch('fetchPayments', this.$route.query)
-            },
-            changeId: function() {
-                this.$route.query.id = this.field_id
-                this.update()
             },
             displayDate: function(dt) {
                 return json2jsDate(dt)
@@ -160,8 +170,8 @@
     .payment-search-filters {
         order: 1;
         background-color: var(--grey1);
-        padding: 1rem;
-        margin-right: 2rem;
+        padding: 1.5rem 1rem .5rem;
+        margin: 0 2rem 1rem 0;
     }
 
     .payment-search-filters h2,
@@ -171,6 +181,10 @@
 
     .payment-search .more {
         width: 100%;
+    }
+
+    .nopays {
+        margin: 1rem 0;
     }
 
 </style>

@@ -14,7 +14,6 @@ from dateutil import rrule
 from django import forms
 from django.db import models, transaction
 from django.db.models import Q, F
-from django.contrib.postgres import fields as postgres_fields
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
@@ -32,23 +31,6 @@ DISABILITY_DEPT = "DISABILITY_DEPT"
 target_group_choices = (
     (FAMILY_DEPT, _("familieafdelingen")),
     (DISABILITY_DEPT, _("handicapafdelingen")),
-)
-
-# Effort steps - definitions and choice list.
-STEP_ONE = 1
-STEP_TWO = 2
-STEP_THREE = 3
-STEP_FOUR = 4
-STEP_FIVE = 5
-STEP_SIX = 6
-
-effort_steps_choices = (
-    (STEP_ONE, _("Trin 1: Tidlig indsats i almenområdet")),
-    (STEP_TWO, _("Trin 2: Forebyggelse")),
-    (STEP_THREE, _("Trin 3: Hjemmebaserede indsatser")),
-    (STEP_FOUR, _("Trin 4: Anbringelse i slægt eller netværk")),
-    (STEP_FIVE, _("Trin 5: Anbringelse i forskellige typer af plejefamilier")),
-    (STEP_SIX, _("Trin 6: Anbringelse i institutionstilbud")),
 )
 
 # Payment methods and choice list.
@@ -113,6 +95,20 @@ class SchoolDistrict(models.Model):
         return f"{self.name}"
 
 
+class EffortStep(models.Model):
+    """Evaluation step for grading the effort deemed necessary in a case."""
+
+    class Meta:
+        verbose_name = _("indsatstrappetrin")
+        verbose_name_plural = _("indsatstrappe")
+
+    name = models.CharField(max_length=128, verbose_name=_("navn"))
+    number = models.PositiveIntegerField(verbose_name="Nummer", unique=True)
+
+    def __str__(self):
+        return f"{self.name}"
+
+
 class PaymentMethodDetails(models.Model):
     """ Contains extra information about a payment method."""
 
@@ -155,6 +151,26 @@ class User(AbstractUser):
     EDIT = "edit"
     GRANT = "grant"
     ADMIN = "admin"
+
+    @classmethod
+    def max_profile(cls, perms):
+        """Sometimes IdPs can send more than one profile when using SAML.
+
+        For the time being, we choose to uphold the most far-reaching
+        permission profile."""
+
+        permission_score = {
+            cls.READONLY: 0,
+            cls.EDIT: 1,
+            cls.GRANT: 2,
+            cls.ADMIN: 3,
+        }
+        if not perms:
+            return ""
+
+        max_score = max(permission_score.get(p, -1) for p in perms)
+
+        return {v: k for k, v in permission_score.items()}.get(max_score, "")
 
     profile_choices = (
         (READONLY, _("Kun læse")),
@@ -294,6 +310,10 @@ class PaymentSchedule(models.Model):
 
     @staticmethod
     def is_payment_and_recipient_allowed(payment_method, recipient_type):
+        """
+        Determine whether a specific combination of payment_method
+        and recipient_type is allowed.
+        """
         allowed = {
             PaymentSchedule.INTERNAL: [INTERNAL],
             PaymentSchedule.PERSON: [CASH, SD],
@@ -303,24 +323,13 @@ class PaymentSchedule(models.Model):
 
     @property
     def can_be_paid(self):
+        """
+        Determine whether the PaymentSchedule allows
+        the underlying Payments to be paid.
+        """
         if (
             hasattr(self, "activity")
             and self.activity.status == STATUS_GRANTED
-        ):
-            return True
-        return False
-
-    @property
-    def triggers_payment_email(self):
-        """
-        Trigger a payment email only in the (recipient_type->payment_method)
-        case of Internal->Internal or Person->SD.
-        """
-        if (
-            self.recipient_type == self.INTERNAL
-            and self.payment_method == INTERNAL
-        ) or (
-            self.recipient_type == self.PERSON and self.payment_method == SD
         ):
             return True
         return False
@@ -481,7 +490,7 @@ class PaymentSchedule(models.Model):
 
 
 class Payment(models.Model):
-    """Represents an amount paid to a supplier - amount, recpient, date.
+    """Represents an amount paid to a supplier - amount, recipient, date.
 
     These may be entered manually, but ideally they should be imported
     from an accounts payable system."""
@@ -489,6 +498,7 @@ class Payment(models.Model):
     class Meta:
         verbose_name = _("betaling")
         verbose_name_plural = _("betalinger")
+        ordering = ("date",)
 
     objects = PaymentQuerySet.as_manager()
 
@@ -559,6 +569,33 @@ class Payment(models.Model):
                 )
             )
         super().save(*args, **kwargs)
+
+    @staticmethod
+    def paid_allowed_for_payment_and_recipient(payment_method, recipient_type):
+        """
+        Determine whether "paid" can be manually set.
+        """
+        disallowed = {PaymentSchedule.PERSON: [CASH, SD]}
+
+        if (
+            recipient_type in disallowed
+            and payment_method in disallowed[recipient_type]
+        ):
+            return False
+        return True
+
+    @property
+    def is_payable_manually(self):
+        """
+        Determine whether it is payable manually (in the frontend).
+        """
+        return (
+            self.paid_allowed_for_payment_and_recipient(
+                self.payment_method, self.recipient_type
+            )
+            and not self.payment_schedule.fictive
+            and self.payment_schedule.can_be_paid
+        )
 
     @property
     def account_string(self):
@@ -635,8 +672,11 @@ class Case(AuditModelMixin, models.Model):
         verbose_name=_("målgruppe"),
         choices=target_group_choices,
     )
-    effort_step = models.PositiveSmallIntegerField(
-        choices=effort_steps_choices, verbose_name=_("indsatstrappe")
+    effort_step = models.ForeignKey(
+        EffortStep,
+        verbose_name=_("indsatstrappe"),
+        on_delete=models.PROTECT,
+        null=True,
     )
     scaling_step = models.PositiveSmallIntegerField(
         verbose_name=_("skaleringstrappe"),
@@ -680,7 +720,7 @@ class Case(AuditModelMixin, models.Model):
         today = timezone.now().date()
         all_main_activities = Activity.objects.filter(
             activity_type=MAIN_ACTIVITY, appropriation__case=self
-        )
+        ).exclude(status=STATUS_DELETED)
         # If no activities exists, we will not consider it expired.
         if not all_main_activities.exists():
             return False
@@ -723,10 +763,11 @@ class Section(models.Model):
     allowed_for_disability_target_group = models.BooleanField(
         verbose_name=_("tilladt for handicapafdelingen"), default=False
     )
-    allowed_for_steps = postgres_fields.ArrayField(
-        models.PositiveSmallIntegerField(choices=effort_steps_choices),
-        size=6,
+    allowed_for_steps = models.ManyToManyField(
+        EffortStep,
+        related_name="sections",
         verbose_name=_("tilladt for trin i indsatstrappen"),
+        blank=True,
     )
     law_text_name = models.CharField(
         max_length=128, verbose_name=_("lov tekst navn")
@@ -1412,8 +1453,6 @@ class Activity(AuditModelMixin, models.Model):
         # or does not need a payment email to trigger.
         if not hasattr(self, "payment_plan") or not self.payment_plan:
             return False
-        if not self.payment_plan.triggers_payment_email:
-            return False
         return True
 
     @property
@@ -1497,9 +1536,13 @@ class Account(models.Model):
     (main activity, supplementary activity, section) pair.
     """
 
-    number = models.CharField(
-        max_length=128, verbose_name=_("konteringsnummer")
+    main_account_number = models.CharField(
+        max_length=128, verbose_name=_("hovedkontonummer")
     )
+    activity_number = models.CharField(
+        max_length=128, verbose_name=_("aktivitetsnummer"), blank=True
+    )
+
     main_activity = models.ForeignKey(
         ActivityDetails,
         null=False,
@@ -1522,6 +1565,18 @@ class Account(models.Model):
         related_name="accounts",
         verbose_name=_("paragraf"),
     )
+
+    @property
+    def number(self):
+        if not self.activity_number:
+            if self.supplementary_activity:
+                activity_number = self.supplementary_activity.activity_id
+            else:
+                activity_number = self.main_activity.activity_id
+        else:
+            activity_number = self.activity_number
+
+        return f"{self.main_account_number}-{activity_number}"
 
     def __str__(self):
         return (
