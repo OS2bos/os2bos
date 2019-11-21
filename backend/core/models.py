@@ -720,7 +720,7 @@ class Case(AuditModelMixin, models.Model):
         today = timezone.now().date()
         all_main_activities = Activity.objects.filter(
             activity_type=MAIN_ACTIVITY, appropriation__case=self
-        )
+        ).exclude(status=STATUS_DELETED)
         # If no activities exists, we will not consider it expired.
         if not all_main_activities.exists():
             return False
