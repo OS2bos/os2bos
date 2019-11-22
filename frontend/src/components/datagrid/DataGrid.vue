@@ -65,7 +65,7 @@
                         <td v-html="c.display_func ? c.display_func(d) : d[c.key]" 
                             :key="c.key" 
                             :class="c.class"
-                            :title="c.display_func ? c.display_func(d) : d[c.key]">
+                            :title="d[c.key]">
                         </td>
                     </template>
                 </tr>
