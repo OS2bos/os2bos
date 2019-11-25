@@ -101,6 +101,7 @@ class EffortStep(models.Model):
     class Meta:
         verbose_name = _("indsatstrappetrin")
         verbose_name_plural = _("indsatstrappe")
+        ordering = ["number"]
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     number = models.PositiveIntegerField(verbose_name="Nummer", unique=True)
