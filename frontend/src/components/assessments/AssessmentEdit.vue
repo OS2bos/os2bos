@@ -66,17 +66,14 @@
                     assessment_comment: null
                 },
                 create_mode: false,
-                effort_steps: null
+            }
+        },
+        computed: {
+            effort_steps: function() {
+                return this.$store.getters.getEffortSteps
             }
         },
         methods: {
-            fetchEffort: function() {
-                axios.get(`/effort_steps/`)
-                .then(res => {
-                    this.effort_steps = res.data
-                })
-                .catch(err => console.log(err))
-            },
             updateEffort: function() {
                 this.$emit('assessment', {
                     effort_step: this.cas.effort_step
@@ -94,7 +91,6 @@
             }
         },
         created: function() {
-            this.fetchEffort()
             if (this.caseObj.id) {
                 this.cas = this.caseObj
             } else {

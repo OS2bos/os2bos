@@ -13,7 +13,8 @@ const state = {
     districts: null,
     sections: null,
     approval_levels: null,
-    service_providers: null
+    service_providers: null,
+    effort_steps: null
 }
 
 const getters = {
@@ -31,6 +32,9 @@ const getters = {
     },
     getServiceProviders ( state ) {
         return state.service_providers ? state.service_providers : false
+    },
+    getEffortSteps ( state ) {
+        return state.effort_steps ? state.effort_steps : false
     }
 }
 
@@ -61,6 +65,9 @@ const mutations = {
             if (a.name < b.name) { return -1 }
             return 0
         })
+    },
+    setEffortSteps (state, effort_steps) {
+        state.effort_steps = effort_steps
     }
 }
 
@@ -100,6 +107,13 @@ const actions = {
         })
         .catch(err => console.log(err))
     },
+    fetchEffortSteps: function({commit}) {
+        return axios.get('/effort_steps/')
+        .then(res => {
+            commit('setEffortSteps', res.data)
+        })
+        .catch(err => console.log(err))
+    },
     fetchLists: function({dispatch}) {
         return Promise.all([
             dispatch('fetchTeams'),
@@ -108,6 +122,7 @@ const actions = {
             dispatch('fetchActivityDetails'),
             dispatch('fetchSections'),
             dispatch('fetchApprovals'),
+            dispatch('fetchEffortSteps'),
             dispatch('fetchServiceProviders')
         ])
         .then(() => {
