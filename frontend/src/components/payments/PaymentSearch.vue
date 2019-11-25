@@ -108,6 +108,11 @@
         components: {
             PaymentModal
         },
+        data: function() {
+            return {
+                input_timeout: null
+            }
+        },
         computed: {
             payments: function() {
                 return this.$store.getters.getPayments
@@ -134,7 +139,10 @@
                 this.$store.dispatch('fetchMorePayments')
             },
             update: function() {
-                this.$store.dispatch('fetchPayments', this.$route.query)
+                clearTimeout(this.input_timeout)
+                this.input_timeout = setTimeout(() => {
+                    this.$store.dispatch('fetchPayments', this.$route.query)
+                }, 300)
             },
             displayDate: function(dt) {
                 return json2jsDate(dt)
