@@ -188,8 +188,8 @@
             displayDistrictName: function(id) {
                 return districtId2name(id)
             },
-            displayEffortName: function(str) {
-                return displayEffort(str)
+            displayEffortName: function(id) {
+                return displayEffort(id)
             },
             displayUserName: function(id) {
                 return userId2name(id)

@@ -119,31 +119,16 @@ function displayStatus(status) {
     return `<span class="label label-${ status }">${ status_str }</span>`
 }
 
-function displayEffort(effort_step) {
-    let effort_str = ''
-    switch(effort_step) {
-        case 1:
-            effort_str = 'Trin 1 - Tidlig indsats i almenområdet'
-            break
-        case 2:
-            effort_str = 'Trin 2 - Forebyggelse'
-            break
-        case 3:
-            effort_str = 'Trin 3 - Hjemmebaserede indsatser'
-            break
-        case 4:
-            effort_str = 'Trin 4 - Anbringelse i slægt eller netværk'
-            break
-        case 5:
-            effort_str = 'Trin 5 - Anbringelse i forskellige typer af plejefamilier'
-            break
-        case 6:
-            effort_str = 'Trin 6 - Anbringelse i institutionstilbud'
-            break
-        default:
-            effort_str = 'ukendt'
+function displayEffort(id) {
+    const effort_step_list = store.getters.getEffortSteps
+    if (effort_step_list) {
+        let effort_step = effort_step_list.find(function(e) {
+            return e.id === parseInt(id);
+        })
+        return effort_step.name
+    } else {
+        return 'Ikke tilgængelig'
     }
-    return effort_str
 }
 
 export {
