@@ -256,8 +256,8 @@
                 }
 
                 if (this.mode === 'create' || this.mode === 'clone') {
+                    
                     // POSTING an activity
-
                     axios.post(`/activities/`, data)
                     .then(res => {
                         this.$router.push(`/appropriation/${ this.appropriation.id }`)
@@ -267,8 +267,8 @@
                     .catch(err => this.$store.dispatch('parseErrorOutput', err))
 
                 } else {
-                    // PATCHING an activity
 
+                    // PATCHING an activity
                     axios.patch(`/activities/${ this.act.id }/`, data)
                     .then(res => {
                         this.$router.push(`/appropriation/${ this.appropriation.id }`)
@@ -281,6 +281,8 @@
             cancel: function() {
                 this.$store.commit('clearPayment')
                 if (this.mode !== 'create') {
+                    // Fetch activity anew, since store should be polluted with cancelled edit info
+                    this.$store.dispatch('fetchActivity', this.act.id) 
                     this.$emit('close')
                 } else {
                     this.$router.push(`/appropriation/${ this.$route.params.apprid }`)
