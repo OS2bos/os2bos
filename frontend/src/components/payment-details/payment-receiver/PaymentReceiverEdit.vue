@@ -14,7 +14,7 @@
             <legend>Hvem skal betales?</legend>
 
             <label class="required" for="field-payee">Betalingsmodtager</label>
-            <select v-model="p_recipient_type" required id="field-payee">
+            <select v-model="p_recipient_type" required id="field-payee" ref="recipientselect">
                 <option value="INTERNAL">Intern</option>
                 <option value="COMPANY">Firma</option>
                 <option value="PERSON">Person</option>
@@ -57,17 +57,22 @@
             }
         },
         watch: {
-            payment: function() {
-                this.p_recipient_type = this.recipient_type
-            },
             p_recipient_type: function() {
                 this.$store.commit('setPaymentRecipientType', this.p_recipient_type)
             }
         },
-        created: function() {
+        mounted: function() {
+            // Update p_recipient_type
             if (this.recipient_type) {
                 this.p_recipient_type = this.recipient_type
             }
+
+            // Add eventlistener after mounted, so only user can wipe fields when changing type
+            this.$refs.recipientselect.addEventListener('change', ev => {
+                console.log('change it now', ev)
+                this.$store.commit('setPaymentRecipientId', null)
+                this.$store.commit('setPaymentRecipientName', null)
+            })
         }
 
     }
