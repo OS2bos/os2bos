@@ -69,7 +69,6 @@
 
             // Add eventlistener after mounted, so only user can wipe fields when changing type
             this.$refs.recipientselect.addEventListener('change', ev => {
-                console.log('change it now', ev)
                 this.$store.commit('setPaymentRecipientId', null)
                 this.$store.commit('setPaymentRecipientName', null)
             })
