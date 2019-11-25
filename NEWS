@@ -1,3 +1,21 @@
+* Version 2.2.1, 2019-11-25
+
+New in this version:
+
+Features:
+
+* Mark payments for SD Løn along with fictive ones.
+
+Bug fixes:
+
+* Fix hover text.
+* Display of Indsatstrappen fixed.
+* Fix ordering of Indsatstrappen.
+* Recipient info stayed in GUI even though payment method was changed to
+  "internal".
+* Empty "not found" text when displaying "Mine sager".
+
+
 * Version 2.2.0, 2019-11-21
 
 New in this version:
