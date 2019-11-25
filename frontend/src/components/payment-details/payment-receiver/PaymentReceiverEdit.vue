@@ -71,6 +71,8 @@
             this.$refs.recipientselect.addEventListener('change', ev => {
                 this.$store.commit('setPaymentRecipientId', null)
                 this.$store.commit('setPaymentRecipientName', null)
+                this.$store.commit('setPaymentMethod', null)
+                this.$store.commit('setPaymentMethodDetails', null)
             })
         }
 
