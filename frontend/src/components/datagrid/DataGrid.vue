@@ -27,7 +27,7 @@
 
         </header>
     
-        <table class="datagrid" v-if="dataList.length > 0">
+        <table class="datagrid" v-if="filteredData.length > 0">
             
             <thead>
                 <tr>
@@ -73,7 +73,7 @@
             </tbody>
         </table>
 
-        <slot name="datagrid-footer"></slot>
+        <p v-if="filteredData.length < 1">Kan ikke finde nogen sager, der matcher de valgte kriterier</p>
 
     </section>
 
