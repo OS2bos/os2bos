@@ -56,7 +56,7 @@
                     </tbody>
                 </table>
                 <p class="nopays" v-if="results.length < 1">
-                    Kunne ikke finde nogen betalinger
+                    Kan ikke finde nogen betalinger
                 </p>
 
                 <button v-if="results.length > 1" :disabled="disableBtn" class="more" @click="loadResults()">Vis flere</button>

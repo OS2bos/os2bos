@@ -24,7 +24,7 @@
                 </div>
 
                 <p slot="datagrid-footer" v-if="cases.length < 1">
-                    Kan ikke finde nogen sager, der matcher de valgte kriterier
+                    Kan ikke finde nogen resultater, der matcher de valgte kriterier
                 </p>
 
             </data-grid>
