@@ -47,6 +47,7 @@ services:
     volumes:
       - .:/code/
       - ./dev-environment/dev-settings.ini:/user-settings.ini
+      - ./log:/log
     depends_on:
       - db
       - postfix
