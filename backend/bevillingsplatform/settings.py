@@ -248,10 +248,12 @@ REST_FRAMEWORK = {
 }
 
 # Output directory for integration with KMD Prisme.
-PRISM_OUTPUT_DIR = settings.get("PRISM_OUTPUT_DIR", fallback="/prisme")
+PRISM_OUTPUT_DIR = settings.get(
+    "PRISM_OUTPUT_DIR", fallback=os.path.join(BASE_DIR, "prisme")
+)
 
 # Logging
-LOG_DIR = settings.get("LOG_DIR", fallback="/log")
+LOG_DIR = settings.get("LOG_DIR", fallback=os.path.join(BASE_DIR, "log"))
 
 LOGGING = {
     "version": 1,
@@ -261,7 +263,7 @@ LOGGING = {
             "level": "DEBUG",
             "class": "logging.FileHandler",
             "filename": settings.get(
-                "LOG_FILE", fallback=os.path.join(LOG_DIR, "debug.log")
+                "LOG_FILE", fallback=os.path.join(LOG_DIR, "django-debug.log")
             ),
         },
         "audit": {
