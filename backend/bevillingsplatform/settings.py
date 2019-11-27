@@ -71,7 +71,7 @@ settings = config["settings"]
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = settings.get("SECRET_KEY", fallback="Not.a.secret")
+SECRET_KEY = settings.get("SECRET_KEY")
 
 # SECURITY WARNING: don"t run with debug turned on in production!
 DEBUG = settings.getboolean("DEBUG", fallback=False)
