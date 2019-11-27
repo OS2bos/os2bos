@@ -223,13 +223,18 @@ def create_section(paragraph="ABL-105-2", allowed_for_steps=None, **kwargs):
 
 
 def create_account(
-    main_activity, supplementary_activity, section, number="12345678"
+    main_activity,
+    supplementary_activity,
+    section,
+    main_account_number="645511002",
+    activity_number="030004",
 ):
     account = Account.objects.create(
         main_activity=main_activity,
         supplementary_activity=supplementary_activity,
         section=section,
-        number=number,
+        main_account_number=main_account_number,
+        activity_number=activity_number,
     )
     return account
 

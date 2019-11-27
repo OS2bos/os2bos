@@ -30,19 +30,29 @@
                     <input type="checkbox" id="field-status-expected" v-model="act_status_expected">
                     <label for="field-status-expected" style="margin: 0;">Opret forventet Ydelse</label>
                 </fieldset>
-                
-                <fieldset style="margin: 0 0 0 2rem;">
-                    <input type="checkbox" id="field-fictive" v-model="payment.fictive">
-                    <label for="field-fictive" style="margin: 0;">Fiktiv Betaling</label>
-                </fieldset>
 
             </header>
         
             <error />
 
             <div class="row">
-                        
+
                 <div class="row-item">
+                    <fieldset>
+                        <dl>
+                            <dt>Foranstaltningssag</dt>
+                            <dd>{{ appropriation.sbsys_id }}</dd>
+
+                            <dt>SBSYS-hovedsag</dt>
+                            <dd>{{ cas.sbsys_id }}</dd>
+
+                            <dt>Sagspart (CPR, navn)</dt>
+                            <dd>
+                                {{ cas.cpr_number }}, {{ cas.name }}
+                            </dd>
+                        </dl>
+                    </fieldset>
+
                     <fieldset class="payment-basic">
                         <legend>Hvad skal betales?</legend>
 
@@ -93,6 +103,11 @@
 
                 <div class="row-item">
                     <payment-receiver-edit />
+
+                    <fieldset>
+                        <input type="checkbox" id="field-fictive" v-model="payment.fictive">
+                        <label for="field-fictive">Fiktiv Betaling</label>
+                    </fieldset>
                 </div>
 
             </div>
@@ -140,6 +155,9 @@
             }
         },
         computed: {
+            cas: function() {
+                return this.$store.getters.getCase
+            },
             appropriation: function() {
                 return this.$store.getters.getAppropriation
             },
@@ -238,8 +256,8 @@
                 }
 
                 if (this.mode === 'create' || this.mode === 'clone') {
+                    
                     // POSTING an activity
-
                     axios.post(`/activities/`, data)
                     .then(res => {
                         this.$router.push(`/appropriation/${ this.appropriation.id }`)
@@ -249,8 +267,8 @@
                     .catch(err => this.$store.dispatch('parseErrorOutput', err))
 
                 } else {
-                    // PATCHING an activity
 
+                    // PATCHING an activity
                     axios.patch(`/activities/${ this.act.id }/`, data)
                     .then(res => {
                         this.$router.push(`/appropriation/${ this.appropriation.id }`)
@@ -263,6 +281,8 @@
             cancel: function() {
                 this.$store.commit('clearPayment')
                 if (this.mode !== 'create') {
+                    // Fetch activity anew, since store should be polluted with cancelled edit info
+                    this.$store.dispatch('fetchActivity', this.act.id) 
                     this.$emit('close')
                 } else {
                     this.$router.push(`/appropriation/${ this.$route.params.apprid }`)

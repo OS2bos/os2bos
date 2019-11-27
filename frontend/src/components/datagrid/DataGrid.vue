@@ -27,7 +27,7 @@
 
         </header>
     
-        <table class="datagrid" v-if="dataList.length > 0">
+        <table class="datagrid" v-if="filteredData.length > 0">
             
             <thead>
                 <tr>
@@ -65,7 +65,7 @@
                         <td v-html="c.display_func ? c.display_func(d) : d[c.key]" 
                             :key="c.key" 
                             :class="c.class"
-                            :title="c.display_func ? c.display_func(d) : d[c.key]">
+                            :title="d[c.key]">
                         </td>
                     </template>
                 </tr>
@@ -74,6 +74,8 @@
         </table>
 
         <slot name="datagrid-footer"></slot>
+
+        <p v-if="filteredData.length < 1 && filterKey">Kan ikke finde nogen resultater, der matcher de valgte kriterier</p>
 
     </section>
 
