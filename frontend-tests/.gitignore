@@ -1,1 +1,5 @@
 node_modules/
+screenshots/vrt-actual-img/*.png
+screenshots/vrt-actual-img/thumbnails/
+screenshots/vrt-base-img/thumbnails/
+screenshots/vrt-reported-img/*.png
