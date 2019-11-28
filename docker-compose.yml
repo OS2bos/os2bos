@@ -47,6 +47,7 @@ services:
     volumes:
       - .:/code/
       - ./dev-environment/dev-settings.ini:/user-settings.ini
+      - ./log:/log
     depends_on:
       - db
       - postfix
@@ -56,6 +57,21 @@ services:
     #ports:
     # - 5000:5000
 
+  bev-cron:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: dist
+    entrypoint: []
+    command: ["supercronic", "/code/docker/crontab"]
+    volumes:
+      - .:/code/
+      - ./dev-environment/dev-settings.ini:/user-settings.ini
+      - ./log:/log
+    depends_on:
+      - db
+      - postfix
+      - idp
 
   db:
     image: postgres:10
