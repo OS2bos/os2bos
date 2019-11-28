@@ -31,7 +31,8 @@ from weasyprint.fonts import FontConfiguration
 
 from service_person_stamdata_udvidet import get_citizen
 
-import core.models as models
+from core import models
+
 
 logger = logging.getLogger(__name__)
 
@@ -178,7 +179,6 @@ def send_appropriation(appropriation, included_activities=None):
     appropriation: the Appropriation from which to generate the PDF and XML.
     included_activities: Activities which should be explicitly included.
     """
-
     if included_activities is None:
         included_activities_qs = models.Activity.objects.none()
     else:
