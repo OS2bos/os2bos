@@ -15,16 +15,16 @@ fixture `Test accessibility with AXE`
     .beforeEach(async t => { await login(t) })
     .afterEach(() => logs())
 
-test.skip('Home page', async t => {
+test('Home page', async t => {
     await axe(t, null, options)
 })
 
-test.skip('Case page', async t => {
+test('Case page', async t => {
     await t.navigateTo('http://localhost:8080/#/case/1/')
     await axe(t, null, options)
 })
 
-test.skip('Appropriation page', async t => {
+test('Appropriation page', async t => {
     await t.navigateTo('http://localhost:8080/#/appropriation/1/')
     await axe(t, null, options)
 })
