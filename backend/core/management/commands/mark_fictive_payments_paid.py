@@ -12,7 +12,7 @@ from datetime import datetime
 
 from django.db import transaction
 from django.core.management.base import BaseCommand
-from core.models import Payment, STATUS_GRANTED
+from core.models import Payment, STATUS_GRANTED, SD
 
 logger = logging.getLogger("bevillingsplatform.mark_fictive_payments_paid")
 
@@ -45,20 +45,28 @@ class Command(BaseCommand):
             date = datetime.now().date()
 
         try:
-            payments = Payment.objects.filter(
+            fictive_payments = Payment.objects.filter(
                 date=date,
                 payment_schedule__fictive=True,
                 paid=False,
                 payment_schedule__activity__status=STATUS_GRANTED,
             )
-            payment_ids = list(payments.values_list("id", flat=True))
+            sd_payments = Payment.objects.filter(
+                date=date,
+                payment_schedule__payment_method=SD,
+                paid=False,
+                payment_schedule__activity__status=STATUS_GRANTED,
+            )
+            payments = list(fictive_payments) + list(sd_payments)
+            payment_ids = [payment.id for payment in payments]
             for payment in payments:
+                print(payment)
                 payment.paid = True
                 payment.paid_amount = payment.amount
                 payment.paid_date = date
                 payment.save()
             logger.info(
-                f"{payments.count()} payment(s) with ids: "
+                f"{len(payments)} payment(s) with ids: "
                 f"{payment_ids} were marked paid on {date}"
             )
         except Exception:

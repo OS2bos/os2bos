@@ -24,7 +24,7 @@
                 </div>
 
                 <p slot="datagrid-footer" v-if="cases.length < 1">
-                    Kan ikke finde nogen sager, der matcher de valgte kriterier
+                    Kan ikke finde nogen resultater, der matcher de valgte kriterier
                 </p>
 
             </data-grid>
@@ -84,7 +84,7 @@
                     <list-picker 
                         v-if="teams"
                         :dom-id="'field-team'" 
-                        :selected-id="$route.query.team"
+                        :selected-id="query.team"
                         :list="teams"
                         @selection="changeTeam"
                         display-key="name" />
@@ -93,7 +93,7 @@
                     <list-picker 
                         v-if="users"
                         :dom-id="'field-case-worker'" 
-                        :selected-id="$route.query.case_worker"
+                        :selected-id="query.case_worker"
                         :list="users"
                         @selection="changeWorker"
                         display-key="fullname" />
@@ -197,7 +197,10 @@
             displayStatus: function(d) {
                 if (!d.expired) {
                     return `<div class="mini-label"><span class="label label-GRANTED">Aktiv</span></div>`
-                }   
+                }
+                if (d.expired) {
+                    return `<div class="mini-label"><span class="label label-CLOSED">Udgået</span></div>`
+                }
             },
             diagChangeWorker: function(worker_id) {
                 this.diag_field_case_worker = worker_id

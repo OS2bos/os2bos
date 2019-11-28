@@ -26,7 +26,7 @@
                         <dd>{{ appr.sbsys_id}}</dd>
                         <dt>SBSYS-hovedsag</dt>
                         <dd>{{ cas.sbsys_id }}</dd>
-                        <dt>Sagspart</dt>
+                        <dt>Sagspart (CPR, navn)</dt>
                         <dd>{{ cas.cpr_number }}, {{ cas.name }}</dd>
                         <template v-if="appr.note">
                             <dt>Supplerende oplysninger</dt>

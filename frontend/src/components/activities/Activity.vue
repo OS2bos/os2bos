@@ -88,7 +88,7 @@
                 </dd>
                 <dt>Bevilges efter §</dt>
                 <dd v-if="appr">{{ displaySection(appr.section) }}</dd>
-                <dt>Aktivitet</dt>
+                <dt>Ydelse</dt>
                 <dd>{{ activityId2name(act.details) }}</dd>
                 <dt>Startdato</dt>
                 <dd>{{ displayDate(act.start_date) }}</dd>

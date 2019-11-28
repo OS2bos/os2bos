@@ -42,6 +42,11 @@
                 selection: null
             }
         },
+        watch: {
+            selectedId: function() {
+                this.setSelected()
+            }
+        },
         methods: {
             setSelected: function() {
                 if (this.selectedId) {

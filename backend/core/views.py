@@ -218,7 +218,7 @@ class PaymentScheduleViewSet(AuditViewSet):
 
 class PaymentViewSet(AuditViewSet):
     serializer_class = PaymentSerializer
-    queryset = Payment.objects.order_by("-id")
+    queryset = Payment.objects.all()
     pagination_class = PageNumberPagination
 
     filterset_class = PaymentFilter

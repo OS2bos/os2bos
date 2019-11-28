@@ -110,7 +110,7 @@ test('Create Case', async t => {
         .click('#selectField4')
         .click(Selector('#selectField4 option').withText('Baltorp'))
         .click('#field-indsatstrappe')
-        .click(Selector('#field-indsatstrappe option').withText('Trin 3 - Hjemmebaserede indsatser'))
+        .click(Selector('#field-indsatstrappe option').withText('Trin 3: Hjemmebaserede indsatser'))
         .click('#field-skaleringstrappe')
         .click(Selector('#field-skaleringstrappe option').withText('5'))
         .click(Selector('input').withAttribute('type', 'submit'))

@@ -47,6 +47,7 @@ services:
     volumes:
       - .:/code/
       - ./dev-environment/dev-settings.ini:/user-settings.ini
+      - ./log:/log
     depends_on:
       - db
       - postfix
@@ -56,12 +57,28 @@ services:
     #ports:
     # - 5000:5000
 
+  bev-cron:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: dist
+    entrypoint: []
+    command: ["supercronic", "/code/docker/crontab"]
+    volumes:
+      - .:/code/
+      - ./dev-environment/dev-settings.ini:/user-settings.ini
+      - ./log:/log
+    depends_on:
+      - db
+      - postfix
+      - idp
 
   db:
     image: postgres:10
     env_file:
       - dev-environment/db.env
     volumes:
+      - postgres-data:/var/lib/postgresql/data
       - ./docker/postgres-initdb.d/20-create-db-and-user.sh:/docker-entrypoint-initdb.d/20-create-db-and-user.sh
       # The following file adds the CREATEDB clause to the db user to enable it
       # to run django tests. This should not be used in production.
@@ -103,3 +120,4 @@ services:
 
 volumes:
   postgres-initdb.d:
+  postgres-data:

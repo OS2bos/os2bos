@@ -101,6 +101,7 @@ class EffortStep(models.Model):
     class Meta:
         verbose_name = _("indsatstrappetrin")
         verbose_name_plural = _("indsatstrappe")
+        ordering = ["number"]
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     number = models.PositiveIntegerField(verbose_name="Nummer", unique=True)
@@ -151,6 +152,26 @@ class User(AbstractUser):
     EDIT = "edit"
     GRANT = "grant"
     ADMIN = "admin"
+
+    @classmethod
+    def max_profile(cls, perms):
+        """Sometimes IdPs can send more than one profile when using SAML.
+
+        For the time being, we choose to uphold the most far-reaching
+        permission profile."""
+
+        permission_score = {
+            cls.READONLY: 0,
+            cls.EDIT: 1,
+            cls.GRANT: 2,
+            cls.ADMIN: 3,
+        }
+        if not perms:
+            return ""
+
+        max_score = max(permission_score.get(p, -1) for p in perms)
+
+        return {v: k for k, v in permission_score.items()}.get(max_score, "")
 
     profile_choices = (
         (READONLY, _("Kun læse")),
@@ -310,21 +331,6 @@ class PaymentSchedule(models.Model):
         if (
             hasattr(self, "activity")
             and self.activity.status == STATUS_GRANTED
-        ):
-            return True
-        return False
-
-    @property
-    def triggers_payment_email(self):
-        """
-        Trigger a payment email only in the (recipient_type->payment_method)
-        case of Internal->Internal or Person->SD.
-        """
-        if (
-            self.recipient_type == self.INTERNAL
-            and self.payment_method == INTERNAL
-        ) or (
-            self.recipient_type == self.PERSON and self.payment_method == SD
         ):
             return True
         return False
@@ -493,7 +499,7 @@ class Payment(models.Model):
     class Meta:
         verbose_name = _("betaling")
         verbose_name_plural = _("betalinger")
-        ordering = (F("paid_date").desc(nulls_last=True), "-date")
+        ordering = ("date",)
 
     objects = PaymentQuerySet.as_manager()
 
@@ -715,7 +721,7 @@ class Case(AuditModelMixin, models.Model):
         today = timezone.now().date()
         all_main_activities = Activity.objects.filter(
             activity_type=MAIN_ACTIVITY, appropriation__case=self
-        )
+        ).exclude(status=STATUS_DELETED)
         # If no activities exists, we will not consider it expired.
         if not all_main_activities.exists():
             return False
@@ -1448,8 +1454,6 @@ class Activity(AuditModelMixin, models.Model):
         # or does not need a payment email to trigger.
         if not hasattr(self, "payment_plan") or not self.payment_plan:
             return False
-        if not self.payment_plan.triggers_payment_email:
-            return False
         return True
 
     @property
@@ -1533,9 +1537,13 @@ class Account(models.Model):
     (main activity, supplementary activity, section) pair.
     """
 
-    number = models.CharField(
-        max_length=128, verbose_name=_("konteringsnummer")
+    main_account_number = models.CharField(
+        max_length=128, verbose_name=_("hovedkontonummer")
     )
+    activity_number = models.CharField(
+        max_length=128, verbose_name=_("aktivitetsnummer"), blank=True
+    )
+
     main_activity = models.ForeignKey(
         ActivityDetails,
         null=False,
@@ -1558,6 +1566,18 @@ class Account(models.Model):
         related_name="accounts",
         verbose_name=_("paragraf"),
     )
+
+    @property
+    def number(self):
+        if not self.activity_number:
+            if self.supplementary_activity:
+                activity_number = self.supplementary_activity.activity_id
+            else:
+                activity_number = self.main_activity.activity_id
+        else:
+            activity_number = self.activity_number
+
+        return f"{self.main_account_number}-{activity_number}"
 
     def __str__(self):
         return (

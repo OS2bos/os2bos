@@ -313,6 +313,8 @@ class ActivityDetailsSerializer(serializers.ModelSerializer):
 
 
 class AccountSerializer(serializers.ModelSerializer):
+    number = serializers.ReadOnlyField()
+
     class Meta:
         model = Account
         fields = "__all__"

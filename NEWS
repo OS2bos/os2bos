@@ -1,3 +1,68 @@
+* Version 2.2.1, 2019-11-25
+
+New in this version:
+
+Features:
+
+* Mark payments for SD Løn along with fictive ones.
+
+Bug fixes:
+
+* Fix hover text.
+* Display of Indsatstrappen fixed.
+* Fix ordering of Indsatstrappen.
+* Recipient info stayed in GUI even though payment method was changed to
+  "internal".
+* Empty "not found" text when displaying "Mine sager".
+
+
+* Version 2.2.0, 2019-11-21
+
+New in this version:
+
+Features:
+
+* It is now possible to find payments from a payment ID.
+* Case worker can now be changed on several cases in one action.
+* A log of all pending and sent emails is now kept and accessible in the
+  Django admin interface.
+* Payment ID and account string is displayed in the Django admin
+  interface.
+* Generally improved interface for searching and displaying cases.
+* Fictive payments are clearly marked as fictive in payment plans.
+* Fictive payments are marked as paid in the database on the day they
+  are due.
+* Field added in API to indicate whether a payment can be paid
+  manually or not.
+* Payments that are paid as Salary (through SD-Løn) or cash or are
+  fictive may not be edited manually.
+* Payments are paginated to avoid too long loading times.
+* Payments are now sorted by payment date.
+* Payments are sorted by *ascending* payment date.
+* Indsatstrappen is now a classification to be maintained in the Django
+  Admin interface.
+* Section (of the law, from the appropriation) is added to the payment
+  emails.
+* Emails are sent for all approved payments, for all combinations of
+  payment and recipient types.
+* Complex logic for generation of account string.
+* Payment dialog improved.
+* Integration to KMD PRISME accounting system.
+* Information about citizen included in display of appropriation.
+
+
+Bug fixes:
+
+* Don't throw an exception if users attempt to access the API without
+  logging in, just deny access.
+* If more than one user profile is sent from SAML IdP, don't crash -
+  choose the *highest* one.
+* "Mixed content error" on some pages (on internal test server).
+* Many small and big improvements to styling and usability.
+* Function deciding if case is expired also looked at DELETED
+  activities.
+
+
 * Version 2.0.1, 2019-11-11
 
 New in this version:

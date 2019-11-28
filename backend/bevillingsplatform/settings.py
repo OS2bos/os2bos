@@ -71,14 +71,22 @@ settings = config["settings"]
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = settings.get("SECRET_KEY", fallback="Not.a.secret")
+SECRET_KEY = settings.get("SECRET_KEY")
 
 # SECURITY WARNING: don"t run with debug turned on in production!
 DEBUG = settings.getboolean("DEBUG", fallback=False)
 
 ALLOWED_HOSTS = settings.get("ALLOWED_HOSTS", fallback="").split(",")
 
-USE_X_FORWARDED_HOST = settings.get("USE_X_FORWARDED_HOST", fallback=False)
+USE_X_FORWARDED_HOST = settings.getboolean(
+    "USE_X_FORWARDED_HOST", fallback=True
+)
+SECURE_PROXY_SSL_HEADER = (
+    tuple(settings.get("SECURE_PROXY_SSL_HEADER").split(","))
+    if "SECURE_PROXY_SSL_HEADER" in settings
+    else ("HTTP_X_FORWARDED_PROTO", "https")
+)
+
 
 # Application definition
 
@@ -240,10 +248,12 @@ REST_FRAMEWORK = {
 }
 
 # Output directory for integration with KMD Prisme.
-PRISM_OUTPUT_DIR = settings.get("PRISM_OUTPUT_DIR", fallback="/prisme")
+PRISM_OUTPUT_DIR = settings.get(
+    "PRISM_OUTPUT_DIR", fallback=os.path.join(BASE_DIR, "prisme")
+)
 
 # Logging
-LOG_DIR = settings.get("LOG_DIR", fallback="/log")
+LOG_DIR = settings.get("LOG_DIR", fallback=os.path.join(BASE_DIR, "log"))
 
 LOGGING = {
     "version": 1,
@@ -253,7 +263,7 @@ LOGGING = {
             "level": "DEBUG",
             "class": "logging.FileHandler",
             "filename": settings.get(
-                "LOG_FILE", fallback=os.path.join(LOG_DIR, "debug.log")
+                "LOG_FILE", fallback=os.path.join(LOG_DIR, "django-debug.log")
             ),
         },
         "audit": {
@@ -406,3 +416,5 @@ SAML2_AUTH = {
     "KEY_FILE": "",
     "AUTHN_REQUESTS_SIGNED": False,
 }
+
+SILENCED_SYSTEM_CHECKS = ["rest_framework.W001"]

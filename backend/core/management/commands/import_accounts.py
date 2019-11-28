@@ -65,6 +65,8 @@ class Command(BaseCommand):
                     or not paragraph
                 ):
                     continue
+                main_account_number = account_number.split("-")[0]
+                activity_number = account_number.split("-")[1]
 
                 # if no main activity column is present
                 # we know the row is a main activity.
@@ -100,5 +102,8 @@ class Command(BaseCommand):
                     main_activity=main_activity_details,
                     supplementary_activity=suppl_activity_details,
                     section=section,
-                    defaults={"number": account_number},
+                    defaults={
+                        "main_account_number": main_account_number,
+                        "activity_number": activity_number,
+                    },
                 )

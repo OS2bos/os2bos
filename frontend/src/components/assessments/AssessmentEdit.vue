@@ -16,12 +16,9 @@
             <legend>Vurdering</legend>
             <label class="required" for="field-indsatstrappe">Indsatstrappen</label>
             <select id="field-indsatstrappe" v-model="cas.effort_step" @change="updateEffort()" required>
-                <option value="1">Trin 1 - Tidlig indsats i almenområdet</option>
-                <option value="2">Trin 2 - Forebyggelse</option>
-                <option value="3">Trin 3 - Hjemmebaserede indsatser</option>
-                <option value="4">Trin 4 - Anbringelse i slægt eller netværk</option>
-                <option value="5">Trin 5 - Anbringelse i forskellige typer af plejefamilier</option>
-                <option value="6">Trin 6 - Anbringelse i institutionstilbud</option>
+                <option v-for="e in effort_steps" :value="e.id" :key="e.id">
+                    {{ e.name }}
+                </option>
             </select>
             <error err-key="effort_step" />
         
@@ -68,7 +65,12 @@
                     scaling_step: null,
                     assessment_comment: null
                 },
-                create_mode: false
+                create_mode: false,
+            }
+        },
+        computed: {
+            effort_steps: function() {
+                return this.$store.getters.getEffortSteps
             }
         },
         methods: {
