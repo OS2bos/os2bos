@@ -11,7 +11,7 @@
     <header>
         <div class="globalheader">
             <router-link to="/" class="header-link" title="Bevilling og Styring">
-                <img class="global-logo" src="/logo.png" alt="" />
+                <img class="global-logo" src="/logo.png" alt="">
                 <span class="global-brandname">Bevilling og Styring</span>
             </router-link>
             <div class="row" style="width: auto; align-items: center;">
