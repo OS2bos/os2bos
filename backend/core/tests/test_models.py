@@ -9,6 +9,7 @@
 from decimal import Decimal
 from datetime import date, timedelta
 from unittest import mock
+from freezegun import freeze_time
 
 from django import forms
 from django.contrib.auth import get_user_model
@@ -1434,6 +1435,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
 
         self.assertEqual(activity.total_cost_this_year, Decimal("500"))
 
+    @freeze_time("2019-08-01")
     def test_total_cost_this_year_multiple_levels(self):
         now = timezone.now()
         payment_schedule = create_payment_schedule()
