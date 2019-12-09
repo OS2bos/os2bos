@@ -1360,6 +1360,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
 
         self.assertEqual(activity.total_cost, Decimal("16000"))
 
+    @freeze_time("2019-08-01")
     def test_total_cost_no_payments(self):
         now = timezone.now()
         payment_schedule = create_payment_schedule()
@@ -1400,6 +1401,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         self.assertEqual(activity.total_cost, Decimal("500"))
         self.assertEqual(expected_activity.total_cost, Decimal("0"))
 
+    @freeze_time("2019-08-01")
     def test_total_cost_this_year(self):
         now = timezone.now()
         payment_schedule = create_payment_schedule()
@@ -1500,6 +1502,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             Decimal("9000"),
         )
 
+    @freeze_time("2019-08-01")
     def test_total_cost_this_year_multiple_levels_one_time(self):
         now = timezone.now()
         payment_schedule = create_payment_schedule(
@@ -1570,6 +1573,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             Decimal("700"),
         )
 
+    @freeze_time("2019-08-01")
     def test_total_cost_this_year_no_payments(self):
         now = timezone.now()
         payment_schedule = create_payment_schedule()
