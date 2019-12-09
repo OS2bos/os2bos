@@ -109,8 +109,17 @@
                 var order = this.sortOrders[sortKey] || 1
                 var list = this.dataList
                 if (filterKey) {
-                    list = list.filter(function (row) {
-                        return Object.keys(row).some(function (key) {
+                    list = list.filter((row) => {
+                        let fewer_keys = Object.keys(row)
+                        fewer_keys = fewer_keys.filter((key) => {
+                            for (let column in this.columns) {
+                                if (this.columns[column].key === key && this.columns[column].searchable === false) {
+                                    return key
+                                }
+                            }
+                        })
+                        return fewer_keys.some(function (key) {
+                            console.log(String(row[key]))
                             return String(row[key]).toLowerCase().indexOf(filterKey) > -1
                         })
                     })
