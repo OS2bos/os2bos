@@ -19,8 +19,6 @@
 
 <script>
 
-    import axios from '../http/Http.js'
-
     export default {
 
         props: {

@@ -87,8 +87,15 @@
                     <label for="field-paid-3">Kun ubetalte</label>
                 </fieldset>
                 <fieldset>
-                    <label>Hovedsag CPR</label>
-                    <input type="search" @input="changeCpr" v-model="$route.query.case__cpr_number">
+                    <label for="field-cpr">Hovedsag CPR</label>
+                    <input id="field-cpr" type="search" @input="changeCpr" v-model="$route.query.case__cpr_number">
+                </fieldset>
+                <fieldset>
+                    <label for="field-pay-method">Betalingsmåde</label>
+                    <list-picker 
+                        domId="field-pay-method"
+                        :list="payment_methods"
+                        @selection="changePaymentMethod" />
                 </fieldset>
             </form>
         </div>
@@ -103,18 +110,42 @@
     import { cost2da } from '../filters/Numbers.js'
     import PaymentModal from './PaymentModal.vue'
     import CaseFilters from '../mixins/CaseFilters.js'
+    import ListPicker from '../forms/ListPicker.vue'
 
     export default {
         
         components: {
-            PaymentModal
+            PaymentModal,
+            ListPicker
         },
         mixins: [
             CaseFilters
         ],
         data: function() {
             return {
-                input_timeout: null
+                input_timeout: null,
+                payment_methods: [
+                    {
+                        id: 0,
+                        name: 'Faktura',
+                        sys_name: 'INVOICE'
+                    },
+                    {
+                        id: 1,
+                        name: 'Intern afregning',
+                        sys_name: 'INTERNAL'
+                    },
+                    {
+                        id: 2,
+                        name: 'Udbetaling',
+                        sys_name: 'CASH'
+                    },
+                    {
+                        id: 3,
+                        name: 'SD-løn',
+                        sys_name: 'SD'
+                    }
+                ]
             }
         },
         computed: {
@@ -141,6 +172,15 @@
         methods: {
             loadResults: function() {
                 this.$store.dispatch('fetchMorePayments')
+            },
+            changePaymentMethod: function(method) {
+                if (method !== null) {
+                    console.log(method)
+                    this.$route.query.payment_method = this.payment_methods[method].sys_name
+                } else {
+                    this.$route.query.payment_method = ''
+                }
+                this.update()
             },
             update: function() {
                 clearTimeout(this.input_timeout)
