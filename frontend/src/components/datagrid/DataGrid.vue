@@ -113,7 +113,7 @@
                         let fewer_keys = Object.keys(row)
                         fewer_keys = fewer_keys.filter((key) => {
                             for (let column in this.columns) {
-                                if (this.columns[column].key === key && this.columns[column].searchable === false) {
+                                if (this.columns[column].key === key) { // Add "&& this.columns[column].searchable !== false" if you want to exclude some columns in searches
                                     return key
                                 }
                             }
