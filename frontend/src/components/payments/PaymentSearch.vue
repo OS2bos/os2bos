@@ -69,14 +69,14 @@
             <form>
                 <fieldset>
                     <label>Betalingsnøgle</label>
-                    <input @input="update()" type="text" v-model="$route.query.payment_schedule__payment_id">
+                    <input type="search" @input="update()" v-model="$route.query.payment_schedule__payment_id">
                 </fieldset>
                 <fieldset>
                     <legend>Tidsrum</legend>
                     <label>Fra dato</label>
-                    <input @input="update()" type="date" v-model="$route.query.paid_date_or_date__gte">
+                    <input type="date" @input="update()" v-model="$route.query.paid_date_or_date__gte">
                     <label>Til dato</label>
-                    <input @input="update()" type="date" v-model="$route.query.paid_date_or_date__lte">
+                    <input type="date" @input="update()" v-model="$route.query.paid_date_or_date__lte">
                 </fieldset>
                 <fieldset>
                     <input type="radio" id="field-paid-1" checked name="field-paid" :value="null" v-model="$route.query.paid" @change="update()">
@@ -88,7 +88,7 @@
                 </fieldset>
                 <fieldset>
                     <label>Hovedsag CPR</label>
-                    <input @input="update()" type="text" v-model="$route.query.case__cpr_number">
+                    <input type="search" @input="changeCpr" v-model="$route.query.case__cpr_number">
                 </fieldset>
             </form>
         </div>
@@ -102,12 +102,16 @@
     import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
     import PaymentModal from './PaymentModal.vue'
+    import CaseFilters from '../mixins/CaseFilters.js'
 
     export default {
         
         components: {
             PaymentModal
         },
+        mixins: [
+            CaseFilters
+        ],
         data: function() {
             return {
                 input_timeout: null
