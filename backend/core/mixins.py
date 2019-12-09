@@ -36,9 +36,7 @@ class AuditMixin:
         if status_code == 201 and action == "create":
             objid = response.data["id"]
             request_path = f"{request_path}{objid}"
-        log_str = (
-            f"{username} {action} {method} " + f"{request_path} {status_code}"
-        )
+        log_str = f"{username} {action} {method} {request_path} {status_code}"
         if request.method.lower() in self.log_methods:
             # Now perform logging.
             if status.is_server_error(status_code):  # pragma: no cover
