@@ -9,6 +9,6 @@ fixture `Check for visual regression`
 test.skip('Homepage', async t => {
 
     await login(t)
-    await vrt('check_for_visual_regression', 'homepage', 'url: http://localhost:8080/')
+    await vrt('check_for_visual_regression', 'homepage', `url: ${ baseurl }`)
 
 })

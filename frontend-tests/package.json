@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "A suite of tests for the bevillingsplatform frontend. Tests are isolated from the frontend src. This way they can be run independently of the development server and corresponding docker container.",
   "scripts": {
-    "test": "./node_modules/.bin/testcafe chrome tests/*.js --baseurl localhost:8080",
-    "headlesstest": "./node_modules/.bin/testcafe chrome:headless tests/*.js --baseurl localhost:8080"
+    "test": "./node_modules/.bin/testcafe chrome tests/*.js --baseurl http://localhost:8080/",
+    "headlesstest": "./node_modules/.bin/testcafe chrome:headless tests/*.js --baseurl http://localhost:8080/"
   },
   "keywords": [],
   "author": "",
