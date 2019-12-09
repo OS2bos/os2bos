@@ -123,7 +123,7 @@
     }
 
     .label-GRANTED {
-        background-color: hsl(var(--color2), 100%, 33%);
+        background-color: hsl(var(--color2), 100%, 25%);
         color: var(--grey0);
     }
 

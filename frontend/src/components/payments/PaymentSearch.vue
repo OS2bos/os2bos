@@ -68,15 +68,15 @@
             <h2>Filtre</h2>
             <form>
                 <fieldset>
-                    <label>Betalingsnøgle</label>
-                    <input type="search" @input="update()" v-model="$route.query.payment_schedule__payment_id">
+                    <label for="field-pay-key">Betalingsnøgle</label>
+                    <input id="field-pay-key" type="search" @input="update()" v-model="$route.query.payment_schedule__payment_id">
                 </fieldset>
                 <fieldset>
                     <legend>Tidsrum</legend>
-                    <label>Fra dato</label>
-                    <input type="date" @input="update()" v-model="$route.query.paid_date_or_date__gte">
-                    <label>Til dato</label>
-                    <input type="date" @input="update()" v-model="$route.query.paid_date_or_date__lte">
+                    <label for="field-from">Fra dato</label>
+                    <input id="field-from" type="date" @input="update()" v-model="$route.query.paid_date_or_date__gte">
+                    <label for="field-to">Til dato</label>
+                    <input id="field-to" type="date" @input="update()" v-model="$route.query.paid_date_or_date__lte">
                 </fieldset>
                 <fieldset>
                     <input type="radio" id="field-paid-1" checked name="field-paid" :value="null" v-model="$route.query.paid" @change="update()">

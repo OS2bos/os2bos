@@ -10,14 +10,13 @@ export async function login(t, user, pass) { // Can be called with optional para
     if (pass) {
         password = pass
     }
-    await t
-        .navigateTo('http://localhost:8080/')
 
     if (Selector('.logintext').exists) {
         await t
             .typeText('#username', username)
             .typeText('#password', password)
             .click(Selector('button').withExactText('Login'))
+            .expect(Selector('h1').innerText).contains('Mine sager')
     }
         
 }
