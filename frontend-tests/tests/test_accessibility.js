@@ -2,9 +2,10 @@ import { login } from '../utils/logins.js'
 import { axe, options } from '../utils/axe.js'
 import { Selector } from 'testcafe'
 import logs from '../utils/logs.js'
+import baseurl from '../utils/url.js'
 
 fixture `Test accessibility with AXE`
-    .page `http://localhost:8080/`
+    .page(baseurl)
     .beforeEach(async t => { await login(t) })
     .afterEach(async t => {
         await axe(t, null, options)

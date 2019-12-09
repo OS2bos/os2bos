@@ -4,6 +4,8 @@ import { Selector } from 'testcafe'
 import { login } from '../utils/logins.js'
 import { createActivity } from '../utils/crud.js'
 import logs from '../utils/logs.js'
+import { axe, options } from '../utils/axe.js'
+import baseurl from '../utils/url.js'
 
 function leadZero(number) {
     if (number < 10) {
@@ -96,9 +98,12 @@ const testdata = {
 }
 
 fixture `Create some data`// declare the fixture
-    .page `http://localhost:8080/#/`  // specify the start page
+    .page(baseurl)  // specify the start page
     .beforeEach(async t => { await login(t) })
-    .afterEach(() => logs())
+    .afterEach(async t => {
+        await axe(t, null, options)
+        logs()
+    })
 
 test('Create Case', async t => {
     
@@ -114,7 +119,7 @@ test('Create Case', async t => {
         .click('#field-skaleringstrappe')
         .click(Selector('#field-skaleringstrappe option').withText('5'))
         .click(Selector('input').withAttribute('type', 'submit'))
-        .navigateTo('http://localhost:8080/#/')
+        .navigateTo(baseurl)
         .expect(Selector('.cases table a').withText(testdata.case1.name)).ok()
 })
 
@@ -127,7 +132,7 @@ test('Create Appropriation', async t => {
         .click('#field-lawref')
         .click(Selector('#field-lawref option').withText(testdata.appr1.section))
         .click(Selector('input').withAttribute('type', 'submit'))
-        .navigateTo('http://localhost:8080/#/')
+        .navigateTo(baseurl)
         .click(Selector('a').withText(testdata.case1.name))
         .expect(Selector('.datagrid-action a').innerText).contains(testdata.appr1.name)
 })
@@ -143,7 +148,7 @@ test('Create activities', async t => {
     await createActivity(t, testdata.act3)
 
     await t
-        .navigateTo('http://localhost:8080/#/')
+        .navigateTo(baseurl)
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
 
@@ -176,7 +181,7 @@ test('Add adjustment activities', async t => {
     await createActivity(t, testdata.act4)
 
     await t
-        .navigateTo('http://localhost:8080/#/')
+        .navigateTo(baseurl)
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
     
@@ -194,7 +199,7 @@ test('Create and delete activity', async t => {
     await createActivity(t, testdata.act6)
 
     await t
-        .navigateTo('http://localhost:8080/#/')
+        .navigateTo(baseurl)
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
         .click(Selector(`tr[title="${ testdata.act6.note }"] a`))

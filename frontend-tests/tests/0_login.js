@@ -1,9 +1,10 @@
 import { login } from '../utils/logins.js'
 import { Selector } from 'testcafe'
+import baseurl from '../utils/url.js'
 
 
 fixture `Test SSO login`
-    .page `http://localhost:8080/`
+    .page(baseurl)
 
 test('Login', async t => {
 

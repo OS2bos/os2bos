@@ -1,9 +1,10 @@
 import vrt from '../utils/vrt.js'
 import { login } from '../utils/logins.js'
+import baseurl from '../utils/url.js'
 
 
 fixture `Check for visual regression`
-.page('http://localhost:8080/')
+.page(baseurl)
 
 test.skip('Homepage', async t => {
 
