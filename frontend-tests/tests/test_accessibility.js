@@ -1,30 +1,40 @@
 import { login } from '../utils/logins.js'
-import { axe } from '../utils/axe.js'
+import { axe, options } from '../utils/axe.js'
+import { Selector } from 'testcafe'
 import logs from '../utils/logs.js'
 
-const options = {
-    runOnly: {
-        type: 'tag',
-        values: ['wcag2a', 'wcag2aa']
-    }
-}
-
-// We are skipping a11y tests for now. This is not a public facing site
 fixture `Test accessibility with AXE`
     .page `http://localhost:8080/`
     .beforeEach(async t => { await login(t) })
-    .afterEach(() => logs())
+    .afterEach(async t => {
+        await axe(t, null, options)
+        logs()
+    })
 
-test('Home page', async t => {
-    await axe(t, null, options)
+test
+('Home page', async t => {
+    await t.expect(Selector('h1').innerText).contains('Mine sager')
 })
 
-test('Case page', async t => {
-    await t.navigateTo('http://localhost:8080/#/case/1/')
-    await axe(t, null, options)
+test
+('Case page', async t => {
+    await t
+        .click(Selector('a').withAttribute('href', '#/case/1/'))
+        .expect(Selector('h1').innerText).contains('Hovedsag')
 })
 
-test('Appropriation page', async t => {
-    await t.navigateTo('http://localhost:8080/#/appropriation/1/')
-    await axe(t, null, options)
+test
+.skip
+('Appropriation page', async t => {
+    await t
+    .click(Selector('a').withAttribute('href', '#/case/1/'))
+    .click(Selector('a').withAttribute('href', '#/appropriation/1/'))
+    .expect(Selector('h1').innerText).contains('Bevillingsskrivelse')
+})
+
+test
+.skip
+('Activity page', async t => {
+    await t.navigateTo('/#/activity/1/')
+    await t.expect(Selector('h1').innerText).contains('Udgift')
 })
