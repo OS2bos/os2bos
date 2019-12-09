@@ -119,7 +119,7 @@ test('Create Case', async t => {
         .click('#field-skaleringstrappe')
         .click(Selector('#field-skaleringstrappe option').withText('5'))
         .click(Selector('input').withAttribute('type', 'submit'))
-        .navigateTo(`${ baseurl }#/`)
+        .click(Selector('a.header-link'))
         .expect(Selector('.cases table a').withText(testdata.case1.name)).ok()
 })
 
@@ -132,7 +132,7 @@ test('Create Appropriation', async t => {
         .click('#field-lawref')
         .click(Selector('#field-lawref option').withText(testdata.appr1.section))
         .click(Selector('input').withAttribute('type', 'submit'))
-        .navigateTo(`${ baseurl }#/`)
+        .click(Selector('a.header-link'))
         .click(Selector('a').withText(testdata.case1.name))
         .expect(Selector('.datagrid-action a').innerText).contains(testdata.appr1.name)
 })
@@ -148,7 +148,7 @@ test('Create activities', async t => {
     await createActivity(t, testdata.act3)
 
     await t
-        .navigateTo(`${ baseurl }#/`)
+        .click(Selector('a.header-link'))
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
 
@@ -181,13 +181,15 @@ test('Add adjustment activities', async t => {
     await createActivity(t, testdata.act4)
 
     await t
-        .navigateTo(`${ baseurl }#/`)
+        .click(Selector('a.header-link'))
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
     
     await createActivity(t, testdata.act5)
     
-    await t.expect(Selector('.label-EXPECTED')).ok()
+    await t
+        .expect(Selector('.label-EXPECTED')).ok()
+        .debug()
 })
 
 test('Create and delete activity', async t => {
@@ -199,7 +201,7 @@ test('Create and delete activity', async t => {
     await createActivity(t, testdata.act6)
 
     await t
-        .navigateTo(`${ baseurl }#/`)
+        .click(Selector('a.header-link'))
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
         .click(Selector(`tr[title="${ testdata.act6.note }"] a`))

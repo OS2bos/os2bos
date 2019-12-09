@@ -29,6 +29,7 @@ async function createActivity(t, act_data) {
         .typeText('#field-payee-id', act_data.payee_id)
         .typeText('#field-payee-name', act_data.payee_name)
         .click(Selector('input').withAttribute('type', 'submit'))
+        .expect(Selector('h1').withText('Bevillingsskrivelse')).ok()
 }
 
 export { createActivity }

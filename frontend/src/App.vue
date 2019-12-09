@@ -176,7 +176,7 @@
     }
 
     .expected {
-        color: hsl(var(--color3), 100%, 40%);
+        color: hsl(var(--color3), 100%, 35%);
     }
 
     /* modal box */
