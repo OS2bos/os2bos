@@ -262,6 +262,7 @@ LOGGING = {
         "default": {
             "level": "DEBUG",
             "class": "logging.FileHandler",
+            "formatter": "verbose",
             "filename": settings.get(
                 "LOG_FILE", fallback=os.path.join(LOG_DIR, "django-debug.log")
             ),
@@ -269,6 +270,7 @@ LOGGING = {
         "audit": {
             "level": "INFO",
             "class": "logging.FileHandler",
+            "formatter": "verbose",
             "filename": settings.get(
                 "AUDIT_LOG_FILE", fallback=os.path.join(LOG_DIR, "audit.log")
             ),
