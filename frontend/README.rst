@@ -67,25 +67,58 @@ The test will run inside a `Chrome browser <https://www.google.com/intl/en/chrom
 If you want to run the test in another browser, open ``/frontend-test/package.json`` and edit the line for the *test* script to use another browser like ``firefox`` or ``safari``.
 
 
-Hacking
--------
+Tutorial: Change the logo
+-------------------------
+
+This tutorial will give you a simple introduction to customizing the frontend for your own purposes.
+
+Say, you want to change the logo image that rests in the top left corner of every page. 
+You'll need to do the following:
+
+# Add a new image to the frontend source files
+# Identify the component that displays the logo
+# Edit the corresponding template and maybe add some styles
+# Build the frontend
+
+Let's go through these steps in greater detail.
 
 
-Styling
--------
+Add a new image
+^^^^^^^^^^^^^^^
+
+Static resources like images, icons, and multimedia are found in the ``/frontend/public`` folder. 
+
+If you look inside the folder, you'll find a *logo.png* file in there already. 
+Now you could easily swap it for a different image with the same filename but that's no fun. 
+Instead, get a new *my-logo.png* image and drop it into ``/fontend/public``.
+
+
+Find the component that displays the logo
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+You probably saw an *index.html* file while looking into the ``/fontend/public`` folder.
+It doesn't contain much of interest since all of the references to javascript and css files are created in the build step.
+But if you want to add external stylesheets or a new favicon, this *index.html* is the place to do it.
+
+The real heart of our single page application is in ``/frontend/src/App.vue``
+All the dynamically generated views are piped into *App.vue*. 
+Notice the line with ``<router-view v-if="auth" />`` in the ``<template>`` part of the file. 
+The *router-view* element is the entrypoint for Vue Router to pipe ind content. 
+When you navigate between views in the single page application, it's really just the contents of *router-view* that are being swapped.
+Looking into ``/frontend/src/router.js`` will tell you what components are displayed for each route.
+This is a good starting point for understanding what components are being displayed at any given time.
+
+*But* since the logo is present on every page, it is not displayed using *router-view*.
+The logo resides in the header so we must look into ``<app-header />``. 
+If you read about `vue components <https://vuejs.org/v2/guide/components.html>`_, you'll know that this element corresponds to the *import* statement in the ``<script>`` section that references ``/frontend/src/components/header/Header.vue``
+
+Opening *Header.vue* will show how the logo image is integrated into the ``<template>`` section of this file.
 
 
 Parts overview
 --------------
 
-
-Documentation outline:
-----------------------
-
-* Getting started
-* Building for production
-* Building for development
-* Working with styles
+* style assets
 * Working with views
 * Working with vue-router
 * working with vuex
