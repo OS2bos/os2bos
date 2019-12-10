@@ -373,6 +373,10 @@ CONSTANCE_CONFIG = {
         settings.get("ACCOUNT_NUMBER_KIND", fallback="123"),
         _("Kontostreng art"),
     ),
+    "ACCOUNT_NUMBER_UNKNOWN": (
+        settings.get("ACCOUNT_NUMBER_UNKNOWN", fallback="UKENDT"),
+        _("standardværdi, hvis kontostreng mangler"),
+    ),
     "PRISM_ORG_UNIT": (
         settings.get("PRISM_ORG_UNIT", fallback=0),
         _("Kommune-nummer"),
