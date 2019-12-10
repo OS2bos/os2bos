@@ -17,12 +17,12 @@
             <error />
             <fieldset>
                 <label class="required" for="field-sbsysid">Foranstaltningssag (SBSYS-sag)</label>
-                <input id="field-sbsysid" type="text" v-model="appr.sbsys_id" @input="checkKLE(appr.sbsys_id)" required>
+                <input id="field-sbsysid" type="text" v-model="appr.sbsys_id" @input="checkKLE(appr.sbsys_id)" required :disabled="appr.granted_from_date">
                 <p class="danger" v-if="sbsysCheck">Sagsnummeret svarer ikke til en af de paragraffer, der kan vælges.</p>
                 <error err-key="sbsys_id" />
             
                 <label class="required" for="field-lawref">Bevilling efter §</label>
-                <select id="field-lawref" class="listpicker" v-model="appr.section" required>
+                <select id="field-lawref" class="listpicker" v-model="appr.section" required :disabled="appr.granted_from_date">
                     <option v-for="s in sections" :value="s.id" :key="s.id">
                         {{ s.paragraph }} {{ s.text }}
                     </option>
@@ -141,7 +141,6 @@
             cancel: function() {
                 if (!this.create_mode) {
                     this.$emit('close')
-                    this.$router.push(`/appropriation/${ this.appr.id }/`) 
                 } else {
                     this.$emit('close')
                     this.$router.push(`/case/${ this.$route.params.caseid }/`) 
