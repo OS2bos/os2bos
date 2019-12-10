@@ -375,7 +375,7 @@ CONSTANCE_CONFIG = {
     ),
     "ACCOUNT_NUMBER_UNKNOWN": (
         settings.get("ACCOUNT_NUMBER_UNKNOWN", fallback="UKENDT"),
-        _("standardværdi, hvis kontrostreng mangler"),
+        _("standardværdi, hvis kontostreng mangler"),
     ),
     "PRISM_ORG_UNIT": (
         settings.get("PRISM_ORG_UNIT", fallback=0),
