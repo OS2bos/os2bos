@@ -18,7 +18,14 @@ Getting started
 ---------------
 
 If you have `docker <https://www.docker.com/>`_ installed and followed the `installation instructions <../README.md>`_ , you already have the frontend up and running.
-Open your browser and point to ``localhost:8080`` to see the GUI in action. You can log in with username ``admin`` and password ``sagsbehandler``.
+
+Open your browser and point to ``localhost:8080`` to see the GUI in action. 
+You should be able to log in with username **admin** and password **sagsbehandler**.
+
+In this configuration, the frontend lives inside a docker container running the Vue CLI server. 
+When you edit files located in ``/frontend/src``, Vue CLI server uses hot relead to immediately reload the changes in your browser.
+
+**Note:** This setup is only suitable for development use.
 
 
 Building
