@@ -175,7 +175,6 @@
             },
             changePaymentMethod: function(method) {
                 if (method !== null) {
-                    console.log(method)
                     this.$route.query.payment_method = this.payment_methods[method].sys_name
                 } else {
                     this.$route.query.payment_method = ''
