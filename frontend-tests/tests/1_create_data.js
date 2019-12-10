@@ -3,8 +3,7 @@
 import { Selector } from 'testcafe'
 import { login } from '../utils/logins.js'
 import { createActivity } from '../utils/crud.js'
-import logs from '../utils/logs.js'
-import { axe, options } from '../utils/axe.js'
+import { axe, axeOptions } from '../utils/axe.js'
 import baseurl from '../utils/url.js'
 
 function leadZero(number) {
@@ -99,16 +98,17 @@ const testdata = {
 
 fixture `Create some data`// declare the fixture
     .page(baseurl)  // specify the start page
-    .beforeEach(async t => { await login(t) })
-    .afterEach(async t => {
-        await axe(t, null, options)
-        logs()
+    .beforeEach(async t => { 
+        await login(t) 
     })
 
 test('Create Case', async t => {
     
+    await t.click(Selector('button').withText('+ Tilknyt hovedsag'))
+    
+    await axe(t, null, axeOptions)
+
     await t
-        .click(Selector('button').withText('+ Tilknyt hovedsag'))
         .typeText('#field-sbsys-id', testdata.case1.name)
         .typeText('#field-cpr', '000000-0000')
         .click(Selector('label').withAttribute('for', 'inputRadio1'))
@@ -121,6 +121,8 @@ test('Create Case', async t => {
         .click(Selector('input').withAttribute('type', 'submit'))
         .click(Selector('a.header-link'))
         .expect(Selector('.cases table a').withText(testdata.case1.name)).ok()
+    
+    await axe(t, null, axeOptions)
 })
 
 test('Create Appropriation', async t => {
@@ -128,6 +130,10 @@ test('Create Appropriation', async t => {
     await t
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('.appropriation-create-btn'))
+    
+    await axe(t, null, axeOptions)
+
+    await t
         .typeText('#field-sbsysid', testdata.appr1.name)
         .click('#field-lawref')
         .click(Selector('#field-lawref option').withText(testdata.appr1.section))
@@ -135,6 +141,8 @@ test('Create Appropriation', async t => {
         .click(Selector('a.header-link'))
         .click(Selector('a').withText(testdata.case1.name))
         .expect(Selector('.datagrid-action a').innerText).contains(testdata.appr1.name)
+    
+    await axe(t, null, axeOptions)
 })
 
 test('Create activities', async t => {
@@ -154,8 +162,9 @@ test('Create activities', async t => {
 
     testdata.act1.act_detail = await Selector('.activities table tr.act-list-item a').nth(0).innerText
 
-    await t
-        .expect(Selector('.activities table tr.act-list-item a')).ok()
+    await t.expect(Selector('.activities table tr.act-list-item a').exists).ok()
+    
+    await axe(t, null, axeOptions)
 })
 
 test('Approve appropriation', async t => {
@@ -165,10 +174,16 @@ test('Approve appropriation', async t => {
         .click(Selector('a').withText(testdata.appr1.name))
         .click('#check-all')
         .click(Selector('button').withText('Godkendt valgte'))
+    
+    await axe(t, null, axeOptions)
+
+    await t
         .click(Selector('label').withAttribute('for','inputRadio1'))
         .typeText('#field-text', 'Godkendt grundet svære og særligt tvingende omstændigheder')
         .click('button[type="submit"]')
-        .expect(Selector('.mini-label .label-GRANTED')).ok()
+        .expect(Selector('.mini-label .label-GRANTED').exists).ok()
+    
+    await axe(t, null, axeOptions)
 })
 
 test('Add adjustment activities', async t => {
@@ -189,7 +204,9 @@ test('Add adjustment activities', async t => {
     
     await t
         .expect(Selector('.label-EXPECTED')).ok()
-        .debug()
+        .expect(Selector('h1').withText('Bevillingsskrivelse').exists).ok()
+    
+    await axe(t, null, axeOptions)
 })
 
 test('Create and delete activity', async t => {
@@ -207,7 +224,13 @@ test('Create and delete activity', async t => {
         .click(Selector(`tr[title="${ testdata.act6.note }"] a`))
         .expect(Selector('.label-DRAFT')).ok()
         .click(Selector('.act-delete-btn'))
+    
+    await axe(t, null, axeOptions)
+
+    await t
         .click('button[type="submit"]')
-        .expect(Selector('h1').withText('Bevillingsskrivelse')).ok()
         .expect(Selector(`tr[title="${ testdata.act6.note }"]`).exists).notOk()
+        .expect(Selector('h1').withText('Bevillingsskrivelse').exists).ok()
+    
+    await axe(t, null, axeOptions)
 })
