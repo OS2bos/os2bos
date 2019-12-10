@@ -2,7 +2,7 @@
 Frontend documentation
 ======================
 
-The frontend web GUI is a single page application based on the `VueJS framework. <https://vuejs.org/>`_
+The frontend GUI is a javascript single page application using the `VueJS framework. <https://vuejs.org/>`_
 It comprises the following components:
 
 * `VueJS <https://vuejs.org/v2/api/>`_ for templating and UI logic (view layer)
@@ -10,14 +10,34 @@ It comprises the following components:
 * `Vuex <https://vuex.vuejs.org/api/>`_ for sharing data between Vue components
 * `axios <https://github.com/axios/axios>`_ for communicating with the backend REST API
 * A modified version of `Semstrap <https://iamfrank.github.io/semstrap/>`_ for basic CSS styling
-* `Vue CLI <https://cli.vuejs.org/guide/>`_ for build tooling
+* `Vue CLI <https://cli.vuejs.org/guide/>`_ for build process management
 * `Testcafe <https://devexpress.github.io/testcafe/documentation/getting-started/>`_ for E2E testing
 
 
 Getting started
 ---------------
 
-To be continued ...
+If you have `docker <https://www.docker.com/>`_ installed and followed the `installation instructions <../README.md>`_ , you already have the frontend up and running.
+Open your browser and point to ``localhost:8080`` to see the GUI in action. You can log in with username ``admin`` and password ``sagsbehandler``.
+
+
+Building
+--------
+
+
+Testing
+-------
+
+Hacking
+-------
+
+
+Styling
+-------
+
+
+Parts overview
+--------------
 
 
 Documentation outline:
