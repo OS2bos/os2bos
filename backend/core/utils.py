@@ -369,7 +369,7 @@ def format_prism_financial_record(payment, line_no, record_no):
         "114": f"{payment.date.year}",
         "132": "02",
         "133": f"{payment.recipient_id}",
-        "153": f"{payment.payment_schedule.activity.details}"[:35],
+        "153": f"{payment.payment_schedule.payment_id}",
     }
     fields["117"] = fields["110"] + fields["103"] + fields["104"]
 
@@ -408,8 +408,6 @@ def format_prism_payment_record(payment, line_no, record_no):
 
     03 - organisation type, always given as '00'. 2 digits.
 
-    07 - ID for the payment. 18 digits with leading zeroes.
-
     08 - amount. 11 digits with leading zeroes.
 
     09 - sign. '+' for larger than zero, '-' for less. Always '+'.
@@ -423,19 +421,22 @@ def format_prism_payment_record(payment, line_no, record_no):
     16 - posteringshenvisningsnummer. As 117 in the finance records -
     date + machine number + record number - 8 chars + 5 chars + 7 chars.
 
+    17 - Payment ID. 20 digits with leading zeroes.
+
     40 - posting text.
     """
 
+    payment_id = payment.payment_schedule.payment_id
     fields = {
         "02": f"{config.PRISM_ORG_UNIT:04d}",
         "03": "00",
-        "07": f"{payment.payment_schedule.payment_id:018d}",
         "08": f"{int(payment.amount*100):011d}",
         "09": "+",
         "10": "02",
         "11": f"{payment.recipient_id}",
         "12": f"{payment.date.strftime('%Y%m%d')}",
-        "40": f"{payment.payment_schedule.activity.details}"[:80],
+        "17": f"{payment_id:020d}",
+        "40": f"Fra Ballerup Kommune ref: {payment_id}",
     }
     fields[
         "16"

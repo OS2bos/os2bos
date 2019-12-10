@@ -469,13 +469,16 @@ class PaymentSchedule(models.Model):
             department = "XXX"
             kind = "XXX"
 
-        # We cannot return an account string when there is no
+        # Account string is "unknown" when there is no
         # activity or account.
+        # The explicit inclusion of "unknown" is a demand due to the
+        # PRISME integration.
         if not hasattr(self, "activity") or not self.activity.account:
-            return ""
+            account_number = config.ACCOUNT_NUMBER_UNKNOWN
+        else:
+            account_number = self.activity.account.number
 
-        account = self.activity.account
-        return f"{department}-{account.number}-{kind}"
+        return f"{department}-{account_number}-{kind}"
 
     def __str__(self):
         recipient_type_str = self.get_recipient_type_display()
