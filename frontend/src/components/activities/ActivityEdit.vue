@@ -61,10 +61,7 @@
                         <error err-key="details" />
                         <label class="required" for="field-startdate">
                             Startdato
-                            <span v-if="startDateSet && this.act.activity_type !== 'MAIN_ACTIVITY' && this.mode !== 'clone'">
-                                - tidligst {{ displayDate(startDateSet) }}
-                            </span>
-                            <span v-if="startDateSet && this.mode === 'clone' && this.act.activity_type !== 'MAIN_ACTIVITY'">
+                            <span v-if="startDateSet && this.act.activity_type !== 'MAIN_ACTIVITY'">
                                 - tidligst {{ displayDate(startDateSet) }}
                             </span>
                         </label>
@@ -81,10 +78,7 @@
                     
                         <label for="field-enddate">
                             Slutdato
-                            <span v-if="endDateSet && this.act.activity_type !== 'MAIN_ACTIVITY' && this.mode !== 'clone'">
-                                - senest {{ displayDate(endDateSet) }}
-                            </span>
-                            <span v-if="startDateSet && this.mode === 'clone' && this.act.activity_type !== 'MAIN_ACTIVITY'">
+                            <span v-if="endDateSet && this.act.activity_type !== 'MAIN_ACTIVITY'">
                                 - senest {{ displayDate(endDateSet) }}
                             </span>
                         </label>
