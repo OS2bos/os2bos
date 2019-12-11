@@ -333,8 +333,14 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
             payment_amount=Decimal(666),
         )
         # Create an activity etc which is required.
+
+        case_cpr_number = "1234567890"
         case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
+            self.case_worker,
+            self.team,
+            self.municipality,
+            self.district,
+            cpr_number=case_cpr_number,
         )
         section = create_section()
         appropriation = create_appropriation(
@@ -369,11 +375,17 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         due_payments = due_payments_for_prism(end_date)
         records = generate_records_for_prism(due_payments)
         self.assertEqual(len(records), 2)
-        payment_reference = records[0].split("&117")[1][:20]
-        finance_reference = records[1].split("&16")[1][:20]
+        finance_reference = records[0].split("&117")[1][:20]
+        payment_reference = records[1].split("&16")[1][:20]
         # These references is what links the two records.
         # This is a simple sanity check.
         self.assertEqual(payment_reference, finance_reference)
+        # Check that the CPR number on G69 is the one from the case.
+        finance_cpr = records[0].split("&133")[1][:10]
+        payment_cpr = records[1].split("&11")[1][:10]
+        self.assertEqual(finance_cpr, case_cpr_number)
+        self.assertEqual(payment_cpr, payment_schedule.recipient_id)
+        self.assertNotEqual(finance_cpr, payment_cpr)
 
     def test_export_prism_payments_for_date(self):
         # Create a payment that is due today

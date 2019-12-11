@@ -354,11 +354,12 @@ def format_prism_financial_record(payment, line_no, record_no):
 
     132 - recipient number code - always '02' for CPR number.
 
-    133 - recipient - 10 digits, CPR number.
+    133 - beneficiary - 10 digits, CPR number.
 
     153 - posting text.
     """
 
+    case_cpr = payment.payment_schedule.activity.appropriation.case.cpr_number
     fields = {
         "103": f"{config.PRISM_MACHINE_NO:05d}",
         "104": f"{record_no:07d}",
@@ -368,7 +369,7 @@ def format_prism_financial_record(payment, line_no, record_no):
         "113": "D",
         "114": f"{payment.date.year}",
         "132": "02",
-        "133": f"{payment.recipient_id}",
+        "133": f"{case_cpr}",
         "153": f"{payment.payment_schedule.payment_id}",
     }
     fields["117"] = fields["110"] + fields["103"] + fields["104"]
