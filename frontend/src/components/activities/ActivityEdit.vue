@@ -133,6 +133,7 @@
     import PayTypeEdit from '../payment-details/payment-type/PaymentTypeEdit.vue'
     import PayPlan from '../payment-details/PaymentPlan.vue'
     import PaymentReceiverEdit from '../payment-details/payment-receiver/PaymentReceiverEdit.vue'
+import notify from '../notifications/Notify'
 
     export default {
 
@@ -229,7 +230,26 @@
             displayDate: function(dt) {
                 return json2jsDate(dt)
             },
+            checkDateMax: function(datestr) {
+                const maxpast = parseInt( new Date().getFullYear() ) - 10
+                const maxfuture = parseInt( new Date().getFullYear() ) + 18
+                if (parseInt(datestr.substr(0,4)) < maxpast) {
+                    notify('Dato må maks. være 10 år tilbage i tiden', 'error')
+                    return false
+                } else if (parseInt(datestr.substr(0,4)) > maxfuture) {
+                    notify('Dato må maks. være 18 år fremme i tiden', 'error')
+                    return false
+                } else {
+                    return true
+                }
+            },
             saveChanges: function() {
+                if (!this.checkDateMax(this.act.start_date)) {
+                    return
+                }
+                if (this.act.end_date && !this.checkDateMax(this.act.end_date)) {
+                    return
+                }
                 let data = {
                     activity_type: this.act.activity_type,
                     start_date: this.act.start_date,
