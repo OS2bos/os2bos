@@ -534,6 +534,110 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         )
         self.assertEqual(response.status_code, 400)
 
+    def test_grant_main_activity_not_allowed(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+
+        now = timezone.now().date()
+        main_activity = create_activity(
+            case,
+            appropriation,
+            start_date=now - timedelta(days=5),
+            end_date=now + timedelta(days=5),
+            activity_type=MAIN_ACTIVITY,
+        )
+        section.main_activities.add(main_activity.details)
+
+        payment_schedule = create_payment_schedule(
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT
+        )
+        # Create a suppl activity without setting its allowed main_activities.
+        suppl_activity = create_activity(
+            case,
+            appropriation,
+            start_date=now - timedelta(days=5),
+            end_date=now - timedelta(days=5),
+            activity_type=SUPPL_ACTIVITY,
+            payment_plan=payment_schedule,
+        )
+        section.supplementary_activities.add(suppl_activity.details)
+
+        url = reverse("appropriation-grant", kwargs={"pk": appropriation.pk})
+        self.client.login(username=self.username, password=self.password)
+        approval_level, _ = ApprovalLevel.objects.get_or_create(
+            name="egenkompetence"
+        )
+        json = {
+            "approval_level": approval_level.id,
+            "activities": [main_activity.pk, suppl_activity.pk],
+        }
+        response = self.client.patch(
+            url, json, content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json()["errors"][0],
+            "En af følgeydelserne kan ikke bevilges"
+            " på den angivne hovedaktivitet",
+        )
+
+    def test_grant_suppl_activity_not_allowed(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+
+        now = timezone.now().date()
+        main_activity = create_activity(
+            case,
+            appropriation,
+            start_date=now - timedelta(days=5),
+            end_date=now + timedelta(days=5),
+            activity_type=MAIN_ACTIVITY,
+        )
+        section.main_activities.add(main_activity.details)
+
+        payment_schedule = create_payment_schedule(
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT
+        )
+        # Create a suppl activity without setting its allowed main_activities.
+        suppl_activity = create_activity(
+            case,
+            appropriation,
+            start_date=now - timedelta(days=5),
+            end_date=now - timedelta(days=5),
+            activity_type=SUPPL_ACTIVITY,
+            payment_plan=payment_schedule,
+        )
+        suppl_activity.details.main_activities.add(main_activity.details)
+
+        url = reverse("appropriation-grant", kwargs={"pk": appropriation.pk})
+        self.client.login(username=self.username, password=self.password)
+        approval_level, _ = ApprovalLevel.objects.get_or_create(
+            name="egenkompetence"
+        )
+        json = {
+            "approval_level": approval_level.id,
+            "activities": [main_activity.pk, suppl_activity.pk],
+        }
+        response = self.client.patch(
+            url, json, content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json()["errors"][0],
+            "En af følgeydelserne kan ikke bevilges"
+            " på den angivne paragraf",
+        )
+
     @mock.patch("core.models.send_appropriation")
     def test_grant_one_time_in_past_included(self, send_appropriation_mock):
         case = create_case(
@@ -564,6 +668,9 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             activity_type=SUPPL_ACTIVITY,
             payment_plan=payment_schedule,
         )
+        section.supplementary_activities.add(one_time_activity.details)
+        one_time_activity.details.main_activities.add(activity.details)
+
         url = reverse("appropriation-grant", kwargs={"pk": appropriation.pk})
         self.client.login(username=self.username, password=self.password)
         approval_level, _ = ApprovalLevel.objects.get_or_create(
@@ -632,6 +739,9 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             activity_type=SUPPL_ACTIVITY,
             payment_plan=payment_schedule,
         )
+        section.supplementary_activities.add(draft_activity.details)
+        draft_activity.details.main_activities.add(activity.details)
+
         url = reverse("appropriation-grant", kwargs={"pk": appropriation.pk})
         self.client.login(username=self.username, password=self.password)
         approval_level, _ = ApprovalLevel.objects.get_or_create(

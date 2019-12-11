@@ -910,6 +910,14 @@ class Appropriation(AuditModelMixin, models.Model):
             return f.first()
 
     @property
+    def supplementary_activities(self):
+        """Return supplementary activities, if any."""
+        suppl_activities = self.activities.filter(
+            activity_type=SUPPL_ACTIVITY, modifies__isnull=True
+        )
+        return suppl_activities
+
+    @property
     def section_info(self):
         if self.main_activity and self.section:
             si_filter = self.main_activity.details.sectioninfo_set.filter(
@@ -945,6 +953,32 @@ class Appropriation(AuditModelMixin, models.Model):
             raise RuntimeError(
                 _("Denne ydelse kan ikke bevilges på den angivne paragraf")
             )
+        # Make sure that the supplementary activities are valid
+        # for this appropriation.
+        if not all(
+            activity.details in self.section.supplementary_activities.all()
+            for activity in self.supplementary_activities
+        ):
+            raise RuntimeError(
+                _(
+                    "En af følgeydelserne kan ikke bevilges"
+                    " på den angivne paragraf"
+                )
+            )
+        # Make sure that the main activity is valid for the
+        # supplementary activities.
+        if not all(
+            self.main_activity.details
+            in activity.details.main_activities.all()
+            for activity in self.supplementary_activities
+        ):
+            raise RuntimeError(
+                _(
+                    "En af følgeydelserne kan ikke bevilges"
+                    " på den angivne hovedaktivitet"
+                )
+            )
+
         # Can't approve nothing
         if not activities:
             raise RuntimeError(_("Angiv mindst én aktivitet"))
