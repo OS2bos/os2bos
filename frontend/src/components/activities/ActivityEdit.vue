@@ -61,7 +61,10 @@
                         <error err-key="details" />
                         <label class="required" for="field-startdate">
                             Startdato
-                            <span v-if="startDateSet">
+                            <span v-if="startDateSet && this.act.activity_type !== 'MAIN_ACTIVITY' && this.mode !== 'clone'">
+                                - tidligst {{ displayDate(startDateSet) }}
+                            </span>
+                            <span v-if="startDateSet && this.mode === 'clone' && this.act.activity_type !== 'MAIN_ACTIVITY'">
                                 - tidligst {{ displayDate(startDateSet) }}
                             </span>
                         </label>
@@ -78,7 +81,10 @@
                     
                         <label for="field-enddate">
                             Slutdato
-                            <span v-if="endDateSet">
+                            <span v-if="endDateSet && this.act.activity_type !== 'MAIN_ACTIVITY' && this.mode !== 'clone'">
+                                - senest {{ displayDate(endDateSet) }}
+                            </span>
+                            <span v-if="startDateSet && this.mode === 'clone' && this.act.activity_type !== 'MAIN_ACTIVITY'">
                                 - senest {{ displayDate(endDateSet) }}
                             </span>
                         </label>
@@ -126,7 +132,7 @@
 
     import axios from '../http/Http.js'
     import { activityId2name } from '../filters/Labels.js'
-    import { epoch2DateStr } from '../filters/Date.js'
+    import { epoch2DateStr, tenYearsAgo, inEighteenYears } from '../filters/Date.js'
     import { json2jsDate } from '../filters/Date.js'
     import Error from '../forms/Error.vue'
     import ListPicker from '../forms/ListPicker.vue'
@@ -180,7 +186,7 @@
                 if (this.mode === 'clone' && this.act.activity_type === 'MAIN_ACTIVITY') {
                     this.act.start_date = null
                 }
-                return false
+                return tenYearsAgo()
             },
             endDateSet: function() {
                 if (this.act.activity_type !== 'MAIN_ACTIVITY' && this.mode !== 'clone') {
@@ -193,7 +199,7 @@
                 if (this.mode === 'clone' && this.act.activity_type === 'MAIN_ACTIVITY') {
                     this.act.end_date = null
                 }
-                return false
+                return inEighteenYears()
             },
             payment: function() {
                 return this.$store.getters.getPayment
