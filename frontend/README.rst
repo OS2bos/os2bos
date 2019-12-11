@@ -138,13 +138,3 @@ Build the frontend
 If you are running in development mode, your changes should display in the browser right after you save your changes.
 For a production build, you'd run the ``npm run build`` command and host the built files from ``/frontend/dist`` somewhere.
 That's it. Now you've customized the frontend :)
-
-
-Parts overview
---------------
-
-* style assets
-* Working with views
-* Working with vue-router
-* working with vuex
-* Usable modules: Store modules, mixins, filters
