@@ -354,7 +354,7 @@ def format_prism_financial_record(payment, line_no, record_no):
 
     132 - recipient number code - always '02' for CPR number.
 
-    133 - recipient - 10 digits, CPR number.
+    133 - beneficiary - 10 digits, CPR number.
 
     153 - posting text.
     """
