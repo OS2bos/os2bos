@@ -23,7 +23,7 @@ Open your browser and point to ``localhost:8080`` to see the GUI in action.
 You should be able to log in with username **admin** and password **admin**.
 
 In this configuration, the frontend lives inside a docker container running the Vue CLI server. 
-When you edit files located in ``/frontend/src``, Vue CLI server uses hot relead to immediately reload the changes in your browser.
+When you edit files located in ``/frontend/src``, Vue CLI server uses hot reload to immediately reload the changes in your browser.
 
 **Note:** This setup is only suitable for development use. You should make a proper production build for any public use.
 
