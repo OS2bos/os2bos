@@ -231,8 +231,14 @@ import notify from '../notifications/Notify'
                 return json2jsDate(dt)
             },
             checkDateMax: function(datestr) {
-                const maxpast = parseInt( new Date().getFullYear() ) - 10
-                const maxfuture = parseInt( new Date().getFullYear() ) + 18
+                const maxpast = parseInt( new Date().getFullYear() ) - 10,
+                    maxfuture = parseInt( new Date().getFullYear() ) + 18,
+                    date_regex = /[0-9]{4}-[0-9]{2}-[0-9]{2}/g
+                    
+                if (!datestr.match(date_regex)) {
+                    notify('Er du sikker på, at du har angivet dato som åååå-mm-dd?', 'error')
+                    return false
+                }
                 if (parseInt(datestr.substr(0,4)) < maxpast) {
                     notify('Dato må maks. være 10 år tilbage i tiden', 'error')
                     return false
