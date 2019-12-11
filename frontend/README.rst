@@ -101,18 +101,43 @@ It doesn't contain much of interest since all of the references to javascript an
 But if you want to add external stylesheets or a new favicon, this *index.html* is the place to do it.
 
 The real heart of our single page application is in ``/frontend/src/App.vue``
-All the dynamically generated views are piped into *App.vue*. 
-Notice the line with ``<router-view v-if="auth" />`` in the ``<template>`` part of the file. 
+All the dynamically generated views are piped into *App.vue*.
+If you open the file, you'll see a ``<template>`` section, a ``<script>`` section, and a ``<style>`` section.
+These are typical sections in a Vue component file.
+
+Notice the line with ``<router-view v-if="auth" />`` in the ``<template>`` section. 
 The *router-view* element is the entrypoint for Vue Router to pipe ind content. 
 When you navigate between views in the single page application, it's really just the contents of *router-view* that are being swapped.
 Looking into ``/frontend/src/router.js`` will tell you what components are displayed for each route.
 This is a good starting point for understanding what components are being displayed at any given time.
 
-*But* since the logo is present on every page, it is not displayed using *router-view*.
-The logo resides in the header so we must look into ``<app-header />``. 
+**But** since the logo is present on every page, it is not displayed using *router-view*.
+The logo resides in the header so you must look into ``<app-header />``.
 If you read about `vue components <https://vuejs.org/v2/guide/components.html>`_, you'll know that this element corresponds to the *import* statement in the ``<script>`` section that references ``/frontend/src/components/header/Header.vue``
+Opening *Header.vue* will show you where the logo image is integrated.
 
-Opening *Header.vue* will show how the logo image is integrated into the ``<template>`` section of this file.
+
+Edit template
+^^^^^^^^^^^^^
+
+In *Header.vue* you'll find that the logo is found in this line ``<img class="global-logo" src="/logo.png" alt="">``.
+Change the *src* attribute of the *img* element to "/my-logo.png".
+Notice that the image src URL considers ``/frontend/public`` folder to be the root folder for static files. 
+So the proper way to point to ``/frontend/public/my-logo.png`` is to enter ``/my-logo.png``.
+
+Maybe your new logo has some different dimensions so you might want to change the logo's styles.
+The *img* element has class *global-logo*. 
+Look in the ``<styles>`` section of *Header.vue* to find the CSS rules for ``.global-logo`` and change it accordingly.
+Styles that only apply to a certain component are usually added directly to Vue components like this.
+Global styles are added in *App.vue* or in some of the CSS files in ``/frontend/src/assets/css``
+
+
+Build the frontend
+^^^^^^^^^^^^^^^^^^
+
+If you are running in development mode, your changes should display in the browser right after you save your changes.
+For a production build, you'd run the ``npm run build`` command and host the built files from ``/frontend/dist`` somewhere.
+That's it. Now you've customized the frontend :)
 
 
 Parts overview
@@ -122,5 +147,4 @@ Parts overview
 * Working with views
 * Working with vue-router
 * working with vuex
-
 * Usable modules: Store modules, mixins, filters
