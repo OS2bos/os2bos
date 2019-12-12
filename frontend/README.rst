@@ -74,7 +74,7 @@ You can test your local development instance in virtual machines and on other de
 This is useful is you need to do UI tests on mobile devices or in browsers that can't be installed on your system (like old versions of Internet Explorer).
 Unfortunately, this doesn't come out of the box. You'll need to set it up.
 
-Pointing your browser to `localhost:8080` will show you the UI but this will only work on your host machine. 
+Pointing your browser to ``localhost:8080`` will show you the UI but this will only work on your host machine. 
 In your virtual guest OS or mobile device, localhost points to something else. 
 The key is to use your host's IP address rather than localhost. 
 Devices *that are on your local network* are able to detect your host system IP and display the UI.
@@ -84,9 +84,9 @@ Virtual machines will generally also be able to pinpoint your development instan
 
 First, find your host system IP address on your local network. 
 There are various ways to do this depending on your system. 
-Your IP could be something like `10.0.0.23`
+Your IP could be something like ``10.0.0.23``
 
-Open `/docker-compose.yml` and find the following bit of text::
+Open ``/docker-compose.yml`` and find the following bit of text::
 
   environment:
     - SIMPLESAMLPHP_BASEURLPATH=http://localhost:8080/simplesaml/
@@ -100,7 +100,7 @@ Replace all mentions of *localhost* with your IP like this::
     - SIMPLESAMLPHP_SP_ENTITY_ID=http://10.0.0.23:8080
     - SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE=http://10.0.0.23:8080/api/saml2_auth/acs/
 
-Open `/dev-environment/dev-settings.ini` and find the following bit of text::
+Open ``/dev-environment/dev-settings.ini`` and find the following bit of text::
 
   ALLOWED_HOSTS=localhost,bev
 
@@ -114,7 +114,7 @@ First with CTRL+C and then::
   docker-compose down -v
   docker-compose up
 
-You should now be able to point a browser in your VM or mobile device to `10.0.0.23:8080` and see the frontend working.
+You should now be able to point a browser in your VM or mobile device to ``10.0.0.23:8080`` and see the frontend working.
 
 
 Tutorial: Change the logo
