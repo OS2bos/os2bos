@@ -69,13 +69,14 @@ def create_case(
     scaling_step=1,
     effort_step=1,
     target_group=FAMILY_DEPT,
+    cpr_number="0205891234",
 ):
 
     effort_step = EffortStep.objects.get(number=effort_step)
 
     case = Case.objects.create(
         sbsys_id=sbsys_id,
-        cpr_number="0205891234",
+        cpr_number=cpr_number,
         name="Jens Jensen",
         case_worker=case_worker,
         team=team,

@@ -42,6 +42,22 @@ function epoch2DateStr(epoch) {
     }
 }
 
+function inEighteenYears() {
+    const dt = new Date()
+    let year_now = dt.getFullYear()
+    let year_future = year_now + 18
+    const future_dt = new Date().setFullYear(year_future)
+    return epoch2DateStr(future_dt)
+}
+
+function tenYearsAgo() {
+    const dt = new Date()
+    let year_now = dt.getFullYear()
+    let year_past = year_now - 10
+    const past_dt = new Date().setFullYear(year_past)
+    return epoch2DateStr(past_dt)
+}
+
 function leadZero(number) {
     if (number < 10) {
         return `0${ number }`
@@ -61,5 +77,7 @@ export {
     json2js,
     json2jsDate,
     json2jsEpoch,
-    epoch2DateStr
+    epoch2DateStr,
+    inEighteenYears,
+    tenYearsAgo
 }

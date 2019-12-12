@@ -1,4 +1,5 @@
 import { Selector } from 'testcafe'
+import { axe, axeOptions } from '../utils/axe.js'
 
 async function createActivity(t, act_data) {
 
@@ -11,6 +12,8 @@ async function createActivity(t, act_data) {
     if (act_data.expected_type === 'expectation') {
         await t.click(Selector('label').withAttribute('for', 'field-status-expected'))
     }
+
+    await axe(t, null, axeOptions)
 
     await t
         .click('#fieldSelectAct')
@@ -29,6 +32,7 @@ async function createActivity(t, act_data) {
         .typeText('#field-payee-id', act_data.payee_id)
         .typeText('#field-payee-name', act_data.payee_name)
         .click(Selector('input').withAttribute('type', 'submit'))
+        .expect(Selector('h1').withText('Bevillingsskrivelse')).ok()
 }
 
 export { createActivity }

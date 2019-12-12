@@ -533,7 +533,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             "note til bevillingsgodkendelse",
             user,
         )
-        activity = create_activity(
+        suppl_activity = create_activity(
             case=case,
             appropriation=appropriation,
             activity_type=SUPPL_ACTIVITY,
@@ -541,15 +541,18 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             start_date=start_date,
             end_date=start_date + timedelta(days=2),
         )
+        section.supplementary_activities.add(activity.details)
+        suppl_activity.details.main_activities.add(activity.details)
+
         appropriation.grant(
-            appropriation.activities.filter(pk=activity.pk),
+            appropriation.activities.filter(pk=suppl_activity.pk),
             approval_level.id,
             "note til bevillingsgodkendelse",
             user,
         )
-        activity.refresh_from_db()
+        suppl_activity.refresh_from_db()
         self.assertEqual(
-            activity.end_date, (start_date + timedelta(days=2)).date()
+            suppl_activity.end_date, (start_date + timedelta(days=2)).date()
         )
 
     def test_grant_no_stop_before_suppl_start(self):
@@ -585,6 +588,9 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             start_date=start_date + timedelta(days=10),
             end_date=None,
         )
+        section.supplementary_activities.add(activity.details)
+        activity.details.main_activities.add(activity.details)
+
         appropriation.grant(
             appropriation.activities.filter(pk=activity.pk),
             approval_level.id,
@@ -878,6 +884,8 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             end_date=suppl_end_date,
             payment_plan=suppl_payment_schedule,
         )
+        section.supplementary_activities.add(suppl_activity.details)
+        suppl_activity.details.main_activities.add(main_activity.details)
 
         user = get_user_model().objects.create(username="Anders And")
         appropriation.grant(
