@@ -26,9 +26,11 @@ export default {
             let cpr = ev.target.value.replace('-','')
             if (cpr.length === 10) {
                 this.$route.query.cpr_number = cpr
+                this.$route.query.case__cpr_number = cpr
                 this.update()
             } else if (!cpr) {
                 this.$route.query.cpr_number = ''
+                this.$route.query.case__cpr_number = ''
                 this.update()
             }
         },
