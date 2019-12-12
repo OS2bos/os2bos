@@ -88,35 +88,35 @@ Your IP could be something like `10.0.0.23`
 
 Open `/docker-compose.yml` and find the following bit of text:
 
-```
+``
 environment:
     - SIMPLESAMLPHP_BASEURLPATH=http://localhost:8080/simplesaml/
     - SIMPLESAMLPHP_SP_ENTITY_ID=http://localhost:8080
     - SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE=http://localhost:8080/api/saml2_auth/acs/
-```
+``
 Replace all mentions of *localhost* with your IP like this:
-```
+``
 environment:
     - SIMPLESAMLPHP_BASEURLPATH=http://10.0.0.23:8080/simplesaml/
     - SIMPLESAMLPHP_SP_ENTITY_ID=http://10.0.0.23:8080
     - SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE=http://10.0.0.23:8080/api/saml2_auth/acs/
-```
+``
 
 Open `/dev-environment/dev-settings.ini` and find the following bit of text:
-```
+``
 ALLOWED_HOSTS=localhost,bev
-```
+``
 Add your IP to the line like this:
-```
+``
 ALLOWED_HOSTS=localhost,bev,10.0.0.23
-```
+``
 
 In the command line, kill and reboot your development instance to use the new configuration.
 First with CTRL+C and then:
-```
+``
 docker-compose down -v
 docker-compose up
-```
+``
 
 You should now be able to point a browser in your VM or mobile device to `10.0.0.23:8080` and see the frontend working.
 
