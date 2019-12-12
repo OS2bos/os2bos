@@ -71,7 +71,7 @@ Testing on external devices
 ---------------------------
 
 You can test your local development instance in virtual machines and on other devices.
-This is useful is you need to do UI tests on mobile devices or in browsers that can't be installed on your system (like old versions of Internet Explorer).
+This is useful when you need to do UI tests on mobile devices or in browsers that can't be installed on your system (like old versions of Internet Explorer).
 Unfortunately, this doesn't come out of the box. You'll need to set it up.
 
 Pointing your browser to ``localhost:8080`` will show you the UI but this will only work on your host machine. 
