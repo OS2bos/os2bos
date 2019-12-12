@@ -18,7 +18,7 @@ current_dir = os.path.dirname(__file__)
 python_sources = os.path.abspath(os.path.join(current_dir, "..", "..", "backend"))
 sys.path.insert(0, python_sources)
 os.environ["DJANGO_SETTINGS_MODULE"] = "bevillingsplatform.settings"
-os.environ["BEV_SYSTEM_CONFIG_PATH"] = "../doc-settings.ini"
+os.environ["BEV_USER_CONFIG_PATH"] = "../../dev-environment/test-settings.ini"
 django.setup()
 
 os.environ["SPHINXBUILDING"] = "YES"
