@@ -92,17 +92,6 @@ class PaymentAdmin(admin.ModelAdmin):
     payment_schedule_str.short_description = _("betalingsplan")
 
 
-class PaymentInline(admin.StackedInline):
-    model = Payment
-    fields = ("id",)
-    list_display_links = ("id",)
-    show_change_link = True
-    can_delete = False
-
-    def has_add_permission(self, request, obj=None):
-        return False
-
-
 @admin.register(PaymentSchedule)
 class PaymentScheduleAdmin(admin.ModelAdmin):
     readonly_fields = ("payment_id", "account_string")
@@ -126,7 +115,6 @@ class PaymentScheduleAdmin(admin.ModelAdmin):
         "payment_frequency",
         "fictive",
     )
-    inlines = (PaymentInline,)
 
     def account_string(self, obj):
         return obj.account_string
