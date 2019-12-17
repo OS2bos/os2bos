@@ -4,6 +4,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+"""Utilities used by other parts of this app."""
 
 
 import os
@@ -38,9 +39,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_next_interval(from_date, payment_frequency):
-    """
-    Calculate the next date based on a start date and payment frequency.
-    """
+    """Calculate the next date based on start date and payment frequency."""
     from core.models import PaymentSchedule
 
     if payment_frequency == PaymentSchedule.DAILY:
@@ -57,9 +56,7 @@ def get_next_interval(from_date, payment_frequency):
 
 
 def get_person_info(cpr):
-    """
-    Get CPR data on a person and his/her relations.
-    """
+    """Get CPR data on a person and his/her relations."""
     if settings.USE_SERVICEPLATFORM:
         func = get_cpr_data
     else:
@@ -76,9 +73,7 @@ def get_person_info(cpr):
 
 
 def get_cpr_data(cpr):
-    """
-    Get CPR data from Serviceplatformen.
-    """
+    """Get CPR data from Serviceplatformen."""
     if not os.path.isfile(settings.SERVICEPLATFORM_CERTIFICATE_PATH):
         logger.info(
             "serviceplatform certificate path: %s is not a file",
@@ -99,9 +94,7 @@ def get_cpr_data(cpr):
 
 
 def get_cpr_data_mock(cpr):
-    """
-    Use test data in place of the real 'get_cpr_data' for now.
-    """
+    """Use test data in place of the real 'get_cpr_data' for now."""
     result = {
         "statsborgerskab": "5100",
         "efternavn": "Jensen",
@@ -144,6 +137,7 @@ def get_cpr_data_mock(cpr):
 
 
 def send_activity_email(subject, template, activity):
+    """Send an email concerning an updated activity."""
     html_message = render_to_string(template, {"activity": activity})
     send_mail(
         subject,
@@ -155,18 +149,21 @@ def send_activity_email(subject, template, activity):
 
 
 def send_activity_created_email(activity):
+    """Send email because an activity was created."""
     subject = _("Aktivitet oprettet")
     template = "emails/activity_created.html"
     send_activity_email(subject, template, activity)
 
 
 def send_activity_updated_email(activity):
+    """Send email because an activity was updated."""
     subject = _("Aktivitet opdateret")
     template = "emails/activity_updated.html"
     send_activity_email(subject, template, activity)
 
 
 def send_activity_expired_email(activity):
+    """Send email because an activity has expired."""
     subject = _("Aktivitet udgået")
     template = "emails/activity_expired.html"
     send_activity_email(subject, template, activity)
@@ -248,7 +245,7 @@ def send_appropriation(appropriation, included_activities=None):
 
 
 def saml_before_login(user_data):
-    "Hook called after userdata is received from IdP, before login."
+    """Hook called after userdata is received from IdP, before login."""
     user_changed = False
     username = user_data["username"][0]
     user = models.User.objects.get(username=username)
@@ -275,7 +272,7 @@ def saml_before_login(user_data):
 
 
 def saml_create_user(user_data):
-    "Hook called after user is created in DB, before login."
+    """Hook called after user is created in DB, before login."""
     username = user_data["username"][0]
     user = models.User.objects.get(username=username)
     if "team" in user_data:
@@ -451,7 +448,7 @@ def format_prism_payment_record(payment, line_no, record_no):
 
 
 def due_payments_for_prism(date):
-    "Return payments which are due today and should be sent to PRISM."
+    """Return payments which are due today and should be sent to PRISM."""
     return models.Payment.objects.filter(
         date=date,
         recipient_type=models.PaymentSchedule.PERSON,
@@ -465,7 +462,6 @@ def due_payments_for_prism(date):
 
 def generate_records_for_prism(due_payments):
     """Generate the list of records for writing to PRISM file."""
-
     prism_records = (
         (
             format_prism_financial_record(p, line_no=2 * i - 1, record_no=i),
@@ -482,7 +478,6 @@ def generate_records_for_prism(due_payments):
 @transaction.atomic
 def export_prism_payments_for_date(date=None):
     """Process payments and output a file for PRISME."""
-
     # The output directory is not configurable - this is mapped through Docker.
     output_dir = settings.PRISM_OUTPUT_DIR
     # Date = today if not given. We need "today" to set payment date.

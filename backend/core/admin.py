@@ -4,6 +4,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+"""Customize django-admin interface."""
 
 
 from django.contrib import admin
@@ -49,12 +50,16 @@ for klass in (
 
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
+    """Dislay read only fields on payment."""
+
     readonly_fields = ("payment_id", "account_string")
 
     def payment_id(self, obj):
+        """Get payment ID from payment plan."""
         return obj.payment_schedule.payment_id
 
     def account_string(self, obj):
+        """Get account string."""
         return obj.account_string
 
     payment_id.short_description = _("betalings-ID")
@@ -63,9 +68,12 @@ class PaymentAdmin(admin.ModelAdmin):
 
 @admin.register(PaymentSchedule)
 class PaymentScheduleAdmin(admin.ModelAdmin):
+    """Display read only fields on payment schedule."""
+
     readonly_fields = ("payment_id", "account_string")
 
     def account_string(self, obj):
+        """Get account string."""
         return obj.account_string
 
     account_string.short_description = _("kontostreng")
@@ -73,9 +81,12 @@ class PaymentScheduleAdmin(admin.ModelAdmin):
 
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):
+    """Display account number (konteringsnummer) as read only field."""
+
     readonly_fields = ("number",)
 
     def number(self, obj):
+        """Get account number."""
         return obj.number
 
     number.short_description = _("konteringsnummer")
@@ -83,6 +94,8 @@ class AccountAdmin(admin.ModelAdmin):
 
 @admin.register(User)
 class CustomUserAdmin(BaseUserAdmin):
+    """Add team to user admin interface."""
+
     fieldsets = (
         ("Organisation", {"fields": ("team",)}),
     ) + BaseUserAdmin.fieldsets
@@ -90,6 +103,8 @@ class CustomUserAdmin(BaseUserAdmin):
 
 @admin.register(ActivityDetails)
 class ActivityDetailsAdmin(admin.ModelAdmin):
+    """Widgets: Filter_horizontal for many to many links, add search field."""
+
     filter_horizontal = (
         "main_activity_for",
         "supplementary_activity_for",
@@ -101,9 +116,13 @@ class ActivityDetailsAdmin(admin.ModelAdmin):
 
 @admin.register(Section)
 class SectionAdmin(admin.ModelAdmin):
+    """Add search field."""
+
     search_fields = ("paragraph",)
 
 
 @admin.register(ServiceProvider)
 class ServiceProviderAdmin(admin.ModelAdmin):
+    """Add search fields."""
+
     search_fields = ("name", "cvr_number")
