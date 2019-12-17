@@ -119,7 +119,6 @@
                             }
                         })
                         return fewer_keys.some(function (key) {
-                            console.log(String(row[key]))
                             return String(row[key]).toLowerCase().indexOf(filterKey) > -1
                         })
                     })
