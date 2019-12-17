@@ -3,7 +3,8 @@
 import { Selector } from 'testcafe'
 import { login } from '../utils/logins.js'
 import { createActivity } from '../utils/crud.js'
-import logs from '../utils/logs.js'
+import { axe, axeOptions } from '../utils/axe.js'
+import baseurl from '../utils/url.js'
 
 function leadZero(number) {
     if (number < 10) {
@@ -96,14 +97,18 @@ const testdata = {
 }
 
 fixture `Create some data`// declare the fixture
-    .page `http://localhost:8080/#/`  // specify the start page
-    .beforeEach(async t => { await login(t) })
-    .afterEach(() => logs())
+    .page(baseurl)  // specify the start page
+    .beforeEach(async t => { 
+        await login(t) 
+    })
 
 test('Create Case', async t => {
     
+    await t.click(Selector('button').withText('+ Tilknyt hovedsag'))
+    
+    await axe(t, null, axeOptions)
+
     await t
-        .click(Selector('button').withText('+ Tilknyt hovedsag'))
         .typeText('#field-sbsys-id', testdata.case1.name)
         .typeText('#field-cpr', '000000-0000')
         .click(Selector('label').withAttribute('for', 'inputRadio1'))
@@ -114,8 +119,10 @@ test('Create Case', async t => {
         .click('#field-skaleringstrappe')
         .click(Selector('#field-skaleringstrappe option').withText('5'))
         .click(Selector('input').withAttribute('type', 'submit'))
-        .navigateTo('http://localhost:8080/#/')
+        .click(Selector('a.header-link'))
         .expect(Selector('.cases table a').withText(testdata.case1.name)).ok()
+    
+    await axe(t, null, axeOptions)
 })
 
 test('Create Appropriation', async t => {
@@ -123,13 +130,19 @@ test('Create Appropriation', async t => {
     await t
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('.appropriation-create-btn'))
+    
+    await axe(t, null, axeOptions)
+
+    await t
         .typeText('#field-sbsysid', testdata.appr1.name)
         .click('#field-lawref')
         .click(Selector('#field-lawref option').withText(testdata.appr1.section))
         .click(Selector('input').withAttribute('type', 'submit'))
-        .navigateTo('http://localhost:8080/#/')
+        .click(Selector('a.header-link'))
         .click(Selector('a').withText(testdata.case1.name))
         .expect(Selector('.datagrid-action a').innerText).contains(testdata.appr1.name)
+    
+    await axe(t, null, axeOptions)
 })
 
 test('Create activities', async t => {
@@ -143,14 +156,15 @@ test('Create activities', async t => {
     await createActivity(t, testdata.act3)
 
     await t
-        .navigateTo('http://localhost:8080/#/')
+        .click(Selector('a.header-link'))
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
 
     testdata.act1.act_detail = await Selector('.activities table tr.act-list-item a').nth(0).innerText
 
-    await t
-        .expect(Selector('.activities table tr.act-list-item a')).ok()
+    await t.expect(Selector('.activities table tr.act-list-item a').exists).ok()
+    
+    await axe(t, null, axeOptions)
 })
 
 test('Approve appropriation', async t => {
@@ -160,10 +174,16 @@ test('Approve appropriation', async t => {
         .click(Selector('a').withText(testdata.appr1.name))
         .click('#check-all')
         .click(Selector('button').withText('Godkendt valgte'))
+    
+    await axe(t, null, axeOptions)
+
+    await t
         .click(Selector('label').withAttribute('for','inputRadio1'))
         .typeText('#field-text', 'Godkendt grundet svære og særligt tvingende omstændigheder')
         .click('button[type="submit"]')
-        .expect(Selector('.mini-label .label-GRANTED')).ok()
+        .expect(Selector('.mini-label .label-GRANTED').exists).ok()
+    
+    await axe(t, null, axeOptions)
 })
 
 test('Add adjustment activities', async t => {
@@ -176,13 +196,17 @@ test('Add adjustment activities', async t => {
     await createActivity(t, testdata.act4)
 
     await t
-        .navigateTo('http://localhost:8080/#/')
+        .click(Selector('a.header-link'))
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
     
     await createActivity(t, testdata.act5)
     
-    await t.expect(Selector('.label-EXPECTED')).ok()
+    await t
+        .expect(Selector('.label-EXPECTED')).ok()
+        .expect(Selector('h1').withText('Bevillingsskrivelse').exists).ok()
+    
+    await axe(t, null, axeOptions)
 })
 
 test('Create and delete activity', async t => {
@@ -194,13 +218,19 @@ test('Create and delete activity', async t => {
     await createActivity(t, testdata.act6)
 
     await t
-        .navigateTo('http://localhost:8080/#/')
+        .click(Selector('a.header-link'))
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
         .click(Selector(`tr[title="${ testdata.act6.note }"] a`))
         .expect(Selector('.label-DRAFT')).ok()
         .click(Selector('.act-delete-btn'))
+    
+    await axe(t, null, axeOptions)
+
+    await t
         .click('button[type="submit"]')
-        .expect(Selector('h1').withText('Bevillingsskrivelse')).ok()
         .expect(Selector(`tr[title="${ testdata.act6.note }"]`).exists).notOk()
+        .expect(Selector('h1').withText('Bevillingsskrivelse').exists).ok()
+    
+    await axe(t, null, axeOptions)
 })

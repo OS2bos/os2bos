@@ -192,7 +192,7 @@ when you want to use an environment closer to production.
 
 [Backend README](backend/README.md)
 
-[Frontend README](frontend/README.md)
+[Frontend README](frontend/README.rst)
 
 ## Licensing
 

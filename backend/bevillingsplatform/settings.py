@@ -71,7 +71,7 @@ settings = config["settings"]
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = settings.get("SECRET_KEY", fallback="Not.a.secret")
+SECRET_KEY = settings.get("SECRET_KEY")
 
 # SECURITY WARNING: don"t run with debug turned on in production!
 DEBUG = settings.getboolean("DEBUG", fallback=False)
@@ -248,10 +248,12 @@ REST_FRAMEWORK = {
 }
 
 # Output directory for integration with KMD Prisme.
-PRISM_OUTPUT_DIR = settings.get("PRISM_OUTPUT_DIR", fallback="/prisme")
+PRISM_OUTPUT_DIR = settings.get(
+    "PRISM_OUTPUT_DIR", fallback=os.path.join(BASE_DIR, "prisme")
+)
 
 # Logging
-LOG_DIR = settings.get("LOG_DIR", fallback="/log")
+LOG_DIR = settings.get("LOG_DIR", fallback=os.path.join(BASE_DIR, "log"))
 
 LOGGING = {
     "version": 1,
@@ -260,13 +262,15 @@ LOGGING = {
         "default": {
             "level": "DEBUG",
             "class": "logging.FileHandler",
+            "formatter": "verbose",
             "filename": settings.get(
-                "LOG_FILE", fallback=os.path.join(LOG_DIR, "debug.log")
+                "LOG_FILE", fallback=os.path.join(LOG_DIR, "django-debug.log")
             ),
         },
         "audit": {
             "level": "INFO",
             "class": "logging.FileHandler",
+            "formatter": "verbose",
             "filename": settings.get(
                 "AUDIT_LOG_FILE", fallback=os.path.join(LOG_DIR, "audit.log")
             ),
@@ -368,6 +372,10 @@ CONSTANCE_CONFIG = {
     "ACCOUNT_NUMBER_KIND": (
         settings.get("ACCOUNT_NUMBER_KIND", fallback="123"),
         _("Kontostreng art"),
+    ),
+    "ACCOUNT_NUMBER_UNKNOWN": (
+        settings.get("ACCOUNT_NUMBER_UNKNOWN", fallback="UKENDT"),
+        _("standardværdi, hvis kontostreng mangler"),
     ),
     "PRISM_ORG_UNIT": (
         settings.get("PRISM_ORG_UNIT", fallback=0),

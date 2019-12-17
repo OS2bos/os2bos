@@ -61,7 +61,7 @@
                         <error err-key="details" />
                         <label class="required" for="field-startdate">
                             Startdato
-                            <span v-if="startDateSet">
+                            <span v-if="startDateSet && this.act.activity_type !== 'MAIN_ACTIVITY'">
                                 - tidligst {{ displayDate(startDateSet) }}
                             </span>
                         </label>
@@ -78,7 +78,7 @@
                     
                         <label for="field-enddate">
                             Slutdato
-                            <span v-if="endDateSet">
+                            <span v-if="endDateSet && this.act.activity_type !== 'MAIN_ACTIVITY'">
                                 - senest {{ displayDate(endDateSet) }}
                             </span>
                         </label>
@@ -126,13 +126,14 @@
 
     import axios from '../http/Http.js'
     import { activityId2name } from '../filters/Labels.js'
-    import { epoch2DateStr } from '../filters/Date.js'
+    import { epoch2DateStr, tenYearsAgo, inEighteenYears } from '../filters/Date.js'
     import { json2jsDate } from '../filters/Date.js'
     import Error from '../forms/Error.vue'
     import ListPicker from '../forms/ListPicker.vue'
     import PayTypeEdit from '../payment-details/payment-type/PaymentTypeEdit.vue'
     import PayPlan from '../payment-details/PaymentPlan.vue'
     import PaymentReceiverEdit from '../payment-details/payment-receiver/PaymentReceiverEdit.vue'
+import notify from '../notifications/Notify'
 
     export default {
 
@@ -180,7 +181,7 @@
                 if (this.mode === 'clone' && this.act.activity_type === 'MAIN_ACTIVITY') {
                     this.act.start_date = null
                 }
-                return false
+                return tenYearsAgo()
             },
             endDateSet: function() {
                 if (this.act.activity_type !== 'MAIN_ACTIVITY' && this.mode !== 'clone') {
@@ -193,7 +194,7 @@
                 if (this.mode === 'clone' && this.act.activity_type === 'MAIN_ACTIVITY') {
                     this.act.end_date = null
                 }
-                return false
+                return inEighteenYears()
             },
             payment: function() {
                 return this.$store.getters.getPayment
@@ -229,7 +230,32 @@
             displayDate: function(dt) {
                 return json2jsDate(dt)
             },
+            checkDateMax: function(datestr) {
+                const maxpast = parseInt( new Date().getFullYear() ) - 10,
+                    maxfuture = parseInt( new Date().getFullYear() ) + 18,
+                    date_regex = /[0-9]{4}-[0-9]{2}-[0-9]{2}/g
+                    
+                if (!datestr.match(date_regex)) {
+                    notify('Er du sikker på, at du har angivet dato som åååå-mm-dd?', 'error')
+                    return false
+                }
+                if (parseInt(datestr.substr(0,4)) < maxpast) {
+                    notify('Dato må maks. være 10 år tilbage i tiden', 'error')
+                    return false
+                } else if (parseInt(datestr.substr(0,4)) > maxfuture) {
+                    notify('Dato må maks. være 18 år fremme i tiden', 'error')
+                    return false
+                } else {
+                    return true
+                }
+            },
             saveChanges: function() {
+                if (!this.checkDateMax(this.act.start_date)) {
+                    return
+                }
+                if (this.act.end_date && !this.checkDateMax(this.act.end_date)) {
+                    return
+                }
                 let data = {
                     activity_type: this.act.activity_type,
                     start_date: this.act.start_date,

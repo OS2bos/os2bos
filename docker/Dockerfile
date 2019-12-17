@@ -23,6 +23,8 @@ CMD npm run serve
 # compiling with the tools from the non -slim image.
 FROM python:3.7 AS dist
 
+ARG SUPERCRONIC_VERSION=v0.1.9
+ARG SUPERCRONIC_SHA1SUM=5ddf8ea26b56d4a7ff6faecdd8966610d5cb9d85
 
 LABEL org.opencontainers.image.title="Bevillingsplatform" \
       org.opencontainers.image.vendor="Magenta ApS" \
@@ -56,6 +58,10 @@ RUN set -ex \
   && apt-get -y install --no-install-recommends $(grep -vE "^\s*#" sys-requirements.txt  | tr "\n" " ") \
   # clean up after apt-get and man-pages
   && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/man/?? /usr/share/man/??_* \
+  # Install supercronic
+  && curl -fsSL "https://github.com/aptible/supercronic/releases/download/${SUPERCRONIC_VERSION}/supercronic-linux-amd64" -o /usr/local/bin/supercronic\
+  && echo "${SUPERCRONIC_SHA1SUM}  /usr/local/bin/supercronic" | sha1sum -c - \
+  && chmod +x /usr/local/bin/supercronic \
   # create folders at easily mountable paths for output from django
   && install -o bev -g bev -d /static \
   && install -o bev -g bev -d /prisme \
