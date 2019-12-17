@@ -63,7 +63,6 @@ class PaymentAdmin(admin.ModelAdmin):
         "paid_date",
         "payment_schedule_str",
     )
-    list_display_links = ("id",)
     list_filter = (
         "paid",
         "payment_schedule__fictive",
