@@ -302,7 +302,7 @@ class AppropriationSerializer(serializers.ModelSerializer):
 
 
 class PaymentMethodDetailsSerializer(serializers.ModelSerializer):
-    """Serializer for the PaymentMethod model."""
+    """Serializer for the PaymentMethodDetails model."""
 
     class Meta:
         model = PaymentMethodDetails
