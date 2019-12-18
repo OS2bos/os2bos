@@ -48,6 +48,21 @@ class TestPaymentAdmin(TestCase):
             payment_admin.account_string(payment), payment.account_string
         )
 
+    def test_payment_schedule_str(self):
+        payment_schedule = create_payment_schedule()
+
+        payment = create_payment(
+            payment_schedule=payment_schedule,
+            date=date(year=2019, month=1, day=1),
+        )
+        site = AdminSite()
+        payment_admin = PaymentAdmin(Payment, site)
+
+        self.assertIn(
+            f"/api/admin/core/paymentschedule/{payment_schedule.id}/change/",
+            payment_admin.payment_schedule_str(payment),
+        )
+
 
 class TestPaymentScheduleAdmin(TestCase):
     def test_account_string(self):
