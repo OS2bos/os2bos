@@ -6,6 +6,10 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+################################################################################
+# Changes to this file requires approval from Labs. Please add a person from   #
+# Labs as required approval to your MR if you have any changes.                #
+################################################################################
 
 # This file creates a database user. It can be mounted into the official
 # postgres docker image (https://hub.docker.com/_/postgres) at
