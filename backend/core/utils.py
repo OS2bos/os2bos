@@ -172,9 +172,9 @@ def send_activity_expired_email(activity):
 def send_appropriation(appropriation, included_activities=None):
     """Generate PDF and XML files from appropriation and send them to SBSYS.
 
-    Parameters:
-    appropriation: the Appropriation from which to generate the PDF and XML.
-    included_activities: Activities which should be explicitly included.
+    :param appropriation: the Appropriation from which to generate PDF and XML.
+    :param included_activities: Activities which should be explicitly included.
+
     """
     if included_activities is None:
         included_activities_qs = models.Activity.objects.none()
@@ -244,7 +244,7 @@ def send_appropriation(appropriation, included_activities=None):
     msg.send()
 
 
-def saml_before_login(user_data):
+def saml_before_login(user_data):  # noqa: D401
     """Hook called after userdata is received from IdP, before login."""
     user_changed = False
     username = user_data["username"][0]
@@ -271,7 +271,7 @@ def saml_before_login(user_data):
         user.save()
 
 
-def saml_create_user(user_data):
+def saml_create_user(user_data):  # noqa: D401
     """Hook called after user is created in DB, before login."""
     username = user_data["username"][0]
     user = models.User.objects.get(username=username)
