@@ -26,7 +26,7 @@ from core.models import ActivityDetails, Section, SectionInfo
 
 class Command(BaseCommand):
     help = """
-    This script imports ActtivityDetails from the "Klassifikationer"
+    This script imports ActivityDetails from the "Klassifikationer"
     spreadsheet.
 
     Currently this requires the sheet "Aktiviteter" be saved

@@ -247,7 +247,7 @@ def send_appropriation(appropriation, included_activities=None):
 
 
 def saml_before_login(user_data):  # noqa: D401
-    """Hook called after userdata is received from IdP, before login."""  # noqa
+    """Hook called after userdata is received from IdP, before login."""
     user_changed = False
     username = user_data["username"][0]
     user = models.User.objects.get(username=username)

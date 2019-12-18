@@ -99,7 +99,7 @@ def initialize_users():
 
 
 def initialize_payment_method_details():
-    """Initialize all the relevant Payment Method Details."""
+    """Initialize all the relevant payment method details."""
     call_command("loaddata", "paymentmethoddetails.json", app_label="core")
 
 
