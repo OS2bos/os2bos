@@ -598,7 +598,7 @@ class PaymentScheduleSerializerTestCase(TestCase, BasicTestMixin):
         self.assertFalse(is_valid)
         self.assertEqual(
             serializer.errors["non_field_errors"][0],
-            "En betalingtype der ikke er en engangsbetaling"
+            "En betalingstype der ikke er en engangsbetaling"
             " skal have en betalingsfrekvens",
         )
 

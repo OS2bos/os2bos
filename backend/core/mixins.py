@@ -4,6 +4,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+"""Mixins to use in view classes."""
 
 
 import logging
@@ -21,7 +22,6 @@ class AuditMixin:
 
     def finalize_response(self, request, response, *args, **kwargs):
         """Perform logging and continue normal operations."""
-
         response = super().finalize_response(
             request, response, *args, **kwargs
         )
