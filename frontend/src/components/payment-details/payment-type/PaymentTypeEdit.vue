@@ -28,7 +28,7 @@
             <label for="pay-type-5">Pr. kilometer</label>
 
             <p style="margin-top: .75rem;">
-                <a href="https://www.kl.dk/media/16653/taksttabel_-2019.pdf" target="_blank">Find takster her</a>
+                <a href="https://www.kl.dk/search/?q=taksttabel&Type=media" target="_blank">Find takster her</a>
             </p>
 
         </fieldset>
