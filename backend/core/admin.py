@@ -76,6 +76,7 @@ class PaymentAdmin(admin.ModelAdmin):
     )
 
     def payment_schedule_str(self, obj):
+        """Get related payment schedule link."""
         link = reverse(
             "admin:core_paymentschedule_change", args=[obj.payment_schedule.id]
         )
