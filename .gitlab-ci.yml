@@ -53,6 +53,7 @@ lint:
     - cd backend
     - black --check --diff .
     - flake8 .
+    - pydocstyle .
 
 docs:
   <<: *lint-default
