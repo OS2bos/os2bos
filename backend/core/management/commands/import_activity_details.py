@@ -7,8 +7,7 @@
 
 
 """
-This script imports ActivityDetails from the CBUR "Klassifikationer"
-spreadsheet.
+This script imports ActivityDetails from the "Klassifikationer" spreadsheet.
 
 Currently this requires the sheet "Aktiviteter" be saved
 as "aktiviteter.csv" in the current directory.
@@ -27,14 +26,11 @@ from core.models import ActivityDetails, Section, SectionInfo
 
 class Command(BaseCommand):
     help = """
-    This script imports Accounts from the CBUR "Klassifikationer"
+    This script imports ActtivityDetails from the "Klassifikationer"
     spreadsheet.
 
     Currently this requires the sheet "Aktiviteter" be saved
     as "activities.csv".
-
-    NOTE: This requires the Section models AND
-    the ActivityDetails to have been populated first.
     """
 
     def add_arguments(self, parser):

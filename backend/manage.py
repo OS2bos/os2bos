@@ -13,6 +13,7 @@ import sys
 
 
 def main():
+    """Run main function."""
     os.environ.setdefault(
         "DJANGO_SETTINGS_MODULE", "bevillingsplatform.settings"
     )

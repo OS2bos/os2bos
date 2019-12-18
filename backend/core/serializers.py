@@ -169,7 +169,7 @@ class PaymentScheduleSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def setup_eager_loading(queryset):
-        """Setup eager loading for improved performance."""
+        """Set up eager loading for improved performance."""
         queryset = queryset.prefetch_related("payments")
         return queryset
 
@@ -225,7 +225,7 @@ class ActivitySerializer(WritableNestedModelSerializer):
 
     @staticmethod
     def setup_eager_loading(queryset):
-        """Setup eager loading for improved performance."""
+        """Set up eager loading for improved performance."""
         queryset = queryset.select_related("payment_plan")
         return queryset
 
@@ -284,7 +284,7 @@ class AppropriationSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def setup_eager_loading(queryset):
-        """Setup eager loading for improved performance."""
+        """Set up eager loading for improved performance."""
         queryset = queryset.prefetch_related("activities")
         return queryset
 

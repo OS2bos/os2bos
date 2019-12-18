@@ -121,9 +121,11 @@ class CaseViewSet(AuditViewSet):
         """
         Change the case_worker of several Cases.
 
-        Parameters:
+        Parameters
+        ----------
         case_pks: A list of case pks.
         case_worker_pk: the case worker pk to change to.
+
         """
         case_pks = request.data.get("case_pks", [])
         case_worker_pk = request.data.get("case_worker_pk", None)
