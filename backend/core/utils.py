@@ -172,10 +172,8 @@ def send_activity_expired_email(activity):
 def send_appropriation(appropriation, included_activities=None):
     """Generate PDF and XML files from appropriation and send them to SBSYS.
 
-    Parameters
-    ----------
-    appropriation: the Appropriation from which to generate the PDF and XML.
-    included_activities: Activities which should be explicitly included.
+    :param appropriation: the Appropriation from which to generate PDF and XML.
+    :param included_activities: Activities which should be explicitly included.
 
     """
     if included_activities is None:
