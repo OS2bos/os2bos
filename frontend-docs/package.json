@@ -1,0 +1,14 @@
+{
+  "name": "bvp-ui-docs",
+  "version": "0.1.0",
+  "description": "Automated documentation for bevillingsplatform project frontend.",
+  "scripts": {
+    "docs": "./node_modules/.bin/documentation build ../frontend/src/** -f html -o docs"
+  },
+  "keywords": [],
+  "author": "Magenta ApS",
+  "license": "MPL-2.0",
+  "dependencies": {
+    "documentation": "^12.1.4"
+  }
+}
