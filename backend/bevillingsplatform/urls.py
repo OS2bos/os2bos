@@ -34,6 +34,7 @@ from django.views.static import serve
 import django_saml2_auth
 
 from rest_framework import routers
+from rest_framework.schemas import get_schema_view
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -93,6 +94,15 @@ urlpatterns = [
         "api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"
     ),
     path("api/", include(router.urls)),
+    path(
+        "openapi",
+        get_schema_view(
+            title="OS2bos REST API",
+            description="API for accessing the OS2bos data model",
+            version="1.0.0",
+        ),
+        name="openapi-schema",
+    ),
 ]
 
 # Static files are served by WhiteNoise in both development and production.
