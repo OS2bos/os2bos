@@ -26,9 +26,9 @@ os.environ["SPHINXBUILDING"] = "YES"
 
 # -- Project information -----------------------------------------------------
 
-project = 'bevillingsplatform'
-copyright = '2019, Magenta ApS'
-author = 'Magenta ApS'
+project = "bevillingsplatform"
+copyright = "2019, Magenta ApS"
+author = "Magenta ApS"
 
 
 # -- General configuration ---------------------------------------------------
@@ -36,13 +36,10 @@ author = 'Magenta ApS'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = [
-    'sphinx.ext.autodoc',
-    "sphinx.ext.intersphinx",
-]
+extensions = ["sphinx.ext.autodoc", "sphinx.ext.intersphinx", "sphinxcontrib_django"]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -63,4 +60,4 @@ html_theme = "sphinx_rtd_theme"
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = []
 
-master_doc = 'index'
+master_doc = "index"
