@@ -99,7 +99,7 @@ urlpatterns = [
         get_schema_view(
             title="OS2bos REST API",
             description="API for accessing the OS2bos data model",
-            version="1.0.0",
+            # version="1.0.0",
         ),
         name="openapi-schema",
     ),
