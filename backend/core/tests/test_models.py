@@ -8,6 +8,7 @@
 
 from decimal import Decimal
 from datetime import date, timedelta
+from dateutil import rrule
 from unittest import mock
 from freezegun import freeze_time
 
@@ -368,7 +369,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             payment_amount=Decimal("700"),
         )
         # create an EXPECTED supplementary activity overruling the GRANTED.
-        create_activity(
+        expected_activity = create_activity(
             case,
             appropriation,
             start_date=start_date,
@@ -380,7 +381,9 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
 
         self.assertEqual(
-            activity.appropriation.total_expected_full_year, Decimal("438000")
+            activity.appropriation.total_expected_full_year,
+            activity.total_cost_full_year
+            + expected_activity.total_cost_full_year,
         )
 
     def test_main_activity(self):
@@ -1669,7 +1672,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(case=case)
-        # 365 days, daily payments of 500.
+        # payments for all days in year, daily payments of 500.
         activity = create_activity(
             case,
             appropriation,
@@ -1677,7 +1680,18 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             end_date=end_date,
             payment_plan=payment_schedule,
         )
-        self.assertEqual(activity.total_cost_full_year, Decimal("182500"))
+        days_in_year = len(
+            list(
+                rrule.rrule(
+                    rrule.DAILY,
+                    dtstart=date(year=now.year, month=1, day=1),
+                    until=date(year=now.year, month=12, day=31),
+                )
+            )
+        )
+        self.assertEqual(
+            activity.total_cost_full_year, Decimal("500") * days_in_year
+        )
 
     def test_total_cost_for_year_no_payment_plan(self):
         now = timezone.now()
@@ -2762,12 +2776,13 @@ class PaymentScheduleTestCase(TestCase):
         self.assertEqual(payment_schedule.payments.count(), 12)
 
     def test_generate_payments_no_end_date(self):
+        now = timezone.now()
         payment_schedule = create_payment_schedule(
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
             payment_frequency=PaymentSchedule.MONTHLY,
             payment_amount=Decimal("100"),
         )
-        start_date = date(year=2019, month=1, day=1)
+        start_date = date(year=now.year, month=1, day=1)
         # Start in January and no end should generate 25 monthly payments
         # (till end of next year)
         payment_schedule.generate_payments(start_date, None)
@@ -2779,12 +2794,13 @@ class PaymentScheduleTestCase(TestCase):
         # Test the case where end is unbounded and payments are generated till
         # end of next year then middle of next year is reached
         # and new payments should be generated once again
+        now = timezone.now()
         payment_schedule = create_payment_schedule(
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
             payment_frequency=PaymentSchedule.MONTHLY,
             payment_amount=Decimal("100"),
         )
-        start_date = date(year=2019, month=1, day=1)
+        start_date = date(year=now.year, month=1, day=1)
         end_date = None
         # Initial call to generate payments will generate 24 payments.
         payment_schedule.generate_payments(start_date, end_date)
@@ -2793,7 +2809,9 @@ class PaymentScheduleTestCase(TestCase):
         # Now we are in the future and we need to generate new payments
         # because end is still unbounded
         with mock.patch("core.models.date") as date_mock:
-            date_mock.today.return_value = date(year=2020, month=7, day=1)
+            date_mock.today.return_value = date(
+                year=now.year + 1, month=7, day=1
+            )
             date_mock.max.month = 12
             date_mock.max.day = 31
             payment_schedule.synchronize_payments(start_date, end_date)
@@ -2802,38 +2820,40 @@ class PaymentScheduleTestCase(TestCase):
     def test_synchronize_payments_new_end_date_in_past(self):
         # Test the case where we generate payments for an unbounded end
         # and next the end is set so we need to delete some generated payments.
+        now = timezone.now()
         payment_schedule = create_payment_schedule(
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
             payment_frequency=PaymentSchedule.MONTHLY,
             payment_amount=Decimal("100"),
         )
-        start_date = date(year=2019, month=1, day=1)
+        start_date = date(year=now.year, month=1, day=1)
         end_date = None
 
         payment_schedule.generate_payments(start_date, end_date)
 
         self.assertEqual(len(payment_schedule.payments.all()), 24)
 
-        new_end_date = date(year=2019, month=6, day=1)
+        new_end_date = date(year=now.year, month=6, day=1)
         payment_schedule.synchronize_payments(start_date, new_end_date)
 
         self.assertEqual(payment_schedule.payments.count(), 6)
 
     def test_synchronize_payments_new_end_date_in_future(self):
+        now = timezone.now()
         payment_schedule = create_payment_schedule(
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
             payment_frequency=PaymentSchedule.MONTHLY,
             payment_amount=Decimal("100"),
         )
-        start_date = date(year=2019, month=1, day=1)
+        start_date = date(year=now.year, month=1, day=1)
         end_date = None
 
-        # Generate payments till 2020-12-1
+        # Generate payments till first of december next year.
         payment_schedule.generate_payments(start_date, end_date)
 
         self.assertEqual(len(payment_schedule.payments.all()), 24)
 
-        new_end_date = date(year=2021, month=2, day=1)
+        new_end_date = date(year=now.year + 2, month=2, day=1)
         payment_schedule.synchronize_payments(start_date, new_end_date)
 
         self.assertEqual(payment_schedule.payments.count(), 26)
