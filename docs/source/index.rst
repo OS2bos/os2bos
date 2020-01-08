@@ -3,19 +3,36 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to the os2BOS documentation
-===================================
+Om OS2BOS
+=========
 
 .. toctree::
-   :maxdepth: 1
-   :caption: Contents:
+   :maxdepth: 2
 
-   backend/index.rst
+   dev
+   news
 
 
-Indices and tables
-==================
+Introduktion
+============
+BOS er en webapplikation til håndtering af foranstaltninger og bevillinger for kommunens socialrådgivere.
+Formålet med BOS er at give socialrådgiverne bedre redskaber til at benytte de bedste foranstaltninger og give kommunen som helhed bedre indblik og styringsmulighed i forhold til foranstaltninger, effekter, økonomi og budget.
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+Opbygning
+=========
+
+Frontend
+---------
+BOS frontenden er skrevet i Javascript frameworket `Vue.js`.
+
+Backend
+-------
+BOS backenden benytter Django og DRF som framework og persisterer dataen i en PostgreSQL-database.
+   
+
+Indekser og tabeller
+====================
+
+   * :ref:`genindex`
+   * :ref:`modindex`
+   * :ref:`search`

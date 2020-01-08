@@ -1,4 +1,5 @@
-* Version 2.2.3, 2019-12-12
+Version 2.2.3, 2019-12-12
+=========================
 
 New in this version:
 
@@ -17,22 +18,27 @@ New in this version:
 * Fix paths in settings.
 * Update Django from 2.2.1 to 2.2.4
 
-* Version 2.2.2, 2019-11-28
+Version 2.2.2, 2019-11-28
+=========================
 
-Hotfix:
+Hotfix
+------
 
 * Fix broken migration.
 
 
-* Version 2.2.1, 2019-11-25
+Version 2.2.1, 2019-11-25
+=========================
 
 New in this version:
 
-Features:
+Features
+--------
 
 * Mark payments for SD Løn along with fictive ones.
 
-Bug fixes:
+Bug fixes
+---------
 
 * Fix hover text.
 * Display of Indsatstrappen fixed.
@@ -42,11 +48,13 @@ Bug fixes:
 * Empty "not found" text when displaying "Mine sager".
 
 
-* Version 2.2.0, 2019-11-21
+Version 2.2.0, 2019-11-21
+=========================
 
 New in this version:
 
-Features:
+Features
+--------
 
 * It is now possible to find payments from a payment ID.
 * Case worker can now be changed on several cases in one action.
@@ -77,7 +85,8 @@ Features:
 * Information about citizen included in display of appropriation.
 
 
-Bug fixes:
+Bug fixes
+---------
 
 * Don't throw an exception if users attempt to access the API without
   logging in, just deny access.
@@ -89,14 +98,16 @@ Bug fixes:
   activities.
 
 
-* Version 2.0.1, 2019-11-11
+Version 2.0.1, 2019-11-11
+=========================
 
 New in this version:
 
 * Add support for Service Provider certificates through PySaml2.
 
 
-* Version 2.0.0, 2019-11-06
+Version 2.0.0, 2019-11-06
+=========================
 
 New in this version:
 
@@ -116,7 +127,8 @@ New in this version:
 * Fix redirect when setting a payment paid.
 * Add missing verbose names in Django admin.
 
-* Version 1.1.1, 2019-10-30
+Version 1.1.1, 2019-10-30
+=========================
 
 Hotfix release.
 
@@ -129,7 +141,8 @@ New in this version:
 * Fix invalid XML in OS2forms.xml.
 * Add missing constraint for creating supplementary activities based on allowed main activities.
 
-* Version 1.1.0, 2019-10-04
+Version 1.1.0, 2019-10-04
+=========================
 
 New in this version:
 
@@ -148,7 +161,8 @@ New in this version:
 * Suppress not writeable warning from ipython.
 
 
-* Version 1.0.0, 2019-09-27
+Version 1.0.0, 2019-09-27
+=========================
 
 First production release. New in this version:
 
@@ -185,7 +199,8 @@ First production release. New in this version:
 * DB representation of effort steps (Indsatstrappe) changed to integer.
 
 
-* Version 0.5.0, 2019-09-05
+Version 0.5.0, 2019-09-05
+=========================
 
 New in this version:
 

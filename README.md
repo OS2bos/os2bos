@@ -190,7 +190,7 @@ when you want to use an environment closer to production.
 
 ## Other Readmes
 
-[Backend README](backend/README.md)
+[Backend README](backend/README.rst)
 
 [Frontend README](frontend/README.rst)
 
