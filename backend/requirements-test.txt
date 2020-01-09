@@ -13,3 +13,9 @@ Sphinx==2.0.1
 sphinxcontrib-websupport
 sphinx_rtd_theme
 sphinxcontrib_django==0.5
+
+uritemplate==3.0.1
+pyyaml==5.3
+sphinxcontrib-openapi==0.6.0
+# ^ These are requirements for openapi
+# |
