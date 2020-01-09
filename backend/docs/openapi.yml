@@ -165,12 +165,7 @@ paths:
       - name: expired
         required: false
         in: query
-        description: &id002 !!python/object/apply:django.utils.functional._lazy_proxy_unpickle
-        - &id018 !!python/name:django.utils.translation.gettext ''
-        - !!python/tuple
-          - "Udg\xE5et"
-        - {}
-        - &id019 !!python/name:builtins.str ''
+        description: "Udg\xE5et"
         schema:
           type: string
       responses:
@@ -659,7 +654,7 @@ paths:
       - name: expired
         required: false
         in: query
-        description: *id002
+        description: "Udg\xE5et"
         schema:
           type: string
       responses:
@@ -934,13 +929,13 @@ paths:
       - name: expired
         required: false
         in: query
-        description: *id002
+        description: "Udg\xE5et"
         schema:
           type: string
       requestBody:
         content:
           application/json:
-            schema: &id003
+            schema: &id002
               properties:
                 created:
                   type: string
@@ -1032,9 +1027,9 @@ paths:
               - acting_municipality
               - residence_municipality
           application/x-www-form-urlencoded:
-            schema: *id003
+            schema: *id002
           multipart/form-data:
-            schema: *id003
+            schema: *id002
       responses:
         '200':
           content:
@@ -1307,13 +1302,13 @@ paths:
       - name: expired
         required: false
         in: query
-        description: *id002
+        description: "Udg\xE5et"
         schema:
           type: string
       requestBody:
         content:
           application/json:
-            schema: &id004
+            schema: &id003
               properties:
                 created:
                   type: string
@@ -1395,9 +1390,9 @@ paths:
                   type: integer
                   nullable: true
           application/x-www-form-urlencoded:
-            schema: *id004
+            schema: *id003
           multipart/form-data:
-            schema: *id004
+            schema: *id003
       responses:
         '200':
           content:
@@ -1670,7 +1665,7 @@ paths:
       - name: expired
         required: false
         in: query
-        description: *id002
+        description: "Udg\xE5et"
         schema:
           type: string
       responses:
@@ -1968,7 +1963,7 @@ paths:
       requestBody:
         content:
           application/json:
-            schema: &id005
+            schema: &id004
               properties:
                 created:
                   type: string
@@ -2012,9 +2007,9 @@ paths:
               - sbsys_id
               - case
           application/x-www-form-urlencoded:
-            schema: *id005
+            schema: *id004
           multipart/form-data:
-            schema: *id005
+            schema: *id004
       responses:
         '200':
           content:
@@ -2351,7 +2346,7 @@ paths:
       requestBody:
         content:
           application/json:
-            schema: &id006
+            schema: &id005
               properties:
                 created:
                   type: string
@@ -2395,9 +2390,9 @@ paths:
               - sbsys_id
               - case
           application/x-www-form-urlencoded:
-            schema: *id006
+            schema: *id005
           multipart/form-data:
-            schema: *id006
+            schema: *id005
       responses:
         '200':
           content:
@@ -2567,7 +2562,7 @@ paths:
       requestBody:
         content:
           application/json:
-            schema: &id007
+            schema: &id006
               properties:
                 created:
                   type: string
@@ -2608,9 +2603,9 @@ paths:
                 case:
                   type: integer
           application/x-www-form-urlencoded:
-            schema: *id007
+            schema: *id006
           multipart/form-data:
-            schema: *id007
+            schema: *id006
       responses:
         '200':
           content:
@@ -3080,8 +3075,7 @@ paths:
                           type: number
                           multipleOf: 0.01
                           maximum: 1000000000000
-                          minimum: &id008 !!python/object/apply:decimal.Decimal
-                          - '0.00'
+                          minimum: &id007 !!float 0.00
                           nullable: true
                         payment_amount:
                           type: number
@@ -3192,7 +3186,7 @@ paths:
       requestBody:
         content:
           application/json:
-            schema: &id009
+            schema: &id008
               properties:
                 payment_plan:
                   properties:
@@ -3322,7 +3316,7 @@ paths:
                       type: number
                       multipleOf: 0.01
                       maximum: 1000000000000
-                      minimum: *id008
+                      minimum: *id007
                       nullable: true
                     payment_amount:
                       type: number
@@ -3422,9 +3416,9 @@ paths:
               - details
               - appropriation
           application/x-www-form-urlencoded:
-            schema: *id009
+            schema: *id008
           multipart/form-data:
-            schema: *id009
+            schema: *id008
       responses:
         '200':
           content:
@@ -3580,7 +3574,7 @@ paths:
                         type: number
                         multipleOf: 0.01
                         maximum: 1000000000000
-                        minimum: *id008
+                        minimum: *id007
                         nullable: true
                       payment_amount:
                         type: number
@@ -3988,7 +3982,7 @@ paths:
                         type: number
                         multipleOf: 0.01
                         maximum: 1000000000000
-                        minimum: *id008
+                        minimum: *id007
                         nullable: true
                       payment_amount:
                         type: number
@@ -4094,6 +4088,649 @@ paths:
           description: ''
     put:
       operationId: updateActivity
+      description: Expose activities in REST API.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - name: revision
+        required: false
+        in: query
+        description: revision
+        schema:
+          type: string
+      - name: created
+        required: false
+        in: query
+        description: created
+        schema:
+          type: string
+      - name: modified
+        required: false
+        in: query
+        description: modified
+        schema:
+          type: string
+      - name: user_created
+        required: false
+        in: query
+        description: user_created
+        schema:
+          type: string
+      - name: user_modified
+        required: false
+        in: query
+        description: user_modified
+        schema:
+          type: string
+      - name: hostname_created
+        required: false
+        in: query
+        description: hostname_created
+        schema:
+          type: string
+      - name: hostname_modified
+        required: false
+        in: query
+        description: hostname_modified
+        schema:
+          type: string
+      - name: device_created
+        required: false
+        in: query
+        description: device_created
+        schema:
+          type: string
+      - name: device_modified
+        required: false
+        in: query
+        description: device_modified
+        schema:
+          type: string
+      - name: details
+        required: false
+        in: query
+        description: details
+        schema:
+          type: string
+      - name: status
+        required: false
+        in: query
+        description: status
+        schema:
+          type: string
+      - name: approval_level
+        required: false
+        in: query
+        description: approval_level
+        schema:
+          type: string
+      - name: approval_note
+        required: false
+        in: query
+        description: approval_note
+        schema:
+          type: string
+      - name: approval_user
+        required: false
+        in: query
+        description: approval_user
+        schema:
+          type: string
+      - name: appropriation_date
+        required: false
+        in: query
+        description: appropriation_date
+        schema:
+          type: string
+      - name: start_date
+        required: false
+        in: query
+        description: start_date
+        schema:
+          type: string
+      - name: end_date
+        required: false
+        in: query
+        description: end_date
+        schema:
+          type: string
+      - name: activity_type
+        required: false
+        in: query
+        description: activity_type
+        schema:
+          type: string
+      - name: payment_plan
+        required: false
+        in: query
+        description: payment_plan
+        schema:
+          type: string
+      - name: modifies
+        required: false
+        in: query
+        description: modifies
+        schema:
+          type: string
+      - name: appropriation
+        required: false
+        in: query
+        description: appropriation
+        schema:
+          type: string
+      - name: service_provider
+        required: false
+        in: query
+        description: service_provider
+        schema:
+          type: string
+      - name: note
+        required: false
+        in: query
+        description: note
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id009
+              properties:
+                payment_plan:
+                  properties:
+                    id:
+                      type: integer
+                      readOnly: true
+                    payments:
+                      type: array
+                      items:
+                        properties:
+                          id:
+                            type: integer
+                            readOnly: true
+                          account_string:
+                            type: string
+                            readOnly: true
+                          payment_schedule__payment_id:
+                            type: string
+                            readOnly: true
+                          case__cpr_number:
+                            type: string
+                            readOnly: true
+                          activity__id:
+                            type: string
+                            readOnly: true
+                          activity__status:
+                            type: string
+                            readOnly: true
+                          activity__details__id:
+                            type: string
+                            readOnly: true
+                          payment_schedule__fictive:
+                            type: string
+                            readOnly: true
+                          is_payable_manually:
+                            type: string
+                            readOnly: true
+                          date:
+                            type: string
+                            format: date
+                          recipient_type:
+                            enum:
+                            - INTERNAL
+                            - PERSON
+                            - COMPANY
+                          recipient_id:
+                            type: string
+                            maxLength: 128
+                          recipient_name:
+                            type: string
+                            maxLength: 128
+                          payment_method:
+                            enum:
+                            - CASH
+                            - SD
+                            - INVOICE
+                            - INTERNAL
+                          amount:
+                            type: number
+                            multipleOf: 0.01
+                            maximum: 1000000000000
+                            minimum: -1000000000000
+                          paid_amount:
+                            type: number
+                            multipleOf: 0.01
+                            maximum: 1000000000000
+                            minimum: -1000000000000
+                            nullable: true
+                          paid:
+                            type: boolean
+                          paid_date:
+                            type: string
+                            format: date
+                            nullable: true
+                          note:
+                            type: string
+                          payment_schedule:
+                            type: integer
+                        required:
+                        - date
+                        - recipient_type
+                        - recipient_id
+                        - recipient_name
+                        - payment_method
+                        - amount
+                        - payment_schedule
+                      readOnly: true
+                    account:
+                      type: string
+                      readOnly: true
+                    recipient_type:
+                      enum:
+                      - INTERNAL
+                      - PERSON
+                      - COMPANY
+                    recipient_id:
+                      type: string
+                      maxLength: 128
+                    recipient_name:
+                      type: string
+                      maxLength: 128
+                    payment_method:
+                      enum:
+                      - CASH
+                      - SD
+                      - INVOICE
+                      - INTERNAL
+                    payment_frequency:
+                      enum:
+                      - DAILY
+                      - WEEKLY
+                      - BIWEEKLY
+                      - MONTHLY
+                      nullable: true
+                    payment_day_of_month:
+                      type: integer
+                      maximum: 31
+                      minimum: 1
+                    payment_type:
+                      enum:
+                      - ONE_TIME_PAYMENT
+                      - RUNNING_PAYMENT
+                      - PER_HOUR_PAYMENT
+                      - PER_DAY_PAYMENT
+                      - PER_KM_PAYMENT
+                    payment_units:
+                      type: number
+                      multipleOf: 0.01
+                      maximum: 1000000000000
+                      minimum: *id007
+                      nullable: true
+                    payment_amount:
+                      type: number
+                      multipleOf: 0.01
+                      maximum: 1000000000000
+                      minimum: -1000000000000
+                    fictive:
+                      type: boolean
+                    payment_id:
+                      type: integer
+                      readOnly: true
+                    payment_method_details:
+                      type: integer
+                      nullable: true
+                  required:
+                  - recipient_type
+                  - recipient_id
+                  - recipient_name
+                  - payment_method
+                  - payment_type
+                  - payment_amount
+                  type: object
+                created:
+                  type: string
+                  format: date-time
+                modified:
+                  type: string
+                  format: date-time
+                user_created:
+                  type: string
+                  description: Updated by admin.save_model
+                  maxLength: 50
+                user_modified:
+                  type: string
+                  description: Updated by admin.save_model
+                  maxLength: 50
+                hostname_created:
+                  type: string
+                  description: System field. (modified on create only)
+                  maxLength: 60
+                hostname_modified:
+                  type: string
+                  description: System field. (modified on every save)
+                  maxLength: 50
+                device_created:
+                  type: string
+                  maxLength: 10
+                device_modified:
+                  type: string
+                  maxLength: 10
+                status:
+                  enum:
+                  - DRAFT
+                  - EXPECTED
+                  - GRANTED
+                approval_note:
+                  type: string
+                appropriation_date:
+                  type: string
+                  format: date
+                  nullable: true
+                start_date:
+                  type: string
+                  format: date
+                end_date:
+                  type: string
+                  format: date
+                  nullable: true
+                activity_type:
+                  enum:
+                  - MAIN_ACTIVITY
+                  - SUPPL_ACTIVITY
+                note:
+                  type: string
+                  nullable: true
+                  maxLength: 1000
+                details:
+                  type: integer
+                approval_level:
+                  type: integer
+                  nullable: true
+                approval_user:
+                  type: integer
+                  nullable: true
+                modifies:
+                  type: integer
+                  nullable: true
+                appropriation:
+                  type: integer
+                service_provider:
+                  type: integer
+                  nullable: true
+              required:
+              - status
+              - start_date
+              - activity_type
+              - details
+              - appropriation
+          application/x-www-form-urlencoded:
+            schema: *id009
+          multipart/form-data:
+            schema: *id009
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  monthly_payment_plan:
+                    type: string
+                    readOnly: true
+                  total_cost:
+                    type: string
+                    readOnly: true
+                  total_cost_this_year:
+                    type: string
+                    readOnly: true
+                  total_cost_full_year:
+                    type: string
+                    readOnly: true
+                  total_granted_this_year:
+                    type: string
+                    readOnly: true
+                  total_expected_this_year:
+                    type: string
+                    readOnly: true
+                  payment_plan:
+                    properties:
+                      id:
+                        type: integer
+                        readOnly: true
+                      payments:
+                        type: array
+                        items:
+                          properties:
+                            id:
+                              type: integer
+                              readOnly: true
+                            account_string:
+                              type: string
+                              readOnly: true
+                            payment_schedule__payment_id:
+                              type: string
+                              readOnly: true
+                            case__cpr_number:
+                              type: string
+                              readOnly: true
+                            activity__id:
+                              type: string
+                              readOnly: true
+                            activity__status:
+                              type: string
+                              readOnly: true
+                            activity__details__id:
+                              type: string
+                              readOnly: true
+                            payment_schedule__fictive:
+                              type: string
+                              readOnly: true
+                            is_payable_manually:
+                              type: string
+                              readOnly: true
+                            date:
+                              type: string
+                              format: date
+                            recipient_type:
+                              enum:
+                              - INTERNAL
+                              - PERSON
+                              - COMPANY
+                            recipient_id:
+                              type: string
+                              maxLength: 128
+                            recipient_name:
+                              type: string
+                              maxLength: 128
+                            payment_method:
+                              enum:
+                              - CASH
+                              - SD
+                              - INVOICE
+                              - INTERNAL
+                            amount:
+                              type: number
+                              multipleOf: 0.01
+                              maximum: 1000000000000
+                              minimum: -1000000000000
+                            paid_amount:
+                              type: number
+                              multipleOf: 0.01
+                              maximum: 1000000000000
+                              minimum: -1000000000000
+                              nullable: true
+                            paid:
+                              type: boolean
+                            paid_date:
+                              type: string
+                              format: date
+                              nullable: true
+                            note:
+                              type: string
+                            payment_schedule:
+                              type: integer
+                          required:
+                          - date
+                          - recipient_type
+                          - recipient_id
+                          - recipient_name
+                          - payment_method
+                          - amount
+                          - payment_schedule
+                        readOnly: true
+                      account:
+                        type: string
+                        readOnly: true
+                      recipient_type:
+                        enum:
+                        - INTERNAL
+                        - PERSON
+                        - COMPANY
+                      recipient_id:
+                        type: string
+                        maxLength: 128
+                      recipient_name:
+                        type: string
+                        maxLength: 128
+                      payment_method:
+                        enum:
+                        - CASH
+                        - SD
+                        - INVOICE
+                        - INTERNAL
+                      payment_frequency:
+                        enum:
+                        - DAILY
+                        - WEEKLY
+                        - BIWEEKLY
+                        - MONTHLY
+                        nullable: true
+                      payment_day_of_month:
+                        type: integer
+                        maximum: 31
+                        minimum: 1
+                      payment_type:
+                        enum:
+                        - ONE_TIME_PAYMENT
+                        - RUNNING_PAYMENT
+                        - PER_HOUR_PAYMENT
+                        - PER_DAY_PAYMENT
+                        - PER_KM_PAYMENT
+                      payment_units:
+                        type: number
+                        multipleOf: 0.01
+                        maximum: 1000000000000
+                        minimum: *id007
+                        nullable: true
+                      payment_amount:
+                        type: number
+                        multipleOf: 0.01
+                        maximum: 1000000000000
+                        minimum: -1000000000000
+                      fictive:
+                        type: boolean
+                      payment_id:
+                        type: integer
+                        readOnly: true
+                      payment_method_details:
+                        type: integer
+                        nullable: true
+                    required:
+                    - recipient_type
+                    - recipient_id
+                    - recipient_name
+                    - payment_method
+                    - payment_type
+                    - payment_amount
+                    type: object
+                  revision:
+                    type: string
+                    readOnly: true
+                    description: System field. Git repository tag:branch:commit.
+                  created:
+                    type: string
+                    format: date-time
+                  modified:
+                    type: string
+                    format: date-time
+                  user_created:
+                    type: string
+                    description: Updated by admin.save_model
+                    maxLength: 50
+                  user_modified:
+                    type: string
+                    description: Updated by admin.save_model
+                    maxLength: 50
+                  hostname_created:
+                    type: string
+                    description: System field. (modified on create only)
+                    maxLength: 60
+                  hostname_modified:
+                    type: string
+                    description: System field. (modified on every save)
+                    maxLength: 50
+                  device_created:
+                    type: string
+                    maxLength: 10
+                  device_modified:
+                    type: string
+                    maxLength: 10
+                  status:
+                    enum:
+                    - DRAFT
+                    - EXPECTED
+                    - GRANTED
+                  approval_note:
+                    type: string
+                  appropriation_date:
+                    type: string
+                    format: date
+                    nullable: true
+                  start_date:
+                    type: string
+                    format: date
+                  end_date:
+                    type: string
+                    format: date
+                    nullable: true
+                  activity_type:
+                    enum:
+                    - MAIN_ACTIVITY
+                    - SUPPL_ACTIVITY
+                  note:
+                    type: string
+                    nullable: true
+                    maxLength: 1000
+                  details:
+                    type: integer
+                  approval_level:
+                    type: integer
+                    nullable: true
+                  approval_user:
+                    type: integer
+                    nullable: true
+                  modifies:
+                    type: integer
+                    nullable: true
+                  appropriation:
+                    type: integer
+                  service_provider:
+                    type: integer
+                    nullable: true
+                required:
+                - status
+                - start_date
+                - activity_type
+                - details
+                - appropriation
+          description: ''
+    patch:
+      operationId: partial_updateActivity
       description: Expose activities in REST API.
       parameters:
       - name: id
@@ -4373,7 +5010,7 @@ paths:
                       type: number
                       multipleOf: 0.01
                       maximum: 1000000000000
-                      minimum: *id008
+                      minimum: *id007
                       nullable: true
                     payment_amount:
                       type: number
@@ -4466,12 +5103,6 @@ paths:
                 service_provider:
                   type: integer
                   nullable: true
-              required:
-              - status
-              - start_date
-              - activity_type
-              - details
-              - appropriation
           application/x-www-form-urlencoded:
             schema: *id010
           multipart/form-data:
@@ -4631,644 +5262,7 @@ paths:
                         type: number
                         multipleOf: 0.01
                         maximum: 1000000000000
-                        minimum: *id008
-                        nullable: true
-                      payment_amount:
-                        type: number
-                        multipleOf: 0.01
-                        maximum: 1000000000000
-                        minimum: -1000000000000
-                      fictive:
-                        type: boolean
-                      payment_id:
-                        type: integer
-                        readOnly: true
-                      payment_method_details:
-                        type: integer
-                        nullable: true
-                    required:
-                    - recipient_type
-                    - recipient_id
-                    - recipient_name
-                    - payment_method
-                    - payment_type
-                    - payment_amount
-                    type: object
-                  revision:
-                    type: string
-                    readOnly: true
-                    description: System field. Git repository tag:branch:commit.
-                  created:
-                    type: string
-                    format: date-time
-                  modified:
-                    type: string
-                    format: date-time
-                  user_created:
-                    type: string
-                    description: Updated by admin.save_model
-                    maxLength: 50
-                  user_modified:
-                    type: string
-                    description: Updated by admin.save_model
-                    maxLength: 50
-                  hostname_created:
-                    type: string
-                    description: System field. (modified on create only)
-                    maxLength: 60
-                  hostname_modified:
-                    type: string
-                    description: System field. (modified on every save)
-                    maxLength: 50
-                  device_created:
-                    type: string
-                    maxLength: 10
-                  device_modified:
-                    type: string
-                    maxLength: 10
-                  status:
-                    enum:
-                    - DRAFT
-                    - EXPECTED
-                    - GRANTED
-                  approval_note:
-                    type: string
-                  appropriation_date:
-                    type: string
-                    format: date
-                    nullable: true
-                  start_date:
-                    type: string
-                    format: date
-                  end_date:
-                    type: string
-                    format: date
-                    nullable: true
-                  activity_type:
-                    enum:
-                    - MAIN_ACTIVITY
-                    - SUPPL_ACTIVITY
-                  note:
-                    type: string
-                    nullable: true
-                    maxLength: 1000
-                  details:
-                    type: integer
-                  approval_level:
-                    type: integer
-                    nullable: true
-                  approval_user:
-                    type: integer
-                    nullable: true
-                  modifies:
-                    type: integer
-                    nullable: true
-                  appropriation:
-                    type: integer
-                  service_provider:
-                    type: integer
-                    nullable: true
-                required:
-                - status
-                - start_date
-                - activity_type
-                - details
-                - appropriation
-          description: ''
-    patch:
-      operationId: partial_updateActivity
-      description: Expose activities in REST API.
-      parameters:
-      - name: id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      - name: revision
-        required: false
-        in: query
-        description: revision
-        schema:
-          type: string
-      - name: created
-        required: false
-        in: query
-        description: created
-        schema:
-          type: string
-      - name: modified
-        required: false
-        in: query
-        description: modified
-        schema:
-          type: string
-      - name: user_created
-        required: false
-        in: query
-        description: user_created
-        schema:
-          type: string
-      - name: user_modified
-        required: false
-        in: query
-        description: user_modified
-        schema:
-          type: string
-      - name: hostname_created
-        required: false
-        in: query
-        description: hostname_created
-        schema:
-          type: string
-      - name: hostname_modified
-        required: false
-        in: query
-        description: hostname_modified
-        schema:
-          type: string
-      - name: device_created
-        required: false
-        in: query
-        description: device_created
-        schema:
-          type: string
-      - name: device_modified
-        required: false
-        in: query
-        description: device_modified
-        schema:
-          type: string
-      - name: details
-        required: false
-        in: query
-        description: details
-        schema:
-          type: string
-      - name: status
-        required: false
-        in: query
-        description: status
-        schema:
-          type: string
-      - name: approval_level
-        required: false
-        in: query
-        description: approval_level
-        schema:
-          type: string
-      - name: approval_note
-        required: false
-        in: query
-        description: approval_note
-        schema:
-          type: string
-      - name: approval_user
-        required: false
-        in: query
-        description: approval_user
-        schema:
-          type: string
-      - name: appropriation_date
-        required: false
-        in: query
-        description: appropriation_date
-        schema:
-          type: string
-      - name: start_date
-        required: false
-        in: query
-        description: start_date
-        schema:
-          type: string
-      - name: end_date
-        required: false
-        in: query
-        description: end_date
-        schema:
-          type: string
-      - name: activity_type
-        required: false
-        in: query
-        description: activity_type
-        schema:
-          type: string
-      - name: payment_plan
-        required: false
-        in: query
-        description: payment_plan
-        schema:
-          type: string
-      - name: modifies
-        required: false
-        in: query
-        description: modifies
-        schema:
-          type: string
-      - name: appropriation
-        required: false
-        in: query
-        description: appropriation
-        schema:
-          type: string
-      - name: service_provider
-        required: false
-        in: query
-        description: service_provider
-        schema:
-          type: string
-      - name: note
-        required: false
-        in: query
-        description: note
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema: &id011
-              properties:
-                payment_plan:
-                  properties:
-                    id:
-                      type: integer
-                      readOnly: true
-                    payments:
-                      type: array
-                      items:
-                        properties:
-                          id:
-                            type: integer
-                            readOnly: true
-                          account_string:
-                            type: string
-                            readOnly: true
-                          payment_schedule__payment_id:
-                            type: string
-                            readOnly: true
-                          case__cpr_number:
-                            type: string
-                            readOnly: true
-                          activity__id:
-                            type: string
-                            readOnly: true
-                          activity__status:
-                            type: string
-                            readOnly: true
-                          activity__details__id:
-                            type: string
-                            readOnly: true
-                          payment_schedule__fictive:
-                            type: string
-                            readOnly: true
-                          is_payable_manually:
-                            type: string
-                            readOnly: true
-                          date:
-                            type: string
-                            format: date
-                          recipient_type:
-                            enum:
-                            - INTERNAL
-                            - PERSON
-                            - COMPANY
-                          recipient_id:
-                            type: string
-                            maxLength: 128
-                          recipient_name:
-                            type: string
-                            maxLength: 128
-                          payment_method:
-                            enum:
-                            - CASH
-                            - SD
-                            - INVOICE
-                            - INTERNAL
-                          amount:
-                            type: number
-                            multipleOf: 0.01
-                            maximum: 1000000000000
-                            minimum: -1000000000000
-                          paid_amount:
-                            type: number
-                            multipleOf: 0.01
-                            maximum: 1000000000000
-                            minimum: -1000000000000
-                            nullable: true
-                          paid:
-                            type: boolean
-                          paid_date:
-                            type: string
-                            format: date
-                            nullable: true
-                          note:
-                            type: string
-                          payment_schedule:
-                            type: integer
-                        required:
-                        - date
-                        - recipient_type
-                        - recipient_id
-                        - recipient_name
-                        - payment_method
-                        - amount
-                        - payment_schedule
-                      readOnly: true
-                    account:
-                      type: string
-                      readOnly: true
-                    recipient_type:
-                      enum:
-                      - INTERNAL
-                      - PERSON
-                      - COMPANY
-                    recipient_id:
-                      type: string
-                      maxLength: 128
-                    recipient_name:
-                      type: string
-                      maxLength: 128
-                    payment_method:
-                      enum:
-                      - CASH
-                      - SD
-                      - INVOICE
-                      - INTERNAL
-                    payment_frequency:
-                      enum:
-                      - DAILY
-                      - WEEKLY
-                      - BIWEEKLY
-                      - MONTHLY
-                      nullable: true
-                    payment_day_of_month:
-                      type: integer
-                      maximum: 31
-                      minimum: 1
-                    payment_type:
-                      enum:
-                      - ONE_TIME_PAYMENT
-                      - RUNNING_PAYMENT
-                      - PER_HOUR_PAYMENT
-                      - PER_DAY_PAYMENT
-                      - PER_KM_PAYMENT
-                    payment_units:
-                      type: number
-                      multipleOf: 0.01
-                      maximum: 1000000000000
-                      minimum: *id008
-                      nullable: true
-                    payment_amount:
-                      type: number
-                      multipleOf: 0.01
-                      maximum: 1000000000000
-                      minimum: -1000000000000
-                    fictive:
-                      type: boolean
-                    payment_id:
-                      type: integer
-                      readOnly: true
-                    payment_method_details:
-                      type: integer
-                      nullable: true
-                  required:
-                  - recipient_type
-                  - recipient_id
-                  - recipient_name
-                  - payment_method
-                  - payment_type
-                  - payment_amount
-                  type: object
-                created:
-                  type: string
-                  format: date-time
-                modified:
-                  type: string
-                  format: date-time
-                user_created:
-                  type: string
-                  description: Updated by admin.save_model
-                  maxLength: 50
-                user_modified:
-                  type: string
-                  description: Updated by admin.save_model
-                  maxLength: 50
-                hostname_created:
-                  type: string
-                  description: System field. (modified on create only)
-                  maxLength: 60
-                hostname_modified:
-                  type: string
-                  description: System field. (modified on every save)
-                  maxLength: 50
-                device_created:
-                  type: string
-                  maxLength: 10
-                device_modified:
-                  type: string
-                  maxLength: 10
-                status:
-                  enum:
-                  - DRAFT
-                  - EXPECTED
-                  - GRANTED
-                approval_note:
-                  type: string
-                appropriation_date:
-                  type: string
-                  format: date
-                  nullable: true
-                start_date:
-                  type: string
-                  format: date
-                end_date:
-                  type: string
-                  format: date
-                  nullable: true
-                activity_type:
-                  enum:
-                  - MAIN_ACTIVITY
-                  - SUPPL_ACTIVITY
-                note:
-                  type: string
-                  nullable: true
-                  maxLength: 1000
-                details:
-                  type: integer
-                approval_level:
-                  type: integer
-                  nullable: true
-                approval_user:
-                  type: integer
-                  nullable: true
-                modifies:
-                  type: integer
-                  nullable: true
-                appropriation:
-                  type: integer
-                service_provider:
-                  type: integer
-                  nullable: true
-          application/x-www-form-urlencoded:
-            schema: *id011
-          multipart/form-data:
-            schema: *id011
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                properties:
-                  id:
-                    type: integer
-                    readOnly: true
-                  monthly_payment_plan:
-                    type: string
-                    readOnly: true
-                  total_cost:
-                    type: string
-                    readOnly: true
-                  total_cost_this_year:
-                    type: string
-                    readOnly: true
-                  total_cost_full_year:
-                    type: string
-                    readOnly: true
-                  total_granted_this_year:
-                    type: string
-                    readOnly: true
-                  total_expected_this_year:
-                    type: string
-                    readOnly: true
-                  payment_plan:
-                    properties:
-                      id:
-                        type: integer
-                        readOnly: true
-                      payments:
-                        type: array
-                        items:
-                          properties:
-                            id:
-                              type: integer
-                              readOnly: true
-                            account_string:
-                              type: string
-                              readOnly: true
-                            payment_schedule__payment_id:
-                              type: string
-                              readOnly: true
-                            case__cpr_number:
-                              type: string
-                              readOnly: true
-                            activity__id:
-                              type: string
-                              readOnly: true
-                            activity__status:
-                              type: string
-                              readOnly: true
-                            activity__details__id:
-                              type: string
-                              readOnly: true
-                            payment_schedule__fictive:
-                              type: string
-                              readOnly: true
-                            is_payable_manually:
-                              type: string
-                              readOnly: true
-                            date:
-                              type: string
-                              format: date
-                            recipient_type:
-                              enum:
-                              - INTERNAL
-                              - PERSON
-                              - COMPANY
-                            recipient_id:
-                              type: string
-                              maxLength: 128
-                            recipient_name:
-                              type: string
-                              maxLength: 128
-                            payment_method:
-                              enum:
-                              - CASH
-                              - SD
-                              - INVOICE
-                              - INTERNAL
-                            amount:
-                              type: number
-                              multipleOf: 0.01
-                              maximum: 1000000000000
-                              minimum: -1000000000000
-                            paid_amount:
-                              type: number
-                              multipleOf: 0.01
-                              maximum: 1000000000000
-                              minimum: -1000000000000
-                              nullable: true
-                            paid:
-                              type: boolean
-                            paid_date:
-                              type: string
-                              format: date
-                              nullable: true
-                            note:
-                              type: string
-                            payment_schedule:
-                              type: integer
-                          required:
-                          - date
-                          - recipient_type
-                          - recipient_id
-                          - recipient_name
-                          - payment_method
-                          - amount
-                          - payment_schedule
-                        readOnly: true
-                      account:
-                        type: string
-                        readOnly: true
-                      recipient_type:
-                        enum:
-                        - INTERNAL
-                        - PERSON
-                        - COMPANY
-                      recipient_id:
-                        type: string
-                        maxLength: 128
-                      recipient_name:
-                        type: string
-                        maxLength: 128
-                      payment_method:
-                        enum:
-                        - CASH
-                        - SD
-                        - INVOICE
-                        - INTERNAL
-                      payment_frequency:
-                        enum:
-                        - DAILY
-                        - WEEKLY
-                        - BIWEEKLY
-                        - MONTHLY
-                        nullable: true
-                      payment_day_of_month:
-                        type: integer
-                        maximum: 31
-                        minimum: 1
-                      payment_type:
-                        enum:
-                        - ONE_TIME_PAYMENT
-                        - RUNNING_PAYMENT
-                        - PER_HOUR_PAYMENT
-                        - PER_DAY_PAYMENT
-                        - PER_KM_PAYMENT
-                      payment_units:
-                        type: number
-                        multipleOf: 0.01
-                        maximum: 1000000000000
-                        minimum: *id008
+                        minimum: *id007
                         nullable: true
                       payment_amount:
                         type: number
@@ -5667,7 +5661,7 @@ paths:
                       type: number
                       multipleOf: 0.01
                       maximum: 1000000000000
-                      minimum: *id008
+                      minimum: *id007
                       nullable: true
                     payment_amount:
                       type: number
@@ -5697,7 +5691,7 @@ paths:
       requestBody:
         content:
           application/json:
-            schema: &id012
+            schema: &id011
               properties:
                 recipient_type:
                   enum:
@@ -5738,7 +5732,7 @@ paths:
                   type: number
                   multipleOf: 0.01
                   maximum: 1000000000000
-                  minimum: *id008
+                  minimum: *id007
                   nullable: true
                 payment_amount:
                   type: number
@@ -5758,9 +5752,9 @@ paths:
               - payment_type
               - payment_amount
           application/x-www-form-urlencoded:
-            schema: *id012
+            schema: *id011
           multipart/form-data:
-            schema: *id012
+            schema: *id011
       responses:
         '200':
           content:
@@ -5893,7 +5887,7 @@ paths:
                     type: number
                     multipleOf: 0.01
                     maximum: 1000000000000
-                    minimum: *id008
+                    minimum: *id007
                     nullable: true
                   payment_amount:
                     type: number
@@ -6059,7 +6053,7 @@ paths:
                     type: number
                     multipleOf: 0.01
                     maximum: 1000000000000
-                    minimum: *id008
+                    minimum: *id007
                     nullable: true
                   payment_amount:
                     type: number
@@ -6084,6 +6078,238 @@ paths:
           description: ''
     put:
       operationId: updatePaymentSchedule
+      description: Expose payment schedules in REST API.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id012
+              properties:
+                recipient_type:
+                  enum:
+                  - INTERNAL
+                  - PERSON
+                  - COMPANY
+                recipient_id:
+                  type: string
+                  maxLength: 128
+                recipient_name:
+                  type: string
+                  maxLength: 128
+                payment_method:
+                  enum:
+                  - CASH
+                  - SD
+                  - INVOICE
+                  - INTERNAL
+                payment_frequency:
+                  enum:
+                  - DAILY
+                  - WEEKLY
+                  - BIWEEKLY
+                  - MONTHLY
+                  nullable: true
+                payment_day_of_month:
+                  type: integer
+                  maximum: 31
+                  minimum: 1
+                payment_type:
+                  enum:
+                  - ONE_TIME_PAYMENT
+                  - RUNNING_PAYMENT
+                  - PER_HOUR_PAYMENT
+                  - PER_DAY_PAYMENT
+                  - PER_KM_PAYMENT
+                payment_units:
+                  type: number
+                  multipleOf: 0.01
+                  maximum: 1000000000000
+                  minimum: *id007
+                  nullable: true
+                payment_amount:
+                  type: number
+                  multipleOf: 0.01
+                  maximum: 1000000000000
+                  minimum: -1000000000000
+                fictive:
+                  type: boolean
+                payment_method_details:
+                  type: integer
+                  nullable: true
+              required:
+              - recipient_type
+              - recipient_id
+              - recipient_name
+              - payment_method
+              - payment_type
+              - payment_amount
+          application/x-www-form-urlencoded:
+            schema: *id012
+          multipart/form-data:
+            schema: *id012
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  payments:
+                    type: array
+                    items:
+                      properties:
+                        id:
+                          type: integer
+                          readOnly: true
+                        account_string:
+                          type: string
+                          readOnly: true
+                        payment_schedule__payment_id:
+                          type: string
+                          readOnly: true
+                        case__cpr_number:
+                          type: string
+                          readOnly: true
+                        activity__id:
+                          type: string
+                          readOnly: true
+                        activity__status:
+                          type: string
+                          readOnly: true
+                        activity__details__id:
+                          type: string
+                          readOnly: true
+                        payment_schedule__fictive:
+                          type: string
+                          readOnly: true
+                        is_payable_manually:
+                          type: string
+                          readOnly: true
+                        date:
+                          type: string
+                          format: date
+                        recipient_type:
+                          enum:
+                          - INTERNAL
+                          - PERSON
+                          - COMPANY
+                        recipient_id:
+                          type: string
+                          maxLength: 128
+                        recipient_name:
+                          type: string
+                          maxLength: 128
+                        payment_method:
+                          enum:
+                          - CASH
+                          - SD
+                          - INVOICE
+                          - INTERNAL
+                        amount:
+                          type: number
+                          multipleOf: 0.01
+                          maximum: 1000000000000
+                          minimum: -1000000000000
+                        paid_amount:
+                          type: number
+                          multipleOf: 0.01
+                          maximum: 1000000000000
+                          minimum: -1000000000000
+                          nullable: true
+                        paid:
+                          type: boolean
+                        paid_date:
+                          type: string
+                          format: date
+                          nullable: true
+                        note:
+                          type: string
+                        payment_schedule:
+                          type: integer
+                      required:
+                      - date
+                      - recipient_type
+                      - recipient_id
+                      - recipient_name
+                      - payment_method
+                      - amount
+                      - payment_schedule
+                    readOnly: true
+                  account:
+                    type: string
+                    readOnly: true
+                  recipient_type:
+                    enum:
+                    - INTERNAL
+                    - PERSON
+                    - COMPANY
+                  recipient_id:
+                    type: string
+                    maxLength: 128
+                  recipient_name:
+                    type: string
+                    maxLength: 128
+                  payment_method:
+                    enum:
+                    - CASH
+                    - SD
+                    - INVOICE
+                    - INTERNAL
+                  payment_frequency:
+                    enum:
+                    - DAILY
+                    - WEEKLY
+                    - BIWEEKLY
+                    - MONTHLY
+                    nullable: true
+                  payment_day_of_month:
+                    type: integer
+                    maximum: 31
+                    minimum: 1
+                  payment_type:
+                    enum:
+                    - ONE_TIME_PAYMENT
+                    - RUNNING_PAYMENT
+                    - PER_HOUR_PAYMENT
+                    - PER_DAY_PAYMENT
+                    - PER_KM_PAYMENT
+                  payment_units:
+                    type: number
+                    multipleOf: 0.01
+                    maximum: 1000000000000
+                    minimum: *id007
+                    nullable: true
+                  payment_amount:
+                    type: number
+                    multipleOf: 0.01
+                    maximum: 1000000000000
+                    minimum: -1000000000000
+                  fictive:
+                    type: boolean
+                  payment_id:
+                    type: integer
+                    readOnly: true
+                  payment_method_details:
+                    type: integer
+                    nullable: true
+                required:
+                - recipient_type
+                - recipient_id
+                - recipient_name
+                - payment_method
+                - payment_type
+                - payment_amount
+          description: ''
+    patch:
+      operationId: partial_updatePaymentSchedule
       description: Expose payment schedules in REST API.
       parameters:
       - name: id
@@ -6136,7 +6362,7 @@ paths:
                   type: number
                   multipleOf: 0.01
                   maximum: 1000000000000
-                  minimum: *id008
+                  minimum: *id007
                   nullable: true
                 payment_amount:
                   type: number
@@ -6148,13 +6374,6 @@ paths:
                 payment_method_details:
                   type: integer
                   nullable: true
-              required:
-              - recipient_type
-              - recipient_id
-              - recipient_name
-              - payment_method
-              - payment_type
-              - payment_amount
           application/x-www-form-urlencoded:
             schema: *id013
           multipart/form-data:
@@ -6291,232 +6510,7 @@ paths:
                     type: number
                     multipleOf: 0.01
                     maximum: 1000000000000
-                    minimum: *id008
-                    nullable: true
-                  payment_amount:
-                    type: number
-                    multipleOf: 0.01
-                    maximum: 1000000000000
-                    minimum: -1000000000000
-                  fictive:
-                    type: boolean
-                  payment_id:
-                    type: integer
-                    readOnly: true
-                  payment_method_details:
-                    type: integer
-                    nullable: true
-                required:
-                - recipient_type
-                - recipient_id
-                - recipient_name
-                - payment_method
-                - payment_type
-                - payment_amount
-          description: ''
-    patch:
-      operationId: partial_updatePaymentSchedule
-      description: Expose payment schedules in REST API.
-      parameters:
-      - name: id
-        in: path
-        required: true
-        description: ''
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema: &id014
-              properties:
-                recipient_type:
-                  enum:
-                  - INTERNAL
-                  - PERSON
-                  - COMPANY
-                recipient_id:
-                  type: string
-                  maxLength: 128
-                recipient_name:
-                  type: string
-                  maxLength: 128
-                payment_method:
-                  enum:
-                  - CASH
-                  - SD
-                  - INVOICE
-                  - INTERNAL
-                payment_frequency:
-                  enum:
-                  - DAILY
-                  - WEEKLY
-                  - BIWEEKLY
-                  - MONTHLY
-                  nullable: true
-                payment_day_of_month:
-                  type: integer
-                  maximum: 31
-                  minimum: 1
-                payment_type:
-                  enum:
-                  - ONE_TIME_PAYMENT
-                  - RUNNING_PAYMENT
-                  - PER_HOUR_PAYMENT
-                  - PER_DAY_PAYMENT
-                  - PER_KM_PAYMENT
-                payment_units:
-                  type: number
-                  multipleOf: 0.01
-                  maximum: 1000000000000
-                  minimum: *id008
-                  nullable: true
-                payment_amount:
-                  type: number
-                  multipleOf: 0.01
-                  maximum: 1000000000000
-                  minimum: -1000000000000
-                fictive:
-                  type: boolean
-                payment_method_details:
-                  type: integer
-                  nullable: true
-          application/x-www-form-urlencoded:
-            schema: *id014
-          multipart/form-data:
-            schema: *id014
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                properties:
-                  id:
-                    type: integer
-                    readOnly: true
-                  payments:
-                    type: array
-                    items:
-                      properties:
-                        id:
-                          type: integer
-                          readOnly: true
-                        account_string:
-                          type: string
-                          readOnly: true
-                        payment_schedule__payment_id:
-                          type: string
-                          readOnly: true
-                        case__cpr_number:
-                          type: string
-                          readOnly: true
-                        activity__id:
-                          type: string
-                          readOnly: true
-                        activity__status:
-                          type: string
-                          readOnly: true
-                        activity__details__id:
-                          type: string
-                          readOnly: true
-                        payment_schedule__fictive:
-                          type: string
-                          readOnly: true
-                        is_payable_manually:
-                          type: string
-                          readOnly: true
-                        date:
-                          type: string
-                          format: date
-                        recipient_type:
-                          enum:
-                          - INTERNAL
-                          - PERSON
-                          - COMPANY
-                        recipient_id:
-                          type: string
-                          maxLength: 128
-                        recipient_name:
-                          type: string
-                          maxLength: 128
-                        payment_method:
-                          enum:
-                          - CASH
-                          - SD
-                          - INVOICE
-                          - INTERNAL
-                        amount:
-                          type: number
-                          multipleOf: 0.01
-                          maximum: 1000000000000
-                          minimum: -1000000000000
-                        paid_amount:
-                          type: number
-                          multipleOf: 0.01
-                          maximum: 1000000000000
-                          minimum: -1000000000000
-                          nullable: true
-                        paid:
-                          type: boolean
-                        paid_date:
-                          type: string
-                          format: date
-                          nullable: true
-                        note:
-                          type: string
-                        payment_schedule:
-                          type: integer
-                      required:
-                      - date
-                      - recipient_type
-                      - recipient_id
-                      - recipient_name
-                      - payment_method
-                      - amount
-                      - payment_schedule
-                    readOnly: true
-                  account:
-                    type: string
-                    readOnly: true
-                  recipient_type:
-                    enum:
-                    - INTERNAL
-                    - PERSON
-                    - COMPANY
-                  recipient_id:
-                    type: string
-                    maxLength: 128
-                  recipient_name:
-                    type: string
-                    maxLength: 128
-                  payment_method:
-                    enum:
-                    - CASH
-                    - SD
-                    - INVOICE
-                    - INTERNAL
-                  payment_frequency:
-                    enum:
-                    - DAILY
-                    - WEEKLY
-                    - BIWEEKLY
-                    - MONTHLY
-                    nullable: true
-                  payment_day_of_month:
-                    type: integer
-                    maximum: 31
-                    minimum: 1
-                  payment_type:
-                    enum:
-                    - ONE_TIME_PAYMENT
-                    - RUNNING_PAYMENT
-                    - PER_HOUR_PAYMENT
-                    - PER_DAY_PAYMENT
-                    - PER_KM_PAYMENT
-                  payment_units:
-                    type: number
-                    multipleOf: 0.01
-                    maximum: 1000000000000
-                    minimum: *id008
+                    minimum: *id007
                     nullable: true
                   payment_amount:
                     type: number
@@ -6582,7 +6576,7 @@ paths:
       requestBody:
         content:
           application/json:
-            schema: &id015
+            schema: &id014
               properties:
                 tax_card:
                   enum:
@@ -6591,9 +6585,9 @@ paths:
               required:
               - tax_card
           application/x-www-form-urlencoded:
-            schema: *id015
+            schema: *id014
           multipart/form-data:
-            schema: *id015
+            schema: *id014
       responses:
         '200':
           content:
@@ -6650,7 +6644,7 @@ paths:
       requestBody:
         content:
           application/json:
-            schema: &id016
+            schema: &id015
               properties:
                 tax_card:
                   enum:
@@ -6659,9 +6653,9 @@ paths:
               required:
               - tax_card
           application/x-www-form-urlencoded:
-            schema: *id016
+            schema: *id015
           multipart/form-data:
-            schema: *id016
+            schema: *id015
       responses:
         '200':
           content:
@@ -6691,16 +6685,16 @@ paths:
       requestBody:
         content:
           application/json:
-            schema: &id017
+            schema: &id016
               properties:
                 tax_card:
                   enum:
                   - MAIN_CARD
                   - SECONDARY_CARD
           application/x-www-form-urlencoded:
-            schema: *id017
+            schema: *id016
           multipart/form-data:
-            schema: *id017
+            schema: *id016
       responses:
         '200':
           content:
@@ -6831,67 +6825,37 @@ paths:
       - name: paid_date__gte
         required: false
         in: query
-        description: &id021 !!python/object/apply:django.utils.functional._lazy_proxy_unpickle
-        - *id018
-        - !!python/tuple
-          - "Betalingsdato st\xF8rre eller lig med"
-        - {}
-        - *id019
+        description: "Betalingsdato st\xF8rre eller lig med"
         schema:
           type: string
       - name: paid_date__lte
         required: false
         in: query
-        description: &id022 !!python/object/apply:django.utils.functional._lazy_proxy_unpickle
-        - *id018
-        - !!python/tuple
-          - Betalingsdato mindre eller lig med
-        - {}
-        - *id019
+        description: Betalingsdato mindre eller lig med
         schema:
           type: string
       - name: date__gte
         required: false
         in: query
-        description: &id023 !!python/object/apply:django.utils.functional._lazy_proxy_unpickle
-        - *id018
-        - !!python/tuple
-          - "Dato st\xF8rre eller lig med"
-        - {}
-        - *id019
+        description: "Dato st\xF8rre eller lig med"
         schema:
           type: string
       - name: date__lte
         required: false
         in: query
-        description: &id024 !!python/object/apply:django.utils.functional._lazy_proxy_unpickle
-        - *id018
-        - !!python/tuple
-          - Dato mindre eller lig med
-        - {}
-        - *id019
+        description: Dato mindre eller lig med
         schema:
           type: string
       - name: paid_date_or_date__gte
         required: false
         in: query
-        description: &id025 !!python/object/apply:django.utils.functional._lazy_proxy_unpickle
-        - *id018
-        - !!python/tuple
-          - "Betalingsdato eller Dato st\xF8rre eller lig med"
-        - {}
-        - *id019
+        description: "Betalingsdato eller Dato st\xF8rre eller lig med"
         schema:
           type: string
       - name: paid_date_or_date__lte
         required: false
         in: query
-        description: &id026 !!python/object/apply:django.utils.functional._lazy_proxy_unpickle
-        - *id018
-        - !!python/tuple
-          - Betalingsdato eller Dato mindre eller lig med
-        - {}
-        - *id019
+        description: Betalingsdato eller Dato mindre eller lig med
         schema:
           type: string
       responses:
@@ -7001,7 +6965,7 @@ paths:
       requestBody:
         content:
           application/json:
-            schema: &id020
+            schema: &id017
               properties:
                 date:
                   type: string
@@ -7053,9 +7017,9 @@ paths:
               - amount
               - payment_schedule
           application/x-www-form-urlencoded:
-            schema: *id020
+            schema: *id017
           multipart/form-data:
-            schema: *id020
+            schema: *id017
       responses:
         '200':
           content:
@@ -7240,37 +7204,37 @@ paths:
       - name: paid_date__gte
         required: false
         in: query
-        description: *id021
+        description: "Betalingsdato st\xF8rre eller lig med"
         schema:
           type: string
       - name: paid_date__lte
         required: false
         in: query
-        description: *id022
+        description: Betalingsdato mindre eller lig med
         schema:
           type: string
       - name: date__gte
         required: false
         in: query
-        description: *id023
+        description: "Dato st\xF8rre eller lig med"
         schema:
           type: string
       - name: date__lte
         required: false
         in: query
-        description: *id024
+        description: Dato mindre eller lig med
         schema:
           type: string
       - name: paid_date_or_date__gte
         required: false
         in: query
-        description: *id025
+        description: "Betalingsdato eller Dato st\xF8rre eller lig med"
         schema:
           type: string
       - name: paid_date_or_date__lte
         required: false
         in: query
-        description: *id026
+        description: Betalingsdato eller Dato mindre eller lig med
         schema:
           type: string
       responses:
@@ -7456,43 +7420,43 @@ paths:
       - name: paid_date__gte
         required: false
         in: query
-        description: *id021
+        description: "Betalingsdato st\xF8rre eller lig med"
         schema:
           type: string
       - name: paid_date__lte
         required: false
         in: query
-        description: *id022
+        description: Betalingsdato mindre eller lig med
         schema:
           type: string
       - name: date__gte
         required: false
         in: query
-        description: *id023
+        description: "Dato st\xF8rre eller lig med"
         schema:
           type: string
       - name: date__lte
         required: false
         in: query
-        description: *id024
+        description: Dato mindre eller lig med
         schema:
           type: string
       - name: paid_date_or_date__gte
         required: false
         in: query
-        description: *id025
+        description: "Betalingsdato eller Dato st\xF8rre eller lig med"
         schema:
           type: string
       - name: paid_date_or_date__lte
         required: false
         in: query
-        description: *id026
+        description: Betalingsdato eller Dato mindre eller lig med
         schema:
           type: string
       requestBody:
         content:
           application/json:
-            schema: &id027
+            schema: &id018
               properties:
                 date:
                   type: string
@@ -7544,9 +7508,9 @@ paths:
               - amount
               - payment_schedule
           application/x-www-form-urlencoded:
-            schema: *id027
+            schema: *id018
           multipart/form-data:
-            schema: *id027
+            schema: *id018
       responses:
         '200':
           content:
@@ -7730,43 +7694,43 @@ paths:
       - name: paid_date__gte
         required: false
         in: query
-        description: *id021
+        description: "Betalingsdato st\xF8rre eller lig med"
         schema:
           type: string
       - name: paid_date__lte
         required: false
         in: query
-        description: *id022
+        description: Betalingsdato mindre eller lig med
         schema:
           type: string
       - name: date__gte
         required: false
         in: query
-        description: *id023
+        description: "Dato st\xF8rre eller lig med"
         schema:
           type: string
       - name: date__lte
         required: false
         in: query
-        description: *id024
+        description: Dato mindre eller lig med
         schema:
           type: string
       - name: paid_date_or_date__gte
         required: false
         in: query
-        description: *id025
+        description: "Betalingsdato eller Dato st\xF8rre eller lig med"
         schema:
           type: string
       - name: paid_date_or_date__lte
         required: false
         in: query
-        description: *id026
+        description: Betalingsdato eller Dato mindre eller lig med
         schema:
           type: string
       requestBody:
         content:
           application/json:
-            schema: &id028
+            schema: &id019
               properties:
                 date:
                   type: string
@@ -7810,9 +7774,9 @@ paths:
                 payment_schedule:
                   type: integer
           application/x-www-form-urlencoded:
-            schema: *id028
+            schema: *id019
           multipart/form-data:
-            schema: *id028
+            schema: *id019
       responses:
         '200':
           content:
@@ -7996,37 +7960,37 @@ paths:
       - name: paid_date__gte
         required: false
         in: query
-        description: *id021
+        description: "Betalingsdato st\xF8rre eller lig med"
         schema:
           type: string
       - name: paid_date__lte
         required: false
         in: query
-        description: *id022
+        description: Betalingsdato mindre eller lig med
         schema:
           type: string
       - name: date__gte
         required: false
         in: query
-        description: *id023
+        description: "Dato st\xF8rre eller lig med"
         schema:
           type: string
       - name: date__lte
         required: false
         in: query
-        description: *id024
+        description: Dato mindre eller lig med
         schema:
           type: string
       - name: paid_date_or_date__gte
         required: false
         in: query
-        description: *id025
+        description: "Betalingsdato eller Dato st\xF8rre eller lig med"
         schema:
           type: string
       - name: paid_date_or_date__lte
         required: false
         in: query
-        description: *id026
+        description: Betalingsdato eller Dato mindre eller lig med
         schema:
           type: string
       responses:
@@ -8104,7 +8068,7 @@ paths:
       requestBody:
         content:
           application/json:
-            schema: &id029
+            schema: &id020
               properties:
                 relation_type:
                   type: string
@@ -8125,9 +8089,9 @@ paths:
               - name
               - main_case
           application/x-www-form-urlencoded:
-            schema: *id029
+            schema: *id020
           multipart/form-data:
-            schema: *id029
+            schema: *id020
       responses:
         '200':
           content:
@@ -8304,7 +8268,7 @@ paths:
       requestBody:
         content:
           application/json:
-            schema: &id030
+            schema: &id021
               properties:
                 relation_type:
                   type: string
@@ -8325,9 +8289,9 @@ paths:
               - name
               - main_case
           application/x-www-form-urlencoded:
-            schema: *id030
+            schema: *id021
           multipart/form-data:
-            schema: *id030
+            schema: *id021
       responses:
         '200':
           content:
@@ -8399,7 +8363,7 @@ paths:
       requestBody:
         content:
           application/json:
-            schema: &id031
+            schema: &id022
               properties:
                 relation_type:
                   type: string
@@ -8416,9 +8380,9 @@ paths:
                 main_case:
                   type: integer
           application/x-www-form-urlencoded:
-            schema: *id031
+            schema: *id022
           multipart/form-data:
-            schema: *id031
+            schema: *id022
       responses:
         '200':
           content:
@@ -9134,8 +9098,7 @@ paths:
                       type: number
                       multipleOf: 0.01
                       maximum: 1000
-                      minimum: &id032 !!python/object/apply:decimal.Decimal
-                      - '0.01'
+                      minimum: &id023 !!float 0.01
                   required:
                   - name
           description: ''
@@ -9169,7 +9132,7 @@ paths:
                     type: number
                     multipleOf: 0.01
                     maximum: 1000
-                    minimum: *id032
+                    minimum: *id023
                 required:
                 - name
           description: ''
@@ -9522,7 +9485,7 @@ paths:
       requestBody:
         content:
           application/json:
-            schema: &id033
+            schema: &id024
               properties:
                 username:
                   type: string
@@ -9533,9 +9496,9 @@ paths:
               - username
               - password
           application/x-www-form-urlencoded:
-            schema: *id033
+            schema: *id024
           multipart/form-data:
-            schema: *id033
+            schema: *id024
       responses:
         '200':
           content:
@@ -9558,16 +9521,16 @@ paths:
       requestBody:
         content:
           application/json:
-            schema: &id034
+            schema: &id025
               properties:
                 refresh:
                   type: string
               required:
               - refresh
           application/x-www-form-urlencoded:
-            schema: *id034
+            schema: *id025
           multipart/form-data:
-            schema: *id034
+            schema: *id025
       responses:
         '200':
           content:
@@ -9592,7 +9555,7 @@ paths:
       requestBody:
         content:
           application/json:
-            schema: &id035
+            schema: &id026
               properties:
                 created:
                   type: string
@@ -9674,9 +9637,9 @@ paths:
                   type: integer
                   nullable: true
           application/x-www-form-urlencoded:
-            schema: *id035
+            schema: *id026
           multipart/form-data:
-            schema: *id035
+            schema: *id026
       responses:
         '200':
           content:
@@ -9797,7 +9760,7 @@ paths:
       requestBody:
         content:
           application/json:
-            schema: &id036
+            schema: &id027
               properties:
                 created:
                   type: string
@@ -9838,9 +9801,9 @@ paths:
                 case:
                   type: integer
           application/x-www-form-urlencoded:
-            schema: *id036
+            schema: *id027
           multipart/form-data:
-            schema: *id036
+            schema: *id027
       responses:
         '200':
           content:

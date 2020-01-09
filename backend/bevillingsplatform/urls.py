@@ -30,6 +30,7 @@ from django.conf.urls import url
 from django.conf.urls.static import static
 from django.conf import settings
 from django.views.static import serve
+from django.views.generic import TemplateView
 
 import django_saml2_auth
 
@@ -102,6 +103,14 @@ urlpatterns = [
             # version="1.0.0",
         ),
         name="openapi-schema",
+    ),
+    path(
+        "api/swagger-ui/",
+        TemplateView.as_view(
+            template_name="core/html/swagger-ui.html",
+            extra_context={"schema_url": "openapi-schema"},
+        ),
+        name="swagger-ui",
     ),
 ]
 
