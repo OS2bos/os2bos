@@ -1,3 +1,10 @@
+* Version 2.3.0, 2020-01-09
+
+New in this version:
+
+* Modify the URL for the rate tabel (taksttabel) to a more general one.
+* Nice-ify django admin for Payments and PaymentSchedules and allow search on payment id.
+
 * Version 2.2.3, 2019-12-12
 
 New in this version:
