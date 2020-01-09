@@ -95,7 +95,7 @@ urlpatterns = [
     ),
     path("api/", include(router.urls)),
     path(
-        "openapi",
+        "api/openapi/",
         get_schema_view(
             title="OS2bos REST API",
             description="API for accessing the OS2bos data model",
