@@ -2,8 +2,16 @@
 
 New in this version:
 
+Features:
+
 * Modify the URL for the rate tabel (taksttabel) to a more general one.
 * Nice-ify django admin for Payments and PaymentSchedules and allow search on payment id.
+* Add pydocstyle compliance.
+* Add sphinx docs generation
+
+Bug fixes:
+
+* Fix incorrect tests dependant on current year.
 
 * Version 2.2.3, 2019-12-12
 
