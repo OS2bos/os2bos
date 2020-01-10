@@ -69,7 +69,7 @@ docs:
     - pip3 install -r backend/requirements.txt
     - apt-get update && apt-get install npm -y && npm install -g jsdoc
   script:
-    - sphinx-build docs/source /doc-build
+    - sphinx-build docs/source doc-build
   artifacts:
     paths:
       - doc-build
