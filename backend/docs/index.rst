@@ -14,6 +14,10 @@ Server-side codebase
    bevillingsplatform.rst
    manage.rst
 
+BOS Backend API documentation
+=============================
+.. openapi:: openapi.yml
+
 
 Indices and tables
 ==================
