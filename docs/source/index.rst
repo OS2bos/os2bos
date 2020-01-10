@@ -3,6 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+=========
 Om OS2BOS
 =========
 
@@ -21,10 +22,12 @@ Formålet med BOS er at give socialrådgiverne bedre redskaber til at benytte de
 Opbygning
 =========
 
+--------
 Frontend
----------
+--------
 BOS frontenden er skrevet i Javascript frameworket `Vue.js`.
 
+-------
 Backend
 -------
 BOS backenden benytter Django og DRF som framework og persisterer dataen i en PostgreSQL-database.
