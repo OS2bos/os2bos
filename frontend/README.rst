@@ -188,5 +188,3 @@ Build the frontend
 If you are running in development mode, your changes should display in the browser right after you save your changes.
 For a production build, you'd run the ``npm run build`` command and host the built files from ``/frontend/dist`` somewhere.
 Now you've customized the frontend :)
-
-.. js:autofunction:: fetchCase
