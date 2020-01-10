@@ -1,5 +1,5 @@
 Version 2.2.3, 2019-12-12
-=========================
+-------------------------
 
 New in this version:
 
@@ -19,26 +19,26 @@ New in this version:
 * Update Django from 2.2.1 to 2.2.4
 
 Version 2.2.2, 2019-11-28
-=========================
+-------------------------
 
 Hotfix
-------
+^^^^^^
 
 * Fix broken migration.
 
 
 Version 2.2.1, 2019-11-25
-=========================
+-------------------------
 
 New in this version:
 
 Features
---------
+^^^^^^^^
 
 * Mark payments for SD Løn along with fictive ones.
 
 Bug fixes
----------
+^^^^^^^^^
 
 * Fix hover text.
 * Display of Indsatstrappen fixed.
@@ -49,12 +49,12 @@ Bug fixes
 
 
 Version 2.2.0, 2019-11-21
-=========================
+-------------------------
 
 New in this version:
 
 Features
---------
+^^^^^^^^
 
 * It is now possible to find payments from a payment ID.
 * Case worker can now be changed on several cases in one action.
@@ -86,7 +86,7 @@ Features
 
 
 Bug fixes
----------
+^^^^^^^^^
 
 * Don't throw an exception if users attempt to access the API without
   logging in, just deny access.
@@ -99,7 +99,7 @@ Bug fixes
 
 
 Version 2.0.1, 2019-11-11
-=========================
+-------------------------
 
 New in this version:
 
@@ -107,7 +107,7 @@ New in this version:
 
 
 Version 2.0.0, 2019-11-06
-=========================
+-------------------------
 
 New in this version:
 
@@ -128,7 +128,7 @@ New in this version:
 * Add missing verbose names in Django admin.
 
 Version 1.1.1, 2019-10-30
-=========================
+-------------------------
 
 Hotfix release.
 
@@ -142,7 +142,7 @@ New in this version:
 * Add missing constraint for creating supplementary activities based on allowed main activities.
 
 Version 1.1.0, 2019-10-04
-=========================
+-------------------------
 
 New in this version:
 
@@ -162,7 +162,7 @@ New in this version:
 
 
 Version 1.0.0, 2019-09-27
-=========================
+-------------------------
 
 First production release. New in this version:
 
@@ -200,7 +200,7 @@ First production release. New in this version:
 
 
 Version 0.5.0, 2019-09-05
-=========================
+-------------------------
 
 New in this version:
 
