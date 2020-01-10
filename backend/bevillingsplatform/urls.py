@@ -30,10 +30,12 @@ from django.conf.urls import url
 from django.conf.urls.static import static
 from django.conf import settings
 from django.views.static import serve
+from django.views.generic import TemplateView
 
 import django_saml2_auth
 
 from rest_framework import routers
+from rest_framework.schemas import get_schema_view
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -93,6 +95,23 @@ urlpatterns = [
         "api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"
     ),
     path("api/", include(router.urls)),
+    path(
+        "api/openapi/",
+        get_schema_view(
+            title="OS2bos REST API",
+            description="API for accessing the OS2bos data model",
+            # version="1.0.0",
+        ),
+        name="openapi-schema",
+    ),
+    path(
+        "api/swagger-ui/",
+        TemplateView.as_view(
+            template_name="core/html/swagger-ui.html",
+            extra_context={"schema_url": "openapi-schema"},
+        ),
+        name="swagger-ui",
+    ),
 ]
 
 # Static files are served by WhiteNoise in both development and production.
