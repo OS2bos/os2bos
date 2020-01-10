@@ -41,6 +41,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinxcontrib_django",
     "sphinxcontrib.openapi",
+    "sphinx_js",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -66,3 +67,6 @@ html_theme = "sphinx_rtd_theme"
 html_static_path = []
 
 master_doc = "index"
+
+js_source_path = "../frontend/src"
+jsdoc_config_path = "../../jsdoc.json"
