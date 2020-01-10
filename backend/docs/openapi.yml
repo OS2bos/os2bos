@@ -3075,7 +3075,7 @@ paths:
                           type: number
                           multipleOf: 0.01
                           maximum: 1000000000000
-                          minimum: &id007 !!float 0.00
+                          minimum: &id007 0.00
                           nullable: true
                         payment_amount:
                           type: number
@@ -9098,7 +9098,7 @@ paths:
                       type: number
                       multipleOf: 0.01
                       maximum: 1000
-                      minimum: &id023 !!float 0.01
+                      minimum: &id023 0.01
                   required:
                   - name
           description: ''

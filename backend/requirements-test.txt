@@ -15,8 +15,8 @@ sphinx_rtd_theme
 sphinxcontrib_django==0.5
 
 uritemplate==3.0.1
-pyyaml==5.3
-# git+https://github.com/syre/pyyaml@add-decimal-representer#egg=pyyaml
+# pyyaml==5.3
+git+https://github.com/syre/pyyaml@yaml-add-decimal-representer#egg=pyyaml
 sphinxcontrib-openapi==0.6.0
 # ^ These are requirements for openapi
 # |
