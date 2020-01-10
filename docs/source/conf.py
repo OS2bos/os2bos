@@ -16,6 +16,7 @@ import django
 
 current_dir = os.path.dirname(__file__)
 python_sources = os.path.abspath(os.path.join(current_dir, "..", "..", "backend"))
+frontend_sources = os.path.abspath(os.path.join(current_dir, "..", "..", "frontend"))
 sys.path.insert(0, python_sources)
 os.environ["DJANGO_SETTINGS_MODULE"] = "bevillingsplatform.settings"
 os.environ["BEV_USER_CONFIG_PATH"] = "../../dev-environment/test-settings.ini"
@@ -68,5 +69,5 @@ html_static_path = []
 
 master_doc = "index"
 
-js_source_path = "../frontend/src"
-jsdoc_config_path = "../../jsdoc.json"
+js_source_path = os.path.join(frontend_sources, "src")
+jsdoc_config_path = os.path.join(frontend_sources, "..", "jsdoc.json")
