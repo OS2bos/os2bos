@@ -1,7 +1,7 @@
 Django==2.2.4
 psycopg2-binary
 gunicorn
-djangorestframework==3.9.3
+djangorestframework==3.11.0
 django-extensions==2.1.6
 edc_utils==0.1.6
 # ^ This is a requirement for "django-audit-fields"
