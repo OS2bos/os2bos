@@ -94,7 +94,7 @@ def get_cpr_data(cpr):
 
 
 def get_cpr_data_mock(cpr):
-    """Use test data in place of the real 'get_cpr_data' for now."""
+    """Use test data in place of the real 'get_cpr_data' for develop/test."""
     result = {
         "statsborgerskab": "5100",
         "efternavn": "Jensen",
@@ -149,21 +149,21 @@ def send_activity_email(subject, template, activity):
 
 
 def send_activity_created_email(activity):
-    """Send email because an activity was created."""
+    """Send an email because an activity was created."""
     subject = _("Aktivitet oprettet")
     template = "emails/activity_created.html"
     send_activity_email(subject, template, activity)
 
 
 def send_activity_updated_email(activity):
-    """Send email because an activity was updated."""
+    """Send an email because an activity was updated."""
     subject = _("Aktivitet opdateret")
     template = "emails/activity_updated.html"
     send_activity_email(subject, template, activity)
 
 
 def send_activity_expired_email(activity):
-    """Send email because an activity has expired."""
+    """Send an email because an activity has expired."""
     subject = _("Aktivitet udgået")
     template = "emails/activity_expired.html"
     send_activity_email(subject, template, activity)
@@ -448,7 +448,7 @@ def format_prism_payment_record(payment, line_no, record_no):
 
 
 def due_payments_for_prism(date):
-    """Return payments which are due today and should be sent to PRISM."""
+    """Return payments which are due on date and should be sent to PRISM."""
     return models.Payment.objects.filter(
         date=date,
         recipient_type=models.PaymentSchedule.PERSON,

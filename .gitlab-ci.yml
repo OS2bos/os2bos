@@ -146,6 +146,7 @@ unit-test:
 
 .release-default: &release-default
   stage: release
+  image: docker:19.03.1
   variables:
     GIT_STRATEGY: none # We do not need the source code
   tags:
