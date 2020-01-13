@@ -4,6 +4,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+"""Data serializers used by the REST API."""
 
 
 from django.contrib.auth import get_user_model
@@ -39,6 +40,8 @@ from core.models import (
 
 
 class UserSerializer(serializers.ModelSerializer):
+    """Serializer for the User model."""
+
     class Meta:
         model = get_user_model()
         fields = (
@@ -53,6 +56,12 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class CaseSerializer(serializers.ModelSerializer):
+    """Serializer for the Case model.
+
+    Note validation to ensure that cases in the family department are
+    always associated with a school district.
+    """
+
     expired = serializers.ReadOnlyField()
 
     class Meta:
@@ -60,7 +69,7 @@ class CaseSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def validate(self, data):
-        # check that if target_group is family, district is given
+        """Check that if target_group is family, district is given."""
         if (
             "target_group" in data and data["target_group"] == FAMILY_DEPT
         ) and ("district" not in data or not data["district"]):
@@ -71,6 +80,8 @@ class CaseSerializer(serializers.ModelSerializer):
 
 
 class HistoricalCaseSerializer(serializers.ModelSerializer):
+    """Serializer for the historic/temporal dimension of a Case."""
+
     class Meta:
         model = HistoricalCase
         # include history_date (date saved),
@@ -87,6 +98,12 @@ class HistoricalCaseSerializer(serializers.ModelSerializer):
 
 
 class PaymentSerializer(serializers.ModelSerializer):
+    """Serializer for the Payment model.
+
+    Note the many options for filtering as well as the non-trivial
+    validate function.
+    """
+
     account_string = serializers.ReadOnlyField()
     payment_schedule__payment_id = serializers.ReadOnlyField(
         source="payment_schedule.payment_id", default=None
@@ -109,6 +126,10 @@ class PaymentSerializer(serializers.ModelSerializer):
     is_payable_manually = serializers.ReadOnlyField(default=False)
 
     def validate(self, data):
+        """Validate this payment.
+
+        The payment method must be allowed for this recipient, etc.
+        """
         payment_method = (
             data.get("payment_method", None) or self.instance.payment_method
         )
@@ -141,15 +162,23 @@ class PaymentSerializer(serializers.ModelSerializer):
 
 
 class PaymentScheduleSerializer(serializers.ModelSerializer):
+    """Serializer for the PaymentSchedule model."""
+
     payments = PaymentSerializer(many=True, read_only=True)
     account = serializers.ReadOnlyField()
 
     @staticmethod
     def setup_eager_loading(queryset):
+        """Set up eager loading for improved performance."""
         queryset = queryset.prefetch_related("payments")
         return queryset
 
     def validate(self, data):
+        """Validate this payment schedule.
+
+        As for Payment, payment method, recipient type and various other
+        things need to fit together.
+        """
         if not self.Meta.model.is_payment_and_recipient_allowed(
             data["payment_method"], data["recipient_type"]
         ):
@@ -166,7 +195,7 @@ class PaymentScheduleSerializer(serializers.ModelSerializer):
         if not one_time_payment and not payment_frequency:
             raise serializers.ValidationError(
                 _(
-                    "En betalingtype der ikke er en engangsbetaling "
+                    "En betalingstype der ikke er en engangsbetaling "
                     "skal have en betalingsfrekvens"
                 )
             )
@@ -183,6 +212,8 @@ class PaymentScheduleSerializer(serializers.ModelSerializer):
 
 
 class ActivitySerializer(WritableNestedModelSerializer):
+    """Serializer for the Activity model."""
+
     monthly_payment_plan = serializers.ReadOnlyField()
     total_cost = serializers.ReadOnlyField()
     total_cost_this_year = serializers.ReadOnlyField()
@@ -194,10 +225,12 @@ class ActivitySerializer(WritableNestedModelSerializer):
 
     @staticmethod
     def setup_eager_loading(queryset):
+        """Set up eager loading for improved performance."""
         queryset = queryset.select_related("payment_plan")
         return queryset
 
     def validate(self, data):
+        """Validate this activity - check end date is after start date, etc."""
         # Check that start_date is before end_date
         if (
             "end_date" in data
@@ -239,6 +272,8 @@ class ActivitySerializer(WritableNestedModelSerializer):
 
 
 class AppropriationSerializer(serializers.ModelSerializer):
+    """Serializer for the Appropriation model."""
+
     total_granted_this_year = serializers.ReadOnlyField()
     total_expected_this_year = serializers.ReadOnlyField()
     total_expected_full_year = serializers.ReadOnlyField()
@@ -249,10 +284,12 @@ class AppropriationSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def setup_eager_loading(queryset):
+        """Set up eager loading for improved performance."""
         queryset = queryset.prefetch_related("activities")
         return queryset
 
     def get_activities(self, appropriation):
+        """Get activities on appropriation."""
         activities = appropriation.activities.exclude(status=STATUS_DELETED)
         serializer = ActivitySerializer(
             instance=activities, many=True, read_only=True
@@ -265,54 +302,72 @@ class AppropriationSerializer(serializers.ModelSerializer):
 
 
 class PaymentMethodDetailsSerializer(serializers.ModelSerializer):
+    """Serializer for the PaymentMethodDetails model."""
+
     class Meta:
         model = PaymentMethodDetails
         fields = "__all__"
 
 
 class RelatedPersonSerializer(serializers.ModelSerializer):
+    """Serializer for the RelatedPerson model."""
+
     class Meta:
         model = RelatedPerson
         fields = "__all__"
 
 
 class MunicipalitySerializer(serializers.ModelSerializer):
+    """Serializer for the Municipality model."""
+
     class Meta:
         model = Municipality
         fields = "__all__"
 
 
 class TeamSerializer(serializers.ModelSerializer):
+    """Serializer for the Team model."""
+
     class Meta:
         model = Team
         fields = "__all__"
 
 
 class SchoolDistrictSerializer(serializers.ModelSerializer):
+    """Serializer for the SchoolDistrict model."""
+
     class Meta:
         model = SchoolDistrict
         fields = "__all__"
 
 
 class SectionSerializer(serializers.ModelSerializer):
+    """Serializer for the Section model."""
+
     class Meta:
         model = Section
         fields = "__all__"
 
 
 class SectionInfoSerializer(serializers.ModelSerializer):
+    """Serializer for the SectionInfo model."""
+
     class Meta:
         model = SectionInfo
         fields = "__all__"
 
 
 class ActivityDetailsSerializer(serializers.ModelSerializer):
+    """Serializer for the ActivityDetails model."""
+
     class Meta:
         model = ActivityDetails
         fields = "__all__"
 
 
 class AccountSerializer(serializers.ModelSerializer):
+    """Serializer for the Account model."""
+
     number = serializers.ReadOnlyField()
 
     class Meta:
@@ -321,18 +376,24 @@ class AccountSerializer(serializers.ModelSerializer):
 
 
 class ServiceProviderSerializer(serializers.ModelSerializer):
+    """Serializer for the ServiceProvider model."""
+
     class Meta:
         model = ServiceProvider
         fields = "__all__"
 
 
 class ApprovalLevelSerializer(serializers.ModelSerializer):
+    """Serializer for the ApprovalLevel model."""
+
     class Meta:
         model = ApprovalLevel
         fields = "__all__"
 
 
 class EffortStepSerializer(serializers.ModelSerializer):
+    """Serializer for the EffortStep model."""
+
     class Meta:
         model = EffortStep
         fields = "__all__"

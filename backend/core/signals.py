@@ -4,7 +4,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
+"""Signals for acting on events occuring on model objects."""
 
 from django.db.models.signals import pre_save, post_save, post_delete
 from django.dispatch import receiver
@@ -27,10 +27,7 @@ from core.utils import (
 def set_saved_account_string_on_payment_save(
     sender, instance, created, **kwargs
 ):
-    """
-    Set the saved_account_string on Payment save.
-    """
-
+    """Set the saved_account_string on Payment save."""
     if (
         instance.paid
         and not instance.saved_account_string
@@ -44,9 +41,7 @@ def set_saved_account_string_on_payment_save(
 def set_payment_id_on_paymentschedule_save(
     sender, instance, created, **kwargs
 ):
-    """
-    Set the payment_id as the PaymentSchedule ID on creation.
-    """
+    """Set the payment_id as the PaymentSchedule ID on creation."""
     if created:
         instance.payment_id = instance.id
         instance.save()
@@ -54,6 +49,7 @@ def set_payment_id_on_paymentschedule_save(
 
 @receiver(post_save, sender=Activity)
 def send_activity_payment_email_on_save(sender, instance, created, **kwargs):
+    """Send payment email when Activity is saved."""
     if not instance.triggers_payment_email:
         return
     if created:
@@ -64,6 +60,7 @@ def send_activity_payment_email_on_save(sender, instance, created, **kwargs):
 
 @receiver(post_delete, sender=Activity)
 def send_activity_payment_email_on_delete(sender, instance, **kwargs):
+    """Send payment email when Activity is deleted."""
     if not instance.triggers_payment_email:
         return
     send_activity_expired_email(instance)
@@ -71,6 +68,7 @@ def send_activity_payment_email_on_delete(sender, instance, **kwargs):
 
 @receiver(pre_save, sender=Activity)
 def generate_payments_on_pre_save(sender, instance, **kwargs):
+    """Generate payments for activity before saving."""
     try:
         current_object = sender.objects.get(pk=instance.pk)
         old_status = current_object.status

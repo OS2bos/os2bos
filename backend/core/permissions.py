@@ -4,6 +4,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+"""Custom permissions used by this app."""
 
 from rest_framework import permissions
 
@@ -11,7 +12,7 @@ from core.models import User
 
 
 class IsUserAllowed(permissions.BasePermission):
-    """Allow everything in the frontend."""
+    """Determine user's frontend permissions i.e., in all API operations."""
 
     def has_permission(self, request, view):
         """Allow depending on operation and user's profile."""

@@ -4,6 +4,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+"""These are the Django models, defining the database layout."""
 
 
 from datetime import date, timedelta
@@ -111,7 +112,7 @@ class EffortStep(models.Model):
 
 
 class PaymentMethodDetails(models.Model):
-    """ Contains extra information about a payment method."""
+    """Contains extra information about a payment method."""
 
     class Meta:
         verbose_name = _("betalingsmåde detalje")
@@ -133,6 +134,8 @@ class PaymentMethodDetails(models.Model):
 
 
 class User(AbstractUser):
+    """Customized user for handling login etc."""
+
     class Meta:
         verbose_name = _("bruger")
         verbose_name_plural = _("brugere")
@@ -155,11 +158,12 @@ class User(AbstractUser):
 
     @classmethod
     def max_profile(cls, perms):
-        """Sometimes IdPs can send more than one profile when using SAML.
+        """Return the profile (in "perms") with the highest permissions.
 
-        For the time being, we choose to uphold the most far-reaching
-        permission profile."""
-
+        IdPs can send more than one profile when using SAML.  This
+        function returns the "maximum" profile in the sense of the one
+        with the most far-reaching permissions.
+        """
         permission_score = {
             cls.READONLY: 0,
             cls.EDIT: 1,
@@ -300,6 +304,7 @@ class PaymentSchedule(models.Model):
 
     @property
     def next_payment(self):
+        """Return the next payment due starting from today, if any."""
         today = date.today()
         upcoming_payments = self.payments.filter(date__gt=today).order_by(
             "date"
@@ -311,10 +316,7 @@ class PaymentSchedule(models.Model):
 
     @staticmethod
     def is_payment_and_recipient_allowed(payment_method, recipient_type):
-        """
-        Determine whether a specific combination of payment_method
-        and recipient_type is allowed.
-        """
+        """Determine if this combination of method and recipient is allowed."""
         allowed = {
             PaymentSchedule.INTERNAL: [INTERNAL],
             PaymentSchedule.PERSON: [CASH, SD],
@@ -324,9 +326,10 @@ class PaymentSchedule(models.Model):
 
     @property
     def can_be_paid(self):
-        """
-        Determine whether the PaymentSchedule allows
-        the underlying Payments to be paid.
+        """Determine whether payments on this schedule can be paid.
+
+        It is only allowed to pay payments associated with an approved
+        activity, i.e. status GRANTED.
         """
         if (
             hasattr(self, "activity")
@@ -336,6 +339,7 @@ class PaymentSchedule(models.Model):
         return False
 
     def save(self, *args, **kwargs):
+        """Save this payment schedule after validating payment method."""
         if not self.is_payment_and_recipient_allowed(
             self.payment_method, self.recipient_type
         ):
@@ -345,8 +349,9 @@ class PaymentSchedule(models.Model):
         super().save(*args, **kwargs)
 
     def create_rrule(self, start, end):
-        """
-        Create a dateutil.rrule based on payment_type/payment_frequency,
+        """Create a dateutil.rrule to generate dates for this schedule.
+
+        The rule should be based on payment_type/payment_frequency,
         start and end.
         """
         if self.payment_type == self.ONE_TIME_PAYMENT:
@@ -379,7 +384,7 @@ class PaymentSchedule(models.Model):
         return rrule_frequency
 
     def calculate_per_payment_amount(self, vat_factor):
-
+        """Calculate amount from payment type and units."""
         if self.payment_type in [self.ONE_TIME_PAYMENT, self.RUNNING_PAYMENT]:
             return self.payment_amount / 100 * vat_factor
         elif self.payment_type in [
@@ -394,9 +399,7 @@ class PaymentSchedule(models.Model):
             raise ValueError(_("ukendt betalingstype"))
 
     def generate_payments(self, start, end=None, vat_factor=Decimal("100")):
-        """
-        Generates payments with a start and end.
-        """
+        """Generate payments with a start and end date."""
         # If no end is specified, choose end of the next year.
         if not end:
             today = date.today()
@@ -420,9 +423,7 @@ class PaymentSchedule(models.Model):
             )
 
     def synchronize_payments(self, start, end, vat_factor=Decimal("100")):
-        """
-        Synchronize an existing number of payments for a new end_date.
-        """
+        """Synchronize an existing number of payments for a new end_date."""
         today = date.today()
 
         # If no existing payments is generated we can't do anything.
@@ -457,6 +458,7 @@ class PaymentSchedule(models.Model):
 
     @property
     def account_string(self):
+        """Calculate account string from activity."""
         if (
             self.recipient_type == PaymentSchedule.PERSON
             and self.payment_method == CASH
@@ -494,10 +496,11 @@ class PaymentSchedule(models.Model):
 
 
 class Payment(models.Model):
-    """Represents an amount paid to a supplier - amount, recipient, date.
+    """Represent an amount paid to a supplier - amount, recipient, date.
 
     These may be entered manually, but ideally they should be imported
-    from an accounts payable system."""
+    from an accounts payable system.
+    """
 
     class Meta:
         verbose_name = _("betaling")
@@ -548,6 +551,7 @@ class Payment(models.Model):
     )
 
     def save(self, *args, **kwargs):
+        """Save this payment - validate payment method and completeness."""
         if not self.payment_schedule.is_payment_and_recipient_allowed(
             self.payment_method, self.recipient_type
         ):
@@ -576,9 +580,7 @@ class Payment(models.Model):
 
     @staticmethod
     def paid_allowed_for_payment_and_recipient(payment_method, recipient_type):
-        """
-        Determine whether "paid" can be manually set.
-        """
+        """Determine whether "paid" can be manually set."""
         disallowed = {PaymentSchedule.PERSON: [CASH, SD]}
 
         if (
@@ -590,9 +592,7 @@ class Payment(models.Model):
 
     @property
     def is_payable_manually(self):
-        """
-        Determine whether it is payable manually (in the frontend).
-        """
+        """Determine whether it is payable manually (in the frontend)."""
         return (
             self.paid_allowed_for_payment_and_recipient(
                 self.payment_method, self.recipient_type
@@ -603,6 +603,7 @@ class Payment(models.Model):
 
     @property
     def account_string(self):
+        """Return saved account string if any, else calculate from schedule."""
         if self.saved_account_string:
             return self.saved_account_string
 
@@ -721,6 +722,13 @@ class Case(AuditModelMixin, models.Model):
 
     @property
     def expired(self):
+        """Determine if this case has expired.
+
+        A case is considered to be expired if all its associated
+        activites have end date in the past. If it does not have any
+        associated (non-deleted) activities, it is not considered to be
+        expired.
+        """
         today = timezone.now().date()
         all_main_activities = Activity.objects.filter(
             activity_type=MAIN_ACTIVITY, appropriation__case=self
@@ -738,6 +746,8 @@ class Case(AuditModelMixin, models.Model):
 
 
 class ApprovalLevel(models.Model):
+    """Organizational level on which an appropriation was approved."""
+
     class Meta:
         verbose_name = _("bevillingsniveau")
         verbose_name_plural = _("bevillingsniveauer")
@@ -802,6 +812,7 @@ class Appropriation(AuditModelMixin, models.Model):
 
     @property
     def status(self):
+        """Calculate appropriation status from status of activities."""
         if not self.activities.exists() or not self.main_activity:
             return STATUS_DRAFT
         # We now know that there is at least one activity and a main activity.
@@ -853,11 +864,10 @@ class Appropriation(AuditModelMixin, models.Model):
 
     @property
     def total_granted_this_year(self):
-        """
-        Retrieve total amount granted this year for payments related to
-        this Appropriation (both main and supplementary activities).
-        """
+        """Retrieve total amount granted this year for this Appropriation.
 
+        This includes both main and supplementary activities.
+        """
         granted_activities = self.activities.all().filter(
             status=STATUS_GRANTED
         )
@@ -870,14 +880,11 @@ class Appropriation(AuditModelMixin, models.Model):
 
     @property
     def total_expected_this_year(self):
-        """
-        Retrieve total amount expected this year for payments related to
-        this Appropriation.
+        """Retrieve total amount expected this year for this Appropriation.
 
-        we take into account granted payments but overrule with expected
-        if it modifies another activity.
+        We take into account granted payments but overrule with expected
+        amounts if they modify another activity.
         """
-
         activities = self.activities.filter(
             Q(status=STATUS_GRANTED) | Q(status=STATUS_EXPECTED)
         )
@@ -885,9 +892,9 @@ class Appropriation(AuditModelMixin, models.Model):
 
     @property
     def total_expected_full_year(self):
-        """
-        Retrieve total amount expected for the year
-        extrapolating for the full year (January 1 - December 31)
+        """Retrieve total amount expected for this year.
+
+        Extrapolate for the full year (January 1 - December 31).
         """
         all_activities = self.activities.filter(
             Q(status=STATUS_GRANTED, modified_by__isnull=True)
@@ -919,6 +926,7 @@ class Appropriation(AuditModelMixin, models.Model):
 
     @property
     def section_info(self):
+        """Return info for law section justifying this appropriation."""
         if self.main_activity and self.section:
             si_filter = self.main_activity.details.sectioninfo_set.filter(
                 section=self.section
@@ -928,13 +936,13 @@ class Appropriation(AuditModelMixin, models.Model):
 
     @property
     def payment_plan(self):
-        # TODO:
+        """Aggregate payment plans in this appropriation. TBD."""
+        # TODO: Implement this in a later phase, maybe. Else delete.
         pass  # pragma: no cover
 
     @transaction.atomic
     def grant(self, activities, approval_level, approval_note, approval_user):
         """Grant all the given Activities."""
-
         # Please specify approval level.
         if approval_level is None:
             raise RuntimeError(_("Angiv venligst bevillingskompetence"))
@@ -1061,9 +1069,7 @@ class Appropriation(AuditModelMixin, models.Model):
 
 
 class ServiceProvider(models.Model):
-    """
-    Class containing information for a specific service provider.
-    """
+    """Class containing information for a specific service provider."""
 
     class Meta:
         verbose_name = _("leverandør")
@@ -1278,8 +1284,7 @@ class Activity(AuditModelMixin, models.Model):
 
     @transaction.atomic
     def grant(self, approval_level, approval_note, approval_user):
-        "Grant this activity - update payment info as needed." ""
-
+        """Grant this activity - update payment info as needed."""
         self.appropriation_date = timezone.now().date()
         self.approval_level = approval_level
         self.approval_note = approval_note
@@ -1331,9 +1336,7 @@ class Activity(AuditModelMixin, models.Model):
         self.save()
 
     def validate_expected(self):
-        """
-        Validate this is a correct expected activity.
-        """
+        """Validate this is a correct expected activity."""
         today = date.today()
 
         if not self.modifies:
@@ -1354,6 +1357,7 @@ class Activity(AuditModelMixin, models.Model):
 
     @property
     def account(self):
+        """Calculate the account to use with this activity."""
         if self.activity_type == MAIN_ACTIVITY:
             accounts = Account.objects.filter(
                 section=self.appropriation.section,
@@ -1377,11 +1381,13 @@ class Activity(AuditModelMixin, models.Model):
 
     @property
     def monthly_payment_plan(self):
+        """Calculate the payment plan for this activity, grouped by months."""
         payments = Payment.objects.filter(payment_schedule__activity=self)
         return payments.group_by_monthly_amounts()
 
     @property
     def total_cost_this_year(self):
+        """Calculate total cost this year for this activity."""
         if self.status == STATUS_GRANTED and self.modified_by.exists():
             # one time payments are always overruled entirely.
             if (
@@ -1416,6 +1422,7 @@ class Activity(AuditModelMixin, models.Model):
 
     @property
     def total_granted_this_year(self):
+        """Calculate total amount *granted* on this activity this year."""
         if self.status == STATUS_GRANTED:
             payments = Payment.objects.filter(payment_schedule__activity=self)
             return payments.in_this_year().amount_sum()
@@ -1424,10 +1431,18 @@ class Activity(AuditModelMixin, models.Model):
 
     @property
     def total_expected_this_year(self):
+        """Calculate total amount *expected* this year.
+
+        As may be noted, this is redundant and identical to "total cost
+        this year". Maybe one of these functions should be removed, the
+        redundancy is due to a desire for clarity as to what is returned
+        in different contexts.
+        """
         return self.total_cost_this_year
 
     @property
     def total_cost(self):
+        """Calculate the total cost of this activity at all times."""
         if self.status == STATUS_GRANTED and self.modified_by.exists():
             # one time payments are always overruled entirely.
             if (
@@ -1462,9 +1477,9 @@ class Activity(AuditModelMixin, models.Model):
 
     @property
     def total_cost_full_year(self):
-        """
-        Retrieve total amount expected for the year
-        extrapolating for the full year (January 1 - December 31)
+        """Retrieve total amount expected for this year.
+
+        Extrapolate for the full year (January 1 - December 31).
         """
         if not self.payment_plan:
             return Decimal(0.0)
@@ -1483,27 +1498,28 @@ class Activity(AuditModelMixin, models.Model):
 
     @property
     def triggers_payment_email(self):
-        # If activity or appropriation is not granted we don't send an email.
+        """Decide if this activity triggers an email when saved.
+
+        If this activity is not granted or doesn't have a payment plan we don't
+        send an email.
+        """
         if not self.status == STATUS_GRANTED:
             return False
 
-        # Don't trigger the email if the payment plan does not exist
-        # or does not need a payment email to trigger.
         if not hasattr(self, "payment_plan") or not self.payment_plan:
             return False
         return True
 
     @property
     def vat_factor(self):
+        """Calculate the VAT factor for this activity."""
         vat_factor = Decimal("100")
         if self.service_provider:
             vat_factor = self.service_provider.vat_factor
         return vat_factor
 
     def get_all_modified_by_activities(self):
-        """
-        Retrieve all modified_by objects recursively.
-        """
+        """Retrieve all modified_by objects recursively."""
         r = []
         if self.modified_by.exists():
             r.append(
@@ -1517,8 +1533,8 @@ class Activity(AuditModelMixin, models.Model):
         return r
 
     def save(self, *args, **kwargs):
+        """Save activity, also update "modified" field on appropriation."""
         super().save(*args, **kwargs)
-        # Trigger an appropriation save to update the "modified" field.
         self.appropriation.save()
 
 
@@ -1549,9 +1565,7 @@ class RelatedPerson(models.Model):
 
     @staticmethod
     def serviceplatformen_to_related_person(data):
-        """
-        Convert data from Serviceplatformen to our RelatedPerson model data.
-        """
+        """Convert data from Serviceplatformen to our RelatedPerson model."""
         converter_dict = {
             "cprnr": "cpr_number",
             "relation": "relation_type",
@@ -1606,6 +1620,7 @@ class Account(models.Model):
 
     @property
     def number(self):
+        """Calculate the account number of this activity."""
         if not self.activity_number:
             if self.supplementary_activity:
                 activity_number = self.supplementary_activity.activity_id

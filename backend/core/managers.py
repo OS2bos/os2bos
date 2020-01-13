@@ -4,7 +4,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
+"""Custom query set managers."""
 
 from django.utils import timezone
 from django.db import models
@@ -30,6 +30,12 @@ from django.db.models.functions import (
 
 
 class PaymentQuerySet(models.QuerySet):
+    """Handle payments properly - some are paid and others are not.
+
+    In general we should use the scheduled day and amount for unpaid
+    payments and the paid date and paid amount for paid ones.
+    """
+
     # Case for using paid_date if available, else date.
     date_case = Case(
         When(paid_date__isnull=False, then="paid_date"),
@@ -45,28 +51,26 @@ class PaymentQuerySet(models.QuerySet):
     )
 
     def paid_date_or_date_gte(self, date):
+        """Return all payments with paid date or payment date >= date."""
         return self.annotate(relevant_date=self.date_case).filter(
             relevant_date__gte=date
         )
 
     def paid_date_or_date_lte(self, date):
+        """Return all payments with paid date or payment date <= date."""
         return self.annotate(relevant_date=self.date_case).filter(
             relevant_date__lte=date
         )
 
     def strict_amount_sum(self):
-        """
-        Sum over Payments amount.
-        """
+        """Sum over Payments amount."""
         return (
             self.aggregate(amount_sum=Coalesce(Sum("amount"), 0))["amount_sum"]
             or 0
         )
 
     def amount_sum(self):
-        """
-        Sum over Payments with paid_amount overruling amount.
-        """
+        """Sum over Payments with paid_amount overruling amount."""
         return (
             self.aggregate(amount_sum=Coalesce(Sum(self.amount_case), 0))[
                 "amount_sum"
@@ -75,9 +79,7 @@ class PaymentQuerySet(models.QuerySet):
         )
 
     def in_this_year(self):
-        """
-        Filter Payments only in the current year.
-        """
+        """Filter Payments only in the current year."""
         now = timezone.now()
 
         return self.exclude(
@@ -88,13 +90,14 @@ class PaymentQuerySet(models.QuerySet):
         """
         Group by monthly amounts.
 
-        The output will look like this:
-        [
-            {'date_month': '2019-07', 'amount': Decimal('3000.00')},
-            {'date_month': '2019-08', 'amount': Decimal('1500.00')}
-        ]
-        """
+        The output will look like this::
 
+            [
+                {'date_month': '2019-07', 'amount': Decimal('3000.00')},
+                {'date_month': '2019-08', 'amount': Decimal('1500.00')}
+            ]
+
+        """
         return (
             self.annotate(
                 date_month=Concat(
@@ -114,17 +117,15 @@ class PaymentQuerySet(models.QuerySet):
 
 
 class CaseQuerySet(models.QuerySet):
+    """Distinguish between expired and ongoing cases."""
+
     def ongoing(self):
-        """
-        Only include ongoing (non-expired) Cases.
-        """
+        """Only include ongoing, i.e. non-expired Cases."""
         expired_ids = self.expired().values_list("id", flat=True)
         return self.exclude(id__in=expired_ids)
 
     def expired(self):
-        """
-        Only include expired Cases.
-        """
+        """Only include expired Cases."""
         from core.models import MAIN_ACTIVITY
 
         today = timezone.now().date()

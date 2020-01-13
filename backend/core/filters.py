@@ -1,3 +1,17 @@
+# Copyright (C) 2019 Magenta ApS, http://magenta.dk.
+# Contact: info@magenta.dk.
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+"""Filters and filtersets for filtering in REST API.
+
+Filters allow us to do basic search for objects on allowed field without
+adding the complexity of an entire search engine nor of custom queries.
+"""
+
+
 from django.utils.translation import gettext_lazy as _
 
 import rest_framework_filters as filters
@@ -6,6 +20,8 @@ from core.models import Case, PaymentSchedule, Activity, Payment, Section
 
 
 class CaseFilter(filters.FilterSet):
+    """Filter cases on the "expired" field."""
+
     expired = filters.BooleanFilter(method="filter_expired", label=_("Udgået"))
 
     class Meta:
@@ -13,6 +29,7 @@ class CaseFilter(filters.FilterSet):
         fields = "__all__"
 
     def filter_expired(self, queryset, name, value):
+        """Filter out cases according to value."""
         if value:
             return queryset.expired()
         else:
@@ -20,24 +37,32 @@ class CaseFilter(filters.FilterSet):
 
 
 class CaseForPaymentFilter(filters.FilterSet):
+    """Filter cases on CPR number."""
+
     class Meta:
         model = Case
         fields = {"cpr_number": ["exact"]}
 
 
 class PaymentScheduleFilter(filters.FilterSet):
+    """Filter payment plans on ID."""
+
     class Meta:
         model = PaymentSchedule
         fields = {"payment_id": ["exact"]}
 
 
 class ActivityFilter(filters.FilterSet):
+    """Filter activities on status."""
+
     class Meta:
         model = Activity
         fields = {"status": ["exact"]}
 
 
 class PaymentFilter(filters.FilterSet):
+    """Filter payments on payment plan, activity, case, dates, etc."""
+
     payment_schedule = filters.RelatedFilter(
         PaymentScheduleFilter,
         field_name="payment_schedule",
@@ -88,9 +113,11 @@ class PaymentFilter(filters.FilterSet):
     )
 
     def filter_paid_date_or_date_gte(self, queryset, name, value):
+        """Filter on value <= "best known payment date"."""
         return queryset.paid_date_or_date_gte(value)
 
     def filter_paid_date_or_date_lte(self, queryset, name, value):
+        """Filter on value >= "best known payment date"."""
         return queryset.paid_date_or_date_lte(value)
 
     class Meta:
@@ -99,6 +126,8 @@ class PaymentFilter(filters.FilterSet):
 
 
 class AllowedForStepsFilter(filters.FilterSet):
+    """Filter sections on allowed effort steps."""
+
     allowed_for_steps = filters.NumberFilter(
         field_name="allowed_for_steps", method="filter_allowed_for_steps"
     )
@@ -108,4 +137,5 @@ class AllowedForStepsFilter(filters.FilterSet):
         fields = "__all__"
 
     def filter_allowed_for_steps(self, qs, name, value):
+        """Filter on "allowed_for_steps" relation."""
         return qs.filter(allowed_for_steps__number=value)

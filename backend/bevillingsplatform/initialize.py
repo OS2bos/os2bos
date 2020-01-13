@@ -4,7 +4,7 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
+"""Functions for populating the database with initial data."""
 
 from django.core.management import call_command
 
@@ -15,7 +15,7 @@ from core.models import Municipality, SchoolDistrict, Team, User
 
 
 def initialize():
-    """Main script for initializing all the basic data we want at start.
+    """Initialize all the basic data we want at start.
 
     Should be able to be run multiple times over without generating duplicates.
     """
@@ -41,7 +41,7 @@ def initialize_municipalities():
 def initialize_approval_levels():
     """Initialize all the initial approval levels.
 
-    Data should be the output of manage.py dumpdata core.approvallevels
+    Data should be the output of "manage.py dumpdata core.approvallevels".
     """
     call_command("loaddata", "approvallevels.json", app_label="core")
 
@@ -49,7 +49,7 @@ def initialize_approval_levels():
 def initialize_sections():
     """Initialize all the relevant law sections.
 
-    Data should be the output of manage.py dumpdata core.section
+    Data should be the output of "manage.py dumpdata core.section".
     """
     call_command("loaddata", "sections.json", app_label="core")
 
@@ -57,7 +57,7 @@ def initialize_sections():
 def initialize_activity_details():
     """Initialize all the relevant activity details.
 
-    Data should be the output of manage.py dumpdata core.activitydetails
+    Data should be the output of "manage.py dumpdata core.activitydetails".
 
     """
     call_command("loaddata", "activitydetails.json", app_label="core")
@@ -66,7 +66,7 @@ def initialize_activity_details():
 def initialize_section_infos():
     """Initialize all the relevant section infos.
 
-    Data should be the output of manage.py dumpdata core.sectioninfos
+    Data should be the output of "manage.py dumpdata core.sectioninfos".
 
     """
     call_command("loaddata", "sectioninfos.json", app_label="core")
@@ -75,16 +75,16 @@ def initialize_section_infos():
 def initialize_accounts():
     """Initialize all the relevant accounts.
 
-    Data should be the output of manage.py dumpdata core.account
+    Data should be the output of "manage.py dumpdata core.account".
 
     """
     call_command("loaddata", "accounts.json", app_label="core")
 
 
 def initialize_service_providers():
-    """Initialize all the relevant service providers
+    """Initialize all the relevant service providers.
 
-    Data should be the output of manage.py dumpdata core.serviceprovider
+    Data should be the output of "manage.py dumpdata core.serviceprovider".
     """
     call_command("loaddata", "serviceproviders.json", app_label="core")
 
@@ -92,13 +92,14 @@ def initialize_service_providers():
 def initialize_users():
     """Prime the system with some users to get started.
 
-    Data should be the output of manage.py dumpdata core.User.
+    Data should be the output of "manage.py dumpdata core.User".
 
     """
     call_command("loaddata", "users.json", app_label="core")
 
 
 def initialize_payment_method_details():
+    """Initialize all the relevant payment method details."""
     call_command("loaddata", "paymentmethoddetails.json", app_label="core")
 
 

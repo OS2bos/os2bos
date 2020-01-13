@@ -4,11 +4,14 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+"""Customize django-admin interface."""
 
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
+from django.utils.html import escape, mark_safe
+from django.urls import reverse
 
 from core.models import (
     Municipality,
@@ -49,23 +52,79 @@ for klass in (
 
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
+    """Dislay read only fields on payment."""
+
     readonly_fields = ("payment_id", "account_string")
+    search_fields = ("payment_schedule__payment_id",)
+
+    list_display = (
+        "id",
+        "payment_id",
+        "account_string",
+        "date",
+        "paid",
+        "paid_date",
+        "payment_schedule_str",
+    )
+    list_filter = (
+        "paid",
+        "payment_schedule__fictive",
+        "date",
+        "paid_date",
+        "payment_method",
+        "recipient_type",
+    )
+
+    def payment_schedule_str(self, obj):
+        """Get related payment schedule link."""
+        link = reverse(
+            "admin:core_paymentschedule_change", args=[obj.payment_schedule.id]
+        )
+        return mark_safe(
+            f'<a href="{link}">{escape(obj.payment_schedule.__str__())}</a>'
+        )
 
     def payment_id(self, obj):
+        """Get payment ID from payment plan."""
         return obj.payment_schedule.payment_id
 
     def account_string(self, obj):
+        """Get account string."""
         return obj.account_string
 
     payment_id.short_description = _("betalings-ID")
     account_string.short_description = _("kontostreng")
+    payment_schedule_str.short_description = _("betalingsplan")
 
 
 @admin.register(PaymentSchedule)
 class PaymentScheduleAdmin(admin.ModelAdmin):
+    """Display read only fields on payment schedule."""
+
     readonly_fields = ("payment_id", "account_string")
+    search_fields = ("payment_id",)
+    list_display = (
+        "id",
+        "payment_id",
+        "recipient_type",
+        "recipient_id",
+        "recipient_name",
+        "payment_frequency",
+        "payment_method",
+        "payment_type",
+        "payment_amount",
+        "account_string",
+        "fictive",
+    )
+    list_filter = (
+        "payment_method",
+        "payment_type",
+        "payment_frequency",
+        "fictive",
+    )
 
     def account_string(self, obj):
+        """Get account string."""
         return obj.account_string
 
     account_string.short_description = _("kontostreng")
@@ -73,9 +132,12 @@ class PaymentScheduleAdmin(admin.ModelAdmin):
 
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):
+    """Display account number (konteringsnummer) as read only field."""
+
     readonly_fields = ("number",)
 
     def number(self, obj):
+        """Get account number."""
         return obj.number
 
     number.short_description = _("konteringsnummer")
@@ -83,6 +145,8 @@ class AccountAdmin(admin.ModelAdmin):
 
 @admin.register(User)
 class CustomUserAdmin(BaseUserAdmin):
+    """Add team to user admin interface."""
+
     fieldsets = (
         ("Organisation", {"fields": ("team",)}),
     ) + BaseUserAdmin.fieldsets
@@ -90,6 +154,8 @@ class CustomUserAdmin(BaseUserAdmin):
 
 @admin.register(ActivityDetails)
 class ActivityDetailsAdmin(admin.ModelAdmin):
+    """Widgets: Filter_horizontal for many to many links, add search field."""
+
     filter_horizontal = (
         "main_activity_for",
         "supplementary_activity_for",
@@ -101,9 +167,13 @@ class ActivityDetailsAdmin(admin.ModelAdmin):
 
 @admin.register(Section)
 class SectionAdmin(admin.ModelAdmin):
+    """Add search field."""
+
     search_fields = ("paragraph",)
 
 
 @admin.register(ServiceProvider)
 class ServiceProviderAdmin(admin.ModelAdmin):
+    """Add search fields."""
+
     search_fields = ("name", "cvr_number")

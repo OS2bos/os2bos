@@ -5,6 +5,8 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+"""Views and viewsets exposed by the REST interface."""
+
 
 from django.contrib.auth import get_user_model
 from django.db import transaction
@@ -74,29 +76,41 @@ from core.permissions import IsUserAllowed
 
 
 class AuditViewSet(AuditMixin, viewsets.ModelViewSet):
+    """Superclass for use by all model classes with audit fields.
+
+    All classes that can be written through the REST interface have
+    audit fields.
+    """
+
     authentication_classes = (CsrfExemptSessionAuthentication,)
     permission_classes = (IsUserAllowed,)
 
 
 class ReadOnlyViewset(viewsets.ReadOnlyModelViewSet):
+    """Superclass for use model classes that are read only through REST."""
+
     permission_classes = (IsUserAllowed,)
 
 
 class CaseViewSet(AuditViewSet):
+    """Viewset exposing Case in the REST API.
+
+    Note the custom actions ``history`` and ``change_case_worker``.
+    """
+
     queryset = Case.objects.all()
     serializer_class = CaseSerializer
     filterset_class = CaseFilter
 
     def perform_create(self, serializer):
+        """Create new case - customized to set team from user."""
         current_user = self.request.user
         team = current_user.team
         serializer.save(case_worker=current_user, team=team)
 
     @action(detail=True, methods=["get"])
     def history(self, request, pk=None):
-        """
-        Fetch history of HistoricalCases which we use as assessments.
-        """
+        """Fetch history of HistoricalCases which we use as assessments."""
         case = self.get_object()
         serializer = HistoricalCaseSerializer(case.history.all(), many=True)
         return Response(serializer.data)
@@ -107,9 +121,9 @@ class CaseViewSet(AuditViewSet):
         """
         Change the case_worker of several Cases.
 
-        Parameters:
-        case_pks: A list of case pks.
-        case_worker_pk: the case worker pk to change to.
+        :param case_pks: A list of case pks.
+        :param case_worker_pk: the case worker pk to change to.
+
         """
         case_pks = request.data.get("case_pks", [])
         case_worker_pk = request.data.get("case_worker_pk", None)
@@ -138,11 +152,18 @@ class CaseViewSet(AuditViewSet):
 
 
 class AppropriationViewSet(AuditViewSet):
+    """Expose appropriations in REST API.
+
+    Note the custom action ``grant`` for approving an appropriation and
+    all its activities.
+    """
+
     serializer_class = AppropriationSerializer
 
     filterset_fields = "__all__"
 
     def get_queryset(self):
+        """Avoid Django's default lazy loading to improve performance."""
         queryset = Appropriation.objects.all()
         queryset = self.get_serializer_class().setup_eager_loading(queryset)
         return queryset
@@ -173,16 +194,24 @@ class AppropriationViewSet(AuditViewSet):
 
 
 class ActivityViewSet(AuditViewSet):
+    """Expose activities in REST API."""
+
     serializer_class = ActivitySerializer
 
     filterset_fields = "__all__"
 
     def get_queryset(self):
+        """Avoid Django's default lazy loading to improve performance."""
         queryset = Activity.objects.exclude(status=STATUS_DELETED)
         queryset = self.get_serializer_class().setup_eager_loading(queryset)
         return queryset
 
     def destroy(self, request, *args, **kwargs):
+        """Handle deletion according to their business logic.
+
+        Drafts are deleted, expectations are logically deleted, granted
+        activities cannot be deleted.
+        """
         activity = self.get_object()
         try:
             if activity.status == STATUS_DRAFT:
@@ -203,20 +232,30 @@ class ActivityViewSet(AuditViewSet):
 
 
 class PaymentMethodDetailsViewSet(AuditViewSet):
+    """Expose payment method details in REST API."""
+
     queryset = PaymentMethodDetails.objects.all()
     serializer_class = PaymentMethodDetailsSerializer
 
 
 class PaymentScheduleViewSet(AuditViewSet):
+    """Expose payment schedules in REST API."""
+
     serializer_class = PaymentScheduleSerializer
 
     def get_queryset(self):
+        """Avoid Django's default lazy loading to improve performance."""
         queryset = PaymentSchedule.objects.all()
         queryset = self.get_serializer_class().setup_eager_loading(queryset)
         return queryset
 
 
 class PaymentViewSet(AuditViewSet):
+    """Expose payments in REST API.
+
+    Note, this viewset supports pagination.
+    """
+
     serializer_class = PaymentSerializer
     queryset = Payment.objects.all()
     pagination_class = PageNumberPagination
@@ -226,6 +265,8 @@ class PaymentViewSet(AuditViewSet):
 
 
 class RelatedPersonViewSet(AuditViewSet):
+    """Expose related persons - typically family relations - in REST API."""
+
     queryset = RelatedPerson.objects.all()
     serializer_class = RelatedPersonSerializer
 
@@ -233,8 +274,7 @@ class RelatedPersonViewSet(AuditViewSet):
 
     @action(detail=False, methods=["get"])
     def fetch_from_serviceplatformen(self, request):
-        """
-        Fetch relations for a person using the CPR from Serviceplatformen.
+        """Fetch relations for a person using the CPR from Serviceplatformen.
 
         Returns the data as serialized RelatedPersons data.
         """
@@ -270,59 +310,81 @@ class RelatedPersonViewSet(AuditViewSet):
 
 
 class MunicipalityViewSet(ReadOnlyViewset):
+    """Expose municipalities in REST API."""
+
     queryset = Municipality.objects.all()
     serializer_class = MunicipalitySerializer
 
 
 class SchoolDistrictViewSet(ReadOnlyViewset):
+    """Expose school districts in REST API."""
+
     queryset = SchoolDistrict.objects.all()
     serializer_class = SchoolDistrictSerializer
 
 
 class TeamViewSet(ReadOnlyViewset):
+    """Expose teams in REST API."""
+
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
 
 
 class SectionViewSet(ReadOnlyViewset):
+    """Expose law sections in REST API."""
+
     queryset = Section.objects.all()
     serializer_class = SectionSerializer
     filterset_class = AllowedForStepsFilter
 
 
 class SectionInfoViewSet(ReadOnlyViewset):
+    """Expose section infos in REST API."""
+
     queryset = SectionInfo.objects.all()
     serializer_class = SectionInfoSerializer
     filterset_fields = "__all__"
 
 
 class ActivityDetailsViewSet(ReadOnlyViewset):
+    """Expose activity details in REST API."""
+
     queryset = ActivityDetails.objects.all()
     serializer_class = ActivityDetailsSerializer
     filterset_fields = "__all__"
 
 
 class AccountViewSet(ReadOnlyViewset):
+    """Expose accounts in REST API."""
+
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
     filterset_fields = "__all__"
 
 
 class UserViewSet(ReadOnlyViewset):
+    """Expose users in REST API."""
+
     queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
 
 
 class ServiceProviderViewSet(ReadOnlyViewset):
+    """Expose service providers in REST API."""
+
     queryset = ServiceProvider.objects.all()
     serializer_class = ServiceProviderSerializer
 
 
 class ApprovalLevelViewSet(ReadOnlyViewset):
+    """Expose approval levels in REST API."""
+
     queryset = ApprovalLevel.objects.all()
     serializer_class = ApprovalLevelSerializer
 
 
 class EffortStepViewSet(ReadOnlyViewset):
+    """Expose effort steps in REST API."""
+
     queryset = EffortStep.objects.all()
     serializer_class = EffortStepSerializer
