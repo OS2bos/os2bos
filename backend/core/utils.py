@@ -485,8 +485,8 @@ def export_prism_payments_for_date(date=None):
     if not date:
         date = tomorrow
 
-    # The microseconds are included to avoid accidentally overwriting tomorrow's
-    # file.
+    # The microseconds are included to avoid accidentally overwriting
+    # tomorrow's file.
     filename = f"{output_dir}/{date.strftime('%Y%m%d')}_{tomorrow.microsecond}"
     payments = due_payments_for_prism(date)
     if not payments.exists():
