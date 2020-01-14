@@ -240,7 +240,7 @@
             }
             
         },
-        created: function() {
+        mounted: function() {
             this.update()
         }
     }
