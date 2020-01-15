@@ -11,6 +11,7 @@ Welcome to the os2BOS documentation
    :caption: Contents:
 
    backend/index.rst
+   frontend/index.rst
 
 
 Indices and tables

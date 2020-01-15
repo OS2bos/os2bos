@@ -14,14 +14,16 @@ Welcome to the BOS Backend documentation
    bevillingsplatform.rst
    manage.rst
 
-BOS Backend API documentation
-=============================
-.. openapi:: openapi.yml
-
 
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+
+BOS Backend API documentation
+=============================
+.. openapi:: openapi.yml
+
