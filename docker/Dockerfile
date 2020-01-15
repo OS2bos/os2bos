@@ -86,7 +86,7 @@ RUN pip3 install -r backend/requirements-test.txt
 
 
 # Copy and install backend code.
-COPY README.md .
+COPY README.rst .
 COPY LICENSE .
 COPY docker ./docker
 COPY tox.ini .
