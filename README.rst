@@ -93,7 +93,7 @@ The docker image will serve the static files for the Vue frontend, Django REST
 framework and Django Admin from gunicorn both in development and in production.
 Normally it is not good practice to serve static files from gunicorn for
 security and performance reasons. We use `whitenoise
-<https://pypi.org/project/whitenoise/>`_ most of these concerns and
+<https://pypi.org/project/whitenoise/>`_ to address most of these concerns and
 generally don't expect many users. If you still want to serve it from another
 service, all the files are copied to ``/static`` on container startup. This can
 easily be mounted to a webserver.
@@ -118,7 +118,7 @@ If you want to use another ``UID/GID``, you can specify it as the
 ``--user=uid:gid`` `overwrite flag
 <https://docs.docker.com/engine/reference/run/#user>`_. for the ``docker run``
 command or `in docker-compose
-<https://docs.docker.com/compose/compose-file/#domainname-hostname-ipc-mac_address-privileged-read_only-shm_size-stdin_open-tty-user-working_dir>`_
+<https://docs.docker.com/compose/compose-file/#domainname-hostname-ipc-mac_address-privileged-read_only-shm_size-stdin_open-tty-user-working_dir>`_.
 If you change the ``UID/GID``, the ``/log`` and ``/static`` volumes may not have the
 right permissions. It is recommended to only use
 `bind
