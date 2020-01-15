@@ -7,3 +7,4 @@ Technical Documentation
    :glob:
 
    backend/index.rst
+   frontend/index.rst
