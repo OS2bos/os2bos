@@ -1,5 +1,5 @@
-=======================================
-Bevillingsplatform for Ballerup (C-BUR)
-=======================================
+======
+README
+======
 
 .. include:: ../../README.rst
