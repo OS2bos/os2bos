@@ -10,6 +10,7 @@ Om OS2BOS
 .. toctree::
    :maxdepth: 2
 
+   readme
    dev
    news
 

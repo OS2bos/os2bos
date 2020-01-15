@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Server-side codebase
-========================================
+Backend documentation
+=====================
 
 .. toctree::
    :maxdepth: 2
@@ -23,7 +23,7 @@ Indices and tables
 * :ref:`search`
 
 
-BOS Backend API documentation
-=============================
+Backend API documentation
+=========================
 .. openapi:: openapi.yml
 
