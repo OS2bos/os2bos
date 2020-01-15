@@ -3,6 +3,21 @@ Version 2.2.3, 2019-12-12
 
 New in this version:
 
+Features:
+
+* Modify the URL for the rate tabel (taksttabel) to a more general one.
+* Nice-ify django admin for Payments and PaymentSchedules and allow search on payment id.
+* Add pydocstyle compliance.
+* Add sphinx docs generation
+
+Bug fixes:
+
+* Fix incorrect tests dependent on current year.
+
+* Version 2.2.3, 2019-12-12
+
+New in this version:
+
 * Changes to PRISM file generation.
 * Enforce rules for activities on grant.
 * Disable edit for appropriation fields on granted activities.

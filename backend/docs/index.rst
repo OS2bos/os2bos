@@ -14,14 +14,16 @@ Server-side codebase
    bevillingsplatform.rst
    manage.rst
 
-BOS Backend API documentation
-=============================
-.. openapi:: openapi.yml
-
 
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+
+BOS Backend API documentation
+=============================
+.. openapi:: openapi.yml
+

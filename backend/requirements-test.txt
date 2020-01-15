@@ -18,5 +18,6 @@ uritemplate==3.0.1
 # pyyaml==5.3 use fork waiting for https://github.com/yaml/pyyaml/pull/372
 git+https://github.com/syre/pyyaml@yaml-add-decimal-representer#egg=pyyaml
 sphinxcontrib-openapi==0.6.0
+sphinx-js==2.8
 # ^ These are requirements for openapi
 # |

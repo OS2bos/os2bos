@@ -480,14 +480,14 @@ def export_prism_payments_for_date(date=None):
     """Process payments and output a file for PRISME."""
     # The output directory is not configurable - this is mapped through Docker.
     output_dir = settings.PRISM_OUTPUT_DIR
-    # Date = today if not given. We need "today" to set payment date.
-    today = datetime.datetime.now()
+    # Date = tomorrow if not given. We need "tomorrow" to set payment date.
+    tomorrow = datetime.datetime.now() + relativedelta(day=1)
     if not date:
-        date = today
+        date = tomorrow
 
-    # The microseconds are included to avoid accidentally overwriting today's
-    # file.
-    filename = f"{output_dir}/{date.strftime('%Y%m%d')}_{today.microsecond}"
+    # The microseconds are included to avoid accidentally overwriting
+    # tomorrow's file.
+    filename = f"{output_dir}/{date.strftime('%Y%m%d')}_{tomorrow.microsecond}"
     payments = due_payments_for_prism(date)
     if not payments.exists():
         # No payments
@@ -507,7 +507,7 @@ def export_prism_payments_for_date(date=None):
         trans_code = "Z300"  # Identifies transaction start.
 
         user_number = f"{config.PRISM_ORG_UNIT:04d}"  # Org unit.
-        day_of_year = today.timetuple().tm_yday  # Day of year.
+        day_of_year = tomorrow.timetuple().tm_yday  # Day of year.
 
         preamble_string = (
             f"{trans_code}{hdisp}{user_number}{media_type}{evolbr}"
@@ -526,7 +526,7 @@ def export_prism_payments_for_date(date=None):
     for p in payments:
         p.paid = True
         p.paid_amount = p.amount
-        p.paid_date = today
+        p.paid_date = tomorrow
         p.save()
     # Return filename for info and verification.
     return filename

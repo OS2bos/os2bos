@@ -8,15 +8,33 @@
 
 import axios from '../components/http/Http.js'
 
+/**
+ * Vuex store methods for cases
+ * @name state_case
+ */
 const state = {
     cases: null,
     main_case: null
 }
 
 const getters = {
+    /**
+     * Get list of cases currently in the store.
+     * @name getCases
+     * @returns {array} List of cases
+     * @example this.$store.getters.getCases()
+     * @memberof state_case
+     */
     getCases (state) {
         return state.cases ? state.cases : false
     },
+    /**
+     * Get case info currently in the store.
+     * @name getCase
+     * @returns {object} A single case object
+     * @example this.$store.getters.getCase()
+     * @memberof state_case
+     */
     getCase (state) {
         return state.main_case ? state.main_case : false
     }
@@ -35,6 +53,14 @@ const mutations = {
 }
 
 const actions = {
+    /**
+     * Get a list of cases from API. Use getCases to read the list.
+     * @name fetchCases
+     * @param {object} queryObj an object containing keys and values for a query string
+     * @returns {void} Use store.getter.getCases to read the list.
+     * @example this.$store.dispatch('fetchCases', { queryKey: 'queryValue'})
+     * @memberof state_case
+     */
     fetchCases: function({commit}, queryObj) {
         let q = ''
         if (queryObj) {
@@ -50,6 +76,14 @@ const actions = {
         })
         .catch(err => console.log(err))
     },
+    /**
+     * Get a single case from API. Use getCase to read the list.
+     * @name fetchCase
+     * @param {number} cas_id Case ID
+     * @returns {void} Use store.getter.getCase to read the info.
+     * @example this.$store.dispatch('fetchCase', 42)
+     * @memberof state_case
+     */
     fetchCase: function({commit}, cas_id) {
         axios.get(`/cases/${ cas_id }/`)
         .then(res => {
