@@ -8,6 +8,7 @@ BOS er en webapplikation til håndtering af foranstaltninger og bevillinger for 
 Formålet med BOS er at give socialrådgiverne bedre redskaber til at benytte de bedste foranstaltninger og give kommunen som helhed bedre indblik og styringsmulighed i forhold til foranstaltninger, effekter, økonomi og budget.
 
 .. image:: graphics/bos_example.png
+   :width: 100%
 
 Opbygning
 =========
