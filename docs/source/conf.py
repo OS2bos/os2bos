@@ -27,7 +27,7 @@ os.environ["SPHINXBUILDING"] = "YES"
 
 # -- Project information -----------------------------------------------------
 
-project = "bevillingsplatform"
+project = "OS2BOS"
 copyright = "2019, Magenta ApS"
 author = "Magenta ApS"
 
