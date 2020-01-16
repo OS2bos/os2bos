@@ -192,6 +192,16 @@ services, but the data will persist. To completely remove the containers and
 data run ``docker-compose down -v``.
 
 
+Postgres initialisation
+^^^^^^^^^^^^^^^^^^^^^^^
+
+The ``docker-compose.yml`` file contains a service named ``bev-cp``. Its purpose
+is to copy the files needed to initialize the database and database user to a
+volume. This volume can then be mounted to the postgres image to automatically
+initialize the database. This functionality is not needed by default because the
+needed files are mounted directly from the host. It is included as an example
+when you want to use an environment closer to production.
+
 Tests and shell access
 ^^^^^^^^^^^^^^^^^^^^^^
 
@@ -203,16 +213,28 @@ To get shell access to the backend run ``docker-compose exec bev bash``.
 If you want to write files from inside the container, make sure the `bev` user
 have permission to do so. See `User permissions`_.
 
+The tests can also be executed locally with tox: ``tox -e test``.
 
-Postgres initialisation
-^^^^^^^^^^^^^^^^^^^^^^^
+Documentation
+=============
 
-The ``docker-compose.yml`` file contains a service named ``bev-cp``. Its purpose
-is to copy the files needed to initialize the database and database user to a
-volume. This volume can then be mounted to the postgres image to automatically
-initialize the database. This functionality is not needed by default because the
-needed files are mounted directly from the host. It is included as an example
-when you want to use an environment closer to production.
+The documentation exists at `Read the Docs`_.
+
+It can be generated locally with tox:
+
+.. code-block:: bash
+
+   tox -e docs
+
+
+.. _Read the Docs: https://os2bos.readthedocs.io/en/latest/
+
+Code standards
+==============
+The Python code uses the `Black style guide`_ and `PEP257 docstring conventions`_.
+
+.. _Black style guide: https://github.com/psf/black
+.. _PEP257 docstring conventions: https://www.python.org/dev/peps/pep-0257/
 
 Licensing
 =========
