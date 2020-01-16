@@ -203,7 +203,7 @@ needed files are mounted directly from the host. It is included as an example
 when you want to use an environment closer to production.
 
 Tests and shell access
-^^^^^^^^^^^^^^^^^^^^^^
+======================
 
 To run the backend test, execute: ``docker-compose exec bev ./manage.py test``. It
 will connect to the running docker container and execute the tests.
@@ -213,14 +213,27 @@ To get shell access to the backend run ``docker-compose exec bev bash``.
 If you want to write files from inside the container, make sure the `bev` user
 have permission to do so. See `User permissions`_.
 
-The tests can also be executed locally with tox: ``tox -e test``.
+Tests can also be executed locally with tox:
+
+.. code-block:: bash
+
+   tox -e test
+
+Code coverage
+=============
+We adhere to a code coverage of 100%.
+
+After running the test-suite a coverage report can be generated locally with tox:
+
+.. code-block:: bash
+
+   tox -e coverage
+
 
 Documentation
 =============
 
-The documentation exists at `Read the Docs`_.
-
-It can be generated locally with tox:
+The documentation exists at `Read the Docs`_ and can be generated locally with tox:
 
 .. code-block:: bash
 
@@ -231,10 +244,24 @@ It can be generated locally with tox:
 
 Code standards
 ==============
-The Python code uses the `Black style guide`_ and `PEP257 docstring conventions`_.
+The Python code is enforced with the following standards:
 
-.. _Black style guide: https://github.com/psf/black
-.. _PEP257 docstring conventions: https://www.python.org/dev/peps/pep-0257/
+- `black`_
+- `flake8`_
+- `pydocstyle`_ (`PEP257`_)
+
+.. _black: https://github.com/psf/black
+.. _flake8: https://gitlab.com/pycqa/flake8
+.. _PEP257: https://www.python.org/dev/peps/pep-0257/
+.. _pydocstyle: http://www.pydocstyle.org/en/latest/
+
+Adherence to these standards can be checked locally with tox:
+
+.. code-block:: bash
+
+   tox -e lint
+
+
 
 Licensing
 =========
