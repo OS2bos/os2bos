@@ -249,3 +249,5 @@ http://mozilla.org/MPL/2.0/.
 
 All source code in this and the underlying directories is subject to
 the terms of the Mozilla Public License, v. 2.0.
+
+The core version of the code is located here: https://github.com/OS2bos/os2bos/
