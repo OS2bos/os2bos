@@ -26,4 +26,5 @@ Indices and tables
 Backend API documentation
 =========================
 .. openapi:: openapi.yml
+   :examples:
 
