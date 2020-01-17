@@ -20,9 +20,19 @@ SAML based single sign-on (SSO)
 
 SAML SSO delegates the login process to the IdP, and as such, requires an IdP supporting SAML single sign-on.
 
-OS2BOS has to be registered as a Service Provider (SP) in the IdP - To facilitate this, we expose an endpoint containing all the necessary metadata: ``https://<OS2BOS URL>/saml/metadata``.
-
 Settings related to SAML SSO can be found in the ``SAML2_AUTH`` object in ``settings.py``.
+
+Integrations
+------------
+
+Serviceplatformen
+^^^^^^^^^^^^^^^^^
+
+We use Serviceplatformen to fetch information from the CPR register. Support for this is implemented through the module `service_person_stamdata_udvidet`_.
+
+Settings relevant to Serviceplatformen can be found in the ``SERVICEPLATFORM_UUIDS`` object and the ``SERVICEPLATFORM_CERTIFICATE_PATH``, ``USE_SERVICEPLATFORM``, ``USE_SERVICEPLATFORM_PROD`` keys in ``settings.py``.
+
+.. _service_person_stamdata_udvidet: https://github.com/magenta-aps/service_person_stamdata_udvidet
 
 Release procedure
 -----------------
