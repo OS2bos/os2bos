@@ -1387,7 +1387,7 @@ class Activity(AuditModelMixin, models.Model):
 
     @property
     def applicable_payments(self):
-        """ Return payments that are not overruled by expected payments."""
+        """Return payments that are not overruled by expected payments."""
         if self.status == STATUS_GRANTED and self.modified_by.exists():
             # one time payments are always overruled entirely.
             if (

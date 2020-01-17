@@ -565,9 +565,7 @@ def generate_expected_payments_report_list():
 
 
 def generate_payments_report_list(activities):
-    """
-    Generate a payments report list of payment dicts from activities.
-    """
+    """Generate a payments report list of payment dicts from activities."""
     payments_report_list = []
     for activity in activities:
         for payment in activity.applicable_payments:
