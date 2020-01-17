@@ -21,9 +21,11 @@ from django.core.mail import EmailMessage
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.utils.html import strip_tags
 from django.db import transaction
+from django.db.models import Q
 
 from constance import config
 
@@ -530,3 +532,78 @@ def export_prism_payments_for_date(date=None):
         p.save()
     # Return filename for info and verification.
     return filename
+
+
+def generate_granted_payments_report_list():
+    """Generate a payments report of only granted payments."""
+    current_year = timezone.now().year
+    two_years_ago = current_year - 2
+
+    granted_activities = models.Activity.objects.filter(
+        status=models.STATUS_GRANTED,
+        start_date__year__gte=two_years_ago,
+        end_date__year__lte=current_year,
+    )
+
+    payments_report_list = generate_payments_report_list(granted_activities)
+    return payments_report_list
+
+
+def generate_expected_payments_report_list():
+    """Generate a payments report of granted AND expected payments."""
+    current_year = timezone.now().year
+    two_years_ago = current_year - 2
+
+    expected_activities = models.Activity.objects.filter(
+        status=Q(models.STATUS_GRANTED | models.STATUS_EXPECTED),
+        start_date__year__gte=two_years_ago,
+        end_date__year__lte=current_year,
+    )
+
+    payments_report_list = generate_payments_report_list(expected_activities)
+    return payments_report_list
+
+
+def generate_payments_report_list(activities):
+    """
+    Generate a payments report list of payment dicts from activities.
+    """
+    payments_report_list = []
+    for activity in activities:
+        for payment in activity.applicable_payments:
+            case = activity.appropriation.case
+            appropriation = activity.appropriation
+            payment_schedule = activity.payment_plan
+
+            payment_dict = {
+                # payment specific.
+                "amount": payment.amount,
+                "paid_amount": payment.paid_amount,
+                "date": payment.date,
+                "paid_date": payment.paid_date,
+                "account_string": payment.account_string,
+                # payment_schedule specific.
+                "payment_schedule__"
+                "payment_amount": payment_schedule.payment_amount,
+                "payment_schedule__"
+                "payment_frequency": payment_schedule.payment_frequency,
+                "recipient_type": payment_schedule.recipient_type,
+                "recipient_id": payment_schedule.recipient_id,
+                "recipient_name": payment_schedule.recipient_name,
+                "payment_method": payment_schedule.payment_method,
+                # activity specific.
+                "details": str(activity.details),
+                "activity_start_date": activity.start_date,
+                "activity_end_date": activity.end_date,
+                # appropriation specific.
+                "section": appropriation.section,
+                "sbsys_id": appropriation.sbsys_id,
+                # case specific.
+                "cpr_number": case.cpr_number,
+                "name": case.name,
+                "effort_step": str(case.effort_step),
+                "paying_municipality": str(case.paying_municipality),
+            }
+            payments_report_list.append(payment_dict)
+
+    return payments_report_list
