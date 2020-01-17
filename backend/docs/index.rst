@@ -65,6 +65,15 @@ Settings relevant to Serviceplatformen can be found in the ``SERVICEPLATFORM_UUI
 
 .. _service_person_stamdata_udvidet: https://github.com/magenta-aps/service_person_stamdata_udvidet
 
+
+PRISME
+^^^^^^
+
+OS2BOS can export daily payment files for import into the `PRISME` economy system. The format of the files are based on KMD's interface specification `GF200001Q`_ for creditor records (transaction type G68).
+
+.. _PRISME: https://www.fujitsu.com/dk/products/software/prisme/
+.. _GF200001Q: https://www.kmd.dk/offentlig-sektor/vores-services/snitflader-og-data-warehouse/snitfladebeskrivelser
+
 Release procedure
 -----------------
 We manage releases using the `Gitflow`_ model.
