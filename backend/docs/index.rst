@@ -22,6 +22,37 @@ SAML SSO delegates the login process to the IdP, and as such, requires an IdP su
 
 Settings related to SAML SSO can be found in the ``SAML2_AUTH`` object in ``settings.py``.
 
+User setup
+""""""""""
+
+In local development and test, SAML SSO is used with `SimpleSamlPHP`_ as idP.
+
+Users and user profiles are defined in ``dev-environment/authsources.php`` for local development. If you wish to add a new user, you need to add an entry to the file following this template:
+
+.. code-block::
+
+   '<brugernavn>:<password>' => array(
+        'email' => '<email_adresse>',
+        'username' => '<brugernavn>',
+        'first_name' => '<fornavn>',
+        'last_name' => '<efternavn>',
+        'team' => '<team (navn)>',
+        'bos_profile' => '<profil>'
+   ),
+
+A user that is not allowed to use OS2BOS, must have a SAML-token with an empty or missing ``bos_profile`` entry. 
+
+User profiles
+"""""""""""""
+There are four user profiles corresponding to four different levels of permissions.
+
+- "readonly" - the user can only read, not write.
+- "edit" - the user can both read and write, but cannot perform grant operations.
+- "grant" - the user can both read, write and perform grant operations, but cannot access Django admin.
+- "admin" - the user can read, write, perform grant operations and access Django admin.
+
+.. _SimpleSamlPHP: https://simplesamlphp.org/
+
 Integrations
 ------------
 
