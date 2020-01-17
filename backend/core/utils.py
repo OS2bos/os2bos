@@ -555,7 +555,7 @@ def generate_expected_payments_report_list():
     two_years_ago = current_year - 2
 
     expected_activities = models.Activity.objects.filter(
-        status=Q(models.STATUS_GRANTED | models.STATUS_EXPECTED),
+        Q(status=models.STATUS_GRANTED) | Q(status=models.STATUS_EXPECTED),
         start_date__year__gte=two_years_ago,
         end_date__year__lte=current_year,
     )
