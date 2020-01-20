@@ -553,12 +553,16 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
 
         payment_schedule.refresh_from_db()
         payments = payment_schedule.payments.all()
+
         report_list = generate_payments_report_list(payments)
+
         self.assertEqual(len(report_list), 0)
 
     def test_generate_payments_report_list_none(self):
         payments = Payment.objects.none()
+
         report_list = generate_payments_report_list(payments)
+
         self.assertEqual(len(report_list), 0)
 
     def test_generate_payments_report_list_granted_payments(self):
@@ -611,7 +615,9 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
             payment_plan=payment_schedule,
             modifies=granted_activity,
         )
+
         report_list = generate_granted_payments_report_list()
+
         self.assertEqual(len(report_list), 6)
 
     def test_generate_payments_report_list_expected_payments(self):
@@ -664,5 +670,10 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
             payment_plan=payment_schedule,
             modifies=granted_activity,
         )
+
         report_list = generate_expected_payments_report_list()
+
         self.assertEqual(len(report_list), 9)
+        self.assertEqual(
+            sum([x["amount"] for x in report_list]), Decimal("6664")
+        )
