@@ -5,10 +5,12 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+import os
 import csv
 import logging
 
-
+from django.utils import timezone
+from django.conf import settings
 from django.core.management.base import BaseCommand
 
 from core.utils import (
@@ -24,10 +26,19 @@ class Command(BaseCommand):
     help = "Generate granted and expected payments reports as CSV"
 
     def handle(self, *args, **options):
+        now = timezone.now()
         granted_payments_list = generate_granted_payments_report_list()
         expected_payments_list = generate_expected_payments_report_list()
+
+        report_dir = settings.PAYMENTS_REPORT_DIR
+
         try:
-            with open("granted_payments.csv", "w") as csvfile:
+            with open(
+                os.path.join(
+                    report_dir, f"{now.isoformat}_granted_payments.csv"
+                ),
+                "w",
+            ) as csvfile:
                 if granted_payments_list:
                     logger.info(
                         f"logging {len(granted_payments_list)}"
@@ -41,7 +52,11 @@ class Command(BaseCommand):
                     for payment_dict in granted_payments_list:
                         writer.writerow(payment_dict)
 
-            with open("expected_payments.csv", "w") as csvfile:
+            with open(
+                os.path.join(
+                    report_dir, f"{now.isoformat}_expected_payments.csv", "w"
+                )
+            ) as csvfile:
                 if expected_payments_list:
                     logger.info(
                         f"logging {len(expected_payments_list)}"

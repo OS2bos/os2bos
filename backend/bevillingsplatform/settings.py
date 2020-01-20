@@ -252,6 +252,12 @@ PRISM_OUTPUT_DIR = settings.get(
     "PRISM_OUTPUT_DIR", fallback=os.path.join(BASE_DIR, "prisme")
 )
 
+
+# Output directory for payments reports.
+PAYMENTS_REPORT_DIR = settings.get(
+    "PAYMENTS_REPORT_DIR", fallback=os.path.join(BASE_DIR, "reports")
+)
+
 # Logging
 LOG_DIR = settings.get("LOG_DIR", fallback=os.path.join(BASE_DIR, "log"))
 
