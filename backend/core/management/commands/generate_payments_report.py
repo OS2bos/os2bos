@@ -26,7 +26,7 @@ class Command(BaseCommand):
     help = "Generate granted and expected payments reports as CSV"
 
     def handle(self, *args, **options):
-        now = timezone.now()
+        now_isoformat = timezone.now().isoformat()
         granted_payments_list = generate_granted_payments_report_list()
         expected_payments_list = generate_expected_payments_report_list()
 
@@ -35,7 +35,7 @@ class Command(BaseCommand):
         try:
             with open(
                 os.path.join(
-                    report_dir, f"{now.isoformat}_granted_payments.csv"
+                    report_dir, f"{now_isoformat}_granted_payments.csv"
                 ),
                 "w",
             ) as csvfile:
@@ -54,7 +54,7 @@ class Command(BaseCommand):
 
             with open(
                 os.path.join(
-                    report_dir, f"{now.isoformat}_expected_payments.csv", "w"
+                    report_dir, f"{now_isoformat}_expected_payments.csv", "w"
                 )
             ) as csvfile:
                 if expected_payments_list:
