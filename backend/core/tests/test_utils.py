@@ -475,7 +475,7 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
         )
-        create_activity(
+        activity = create_activity(
             case,
             appropriation,
             start_date=start_date,
@@ -509,6 +509,11 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
                 "effort_step": "Trin 1: Tidlig indsats i almenområdet",
                 "paying_municipality": "København",
                 "section": "ABL-105-2",
+                "activity": activity.pk,
+                "main_activity_id": (
+                    appropriation.main_activity.details.activity_id
+                ),
+                "main_activity": appropriation.main_activity.pk,
             }.items()
             <= first_elem.items()
         )
@@ -646,7 +651,7 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
             recipient_type=PaymentSchedule.PERSON,
             payment_method=CASH,
-            payment_amount=Decimal(666),
+            payment_amount=Decimal(800),
         )
 
         create_activity(
