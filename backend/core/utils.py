@@ -544,8 +544,12 @@ def generate_granted_payments_report_list():
         start_date__year__gte=two_years_ago,
         end_date__year__lte=current_year,
     )
-
-    payments_report_list = generate_payments_report_list(granted_activities)
+    payments = [
+        payment
+        for activity in granted_activities
+        for payment in activity.payment_plan.payments.all()
+    ]
+    payments_report_list = generate_payments_report_list(payments)
     return payments_report_list
 
 
@@ -559,49 +563,61 @@ def generate_expected_payments_report_list():
         start_date__year__gte=two_years_ago,
         end_date__year__lte=current_year,
     )
-
-    payments_report_list = generate_payments_report_list(expected_activities)
+    payments = [
+        payment
+        for activity in expected_activities
+        for payment in activity.applicable_payments
+    ]
+    payments_report_list = generate_payments_report_list(payments)
     return payments_report_list
 
 
-def generate_payments_report_list(activities):
-    """Generate a payments report list of payment dicts from activities."""
+def generate_payments_report_list(payments):
+    """Generate a payments report list of payment dicts from payments."""
     payments_report_list = []
-    for activity in activities:
-        for payment in activity.applicable_payments:
-            case = activity.appropriation.case
-            appropriation = activity.appropriation
-            payment_schedule = activity.payment_plan
+    for payment in payments:
+        try:
+            activity = payment.payment_schedule.activity
+        except models.Activity.DoesNotExist:
+            logger.exception(
+                f"PaymentSchedule {payment.payment_schedule.pk}"
+                f" has no activity"
+            )
+            continue
 
-            payment_dict = {
-                # payment specific.
-                "amount": payment.amount,
-                "paid_amount": payment.paid_amount,
-                "date": payment.date,
-                "paid_date": payment.paid_date,
-                "account_string": payment.account_string,
-                # payment_schedule specific.
-                "payment_schedule__"
-                "payment_amount": payment_schedule.payment_amount,
-                "payment_schedule__"
-                "payment_frequency": payment_schedule.payment_frequency,
-                "recipient_type": payment_schedule.recipient_type,
-                "recipient_id": payment_schedule.recipient_id,
-                "recipient_name": payment_schedule.recipient_name,
-                "payment_method": payment_schedule.payment_method,
-                # activity specific.
-                "details": str(activity.details),
-                "activity_start_date": activity.start_date,
-                "activity_end_date": activity.end_date,
-                # appropriation specific.
-                "section": appropriation.section,
-                "sbsys_id": appropriation.sbsys_id,
-                # case specific.
-                "cpr_number": case.cpr_number,
-                "name": case.name,
-                "effort_step": str(case.effort_step),
-                "paying_municipality": str(case.paying_municipality),
-            }
-            payments_report_list.append(payment_dict)
+        case = activity.appropriation.case
+        appropriation = activity.appropriation
+        payment_schedule = activity.payment_plan
+
+        payment_dict = {
+            # payment specific.
+            "amount": payment.amount,
+            "paid_amount": payment.paid_amount,
+            "date": payment.date,
+            "paid_date": payment.paid_date,
+            "account_string": payment.account_string,
+            # payment_schedule specific.
+            "payment_schedule__"
+            "payment_amount": payment_schedule.payment_amount,
+            "payment_schedule__"
+            "payment_frequency": payment_schedule.payment_frequency,
+            "recipient_type": payment_schedule.recipient_type,
+            "recipient_id": payment_schedule.recipient_id,
+            "recipient_name": payment_schedule.recipient_name,
+            "payment_method": payment_schedule.payment_method,
+            # activity specific.
+            "details": str(activity.details),
+            "activity_start_date": activity.start_date,
+            "activity_end_date": activity.end_date,
+            # appropriation specific.
+            "section": str(appropriation.section),
+            "sbsys_id": appropriation.sbsys_id,
+            # case specific.
+            "cpr_number": case.cpr_number,
+            "name": case.name,
+            "effort_step": str(case.effort_step),
+            "paying_municipality": str(case.paying_municipality),
+        }
+        payments_report_list.append(payment_dict)
 
     return payments_report_list

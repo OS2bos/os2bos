@@ -19,10 +19,12 @@ from core.models import (
     SUPPL_ACTIVITY,
     PaymentSchedule,
     STATUS_GRANTED,
+    STATUS_EXPECTED,
     CASH,
     User,
     Team,
     ActivityDetails,
+    Payment,
 )
 from core.utils import (
     get_cpr_data,
@@ -34,6 +36,9 @@ from core.utils import (
     generate_records_for_prism,
     due_payments_for_prism,
     export_prism_payments_for_date,
+    generate_payments_report_list,
+    generate_granted_payments_report_list,
+    generate_expected_payments_report_list,
 )
 from core.tests.testing_utils import (
     BasicTestMixin,
@@ -444,3 +449,215 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         # Repeat the previous processing to have an example with no due
         # payments.
         export_prism_payments_for_date()
+
+
+class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_generate_payments_report_list(self):
+        now = timezone.now()
+        start_date = now
+        end_date = now + timedelta(days=5)
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+        )
+        # Create an activity etc which is required.
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            payment_plan=payment_schedule,
+        )
+
+        payments = payment_schedule.payments.all()
+        report_list = generate_payments_report_list(payments)
+        self.assertEqual(len(report_list), 6)
+        first_elem = report_list[0]
+        # Assert that the first element is a subset of the following dict.
+        self.assertTrue(
+            {
+                "amount": Decimal("666.00"),
+                "paid_amount": None,
+                "paid_date": None,
+                "account_string": "12345-UKENDT-123",
+                "payment_schedule__payment_amount": Decimal("666"),
+                "payment_schedule__payment_frequency": "DAILY",
+                "recipient_type": "PERSON",
+                "recipient_id": "0205891234",
+                "recipient_name": "Jens Testersen",
+                "payment_method": "CASH",
+                "details": "000000 - Test aktivitet",
+                "sbsys_id": "XXX-YYY",
+                "cpr_number": "0205891234",
+                "name": "Jens Jensen",
+                "effort_step": "Trin 1: Tidlig indsats i almenområdet",
+                "paying_municipality": "København",
+                "section": "ABL-105-2",
+            }.items()
+            <= first_elem.items()
+        )
+        self.assertIsNotNone(first_elem["activity_start_date"])
+        self.assertIsNotNone(first_elem["activity_end_date"])
+        self.assertIsNotNone(first_elem["date"])
+
+    def test_generate_payments_report_list_missing_activity(self):
+        now = timezone.now()
+        start_date = now
+        end_date = now + timedelta(days=5)
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+        )
+        # Create an activity etc which is required.
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            payment_plan=payment_schedule,
+        )
+        activity.delete()
+
+        payment_schedule.refresh_from_db()
+        payments = payment_schedule.payments.all()
+        report_list = generate_payments_report_list(payments)
+        self.assertEqual(len(report_list), 0)
+
+    def test_generate_payments_report_list_none(self):
+        payments = Payment.objects.none()
+        report_list = generate_payments_report_list(payments)
+        self.assertEqual(len(report_list), 0)
+
+    def test_generate_payments_report_list_granted_payments(self):
+        now = timezone.now()
+        # Create a granted activity.
+        start_date = now
+        end_date = now + timedelta(days=5)
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        granted_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            payment_plan=payment_schedule,
+        )
+
+        # Create an expected activity.
+        start_date = now + timedelta(days=4)
+        end_date = now + timedelta(days=8)
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+        )
+
+        create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_EXPECTED,
+            payment_plan=payment_schedule,
+            modifies=granted_activity,
+        )
+        report_list = generate_granted_payments_report_list()
+        self.assertEqual(len(report_list), 6)
+
+    def test_generate_payments_report_list_expected_payments(self):
+        now = timezone.now()
+        # Create a granted activity.
+        start_date = now
+        end_date = now + timedelta(days=5)
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        granted_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            payment_plan=payment_schedule,
+        )
+
+        # Create an expected activity.
+        start_date = now + timedelta(days=4)
+        end_date = now + timedelta(days=8)
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+        )
+
+        create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_EXPECTED,
+            payment_plan=payment_schedule,
+            modifies=granted_activity,
+        )
+        report_list = generate_expected_payments_report_list()
+        self.assertEqual(len(report_list), 9)
