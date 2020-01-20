@@ -170,7 +170,11 @@ function displayEffort(id) {
         let effort_step = effort_step_list.find(function(e) {
             return e.id === parseInt(id);
         })
-        return effort_step.name
+        if (effort_step) {
+            return effort_step.name
+        } else {
+            return 'Ukendt'
+        }
     } else {
         return 'Ikke tilgængelig'
     }
