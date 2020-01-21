@@ -77,6 +77,7 @@ RUN set -ex \
   # create folders at easily mountable paths for output from django
   && install -o bev -g bev -d /static \
   && install -o bev -g bev -d /prisme \
+  && install -o bev -g bev -d /reports \
   && install -o bev -g bev -d /log
 
 # Install requirements
