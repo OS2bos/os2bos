@@ -41,8 +41,8 @@ class Command(BaseCommand):
             ) as csvfile:
                 if granted_payments_list:
                     logger.info(
-                        f"logging {len(granted_payments_list)}"
-                        " granted payments"
+                        f"Created granted payments report "
+                        f"for {len(granted_payments_list)} payments"
                     )
                     writer = csv.DictWriter(
                         csvfile, fieldnames=granted_payments_list[0].keys()
@@ -54,13 +54,14 @@ class Command(BaseCommand):
 
             with open(
                 os.path.join(
-                    report_dir, f"{now_isoformat}_expected_payments.csv", "w"
-                )
+                    report_dir, f"{now_isoformat}_expected_payments.csv"
+                ),
+                "w",
             ) as csvfile:
                 if expected_payments_list:
                     logger.info(
-                        f"logging {len(expected_payments_list)}"
-                        " expected payments"
+                        f"Created expected payments report "
+                        f" for {len(expected_payments_list)} expected payments"
                     )
                     writer = csv.DictWriter(
                         csvfile, fieldnames=expected_payments_list[0].keys()
