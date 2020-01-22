@@ -502,18 +502,22 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
                 "recipient_id": "0205891234",
                 "recipient_name": "Jens Testersen",
                 "payment_method": "CASH",
-                "details": "000000 - Test aktivitet",
+                "activity__details__name": "Test aktivitet",
+                "activity__details__activity_id": "000000",
                 "sbsys_id": "XXX-YYY",
                 "cpr_number": "0205891234",
                 "name": "Jens Jensen",
                 "effort_step": "Trin 1: Tidlig indsats i almenområdet",
                 "paying_municipality": "København",
                 "section": "ABL-105-2",
-                "activity": activity.pk,
+                "scaling_step": "1",
+                "case_worker": "Orla Frøsnapper",
+                "leader": "Orla Frøsnapper",
+                "team": "FCK",
+                "target_group": "FAMILY_DEPT",
                 "main_activity_id": (
                     appropriation.main_activity.details.activity_id
                 ),
-                "main_activity": appropriation.main_activity.pk,
             }.items()
             <= first_elem.items()
         )
