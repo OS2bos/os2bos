@@ -62,7 +62,7 @@
                 </template>
                 <tr class="lastrow">
                     <td colspan="5" style="padding-left: 0;">
-                        <button v-if="permissionCheck === true && this.user.profile !== 'edit'" @click="initPreApprove()" :disabled="approvable_acts.length < 1">✔ Godkendt valgte</button>
+                        <button v-if="permissionCheck === true && this.user.profile !== 'edit'" @click="initPreApprove()" :disabled="approvable_acts.length < 1">✔ Godkend valgte</button>
                     </td>
                     <td class="right"><strong>I alt</strong></td>
                     <td class="nowrap right">

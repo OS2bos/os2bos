@@ -21,9 +21,8 @@
                     <div class="modal-body">
                         <slot name="body">
 
-                            <p v-if="warning" class="dialog-warning">
-                                {{ warning }}
-                            </p>
+                            <warning :content="warning" />
+                            <warning :content="payDateRule" />
 
                             <table>
                                 <thead>
@@ -110,11 +109,14 @@
     import { activityId2name, displayStatus } from '../filters/Labels.js'
     import { cost2da } from '../filters/Numbers.js'
     import { json2jsDate } from '../filters/Date.js'
+    import Warning from '../warnings/Warning.vue'
+    import { checkRulePayDate } from '../filters/Rules.js'
 
     export default {
 
         components: {
-            Error
+            Error,
+            Warning
         },
         props: [
             'acts',
@@ -139,6 +141,20 @@
                 return this.acts.filter(function(a) {
                     return a.activity_type === 'SUPPL_ACTIVITY'
                 })
+            },
+            payDateRule: function() {
+                let rule_breakers = this.act_list.filter(act => {
+                    return checkRulePayDate(act.start_date, act.payment_plan.payment_method)
+                })
+                if (rule_breakers.length > 0) {
+                    // Return almost exact same error message with slightly different wording
+                    return `
+                        <strong>Bemærk:</strong> Betalinger med udbetalingsdato i dag eller tidligere vil ikke blive udbetalt.<br>
+                        Du er i gang med at godkende en ydelse med betaling tilbage i tid.
+                    `
+                } else {
+                    return false
+                }
             }
         },
         methods: {
@@ -192,20 +208,6 @@
     .approval .modal-body {
         overflow-x: hidden;
         overflow-y: auto;
-    }
-
-    .approval .dialog-warning {
-        background-color: var(--warning);
-        color: hsl(var(--color3), 100%, 20%);
-        padding: 1rem 2rem;
-    }
-
-    .approval .dialog-warning::before {
-        content: '⚠';
-        display: block;
-        float: left;
-        font-size: 2rem;
-        padding: 0 1rem 0 0;
     }
 
 </style>
