@@ -608,6 +608,7 @@ def generate_payments_report_list(payments):
 
         payment_dict = {
             # payment specific.
+            "id": payment.pk,
             "amount": payment.amount,
             "paid_amount": payment.paid_amount,
             "date": payment.date,

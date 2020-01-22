@@ -521,6 +521,7 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
             }.items()
             <= first_elem.items()
         )
+        self.assertIsNotNone(first_elem["id"])
         self.assertIsNotNone(first_elem["activity_start_date"])
         self.assertIsNotNone(first_elem["activity_end_date"])
         self.assertIsNotNone(first_elem["date"])
