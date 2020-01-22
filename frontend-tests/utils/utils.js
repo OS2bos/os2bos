@@ -6,6 +6,11 @@ function leadZero(num) {
     }
 }
 
+function randNum() {
+    return Math.floor(Math.random() * 10 )
+}
+
 export {
-    leadZero
+    leadZero,
+    randNum
 }
