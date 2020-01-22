@@ -17,7 +17,7 @@
             </h1>
             <template v-if="permissionCheck === true">
                 <button v-if="act.status !== 'GRANTED'" @click="show_edit = !show_edit" class="act-edit-btn">Redigér</button>
-                <button v-if="act.status === 'GRANTED'" @click="createExpected()" class="act-edit-btn">+ Lav forventet justering</button>
+                <button v-if="can_adjust" @click="createExpected()" class="act-edit-btn">+ Lav forventet justering</button>
                 <button v-if="act.status !== 'GRANTED'" class="act-delete-btn" @click="preDeleteCheck()">Slet</button>
             </template>
         </header>
@@ -232,6 +232,21 @@
             },
             cas: function() {
                 return this.$store.getters.getCase
+            },
+            can_adjust: function() {
+                // Adjust only if parent activity was granted ans has no other modifying activities
+                if (this.appr && this.act.status === 'GRANTED') {
+                    let modifier = this.appr.activities.filter(ac => {
+                        return ac.modifies === this.act.id
+                    })
+                    if (modifier.length < 1) {
+                        return true
+                    } else {
+                        return false
+                    }
+                } else {
+                    return false
+                }
             }
         },
         watch: {
