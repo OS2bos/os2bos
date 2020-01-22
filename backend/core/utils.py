@@ -12,6 +12,7 @@ import logging
 import requests
 import datetime
 import itertools
+from datetime import date
 
 from dateutil.relativedelta import relativedelta
 
@@ -537,18 +538,23 @@ def export_prism_payments_for_date(date=None):
 def generate_granted_payments_report_list():
     """Generate a payments report of only granted payments."""
     current_year = timezone.now().year
+    end_of_current_year = date.max.replace(year=current_year)
     two_years_ago = current_year - 2
+    beginning_of_two_years_ago = date.min.replace(year=two_years_ago)
 
     granted_activities = models.Activity.objects.filter(
-        status=models.STATUS_GRANTED,
-        start_date__year__gte=two_years_ago,
-        end_date__year__lte=current_year,
+        status=models.STATUS_GRANTED
     )
-    payments = [
-        payment
+    payment_ids = [
+        payment.id
         for activity in granted_activities
         for payment in activity.payment_plan.payments.all()
     ]
+    payments = (
+        models.Payment.objects.filter(id__in=payment_ids)
+        .paid_date_or_date_gte(beginning_of_two_years_ago)
+        .paid_date_or_date_lte(end_of_current_year)
+    )
     payments_report_list = generate_payments_report_list(payments)
     return payments_report_list
 
@@ -556,18 +562,23 @@ def generate_granted_payments_report_list():
 def generate_expected_payments_report_list():
     """Generate a payments report of granted AND expected payments."""
     current_year = timezone.now().year
+    end_of_current_year = date.max.replace(year=current_year)
     two_years_ago = current_year - 2
+    beginning_of_two_years_ago = date.min.replace(year=two_years_ago)
 
     expected_activities = models.Activity.objects.filter(
-        Q(status=models.STATUS_GRANTED) | Q(status=models.STATUS_EXPECTED),
-        start_date__year__gte=two_years_ago,
-        end_date__year__lte=current_year,
+        Q(status=models.STATUS_GRANTED) | Q(status=models.STATUS_EXPECTED)
     )
-    payments = [
-        payment
+    payment_ids = [
+        payment.id
         for activity in expected_activities
         for payment in activity.applicable_payments
     ]
+    payments = (
+        models.Payment.objects.filter(id__in=payment_ids)
+        .paid_date_or_date_gte(beginning_of_two_years_ago)
+        .paid_date_or_date_lte(end_of_current_year)
+    )
     payments_report_list = generate_payments_report_list(payments)
     return payments_report_list
 
