@@ -489,7 +489,7 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         report_list = generate_payments_report_list(payments)
         self.assertEqual(len(report_list), 6)
         first_elem = report_list[0]
-        # Assert that the first element is a subset of the following dict.
+        # Assert that the following dict is a subset of the first element.
         self.assertTrue(
             {
                 "amount": Decimal("666.00"),
