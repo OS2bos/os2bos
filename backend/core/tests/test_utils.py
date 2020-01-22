@@ -475,7 +475,7 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
         )
-        activity = create_activity(
+        create_activity(
             case,
             appropriation,
             start_date=start_date,
