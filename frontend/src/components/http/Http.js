@@ -14,9 +14,20 @@ const ax = axios.create({
     baseURL: '/api'
 })
 
+let load_stack = []
+
+function checkSpin() {
+    if (load_stack.length > 0) {
+        spinner.spinOn()
+    } else {
+        spinner.spinOff()
+    }
+}
+
 ax.interceptors.request.use(
     function (config) {
-        spinner.spinOn()
+        load_stack.push(true)
+        checkSpin()
         return config
     },
     function (err) {
@@ -30,11 +41,13 @@ ax.interceptors.request.use(
 
 ax.interceptors.response.use(
     function (res) {
-        spinner.spinOff()
+        load_stack.pop()
+        checkSpin()
         return res
     },
     function (err) {
-        spinner.spinOff()
+        load_stack.pop()
+        checkSpin()
         return Promise.reject(err)
     }
 )
