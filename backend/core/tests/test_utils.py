@@ -467,7 +467,7 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
             payment_method=CASH,
             payment_amount=Decimal(666),
         )
-        # Create an activity etc which is required.
+
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
