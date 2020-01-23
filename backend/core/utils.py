@@ -419,7 +419,7 @@ def format_prism_payment_record(payment, line_no, record_no):
     16 - posteringshenvisningsnummer. As 117 in the finance records -
     date + machine number + record number - 8 chars + 5 chars + 7 chars.
 
-    17 - Payment ID. 20 digits with leading zeroes.
+    17 - The unique Payment pk. 20 digits with leading zeroes.
 
     40 - posting text.
     """
@@ -433,7 +433,7 @@ def format_prism_payment_record(payment, line_no, record_no):
         "10": "02",
         "11": f"{payment.recipient_id}",
         "12": f"{payment.date.strftime('%Y%m%d')}",
-        "17": f"{payment_id:020d}",
+        "17": f"{payment.pk:020d}",
         "40": f"Fra Ballerup Kommune ref: {payment_id}",
     }
     fields[
