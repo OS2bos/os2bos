@@ -1386,8 +1386,8 @@ class Activity(AuditModelMixin, models.Model):
         return payments.group_by_monthly_amounts()
 
     @property
-    def total_cost_this_year(self):
-        """Calculate total cost this year for this activity."""
+    def applicable_payments(self):
+        """Return payments that are not overruled by expected payments."""
         if self.status == STATUS_GRANTED and self.modified_by.exists():
             # one time payments are always overruled entirely.
             if (
@@ -1418,7 +1418,13 @@ class Activity(AuditModelMixin, models.Model):
                     ).exclude(date__gte=min_date)
         else:
             payments = Payment.objects.filter(payment_schedule__activity=self)
-        return payments.in_this_year().amount_sum()
+
+        return payments
+
+    @property
+    def total_cost_this_year(self):
+        """Calculate total cost this year for this activity."""
+        return self.applicable_payments.in_this_year().amount_sum()
 
     @property
     def total_granted_this_year(self):
@@ -1443,37 +1449,7 @@ class Activity(AuditModelMixin, models.Model):
     @property
     def total_cost(self):
         """Calculate the total cost of this activity at all times."""
-        if self.status == STATUS_GRANTED and self.modified_by.exists():
-            # one time payments are always overruled entirely.
-            if (
-                self.payment_plan.payment_type
-                == PaymentSchedule.ONE_TIME_PAYMENT
-            ):
-                payments = Payment.objects.none()
-            else:
-                # Find the earliest payment date in the chain of
-                # modified_by activities and exclude from that point
-                # and onwards.
-                modified_by_activities = self.get_all_modified_by_activities()
-                min_payment = (
-                    Payment.objects.filter(
-                        payment_schedule__activity__in=modified_by_activities
-                    )
-                    .order_by("date")
-                    .first()
-                )
-                if not min_payment:
-                    payments = Payment.objects.filter(
-                        payment_schedule__activity=self
-                    )
-                else:
-                    min_date = min_payment.date
-                    payments = Payment.objects.filter(
-                        payment_schedule__activity=self
-                    ).exclude(date__gte=min_date)
-        else:
-            payments = Payment.objects.filter(payment_schedule__activity=self)
-        return payments.amount_sum()
+        return self.applicable_payments.amount_sum()
 
     @property
     def total_cost_full_year(self):

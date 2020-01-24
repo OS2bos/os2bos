@@ -22,6 +22,7 @@
 5 0 * * * python manage.py export_to_prism
 
 10 0 * * * python manage.py mark_fictive_payments_paid
+15 0 * * * python manage.py generate_payments_report
 
 * * * * * sh -c "python manage.py send_mail >> /log/cron_mail.log 2>&1"
 */20 * * * * sh -c "python manage.py retry_deferred >> /log/cron_mail_deferred.log 2>&1"

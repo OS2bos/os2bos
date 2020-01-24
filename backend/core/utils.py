@@ -12,6 +12,7 @@ import logging
 import requests
 import datetime
 import itertools
+from datetime import date
 
 from dateutil.relativedelta import relativedelta
 
@@ -21,9 +22,11 @@ from django.core.mail import EmailMessage
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.utils.html import strip_tags
 from django.db import transaction
+from django.db.models import Q
 
 from constance import config
 
@@ -530,3 +533,116 @@ def export_prism_payments_for_date(date=None):
         p.save()
     # Return filename for info and verification.
     return filename
+
+
+def generate_granted_payments_report_list():
+    """Generate a payments report of only granted payments."""
+    current_year = timezone.now().year
+    end_of_current_year = date.max.replace(year=current_year)
+    two_years_ago = current_year - 2
+    beginning_of_two_years_ago = date.min.replace(year=two_years_ago)
+
+    granted_activities = models.Activity.objects.filter(
+        status=models.STATUS_GRANTED
+    )
+    payment_ids = [
+        payment.id
+        for activity in granted_activities
+        for payment in activity.payment_plan.payments.all()
+    ]
+    payments = (
+        models.Payment.objects.filter(id__in=payment_ids)
+        .paid_date_or_date_gte(beginning_of_two_years_ago)
+        .paid_date_or_date_lte(end_of_current_year)
+    )
+    payments_report_list = generate_payments_report_list(payments)
+    return payments_report_list
+
+
+def generate_expected_payments_report_list():
+    """Generate a payments report of granted AND expected payments."""
+    current_year = timezone.now().year
+    end_of_current_year = date.max.replace(year=current_year)
+    two_years_ago = current_year - 2
+    beginning_of_two_years_ago = date.min.replace(year=two_years_ago)
+
+    expected_activities = models.Activity.objects.filter(
+        Q(status=models.STATUS_GRANTED) | Q(status=models.STATUS_EXPECTED)
+    )
+    payment_ids = [
+        payment.id
+        for activity in expected_activities
+        for payment in activity.applicable_payments
+    ]
+    payments = (
+        models.Payment.objects.filter(id__in=payment_ids)
+        .paid_date_or_date_gte(beginning_of_two_years_ago)
+        .paid_date_or_date_lte(end_of_current_year)
+    )
+    payments_report_list = generate_payments_report_list(payments)
+    return payments_report_list
+
+
+def generate_payments_report_list(payments):
+    """Generate a payments report list of payment dicts from payments."""
+    payments_report_list = []
+    for payment in payments:
+        try:
+            activity = payment.payment_schedule.activity
+        except models.Activity.DoesNotExist:
+            logger.exception(
+                f"PaymentSchedule {payment.payment_schedule.pk}"
+                f" has no activity"
+            )
+            continue
+
+        case = activity.appropriation.case
+        appropriation = activity.appropriation
+        payment_schedule = activity.payment_plan
+
+        main_activity_id = (
+            appropriation.main_activity.details.activity_id
+            if appropriation.main_activity
+            else None
+        )
+
+        payment_dict = {
+            # payment specific.
+            "id": payment.pk,
+            "amount": payment.amount,
+            "paid_amount": payment.paid_amount,
+            "date": payment.date,
+            "paid_date": payment.paid_date,
+            "account_string": payment.account_string,
+            # payment_schedule specific.
+            "payment_schedule__"
+            "payment_amount": payment_schedule.payment_amount,
+            "payment_schedule__"
+            "payment_frequency": payment_schedule.payment_frequency,
+            "recipient_type": payment_schedule.recipient_type,
+            "recipient_id": payment_schedule.recipient_id,
+            "recipient_name": payment_schedule.recipient_name,
+            "payment_method": payment_schedule.payment_method,
+            # activity specific.
+            "activity__details__activity_id": activity.details.activity_id,
+            "activity__details__name": activity.details.name,
+            "activity_start_date": activity.start_date,
+            "activity_end_date": activity.end_date,
+            # appropriation specific.
+            "section": str(appropriation.section),
+            "sbsys_id": appropriation.sbsys_id,
+            "main_activity_id": main_activity_id,
+            # case specific.
+            "cpr_number": case.cpr_number,
+            "name": case.name,
+            "target_group": case.target_group,
+            "case_worker": str(case.case_worker),
+            "team": str(case.team) if case.team else None,
+            "leader": str(case.team.leader) if case.team else None,
+            "effort_step": str(case.effort_step),
+            "scaling_step": str(case.scaling_step),
+            "paying_municipality": str(case.paying_municipality),
+        }
+        payments_report_list.append(payment_dict)
+
+    return payments_report_list
