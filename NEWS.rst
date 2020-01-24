@@ -1,3 +1,23 @@
+Version 2.4.0, 2020-01-24
+-------------------------
+
+New in this version:
+
+Features
+^^^^^^^^
+
+* Add warning in GUI if a payent date is earlier than tomorrow.
+* Add restriction in GUI so an Activity can only have one Expected Activity.
+* Add Actual-state CSV generation for Payments.
+* Improve documentation all-around.
+* Change payment file default date to tomorrow.
+
+Bug fixes
+^^^^^^^^^
+
+* Fix CPR search for "Find sager".
+* Change field 17 of PRISM file to the unique Payment pk.
+
 Version 2.3.0, 2020-01-09
 -------------------------
 
