@@ -11,12 +11,14 @@ Features
 * Add Actual-state CSV generation for Payments.
 * Improve documentation all-around.
 * Change payment file default date to tomorrow.
+* Update Django from 2.2.4 to 2.2.9
 
 Bug fixes
 ^^^^^^^^^
 
 * Fix CPR search for "Find sager".
 * Change field 17 of PRISM file to the unique Payment pk.
+* Handle missing effort steps gracefully in GUI.
 
 Version 2.3.0, 2020-01-09
 -------------------------
