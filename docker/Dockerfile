@@ -22,7 +22,7 @@ RUN npm install --frozen-lockfile
 COPY frontend .
 RUN npm run build
 
-CMD npm run serve
+CMD ["npm", "run", "serve"]
 
 
 # We do not use alpine. The resulting image is smaller, but there is currently
