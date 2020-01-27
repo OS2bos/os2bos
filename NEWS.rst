@@ -6,7 +6,7 @@ New in this version:
 Features
 ^^^^^^^^
 
-* Add warning in GUI if a payment date is earlier than tomorrow.
+* Add warning in GUI if a payment date is earlier than two days from today.
 * Add restriction in GUI so an Activity can only have one expected Activity.
 * Add Actual-state CSV generation for Payments.
 * Improve documentation all-around.
