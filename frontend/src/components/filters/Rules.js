@@ -16,10 +16,6 @@
 function checkRulePayDate(start_date, method) {
     let split_date = new Date(new Date().setDate(new Date().getDate() + 2))
     split_date.setHours(0, 0, 0) 
-    console.log('checking dates')
-    console.log(split_date)
-    console.log('must be later than')
-    console.log(new Date(start_date))
     if (method === 'CASH' && new Date(start_date).getTime() < split_date.getTime()) {
         return `
             <strong>Bemærk:</strong> Betalinger med udbetalingsdato i morgen eller tidligere vil ikke blive udbetalt.
