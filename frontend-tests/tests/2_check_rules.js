@@ -6,7 +6,7 @@ import baseurl from '../utils/url.js'
 import { leadZero, randNum } from '../utils/utils.js'
 
 const today = new Date(),
-    tomorrow = new Date(new Date().setDate(today.getDate() + 1)),
+    tomorrow = new Date(new Date().setDate(today.getDate() + 2)),
     testdata = {
         case: {
             name: `${ randNum() }.${ randNum() }.${ randNum() }-regel-test`
