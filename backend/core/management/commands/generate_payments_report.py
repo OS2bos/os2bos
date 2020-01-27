@@ -9,7 +9,6 @@ import os
 import csv
 import logging
 
-from django.utils import timezone
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
