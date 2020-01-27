@@ -53,7 +53,7 @@ class Command(BaseCommand):
                 if expected_payments_list:
                     logger.info(
                         f"Created expected payments report "
-                        f" for {len(expected_payments_list)} expected payments"
+                        f"for {len(expected_payments_list)} expected payments"
                     )
                     writer = csv.DictWriter(
                         csvfile, fieldnames=expected_payments_list[0].keys()
