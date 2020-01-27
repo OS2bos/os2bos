@@ -56,7 +56,7 @@ ENV PYTHONUNBUFFERED=1 \
 WORKDIR /code/
 COPY backend/sys-requirements.txt sys-requirements.txt
 
-# hadolint ignore=SC2046
+# hadolint ignore=SC2046,DL3008,DL4006
 RUN set -ex \
   # Add a bev group and user. Note: this is a system user/group, but have
   # UID/GID above the normal SYS_UID_MAX/SYS_GID_MAX of 999, but also above the
