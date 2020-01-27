@@ -9,15 +9,20 @@
 /**
  * Check that an activity has payment type PERSON/CASH 
  * and that its starting date is no earlier than tomorrow
- * @param {object} start_date Start date for the activity
- * @param {object} method Payment method for the activity (from activity.payment_plan)
+ * @param {string} start_date Start date string for the activity
+ * @param {string} method Payment method string for the activity (from activity.payment_plan)
  * @returns {string} Warning text if rule is not met
  */
 function checkRulePayDate(start_date, method) {
-    if (method === 'CASH' && new Date(start_date).getTime() < new Date(new Date().setUTCHours(23,59))) {
+    let split_date = new Date(new Date().setDate(new Date().getDate() + 2))
+    split_date.setHours(0, 0, 0) 
+    console.log('checking dates')
+    console.log(split_date)
+    console.log('must be later than')
+    console.log(new Date(start_date))
+    if (method === 'CASH' && new Date(start_date).getTime() < split_date.getTime()) {
         return `
-            <strong>Bemærk:</strong> Betalinger med udbetalingsdato i dag eller tidligere vil ikke blive udbetalt.<br>
-            Du er i gang med at oprette en ydelse med betaling tilbage i tid.
+            <strong>Bemærk:</strong> Betalinger med udbetalingsdato i morgen eller tidligere vil ikke blive udbetalt.
         `
     }
     return false

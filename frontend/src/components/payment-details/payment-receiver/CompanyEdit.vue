@@ -12,8 +12,8 @@
         <p><strong>Betales via faktura</strong></p>
 
         <template v-if="service_providers">
-            <label>Mulige leverandører</label>
-            <select v-model="service_provider">
+            <label for="field-select-company">Mulige leverandører</label>
+            <select v-model="service_provider" id="field-select-company">
                 <option v-for="s in service_providers" :key="s.id" :value="s">
                     {{ s.name }}
                 </option>
