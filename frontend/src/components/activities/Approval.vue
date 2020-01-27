@@ -143,18 +143,17 @@
                 })
             },
             payDateRule: function() {
+                let rule = false
                 let rule_breakers = this.act_list.filter(act => {
-                    return checkRulePayDate(act.start_date, act.payment_plan.payment_method)
+                    const rulecheck = checkRulePayDate(act.start_date, act.payment_plan.payment_method)
+                    if (rulecheck) {
+                        rule = rulecheck
+                        return true
+                    } else {
+                        return false
+                    }
                 })
-                if (rule_breakers.length > 0) {
-                    // Return almost exact same error message with slightly different wording
-                    return `
-                        <strong>Bemærk:</strong> Betalinger med udbetalingsdato i dag eller tidligere vil ikke blive udbetalt.<br>
-                        Du er i gang med at godkende en ydelse med betaling tilbage i tid.
-                    `
-                } else {
-                    return false
-                }
+                return rule
             }
         },
         methods: {

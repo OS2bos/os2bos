@@ -7,7 +7,7 @@ import { leadZero, randNum, createDate } from '../utils/utils.js'
 import { createCase, createAppropriation, createActivity, approveActivities } from '../utils/crud.js'
 
 const today = new Date(),
-    tomorrow = new Date(new Date().setDate(today.getDate() + 1)),
+    anotherday = new Date(new Date().setDate(today.getDate() + 2)),
     testdata = {
         case1: {
             name: `${ randNum() }.${ randNum() }.${ randNum() }-regel-test`
@@ -23,7 +23,7 @@ const today = new Date(),
         },
         act1: {
             start_today: `${ today.getFullYear() }-${ leadZero(today.getMonth() + 1) }-${ leadZero(today.getDate()) }`,
-            start_tomorrow: `${ tomorrow.getFullYear() }-${ leadZero(tomorrow.getMonth() + 1) }-${ leadZero(tomorrow.getDate()) }`
+            end_date: `${ anotherday.getFullYear() }-${ leadZero(anotherday.getMonth() + 1) }-${ leadZero(anotherday.getDate()) }`
         },
         act2: {
             type: 1,
@@ -62,7 +62,7 @@ test('Start date rule check for activities with "CASH" payment', async t => {
         .click('#field-pay-method')
         .click(Selector('#field-pay-method option').nth(0))
         .expect(Selector('.warning').exists).ok()
-        .typeText('#field-startdate', testdata.act1.start_tomorrow)
+        .typeText('#field-startdate', testdata.act1.end_date)
         .expect(Selector('.warning').exists).notOk()
 })
 
