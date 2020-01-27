@@ -30,7 +30,7 @@ async function createActivity(t, act_data) {
     await t.click('#pay-type-2')
 
     if (act_data.amount) {
-        await t.typeText('#field-amount-1', act_data.amount)
+        await t.typeText('#field-amount-1', act_data.amount, {replace: true})
     }
 
     await t

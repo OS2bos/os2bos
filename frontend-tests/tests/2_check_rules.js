@@ -66,7 +66,7 @@ test('Start date rule check for activities with "CASH" payment', async t => {
         .expect(Selector('.warning').exists).notOk()
 })
 
-test.only('Check that an activity may only have one modifier', async t => {
+test('Check that an activity may only have one modifier', async t => {
 
     await createCase(t, testdata.case2)
     await createAppropriation(t, testdata.appr2)
