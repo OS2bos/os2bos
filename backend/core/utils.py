@@ -545,15 +545,18 @@ def generate_granted_payments_report_list():
     granted_activities = models.Activity.objects.filter(
         status=models.STATUS_GRANTED
     )
-    payment_ids = [
-        payment.id
-        for activity in granted_activities
-        for payment in activity.payment_plan.payments.all()
-    ]
+    payment_ids = granted_activities.values_list(
+        "payment_plan__payments__pk", flat=True
+    )
     payments = (
         models.Payment.objects.filter(id__in=payment_ids)
         .paid_date_or_date_gte(beginning_of_two_years_ago)
         .paid_date_or_date_lte(end_of_current_year)
+        .select_related(
+            "payment_schedule__activity__appropriation__case",
+            "payment_schedule__activity__appropriation__section",
+            "payment_schedule__activity__details",
+        )
     )
     payments_report_list = generate_payments_report_list(payments)
     return payments_report_list
@@ -578,6 +581,11 @@ def generate_expected_payments_report_list():
         models.Payment.objects.filter(id__in=payment_ids)
         .paid_date_or_date_gte(beginning_of_two_years_ago)
         .paid_date_or_date_lte(end_of_current_year)
+        .select_related(
+            "payment_schedule__activity__appropriation__case",
+            "payment_schedule__activity__appropriation__section",
+            "payment_schedule__activity__details",
+        )
     )
     payments_report_list = generate_payments_report_list(payments)
     return payments_report_list
@@ -598,7 +606,7 @@ def generate_payments_report_list(payments):
 
         case = activity.appropriation.case
         appropriation = activity.appropriation
-        payment_schedule = activity.payment_plan
+        payment_schedule = payment.payment_schedule
 
         main_activity_id = (
             appropriation.main_activity.details.activity_id
