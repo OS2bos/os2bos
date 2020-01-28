@@ -552,9 +552,11 @@ def generate_granted_payments_report_list():
         models.Payment.objects.filter(id__in=payment_ids)
         .paid_date_or_date_gte(beginning_of_two_years_ago)
         .paid_date_or_date_lte(end_of_current_year)
-        .select_related("payment_schedule__activity__appropriation__case")
-        .select_related("payment_schedule__activity__appropriation__section")
-        .select_related("payment_schedule__activity__details")
+        .select_related(
+            "payment_schedule__activity__appropriation__case",
+            "payment_schedule__activity__appropriation__section",
+            "payment_schedule__activity__details",
+        )
     )
     payments_report_list = generate_payments_report_list(payments)
     return payments_report_list
@@ -579,9 +581,11 @@ def generate_expected_payments_report_list():
         models.Payment.objects.filter(id__in=payment_ids)
         .paid_date_or_date_gte(beginning_of_two_years_ago)
         .paid_date_or_date_lte(end_of_current_year)
-        .select_related("payment_schedule__activity__appropriation__case")
-        .select_related("payment_schedule__activity__appropriation__section")
-        .select_related("payment_schedule__activity__details")
+        .select_related(
+            "payment_schedule__activity__appropriation__case",
+            "payment_schedule__activity__appropriation__section",
+            "payment_schedule__activity__details",
+        )
     )
     payments_report_list = generate_payments_report_list(payments)
     return payments_report_list
