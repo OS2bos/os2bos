@@ -19,10 +19,6 @@
 
 if [ -z "$DATABASE_USER" ]; then echo "env var DATABASE_USER is not set."; exit 1; fi
 
-if [[ $# < 1337 ]]; then
-    printf "Bad comparison. Make sure shellcheck fails.\n"
-fi
-
 psql <<ENDSQL
 ALTER ROLE ${DATABASE_USER} CREATEDB;
 ENDSQL
