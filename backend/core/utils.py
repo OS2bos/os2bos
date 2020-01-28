@@ -484,7 +484,7 @@ def export_prism_payments_for_date(date=None):
     # The output directory is not configurable - this is mapped through Docker.
     output_dir = settings.PRISM_OUTPUT_DIR
     # Date = tomorrow if not given. We need "tomorrow" to set payment date.
-    tomorrow = datetime.datetime.now() + relativedelta(day=1)
+    tomorrow = datetime.datetime.now() + relativedelta(days=1)
     if not date:
         date = tomorrow
 
