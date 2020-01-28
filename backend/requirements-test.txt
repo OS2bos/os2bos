@@ -12,7 +12,7 @@ freezegun==0.3.14
 Sphinx==2.3.1
 sphinxcontrib-websupport==1.1.2
 sphinx_rtd_theme==0.4.3
-sphinxcontrib_django==0.5
+sphinxcontrib_django==0.5.1
 
 uritemplate==3.0.1
 # pyyaml==5.3 use fork waiting for https://github.com/yaml/pyyaml/pull/372
