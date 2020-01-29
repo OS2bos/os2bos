@@ -80,7 +80,7 @@ The key is to use your host's IP address rather than localhost.
 Devices *that are on your local network* are able to detect your host system IP and display the UI.
 Virtual machines will generally also be able to pinpoint your development instance by IP.
 
-**Let's set it up:**
+**Set it up**
 
 First, find your host system IP address on your local network. 
 There are various ways to do this depending on your system. 
@@ -187,4 +187,4 @@ Build the frontend
 
 If you are running in development mode, your changes should display in the browser right after you save your changes.
 For a production build, you'd run the ``npm run build`` command and host the built files from ``/frontend/dist`` somewhere.
-That's it. Now you've customized the frontend :)
+Now you've customized the frontend :)

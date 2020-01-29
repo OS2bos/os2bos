@@ -36,12 +36,16 @@ export default {
             }
         },
         changeWorker: function(worker_id) {
-            this.$route.query.case_worker = worker_id
-            this.update()
+            if (this.$route.query.case_worker != worker_id) { // Only update if choice is different
+                this.$route.query.case_worker = worker_id
+                this.update()
+            }
         },
         changeTeam: function(team_id) {
-            this.$route.query.team = team_id
-            this.update()
+            if (this.$route.query.team != team_id) { // Only update if choice is different
+                this.$route.query.team = team_id
+                this.update()
+            }
         }
     }
 

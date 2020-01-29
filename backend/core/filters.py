@@ -12,7 +12,7 @@ adding the complexity of an entire search engine nor of custom queries.
 """
 
 
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext
 
 import rest_framework_filters as filters
 
@@ -22,7 +22,9 @@ from core.models import Case, PaymentSchedule, Activity, Payment, Section
 class CaseFilter(filters.FilterSet):
     """Filter cases on the "expired" field."""
 
-    expired = filters.BooleanFilter(method="filter_expired", label=_("Udgået"))
+    expired = filters.BooleanFilter(
+        method="filter_expired", label=gettext("Udgået")
+    )
 
     class Meta:
         model = Case
@@ -84,32 +86,32 @@ class PaymentFilter(filters.FilterSet):
     paid_date__gte = filters.DateFilter(
         field_name="paid_date",
         lookup_expr="gte",
-        label=_("Betalingsdato større eller lig med"),
+        label=gettext("Betalingsdato større eller lig med"),
     )
     paid_date__lte = filters.DateFilter(
         field_name="paid_date",
         lookup_expr="lte",
-        label=_("Betalingsdato mindre eller lig med"),
+        label=gettext("Betalingsdato mindre eller lig med"),
     )
 
     date__gte = filters.DateFilter(
         field_name="date",
         lookup_expr="gte",
-        label=_("Dato større eller lig med"),
+        label=gettext("Dato større eller lig med"),
     )
     date__lte = filters.DateFilter(
         field_name="date",
         lookup_expr="lte",
-        label=_("Dato mindre eller lig med"),
+        label=gettext("Dato mindre eller lig med"),
     )
 
     paid_date_or_date__gte = filters.DateFilter(
         method="filter_paid_date_or_date_gte",
-        label=_("Betalingsdato eller Dato større eller lig med"),
+        label=gettext("Betalingsdato eller Dato større eller lig med"),
     )
     paid_date_or_date__lte = filters.DateFilter(
         method="filter_paid_date_or_date_lte",
-        label=_("Betalingsdato eller Dato mindre eller lig med"),
+        label=gettext("Betalingsdato eller Dato mindre eller lig med"),
     )
 
     def filter_paid_date_or_date_gte(self, queryset, name, value):

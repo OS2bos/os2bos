@@ -8,6 +8,11 @@
 
 import store from '../../store.js'
 
+/**
+ * Convert municipality id to human readable name
+ * @param {number} id municipality ID
+ * @returns {string} municipality name
+ */
 function municipalityId2name(id) {
     const muni_list = store.getters.getMunis
     if (muni_list) {
@@ -20,6 +25,11 @@ function municipalityId2name(id) {
     }
 }
 
+/**
+ * Convert district id to human readable name
+ * @param {number} id distict ID
+ * @returns {string} dictrict name
+ */
 function districtId2name(id) {
     const dist_list = store.getters.getDistricts
     if (dist_list) {
@@ -32,6 +42,11 @@ function districtId2name(id) {
     }
 }
 
+/**
+ * Convert activity id to human readable name
+ * @param {number} id activity ID
+ * @returns {string} activity name
+ */
 function activityId2name(id) {
     const act_list = store.getters.getActivityDetails
     if (act_list) {
@@ -44,6 +59,11 @@ function activityId2name(id) {
     }
 }
 
+/**
+ * Convert section id to human readable name
+ * @param {number} id section ID
+ * @returns {string} section name
+ */
 function sectionId2name(id) {
     const section_list = store.getters.getSections
     if (section_list) {
@@ -56,6 +76,11 @@ function sectionId2name(id) {
     }
 }
 
+/**
+ * Convert user id to human readable name
+ * @param {number} id user ID
+ * @returns {string} user's name
+ */
 function userId2name(id) {
     const user_list = store.getters.getUsers
     if (user_list) {
@@ -68,6 +93,11 @@ function userId2name(id) {
     }
 }
 
+/**
+ * Convert approval id to human readable name
+ * @param {number} id approval ID
+ * @returns {string} approval name
+ */
 function approvalId2name(id) {
     const approval_list = store.getters.getApprovals
     if (approval_list) {
@@ -80,6 +110,11 @@ function approvalId2name(id) {
     }
 }
 
+/**
+ * Convert team id to human readable name
+ * @param {number} id team ID
+ * @returns {string} team's name
+ */
 function teamId2name(id) {
     const team_list = store.getters.getTeams
     if (team_list) {
@@ -95,6 +130,11 @@ function teamId2name(id) {
     }
 }
 
+/**
+ * Return a human readable status
+ * @param {string} id system status name
+ * @returns {string} Readable status in Danish
+ */
 function displayStatus(status) {
     let status_str = ''
     switch(status) {
@@ -119,13 +159,22 @@ function displayStatus(status) {
     return `<span class="label label-${ status }">${ status_str }</span>`
 }
 
+/**
+ * Convert effort step id to human readable name
+ * @param {number} id effort step ID
+ * @returns {string} effort step name
+ */
 function displayEffort(id) {
     const effort_step_list = store.getters.getEffortSteps
     if (effort_step_list) {
         let effort_step = effort_step_list.find(function(e) {
             return e.id === parseInt(id);
         })
-        return effort_step.name
+        if (effort_step) {
+            return effort_step.name
+        } else {
+            return 'Ukendt'
+        }
     } else {
         return 'Ikke tilgængelig'
     }

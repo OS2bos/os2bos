@@ -252,6 +252,12 @@ PRISM_OUTPUT_DIR = settings.get(
     "PRISM_OUTPUT_DIR", fallback=os.path.join(BASE_DIR, "prisme")
 )
 
+
+# Output directory for payments reports.
+PAYMENTS_REPORT_DIR = settings.get(
+    "PAYMENTS_REPORT_DIR", fallback=os.path.join(BASE_DIR, "reports")
+)
+
 # Logging
 LOG_DIR = settings.get("LOG_DIR", fallback=os.path.join(BASE_DIR, "log"))
 
@@ -284,6 +290,15 @@ LOGGING = {
                 fallback=os.path.join(LOG_DIR, "export_to_prism.log"),
             ),
         },
+        "generate_payments_report": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "formatter": "verbose",
+            "filename": settings.get(
+                "PAYMENTS_REPORT_LOG_FILE",
+                fallback=os.path.join(LOG_DIR, "generate_payments_report.log"),
+            ),
+        },
         "mark_fictive_payments_paid": {
             "level": "INFO",
             "class": "logging.FileHandler",
@@ -314,6 +329,11 @@ LOGGING = {
         },
         "bevillingsplatform.export_to_prism": {
             "handlers": ["export_to_prism"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        "bevillingsplatform.generate_payments_report": {
+            "handlers": ["generate_payments_report"],
             "level": "INFO",
             "propagate": True,
         },

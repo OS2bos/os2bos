@@ -173,7 +173,7 @@ test('Approve appropriation', async t => {
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
         .click('#check-all')
-        .click(Selector('button').withText('Godkendt valgte'))
+        .click(Selector('button').withText('Godkend valgte'))
     
     await axe(t, null, axeOptions)
 

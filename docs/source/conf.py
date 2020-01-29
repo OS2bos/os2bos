@@ -16,6 +16,7 @@ import django
 
 current_dir = os.path.dirname(__file__)
 python_sources = os.path.abspath(os.path.join(current_dir, "..", "..", "backend"))
+frontend_sources = os.path.abspath(os.path.join(current_dir, "..", "..", "frontend"))
 sys.path.insert(0, python_sources)
 os.environ["DJANGO_SETTINGS_MODULE"] = "bevillingsplatform.settings"
 os.environ["BEV_USER_CONFIG_PATH"] = "../../dev-environment/test-settings.ini"
@@ -26,7 +27,7 @@ os.environ["SPHINXBUILDING"] = "YES"
 
 # -- Project information -----------------------------------------------------
 
-project = "bevillingsplatform"
+project = "OS2BOS"
 copyright = "2019, Magenta ApS"
 author = "Magenta ApS"
 
@@ -36,7 +37,13 @@ author = "Magenta ApS"
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ["sphinx.ext.autodoc", "sphinx.ext.intersphinx", "sphinxcontrib_django"]
+extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.intersphinx",
+    "sphinxcontrib_django",
+    "sphinxcontrib.openapi",
+    "sphinx_js",
+]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -61,3 +68,6 @@ html_theme = "sphinx_rtd_theme"
 html_static_path = []
 
 master_doc = "index"
+
+js_source_path = os.path.join(frontend_sources, "src")
+jsdoc_config_path = os.path.join(frontend_sources, "..", "jsdoc.json")

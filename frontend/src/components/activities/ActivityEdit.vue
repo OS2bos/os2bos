@@ -59,6 +59,7 @@
                         <label class="required" for="fieldSelectAct">Ydelse</label>
                         <list-picker :dom-id="'fieldSelectAct'" :disabled="disableAct" :selected-id="act.details" @selection="changeActivity" :list="act_details" required />
                         <error err-key="details" />
+
                         <label class="required" for="field-startdate">
                             Startdato
                             <span v-if="startDateSet && this.act.activity_type !== 'MAIN_ACTIVITY'">
@@ -113,6 +114,7 @@
             </div>
 
             <fieldset class="form-actions">
+                <warning :content="payDateRule" />
                 <input type="submit" value="Gem" :disabled="disableAct">
                 <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
             </fieldset>
@@ -133,7 +135,9 @@
     import PayTypeEdit from '../payment-details/payment-type/PaymentTypeEdit.vue'
     import PayPlan from '../payment-details/PaymentPlan.vue'
     import PaymentReceiverEdit from '../payment-details/payment-receiver/PaymentReceiverEdit.vue'
-import notify from '../notifications/Notify'
+    import notify from '../notifications/Notify'
+    import Warning from '../warnings/Warning.vue'
+    import { checkRulePayDate } from '../filters/Rules.js'
 
     export default {
 
@@ -142,7 +146,8 @@ import notify from '../notifications/Notify'
             ListPicker,
             PayTypeEdit,
             PayPlan,
-            PaymentReceiverEdit
+            PaymentReceiverEdit,
+            Warning
         },
         props: [
             'mode', // Can be either 'create', 'edit', or 'clone'
@@ -198,6 +203,12 @@ import notify from '../notifications/Notify'
             },
             payment: function() {
                 return this.$store.getters.getPayment
+            },
+            payment_method: function() {
+                return this.$store.getters.getPaymentMethod
+            },
+            payDateRule: function() {
+                return checkRulePayDate(this.act.start_date, this.$store.getters.getPaymentMethod)
             }
         },
         watch: {

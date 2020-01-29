@@ -67,8 +67,9 @@ docs:
   before_script:
     - pip3 install -r backend/requirements-test.txt
     - pip3 install -r backend/requirements.txt
+    - apt-get update && apt-get install npm -y && npm install -g jsdoc
   script:
-    - sphinx-build docs/source /doc-build
+    - sphinx-build docs/source doc-build
   artifacts:
     paths:
       - doc-build
@@ -146,6 +147,7 @@ unit-test:
 
 .release-default: &release-default
   stage: release
+  image: docker:19.03.1
   variables:
     GIT_STRATEGY: none # We do not need the source code
   tags:

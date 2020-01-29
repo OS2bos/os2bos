@@ -3,19 +3,10 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to the os2BOS documentation
-===================================
-
 .. toctree::
-   :maxdepth: 1
-   :caption: Contents:
+   :maxdepth: 2
 
-   backend/index.rst
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   about
+   readme
+   dev
+   news
