@@ -100,6 +100,8 @@ We manage releases using the `Gitflow`_ model.
 
 Code documentation
 ------------------
+.. image:: graphics/OS2BOS_datamodel.png
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
