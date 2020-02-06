@@ -239,6 +239,11 @@ The documentation exists at `Read the Docs`_ and can be generated locally with t
 
    tox -e docs
 
+When changes are introduced to the Django models, update and commit the database model graph for use in documentation:
+
+.. code-block:: bash
+
+   tox -e graph
 
 .. _Read the Docs: https://os2bos.readthedocs.io/en/latest/
 

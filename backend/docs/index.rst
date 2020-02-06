@@ -84,6 +84,7 @@ We manage releases using the `Gitflow`_ model.
 - Bump the version and changelog in ``NEWS.rst`` and ``VERSION`` according to `Semantic Versioning`_.
 - `Optional`: Check our dependencies for new security bugfixes.
 - `Optional`: In case of API changes, save the OpenAPI schema ``openapi.yml`` from ``<OS2BOS URL>/api/openapi/?format=api`` for use in documentation.
+- `Optional`: In case of model changes, update the database model graph by running `tox -e graph` for use in documentation.
 - Test the release and verify that it doesn't contain any breaking bugs or regressions.
 - Create an ``rc`` tag, e.g. ``1.0.0-rc1`` on the release branch to make it deployable on staging.
 - In case of further development, make pull requests against the release branch and create a new ``rc`` tag.
@@ -100,6 +101,8 @@ We manage releases using the `Gitflow`_ model.
 
 Code documentation
 ------------------
+.. image:: graphics/OS2BOS_datamodel.png
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
