@@ -11,7 +11,7 @@ TL;DR: To get a running development environment run:
 
 .. code-block:: bash
 
-   git@git.magenta.dk:bevillingsplatform/bevillingsplatform.git
+   git clone git@git.magenta.dk:bevillingsplatform/bevillingsplatform.git
    cd bevillingsplatform
    docker-compose up -d --build frontend
 
