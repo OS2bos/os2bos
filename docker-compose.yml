@@ -56,6 +56,8 @@ services:
     # `vue-cli-service serve` proxy), expose it with:
     #ports:
     # - 5000:5000
+    stdin_open: true
+    tty: true
 
   bev-cron:
     build:

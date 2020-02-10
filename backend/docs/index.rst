@@ -115,6 +115,15 @@ The documentation is now found in the ``er_html`` folder.
 
 .. _SchemaSpy: http://schemaspy.org/
 
+Django debugging
+----------------
+
+To debug end-to-end you can set the ``breakpoint()`` you want and use ``docker attach``:
+
+.. code-block:: bash
+
+   docker attach bevillingsplatform_bev_1
+
 
 Release procedure
 -----------------
