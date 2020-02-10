@@ -2628,7 +2628,7 @@ class PaymentScheduleTestCase(TestCase):
     )
     def test_create_rrule_frequency(self, frequency, start, end, expected):
         payment_schedule = create_payment_schedule(payment_frequency=frequency)
-        rrule = payment_schedule.create_rrule(start=start, end=end)
+        rrule = payment_schedule.create_rrule(start=start, until=end)
 
         self.assertEqual(len(list(rrule)), expected)
 
@@ -2640,7 +2640,7 @@ class PaymentScheduleTestCase(TestCase):
 
         rrule = payment_schedule.create_rrule(
             start=date(year=2019, month=1, day=1),
-            end=date(year=2019, month=2, day=1),
+            until=date(year=2019, month=2, day=1),
         )
 
         self.assertEqual(len(list(rrule)), 1)
@@ -2657,7 +2657,7 @@ class PaymentScheduleTestCase(TestCase):
         with self.assertRaises(ValueError):
             payment_schedule.create_rrule(
                 start=date(year=2019, month=1, day=1),
-                end=date(year=2019, month=2, day=1),
+                until=date(year=2019, month=2, day=1),
             )
 
     @parameterized.expand(
