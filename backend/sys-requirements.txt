@@ -2,7 +2,6 @@
 # Dockerfile and .gitlab-ci.yml. It is intended for the python:3.6 docker image
 # which through buildpack-deps is based on Debian Stretch.
 
-# Empty for now
 build-essential
 python3-dev
 python3-cffi

@@ -22,7 +22,7 @@ RUN npm install --frozen-lockfile
 COPY frontend .
 RUN npm run build
 
-CMD npm run serve
+CMD ["npm", "run", "serve"]
 
 
 # We do not use alpine. The resulting image is smaller, but there is currently
@@ -55,6 +55,8 @@ ENV PYTHONUNBUFFERED=1 \
 
 WORKDIR /code/
 COPY backend/sys-requirements.txt sys-requirements.txt
+
+# hadolint ignore=SC2046,DL3008,DL4006
 RUN set -ex \
   # Add a bev group and user. Note: this is a system user/group, but have
   # UID/GID above the normal SYS_UID_MAX/SYS_GID_MAX of 999, but also above the
@@ -67,7 +69,7 @@ RUN set -ex \
   && useradd -u 72050 --no-log-init -r -g bev bev \
   # Install system dependencies from file.
   && apt-get -y update \
-  && apt-get -y install --no-install-recommends $(grep -vE "^\s*#" sys-requirements.txt  | tr "\n" " ") \
+  && apt-get -y install --no-install-recommends $(grep -o '^[^#][[:alnum:].-]*' sys-requirements.txt) \
   # clean up after apt-get and man-pages
   && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/man/?? /usr/share/man/??_* \
   # Install supercronic
