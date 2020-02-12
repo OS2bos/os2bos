@@ -104,6 +104,7 @@ Logs
 
 For logging we use the builtin ``logging`` module used by `Django`_.
 Logs are written to the ``/log/`` directory inside the container.
+
 The ``/log/`` folder is mapped to the host systems ``log/`` folder in local development and ``/var/log/os2bos/`` anywhere else.
 
 We log the following:
