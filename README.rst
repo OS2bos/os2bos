@@ -109,19 +109,19 @@ We log the following:
 
 * Error log - the gunicorn error log is output on ``STDERR``. It can be inspected with ``docker logs``.
 
-* Access log - The gunicorn access log is written to ``/log/access.log``.
+* Access log - The gunicorn access log. The log is written to ``/log/access.log``.
 
 * Django debug log - The django log is written to ``/log/django-debug.log``.
 
 * Audit log - We log all non-idempotent requests (``POST``/``PUT``/``PATCH``/``DELETE``) in the audit log specifying the request endpoint and user making the request. The log is written to ``/log/audit.log``.
 
-* Export to Prism log - Log related to the PRISM exports management command, written to ``/log/export_to_prism.log``.
+* Export to Prism log - Log related to the PRISM exports management command. The log is written to ``/log/export_to_prism.log``.
 
-* Mark Fictive Payments Paid log - Log related to the marking fictive payments paid management command, written to ``mark_fictive_payments_paid.log``.
+* Mark Fictive Payments Paid log - Log related to the marking fictive payments paid management command. The log is written to ``mark_fictive_payments_paid.log``.
 
-* Generate Payments Report log - Log related to generating the payment reports, written to ``/log/generate_payments_report.log``.
+* Generate Payments Report log - Log related to generating the payment reports. The log is written to ``/log/generate_payments_report.log``.
 
-* Cron mail logs - Logs related to the `Django mailer app`_, written to ``cron_mail.log``, ``cron_mail_deferred.log``, ``cron_mail_purge.log``.
+* Cron mail logs - Logs related to the `Django mailer app`_. The logs are written to ``cron_mail.log``, ``cron_mail_deferred.log``, ``cron_mail_purge.log``.
 
 .. _Django: https://docs.djangoproject.com/en/dev/topics/logging/
 .. _Django mailer app: https://github.com/pinax/django-mailer/
