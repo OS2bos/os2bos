@@ -107,9 +107,9 @@ Logs are written to the ``/log/`` directory inside the container.
 
 We log the following:
 
-* Error log - the gunicorn error log is output on ``STDERR``. It can be inspected with ``docker logs``.
+* Error log - the gunicorn error log is output on ``STDERR`` as well as in ``/log/error.log``. It can be inspected with ``docker logs``.
 
-* Access log - The gunicorn access log. The log is written to ``/log/access.log``.
+* Access log - The gunicorn access log is output on ``STDOUT`` as well as in ``/log/access.log``. It can be inspected with ``docker logs``.
 
 * Django debug log - The django log is written to ``/log/django-debug.log``.
 
