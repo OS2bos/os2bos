@@ -74,6 +74,57 @@ OS2BOS can export daily payment files for import into the `PRISME` economy syste
 .. _PRISME: https://www.fujitsu.com/dk/products/software/prisme/
 .. _GF200001Q: https://www.kmd.dk/offentlig-sektor/vores-services/snitflader-og-data-warehouse/snitfladebeskrivelser
 
+Generating database documentation
+---------------------------------
+We generate database documentation using the tool `SchemaSpy`_.
+The following commands are run from inside the container as root: ``docker-compose exec -u 0 bev bash``
+
+Install a JRE:
+
+.. code-block:: bash
+
+   apt-get install default-jre
+
+
+Install graphviz:
+
+.. code-block:: bash
+
+   apt-get install graphviz
+
+Download the latest ``schemaspy.jar``
+
+.. code-block:: bash
+
+   wget https://github.com/schemaspy/schemaspy/releases/download/v6.1.0/schemaspy-6.1.0.jar -O schemaspy.jar
+
+Download the latest JDBC for Postgresql:
+
+.. code-block:: bash
+
+   wget https://jdbc.postgresql.org/download/postgresql-42.2.8.jar -O postgresql.jar
+
+Run SchemaSpy against the database:
+
+.. code-block:: bash
+
+   java -jar schemaspy.jar -dp postgresql.jar -t pgsql -s public -db bev -host db -u bev -p bev -o er_html
+
+The documentation is now found in the ``er_html`` folder.
+
+
+.. _SchemaSpy: http://schemaspy.org/
+
+Django debugging
+----------------
+
+To debug end-to-end you can set the ``breakpoint()`` you want and use ``docker attach``:
+
+.. code-block:: bash
+
+   docker attach bevillingsplatform_bev_1
+
+
 Release procedure
 -----------------
 We manage releases using the `Gitflow`_ model.
