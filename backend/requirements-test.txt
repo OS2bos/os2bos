@@ -1,6 +1,6 @@
 # RTD demands requirements in ONE file only.
 -r requirements.txt
-tox==3.14.3
+tox==3.14.5
 black==19.10b0
 pytest==5.3.5
 pytest-django==3.8.0
