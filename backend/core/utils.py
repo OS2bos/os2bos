@@ -597,6 +597,12 @@ def generate_payments_report_list(payments):
             else None
         )
 
+        main_activity_name = (
+            appropriation.main_activity.details.name
+            if appropriation.main_activity
+            else None
+        )
+
         payment_dict = {
             # payment specific.
             "id": payment.pk,
@@ -606,6 +612,7 @@ def generate_payments_report_list(payments):
             "paid_date": payment.paid_date,
             "account_string": payment.account_string,
             # payment_schedule specific.
+            "payment_schedule__payment_id": payment_schedule.payment_id,
             "payment_schedule__"
             "payment_amount": payment_schedule.payment_amount,
             "payment_schedule__"
@@ -620,9 +627,11 @@ def generate_payments_report_list(payments):
             "activity_start_date": activity.start_date,
             "activity_end_date": activity.end_date,
             # appropriation specific.
-            "section": str(appropriation.section),
+            "section": appropriation.section.paragraph,
+            "section_text": appropriation.section.text,
             "sbsys_id": appropriation.sbsys_id,
             "main_activity_id": main_activity_id,
+            "main_activity_name": main_activity_name,
             # case specific.
             "cpr_number": case.cpr_number,
             "name": case.name,
