@@ -24,7 +24,7 @@ from simple_history.models import HistoricalRecords
 from constance import config
 
 from core.managers import PaymentQuerySet, CaseQuerySet
-from core.utils import send_appropriation, get_next_interval
+from core.utils import send_appropriation
 
 # Target group - definitions and choice list.
 FAMILY_DEPT = "FAMILY_DEPT"
@@ -348,25 +348,24 @@ class PaymentSchedule(models.Model):
             )
         super().save(*args, **kwargs)
 
-    def create_rrule(self, start, end):
+    def create_rrule(self, start, **kwargs):
         """Create a dateutil.rrule to generate dates for this schedule.
 
-        The rule should be based on payment_type/payment_frequency,
-        start and end.
+        The rule should be based on payment_type/payment_frequency and start.
+        Takes either "until" or "count" as kwargs.
         """
+        # One time payments are a special case with a count of 1 always.
         if self.payment_type == self.ONE_TIME_PAYMENT:
-            rrule_frequency = rrule.rrule(rrule.DAILY, count=1, dtstart=start)
+            rrule_frequency = rrule.rrule(rrule.DAILY, dtstart=start, count=1)
         elif self.payment_frequency == self.DAILY:
-            rrule_frequency = rrule.rrule(
-                rrule.DAILY, dtstart=start, until=end
-            )
+            rrule_frequency = rrule.rrule(rrule.DAILY, dtstart=start, **kwargs)
         elif self.payment_frequency == self.WEEKLY:
             rrule_frequency = rrule.rrule(
-                rrule.WEEKLY, dtstart=start, until=end
+                rrule.WEEKLY, dtstart=start, **kwargs
             )
         elif self.payment_frequency == self.BIWEEKLY:
             rrule_frequency = rrule.rrule(
-                rrule.WEEKLY, dtstart=start, until=end, interval=2
+                rrule.WEEKLY, dtstart=start, interval=2, **kwargs
             )
         elif self.payment_frequency == self.MONTHLY:
             monthly_date = self.payment_day_of_month
@@ -375,9 +374,9 @@ class PaymentSchedule(models.Model):
             rrule_frequency = rrule.rrule(
                 rrule.MONTHLY,
                 dtstart=start,
-                until=end,
                 bymonthday=monthly_date,
                 bysetpos=-1,
+                **kwargs,
             )
         else:
             raise ValueError(_("ukendt betalingsfrekvens"))
@@ -407,7 +406,7 @@ class PaymentSchedule(models.Model):
                 year=today.year + 1, month=date.max.month, day=date.max.day
             )
 
-        rrule_frequency = self.create_rrule(start, end)
+        rrule_frequency = self.create_rrule(start, until=end)
 
         dates = list(rrule_frequency)
 
@@ -435,11 +434,10 @@ class PaymentSchedule(models.Model):
         # One time payment is a special case and should not be handled.
         if self.payment_type == PaymentSchedule.ONE_TIME_PAYMENT:
             return
-        # The new start_date should be based on the newest payment date
-        # and the payment frequency.
-        new_start = get_next_interval(
-            newest_payment.date, self.payment_frequency
-        )
+        # The new start_date should be based on the next payment date
+        # from create_rrule.
+        _, new_start = list(self.create_rrule(newest_payment.date, count=2))
+        new_start = new_start.date()
 
         # Handle the case where an end_date is set in the future
         # after already having generated payments with no end_date.
@@ -1465,7 +1463,7 @@ class Activity(AuditModelMixin, models.Model):
         start_date = date(now.year, month=1, day=1)
         end_date = date(now.year, month=12, day=31)
         num_payments = len(
-            list(self.payment_plan.create_rrule(start_date, end_date))
+            list(self.payment_plan.create_rrule(start_date, until=end_date))
         )
         return (
             self.payment_plan.calculate_per_payment_amount(vat_factor)

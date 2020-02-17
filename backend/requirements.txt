@@ -2,7 +2,7 @@ Django==2.2.9
 psycopg2-binary==2.8.4
 gunicorn==20.0.4
 djangorestframework==3.11.0
-django-extensions==2.2.6
+django-extensions==2.2.8
 edc_utils==0.1.13
 # ^ This is a requirement for "django-audit-fields"
 # |
@@ -15,7 +15,7 @@ djangorestframework-filters==1.0.0.dev0
 git+git://github.com/magenta-aps/service_person_stamdata_udvidet@0.2.0
 djangorestframework_simplejwt==4.4.0
 whitenoise==5.0.1
-ipython==7.11.1
+ipython==7.12.0
 WeasyPrint==51
 python-dateutil==2.8.1
 django-constance[database]==2.5.0
