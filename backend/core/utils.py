@@ -627,8 +627,8 @@ def generate_payments_report_list(payments):
             "activity_start_date": activity.start_date,
             "activity_end_date": activity.end_date,
             # appropriation specific.
-            "section": str(appropriation.section),
-            "section_text": str(appropriation.section.text),
+            "section": appropriation.section.paragraph,
+            "section_text": appropriation.section.text,
             "sbsys_id": appropriation.sbsys_id,
             "main_activity_id": main_activity_id,
             "main_activity_name": main_activity_name,
