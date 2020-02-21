@@ -2340,7 +2340,7 @@ class PaymentTestCase(TestCase, BasicTestMixin):
         )
         payment = create_payment(
             payment_schedule=payment_schedule,
-            date=date(year=2019, month=1, day=1),
+            date=date(year=2019, month=1, day=11),
             amount=Decimal("500.0"),
             recipient_type=PaymentSchedule.PERSON,
             payment_method=CASH,
@@ -2379,7 +2379,7 @@ class PaymentTestCase(TestCase, BasicTestMixin):
         )
         payment = create_payment(
             payment_schedule=payment_schedule,
-            date=date(year=2019, month=1, day=1),
+            date=date(year=2019, month=1, day=11),
             amount=Decimal("500.0"),
             saved_account_string="123-1234-123",
         )
@@ -2412,7 +2412,7 @@ class PaymentTestCase(TestCase, BasicTestMixin):
         )
         payment = create_payment(
             payment_schedule=payment_schedule,
-            date=date(year=2019, month=1, day=1),
+            date=date(year=2019, month=1, day=11),
             amount=Decimal("500.0"),
         )
         self.assertEqual(payment.account_string, "XXX-12345-1234-XXX")
@@ -2441,7 +2441,7 @@ class PaymentTestCase(TestCase, BasicTestMixin):
         )
         payment = create_payment(
             payment_schedule=payment_schedule,
-            date=date(year=2019, month=1, day=1),
+            date=date(year=2019, month=1, day=11),
             amount=Decimal("500.0"),
         )
 
@@ -2451,7 +2451,7 @@ class PaymentTestCase(TestCase, BasicTestMixin):
 
         # Set payment paid which should save the saved_account_string
         payment.paid = True
-        payment.paid_date = date(year=2019, month=1, day=1)
+        payment.paid_date = date(year=2019, month=2, day=1)
         payment.paid_amount = Decimal("500.0")
         payment.save()
         payment.refresh_from_db()
