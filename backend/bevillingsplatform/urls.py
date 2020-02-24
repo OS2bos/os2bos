@@ -129,8 +129,7 @@ urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 _frontend_root = settings.STATIC_ROOT + "/frontend"
 urlpatterns += [
     re_path(
-        r"^(?P<path>(?:(?:js|css|img|eot|ttf|woff|woff2)"
-        r"\/.*|favicon.ico|logo.png))$",
+        r"^(?P<path>(?:(?:js|css|img|fonts)\/.*|favicon.ico|logo.png))$",
         serve,
         kwargs={"document_root": _frontend_root},
     ),
