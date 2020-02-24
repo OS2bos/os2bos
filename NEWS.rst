@@ -1,3 +1,13 @@
+VERSION 2.4.2, 2020-02-24
+-------------------------
+
+Hotfix:
+
+Bug fixes
+^^^^^^^^^
+
+* Fix fonts urlpattern for loading fonts as assets.
+
 VERSION 2.4.1, 2020-02-24
 -------------------------
 
