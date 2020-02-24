@@ -23,7 +23,11 @@ from core.utils import (
 )
 
 
-@receiver(post_save, sender=Payment)
+@receiver(
+    post_save,
+    sender=Payment,
+    dispatch_uid="set_saved_account_string_on_payment_save",
+)
 def set_saved_account_string_on_payment_save(
     sender, instance, created, **kwargs
 ):
@@ -37,7 +41,11 @@ def set_saved_account_string_on_payment_save(
         instance.save()
 
 
-@receiver(post_save, sender=PaymentSchedule)
+@receiver(
+    post_save,
+    sender=PaymentSchedule,
+    dispatch_uid="set_payment_id_on_paymentschedule_save",
+)
 def set_payment_id_on_paymentschedule_save(
     sender, instance, created, **kwargs
 ):
@@ -47,7 +55,11 @@ def set_payment_id_on_paymentschedule_save(
         instance.save()
 
 
-@receiver(post_save, sender=Activity)
+@receiver(
+    post_save,
+    sender=Activity,
+    dispatch_uid="send_activity_payment_email_on_save",
+)
 def send_activity_payment_email_on_save(sender, instance, created, **kwargs):
     """Send payment email when Activity is saved."""
     if not instance.triggers_payment_email:
@@ -58,7 +70,11 @@ def send_activity_payment_email_on_save(sender, instance, created, **kwargs):
         send_activity_updated_email(instance)
 
 
-@receiver(post_delete, sender=Activity)
+@receiver(
+    post_delete,
+    sender=Activity,
+    dispatch_uid="send_activity_payment_email_on_delete",
+)
 def send_activity_payment_email_on_delete(sender, instance, **kwargs):
     """Send payment email when Activity is deleted."""
     if not instance.triggers_payment_email:
@@ -66,7 +82,9 @@ def send_activity_payment_email_on_delete(sender, instance, **kwargs):
     send_activity_expired_email(instance)
 
 
-@receiver(pre_save, sender=Activity)
+@receiver(
+    pre_save, sender=Activity, dispatch_uid="generate_payments_on_pre_save"
+)
 def generate_payments_on_pre_save(sender, instance, **kwargs):
     """Generate payments for activity before saving."""
     try:
@@ -82,7 +100,7 @@ def generate_payments_on_pre_save(sender, instance, **kwargs):
 
     vat_factor = instance.vat_factor
 
-    if created:
+    if created and not instance.payment_plan.payments.exists():
         instance.payment_plan.generate_payments(
             instance.start_date, instance.end_date, vat_factor
         )

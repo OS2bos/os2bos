@@ -1,3 +1,20 @@
+VERSION 2.4.1, 2020-02-24
+-------------------------
+
+New in this version:
+
+Features
+^^^^^^^^
+
+* Store google fonts as assets instead of fetching them from google servers.
+
+Bug fixes
+^^^^^^^^^
+
+* Fix duplicate payments generation.
+* Remove duplicate payments in a migration.
+* Add database constraint which prevents duplicate payments on date.
+
 Version 2.4.0, 2020-01-24
 -------------------------
 
