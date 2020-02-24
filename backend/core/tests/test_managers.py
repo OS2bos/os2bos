@@ -90,7 +90,7 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
         # should be included
         paid_date_gte_payment = create_payment(
             payment_schedule,
-            date=date(year=now.year - 1, month=12, day=31),
+            date=date(year=now.year - 1, month=12, day=29),
             paid_date=date(year=now.year, month=1, day=1),
             paid_amount=Decimal("500.0"),
             paid=True,
@@ -103,7 +103,11 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
 
         # should not be included
         paid_date_lt_payment = create_payment(
-            payment_schedule, date=date(year=now.year - 1, month=12, day=31)
+            payment_schedule,
+            date=date(year=now.year - 1, month=12, day=30),
+            paid_date=date(year=now.year - 1, month=12, day=31),
+            paid_amount=Decimal("500.0"),
+            paid=True,
         )
 
         # should not be included
@@ -156,7 +160,7 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
         # should be included
         paid_date_lte_payment = create_payment(
             payment_schedule,
-            date=date(year=now.year - 1, month=12, day=31),
+            date=date(year=now.year - 1, month=12, day=29),
             paid_date=date(year=now.year, month=1, day=1),
             paid_amount=Decimal("500.0"),
             paid=True,
@@ -169,12 +173,16 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
 
         # should not be included
         paid_date_gt_payment = create_payment(
-            payment_schedule, date=date(year=now.year - 1, month=12, day=31)
+            payment_schedule,
+            date=date(year=now.year - 1, month=12, day=30),
+            paid_date=date(year=now.year, month=1, day=2),
+            paid_amount=Decimal("500.0"),
+            paid=True,
         )
 
         # should not be included
         date_gt_payment = create_payment(
-            payment_schedule, date=date(year=now.year - 1, month=12, day=31)
+            payment_schedule, date=date(year=now.year, month=1, day=2)
         )
 
         self.assertIn(
@@ -186,20 +194,20 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
 
         self.assertIn(
             date_lte_payment,
-            Payment.objects.paid_date_or_date_gte(
+            Payment.objects.paid_date_or_date_lte(
                 date(year=now.year, month=1, day=1)
             ),
         )
         self.assertNotIn(
             paid_date_gt_payment,
-            Payment.objects.paid_date_or_date_gte(
+            Payment.objects.paid_date_or_date_lte(
                 date(year=now.year, month=1, day=1)
             ),
         )
 
         self.assertNotIn(
             date_gt_payment,
-            Payment.objects.paid_date_or_date_gte(
+            Payment.objects.paid_date_or_date_lte(
                 date(year=now.year, month=1, day=1)
             ),
         )
@@ -229,10 +237,24 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
         self.assertNotIn(payment, Payment.objects.in_this_year())
 
     def test_amount_sum(self):
+        now = timezone.now()
+
         payment_schedule = create_payment_schedule()
-        create_payment(payment_schedule, amount=Decimal("1000"))
-        create_payment(payment_schedule, amount=Decimal("100"))
-        create_payment(payment_schedule, amount=Decimal("50"))
+        create_payment(
+            payment_schedule,
+            amount=Decimal("1000"),
+            date=date(year=now.year, month=1, day=1),
+        )
+        create_payment(
+            payment_schedule,
+            amount=Decimal("100"),
+            date=date(year=now.year, month=1, day=2),
+        )
+        create_payment(
+            payment_schedule,
+            amount=Decimal("50"),
+            date=date(year=now.year, month=1, day=3),
+        )
 
         self.assertEqual(Payment.objects.amount_sum(), Decimal("1150"))
 

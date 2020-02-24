@@ -504,6 +504,11 @@ class Payment(models.Model):
         verbose_name = _("betaling")
         verbose_name_plural = _("betalinger")
         ordering = ("date",)
+        constraints = [
+            models.UniqueConstraint(
+                fields=["payment_schedule", "date"], name="unique_payment_date"
+            )
+        ]
 
     objects = PaymentQuerySet.as_manager()
 
