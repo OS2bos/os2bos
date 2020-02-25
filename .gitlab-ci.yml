@@ -221,21 +221,23 @@ release-master:
 
 .deploy-default: &deploy-default
   stage: deploy
-  variables:
-    GIT_STRATEGY: none
+  image: magentalabs/deployment-client:latest
+  services: []
   tags:
-    - docker
-    - privileged
-    # TODO fix tags
+    - deploy
 
 
 .deploy-dev:
   <<: *deploy-default
   only:
-    - develop
+    - /develop/
+  variables:
+    DEPLOYMENT_NAMESPACE: cbur.magenta.test
+    DEPLOYMENT_URL: https://deploymenttest.magenta-aps.dk
+    GIT_STRATEGY: none
   script:
-    - echo Deploying ${IMAGE_DEV} to moradev.magneta.dk
-    # TODO: push ${IMAGE_DEV} to moradev.magneta.dk
+    - echo Attempting to call deployment
+    - python /app/deployment/client.py
 
 
 .deploy-rc:
