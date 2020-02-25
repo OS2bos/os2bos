@@ -180,7 +180,8 @@ unit-test:
 release-dev:
   <<: *release-default
   only:
-    - /develop/
+    refs:
+      - develop
   script:
     - docker tag ${IMAGE_SHA} ${IMAGE_DEV}
     - docker push ${IMAGE_DEV}
@@ -227,10 +228,11 @@ release-master:
     - deploy
 
 
-.deploy-dev:
+deploy-dev:
   <<: *deploy-default
   only:
-    - /develop/
+    refs:
+      - develop
   variables:
     DEPLOYMENT_NAMESPACE: cbur.magenta.test
     DEPLOYMENT_URL: https://deploymenttest.magenta-aps.dk
