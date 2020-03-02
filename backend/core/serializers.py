@@ -35,8 +35,6 @@ from core.models import (
     EffortStep,
     FAMILY_DEPT,
     STATUS_DELETED,
-    MONTHLY,
-    ONE_TIME_PAYMENT,
 )
 from core.utils import create_rrule
 
@@ -188,7 +186,9 @@ class PaymentScheduleSerializer(serializers.ModelSerializer):
                 _("ugyldig betalingsmetode for betalingsmodtager")
             )
 
-        one_time_payment = data["payment_type"] == ONE_TIME_PAYMENT
+        one_time_payment = (
+            data["payment_type"] == PaymentSchedule.ONE_TIME_PAYMENT
+        )
         payment_frequency = (
             "payment_frequency" in data and data["payment_frequency"]
         )
@@ -243,7 +243,8 @@ class ActivitySerializer(WritableNestedModelSerializer):
 
         # one time payments should have the same start and end date.
         is_one_time_payment = (
-            data["payment_plan"]["payment_type"] == ONE_TIME_PAYMENT
+            data["payment_plan"]["payment_type"]
+            == PaymentSchedule.ONE_TIME_PAYMENT
         )
         if is_one_time_payment and (
             "end_date" not in data or data["end_date"] != data["start_date"]
@@ -254,7 +255,8 @@ class ActivitySerializer(WritableNestedModelSerializer):
 
         is_monthly_payment = (
             "payment_frequency" in data["payment_plan"]
-            and data["payment_plan"]["payment_frequency"] == MONTHLY
+            and data["payment_plan"]["payment_frequency"]
+            == PaymentSchedule.MONTHLY
         )
         if is_monthly_payment and ("end_date" in data and data["end_date"]):
             start_date = data["start_date"]

@@ -658,17 +658,17 @@ def create_rrule(
     Takes either "until" or "count" as kwargs.
     """
     # One time payments are a special case with a count of 1 always.
-    if payment_type == models.ONE_TIME_PAYMENT:
+    if payment_type == models.PaymentSchedule.ONE_TIME_PAYMENT:
         rrule_frequency = rrule.rrule(rrule.DAILY, dtstart=start, count=1)
-    elif payment_frequency == models.DAILY:
+    elif payment_frequency == models.PaymentSchedule.DAILY:
         rrule_frequency = rrule.rrule(rrule.DAILY, dtstart=start, **kwargs)
-    elif payment_frequency == models.WEEKLY:
+    elif payment_frequency == models.PaymentSchedule.WEEKLY:
         rrule_frequency = rrule.rrule(rrule.WEEKLY, dtstart=start, **kwargs)
-    elif payment_frequency == models.BIWEEKLY:
+    elif payment_frequency == models.PaymentSchedule.BIWEEKLY:
         rrule_frequency = rrule.rrule(
             rrule.WEEKLY, dtstart=start, interval=2, **kwargs
         )
-    elif payment_frequency == models.MONTHLY:
+    elif payment_frequency == models.PaymentSchedule.MONTHLY:
         monthly_date = payment_day_of_month
         if monthly_date > 28:
             monthly_date = [d for d in range(28, monthly_date + 1)]
