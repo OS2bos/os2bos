@@ -8,7 +8,7 @@
 
 from django.core.management.base import BaseCommand
 
-from core.models import PaymentSchedule
+from core.models import PaymentSchedule, ONE_TIME_PAYMENT
 
 
 class Command(BaseCommand):
@@ -18,7 +18,7 @@ class Command(BaseCommand):
         # Find recurring payment schedules which has an associated Activity.
         recurring_schedules = PaymentSchedule.objects.filter(
             activity__is_null=False
-        ).exclude(payment_type=PaymentSchedule.ONE_TIME_PAYMENT)
+        ).exclude(payment_type=ONE_TIME_PAYMENT)
 
         for schedule in recurring_schedules:
             activity = schedule.activity

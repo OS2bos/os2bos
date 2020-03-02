@@ -14,6 +14,7 @@ import datetime
 import itertools
 from datetime import date
 
+from dateutil import rrule
 from dateutil.relativedelta import relativedelta
 
 from django.template.loader import get_template
@@ -646,3 +647,38 @@ def generate_payments_report_list(payments):
         payments_report_list.append(payment_dict)
 
     return payments_report_list
+
+
+def create_rrule(
+    payment_type, payment_frequency, payment_day_of_month, start, **kwargs
+):
+    """Create a dateutil.rrule to generate dates for a payment schedule.
+
+    The rule should be based on payment_type/payment_frequency and start.
+    Takes either "until" or "count" as kwargs.
+    """
+    # One time payments are a special case with a count of 1 always.
+    if payment_type == models.ONE_TIME_PAYMENT:
+        rrule_frequency = rrule.rrule(rrule.DAILY, dtstart=start, count=1)
+    elif payment_frequency == models.DAILY:
+        rrule_frequency = rrule.rrule(rrule.DAILY, dtstart=start, **kwargs)
+    elif payment_frequency == models.WEEKLY:
+        rrule_frequency = rrule.rrule(rrule.WEEKLY, dtstart=start, **kwargs)
+    elif payment_frequency == models.BIWEEKLY:
+        rrule_frequency = rrule.rrule(
+            rrule.WEEKLY, dtstart=start, interval=2, **kwargs
+        )
+    elif payment_frequency == models.MONTHLY:
+        monthly_date = payment_day_of_month
+        if monthly_date > 28:
+            monthly_date = [d for d in range(28, monthly_date + 1)]
+        rrule_frequency = rrule.rrule(
+            rrule.MONTHLY,
+            dtstart=start,
+            bymonthday=monthly_date,
+            bysetpos=-1,
+            **kwargs,
+        )
+    else:
+        raise ValueError(_("ukendt betalingsfrekvens"))
+    return rrule_frequency

@@ -23,6 +23,11 @@ from core.models import (
     STATUS_GRANTED,
     STATUS_DELETED,
     PaymentSchedule,
+    WEEKLY,
+    MONTHLY,
+    DAILY,
+    ONE_TIME_PAYMENT,
+    RUNNING_PAYMENT,
 )
 from core.tests.testing_utils import (
     BasicTestMixin,
@@ -52,8 +57,7 @@ class AppropriationSerializerTestCase(TestCase, BasicTestMixin):
         )
         appropriation = create_appropriation(case=case)
         payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("500.0"),
-            payment_frequency=PaymentSchedule.WEEKLY,
+            payment_amount=Decimal("500.0"), payment_frequency=WEEKLY
         )
         activity = create_activity(
             case=case,
@@ -107,8 +111,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         )
         appropriation = create_appropriation(case=case)
         payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("500.0"),
-            payment_frequency=PaymentSchedule.WEEKLY,
+            payment_amount=Decimal("500.0"), payment_frequency=WEEKLY
         )
         # start_date < end_date
         data = {
@@ -133,8 +136,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         )
         appropriation = create_appropriation(case=case)
         payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("500.0"),
-            payment_frequency=PaymentSchedule.WEEKLY,
+            payment_amount=Decimal("500.0"), payment_frequency=WEEKLY
         )
 
         # no end_date
@@ -159,8 +161,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         )
         appropriation = create_appropriation(case=case)
         payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("500.0"),
-            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_amount=Decimal("500.0"), payment_frequency=MONTHLY
         )
 
         # no end_date
@@ -178,8 +179,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
 
     def test_validate_expected_success(self):
         payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("500.0"),
-            payment_frequency=PaymentSchedule.WEEKLY,
+            payment_amount=Decimal("500.0"), payment_frequency=WEEKLY
         )
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -206,8 +206,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             payment_plan=payment_schedule,
         )
         modifies_payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("600.0"),
-            payment_frequency=PaymentSchedule.WEEKLY,
+            payment_amount=Decimal("600.0"), payment_frequency=WEEKLY
         )
         modified_start_date = start_date + timedelta(days=7)
         modified_end_date = end_date + timedelta(days=12)
@@ -231,8 +230,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
 
     def test_validate_expected_invalid_date(self):
         payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("500.0"),
-            payment_frequency=PaymentSchedule.WEEKLY,
+            payment_amount=Decimal("500.0"), payment_frequency=WEEKLY
         )
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -259,8 +257,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             payment_plan=payment_schedule,
         )
         modifies_payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("600.0"),
-            payment_frequency=PaymentSchedule.WEEKLY,
+            payment_amount=Decimal("600.0"), payment_frequency=WEEKLY
         )
         modified_start_date = start_date
         modified_end_date = end_date + timedelta(days=12)
@@ -283,8 +280,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
 
     def test_validate_expected_no_modifies_end_date(self):
         payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("500.0"),
-            payment_frequency=PaymentSchedule.WEEKLY,
+            payment_amount=Decimal("500.0"), payment_frequency=WEEKLY
         )
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -310,8 +306,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             payment_plan=payment_schedule,
         )
         modifies_payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("600.0"),
-            payment_frequency=PaymentSchedule.WEEKLY,
+            payment_amount=Decimal("600.0"), payment_frequency=WEEKLY
         )
         modified_start_date = start_date + timedelta(days=1)
         # let the granted activity be modified by another expected activity.
@@ -335,8 +330,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
 
     def test_validate_expected_no_next_payment(self):
         payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("500.0"),
-            payment_frequency=PaymentSchedule.WEEKLY,
+            payment_amount=Decimal("500.0"), payment_frequency=WEEKLY
         )
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -362,8 +356,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             payment_plan=payment_schedule,
         )
         modifies_payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("600.0"),
-            payment_frequency=PaymentSchedule.WEEKLY,
+            payment_amount=Decimal("600.0"), payment_frequency=WEEKLY
         )
         start_date = date.today() - timedelta(days=3)
         end_date = date.today() + timedelta(days=2)
@@ -386,8 +379,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
 
     def test_validate_expected_true_ongoing_with_next_payment(self):
         payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("500.0"),
-            payment_frequency=PaymentSchedule.DAILY,
+            payment_amount=Decimal("500.0"), payment_frequency=DAILY
         )
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -413,8 +405,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             payment_plan=payment_schedule,
         )
         modifies_payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("600.0"),
-            payment_frequency=PaymentSchedule.DAILY,
+            payment_amount=Decimal("600.0"), payment_frequency=DAILY
         )
         start_date = date.today() + timedelta(days=3)
         end_date = date.today() + timedelta(days=6)
@@ -439,7 +430,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
     def test_validate_one_time_payment_with_payment_frequency(self):
         payment_schedule = create_payment_schedule(
             payment_amount=Decimal("500.0"),
-            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            payment_type=ONE_TIME_PAYMENT,
             payment_frequency="",
         )
         case = create_case(
@@ -471,7 +462,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
     def test_validate_one_time_payment_different_dates(self):
         payment_schedule = create_payment_schedule(
             payment_amount=Decimal("500.0"),
-            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            payment_type=ONE_TIME_PAYMENT,
             payment_frequency="",
         )
         case = create_case(
@@ -563,8 +554,8 @@ class PaymentScheduleSerializerTestCase(TestCase, BasicTestMixin):
     def test_validate_error_one_time_payment_with_frequency(self):
         # Create an invalid one time payment, daily combination.
         data = {
-            "payment_frequency": PaymentSchedule.DAILY,
-            "payment_type": PaymentSchedule.ONE_TIME_PAYMENT,
+            "payment_frequency": DAILY,
+            "payment_type": ONE_TIME_PAYMENT,
             "payment_amount": Decimal("500.0"),
             "payment_units": 0,
             "recipient_type": PaymentSchedule.PERSON,
@@ -584,7 +575,7 @@ class PaymentScheduleSerializerTestCase(TestCase, BasicTestMixin):
     def test_validate_error_non_one_time_payment_without_frequency(self):
         # Create an invalid running payment, no frequency combiation.
         data = {
-            "payment_type": PaymentSchedule.RUNNING_PAYMENT,
+            "payment_type": RUNNING_PAYMENT,
             "payment_amount": Decimal("500.0"),
             "payment_units": 0,
             "recipient_type": PaymentSchedule.PERSON,
@@ -605,8 +596,8 @@ class PaymentScheduleSerializerTestCase(TestCase, BasicTestMixin):
     def test_validate_one_time_payment_without_frequency(self):
         # Create a valid running payment, monthly combination.
         data = {
-            "payment_type": PaymentSchedule.RUNNING_PAYMENT,
-            "payment_frequency": PaymentSchedule.MONTHLY,
+            "payment_type": RUNNING_PAYMENT,
+            "payment_frequency": MONTHLY,
             "payment_amount": Decimal("500.0"),
             "payment_units": 0,
             "recipient_type": PaymentSchedule.PERSON,

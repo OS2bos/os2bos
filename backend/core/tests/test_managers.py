@@ -26,6 +26,8 @@ from core.models import (
     Case,
     MAIN_ACTIVITY,
     STATUS_GRANTED,
+    DAILY,
+    RUNNING_PAYMENT,
 )
 
 
@@ -383,8 +385,7 @@ class CaseQuerySetTestCase(TestCase, BasicTestMixin):
         )
         appropriation = create_appropriation(case=case)
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY, payment_type=RUNNING_PAYMENT
         )
         # create an expired main activity
         activity = create_activity(
@@ -397,8 +398,7 @@ class CaseQuerySetTestCase(TestCase, BasicTestMixin):
             payment_plan=payment_schedule,
         )
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY, payment_type=RUNNING_PAYMENT
         )
         # create an ongoing main activity
         create_activity(
@@ -414,8 +414,7 @@ class CaseQuerySetTestCase(TestCase, BasicTestMixin):
         # create a second appropriation
         appropriation = create_appropriation(case=case, sbsys_id="6521")
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY, payment_type=RUNNING_PAYMENT
         )
         # create an expired main activity
         activity = create_activity(
@@ -428,8 +427,7 @@ class CaseQuerySetTestCase(TestCase, BasicTestMixin):
             payment_plan=payment_schedule,
         )
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY, payment_type=RUNNING_PAYMENT
         )
         # create an ongoing main activity
         create_activity(
@@ -454,8 +452,7 @@ class CaseQuerySetTestCase(TestCase, BasicTestMixin):
         )
         appropriation = create_appropriation(case=case)
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY, payment_type=RUNNING_PAYMENT
         )
         # create an expired main activity
         activity = create_activity(
@@ -468,8 +465,7 @@ class CaseQuerySetTestCase(TestCase, BasicTestMixin):
             payment_plan=payment_schedule,
         )
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY, payment_type=RUNNING_PAYMENT
         )
         # create an expired main activity
         create_activity(
@@ -485,8 +481,7 @@ class CaseQuerySetTestCase(TestCase, BasicTestMixin):
         # create a second appropriation
         appropriation = create_appropriation(case=case, sbsys_id="6521")
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY, payment_type=RUNNING_PAYMENT
         )
         # create an expired main activity
         activity = create_activity(
@@ -499,8 +494,7 @@ class CaseQuerySetTestCase(TestCase, BasicTestMixin):
             payment_plan=payment_schedule,
         )
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY, payment_type=RUNNING_PAYMENT
         )
         # create an expired main activity
         create_activity(

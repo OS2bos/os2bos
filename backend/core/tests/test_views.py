@@ -22,6 +22,9 @@ from core.models import (
     STATUS_GRANTED,
     STATUS_DRAFT,
     STATUS_EXPECTED,
+    DAILY,
+    RUNNING_PAYMENT,
+    ONE_TIME_PAYMENT,
 )
 
 from core.tests.testing_utils import (
@@ -288,8 +291,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
 
         now = timezone.now().date()
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY, payment_type=RUNNING_PAYMENT
         )
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -321,8 +323,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
 
         now = timezone.now().date()
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY, payment_type=RUNNING_PAYMENT
         )
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -554,7 +555,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         section.main_activities.add(main_activity.details)
 
         payment_schedule = create_payment_schedule(
-            payment_type=PaymentSchedule.ONE_TIME_PAYMENT
+            payment_type=ONE_TIME_PAYMENT
         )
         # Create a suppl activity without setting its allowed main_activities.
         suppl_activity = create_activity(
@@ -606,7 +607,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         section.main_activities.add(main_activity.details)
 
         payment_schedule = create_payment_schedule(
-            payment_type=PaymentSchedule.ONE_TIME_PAYMENT
+            payment_type=ONE_TIME_PAYMENT
         )
         # Create a suppl activity without setting its allowed main_activities.
         suppl_activity = create_activity(
@@ -658,7 +659,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         )
         section.main_activities.add(main_activity.details)
         payment_schedule = create_payment_schedule(
-            payment_type=PaymentSchedule.ONE_TIME_PAYMENT
+            payment_type=ONE_TIME_PAYMENT
         )
         # Create a suppl activity without setting its allowed main_activities.
         suppl_activity = create_activity(
@@ -709,7 +710,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         )
         section.main_activities.add(activity.details)
         payment_schedule = create_payment_schedule(
-            payment_type=PaymentSchedule.ONE_TIME_PAYMENT
+            payment_type=ONE_TIME_PAYMENT
         )
         one_time_activity = create_activity(
             case,
@@ -750,8 +751,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         )
         start_date = timezone.now().date()
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY, payment_type=RUNNING_PAYMENT
         )
         activity = create_activity(
             case,
@@ -764,8 +764,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         )
         section.main_activities.add(activity.details)
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY, payment_type=RUNNING_PAYMENT
         )
         modifying_activity = create_activity(
             case,
@@ -778,8 +777,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             payment_plan=payment_schedule,
         )
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY, payment_type=RUNNING_PAYMENT
         )
         draft_activity = create_activity(
             case,
@@ -831,8 +829,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
 class TestPaymentScheduleViewSet(AuthenticatedTestCase):
     def test_get(self):
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY, payment_type=RUNNING_PAYMENT
         )
         url = reverse("paymentschedule-list")
         self.client.login(username=self.username, password=self.password)
@@ -923,8 +920,7 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
     def test_get(self):
         now = timezone.now().date()
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY, payment_type=RUNNING_PAYMENT
         )
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -950,8 +946,7 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
     def test_delete(self):
         now = timezone.now().date()
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY, payment_type=RUNNING_PAYMENT
         )
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district

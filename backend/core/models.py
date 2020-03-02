@@ -10,7 +10,6 @@
 from datetime import date, timedelta
 from decimal import Decimal
 from dateutil.relativedelta import relativedelta
-from dateutil import rrule
 
 from django import forms
 from django.db import models, transaction
@@ -24,7 +23,7 @@ from simple_history.models import HistoricalRecords
 from constance import config
 
 from core.managers import PaymentQuerySet, CaseQuerySet
-from core.utils import send_appropriation
+from core.utils import send_appropriation, create_rrule
 
 # Target group - definitions and choice list.
 FAMILY_DEPT = "FAMILY_DEPT"
@@ -67,6 +66,32 @@ status_choices = (
     (STATUS_DRAFT, _("kladde")),
     (STATUS_EXPECTED, _("forventet")),
     (STATUS_GRANTED, _("bevilget")),
+)
+
+# PaymentSchedule payment types.
+ONE_TIME_PAYMENT = "ONE_TIME_PAYMENT"
+RUNNING_PAYMENT = "RUNNING_PAYMENT"
+PER_HOUR_PAYMENT = "PER_HOUR_PAYMENT"
+PER_DAY_PAYMENT = "PER_DAY_PAYMENT"
+PER_KM_PAYMENT = "PER_KM_PAYMENT"
+payment_type_choices = (
+    ((ONE_TIME_PAYMENT), _("Engangsudgift")),
+    ((RUNNING_PAYMENT), _("Fast beløb, løbende")),
+    ((PER_HOUR_PAYMENT), _("Takst pr. time")),
+    ((PER_DAY_PAYMENT), _("Takst pr. døgn")),
+    ((PER_KM_PAYMENT), _("Takst pr. kilometer")),
+)
+
+# PaymentSchedule payment frequencies.
+DAILY = "DAILY"
+WEEKLY = "WEEKLY"
+BIWEEKLY = "BIWEEKLY"
+MONTHLY = "MONTHLY"
+payment_frequency_choices = (
+    (DAILY, _("Dagligt")),
+    (WEEKLY, _("Ugentligt")),
+    (BIWEEKLY, _("Hver 2. uge")),
+    (MONTHLY, _("Månedligt")),
 )
 
 
@@ -242,16 +267,7 @@ class PaymentSchedule(models.Model):
         on_delete=models.SET_NULL,
         verbose_name=_("betalingsmåde detalje"),
     )
-    DAILY = "DAILY"
-    WEEKLY = "WEEKLY"
-    BIWEEKLY = "BIWEEKLY"
-    MONTHLY = "MONTHLY"
-    payment_frequency_choices = (
-        (DAILY, _("Dagligt")),
-        (WEEKLY, _("Ugentligt")),
-        (BIWEEKLY, _("Hver 2. uge")),
-        (MONTHLY, _("Månedligt")),
-    )
+
     payment_frequency = models.CharField(
         max_length=128,
         verbose_name=_("betalingsfrekvens"),
@@ -268,18 +284,6 @@ class PaymentSchedule(models.Model):
         validators=[MinValueValidator(1), MaxValueValidator(31)],
     )
 
-    ONE_TIME_PAYMENT = "ONE_TIME_PAYMENT"
-    RUNNING_PAYMENT = "RUNNING_PAYMENT"
-    PER_HOUR_PAYMENT = "PER_HOUR_PAYMENT"
-    PER_DAY_PAYMENT = "PER_DAY_PAYMENT"
-    PER_KM_PAYMENT = "PER_KM_PAYMENT"
-    payment_type_choices = (
-        ((ONE_TIME_PAYMENT), _("Engangsudgift")),
-        ((RUNNING_PAYMENT), _("Fast beløb, løbende")),
-        ((PER_HOUR_PAYMENT), _("Takst pr. time")),
-        ((PER_DAY_PAYMENT), _("Takst pr. døgn")),
-        ((PER_KM_PAYMENT), _("Takst pr. kilometer")),
-    )
     payment_type = models.CharField(
         max_length=128,
         verbose_name=_("betalingstype"),
@@ -349,47 +353,24 @@ class PaymentSchedule(models.Model):
         super().save(*args, **kwargs)
 
     def create_rrule(self, start, **kwargs):
-        """Create a dateutil.rrule to generate dates for this schedule.
+        """Create a dateutil.rrule for this schedule specifically."""
 
-        The rule should be based on payment_type/payment_frequency and start.
-        Takes either "until" or "count" as kwargs.
-        """
-        # One time payments are a special case with a count of 1 always.
-        if self.payment_type == self.ONE_TIME_PAYMENT:
-            rrule_frequency = rrule.rrule(rrule.DAILY, dtstart=start, count=1)
-        elif self.payment_frequency == self.DAILY:
-            rrule_frequency = rrule.rrule(rrule.DAILY, dtstart=start, **kwargs)
-        elif self.payment_frequency == self.WEEKLY:
-            rrule_frequency = rrule.rrule(
-                rrule.WEEKLY, dtstart=start, **kwargs
-            )
-        elif self.payment_frequency == self.BIWEEKLY:
-            rrule_frequency = rrule.rrule(
-                rrule.WEEKLY, dtstart=start, interval=2, **kwargs
-            )
-        elif self.payment_frequency == self.MONTHLY:
-            monthly_date = self.payment_day_of_month
-            if monthly_date > 28:
-                monthly_date = [d for d in range(28, monthly_date + 1)]
-            rrule_frequency = rrule.rrule(
-                rrule.MONTHLY,
-                dtstart=start,
-                bymonthday=monthly_date,
-                bysetpos=-1,
-                **kwargs,
-            )
-        else:
-            raise ValueError(_("ukendt betalingsfrekvens"))
-        return rrule_frequency
+        return create_rrule(
+            self.payment_type,
+            self.payment_frequency,
+            self.payment_day_of_month,
+            start,
+            **kwargs,
+        )
 
     def calculate_per_payment_amount(self, vat_factor):
         """Calculate amount from payment type and units."""
-        if self.payment_type in [self.ONE_TIME_PAYMENT, self.RUNNING_PAYMENT]:
+        if self.payment_type in [ONE_TIME_PAYMENT, RUNNING_PAYMENT]:
             return self.payment_amount / 100 * vat_factor
         elif self.payment_type in [
-            self.PER_HOUR_PAYMENT,
-            self.PER_DAY_PAYMENT,
-            self.PER_KM_PAYMENT,
+            PER_HOUR_PAYMENT,
+            PER_DAY_PAYMENT,
+            PER_KM_PAYMENT,
         ]:
             return (
                 (self.payment_units * self.payment_amount) / 100 * vat_factor
@@ -432,7 +413,7 @@ class PaymentSchedule(models.Model):
         newest_payment = self.payments.order_by("-date").first()
 
         # One time payment is a special case and should not be handled.
-        if self.payment_type == PaymentSchedule.ONE_TIME_PAYMENT:
+        if self.payment_type == ONE_TIME_PAYMENT:
             return
         # The new start_date should be based on the next payment date
         # from create_rrule.
@@ -1306,7 +1287,7 @@ class Activity(AuditModelMixin, models.Model):
             # In case of a one_time_payment we end the on the same day and
             # delete all payments for the old one.
             payment_type = self.modifies.payment_plan.payment_type
-            if payment_type == PaymentSchedule.ONE_TIME_PAYMENT:
+            if payment_type == ONE_TIME_PAYMENT:
                 self.modifies.payment_plan.payments.all().delete()
                 self.modifies.start_date = self.start_date
                 # With one time payments, end date and start date must
@@ -1393,10 +1374,7 @@ class Activity(AuditModelMixin, models.Model):
         """Return payments that are not overruled by expected payments."""
         if self.status == STATUS_GRANTED and self.modified_by.exists():
             # one time payments are always overruled entirely.
-            if (
-                self.payment_plan.payment_type
-                == PaymentSchedule.ONE_TIME_PAYMENT
-            ):
+            if self.payment_plan.payment_type == ONE_TIME_PAYMENT:
                 payments = Payment.objects.none()
             else:
                 # Find the earliest payment date in the chain of

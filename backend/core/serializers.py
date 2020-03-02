@@ -6,7 +6,6 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """Data serializers used by the REST API."""
 
-
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from django import forms
@@ -36,7 +35,10 @@ from core.models import (
     EffortStep,
     FAMILY_DEPT,
     STATUS_DELETED,
+    MONTHLY,
+    ONE_TIME_PAYMENT,
 )
+from core.utils import create_rrule
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -186,9 +188,7 @@ class PaymentScheduleSerializer(serializers.ModelSerializer):
                 _("ugyldig betalingsmetode for betalingsmodtager")
             )
 
-        one_time_payment = (
-            data["payment_type"] == PaymentSchedule.ONE_TIME_PAYMENT
-        )
+        one_time_payment = data["payment_type"] == ONE_TIME_PAYMENT
         payment_frequency = (
             "payment_frequency" in data and data["payment_frequency"]
         )
@@ -243,8 +243,7 @@ class ActivitySerializer(WritableNestedModelSerializer):
 
         # one time payments should have the same start and end date.
         is_one_time_payment = (
-            data["payment_plan"]["payment_type"]
-            == PaymentSchedule.ONE_TIME_PAYMENT
+            data["payment_plan"]["payment_type"] == ONE_TIME_PAYMENT
         )
         if is_one_time_payment and (
             "end_date" not in data or data["end_date"] != data["start_date"]
@@ -252,6 +251,30 @@ class ActivitySerializer(WritableNestedModelSerializer):
             raise serializers.ValidationError(
                 _("startdato og slutdato skal være ens for engangsbetaling")
             )
+
+        is_monthly_payment = (
+            "payment_frequency" in data["payment_plan"]
+            and data["payment_plan"]["payment_frequency"] == MONTHLY
+        )
+        if is_monthly_payment and ("end_date" in data and data["end_date"]):
+            start_date = data["start_date"]
+            end_date = data["end_date"]
+            payment_type = data["payment_plan"]["payment_type"]
+            payment_frequency = data["payment_plan"]["payment_frequency"]
+            payment_day_of_month = data["payment_plan"]["payment_day_of_month"]
+            has_payments = list(
+                create_rrule(
+                    payment_type,
+                    payment_frequency,
+                    payment_day_of_month,
+                    start_date,
+                    until=end_date,
+                )
+            )
+            if not has_payments:
+                raise serializers.ValidationError(
+                    _("Betalingsparametre resulterer ikke i nogle betalinger")
+                )
 
         if "modifies" in data and data["modifies"]:
             # run the validate_expected flow.

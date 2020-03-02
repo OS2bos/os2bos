@@ -31,6 +31,8 @@ from core.models import (
     SD,
     FAMILY_DEPT,
     EffortStep,
+    DAILY,
+    RUNNING_PAYMENT,
 )
 
 
@@ -115,8 +117,8 @@ def create_case_as_json(
 
 
 def create_payment_schedule(
-    payment_frequency=PaymentSchedule.DAILY,
-    payment_type=PaymentSchedule.RUNNING_PAYMENT,
+    payment_frequency=DAILY,
+    payment_type=RUNNING_PAYMENT,
     payment_amount=Decimal("500.0"),
     payment_units=0,
     recipient_type=PaymentSchedule.PERSON,

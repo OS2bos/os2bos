@@ -57,6 +57,14 @@ from core.models import (
     STATUS_EXPECTED,
     STATUS_DRAFT,
     STATUS_EXPIRED,
+    DAILY,
+    WEEKLY,
+    BIWEEKLY,
+    MONTHLY,
+    RUNNING_PAYMENT,
+    ONE_TIME_PAYMENT,
+    PER_HOUR_PAYMENT,
+    PER_KM_PAYMENT,
 )
 
 
@@ -102,8 +110,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         start_date = date(year=now.year, month=1, day=1)
         end_date = date(year=now.year, month=1, day=10)
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY, payment_type=RUNNING_PAYMENT
         )
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -120,8 +127,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
 
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY, payment_type=RUNNING_PAYMENT
         )
 
         # create main activity with GRANTED.
@@ -175,8 +181,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         end_date = now + timedelta(days=2)
         # create main activity with GRANTED.
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY, payment_type=RUNNING_PAYMENT
         )
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -193,8 +198,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
 
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY, payment_type=RUNNING_PAYMENT
         )
         # create a GRANTED supplementary activity.
         supplementary_activity = create_activity(
@@ -208,8 +212,8 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
 
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY,
+            payment_type=RUNNING_PAYMENT,
             payment_amount=Decimal("700"),
         )
         # create an EXPECTED supplementary activity overruling the GRANTED.
@@ -224,8 +228,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             modifies=supplementary_activity,
         )
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY, payment_type=RUNNING_PAYMENT
         )
         # create a DRAFT supplementary activity which should not be counted.
         create_activity(
@@ -238,14 +241,12 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             payment_plan=payment_schedule,
         )
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY, payment_type=RUNNING_PAYMENT
         )
         # create a GRANTED supplementary activity which has
         # modified another that is also GRANTED.
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY, payment_type=RUNNING_PAYMENT
         )
         supplementary_activity = create_activity(
             case,
@@ -257,8 +258,8 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             payment_plan=payment_schedule,
         )
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY,
+            payment_type=RUNNING_PAYMENT,
             payment_amount=Decimal("700"),
         )
         create_activity(
@@ -288,8 +289,8 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         appropriation = create_appropriation(case=case)
         # create a granted activity
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY,
+            payment_type=RUNNING_PAYMENT,
             payment_amount=Decimal("700"),
         )
         modified_activity = create_activity(
@@ -306,8 +307,8 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         modified_start_date = now + timedelta(days=3)
         modified_end_date = now + timedelta(days=6)
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY,
+            payment_type=RUNNING_PAYMENT,
             payment_amount=Decimal("500"),
         )
         create_activity(
@@ -331,8 +332,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         end_date = date(year=now.year, month=1, day=10)
         # create main activity with GRANTED.
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY, payment_type=RUNNING_PAYMENT
         )
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -349,8 +349,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
 
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY, payment_type=RUNNING_PAYMENT
         )
         # create a GRANTED supplementary activity.
         supplementary_activity = create_activity(
@@ -364,8 +363,8 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
 
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY,
+            payment_type=RUNNING_PAYMENT,
             payment_amount=Decimal("700"),
         )
         # create an EXPECTED supplementary activity overruling the GRANTED.
@@ -615,8 +614,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
     def test_appropriation_grant_on_already_granted_one_time(self):
         approval_level = ApprovalLevel.objects.create(name="egenkompetence")
         payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("500.0"),
-            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            payment_amount=Decimal("500.0"), payment_type=ONE_TIME_PAYMENT
         )
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -638,8 +636,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
         activity.details.main_activity_for.add(section)
         modifies_payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("600.0"),
-            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            payment_amount=Decimal("600.0"), payment_type=ONE_TIME_PAYMENT
         )
         modified_start_date = start_date
         modified_end_date = end_date
@@ -683,8 +680,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
     def test_appropriation_grant_on_already_granted_daily(self):
         approval_level = ApprovalLevel.objects.create(name="egenkompetence")
         payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("500.0"),
-            payment_frequency=PaymentSchedule.DAILY,
+            payment_amount=Decimal("500.0"), payment_frequency=DAILY
         )
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -706,8 +702,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
         activity.details.main_activity_for.add(section)
         modifies_payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("600.0"),
-            payment_frequency=PaymentSchedule.DAILY,
+            payment_amount=Decimal("600.0"), payment_frequency=DAILY
         )
         modified_start_date = now + timedelta(days=1)
         modified_end_date = end_date + timedelta(days=6)
@@ -767,8 +762,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
     def test_appropriation_grant_on_already_granted_weekly(self):
         approval_level = ApprovalLevel.objects.create(name="egenkompetence")
         payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("500.0"),
-            payment_frequency=PaymentSchedule.WEEKLY,
+            payment_amount=Decimal("500.0"), payment_frequency=WEEKLY
         )
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -790,8 +784,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
         activity.details.main_activity_for.add(section)
         modifies_payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("600.0"),
-            payment_frequency=PaymentSchedule.WEEKLY,
+            payment_amount=Decimal("600.0"), payment_frequency=WEEKLY
         )
         modified_start_date = start_date + timedelta(days=7)
         modified_end_date = end_date + timedelta(days=12)
@@ -849,8 +842,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
     def test_appropriation_grant_on_modifies_suppl_date(self):
         approval_level = ApprovalLevel.objects.create(name="egenkompetence")
         payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("500.0"),
-            payment_frequency=PaymentSchedule.WEEKLY,
+            payment_amount=Decimal("500.0"), payment_frequency=WEEKLY
         )
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -872,8 +864,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
         main_activity.details.main_activity_for.add(section)
         suppl_payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("50.0"),
-            payment_frequency=PaymentSchedule.WEEKLY,
+            payment_amount=Decimal("50.0"), payment_frequency=WEEKLY
         )
         suppl_start_date = start_date + timedelta(days=7)
         suppl_end_date = None
@@ -898,8 +889,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             user,
         )
         modifies_payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("500.0"),
-            payment_frequency=PaymentSchedule.WEEKLY,
+            payment_amount=Decimal("500.0"), payment_frequency=WEEKLY
         )
         modified_start_date = start_date + timedelta(days=7)
         modified_end_date = start_date + timedelta(days=365)
@@ -1170,7 +1160,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         appropriation = create_appropriation(case=case)
         payment_schedule = create_payment_schedule(
-            payment_type=PaymentSchedule.ONE_TIME_PAYMENT
+            payment_type=ONE_TIME_PAYMENT
         )
         activity = create_activity(
             case,
@@ -1272,7 +1262,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
 
         self.assertEqual(activity.payment_plan.payments.count(), 10)
 
-        payment_schedule.payment_frequency = PaymentSchedule.MONTHLY
+        payment_schedule.payment_frequency = MONTHLY
         payment_schedule.save()
         activity.save()
         self.assertEqual(activity.payment_plan.payments.count(), 1)
@@ -1517,8 +1507,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
     def test_total_cost_this_year_multiple_levels_one_time(self):
         now = timezone.now()
         payment_schedule = create_payment_schedule(
-            payment_frequency=None,
-            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            payment_frequency=None, payment_type=ONE_TIME_PAYMENT
         )
         start_date = date(year=now.year, month=12, day=1)
         end_date = date(year=now.year, month=12, day=1)
@@ -1546,7 +1535,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             end_date=end_date,
             payment_plan=create_payment_schedule(
                 payment_frequency=None,
-                payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+                payment_type=ONE_TIME_PAYMENT,
                 payment_amount=Decimal("600"),
             ),
             status=STATUS_GRANTED,
@@ -1569,7 +1558,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             end_date=end_date,
             payment_plan=create_payment_schedule(
                 payment_frequency=None,
-                payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+                payment_type=ONE_TIME_PAYMENT,
                 payment_amount=Decimal("700"),
             ),
             status=STATUS_EXPECTED,
@@ -1991,8 +1980,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             max_tolerance_in_percent=10,
         )
         payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("500.0"),
-            payment_frequency=PaymentSchedule.DAILY,
+            payment_amount=Decimal("500.0"), payment_frequency=DAILY
         )
         start_date = date.today()
         end_date = date.today() + timedelta(days=7)
@@ -2007,8 +1995,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             details=main_activity_details,
         )
         payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("700.0"),
-            payment_frequency=PaymentSchedule.DAILY,
+            payment_amount=Decimal("700.0"), payment_frequency=DAILY
         )
         start_date = start_date + timedelta(days=1)
         end_date = date.today() + timedelta(days=14)
@@ -2041,8 +2028,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         start_date = date.today()
         end_date = date.today() + timedelta(days=7)
         payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("700.0"),
-            payment_frequency=PaymentSchedule.DAILY,
+            payment_amount=Decimal("700.0"), payment_frequency=DAILY
         )
         expected_activity = create_activity(
             case,
@@ -2070,8 +2056,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             max_tolerance_in_percent=10,
         )
         payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("500.0"),
-            payment_frequency=PaymentSchedule.DAILY,
+            payment_amount=Decimal("500.0"), payment_frequency=DAILY
         )
         start_date = date.today()
         end_date = date.today() + timedelta(days=7)
@@ -2086,8 +2071,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             details=main_activity_details,
         )
         payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("700.0"),
-            payment_frequency=PaymentSchedule.DAILY,
+            payment_amount=Decimal("700.0"), payment_frequency=DAILY
         )
         start_date = start_date
         end_date = date.today() + timedelta(days=14)
@@ -2117,8 +2101,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             max_tolerance_in_percent=10,
         )
         payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("500.0"),
-            payment_frequency=PaymentSchedule.DAILY,
+            payment_amount=Decimal("500.0"), payment_frequency=DAILY
         )
         start_date = date.today() + timedelta(days=2)
         end_date = date.today() + timedelta(days=4)
@@ -2133,8 +2116,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             details=main_activity_details,
         )
         payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("700.0"),
-            payment_frequency=PaymentSchedule.DAILY,
+            payment_amount=Decimal("700.0"), payment_frequency=DAILY
         )
         start_date = date.today() + timedelta(days=3)
         end_date = date.today() + timedelta(days=6)
@@ -2164,8 +2146,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             max_tolerance_in_percent=10,
         )
         payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("500.0"),
-            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            payment_amount=Decimal("500.0"), payment_type=ONE_TIME_PAYMENT
         )
         start_date = date.today()
         end_date = date.today()
@@ -2180,8 +2161,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             details=main_activity_details,
         )
         payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("700.0"),
-            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            payment_amount=Decimal("700.0"), payment_type=ONE_TIME_PAYMENT
         )
         start_date = date.today()
         end_date = date.today()
@@ -2565,61 +2545,61 @@ class PaymentScheduleTestCase(TestCase):
     @parameterized.expand(
         [
             (
-                PaymentSchedule.DAILY,
+                DAILY,
                 date(year=2019, month=1, day=1),
                 date(year=2019, month=1, day=10),
                 10,
             ),
             (
-                PaymentSchedule.DAILY,
+                DAILY,
                 date(year=2019, month=1, day=1),
                 date(year=2019, month=1, day=1),
                 1,
             ),
             (
-                PaymentSchedule.WEEKLY,
+                WEEKLY,
                 date(year=2019, month=1, day=1),
                 date(year=2019, month=2, day=1),
                 5,
             ),
             (
-                PaymentSchedule.WEEKLY,
+                WEEKLY,
                 date(year=2019, month=1, day=1),
                 date(year=2019, month=1, day=1),
                 1,
             ),
             (
-                PaymentSchedule.BIWEEKLY,
+                BIWEEKLY,
                 date(year=2019, month=1, day=1),
                 date(year=2019, month=2, day=1),
                 3,
             ),
             (
-                PaymentSchedule.BIWEEKLY,
+                BIWEEKLY,
                 date(year=2019, month=1, day=1),
                 date(year=2019, month=1, day=1),
                 1,
             ),
             (
-                PaymentSchedule.MONTHLY,
+                MONTHLY,
                 date(year=2019, month=1, day=1),
                 date(year=2019, month=10, day=1),
                 10,
             ),
             (
-                PaymentSchedule.MONTHLY,
+                MONTHLY,
                 date(year=2019, month=1, day=1),
                 date(year=2019, month=1, day=1),
                 1,
             ),
             (
-                PaymentSchedule.MONTHLY,
+                MONTHLY,
                 date(year=2020, month=1, day=31),
                 date(year=2022, month=1, day=1),
                 24,
             ),
             (
-                PaymentSchedule.MONTHLY,
+                MONTHLY,
                 date(year=2020, month=1, day=1),
                 date(year=2020, month=3, day=31),
                 3,
@@ -2634,8 +2614,7 @@ class PaymentScheduleTestCase(TestCase):
 
     def test_create_rrule_one_time_1_day(self):
         payment_schedule = create_payment_schedule(
-            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
-            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=ONE_TIME_PAYMENT, payment_frequency=DAILY
         )
 
         rrule = payment_schedule.create_rrule(
@@ -2650,7 +2629,7 @@ class PaymentScheduleTestCase(TestCase):
 
     def test_create_rrule_incorrect_frequency(self):
         payment_schedule = create_payment_schedule(
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_type=RUNNING_PAYMENT,
             payment_frequency="incorrect frequency",
         )
 
@@ -2663,32 +2642,32 @@ class PaymentScheduleTestCase(TestCase):
     @parameterized.expand(
         [
             (
-                PaymentSchedule.ONE_TIME_PAYMENT,
-                PaymentSchedule.DAILY,
+                ONE_TIME_PAYMENT,
+                DAILY,
                 Decimal("100"),
                 0,
                 Decimal("100"),
                 Decimal("100"),
             ),
             (
-                PaymentSchedule.RUNNING_PAYMENT,
-                PaymentSchedule.DAILY,
+                RUNNING_PAYMENT,
+                DAILY,
                 Decimal("100"),
                 0,
                 Decimal("100"),
                 Decimal("100"),
             ),
             (
-                PaymentSchedule.PER_HOUR_PAYMENT,
-                PaymentSchedule.DAILY,
+                PER_HOUR_PAYMENT,
+                DAILY,
                 Decimal("100"),
                 5,
                 Decimal("100"),
                 Decimal("500"),
             ),
             (
-                PaymentSchedule.PER_KM_PAYMENT,
-                PaymentSchedule.DAILY,
+                PER_KM_PAYMENT,
+                DAILY,
                 Decimal("100"),
                 10,
                 Decimal("100"),
@@ -2739,8 +2718,7 @@ class PaymentScheduleTestCase(TestCase):
 
     def test_calculate_per_payment_amount_invalid_payment_type(self):
         payment_schedule = create_payment_schedule(
-            payment_type="ugyldig betalingstype",
-            payment_frequency=PaymentSchedule.DAILY,
+            payment_type="ugyldig betalingstype", payment_frequency=DAILY
         )
 
         with self.assertRaises(ValueError):
@@ -2750,8 +2728,8 @@ class PaymentScheduleTestCase(TestCase):
 
     def test_generate_payments(self):
         payment_schedule = create_payment_schedule(
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=RUNNING_PAYMENT,
+            payment_frequency=DAILY,
             payment_amount=Decimal("100"),
         )
         start_date = date(year=2019, month=1, day=1)
@@ -2763,8 +2741,8 @@ class PaymentScheduleTestCase(TestCase):
 
     def test_generate_payments_with_monthly_date(self):
         payment_schedule = create_payment_schedule(
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_type=RUNNING_PAYMENT,
+            payment_frequency=MONTHLY,
             payment_amount=Decimal("100"),
             payment_day_of_month=31,
         )
@@ -2778,8 +2756,8 @@ class PaymentScheduleTestCase(TestCase):
     def test_generate_payments_no_end_date(self):
         now = timezone.now()
         payment_schedule = create_payment_schedule(
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_type=RUNNING_PAYMENT,
+            payment_frequency=MONTHLY,
             payment_amount=Decimal("100"),
         )
         start_date = date(year=now.year, month=1, day=1)
@@ -2796,8 +2774,8 @@ class PaymentScheduleTestCase(TestCase):
         # and new payments should be generated once again
         now = timezone.now()
         payment_schedule = create_payment_schedule(
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_type=RUNNING_PAYMENT,
+            payment_frequency=MONTHLY,
             payment_amount=Decimal("100"),
         )
         start_date = date(year=now.year, month=1, day=1)
@@ -2822,8 +2800,8 @@ class PaymentScheduleTestCase(TestCase):
         # and next the end is set so we need to delete some generated payments.
         now = timezone.now()
         payment_schedule = create_payment_schedule(
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_type=RUNNING_PAYMENT,
+            payment_frequency=MONTHLY,
             payment_amount=Decimal("100"),
         )
         start_date = date(year=now.year, month=1, day=1)
@@ -2841,8 +2819,8 @@ class PaymentScheduleTestCase(TestCase):
     def test_synchronize_payments_new_end_date_in_future(self):
         now = timezone.now()
         payment_schedule = create_payment_schedule(
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_type=RUNNING_PAYMENT,
+            payment_frequency=MONTHLY,
             payment_amount=Decimal("100"),
         )
         start_date = date(year=now.year, month=1, day=1)
@@ -2860,8 +2838,8 @@ class PaymentScheduleTestCase(TestCase):
 
     def test_synchronize_payments_same_end_date_no_changes(self):
         payment_schedule = create_payment_schedule(
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_type=RUNNING_PAYMENT,
+            payment_frequency=MONTHLY,
             payment_amount=Decimal("100"),
         )
         start_date = date(year=2019, month=1, day=1)
@@ -2877,8 +2855,8 @@ class PaymentScheduleTestCase(TestCase):
 
     def test_synchronize_payments_no_payments(self):
         payment_schedule = create_payment_schedule(
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_type=RUNNING_PAYMENT,
+            payment_frequency=MONTHLY,
             payment_amount=Decimal("100"),
         )
         start_date = date(year=2019, month=1, day=1)
@@ -2889,8 +2867,8 @@ class PaymentScheduleTestCase(TestCase):
 
     def test_synchronize_payments_end_date_in_future_for_weekly(self):
         payment_schedule = create_payment_schedule(
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-            payment_frequency=PaymentSchedule.WEEKLY,
+            payment_type=RUNNING_PAYMENT,
+            payment_frequency=WEEKLY,
             payment_amount=Decimal("100"),
         )
         start_date = date(year=2019, month=1, day=1)
@@ -2906,8 +2884,8 @@ class PaymentScheduleTestCase(TestCase):
 
     def test_synchronize_payments_end_date_in_future_for_biweekly(self):
         payment_schedule = create_payment_schedule(
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-            payment_frequency=PaymentSchedule.BIWEEKLY,
+            payment_type=RUNNING_PAYMENT,
+            payment_frequency=BIWEEKLY,
             payment_amount=Decimal("100"),
         )
         start_date = date(year=2019, month=1, day=1)
@@ -2923,8 +2901,8 @@ class PaymentScheduleTestCase(TestCase):
 
     def test_synchronize_payments_invalid_frequency(self):
         payment_schedule = create_payment_schedule(
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-            payment_frequency=PaymentSchedule.WEEKLY,
+            payment_type=RUNNING_PAYMENT,
+            payment_frequency=WEEKLY,
             payment_amount=Decimal("100"),
         )
         start_date = date(year=2019, month=1, day=1)
@@ -2986,8 +2964,8 @@ class PaymentScheduleTestCase(TestCase):
 
     def test_next_payment_none(self):
         payment_schedule = create_payment_schedule(
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-            payment_frequency=PaymentSchedule.WEEKLY,
+            payment_type=RUNNING_PAYMENT,
+            payment_frequency=WEEKLY,
             payment_amount=Decimal("100"),
         )
         start_date = date(year=2019, month=1, day=1)
@@ -2999,8 +2977,8 @@ class PaymentScheduleTestCase(TestCase):
 
     def test_next_payment(self):
         payment_schedule = create_payment_schedule(
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-            payment_frequency=PaymentSchedule.WEEKLY,
+            payment_type=RUNNING_PAYMENT,
+            payment_frequency=WEEKLY,
             payment_amount=Decimal("100"),
         )
         start_date = date.today()
@@ -3015,8 +2993,8 @@ class PaymentScheduleTestCase(TestCase):
 
     def test_payment_schedule_save_generates_payment_id(self):
         payment_schedule = create_payment_schedule(
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-            payment_frequency=PaymentSchedule.WEEKLY,
+            payment_type=RUNNING_PAYMENT,
+            payment_frequency=WEEKLY,
             payment_amount=Decimal("100"),
         )
 
@@ -3048,8 +3026,7 @@ class CaseTestCase(TestCase, BasicTestMixin):
         start_date = date(year=now.year, month=1, day=1)
         end_date = now.date() - timedelta(days=1)
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY, payment_type=RUNNING_PAYMENT
         )
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -3073,8 +3050,7 @@ class CaseTestCase(TestCase, BasicTestMixin):
         start_date = date(year=now.year, month=1, day=1)
         end_date = now.date()
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY, payment_type=RUNNING_PAYMENT
         )
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -3104,8 +3080,7 @@ class CaseTestCase(TestCase, BasicTestMixin):
         start_date = date(year=now.year, month=1, day=1)
         end_date = now.date() - timedelta(days=3)
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY, payment_type=RUNNING_PAYMENT
         )
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -3125,8 +3100,7 @@ class CaseTestCase(TestCase, BasicTestMixin):
         start_date = now.date() - timedelta(days=2)
         end_date = now.date() - timedelta(days=1)
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY, payment_type=RUNNING_PAYMENT
         )
         create_activity(
             case=case,

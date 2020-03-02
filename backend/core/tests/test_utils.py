@@ -25,6 +25,9 @@ from core.models import (
     Team,
     ActivityDetails,
     Payment,
+    DAILY,
+    RUNNING_PAYMENT,
+    ONE_TIME_PAYMENT,
 )
 from core.utils import (
     get_cpr_data,
@@ -186,7 +189,7 @@ class SendAppropriationTestCase(TestCase, BasicTestMixin):
         )
         section.main_activities.add(activity.details)
         payment_schedule = create_payment_schedule(
-            payment_type=PaymentSchedule.ONE_TIME_PAYMENT
+            payment_type=ONE_TIME_PAYMENT
         )
         one_time_activity = create_activity(
             case,
@@ -236,7 +239,7 @@ class SendAppropriationTestCase(TestCase, BasicTestMixin):
         )
         section.main_activities.add(activity.details)
         payment_schedule = create_payment_schedule(
-            payment_type=PaymentSchedule.ONE_TIME_PAYMENT
+            payment_type=ONE_TIME_PAYMENT
         )
         create_activity(
             case,
@@ -331,8 +334,8 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         start_date = now - timedelta(days=1)
         end_date = now + timedelta(days=1)
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY,
+            payment_type=RUNNING_PAYMENT,
             recipient_type=PaymentSchedule.PERSON,
             payment_method=CASH,
             payment_amount=Decimal(666),
@@ -398,8 +401,8 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         start_date = now - timedelta(days=1)
         end_date = now + timedelta(days=1)
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY,
+            payment_type=RUNNING_PAYMENT,
             recipient_type=PaymentSchedule.PERSON,
             payment_method=CASH,
             payment_amount=Decimal(666),
@@ -461,8 +464,8 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         start_date = now
         end_date = now + timedelta(days=5)
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY,
+            payment_type=RUNNING_PAYMENT,
             recipient_type=PaymentSchedule.PERSON,
             payment_method=CASH,
             payment_amount=Decimal(666),
@@ -531,8 +534,8 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         start_date = now
         end_date = now + timedelta(days=5)
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY,
+            payment_type=RUNNING_PAYMENT,
             recipient_type=PaymentSchedule.PERSON,
             payment_method=CASH,
             payment_amount=Decimal(666),
@@ -576,8 +579,8 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         start_date = now
         end_date = now + timedelta(days=5)
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY,
+            payment_type=RUNNING_PAYMENT,
             recipient_type=PaymentSchedule.PERSON,
             payment_method=CASH,
             payment_amount=Decimal(666),
@@ -603,8 +606,8 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         start_date = now + timedelta(days=4)
         end_date = now + timedelta(days=8)
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY,
+            payment_type=RUNNING_PAYMENT,
             recipient_type=PaymentSchedule.PERSON,
             payment_method=CASH,
             payment_amount=Decimal(666),
@@ -631,8 +634,8 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         start_date = now
         end_date = now + timedelta(days=5)
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY,
+            payment_type=RUNNING_PAYMENT,
             recipient_type=PaymentSchedule.PERSON,
             payment_method=CASH,
             payment_amount=Decimal(666),
@@ -658,8 +661,8 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         start_date = now + timedelta(days=4)
         end_date = now + timedelta(days=8)
         payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=DAILY,
+            payment_type=RUNNING_PAYMENT,
             recipient_type=PaymentSchedule.PERSON,
             payment_method=CASH,
             payment_amount=Decimal(800),
