@@ -22,7 +22,6 @@ from core.tests.testing_utils import (
 )
 from core.models import (
     Payment,
-    PaymentSchedule,
     Case,
     MAIN_ACTIVITY,
     STATUS_GRANTED,

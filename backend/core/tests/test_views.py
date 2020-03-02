@@ -14,7 +14,6 @@ from django.utils import timezone
 
 from core.models import (
     ApprovalLevel,
-    PaymentSchedule,
     Payment,
     EffortStep,
     MAIN_ACTIVITY,
