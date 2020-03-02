@@ -354,7 +354,6 @@ class PaymentSchedule(models.Model):
 
     def create_rrule(self, start, **kwargs):
         """Create a dateutil.rrule for this schedule specifically."""
-
         return create_rrule(
             self.payment_type,
             self.payment_frequency,
