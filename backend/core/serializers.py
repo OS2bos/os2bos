@@ -273,7 +273,7 @@ class ActivitySerializer(WritableNestedModelSerializer):
             )
             if not has_payments:
                 raise serializers.ValidationError(
-                    _("Betalingsparametre resulterer ikke i nogle betalinger")
+                    _("Betalingsparametre resulterer ikke i nogen betalinger")
                 )
 
         if "modifies" in data and data["modifies"]:

@@ -527,7 +527,47 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         self.assertFalse(is_valid)
         self.assertEqual(
             serializer.errors["non_field_errors"][0],
-            "Betalingsparametre resulterer ikke i nogle betalinger",
+            "Betalingsparametre resulterer ikke i nogen betalinger",
+        )
+
+    def test_validate_monthly_payment_with_valid_parameters(self):
+        # Create an "valid" monthly activity with payment_day_of_month
+        # in start - end range
+
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_type=RUNNING_PAYMENT,
+            payment_frequency=MONTHLY,
+            payment_day_of_month=31,
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        start_date = date(2020, 1, 1)
+        end_date = date(2020, 2, 1)
+        details, unused = ActivityDetails.objects.get_or_create(
+            activity_id="000000",
+            name="Test aktivitet",
+            max_tolerance_in_percent=10,
+            max_tolerance_in_dkk=1000,
+        )
+        data = {
+            "case": case.id,
+            "appropriation": appropriation.id,
+            "start_date": start_date,
+            "status": STATUS_EXPECTED,
+            "activity_type": MAIN_ACTIVITY,
+            "end_date": end_date,
+            "details": details.id,
+            "payment_plan": PaymentScheduleSerializer(payment_schedule).data,
+        }
+        serializer = ActivitySerializer(data=data)
+        is_valid = serializer.is_valid()
+        self.assertFalse(is_valid)
+        self.assertEqual(
+            serializer.errors["non_field_errors"][0],
+            "Betalingsparametre resulterer ikke i nogen betalinger",
         )
 
 
