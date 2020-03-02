@@ -22,4 +22,4 @@ django-constance[database]==2.5.0
 drf-writable-nested==0.5.4
 git+https://github.com/magenta-aps/django-saml2-auth#egg=django-saml2-auth
 pysaml2==5.0.0
-django-mailer==2.0
+django-mailer==2.0.1
