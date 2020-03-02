@@ -626,6 +626,7 @@ def generate_payments_report_list(payments):
             "activity__details__name": activity.details.name,
             "activity_start_date": activity.start_date,
             "activity_end_date": activity.end_date,
+            "activity_status": activity.status,
             # appropriation specific.
             "section": appropriation.section.paragraph,
             "section_text": appropriation.section.text,
