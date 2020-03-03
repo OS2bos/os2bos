@@ -6,7 +6,6 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """Data serializers used by the REST API."""
 
-
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from django import forms
@@ -37,6 +36,7 @@ from core.models import (
     FAMILY_DEPT,
     STATUS_DELETED,
 )
+from core.utils import create_rrule
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -252,6 +252,31 @@ class ActivitySerializer(WritableNestedModelSerializer):
             raise serializers.ValidationError(
                 _("startdato og slutdato skal være ens for engangsbetaling")
             )
+
+        is_monthly_payment = (
+            "payment_frequency" in data["payment_plan"]
+            and data["payment_plan"]["payment_frequency"]
+            == PaymentSchedule.MONTHLY
+        )
+        if is_monthly_payment and ("end_date" in data and data["end_date"]):
+            start_date = data["start_date"]
+            end_date = data["end_date"]
+            payment_type = data["payment_plan"]["payment_type"]
+            payment_frequency = data["payment_plan"]["payment_frequency"]
+            payment_day_of_month = data["payment_plan"]["payment_day_of_month"]
+            has_payments = list(
+                create_rrule(
+                    payment_type,
+                    payment_frequency,
+                    payment_day_of_month,
+                    start_date,
+                    until=end_date,
+                )
+            )
+            if not has_payments:
+                raise serializers.ValidationError(
+                    _("Betalingsparametre resulterer ikke i nogen betalinger")
+                )
 
         if "modifies" in data and data["modifies"]:
             # run the validate_expected flow.
