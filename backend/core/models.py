@@ -242,6 +242,15 @@ class PaymentSchedule(models.Model):
         verbose_name=_("betalingsmåde detalje"),
     )
 
+    activity = models.OneToOneField(
+        "Activity",
+        on_delete=models.CASCADE,
+        verbose_name=_("aktivitet"),
+        related_name="payment_plan",
+        null=True,
+        blank=True,
+    )
+
     ONE_TIME_PAYMENT = "ONE_TIME_PAYMENT"
     RUNNING_PAYMENT = "RUNNING_PAYMENT"
     PER_HOUR_PAYMENT = "PER_HOUR_PAYMENT"
@@ -1220,14 +1229,6 @@ class Activity(AuditModelMixin, models.Model):
 
     activity_type = models.CharField(
         max_length=128, verbose_name=_("type"), choices=type_choices
-    )
-
-    payment_plan = models.OneToOneField(
-        PaymentSchedule,
-        on_delete=models.CASCADE,
-        verbose_name=_("betalingsplan"),
-        null=True,
-        blank=True,
     )
 
     # An expected change modifies another actitvity and will eventually
