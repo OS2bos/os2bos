@@ -225,7 +225,7 @@ release-master:
 
 .deploy-default: &deploy-default
   stage: deploy
-  image: magentalabs/deployment-client:latest
+  image: magentalabs/deployment-client:v2.0
   services: []
   dependencies: []
   tags:
@@ -243,7 +243,7 @@ deploy-dev:
     GIT_STRATEGY: none
   script:
     - echo Attempting to call deployment
-    - python /app/deployment/client.py
+    - python /app/deployment/client.py deploy
 
 
 .deploy-rc:
