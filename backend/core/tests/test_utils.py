@@ -537,26 +537,8 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
             payment_method=CASH,
             payment_amount=Decimal(666),
         )
-        # Create an activity etc which is required.
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
-        section = create_section()
-        appropriation = create_appropriation(
-            sbsys_id="XXX-YYY", case=case, section=section
-        )
-        activity = create_activity(
-            case,
-            appropriation,
-            start_date=start_date,
-            end_date=end_date,
-            activity_type=MAIN_ACTIVITY,
-            status=STATUS_GRANTED,
-            payment_plan=payment_schedule,
-        )
-        activity.delete()
 
-        payment_schedule.refresh_from_db()
+        payment_schedule.generate_payments(start_date, end_date)
         payments = payment_schedule.payments.all()
 
         report_list = generate_payments_report_list(payments)

@@ -2206,6 +2206,36 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         activity = create_activity(case=case, appropriation=appropriation)
         self.assertGreaterEqual(appropriation.modified, activity.modified)
 
+    def test_delete_activity_deletes_payment_schedule(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+        main_activity_details = ActivityDetails.objects.create(
+            name="Betaling til andre kommuner/region for specialtandpleje",
+            activity_id="010001",
+            max_tolerance_in_dkk=5000,
+            max_tolerance_in_percent=10,
+        )
+
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("700.0"),
+            payment_frequency=PaymentSchedule.DAILY,
+        )
+        activity = create_activity(
+            case,
+            appropriation,
+            payment_plan=payment_schedule,
+            status=STATUS_DRAFT,
+            activity_type=MAIN_ACTIVITY,
+            details=main_activity_details,
+        )
+
+        activity.delete()
+        with self.assertRaises(PaymentSchedule.DoesNotExist):
+            payment_schedule.refresh_from_db()
+
 
 class AccountTestCase(TestCase):
     def test_account_str(self):
