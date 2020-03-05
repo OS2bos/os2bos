@@ -128,6 +128,6 @@ def generate_payments_on_pre_save(sender, instance, **kwargs):
     dispatch_uid="delete_payment_schedule_on_post_delete",
 )
 def delete_payment_schedule_on_post_delete(sender, instance, **kwargs):
-    """ Delete the associated PaymentSchedule on Activity post_delete."""
+    """Delete the associated PaymentSchedule on Activity post_delete."""
     if instance.payment_plan:
         instance.payment_plan.delete()
