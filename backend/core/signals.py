@@ -120,3 +120,13 @@ def generate_payments_on_pre_save(sender, instance, **kwargs):
             instance.payment_plan.synchronize_payments(
                 instance.start_date, instance.end_date, vat_factor
             )
+
+
+@receiver(
+    post_delete,
+    sender=Activity,
+    dispatch_uid="delete_payment_schedule_on_post_delete",
+)
+def delete_payment_schedule_on_post_delete(sender, instance, **kwargs):
+    if instance.payment_plan:
+        instance.payment_plan.delete()
