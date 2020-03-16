@@ -29,7 +29,6 @@
 # Run Monday export on Friday
 15 0 * * 5 python manage.py export_to_prism --date $(date +%Y%m%d --date="+2 day")
 
-
 20 0 * * * python manage.py mark_fictive_payments_paid
 25 0 * * * python manage.py generate_payments_report
 
