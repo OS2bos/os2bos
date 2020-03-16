@@ -74,12 +74,31 @@ docs:
     paths:
       - doc-build
 
+shell-lint:
+  <<: *lint-default
+  image: koalaman/shellcheck-alpine:latest
+  before_script:
+    - apk update
+    - apk add git
+  script:
+    - git ls-files --exclude='*.sh' --ignored | xargs shellcheck
+
+Lint Dockerfiles:
+  <<: *lint-default
+  image: hadolint/hadolint:latest-debian
+  before_script:
+    - apt-get -y update
+    - apt-get -y install --no-install-recommends git
+  script:
+    - git ls-files --exclude='Dockerfile*' --ignored | xargs --max-lines=1 hadolint
+
 
 # Build stage
 #############
 
 build:
   stage: lint-build
+  dependencies: []
   tags:
     - docker
     - privileged
@@ -105,6 +124,7 @@ unit-test:
   services:
     - name: postgres:11
       alias: db
+  dependencies: []
   variables:
     POSTGRES_USER: bev
     POSTGRES_PASSWORD: bev
@@ -150,6 +170,7 @@ unit-test:
   image: docker:19.03.1
   variables:
     GIT_STRATEGY: none # We do not need the source code
+  dependencies: []
   tags:
     - docker
     - privileged
@@ -162,7 +183,8 @@ unit-test:
 release-dev:
   <<: *release-default
   only:
-    - /develop/
+    refs:
+      - develop
   script:
     - docker tag ${IMAGE_SHA} ${IMAGE_DEV}
     - docker push ${IMAGE_DEV}
@@ -203,21 +225,25 @@ release-master:
 
 .deploy-default: &deploy-default
   stage: deploy
-  variables:
-    GIT_STRATEGY: none
+  image: magentalabs/deployment-client:v2.0
+  services: []
+  dependencies: []
   tags:
-    - docker
-    - privileged
-    # TODO fix tags
+    - deploy
 
 
-.deploy-dev:
+deploy-dev:
   <<: *deploy-default
   only:
-    - develop
+    refs:
+      - develop
+  variables:
+    DEPLOYMENT_NAMESPACE: cbur.magenta.test
+    DEPLOYMENT_URL: https://deploymenttest.magenta-aps.dk
+    GIT_STRATEGY: none
   script:
-    - echo Deploying ${IMAGE_DEV} to moradev.magneta.dk
-    # TODO: push ${IMAGE_DEV} to moradev.magneta.dk
+    - echo Attempting to call deployment
+    - python /app/deployment/client.py deploy
 
 
 .deploy-rc:

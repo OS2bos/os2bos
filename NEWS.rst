@@ -1,4 +1,23 @@
-VERSION 2.4.2, 2020-02-24
+Version 2.5.0, 2020-03-06
+-------------------------
+
+New in this version:
+
+Features
+^^^^^^^^
+
+- Add section, section_text, payment_schedule__payment_id and main_activity_name to CSV Payments report.
+- Return a validation error when trying to create an invalid monthly payment schedule.
+- Use create_rrule for all the places we check generated payments.
+- Add tests for the frontend.
+- Update README with logging documentation.
+- Update documentation for generating database documentation.
+- Add shell linting and docker file linting and lint fixes.
+- Add automatic deployment for develop branch.
+- Allow the docker backend service to be debuggable with docker attach.
+- Update dependencies to new versions.
+
+Version 2.4.2, 2020-02-24
 -------------------------
 
 Hotfix:
@@ -8,7 +27,7 @@ Bug fixes
 
 * Fix fonts urlpattern for loading fonts as assets.
 
-VERSION 2.4.1, 2020-02-24
+Version 2.4.1, 2020-02-24
 -------------------------
 
 New in this version:

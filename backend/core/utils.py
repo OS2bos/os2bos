@@ -14,6 +14,7 @@ import datetime
 import itertools
 from datetime import date
 
+from dateutil import rrule
 from dateutil.relativedelta import relativedelta
 
 from django.template.loader import get_template
@@ -39,23 +40,6 @@ from core import models
 
 
 logger = logging.getLogger(__name__)
-
-
-def get_next_interval(from_date, payment_frequency):
-    """Calculate the next date based on start date and payment frequency."""
-    from core.models import PaymentSchedule
-
-    if payment_frequency == PaymentSchedule.DAILY:
-        new_start = from_date + relativedelta(days=1)
-    elif payment_frequency == PaymentSchedule.WEEKLY:
-        new_start = from_date + relativedelta(weeks=1)
-    elif payment_frequency == PaymentSchedule.BIWEEKLY:
-        new_start = from_date + relativedelta(weeks=2)
-    elif payment_frequency == PaymentSchedule.MONTHLY:
-        new_start = from_date.replace(day=1) + relativedelta(months=1)
-    else:
-        raise ValueError(_("ukendt betalingsfrekvens"))
-    return new_start
 
 
 def get_person_info(cpr):
@@ -614,6 +598,12 @@ def generate_payments_report_list(payments):
             else None
         )
 
+        main_activity_name = (
+            appropriation.main_activity.details.name
+            if appropriation.main_activity
+            else None
+        )
+
         payment_dict = {
             # payment specific.
             "id": payment.pk,
@@ -623,6 +613,7 @@ def generate_payments_report_list(payments):
             "paid_date": payment.paid_date,
             "account_string": payment.account_string,
             # payment_schedule specific.
+            "payment_schedule__payment_id": payment_schedule.payment_id,
             "payment_schedule__"
             "payment_amount": payment_schedule.payment_amount,
             "payment_schedule__"
@@ -637,9 +628,11 @@ def generate_payments_report_list(payments):
             "activity_start_date": activity.start_date,
             "activity_end_date": activity.end_date,
             # appropriation specific.
-            "section": str(appropriation.section),
+            "section": appropriation.section.paragraph,
+            "section_text": appropriation.section.text,
             "sbsys_id": appropriation.sbsys_id,
             "main_activity_id": main_activity_id,
+            "main_activity_name": main_activity_name,
             # case specific.
             "cpr_number": case.cpr_number,
             "name": case.name,
@@ -654,3 +647,38 @@ def generate_payments_report_list(payments):
         payments_report_list.append(payment_dict)
 
     return payments_report_list
+
+
+def create_rrule(
+    payment_type, payment_frequency, payment_day_of_month, start, **kwargs
+):
+    """Create a dateutil.rrule to generate dates for a payment schedule.
+
+    The rule should be based on payment_type/payment_frequency and start.
+    Takes either "until" or "count" as kwargs.
+    """
+    # One time payments are a special case with a count of 1 always.
+    if payment_type == models.PaymentSchedule.ONE_TIME_PAYMENT:
+        rrule_frequency = rrule.rrule(rrule.DAILY, dtstart=start, count=1)
+    elif payment_frequency == models.PaymentSchedule.DAILY:
+        rrule_frequency = rrule.rrule(rrule.DAILY, dtstart=start, **kwargs)
+    elif payment_frequency == models.PaymentSchedule.WEEKLY:
+        rrule_frequency = rrule.rrule(rrule.WEEKLY, dtstart=start, **kwargs)
+    elif payment_frequency == models.PaymentSchedule.BIWEEKLY:
+        rrule_frequency = rrule.rrule(
+            rrule.WEEKLY, dtstart=start, interval=2, **kwargs
+        )
+    elif payment_frequency == models.PaymentSchedule.MONTHLY:
+        monthly_date = payment_day_of_month
+        if monthly_date > 28:
+            monthly_date = [d for d in range(28, monthly_date + 1)]
+        rrule_frequency = rrule.rrule(
+            rrule.MONTHLY,
+            dtstart=start,
+            bymonthday=monthly_date,
+            bysetpos=-1,
+            **kwargs,
+        )
+    else:
+        raise ValueError(_("ukendt betalingsfrekvens"))
+    return rrule_frequency

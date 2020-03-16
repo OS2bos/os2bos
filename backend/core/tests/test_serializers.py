@@ -500,6 +500,81 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         is_valid = serializer.is_valid()
         self.assertFalse(is_valid)
 
+    def test_validate_monthly_payment_with_invalid_parameters(self):
+        # Create an "invalid" monthly activity with start and end date 1st
+        # but a payment_day_of_month of 31st.
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_day_of_month=31,
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        start_date = date(2020, 1, 1)
+        end_date = date(2020, 1, 1)
+        details, unused = ActivityDetails.objects.get_or_create(
+            activity_id="000000",
+            name="Test aktivitet",
+            max_tolerance_in_percent=10,
+            max_tolerance_in_dkk=1000,
+        )
+        data = {
+            "case": case.id,
+            "appropriation": appropriation.id,
+            "start_date": start_date,
+            "status": STATUS_EXPECTED,
+            "activity_type": MAIN_ACTIVITY,
+            "end_date": end_date,
+            "details": details.id,
+            "payment_plan": PaymentScheduleSerializer(payment_schedule).data,
+        }
+        serializer = ActivitySerializer(data=data)
+        is_valid = serializer.is_valid()
+        self.assertFalse(is_valid)
+        self.assertEqual(
+            serializer.errors["non_field_errors"][0],
+            "Betalingsparametre resulterer ikke i nogen betalinger",
+        )
+
+    def test_validate_monthly_payment_with_valid_parameters(self):
+        # Create an "valid" monthly activity with payment_day_of_month
+        # in start - end range
+
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_day_of_month=31,
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        start_date = date(2020, 1, 1)
+        end_date = date(2020, 2, 1)
+        details, unused = ActivityDetails.objects.get_or_create(
+            activity_id="000000",
+            name="Test aktivitet",
+            max_tolerance_in_percent=10,
+            max_tolerance_in_dkk=1000,
+        )
+        data = {
+            "case": case.id,
+            "appropriation": appropriation.id,
+            "start_date": start_date,
+            "status": STATUS_EXPECTED,
+            "activity_type": MAIN_ACTIVITY,
+            "end_date": end_date,
+            "details": details.id,
+            "payment_plan": PaymentScheduleSerializer(payment_schedule).data,
+        }
+        serializer = ActivitySerializer(data=data)
+        is_valid = serializer.is_valid()
+        self.assertTrue(is_valid)
+
 
 class CaseSerializerTestCase(TestCase, BasicTestMixin):
     @classmethod
@@ -582,7 +657,7 @@ class PaymentScheduleSerializerTestCase(TestCase, BasicTestMixin):
         )
 
     def test_validate_error_non_one_time_payment_without_frequency(self):
-        # Create an invalid running payment, no frequency combiation.
+        # Create an invalid running payment, no frequency combination.
         data = {
             "payment_type": PaymentSchedule.RUNNING_PAYMENT,
             "payment_amount": Decimal("500.0"),

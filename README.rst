@@ -11,7 +11,7 @@ TL;DR: To get a running development environment run:
 
 .. code-block:: bash
 
-   git@git.magenta.dk:bevillingsplatform/bevillingsplatform.git
+   git clone git@git.magenta.dk:bevillingsplatform/bevillingsplatform.git
    cd bevillingsplatform
    docker-compose up -d --build frontend
 
@@ -102,10 +102,31 @@ easily be mounted to a webserver.
 Logs
 ^^^^
 
-The gunicorn error log is output on ``STDERR``. It can be inspected with ``docker
-logs``. The gunicorn access log is written to ``/log/access.log``. The django log
-is written to ``/log/django-debug.log``.
+For logging we use the builtin ``logging`` module used by `Django`_.
+Logs are written to the ``/log/`` directory inside the container.
 
+The ``/log/`` folder is mapped to the host systems ``log/`` folder in local development and ``/var/log/os2bos/`` anywhere else.
+
+We log the following:
+
+* Error log - the gunicorn error log is output on ``STDERR`` as well as in ``/log/error.log``. It can be inspected with ``docker logs``.
+
+* Access log - The gunicorn access log is output on ``STDOUT`` as well as in ``/log/access.log``. It can be inspected with ``docker logs``.
+
+* Django debug log - The django log is written to ``/log/django-debug.log``.
+
+* Audit log - We log all non-idempotent requests (``POST``/``PUT``/``PATCH``/``DELETE``) in the audit log specifying the request endpoint and user making the request. The log is written to ``/log/audit.log``.
+
+* Export to Prism log - Log related to the PRISM exports management command. The log is written to ``/log/export_to_prism.log``.
+
+* Mark Fictive Payments Paid log - Log related to the marking fictive payments paid management command. The log is written to ``mark_fictive_payments_paid.log``.
+
+* Generate Payments Report log - Log related to generating the payment reports. The log is written to ``/log/generate_payments_report.log``.
+
+* Cron mail logs - Logs related to the `Django mailer app`_. The logs are written to ``cron_mail.log``, ``cron_mail_deferred.log``, ``cron_mail_purge.log``.
+
+.. _Django: https://docs.djangoproject.com/en/dev/topics/logging/
+.. _Django mailer app: https://github.com/pinax/django-mailer/
 
 User permissions
 ^^^^^^^^^^^^^^^^
@@ -239,6 +260,11 @@ The documentation exists at `Read the Docs`_ and can be generated locally with t
 
    tox -e docs
 
+When changes are introduced to the Django models, update and commit the database model graph for use in documentation:
+
+.. code-block:: bash
+
+   tox -e graph
 
 .. _Read the Docs: https://os2bos.readthedocs.io/en/latest/
 
