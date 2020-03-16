@@ -19,10 +19,18 @@
 # │ │ │ │ │
 # * * * * * command to execute
 
-5 0 * * * python manage.py export_to_prism
+# Prism exports
+# Run export Monday to Friday which will generate exports for Tuesday to Saturday.
+5 0 * * 1-5 python manage.py export_to_prism
 
-10 0 * * * python manage.py mark_fictive_payments_paid
-15 0 * * * python manage.py generate_payments_report
+# Run Sunday export on Friday
+10 0 * * 5 python manage.py export_to_prism --date $(date +%Y%m%d --date="+1 day")
+
+# Run Monday export on Friday
+15 0 * * 5 python manage.py export_to_prism --date $(date +%Y%m%d --date="+2 day")
+
+20 0 * * * python manage.py mark_fictive_payments_paid
+25 0 * * * python manage.py generate_payments_report
 
 * * * * * sh -c "python manage.py send_mail >> /log/cron_mail.log 2>&1"
 */20 * * * * sh -c "python manage.py retry_deferred >> /log/cron_mail_deferred.log 2>&1"
