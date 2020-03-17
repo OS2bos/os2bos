@@ -5,13 +5,16 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-
+import logging
 from datetime import timedelta
+
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 from core.models import Activity, STATUS_GRANTED
 from core.utils import send_activity_expired_email
+
+logger = logging.getLogger("bevillingsplatform.send_expired_emails")
 
 
 class Command(BaseCommand):
@@ -32,6 +35,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
+        logger.info("sending expired emails")
         last_days = options["last_days"]
         now_date = timezone.now().date()
 
@@ -44,4 +48,5 @@ class Command(BaseCommand):
         for activity in activities:
             if not activity.triggers_payment_email:
                 continue
+            logger.info("sending expired email for %s", activity.id)
             send_activity_expired_email(activity)
