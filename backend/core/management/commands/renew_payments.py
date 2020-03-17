@@ -17,7 +17,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         # Find recurring payment schedules which has an associated Activity.
         recurring_schedules = PaymentSchedule.objects.filter(
-            activity__is_null=False
+            activity__isnull=False
         ).exclude(payment_type=PaymentSchedule.ONE_TIME_PAYMENT)
 
         for schedule in recurring_schedules:

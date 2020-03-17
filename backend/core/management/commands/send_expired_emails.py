@@ -10,7 +10,7 @@ from datetime import timedelta
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from core.models import Activity
+from core.models import Activity, STATUS_GRANTED
 from core.utils import send_activity_expired_email
 
 
@@ -38,7 +38,7 @@ class Command(BaseCommand):
         activities = Activity.objects.filter(
             end_date__gte=now_date - timedelta(days=last_days),
             end_date__lt=now_date,
-            status=Activity.STATUS_GRANTED,
+            status=STATUS_GRANTED,
         )
 
         for activity in activities:
