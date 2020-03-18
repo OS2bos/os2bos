@@ -2,7 +2,7 @@ from unittest import mock
 from datetime import datetime, date, timedelta
 
 from django.core.management import call_command
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.utils import timezone
 from django.db import IntegrityError
 from django.db.utils import OperationalError
@@ -12,12 +12,15 @@ from freezegun import freeze_time
 
 from core.models import (
     MAIN_ACTIVITY,
+    SUPPL_ACTIVITY,
     STATUS_GRANTED,
+    STATUS_EXPECTED,
     PaymentSchedule,
     ActivityDetails,
     Account,
     ServiceProvider,
     SchoolDistrict,
+    Section,
 )
 from core.tests.testing_utils import (
     BasicTestMixin,
@@ -26,6 +29,7 @@ from core.tests.testing_utils import (
     create_case,
     create_appropriation,
     create_activity,
+    create_section,
 )
 
 
@@ -380,3 +384,85 @@ class TestExportToPrism(TestCase):
         logger_mock.exception.assert_called_with(
             "An exception occurred during export to PRISME"
         )
+
+
+class TestGeneratePaymentsReports(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    @override_settings(PAYMENTS_REPORT_DIR="/tmp/")
+    @mock.patch("core.management.commands.generate_payments_report.logger")
+    def test_generate_payments_report_success(self, logger_mock):
+        section = create_section()
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case, section=section)
+
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            payment_plan=payment_schedule,
+            start_date=date(year=2020, month=1, day=1),
+            end_date=date(year=2020, month=2, day=1),
+        )
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+        )
+
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=SUPPL_ACTIVITY,
+            status=STATUS_EXPECTED,
+            payment_plan=payment_schedule,
+            start_date=date(year=2020, month=1, day=1),
+            end_date=date(year=2020, month=2, day=1),
+        )
+
+        call_command("generate_payments_report")
+
+        logger_mock.info.assert_has_calls(
+            [
+                mock.call("Created granted payments report for 2 payments"),
+                mock.call(
+                    "Created expected payments report for 4 expected payments"
+                ),
+            ]
+        )
+
+    @override_settings(PAYMENTS_REPORT_DIR="/invalid_dir/")
+    @mock.patch("core.management.commands.generate_payments_report.logger")
+    def test_generate_payments_report_exception(self, logger_mock):
+
+        call_command("generate_payments_report")
+
+        logger_mock.exception.assert_called_with(
+            "An error occurred during generation of payments reports"
+        )
+
+
+class TestImportServiceProviders(TestCase):
+    def test_import_service_providers(self):
+        self.assertEqual(ServiceProvider.objects.count(), 0)
+
+        call_command("import_service_providers")
+
+        self.assertEqual(ServiceProvider.objects.count(), 422)
+
+
+class TestImportSections(TestCase):
+    def test_import_sections(self):
+        self.assertEqual(Section.objects.count(), 0)
+
+        call_command("import_sections")
+
+        self.assertEqual(Section.objects.count(), 146)
