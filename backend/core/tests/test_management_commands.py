@@ -1,5 +1,5 @@
 from unittest import mock
-from datetime import date, timedelta
+from datetime import datetime, date, timedelta
 
 from django.core.management import call_command
 from django.test import TestCase
@@ -238,7 +238,7 @@ class TestSendExpiredEmails(TestCase, BasicTestMixin):
             start_date=today - timedelta(days=30),
             end_date=today - timedelta(days=1),
         )
-        # Created email should be sent initially.
+        # Only created email should be sent initially.
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, "Aktivitet oprettet")
 
@@ -246,3 +246,101 @@ class TestSendExpiredEmails(TestCase, BasicTestMixin):
         # Then expired email.
         self.assertEqual(len(mail.outbox), 2)
         self.assertEqual(mail.outbox[1].subject, "Aktivitet udgået")
+
+
+class TestExportToPrism(TestCase):
+    @mock.patch("core.management.commands.export_to_prism.logger")
+    @mock.patch(
+        "core.management.commands.export_to_prism.export_prism_payments_for_date"
+    )
+    def test_export_to_prism_success(
+        self, export_prism_payments_mock, logger_mock
+    ):
+        export_prism_payments_mock.return_value = None
+
+        call_command("export_to_prism")
+
+        export_prism_payments_mock.assert_called_with(None)
+        logger_mock.info.assert_called_with(
+            "No records found for export to PRISME."
+        )
+
+    @mock.patch(
+        "core.management.commands.export_to_prism.export_prism_payments_for_date"
+    )
+    def test_export_to_prism_success_with_date(
+        self, export_prism_payments_mock
+    ):
+        yesterday = timezone.now() - timedelta(days=1)
+        call_command(
+            "export_to_prism", "--date=" + yesterday.strftime("%Y%m%d")
+        )
+
+        export_prism_payments_mock.assert_called_with(
+            datetime(yesterday.year, yesterday.month, yesterday.day, 0, 0)
+        )
+
+    @mock.patch("core.management.commands.export_to_prism.os")
+    @mock.patch("core.management.commands.export_to_prism.logger")
+    @mock.patch(
+        "core.management.commands.export_to_prism.export_prism_payments_for_date"
+    )
+    def test_export_to_prism_success_with_file(
+        self, export_prism_payments_mock, logger_mock, os_mock
+    ):
+        os_mock.path.isfile.return_value = True
+        export_prism_payments_mock.return_value = "/test/path"
+
+        call_command("export_to_prism")
+
+        logger_mock.info.assert_called_with(
+            "Success: PRISME records were exported to /test/path"
+        )
+
+    @mock.patch("core.management.commands.export_to_prism.os")
+    @mock.patch("core.management.commands.export_to_prism.logger")
+    @mock.patch(
+        "core.management.commands.export_to_prism.export_prism_payments_for_date"
+    )
+    def test_export_to_prism_error_invalid_filepath(
+        self, export_prism_payments_mock, logger_mock, os_mock
+    ):
+        os_mock.path.isfile.return_value = False
+        export_prism_payments_mock.return_value = "/test/path"
+
+        call_command("export_to_prism")
+
+        logger_mock.error.assert_called_with(
+            "Export of records to PRISME failed!"
+        )
+
+    @mock.patch("core.management.commands.export_to_prism.logger")
+    @mock.patch(
+        "core.management.commands.export_to_prism.export_prism_payments_for_date"
+    )
+    def test_export_to_prism_error_invalid_date(
+        self, export_prism_payments_mock, logger_mock
+    ):
+        with self.assertRaises(SystemExit) as cm:
+            call_command("export_to_prism", "--date=wrong_date")
+            self.assertEqual(cm.code, 1)
+
+        export_prism_payments_mock.assert_not_called()
+        logger_mock.error.assert_called_with(
+            "Invalid date input wrong_date - should parse as 'YYYYMMDD'"
+        )
+
+    @mock.patch("core.management.commands.export_to_prism.logger")
+    @mock.patch(
+        "core.management.commands.export_to_prism.export_prism_payments_for_date"
+    )
+    def test_export_to_prism_error_failed_export(
+        self, export_prism_payments_mock, logger_mock
+    ):
+        export_prism_payments_mock.side_effect = OSError("test")
+
+        call_command("export_to_prism")
+
+        logger_mock.exception.assert_called_with(
+            "An exception occurred during export to PRISME"
+        )
