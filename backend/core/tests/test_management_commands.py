@@ -439,6 +439,15 @@ class TestGeneratePaymentsReports(TestCase, BasicTestMixin):
             ]
         )
 
+    @override_settings(PAYMENTS_REPORT_DIR="/tmp/")
+    @mock.patch("core.management.commands.generate_payments_report.logger")
+    def test_generate_payments_report_no_payments(self, logger_mock):
+
+        call_command("generate_payments_report")
+
+        logger_mock.info.assert_not_called()
+        logger_mock.exception.assert_not_called()
+
     @override_settings(PAYMENTS_REPORT_DIR="/invalid_dir/")
     @mock.patch("core.management.commands.generate_payments_report.logger")
     def test_generate_payments_report_exception(self, logger_mock):
