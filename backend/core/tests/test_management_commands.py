@@ -459,6 +459,29 @@ class TestGeneratePaymentsReports(TestCase, BasicTestMixin):
         )
 
 
+class TestImportActivityDetails(TestCase):
+    def test_import_activity_details(self):
+        self.assertEqual(ActivityDetails.objects.count(), 0)
+
+        call_command("import_activity_details")
+
+        self.assertEqual(ActivityDetails.objects.count(), 82)
+
+
+class TestImportAccounts(TestCase):
+    def test_import_accounts(self):
+        # The import_accounts script requires activity details and sections
+        # to have been populated first.
+        call_command("import_activity_details")
+        call_command("import_sections")
+
+        self.assertEqual(Account.objects.count(), 0)
+
+        call_command("import_accounts")
+
+        self.assertEqual(Account.objects.count(), 870)
+
+
 class TestImportServiceProviders(TestCase):
     def test_import_service_providers(self):
         self.assertEqual(ServiceProvider.objects.count(), 0)
