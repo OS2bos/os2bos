@@ -202,6 +202,21 @@ class TestEnsureDbConnection(TestCase):
 
         self.assertEqual(cm.exception.code, 1)
 
+    def test_ensure_db_connection_fail_with_wait(self):
+        # Mock the ensure_connection method to raise an OperationalError.
+        db_mock = mock.MagicMock()
+        db_mock.ensure_connection.side_effect = OperationalError
+        db_dict = {"default": db_mock}
+
+        with mock.patch(
+            "core.management.commands.ensure_db_connection.connections",
+            db_dict,
+        ):
+            with self.assertRaises(SystemExit) as cm:
+                call_command("ensure_db_connection", "--wait=2")
+
+        self.assertEqual(cm.exception.code, 1)
+
 
 class TestInitializeDatabase(TestCase):
     @mock.patch("core.management.commands.initialize_database.initialize")
@@ -218,7 +233,7 @@ class TestSendExpiredEmails(TestCase, BasicTestMixin):
     def setUpTestData(cls):
         cls.basic_setup()
 
-    def test_send_expired_emails(self):
+    def test_send_expired_emails_success(self):
         today = timezone.now().date()
         payment_schedule = create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
@@ -246,6 +261,27 @@ class TestSendExpiredEmails(TestCase, BasicTestMixin):
         # Then expired email.
         self.assertEqual(len(mail.outbox), 2)
         self.assertEqual(mail.outbox[1].subject, "Aktivitet udgået")
+
+    def test_send_expired_emails_doesnt_trigger_email(self):
+        today = timezone.now().date()
+
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=today - timedelta(days=30),
+            end_date=today - timedelta(days=1),
+        )
+
+        call_command("send_expired_emails")
+        # No emails should be sent.
+        self.assertEqual(len(mail.outbox), 0)
 
 
 class TestExportToPrism(TestCase):
