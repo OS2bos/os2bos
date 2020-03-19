@@ -19,7 +19,6 @@ from core.models import (
     ActivityDetails,
     Account,
     ServiceProvider,
-    SchoolDistrict,
     Section,
 )
 from core.tests.testing_utils import (
@@ -291,7 +290,8 @@ class TestSendExpiredEmails(TestCase, BasicTestMixin):
 class TestExportToPrism(TestCase):
     @mock.patch("core.management.commands.export_to_prism.logger")
     @mock.patch(
-        "core.management.commands.export_to_prism.export_prism_payments_for_date"
+        "core.management.commands.export_to_prism."
+        "export_prism_payments_for_date"
     )
     def test_export_to_prism_success(
         self, export_prism_payments_mock, logger_mock
@@ -306,7 +306,8 @@ class TestExportToPrism(TestCase):
         )
 
     @mock.patch(
-        "core.management.commands.export_to_prism.export_prism_payments_for_date"
+        "core.management.commands.export_to_prism."
+        "export_prism_payments_for_date"
     )
     def test_export_to_prism_success_with_date(
         self, export_prism_payments_mock
@@ -323,7 +324,8 @@ class TestExportToPrism(TestCase):
     @mock.patch("core.management.commands.export_to_prism.os")
     @mock.patch("core.management.commands.export_to_prism.logger")
     @mock.patch(
-        "core.management.commands.export_to_prism.export_prism_payments_for_date"
+        "core.management.commands.export_to_prism."
+        "export_prism_payments_for_date"
     )
     def test_export_to_prism_success_with_file(
         self, export_prism_payments_mock, logger_mock, os_mock
@@ -340,7 +342,8 @@ class TestExportToPrism(TestCase):
     @mock.patch("core.management.commands.export_to_prism.os")
     @mock.patch("core.management.commands.export_to_prism.logger")
     @mock.patch(
-        "core.management.commands.export_to_prism.export_prism_payments_for_date"
+        "core.management.commands.export_to_prism."
+        "export_prism_payments_for_date"
     )
     def test_export_to_prism_error_invalid_filepath(
         self, export_prism_payments_mock, logger_mock, os_mock
@@ -356,7 +359,8 @@ class TestExportToPrism(TestCase):
 
     @mock.patch("core.management.commands.export_to_prism.logger")
     @mock.patch(
-        "core.management.commands.export_to_prism.export_prism_payments_for_date"
+        "core.management.commands.export_to_prism."
+        "export_prism_payments_for_date"
     )
     def test_export_to_prism_error_invalid_date(
         self, export_prism_payments_mock, logger_mock
@@ -372,7 +376,8 @@ class TestExportToPrism(TestCase):
 
     @mock.patch("core.management.commands.export_to_prism.logger")
     @mock.patch(
-        "core.management.commands.export_to_prism.export_prism_payments_for_date"
+        "core.management.commands.export_to_prism."
+        "export_prism_payments_for_date"
     )
     def test_export_to_prism_error_failed_export(
         self, export_prism_payments_mock, logger_mock
@@ -648,10 +653,12 @@ class TestImportSections(TestCase):
 
         # CSV data with headers and a single section entry.
         csv_data = (
-            "Lgl,Paragraf,Stykke,Nøgle,B&V-tekst,Betegnelse,KLE nr.,SBSYS KLE nr.,"
-            "SBSYS skabelonid.,KMD Sag-tekst,Afsnit,Indsatstrappen,Målgruppe,"
-            'Kolonne1\nSEL,10,,SEL-10,"Rådgivning, kommunal","SEL-10 Rådgivning,'
-            'kommunal",27.12.04,,,"Rådgivning, enhver",Kommunens rådgivning,,,\n'
+            "Lgl,Paragraf,Stykke,Nøgle,B&V-tekst,Betegnelse,KLE nr.,"
+            "SBSYS KLE nr.,SBSYS skabelonid.,KMD Sag-tekst,Afsnit,"
+            "Indsatstrappen,Målgruppe,Kolonne1\nSEL,10,,SEL-10,"
+            '"Rådgivning, kommunal","SEL-10 Rådgivning,'
+            'kommunal",27.12.04,,,"Rådgivning, enhver",Kommunens rådgivning'
+            ",,,\n"
         )
         open_mock = mock.mock_open(read_data=csv_data)
 
