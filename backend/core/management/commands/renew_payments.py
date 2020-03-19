@@ -18,7 +18,7 @@ class Command(BaseCommand):
         # Find recurring unbounded payment schedules
         # which has an associated Activity.
         recurring_schedules = PaymentSchedule.objects.filter(
-            activity__isnull=False, activity_end_date__isnull=True
+            activity__isnull=False, activity__end_date__isnull=True
         ).exclude(payment_type=PaymentSchedule.ONE_TIME_PAYMENT)
 
         for schedule in recurring_schedules:
