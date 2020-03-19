@@ -64,7 +64,7 @@ class Command(BaseCommand):
                     or not account_number
                     or not paragraph
                 ):
-                    continue
+                    continue  # pragma: no cover
                 main_account_number = account_number.split("-")[0]
                 activity_number = account_number.split("-")[1]
 
