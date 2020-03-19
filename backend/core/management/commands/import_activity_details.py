@@ -97,6 +97,7 @@ class Command(BaseCommand):
                 main_activity = row[8]
                 if main_activity:
                     main_activity_dict[activity_id].add(main_activity)
+
                 try:
                     ad, created = ActivityDetails.objects.update_or_create(
                         activity_id=activity_id,
