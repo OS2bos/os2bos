@@ -253,8 +253,8 @@ class ActivitySerializer(WritableNestedModelSerializer):
                 _("startdato og slutdato skal være ens for engangsbetaling")
             )
 
-        # Monthly payments that are not expected adjustments should have a valid
-        # start_date, end_date and day_of_month that results in payments.
+        # Monthly payments that are not expected adjustments should have a
+        # valid start_date, end_date and day_of_month that results in payments.
         is_monthly_payment = (
             "payment_frequency" in data["payment_plan"]
             and data["payment_plan"]["payment_frequency"]
