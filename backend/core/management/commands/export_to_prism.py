@@ -39,7 +39,7 @@ class Command(BaseCommand):
                 logger.error(
                     f"Invalid date input {date} - should parse as 'YYYYMMDD'"
                 )
-                sys.exit()
+                sys.exit(1)
         try:
             prism_file = export_prism_payments_for_date(date)
             # This is just a sanity check, if we arrive here everything will
@@ -52,7 +52,5 @@ class Command(BaseCommand):
                 )
             else:
                 logger.error("Export of records to PRISME failed!")
-        except Exception as e:
-            logger.exception(
-                f"An exception occurred during export to PRISME: {e}"
-            )
+        except Exception:
+            logger.exception("An exception occurred during export to PRISME")
