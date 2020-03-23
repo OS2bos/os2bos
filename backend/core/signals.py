@@ -19,7 +19,6 @@ from core.models import (
 from core.utils import (
     send_activity_created_email,
     send_activity_updated_email,
-    send_activity_expired_email,
     send_activity_deleted_email,
 )
 
