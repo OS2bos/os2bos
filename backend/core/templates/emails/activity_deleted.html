@@ -1,0 +1,41 @@
+<!-- Copyright (C) 2019 Magenta ApS, http://magenta.dk.
+   - Contact: info@magenta.dk.
+   -
+   - This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
+
+
+{% extends "emails/base.html" %}
+{% block content %}
+<h1>Sagsoplysninger</h1>
+<p>Aktivitet: {{ activity.details }}</p>
+<p>Aktivitetstype: {{ activity.get_activity_type_display }}</p>
+<p>Bevillingsparagraf: {{ activity.appropriation.section.paragraph }}</p>
+<p>Barnets CPR nummer: {{ activity.appropriation.case.cpr_number }}</p>
+<p>Start dato: {{ activity.start_date }}</p>
+<p>Slut dato: {{ activity.end_date }}</p>
+<p>Beløb: {{ activity.payment_plan.payment_amount }}</p>
+<p>Betalingstype: {{ activity.payment_plan.get_payment_type_display }}</p>
+{% if activity.payment_plan.payment_frequency %}
+    <p>Betalingsfrekvens: {{ activity.payment_plan.get_payment_frequency_display }}</p>
+{% endif %}
+{% if activity.payment_plan.payment_units %}
+    <p>Afregningsenheder: {{ activity.payment_plan.payment_units }}</p>
+{% endif %}
+{% if activity.account %}
+    <p>Kontering: {{ activity.account.number }}</p>
+{% else %}
+    <p>Kontering: Ingen </p>
+{% endif %}
+<p>BetalingsID: {{ activity.payment_plan.payment_id }}</p>
+<p>Fiktiv: {{ activity.payment_plan.fictive|yesno:"ja, nej" }}</p>
+
+<h1>Betalingsmodtager</h1>
+<p>CPR/CVR: {{ activity.payment_plan.recipient_id }}</p>
+<p>Navn: {{ activity.payment_plan.recipient_name }}</p>
+<p>Modtagertype: {{ activity.payment_plan.get_recipient_type_display }}</p>
+<p>Oplysninger om skattekort: {{ activity.payment_plan.payment_method_details.tax_card }}</p>
+<p>Oplysninger om betalingsmåde: {{ activity.payment_plan.get_payment_method_display }}</p>
+
+{% endblock %}
