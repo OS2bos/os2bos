@@ -125,6 +125,7 @@ def create_payment_schedule(
     recipient_name="Jens Testersen",
     payment_day_of_month=1,
     fictive=False,
+    **kwargs,
 ):
     payment_schedule = PaymentSchedule.objects.create(
         payment_amount=payment_amount,
@@ -137,6 +138,7 @@ def create_payment_schedule(
         recipient_name=recipient_name,
         payment_day_of_month=payment_day_of_month,
         fictive=fictive,
+        **kwargs,
     )
     return payment_schedule
 

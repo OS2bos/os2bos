@@ -161,7 +161,7 @@ class PaymentSerializer(serializers.ModelSerializer):
         exclude = ("saved_account_string",)
 
 
-class PaymentScheduleSerializer(serializers.ModelSerializer):
+class PaymentScheduleSerializer(WritableNestedModelSerializer):
     """Serializer for the PaymentSchedule model."""
 
     payments = PaymentSerializer(many=True, read_only=True)
