@@ -2,15 +2,15 @@
 -r requirements.txt
 tox==3.14.5
 black==19.10b0
-pytest==5.3.5
+pytest==5.4.1
 pytest-django==3.8.0
 pytest-cov==2.8.1
 flake8==3.7.9
 pydocstyle==5.0.2
 parameterized==0.7.1
 freezegun==0.3.15
-Sphinx==2.4.3
-sphinxcontrib-websupport==1.2.0
+Sphinx==2.4.4
+sphinxcontrib-websupport==1.2.1
 sphinx_rtd_theme==0.4.3
 sphinxcontrib_django==0.5.1
 

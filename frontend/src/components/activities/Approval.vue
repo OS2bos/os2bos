@@ -64,18 +64,22 @@
                                 <div style="width: 50%;">
                                     <fieldset style="display: block;">
                                         <legend style="margin-bottom: .75rem">Bevilling foretaget på følgende niveau</legend>
-                                        <input id="inputRadio1" type="radio" value="5" v-model="appr.approval_level" name="approval-group" required>
-                                        <label for="inputRadio1">Afsnitsleder</label>
-                                        <input id="inputRadio2" type="radio" value="1" v-model="appr.approval_level" name="approval-group" required>
-                                        <label for="inputRadio2">Egenkompetence</label>
-                                        <input id="inputRadio3" type="radio" value="3" v-model="appr.approval_level" name="approval-group" required>
-                                        <label for="inputRadio3">Fagspecialist</label>
-                                        <input id="inputRadio4" type="radio" value="4" v-model="appr.approval_level" name="approval-group" required>
-                                        <label for="inputRadio4">Teamleder</label>
-                                        <input id="inputRadio5" type="radio" value="2" v-model="appr.approval_level" name="approval-group" required>
-                                        <label for="inputRadio5">Teammøde</label>
-                                        <input id="inputRadio6" type="radio" value="6" v-model="appr.approval_level" name="approval-group" required>
-                                        <label for="inputRadio6">Ungdomskriminalitetsnævnet</label>
+                                        <template v-for="appro_lvl in approval_level_list">
+                                            <input 
+                                                :key="appro_lvl.id"
+                                                :id="`radio-btn-${ appro_lvl.id }`" 
+                                                type="radio" 
+                                                :value="appro_lvl.id" 
+                                                v-model="appr.approval_level" 
+                                                name="approval-group"
+                                                required>
+                                            <label 
+                                                :key="appro_lvl.name" 
+                                                :for="`radio-btn-${ appro_lvl.id }`"
+                                                style="text-transform: capitalize;">
+                                                {{ appro_lvl.name }}
+                                            </label>
+                                        </template>
                                     </fieldset>
                                 </div>
                                 <div style="width: 50%;">
@@ -141,6 +145,9 @@
                 return this.acts.filter(function(a) {
                     return a.activity_type === 'SUPPL_ACTIVITY'
                 })
+            },
+            approval_level_list: function() {
+                return this.$store.getters.getApprovals
             },
             payDateRule: function() {
                 let rule = false

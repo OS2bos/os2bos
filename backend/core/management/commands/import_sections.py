@@ -11,7 +11,7 @@ import csv
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
-import core.models as models
+from core import models
 
 
 class Command(BaseCommand):
@@ -52,12 +52,12 @@ class Command(BaseCommand):
                     x.strip() for x in row[12].split(",") if x != ""
                 ]
                 steps_dict = {
-                    "Trin 1": models.STEP_ONE,
-                    "Trin 2": models.STEP_TWO,
-                    "Trin 3": models.STEP_THREE,
-                    "Trin 4": models.STEP_FOUR,
-                    "Trin 5": models.STEP_FIVE,
-                    "Trin 6": models.STEP_SIX,
+                    "Trin 1": 1,
+                    "Trin 2": 2,
+                    "Trin 3": 3,
+                    "Trin 4": 4,
+                    "Trin 5": 5,
+                    "Trin 6": 6,
                 }
                 steps_list = []
                 if action_steps:
@@ -94,6 +94,11 @@ class Command(BaseCommand):
                         in target_groups,
                         "allowed_for_family_target_group": "Familieafdeling"
                         in target_groups,
-                        "allowed_for_steps": steps_list,
                     },
                 )
+                section = models.Section.objects.get(paragraph=key)
+                effort_steps = models.EffortStep.objects.filter(
+                    number__in=steps_list
+                )
+                if effort_steps.exists():
+                    section.allowed_for_steps.add(*effort_steps)

@@ -1829,7 +1829,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         activity.delete()
         self.assertEqual(len(mail.outbox), 2)
         email_message = mail.outbox[1]
-        self.assertIn("Aktivitet udgået", email_message.subject)
+        self.assertIn("Aktivitet slettet", email_message.subject)
         self.assertIn("Barnets CPR nummer: 0205891234", email_message.body)
         self.assertIn("Beløb: 500,0", email_message.body)
         self.assertIn("Start dato: 1. december 2019", email_message.body)

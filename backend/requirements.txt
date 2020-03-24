@@ -3,10 +3,10 @@ psycopg2-binary==2.8.4
 gunicorn==20.0.4
 djangorestframework==3.11.0
 django-extensions==2.2.8
-edc_utils==0.1.13
+edc_utils==0.1.22
 # ^ This is a requirement for "django-audit-fields"
 # |
-django-audit-fields==0.1.13
+django-audit-fields==0.1.14
 django-simple-history==2.8.0
 django-filter==2.2.0
 # ^ This is a requirement for "djangorestframework-filters"

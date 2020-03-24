@@ -1203,7 +1203,7 @@ class Activity(AuditModelMixin, models.Model):
         related_name="approved_activities",
         null=True,
         blank=True,
-        on_delete=models.SET_NULL,
+        on_delete=models.PROTECT,
         verbose_name=_("bevillingsniveau"),
     )
     approval_note = models.TextField(

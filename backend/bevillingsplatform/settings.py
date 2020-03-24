@@ -310,6 +310,15 @@ LOGGING = {
                 ),
             ),
         },
+        "send_expired_emails": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "formatter": "verbose",
+            "filename": settings.get(
+                "SEND_EXPIRED_EMAILS_LOG_FILE",
+                fallback=os.path.join(LOG_DIR, "send_expired_emails.log"),
+            ),
+        },
     },
     "formatters": {
         "verbose": {
@@ -339,6 +348,11 @@ LOGGING = {
         },
         "bevillingsplatform.mark_fictive_payments_paid": {
             "handlers": ["mark_fictive_payments_paid"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        "bevillingsplatform.send_expired_emails": {
+            "handlers": ["send_expired_emails"],
             "level": "INFO",
             "propagate": True,
         },
