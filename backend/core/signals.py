@@ -19,7 +19,7 @@ from core.models import (
 from core.utils import (
     send_activity_created_email,
     send_activity_updated_email,
-    send_activity_expired_email,
+    send_activity_deleted_email,
 )
 
 
@@ -79,7 +79,7 @@ def send_activity_payment_email_on_delete(sender, instance, **kwargs):
     """Send payment email when Activity is deleted."""
     if not instance.triggers_payment_email:
         return
-    send_activity_expired_email(instance)
+    send_activity_deleted_email(instance)
 
 
 @receiver(

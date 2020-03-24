@@ -156,6 +156,13 @@ def send_activity_expired_email(activity):
     send_activity_email(subject, template, activity)
 
 
+def send_activity_deleted_email(activity):
+    """Send an email because an activity has been deleted."""
+    subject = _("Aktivitet slettet")
+    template = "emails/activity_deleted.html"
+    send_activity_email(subject, template, activity)
+
+
 def send_appropriation(appropriation, included_activities=None):
     """Generate PDF and XML files from appropriation and send them to SBSYS.
 
