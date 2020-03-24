@@ -330,13 +330,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         now = timezone.now()
         start_date = now - timedelta(days=1)
         end_date = now + timedelta(days=1)
-        payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-            recipient_type=PaymentSchedule.PERSON,
-            payment_method=CASH,
-            payment_amount=Decimal(666),
-        )
+
         # Create an activity etc which is required.
 
         case_cpr_number = "1234567890"
@@ -362,15 +356,22 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
             main_activity=main_activity_details,
             supplementary_activity=None,
         )
-        create_activity(
+        activity = create_activity(
             case,
             appropriation,
             start_date=start_date,
             end_date=end_date,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
-            payment_plan=payment_schedule,
             details=main_activity_details,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=activity,
         )
         # This will generate three payments on the payment plan, and one
         # of them will be for today.
@@ -397,13 +398,6 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         now = timezone.now()
         start_date = now - timedelta(days=1)
         end_date = now + timedelta(days=1)
-        payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-            recipient_type=PaymentSchedule.PERSON,
-            payment_method=CASH,
-            payment_amount=Decimal(666),
-        )
         # Create an activity etc which is required.
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -423,15 +417,22 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
             main_activity=main_activity_details,
             supplementary_activity=None,
         )
-        create_activity(
+        activity = create_activity(
             case,
             appropriation,
             start_date=start_date,
             end_date=end_date,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
-            payment_plan=payment_schedule,
             details=main_activity_details,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=activity,
         )
         # Check that there's unpaid payments for today.
         due_payments = due_payments_for_prism(start_date)
@@ -460,13 +461,6 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         now = timezone.now()
         start_date = now
         end_date = now + timedelta(days=5)
-        payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-            recipient_type=PaymentSchedule.PERSON,
-            payment_method=CASH,
-            payment_amount=Decimal(666),
-        )
 
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -475,16 +469,22 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
         )
-        create_activity(
+        activity = create_activity(
             case,
             appropriation,
             start_date=start_date,
             end_date=end_date,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
-            payment_plan=payment_schedule,
         )
-
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=activity,
+        )
         payments = payment_schedule.payments.all()
         report_list = generate_payments_report_list(payments)
         self.assertEqual(len(report_list), 6)
@@ -557,13 +557,7 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         # Create a granted activity.
         start_date = now
         end_date = now + timedelta(days=5)
-        payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-            recipient_type=PaymentSchedule.PERSON,
-            payment_method=CASH,
-            payment_amount=Decimal(666),
-        )
+
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
@@ -578,29 +572,36 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
             end_date=end_date,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
-            payment_plan=payment_schedule,
         )
-
-        # Create an expected activity.
-        start_date = now + timedelta(days=4)
-        end_date = now + timedelta(days=8)
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
             recipient_type=PaymentSchedule.PERSON,
             payment_method=CASH,
             payment_amount=Decimal(666),
+            activity=granted_activity,
         )
+        # Create an expected activity.
+        start_date = now + timedelta(days=4)
+        end_date = now + timedelta(days=8)
 
-        create_activity(
+        expected_activity = create_activity(
             case,
             appropriation,
             start_date=start_date,
             end_date=end_date,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_EXPECTED,
-            payment_plan=payment_schedule,
             modifies=granted_activity,
+        )
+
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=expected_activity,
         )
 
         report_list = generate_granted_payments_report_list()
@@ -612,13 +613,7 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         # Create a granted activity.
         start_date = now
         end_date = now + timedelta(days=5)
-        payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-            recipient_type=PaymentSchedule.PERSON,
-            payment_method=CASH,
-            payment_amount=Decimal(666),
-        )
+
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
@@ -633,29 +628,35 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
             end_date=end_date,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
-            payment_plan=payment_schedule,
         )
-
-        # Create an expected activity.
-        start_date = now + timedelta(days=4)
-        end_date = now + timedelta(days=8)
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
             recipient_type=PaymentSchedule.PERSON,
             payment_method=CASH,
-            payment_amount=Decimal(800),
+            payment_amount=Decimal(666),
+            activity=granted_activity,
         )
+        # Create an expected activity.
+        start_date = now + timedelta(days=4)
+        end_date = now + timedelta(days=8)
 
-        create_activity(
+        expected_activity = create_activity(
             case,
             appropriation,
             start_date=start_date,
             end_date=end_date,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_EXPECTED,
-            payment_plan=payment_schedule,
             modifies=granted_activity,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(800),
+            activity=expected_activity,
         )
 
         report_list = generate_expected_payments_report_list()

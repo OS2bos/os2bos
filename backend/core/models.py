@@ -344,6 +344,7 @@ class PaymentSchedule(models.Model):
         """
         if (
             hasattr(self, "activity")
+            and self.activity
             and self.activity.status == STATUS_GRANTED
         ):
             return True
@@ -460,7 +461,11 @@ class PaymentSchedule(models.Model):
         # activity or account.
         # The explicit inclusion of "unknown" is a demand due to the
         # PRISME integration.
-        if not hasattr(self, "activity") or not self.activity.account:
+        if (
+            not hasattr(self, "activity")
+            or not self.activity
+            or not self.activity.account
+        ):
             account_number = config.ACCOUNT_NUMBER_UNKNOWN
         else:
             account_number = self.activity.account.number
@@ -1370,6 +1375,9 @@ class Activity(AuditModelMixin, models.Model):
     @property
     def applicable_payments(self):
         """Return payments that are not overruled by expected payments."""
+        if not hasattr(self, "payment_plan") or not self.payment_plan:
+            return Payment.objects.none()
+
         if self.status == STATUS_GRANTED and self.modified_by.exists():
             # one time payments are always overruled entirely.
             if (
@@ -1439,7 +1447,7 @@ class Activity(AuditModelMixin, models.Model):
 
         Extrapolate for the full year (January 1 - December 31).
         """
-        if not self.payment_plan:
+        if not hasattr(self, "payment_plan") or not self.payment_plan:
             return Decimal(0.0)
 
         vat_factor = self.vat_factor
@@ -1491,9 +1499,16 @@ class Activity(AuditModelMixin, models.Model):
         return r
 
     def save(self, *args, **kwargs):
-        """Save activity, also update "modified" field on appropriation."""
+        """
+        Save activity.
+
+        Also updates "modified" field on appropriation and
+        payment_plan payments.
+        """
         super().save(*args, **kwargs)
         self.appropriation.save()
+        if hasattr(self, "payment_plan") and self.payment_plan:
+            self.payment_plan.save()
 
 
 class RelatedPerson(models.Model):

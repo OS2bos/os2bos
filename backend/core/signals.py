@@ -6,13 +6,12 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """Signals for acting on events occuring on model objects."""
 
-from django.db.models.signals import pre_save, post_save, post_delete
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from core.models import (
     Activity,
     PaymentSchedule,
     Payment,
-    STATUS_GRANTED,
     STATUS_EXPECTED,
     STATUS_DRAFT,
 )
@@ -85,9 +84,9 @@ def send_activity_payment_email_on_delete(sender, instance, **kwargs):
 @receiver(
     post_save,
     sender=PaymentSchedule,
-    dispatch_uid="generate_payments_on_pre_save",
+    dispatch_uid="generate_payments_on_post_save",
 )
-def generate_payments_on_pre_save(sender, instance, created, **kwargs):
+def generate_payments_on_post_save(sender, instance, created, **kwargs):
     """Generate payments for activity before saving."""
     if not hasattr(instance, "activity") or not instance.activity:
         return
@@ -100,9 +99,8 @@ def generate_payments_on_pre_save(sender, instance, created, **kwargs):
             activity.start_date, activity.end_date, vat_factor
         )
     elif instance.payments.exists():
-        # If status is either STATUS_DRAFT or STATUS_EXPECTED or
-        # the activity was just granted we delete and
-        # regenerate payments.
+        # If status is either STATUS_DRAFT or STATUS_EXPECTED we delete
+        # and regenerate payments.
         if activity.status in [STATUS_DRAFT, STATUS_EXPECTED]:
             instance.payments.all().delete()
             instance.generate_payments(

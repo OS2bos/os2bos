@@ -49,18 +49,18 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
         self.assertNotIn(payment, Payment.objects.in_this_year())
 
     def test_in_this_year_true_paid_date(self):
-        payment_schedule = create_payment_schedule()
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(case=case)
-        create_activity(
+        activity = create_activity(
             case=case,
             appropriation=appropriation,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
-            payment_plan=payment_schedule,
         )
+        payment_schedule = create_payment_schedule(activity=activity)
+
         now = timezone.now()
         payment = create_payment(
             payment_schedule,
@@ -73,18 +73,18 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
         self.assertIn(payment, Payment.objects.in_this_year())
 
     def test_paid_date_or_date_gte(self):
-        payment_schedule = create_payment_schedule()
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(case=case)
-        create_activity(
+        activity = create_activity(
             case=case,
             appropriation=appropriation,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
-            payment_plan=payment_schedule,
         )
+        payment_schedule = create_payment_schedule(activity=activity)
+
         now = timezone.now()
 
         # should be included
@@ -143,18 +143,18 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
         )
 
     def test_paid_date_or_date_lte(self):
-        payment_schedule = create_payment_schedule()
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(case=case)
-        create_activity(
+        activity = create_activity(
             case=case,
             appropriation=appropriation,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
-            payment_plan=payment_schedule,
         )
+        payment_schedule = create_payment_schedule(activity=activity)
+
         now = timezone.now()
 
         # should be included
@@ -213,18 +213,18 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
         )
 
     def test_in_this_year_false_paid_date(self):
-        payment_schedule = create_payment_schedule()
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(case=case)
-        create_activity(
+        activity = create_activity(
             case=case,
             appropriation=appropriation,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
-            payment_plan=payment_schedule,
         )
+        payment_schedule = create_payment_schedule(activity=activity)
+
         now = timezone.now()
         payment = create_payment(
             payment_schedule,
@@ -259,19 +259,18 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
         self.assertEqual(Payment.objects.amount_sum(), Decimal("1150"))
 
     def test_amount_sum_paid_amount_overrides(self):
-        payment_schedule = create_payment_schedule()
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(case=case)
         # Default 10 days of 500DKK.
-        create_activity(
+        activity = create_activity(
             case=case,
             appropriation=appropriation,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
-            payment_plan=payment_schedule,
         )
+        create_payment_schedule(activity=activity)
 
         # mark last payment paid with 1000.
         last_payment = Payment.objects.last()
@@ -283,19 +282,18 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
         self.assertEqual(Payment.objects.amount_sum(), Decimal("5500"))
 
     def test_strict_amount_sum_paid_amount_does_not_override(self):
-        payment_schedule = create_payment_schedule()
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(case=case)
         # Default 10 days of 500DKK.
-        create_activity(
+        activity = create_activity(
             case=case,
             appropriation=appropriation,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
-            payment_plan=payment_schedule,
         )
+        create_payment_schedule(activity=activity)
 
         # mark last payment paid with 700.
         last_payment = Payment.objects.last()
@@ -335,7 +333,6 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
         )
 
     def test_group_by_monthly_amounts_paid(self):
-        payment_schedule = create_payment_schedule()
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
@@ -346,10 +343,10 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
             appropriation=appropriation,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
-            payment_plan=payment_schedule,
             start_date=date(year=2019, month=2, day=27),
             end_date=date(year=2019, month=3, day=2),
         )
+        create_payment_schedule(activity=activity)
         # Mark one March payment paid with 700.
         last_payment = activity.payment_plan.payments.get(
             date=date(year=2019, month=3, day=2)

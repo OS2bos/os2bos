@@ -749,10 +749,6 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             sbsys_id="XXX-YYY", case=case, section=section
         )
         start_date = timezone.now().date()
-        payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-        )
         activity = create_activity(
             case,
             appropriation,
@@ -760,13 +756,14 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             end_date=date(year=2020, month=12, day=24),
             status=STATUS_GRANTED,
             activity_type=MAIN_ACTIVITY,
-            payment_plan=payment_schedule,
         )
-        section.main_activities.add(activity.details)
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=activity,
         )
+        section.main_activities.add(activity.details)
+
         modifying_activity = create_activity(
             case,
             appropriation,
@@ -775,12 +772,13 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             status=STATUS_EXPECTED,
             activity_type=MAIN_ACTIVITY,
             modifies=activity,
-            payment_plan=payment_schedule,
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=modifying_activity,
         )
+
         draft_activity = create_activity(
             case,
             appropriation,
@@ -788,7 +786,11 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             end_date=date(year=2023, month=12, day=24),
             status=STATUS_DRAFT,
             activity_type=SUPPL_ACTIVITY,
-            payment_plan=payment_schedule,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=draft_activity,
         )
         section.supplementary_activities.add(draft_activity.details)
         draft_activity.details.main_activities.add(activity.details)

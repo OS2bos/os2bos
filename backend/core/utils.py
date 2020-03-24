@@ -586,9 +586,8 @@ def generate_payments_report_list(payments):
     """Generate a payments report list of payment dicts from payments."""
     payments_report_list = []
     for payment in payments:
-        try:
-            activity = payment.payment_schedule.activity
-        except models.Activity.DoesNotExist:
+        activity = payment.payment_schedule.activity
+        if not activity:
             logger.exception(
                 f"PaymentSchedule {payment.payment_schedule.pk}"
                 f" has no activity"

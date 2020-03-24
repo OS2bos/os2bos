@@ -783,14 +783,14 @@ class PaymentSerializerTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(case=case)
-        payment_schedule = create_payment_schedule(
-            payment_method=INTERNAL, recipient_type=PaymentSchedule.INTERNAL
+
+        activity = create_activity(
+            case=case, appropriation=appropriation, status=STATUS_GRANTED,
         )
-        create_activity(
-            case=case,
-            appropriation=appropriation,
-            payment_plan=payment_schedule,
-            status=STATUS_GRANTED,
+        payment_schedule = create_payment_schedule(
+            payment_method=INTERNAL,
+            recipient_type=PaymentSchedule.INTERNAL,
+            activity=activity,
         )
         payment = create_payment(
             payment_schedule,
@@ -857,14 +857,14 @@ class PaymentSerializerTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(case=case)
-        payment_schedule = create_payment_schedule(
-            payment_method=INTERNAL, recipient_type=PaymentSchedule.INTERNAL
+
+        activity = create_activity(
+            case=case, appropriation=appropriation, status=STATUS_EXPECTED,
         )
-        create_activity(
-            case=case,
-            appropriation=appropriation,
-            payment_plan=payment_schedule,
-            status=STATUS_EXPECTED,
+        payment_schedule = create_payment_schedule(
+            payment_method=INTERNAL,
+            recipient_type=PaymentSchedule.INTERNAL,
+            activity=activity,
         )
         payment = create_payment(
             payment_schedule,
