@@ -9,6 +9,8 @@
 from decimal import Decimal
 from datetime import timedelta, date
 
+from freezegun import freeze_time
+
 from django.test import TestCase
 from django.utils import timezone
 
@@ -540,7 +542,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         )
 
     def test_validate_monthly_payment_with_valid_parameters(self):
-        # Create an "valid" monthly activity with payment_day_of_month
+        # Create a "valid" monthly activity with payment_day_of_month
         # in start - end range
 
         payment_schedule = create_payment_schedule(
@@ -570,6 +572,62 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             "end_date": end_date,
             "details": details.id,
             "payment_plan": PaymentScheduleSerializer(payment_schedule).data,
+        }
+        serializer = ActivitySerializer(data=data)
+        is_valid = serializer.is_valid()
+        self.assertTrue(is_valid)
+
+    @freeze_time("2020-01-01")
+    def test_validate_monthly_payment_with_for_expected_adjustment(self):
+        # Create an "invalid" expected adjustment monthly activity with start
+        # and end date on the 23rd and a payment_day_of_month on the 1st.
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_day_of_month=1,
+        )
+        details, unused = ActivityDetails.objects.get_or_create(
+            activity_id="000000",
+            name="Test aktivitet",
+            max_tolerance_in_percent=10,
+            max_tolerance_in_dkk=1000,
+        )
+
+        modified_activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            payment_plan=payment_schedule,
+            status=STATUS_GRANTED,
+            start_date=date(2020, 1, 1),
+            end_date=date(2020, 3, 1),
+            details=details,
+        )
+
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_day_of_month=1,
+        )
+        start_date = date(2020, 2, 23)
+        end_date = date(2020, 2, 23)
+
+        data = {
+            "case": case.id,
+            "appropriation": appropriation.id,
+            "start_date": start_date,
+            "status": STATUS_EXPECTED,
+            "activity_type": MAIN_ACTIVITY,
+            "end_date": end_date,
+            "details": details.id,
+            "payment_plan": PaymentScheduleSerializer(payment_schedule).data,
+            "modifies": modified_activity.id,
         }
         serializer = ActivitySerializer(data=data)
         is_valid = serializer.is_valid()
