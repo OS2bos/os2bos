@@ -84,7 +84,7 @@ async function approveActivities(t) {
     await t
         .click('#check-all')
         .click(Selector('button').withText('Godkend valgte'))
-        .click(Selector('label').withAttribute('for','inputRadio1'))
+        .click(Selector('label').withAttribute('for','radio-btn-1'))
         .click('button[type="submit"]')
 }
 

@@ -308,7 +308,7 @@
                 this.showModal = true
             },
             deleteActivity: function() {
-                axios.delete(`/activities/${ this.$route.params.actId }`)
+                axios.delete(`/activities/${ this.$route.params.actId }/`)
                 .then(res => {
                     this.$router.push(`/appropriation/${ this.appr.id }`)
                     notify('Ydelse slettet', 'success')
