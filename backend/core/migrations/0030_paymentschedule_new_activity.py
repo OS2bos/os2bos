@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("core", "0028_delete_paymentschedules_without_an_activity")
+        ("core", "0029_delete_paymentschedules_without_an_activity")
     ]
 
     operations = [

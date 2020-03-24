@@ -13,6 +13,6 @@ def payment_schedule_migrate_activities(apps, schema_editor):
 
 class Migration(migrations.Migration):
 
-    dependencies = [("core", "0029_paymentschedule_new_activity")]
+    dependencies = [("core", "0030_paymentschedule_new_activity")]
 
     operations = [migrations.RunPython(payment_schedule_migrate_activities)]

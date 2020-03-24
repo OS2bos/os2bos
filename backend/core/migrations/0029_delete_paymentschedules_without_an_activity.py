@@ -14,7 +14,7 @@ def remove_paymentschedules_without_an_activity(apps, schema_editor):
 
 class Migration(migrations.Migration):
 
-    dependencies = [("core", "0027_auto_20200221_1323")]
+    dependencies = [("core", "0028_auto_20200324_0959")]
 
     operations = [
         migrations.RunPython(remove_paymentschedules_without_an_activity)

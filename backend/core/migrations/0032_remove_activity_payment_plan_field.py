@@ -5,7 +5,7 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [("core", "0030_paymentschedule_migrate_activities")]
+    dependencies = [("core", "0031_paymentschedule_migrate_activities")]
 
     operations = [
         migrations.RemoveField(model_name="activity", name="payment_plan"),
