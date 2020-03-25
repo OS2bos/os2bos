@@ -54,7 +54,7 @@ class AuthenticatedTestCase(TestCase):
 class BasicTestMixin:
     @classmethod
     def basic_setup(cls):
-        cls.case_worker = User.objects.create(username="Orla Frøsnapper")
+        cls.case_worker = User.objects.create_user(username="Orla Frøsnapper")
         cls.team = Team.objects.create(name="FCK", leader=cls.case_worker)
         cls.municipality = Municipality.objects.create(name="København")
         cls.district = SchoolDistrict.objects.create(name="Baltorpskolen")

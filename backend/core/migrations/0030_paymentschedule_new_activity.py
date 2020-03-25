@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 on_delete=django.db.models.deletion.CASCADE,
                 to="core.Activity",
                 verbose_name="aktivitet",
-                related_name="payment_plan",
+                related_name="payment_schedule",
             ),
         )
     ]
