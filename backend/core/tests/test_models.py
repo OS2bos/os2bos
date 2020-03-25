@@ -1899,7 +1899,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             activity_type=MAIN_ACTIVITY,
             details=main_activity_details,
         )
-        payment_schedule = create_payment_schedule(activity=main_activity)
+        create_payment_schedule(activity=main_activity)
         supplementary_activity = create_activity(
             case,
             appropriation,
