@@ -1732,20 +1732,19 @@ class ActivityTestCase(TestCase, BasicTestMixin):
     def test_created_payment_email(self):
         start_date = date(year=2019, month=12, day=1)
         end_date = date(year=2020, month=1, day=1)
-        payment_schedule = create_payment_schedule()
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(case=case)
-        create_activity(
+        activity = create_activity(
             case,
             appropriation,
             start_date=start_date,
             end_date=end_date,
-            payment_plan=payment_schedule,
             status=STATUS_GRANTED,
             activity_type=MAIN_ACTIVITY,
         )
+        payment_schedule = create_payment_schedule(activity=activity)
 
         self.assertEqual(len(mail.outbox), 1)
         email_message = mail.outbox[0]
@@ -1758,7 +1757,6 @@ class ActivityTestCase(TestCase, BasicTestMixin):
     def test_updated_payment_email(self):
         start_date = date(year=2019, month=12, day=1)
         end_date = date(year=2020, month=1, day=1)
-        payment_schedule = create_payment_schedule()
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
@@ -1768,9 +1766,10 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             appropriation,
             start_date=start_date,
             end_date=end_date,
-            payment_plan=payment_schedule,
             status=STATUS_GRANTED,
         )
+        payment_schedule = create_payment_schedule(activity=activity)
+
         activity.save()
         self.assertEqual(len(mail.outbox), 2)
         email_message = mail.outbox[1]
@@ -1783,7 +1782,6 @@ class ActivityTestCase(TestCase, BasicTestMixin):
     def test_deleted_payment_email(self):
         start_date = date(year=2019, month=12, day=1)
         end_date = date(year=2020, month=1, day=1)
-        payment_schedule = create_payment_schedule()
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
@@ -1794,10 +1792,11 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             appropriation,
             start_date=start_date,
             end_date=end_date,
-            payment_plan=payment_schedule,
             status=STATUS_GRANTED,
             activity_type=MAIN_ACTIVITY,
         )
+        payment_schedule = create_payment_schedule(activity=activity)
+
         activity.delete()
         self.assertEqual(len(mail.outbox), 2)
         email_message = mail.outbox[1]
@@ -1810,7 +1809,6 @@ class ActivityTestCase(TestCase, BasicTestMixin):
     def test_payment_email_draft_should_not_send(self):
         start_date = date(year=2019, month=12, day=1)
         end_date = date(year=2020, month=1, day=1)
-        payment_schedule = create_payment_schedule()
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
@@ -1820,9 +1818,10 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             appropriation,
             start_date=start_date,
             end_date=end_date,
-            payment_plan=payment_schedule,
             status=STATUS_DRAFT,
         )
+        payment_schedule = create_payment_schedule(activity=activity)
+
         activity.delete()
         self.assertEqual(len(mail.outbox), 0)
 
@@ -1847,7 +1846,6 @@ class ActivityTestCase(TestCase, BasicTestMixin):
     def test_account_main_activity(self):
         start_date = date(year=2019, month=12, day=1)
         end_date = date(year=2020, month=1, day=1)
-        payment_schedule = create_payment_schedule()
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
@@ -1859,10 +1857,11 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             appropriation,
             start_date=start_date,
             end_date=end_date,
-            payment_plan=payment_schedule,
             status=STATUS_GRANTED,
             activity_type=MAIN_ACTIVITY,
         )
+        payment_schedule = create_payment_schedule(activity=activity)
+
         account = create_account(
             main_activity=activity.details,
             supplementary_activity=None,
@@ -1873,7 +1872,6 @@ class ActivityTestCase(TestCase, BasicTestMixin):
     def test_account_supplementary_activity(self):
         start_date = date(year=2019, month=12, day=1)
         end_date = date(year=2020, month=1, day=1)
-        payment_schedule = create_payment_schedule()
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
@@ -1897,23 +1895,23 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             appropriation,
             start_date=start_date,
             end_date=end_date,
-            payment_plan=payment_schedule,
             status=STATUS_GRANTED,
             activity_type=MAIN_ACTIVITY,
             details=main_activity_details,
         )
-        payment_schedule = create_payment_schedule()
+        payment_schedule = create_payment_schedule(activity=main_activity)
         supplementary_activity = create_activity(
             case,
             appropriation,
             start_date=start_date,
             end_date=end_date,
-            payment_plan=payment_schedule,
             status=STATUS_GRANTED,
             activity_type=SUPPL_ACTIVITY,
             details=supplementary_activity_details,
         )
-
+        payment_schedule = create_payment_schedule(
+            activity=supplementary_activity
+        )
         account = create_account(
             main_activity=main_activity.details,
             supplementary_activity=supplementary_activity.details,

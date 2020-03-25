@@ -56,6 +56,23 @@ def set_payment_id_on_paymentschedule_save(
 
 @receiver(
     post_save,
+    sender=PaymentSchedule,
+    dispatch_uid="send_activity_created_email_on_paymentschedule_create",
+)
+def send_activity_created_email_on_paymentschedule_create(
+    sender, instance, created, **kwargs
+):
+    """Set the payment_id as the PaymentSchedule ID on creation."""
+    if (
+        created
+        and instance.activity
+        and instance.activity.triggers_payment_email
+    ):
+        send_activity_created_email(instance.activity)
+
+
+@receiver(
+    post_save,
     sender=Activity,
     dispatch_uid="send_activity_payment_email_on_save",
 )
@@ -63,10 +80,7 @@ def send_activity_payment_email_on_save(sender, instance, created, **kwargs):
     """Send payment email when Activity is saved."""
     if not instance.triggers_payment_email:
         return
-    if created:
-        send_activity_created_email(instance)
-    else:
-        send_activity_updated_email(instance)
+    send_activity_updated_email(instance)
 
 
 @receiver(
