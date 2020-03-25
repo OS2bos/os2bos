@@ -1744,7 +1744,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             status=STATUS_GRANTED,
             activity_type=MAIN_ACTIVITY,
         )
-        payment_schedule = create_payment_schedule(activity=activity)
+        create_payment_schedule(activity=activity)
 
         self.assertEqual(len(mail.outbox), 1)
         email_message = mail.outbox[0]
@@ -1768,7 +1768,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             end_date=end_date,
             status=STATUS_GRANTED,
         )
-        payment_schedule = create_payment_schedule(activity=activity)
+        create_payment_schedule(activity=activity)
 
         activity.save()
         self.assertEqual(len(mail.outbox), 2)
@@ -1795,7 +1795,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             status=STATUS_GRANTED,
             activity_type=MAIN_ACTIVITY,
         )
-        payment_schedule = create_payment_schedule(activity=activity)
+        create_payment_schedule(activity=activity)
 
         activity.delete()
         self.assertEqual(len(mail.outbox), 2)
@@ -1820,7 +1820,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             end_date=end_date,
             status=STATUS_DRAFT,
         )
-        payment_schedule = create_payment_schedule(activity=activity)
+        create_payment_schedule(activity=activity)
 
         activity.delete()
         self.assertEqual(len(mail.outbox), 0)
@@ -1860,7 +1860,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             status=STATUS_GRANTED,
             activity_type=MAIN_ACTIVITY,
         )
-        payment_schedule = create_payment_schedule(activity=activity)
+        create_payment_schedule(activity=activity)
 
         account = create_account(
             main_activity=activity.details,
@@ -1909,9 +1909,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             activity_type=SUPPL_ACTIVITY,
             details=supplementary_activity_details,
         )
-        payment_schedule = create_payment_schedule(
-            activity=supplementary_activity
-        )
+        create_payment_schedule(activity=supplementary_activity)
         account = create_account(
             main_activity=main_activity.details,
             supplementary_activity=supplementary_activity.details,
