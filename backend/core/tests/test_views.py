@@ -553,9 +553,6 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         )
         section.main_activities.add(main_activity.details)
 
-        payment_schedule = create_payment_schedule(
-            payment_type=PaymentSchedule.ONE_TIME_PAYMENT
-        )
         # Create a suppl activity without setting its allowed main_activities.
         suppl_activity = create_activity(
             case,
@@ -563,7 +560,10 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             start_date=now - timedelta(days=5),
             end_date=now - timedelta(days=5),
             activity_type=SUPPL_ACTIVITY,
-            payment_plan=payment_schedule,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            activity=suppl_activity,
         )
         section.supplementary_activities.add(suppl_activity.details)
 
@@ -605,9 +605,6 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         )
         section.main_activities.add(main_activity.details)
 
-        payment_schedule = create_payment_schedule(
-            payment_type=PaymentSchedule.ONE_TIME_PAYMENT
-        )
         # Create a suppl activity without setting its allowed main_activities.
         suppl_activity = create_activity(
             case,
@@ -615,7 +612,10 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             start_date=now - timedelta(days=5),
             end_date=now - timedelta(days=5),
             activity_type=SUPPL_ACTIVITY,
-            payment_plan=payment_schedule,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            activity=suppl_activity,
         )
         suppl_activity.details.main_activities.add(main_activity.details)
 
@@ -657,9 +657,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             status=STATUS_DRAFT,
         )
         section.main_activities.add(main_activity.details)
-        payment_schedule = create_payment_schedule(
-            payment_type=PaymentSchedule.ONE_TIME_PAYMENT
-        )
+
         # Create a suppl activity without setting its allowed main_activities.
         suppl_activity = create_activity(
             case,
@@ -667,7 +665,10 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             start_date=now - timedelta(days=5),
             end_date=now - timedelta(days=5),
             activity_type=SUPPL_ACTIVITY,
-            payment_plan=payment_schedule,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            activity=suppl_activity,
         )
         section.supplementary_activities.add(suppl_activity.details)
         suppl_activity.details.main_activities.add(main_activity.details)
@@ -708,16 +709,17 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             activity_type=MAIN_ACTIVITY,
         )
         section.main_activities.add(activity.details)
-        payment_schedule = create_payment_schedule(
-            payment_type=PaymentSchedule.ONE_TIME_PAYMENT
-        )
+
         one_time_activity = create_activity(
             case,
             appropriation,
             start_date=now - timedelta(days=5),
             end_date=now - timedelta(days=5),
             activity_type=SUPPL_ACTIVITY,
-            payment_plan=payment_schedule,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            activity=one_time_activity,
         )
         section.supplementary_activities.add(one_time_activity.details)
         one_time_activity.details.main_activities.add(activity.details)
@@ -851,21 +853,20 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
         cls.basic_setup()
 
     def test_get_payment_date_or_date__gte_filter(self):
-        payment_schedule = create_payment_schedule()
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(case=case)
         now = timezone.now()
-        create_activity(
+        activity = create_activity(
             case=case,
             appropriation=appropriation,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
-            payment_plan=payment_schedule,
             start_date=date(year=now.year, month=1, day=1),
             end_date=date(year=now.year, month=1, day=1),
         )
+        payment_schedule = create_payment_schedule(activity=activity)
 
         url = reverse("payment-list")
         self.client.login(username=self.username, password=self.password)
@@ -884,22 +885,21 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
         )
 
     def test_get_payment_date_or_date__lte_filter(self):
-        payment_schedule = create_payment_schedule()
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(case=case)
 
         now = timezone.now()
-        create_activity(
+        activity = create_activity(
             case=case,
             appropriation=appropriation,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
-            payment_plan=payment_schedule,
             start_date=date(year=now.year, month=1, day=1),
             end_date=date(year=now.year, month=1, day=1),
         )
+        payment_schedule = create_payment_schedule(activity=activity)
 
         url = reverse("payment-list")
         self.client.login(username=self.username, password=self.password)
@@ -924,10 +924,6 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
 
     def test_get(self):
         now = timezone.now().date()
-        payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-        )
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
@@ -939,7 +935,11 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
             end_date=now + timedelta(days=6),
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
-            payment_plan=payment_schedule,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=activity,
         )
         url = reverse("activity-list")
         self.client.login(username=self.username, password=self.password)
@@ -951,10 +951,6 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
 
     def test_delete(self):
         now = timezone.now().date()
-        payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-        )
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
@@ -966,7 +962,11 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
             end_date=now + timedelta(days=6),
             activity_type=MAIN_ACTIVITY,
             status=STATUS_DRAFT,
-            payment_plan=payment_schedule,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=activity1,
         )
         url = reverse("activity-detail", kwargs={"pk": activity1.pk})
         self.client.login(username=self.username, password=self.password)
@@ -986,8 +986,8 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
             end_date=now + timedelta(days=6),
             activity_type=SUPPL_ACTIVITY,
             status=STATUS_EXPECTED,
-            payment_plan=create_payment_schedule(),
         )
+        create_payment_schedule(activity=activity2)
         url = reverse("activity-detail", kwargs={"pk": activity2.pk})
         # Check it's there.
         response = self.client.get(url)
@@ -1005,8 +1005,8 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
             end_date=now + timedelta(days=6),
             activity_type=SUPPL_ACTIVITY,
             status=STATUS_GRANTED,
-            payment_plan=create_payment_schedule(),
         )
+        create_payment_schedule(activity=activity3)
         url = reverse("activity-detail", kwargs={"pk": activity3.pk})
         # Delete.
         response = self.client.delete(url)
