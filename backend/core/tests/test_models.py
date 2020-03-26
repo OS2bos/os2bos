@@ -1920,7 +1920,6 @@ class ActivityTestCase(TestCase, BasicTestMixin):
     def test_account_no_account(self):
         start_date = date(year=2019, month=12, day=1)
         end_date = date(year=2020, month=1, day=1)
-        payment_schedule = create_payment_schedule()
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
@@ -1938,11 +1937,11 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             appropriation,
             start_date=start_date,
             end_date=end_date,
-            payment_plan=payment_schedule,
             status=STATUS_GRANTED,
             activity_type=MAIN_ACTIVITY,
             details=main_activity_details,
         )
+        payment_schedule = create_payment_schedule(activity=main_activity)
 
         self.assertIsNone(main_activity.account)
 
@@ -1958,10 +1957,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             max_tolerance_in_dkk=5000,
             max_tolerance_in_percent=10,
         )
-        payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("500.0"),
-            payment_frequency=PaymentSchedule.DAILY,
-        )
+
         start_date = date.today()
         end_date = date.today() + timedelta(days=7)
         main_activity = create_activity(
@@ -1969,15 +1965,16 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             appropriation,
             start_date=start_date,
             end_date=end_date,
-            payment_plan=payment_schedule,
             status=STATUS_GRANTED,
             activity_type=MAIN_ACTIVITY,
             details=main_activity_details,
         )
         payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("700.0"),
+            payment_amount=Decimal("500.0"),
             payment_frequency=PaymentSchedule.DAILY,
+            activity=main_activity,
         )
+
         start_date = start_date + timedelta(days=1)
         end_date = date.today() + timedelta(days=14)
         expected_activity = create_activity(
@@ -1985,12 +1982,17 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             appropriation,
             start_date=start_date,
             end_date=end_date,
-            payment_plan=payment_schedule,
             status=STATUS_EXPECTED,
             activity_type=MAIN_ACTIVITY,
             modifies=main_activity,
             details=main_activity_details,
         )
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("700.0"),
+            payment_frequency=PaymentSchedule.DAILY,
+            activity=expected_activity,
+        )
+
         self.assertTrue(expected_activity.validate_expected())
 
     def test_validate_expected_false_no_modifies(self):
@@ -2008,19 +2010,20 @@ class ActivityTestCase(TestCase, BasicTestMixin):
 
         start_date = date.today()
         end_date = date.today() + timedelta(days=7)
-        payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("700.0"),
-            payment_frequency=PaymentSchedule.DAILY,
-        )
+
         expected_activity = create_activity(
             case,
             appropriation,
             start_date=start_date,
             end_date=end_date,
-            payment_plan=payment_schedule,
             status=STATUS_EXPECTED,
             activity_type=MAIN_ACTIVITY,
             details=main_activity_details,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("700.0"),
+            payment_frequency=PaymentSchedule.DAILY,
+            activity=expected_activity,
         )
         with self.assertRaises(forms.ValidationError):
             expected_activity.validate_expected()
@@ -2037,10 +2040,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             max_tolerance_in_dkk=5000,
             max_tolerance_in_percent=10,
         )
-        payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("500.0"),
-            payment_frequency=PaymentSchedule.DAILY,
-        )
+
         start_date = date.today()
         end_date = date.today() + timedelta(days=7)
         main_activity = create_activity(
@@ -2048,15 +2048,16 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             appropriation,
             start_date=start_date,
             end_date=end_date,
-            payment_plan=payment_schedule,
             status=STATUS_GRANTED,
             activity_type=MAIN_ACTIVITY,
             details=main_activity_details,
         )
         payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("700.0"),
+            payment_amount=Decimal("500.0"),
             payment_frequency=PaymentSchedule.DAILY,
+            activity=main_activity,
         )
+
         start_date = start_date
         end_date = date.today() + timedelta(days=14)
         expected_activity = create_activity(
@@ -2064,12 +2065,17 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             appropriation,
             start_date=start_date,
             end_date=end_date,
-            payment_plan=payment_schedule,
             status=STATUS_EXPECTED,
             activity_type=MAIN_ACTIVITY,
             modifies=main_activity,
             details=main_activity_details,
         )
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("700.0"),
+            payment_frequency=PaymentSchedule.DAILY,
+            activity=expected_activity,
+        )
+
         expected_activity.validate_expected()
 
     def test_validate_expected_true_ongoing_with_next_payment(self):
@@ -2084,10 +2090,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             max_tolerance_in_dkk=5000,
             max_tolerance_in_percent=10,
         )
-        payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("500.0"),
-            payment_frequency=PaymentSchedule.DAILY,
-        )
+
         start_date = date.today() + timedelta(days=2)
         end_date = date.today() + timedelta(days=4)
         main_activity = create_activity(
@@ -2095,15 +2098,16 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             appropriation,
             start_date=start_date,
             end_date=end_date,
-            payment_plan=payment_schedule,
             status=STATUS_GRANTED,
             activity_type=MAIN_ACTIVITY,
             details=main_activity_details,
         )
         payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("700.0"),
+            payment_amount=Decimal("500.0"),
             payment_frequency=PaymentSchedule.DAILY,
+            activity=main_activity,
         )
+
         start_date = date.today() + timedelta(days=3)
         end_date = date.today() + timedelta(days=6)
         expected_activity = create_activity(
@@ -2111,12 +2115,18 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             appropriation,
             start_date=start_date,
             end_date=end_date,
-            payment_plan=payment_schedule,
             status=STATUS_EXPECTED,
             activity_type=MAIN_ACTIVITY,
             modifies=main_activity,
             details=main_activity_details,
         )
+
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("700.0"),
+            payment_frequency=PaymentSchedule.DAILY,
+            activity=expected_activity,
+        )
+
         self.assertTrue(expected_activity.validate_expected())
 
     def test_validate_expected_false_one_time_with_invalid_start_date(self):
@@ -2131,10 +2141,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             max_tolerance_in_dkk=5000,
             max_tolerance_in_percent=10,
         )
-        payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("500.0"),
-            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
-        )
+
         start_date = date.today()
         end_date = date.today()
         main_activity = create_activity(
@@ -2142,15 +2149,16 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             appropriation,
             start_date=start_date,
             end_date=end_date,
-            payment_plan=payment_schedule,
             status=STATUS_GRANTED,
             activity_type=MAIN_ACTIVITY,
             details=main_activity_details,
         )
         payment_schedule = create_payment_schedule(
-            payment_amount=Decimal("700.0"),
+            payment_amount=Decimal("500.0"),
             payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            activity=main_activity,
         )
+
         start_date = date.today()
         end_date = date.today()
         expected_activity = create_activity(
@@ -2158,11 +2166,15 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             appropriation,
             start_date=start_date,
             end_date=end_date,
-            payment_plan=payment_schedule,
             status=STATUS_EXPECTED,
             activity_type=MAIN_ACTIVITY,
             modifies=main_activity,
             details=main_activity_details,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("700.0"),
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            activity=expected_activity,
         )
         expected_activity.validate_expected()
 
@@ -2355,7 +2367,6 @@ class PaymentTestCase(TestCase, BasicTestMixin):
         )
 
     def test_payment_account_already_saved(self):
-        payment_schedule = create_payment_schedule()
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
@@ -2368,6 +2379,8 @@ class PaymentTestCase(TestCase, BasicTestMixin):
             status=STATUS_GRANTED,
             activity_type=MAIN_ACTIVITY,
         )
+        payment_schedule = create_payment_schedule(activity=activity)
+
         create_account(
             main_activity=activity.details,
             supplementary_activity=None,

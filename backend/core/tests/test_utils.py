@@ -185,17 +185,18 @@ class SendAppropriationTestCase(TestCase, BasicTestMixin):
             status=STATUS_GRANTED,
         )
         section.main_activities.add(activity.details)
-        payment_schedule = create_payment_schedule(
-            payment_type=PaymentSchedule.ONE_TIME_PAYMENT
-        )
+
         one_time_activity = create_activity(
             case,
             appropriation,
             start_date=now - timedelta(days=5),
             end_date=now - timedelta(days=5),
             activity_type=SUPPL_ACTIVITY,
-            payment_plan=payment_schedule,
             status=STATUS_GRANTED,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            activity=one_time_activity,
         )
         send_appropriation(
             appropriation, Activity.objects.filter(pk=one_time_activity.pk)
@@ -235,10 +236,8 @@ class SendAppropriationTestCase(TestCase, BasicTestMixin):
             status=STATUS_GRANTED,
         )
         section.main_activities.add(activity.details)
-        payment_schedule = create_payment_schedule(
-            payment_type=PaymentSchedule.ONE_TIME_PAYMENT
-        )
-        create_activity(
+
+        suppl_activity = create_activity(
             case,
             appropriation,
             start_date=now - timedelta(days=5),
@@ -246,6 +245,10 @@ class SendAppropriationTestCase(TestCase, BasicTestMixin):
             activity_type=SUPPL_ACTIVITY,
             payment_plan=payment_schedule,
             status=STATUS_GRANTED,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            activity=suppl_activity,
         )
         send_appropriation(appropriation)
         # Retrieve the mocked template.render call.
