@@ -55,7 +55,7 @@ class AppropriationSerializerTestCase(TestCase, BasicTestMixin):
         appropriation = create_appropriation(case=case)
 
         activity = create_activity(case=case, appropriation=appropriation,)
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_amount=Decimal("500.0"),
             payment_frequency=PaymentSchedule.WEEKLY,
             activity=activity,
@@ -200,7 +200,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             end_date=end_date,
             details=details,
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_amount=Decimal("500.0"),
             payment_frequency=PaymentSchedule.WEEKLY,
             activity=activity,
@@ -253,7 +253,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             end_date=end_date,
             details=details,
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_amount=Decimal("500.0"),
             payment_frequency=PaymentSchedule.WEEKLY,
             activity=activity,
@@ -304,7 +304,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             end_date=None,
             details=details,
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_amount=Decimal("500.0"),
             payment_frequency=PaymentSchedule.WEEKLY,
             activity=activity,
@@ -356,7 +356,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             end_date=end_date,
             details=details,
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_amount=Decimal("500.0"),
             payment_frequency=PaymentSchedule.WEEKLY,
             activity=activity,
@@ -407,7 +407,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             end_date=end_date,
             details=details,
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_amount=Decimal("500.0"),
             payment_frequency=PaymentSchedule.DAILY,
             activity=activity,

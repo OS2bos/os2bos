@@ -561,7 +561,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             end_date=now - timedelta(days=5),
             activity_type=SUPPL_ACTIVITY,
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
             activity=suppl_activity,
         )
@@ -613,7 +613,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             end_date=now - timedelta(days=5),
             activity_type=SUPPL_ACTIVITY,
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
             activity=suppl_activity,
         )
@@ -666,7 +666,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             end_date=now - timedelta(days=5),
             activity_type=SUPPL_ACTIVITY,
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
             activity=suppl_activity,
         )
@@ -717,7 +717,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             end_date=now - timedelta(days=5),
             activity_type=SUPPL_ACTIVITY,
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
             activity=one_time_activity,
         )
@@ -866,7 +866,7 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
             start_date=date(year=now.year, month=1, day=1),
             end_date=date(year=now.year, month=1, day=1),
         )
-        payment_schedule = create_payment_schedule(activity=activity)
+        create_payment_schedule(activity=activity)
 
         url = reverse("payment-list")
         self.client.login(username=self.username, password=self.password)
@@ -899,7 +899,7 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
             start_date=date(year=now.year, month=1, day=1),
             end_date=date(year=now.year, month=1, day=1),
         )
-        payment_schedule = create_payment_schedule(activity=activity)
+        create_payment_schedule(activity=activity)
 
         url = reverse("payment-list")
         self.client.login(username=self.username, password=self.password)
@@ -936,7 +936,7 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
             activity=activity,
@@ -963,7 +963,7 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
             activity_type=MAIN_ACTIVITY,
             status=STATUS_DRAFT,
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
             activity=activity1,
