@@ -1941,7 +1941,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             activity_type=MAIN_ACTIVITY,
             details=main_activity_details,
         )
-        payment_schedule = create_payment_schedule(activity=main_activity)
+        create_payment_schedule(activity=main_activity)
 
         self.assertIsNone(main_activity.account)
 
@@ -1969,7 +1969,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             activity_type=MAIN_ACTIVITY,
             details=main_activity_details,
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_amount=Decimal("500.0"),
             payment_frequency=PaymentSchedule.DAILY,
             activity=main_activity,
@@ -1987,7 +1987,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             modifies=main_activity,
             details=main_activity_details,
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_amount=Decimal("700.0"),
             payment_frequency=PaymentSchedule.DAILY,
             activity=expected_activity,
@@ -2020,7 +2020,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             activity_type=MAIN_ACTIVITY,
             details=main_activity_details,
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_amount=Decimal("700.0"),
             payment_frequency=PaymentSchedule.DAILY,
             activity=expected_activity,
@@ -2052,7 +2052,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             activity_type=MAIN_ACTIVITY,
             details=main_activity_details,
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_amount=Decimal("500.0"),
             payment_frequency=PaymentSchedule.DAILY,
             activity=main_activity,
@@ -2070,7 +2070,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             modifies=main_activity,
             details=main_activity_details,
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_amount=Decimal("700.0"),
             payment_frequency=PaymentSchedule.DAILY,
             activity=expected_activity,
@@ -2102,7 +2102,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             activity_type=MAIN_ACTIVITY,
             details=main_activity_details,
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_amount=Decimal("500.0"),
             payment_frequency=PaymentSchedule.DAILY,
             activity=main_activity,
@@ -2121,7 +2121,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             details=main_activity_details,
         )
 
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_amount=Decimal("700.0"),
             payment_frequency=PaymentSchedule.DAILY,
             activity=expected_activity,
@@ -2153,7 +2153,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             activity_type=MAIN_ACTIVITY,
             details=main_activity_details,
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_amount=Decimal("500.0"),
             payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
             activity=main_activity,
@@ -2171,7 +2171,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             modifies=main_activity,
             details=main_activity_details,
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_amount=Decimal("700.0"),
             payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
             activity=expected_activity,

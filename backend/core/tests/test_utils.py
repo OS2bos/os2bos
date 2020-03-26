@@ -194,7 +194,7 @@ class SendAppropriationTestCase(TestCase, BasicTestMixin):
             activity_type=SUPPL_ACTIVITY,
             status=STATUS_GRANTED,
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
             activity=one_time_activity,
         )
@@ -243,10 +243,9 @@ class SendAppropriationTestCase(TestCase, BasicTestMixin):
             start_date=now - timedelta(days=5),
             end_date=now - timedelta(days=5),
             activity_type=SUPPL_ACTIVITY,
-            payment_plan=payment_schedule,
             status=STATUS_GRANTED,
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
             activity=suppl_activity,
         )
