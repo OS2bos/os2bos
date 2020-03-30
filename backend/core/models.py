@@ -1276,6 +1276,7 @@ class Activity(AuditModelMixin, models.Model):
         self.approval_level = approval_level
         self.approval_note = approval_note
         self.approval_user = approval_user
+
         if self.status == STATUS_GRANTED:
             # Re-granting - nothing more to do.
             pass
