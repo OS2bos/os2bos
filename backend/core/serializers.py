@@ -208,7 +208,7 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = PaymentSchedule
-        fields = "__all__"
+        exclude = ("activity",)
 
 
 class ActivitySerializer(WritableNestedModelSerializer):
