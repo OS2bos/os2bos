@@ -38,17 +38,18 @@ class TestMarkFictivePaymentsPaid(TestCase, BasicTestMixin):
         cls.basic_setup()
 
     def test_mark_fictive_payments_paid(self):
-        payment_schedule = create_payment_schedule(fictive=True)
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(case=case)
-        create_activity(
+        activity = create_activity(
             case=case,
             appropriation=appropriation,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
-            payment_plan=payment_schedule,
+        )
+        payment_schedule = create_payment_schedule(
+            activity=activity, fictive=True
         )
         today = timezone.now().date()
         payment = create_payment(payment_schedule, date=today)
@@ -63,18 +64,20 @@ class TestMarkFictivePaymentsPaid(TestCase, BasicTestMixin):
         self.assertEqual(payment.paid_amount, payment.amount)
 
     def test_mark_fictive_payments_paid_no_arg(self):
-        payment_schedule = create_payment_schedule(fictive=True)
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(case=case)
-        create_activity(
+        activity = create_activity(
             case=case,
             appropriation=appropriation,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
-            payment_plan=payment_schedule,
         )
+        payment_schedule = create_payment_schedule(
+            fictive=True, activity=activity
+        )
+
         today = timezone.now().date()
         payment = create_payment(payment_schedule, date=today)
 
@@ -152,10 +155,6 @@ class TestRenewPayments(TestCase, BasicTestMixin):
         cls.basic_setup()
 
     def test_renew_payments_renewed(self):
-        payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.MONTHLY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-        )
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
@@ -163,14 +162,18 @@ class TestRenewPayments(TestCase, BasicTestMixin):
 
         # Should generate payments to 2019-12-01.
         with freeze_time("2018-01-01"):
-            create_activity(
+            activity = create_activity(
                 case=case,
                 appropriation=appropriation,
                 activity_type=MAIN_ACTIVITY,
                 status=STATUS_GRANTED,
-                payment_plan=payment_schedule,
                 start_date=date(year=2018, month=1, day=1),
                 end_date=None,
+            )
+            payment_schedule = create_payment_schedule(
+                payment_frequency=PaymentSchedule.MONTHLY,
+                payment_type=PaymentSchedule.RUNNING_PAYMENT,
+                activity=activity,
             )
         self.assertEqual(payment_schedule.payments.count(), 24)
 
@@ -238,23 +241,24 @@ class TestSendExpiredEmails(TestCase, BasicTestMixin):
 
     def test_send_expired_emails_success(self):
         today = timezone.now().date()
-        payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-        )
+
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(case=case)
 
-        create_activity(
+        activity = create_activity(
             case=case,
             appropriation=appropriation,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
-            payment_plan=payment_schedule,
             start_date=today - timedelta(days=30),
             end_date=today - timedelta(days=1),
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=activity,
         )
         # Only created email should be sent initially.
         self.assertEqual(len(mail.outbox), 1)
@@ -400,37 +404,38 @@ class TestGeneratePaymentsReports(TestCase, BasicTestMixin):
     @mock.patch("core.management.commands.generate_payments_report.logger")
     def test_generate_payments_report_success(self, logger_mock):
         section = create_section()
-        payment_schedule = create_payment_schedule(
-            payment_frequency=PaymentSchedule.MONTHLY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-        )
+
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(case=case, section=section)
 
-        create_activity(
+        activity = create_activity(
             case=case,
             appropriation=appropriation,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
-            payment_plan=payment_schedule,
             start_date=date(year=2020, month=1, day=1),
             end_date=date(year=2020, month=2, day=1),
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_frequency=PaymentSchedule.MONTHLY,
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=activity,
         )
 
-        create_activity(
+        another_activity = create_activity(
             case=case,
             appropriation=appropriation,
             activity_type=SUPPL_ACTIVITY,
             status=STATUS_EXPECTED,
-            payment_plan=payment_schedule,
             start_date=date(year=2020, month=1, day=1),
             end_date=date(year=2020, month=2, day=1),
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=another_activity,
         )
 
         call_command("generate_payments_report")
