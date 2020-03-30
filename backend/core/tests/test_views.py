@@ -11,11 +11,15 @@ from datetime import date, timedelta
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.utils import timezone
+from django.core.exceptions import ObjectDoesNotExist
+
+from freezegun import freeze_time
 
 from core.models import (
     ApprovalLevel,
     PaymentSchedule,
     Payment,
+    Activity,
     EffortStep,
     MAIN_ACTIVITY,
     SUPPL_ACTIVITY,
@@ -811,6 +815,66 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             url, json, content_type="application/json"
         )
         self.assertEqual(response.status_code, 200)
+
+    @freeze_time("2020-01-01")
+    def test_grant_granted_in_future_deletes_old(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        start_date = date(year=2020, month=2, day=1)
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=date(year=2020, month=3, day=1),
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=activity,
+        )
+        section.main_activities.add(activity.details)
+
+        modifying_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=date(year=2020, month=5, day=1),
+            status=STATUS_EXPECTED,
+            activity_type=MAIN_ACTIVITY,
+            modifies=activity,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=modifying_activity,
+        )
+        url = reverse("appropriation-grant", kwargs={"pk": appropriation.pk})
+        self.client.login(username=self.username, password=self.password)
+        approval_level, _ = ApprovalLevel.objects.get_or_create(
+            name="egenkompetence"
+        )
+        json = {
+            "approval_level": approval_level.id,
+            "approval_note": "HEJ!",
+            "activities": [modifying_activity.pk,],
+        }
+        response = self.client.patch(
+            url, json, content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+
+        # Assert old activity is deleted and all
+        # modifying_activity payments are there.
+        with self.assertRaises(ObjectDoesNotExist):
+            activity.refresh_from_db()
+        self.assertEqual(modifying_activity.payment_plan.payments.count(), 91)
 
     def test_no_approval_level(self):
         case = create_case(

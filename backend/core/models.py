@@ -1276,7 +1276,6 @@ class Activity(AuditModelMixin, models.Model):
         self.approval_level = approval_level
         self.approval_note = approval_note
         self.approval_user = approval_user
-
         if self.status == STATUS_GRANTED:
             # Re-granting - nothing more to do.
             pass
@@ -1303,6 +1302,11 @@ class Activity(AuditModelMixin, models.Model):
                 ):
                     old_activity = self.modifies
                     self.modifies = self.modifies.modifies
+
+                    old_activity.status = STATUS_DELETED
+                    old_activity.modifies = None
+                    old_activity.save()
+                    self.save()
                     old_activity.delete()
                 # self.start_date > self.modifies.start_date or is None
                 if self.modifies:
