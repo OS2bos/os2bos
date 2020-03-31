@@ -1302,7 +1302,13 @@ class Activity(AuditModelMixin, models.Model):
                     and self.start_date <= self.modifies.start_date
                 ):
                     old_activity = self.modifies
+                    # Set STATUS_DELETED to circumvent
+                    # unique_main_activity constraint.
+                    old_activity.status = STATUS_DELETED
+                    old_activity.save()
+                    # Save with new modifies to not trigger CASCADE deletion.
                     self.modifies = self.modifies.modifies
+                    self.save()
                     old_activity.delete()
                 # self.start_date > self.modifies.start_date or is None
                 if self.modifies:
