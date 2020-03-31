@@ -19,7 +19,6 @@ from core.models import (
     ApprovalLevel,
     PaymentSchedule,
     Payment,
-    Activity,
     EffortStep,
     MAIN_ACTIVITY,
     SUPPL_ACTIVITY,
@@ -863,7 +862,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         json = {
             "approval_level": approval_level.id,
             "approval_note": "HEJ!",
-            "activities": [modifying_activity.pk,],
+            "activities": [modifying_activity.pk],
         }
         response = self.client.patch(
             url, json, content_type="application/json"
