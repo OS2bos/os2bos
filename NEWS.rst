@@ -8,10 +8,10 @@ Features
 
 - Delete payment schedules and payments when an activity is deleted.
 - Send an email when an activity is expired.
-- Changes subject on activity deleted email.
+- Change subject on activity deleted email.
 - Change text string in frontend for closed cases.
 - Add status in payments report.
-- Change prism payment for Saturday, Sunday and Monday to be exported friday.
+- Change prism payment for Saturday, Sunday and Monday to be exported Friday.
 - Add coverage and tests for management commands.
 - Update dependencies to new versions.
 
