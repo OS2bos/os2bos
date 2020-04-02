@@ -102,11 +102,11 @@
                 <fieldset>
 
                     <input type="radio" v-model="$route.query.expired" id="field-expired-1" @change="update()" :value="null">
-                    <label for="field-expired-1">Aktive og udgåede sager</label>
+                    <label for="field-expired-1">Aktive og lukkede sager</label>
                     <input type="radio" v-model="$route.query.expired" id="field-expired-2" @change="update()" :value="false">
                     <label for="field-expired-2">Kun aktive sager</label>
                     <input type="radio" v-model="$route.query.expired" id="field-expired-3" @change="update()" :value="true">
-                    <label for="field-expired-3">Kun udgåede sager</label>
+                    <label for="field-expired-3">Kun lukkede sager</label>
 
                 </fieldset>
             </form>
@@ -199,7 +199,7 @@
                     return `<div class="mini-label"><span class="label label-GRANTED">Aktiv</span></div>`
                 }
                 if (d.expired) {
-                    return `<div class="mini-label"><span class="label label-CLOSED">Udgået</span></div>`
+                    return `<div class="mini-label"><span class="label label-CLOSED">Lukket</span></div>`
                 }
             },
             diagChangeWorker: function(worker_id) {

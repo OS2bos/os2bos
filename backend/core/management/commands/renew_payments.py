@@ -12,12 +12,13 @@ from core.models import PaymentSchedule
 
 
 class Command(BaseCommand):
-    help = "Renews Payments for an Activity"
+    help = "Renews payments for an unbounded Activity"
 
     def handle(self, *args, **options):
-        # Find recurring payment schedules which has an associated Activity.
+        # Find recurring unbounded payment schedules
+        # which has an associated Activity.
         recurring_schedules = PaymentSchedule.objects.filter(
-            activity__is_null=False
+            activity__isnull=False, activity__end_date__isnull=True
         ).exclude(payment_type=PaymentSchedule.ONE_TIME_PAYMENT)
 
         for schedule in recurring_schedules:
