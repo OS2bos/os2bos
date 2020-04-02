@@ -165,12 +165,10 @@
                         title: 'Navn',
                     },
                     {
-                        key: 'tentative',
                         title: 'Foreløbige',
                         display_func: this.actCountTotal
                     },
                     {
-                        key: 'total',
                         title: 'Bev.',
                         display_func: this.actCountTotal
                     },
