@@ -165,6 +165,16 @@
                         title: 'Navn',
                     },
                     {
+                        key: 'tentative',
+                        title: 'Foreløbige',
+                        display_func: this.actCountTotal
+                    },
+                    {
+                        key: 'total',
+                        title: 'Bev.',
+                        display_func: this.actCountTotal
+                    },
+                    {
                         key: 'modified',
                         title: 'Ændret',
                         display_func: this.displayDate
@@ -184,6 +194,9 @@
             }
         },
         methods: {
+            actCountTotal: function() {
+                return `-`
+            },
             updateSelectedCases: function(selections) {
                 this.selected_cases = selections
             },
