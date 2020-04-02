@@ -16,13 +16,12 @@ const router = new Router({
     routes: [
         {
             path: '/',
-            name: 'my-cases',
-            component: () => import(/* webpackPreload: true */ './components/cases/MyCases.vue')
+            redirect: '/cases/'
         },
         {
             path: '/cases/',
             name: 'cases',
-            component: () => import(/* webpackChunkName: "cases" */ './components/cases/Cases.vue')
+            component: () => import(/* webpackPreload: true */ './components/cases/Cases.vue')
         },
         {
             path: '/case/:caseId',

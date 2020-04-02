@@ -16,7 +16,7 @@ export async function login(t, user, pass) { // Can be called with optional para
             .typeText('#username', username)
             .typeText('#password', password)
             .click(Selector('button').withExactText('Login'))
-            .expect(Selector('h1').innerText).contains('Mine sager')
+            .expect(Selector('h1').innerText).contains('Sager')
     }
         
 }

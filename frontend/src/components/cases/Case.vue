@@ -149,29 +149,16 @@
         },
         watch: {
             cas: function() {
-                if (this.cas.case_worker === this.user.id) {
-                    this.$store.commit('setBreadcrumb', [
-                        {
-                            link: '/',
-                            title: 'Mine sager'
-                        },
-                        {
-                            link: false,
-                            title: `${ this.cas.sbsys_id}, ${ this.cas.name}`
-                        }
-                    ])
-                } else {
-                    this.$store.commit('setBreadcrumb', [
-                        {
-                            link: '/cases/',
-                            title: 'Alle sager'
-                        },
-                        {
-                            link: false,
-                            title: `${ this.cas.sbsys_id}, ${ this.cas.name}`
-                        }
-                    ])
-                }
+                this.$store.commit('setBreadcrumb', [
+                    {
+                        link: '/',
+                        title: 'Sager'
+                    },
+                    {
+                        link: false,
+                        title: `${ this.cas.sbsys_id}, ${ this.cas.name}`
+                    }
+                ])
             },
             user: function() {
                 this.reload()
