@@ -87,6 +87,14 @@
                         class: 'nowrap'
                     },
                     {
+                        title: 'Foreløbige',
+                        display_func: this.actCount
+                    },
+                    {
+                        title: 'I alt',
+                        display_func: this.actCountTotal
+                    },
+                    {
                         key: 'created',
                         title: 'Oprettet',
                         display_func: this.displayCreatedDate,
@@ -192,6 +200,20 @@
             displayID: function(d) {
                 let to = `#/appropriation/${ d.id }/`
                 return `<a href="${ to }"><i class="material-icons">folder_open</i> ${ d.sbsys_id }</a>`
+            },
+            actCountTotal: function(appr) {
+                return appr.activities.length
+            },
+            actCount: function(appr) {
+                // let count = 0
+                // for (let act in appr.activities) {
+                //     if (appr.activities[act].lenght === 'EXPECTED' || 'DRAFT') {
+                //         console.log(appr.activities[act].lenght)
+                //         count = appr.activities[act].length === 'EXPECTED' || 'DRAFT'
+                //     }
+                // }
+                // return count
+                return '-'
             }
         },
         created: function() {
