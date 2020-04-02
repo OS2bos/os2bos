@@ -21,7 +21,7 @@
             </div>
 
             <tr slot="datagrid-table-footer" class="summary">
-                <td colspan="5"></td>
+                <td colspan="7"></td>
                 <td class="right">Samlet</td>
                 <td class="right nowrap"><strong>{{ displayDigits(total_granted) }} kr</strong></td>
                 <td class="expected right nowrap">
