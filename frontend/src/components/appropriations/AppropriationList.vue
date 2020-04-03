@@ -88,7 +88,7 @@
                     },
                     {
                         title: 'Foreløbige',
-                        display_func: this.actCount
+                        key: 'num_draft_or_expected_activities',
                     },
                     {
                         title: 'I alt',

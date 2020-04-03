@@ -166,12 +166,12 @@
                         title: 'Navn',
                     },
                     {
-                        title: 'Foreløbige',
-                        display_func: this.actCountTotal
+                        key: 'num_draft_or_expected_appropriations',
+                        title: 'Foreløbige'
                     },
                     {
-                        title: 'Bev.',
-                        display_func: this.actCountTotal
+                        key: 'num_appropriations',
+                        title: 'Bev.'
                     },
                     {
                         key: 'modified',
@@ -222,9 +222,6 @@
             }
         },
         methods: {
-            actCountTotal: function() {
-                return `-`
-            },
             updateSelectedCases: function(selections) {
                 this.selected_cases = selections
             },
