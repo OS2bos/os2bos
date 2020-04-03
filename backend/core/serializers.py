@@ -6,6 +6,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """Data serializers used by the REST API."""
 
+from django.db.models import Q
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from django import forms
