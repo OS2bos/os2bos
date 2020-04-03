@@ -35,6 +35,8 @@ from core.models import (
     EffortStep,
     FAMILY_DEPT,
     STATUS_DELETED,
+    STATUS_DRAFT,
+    STATUS_EXPECTED,
 )
 from core.utils import create_rrule
 
@@ -63,10 +65,33 @@ class CaseSerializer(serializers.ModelSerializer):
     """
 
     expired = serializers.ReadOnlyField()
+    num_appropriations = serializers.ReadOnlyField(
+        source="appropriations.count"
+    )
+    num_expected_appropriations = serializers.SerializerMethodField()
+    num_draft_appropriations = serializers.SerializerMethodField()
 
     class Meta:
         model = Case
         fields = "__all__"
+
+    def get_num_expected_appropriations(self, case):
+        return len(
+            [
+                appr
+                for appr in case.appropriations.all()
+                if appr.status == STATUS_EXPECTED
+            ]
+        )
+
+    def get_num_draft_appropriations(self, case):
+        return len(
+            [
+                appr
+                for appr in case.appropriations.all()
+                if appr.status == STATUS_DRAFT
+            ]
+        )
 
     def validate(self, data):
         """Check that if target_group is family, district is given."""
@@ -310,6 +335,8 @@ class AppropriationSerializer(serializers.ModelSerializer):
     total_expected_full_year = serializers.ReadOnlyField()
     granted_from_date = serializers.ReadOnlyField()
     granted_to_date = serializers.ReadOnlyField()
+    num_draft_activities = serializers.SerializerMethodField()
+    num_expected_activities = serializers.SerializerMethodField()
 
     activities = serializers.SerializerMethodField()
 
@@ -318,6 +345,12 @@ class AppropriationSerializer(serializers.ModelSerializer):
         """Set up eager loading for improved performance."""
         queryset = queryset.prefetch_related("activities")
         return queryset
+
+    def get_num_draft_activities(self, appropriation):
+        return appropriation.activities.filter(status=STATUS_DRAFT).count()
+
+    def get_num_expected_activities(self, appropriation):
+        return appropriation.activities.filter(status=STATUS_EXPECTED).count()
 
     def get_activities(self, appropriation):
         """Get activities on appropriation."""
