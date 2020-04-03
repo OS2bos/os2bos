@@ -10,7 +10,7 @@
 
     <select :id="domId" class="listpicker" @change="emitChange" v-model="selection" :required="required">
         <option :value="null">---</option>
-        <option v-for="l in list" :value="l.id" :key="l.id">
+        <option v-for="l in sortList" :value="l.id" :key="l.id">
             {{ l[displayKey] }}
         </option>
     </select>
@@ -38,6 +38,23 @@
         data: function(){
             return {
                 selection: null
+            }
+        },
+        computed: {
+            sortList: function () {
+                let list = this.list
+                list = list.slice().sort(function (a, b) {
+                    let nameA = a.name || a.fullname
+                    let nameB = b.name || b.fullname
+                    if (nameA < nameB) {
+                        return -1
+                    }
+                    if (nameA > nameB) {
+                        return 1
+                    }
+                    return 0
+                })
+                return list
             }
         },
         watch: {

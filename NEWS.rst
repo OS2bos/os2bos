@@ -1,3 +1,34 @@
+Version 2.6.1, 2020-04-03
+
+Hotfix:
+
+Bug fixes
+^^^^^^^^^
+
+* Use correct dates for PRISM exports for Sunday and Monday.
+
+Version 2.6.0, 2020-03-31
+-------------------------
+
+New in this version:
+
+Features
+^^^^^^^^
+
+- Delete payment schedules and payments when an activity is deleted.
+- Send an email when an activity is expired.
+- Change subject on activity deleted email.
+- Change text string in frontend for closed cases.
+- Add status in payments report.
+- Change prism payment for Saturday, Sunday and Monday to be exported Friday.
+- Add coverage and tests for management commands.
+- Update dependencies to new versions.
+
+Bug fixes
+^^^^^^^^^
+
+- Remove validation for monthly expected adjustments.
+
 Version 2.5.0, 2020-03-06
 -------------------------
 

@@ -1,6 +1,6 @@
 // Testing with Testcafe : https://devexpress.github.io/testcafe/documentation/getting-started/
 
-import { Selector } from 'testcafe'
+import { Selector, RequestLogger } from 'testcafe'
 import { login } from '../utils/logins.js'
 import { createActivity } from '../utils/crud.js'
 import { axe, axeOptions } from '../utils/axe.js'
@@ -205,33 +205,6 @@ test('Add adjustment activities', async t => {
     await t
         .expect(Selector('.label-EXPECTED')).ok()
         .expect(Selector('h1').withText('Bevillingsskrivelse').exists).ok()
-    
-    await axe(t, null, axeOptions)
-})
-
-test.skip('Create and delete activity', async t => {
-
-    await t
-        .click(Selector('a').withText(testdata.case1.name))
-        .click(Selector('a').withText(testdata.appr1.name))
-    
-    await createActivity(t, testdata.act6)
-
-    await t
-        .click(Selector('a.header-link'))
-        .click(Selector('a').withText(testdata.case1.name))
-        .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector(`tr[title="${ testdata.act6.note }"] a`))
-        .expect(Selector('.label-DRAFT')).ok()
-        .click(Selector('.act-delete-btn'))
-    
-    await axe(t, null, axeOptions)
-
-    await t
-        .click('button.modal-delete-btn')
-        .expect(Selector('.notification .msg').innerText).contains('Ydelse slettet')
-        //.expect(Selector(`tr[title="${ testdata.act6.note }"]`).exists).notOk()
-        //.expect(Selector('h1').withText('Bevillingsskrivelse').exists).ok()
     
     await axe(t, null, axeOptions)
 })

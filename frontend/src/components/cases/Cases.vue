@@ -20,9 +20,9 @@
                        :selectable="permissionCheck">
 
                 <div slot="datagrid-header">
-                    <h1 style="padding: 0;">Find sager</h1>
+                    <h1 style="padding: 0;">Sager</h1>
+                    <button v-if="permissionCheck === true" class="create" @click="$router.push('/case-create/')">+ Tilknyt hovedsag</button>
                 </div>
-
                 <p slot="datagrid-footer" v-if="cases.length < 1">
                     Kan ikke finde nogen resultater, der matcher de valgte kriterier
                 </p>
@@ -103,7 +103,7 @@
 
                     <input type="radio" v-model="$route.query.expired" id="field-expired-1" @change="update()" :value="null">
                     <label for="field-expired-1">Aktive og lukkede sager</label>
-                    <input type="radio" v-model="$route.query.expired" id="field-expired-2" @change="update()" :value="false">
+                    <input type="radio" v-model="$route.query.expired" id="field-expired-2" @change="update()" :preselected="selectedCases" :value="false">
                     <label for="field-expired-2">Kun aktive sager</label>
                     <input type="radio" v-model="$route.query.expired" id="field-expired-3" @change="update()" :value="true">
                     <label for="field-expired-3">Kun lukkede sager</label>
@@ -140,6 +140,7 @@
         ],
         data: function() {
             return {
+                preselected: null,
                 selected_cases: [],
                 show_modal: false,
                 diag_field_case_worker: null,
@@ -189,6 +190,35 @@
             },
             teams: function() {
                 return this.$store.getters.getTeams
+            },
+            user: function() {
+                let user = this.$store.getters.getUser
+                if (user) {
+                    this.$store.dispatch('fetchTeam', user.team)
+                }
+                return user
+            },
+            selectedUser: function() {
+                let user = this.$store.getters.getUser
+                if (user) {
+                    this.$store.dispatch('fetchTeam', user.team)
+                }
+                if (user.id) {
+                    return this.query.case_worker = user.id
+                }
+            },
+            selectedCases: function() {
+                this.$route.query.expired = false
+                this.update()
+                return this.$route.query.expired
+            }
+        },
+        watch: {
+            selectedUser: function() {
+                this.update()
+            },
+            user: function() {
+                this.update()
             }
         },
         methods: {
@@ -269,6 +299,11 @@
     .case-search-list {
         order: 2;
         flex-grow: 1;
+    }
+
+    .case-search .create {
+        float: left;
+        margin: -2rem 0 0 5rem;
     }
 
     .case-search-list .more .material-icons {

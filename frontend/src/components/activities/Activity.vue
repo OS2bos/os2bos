@@ -255,7 +255,7 @@
                     this.$store.commit('setBreadcrumb', [
                         {
                             link: '/',
-                            title: 'Mine sager'
+                            title: 'Sager'
                         },
                         {
                             link: `/case/${ this.cas.id }`,
