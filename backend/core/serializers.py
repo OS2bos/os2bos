@@ -76,7 +76,7 @@ class CaseSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_num_draft_or_expected_appropriations(self, case):
-        """ Get number of related expected or draft appropriations."""
+        """Get number of related expected or draft appropriations."""
         return len(
             [
                 appr
@@ -339,7 +339,7 @@ class AppropriationSerializer(serializers.ModelSerializer):
         return queryset
 
     def get_num_draft_or_expected_activities(self, appropriation):
-        """ Get number of related draft or expected activities."""
+        """Get number of related draft or expected activities."""
         return appropriation.activities.filter(
             Q(status=STATUS_DRAFT) | Q(status=STATUS_EXPECTED)
         ).count()
