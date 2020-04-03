@@ -68,28 +68,20 @@ class CaseSerializer(serializers.ModelSerializer):
     num_appropriations = serializers.ReadOnlyField(
         source="appropriations.count"
     )
-    num_expected_appropriations = serializers.SerializerMethodField()
-    num_draft_appropriations = serializers.SerializerMethodField()
+    num_draft_or_expected_appropriations = serializers.SerializerMethodField()
 
     class Meta:
         model = Case
         fields = "__all__"
 
-    def get_num_expected_appropriations(self, case):
+    def get_num_draft_or_expected_appropriations(self, case):
+        """ Get number of related expected or draft appropriations."""
         return len(
             [
                 appr
                 for appr in case.appropriations.all()
                 if appr.status == STATUS_EXPECTED
-            ]
-        )
-
-    def get_num_draft_appropriations(self, case):
-        return len(
-            [
-                appr
-                for appr in case.appropriations.all()
-                if appr.status == STATUS_DRAFT
+                or appr.status == STATUS_DRAFT
             ]
         )
 
@@ -335,8 +327,7 @@ class AppropriationSerializer(serializers.ModelSerializer):
     total_expected_full_year = serializers.ReadOnlyField()
     granted_from_date = serializers.ReadOnlyField()
     granted_to_date = serializers.ReadOnlyField()
-    num_draft_activities = serializers.SerializerMethodField()
-    num_expected_activities = serializers.SerializerMethodField()
+    num_draft_or_expected_activities = serializers.SerializerMethodField()
 
     activities = serializers.SerializerMethodField()
 
@@ -346,11 +337,11 @@ class AppropriationSerializer(serializers.ModelSerializer):
         queryset = queryset.prefetch_related("activities")
         return queryset
 
-    def get_num_draft_activities(self, appropriation):
-        return appropriation.activities.filter(status=STATUS_DRAFT).count()
-
-    def get_num_expected_activities(self, appropriation):
-        return appropriation.activities.filter(status=STATUS_EXPECTED).count()
+    def get_num_draft_or_expected_activities(self, appropriation):
+        """ Get number of related draft or expected activities."""
+        return appropriation.activities.filter(
+            Q(status=STATUS_DRAFT) | Q(status=STATUS_EXPECTED)
+        ).count()
 
     def get_activities(self, appropriation):
         """Get activities on appropriation."""
