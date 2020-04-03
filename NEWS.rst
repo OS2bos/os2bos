@@ -1,3 +1,12 @@
+Version 2.6.1, 2020-04-03
+
+Hotfix:
+
+Bug fixes
+^^^^^^^^^
+
+* Use correct dates for PRISM exports for Sunday and Monday.
+
 Version 2.6.0, 2020-03-31
 -------------------------
 
