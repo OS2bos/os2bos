@@ -43,17 +43,19 @@
         computed: {
             sortList: function () {
                 let list = this.list
-                list = list.slice().sort(function (a, b) {
-                    let nameA = a.name || a.fullname
-                    let nameB = b.name || b.fullname
-                    if (nameA < nameB) {
-                        return -1
-                    }
-                    if (nameA > nameB) {
-                        return 1
-                    }
-                    return 0
-                })
+                if (list) {
+                    list = list.slice().sort(function (a, b) {
+                        let nameA = a.name || a.fullname
+                        let nameB = b.name || b.fullname
+                        if (nameA < nameB) {
+                            return -1
+                        }
+                        if (nameA > nameB) {
+                            return 1
+                        }
+                        return 0
+                    })
+                }
                 return list
             }
         },
