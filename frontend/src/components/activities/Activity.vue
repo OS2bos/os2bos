@@ -165,7 +165,7 @@
                     <dd>
                         <div v-if="pay.payment_method === 'INVOICE'">Faktura</div>
                         <div v-if="pay.payment_method === 'INTERNAL'">Intern afregning</div>
-                        <div v-if="pay.payment_method === 'CASH'">Kontant udbetaling</div>
+                        <div v-if="pay.payment_method === 'CASH'">Udbetaling</div>
                         <div v-if="pay.payment_method === 'SD'">SD-løn</div>
                     </dd>
                     <template v-if="pay.payment_method_details === 1">

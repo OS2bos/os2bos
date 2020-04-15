@@ -18,6 +18,8 @@
                         <tr>
                             <th>Betaling nr</th>
                             <th>Betalingsnøgle</th>
+                            <th>Betalingsmåde</th>
+                            <th>Udbetales til</th>
                             <th>CPR nr</th>
                             <th>Betalingsdato</th>
                             <th>Betalt</th>
@@ -31,6 +33,19 @@
                                 <span class="dim" v-if="p.payment_schedule__fictive">(Fiktiv)</span>
                             </td>
                             <td> {{ p.payment_schedule__payment_id }} </td>
+                            <td> 
+                                <div v-if="p.payment_method === 'INVOICE'">Faktura</div>
+                                <div v-if="p.payment_method === 'INTERNAL'">Intern afregning</div>
+                                <div v-if="p.payment_method === 'CASH'">Udbetaling</div>
+                                <div v-if="p.payment_method === 'SD'">SD-løn</div>
+                            </td>
+                            <td> 
+                                {{ p.recipient_name }}<br>
+                                <span v-if="p.recipient_type === 'COMPANY'">
+                                    CVR
+                                </span>
+                                {{ p.recipient_id }}
+                            </td>
                             <td> {{ p.case__cpr_number }} </td>
                             <td>
                                 <span v-if="p.paid_date" style="white-space: nowrap;">
