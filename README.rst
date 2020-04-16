@@ -13,7 +13,7 @@ TL;DR: To get a running development environment run:
 
    git clone git@git.magenta.dk:bevillingsplatform/bevillingsplatform.git
    cd bevillingsplatform
-   docker-compose up -d --build frontend
+   docker-compose up -d
 
 
 You can now reach the frontend at http://localhost:8080. The frontend will proxy
