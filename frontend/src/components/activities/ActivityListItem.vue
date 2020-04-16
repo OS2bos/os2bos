@@ -31,6 +31,7 @@
         </td>
         <td class="nowrap">{{ displayDate(act.start_date) }}</td>
         <td class="nowrap">{{ displayDate(act.end_date) }}</td>
+        <td class="nowrap">{{ displayDate(act.modified) }}</td>
         <td class="nowrap right">
             {{ displayCost(act, 'granted') }}
         </td>

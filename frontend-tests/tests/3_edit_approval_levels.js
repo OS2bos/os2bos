@@ -10,11 +10,10 @@ let appro_lvl_name = 'etaten'
 
 fixture('Adding approval levels') // declare the fixture
     .page(baseurl)  // specify the start page
-    .beforeEach(async t => { 
-        await login(t, 'admin', 'admin')
-    })
 
 test('Add new approval level in Django admin', async t => {
+
+    await login(t, 'admin', 'admin')
 
     await t
         .click(Selector('a').withAttribute('href', '/api/admin/'))
@@ -27,8 +26,10 @@ test('Add new approval level in Django admin', async t => {
 
 test('Check existence of approval level', async t => {
 
+    await login(t, 'familieleder', 'sagsbehandler')
+
     await t
-        .click(Selector('a').withAttribute('href', '#/cases/'))
+        .click(Selector('a').withAttribute('href', '#/'))
         .click(Selector('td.datagrid-action a'))
         .click(Selector('td.datagrid-action a'))
         .click(Selector('label').withAttribute('for', 'check-all'))

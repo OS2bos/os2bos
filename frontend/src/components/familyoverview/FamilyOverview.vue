@@ -10,7 +10,7 @@
     <section class="familyoverview">
         <header class="familyoverview-header">
             <h2>Familieoversigt</h2>
-            <button v-if="permissionCheck === true" class="familyoverview-create-btn" @click="$router.push(`/case/${ caseId }/familyoverview-create/`)">+ Opret familierelation</button>
+            <button v-if="permissionCheck === true" class="familyoverview-create-btn" @click="$router.push(`/case/${ caseId }/familyoverview-create/`)">+ Opret relation</button>
         </header>
         <ul class="familyoverview-list list" v-if="fam && fam.length > 0">
             <li v-for="f in fam" :key="f.id" class="familyoverview-list-item">

@@ -27,6 +27,7 @@
                     <th>Udbetales til</th>
                     <th>Start</th>
                     <th>Slut</th>
+                    <th>Senest ændret</th>
                     <th class="right">Udgift i år</th>
                     <th class="right">Forventet udgift i år</th>
                 </tr>
@@ -61,7 +62,7 @@
                         @check="checkOneInList(a, ...arguments)" />
                 </template>
                 <tr class="lastrow">
-                    <td colspan="5" style="padding-left: 0;">
+                    <td colspan="6" style="padding-left: 0;">
                         <button v-if="permissionCheck === true && this.user.profile !== 'edit'" @click="initPreApprove()" :disabled="approvable_acts.length < 1">✔ Godkend valgte</button>
                     </td>
                     <td class="right"><strong>I alt</strong></td>
@@ -182,6 +183,9 @@
                 }
                 return best_date
             },
+            getBestModified(arr) {
+                return arr[arr.length - 1].modified
+            },
             checkExpected(arr) {
                 return arr.find(function(a) {
                     return a.status === 'EXPECTED'
@@ -233,6 +237,7 @@
                                 status: this.checkExpected(chunk),
                                 start_date: this.getBestDate(chunk,'start'),
                                 end_date: this.getBestDate(chunk,'end'),
+                                modified: this.getBestModified(chunk),
                                 activity_type: last_chunk.activity_type,
                                 approved: costs.approved,
                                 expected: costs.expected,
