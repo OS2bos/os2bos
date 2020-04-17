@@ -81,8 +81,10 @@ class CaseSerializer(serializers.ModelSerializer):
             [
                 appr
                 for appr in case.appropriations.all()
-                if appr.status == STATUS_EXPECTED
-                or appr.status == STATUS_DRAFT
+                if (
+                    appr.status == STATUS_EXPECTED
+                    or appr.status == STATUS_DRAFT
+                )
             ]
         )
 
@@ -323,6 +325,7 @@ class ActivitySerializer(WritableNestedModelSerializer):
 class AppropriationSerializer(serializers.ModelSerializer):
     """Serializer for the Appropriation model."""
 
+    status = serializers.ReadOnlyField()
     total_granted_this_year = serializers.ReadOnlyField()
     total_expected_this_year = serializers.ReadOnlyField()
     total_expected_full_year = serializers.ReadOnlyField()
@@ -341,7 +344,8 @@ class AppropriationSerializer(serializers.ModelSerializer):
     def get_num_draft_or_expected_activities(self, appropriation):
         """Get number of related draft or expected activities."""
         return appropriation.activities.filter(
-            Q(status=STATUS_DRAFT) | Q(status=STATUS_EXPECTED)
+            Q(status=STATUS_DRAFT) | Q(status=STATUS_EXPECTED),
+            modified_by__isnull=True,
         ).count()
 
     def get_activities(self, appropriation):

@@ -59,8 +59,6 @@ STATUS_DRAFT = "DRAFT"
 STATUS_EXPECTED = "EXPECTED"
 STATUS_GRANTED = "GRANTED"
 STATUS_DELETED = "DELETED"
-# Below, a "virtual" status only relevant for appropriations.
-STATUS_EXPIRED = "EXPIRED"
 
 status_choices = (
     (STATUS_DRAFT, _("kladde")),
@@ -808,14 +806,12 @@ class Appropriation(AuditModelMixin, models.Model):
     @property
     def status(self):
         """Calculate appropriation status from status of activities."""
-        if not self.activities.exists() or not self.main_activity:
-            return STATUS_DRAFT
-        # We now know that there is at least one activity and a main activity.
-        today = timezone.now().date()
-        if self.main_activity.end_date and self.main_activity.end_date < today:
-            return STATUS_EXPIRED
-        # Now, the status should follow the main activity's status.
-        return self.main_activity.status
+        if self.activities.filter(status=STATUS_EXPECTED).exists():
+            return STATUS_EXPECTED
+        if self.activities.filter(status=STATUS_GRANTED).exists():
+            return STATUS_GRANTED
+
+        return STATUS_DRAFT
 
     case = models.ForeignKey(
         Case,

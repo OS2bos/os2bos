@@ -56,7 +56,6 @@ from core.models import (
     STATUS_GRANTED,
     STATUS_EXPECTED,
     STATUS_DRAFT,
-    STATUS_EXPIRED,
 )
 
 
@@ -157,15 +156,15 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             start_date=start_date,
             end_date=end_date,
             activity_type=MAIN_ACTIVITY,
-            status=STATUS_GRANTED,
+            status=STATUS_EXPECTED,
         )
 
-        self.assertEqual(appropriation.status, STATUS_GRANTED)
+        self.assertEqual(appropriation.status, STATUS_EXPECTED)
 
-        activity.end_date = date.today() - timedelta(1)
+        activity.status = STATUS_GRANTED
         activity.save()
 
-        self.assertEqual(appropriation.status, STATUS_EXPIRED)
+        self.assertEqual(appropriation.status, STATUS_GRANTED)
 
     def test_total_expected_this_year(self):
         # generate a start and end span of 3 days
