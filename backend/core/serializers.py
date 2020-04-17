@@ -344,7 +344,8 @@ class AppropriationSerializer(serializers.ModelSerializer):
     def get_num_draft_or_expected_activities(self, appropriation):
         """Get number of related draft or expected activities."""
         return appropriation.activities.filter(
-            Q(status=STATUS_DRAFT) | Q(status=STATUS_EXPECTED)
+            Q(status=STATUS_DRAFT) | Q(status=STATUS_EXPECTED),
+            modified_by__isnull=True,
         ).count()
 
     def get_activities(self, appropriation):
