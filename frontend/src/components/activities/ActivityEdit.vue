@@ -57,7 +57,8 @@
                         <legend>Hvad skal betales?</legend>
 
                         <label class="required" for="fieldSelectAct">Ydelse</label>
-                        <list-picker :dom-id="'fieldSelectAct'" :disabled="disableAct" :selected-id="act.details" @selection="changeActivity" :list="act_details" required />
+                        <p v-if="preselectedAct"><strong>{{ act_details[0].name }}</strong></p>
+                        <list-picker v-if="!preselectedAct" :dom-id="'fieldSelectAct'" :disabled="disableAct" :selected-id="act.details" @selection="changeActivity" :list="act_details" required />
                         <error err-key="details" />
 
                         <label class="required" for="field-startdate">
@@ -209,10 +210,19 @@
             },
             payDateRule: function() {
                 return checkRulePayDate(this.act.start_date, this.$store.getters.getPaymentMethod)
+            },
+            preselectedAct: function() {
+                if (this.act_details && this.act_details.length === 1) {
+                    this.$store.commit('setActDetail', this.act_details[0].id)
+                    return this.act.details = this.act_details[0].id
+                }
             }
         },
         watch: {
             activityObj: function() {
+                this.update()
+            },
+            preselectedAct: function() {
                 this.update()
             }
         },
