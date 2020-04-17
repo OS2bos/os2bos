@@ -203,17 +203,6 @@
             },
             actCountTotal: function(appr) {
                 return appr.activities.length
-            },
-            actCount: function(appr) {
-                // let count = 0
-                // for (let act in appr.activities) {
-                //     if (appr.activities[act].lenght === 'EXPECTED' || 'DRAFT') {
-                //         console.log(appr.activities[act].lenght)
-                //         count = appr.activities[act].length === 'EXPECTED' || 'DRAFT'
-                //     }
-                // }
-                // return count
-                return '-'
             }
         },
         created: function() {
