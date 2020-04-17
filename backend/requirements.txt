@@ -1,9 +1,9 @@
 Django==2.2.9
-psycopg2-binary==2.8.4
+psycopg2-binary==2.8.5
 gunicorn==20.0.4
 djangorestframework==3.11.0
 django-extensions==2.2.9
-edc_utils==0.1.22
+edc_utils==0.1.23
 # ^ This is a requirement for "django-audit-fields"
 # |
 django-audit-fields==0.1.14
@@ -19,7 +19,7 @@ ipython==7.13.0
 WeasyPrint==51
 python-dateutil==2.8.1
 django-constance[database]==2.5.0
-drf-writable-nested==0.5.4
+drf-writable-nested==0.6.0
 git+https://github.com/magenta-aps/django-saml2-auth#egg=django-saml2-auth
 pysaml2==5.0.0
 django-mailer==2.0.1

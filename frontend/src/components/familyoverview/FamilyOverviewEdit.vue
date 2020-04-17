@@ -10,7 +10,7 @@
 
     <article class="familyoverview-edit">
         <header class="familyoverview-edit-header">
-            <h1 v-if="create_mode">Opret familierelation</h1>
+            <h1 v-if="create_mode">Opret relation</h1>
             <h1 v-else>Redigér familierelation</h1>
         </header>
         <form @submit.prevent="saveChanges()">
