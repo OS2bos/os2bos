@@ -812,7 +812,7 @@ class Appropriation(AuditModelMixin, models.Model):
             return STATUS_DRAFT
         # We now know that there is at least one activity and a main activity.
         today = timezone.now().date()
-        if self.main_activity.end_date < today:
+        if self.main_activity.end_date and self.main_activity.end_date < today:
             return STATUS_EXPIRED
         # Now, the status should follow the main activity's status.
         return self.main_activity.status
