@@ -20,9 +20,10 @@
                 <input id="field-sbsysid" type="text" v-model="appr.sbsys_id" @input="checkKLE(appr.sbsys_id)" required :disabled="appr.granted_from_date">
                 <p class="danger" v-if="sbsysCheck">Sagsnummeret svarer ikke til en af de paragraffer, der kan vælges.</p>
                 <error err-key="sbsys_id" />
-            
+
                 <label class="required" for="field-lawref">Bevilling efter §</label>
-                <select id="field-lawref" class="listpicker" v-model="appr.section" required :disabled="appr.granted_from_date">
+                <p v-if="preselectedPara"><strong>{{ sections[0].paragraph }} {{ sections[0].text }}</strong></p>
+                <select v-if="!preselectedPara" id="field-lawref" class="listpicker" v-model="appr.section" required :disabled="appr.granted_from_date">
                     <option v-for="s in sections" :value="s.id" :key="s.id">
                         {{ s.paragraph }} {{ s.text }}
                     </option>
@@ -77,6 +78,11 @@
             },
             all_sections: function() {
                 return this.$store.getters.getSections
+            },
+            preselectedPara: function() {
+                if (this.sections && this.sections.length === 1) {
+                    return this.appr.section = this.sections[0].id
+                }
             }
         },
         methods: {
