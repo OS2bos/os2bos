@@ -81,8 +81,10 @@ class CaseSerializer(serializers.ModelSerializer):
             [
                 appr
                 for appr in case.appropriations.all()
-                if appr.status == STATUS_EXPECTED
-                or appr.status == STATUS_DRAFT
+                if (
+                    appr.status == STATUS_EXPECTED
+                    or appr.status == STATUS_DRAFT
+                )
             ]
         )
 
@@ -323,6 +325,7 @@ class ActivitySerializer(WritableNestedModelSerializer):
 class AppropriationSerializer(serializers.ModelSerializer):
     """Serializer for the Appropriation model."""
 
+    status = serializers.ReadOnlyField()
     total_granted_this_year = serializers.ReadOnlyField()
     total_expected_this_year = serializers.ReadOnlyField()
     total_expected_full_year = serializers.ReadOnlyField()
