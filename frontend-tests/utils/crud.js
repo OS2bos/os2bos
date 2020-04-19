@@ -15,9 +15,13 @@ async function createActivity(t, act_data) {
 
     await axe(t, null, axeOptions)
 
+    if (act_data.type === 1) {
+        await t
+            .click('#fieldSelectAct')
+            .click(Selector('#fieldSelectAct option').nth(act_data.type))
+    }
+
     await t
-        .click('#fieldSelectAct')
-        .click(Selector('#fieldSelectAct option').nth(act_data.type))
         .typeText('#field-startdate', act_data.start)
 
     if (act_data.end) {
