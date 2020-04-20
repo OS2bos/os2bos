@@ -99,14 +99,14 @@
                         class: 'nowrap'
                     },
                     {
-                        key: 'total_granted_this_year',
-                        title: 'Udgift i år',
+                        key: 'total_cost_full_year',
+                        title: 'Udgift pr år',
                         display_func: this.displayGranted,
                         class: 'right nowrap'
                     },
                     {
-                        key: 'total_expected_this_year',
-                        title: 'Forventet udgift i år',
+                        key: 'total_expected_full_year',
+                        title: 'Forventet udgift pr år',
                         display_func: this.displayExpected,
                         class: 'expected right nowrap'
                     }
@@ -165,11 +165,15 @@
                 return cost2da(num)
             },
             displayGranted: function(appr) {
-                return `${ cost2da(appr.total_granted_this_year) } kr.`
+                for (let act in appr.activities) {
+                    if (appr.total_granted_this_year) {
+                        return `${ cost2da(appr.activities[act].total_cost_full_year) } kr.`
+                    }
+                }
             },
             displayExpected: function(appr) {
                 if (appr.total_expected_this_year > 0 && appr.total_expected_this_year !== appr.total_granted_this_year) {
-                    return `${ cost2da(appr.total_expected_this_year) } kr.`
+                    return `${ cost2da(appr.total_expected_full_year) } kr.`
                 }
             },
             displaySection: function(appr) {
