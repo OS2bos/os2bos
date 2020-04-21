@@ -138,6 +138,50 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             activity.appropriation.total_granted_this_year, Decimal("10000")
         )
 
+    def test_total_granted_full_year(self):
+        now = timezone.now()
+        start_date = date(year=now.year, month=1, day=1)
+        end_date = date(year=now.year, month=1, day=10)
+
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        # Daily payments of 500.00.
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=activity,
+        )
+
+        # Create main activity with GRANTED.
+        # Daily payments of 500.00.
+        new_granted_activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            status=STATUS_GRANTED,
+            activity_type=SUPPL_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=new_granted_activity,
+        )
+        self.assertEqual(
+            activity.appropriation.total_granted_full_year,
+            Decimal("366000.00"),
+        )
+
     def test_appropriation_status(self):
 
         now = timezone.now()
