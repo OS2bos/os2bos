@@ -147,6 +147,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(case=case)
+        # Create granted activities.
         # Daily payments of 500.00.
         activity = create_activity(
             case=case,
@@ -162,7 +163,6 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             activity=activity,
         )
 
-        # Create main activity with GRANTED.
         # Daily payments of 500.00.
         new_granted_activity = create_activity(
             case=case,
