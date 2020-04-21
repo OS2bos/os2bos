@@ -18,7 +18,6 @@
             <div slot="datagrid-header" class="appropriations-header">
                 <h2 style="padding: 0;">Bevillingsskrivelser</h2>
                 <button v-if="permissionCheck === true" class="appropriation-create-btn" @click="$router.push(`/case/${ caseId }/appropriation-create/`)">+ Opret bevillingsskrivelse</button>
-                <router-link to="/appropriation-search/">Find bevillinger</router-link>
             </div>
 
             <tr slot="datagrid-table-footer" class="summary">
