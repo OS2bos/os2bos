@@ -12,6 +12,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
 from django.utils.html import escape, mark_safe
 from django.urls import reverse
+from django import forms
 
 from core.models import (
     Municipality,
@@ -98,9 +99,23 @@ class PaymentAdmin(admin.ModelAdmin):
     payment_schedule_str.short_description = _("betalingsplan")
 
 
+class TargetGroupForm(forms.ModelForm):
+    def required_fields_for_case_choices():
+        return [
+            (field.name, field.verbose_name)
+            for field in Case._meta.get_fields()
+            if field.null and hasattr(field, "verbose_name")
+        ]
+
+    required_fields_for_case = forms.MultipleChoiceField(
+        choices=required_fields_for_case_choices()
+    )
+
+
 @admin.register(TargetGroup)
 class TargetGroupAdmin(admin.ModelAdmin):
-    pass
+    fields = ("name", "required_fields_for_case")
+    form = TargetGroupForm
 
 
 @admin.register(PaymentSchedule)
