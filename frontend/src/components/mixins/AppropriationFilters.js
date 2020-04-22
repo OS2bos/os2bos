@@ -22,6 +22,12 @@
       update: function() {
           this.$store.dispatch('fetchAppropriations', this.$route.query)
       },
+      changeSection: function(section_id) {
+        if (this.$route.query.section != section_id) { // Only update if choice is different
+            this.$route.query.section = section_id
+            this.update()
+        }
+      },
       changeCpr: function(ev) {
           let cpr = ev.target.value.replace('-','')
           if (cpr.length === 10) {
