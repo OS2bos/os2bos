@@ -14,7 +14,7 @@
 
             <data-grid
                        ref="data-grid"
-                       :data-list="cases"
+                       :data-list="apprs"
                        :columns="columns"
                        @selection="updateSelectedApprs">
 
@@ -42,7 +42,7 @@
 
                     <label for="field-team">Team</label>
                     <list-picker 
-                        v-if="teams"
+                        v-if="apprs"
                         :dom-id="'field-team'" 
                         :selected-id="query.team"
                         :list="teams"
@@ -52,7 +52,7 @@
                 
                     <label for="field-case-worker">Sagsbehandler</label>
                     <list-picker 
-                        v-if="users"
+                        v-if="apprs"
                         :dom-id="'field-case-worker'" 
                         :selected-id="query.case_worker"
                         :list="users"
@@ -60,24 +60,24 @@
                         display-key="fullname"
                     />
 
-                    <label for="field-case-worker">Bevilling efter §</label>
+                    <label for="field-section">Bevilling efter §</label>
                     <list-picker 
                         v-if="apprs"
-                        :dom-id="'field-case-worker'" 
+                        :dom-id="'field-section'" 
                         :selected-id="query.section"
-                        :list="users"
-                        @selection="changeWorker"
-                        display-key="fullname"
+                        :list="apprs"
+                        @selection="changeSection"
+                        display-key="section"
                     />
 
-                    <label for="field-case-worker">Hovedydelse</label>
+                    <label for="field-main-act">Hovedydelse</label>
                     <list-picker 
                         v-if="apprs"
-                        :dom-id="'field-case-worker'" 
+                        :dom-id="'field-main-act'" 
                         :selected-id="query.section"
-                        :list="users"
-                        @selection="changeWorker"
-                        display-key="fullname"
+                        :list="apprs"
+                        @selection="changeSection"
+                        display-key="section"
                     />
 
                 </fieldset>
@@ -92,38 +92,28 @@
 
     import axios from '../http/Http.js'
     import DataGrid from '../datagrid/DataGrid.vue'
-    import { json2js } from '../filters/Date.js'
+    import { sectionId2name } from '../filters/Labels.js'
     import ListPicker from '../forms/ListPicker.vue'
-    import DialogBox from '../dialog/Dialog.vue'
-    import notify from '../notifications/Notify.js'
     import AppropriationFilters from '../mixins/AppropriationFilters.js'
-    import UserRights from '../mixins/UserRights.js'
 
     export default {
 
         components: {
             DataGrid,
-            ListPicker,
-            DialogBox
+            ListPicker
         },
         mixins: [
-            AppropriationFilters,
-            UserRights
+            AppropriationFilters
         ],
         data: function() {
             return {
-                preselected: null,
                 selected_apprs: [],
                 columns: [
                     {
                         key: 'sbsys_id',
-                        title: 'SBSYS ID',
+                        title: 'Foranstaltningssag',
                         display_func: this.displayID,
                         class: 'datagrid-action'
-                    },
-                     {
-                        key: 'appropriation',
-                        title: 'Foranstaltningssag',
                     },
                     {
                         key: 'section',
@@ -138,19 +128,11 @@
                     {
                         key: 'name',
                         title: 'Navn',
-                    },
-                    {
-                        key: 'modified',
-                        title: 'Ændret',
-                        display_func: this.displayDate
                     }
                 ]
             }
         },  
         computed: {
-            cases: function() {
-                return this.$store.getters.getCases
-            },
             apprs: function() {
                 return this.$store.getters.getAppropriations
             },
@@ -159,18 +141,6 @@
             },
             teams: function() {
                 return this.$store.getters.getTeams
-            },
-            user: function() {
-                let user = this.$store.getters.getUser
-                if (user) {
-                    this.$store.dispatch('fetchTeam', user.team)
-                }
-                return user
-            }
-        },
-        watch: {
-            user: function() {
-                this.update()
             }
         },
         methods: {
@@ -178,22 +148,11 @@
                 this.selected_apprs = selections
             },
             displayID: function(d) {
-                let to = `#/case/${ d.id }/`
+                let to = `#/appropriation/${ d.id }/`
                 return `<a href="${ to }"><i class="material-icons">folder_shared</i> ${ d.sbsys_id }</a>`
             },
-            displayDate: function(d) {
-                return json2js(d.modified)
-            },
-            displayStatus: function(d) {
-                if (!d.expired) {
-                    return `<div class="mini-label"><span class="label label-GRANTED">Aktiv</span></div>`
-                }
-                if (d.expired) {
-                    return `<div class="mini-label"><span class="label label-CLOSED">Lukket</span></div>`
-                }
-            },
-            diagChangeWorker: function(worker_id) {
-                this.diag_field_case_worker = worker_id
+            displaySection: function(appr) {
+                return `§ ${ sectionId2name(appr.section) }`
             }
         },
         mounted: function() {
