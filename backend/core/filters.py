@@ -16,7 +16,15 @@ from django.utils.translation import gettext
 
 import rest_framework_filters as filters
 
-from core.models import Case, PaymentSchedule, Activity, Payment, Section
+from core.models import (
+    Case,
+    PaymentSchedule,
+    Activity,
+    Payment,
+    Section,
+    Appropriation,
+    MAIN_ACTIVITY,
+)
 
 
 class CaseFilter(filters.FilterSet):
@@ -44,6 +52,41 @@ class CaseForPaymentFilter(filters.FilterSet):
     class Meta:
         model = Case
         fields = {"cpr_number": ["exact"]}
+
+
+class CaseForAppropriationFilter(filters.FilterSet):
+    """Filter cases on CPR number."""
+
+    class Meta:
+        model = Case
+        fields = {
+            "cpr_number": ["exact"],
+            "team": ["exact"],
+            "case_worker": ["exact"],
+        }
+
+
+class AppropriationFilter(filters.FilterSet):
+    """Filter appropriation."""
+
+    case = filters.RelatedFilter(
+        CaseForAppropriationFilter,
+        field_name="case",
+        label=Case._meta.verbose_name.title(),
+        queryset=Case.objects.all(),
+    )
+
+    main_activity = filters.ModelChoiceFilter(
+        queryset=Activity.objects.filter(
+            activity_type=MAIN_ACTIVITY, modifies__isnull=True
+        ),
+        label=gettext("Hovedaktivitet"),
+        field_name="activities",
+    )
+
+    class Meta:
+        model = Appropriation
+        fields = "__all__"
 
 
 class PaymentScheduleFilter(filters.FilterSet):

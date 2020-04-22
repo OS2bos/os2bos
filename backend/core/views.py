@@ -62,7 +62,12 @@ from core.serializers import (
     ApprovalLevelSerializer,
     EffortStepSerializer,
 )
-from core.filters import CaseFilter, PaymentFilter, AllowedForStepsFilter
+from core.filters import (
+    CaseFilter,
+    AppropriationFilter,
+    PaymentFilter,
+    AllowedForStepsFilter,
+)
 from core.utils import get_person_info
 
 from core.mixins import AuditMixin
@@ -160,7 +165,7 @@ class AppropriationViewSet(AuditViewSet):
 
     serializer_class = AppropriationSerializer
 
-    filterset_fields = "__all__"
+    filterset_class = AppropriationFilter
 
     def get_queryset(self):
         """Avoid Django's default lazy loading to improve performance."""
