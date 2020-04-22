@@ -33,7 +33,6 @@ from core.models import (
     ApprovalLevel,
     Team,
     EffortStep,
-    FAMILY_DEPT,
     STATUS_DELETED,
 )
 from core.utils import create_rrule
@@ -71,11 +70,19 @@ class CaseSerializer(serializers.ModelSerializer):
     def validate(self, data):
         """Check that if target_group is family, district is given."""
         if (
-            "target_group" in data and data["target_group"] == FAMILY_DEPT
-        ) and ("district" not in data or not data["district"]):
-            raise serializers.ValidationError(
-                _("En sag med familie målgruppe skal have et distrikt")
-            )
+            "target_group" in data
+            and data["target_group"].get_required_fields_for_case
+        ):
+            required_fields_for_case = data[
+                "target_group"
+            ].get_required_fields_for_case
+            for field in required_fields_for_case:
+                if not field in data:
+                    raise serializers.ValidationError(
+                        _(
+                            f"En sag med den givne målgruppe skal have feltet {field}"
+                        )
+                    )
         return data
 
 

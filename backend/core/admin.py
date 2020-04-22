@@ -32,6 +32,7 @@ from core.models import (
     ApprovalLevel,
     SectionInfo,
     EffortStep,
+    TargetGroup,
 )
 
 for klass in (
@@ -95,6 +96,11 @@ class PaymentAdmin(admin.ModelAdmin):
     payment_id.short_description = _("betalings-ID")
     account_string.short_description = _("kontostreng")
     payment_schedule_str.short_description = _("betalingsplan")
+
+
+@admin.register(TargetGroup)
+class TargetGroupAdmin(admin.ModelAdmin):
+    pass
 
 
 @admin.register(PaymentSchedule)
