@@ -310,7 +310,10 @@ class AppropriationSerializer(serializers.ModelSerializer):
     total_expected_full_year = serializers.ReadOnlyField()
     granted_from_date = serializers.ReadOnlyField()
     granted_to_date = serializers.ReadOnlyField()
+    case__cpr_number = serializers.ReadOnlyField(source="case.cpr_number")
+    case__name = serializers.ReadOnlyField(source="case.name")
 
+    main_activity = ActivitySerializer(read_only=True)
     activities = serializers.SerializerMethodField()
 
     @staticmethod
