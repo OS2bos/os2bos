@@ -319,7 +319,7 @@ class AppropriationSerializer(serializers.ModelSerializer):
     @staticmethod
     def setup_eager_loading(queryset):
         """Set up eager loading for improved performance."""
-        queryset = queryset.prefetch_related("activities")
+        queryset = queryset.prefetch_related("case", "activities")
         return queryset
 
     def get_activities(self, appropriation):
