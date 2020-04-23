@@ -35,7 +35,7 @@
                 <fieldset>
 
                     <label for="field-sbsysid">SBSYS ID</label>
-                    <input type="search" @input="update()" id="field-sbsysid" v-model="$route.query.sbsys_id">
+                    <input type="search" @input="update()" id="field-sbsysid" v-model="$route.query.case__sbsys_id">
 
                     <label for="field-cpr">Hovedsag CPR</label>
                     <input type="search" @input="changeCpr" id="field-cpr" v-model="$route.query.cpr_number">
@@ -65,12 +65,12 @@
                         v-if="apprs"
                         :dom-id="'field-section'" 
                         :selected-id="query.section"
-                        :list="apprs"
+                        :list="sections"
                         @selection="changeSection"
-                        display-key="section"
+                        display-key="paragraph"
                     />
 
-                    <label for="field-main-act">Hovedydelse</label>
+                    <!-- <label for="field-main-act">Hovedydelse</label>
                     <list-picker 
                         v-if="apprs"
                         :dom-id="'field-main-act'" 
@@ -78,7 +78,7 @@
                         :list="apprs"
                         @selection="changeMainAct"
                         display-key="main_activity"
-                    />
+                    /> -->
 
                 </fieldset>
             </form>
@@ -92,7 +92,7 @@
 
     import axios from '../http/Http.js'
     import DataGrid from '../datagrid/DataGrid.vue'
-    import { sectionId2name, activityId2name } from '../filters/Labels.js'
+    import { displayStatus, sectionId2name, activityId2name } from '../filters/Labels.js'
     import ListPicker from '../forms/ListPicker.vue'
     import AppropriationFilters from '../mixins/AppropriationFilters.js'
 
@@ -110,15 +110,20 @@
                 selected_apprs: [],
                 columns: [
                     {
-                        key: 'case',
-                        title: 'SBSYS ID',
-                        display_func: this.displayCaseID,
-                        class: 'datagrid-action'
+                        key: 'status',
+                        title: 'Status',
+                        display_func: this.statusLabel,
+                        class: 'mini-label datagrid-td-status'
                     },
                     {
                         key: 'sbsys_id',
                         title: 'Foranstaltningssag',
                         display_func: this.displayID,
+                        class: 'datagrid-action'
+                    },
+                    {
+                        key: 'case__sbsys_id',
+                        title: 'SBSYS ID',
                         class: 'datagrid-action'
                     },
                     {
@@ -129,7 +134,20 @@
                     },
                     {
                         key: 'case__cpr_number',
+                        display_func: this.displayCPRName,
                         title: 'CPR nr.',
+                    },
+                    {
+                        key: 'total_granted_this_year',
+                        title: 'Udgift i år',
+                        display_func: this.displayGranted,
+                        class: 'right nowrap'
+                    },
+                    {
+                        key: 'total_expected_this_year',
+                        title: 'Forventet udgift i år',
+                        display_func: this.displayExpected,
+                        class: 'expected right nowrap'
                     }
                 ]
             }
@@ -147,6 +165,9 @@
             teams: function() {
                 return this.$store.getters.getTeams
             },
+            sections: function() {
+                return this.$store.getters.getSections
+            },
             appr_main_acts: function() {
                 return this.$store.getters.getAppropriationMainActs
             }
@@ -155,16 +176,29 @@
             updateSelectedApprs: function(selections) {
                 this.selected_apprs = selections
             },
-            displayCaseID: function(d) {
-                let to = `#/case/${ d.id }/`
-                return `<a href="${ to }"><i class="material-icons">folder_shared</i> ${ d.case }</a>`
+            statusLabel: function(appr) {
+                let label = 'DRAFT'
+                for (let act in appr.activities) {
+                    if (appr.activities[act].status === 'GRANTED') {
+                        label = 'GRANTED'
+                    }
+                }
+                for (let act in appr.activities) {
+                    if (appr.activities[act].status === 'EXPECTED') {
+                        label = 'EXPECTED'
+                    }
+                }
+                return displayStatus(label)
             },
             displayID: function(d) {
                 let to = `#/appropriation/${ d.id }/`
                 return `<a href="${ to }"><i class="material-icons">folder_shared</i> ${ d.sbsys_id }</a>`
             },
-            displaySection: function(apprs) {
-                return `§ ${ sectionId2name(apprs.section) }`
+            displayCPRName: function(d) {
+                return `${ d.case__cpr_number } <br> ${ d.case__name }`
+            },
+            displaySection: function(d) {
+                return `§ ${ sectionId2name(d.section) }`
             },
             displayActName: function(id) {
                 return activityId2name(id)
