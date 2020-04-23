@@ -55,7 +55,7 @@ class CaseForPaymentFilter(filters.FilterSet):
 
 
 class CaseForAppropriationFilter(filters.FilterSet):
-    """Filter cases on CPR number."""
+    """Filter cases on CPR number, team and case_worker."""
 
     class Meta:
         model = Case
