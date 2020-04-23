@@ -63,6 +63,7 @@ class CaseForAppropriationFilter(filters.FilterSet):
             "cpr_number": ["exact"],
             "team": ["exact"],
             "case_worker": ["exact"],
+            "sbsys_id": ["exact"],
         }
 
 
