@@ -107,14 +107,14 @@
                         class: 'nowrap'
                     },
                     {
-                        key: 'total_granted_this_year',
-                        title: 'Udgift i år',
+                        key: 'total_granted_full_year',
+                        title: 'Udgift pr år',
                         display_func: this.displayGranted,
                         class: 'right nowrap'
                     },
                     {
-                        key: 'total_expected_this_year',
-                        title: 'Forventet udgift i år',
+                        key: 'total_expected_full_year',
+                        title: 'Forventet udgift pr år',
                         display_func: this.displayExpected,
                         class: 'expected right nowrap'
                     }
@@ -124,7 +124,7 @@
         computed: {
             total_granted: function() {
                 function getTotal(total, a) {
-                    return total + a.total_granted_this_year
+                    return total + a.total_granted_full_year
                 }
                 if (this.apprs) {
                     return this.apprs.reduce(getTotal, 0)
@@ -141,7 +141,7 @@
             },
             total_expected: function() {
                 function getTotal(total, a) {
-                    return total + a.total_expected_this_year
+                    return total + a.total_expected_full_year
                 }
                 if (this.apprs) {
                     return this.apprs.reduce(getTotal, 0)
@@ -173,11 +173,11 @@
                 return cost2da(num)
             },
             displayGranted: function(appr) {
-                return `${ cost2da(appr.total_granted_this_year) } kr.`
+                return `${ cost2da(appr.total_granted_full_year) } kr.`
             },
             displayExpected: function(appr) {
                 if (appr.total_expected_this_year > 0 && appr.total_expected_this_year !== appr.total_granted_this_year) {
-                    return `${ cost2da(appr.total_expected_this_year) } kr.`
+                    return `${ cost2da(appr.total_expected_full_year) } kr.`
                 }
             },
             displaySection: function(appr) {

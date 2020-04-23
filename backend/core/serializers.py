@@ -327,6 +327,7 @@ class AppropriationSerializer(serializers.ModelSerializer):
 
     status = serializers.ReadOnlyField()
     total_granted_this_year = serializers.ReadOnlyField()
+    total_granted_full_year = serializers.ReadOnlyField()
     total_expected_this_year = serializers.ReadOnlyField()
     total_expected_full_year = serializers.ReadOnlyField()
     granted_from_date = serializers.ReadOnlyField()
