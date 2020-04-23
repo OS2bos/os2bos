@@ -21,7 +21,7 @@
             </div>
 
             <tr slot="datagrid-table-footer" class="summary">
-                <td colspan="5"></td>
+                <td colspan="7"></td>
                 <td class="right">Samlet</td>
                 <td class="right nowrap"><strong>{{ displayDigits(total_granted) }} kr</strong></td>
                 <td class="expected right nowrap">
@@ -85,6 +85,14 @@
                         key: 'note',
                         title: 'Supplerende info',
                         class: 'nowrap'
+                    },
+                    {
+                        title: 'Foreløbige',
+                        key: 'num_draft_or_expected_activities',
+                    },
+                    {
+                        title: 'I alt',
+                        display_func: this.actCountTotal
                     },
                     {
                         key: 'created',
@@ -192,6 +200,9 @@
             displayID: function(d) {
                 let to = `#/appropriation/${ d.id }/`
                 return `<a href="${ to }"><i class="material-icons">folder_open</i> ${ d.sbsys_id }</a>`
+            },
+            actCountTotal: function(appr) {
+                return appr.activities.length
             }
         },
         created: function() {
