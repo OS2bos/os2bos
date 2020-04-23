@@ -6,6 +6,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """Data serializers used by the REST API."""
 
+from django.db.models import Q
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from django import forms
@@ -35,6 +36,8 @@ from core.models import (
     EffortStep,
     FAMILY_DEPT,
     STATUS_DELETED,
+    STATUS_DRAFT,
+    STATUS_EXPECTED,
 )
 from core.utils import create_rrule
 
@@ -63,10 +66,27 @@ class CaseSerializer(serializers.ModelSerializer):
     """
 
     expired = serializers.ReadOnlyField()
+    num_appropriations = serializers.ReadOnlyField(
+        source="appropriations.count"
+    )
+    num_draft_or_expected_appropriations = serializers.SerializerMethodField()
 
     class Meta:
         model = Case
         fields = "__all__"
+
+    def get_num_draft_or_expected_appropriations(self, case):
+        """Get number of related expected or draft appropriations."""
+        return len(
+            [
+                appr
+                for appr in case.appropriations.all()
+                if (
+                    appr.status == STATUS_EXPECTED
+                    or appr.status == STATUS_DRAFT
+                )
+            ]
+        )
 
     def validate(self, data):
         """Check that if target_group is family, district is given."""
@@ -305,6 +325,7 @@ class ActivitySerializer(WritableNestedModelSerializer):
 class AppropriationSerializer(serializers.ModelSerializer):
     """Serializer for the Appropriation model."""
 
+    status = serializers.ReadOnlyField()
     total_granted_this_year = serializers.ReadOnlyField()
     total_expected_this_year = serializers.ReadOnlyField()
     total_expected_full_year = serializers.ReadOnlyField()
@@ -314,6 +335,7 @@ class AppropriationSerializer(serializers.ModelSerializer):
     case__name = serializers.ReadOnlyField(source="case.name")
     case__sbsys_id = serializers.ReadOnlyField(source="case.sbsys_id")
 
+    num_draft_or_expected_activities = serializers.SerializerMethodField()
     main_activity = ActivitySerializer(read_only=True)
     activities = serializers.SerializerMethodField()
 
@@ -322,6 +344,13 @@ class AppropriationSerializer(serializers.ModelSerializer):
         """Set up eager loading for improved performance."""
         queryset = queryset.prefetch_related("case", "activities")
         return queryset
+
+    def get_num_draft_or_expected_activities(self, appropriation):
+        """Get number of related draft or expected activities."""
+        return appropriation.activities.filter(
+            Q(status=STATUS_DRAFT) | Q(status=STATUS_EXPECTED),
+            modified_by__isnull=True,
+        ).count()
 
     def get_activities(self, appropriation):
         """Get activities on appropriation."""
