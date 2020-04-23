@@ -74,10 +74,10 @@
                     <list-picker 
                         v-if="apprs"
                         :dom-id="'field-main-act'" 
-                        :selected-id="query.section"
+                        :selected-id="query.main_activity"
                         :list="apprs"
-                        @selection="changeSection"
-                        display-key="section"
+                        @selection="changeMainAct"
+                        display-key="main_activity"
                     />
 
                 </fieldset>
@@ -92,7 +92,7 @@
 
     import axios from '../http/Http.js'
     import DataGrid from '../datagrid/DataGrid.vue'
-    import { sectionId2name } from '../filters/Labels.js'
+    import { sectionId2name, activityId2name } from '../filters/Labels.js'
     import ListPicker from '../forms/ListPicker.vue'
     import AppropriationFilters from '../mixins/AppropriationFilters.js'
 
@@ -110,6 +110,12 @@
                 selected_apprs: [],
                 columns: [
                     {
+                        key: 'case',
+                        title: 'SBSYS ID',
+                        display_func: this.displayCaseID,
+                        class: 'datagrid-action'
+                    },
+                    {
                         key: 'sbsys_id',
                         title: 'Foranstaltningssag',
                         display_func: this.displayID,
@@ -122,17 +128,16 @@
                         class: 'nowrap'
                     },
                     {
-                        key: 'cpr_number',
+                        key: 'case__cpr_number',
                         title: 'CPR nr.',
-                    },
-                    {
-                        key: 'name',
-                        title: 'Navn',
                     }
                 ]
             }
         },  
         computed: {
+            cas: function() {
+                return this.$store.getters.getCase
+            },
             apprs: function() {
                 return this.$store.getters.getAppropriations
             },
@@ -141,18 +146,28 @@
             },
             teams: function() {
                 return this.$store.getters.getTeams
+            },
+            appr_main_acts: function() {
+                return this.$store.getters.getAppropriationMainActs
             }
         },
         methods: {
             updateSelectedApprs: function(selections) {
                 this.selected_apprs = selections
             },
+            displayCaseID: function(d) {
+                let to = `#/case/${ d.id }/`
+                return `<a href="${ to }"><i class="material-icons">folder_shared</i> ${ d.case }</a>`
+            },
             displayID: function(d) {
                 let to = `#/appropriation/${ d.id }/`
                 return `<a href="${ to }"><i class="material-icons">folder_shared</i> ${ d.sbsys_id }</a>`
             },
-            displaySection: function(appr) {
-                return `§ ${ sectionId2name(appr.section) }`
+            displaySection: function(apprs) {
+                return `§ ${ sectionId2name(apprs.section) }`
+            },
+            displayActName: function(id) {
+                return activityId2name(id)
             }
         },
         mounted: function() {

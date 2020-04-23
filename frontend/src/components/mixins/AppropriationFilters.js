@@ -28,28 +28,31 @@
             this.update()
         }
       },
+      changeMainAct: function(main_activity_id) {
+        if (this.$route.query.main_activity != main_activity_id) { // Only update if choice is different
+            this.$route.query.main_activity = main_activity_id
+            this.update()
+        }
+      },
       changeCpr: function(ev) {
           let cpr = ev.target.value.replace('-','')
           if (cpr.length === 10) {
-              // Potential refactor: Maybe supply 'cpr_number' and 'case__cpr_number' as a function parameter.
-              this.$route.query.cpr_number = cpr
               this.$route.query.case__cpr_number = cpr
               this.update()
           } else if (!cpr) {
-              this.$route.query.cpr_number = ''
               this.$route.query.case__cpr_number = ''
               this.update()
           }
       },
       changeWorker: function(worker_id) {
-          if (this.$route.query.case_worker != worker_id) { // Only update if choice is different
-              this.$route.query.case_worker = worker_id
+          if (this.$route.query.case__case_worker != worker_id) { // Only update if choice is different
+              this.$route.query.case__case_worker = worker_id
               this.update()
           }
       },
       changeTeam: function(team_id) {
-          if (this.$route.query.team != team_id) { // Only update if choice is different
-              this.$route.query.team = team_id
+          if (this.$route.query.case__team != team_id) { // Only update if choice is different
+              this.$route.query.case__team = team_id
               this.update()
           }
       }
