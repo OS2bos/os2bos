@@ -312,6 +312,7 @@ class AppropriationSerializer(serializers.ModelSerializer):
     granted_to_date = serializers.ReadOnlyField()
     case__cpr_number = serializers.ReadOnlyField(source="case.cpr_number")
     case__name = serializers.ReadOnlyField(source="case.name")
+    case__sbsys_id = serializers.ReadOnlyField(source="case.sbsys_id")
 
     main_activity = ActivitySerializer(read_only=True)
     activities = serializers.SerializerMethodField()
