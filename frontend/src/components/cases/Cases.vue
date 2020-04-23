@@ -166,6 +166,14 @@
                         title: 'Navn',
                     },
                     {
+                        key: 'num_draft_or_expected_appropriations',
+                        title: 'Foreløbige'
+                    },
+                    {
+                        key: 'num_appropriations',
+                        title: 'Bev.'
+                    },
+                    {
                         key: 'modified',
                         title: 'Ændret',
                         display_func: this.displayDate
