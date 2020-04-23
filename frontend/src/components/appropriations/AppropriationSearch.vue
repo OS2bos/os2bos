@@ -119,12 +119,11 @@
                         key: 'sbsys_id',
                         title: 'Foranstaltningssag',
                         display_func: this.displayID,
-                        class: 'datagrid-action'
+                        class: 'datagrid-action nowrap'
                     },
                     {
                         key: 'case__sbsys_id',
-                        title: 'SBSYS ID',
-                        class: 'datagrid-action'
+                        title: 'SBSYS ID'
                     },
                     {
                         key: 'section',
