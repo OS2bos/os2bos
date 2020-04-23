@@ -77,10 +77,11 @@ class CaseSerializer(serializers.ModelSerializer):
                 "target_group"
             ].get_required_fields_for_case
             for field in required_fields_for_case:
-                if not field in data:
+                if field not in data:
                     raise serializers.ValidationError(
                         _(
-                            f"En sag med den givne målgruppe skal have feltet {field}"
+                            f"En sag med den givne "
+                            f"målgruppe skal have feltet {field}"
                         )
                     )
         return data
