@@ -859,15 +859,24 @@ class Appropriation(AuditModelMixin, models.Model):
 
         This includes both main and supplementary activities.
         """
-        granted_activities = self.activities.all().filter(
-            status=STATUS_GRANTED
-        )
+        granted_activities = self.activities.filter(status=STATUS_GRANTED)
 
         this_years_payments = Payment.objects.filter(
             payment_schedule__activity__in=granted_activities
         ).in_this_year()
 
         return this_years_payments.amount_sum()
+
+    @property
+    def total_granted_full_year(self):
+        """Retrieve total amount granted for this year.
+
+        Extrapolate for the full year (January 1 - December 31).
+        """
+        all_activities = self.activities.filter(status=STATUS_GRANTED)
+        return sum(
+            activity.total_cost_full_year for activity in all_activities
+        )
 
     @property
     def total_expected_this_year(self):
