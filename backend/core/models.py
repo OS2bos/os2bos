@@ -121,7 +121,9 @@ class TargetGroup(models.Model):
 
         The field is stored as a list in a CharField.
         """
-        return json.loads(self.required_fields_for_case.replace("'", '"'))
+        if self.required_fields_for_case:
+            return json.loads(self.required_fields_for_case.replace("'", '"'))
+        return []
 
     def __str__(self):
         return f"{self.name}"
