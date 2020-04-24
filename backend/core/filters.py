@@ -69,7 +69,7 @@ class CaseForAppropriationFilter(filters.FilterSet):
 
 
 class ActivityDetailsForAppropriationFilter(filters.FilterSet):
-    """ Filter activity details on ID."""
+    """Filter activity details on ID."""
 
     class Meta:
         model = ActivityDetails
