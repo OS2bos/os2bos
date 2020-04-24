@@ -98,9 +98,13 @@ class PaymentAdmin(admin.ModelAdmin):
 
 
 class TargetGroupForm(forms.ModelForm):
-    """Custom form for TargetGroup to set required_fields_for_case."""
+    """Form for TargetGroup to set required_fields_for_case."""
 
     def __init__(self, *args, **kwargs):
+        """__init__ for TargetGroupForm.
+
+        Set initial value for required_fields_for_case.
+        """
         super(TargetGroupForm, self).__init__(*args, **kwargs)
         # Set initial value as a list
         self.initial[
@@ -128,6 +132,8 @@ class TargetGroupForm(forms.ModelForm):
 
 @admin.register(TargetGroup)
 class TargetGroupAdmin(admin.ModelAdmin):
+    """ModelAdmin for TargetGroup with custom ModelForm."""
+
     fields = ("name", "required_fields_for_case")
     form = TargetGroupForm
 

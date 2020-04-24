@@ -104,7 +104,7 @@ class EffortStep(models.Model):
 
 
 class TargetGroup(models.Model):
-    """ Target group for a case."""
+    """Target group for a case."""
 
     class Meta:
         verbose_name = _("målgruppe")
@@ -117,6 +117,10 @@ class TargetGroup(models.Model):
 
     @property
     def get_required_fields_for_case(self):
+        """Get required_fields_for_case.
+
+        The field is stored as a list in a CharField.
+        """
         return json.loads(self.required_fields_for_case.replace("'", '"'))
 
     def __str__(self):
