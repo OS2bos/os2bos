@@ -444,4 +444,4 @@ class TargetGroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TargetGroup
-        fields = "__all__"
+        exclude = ("required_fields_for_case",)
