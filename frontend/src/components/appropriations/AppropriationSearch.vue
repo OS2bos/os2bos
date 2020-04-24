@@ -61,24 +61,27 @@
                     />
 
                     <label for="field-section">Bevilling efter §</label>
-                    <list-picker 
+                    <list-picker
                         v-if="apprs"
+                        class="resize"
                         :dom-id="'field-section'" 
                         :selected-id="query.section"
                         :list="sections"
                         @selection="changeSection"
                         display-key="paragraph"
+                        display-key2="text"
                     />
 
-                    <!-- <label for="field-main-act">Hovedydelse</label>
+                    <label for="field-main-act">Hovedydelse</label>
                     <list-picker 
                         v-if="apprs"
+                        class="resize"
                         :dom-id="'field-main-act'" 
                         :selected-id="query.main_activity"
-                        :list="apprs"
+                        :list="appr_main_acts"
                         @selection="changeMainAct"
-                        display-key="main_activity"
-                    /> -->
+                        display-key="name"
+                    />
 
                 </fieldset>
             </form>
@@ -93,6 +96,7 @@
     import axios from '../http/Http.js'
     import DataGrid from '../datagrid/DataGrid.vue'
     import { displayStatus, sectionId2name, activityId2name } from '../filters/Labels.js'
+    import { cost2da } from '../filters/Numbers.js'
     import ListPicker from '../forms/ListPicker.vue'
     import AppropriationFilters from '../mixins/AppropriationFilters.js'
 
@@ -107,6 +111,7 @@
         ],
         data: function() {
             return {
+                act_details: [],
                 selected_apprs: [],
                 columns: [
                     {
@@ -138,13 +143,13 @@
                     },
                     {
                         key: 'total_granted_this_year',
-                        title: 'Udgift i år',
+                        title: 'Udgift pr år',
                         display_func: this.displayGranted,
                         class: 'right nowrap'
                     },
                     {
                         key: 'total_expected_this_year',
-                        title: 'Forventet udgift i år',
+                        title: 'Forventet udgift pr år',
                         display_func: this.displayExpected,
                         class: 'expected right nowrap'
                     }
@@ -168,7 +173,8 @@
                 return this.$store.getters.getSections
             },
             appr_main_acts: function() {
-                return this.$store.getters.getAppropriationMainActs
+                console.log(this.$store.getters.getActivityDetails, 'ALLE SAMMEN')
+                return this.$store.getters.getActivityDetails
             }
         },
         methods: {
@@ -201,6 +207,14 @@
             },
             displayActName: function(id) {
                 return activityId2name(id)
+            },
+            displayGranted: function(appr) {
+                return `${ cost2da(appr.total_granted_full_year) } kr.`
+            },
+            displayExpected: function(appr) {
+                if (appr.total_expected_this_year > 0 && appr.total_expected_this_year !== appr.total_granted_this_year) {
+                    return `${ cost2da(appr.total_expected_full_year) } kr.`
+                }
             }
         },
         mounted: function() {
@@ -228,6 +242,10 @@
         background-color: var(--grey1);
         padding: 1.5rem 1rem 0;
         margin: 1.25rem 1.25rem 0 0;
+    }
+
+    .appropriation-search-filters .resize {
+        max-width: 18.5rem;
     }
 
     .appropriation-search-filters h2,
