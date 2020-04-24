@@ -33,6 +33,7 @@ from core.models import (
     ApprovalLevel,
     Team,
     EffortStep,
+    TargetGroup,
     STATUS_DELETED,
 )
 from core.utils import create_rrule
@@ -435,4 +436,12 @@ class EffortStepSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EffortStep
+        fields = "__all__"
+
+
+class TargetGroupSerializer(serializers.ModelSerializer):
+    """ Serializer for the TargetGroup model."""
+
+    class Meta:
+        model = TargetGroup
         fields = "__all__"
