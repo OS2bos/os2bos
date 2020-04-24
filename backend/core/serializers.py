@@ -335,8 +335,8 @@ class AppropriationSerializer(serializers.ModelSerializer):
     case__cpr_number = serializers.ReadOnlyField(source="case.cpr_number")
     case__name = serializers.ReadOnlyField(source="case.name")
     case__sbsys_id = serializers.ReadOnlyField(source="case.sbsys_id")
-    num_draft_or_expected_activities = serializers.SerializerMethodField()
 
+    num_draft_or_expected_activities = serializers.SerializerMethodField()
     main_activity = ActivitySerializer(read_only=True)
     activities = serializers.SerializerMethodField()
 

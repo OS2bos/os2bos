@@ -23,6 +23,7 @@ from core.models import (
     Payment,
     Section,
     Appropriation,
+    ActivityDetails,
     MAIN_ACTIVITY,
 )
 
@@ -67,6 +68,14 @@ class CaseForAppropriationFilter(filters.FilterSet):
         }
 
 
+class ActivityDetailsForAppropriationFilter(filters.FilterSet):
+    """ Filter activity details on ID."""
+
+    class Meta:
+        model = ActivityDetails
+        fields = {"id": ["exact"]}
+
+
 class AppropriationFilter(filters.FilterSet):
     """Filter appropriation."""
 
@@ -77,12 +86,14 @@ class AppropriationFilter(filters.FilterSet):
         queryset=Case.objects.all(),
     )
 
-    main_activity = filters.ModelChoiceFilter(
-        queryset=Activity.objects.filter(
-            activity_type=MAIN_ACTIVITY, modifies__isnull=True
+    main_activity__details = filters.RelatedFilter(
+        ActivityDetailsForAppropriationFilter,
+        field_name="activities__details",
+        label=gettext("Aktivitetsdetalje for hovedaktivitet"),
+        queryset=ActivityDetails.objects.filter(
+            activity__activity_type=MAIN_ACTIVITY,
+            activity__modifies__isnull=True,
         ),
-        label=gettext("Hovedaktivitet"),
-        field_name="activities",
     )
 
     class Meta:
