@@ -6,6 +6,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """These are the Django models, defining the database layout."""
 
+import json
 
 from datetime import date, timedelta
 from decimal import Decimal
@@ -116,7 +117,7 @@ class TargetGroup(models.Model):
 
     @property
     def get_required_fields_for_case(self):
-        return self.required_fields_for_case.split(",")
+        return json.loads(self.required_fields_for_case.replace("'", '"'))
 
     def __str__(self):
         return f"{self.name}"

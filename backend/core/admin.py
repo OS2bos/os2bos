@@ -5,8 +5,6 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """Customize django-admin interface."""
-
-
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
@@ -100,15 +98,31 @@ class PaymentAdmin(admin.ModelAdmin):
 
 
 class TargetGroupForm(forms.ModelForm):
+    """Custom form for TargetGroup to set required_fields_for_case."""
+
+    def __init__(self, *args, **kwargs):
+        super(TargetGroupForm, self).__init__(*args, **kwargs)
+        # Set initial value as a list
+        self.initial[
+            "required_fields_for_case"
+        ] = self.instance.get_required_fields_for_case
+
     def required_fields_for_case_choices():
-        return [
+        """Define the choices for the required_fields_for_case field."""
+        excluded_fields = ["revision"]
+
+        choices = [
             (field.name, field.verbose_name)
             for field in Case._meta.get_fields()
-            if field.null and hasattr(field, "verbose_name")
+            if field.null
+            and hasattr(field, "verbose_name")
+            and field.name not in excluded_fields
         ]
+        return choices
 
     required_fields_for_case = forms.MultipleChoiceField(
-        choices=required_fields_for_case_choices()
+        choices=required_fields_for_case_choices(),
+        label=_("Påkrævede felter på sag"),
     )
 
 
