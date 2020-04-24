@@ -11,7 +11,7 @@
     <select :id="domId" class="listpicker" @change="emitChange" v-model="selection" :required="required">
         <option :value="null">---</option>
         <option v-for="l in sortList" :value="l.id" :key="l.id">
-            {{ l[displayKey] }}
+            {{ l[displayKey] }} {{ l[displayKey2]}}
         </option>
     </select>
 
@@ -24,7 +24,7 @@
         props: {
             domId: String,
             selectedId: Number,
-            list: Array,
+            list: [Array, Boolean],
             default: {
                 type: Number,
                 default: null
@@ -32,6 +32,9 @@
             displayKey: {
                 type: String,
                 default: 'name'
+            },
+            displayKey2: {
+                type: String
             },
             required: Boolean
         },

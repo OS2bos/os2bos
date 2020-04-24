@@ -86,7 +86,7 @@
     export default {
 
         props: {
-            dataList: Array,
+            dataList: [Array, Boolean],
             columns: Array,
             selectable: Boolean
         },
