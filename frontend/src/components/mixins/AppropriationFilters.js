@@ -29,8 +29,8 @@
         }
       },
       changeMainAct: function(main_activity_id) {
-        if (this.$route.query.main_activity != main_activity_id) { // Only update if choice is different
-            this.$route.query.main_activity = main_activity_id
+        if (this.$route.query.main_activity__details__id != main_activity_id) { // Only update if choice is different
+            this.$route.query.main_activity__details__id = main_activity_id
             this.update()
         }
       },

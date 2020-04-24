@@ -77,7 +77,7 @@
                         v-if="apprs"
                         class="resize"
                         :dom-id="'field-main-act'" 
-                        :selected-id="query.main_activity"
+                        :selected-id="query.main_activity__details__id"
                         :list="appr_main_acts"
                         @selection="changeMainAct"
                         display-key="name"
@@ -173,8 +173,8 @@
                 return this.$store.getters.getSections
             },
             appr_main_acts: function() {
-                console.log(this.$store.getters.getActivityDetails, 'ALLE SAMMEN')
-                return this.$store.getters.getActivityDetails
+                let actList = this.$store.getters.getActivityDetails.filter(act => act.main_activity_for.length > 0)
+                return actList
             }
         },
         methods: {
