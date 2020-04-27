@@ -3,13 +3,25 @@ from datetime import date
 from django.test import TestCase
 from django.contrib.admin.sites import AdminSite
 
-from core.models import Payment, PaymentSchedule, ActivityDetails, Account
-from core.admin import PaymentAdmin, PaymentScheduleAdmin, AccountAdmin
+from core.models import (
+    Payment,
+    PaymentSchedule,
+    ActivityDetails,
+    Account,
+    TargetGroup,
+)
+from core.admin import (
+    PaymentAdmin,
+    PaymentScheduleAdmin,
+    AccountAdmin,
+    TargetGroupAdmin,
+)
 from core.tests.testing_utils import (
     create_payment,
     create_payment_schedule,
     create_account,
     create_section,
+    create_target_group,
 )
 
 
@@ -101,3 +113,22 @@ class TestAccountAdmin(TestCase):
         account_admin = AccountAdmin(Account, site)
 
         self.assertEqual(account_admin.number(account), account.number)
+
+
+class TestTargetGroupAdmin(TestCase):
+    def test_target_group_required_fields_for_case_initial(self):
+        target_group = create_target_group(
+            name="familieafdelingen", required_fields_for_case="['district']"
+        )
+        site = AdminSite()
+        target_group_admin = TargetGroupAdmin(TargetGroup, site)
+        target_group_form_class = target_group_admin.get_form(
+            request, target_group
+        )
+        target_group_form = target_group_form_class(instance=target_group)
+        initial_required_fields = target_group_form.get_initial_for_field(
+            target_group_form.fields["required_fields_for_case"],
+            "required_fields_for_case",
+        )
+
+        self.assertEqual(initial_required_fields, ["district"])

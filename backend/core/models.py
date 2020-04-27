@@ -6,6 +6,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """These are the Django models, defining the database layout."""
 
+import json
 
 from datetime import date, timedelta
 from decimal import Decimal
@@ -24,14 +25,6 @@ from constance import config
 
 from core.managers import PaymentQuerySet, CaseQuerySet
 from core.utils import send_appropriation, create_rrule
-
-# Target group - definitions and choice list.
-FAMILY_DEPT = "FAMILY_DEPT"
-DISABILITY_DEPT = "DISABILITY_DEPT"
-target_group_choices = (
-    (FAMILY_DEPT, _("familieafdelingen")),
-    (DISABILITY_DEPT, _("handicapafdelingen")),
-)
 
 # Payment methods and choice list.
 CASH = "CASH"
@@ -103,6 +96,32 @@ class EffortStep(models.Model):
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     number = models.PositiveIntegerField(verbose_name="Nummer", unique=True)
+
+    def __str__(self):
+        return f"{self.name}"
+
+
+class TargetGroup(models.Model):
+    """Target group for a case."""
+
+    class Meta:
+        verbose_name = _("målgruppe")
+        verbose_name_plural = _("målgrupper")
+
+    name = models.CharField(max_length=128, verbose_name=_("navn"))
+    required_fields_for_case = models.CharField(
+        max_length=255, verbose_name=_("påkrævede felter på sag"), blank=True
+    )
+
+    @property
+    def get_required_fields_for_case(self):
+        """Get required_fields_for_case.
+
+        The field is stored as a list in a CharField.
+        """
+        if self.required_fields_for_case:
+            return json.loads(self.required_fields_for_case.replace("'", '"'))
+        return []
 
     def __str__(self):
         return f"{self.name}"
@@ -665,10 +684,12 @@ class Case(AuditModelMixin, models.Model):
         related_name="resident_clients",
         on_delete=models.PROTECT,
     )
-    target_group = models.CharField(
-        max_length=128,
+    target_group = models.ForeignKey(
+        TargetGroup,
         verbose_name=_("målgruppe"),
-        choices=target_group_choices,
+        on_delete=models.PROTECT,
+        related_name="cases",
+        null=True,
     )
     effort_step = models.ForeignKey(
         EffortStep,

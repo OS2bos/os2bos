@@ -34,7 +34,7 @@ from core.models import (
     ApprovalLevel,
     Team,
     EffortStep,
-    FAMILY_DEPT,
+    TargetGroup,
     STATUS_DELETED,
     STATUS_DRAFT,
     STATUS_EXPECTED,
@@ -91,11 +91,20 @@ class CaseSerializer(serializers.ModelSerializer):
     def validate(self, data):
         """Check that if target_group is family, district is given."""
         if (
-            "target_group" in data and data["target_group"] == FAMILY_DEPT
-        ) and ("district" not in data or not data["district"]):
-            raise serializers.ValidationError(
-                _("En sag med familie målgruppe skal have et distrikt")
-            )
+            "target_group" in data
+            and data["target_group"].get_required_fields_for_case
+        ):
+            required_fields_for_case = data[
+                "target_group"
+            ].get_required_fields_for_case
+            for field in required_fields_for_case:
+                if field not in data or not data[field]:
+                    raise serializers.ValidationError(
+                        _(
+                            f"En sag med den givne "
+                            f"målgruppe skal have feltet {field}"
+                        )
+                    )
         return data
 
 
@@ -458,3 +467,11 @@ class EffortStepSerializer(serializers.ModelSerializer):
     class Meta:
         model = EffortStep
         fields = "__all__"
+
+
+class TargetGroupSerializer(serializers.ModelSerializer):
+    """Serializer for the TargetGroup model."""
+
+    class Meta:
+        model = TargetGroup
+        exclude = ("required_fields_for_case",)
