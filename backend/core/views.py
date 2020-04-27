@@ -393,7 +393,7 @@ class EffortStepViewSet(ReadOnlyViewset):
 
 
 class TargetGroupViewSet(ReadOnlyViewset):
-    """ Expose target groups in REST API."""
+    """Expose target groups in REST API."""
 
     queryset = TargetGroup.objects.all()
     serializer_class = TargetGroupSerializer

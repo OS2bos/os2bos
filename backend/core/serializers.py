@@ -440,7 +440,7 @@ class EffortStepSerializer(serializers.ModelSerializer):
 
 
 class TargetGroupSerializer(serializers.ModelSerializer):
-    """ Serializer for the TargetGroup model."""
+    """Serializer for the TargetGroup model."""
 
     class Meta:
         model = TargetGroup
