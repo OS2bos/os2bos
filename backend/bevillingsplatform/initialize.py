@@ -21,6 +21,7 @@ def initialize():
     """
     initialize_municipalities()
     initialize_school_districts()
+    initialize_target_groups()
     initialize_sections()
     initialize_activity_details()
     initialize_section_infos()
@@ -44,6 +45,14 @@ def initialize_approval_levels():
     Data should be the output of "manage.py dumpdata core.approvallevels".
     """
     call_command("loaddata", "approvallevels.json", app_label="core")
+
+
+def initialize_target_groups():
+    """ Initialize the initial target groups.
+
+    Data should be output of "manage.py dumpdata core.targetgroups".
+    """
+    call_command("loaddata", "targetgroups.json", app_label="core")
 
 
 def initialize_sections():

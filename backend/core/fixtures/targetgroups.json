@@ -1,0 +1,18 @@
+[
+    {
+        "model": "core.targetgroup",
+        "pk": 1,
+        "fields": {
+            "name": "Familieafdelingen",
+            "required_fields_for_case": "['district']"
+        }
+    },
+    {
+        "model": "core.targetgroup",
+        "pk": 2,
+        "fields": {
+            "name": "Handicapafdelingen",
+            "required_fields_for_case": ""
+        }
+    }
+]

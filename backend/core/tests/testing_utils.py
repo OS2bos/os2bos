@@ -76,7 +76,7 @@ def create_case(
     sbsys_id="13212",
     scaling_step=1,
     effort_step=1,
-    target_group="familieafdelingen",
+    target_group="Familieafdelingen",
     cpr_number="0205891234",
 ):
     target_group = TargetGroup.objects.get(name=target_group)
@@ -283,9 +283,9 @@ def create_user(username):
 
 
 def create_target_group(
-    name="familieafdelingen", required_fields_for_case="['district']"
+    name="Familieafdelingen", required_fields_for_case="['district']"
 ):
-    target_group = TargetGroup.objects.create(
+    target_group, _ = TargetGroup.objects.get_or_create(
         name=name, required_fields_for_case=required_fields_for_case
     )
     return target_group

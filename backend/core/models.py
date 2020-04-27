@@ -787,11 +787,11 @@ class Section(models.Model):
 
     paragraph = models.CharField(max_length=128, verbose_name=_("paragraf"))
     text = models.TextField(verbose_name=_("forklarende tekst"))
-    allowed_for_family_target_group = models.BooleanField(
-        verbose_name=_("tilladt for familieafdelingen"), default=False
-    )
-    allowed_for_disability_target_group = models.BooleanField(
-        verbose_name=_("tilladt for handicapafdelingen"), default=False
+    allowed_for_target_groups = models.ManyToManyField(
+        TargetGroup,
+        related_name="sections",
+        verbose_name=_("tilladt for målgrupper"),
+        blank=True,
     )
     allowed_for_steps = models.ManyToManyField(
         EffortStep,
