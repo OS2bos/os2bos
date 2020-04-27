@@ -37,25 +37,25 @@
                     <fieldset>
                         <legend>Kommune:</legend>
 
-                        <label class="required" for="selectField1">Betalingskommune:</label>
+                        <label class="required" for="selectPayingMunicipality">Betalingskommune:</label>
                         <list-picker 
-                            :dom-id="'selectField1'" 
+                            :dom-id="'selectPayingMunicipality'" 
                             :selected-id="cas.paying_municipality" 
                             @selection="changeMuni($event, 'paying_municipality')" 
                             :list="municipalities" 
                             :default="42" />
                     
-                        <label class="required" for="selectField2">Handlekommune:</label>
+                        <label class="required" for="selectActingMunicipality">Handlekommune:</label>
                         <list-picker 
-                            :dom-id="'selectField2'" 
+                            :dom-id="'selectActingMunicipality'" 
                             :selected-id="cas.acting_municipality" 
                             @selection="changeMuni($event, 'acting_municipality')" 
                             :list="municipalities" 
                             :default="42" />
                     
-                        <label class="required" for="selectField3">Bopælsskommune:</label>
+                        <label class="required" for="selectResidenceMunicipality">Bopælsskommune:</label>
                         <list-picker 
-                            :dom-id="'selectField3'" 
+                            :dom-id="'selectResidenceMunicipality'" 
                             :selected-id="cas.residence_municipality" 
                             @selection="changeMuni($event, 'residence_municipality')" 
                             :list="municipalities" 
@@ -66,16 +66,17 @@
                 <div class="row-item">
 
                     <fieldset>
-                        <legend style="margin-bottom: .75rem;" class="required">Målgruppe:</legend>
-                        <input id="inputRadio1" type="radio" value="FAMILY_DEPT" v-model="cas.target_group" name="target-group" required>
-                        <label for="inputRadio1">Familieafdelingen</label>
-                        <input id="inputRadio2" type="radio" value="DISABILITY_DEPT" v-model="cas.target_group" name="target-group" required>
-                        <label for="inputRadio2">Handicapafdelingen</label>
-                        <error err-key="target_group" />
+                        <label class="required" for="selectTargetGroup">Målgruppe:</label>
+                        <list-picker
+                            :dom-id="'selectTargetGroup'" 
+                            :selected-id="cas.residence_municipality" 
+                            @selection="changeMuni($event, 'residence_municipality')" 
+                            :list="targetGroups" 
+                            :default="42" />
                     
                         <template v-if="cas.target_group === 'FAMILY_DEPT'">
-                            <label class="required" for="selectField4">Skoledistrikt (nuværende eller oprindeligt)</label>
-                            <list-picker :dom-id="'selectField4'" :selected-id="cas.district" @selection="changeDistrict" :list="districts" required />
+                            <label class="required" for="selectDistrict">Skoledistrikt (nuværende eller oprindeligt)</label>
+                            <list-picker :dom-id="'selectDistrict'" :selected-id="cas.district" @selection="changeDistrict" :list="districts" required />
                         </template>
                     </fieldset>
 
