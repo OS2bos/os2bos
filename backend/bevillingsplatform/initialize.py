@@ -48,7 +48,7 @@ def initialize_approval_levels():
 
 
 def initialize_target_groups():
-    """ Initialize the initial target groups.
+    """Initialize the initial target groups.
 
     Data should be output of "manage.py dumpdata core.targetgroups".
     """
