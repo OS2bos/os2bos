@@ -122,11 +122,13 @@ class TestTargetGroupAdmin(TestCase):
         )
         site = AdminSite()
         target_group_admin = TargetGroupAdmin(TargetGroup, site)
-        target_group_form = target_group_admin.get_form(request, target_group)
-        target_group_form_instance = target_group_form(instance=target_group)
-        initial_required_fields_for_case = target_group_form_instance.get_initial_for_field(
-            target_group_form_instance.fields["required_fields_for_case"],
+        target_group_form_class = target_group_admin.get_form(
+            request, target_group
+        )
+        target_group_form = target_group_form_class(instance=target_group)
+        initial_required_fields = target_group_form.get_initial_for_field(
+            target_group_form.fields["required_fields_for_case"],
             "required_fields_for_case",
         )
 
-        self.assertEqual(initial_required_fields_for_case, ["district"])
+        self.assertEqual(initial_required_fields, ["district"])
