@@ -78,7 +78,7 @@ class CaseSerializer(serializers.ModelSerializer):
                 "target_group"
             ].get_required_fields_for_case
             for field in required_fields_for_case:
-                if field not in data:
+                if field not in data or not data[field]:
                     raise serializers.ValidationError(
                         _(
                             f"En sag med den givne "

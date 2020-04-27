@@ -516,7 +516,7 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
                 "case_worker": "Orla Frøsnapper",
                 "leader": "Orla Frøsnapper",
                 "team": "FCK",
-                "target_group": "FAMILY_DEPT",
+                "target_group": case.target_group,
                 "main_activity_id": (
                     appropriation.main_activity.details.activity_id
                 ),

@@ -29,8 +29,8 @@ from core.models import (
     Account,
     RelatedPerson,
     SD,
-    FAMILY_DEPT,
     EffortStep,
+    TargetGroup,
 )
 
 
@@ -76,10 +76,10 @@ def create_case(
     sbsys_id="13212",
     scaling_step=1,
     effort_step=1,
-    target_group=FAMILY_DEPT,
+    target_group="familieafdelingen",
     cpr_number="0205891234",
 ):
-
+    target_group = TargetGroup.objects.get(name=target_group)
     effort_step = EffortStep.objects.get(number=effort_step)
 
     case = Case.objects.create(
@@ -106,7 +106,7 @@ def create_case_as_json(
         "sbsys_id": "xxx-yyyx",
         "cpr_number": "1112130014",
         "name": "Mak Mouse",
-        "target_group": "FAMILY_DEPT",
+        "target_group": 1,
         "refugee_integration": True,
         "cross_department_measure": True,
         "case_worker": case_worker.id,
@@ -280,3 +280,12 @@ def create_related_person(main_case, name="Jens Jensen", relation_type="far"):
 def create_user(username):
     user = User.objects.create(username=username)
     return user
+
+
+def create_target_group(
+    name="familieafdelingen", required_fields_for_case="['district']"
+):
+    target_group = TargetGroup.objects.create(
+        name=name, required_fields_for_case=required_fields_for_case
+    )
+    return target_group
