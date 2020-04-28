@@ -332,14 +332,18 @@ class AppropriationSerializer(serializers.ModelSerializer):
     total_expected_full_year = serializers.ReadOnlyField()
     granted_from_date = serializers.ReadOnlyField()
     granted_to_date = serializers.ReadOnlyField()
-    num_draft_or_expected_activities = serializers.SerializerMethodField()
+    case__cpr_number = serializers.ReadOnlyField(source="case.cpr_number")
+    case__name = serializers.ReadOnlyField(source="case.name")
+    case__sbsys_id = serializers.ReadOnlyField(source="case.sbsys_id")
 
+    num_draft_or_expected_activities = serializers.SerializerMethodField()
+    main_activity = ActivitySerializer(read_only=True)
     activities = serializers.SerializerMethodField()
 
     @staticmethod
     def setup_eager_loading(queryset):
         """Set up eager loading for improved performance."""
-        queryset = queryset.prefetch_related("activities")
+        queryset = queryset.prefetch_related("case", "activities")
         return queryset
 
     def get_num_draft_or_expected_activities(self, appropriation):

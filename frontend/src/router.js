@@ -72,6 +72,11 @@ const router = new Router({
             props: { mode: 'create' }
         },
         {
+            path: '/appropriation-search/',
+            name: 'appropriation-search',
+            component: () => import(/* webpackChunkName: "appropriationsearch" */ './components/appropriations/AppropriationSearch.vue')
+        },
+        {
             path: '/payments/',
             name: 'payments',
             component: () => import(/* webpackChunkName: "payments" */ './components/payments/PaymentSearch.vue')
