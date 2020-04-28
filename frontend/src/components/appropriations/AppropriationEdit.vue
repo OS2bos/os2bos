@@ -68,13 +68,7 @@
                 return this.$store.getters.getCase
             },
             cas_target: function() {
-                if (this.cas.target_group === 1) {
-                    return `allowed_for_target_groups=${ this.cas.target_group}`
-                } else if (this.cas.target_group === 2) {
-                    return `allowed_for_target_groups=${ this.cas.target_group}`
-                } else {
-                    return ''
-                }
+                return `allowed_for_target_groups=${ this.cas.target_group}`
             },
             all_sections: function() {
                 return this.$store.getters.getSections
