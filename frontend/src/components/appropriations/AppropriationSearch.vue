@@ -142,13 +142,13 @@
                         title: 'CPR nr.',
                     },
                     {
-                        key: 'total_granted_this_year',
+                        key: 'total_granted_full_year',
                         title: 'Udgift pr år',
                         display_func: this.displayGranted,
                         class: 'right nowrap'
                     },
                     {
-                        key: 'total_expected_this_year',
+                        key: 'total_expected_full_year',
                         title: 'Forventet udgift pr år',
                         display_func: this.displayExpected,
                         class: 'expected right nowrap'
