@@ -90,10 +90,6 @@ class Command(BaseCommand):
                         "paragraph": key,
                         "text": text,
                         "law_text_name": law_text_name,
-                        "allowed_for_disability_target_group": "Handicap"
-                        in target_groups,
-                        "allowed_for_family_target_group": "Familieafdeling"
-                        in target_groups,
                     },
                 )
                 section = models.Section.objects.get(paragraph=key)
@@ -102,3 +98,14 @@ class Command(BaseCommand):
                 )
                 if effort_steps.exists():
                     section.allowed_for_steps.add(*effort_steps)
+
+                if "Handicap" in target_groups:
+                    target_group, _ = models.TargetGroup.objects.get_or_create(
+                        name="Handicapafdelingen"
+                    )
+                    section.allowed_for_target_groups.add(target_group)
+                if "Familieafdeling" in target_groups:
+                    target_group, _ = models.TargetGroup.objects.get_or_create(
+                        name="Familieafdeling"
+                    )
+                    section.allowed_for_target_groups.add(target_group)
