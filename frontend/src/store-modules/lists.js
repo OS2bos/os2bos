@@ -10,6 +10,7 @@ import axios from '../components/http/Http.js'
 
 const state = {
     municipalities: null,
+    target_group: null,
     districts: null,
     sections: null,
     approval_levels: null,
@@ -20,6 +21,9 @@ const state = {
 const getters = {
     getMunis (state) {
         return state.municipalities ? state.municipalities : false
+    },
+    getTargetGroups (state) {
+        return state.target_group ? state.target_group : false
     },
     getDistricts (state) {
         return state.districts ? state.districts : false
@@ -41,6 +45,13 @@ const getters = {
 const mutations = {
     setMunis (state, munis) {
         state.municipalities = munis.sort(function(a,b) {
+            if (a.name > b.name) { return 1 } 
+            if (a.name < b.name) { return -1 }
+            return 0
+        })
+    },
+    setTarget (state, target) {
+        state.target_group = target.sort(function(a,b) {
             if (a.name > b.name) { return 1 } 
             if (a.name < b.name) { return -1 }
             return 0
@@ -76,6 +87,13 @@ const actions = {
         return axios.get('/municipalities/')
         .then(res => {
             commit('setMunis', res.data)
+        })
+        .catch(err => console.log(err))
+    },
+    fetchTargetGroups: function({commit}) {
+        return axios.get('/target_groups/')
+        .then(res => {
+            commit('setTarget', res.data)
         })
         .catch(err => console.log(err))
     },
@@ -118,6 +136,7 @@ const actions = {
         return Promise.all([
             dispatch('fetchTeams'),
             dispatch('fetchMunis'),
+            dispatch('fetchTargetGroups'),
             dispatch('fetchDistricts'),
             dispatch('fetchActivityDetails'),
             dispatch('fetchSections'),
