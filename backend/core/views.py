@@ -407,7 +407,7 @@ class TargetGroupViewSet(ReadOnlyViewset):
 
 
 class EffortViewSet(ReadOnlyViewset):
-    """ Expose efforts in REST API."""
+    """Expose efforts in REST API."""
 
     queryset = Effort.objects.all()
     serializer_class = EffortSerializer
