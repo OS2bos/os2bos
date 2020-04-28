@@ -92,11 +92,11 @@ class CaseSerializer(serializers.ModelSerializer):
         """Check that if target_group is family, district is given."""
         if (
             "target_group" in data
-            and data["target_group"].get_required_fields_for_case
+            and data["target_group"].required_fields_for_case
         ):
             required_fields_for_case = data[
                 "target_group"
-            ].get_required_fields_for_case
+            ].required_fields_for_case
             for field in required_fields_for_case:
                 if field not in data or not data[field]:
                     raise serializers.ValidationError(

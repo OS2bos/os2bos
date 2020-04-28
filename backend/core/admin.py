@@ -111,7 +111,7 @@ class TargetGroupForm(forms.ModelForm):
         # Set initial value as a list
         self.initial[
             "required_fields_for_case"
-        ] = self.instance.get_required_fields_for_case
+        ] = self.instance.required_fields_for_case
 
     def required_fields_for_case_choices():
         """Define the choices for the required_fields_for_case field."""
@@ -129,6 +129,7 @@ class TargetGroupForm(forms.ModelForm):
     required_fields_for_case = forms.MultipleChoiceField(
         choices=required_fields_for_case_choices(),
         label=_("Påkrævede felter på sag"),
+        required=False,
     )
 
 

@@ -14,6 +14,7 @@ from dateutil.relativedelta import relativedelta
 
 from django import forms
 from django.db import models, transaction
+from django.contrib.postgres.fields import ArrayField
 from django.db.models import Q, F
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
@@ -109,19 +110,12 @@ class TargetGroup(models.Model):
         verbose_name_plural = _("målgrupper")
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
-    required_fields_for_case = models.CharField(
-        max_length=255, verbose_name=_("påkrævede felter på sag"), blank=True
+    required_fields_for_case = ArrayField(
+        models.CharField(max_length=128),
+        blank=True,
+        null=True,
+        verbose_name="påkrævede felter på sag",
     )
-
-    @property
-    def get_required_fields_for_case(self):
-        """Get required_fields_for_case.
-
-        The field is stored as a list in a CharField.
-        """
-        if self.required_fields_for_case:
-            return json.loads(self.required_fields_for_case.replace("'", '"'))
-        return []
 
     def __str__(self):
         return f"{self.name}"

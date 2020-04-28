@@ -643,7 +643,7 @@ class CaseSerializerTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         target_group = create_target_group(
-            name="Familieafdelingen", required_fields_for_case="['district']"
+            name="Familieafdelingen", required_fields_for_case=["district"]
         )
         data = CaseSerializer(case).data
         data["target_group"] = target_group.id
@@ -664,7 +664,7 @@ class CaseSerializerTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         target_group = create_target_group(
-            name="handicapafdelingen", required_fields_for_case=""
+            name="Handicapafdelingen", required_fields_for_case=[]
         )
         data = CaseSerializer(case).data
         data["target_group"] = target_group.id
