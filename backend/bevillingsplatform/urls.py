@@ -65,6 +65,7 @@ router.register(r"users", views.UserViewSet)
 router.register(r"accounts", views.AccountViewSet)
 router.register(r"effort_steps", views.EffortStepViewSet)
 router.register(r"target_groups", views.TargetGroupViewSet)
+router.register(r"efforts", views.EffortViewSet)
 
 urlpatterns = [
     # These are the SAML2 related URLs. You can change
