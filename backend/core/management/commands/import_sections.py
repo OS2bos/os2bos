@@ -106,6 +106,6 @@ class Command(BaseCommand):
                     section.allowed_for_target_groups.add(target_group)
                 if "Familieafdeling" in target_groups:
                     target_group, _ = models.TargetGroup.objects.get_or_create(
-                        name="Familieafdeling"
+                        name="Familieafdelingen"
                     )
                     section.allowed_for_target_groups.add(target_group)
