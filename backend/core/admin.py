@@ -34,6 +34,7 @@ from core.models import (
     SectionInfo,
     EffortStep,
     TargetGroup,
+    Effort,
 )
 
 for klass in (
@@ -139,6 +140,13 @@ class TargetGroupAdmin(admin.ModelAdmin):
 
     fields = ("name", "required_fields_for_case")
     form = TargetGroupForm
+
+
+@admin.register(Effort)
+class EffortAdmin(admin.ModelAdmin):
+    """ModelAdmin for Effort."""
+
+    filter_horizontal = ("allowed_for_target_groups",)
 
 
 @admin.register(PaymentSchedule)

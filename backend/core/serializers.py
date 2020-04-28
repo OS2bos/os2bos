@@ -35,6 +35,7 @@ from core.models import (
     Team,
     EffortStep,
     TargetGroup,
+    Effort,
     STATUS_DELETED,
     STATUS_DRAFT,
     STATUS_EXPECTED,
@@ -479,3 +480,11 @@ class TargetGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = TargetGroup
         exclude = ("required_fields_for_case",)
+
+
+class EffortSerializer(serializers.ModelSerializer):
+    """Serializer for the Effort model."""
+
+    class Meta:
+        model = Effort
+        fields = "__all__"
