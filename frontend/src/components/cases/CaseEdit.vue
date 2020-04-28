@@ -69,12 +69,13 @@
                         <label class="required" for="selectTargetGroup">Målgruppe:</label>
                         <list-picker
                             :dom-id="'selectTargetGroup'" 
-                            :selected-id="cas.residence_municipality" 
-                            @selection="changeMuni($event, 'residence_municipality')" 
+                            :selected-id="cas.target_group" 
+                            @selection="changeTargetGroup" 
                             :list="targetGroups" 
-                            :default="42" />
+                            required />
+                        <error err-key="target_group" />
                     
-                        <template v-if="cas.target_group === 'FAMILY_DEPT'">
+                        <template v-if="cas.target_group === 1">
                             <label class="required" for="selectDistrict">Skoledistrikt (nuværende eller oprindeligt)</label>
                             <list-picker :dom-id="'selectDistrict'" :selected-id="cas.district" @selection="changeDistrict" :list="districts" required />
                         </template>
@@ -154,6 +155,9 @@
             municipalities: function() {
                 return this.$store.getters.getMunis
             },
+            targetGroups: function() {
+                return this.$store.getters.getTargetGroups
+            },
             districts: function() {
                 return this.$store.getters.getDistricts
             },
@@ -178,6 +182,10 @@
         methods: {
             changeMuni: function(ev, type) {
                 this.cas[type] = ev
+            },
+            changeTargetGroup: function(tar) {
+                this.cas.target_group = tar
+                this.$forceUpdate()
             },
             changeDistrict: function(dist) {
                 this.cas.district = dist
