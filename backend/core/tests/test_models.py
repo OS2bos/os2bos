@@ -47,6 +47,7 @@ from core.models import (
     PaymentMethodDetails,
     ServiceProvider,
     EffortStep,
+    Effort,
     CASH,
     SD,
     INVOICE,
@@ -3235,3 +3236,10 @@ class EffortStepTestCase(TestCase, BasicTestMixin):
         effort_step = EffortStep.objects.create(name="Name", number=127)
 
         self.assertEqual(str(effort_step), "Name")
+
+
+class EffortTestCase(TestCase):
+    def test_str(self):
+        effort = Effort.objects.create(name="Integrationsindsatsen")
+
+        self.assertEqual(str(effort), "Integrationsindsatsen")
