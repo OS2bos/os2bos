@@ -6,8 +6,6 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """These are the Django models, defining the database layout."""
 
-import json
-
 from datetime import date, timedelta
 from decimal import Decimal
 from dateutil.relativedelta import relativedelta
