@@ -12,6 +12,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
 from django.utils.html import escape, mark_safe
 from django.urls import reverse
+from django import forms
 
 from core.models import (
     Municipality,
@@ -32,6 +33,7 @@ from core.models import (
     ApprovalLevel,
     SectionInfo,
     EffortStep,
+    TargetGroup,
 )
 
 for klass in (
@@ -95,6 +97,48 @@ class PaymentAdmin(admin.ModelAdmin):
     payment_id.short_description = _("betalings-ID")
     account_string.short_description = _("kontostreng")
     payment_schedule_str.short_description = _("betalingsplan")
+
+
+class TargetGroupForm(forms.ModelForm):
+    """Form for TargetGroup to set required_fields_for_case."""
+
+    def __init__(self, *args, **kwargs):
+        """__init__ for TargetGroupForm.
+
+        Set initial value for required_fields_for_case.
+        """
+        super(TargetGroupForm, self).__init__(*args, **kwargs)
+        # Set initial value as a list
+        self.initial[
+            "required_fields_for_case"
+        ] = self.instance.required_fields_for_case
+
+    def required_fields_for_case_choices():
+        """Define the choices for the required_fields_for_case field."""
+        excluded_fields = ["revision"]
+
+        choices = [
+            (field.name, field.verbose_name)
+            for field in Case._meta.get_fields()
+            if field.null
+            and hasattr(field, "verbose_name")
+            and field.name not in excluded_fields
+        ]
+        return choices
+
+    required_fields_for_case = forms.MultipleChoiceField(
+        choices=required_fields_for_case_choices(),
+        label=_("Påkrævede felter på sag"),
+        required=False,
+    )
+
+
+@admin.register(TargetGroup)
+class TargetGroupAdmin(admin.ModelAdmin):
+    """ModelAdmin for TargetGroup with custom ModelForm."""
+
+    fields = ("name", "required_fields_for_case")
+    form = TargetGroupForm
 
 
 @admin.register(PaymentSchedule)

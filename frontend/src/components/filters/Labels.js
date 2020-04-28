@@ -26,6 +26,23 @@ function municipalityId2name(id) {
 }
 
 /**
+ * Convert target group id to human readable name
+ * @param {number} id target group ID
+ * @returns {string} target group name
+ */
+function targetGroupId2name(id) {
+    const targetGroup_list = store.getters.getTargetGroups
+    if (targetGroup_list) {
+        let target = targetGroup_list.find(function(element) {
+            return element.id === id;
+        })
+        return target.name
+    } else {
+        return 'Ikke tilgængelig'
+    }
+}
+
+/**
  * Convert district id to human readable name
  * @param {number} id distict ID
  * @returns {string} dictrict name
@@ -181,7 +198,8 @@ function displayEffort(id) {
 }
 
 export {
-    municipalityId2name, 
+    municipalityId2name,
+    targetGroupId2name,
     districtId2name,
     activityId2name,
     sectionId2name,

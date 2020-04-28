@@ -6,13 +6,13 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """These are the Django models, defining the database layout."""
 
-
 from datetime import date, timedelta
 from decimal import Decimal
 from dateutil.relativedelta import relativedelta
 
 from django import forms
 from django.db import models, transaction
+from django.contrib.postgres.fields import ArrayField
 from django.db.models import Q, F
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
@@ -24,14 +24,6 @@ from constance import config
 
 from core.managers import PaymentQuerySet, CaseQuerySet
 from core.utils import send_appropriation, create_rrule
-
-# Target group - definitions and choice list.
-FAMILY_DEPT = "FAMILY_DEPT"
-DISABILITY_DEPT = "DISABILITY_DEPT"
-target_group_choices = (
-    (FAMILY_DEPT, _("familieafdelingen")),
-    (DISABILITY_DEPT, _("handicapafdelingen")),
-)
 
 # Payment methods and choice list.
 CASH = "CASH"
@@ -103,6 +95,25 @@ class EffortStep(models.Model):
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     number = models.PositiveIntegerField(verbose_name="Nummer", unique=True)
+
+    def __str__(self):
+        return f"{self.name}"
+
+
+class TargetGroup(models.Model):
+    """Target group for a case."""
+
+    class Meta:
+        verbose_name = _("målgruppe")
+        verbose_name_plural = _("målgrupper")
+
+    name = models.CharField(max_length=128, verbose_name=_("navn"))
+    required_fields_for_case = ArrayField(
+        models.CharField(max_length=128),
+        blank=True,
+        null=True,
+        verbose_name="påkrævede felter på sag",
+    )
 
     def __str__(self):
         return f"{self.name}"
@@ -665,10 +676,12 @@ class Case(AuditModelMixin, models.Model):
         related_name="resident_clients",
         on_delete=models.PROTECT,
     )
-    target_group = models.CharField(
-        max_length=128,
+    target_group = models.ForeignKey(
+        TargetGroup,
         verbose_name=_("målgruppe"),
-        choices=target_group_choices,
+        on_delete=models.PROTECT,
+        related_name="cases",
+        null=True,
     )
     effort_step = models.ForeignKey(
         EffortStep,
@@ -764,11 +777,11 @@ class Section(models.Model):
 
     paragraph = models.CharField(max_length=128, verbose_name=_("paragraf"))
     text = models.TextField(verbose_name=_("forklarende tekst"))
-    allowed_for_family_target_group = models.BooleanField(
-        verbose_name=_("tilladt for familieafdelingen"), default=False
-    )
-    allowed_for_disability_target_group = models.BooleanField(
-        verbose_name=_("tilladt for handicapafdelingen"), default=False
+    allowed_for_target_groups = models.ManyToManyField(
+        TargetGroup,
+        related_name="sections",
+        verbose_name=_("tilladt for målgrupper"),
+        blank=True,
     )
     allowed_for_steps = models.ManyToManyField(
         EffortStep,

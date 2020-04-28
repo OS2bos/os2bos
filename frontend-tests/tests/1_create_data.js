@@ -124,9 +124,10 @@ test('Create Case', async t => {
     await t
         .typeText('#field-sbsys-id', testdata.case1.name)
         .typeText('#field-cpr', '000000-0000')
-        .click(Selector('label').withAttribute('for', 'inputRadio1'))
-        .click('#selectField4')
-        .click(Selector('#selectField4 option').withText('Baltorp'))
+        .click('#selectTargetGroup')
+        .click(Selector('#selectTargetGroup option').withText('familieafdelingen'))
+        .click('#selectDistrict')
+        .click(Selector('#selectDistrict option').withText('Baltorp'))
         .click('#field-indsatstrappe')
         .click(Selector('#field-indsatstrappe option').withText('Trin 3: Hjemmebaserede indsatser'))
         .click('#field-skaleringstrappe')

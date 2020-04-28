@@ -46,16 +46,9 @@
                 </dl>
                 <dl>
                     <dt>Målgruppe</dt>
-                    <dd>
-                        <span v-if="cas.target_group === 'DISABILITY_DEPT'">
-                            Handicapafdelingen
-                        </span>
-                        <span v-if="cas.target_group === 'FAMILY_DEPT'">
-                            Familieafdelingen
-                        </span>
-                    </dd>
+                    <dd>{{ displaytargetGroup(cas.target_group) }}</dd>
 
-                    <template v-if="cas.target_group === 'FAMILY_DEPT'">
+                    <template v-if="cas.target_group === 1">
                         <dt>Skoledistrikt</dt>
                         <dd>{{ displayDistrictName(cas.district) }}</dd>
                     </template>
@@ -112,7 +105,7 @@
     import Appropriations from '../appropriations/AppropriationList.vue'
     import FamilyOverview from '../familyoverview/FamilyOverview.vue'
     import axios from '../http/Http.js'
-    import { municipalityId2name, districtId2name, displayEffort, userId2name, teamId2name } from '../filters/Labels.js'
+    import { municipalityId2name, targetGroupId2name, districtId2name, displayEffort, userId2name, teamId2name } from '../filters/Labels.js'
     import store from '../../store.js'
     import UserRights from '../mixins/UserRights.js'
 
@@ -174,6 +167,9 @@
             },
             displayDistrictName: function(id) {
                 return districtId2name(id)
+            },
+            displaytargetGroup: function(id) {
+                return targetGroupId2name(id)
             },
             displayEffortName: function(id) {
                 return displayEffort(id)

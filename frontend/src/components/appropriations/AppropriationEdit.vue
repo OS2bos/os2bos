@@ -68,13 +68,7 @@
                 return this.$store.getters.getCase
             },
             cas_target: function() {
-                if (this.cas.target_group === 'FAMILY_DEPT') {
-                    return 'allowed_for_family_target_group=true'
-                } else if (this.cas.target_group === 'DISABILITY_DEPT') {
-                    return 'allowed_for_disability_target_group=true'
-                } else {
-                    return ''
-                }
+                return `allowed_for_target_groups=${ this.cas.target_group}`
             },
             all_sections: function() {
                 return this.$store.getters.getSections

@@ -36,6 +36,7 @@ from core.models import (
     PaymentMethodDetails,
     ApprovalLevel,
     EffortStep,
+    TargetGroup,
     STATUS_DELETED,
     STATUS_DRAFT,
     STATUS_GRANTED,
@@ -61,6 +62,7 @@ from core.serializers import (
     PaymentMethodDetailsSerializer,
     ApprovalLevelSerializer,
     EffortStepSerializer,
+    TargetGroupSerializer,
 )
 from core.filters import (
     CaseFilter,
@@ -393,3 +395,10 @@ class EffortStepViewSet(ReadOnlyViewset):
 
     queryset = EffortStep.objects.all()
     serializer_class = EffortStepSerializer
+
+
+class TargetGroupViewSet(ReadOnlyViewset):
+    """Expose target groups in REST API."""
+
+    queryset = TargetGroup.objects.all()
+    serializer_class = TargetGroupSerializer

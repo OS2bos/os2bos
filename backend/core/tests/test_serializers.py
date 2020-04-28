@@ -16,8 +16,6 @@ from django.utils import timezone
 
 from core.models import (
     ActivityDetails,
-    FAMILY_DEPT,
-    DISABILITY_DEPT,
     CASH,
     INTERNAL,
     MAIN_ACTIVITY,
@@ -33,6 +31,7 @@ from core.tests.testing_utils import (
     create_payment_schedule,
     create_activity,
     create_payment,
+    create_target_group,
 )
 from core.serializers import (
     ActivitySerializer,
@@ -643,9 +642,11 @@ class CaseSerializerTestCase(TestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-
+        target_group = create_target_group(
+            name="Familieafdelingen", required_fields_for_case=["district"]
+        )
         data = CaseSerializer(case).data
-        data["target_group"] = FAMILY_DEPT
+        data["target_group"] = target_group.id
         data["district"] = None
         data["sbsys_id"] = "12356789"
         serializer = CaseSerializer(data=data)
@@ -654,7 +655,7 @@ class CaseSerializerTestCase(TestCase, BasicTestMixin):
         self.assertFalse(is_valid)
         self.assertEqual(
             serializer.errors["non_field_errors"][0],
-            "En sag med familie målgruppe skal have et distrikt",
+            "En sag med den givne målgruppe skal have feltet district",
         )
 
     def test_validate_success_no_district_for_handicap_dept(self):
@@ -662,8 +663,11 @@ class CaseSerializerTestCase(TestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
+        target_group = create_target_group(
+            name="Handicapafdelingen", required_fields_for_case=[]
+        )
         data = CaseSerializer(case).data
-        data["target_group"] = DISABILITY_DEPT
+        data["target_group"] = target_group.id
         data["district"] = None
         data["sbsys_id"] = "12356789"
         serializer = CaseSerializer(data=data)
