@@ -411,3 +411,4 @@ class EffortViewSet(ReadOnlyViewset):
 
     queryset = Effort.objects.all()
     serializer_class = EffortSerializer
+    filterset_fields = "__all__"
