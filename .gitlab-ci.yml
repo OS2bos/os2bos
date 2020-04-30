@@ -16,7 +16,10 @@
 # RELEASE_REGISTRY_PASSWORD
 
 stages:
-  - lint-build
+  - lint
+  # build stage is not blocked by lint stage, as we have a DAG:
+  # https://docs.gitlab.com/ee/ci/directed_acyclic_graph/index.html
+  - build
   - test
   - release
   - deploy
@@ -38,16 +41,13 @@ variables:
   IMAGE_TAG: ${IMAGE}:${CI_COMMIT_TAG}
   IMAGE_LATEST: ${IMAGE}:latest
 
+
 # Lint stage
 #############
 
-# For now we execute the lint and build stage as one stage to speed up the
-# pipeline. When it is possible to use a DAG for describing the relations
-# (https://gitlab.com/gitlab-org/gitlab-ce/issues/47063), the lint jobs can be
-# executed in its own stage where no further jobs depend on them.
-
 .lint-default: &lint-default
-  stage: lint-build
+  stage: lint
+  needs: []
   image: python:3.7
   tags:
     - docker
@@ -61,18 +61,6 @@ lint:
     - black --check --diff .
     - flake8 .
     - pydocstyle .
-
-docs:
-  <<: *lint-default
-  before_script:
-    - pip3 install -r backend/requirements-test.txt
-    - pip3 install -r backend/requirements.txt
-    - apt-get update && apt-get install npm -y && npm install -g jsdoc
-  script:
-    - sphinx-build docs/source doc-build
-  artifacts:
-    paths:
-      - doc-build
 
 shell-lint:
   <<: *lint-default
@@ -96,8 +84,25 @@ Lint Dockerfiles:
 # Build stage
 #############
 
+docs:
+  stage: build
+  needs: []
+  image: python:3.7
+  tags:
+    - docker
+  before_script:
+    - pip3 install -r backend/requirements-test.txt
+    - pip3 install -r backend/requirements.txt
+    - apt-get update && apt-get install npm -y && npm install -g jsdoc
+  script:
+    - sphinx-build docs/source doc-build
+  artifacts:
+    paths:
+      - doc-build
+
 build:
-  stage: lint-build
+  stage: build
+  needs: []
   dependencies: []
   tags:
     - docker
@@ -117,6 +122,7 @@ build:
 
 unit-test:
   stage: test
+  needs: ["build"]
   image:
     name: ${IMAGE_SHA}
   tags:
@@ -153,6 +159,9 @@ unit-test:
 
 .integration-test:
   stage: test
+  needs: ["build"]
+  # TODO when you implement integration tests in ci, remember to add it to the
+  # `needs` array for ".release-default".
   tags:
     - docker
   before_script:
@@ -168,6 +177,7 @@ unit-test:
 
 .release-default: &release-default
   stage: release
+  needs: ["unit-test"]
   image: docker:19.03.1
   variables:
     GIT_STRATEGY: none # We do not need the source code
@@ -235,6 +245,7 @@ release-master:
 
 deploy-dev:
   <<: *deploy-default
+  needs: ["release-dev"]
   only:
     refs:
       - develop
@@ -249,6 +260,7 @@ deploy-dev:
 
 .deploy-rc:
   <<: *deploy-default
+  needs: ["release-rc"]
   only:
     - /release/.*/
   script:
@@ -258,6 +270,7 @@ deploy-dev:
 
 .deploy-master:
   <<: *deploy-default
+  needs: ["release-master"]
   only:
     - tags
   script:
