@@ -154,7 +154,9 @@
         ],
         data: function() {
             return {
-                cas: {},
+                cas: {
+                    efforts: []
+                },
                 create_mode: true,
                 assessment_changes: false,
                 relations: null
@@ -192,13 +194,6 @@
             }
         },
         methods: {
-            // fetchEfforts: function() {
-            //     axios.get(`/efforts/?allowed_for_target_groups=${ this.cas.target_group }`)
-            //     .then(res => {
-            //         this.effort_available = res.data
-            //     })
-            //     .catch(err => console.log(err))
-            // },
             changeMuni: function(ev, type) {
                 this.cas[type] = ev
             },
@@ -301,7 +296,6 @@
                 this.create_mode = false
                 this.cas = this.caseObj
                 this.fetchTeamInfo()
-                // this.fetchEfforts()
             }
             this.$store.commit('clearErrors')
         }
