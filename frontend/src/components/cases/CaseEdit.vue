@@ -83,7 +83,7 @@
 
                     <fieldset>
                         <legend style="margin-bottom: .75rem;">Andet:</legend>
-                        <template v-for="effort in efforts">
+                        <template v-for="effort in effort_available">
                             <input 
                                 :key="effort.id"
                                 :id="`inputCheckbox${ effort.id }`" 
@@ -154,8 +154,10 @@
         ],
         data: function() {
             return {
+                effort_available: null,
                 cas: {
-                    efforts: []
+                    efforts: [],
+                    target_group: null
                 },
                 create_mode: true,
                 assessment_changes: false,
@@ -193,7 +195,22 @@
                 }
             }
         },
+        watch: {
+            cas: {
+                handler() {
+                    this.fetchEfforts()
+                },
+                deep: true
+            },
+        },
         methods: {
+            fetchEfforts: function() {
+                axios.get(`/efforts/?allowed_for_target_groups=${ this.cas.target_group }`)
+                .then(res => {
+                    this.effort_available = res.data    
+                })
+                .catch(err => console.log(err))
+            },
             changeMuni: function(ev, type) {
                 this.cas[type] = ev
             },
@@ -297,6 +314,7 @@
                 this.cas = this.caseObj
                 this.fetchTeamInfo()
             }
+            this.fetchEfforts()
             this.$store.commit('clearErrors')
         }
     }
