@@ -125,7 +125,7 @@ test('Create Case', async t => {
         .typeText('#field-sbsys-id', testdata.case1.name)
         .typeText('#field-cpr', '000000-0000')
         .click('#selectTargetGroup')
-        .click(Selector('#selectTargetGroup option').withText('familieafdelingen'))
+        .click(Selector('#selectTargetGroup option').withText('Familieafdelingen'))
         .click('#selectDistrict')
         .click(Selector('#selectDistrict option').withText('Baltorp'))
         .click('#field-indsatstrappe')
