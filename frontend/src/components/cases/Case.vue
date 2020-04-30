@@ -53,17 +53,12 @@
                         <dd>{{ displayDistrictName(cas.district) }}</dd>
                     </template>
 
-                    <template v-if="cas.cross_department_measure || cas.refugee_integration">
+                    <div v-if="cas.efforts.length">
                         <dt>Indsatser</dt>
-                        <dd>
-                            <div v-if="cas.cross_department_measure">
-                                Tværgående ungeindsats
-                            </div>
-                            <div v-if="cas.refugee_integration">
-                                Integrationsindsatsen
-                            </div>
-                        </dd>
-                    </template>
+                        <template v-for="effort in cas.efforts">
+                            <dd :key="effort.id">{{ displayEffort(effort) }}</dd>
+                        </template>
+                    </div>
                 </dl>
                 <dl>
                     <dt>Sagsbehandler</dt>
@@ -105,7 +100,7 @@
     import Appropriations from '../appropriations/AppropriationList.vue'
     import FamilyOverview from '../familyoverview/FamilyOverview.vue'
     import axios from '../http/Http.js'
-    import { municipalityId2name, targetGroupId2name, districtId2name, displayEffort, userId2name, teamId2name } from '../filters/Labels.js'
+    import { municipalityId2name, targetGroupId2name, districtId2name, effortId2name, displayEffort, userId2name, teamId2name } from '../filters/Labels.js'
     import store from '../../store.js'
     import UserRights from '../mixins/UserRights.js'
 
@@ -170,6 +165,9 @@
             },
             displaytargetGroup: function(id) {
                 return targetGroupId2name(id)
+            },
+            displayEffort: function(id) {
+                return effortId2name(id)
             },
             displayEffortName: function(id) {
                 return displayEffort(id)
