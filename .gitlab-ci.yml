@@ -52,7 +52,7 @@ variables:
   tags:
     - docker
 
-lint:
+Lint Python:
   <<: *lint-default
   before_script:
     - pip3 install -r backend/requirements-test.txt
@@ -62,7 +62,7 @@ lint:
     - flake8 .
     - pydocstyle .
 
-shell-lint:
+Lint shell scripts:
   <<: *lint-default
   image: koalaman/shellcheck-alpine:latest
   before_script:
@@ -84,7 +84,7 @@ Lint Dockerfiles:
 # Build stage
 #############
 
-docs:
+Build docs:
   stage: build
   needs: []
   image: python:3.7
@@ -100,7 +100,7 @@ docs:
     paths:
       - doc-build
 
-build:
+Build app image:
   stage: build
   needs: []
   dependencies: []
@@ -120,9 +120,9 @@ build:
 ############
 
 
-unit-test:
+Unittest:
   stage: test
-  needs: ["build"]
+  needs: ["Build app image"]
   image:
     name: ${IMAGE_SHA}
   tags:
@@ -159,7 +159,7 @@ unit-test:
 
 .integration-test:
   stage: test
-  needs: ["build"]
+  needs: ["Build app image"]
   # TODO when you implement integration tests in ci, remember to add it to the
   # `needs` array for ".release-default".
   tags:
@@ -177,7 +177,7 @@ unit-test:
 
 .release-default: &release-default
   stage: release
-  needs: ["unit-test"]
+  needs: ["Unittest"]
   image: docker:19.03.1
   variables:
     GIT_STRATEGY: none # We do not need the source code
@@ -191,7 +191,7 @@ unit-test:
     - docker pull ${IMAGE_SHA}
 
 
-release-dev:
+Release dev:
   <<: *release-default
   only:
     refs:
@@ -201,7 +201,7 @@ release-dev:
     - docker push ${IMAGE_DEV}
 
 
-release-rc:
+Release rc:
   <<: *release-default
   only:
     variables:
@@ -214,7 +214,7 @@ release-rc:
     - docker tag ${IMAGE_SHA} ${IMAGE_TAG}
     - docker push ${IMAGE_TAG}
 
-release-master:
+Release master:
   <<: *release-default
   only:
     variables:
@@ -245,7 +245,7 @@ release-master:
 
 deploy-dev:
   <<: *deploy-default
-  needs: ["release-dev"]
+  needs: ["Release dev"]
   only:
     refs:
       - develop
@@ -260,7 +260,7 @@ deploy-dev:
 
 .deploy-rc:
   <<: *deploy-default
-  needs: ["release-rc"]
+  needs: ["Release rc"]
   only:
     - /release/.*/
   script:
@@ -270,7 +270,7 @@ deploy-dev:
 
 .deploy-master:
   <<: *deploy-default
-  needs: ["release-master"]
+  needs: ["Release master"]
   only:
     - tags
   script:
