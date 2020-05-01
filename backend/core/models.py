@@ -1137,6 +1137,7 @@ class ActivityDetails(models.Model):
         verbose_name_plural = _("aktivitetsdetaljer")
 
     name = models.CharField(max_length=128, verbose_name=_("Navn"))
+    description = models.TextField(verbose_name=_("beskrivelse"), blank=True)
     activity_id = models.CharField(
         max_length=128, verbose_name=_("aktivitets ID"), unique=True
     )
