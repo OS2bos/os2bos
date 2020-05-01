@@ -29,6 +29,6 @@ def migrate_efforts(apps, schema_editor):
 
 class Migration(migrations.Migration):
 
-    dependencies = [("core", "0041_auto_20200428_1526")]
+    dependencies = [("core", "0042_auto_20200428_1526")]
 
     operations = [migrations.RunPython(migrate_efforts)]
