@@ -106,6 +106,8 @@
                     <input id="field-cpr" type="search" @input="changeCpr" v-model="$route.query.case__cpr_number">
                 </fieldset>
                 <fieldset>
+                    <label for="field-payee">Betalingsmodtager</label>
+                    <input id="field-payee" type="search" @input="update()" v-model="$route.query.recipient_id">
                     <label for="field-pay-method">Betalingsmåde</label>
                     <list-picker 
                         domId="field-pay-method"
