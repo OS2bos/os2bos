@@ -251,11 +251,12 @@ class ActivitySerializer(WritableNestedModelSerializer):
     total_expected_this_year = serializers.ReadOnlyField()
 
     payment_plan = PaymentScheduleSerializer(partial=True, required=False)
+    details__name = serializers.ReadOnlyField(source="details.name")
 
     @staticmethod
     def setup_eager_loading(queryset):
         """Set up eager loading for improved performance."""
-        queryset = queryset.select_related("payment_plan")
+        queryset = queryset.select_related("payment_plan", "details")
         return queryset
 
     def validate(self, data):

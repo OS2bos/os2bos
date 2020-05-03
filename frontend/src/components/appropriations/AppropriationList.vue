@@ -82,17 +82,20 @@
                         class: 'nowrap'
                     },
                     {
-                        key: 'note',
-                        title: 'Supplerende info',
+                        key: 'details__name',
+                        title: 'Hovedydelse',
+                        display_func: this.displayMainAct,
                         class: 'nowrap'
                     },
                     {
-                        title: 'Foreløbige',
                         key: 'num_draft_or_expected_activities',
+                        title: 'Foreløbige',
+                        class: 'nowrap'
                     },
                     {
                         title: 'I alt',
-                        display_func: this.actCountTotal
+                        display_func: this.actCountTotal,
+                        class: 'nowrap'
                     },
                     {
                         key: 'created',
@@ -182,6 +185,11 @@
             },
             displaySection: function(appr) {
                 return `§ ${ sectionId2name(appr.section) }`
+            },
+            displayMainAct: function(appr) {
+                if (appr.main_activity) {
+                    return appr.main_activity.details__name
+                }
             },
             statusLabel: function(appr) {
                 let label = 'DRAFT'
