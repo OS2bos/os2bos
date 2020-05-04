@@ -35,6 +35,7 @@ from core.models import (
     EffortStep,
     TargetGroup,
     Effort,
+    Rate,
 )
 
 for klass in (
@@ -45,6 +46,7 @@ for klass in (
     RelatedPerson,
     Team,
     SectionInfo,
+    Rate,
 ):
     admin.site.register(klass, admin.ModelAdmin)
 

@@ -254,6 +254,63 @@ class Team(models.Model):
         return f"{self.name}"
 
 
+class VariableRate(models.Model):
+    """Superclass for time-dependent rates and prices."""
+
+    @property
+    def rate_amount(date):
+        # TODO: Look up period in RatesPerDate.
+        return 0
+
+    def set_rate_amount(start_date, end_date, amount):
+        # TODO: Set amount, merge with existing periods.
+        pass
+
+
+class RatePerDate(models.Model):
+
+    rate = models.DecimalField(
+        max_digits=14, decimal_places=2, verbose_name=_(_("takst"))
+    )
+
+    # Date dependency
+    start_date = models.DateField(
+        null=True, blank=True, verbose_name="startdato"
+    )
+    start_date = models.DateField(
+        null=True, blank=True, verbose_name="slutdato"
+    )
+    main_rate = models.ForeignKey(
+        VariableRate, on_delete=models.CASCADE, related_name="rate_per_date"
+    )
+
+
+class Price(VariableRate):
+    """A price on an individual payment plan."""
+
+    class Meta:
+        verbose_name = _("pris")
+
+    payment_schedule = models.OneToOneField(
+        "PaymentSchedule",
+        on_delete=models.CASCADE,
+        verbose_name=_("betalingsplan"),
+        related_name="price",
+        null=True,
+        blank=True,
+    )
+
+
+class Rate(VariableRate):
+    """A centrally fixed rate."""
+
+    class Meta:
+        verbose_name = _("takst")
+
+    name = models.CharField(max_length=128, verbose_name=_("Navn"))
+    description = models.TextField(verbose_name=_("beskrivelse"), blank=True)
+
+
 class PaymentSchedule(models.Model):
     """Schedule a payment for an Activity."""
 
