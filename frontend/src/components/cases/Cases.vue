@@ -198,25 +198,11 @@
                 }
                 return user
             },
-            selectedUser: function() {
-                let user = this.$store.getters.getUser
-                if (user) {
-                    this.$store.dispatch('fetchTeam', user.team)
-                }
-                if (user.id) {
-                    return this.query.case_worker = user.id
-                }
-            },
             selectedCases: function() {
-                this.$route.query.expired = false
-                this.update()
-                return this.$route.query.expired
+                return this.$route.query.expired = false
             }
         },
         watch: {
-            selectedUser: function() {
-                this.update()
-            },
             user: function() {
                 this.update()
             }
