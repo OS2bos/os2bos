@@ -262,19 +262,27 @@ class ServiceProviderAdmin(ClassificationAdmin):
 
 @admin.register(Municipality)
 class MunicipalityAdmin(ClassificationAdmin):
+    """ModelAdmin for Municipality."""
+
     pass
 
 
 @admin.register(ApprovalLevel)
 class ApprovalLevelAdmin(ClassificationAdmin):
+    """ModelAdmin for ApprovalLevel."""
+
     pass
 
 
 @admin.register(EffortStep)
 class EffortStepAdmin(ClassificationAdmin):
+    """ModelAdmin for EffortStep."""
+
     pass
 
 
 @admin.register(SchoolDistrict)
 class SchoolDistrictAdmin(ClassificationAdmin):
+    """ModelAdmin for SchoolDistrict."""
+
     pass
