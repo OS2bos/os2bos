@@ -232,6 +232,12 @@ class User(AbstractUser):
         blank=True,
     )
 
+    def is_workflow_engine_or_admin(self):
+        """Return if user has workflow or admin permission."""
+        if self.profile in [User.WORKFLOW_ENGINE, User.ADMIN]:
+            return True
+        return False
+
 
 class Team(models.Model):
     """Represents a team in the administration."""
