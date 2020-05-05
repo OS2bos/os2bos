@@ -30,7 +30,6 @@ from core.models import (
     ServiceProvider,
     PaymentMethodDetails,
     Team,
-    User,
     ApprovalLevel,
     SectionInfo,
     EffortStep,
@@ -54,7 +53,10 @@ User = get_user_model()
 
 
 class ClassificationAdmin(admin.ModelAdmin):
+    """ ModelAdmin for Classification models."""
+
     def is_workflow_engine_or_admin(self, request):
+        """ Allow if User has workflow or admin permission."""
         try:
             profile = request.user.profile
         except AttributeError:
