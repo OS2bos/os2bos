@@ -68,7 +68,7 @@ class Classification(models.Model):
         abstract = True
 
 
-class Municipality(Classification, models.Model):
+class Municipality(Classification):
     """Represents a Danish municipality."""
 
     class Meta:
@@ -81,7 +81,7 @@ class Municipality(Classification, models.Model):
         return f"{self.name}"
 
 
-class SchoolDistrict(Classification, models.Model):
+class SchoolDistrict(Classification):
     """Represents a Danish school district."""
 
     class Meta:
@@ -94,7 +94,7 @@ class SchoolDistrict(Classification, models.Model):
         return f"{self.name}"
 
 
-class EffortStep(Classification, models.Model):
+class EffortStep(Classification):
     """Evaluation step for grading the effort deemed necessary in a case."""
 
     class Meta:
@@ -109,7 +109,7 @@ class EffortStep(Classification, models.Model):
         return f"{self.name}"
 
 
-class TargetGroup(Classification, models.Model):
+class TargetGroup(Classification):
     """Target group for a case."""
 
     class Meta:
@@ -760,7 +760,7 @@ class Case(AuditModelMixin, models.Model):
         )
 
 
-class ApprovalLevel(Classification, models.Model):
+class ApprovalLevel(Classification):
     """Organizational level on which an appropriation was approved."""
 
     class Meta:
@@ -773,7 +773,7 @@ class ApprovalLevel(Classification, models.Model):
         return f"{self.name}"
 
 
-class Section(Classification, models.Model):
+class Section(Classification):
     """Law sections and the corresponding KLE codes.
 
     Each section is associated with the target group for which it is
@@ -1090,7 +1090,7 @@ class Appropriation(AuditModelMixin, models.Model):
         return f"{self.sbsys_id} - {self.section}"
 
 
-class ServiceProvider(Classification, models.Model):
+class ServiceProvider(Classification):
     """Class containing information for a specific service provider."""
 
     class Meta:
@@ -1115,7 +1115,7 @@ class ServiceProvider(Classification, models.Model):
         return f"{self.cvr_number} - {self.name}"
 
 
-class ActivityDetails(Classification, models.Model):
+class ActivityDetails(Classification):
     """Class containing all services offered by this municipality.
 
     Each service is associated with the legal articles for which it is
@@ -1588,7 +1588,7 @@ class RelatedPerson(models.Model):
         return f"{self.name} - {self.cpr_number} - {self.main_case}"
 
 
-class Account(Classification, models.Model):
+class Account(Classification):
     """Class containing account numbers.
 
     Should have a number for each
