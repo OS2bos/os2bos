@@ -6,53 +6,53 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0041_activitydetails_description'),
+        ("core", "0044_auto_20200428_1537"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='account',
-            name='active',
+            model_name="account",
+            name="active",
             field=models.BooleanField(default=True),
         ),
         migrations.AddField(
-            model_name='activitydetails',
-            name='active',
+            model_name="activitydetails",
+            name="active",
             field=models.BooleanField(default=True),
         ),
         migrations.AddField(
-            model_name='approvallevel',
-            name='active',
+            model_name="approvallevel",
+            name="active",
             field=models.BooleanField(default=True),
         ),
         migrations.AddField(
-            model_name='effortstep',
-            name='active',
+            model_name="effortstep",
+            name="active",
             field=models.BooleanField(default=True),
         ),
         migrations.AddField(
-            model_name='municipality',
-            name='active',
+            model_name="municipality",
+            name="active",
             field=models.BooleanField(default=True),
         ),
         migrations.AddField(
-            model_name='schooldistrict',
-            name='active',
+            model_name="schooldistrict",
+            name="active",
             field=models.BooleanField(default=True),
         ),
         migrations.AddField(
-            model_name='section',
-            name='active',
+            model_name="section",
+            name="active",
             field=models.BooleanField(default=True),
         ),
         migrations.AddField(
-            model_name='serviceprovider',
-            name='active',
+            model_name="serviceprovider",
+            name="active",
             field=models.BooleanField(default=True),
         ),
         migrations.AddField(
-            model_name='targetgroup',
-            name='active',
+            model_name="targetgroup",
+            name="active",
             field=models.BooleanField(default=True),
         ),
     ]
