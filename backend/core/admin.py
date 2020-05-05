@@ -53,10 +53,10 @@ User = get_user_model()
 
 
 class ClassificationAdmin(admin.ModelAdmin):
-    """ ModelAdmin for Classification models."""
+    """ModelAdmin for Classification models."""
 
     def is_workflow_engine_or_admin(self, request):
-        """ Allow if User has workflow or admin permission."""
+        """Allow if User has workflow or admin permission."""
         try:
             profile = request.user.profile
         except AttributeError:
@@ -67,18 +67,23 @@ class ClassificationAdmin(admin.ModelAdmin):
         return False
 
     def has_view_permission(self, request, obj=None):
+        """Override has_view_permission for ModelAdmin."""
         return self.is_workflow_engine_or_admin(request)
 
     def has_add_permission(self, request):
+        """Override has_add_permission for ModelAdmin."""
         return self.is_workflow_engine_or_admin(request)
 
     def has_change_permission(self, request, obj=None):
+        """Override has_change_permission for ModelAdmin."""
         return self.is_workflow_engine_or_admin(request)
 
     def has_delete_permission(self, request, obj=None):
+        """Override has_delete_permission for ModelAdmin."""
         return self.is_workflow_engine_or_admin(request)
 
     def has_module_permission(self, request):
+        """Override has_model_permission for ModelAdmin."""
         return self.is_workflow_engine_or_admin(request)
 
 
