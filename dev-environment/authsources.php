@@ -52,6 +52,13 @@ $config = array(
             'last_name' => 'Engelhardt Bebe',
             'bos_profile' => 'admin'
         ),
+        'regelmotor:regelmotor' => array(
+            'email' => 'user2@example.com',
+            'username' => 'regelmotor',
+            'first_name' => 'regelmotor',
+            'last_name' => 'regelmotor',
+            'bos_profile' => 'workflow_engine'
+        ),
     ),
 
 );

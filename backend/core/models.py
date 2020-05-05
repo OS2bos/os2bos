@@ -193,6 +193,7 @@ class User(AbstractUser):
     READONLY = "readonly"
     EDIT = "edit"
     GRANT = "grant"
+    WORKFLOW_ENGINE = "workflow_engine"
     ADMIN = "admin"
 
     @classmethod
@@ -207,7 +208,8 @@ class User(AbstractUser):
             cls.READONLY: 0,
             cls.EDIT: 1,
             cls.GRANT: 2,
-            cls.ADMIN: 3,
+            cls.WORKFLOW_ENGINE: 3,
+            cls.ADMIN: 4,
         }
         if not perms:
             return ""
@@ -220,6 +222,7 @@ class User(AbstractUser):
         (READONLY, _("Kun læse")),
         (EDIT, _("Læse og skrive")),
         (GRANT, _("Bevilge")),
+        (WORKFLOW_ENGINE, ("Redigere klassifikationer")),
         (ADMIN, _("Admin")),
     )
     profile = models.CharField(
