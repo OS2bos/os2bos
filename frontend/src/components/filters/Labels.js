@@ -60,6 +60,24 @@ function districtId2name(id) {
 }
 
 /**
+ * Convert effort id to human readable name
+ * @param {number} id effort ID
+ * @returns {string} effort name
+ */
+function effortId2name(id) {
+    const effort_list = store.getters.getEfforts
+    
+    if (effort_list) {
+        let effort = effort_list.find(function(element) {
+            return element.id === parseInt(id)
+        })
+        return effort.name
+    } else {
+        return 'Ikke tilgængelig'
+    }
+}
+
+/**
  * Convert activity id to human readable name
  * @param {number} id activity ID
  * @returns {string} activity name
@@ -201,6 +219,7 @@ export {
     municipalityId2name,
     targetGroupId2name,
     districtId2name,
+    effortId2name,
     activityId2name,
     sectionId2name,
     userId2name,

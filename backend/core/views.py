@@ -37,6 +37,7 @@ from core.models import (
     ApprovalLevel,
     EffortStep,
     TargetGroup,
+    Effort,
     STATUS_DELETED,
     STATUS_DRAFT,
     STATUS_GRANTED,
@@ -63,6 +64,7 @@ from core.serializers import (
     ApprovalLevelSerializer,
     EffortStepSerializer,
     TargetGroupSerializer,
+    EffortSerializer,
 )
 from core.filters import (
     CaseFilter,
@@ -402,3 +404,11 @@ class TargetGroupViewSet(ReadOnlyViewset):
 
     queryset = TargetGroup.objects.all()
     serializer_class = TargetGroupSerializer
+
+
+class EffortViewSet(ReadOnlyViewset):
+    """Expose efforts in REST API."""
+
+    queryset = Effort.objects.all()
+    serializer_class = EffortSerializer
+    filterset_fields = "__all__"

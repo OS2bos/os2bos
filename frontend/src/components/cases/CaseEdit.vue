@@ -83,10 +83,19 @@
 
                     <fieldset>
                         <legend style="margin-bottom: .75rem;">Andet:</legend>
-                        <input id="inputCheckbox1" type="checkbox" v-model="cas.refugee_integration">
-                        <label for="inputCheckbox1">Integrationsindsatsen</label>
-                        <input id="inputCheckbox2" type="checkbox" v-model="cas.cross_department_measure">
-                        <label for="inputCheckbox2">Tværgående ungeindsats</label>
+                        <template v-for="effort in effort_available">
+                            <input 
+                                :key="effort.id"
+                                :id="`inputCheckbox${ effort.id }`" 
+                                type="checkbox" 
+                                :value="effort.id" 
+                                v-model="cas.efforts">
+                            <label 
+                                :key="effort.name" 
+                                :for="`inputCheckbox${ effort.id }`">
+                                {{ effort.name }}
+                            </label>
+                        </template>
                     </fieldset>
                 </div>
                 
@@ -145,7 +154,11 @@
         ],
         data: function() {
             return {
-                cas: {},
+                effort_available: null,
+                cas: {
+                    efforts: [],
+                    target_group: null
+                },
                 create_mode: true,
                 assessment_changes: false,
                 relations: null
@@ -160,6 +173,9 @@
             },
             districts: function() {
                 return this.$store.getters.getDistricts
+            },
+            efforts: function() {
+                return this.$store.getters.getEfforts
             },
             user: function() {
                 return this.$store.getters.getUser
@@ -179,7 +195,22 @@
                 }
             }
         },
+        watch: {
+            cas: {
+                handler() {
+                    this.fetchEfforts()
+                },
+                deep: true
+            },
+        },
         methods: {
+            fetchEfforts: function() {
+                axios.get(`/efforts/?allowed_for_target_groups=${ this.cas.target_group }`)
+                .then(res => {
+                    this.effort_available = res.data    
+                })
+                .catch(err => console.log(err))
+            },
             changeMuni: function(ev, type) {
                 this.cas[type] = ev
             },
@@ -239,8 +270,7 @@
                     acting_municipality: this.cas.acting_municipality,
                     residence_municipality: this.cas.residence_municipality,
                     target_group: this.cas.target_group,
-                    refugee_integration: this.cas.refugee_integration,
-                    cross_department_measure: this.cas.cross_department_measure,
+                    efforts: this.cas.efforts,
                     note: this.cas.note ? this.cas.note : ''
                 }
                 if (this.assessment_changes) {
@@ -284,6 +314,7 @@
                 this.cas = this.caseObj
                 this.fetchTeamInfo()
             }
+            this.fetchEfforts()
             this.$store.commit('clearErrors')
         }
     }

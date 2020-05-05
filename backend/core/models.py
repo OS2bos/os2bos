@@ -119,6 +119,28 @@ class TargetGroup(models.Model):
         return f"{self.name}"
 
 
+class Effort(models.Model):
+    """Effort for a case."""
+
+    class Meta:
+        verbose_name = _("indsats")
+        verbose_name_plural = _("indsatser")
+
+    name = models.CharField(max_length=128, verbose_name=_("navn"))
+    description = models.CharField(
+        max_length=128, verbose_name=_("beskrivelse"), blank=True
+    )
+    allowed_for_target_groups = models.ManyToManyField(
+        TargetGroup,
+        related_name="efforts",
+        verbose_name=_("tilladt for målgrupper"),
+        blank=True,
+    )
+
+    def __str__(self):
+        return f"{self.name}"
+
+
 class PaymentMethodDetails(models.Model):
     """Contains extra information about a payment method."""
 
@@ -696,11 +718,8 @@ class Case(AuditModelMixin, models.Model):
     assessment_comment = models.TextField(
         verbose_name=_("supplerende oplysninger til vurdering"), blank=True
     )
-    refugee_integration = models.BooleanField(
-        verbose_name=_("integrationsindsatsen"), default=False
-    )
-    cross_department_measure = models.BooleanField(
-        verbose_name=_("tværgående ungeindsats"), default=False
+    efforts = models.ManyToManyField(
+        Effort, related_name="cases", verbose_name=_("indsatser"), blank=True,
     )
     note = models.TextField(verbose_name=_("note"), blank=True)
 
