@@ -3,6 +3,7 @@ from datetime import date
 from django.test import TestCase
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 
 from core.models import (
     Payment,
@@ -20,6 +21,8 @@ from core.admin import (
     ClassificationAdmin,
 )
 from core.tests.testing_utils import (
+    AuthenticatedTestCase,
+    BasicTestMixin,
     create_payment,
     create_payment_schedule,
     create_account,
@@ -34,7 +37,11 @@ class MockRequest:
     pass
 
 
-class TestPaymentAdmin(TestCase):
+class TestPaymentAdmin(AuthenticatedTestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
     def test_payment_id(self):
         payment_schedule = create_payment_schedule()
 
@@ -77,8 +84,35 @@ class TestPaymentAdmin(TestCase):
             payment_admin.payment_schedule_str(payment),
         )
 
+    def test_admin_changelist_not_admin_user_disallowed(self):
+        url = reverse("admin:core_payment_changelist")
+        self.user.is_staff = True
+        self.user.profile = User.WORKFLOW_ENGINE
+        self.user.save()
 
-class TestPaymentScheduleAdmin(TestCase):
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 403)
+
+    def test_admin_changelist_admin_user_allowed(self):
+        url = reverse("admin:core_payment_changelist")
+        self.user.is_staff = True
+        self.user.is_superuser = True
+        self.user.profile = User.ADMIN
+        self.user.save()
+
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+
+
+class TestPaymentScheduleAdmin(AuthenticatedTestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
     def test_account_string(self):
         payment_schedule = create_payment_schedule()
 
@@ -88,6 +122,116 @@ class TestPaymentScheduleAdmin(TestCase):
             payment_schedule_admin.account_string(payment_schedule),
             payment_schedule.account_string,
         )
+
+    def test_admin_changelist_not_admin_user_disallowed(self):
+        url = reverse("admin:core_paymentschedule_changelist")
+        self.user.is_staff = True
+        self.user.profile = User.WORKFLOW_ENGINE
+        self.user.save()
+
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 403)
+
+    def test_admin_changelist_admin_user_allowed(self):
+        url = reverse("admin:core_paymentschedule_changelist")
+        self.user.is_staff = True
+        self.user.is_superuser = True
+        self.user.profile = User.ADMIN
+        self.user.save()
+
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+
+
+class TestAppropriationAdmin(AuthenticatedTestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_admin_changelist_not_admin_user_disallowed(self):
+        url = reverse("admin:core_appropriation_changelist")
+        self.user.is_staff = True
+        self.user.profile = User.WORKFLOW_ENGINE
+        self.user.save()
+
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 403)
+
+    def test_admin_changelist_admin_user_allowed(self):
+        url = reverse("admin:core_appropriation_changelist")
+        self.user.is_staff = True
+        self.user.is_superuser = True
+        self.user.profile = User.ADMIN
+        self.user.save()
+
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+
+
+class TestCaseAdmin(AuthenticatedTestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_admin_changelist_not_admin_user_disallowed(self):
+        url = reverse("admin:core_case_changelist")
+        self.user.is_staff = True
+        self.user.profile = User.WORKFLOW_ENGINE
+        self.user.save()
+
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 403)
+
+    def test_admin_changelist_admin_user_allowed(self):
+        url = reverse("admin:core_case_changelist")
+        self.user.is_staff = True
+        self.user.is_superuser = True
+        self.user.profile = User.ADMIN
+        self.user.save()
+
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+
+
+class TestActivityAdmin(AuthenticatedTestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_admin_changelist_not_admin_user_disallowed(self):
+        url = reverse("admin:core_activity_changelist")
+        self.user.is_staff = True
+        self.user.profile = User.WORKFLOW_ENGINE
+        self.user.save()
+
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 403)
+
+    def test_admin_changelist_admin_user_allowed(self):
+        url = reverse("admin:core_activity_changelist")
+        self.user.is_staff = True
+        self.user.is_superuser = True
+        self.user.profile = User.ADMIN
+        self.user.save()
+
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
 
 
 class TestAccountAdmin(TestCase):
