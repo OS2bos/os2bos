@@ -49,7 +49,7 @@ class AuditMixin:
         return response
 
 
-class ClassificationMixin:
+class ClassificationViewSetMixin:
     """Superclass for Classifications only exposing the active."""
 
     def get_queryset(self):
