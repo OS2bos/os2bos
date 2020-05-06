@@ -74,7 +74,7 @@ from core.filters import (
 )
 from core.utils import get_person_info
 
-from core.mixins import AuditMixin
+from core.mixins import AuditMixin, ClassificationMixin
 
 from core.authentication import CsrfExemptSessionAuthentication
 
@@ -99,17 +99,6 @@ class ReadOnlyViewset(viewsets.ReadOnlyModelViewSet):
     """Superclass for use model classes that are read only through REST."""
 
     permission_classes = (IsUserAllowed,)
-
-
-class ClassificationMixin:
-    """Superclass for Classifications only exposing the active."""
-
-    def get_queryset(self):
-        """Only expose active objects if user is not workflow or admin."""
-        user = self.request.user
-        if user.is_authenticated and user.is_workflow_engine_or_admin():
-            return self.queryset
-        return self.queryset.filter(active=True)
 
 
 class CaseViewSet(AuditViewSet):

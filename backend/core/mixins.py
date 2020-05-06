@@ -47,3 +47,14 @@ class AuditMixin:
                 self.logger.info(log_str)
 
         return response
+
+
+class ClassificationMixin:
+    """Superclass for Classifications only exposing the active."""
+
+    def get_queryset(self):
+        """Only expose active objects if user is not workflow or admin."""
+        user = self.request.user
+        if user.is_authenticated and user.is_workflow_engine_or_admin():
+            return self.queryset
+        return self.queryset.filter(active=True)

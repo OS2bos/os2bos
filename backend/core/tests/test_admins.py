@@ -2,6 +2,7 @@ from datetime import date
 
 from django.test import TestCase
 from django.contrib.admin.sites import AdminSite
+from django.contrib.auth import get_user_model
 
 from core.models import (
     Payment,
@@ -9,12 +10,14 @@ from core.models import (
     ActivityDetails,
     Account,
     TargetGroup,
+    Section,
 )
 from core.admin import (
     PaymentAdmin,
     PaymentScheduleAdmin,
     AccountAdmin,
     TargetGroupAdmin,
+    ClassificationAdmin,
 )
 from core.tests.testing_utils import (
     create_payment,
@@ -24,12 +27,11 @@ from core.tests.testing_utils import (
     create_target_group,
 )
 
+User = get_user_model()
+
 
 class MockRequest:
     pass
-
-
-request = MockRequest()
 
 
 class TestPaymentAdmin(TestCase):
@@ -121,6 +123,7 @@ class TestTargetGroupAdmin(TestCase):
             name="familieafdelingen", required_fields_for_case=["district"]
         )
         site = AdminSite()
+        request = MockRequest()
         target_group_admin = TargetGroupAdmin(TargetGroup, site)
         target_group_form_class = target_group_admin.get_form(
             request, target_group
@@ -132,3 +135,85 @@ class TestTargetGroupAdmin(TestCase):
         )
 
         self.assertEqual(initial_required_fields, ["district"])
+
+
+class TestClassificationAdmin(TestCase):
+    def test_has_view_permissions_grant_user_false(self):
+        site = AdminSite()
+        classification_admin = ClassificationAdmin(Section, site)
+        request = MockRequest()
+
+        request.user = User.objects.create(profile=User.GRANT)
+        self.assertFalse(classification_admin.has_view_permission(request))
+
+    def test_has_add_permission_grant_user_false(self):
+        site = AdminSite()
+        classification_admin = ClassificationAdmin(Section, site)
+        request = MockRequest()
+
+        request.user = User.objects.create(profile=User.GRANT)
+        self.assertFalse(classification_admin.has_add_permission(request))
+
+    def test_has_change_permission_grant_user_false(self):
+        site = AdminSite()
+        classification_admin = ClassificationAdmin(Section, site)
+        request = MockRequest()
+
+        request.user = User.objects.create(profile=User.GRANT)
+        self.assertFalse(classification_admin.has_change_permission(request))
+
+    def test_has_delete_permission_grant_user_false(self):
+        site = AdminSite()
+        classification_admin = ClassificationAdmin(Section, site)
+        request = MockRequest()
+
+        request.user = User.objects.create(profile=User.GRANT)
+        self.assertFalse(classification_admin.has_delete_permission(request))
+
+    def test_has_module_permission_grant_user_false(self):
+        site = AdminSite()
+        classification_admin = ClassificationAdmin(Section, site)
+        request = MockRequest()
+
+        request.user = User.objects.create(profile=User.GRANT)
+        self.assertFalse(classification_admin.has_module_permission(request))
+
+    def test_has_view_permissions_workflow_engine_user_true(self):
+        site = AdminSite()
+        classification_admin = ClassificationAdmin(Section, site)
+        request = MockRequest()
+
+        request.user = User.objects.create(profile=User.WORKFLOW_ENGINE)
+        self.assertTrue(classification_admin.has_view_permission(request))
+
+    def test_has_add_permission_workflow_engine_user_true(self):
+        site = AdminSite()
+        classification_admin = ClassificationAdmin(Section, site)
+        request = MockRequest()
+
+        request.user = User.objects.create(profile=User.WORKFLOW_ENGINE)
+        self.assertTrue(classification_admin.has_add_permission(request))
+
+    def test_has_change_permission_workflow_engine_user_true(self):
+        site = AdminSite()
+        classification_admin = ClassificationAdmin(Section, site)
+        request = MockRequest()
+
+        request.user = User.objects.create(profile=User.WORKFLOW_ENGINE)
+        self.assertTrue(classification_admin.has_change_permission(request))
+
+    def test_has_delete_permission_workflow_engine_user_true(self):
+        site = AdminSite()
+        classification_admin = ClassificationAdmin(Section, site)
+        request = MockRequest()
+
+        request.user = User.objects.create(profile=User.WORKFLOW_ENGINE)
+        self.assertTrue(classification_admin.has_delete_permission(request))
+
+    def test_has_module_permission_workflow_engine_user_true(self):
+        site = AdminSite()
+        classification_admin = ClassificationAdmin(Section, site)
+        request = MockRequest()
+
+        request.user = User.objects.create(profile=User.WORKFLOW_ENGINE)
+        self.assertTrue(classification_admin.has_module_permission(request))
