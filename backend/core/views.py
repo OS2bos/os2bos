@@ -74,7 +74,7 @@ from core.filters import (
 )
 from core.utils import get_person_info
 
-from core.mixins import AuditMixin, ClassificationMixin
+from core.mixins import AuditMixin, ClassificationViewSetMixin
 
 from core.authentication import CsrfExemptSessionAuthentication
 
@@ -318,7 +318,7 @@ class RelatedPersonViewSet(AuditViewSet):
 # Master data, read only.
 
 
-class MunicipalityViewSet(ClassificationMixin, ReadOnlyViewset):
+class MunicipalityViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     """Expose municipalities in REST API."""
 
     queryset = Municipality.objects.all()
@@ -326,7 +326,7 @@ class MunicipalityViewSet(ClassificationMixin, ReadOnlyViewset):
     filterset_fields = "__all__"
 
 
-class SchoolDistrictViewSet(ClassificationMixin, ReadOnlyViewset):
+class SchoolDistrictViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     """Expose school districts in REST API."""
 
     queryset = SchoolDistrict.objects.all()
@@ -341,7 +341,7 @@ class TeamViewSet(ReadOnlyViewset):
     serializer_class = TeamSerializer
 
 
-class SectionViewSet(ClassificationMixin, ReadOnlyViewset):
+class SectionViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     """Expose law sections in REST API."""
 
     queryset = Section.objects.all()
@@ -357,7 +357,7 @@ class SectionInfoViewSet(ReadOnlyViewset):
     filterset_fields = "__all__"
 
 
-class ActivityDetailsViewSet(ClassificationMixin, ReadOnlyViewset):
+class ActivityDetailsViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     """Expose activity details in REST API."""
 
     queryset = ActivityDetails.objects.all()
@@ -365,7 +365,7 @@ class ActivityDetailsViewSet(ClassificationMixin, ReadOnlyViewset):
     filterset_fields = "__all__"
 
 
-class AccountViewSet(ClassificationMixin, ReadOnlyViewset):
+class AccountViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     """Expose accounts in REST API."""
 
     queryset = Account.objects.all()
@@ -380,7 +380,7 @@ class UserViewSet(ReadOnlyViewset):
     serializer_class = UserSerializer
 
 
-class ServiceProviderViewSet(ClassificationMixin, ReadOnlyViewset):
+class ServiceProviderViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     """Expose service providers in REST API."""
 
     queryset = ServiceProvider.objects.all()
@@ -388,7 +388,7 @@ class ServiceProviderViewSet(ClassificationMixin, ReadOnlyViewset):
     filterset_fields = "__all__"
 
 
-class ApprovalLevelViewSet(ClassificationMixin, ReadOnlyViewset):
+class ApprovalLevelViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     """Expose approval levels in REST API."""
 
     queryset = ApprovalLevel.objects.all()
@@ -396,7 +396,7 @@ class ApprovalLevelViewSet(ClassificationMixin, ReadOnlyViewset):
     filterset_fields = "__all__"
 
 
-class EffortStepViewSet(ClassificationMixin, ReadOnlyViewset):
+class EffortStepViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     """Expose effort steps in REST API."""
 
     queryset = EffortStep.objects.all()
@@ -404,7 +404,7 @@ class EffortStepViewSet(ClassificationMixin, ReadOnlyViewset):
     filterset_fields = "__all__"
 
 
-class TargetGroupViewSet(ClassificationMixin, ReadOnlyViewset):
+class TargetGroupViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     """Expose target groups in REST API."""
 
     queryset = TargetGroup.objects.all()
@@ -412,7 +412,7 @@ class TargetGroupViewSet(ClassificationMixin, ReadOnlyViewset):
     filterset_fields = "__all__"
 
 
-class EffortViewSet(ClassificationMixin, ReadOnlyViewset):
+class EffortViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     """Expose efforts in REST API."""
 
     queryset = Effort.objects.all()
