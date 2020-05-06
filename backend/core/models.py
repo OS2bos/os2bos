@@ -62,7 +62,7 @@ status_choices = (
 class Classification(models.Model):
     """Abstract base class for Classifications."""
 
-    active = models.BooleanField(default=True)
+    active = models.BooleanField(default=True, verbose_name=_("aktiv"))
 
     class Meta:
         abstract = True
