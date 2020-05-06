@@ -1107,7 +1107,7 @@ class TestClassificationMixin(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.json()[0]["id"], section.id)
 
     def test_get_queryset_inactive_disallowed_as_grant_user(self):
-        section = create_section(active=False)
+        create_section(active=False)
         url = reverse("section-list")
         # User has grant permissions.
         self.client.login(username=self.username, password=self.password)
