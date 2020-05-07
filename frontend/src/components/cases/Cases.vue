@@ -238,7 +238,11 @@
                 return `<dl><dt>CPR</dt><dd>${ id.cpr_number }</dd><dt>Navn</dt><dd>${ id.name }</dd>`
             },
             displayTargetGroupDistrict: function(id) {
-                return `<dl><dt>Målgruppe</dt><dd>${ targetGroupId2name(id.target_group) }</dd><dt>Skoledistrikt</dt><dd>${ districtId2name(id.district) }</dd></dl>`
+                let str = `<dl><dt>Målgruppe</dt><dd>${ targetGroupId2name(id.target_group) }</dd>`
+                if (id.target_group === 1) { 
+                    str += `<dt>Skoledistrikt</dt><dd>${ districtId2name(id.district) }</dd></dl>`
+                }
+                return str
             },
             displayEffortName: function(id) {
                 return displayEffort(id.effort_step)
