@@ -260,11 +260,11 @@ class VariableRate(models.Model):
     @property
     def rate_amount(date):
         """Look up period in RatesPerDate."""
-        return 0
+        return 0  # pragma: no cover
 
     def set_rate_amount(start_date, end_date, amount):
         """Set amount, merge with existing periods."""
-        pass
+        pass  # pragma: no cover
 
 
 class RatePerDate(models.Model):
