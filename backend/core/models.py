@@ -258,13 +258,36 @@ class VariableRate(models.Model):
     """Superclass for time-dependent rates and prices."""
 
     @property
-    def rate_amount(date):
+    def rate_amount(self, date):
         """Look up period in RatesPerDate."""
         return 0  # pragma: no cover
 
-    def set_rate_amount(start_date, end_date, amount):
+    def set_rate_amount(self, start_date, end_date, amount):
         """Set amount, merge with existing periods."""
-        pass  # pragma: no cover
+        def less_than(a, b):
+            """Check a < b allowing None for infinity."""
+            if a is None:
+                # None == -infinity is always less than anything else.
+                return True
+            elif b is None:
+                # None == +infinity is always larger than any finite date.
+                return False
+            return a < b
+
+        if not less_than(start_date, stop_date):
+            raise ValueError(
+                _("Slutdato skal være mindre end startdato")
+            )
+
+        existing_periods = self.rates_per_date.all()
+        if len(existing_periods) == 0:
+            new_rpd = RatePerDate.objects.create(
+                rate=amount, start_date=start_date, end_date=end_date,
+                main_rate=self
+            )
+        else:
+            # Merge periods - the hard part.
+            pass
 
 
 class RatePerDate(models.Model):
@@ -278,11 +301,11 @@ class RatePerDate(models.Model):
     start_date = models.DateField(
         null=True, blank=True, verbose_name="startdato"
     )
-    start_date = models.DateField(
+    end_date = models.DateField(
         null=True, blank=True, verbose_name="slutdato"
     )
     main_rate = models.ForeignKey(
-        VariableRate, on_delete=models.CASCADE, related_name="rate_per_date"
+        VariableRate, on_delete=models.CASCADE, related_name="rates_per_date"
     )
 
 
