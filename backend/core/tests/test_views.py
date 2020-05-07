@@ -99,26 +99,31 @@ class TestRelatedPersonsViewSet(AuthenticatedTestCase):
         self.assertEqual(response.status_code, 200)
         expected_format = {
             "name": "Bo Jensen",
+            "from_serviceplatformen": True,
             "relations": [
                 {
                     "cpr_number": "0123456780",
                     "relation_type": "aegtefaelle",
                     "name": "Iben Jensen",
+                    "from_serviceplatformen": True,
                 },
                 {
                     "cpr_number": "2123456789",
                     "relation_type": "barn",
                     "name": "Ib Jensen",
+                    "from_serviceplatformen": True,
                 },
                 {
                     "cpr_number": "0000000000",
                     "relation_type": "mor",
                     "name": "Ingeborg Jensen",
+                    "from_serviceplatformen": True,
                 },
                 {
                     "cpr_number": "0000000000",
                     "relation_type": "far",
                     "name": "Gunnar Jensen",
+                    "from_serviceplatformen": True,
                 },
             ],
         }
