@@ -106,5 +106,24 @@
         "groups": [],
         "user_permissions": []
     }
-}
+},
+    {
+        "model": "core.user",
+        "pk": 7,
+        "fields": {
+            "password": "pbkdf2_sha256$150000$G0TufYJKCCeH$MDf2dzcOfnWU/v1bunASnZU81YrI9N5bwmqAyvsAFvE=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "regelmotor",
+            "first_name": "regelmotor",
+            "last_name": "regelmotor",
+            "email": "cbur@magenta.dk",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2020-05-05T11:35:00.913Z",
+            "profile": "",
+            "groups": [],
+            "user_permissions": []
+        }
+    }
 ]

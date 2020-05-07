@@ -62,7 +62,7 @@ status_choices = (
 class Classification(models.Model):
     """Abstract base class for Classifications."""
 
-    active = models.BooleanField(default=True)
+    active = models.BooleanField(default=True, verbose_name=_("aktiv"))
 
     class Meta:
         abstract = True
@@ -193,6 +193,7 @@ class User(AbstractUser):
     READONLY = "readonly"
     EDIT = "edit"
     GRANT = "grant"
+    WORKFLOW_ENGINE = "workflow_engine"
     ADMIN = "admin"
 
     @classmethod
@@ -207,7 +208,8 @@ class User(AbstractUser):
             cls.READONLY: 0,
             cls.EDIT: 1,
             cls.GRANT: 2,
-            cls.ADMIN: 3,
+            cls.WORKFLOW_ENGINE: 3,
+            cls.ADMIN: 4,
         }
         if not perms:
             return ""
@@ -220,6 +222,7 @@ class User(AbstractUser):
         (READONLY, _("Kun læse")),
         (EDIT, _("Læse og skrive")),
         (GRANT, _("Bevilge")),
+        (WORKFLOW_ENGINE, ("Redigere klassifikationer")),
         (ADMIN, _("Admin")),
     )
     profile = models.CharField(
@@ -228,6 +231,12 @@ class User(AbstractUser):
         choices=profile_choices,
         blank=True,
     )
+
+    def is_workflow_engine_or_admin(self):
+        """Return if user has workflow or admin permission."""
+        if self.profile in [User.WORKFLOW_ENGINE, User.ADMIN]:
+            return True
+        return False
 
 
 class Team(models.Model):

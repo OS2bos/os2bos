@@ -9,6 +9,7 @@
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from django.utils.html import escape, mark_safe
 from django.urls import reverse
@@ -29,7 +30,6 @@ from core.models import (
     ServiceProvider,
     PaymentMethodDetails,
     Team,
-    User,
     ApprovalLevel,
     SectionInfo,
     EffortStep,
@@ -38,19 +38,47 @@ from core.models import (
 )
 
 for klass in (
-    Municipality,
     PaymentMethodDetails,
     Case,
     Appropriation,
     Activity,
     RelatedPerson,
-    SchoolDistrict,
     Team,
-    ApprovalLevel,
     SectionInfo,
-    EffortStep,
 ):
     admin.site.register(klass, admin.ModelAdmin)
+
+
+User = get_user_model()
+
+
+class ClassificationAdmin(admin.ModelAdmin):
+    """ModelAdmin for Classification models."""
+
+    def has_view_permission(self, request, obj=None):
+        """Override has_view_permission for ModelAdmin."""
+        user = request.user
+        return user.is_authenticated and user.is_workflow_engine_or_admin()
+
+    def has_add_permission(self, request):
+        """Override has_add_permission for ModelAdmin."""
+        user = request.user
+        return user.is_authenticated and user.is_workflow_engine_or_admin()
+
+    def has_change_permission(self, request, obj=None):
+        """Override has_change_permission for ModelAdmin."""
+        user = request.user
+        return user.is_authenticated and user.is_workflow_engine_or_admin()
+
+    def has_delete_permission(self, request, obj=None):
+        """Override has_delete_permission for ModelAdmin."""
+        user = request.user
+        return user.is_authenticated and user.is_workflow_engine_or_admin()
+
+    def has_module_permission(self, request):
+        """Override has_model_permission for ModelAdmin."""
+        user = request.user
+        return user.is_authenticated and user.is_workflow_engine_or_admin()
 
 
 @admin.register(Payment)
@@ -135,7 +163,7 @@ class TargetGroupForm(forms.ModelForm):
 
 
 @admin.register(TargetGroup)
-class TargetGroupAdmin(admin.ModelAdmin):
+class TargetGroupAdmin(ClassificationAdmin):
     """ModelAdmin for TargetGroup with custom ModelForm."""
 
     fields = ("name", "required_fields_for_case")
@@ -143,7 +171,7 @@ class TargetGroupAdmin(admin.ModelAdmin):
 
 
 @admin.register(Effort)
-class EffortAdmin(admin.ModelAdmin):
+class EffortAdmin(ClassificationAdmin):
     """ModelAdmin for Effort."""
 
     filter_horizontal = ("allowed_for_target_groups",)
@@ -183,7 +211,7 @@ class PaymentScheduleAdmin(admin.ModelAdmin):
 
 
 @admin.register(Account)
-class AccountAdmin(admin.ModelAdmin):
+class AccountAdmin(ClassificationAdmin):
     """Display account number (konteringsnummer) as read only field."""
 
     readonly_fields = ("number",)
@@ -218,14 +246,42 @@ class ActivityDetailsAdmin(admin.ModelAdmin):
 
 
 @admin.register(Section)
-class SectionAdmin(admin.ModelAdmin):
+class SectionAdmin(ClassificationAdmin):
     """Add search field."""
 
     search_fields = ("paragraph",)
 
 
 @admin.register(ServiceProvider)
-class ServiceProviderAdmin(admin.ModelAdmin):
+class ServiceProviderAdmin(ClassificationAdmin):
     """Add search fields."""
 
     search_fields = ("name", "cvr_number")
+
+
+@admin.register(Municipality)
+class MunicipalityAdmin(ClassificationAdmin):
+    """ModelAdmin for Municipality."""
+
+    pass
+
+
+@admin.register(ApprovalLevel)
+class ApprovalLevelAdmin(ClassificationAdmin):
+    """ModelAdmin for ApprovalLevel."""
+
+    pass
+
+
+@admin.register(EffortStep)
+class EffortStepAdmin(ClassificationAdmin):
+    """ModelAdmin for EffortStep."""
+
+    pass
+
+
+@admin.register(SchoolDistrict)
+class SchoolDistrictAdmin(ClassificationAdmin):
+    """ModelAdmin for SchoolDistrict."""
+
+    pass
