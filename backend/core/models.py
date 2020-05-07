@@ -1607,11 +1607,15 @@ class RelatedPerson(AuditModelMixin, models.Model):
             "relation": "relation_type",
             "adresseringsnavn": "name",
         }
-        return {
+        converted_data = {
             converter_dict[k]: v
             for (k, v) in data.items()
             if k in converter_dict
         }
+        extra_fields = {"from_serviceplatformen": True}
+        converted_data.update(extra_fields)
+
+        return converted_data
 
     def __str__(self):
         return f"{self.name} - {self.cpr_number} - {self.main_case}"
