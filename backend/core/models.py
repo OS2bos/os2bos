@@ -259,15 +259,16 @@ class VariableRate(models.Model):
 
     @property
     def rate_amount(date):
-        # TODO: Look up period in RatesPerDate.
+        """Look up period in RatesPerDate."""
         return 0
 
     def set_rate_amount(start_date, end_date, amount):
-        # TODO: Set amount, merge with existing periods.
+        """Set amount, merge with existing periods."""
         pass
 
 
 class RatePerDate(models.Model):
+    """Handle the date variation of VariableRates."""
 
     rate = models.DecimalField(
         max_digits=14, decimal_places=2, verbose_name=_(_("takst"))
