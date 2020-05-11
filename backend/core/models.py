@@ -1590,7 +1590,9 @@ class RelatedPerson(AuditModelMixin, models.Model):
     related_case = models.CharField(
         max_length=128, verbose_name=_("SBSYS-sag"), blank=True
     )
-    from_serviceplatformen = models.BooleanField(blank=True, default=True)
+    from_serviceplatformen = models.BooleanField(
+        blank=True, default=True, verbose_name=_("fra Serviceplatformen")
+    )
 
     main_case = models.ForeignKey(
         Case,

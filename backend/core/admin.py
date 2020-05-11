@@ -42,7 +42,6 @@ for klass in (
     Case,
     Appropriation,
     Activity,
-    RelatedPerson,
     Team,
     SectionInfo,
 ):
@@ -257,6 +256,13 @@ class ServiceProviderAdmin(ClassificationAdmin):
     """Add search fields."""
 
     search_fields = ("name", "cvr_number")
+
+
+@admin.register(RelatedPerson)
+class RelatedPersonAdmin(admin.ModelAdmin):
+    """ModelAdmin for RelatedPerson."""
+
+    readonly_fields = ("from_serviceplatformen",)
 
 
 @admin.register(Municipality)
