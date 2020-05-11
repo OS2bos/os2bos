@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='relatedperson',
             name='from_serviceplatformen',
-            field=models.BooleanField(blank=True, default=True, verbose_name=_("fra Serviceplatformen")),
+            field=models.BooleanField(blank=True, default=True, verbose_name='fra Serviceplatformen'),
         ),
         migrations.AddField(
             model_name='relatedperson',
