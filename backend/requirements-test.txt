@@ -2,7 +2,7 @@
 -r requirements.txt
 tox==3.15.0
 black==19.10b0
-pytest==5.4.1
+pytest==5.4.2
 pytest-django==3.9.0
 pytest-cov==2.8.1
 flake8==3.7.9
