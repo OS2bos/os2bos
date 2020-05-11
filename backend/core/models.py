@@ -10,6 +10,8 @@ from datetime import date, timedelta
 from decimal import Decimal
 from dateutil.relativedelta import relativedelta
 
+import portion as P
+
 from django import forms
 from django.db import models, transaction
 from django.contrib.postgres.fields import ArrayField
@@ -257,37 +259,51 @@ class Team(models.Model):
 class VariableRate(models.Model):
     """Superclass for time-dependent rates and prices."""
 
+    @staticmethod
+    def create_interval(start_date, end_date):
+        if start_date is None:
+            start_date = -P.inf
+        if end_date is None:
+            end_date = P.inf
+        if not start_date < end_date:
+            raise ValueError(_("Slutdato skal være mindre end startdato"))
+        return P.closedopen(start_date, end_date)
+
     @property
-    def rate_amount(self, date):
+    def rate_amount(self, rate_date=date.today()):
         """Look up period in RatesPerDate."""
-        return 0  # pragma: no cover
+        periods = self.rates_per_date.all()
+        d = P.IntervalDict()
+        for p in periods:
+            i = self.create_interval(p.start_date, p.end_date)
+            d[i] = p.rate
+        return d.get(rate_date)
 
-    def set_rate_amount(self, start_date, end_date, amount):
+    def set_rate_amount(self, amount, start_date=None, end_date=None):
         """Set amount, merge with existing periods."""
-        def less_than(a, b):
-            """Check a < b allowing None for infinity."""
-            if a is None:
-                # None == -infinity is always less than anything else.
-                return True
-            elif b is None:
-                # None == +infinity is always larger than any finite date.
-                return False
-            return a < b
 
-        if not less_than(start_date, stop_date):
-            raise ValueError(
-                _("Slutdato skal være mindre end startdato")
-            )
+        new_period = self.create_interval(start_date, end_date)
 
         existing_periods = self.rates_per_date.all()
-        if len(existing_periods) == 0:
-            new_rpd = RatePerDate.objects.create(
-                rate=amount, start_date=start_date, end_date=end_date,
-                main_rate=self
-            )
-        else:
-            # Merge periods - the hard part.
-            pass
+        d = P.IntervalDict()
+        for p in existing_periods:
+            i = self.create_interval(p.start_date, p.end_date)
+            d[i] = p.rate
+
+        d[new_period] = amount
+
+        for p in d.keys():
+            for i in list(p):
+                # In case of composite intervals
+                rpd = RatePerDate(
+                    start_date=p.lower,
+                    end_date=p.upper,
+                    rate=d[p],
+                    main_rate=self,
+                )
+                rpd.save()
+
+        existing_periods.delete()
 
 
 class RatePerDate(models.Model):
@@ -301,9 +317,7 @@ class RatePerDate(models.Model):
     start_date = models.DateField(
         null=True, blank=True, verbose_name="startdato"
     )
-    end_date = models.DateField(
-        null=True, blank=True, verbose_name="slutdato"
-    )
+    end_date = models.DateField(null=True, blank=True, verbose_name="slutdato")
     main_rate = models.ForeignKey(
         VariableRate, on_delete=models.CASCADE, related_name="rates_per_date"
     )
