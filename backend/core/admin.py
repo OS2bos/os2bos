@@ -15,6 +15,8 @@ from django.utils.html import escape, mark_safe
 from django.urls import reverse
 from django import forms
 
+from django_audit_fields.admin import ModelAdminAuditFieldsMixin
+
 from core.models import (
     Municipality,
     PaymentSchedule,
@@ -39,10 +41,6 @@ from core.models import (
 
 for klass in (
     PaymentMethodDetails,
-    Case,
-    Appropriation,
-    Activity,
-    RelatedPerson,
     Team,
     SectionInfo,
 ):
@@ -79,6 +77,27 @@ class ClassificationAdmin(admin.ModelAdmin):
         """Override has_model_permission for ModelAdmin."""
         user = request.user
         return user.is_authenticated and user.is_workflow_engine_or_admin()
+
+
+@admin.register(Case)
+class CaseAdmin(ModelAdminAuditFieldsMixin, admin.ModelAdmin):
+    """ModelAdmin for Case."""
+
+    pass
+
+
+@admin.register(Appropriation)
+class AppropriationAdmin(ModelAdminAuditFieldsMixin, admin.ModelAdmin):
+    """ModelAdmin for Appropriation."""
+
+    pass
+
+
+@admin.register(Activity)
+class ActivityAdmin(ModelAdminAuditFieldsMixin, admin.ModelAdmin):
+    """ModelAdmin for Activity."""
+
+    pass
 
 
 @admin.register(Payment)
@@ -257,6 +276,13 @@ class ServiceProviderAdmin(ClassificationAdmin):
     """Add search fields."""
 
     search_fields = ("name", "cvr_number")
+
+
+@admin.register(RelatedPerson)
+class RelatedPersonAdmin(ModelAdminAuditFieldsMixin, admin.ModelAdmin):
+    """ModelAdmin for RelatedPerson."""
+
+    pass
 
 
 @admin.register(Municipality)

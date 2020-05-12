@@ -90,7 +90,8 @@
                         cpr_number: this.fam.cpr_number,
                         name: this.fam.name,
                         related_case: this.fam.related_case,
-                        main_case: this.casid
+                        main_case: this.casid,
+                        from_serviceplatformen: false
                     })
                     .then(res => {
                         this.$router.push(`/case/${ this.casid }/`)

@@ -1573,7 +1573,7 @@ class Activity(AuditModelMixin, models.Model):
             self.payment_plan.save()
 
 
-class RelatedPerson(models.Model):
+class RelatedPerson(AuditModelMixin, models.Model):
     """A person related to a Case, e.g. as a parent or sibling."""
 
     class Meta:
@@ -1589,6 +1589,9 @@ class RelatedPerson(models.Model):
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     related_case = models.CharField(
         max_length=128, verbose_name=_("SBSYS-sag"), blank=True
+    )
+    from_serviceplatformen = models.BooleanField(
+        blank=True, default=True, verbose_name=_("fra Serviceplatformen")
     )
 
     main_case = models.ForeignKey(
@@ -1606,11 +1609,15 @@ class RelatedPerson(models.Model):
             "relation": "relation_type",
             "adresseringsnavn": "name",
         }
-        return {
+        converted_data = {
             converter_dict[k]: v
             for (k, v) in data.items()
             if k in converter_dict
         }
+        extra_fields = {"from_serviceplatformen": True}
+        converted_data.update(extra_fields)
+
+        return converted_data
 
     def __str__(self):
         return f"{self.name} - {self.cpr_number} - {self.main_case}"
