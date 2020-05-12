@@ -15,6 +15,8 @@ from django.utils.html import escape, mark_safe
 from django.urls import reverse
 from django import forms
 
+from django_audit_fields.admin import ModelAdminAuditFieldsMixin
+
 from core.models import (
     Municipality,
     PaymentSchedule,
@@ -78,54 +80,24 @@ class ClassificationAdmin(admin.ModelAdmin):
 
 
 @admin.register(Case)
-class CaseAdmin(admin.ModelAdmin):
+class CaseAdmin(ModelAdminAuditFieldsMixin, admin.ModelAdmin):
     """ModelAdmin for Case."""
 
-    # Mark AuditModelMixin fields readonly.
-    readonly_fields = (
-        "created",
-        "modified",
-        "user_created",
-        "user_modified",
-        "hostname_created",
-        "hostname_modified",
-        "device_created",
-        "device_modified",
-    )
+    pass
 
 
 @admin.register(Appropriation)
-class AppropriationAdmin(admin.ModelAdmin):
+class AppropriationAdmin(ModelAdminAuditFieldsMixin, admin.ModelAdmin):
     """ModelAdmin for Appropriation."""
 
-    # Mark AuditModelMixin fields readonly.
-    readonly_fields = (
-        "created",
-        "modified",
-        "user_created",
-        "user_modified",
-        "hostname_created",
-        "hostname_modified",
-        "device_created",
-        "device_modified",
-    )
+    pass
 
 
 @admin.register(Activity)
-class ActivityAdmin(admin.ModelAdmin):
+class ActivityAdmin(ModelAdminAuditFieldsMixin, admin.ModelAdmin):
     """ModelAdmin for Activity."""
 
-    # Mark AuditModelMixin fields readonly.
-    readonly_fields = (
-        "created",
-        "modified",
-        "user_created",
-        "user_modified",
-        "hostname_created",
-        "hostname_modified",
-        "device_created",
-        "device_modified",
-    )
+    pass
 
 
 @admin.register(Payment)
@@ -307,21 +279,10 @@ class ServiceProviderAdmin(ClassificationAdmin):
 
 
 @admin.register(RelatedPerson)
-class RelatedPersonAdmin(admin.ModelAdmin):
+class RelatedPersonAdmin(ModelAdminAuditFieldsMixin, admin.ModelAdmin):
     """ModelAdmin for RelatedPerson."""
 
-    # Mark AuditModelMixin fields readonly.
-    readonly_fields = (
-        "created",
-        "modified",
-        "user_created",
-        "user_modified",
-        "hostname_created",
-        "hostname_modified",
-        "device_created",
-        "device_modified",
-        "from_serviceplatformen",
-    )
+    pass
 
 
 @admin.register(Municipality)
