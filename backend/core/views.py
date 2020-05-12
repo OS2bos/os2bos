@@ -286,6 +286,8 @@ class RelatedPersonViewSet(AuditViewSet):
         """Fetch relations for a person using the CPR from Serviceplatformen.
 
         Returns the data as serialized RelatedPersons data.
+
+        GET params: cpr
         """
         cpr = request.query_params.get("cpr")
         if not cpr:

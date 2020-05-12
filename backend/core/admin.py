@@ -39,10 +39,6 @@ from core.models import (
 
 for klass in (
     PaymentMethodDetails,
-    Case,
-    Appropriation,
-    Activity,
-    RelatedPerson,
     Team,
     SectionInfo,
 ):
@@ -79,6 +75,57 @@ class ClassificationAdmin(admin.ModelAdmin):
         """Override has_model_permission for ModelAdmin."""
         user = request.user
         return user.is_authenticated and user.is_workflow_engine_or_admin()
+
+
+@admin.register(Case)
+class CaseAdmin(admin.ModelAdmin):
+    """ModelAdmin for Case."""
+
+    # Mark AuditModelMixin fields readonly.
+    readonly_fields = (
+        "created",
+        "modified",
+        "user_created",
+        "user_modified",
+        "hostname_created",
+        "hostname_modified",
+        "device_created",
+        "device_modified",
+    )
+
+
+@admin.register(Appropriation)
+class AppropriationAdmin(admin.ModelAdmin):
+    """ModelAdmin for Appropriation."""
+
+    # Mark AuditModelMixin fields readonly.
+    readonly_fields = (
+        "created",
+        "modified",
+        "user_created",
+        "user_modified",
+        "hostname_created",
+        "hostname_modified",
+        "device_created",
+        "device_modified",
+    )
+
+
+@admin.register(Activity)
+class ActivityAdmin(admin.ModelAdmin):
+    """ModelAdmin for Activity."""
+
+    # Mark AuditModelMixin fields readonly.
+    readonly_fields = (
+        "created",
+        "modified",
+        "user_created",
+        "user_modified",
+        "hostname_created",
+        "hostname_modified",
+        "device_created",
+        "device_modified",
+    )
 
 
 @admin.register(Payment)
@@ -257,6 +304,24 @@ class ServiceProviderAdmin(ClassificationAdmin):
     """Add search fields."""
 
     search_fields = ("name", "cvr_number")
+
+
+@admin.register(RelatedPerson)
+class RelatedPersonAdmin(admin.ModelAdmin):
+    """ModelAdmin for RelatedPerson."""
+
+    # Mark AuditModelMixin fields readonly.
+    readonly_fields = (
+        "created",
+        "modified",
+        "user_created",
+        "user_modified",
+        "hostname_created",
+        "hostname_modified",
+        "device_created",
+        "device_modified",
+        "from_serviceplatformen",
+    )
 
 
 @admin.register(Municipality)
