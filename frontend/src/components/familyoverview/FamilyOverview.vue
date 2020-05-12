@@ -96,9 +96,9 @@
             displayName: function(id) {
                 if (this.permissionCheck === true && id.from_serviceplatformen === false) {
                     let to = `#/case/${ this.caseId }/familyoverview-edit/${ id.id }`
-                    return `<a href="${ to }">${ id.name }</a><br>${ id.cpr_number }`
+                    return `<dl><dt>${ id.relation_type }</dt><dd><a href="${ to }">${ id.name }</a><br>${ id.cpr_number }</dd></dl>`
                 } else {
-                    return `${ id.name }<br>${ id.cpr_number }`
+                    return `<dl><dt>${ id.relation_type }</dt><dd>${ id.name }<br>${ id.cpr_number }</dd></dl>`
                 }
             },
             displayCreatedDate: function(id) {
