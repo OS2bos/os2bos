@@ -13,6 +13,39 @@
             <h1 v-if="create_mode">Opret relation</h1>
             <h1 v-else>Redigér familierelation</h1>
         </header>
+
+        <!-- Delete relation modal -->
+        <div v-if="showModal && !create_mode">
+            <form @submit.prevent="deleteRelation()" class="modal-form">
+                <div class="modal-mask">
+                    <div class="modal-wrapper">
+                        <div class="modal-container">
+
+                            <div class="modal-header">
+                                <slot name="header">
+                                    <h2>Slet</h2>
+                                </slot>
+                            </div>
+
+                            <div class="modal-body">
+                                <slot name="body">
+                                    <p>
+                                        Er du sikker på, at du vil slette denne relation?
+                                    </p>
+                                </slot>
+                            </div>
+
+                            <div class="modal-footer">
+                                <slot name="footer">
+                                    <button type="button" class="modal-cancel-btn" @click="cancel()">Annullér</button>
+                                    <button class="modal-delete-btn" type="submit">Slet</button>
+                                </slot>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
         <form @submit.prevent="saveChanges()">
 
             <error />
@@ -31,6 +64,7 @@
                 
             <fieldset class="form-actions">
                 <input type="submit" value="Gem">
+                <button v-if="!create_mode" type="button" class="fam-delete-btn" @click="preDeleteCheck()">Slet</button>
                 <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
             </fieldset>
         </form>
@@ -44,6 +78,7 @@
     import router from '../../router.js'
     import CprLookup from '../forms/CprLookUp.vue'
     import Error from '../forms/Error.vue'
+    import notify from '../notifications/Notify.js'
 
     export default {
 
@@ -54,7 +89,8 @@
         data: function() {
             return {
                 create_mode: false,
-                fam: {}
+                fam: {},
+                showModal: false
             }
         },
         computed: {
@@ -100,8 +136,24 @@
                 }
             },
             cancel: function() {
-                this.$emit('close')
-                this.$router.push(`/case/${ this.casid }/`)
+                if (this.showModal === true) {
+                    this.showModal = false
+                } else {
+                    this.$emit('close')
+                    this.$router.push(`/case/${ this.casid }/`)
+                }
+            },
+            preDeleteCheck: function() {
+                this.showModal = true
+            },
+            deleteRelation: function() {
+                axios.delete(`/related_persons/${ this.$route.params.famid }/`)
+                .then(res => {
+                    this.$emit('close')
+                    this.$router.push(`/case/${ this.casid }/`)
+                    notify('Relation slettet', 'success')
+                })
+                .catch(err => this.$store.dispatch('parseErrorOutput', err))
             }
         },
         created: function() {
@@ -142,10 +194,33 @@
     }
 
     .familyoverview-edit .cancel-btn {
-        margin-left: 0.5rem;
+        float: right;
         background-color: transparent;
         color: var(--primary);
         border-color: transparent;
+    }
+
+    .familyoverview-edit .fam-delete-btn,
+    .modal-delete-btn {
+        margin-left: .5rem;
+        border-color: var(--danger);
+        color: var(--danger);
+        background-color: transparent;
+    }
+    .modal-delete-btn {
+        float: right;
+        margin-left: .5rem;
+    }
+
+    .familyoverview-edit .fam-delete-btn:focus,
+    .familyoverview-edit .fam-delete-btn:hover,
+    .familyoverview-edit .fam-delete-btn:active,
+    .modal-delete-btn:focus,
+    .modal-delete-btn:hover,
+    .modal-delete-btn:active {
+        background-color: var(--danger);
+        color: var(--grey0);
+        border-color: var(--danger);
     }
 
 </style>
