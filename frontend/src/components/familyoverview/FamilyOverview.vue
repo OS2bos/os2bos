@@ -15,7 +15,7 @@
                 :selectable="false">
 
                 <div class="familyoverview-header" slot="datagrid-header">
-                    <h2>Familieoversigt</h2>
+                    <h2>Relationer</h2>
                    <button v-if="permissionCheck === true" class="familyoverview-create-btn" @click="$router.push(`/case/${ caseId }/familyoverview-create/`)">+ Opret relation</button>
                 </div>
 
