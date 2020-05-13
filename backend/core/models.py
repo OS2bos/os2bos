@@ -128,7 +128,7 @@ class TargetGroup(Classification):
         return f"{self.name}"
 
 
-class Effort(models.Model):
+class Effort(Classification):
     """Effort for a case."""
 
     class Meta:

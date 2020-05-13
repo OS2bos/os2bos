@@ -185,7 +185,7 @@ class TargetGroupForm(forms.ModelForm):
 class TargetGroupAdmin(ClassificationAdmin):
     """ModelAdmin for TargetGroup with custom ModelForm."""
 
-    fields = ("name", "required_fields_for_case")
+    fields = ("name", "required_fields_for_case", "active")
     form = TargetGroupForm
 
 
