@@ -11,7 +11,7 @@
     <article class="familyoverview-edit">
         <header class="familyoverview-edit-header">
             <h1 v-if="create_mode">Opret relation</h1>
-            <h1 v-else>Redigér familierelation</h1>
+            <h1 v-else>Redigér relation</h1>
         </header>
 
         <!-- Delete relation modal -->
