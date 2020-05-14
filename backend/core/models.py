@@ -267,10 +267,9 @@ class VariableRate(models.Model):
             end_date = P.inf
         if not start_date < end_date:
             raise ValueError(_("Slutdato skal være mindre end startdato"))
-        return P.closedopen(start_date, end_date)
+        return P.closed(start_date, end_date)
 
-    @property
-    def rate_amount(self, rate_date=date.today()):
+    def get_rate_amount(self, rate_date=date.today()):
         """Look up period in RatesPerDate."""
         periods = self.rates_per_date.all()
         d = P.IntervalDict()
@@ -278,6 +277,8 @@ class VariableRate(models.Model):
             i = self.create_interval(p.start_date, p.end_date)
             d[i] = p.rate
         return d.get(rate_date)
+
+    rate_amount = property(get_rate_amount)
 
     def set_rate_amount(self, amount, start_date=None, end_date=None):
         """Set amount, merge with existing periods."""
