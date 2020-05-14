@@ -57,6 +57,8 @@ from core.models import (
     STATUS_GRANTED,
     STATUS_EXPECTED,
     STATUS_DRAFT,
+    VariableRate,
+    Rate,
 )
 
 
@@ -3243,3 +3245,13 @@ class EffortTestCase(TestCase):
         effort = Effort.objects.create(name="Integrationsindsatsen")
 
         self.assertEqual(str(effort), "Integrationsindsatsen")
+
+
+class VariableRateTestCase(TestCase):
+    def test_str(self):
+        rate = Rate.objects.create(name="Min rate")
+        rate.set_rate_amount(Decimal(25), start_date=date.today())
+
+        self.assertEqual(rate.rate_amount, Decimal(25))
+
+        self.assertEqual(str(rate), "2020-05-14, None: 25.00")
