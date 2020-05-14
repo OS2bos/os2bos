@@ -290,20 +290,29 @@ class VariableRate(models.Model):
             i = self.create_interval(p.start_date, p.end_date)
             d[i] = p.rate
 
-        d[new_period] = amount
+        # We generate all periods from scratch to avoid complicated
+        # merging logic.
+        existing_periods.delete()
 
+        d[new_period] = amount
         for p in d.keys():
             for i in list(p):
                 # In case of composite intervals
+                start = i.lower if isinstance(i.lower, date) else None
+                end = i.upper if isinstance(i.upper, date) else None
                 rpd = RatePerDate(
-                    start_date=p.lower,
-                    end_date=p.upper,
-                    rate=d[p],
+                    start_date=start,
+                    end_date=end,
+                    rate=d[p.lower],
                     main_rate=self,
                 )
                 rpd.save()
 
-        existing_periods.delete()
+    def __str__(self):
+        return ";".join(
+            f"{r.start_date}, {r.end_date}: {r.rate}"
+            for r in self.rates_per_date.all()
+        )
 
 
 class RatePerDate(models.Model):
