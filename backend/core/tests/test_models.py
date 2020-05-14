@@ -57,7 +57,6 @@ from core.models import (
     STATUS_GRANTED,
     STATUS_EXPECTED,
     STATUS_DRAFT,
-    VariableRate,
     Rate,
 )
 
@@ -3267,3 +3266,17 @@ class VariableRateTestCase(TestCase):
         self.assertEqual(
             rate.get_rate_amount(rate_date=next_week), Decimal(25)
         )
+
+    def test_start_minus_inf(self):
+        rate = Rate.objects.create(name="Min rate")
+        rate.set_rate_amount(Decimal(25))
+
+    def test_start_after_end(self):
+        rate = Rate.objects.create(name="Min rate")
+        next_week = date.today() + timedelta(days=7)
+        with self.assertRaises(
+            ValueError, msg="Slutdato skal være mindre end startdato",
+        ):
+            rate.set_rate_amount(
+                Decimal(25), start_date=next_week, end_date=date.today()
+            )

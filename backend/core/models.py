@@ -261,13 +261,14 @@ class VariableRate(models.Model):
 
     @staticmethod
     def create_interval(start_date, end_date):
+        """Create new interval for rates."""
         if start_date is None:
             start_date = -P.inf
         if end_date is None:
             end_date = P.inf
         if not start_date < end_date:
             raise ValueError(_("Slutdato skal være mindre end startdato"))
-        return P.closed(start_date, end_date)
+        return P.closedopen(start_date, end_date)
 
     def get_rate_amount(self, rate_date=date.today()):
         """Look up period in RatesPerDate."""
@@ -282,7 +283,6 @@ class VariableRate(models.Model):
 
     def set_rate_amount(self, amount, start_date=None, end_date=None):
         """Set amount, merge with existing periods."""
-
         new_period = self.create_interval(start_date, end_date)
 
         existing_periods = self.rates_per_date.all()
@@ -304,7 +304,7 @@ class VariableRate(models.Model):
                 rpd = RatePerDate(
                     start_date=start,
                     end_date=end,
-                    rate=d[p.lower],
+                    rate=d[start or end or date.today()],
                     main_rate=self,
                 )
                 rpd.save()
