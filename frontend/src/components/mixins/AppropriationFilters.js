@@ -19,8 +19,15 @@
       }
   },
   methods: {
-      update: function() {
-          this.$store.dispatch('fetchAppropriations', this.$route.query)
+      update: function(worker_id) {
+        if (this.user.id) {
+            if (this.$route.query.case__case_worker != worker_id || this.$route.query.case__case_worker === null) {
+                this.$store.dispatch('fetchAppropriations', this.$route.query)
+            } else {
+                this.$route.query.case__case_worker = this.user.id
+                this.$store.dispatch('fetchAppropriations', this.$route.query)
+            }
+        }
       },
       changeSection: function(section_id) {
         if (this.$route.query.section != section_id) { // Only update if choice is different

@@ -42,7 +42,7 @@
 
                     <label for="field-team">Team</label>
                     <list-picker 
-                        v-if="apprs"
+                        v-if="teams"
                         :dom-id="'field-team'" 
                         :selected-id="query.team"
                         :list="teams"
@@ -52,9 +52,9 @@
                 
                     <label for="field-case-worker">Sagsbehandler</label>
                     <list-picker 
-                        v-if="apprs"
+                        v-if="users"
                         :dom-id="'field-case-worker'" 
-                        :selected-id="query.case_worker"
+                        :selected-id="query.case__case_worker"
                         :list="users"
                         @selection="changeWorker"
                         display-key="fullname"
@@ -62,7 +62,7 @@
 
                     <label for="field-section">Bevilling efter §</label>
                     <list-picker
-                        v-if="apprs"
+                        v-if="sections"
                         class="resize"
                         :dom-id="'field-section'" 
                         :selected-id="query.section"
@@ -74,7 +74,7 @@
 
                     <label for="field-main-act">Hovedydelse</label>
                     <list-picker 
-                        v-if="apprs"
+                        v-if="appr_main_acts"
                         class="resize"
                         :dom-id="'field-main-act'" 
                         :selected-id="query.main_activity__details__id"
@@ -175,6 +175,13 @@
             appr_main_acts: function() {
                 let actList = this.$store.getters.getActivityDetails.filter(act => act.main_activity_for.length > 0)
                 return actList
+            },
+            user: function() {
+                let user = this.$store.getters.getUser
+                if (user) {
+                    this.$store.dispatch('fetchTeam', user.team)
+                }
+                return user
             }
         },
         methods: {
