@@ -53,7 +53,7 @@
                         <label for="field-expired-1">Aktive og lukkede sager</label>
                     </li>
                     <li>
-                        <input type="radio" v-model="$route.query.expired" id="field-expired-2" @change="update()" :preselected="selectedCases" :value="false">
+                        <input type="radio" v-model="$route.query.expired" id="field-expired-2" @change="update()" :value="false">
                         <label for="field-expired-2">Kun aktive sager</label>
                     </li>
                     <li>
@@ -122,7 +122,6 @@
             </dialog-box>
 
         </div>
-
     </div>
 
 </template>
@@ -175,20 +174,24 @@
                         display_func: this.displayCPRName
                     },
                     {
+                        key: 'target_group',
                         title: 'Målgruppe',
                         display_func: this.displayTargetGroupDistrict,
                         class: 'nowrap'
                     },
                     {
+                        key: 'effort_step',
                         title: 'Indsatstrappen',
                         display_func: this.displayEffortName
                     },
                     {
+                        key: 'num_appropriations',
                         title: 'Bevillinger',
                         display_func: this.displayAppr,
                         class: 'nowrap'
                     },
                     {
+                        key: 'case_worker',
                         title: 'Sagsbehandler',
                         display_func: this.displayUserTeam
                     },
@@ -216,9 +219,6 @@
                     this.$store.dispatch('fetchTeam', user.team)
                 }
                 return user
-            },
-            selectedCases: function() {
-                return this.$route.query.expired = false
             }
         },
         watch: {

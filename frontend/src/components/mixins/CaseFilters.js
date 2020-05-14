@@ -25,6 +25,7 @@ export default {
                     this.$store.dispatch('fetchCases', this.$route.query)
                 } else {
                     this.$route.query.case_worker = this.user.id
+                    this.$route.query.expired = false
                     this.$store.dispatch('fetchCases', this.$route.query)
                 }
             }
