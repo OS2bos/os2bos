@@ -258,8 +258,9 @@ def saml_before_login(user_data):  # noqa: D401
         if profile != user.profile:
             user.profile = profile
             is_admin = profile == models.User.ADMIN
+            is_workflow_engine = profile == models.User.WORKFLOW_ENGINE
             # Admin status is controlled by these flags.
-            user.is_staff = user.is_superuser = is_admin
+            user.is_staff = is_admin or is_workflow_engine
             user_changed = True
     if user_changed:
         user.save()
@@ -285,8 +286,9 @@ def saml_create_user(user_data):  # noqa: D401
         profile = models.User.max_profile(user_data["bos_profile"])
         user.profile = profile
         is_admin = profile == models.User.ADMIN
+        is_workflow_engine = profile == models.User.WORKFLOW_ENGINE
         # Admin status is controlled by these flags.
-        user.is_staff = user.is_superuser = is_admin
+        user.is_staff = is_admin or is_workflow_engine
     user.save()
 
 
