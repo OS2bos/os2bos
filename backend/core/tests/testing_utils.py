@@ -259,14 +259,24 @@ def create_service_provider(cvr_number, name):
 
 
 def create_section_info(
-    details, section, kle_number="27.18.02", sbsys_template_id="900"
+    details,
+    section,
+    kle_number="27.18.02",
+    sbsys_template_id="900",
+    main_activity_main_account_number="1234",
+    supplementary_activity_main_account_number="5678",
 ):
-    section_info = SectionInfo.objects.create(
-        activity_details=details,
-        section=section,
-        kle_number=kle_number,
-        sbsys_template_id=sbsys_template_id,
-    )
+    params = {
+        "activity_details": details,
+        "section": section,
+        "kle_number": kle_number,
+        "sbsys_template_id": sbsys_template_id,
+        "main_activity_main_account_number": main_activity_main_account_number,
+        "supplementary_activity_"
+        "main_account_number": supplementary_activity_main_account_number,
+    }
+
+    section_info = SectionInfo.objects.create(**params)
     return section_info
 
 
