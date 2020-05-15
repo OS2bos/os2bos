@@ -10,6 +10,8 @@ from datetime import date, timedelta
 from decimal import Decimal
 from dateutil.relativedelta import relativedelta
 
+import portion as P
+
 from django import forms
 from django.db import models, transaction
 from django.contrib.postgres.fields import ArrayField
@@ -252,6 +254,120 @@ class Team(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+
+class VariableRate(models.Model):
+    """Superclass for time-dependent rates and prices."""
+
+    @staticmethod
+    def create_interval(start_date, end_date):
+        """Create new interval for rates."""
+        if start_date is None:
+            start_date = -P.inf
+        if end_date is None:
+            end_date = P.inf
+        if not start_date < end_date:
+            raise ValueError(_("Slutdato skal være mindre end startdato"))
+        return P.closedopen(start_date, end_date)
+
+    def get_rate_amount(self, rate_date=date.today()):
+        """Look up period in RatesPerDate."""
+        periods = self.rates_per_date.all()
+        d = P.IntervalDict()
+        for p in periods:
+            i = self.create_interval(p.start_date, p.end_date)
+            d[i] = p.rate
+        return d.get(rate_date)
+
+    rate_amount = property(get_rate_amount)
+
+    @transaction.atomic
+    def set_rate_amount(self, amount, start_date=None, end_date=None):
+        """Set amount, merge with existing periods."""
+        new_period = self.create_interval(start_date, end_date)
+
+        existing_periods = self.rates_per_date.all()
+        d = P.IntervalDict()
+        for period in existing_periods:
+            interval = self.create_interval(period.start_date, period.end_date)
+            d[interval] = period.rate
+
+        # We generate all periods from scratch to avoid complicated
+        # merging logic.
+        existing_periods.delete()
+
+        d[new_period] = amount
+        for period in d.keys():
+            for interval in list(period):
+                # In case of composite intervals
+                start = (
+                    interval.lower
+                    if isinstance(interval.lower, date)
+                    else None
+                )
+                end = (
+                    interval.upper
+                    if isinstance(interval.upper, date)
+                    else None
+                )
+                rpd = RatePerDate(
+                    start_date=start,
+                    end_date=end,
+                    rate=d[start or end or date.today()],
+                    main_rate=self,
+                )
+                rpd.save()
+
+    def __str__(self):
+        return ";".join(
+            f"{r.start_date}, {r.end_date}: {r.rate}"
+            for r in self.rates_per_date.all()
+        )
+
+
+class RatePerDate(models.Model):
+    """Handle the date variation of VariableRates."""
+
+    rate = models.DecimalField(
+        max_digits=14, decimal_places=2, verbose_name=_("takst")
+    )
+
+    # Date dependency
+    start_date = models.DateField(
+        null=True, blank=True, verbose_name=_("startdato")
+    )
+    end_date = models.DateField(
+        null=True, blank=True, verbose_name=_("slutdato")
+    )
+    main_rate = models.ForeignKey(
+        VariableRate, on_delete=models.CASCADE, related_name="rates_per_date"
+    )
+
+
+class Price(VariableRate):
+    """A price on an individual payment plan."""
+
+    class Meta:
+        verbose_name = _("pris")
+
+    payment_schedule = models.OneToOneField(
+        "PaymentSchedule",
+        on_delete=models.CASCADE,
+        verbose_name=_("betalingsplan"),
+        related_name="price",
+        null=True,
+        blank=True,
+    )
+
+
+class Rate(VariableRate):
+    """A centrally fixed rate."""
+
+    class Meta:
+        verbose_name = _("takst")
+
+    name = models.CharField(max_length=128, verbose_name=_("navn"))
+    description = models.TextField(verbose_name=_("beskrivelse"), blank=True)
 
 
 class PaymentSchedule(models.Model):
