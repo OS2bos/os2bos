@@ -281,26 +281,35 @@ class VariableRate(models.Model):
 
     rate_amount = property(get_rate_amount)
 
+    @transaction.atomic
     def set_rate_amount(self, amount, start_date=None, end_date=None):
         """Set amount, merge with existing periods."""
         new_period = self.create_interval(start_date, end_date)
 
         existing_periods = self.rates_per_date.all()
         d = P.IntervalDict()
-        for p in existing_periods:
-            i = self.create_interval(p.start_date, p.end_date)
-            d[i] = p.rate
+        for period in existing_periods:
+            interval = self.create_interval(period.start_date, period.end_date)
+            d[interval] = period.rate
 
         # We generate all periods from scratch to avoid complicated
         # merging logic.
         existing_periods.delete()
 
         d[new_period] = amount
-        for p in d.keys():
-            for i in list(p):
+        for period in d.keys():
+            for interval in list(period):
                 # In case of composite intervals
-                start = i.lower if isinstance(i.lower, date) else None
-                end = i.upper if isinstance(i.upper, date) else None
+                start = (
+                    interval.lower
+                    if isinstance(interval.lower, date)
+                    else None
+                )
+                end = (
+                    interval.upper
+                    if isinstance(interval.upper, date)
+                    else None
+                )
                 rpd = RatePerDate(
                     start_date=start,
                     end_date=end,
@@ -320,14 +329,16 @@ class RatePerDate(models.Model):
     """Handle the date variation of VariableRates."""
 
     rate = models.DecimalField(
-        max_digits=14, decimal_places=2, verbose_name=_(_("takst"))
+        max_digits=14, decimal_places=2, verbose_name=_("takst")
     )
 
     # Date dependency
     start_date = models.DateField(
-        null=True, blank=True, verbose_name="startdato"
+        null=True, blank=True, verbose_name=_("startdato")
     )
-    end_date = models.DateField(null=True, blank=True, verbose_name="slutdato")
+    end_date = models.DateField(
+        null=True, blank=True, verbose_name=_("slutdato")
+    )
     main_rate = models.ForeignKey(
         VariableRate, on_delete=models.CASCADE, related_name="rates_per_date"
     )
@@ -355,7 +366,7 @@ class Rate(VariableRate):
     class Meta:
         verbose_name = _("takst")
 
-    name = models.CharField(max_length=128, verbose_name=_("Navn"))
+    name = models.CharField(max_length=128, verbose_name=_("navn"))
     description = models.TextField(verbose_name=_("beskrivelse"), blank=True)
 
 
