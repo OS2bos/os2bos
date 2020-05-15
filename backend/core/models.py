@@ -521,6 +521,39 @@ class PaymentSchedule(models.Model):
 
         return f"{department}-{account_number}-{kind}"
 
+    @property
+    def account_string_new(self):
+        """Calculate account string from activity.
+
+        TODO: eventually replace account_string with this.
+        """
+        if (
+            self.recipient_type == PaymentSchedule.PERSON
+            and self.payment_method == CASH
+        ):
+            department = config.ACCOUNT_NUMBER_DEPARTMENT
+            kind = config.ACCOUNT_NUMBER_KIND
+        else:
+            # Set department and kind to 'XXX'
+            # to signify they are not used.
+            department = "XXX"
+            kind = "XXX"
+
+        # Account string is "unknown" when there is no
+        # activity or account.
+        # The explicit inclusion of "unknown" is a demand due to the
+        # PRISME integration.
+        if (
+            not hasattr(self, "activity")
+            or not self.activity
+            or not self.activity.account_number
+        ):
+            account_number = config.ACCOUNT_NUMBER_UNKNOWN
+        else:
+            account_number = self.activity.account_number
+
+        return f"{department}-{account_number}-{kind}"
+
     def __str__(self):
         recipient_type_str = self.get_recipient_type_display()
         payment_frequency_str = self.get_payment_frequency_display()
@@ -652,6 +685,17 @@ class Payment(models.Model):
             return self.saved_account_string
 
         return self.payment_schedule.account_string
+
+    @property
+    def account_string_new(self):
+        """Return saved account string if any, else calculate from schedule.
+
+        TODO: eventually replace account_string with this.
+        """
+        if self.saved_account_string:
+            return self.saved_account_string
+
+        return self.payment_schedule.account_string_new
 
     def __str__(self):
         recipient_type_str = self.get_recipient_type_display()
@@ -1220,6 +1264,30 @@ class SectionInfo(models.Model):
         max_length=128, verbose_name=_("SBSYS skabelon-id"), blank=True
     )
 
+    main_activity_main_account_number = models.CharField(
+        max_length=128,
+        verbose_name=_("hovedkontonummer for hovedaktivitet"),
+        blank=True,
+    )
+    supplementary_activity_main_account_number = models.CharField(
+        max_length=128,
+        verbose_name=_("hovedkontonummer for følgeudgift"),
+        blank=True,
+    )
+
+    def get_main_activity_main_account_number(self):
+        """Get the main activity main account number."""
+        return self.main_activity_main_account_number
+
+    def get_supplementary_activity_main_account_number(self):
+        """Get the supplementary activity main account number.
+
+        If no such number exists, take the one for the main activity.
+        """
+        if self.supplementary_activity_main_account_number:
+            return self.supplementary_activity_main_account_number
+        return self.main_activity_main_account_number
+
     def __str__(self):
         return f"{self.activity_details} - {self.section}"
 
@@ -1427,6 +1495,37 @@ class Activity(AuditModelMixin, models.Model):
         else:
             account = None
         return account
+
+    @property
+    def account_number(self):
+        """Calculate the account_number to use with this activity.
+
+        TODO: eventually replace account.number with this.
+        """
+        if self.activity_type == MAIN_ACTIVITY:
+            section_info = SectionInfo.objects.filter(
+                activity_details=self.details,
+                section=self.appropriation.section,
+            ).first()
+            if not section_info:
+                return None
+            main_account_number = (
+                section_info.get_main_activity_main_account_number()
+            )
+        else:
+            main_activity = self.appropriation.main_activity
+            if not main_activity:
+                return None
+            section_info = SectionInfo.objects.filter(
+                activity_details=main_activity.details,
+                section=self.appropriation.section,
+            ).first()
+            if not section_info:
+                return None
+            main_account_number = (
+                section_info.get_supplementary_activity_main_account_number()
+            )
+        return f"{main_account_number}-{self.details.activity_id}"
 
     @property
     def monthly_payment_plan(self):
