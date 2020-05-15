@@ -2273,7 +2273,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             status=STATUS_GRANTED,
             activity_type=MAIN_ACTIVITY,
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_method=CASH,
             recipient_type=PaymentSchedule.PERSON,
             activity=activity,
@@ -2304,7 +2304,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             status=STATUS_GRANTED,
             activity_type=MAIN_ACTIVITY,
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_method=CASH,
             recipient_type=PaymentSchedule.PERSON,
             activity=activity,
@@ -2325,7 +2325,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             status=STATUS_GRANTED,
             activity_type=MAIN_ACTIVITY,
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_method=CASH,
             recipient_type=PaymentSchedule.PERSON,
             activity=main_activity,
@@ -2341,7 +2341,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             status=STATUS_GRANTED,
             activity_type=SUPPL_ACTIVITY,
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_method=CASH,
             recipient_type=PaymentSchedule.PERSON,
             activity=suppl_activity,
@@ -2367,7 +2367,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             status=STATUS_GRANTED,
             activity_type=MAIN_ACTIVITY,
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_method=CASH,
             recipient_type=PaymentSchedule.PERSON,
             activity=main_activity,
@@ -2378,7 +2378,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             status=STATUS_GRANTED,
             activity_type=SUPPL_ACTIVITY,
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_method=CASH,
             recipient_type=PaymentSchedule.PERSON,
             activity=suppl_activity,
@@ -2399,7 +2399,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             status=STATUS_GRANTED,
             activity_type=SUPPL_ACTIVITY,
         )
-        payment_schedule = create_payment_schedule(
+        create_payment_schedule(
             payment_method=CASH,
             recipient_type=PaymentSchedule.PERSON,
             activity=suppl_activity,
