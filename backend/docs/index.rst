@@ -44,11 +44,12 @@ A user that is not allowed to use OS2BOS, must have a SAML-token with an empty o
 
 User profiles
 """""""""""""
-There are four user profiles corresponding to four different levels of permissions.
+There are five user profiles corresponding to five different levels of permissions.
 
 - "readonly" - the user can only read, not write.
 - "edit" - the user can both read and write, but cannot perform grant operations.
 - "grant" - the user can both read, write and perform grant operations, but cannot access Django admin.
+- "workflow_engine" - the user can both read, write and perform grant operations, and can access only classifications in Django admin.
 - "admin" - the user can read, write, perform grant operations and access Django admin.
 
 .. _SimpleSamlPHP: https://simplesamlphp.org/
