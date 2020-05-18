@@ -99,7 +99,12 @@ class AppropriationAdmin(ModelAdminAuditFieldsMixin, admin.ModelAdmin):
 class ActivityAdmin(ModelAdminAuditFieldsMixin, admin.ModelAdmin):
     """ModelAdmin for Activity."""
 
-    pass
+    readonly_fields = ("account_number",)
+
+    def account_number(self, obj):
+        return obj.account_number
+
+    account_number.short_description = _("kontonummer")
 
 
 @admin.register(Payment)
@@ -207,7 +212,7 @@ class EffortAdmin(ClassificationAdmin):
 class PaymentScheduleAdmin(admin.ModelAdmin):
     """Display read only fields on payment schedule."""
 
-    readonly_fields = ("payment_id", "account_string")
+    readonly_fields = ("payment_id", "account_string", "account_string_new")
     search_fields = ("payment_id",)
     list_display = (
         "id",
@@ -233,7 +238,12 @@ class PaymentScheduleAdmin(admin.ModelAdmin):
         """Get account string."""
         return obj.account_string
 
+    def account_string_new(self, obj):
+        """ Get new account string."""
+        return obj.account_string_new
+
     account_string.short_description = _("kontostreng")
+    account_string_new.short_description = _("ny kontostreng")
 
 
 @admin.register(Account)
