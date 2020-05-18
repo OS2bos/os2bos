@@ -28,7 +28,6 @@ from core.tests.testing_utils import (
     create_payment,
     create_payment_schedule,
     create_account,
-    create_section,
     create_target_group,
     create_activity,
     create_case,

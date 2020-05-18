@@ -102,6 +102,7 @@ class ActivityAdmin(ModelAdminAuditFieldsMixin, admin.ModelAdmin):
     readonly_fields = ("account_number",)
 
     def account_number(self, obj):
+        """Get account number."""
         return obj.account_number
 
     account_number.short_description = _("kontonummer")
@@ -239,7 +240,7 @@ class PaymentScheduleAdmin(admin.ModelAdmin):
         return obj.account_string
 
     def account_string_new(self, obj):
-        """ Get new account string."""
+        """Get new account string."""
         return obj.account_string_new
 
     account_string.short_description = _("kontostreng")
