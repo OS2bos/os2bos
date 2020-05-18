@@ -46,6 +46,7 @@ from core.tests.testing_utils import (
     create_appropriation,
     create_activity,
     create_section,
+    create_section_info,
     create_account,
     create_payment_schedule,
 )
@@ -418,6 +419,11 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
             section=section,
             main_activity=main_activity_details,
             supplementary_activity=None,
+        )
+        create_section_info(
+            main_activity_details,
+            section,
+            main_activity_main_account_number="1234",
         )
         activity = create_activity(
             case,

@@ -1,1 +1,1034 @@
-[{"model": "core.sectioninfo", "pk": 299, "fields": {"activity_details": 1729, "section": 1327, "kle_number": "27.27.09", "sbsys_template_id": "1296"}}, {"model": "core.sectioninfo", "pk": 300, "fields": {"activity_details": 1758, "section": 1368, "kle_number": "27.24.00", "sbsys_template_id": "891"}}, {"model": "core.sectioninfo", "pk": 301, "fields": {"activity_details": 1730, "section": 1322, "kle_number": "27.24.03", "sbsys_template_id": "1562"}}, {"model": "core.sectioninfo", "pk": 302, "fields": {"activity_details": 1730, "section": 1320, "kle_number": "27.24.03", "sbsys_template_id": "1562"}}, {"model": "core.sectioninfo", "pk": 303, "fields": {"activity_details": 1763, "section": 1325, "kle_number": "27.27.03", "sbsys_template_id": "899"}}, {"model": "core.sectioninfo", "pk": 304, "fields": {"activity_details": 1732, "section": 1328, "kle_number": "27.27.12", "sbsys_template_id": "886"}}, {"model": "core.sectioninfo", "pk": 305, "fields": {"activity_details": 1749, "section": 1274, "kle_number": "27.12.06", "sbsys_template_id": "996"}}, {"model": "core.sectioninfo", "pk": 306, "fields": {"activity_details": 1733, "section": 1318, "kle_number": "27.06.08", "sbsys_template_id": "912"}}, {"model": "core.sectioninfo", "pk": 307, "fields": {"activity_details": 1733, "section": 1329, "kle_number": "27.27.15", "sbsys_template_id": "1566"}}, {"model": "core.sectioninfo", "pk": 308, "fields": {"activity_details": 1733, "section": 1331, "kle_number": "27.27.33", "sbsys_template_id": "878"}}, {"model": "core.sectioninfo", "pk": 309, "fields": {"activity_details": 1733, "section": 1367, "kle_number": "27.27.00", "sbsys_template_id": "1586"}}, {"model": "core.sectioninfo", "pk": 310, "fields": {"activity_details": 1733, "section": 1352, "kle_number": "27.24.27", "sbsys_template_id": "1573"}}, {"model": "core.sectioninfo", "pk": 311, "fields": {"activity_details": 1733, "section": 1365, "kle_number": "27.27.00", "sbsys_template_id": "1579"}}, {"model": "core.sectioninfo", "pk": 312, "fields": {"activity_details": 1764, "section": 1381, "kle_number": "27.36.16", "sbsys_template_id": "918"}}, {"model": "core.sectioninfo", "pk": 313, "fields": {"activity_details": 1735, "section": 1318, "kle_number": "27.06.08", "sbsys_template_id": "912"}}, {"model": "core.sectioninfo", "pk": 314, "fields": {"activity_details": 1737, "section": 1318, "kle_number": "27.06.08", "sbsys_template_id": "912"}}, {"model": "core.sectioninfo", "pk": 315, "fields": {"activity_details": 1737, "section": 1329, "kle_number": "27.27.15", "sbsys_template_id": "1564"}}, {"model": "core.sectioninfo", "pk": 316, "fields": {"activity_details": 1737, "section": 1331, "kle_number": "27.27.27", "sbsys_template_id": "1569"}}, {"model": "core.sectioninfo", "pk": 317, "fields": {"activity_details": 1737, "section": 1367, "kle_number": "27.27.00", "sbsys_template_id": "1583"}}, {"model": "core.sectioninfo", "pk": 318, "fields": {"activity_details": 1737, "section": 1352, "kle_number": "27.24.27", "sbsys_template_id": "1570"}}, {"model": "core.sectioninfo", "pk": 319, "fields": {"activity_details": 1737, "section": 1365, "kle_number": "27.27.00", "sbsys_template_id": "1576"}}, {"model": "core.sectioninfo", "pk": 320, "fields": {"activity_details": 1726, "section": 1326, "kle_number": "27.27.06", "sbsys_template_id": "900"}}, {"model": "core.sectioninfo", "pk": 321, "fields": {"activity_details": 1727, "section": 1327, "kle_number": "27.27.09", "sbsys_template_id": "894"}}, {"model": "core.sectioninfo", "pk": 322, "fields": {"activity_details": 1724, "section": 1334, "kle_number": "27.24.09", "sbsys_template_id": "1591"}}, {"model": "core.sectioninfo", "pk": 323, "fields": {"activity_details": 1724, "section": 1335, "kle_number": "27.24.09", "sbsys_template_id": "1593"}}, {"model": "core.sectioninfo", "pk": 324, "fields": {"activity_details": 1724, "section": 1331, "kle_number": "27.27.39", "sbsys_template_id": "881"}}, {"model": "core.sectioninfo", "pk": 325, "fields": {"activity_details": 1724, "section": 1367, "kle_number": "27.27.00", "sbsys_template_id": "1599"}}, {"model": "core.sectioninfo", "pk": 326, "fields": {"activity_details": 1724, "section": 1352, "kle_number": "27.24.27", "sbsys_template_id": "1572"}}, {"model": "core.sectioninfo", "pk": 327, "fields": {"activity_details": 1724, "section": 1365, "kle_number": "27.27.00", "sbsys_template_id": "1600"}}, {"model": "core.sectioninfo", "pk": 328, "fields": {"activity_details": 1728, "section": 1322, "kle_number": "27.24.03", "sbsys_template_id": "1561"}}, {"model": "core.sectioninfo", "pk": 329, "fields": {"activity_details": 1728, "section": 1320, "kle_number": "27.24.03", "sbsys_template_id": "1561"}}, {"model": "core.sectioninfo", "pk": 330, "fields": {"activity_details": 1738, "section": 1366, "kle_number": "27.24.00", "sbsys_template_id": "889"}}, {"model": "core.sectioninfo", "pk": 331, "fields": {"activity_details": 1738, "section": 1330, "kle_number": "27.27.24", "sbsys_template_id": "895"}}, {"model": "core.sectioninfo", "pk": 332, "fields": {"activity_details": 1738, "section": 1370, "kle_number": "27.27.00", "sbsys_template_id": "1589"}}, {"model": "core.sectioninfo", "pk": 333, "fields": {"activity_details": 1739, "section": 1330, "kle_number": "27.27.21", "sbsys_template_id": "893"}}, {"model": "core.sectioninfo", "pk": 334, "fields": {"activity_details": 1740, "section": 1339, "kle_number": "27.24.18", "sbsys_template_id": "1642"}}, {"model": "core.sectioninfo", "pk": 335, "fields": {"activity_details": 1741, "section": 1363, "kle_number": "27.24.00", "sbsys_template_id": "887"}}, {"model": "core.sectioninfo", "pk": 336, "fields": {"activity_details": 1743, "section": 1321, "kle_number": "27.24.03", "sbsys_template_id": "1560"}}, {"model": "core.sectioninfo", "pk": 337, "fields": {"activity_details": 1745, "section": 1273, "kle_number": "27.12.06", "sbsys_template_id": "997"}}, {"model": "core.sectioninfo", "pk": 338, "fields": {"activity_details": 1746, "section": 1281, "kle_number": "27.12.06", "sbsys_template_id": "998"}}, {"model": "core.sectioninfo", "pk": 339, "fields": {"activity_details": 1748, "section": 1279, "kle_number": "27.12.06", "sbsys_template_id": "997"}}, {"model": "core.sectioninfo", "pk": 340, "fields": {"activity_details": 1752, "section": 1264, "kle_number": "27.57.12", "sbsys_template_id": "922"}}, {"model": "core.sectioninfo", "pk": 341, "fields": {"activity_details": 1731, "section": 1373, "kle_number": "27.24.00", "sbsys_template_id": "892"}}, {"model": "core.sectioninfo", "pk": 342, "fields": {"activity_details": 1731, "section": 1318, "kle_number": "27.06.08", "sbsys_template_id": "912"}}, {"model": "core.sectioninfo", "pk": 343, "fields": {"activity_details": 1731, "section": 1329, "kle_number": "27.27.15", "sbsys_template_id": "1567"}}, {"model": "core.sectioninfo", "pk": 344, "fields": {"activity_details": 1731, "section": 1331, "kle_number": "27.27.30", "sbsys_template_id": "879"}}, {"model": "core.sectioninfo", "pk": 345, "fields": {"activity_details": 1731, "section": 1328, "kle_number": "27.27.12", "sbsys_template_id": "1563"}}, {"model": "core.sectioninfo", "pk": 346, "fields": {"activity_details": 1731, "section": 1367, "kle_number": "27.27.00", "sbsys_template_id": "1587"}}, {"model": "core.sectioninfo", "pk": 347, "fields": {"activity_details": 1731, "section": 1352, "kle_number": "27.24.27", "sbsys_template_id": "1574"}}, {"model": "core.sectioninfo", "pk": 348, "fields": {"activity_details": 1731, "section": 1365, "kle_number": "27.27.00", "sbsys_template_id": "1580"}}, {"model": "core.sectioninfo", "pk": 349, "fields": {"activity_details": 1744, "section": 1286, "kle_number": "27.12.08", "sbsys_template_id": "1556"}}, {"model": "core.sectioninfo", "pk": 350, "fields": {"activity_details": 1744, "section": 1264, "kle_number": "27.57.12", "sbsys_template_id": "1552"}}, {"model": "core.sectioninfo", "pk": 351, "fields": {"activity_details": 1753, "section": 1315, "kle_number": "32.18.04", "sbsys_template_id": "914"}}, {"model": "core.sectioninfo", "pk": 352, "fields": {"activity_details": 1754, "section": 1316, "kle_number": "32.18.12", "sbsys_template_id": "916"}}, {"model": "core.sectioninfo", "pk": 353, "fields": {"activity_details": 1755, "section": 1308, "kle_number": "27.18.02", "sbsys_template_id": "920"}}, {"model": "core.sectioninfo", "pk": 354, "fields": {"activity_details": 1756, "section": 1332, "kle_number": "27.27.51", "sbsys_template_id": "896"}}, {"model": "core.sectioninfo", "pk": 355, "fields": {"activity_details": 1757, "section": 1333, "kle_number": "27.27.54", "sbsys_template_id": "884"}}, {"model": "core.sectioninfo", "pk": 356, "fields": {"activity_details": 1760, "section": 1335, "kle_number": "27.24.09", "sbsys_template_id": "1592"}}, {"model": "core.sectioninfo", "pk": 357, "fields": {"activity_details": 1747, "section": 1283, "kle_number": "27.12.06", "sbsys_template_id": "999"}}, {"model": "core.sectioninfo", "pk": 358, "fields": {"activity_details": 1759, "section": 1336, "kle_number": "27.24.09", "sbsys_template_id": "1594"}}, {"model": "core.sectioninfo", "pk": 359, "fields": {"activity_details": 1759, "section": 1337, "kle_number": "27.24.15", "sbsys_template_id": "903"}}, {"model": "core.sectioninfo", "pk": 360, "fields": {"activity_details": 1759, "section": 1334, "kle_number": "27.24.09", "sbsys_template_id": "1590"}}, {"model": "core.sectioninfo", "pk": 361, "fields": {"activity_details": 1723, "section": 1367, "kle_number": "27.27.00", "sbsys_template_id": "1588"}}, {"model": "core.sectioninfo", "pk": 362, "fields": {"activity_details": 1723, "section": 1365, "kle_number": "27.27.00", "sbsys_template_id": "1581"}}, {"model": "core.sectioninfo", "pk": 363, "fields": {"activity_details": 1723, "section": 1331, "kle_number": "27.27.42", "sbsys_template_id": "882"}}, {"model": "core.sectioninfo", "pk": 364, "fields": {"activity_details": 1723, "section": 1352, "kle_number": "27.24.27", "sbsys_template_id": "1575"}}, {"model": "core.sectioninfo", "pk": 365, "fields": {"activity_details": 1736, "section": 1318, "kle_number": "27.06.08", "sbsys_template_id": "912"}}, {"model": "core.sectioninfo", "pk": 366, "fields": {"activity_details": 1736, "section": 1329, "kle_number": "27.27.15", "sbsys_template_id": "1595"}}, {"model": "core.sectioninfo", "pk": 367, "fields": {"activity_details": 1736, "section": 1331, "kle_number": "27.27.45", "sbsys_template_id": "1568"}}, {"model": "core.sectioninfo", "pk": 368, "fields": {"activity_details": 1736, "section": 1367, "kle_number": "27.27.00", "sbsys_template_id": "1582"}}, {"model": "core.sectioninfo", "pk": 369, "fields": {"activity_details": 1736, "section": 1365, "kle_number": "27.27.00", "sbsys_template_id": "1601"}}, {"model": "core.sectioninfo", "pk": 370, "fields": {"activity_details": 1751, "section": 1331, "kle_number": "27.27.27", "sbsys_template_id": "1569"}}, {"model": "core.sectioninfo", "pk": 371, "fields": {"activity_details": 1751, "section": 1352, "kle_number": "27.27.48", "sbsys_template_id": "870"}}, {"model": "core.sectioninfo", "pk": 372, "fields": {"activity_details": 1750, "section": 1319, "kle_number": "27.21.08", "sbsys_template_id": "911"}}, {"model": "core.sectioninfo", "pk": 373, "fields": {"activity_details": 1804, "section": 1319, "kle_number": "27.21.08", "sbsys_template_id": "911"}}, {"model": "core.sectioninfo", "pk": 374, "fields": {"activity_details": 1798, "section": 1317, "kle_number": "30.18.12", "sbsys_template_id": "974"}}, {"model": "core.sectioninfo", "pk": 375, "fields": {"activity_details": 1799, "section": 1314, "kle_number": "27.18.24", "sbsys_template_id": "921"}}, {"model": "core.sectioninfo", "pk": 376, "fields": {"activity_details": 1725, "section": 1367, "kle_number": "27.27.00", "sbsys_template_id": "1584"}}, {"model": "core.sectioninfo", "pk": 377, "fields": {"activity_details": 1725, "section": 1365, "kle_number": "27.27.00", "sbsys_template_id": "1577"}}, {"model": "core.sectioninfo", "pk": 378, "fields": {"activity_details": 1725, "section": 1331, "kle_number": "27.27.45", "sbsys_template_id": "880"}}, {"model": "core.sectioninfo", "pk": 379, "fields": {"activity_details": 1734, "section": 1318, "kle_number": "27.06.08", "sbsys_template_id": "912"}}, {"model": "core.sectioninfo", "pk": 380, "fields": {"activity_details": 1734, "section": 1329, "kle_number": "27.27.15", "sbsys_template_id": "1565"}}, {"model": "core.sectioninfo", "pk": 381, "fields": {"activity_details": 1734, "section": 1331, "kle_number": "27.27.32", "sbsys_template_id": "877"}}, {"model": "core.sectioninfo", "pk": 382, "fields": {"activity_details": 1734, "section": 1367, "kle_number": "27.27.00", "sbsys_template_id": "1585"}}, {"model": "core.sectioninfo", "pk": 383, "fields": {"activity_details": 1734, "section": 1352, "kle_number": "27.24.27", "sbsys_template_id": "1571"}}, {"model": "core.sectioninfo", "pk": 384, "fields": {"activity_details": 1734, "section": 1365, "kle_number": "27.27.00", "sbsys_template_id": "1578"}}]
+[
+    {
+        "model": "core.sectioninfo",
+        "pk": 299,
+        "fields": {
+            "activity_details": 1729,
+            "section": 1327,
+            "kle_number": "27.27.09",
+            "sbsys_template_id": "1296",
+            "main_activity_main_account_number": "528211003",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 300,
+        "fields": {
+            "activity_details": 1758,
+            "section": 1368,
+            "kle_number": "27.24.00",
+            "sbsys_template_id": "891",
+            "main_activity_main_account_number": "582211010",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 301,
+        "fields": {
+            "activity_details": 1730,
+            "section": 1322,
+            "kle_number": "27.24.03",
+            "sbsys_template_id": "1562",
+            "main_activity_main_account_number": "528211003",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 302,
+        "fields": {
+            "activity_details": 1730,
+            "section": 1320,
+            "kle_number": "27.24.03",
+            "sbsys_template_id": "1562",
+            "main_activity_main_account_number": "528211003",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 303,
+        "fields": {
+            "activity_details": 1763,
+            "section": 1325,
+            "kle_number": "27.27.03",
+            "sbsys_template_id": "899",
+            "main_activity_main_account_number": "PPR betaler ",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 304,
+        "fields": {
+            "activity_details": 1732,
+            "section": 1328,
+            "kle_number": "27.27.12",
+            "sbsys_template_id": "886",
+            "main_activity_main_account_number": "528211004",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 305,
+        "fields": {
+            "activity_details": 1749,
+            "section": 1274,
+            "kle_number": "27.12.06",
+            "sbsys_template_id": "996",
+            "main_activity_main_account_number": "528211017",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 306,
+        "fields": {
+            "activity_details": 1733,
+            "section": 1318,
+            "kle_number": "27.06.08",
+            "sbsys_template_id": "912",
+            "main_activity_main_account_number": "528211006",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 307,
+        "fields": {
+            "activity_details": 1733,
+            "section": 1329,
+            "kle_number": "27.27.15",
+            "sbsys_template_id": "1566",
+            "main_activity_main_account_number": "528211005",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 308,
+        "fields": {
+            "activity_details": 1733,
+            "section": 1331,
+            "kle_number": "27.27.33",
+            "sbsys_template_id": "878",
+            "main_activity_main_account_number": "528221005",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 309,
+        "fields": {
+            "activity_details": 1733,
+            "section": 1367,
+            "kle_number": "27.27.00",
+            "sbsys_template_id": "1586",
+            "main_activity_main_account_number": "528221005",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 310,
+        "fields": {
+            "activity_details": 1733,
+            "section": 1352,
+            "kle_number": "27.24.27",
+            "sbsys_template_id": "1573",
+            "main_activity_main_account_number": "528221005",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 311,
+        "fields": {
+            "activity_details": 1733,
+            "section": 1365,
+            "kle_number": "27.27.00",
+            "sbsys_template_id": "1579",
+            "main_activity_main_account_number": "528221005",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 312,
+        "fields": {
+            "activity_details": 1764,
+            "section": 1381,
+            "kle_number": "27.36.16",
+            "sbsys_template_id": "918",
+            "main_activity_main_account_number": "snak med Camilla",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 313,
+        "fields": {
+            "activity_details": 1735,
+            "section": 1318,
+            "kle_number": "27.06.08",
+            "sbsys_template_id": "912",
+            "main_activity_main_account_number": "528211005",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 314,
+        "fields": {
+            "activity_details": 1737,
+            "section": 1318,
+            "kle_number": "27.06.08",
+            "sbsys_template_id": "912",
+            "main_activity_main_account_number": "528211005",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 315,
+        "fields": {
+            "activity_details": 1737,
+            "section": 1329,
+            "kle_number": "27.27.15",
+            "sbsys_template_id": "1564",
+            "main_activity_main_account_number": "528211005",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 316,
+        "fields": {
+            "activity_details": 1737,
+            "section": 1331,
+            "kle_number": "27.27.27",
+            "sbsys_template_id": "1569",
+            "main_activity_main_account_number": "",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 317,
+        "fields": {
+            "activity_details": 1737,
+            "section": 1367,
+            "kle_number": "27.27.00",
+            "sbsys_template_id": "1583",
+            "main_activity_main_account_number": "",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 318,
+        "fields": {
+            "activity_details": 1737,
+            "section": 1352,
+            "kle_number": "27.24.27",
+            "sbsys_template_id": "1570",
+            "main_activity_main_account_number": "528231002",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 319,
+        "fields": {
+            "activity_details": 1737,
+            "section": 1365,
+            "kle_number": "27.27.00",
+            "sbsys_template_id": "1576",
+            "main_activity_main_account_number": "528231002",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 320,
+        "fields": {
+            "activity_details": 1726,
+            "section": 1326,
+            "kle_number": "27.27.06",
+            "sbsys_template_id": "900",
+            "main_activity_main_account_number": "528211002",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 321,
+        "fields": {
+            "activity_details": 1727,
+            "section": 1327,
+            "kle_number": "27.27.09",
+            "sbsys_template_id": "894",
+            "main_activity_main_account_number": "528211003",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 322,
+        "fields": {
+            "activity_details": 1724,
+            "section": 1334,
+            "kle_number": "27.24.09",
+            "sbsys_template_id": "1591",
+            "main_activity_main_account_number": "582211011",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 323,
+        "fields": {
+            "activity_details": 1724,
+            "section": 1335,
+            "kle_number": "27.24.09",
+            "sbsys_template_id": "1593",
+            "main_activity_main_account_number": "582211011",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 324,
+        "fields": {
+            "activity_details": 1724,
+            "section": 1331,
+            "kle_number": "27.27.39",
+            "sbsys_template_id": "881",
+            "main_activity_main_account_number": "528201004",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 325,
+        "fields": {
+            "activity_details": 1724,
+            "section": 1367,
+            "kle_number": "27.27.00",
+            "sbsys_template_id": "1599",
+            "main_activity_main_account_number": "528201004",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 326,
+        "fields": {
+            "activity_details": 1724,
+            "section": 1352,
+            "kle_number": "27.24.27",
+            "sbsys_template_id": "1572",
+            "main_activity_main_account_number": "528201004",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 327,
+        "fields": {
+            "activity_details": 1724,
+            "section": 1365,
+            "kle_number": "27.27.00",
+            "sbsys_template_id": "1600",
+            "main_activity_main_account_number": "528201004",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 328,
+        "fields": {
+            "activity_details": 1728,
+            "section": 1322,
+            "kle_number": "27.24.03",
+            "sbsys_template_id": "1561",
+            "main_activity_main_account_number": "528211003",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 329,
+        "fields": {
+            "activity_details": 1728,
+            "section": 1320,
+            "kle_number": "27.24.03",
+            "sbsys_template_id": "1561",
+            "main_activity_main_account_number": "528211003",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 330,
+        "fields": {
+            "activity_details": 1738,
+            "section": 1366,
+            "kle_number": "27.24.00",
+            "sbsys_template_id": "889",
+            "main_activity_main_account_number": "528211007",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 331,
+        "fields": {
+            "activity_details": 1738,
+            "section": 1330,
+            "kle_number": "27.27.24",
+            "sbsys_template_id": "895",
+            "main_activity_main_account_number": "528211007",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 332,
+        "fields": {
+            "activity_details": 1738,
+            "section": 1370,
+            "kle_number": "27.27.00",
+            "sbsys_template_id": "1589",
+            "main_activity_main_account_number": "528211007",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 333,
+        "fields": {
+            "activity_details": 1739,
+            "section": 1330,
+            "kle_number": "27.27.21",
+            "sbsys_template_id": "893",
+            "main_activity_main_account_number": "528211007",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 334,
+        "fields": {
+            "activity_details": 1740,
+            "section": 1339,
+            "kle_number": "27.24.18",
+            "sbsys_template_id": "1642",
+            "main_activity_main_account_number": "528211007",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 335,
+        "fields": {
+            "activity_details": 1741,
+            "section": 1363,
+            "kle_number": "27.24.00",
+            "sbsys_template_id": "887",
+            "main_activity_main_account_number": "528211007",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 336,
+        "fields": {
+            "activity_details": 1743,
+            "section": 1321,
+            "kle_number": "27.24.03",
+            "sbsys_template_id": "1560",
+            "main_activity_main_account_number": "528211014",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 337,
+        "fields": {
+            "activity_details": 1745,
+            "section": 1273,
+            "kle_number": "27.12.06",
+            "sbsys_template_id": "997",
+            "main_activity_main_account_number": "528211017",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 338,
+        "fields": {
+            "activity_details": 1746,
+            "section": 1281,
+            "kle_number": "27.12.06",
+            "sbsys_template_id": "998",
+            "main_activity_main_account_number": "528211017",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 339,
+        "fields": {
+            "activity_details": 1748,
+            "section": 1279,
+            "kle_number": "27.12.06",
+            "sbsys_template_id": "997",
+            "main_activity_main_account_number": "528211017",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 340,
+        "fields": {
+            "activity_details": 1752,
+            "section": 1264,
+            "kle_number": "27.57.12",
+            "sbsys_template_id": "922",
+            "main_activity_main_account_number": "538421002",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 341,
+        "fields": {
+            "activity_details": 1731,
+            "section": 1373,
+            "kle_number": "27.24.00",
+            "sbsys_template_id": "892",
+            "main_activity_main_account_number": "528221004",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 342,
+        "fields": {
+            "activity_details": 1731,
+            "section": 1318,
+            "kle_number": "27.06.08",
+            "sbsys_template_id": "912",
+            "main_activity_main_account_number": "528211006",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 343,
+        "fields": {
+            "activity_details": 1731,
+            "section": 1329,
+            "kle_number": "27.27.15",
+            "sbsys_template_id": "1567",
+            "main_activity_main_account_number": "528211005",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 344,
+        "fields": {
+            "activity_details": 1731,
+            "section": 1331,
+            "kle_number": "27.27.30",
+            "sbsys_template_id": "879",
+            "main_activity_main_account_number": "528221002",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 345,
+        "fields": {
+            "activity_details": 1731,
+            "section": 1328,
+            "kle_number": "27.27.12",
+            "sbsys_template_id": "1563",
+            "main_activity_main_account_number": "528211004",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 346,
+        "fields": {
+            "activity_details": 1731,
+            "section": 1367,
+            "kle_number": "27.27.00",
+            "sbsys_template_id": "1587",
+            "main_activity_main_account_number": "528221002",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 347,
+        "fields": {
+            "activity_details": 1731,
+            "section": 1352,
+            "kle_number": "27.24.27",
+            "sbsys_template_id": "1574",
+            "main_activity_main_account_number": "528221002",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 348,
+        "fields": {
+            "activity_details": 1731,
+            "section": 1365,
+            "kle_number": "27.27.00",
+            "sbsys_template_id": "1580",
+            "main_activity_main_account_number": "528221002",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 349,
+        "fields": {
+            "activity_details": 1744,
+            "section": 1286,
+            "kle_number": "27.12.08",
+            "sbsys_template_id": "1556",
+            "main_activity_main_account_number": "528211016",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 350,
+        "fields": {
+            "activity_details": 1744,
+            "section": 1264,
+            "kle_number": "27.57.12",
+            "sbsys_template_id": "1552",
+            "main_activity_main_account_number": "538421002",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 351,
+        "fields": {
+            "activity_details": 1753,
+            "section": 1315,
+            "kle_number": "32.18.04",
+            "sbsys_template_id": "914",
+            "main_activity_main_account_number": "557721009",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 352,
+        "fields": {
+            "activity_details": 1754,
+            "section": 1316,
+            "kle_number": "32.18.12",
+            "sbsys_template_id": "916",
+            "main_activity_main_account_number": "557721015",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 353,
+        "fields": {
+            "activity_details": 1755,
+            "section": 1308,
+            "kle_number": "27.18.02",
+            "sbsys_template_id": "920",
+            "main_activity_main_account_number": "557721016",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 354,
+        "fields": {
+            "activity_details": 1756,
+            "section": 1332,
+            "kle_number": "27.27.51",
+            "sbsys_template_id": "896",
+            "main_activity_main_account_number": "582211009",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 355,
+        "fields": {
+            "activity_details": 1757,
+            "section": 1333,
+            "kle_number": "27.27.54",
+            "sbsys_template_id": "884",
+            "main_activity_main_account_number": "582211010",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 356,
+        "fields": {
+            "activity_details": 1760,
+            "section": 1335,
+            "kle_number": "27.24.09",
+            "sbsys_template_id": "1592",
+            "main_activity_main_account_number": "582211011",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 357,
+        "fields": {
+            "activity_details": 1747,
+            "section": 1283,
+            "kle_number": "27.12.06",
+            "sbsys_template_id": "999",
+            "main_activity_main_account_number": "528211017",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 358,
+        "fields": {
+            "activity_details": 1759,
+            "section": 1336,
+            "kle_number": "27.24.09",
+            "sbsys_template_id": "1594",
+            "main_activity_main_account_number": "582211011",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 359,
+        "fields": {
+            "activity_details": 1759,
+            "section": 1337,
+            "kle_number": "27.24.15",
+            "sbsys_template_id": "903",
+            "main_activity_main_account_number": "582211013",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 360,
+        "fields": {
+            "activity_details": 1759,
+            "section": 1334,
+            "kle_number": "27.24.09",
+            "sbsys_template_id": "1590",
+            "main_activity_main_account_number": "582211011",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 361,
+        "fields": {
+            "activity_details": 1723,
+            "section": 1367,
+            "kle_number": "27.27.00",
+            "sbsys_template_id": "1588",
+            "main_activity_main_account_number": "528201003",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 362,
+        "fields": {
+            "activity_details": 1723,
+            "section": 1365,
+            "kle_number": "27.27.00",
+            "sbsys_template_id": "1581",
+            "main_activity_main_account_number": "528201003",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 363,
+        "fields": {
+            "activity_details": 1723,
+            "section": 1331,
+            "kle_number": "27.27.42",
+            "sbsys_template_id": "882",
+            "main_activity_main_account_number": "528201003",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 364,
+        "fields": {
+            "activity_details": 1723,
+            "section": 1352,
+            "kle_number": "27.24.27",
+            "sbsys_template_id": "1575",
+            "main_activity_main_account_number": "",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 365,
+        "fields": {
+            "activity_details": 1736,
+            "section": 1318,
+            "kle_number": "27.06.08",
+            "sbsys_template_id": "912",
+            "main_activity_main_account_number": "528211005",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 366,
+        "fields": {
+            "activity_details": 1736,
+            "section": 1329,
+            "kle_number": "27.27.15",
+            "sbsys_template_id": "1595",
+            "main_activity_main_account_number": "528211005",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 367,
+        "fields": {
+            "activity_details": 1736,
+            "section": 1331,
+            "kle_number": "27.27.45",
+            "sbsys_template_id": "1568",
+            "main_activity_main_account_number": "",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 368,
+        "fields": {
+            "activity_details": 1736,
+            "section": 1367,
+            "kle_number": "27.27.00",
+            "sbsys_template_id": "1582",
+            "main_activity_main_account_number": "",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 369,
+        "fields": {
+            "activity_details": 1736,
+            "section": 1365,
+            "kle_number": "27.27.00",
+            "sbsys_template_id": "1601",
+            "main_activity_main_account_number": "",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 370,
+        "fields": {
+            "activity_details": 1751,
+            "section": 1331,
+            "kle_number": "27.27.27",
+            "sbsys_template_id": "1569",
+            "main_activity_main_account_number": "528241999",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 371,
+        "fields": {
+            "activity_details": 1751,
+            "section": 1352,
+            "kle_number": "27.27.48",
+            "sbsys_template_id": "870",
+            "main_activity_main_account_number": "",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 372,
+        "fields": {
+            "activity_details": 1750,
+            "section": 1319,
+            "kle_number": "27.21.08",
+            "sbsys_template_id": "911",
+            "main_activity_main_account_number": "528211019",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 373,
+        "fields": {
+            "activity_details": 1804,
+            "section": 1319,
+            "kle_number": "27.21.08",
+            "sbsys_template_id": "911",
+            "main_activity_main_account_number": "",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 374,
+        "fields": {
+            "activity_details": 1798,
+            "section": 1317,
+            "kle_number": "30.18.12",
+            "sbsys_template_id": "974",
+            "main_activity_main_account_number": "",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 375,
+        "fields": {
+            "activity_details": 1799,
+            "section": 1314,
+            "kle_number": "27.18.24",
+            "sbsys_template_id": "921",
+            "main_activity_main_account_number": "",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 376,
+        "fields": {
+            "activity_details": 1725,
+            "section": 1367,
+            "kle_number": "27.27.00",
+            "sbsys_template_id": "1584",
+            "main_activity_main_account_number": "",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 377,
+        "fields": {
+            "activity_details": 1725,
+            "section": 1365,
+            "kle_number": "27.27.00",
+            "sbsys_template_id": "1577",
+            "main_activity_main_account_number": "528201005",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 378,
+        "fields": {
+            "activity_details": 1725,
+            "section": 1331,
+            "kle_number": "27.27.45",
+            "sbsys_template_id": "880",
+            "main_activity_main_account_number": "528201005",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 379,
+        "fields": {
+            "activity_details": 1734,
+            "section": 1318,
+            "kle_number": "27.06.08",
+            "sbsys_template_id": "912",
+            "main_activity_main_account_number": "528211006",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 380,
+        "fields": {
+            "activity_details": 1734,
+            "section": 1329,
+            "kle_number": "27.27.15",
+            "sbsys_template_id": "1565",
+            "main_activity_main_account_number": "528211005",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 381,
+        "fields": {
+            "activity_details": 1734,
+            "section": 1331,
+            "kle_number": "27.27.32",
+            "sbsys_template_id": "877",
+            "main_activity_main_account_number": "528221004",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 382,
+        "fields": {
+            "activity_details": 1734,
+            "section": 1367,
+            "kle_number": "27.27.00",
+            "sbsys_template_id": "1585",
+            "main_activity_main_account_number": "",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 383,
+        "fields": {
+            "activity_details": 1734,
+            "section": 1352,
+            "kle_number": "27.24.27",
+            "sbsys_template_id": "1571",
+            "main_activity_main_account_number": "528221004",
+            "supplementary_activity_main_account_number": ""
+        }
+    },
+    {
+        "model": "core.sectioninfo",
+        "pk": 384,
+        "fields": {
+            "activity_details": 1734,
+            "section": 1365,
+            "kle_number": "27.27.00",
+            "sbsys_template_id": "1578",
+            "main_activity_main_account_number": "528221004",
+            "supplementary_activity_main_account_number": ""
+        }
+    }
+]

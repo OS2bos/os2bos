@@ -106,7 +106,7 @@ class ActivityAdmin(ModelAdminAuditFieldsMixin, admin.ModelAdmin):
 class PaymentAdmin(admin.ModelAdmin):
     """Dislay read only fields on payment."""
 
-    readonly_fields = ("payment_id", "account_string")
+    readonly_fields = ("payment_id", "account_string", "account_string_new")
     search_fields = ("payment_schedule__payment_id",)
 
     list_display = (
@@ -144,8 +144,13 @@ class PaymentAdmin(admin.ModelAdmin):
         """Get account string."""
         return obj.account_string
 
+    def account_string_new(self, obj):
+        """Get new account string."""
+        return obj.account_string_new
+
     payment_id.short_description = _("betalings-ID")
     account_string.short_description = _("kontostreng")
+    account_string_new.short_description = _("ny kontostreng")
     payment_schedule_str.short_description = _("betalingsplan")
 
 

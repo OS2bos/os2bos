@@ -298,7 +298,9 @@ def saml_create_user(user_data):  # noqa: D401
 # TODO: At some point, factor out customer specific third party integrations.
 
 
-def format_prism_financial_record(payment, line_no, record_no):
+def format_prism_financial_record(
+    payment, line_no, record_no, new_account_string=False
+):
     """Format a single financial record for PRISM, on a single line.
 
     This follows documentation provided by Ballerup Kommune based on
@@ -353,13 +355,18 @@ def format_prism_financial_record(payment, line_no, record_no):
 
     153 - posting text.
     """
+    # TODO: remove this branch when account_string_new is ready.
+    if new_account_string:
+        account_string = payment.account_string_new
+    else:
+        account_string = payment.account_string
 
     case_cpr = payment.payment_schedule.activity.appropriation.case.cpr_number
     fields = {
         "103": f"{config.PRISM_MACHINE_NO:05d}",
         "104": f"{record_no:07d}",
         "110": f"{payment.date.strftime('%Y%m%d')}",
-        "111": f"{payment.account_string}",
+        "111": f"{account_string}",
         "112": f"{int(payment.amount*100):012d} ",
         "113": "D",
         "114": f"{payment.date.year}",
@@ -458,11 +465,16 @@ def due_payments_for_prism(date):
     )
 
 
-def generate_records_for_prism(due_payments):
+def generate_records_for_prism(due_payments, new_account_string=False):
     """Generate the list of records for writing to PRISM file."""
     prism_records = (
         (
-            format_prism_financial_record(p, line_no=2 * i - 1, record_no=i),
+            format_prism_financial_record(
+                p,
+                line_no=2 * i - 1,
+                record_no=i,
+                new_account_string=new_account_string,
+            ),
             format_prism_payment_record(p, line_no=2 * i, record_no=i),
         )
         for i, p in enumerate(due_payments, 1)
@@ -473,23 +485,21 @@ def generate_records_for_prism(due_payments):
     return prism_records
 
 
-@transaction.atomic
-def export_prism_payments_for_date(date=None):
-    """Process payments and output a file for PRISME."""
+def write_prism_file(date, payments, tomorrow, new_account_string=False):
+    """Write the actual PRISM file."""
+    if new_account_string:
+        filename_str = "_new"
+    else:
+        filename_str = ""
     # The output directory is not configurable - this is mapped through Docker.
     output_dir = settings.PRISM_OUTPUT_DIR
-    # Date = tomorrow if not given. We need "tomorrow" to set payment date.
-    tomorrow = datetime.datetime.now() + relativedelta(days=1)
-    if not date:
-        date = tomorrow
 
     # The microseconds are included to avoid accidentally overwriting
     # tomorrow's file.
-    filename = f"{output_dir}/{date.strftime('%Y%m%d')}_{tomorrow.microsecond}"
-    payments = due_payments_for_prism(date)
-    if not payments.exists():
-        # No payments
-        return
+    filename = (
+        f"{output_dir}/{date.strftime('%Y%m%d')}_{tomorrow.microsecond}"
+        + filename_str
+    )
     with open(filename, "w") as f:
         # Generate and write preamble.
 
@@ -513,13 +523,35 @@ def export_prism_payments_for_date(date=None):
         )
         f.write(f"{preamble_string}\n")
         # Generate and write the records.
-        prism_records = generate_records_for_prism(payments)
+        prism_records = generate_records_for_prism(
+            payments, new_account_string
+        )
         f.write("\n".join(prism_records))
 
         # Generate and write the final line.
         cslutd = "SLUTD"  # Don't ask.
         fantrec = f"{len(prism_records):05d}"
         f.write(f"\n{cslutd}{fantrec}\n")
+    return filename
+
+
+@transaction.atomic
+def export_prism_payments_for_date(date=None):
+    """Process payments and output a file for PRISME."""
+    # Date = tomorrow if not given. We need "tomorrow" to set payment date.
+    tomorrow = datetime.datetime.now() + relativedelta(days=1)
+    if not date:
+        date = tomorrow
+
+    payments = due_payments_for_prism(date)
+    if not payments.exists():
+        # No payments
+        return
+
+    filename = write_prism_file(date, payments, tomorrow)
+    # TODO: the "new_account_string" prism file should be the future default.
+    write_prism_file(date, payments, tomorrow, new_account_string=True)
+
     # Register all payments as paid.
     for p in payments:
         p.paid = True
@@ -621,7 +653,9 @@ def generate_payments_report_list(payments):
             "paid_amount": payment.paid_amount,
             "date": payment.date,
             "paid_date": payment.paid_date,
+            # TODO: remove this field when account_string_new is ready.
             "account_string": payment.account_string,
+            "account_string_new": payment.account_string_new,
             # payment_schedule specific.
             "payment_schedule__payment_id": payment_schedule.payment_id,
             "payment_schedule__"
