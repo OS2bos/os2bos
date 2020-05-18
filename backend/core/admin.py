@@ -37,6 +37,8 @@ from core.models import (
     EffortStep,
     TargetGroup,
     Effort,
+    RatePerDate,
+    VariableRate,
     Rate,
     SectionEffortStepProxy,
     ActivityDetailsSectionProxy,
@@ -46,7 +48,6 @@ for klass in (
     PaymentMethodDetails,
     Team,
     SectionInfo,
-    Rate,
 ):
     admin.site.register(klass, admin.ModelAdmin)
 
@@ -132,6 +133,26 @@ class ActivityAdmin(ModelAdminAuditFieldsMixin, admin.ModelAdmin):
         return obj.account_number
 
     account_number.short_description = _("kontonummer")
+
+
+class RatePerDateInline(admin.TabularInline):
+    model = RatePerDate
+
+
+@admin.register(VariableRate)
+class VariableRateAdmin(ClassificationAdmin):
+    """ModelAdmin for VariableRate subclasses."""
+
+    inlines = [
+        RatePerDateInline,
+    ]
+
+
+@admin.register(Rate)
+class RateAdmin(VariableRateAdmin):
+    """ModelAdmin for Rate."""
+
+    pass
 
 
 @admin.register(Payment)

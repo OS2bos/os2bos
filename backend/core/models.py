@@ -382,6 +382,7 @@ class Rate(VariableRate):
 
     class Meta:
         verbose_name = _("takst")
+        verbose_name_plural = _("takster")
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     description = models.TextField(verbose_name=_("beskrivelse"), blank=True)
