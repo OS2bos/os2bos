@@ -482,6 +482,7 @@ def generate_records_for_prism(due_payments, new_account_string=False):
 
 
 def write_prism_file(date, payments, tomorrow, new_account_string=False):
+    """Write the actual PRISM file."""
     if new_account_string:
         filename_str = "_new"
     else:
@@ -544,9 +545,8 @@ def export_prism_payments_for_date(date=None):
         return
 
     filename = write_prism_file(date, payments, tomorrow)
-    filename_new = write_prism_file(
-        date, payments, tomorrow, new_account_string=True
-    )
+    # TODO: the "new_account_string" prism file should be the future default.
+    write_prism_file(date, payments, tomorrow, new_account_string=True)
 
     # Register all payments as paid.
     for p in payments:
