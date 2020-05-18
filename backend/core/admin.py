@@ -6,6 +6,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """Customize django-admin interface."""
 
+import datetime
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
@@ -138,8 +139,23 @@ class ActivityAdmin(ModelAdminAuditFieldsMixin, admin.ModelAdmin):
 class RatePerDateInline(admin.TabularInline):
     model = RatePerDate
 
+    readonly_fields = ["rate", "start_date", "end_date"]
 
-@admin.register(VariableRate)
+
+class VariableRateAdminForm(forms.ModelForm):
+    """Form for handling the specifics of date dependency."""
+
+    class Meta:
+        model = VariableRate
+        fields = []
+
+    rate = forms.DecimalField(label=_("rate"))
+    start_date = forms.DateField(
+        label=_("start date"), initial=datetime.date.today(), required=False
+    )
+    end_date = forms.DateField(label=_("end date"), required=False)
+
+
 class VariableRateAdmin(ClassificationAdmin):
     """ModelAdmin for VariableRate subclasses."""
 
@@ -147,12 +163,22 @@ class VariableRateAdmin(ClassificationAdmin):
         RatePerDateInline,
     ]
 
+    def get_form(self, request, obj=None, **kwargs):
+
+        kwargs["form"] = VariableRateAdminForm
+        return super().get_form(request, obj, **kwargs)
+
+    def save_model(self, request, obj, form, change):
+        if form.rate or form.start_date or form.end_date:
+            obj.set_rate_amount(form.rate, form.start_date, form.end_date)
+        super().save_model(request, obj, form, change)
+
 
 @admin.register(Rate)
 class RateAdmin(VariableRateAdmin):
     """ModelAdmin for Rate."""
 
-    pass
+    form = VariableRateAdminForm
 
 
 @admin.register(Payment)
