@@ -24,6 +24,6 @@ def migrate_accounts(apps, schema_editor):
 
 class Migration(migrations.Migration):
 
-    dependencies = [("core", "0049_auto_20200514_1046")]
+    dependencies = [("core", "0050_auto_20200514_1046")]
 
     operations = [migrations.RunPython(migrate_accounts)]

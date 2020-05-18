@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0048_effort_active'),
+        ('core', '0049_price_rate_rateperdate_variablerate'),
     ]
 
     operations = [
