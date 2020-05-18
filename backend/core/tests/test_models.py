@@ -57,6 +57,7 @@ from core.models import (
     STATUS_GRANTED,
     STATUS_EXPECTED,
     STATUS_DRAFT,
+    Rate,
 )
 
 
@@ -3532,3 +3533,39 @@ class EffortTestCase(TestCase):
         effort = Effort.objects.create(name="Integrationsindsatsen")
 
         self.assertEqual(str(effort), "Integrationsindsatsen")
+
+
+class VariableRateTestCase(TestCase):
+    def test_str(self):
+        rate = Rate.objects.create(name="Min rate")
+        rate.set_rate_amount(Decimal(25), start_date=date.today())
+
+        self.assertEqual(rate.rate_amount, Decimal(25))
+
+        self.assertEqual(str(rate), f"{date.today()}, None: 25.00")
+
+        tomorrow = date.today() + timedelta(days=1)
+        next_week = date.today() + timedelta(days=7)
+
+        rate.set_rate_amount(
+            Decimal(30),
+            start_date=tomorrow,
+            end_date=next_week - timedelta(days=1),
+        )
+        self.assertEqual(
+            rate.get_rate_amount(rate_date=next_week), Decimal(25)
+        )
+
+    def test_start_minus_inf(self):
+        rate = Rate.objects.create(name="Min rate")
+        rate.set_rate_amount(Decimal(25))
+
+    def test_start_after_end(self):
+        rate = Rate.objects.create(name="Min rate")
+        next_week = date.today() + timedelta(days=7)
+        with self.assertRaises(
+            ValueError, msg="Slutdato skal være mindre end startdato",
+        ):
+            rate.set_rate_amount(
+                Decimal(25), start_date=next_week, end_date=date.today()
+            )

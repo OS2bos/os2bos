@@ -37,12 +37,14 @@ from core.models import (
     EffortStep,
     TargetGroup,
     Effort,
+    Rate,
 )
 
 for klass in (
     PaymentMethodDetails,
     Team,
     SectionInfo,
+    Rate,
 ):
     admin.site.register(klass, admin.ModelAdmin)
 

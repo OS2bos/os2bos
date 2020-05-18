@@ -15,6 +15,9 @@ export default {
       if (this.user.profile === 'admin') {
         return true
       }
+      if (this.user.profile === 'workflow_engine') {
+        return true
+      }
       if (this.user.profile === 'grant') {
         return true
       }
