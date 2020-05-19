@@ -12,6 +12,7 @@ from core.models import (
     Account,
     TargetGroup,
     Section,
+    Activity,
 )
 from core.admin import (
     PaymentAdmin,
@@ -19,6 +20,7 @@ from core.admin import (
     AccountAdmin,
     TargetGroupAdmin,
     ClassificationAdmin,
+    ActivityAdmin,
 )
 from core.tests.testing_utils import (
     AuthenticatedTestCase,
@@ -26,8 +28,11 @@ from core.tests.testing_utils import (
     create_payment,
     create_payment_schedule,
     create_account,
-    create_section,
     create_target_group,
+    create_activity,
+    create_case,
+    create_appropriation,
+    create_section,
 )
 
 User = get_user_model()
@@ -135,6 +140,16 @@ class TestPaymentScheduleAdmin(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(
             payment_schedule_admin.account_string(payment_schedule),
             payment_schedule.account_string,
+        )
+
+    def test_account_string_new(self):
+        payment_schedule = create_payment_schedule()
+
+        site = AdminSite()
+        payment_schedule_admin = PaymentScheduleAdmin(PaymentSchedule, site)
+        self.assertEqual(
+            payment_schedule_admin.account_string_new(payment_schedule),
+            payment_schedule.account_string_new,
         )
 
     def test_admin_changelist_not_admin_user_disallowed(self):
@@ -246,6 +261,20 @@ class TestActivityAdmin(AuthenticatedTestCase, BasicTestMixin):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 200)
+
+    def test_account_number(self):
+        section = create_section()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(section=section, case=case)
+        activity = create_activity(case=case, appropriation=appropriation)
+
+        site = AdminSite()
+        activity_admin = ActivityAdmin(Activity, site)
+        self.assertEqual(
+            activity_admin.account_number(activity), activity.account_number,
+        )
 
 
 class TestAccountAdmin(TestCase):
