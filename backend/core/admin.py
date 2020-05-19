@@ -282,11 +282,35 @@ class ActivityDetailsAdmin(admin.ModelAdmin):
     search_fields = ("activity_id",)
 
 
+class SectionInfoInline(admin.TabularInline):
+    model = SectionInfo
+
+
+class MainActivityDetailsInline(admin.TabularInline):
+    model = ActivityDetails.main_activity_for.through
+    verbose_name = _("Paragraf for hovedaktivitet")
+    verbose_name_plural = _("Paragraf for hovedaktiviteter")
+
+
+class SupplementaryActivityDetailsInline(admin.TabularInline):
+    model = ActivityDetails.supplementary_activity_for.through
+    verbose_name = _("Paragraf for følgeudgift")
+    verbose_name_plural = _("Paragraf for følgeudgifter")
+
+
 @admin.register(Section)
 class SectionAdmin(ClassificationAdmin):
     """Add search field."""
 
     search_fields = ("paragraph",)
+
+    filter_horizontal = ("allowed_for_target_groups", "allowed_for_steps")
+
+    inlines = (
+        SectionInfoInline,
+        MainActivityDetailsInline,
+        SupplementaryActivityDetailsInline,
+    )
 
 
 @admin.register(ServiceProvider)
@@ -317,11 +341,17 @@ class ApprovalLevelAdmin(ClassificationAdmin):
     pass
 
 
+class SectionsInline(admin.TabularInline):
+    model = EffortStep.sections.through
+    verbose_name = _("Trin tilladt for paragraf")
+    verbose_name_plural = _("Trin tilladt for paragraffer")
+
+
 @admin.register(EffortStep)
 class EffortStepAdmin(ClassificationAdmin):
     """ModelAdmin for EffortStep."""
 
-    pass
+    inlines = (SectionsInline,)
 
 
 @admin.register(SchoolDistrict)
