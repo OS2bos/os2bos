@@ -283,16 +283,22 @@ class ActivityDetailsAdmin(admin.ModelAdmin):
 
 
 class SectionInfoInline(admin.TabularInline):
+    """SectionInfoInline for SectionAdmin."""
+
     model = SectionInfo
 
 
 class MainActivityDetailsInline(admin.TabularInline):
+    """MainActivityDetailsInline for SectionAdmin."""
+
     model = ActivityDetails.main_activity_for.through
     verbose_name = _("Paragraf for hovedaktivitet")
     verbose_name_plural = _("Paragraf for hovedaktiviteter")
 
 
 class SupplementaryActivityDetailsInline(admin.TabularInline):
+    """SupplementaryActivityDetailsInline for SectionAdmin."""
+
     model = ActivityDetails.supplementary_activity_for.through
     verbose_name = _("Paragraf for følgeudgift")
     verbose_name_plural = _("Paragraf for følgeudgifter")
@@ -341,7 +347,9 @@ class ApprovalLevelAdmin(ClassificationAdmin):
     pass
 
 
-class SectionsInline(admin.TabularInline):
+class SectionInline(admin.TabularInline):
+    """SectionInline for EffortStepAdmin."""
+
     model = EffortStep.sections.through
     verbose_name = _("Trin tilladt for paragraf")
     verbose_name_plural = _("Trin tilladt for paragraffer")
@@ -351,7 +359,7 @@ class SectionsInline(admin.TabularInline):
 class EffortStepAdmin(ClassificationAdmin):
     """ModelAdmin for EffortStep."""
 
-    inlines = (SectionsInline,)
+    inlines = (SectionInline,)
 
 
 @admin.register(SchoolDistrict)
