@@ -303,7 +303,7 @@ class ActivityDetailsAdmin(ClassificationAdmin):
         "service_providers",
         "main_activities",
     )
-    search_fields = ("activity_id",)
+    search_fields = ("activity_id", "name")
 
 
 class MainActivityDetailsInline(ClassificationInline):
@@ -328,7 +328,7 @@ class SupplementaryActivityDetailsInline(ClassificationInline):
 class SectionAdmin(ClassificationAdmin):
     """Add search field."""
 
-    search_fields = ("paragraph",)
+    search_fields = ("paragraph", "text")
 
     list_display = (
         "paragraph",
@@ -361,7 +361,7 @@ class RelatedPersonAdmin(ModelAdminAuditFieldsMixin, admin.ModelAdmin):
 class MunicipalityAdmin(ClassificationAdmin):
     """ModelAdmin for Municipality."""
 
-    pass
+    search_fields = ("name",)
 
 
 @admin.register(ApprovalLevel)
