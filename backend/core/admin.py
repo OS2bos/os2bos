@@ -331,6 +331,11 @@ class SectionAdmin(ClassificationAdmin):
 
     search_fields = ("paragraph",)
 
+    list_display = (
+        "paragraph",
+        "list_main_activity_for_property",
+        "list_supplementary_activity_for_property",
+    )
     filter_horizontal = ("allowed_for_target_groups", "allowed_for_steps")
 
     inlines = (

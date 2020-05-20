@@ -18,6 +18,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.db.models import Q, F
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
+from django.utils.html import format_html_join
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django_audit_fields.models import AuditModelMixin
@@ -992,6 +993,30 @@ class Section(Classification):
 
     def __str__(self):
         return f"{self.paragraph}"
+
+    def list_main_activity_for(self):
+        return format_html_join(
+            "\n", "<div>{}</div>", ((x,) for x in self.main_activities.all())
+        )
+
+    def list_supplementary_activity_for(self):
+        return format_html_join(
+            "\n",
+            "<div>{}</div>",
+            ([(x,) for x in self.supplementary_activities.all()]),
+        )
+
+    list_main_activity_for_property = property(list_main_activity_for)
+    list_supplementary_activity_for_property = property(
+        list_supplementary_activity_for
+    )
+
+    list_main_activity_for.short_description = _(
+        "Paragraf for hovedaktiviteter"
+    )
+    list_supplementary_activity_for.short_description = _(
+        "Paragraf for følgeudgifter"
+    )
 
 
 class Appropriation(AuditModelMixin, models.Model):
