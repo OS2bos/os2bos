@@ -384,6 +384,11 @@ class SectionInline(ClassificationInline):
 class EffortStepAdmin(ClassificationAdmin):
     """ModelAdmin for EffortStep."""
 
+    list_display = (
+        "name",
+        "list_sections",
+    )
+
     inlines = (SectionInline,)
 
 

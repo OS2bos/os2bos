@@ -108,6 +108,16 @@ class EffortStep(Classification):
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     number = models.PositiveIntegerField(verbose_name="Nummer", unique=True)
 
+    def list_sections(self):
+        """HTML list of sections for Django admin purposes."""
+        return format_html_join(
+            "\n", "<div>{}</div>", ((x,) for x in self.sections.all())
+        )
+
+    list_sections_property = property(list_sections)
+
+    list_sections.short_description = _("Tilladte paragraffer")
+
     def __str__(self):
         return f"{self.name}"
 
