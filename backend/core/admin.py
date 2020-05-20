@@ -52,6 +52,28 @@ for klass in (
 User = get_user_model()
 
 
+class ClassificationInline(admin.TabularInline):
+    def has_view_permission(self, request, obj=None):
+        """Override has_view_permission for ModelAdmin."""
+        user = request.user
+        return user.is_authenticated and user.is_workflow_engine_or_admin()
+
+    def has_add_permission(self, request):
+        """Override has_add_permission for ModelAdmin."""
+        user = request.user
+        return user.is_authenticated and user.is_workflow_engine_or_admin()
+
+    def has_change_permission(self, request, obj=None):
+        """Override has_change_permission for ModelAdmin."""
+        user = request.user
+        return user.is_authenticated and user.is_workflow_engine_or_admin()
+
+    def has_delete_permission(self, request, obj=None):
+        """Override has_delete_permission for ModelAdmin."""
+        user = request.user
+        return user.is_authenticated and user.is_workflow_engine_or_admin()
+
+
 class ClassificationAdmin(admin.ModelAdmin):
     """ModelAdmin for Classification models."""
 
@@ -79,6 +101,9 @@ class ClassificationAdmin(admin.ModelAdmin):
         """Override has_model_permission for ModelAdmin."""
         user = request.user
         return user.is_authenticated and user.is_workflow_engine_or_admin()
+
+    def get_inline_instances(self, request, obj=None):
+        return [inline(self.model, self.admin_site) for inline in self.inlines]
 
 
 @admin.register(Case)
@@ -282,13 +307,13 @@ class ActivityDetailsAdmin(admin.ModelAdmin):
     search_fields = ("activity_id",)
 
 
-class SectionInfoInline(admin.TabularInline):
+class SectionInfoInline(ClassificationInline):
     """SectionInfoInline for SectionAdmin."""
 
     model = SectionInfo
 
 
-class MainActivityDetailsInline(admin.TabularInline):
+class MainActivityDetailsInline(ClassificationInline):
     """MainActivityDetailsInline for SectionAdmin."""
 
     model = ActivityDetails.main_activity_for.through
@@ -296,7 +321,7 @@ class MainActivityDetailsInline(admin.TabularInline):
     verbose_name_plural = _("Paragraf for hovedaktiviteter")
 
 
-class SupplementaryActivityDetailsInline(admin.TabularInline):
+class SupplementaryActivityDetailsInline(ClassificationInline):
     """SupplementaryActivityDetailsInline for SectionAdmin."""
 
     model = ActivityDetails.supplementary_activity_for.through
@@ -347,7 +372,7 @@ class ApprovalLevelAdmin(ClassificationAdmin):
     pass
 
 
-class SectionInline(admin.TabularInline):
+class SectionInline(ClassificationInline):
     """SectionInline for EffortStepAdmin."""
 
     model = EffortStep.sections.through
