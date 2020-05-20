@@ -295,7 +295,7 @@ class CustomUserAdmin(BaseUserAdmin):
 
 
 @admin.register(ActivityDetails)
-class ActivityDetailsAdmin(admin.ModelAdmin):
+class ActivityDetailsAdmin(ClassificationAdmin):
     """Widgets: Filter_horizontal for many to many links, add search field."""
 
     filter_horizontal = (

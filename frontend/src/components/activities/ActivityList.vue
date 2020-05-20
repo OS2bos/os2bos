@@ -14,6 +14,8 @@
             <button v-if="permissionCheck === true" class="activities-create-btn" title="Ny aktivitet" @click="$router.push(`/appropriation/${ apprId }/activity-create/`)" style="margin: 0 1rem;">
                 + Tilføj ydelse
             </button>
+            <input type="checkbox" id="discontinuedActs" v-model="isOpen">
+            <label for="discontinuedActs">{{ button.text }}</label>
         </header>
         <table v-if="!no_acts">
             <thead>
@@ -95,7 +97,7 @@
     import axios from '../http/Http.js'
     import { cost2da } from '../filters/Numbers.js'
     import { displayStatus } from '../filters/Labels.js'
-    import { json2jsEpoch } from '../filters/Date.js'
+    import { json2jsEpoch, epoch2DateStr } from '../filters/Date.js'
     import ActListItem from './ActivityListItem.vue'
     import ApprovalDiag from './Approval.vue'
     import UserRights from '../mixins/UserRights.js'
@@ -119,7 +121,11 @@
                 check_all_approvable: false,
                 approvable_acts: [],
                 diag_open: false,
-                diag_approval_warning: null
+                diag_approval_warning: null,
+                isOpen: false,
+                button: { 
+                    text: 'Se udgåede ydelser'
+                }
             }
         },
         computed: {
@@ -144,6 +150,9 @@
             acts: function() {
                 this.chunks = []
                 this.splitActList(this.acts)
+            },
+            isOpen: function() {
+                this.update()
             }
         },
         methods: {
@@ -250,26 +259,55 @@
                 }
 
                 // Populate main and supplementary activities lists
-                this.main_acts = this.chunks.filter(function(c) {
-                    return c[0].activity_type === 'MAIN_ACTIVITY'
-                })
-                let unsorted_suppl_acts = this.chunks.filter(function(c) {
-                    return c[0].activity_type === 'SUPPL_ACTIVITY'
-                })
+                if (!this.isOpen) {
+                    this.main_acts = this.chunks.filter(function(c) {
+                        let nowDate = epoch2DateStr(new Date())
+                        let activeDates = c[0].end_date >= nowDate || c[0].end_date === null
+                        return c[0].activity_type === 'MAIN_ACTIVITY' &&  activeDates
+                    })
+                } else {
+                    this.main_acts = this.chunks.filter(function(c) {
+                        return c[0].activity_type === 'MAIN_ACTIVITY'
+                    })
+                }
 
-                // Sort supplementary list by start date
-                unsorted_suppl_acts.sort(function(a,b) {
-                    const a_start_date = new Date(a[0].start_date).getTime(),
-                          b_start_date = new Date(b[0].start_date).getTime()
-                    if (a_start_date > b_start_date) {
-                        return 1
-                    } else if (b_start_date > a_start_date) {
-                        return -1
-                    } else {
-                        return 0
-                    }
-                })
-                this.suppl_acts = unsorted_suppl_acts
+                if (!this.isOpen) {
+                    let unsorted_suppl_acts = this.chunks.filter(function(c) {
+                        let nowDate = epoch2DateStr(new Date())
+                        let activeDates = c[0].end_date >= nowDate || c[0].end_date === null
+                        return c[0].activity_type === 'SUPPL_ACTIVITY' && activeDates
+                    })
+                    // Sort supplementary list by start date
+                    unsorted_suppl_acts.sort(function(a,b) {
+                        const a_start_date = new Date(a[0].start_date).getTime(),
+                            b_start_date = new Date(b[0].start_date).getTime()
+                        if (a_start_date > b_start_date) {
+                            return 1
+                        } else if (b_start_date > a_start_date) {
+                            return -1
+                        } else {
+                            return 0
+                        }
+                    })
+                    this.suppl_acts = unsorted_suppl_acts
+                } else {
+                    let unsorted_suppl_acts = this.chunks.filter(function(c) {
+                        return c[0].activity_type === 'SUPPL_ACTIVITY'
+                    })
+                     // Sort supplementary list by start date
+                    unsorted_suppl_acts.sort(function(a,b) {
+                        const a_start_date = new Date(a[0].start_date).getTime(),
+                            b_start_date = new Date(b[0].start_date).getTime()
+                        if (a_start_date > b_start_date) {
+                            return 1
+                        } else if (b_start_date > a_start_date) {
+                            return -1
+                        } else {
+                            return 0
+                        }
+                    })
+                    this.suppl_acts = unsorted_suppl_acts
+                }
             },
             toggleHandler: function(toggl_id) {     
                 for (let comp of this.$refs[toggl_id]) {
