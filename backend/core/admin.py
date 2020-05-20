@@ -53,6 +53,8 @@ User = get_user_model()
 
 
 class ClassificationInline(admin.TabularInline):
+    """TabularInline for Classification inlines."""
+
     def has_view_permission(self, request, obj=None):
         """Override has_view_permission for ModelAdmin."""
         user = request.user
@@ -101,9 +103,6 @@ class ClassificationAdmin(admin.ModelAdmin):
         """Override has_model_permission for ModelAdmin."""
         user = request.user
         return user.is_authenticated and user.is_workflow_engine_or_admin()
-
-    def get_inline_instances(self, request, obj=None):
-        return [inline(self.model, self.admin_site) for inline in self.inlines]
 
 
 @admin.register(Case)

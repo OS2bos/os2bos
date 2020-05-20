@@ -995,11 +995,13 @@ class Section(Classification):
         return f"{self.paragraph}"
 
     def list_main_activity_for(self):
+        """HTML list of main activities for Django admin purposes."""
         return format_html_join(
             "\n", "<div>{}</div>", ((x,) for x in self.main_activities.all())
         )
 
     def list_supplementary_activity_for(self):
+        """HTML list of supplementary activities for Django admin purposes."""
         return format_html_join(
             "\n",
             "<div>{}</div>",
