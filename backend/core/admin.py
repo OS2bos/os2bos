@@ -307,26 +307,22 @@ class ActivityDetailsAdmin(admin.ModelAdmin):
     search_fields = ("activity_id",)
 
 
-class SectionInfoInline(ClassificationInline):
-    """SectionInfoInline for SectionAdmin."""
-
-    model = SectionInfo
-
-
 class MainActivityDetailsInline(ClassificationInline):
     """MainActivityDetailsInline for SectionAdmin."""
 
     model = ActivityDetails.main_activity_for.through
-    verbose_name = _("Paragraf for hovedaktivitet")
-    verbose_name_plural = _("Paragraf for hovedaktiviteter")
+    extra = 0
+    verbose_name = _("Tilladt hovedydelse")
+    verbose_name_plural = _("Tilladte hovedydelser")
 
 
 class SupplementaryActivityDetailsInline(ClassificationInline):
     """SupplementaryActivityDetailsInline for SectionAdmin."""
 
     model = ActivityDetails.supplementary_activity_for.through
-    verbose_name = _("Paragraf for følgeudgift")
-    verbose_name_plural = _("Paragraf for følgeudgifter")
+    extra = 0
+    verbose_name = _("Tilladt følgeudgift")
+    verbose_name_plural = _("Tilladte følgeudgifter")
 
 
 @admin.register(Section)
@@ -338,7 +334,6 @@ class SectionAdmin(ClassificationAdmin):
     filter_horizontal = ("allowed_for_target_groups", "allowed_for_steps")
 
     inlines = (
-        SectionInfoInline,
         MainActivityDetailsInline,
         SupplementaryActivityDetailsInline,
     )
@@ -376,6 +371,7 @@ class SectionInline(ClassificationInline):
     """SectionInline for EffortStepAdmin."""
 
     model = EffortStep.sections.through
+    extra = 0
     verbose_name = _("Trin tilladt for paragraf")
     verbose_name_plural = _("Trin tilladt for paragraffer")
 
