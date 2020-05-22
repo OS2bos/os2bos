@@ -341,7 +341,6 @@ class TestSectionAdmin(TestCase):
         main_activity_details.main_activity_for.add(section)
 
         site = AdminSite()
-        request = MockRequest()
         section_admin = SectionAdmin(Section, site)
 
         self.assertEqual(
@@ -361,7 +360,6 @@ class TestSectionAdmin(TestCase):
         supplementary_activity_details.supplementary_activity_for.add(section)
 
         site = AdminSite()
-        request = MockRequest()
         section_admin = SectionAdmin(Section, site)
 
         self.assertEqual(
@@ -475,7 +473,6 @@ class TestClassificationAdmin(TestCase):
 class TestClassificationInline(TestCase):
     def test_has_view_permissions_grant_user_false(self):
         site = AdminSite()
-        classification_admin = ClassificationAdmin(Section, site)
         classification_inline = SectionInline(ClassificationAdmin, site)
         self.assertIsInstance(classification_inline, ClassificationInline)
         request = MockRequest()
@@ -485,7 +482,6 @@ class TestClassificationInline(TestCase):
 
     def test_has_add_permission_grant_user_false(self):
         site = AdminSite()
-        classification_admin = ClassificationAdmin(Section, site)
         classification_inline = SectionInline(ClassificationAdmin, site)
         self.assertIsInstance(classification_inline, ClassificationInline)
 
@@ -496,7 +492,6 @@ class TestClassificationInline(TestCase):
 
     def test_has_change_permission_grant_user_false(self):
         site = AdminSite()
-        classification_admin = ClassificationAdmin(Section, site)
         classification_inline = SectionInline(ClassificationAdmin, site)
         self.assertIsInstance(classification_inline, ClassificationInline)
 
@@ -507,7 +502,6 @@ class TestClassificationInline(TestCase):
 
     def test_has_delete_permission_grant_user_false(self):
         site = AdminSite()
-        classification_admin = ClassificationAdmin(Section, site)
         classification_inline = SectionInline(ClassificationAdmin, site)
         self.assertIsInstance(classification_inline, ClassificationInline)
 
@@ -518,7 +512,6 @@ class TestClassificationInline(TestCase):
 
     def test_has_view_permissions_workflow_engine_user_true(self):
         site = AdminSite()
-        classification_admin = ClassificationAdmin(Section, site)
         classification_inline = SectionInline(ClassificationAdmin, site)
         self.assertIsInstance(classification_inline, ClassificationInline)
 
@@ -529,7 +522,6 @@ class TestClassificationInline(TestCase):
 
     def test_has_add_permission_workflow_engine_user_true(self):
         site = AdminSite()
-        classification_admin = ClassificationAdmin(Section, site)
         classification_inline = SectionInline(ClassificationAdmin, site)
         self.assertIsInstance(classification_inline, ClassificationInline)
 
@@ -540,7 +532,6 @@ class TestClassificationInline(TestCase):
 
     def test_has_change_permission_workflow_engine_user_true(self):
         site = AdminSite()
-        classification_admin = ClassificationAdmin(Section, site)
         classification_inline = SectionInline(ClassificationAdmin, site)
         self.assertIsInstance(classification_inline, ClassificationInline)
 
@@ -551,7 +542,6 @@ class TestClassificationInline(TestCase):
 
     def test_has_delete_permission_workflow_engine_user_true(self):
         site = AdminSite()
-        classification_admin = ClassificationAdmin(Section, site)
         classification_inline = SectionInline(ClassificationAdmin, site)
         self.assertIsInstance(classification_inline, ClassificationInline)
 
