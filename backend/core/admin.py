@@ -56,22 +56,22 @@ class ClassificationInline(admin.TabularInline):
     """TabularInline for Classification inlines."""
 
     def has_view_permission(self, request, obj=None):
-        """Override has_view_permission for ModelAdmin."""
+        """Override has_view_permission for InlineModelAdmin."""
         user = request.user
         return user.is_authenticated and user.is_workflow_engine_or_admin()
 
     def has_add_permission(self, request):
-        """Override has_add_permission for ModelAdmin."""
+        """Override has_add_permission for InlineModelAdmin."""
         user = request.user
         return user.is_authenticated and user.is_workflow_engine_or_admin()
 
     def has_change_permission(self, request, obj=None):
-        """Override has_change_permission for ModelAdmin."""
+        """Override has_change_permission for InlineModelAdmin."""
         user = request.user
         return user.is_authenticated and user.is_workflow_engine_or_admin()
 
     def has_delete_permission(self, request, obj=None):
-        """Override has_delete_permission for ModelAdmin."""
+        """Override has_delete_permission for InlineModelAdmin."""
         user = request.user
         return user.is_authenticated and user.is_workflow_engine_or_admin()
 
