@@ -1116,6 +1116,24 @@ class Appropriation(AuditModelMixin, models.Model):
         )
 
     @property
+    def total_cost_expected(self):
+        """Retrieve total amount expected."""
+        activities = self.activities.filter(
+            Q(status=STATUS_GRANTED) | Q(status=STATUS_EXPECTED)
+        )
+        return sum(activity.total_cost for activity in activities)
+
+    @property
+    def total_cost_granted(self):
+        """Retrieve total amount granted."""
+        all_granted_activities = self.activities.filter(status=STATUS_GRANTED)
+        payments = Payment.objects.filter(
+            payment_schedule__activity__in=all_granted_activities
+        )
+
+        return payments.amount_sum()
+
+    @property
     def main_activity(self):
         """Return main activity, if any."""
         # We define the main activity as the *first* main activity.
