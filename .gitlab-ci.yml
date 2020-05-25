@@ -256,7 +256,7 @@ deploy-dev:
     GIT_STRATEGY: none
   script:
     - echo Attempting to call deployment
-    - pepper --client runner --fail-any-none state.orchestrate ${DEPLOYMENT_NAMESPACE}
+    - pepper --client runner --fail-any state.orchestrate ${DEPLOYMENT_NAMESPACE}
   environment:
     name: develop
     url: https://cburtest.magenta.dk
