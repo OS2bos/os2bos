@@ -118,6 +118,7 @@ class TargetGroup(Classification):
     class Meta:
         verbose_name = _("målgruppe")
         verbose_name_plural = _("målgrupper")
+        ordering = ["name"]
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     required_fields_for_case = ArrayField(
@@ -137,6 +138,7 @@ class Effort(Classification):
     class Meta:
         verbose_name = _("indsats")
         verbose_name_plural = _("indsatser")
+        ordering = ["name"]
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     description = models.CharField(
