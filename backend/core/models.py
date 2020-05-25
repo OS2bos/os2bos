@@ -144,7 +144,7 @@ class Effort(Classification):
     allowed_for_target_groups = models.ManyToManyField(
         TargetGroup,
         related_name="efforts",
-        verbose_name=_("tilladt for målgrupper"),
+        verbose_name=_("målgrupper"),
         blank=True,
     )
 
@@ -977,13 +977,13 @@ class Section(Classification):
     allowed_for_target_groups = models.ManyToManyField(
         TargetGroup,
         related_name="sections",
-        verbose_name=_("tilladt for målgrupper"),
+        verbose_name=_("målgrupper"),
         blank=True,
     )
     allowed_for_steps = models.ManyToManyField(
         EffortStep,
         related_name="sections",
-        verbose_name=_("tilladt for trin i indsatstrappen"),
+        verbose_name=_("trin i indsatstrappen"),
         blank=True,
     )
     law_text_name = models.CharField(

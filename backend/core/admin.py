@@ -306,12 +306,18 @@ class CustomUserAdmin(BaseUserAdmin):
     ) + BaseUserAdmin.fieldsets
 
 
+class SectionInfoInline(ClassificationInline):
+    model = ActivityDetails.main_activity_for.through
+    extra = 0
+    verbose_name = _("Hovedydelse for paragraffer")
+    verbose_name_plural = _("Hovedydelse for paragraffer")
+
+
 @admin.register(ActivityDetails)
 class ActivityDetailsAdmin(ClassificationAdmin):
     """Widgets: Filter_horizontal for many to many links, add search field."""
 
     filter_horizontal = (
-        "main_activity_for",
         "supplementary_activity_for",
         "service_providers",
         "main_activities",
@@ -322,6 +328,7 @@ class ActivityDetailsAdmin(ClassificationAdmin):
         "activity_id",
         "active",
     )
+    inlines = (SectionInfoInline,)
 
 
 class MainActivityDetailsInline(ClassificationInline):
@@ -405,6 +412,7 @@ class ServiceProviderAdmin(ClassificationAdmin):
 
     list_display = (
         "name",
+        "cvr_number",
         "active",
     )
 
