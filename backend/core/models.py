@@ -1334,7 +1334,7 @@ class ActivityDetails(Classification):
     class Meta:
         verbose_name = _("aktivitetsdetalje")
         verbose_name_plural = _("aktivitetsdetaljer")
-        ordering = ["activity_id"]
+        ordering = ["name"]
 
     name = models.CharField(max_length=128, verbose_name=_("Navn"))
     description = models.TextField(verbose_name=_("beskrivelse"), blank=True)
