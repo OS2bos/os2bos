@@ -48,11 +48,7 @@ const getters = {
 
 const mutations = {
     setMunis (state, munis) {
-        state.municipalities = munis.sort(function(a,b) {
-            if (a.name > b.name) { return 1 } 
-            if (a.name < b.name) { return -1 }
-            return 0
-        })
+        state.municipalities = munis
     },
     setTarget (state, target) {
         state.target_group = target.sort(function(a,b) {
@@ -62,11 +58,7 @@ const mutations = {
         })
     },
     setDist (state, districts) {
-        state.districts = districts.sort(function(a,b) {
-            if (a.name > b.name) { return 1 } 
-            if (a.name < b.name) { return -1 }
-            return 0
-        })
+        state.districts = districts
     },
     setSections (state, sections) {
         state.sections = sections
@@ -75,11 +67,7 @@ const mutations = {
         state.approval_levels = approvals
     },
     setServiceProviders (state, sp_list) {
-        state.service_providers = sp_list.sort(function(a,b) {
-            if (a.name > b.name) { return 1 } 
-            if (a.name < b.name) { return -1 }
-            return 0
-        })
+        state.service_providers = sp_list
     },
     setEffortSteps (state, effort_steps) {
         state.effort_steps = effort_steps
