@@ -76,6 +76,7 @@ class Municipality(Classification):
     class Meta:
         verbose_name = _("kommune")
         verbose_name_plural = _("kommuner")
+        ordering = ["name"]
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
 
@@ -971,6 +972,7 @@ class Section(Classification):
     class Meta:
         verbose_name = _("paragraf")
         verbose_name_plural = _("paragraffer")
+        ordering = ["paragraph"]
 
     paragraph = models.CharField(max_length=128, verbose_name=_("paragraf"))
     text = models.TextField(verbose_name=_("forklarende tekst"))
@@ -1302,6 +1304,7 @@ class ServiceProvider(Classification):
     class Meta:
         verbose_name = _("leverandør")
         verbose_name_plural = _("leverandører")
+        ordering = ["name"]
 
     cvr_number = models.CharField(
         max_length=8, blank=True, verbose_name=_("cvr-nummer")
@@ -1331,6 +1334,7 @@ class ActivityDetails(Classification):
     class Meta:
         verbose_name = _("aktivitetsdetalje")
         verbose_name_plural = _("aktivitetsdetaljer")
+        ordering = ["activity_id"]
 
     name = models.CharField(max_length=128, verbose_name=_("Navn"))
     description = models.TextField(verbose_name=_("beskrivelse"), blank=True)
