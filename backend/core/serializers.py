@@ -341,6 +341,9 @@ class AppropriationSerializer(serializers.ModelSerializer):
     total_granted_full_year = serializers.ReadOnlyField()
     total_expected_this_year = serializers.ReadOnlyField()
     total_expected_full_year = serializers.ReadOnlyField()
+    total_cost_expected = serializers.ReadOnlyField()
+    total_cost_granted = serializers.ReadOnlyField()
+
     granted_from_date = serializers.ReadOnlyField()
     granted_to_date = serializers.ReadOnlyField()
     case__cpr_number = serializers.ReadOnlyField(source="case.cpr_number")
