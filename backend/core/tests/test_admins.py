@@ -13,6 +13,7 @@ from core.models import (
     TargetGroup,
     Section,
     Activity,
+    EffortStep,
 )
 from core.admin import (
     PaymentAdmin,
@@ -20,7 +21,11 @@ from core.admin import (
     AccountAdmin,
     TargetGroupAdmin,
     ClassificationAdmin,
+    ClassificationInline,
     ActivityAdmin,
+    SectionAdmin,
+    SectionInline,
+    EffortStepAdmin,
 )
 from core.tests.testing_utils import (
     AuthenticatedTestCase,
@@ -33,6 +38,8 @@ from core.tests.testing_utils import (
     create_case,
     create_appropriation,
     create_section,
+    create_activity_details,
+    create_effort_step,
 )
 
 User = get_user_model()
@@ -324,6 +331,63 @@ class TestTargetGroupAdmin(TestCase):
         self.assertEqual(initial_required_fields, ["district"])
 
 
+class TestSectionAdmin(TestCase):
+    def test_list_main_activity_for(self):
+        section = create_section()
+        main_activity_details = create_activity_details(
+            name="Betaling til andre kommuner/region for specialtandpleje",
+            activity_id="010001",
+        )
+        main_activity_details.main_activity_for.add(section)
+
+        site = AdminSite()
+        section_admin = SectionAdmin(Section, site)
+
+        self.assertEqual(
+            section_admin.list_main_activity_for(section),
+            f'<div><a href="/api/admin/core/activitydetails/'
+            f'{main_activity_details.id}/change/">'
+            f"010001 - Betaling til andre kommuner/region for specialtandpleje"
+            f"</a></div>",
+        )
+
+    def test_list_supplementary_activity_for(self):
+        section = create_section()
+        supplementary_activity_details = create_activity_details(
+            name="Betaling til andre kommuner/region for specialtandpleje",
+            activity_id="010001",
+        )
+        supplementary_activity_details.supplementary_activity_for.add(section)
+
+        site = AdminSite()
+        section_admin = SectionAdmin(Section, site)
+
+        self.assertEqual(
+            section_admin.list_supplementary_activity_for(section),
+            f'<div><a href="/api/admin/core/activitydetails'
+            f'/{supplementary_activity_details.id}/change/">'
+            f"010001 - Betaling til andre kommuner/region for specialtandpleje"
+            f"</a></div>",
+        )
+
+
+class TestEffortStepAdmin(TestCase):
+    def test_list_sections(self):
+        effort_step = create_effort_step()
+        section = create_section()
+
+        section.allowed_for_steps.add(effort_step)
+
+        site = AdminSite()
+        effort_step_admin = EffortStepAdmin(EffortStep, site)
+
+        self.assertEqual(
+            effort_step_admin.list_sections(effort_step),
+            f'<div><a href="/api/admin/core/section/{section.id}/'
+            f'change/">ABL-105-2 - </a></div>',
+        )
+
+
 class TestClassificationAdmin(TestCase):
     def test_has_view_permissions_grant_user_false(self):
         site = AdminSite()
@@ -404,3 +468,84 @@ class TestClassificationAdmin(TestCase):
 
         request.user = User.objects.create(profile=User.WORKFLOW_ENGINE)
         self.assertTrue(classification_admin.has_module_permission(request))
+
+
+class TestClassificationInline(TestCase):
+    def test_has_view_permissions_grant_user_false(self):
+        site = AdminSite()
+        classification_inline = SectionInline(ClassificationAdmin, site)
+        self.assertIsInstance(classification_inline, ClassificationInline)
+        request = MockRequest()
+
+        request.user = User.objects.create(profile=User.GRANT)
+        self.assertFalse(classification_inline.has_view_permission(request))
+
+    def test_has_add_permission_grant_user_false(self):
+        site = AdminSite()
+        classification_inline = SectionInline(ClassificationAdmin, site)
+        self.assertIsInstance(classification_inline, ClassificationInline)
+
+        request = MockRequest()
+
+        request.user = User.objects.create(profile=User.GRANT)
+        self.assertFalse(classification_inline.has_add_permission(request))
+
+    def test_has_change_permission_grant_user_false(self):
+        site = AdminSite()
+        classification_inline = SectionInline(ClassificationAdmin, site)
+        self.assertIsInstance(classification_inline, ClassificationInline)
+
+        request = MockRequest()
+
+        request.user = User.objects.create(profile=User.GRANT)
+        self.assertFalse(classification_inline.has_change_permission(request))
+
+    def test_has_delete_permission_grant_user_false(self):
+        site = AdminSite()
+        classification_inline = SectionInline(ClassificationAdmin, site)
+        self.assertIsInstance(classification_inline, ClassificationInline)
+
+        request = MockRequest()
+
+        request.user = User.objects.create(profile=User.GRANT)
+        self.assertFalse(classification_inline.has_delete_permission(request))
+
+    def test_has_view_permissions_workflow_engine_user_true(self):
+        site = AdminSite()
+        classification_inline = SectionInline(ClassificationAdmin, site)
+        self.assertIsInstance(classification_inline, ClassificationInline)
+
+        request = MockRequest()
+
+        request.user = User.objects.create(profile=User.WORKFLOW_ENGINE)
+        self.assertTrue(classification_inline.has_view_permission(request))
+
+    def test_has_add_permission_workflow_engine_user_true(self):
+        site = AdminSite()
+        classification_inline = SectionInline(ClassificationAdmin, site)
+        self.assertIsInstance(classification_inline, ClassificationInline)
+
+        request = MockRequest()
+
+        request.user = User.objects.create(profile=User.WORKFLOW_ENGINE)
+        self.assertTrue(classification_inline.has_add_permission(request))
+
+    def test_has_change_permission_workflow_engine_user_true(self):
+        site = AdminSite()
+        classification_inline = SectionInline(ClassificationAdmin, site)
+        self.assertIsInstance(classification_inline, ClassificationInline)
+
+        request = MockRequest()
+
+        request.user = User.objects.create(profile=User.WORKFLOW_ENGINE)
+        self.assertTrue(classification_inline.has_change_permission(request))
+
+    def test_has_delete_permission_workflow_engine_user_true(self):
+        site = AdminSite()
+        classification_inline = SectionInline(ClassificationAdmin, site)
+        self.assertIsInstance(classification_inline, ClassificationInline)
+
+        request = MockRequest()
+
+        request.user = User.objects.create(profile=User.WORKFLOW_ENGINE)
+        self.assertTrue(classification_inline.has_delete_permission(request))

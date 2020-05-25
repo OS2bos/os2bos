@@ -11,7 +11,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
-from django.utils.html import escape, mark_safe
+from django.utils.html import escape, mark_safe, format_html_join
 from django.urls import reverse
 from django import forms
 
@@ -50,6 +50,30 @@ for klass in (
 
 
 User = get_user_model()
+
+
+class ClassificationInline(admin.TabularInline):
+    """TabularInline for Classification inlines."""
+
+    def has_view_permission(self, request, obj=None):
+        """Override has_view_permission for InlineModelAdmin."""
+        user = request.user
+        return user.is_authenticated and user.is_workflow_engine_or_admin()
+
+    def has_add_permission(self, request):
+        """Override has_add_permission for InlineModelAdmin."""
+        user = request.user
+        return user.is_authenticated and user.is_workflow_engine_or_admin()
+
+    def has_change_permission(self, request, obj=None):
+        """Override has_change_permission for InlineModelAdmin."""
+        user = request.user
+        return user.is_authenticated and user.is_workflow_engine_or_admin()
+
+    def has_delete_permission(self, request, obj=None):
+        """Override has_delete_permission for InlineModelAdmin."""
+        user = request.user
+        return user.is_authenticated and user.is_workflow_engine_or_admin()
 
 
 class ClassificationAdmin(admin.ModelAdmin):
@@ -199,6 +223,10 @@ class TargetGroupAdmin(ClassificationAdmin):
     """ModelAdmin for TargetGroup with custom ModelForm."""
 
     fields = ("name", "required_fields_for_case", "active")
+    list_display = (
+        "name",
+        "active",
+    )
     form = TargetGroupForm
 
 
@@ -207,6 +235,11 @@ class EffortAdmin(ClassificationAdmin):
     """ModelAdmin for Effort."""
 
     filter_horizontal = ("allowed_for_target_groups",)
+
+    list_display = (
+        "name",
+        "active",
+    )
 
 
 @admin.register(PaymentSchedule)
@@ -252,6 +285,10 @@ class AccountAdmin(ClassificationAdmin):
     """Display account number (konteringsnummer) as read only field."""
 
     readonly_fields = ("number",)
+    list_display = (
+        "main_account_number",
+        "active",
+    )
 
     def number(self, obj):
         """Get account number."""
@@ -279,14 +316,85 @@ class ActivityDetailsAdmin(ClassificationAdmin):
         "service_providers",
         "main_activities",
     )
-    search_fields = ("activity_id",)
+    search_fields = ("activity_id", "name")
+    list_display = (
+        "name",
+        "activity_id",
+        "active",
+    )
+
+
+class MainActivityDetailsInline(ClassificationInline):
+    """MainActivityDetailsInline for SectionAdmin."""
+
+    model = ActivityDetails.main_activity_for.through
+    extra = 0
+    verbose_name = _("Tilladt hovedydelse")
+    verbose_name_plural = _("Tilladte hovedydelser")
+
+
+class SupplementaryActivityDetailsInline(ClassificationInline):
+    """SupplementaryActivityDetailsInline for SectionAdmin."""
+
+    model = ActivityDetails.supplementary_activity_for.through
+    extra = 0
+    verbose_name = _("Tilladt følgeudgift")
+    verbose_name_plural = _("Tilladte følgeudgifter")
 
 
 @admin.register(Section)
 class SectionAdmin(ClassificationAdmin):
     """Add search field."""
 
-    search_fields = ("paragraph",)
+    search_fields = ("paragraph", "text")
+
+    list_display = (
+        "paragraph",
+        "text",
+        "list_main_activity_for",
+        "list_supplementary_activity_for",
+        "active",
+    )
+    filter_horizontal = ("allowed_for_target_groups", "allowed_for_steps")
+
+    inlines = (
+        MainActivityDetailsInline,
+        SupplementaryActivityDetailsInline,
+    )
+
+    def list_main_activity_for(self, obj):
+        """HTML list of main activities for Django admin purposes."""
+        return format_html_join(
+            "\n",
+            '<div><a href="{}">{}</a></div>',
+            (
+                (reverse("admin:core_activitydetails_change", args=[x.id]), x,)
+                for x in obj.main_activities.all()
+            ),
+        )
+
+    def list_supplementary_activity_for(self, obj):
+        """HTML list of supplementary activities for Django admin purposes."""
+        return format_html_join(
+            "\n",
+            '<div><a href="{}">{}</a></div>',
+            (
+                [
+                    (
+                        reverse(
+                            "admin:core_activitydetails_change", args=[x.id]
+                        ),
+                        x,
+                    )
+                    for x in obj.supplementary_activities.all()
+                ]
+            ),
+        )
+
+    list_main_activity_for.short_description = _("Tilladte hovedydelser")
+    list_supplementary_activity_for.short_description = _(
+        "Tilladte følgeudgifter"
+    )
 
 
 @admin.register(ServiceProvider)
@@ -294,6 +402,11 @@ class ServiceProviderAdmin(ClassificationAdmin):
     """Add search fields."""
 
     search_fields = ("name", "cvr_number")
+
+    list_display = (
+        "name",
+        "active",
+    )
 
 
 @admin.register(RelatedPerson)
@@ -307,25 +420,71 @@ class RelatedPersonAdmin(ModelAdminAuditFieldsMixin, admin.ModelAdmin):
 class MunicipalityAdmin(ClassificationAdmin):
     """ModelAdmin for Municipality."""
 
-    pass
+    search_fields = ("name",)
+    list_display = (
+        "name",
+        "active",
+    )
 
 
 @admin.register(ApprovalLevel)
 class ApprovalLevelAdmin(ClassificationAdmin):
     """ModelAdmin for ApprovalLevel."""
 
-    pass
+    list_display = (
+        "name",
+        "active",
+    )
+
+
+class SectionInline(ClassificationInline):
+    """SectionInline for EffortStepAdmin."""
+
+    model = EffortStep.sections.through
+    extra = 0
+    verbose_name = _("Trin tilladt for paragraf")
+    verbose_name_plural = _("Trin tilladt for paragraffer")
 
 
 @admin.register(EffortStep)
 class EffortStepAdmin(ClassificationAdmin):
     """ModelAdmin for EffortStep."""
 
-    pass
+    search_fields = (
+        "name",
+        "number",
+    )
+    list_display = (
+        "name",
+        "list_sections",
+        "active",
+    )
+
+    inlines = (SectionInline,)
+
+    def list_sections(self, obj):
+        """HTML list of sections for Django admin purposes."""
+        return format_html_join(
+            "\n",
+            '<div><a href="{}">{} - {}</a></div>',
+            (
+                (
+                    reverse("admin:core_section_change", args=[x.id]),
+                    x.paragraph,
+                    x.text,
+                )
+                for x in obj.sections.all()
+            ),
+        )
+
+    list_sections.short_description = _("Tilladte paragraffer")
 
 
 @admin.register(SchoolDistrict)
 class SchoolDistrictAdmin(ClassificationAdmin):
     """ModelAdmin for SchoolDistrict."""
 
-    pass
+    list_display = (
+        "name",
+        "active",
+    )

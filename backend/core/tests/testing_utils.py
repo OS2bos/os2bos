@@ -301,3 +301,9 @@ def create_target_group(
         name=name, required_fields_for_case=required_fields_for_case
     )
     return target_group
+
+
+def create_effort_step(name="Trin 1: Tidlig indsats i almenområdet", number=1):
+    effort_step, _ = EffortStep.objects.get_or_create(name=name, number=number)
+
+    return effort_step
