@@ -197,6 +197,7 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
 
     payments = PaymentSerializer(many=True, read_only=True)
     account = serializers.ReadOnlyField()
+    payment_amount = serializers.DecimalField(max_digits=20, decimal_places=2)
 
     @staticmethod
     def setup_eager_loading(queryset):
