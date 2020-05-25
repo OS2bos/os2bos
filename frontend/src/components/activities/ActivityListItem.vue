@@ -57,18 +57,23 @@
     
         props: [
             'act',
-            'checked'
+            'checked',
+            'selectedValue'
         ],
         data: function() {
             return {
                 visible: true,
                 toggled: false,
-                is_checked: false
+                is_checked: false,
+                is_selectedValue: '1'
             }
         },
         watch: {
             checked: function() {
                 this.is_checked = this.checked
+            },
+            selectedValue: function() {
+                this.is_selectedValue = this.selectedValue
             }
         },
         methods: {
@@ -100,12 +105,24 @@
                     }
                 } else {
                     if (column === 'granted') {
-                        if (act.status === 'GRANTED') {
+                        if (act.status === 'GRANTED' && this.selectedValue === '1') {
                             return `${ this.displayDigits(act.total_granted_this_year) } kr`
                         }
+                        if (act.status === 'GRANTED' && this.selectedValue === '2') {
+                            return `${ this.displayDigits(act.total_cost_full_year) } kr`
+                        }
+                        if (act.status === 'GRANTED' && this.selectedValue === '3') {
+                            return `${ this.displayDigits(act.total_cost) } kr`
+                        }
                     } else {
-                        if (act.total_expected_this_year === 0 || act.total_expected_this_year !== act.total_granted_this_year) {
+                        if (act.total_expected_this_year === 0 || act.total_expected_this_year !== act.total_granted_this_year && this.selectedValue === '1') {
                             return `${ this.displayDigits(act.total_expected_this_year) } kr`
+                        }
+                        if (act.total_expected_this_year === 0 || act.total_expected_this_year !== act.total_granted_this_year && this.selectedValue === '2') {
+                            return `${ this.displayDigits(act.total_cost_full_year) } kr`
+                        }
+                        if (act.total_expected_this_year === 0 || act.total_expected_this_year !== act.total_granted_this_year && this.selectedValue === '3') {
+                            return `${ this.displayDigits(act.total_cost) } kr`
                         }
                     }
                 }
@@ -113,6 +130,7 @@
         },
         created: function() {
             this.is_checked = this.checked
+            this.is_selectedValue = this.selectedValue
             if (this.act.group) {
                 this.visible = false
             }

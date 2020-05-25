@@ -9,13 +9,24 @@
 <template>
 
     <section class="activities">
-        <header style="display: flex; flex-flow: row nowrap; align-items: center; margin: 2rem 0;">
-            <h2 style="padding: 0;">Bevilgede ydelser</h2>
-            <button v-if="permissionCheck === true" class="activities-create-btn" title="Ny aktivitet" @click="$router.push(`/appropriation/${ apprId }/activity-create/`)" style="margin: 0 1rem;">
-                + Tilføj ydelse
-            </button>
-            <input type="checkbox" id="discontinuedActs" v-model="isOpen">
-            <label for="discontinuedActs">{{ button.text }}</label>
+        <header class="activities-header">
+            <div class="create-content">
+                <h2 style="padding: 0;">Bevilgede ydelser</h2>
+                <button v-if="permissionCheck === true" class="activities-create-btn" title="Ny aktivitet" @click="$router.push(`/appropriation/${ apprId }/activity-create/`)" style="margin: 0 1rem;">
+                    + Tilføj ydelse
+                </button>
+            </div>
+
+            <div class="buttons-content">
+                <input class="activities-checkbox-btn" type="checkbox" id="discontinuedActs" v-model="isOpenAct">
+                <label for="discontinuedActs">{{ buttonAct }}</label>
+
+                <select class="selected-btn" v-model="selectedValue">
+                    <option value="1">Udgift i år</option>
+                    <option value="2">Udgift pr år</option>
+                    <option value="3">Samlet udgift</option>
+                </select>
+            </div>
         </header>
         <table v-if="!no_acts">
             <thead>
@@ -30,8 +41,16 @@
                     <th>Start</th>
                     <th>Slut</th>
                     <th>Senest ændret</th>
-                    <th class="right">Udgift i år</th>
-                    <th class="right">Forventet udgift i år</th>
+                    <th class="right">
+                        <span v-if="selectedValue === '1'">Udgift i år</span>
+                        <span v-if="selectedValue === '2'">Udgift pr år</span>
+                        <span v-if="selectedValue === '3'">Samlet udgift</span>
+                    </th>
+                    <th class="right">
+                        <span v-if="selectedValue === '1'">Forventet udgift i år</span>
+                        <span v-if="selectedValue === '2'">Forventet udgift pr år</span>
+                        <span v-if="selectedValue === '3'">Forventet samlet udgift</span>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -46,6 +65,7 @@
                         :act="a"
                         :key="a.id"
                         :checked="a.checked"
+                        :selectedValue="selectedValue"
                         @toggle="toggleHandler"
                         @check="checkOneInList(a, ...arguments)" />
                 </template>
@@ -60,6 +80,7 @@
                         :act="a" 
                         :key="a.id"
                         :checked="a.checked"
+                        :selectedValue="selectedValue"
                         @toggle="toggleHandler"
                         @check="checkOneInList(a, ...arguments)" />
                 </template>
@@ -69,11 +90,19 @@
                     </td>
                     <td class="right"><strong>I alt</strong></td>
                     <td class="nowrap right">
-                        <strong>{{ displayDigits(appropriation.total_granted_this_year) }} kr.</strong>
+                        <strong v-if="selectedValue <= '1'">{{ displayDigits(appropriation.total_granted_this_year) }} kr.</strong>
+                        <strong v-if="selectedValue === '2'">{{ displayDigits(appropriation.total_granted_full_year) }} kr.</strong>
+                        <strong v-if="selectedValue === '3'">{{ displayDigits(appropriation.total_cost_granted) }} kr.</strong>
                     </td>
                     <td class="nowrap expected right">
-                        <span v-if="appropriation.total_expected_this_year !== appropriation.total_granted_this_year">
+                        <span v-if="appropriation.total_expected_this_year !== appropriation.total_granted_this_year && selectedValue <= '1'">
                             {{ displayDigits(appropriation.total_expected_this_year) }} kr.
+                        </span>
+                        <span v-if="appropriation.total_expected_this_year !== appropriation.total_granted_this_year && selectedValue === '2'">
+                            {{ displayDigits(appropriation.total_expected_full_year) }} kr.
+                        </span>
+                        <span v-if="appropriation.total_expected_this_year !== appropriation.total_granted_this_year && selectedValue === '3'">
+                            {{  displayDigits(appropriation.total_cost_expected) }} kr.
                         </span>
                     </td>
                 </tr>
@@ -122,10 +151,9 @@
                 approvable_acts: [],
                 diag_open: false,
                 diag_approval_warning: null,
-                isOpen: false,
-                button: { 
-                    text: 'Se udgåede ydelser'
-                }
+                isOpenAct: false,
+                buttonAct: 'Se udgåede ydelser',
+                selectedValue: '1'
             }
         },
         computed: {
@@ -151,7 +179,10 @@
                 this.chunks = []
                 this.splitActList(this.acts)
             },
-            isOpen: function() {
+            isOpenAct: function() {
+                this.update()
+            },
+            selectedValue: function() {
                 this.update()
             }
         },
@@ -259,7 +290,7 @@
                 }
 
                 // Populate main and supplementary activities lists
-                if (!this.isOpen) {
+                if (!this.isOpenAct) {
                     this.main_acts = this.chunks.filter(function(c) {
                         let nowDate = epoch2DateStr(new Date())
                         let activeDates = c[0].end_date >= nowDate || c[0].end_date === null
@@ -271,7 +302,7 @@
                     })
                 }
 
-                if (!this.isOpen) {
+                if (!this.isOpenAct) {
                     let unsorted_suppl_acts = this.chunks.filter(function(c) {
                         let nowDate = epoch2DateStr(new Date())
                         let activeDates = c[0].end_date >= nowDate || c[0].end_date === null
@@ -384,14 +415,41 @@
     }
 
     .activities-header {
+        width: 100%;
+        margin: 2rem 0;
         display: flex;
         flex-flow: row nowrap;
         justify-content: flex-start;
         align-items: center;
     }
 
+    .create-content {
+        width: 50%;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .buttons-content {
+        width: 50%;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
     .activities-create-btn {
         margin: 0 0 1rem;
+    }
+
+    .activities-checkbox-btn {
+        margin: 0;
+    }
+
+    .selected-btn {
+        margin: 0 .5rem;
+        border-color: var(--primary);
     }
 
     .activities .act-label {
