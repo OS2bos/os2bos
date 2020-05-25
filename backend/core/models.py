@@ -90,6 +90,7 @@ class SchoolDistrict(Classification):
     class Meta:
         verbose_name = _("distrikt")
         verbose_name_plural = _("distrikter")
+        ordering = ["name"]
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
 
@@ -957,6 +958,7 @@ class ApprovalLevel(Classification):
     class Meta:
         verbose_name = _("bevillingsniveau")
         verbose_name_plural = _("bevillingsniveauer")
+        ordering = ["name"]
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
 
