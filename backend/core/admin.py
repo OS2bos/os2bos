@@ -317,12 +317,20 @@ class SectionInfoInline(ClassificationInline):
     verbose_name_plural = _("Hovedydelse for paragraffer")
 
 
+class SupplementaryActivityInline(ClassificationInline):
+    """SupplementaryActivityInline for ActivityDetailsAdmin."""
+
+    model = ActivityDetailsSectionProxy
+    extra = 0
+    verbose_name = _("Følgeudgift for paragraffer")
+    verbose_name_plural = _("Følgeudgift for paragraffer")
+
+
 @admin.register(ActivityDetails)
 class ActivityDetailsAdmin(ClassificationAdmin):
     """Widgets: Filter_horizontal for many to many links, add search field."""
 
     filter_horizontal = (
-        "supplementary_activity_for",
         "service_providers",
         "main_activities",
     )
@@ -332,7 +340,8 @@ class ActivityDetailsAdmin(ClassificationAdmin):
         "activity_id",
         "active",
     )
-    inlines = (SectionInfoInline,)
+    exclude = ("supplementary_activity_for", "main_activity_for")
+    inlines = (SectionInfoInline, SupplementaryActivityInline)
 
 
 class MainActivityDetailsInline(ClassificationInline):
