@@ -995,7 +995,7 @@ class Section(Classification):
 
 
 class SectionEffortStepProxy(Section.allowed_for_steps.through):
-    """Proxy model for the allowed_for_steps m2m field on Section.
+    """Proxy model for the allowed_for_steps (EffortStep) m2m field on Section.
 
     We use a proxy so we can override __str__ for use in django admin
     without an explicit through model.
@@ -1395,14 +1395,14 @@ class ActivityDetails(Classification):
         return f"{self.activity_id} - {self.name}"
 
 
-class ActivityDetailsSupplementaryActivityProxy(
+class ActivityDetailsSectionProxy(
     ActivityDetails.supplementary_activity_for.through
 ):
     """
-    Proxy model for supplementary_activity_for on ActivityDetails.
+    Proxy model for supplementary_activity_for (Section) on ActivityDetails.
 
-    We use a proxy so we can override __str__ for use in django admin
-    without an explicit through model.
+    We use a proxy model so we can override __str__ for
+    use in django admin without an explicit through model.
     """
 
     class Meta:

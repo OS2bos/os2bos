@@ -39,7 +39,7 @@ from core.models import (
     Effort,
     Rate,
     SectionEffortStepProxy,
-    ActivityDetailsSupplementaryActivityProxy,
+    ActivityDetailsSectionProxy,
 )
 
 for klass in (
@@ -347,7 +347,7 @@ class MainActivityDetailsInline(ClassificationInline):
 class SupplementaryActivityDetailsInline(ClassificationInline):
     """SupplementaryActivityDetailsInline for SectionAdmin."""
 
-    model = ActivityDetailsSupplementaryActivityProxy
+    model = ActivityDetailsSectionProxy
     extra = 0
     verbose_name = _("Tilladt følgeudgift")
     verbose_name_plural = _("Tilladte følgeudgifter")
