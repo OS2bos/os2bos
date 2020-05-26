@@ -37,11 +37,10 @@ variables:
   IMAGE_SHA: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}
   IMAGE_DEV: ${CI_REGISTRY_IMAGE}:dev
 
-
   IMAGE: magentaaps/bevillingsplatform
   IMAGE_TAG: ${IMAGE}:${CI_COMMIT_TAG}
   IMAGE_LATEST: ${IMAGE}:latest
-  IMAGE_TEST: ${IMAGE}:test
+
 
 
 # Lint stage
@@ -208,16 +207,6 @@ FrontendTest:
     - echo ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
     - docker pull ${IMAGE_SHA}
 
-Release test:
-  <<: *release-default
-  except:
-    refs:
-      - master
-      - develop
-  script:
-    - docker tag ${IMAGE_SHA} ${IMAGE_TEST}
-    - docker push ${IMAGE_TEST}
-
 Release dev:
   <<: *release-default
   only:
@@ -290,7 +279,7 @@ Deploy dev:
 
 deploy-test:
   <<: *deploy-default
-  needs: ["Release test"]
+  needs: ["Unittest"]
   except:
     refs:
       - master
@@ -302,7 +291,7 @@ deploy-test:
     SALTAPI_EAUTH: file
     GIT_STRATEGY: none
   script:
-    - echo deploying ${CI_COMMIT_BRANCH} at ${CI_COMMIT_SHA}
+    - echo deploying ${IMAGE_SHA}
     - pepper --client runner --fail-any state.orchestrate ${DEPLOYMENT_NAMESPACE}
   environment:
     name: test
