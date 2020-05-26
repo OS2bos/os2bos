@@ -17,7 +17,9 @@
             <label class="required" for="field-indsatstrappe">Indsatstrappen</label>
             <select id="field-indsatstrappe" v-model="cas.effort_step" @change="updateEffort()" required>
                 <option v-for="e in effort_steps" :value="e.id" :key="e.id">
+                    <span v-if="e.active === false">(</span>
                     {{ e.name }}
+                    <span v-if="e.active === false">)</span>
                 </option>
             </select>
             <error err-key="effort_step" />
