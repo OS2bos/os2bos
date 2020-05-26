@@ -30,7 +30,7 @@
         </div>
 
         <div class="appropriation-search-filters">
-            <h2>Filtre</h2>
+            <h2 class="appropriation-search-filters--title">Filtre</h2>
             <form @submit.prevent>
                 <fieldset>
 
