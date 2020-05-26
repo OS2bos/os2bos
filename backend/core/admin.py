@@ -38,6 +38,8 @@ from core.models import (
     TargetGroup,
     Effort,
     Rate,
+    SectionEffortStepProxy,
+    ActivityDetailsSupplementaryActivityProxy,
 )
 
 for klass in (
@@ -307,6 +309,8 @@ class CustomUserAdmin(BaseUserAdmin):
 
 
 class SectionInfoInline(ClassificationInline):
+    """SectionInfoInline for ActivityDetailsAdmin."""
+
     model = ActivityDetails.main_activity_for.through
     extra = 0
     verbose_name = _("Hovedydelse for paragraffer")
@@ -343,7 +347,7 @@ class MainActivityDetailsInline(ClassificationInline):
 class SupplementaryActivityDetailsInline(ClassificationInline):
     """SupplementaryActivityDetailsInline for SectionAdmin."""
 
-    model = ActivityDetails.supplementary_activity_for.through
+    model = ActivityDetailsSupplementaryActivityProxy
     extra = 0
     verbose_name = _("Tilladt følgeudgift")
     verbose_name_plural = _("Tilladte følgeudgifter")
@@ -445,13 +449,13 @@ class ApprovalLevelAdmin(ClassificationAdmin):
     )
 
 
-class SectionInline(ClassificationInline):
-    """SectionInline for EffortStepAdmin."""
+class SectionEffortStepProxyInline(ClassificationInline):
+    """SectionEffortStepProxyInline for EffortStepAdmin."""
 
-    model = EffortStep.sections.through
+    model = SectionEffortStepProxy
     extra = 0
-    verbose_name = _("Trin tilladt for paragraf")
-    verbose_name_plural = _("Trin tilladt for paragraffer")
+    verbose_name = _("Tilladt paragraf")
+    verbose_name_plural = _("Tilladte paragraffer")
 
 
 @admin.register(EffortStep)
@@ -468,7 +472,7 @@ class EffortStepAdmin(ClassificationAdmin):
         "active",
     )
 
-    inlines = (SectionInline,)
+    inlines = (SectionEffortStepProxyInline,)
 
     def list_sections(self, obj):
         """HTML list of sections for Django admin purposes."""

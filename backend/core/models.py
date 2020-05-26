@@ -994,6 +994,22 @@ class Section(Classification):
         return f"{self.paragraph}"
 
 
+class SectionEffortStepProxy(Section.allowed_for_steps.through):
+    """Proxy model for the allowed_for_steps m2m field on Section.
+
+    We use a proxy so we can override __str__ for use in django admin
+    without an explicit through model.
+    """
+
+    class Meta:
+        proxy = True
+        verbose_name = _("paragraf")
+        verbose_name_plural = _("paragraf")
+
+    def __str__(self):
+        return f"{self.section.paragraph} {self.section.text}"
+
+
 class Appropriation(AuditModelMixin, models.Model):
     """An appropriation of funds in a Case - corresponds to a Sag in SBSYS."""
 
@@ -1367,12 +1383,35 @@ class ActivityDetails(Classification):
         "self",
         related_name="supplementary_activities",
         symmetrical=False,
-        verbose_name=_("tilladte hovedaktiviteter"),
+        verbose_name=_("hovedydelser"),
+        help_text=_(
+            "Denne aktivitetsdetalje kan være følgeudgift for"
+            " disse hovedydelser.<br>"
+        ),
         blank=True,
     )
 
     def __str__(self):
         return f"{self.activity_id} - {self.name}"
+
+
+class ActivityDetailsSupplementaryActivityProxy(
+    ActivityDetails.supplementary_activity_for.through
+):
+    """
+    Proxy model for supplementary_activity_for on ActivityDetails.
+
+    We use a proxy so we can override __str__ for use in django admin
+    without an explicit through model.
+    """
+
+    class Meta:
+        proxy = True
+        verbose_name = _("aktivitetsdetalje")
+        verbose_name_plural = _("aktivitetsdetalje")
+
+    def __str__(self):
+        return f"{self.activitydetails}"
 
 
 class SectionInfo(models.Model):
@@ -1406,6 +1445,10 @@ class SectionInfo(models.Model):
     supplementary_activity_main_account_number = models.CharField(
         max_length=128,
         verbose_name=_("hovedkontonummer for følgeudgift"),
+        help_text=_(
+            "Et hovedkontonummer der skal bruges, hvis en følgeudgift"
+            " har denne aktivitetsdetalje som hovedydelse.<br>"
+        ),
         blank=True,
     )
 
