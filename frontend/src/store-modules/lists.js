@@ -51,11 +51,7 @@ const mutations = {
         state.municipalities = munis
     },
     setTarget (state, target) {
-        state.target_group = target.sort(function(a,b) {
-            if (a.name > b.name) { return 1 } 
-            if (a.name < b.name) { return -1 }
-            return 0
-        })
+        state.target_group = target
     },
     setDist (state, districts) {
         state.districts = districts
