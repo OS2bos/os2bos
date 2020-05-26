@@ -76,6 +76,7 @@ class Municipality(Classification):
     class Meta:
         verbose_name = _("kommune")
         verbose_name_plural = _("kommuner")
+        ordering = ("name",)
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
 
@@ -89,6 +90,7 @@ class SchoolDistrict(Classification):
     class Meta:
         verbose_name = _("distrikt")
         verbose_name_plural = _("distrikter")
+        ordering = ("name",)
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
 
@@ -102,7 +104,7 @@ class EffortStep(Classification):
     class Meta:
         verbose_name = _("indsatstrappetrin")
         verbose_name_plural = _("indsatstrappe")
-        ordering = ["number"]
+        ordering = ("number",)
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     number = models.PositiveIntegerField(verbose_name="Nummer", unique=True)
@@ -117,6 +119,7 @@ class TargetGroup(Classification):
     class Meta:
         verbose_name = _("målgruppe")
         verbose_name_plural = _("målgrupper")
+        ordering = ("name",)
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     required_fields_for_case = ArrayField(
@@ -136,6 +139,7 @@ class Effort(Classification):
     class Meta:
         verbose_name = _("indsats")
         verbose_name_plural = _("indsatser")
+        ordering = ("name",)
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     description = models.CharField(
@@ -954,6 +958,7 @@ class ApprovalLevel(Classification):
     class Meta:
         verbose_name = _("bevillingsniveau")
         verbose_name_plural = _("bevillingsniveauer")
+        ordering = ("name",)
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
 
@@ -971,6 +976,7 @@ class Section(Classification):
     class Meta:
         verbose_name = _("paragraf")
         verbose_name_plural = _("paragraffer")
+        ordering = ("paragraph",)
 
     paragraph = models.CharField(max_length=128, verbose_name=_("paragraf"))
     text = models.TextField(verbose_name=_("forklarende tekst"))
@@ -1302,6 +1308,7 @@ class ServiceProvider(Classification):
     class Meta:
         verbose_name = _("leverandør")
         verbose_name_plural = _("leverandører")
+        ordering = ("name",)
 
     cvr_number = models.CharField(
         max_length=8, blank=True, verbose_name=_("cvr-nummer")
@@ -1331,6 +1338,7 @@ class ActivityDetails(Classification):
     class Meta:
         verbose_name = _("aktivitetsdetalje")
         verbose_name_plural = _("aktivitetsdetaljer")
+        ordering = ("name",)
 
     name = models.CharField(max_length=128, verbose_name=_("Navn"))
     description = models.TextField(verbose_name=_("beskrivelse"), blank=True)
