@@ -1419,7 +1419,7 @@ class ActivityDetailsSectionProxy(
         verbose_name_plural = _("aktivitetsdetalje")
 
     def __str__(self):
-        return f"{self.activitydetails}"
+        return f"{self.activitydetails} - {self.section}"
 
 
 class SectionInfo(models.Model):
