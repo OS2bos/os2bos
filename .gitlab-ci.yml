@@ -236,7 +236,7 @@ Release master:
 
 .deploy-default: &deploy-default
   stage: deploy
-  image: magentalabs/deployment-client:v2.0
+  image: magentalabs/pepper:latest
   services: []
   dependencies: []
   tags:
@@ -251,12 +251,15 @@ deploy-dev:
       - develop
   variables:
     DEPLOYMENT_NAMESPACE: cbur.magenta.test
-    DEPLOYMENT_URL: https://deploymenttest.magenta-aps.dk
+    SALTAPI_URL: https://ctrldev1.magenta-aps.dk/api/
+    SALTAPI_EAUTH: file
     GIT_STRATEGY: none
   script:
     - echo Attempting to call deployment
-    - python /app/deployment/client.py deploy
-
+    - pepper --client runner --fail-any state.orchestrate ${DEPLOYMENT_NAMESPACE}
+  environment:
+    name: develop
+    url: https://cburtest.magenta.dk
 
 .deploy-rc:
   <<: *deploy-default

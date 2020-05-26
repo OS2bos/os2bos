@@ -12,7 +12,7 @@
         <header class="activity-header">
             <h1>
                 <i class="material-icons">style</i>
-                Udgift til {{ activityId2name(act.details) }}
+                Udgift til <span v-html="activityId2name(act.details)"></span>
                 <span v-if="act.payment_plan.fictive" class="dim">(Fiktiv)</span>
             </h1>
             <template v-if="permissionCheck === true">
@@ -85,7 +85,7 @@
                     <dd>
                         <p>
                             <em>{{ displayUserName(act.approval_user) }}</em> d. {{ displayDate(act.appropriation_date) }}<br>
-                            ({{ displayApprLevel(act.approval_level) }} kompetence)
+                            (<span v-html="displayApprLevel(act.approval_level)"></span> kompetence)
                         </p>
                         <p v-if="act.approval_note">Note: {{ act.approval_note }}</p>
                     </dd>
@@ -98,9 +98,9 @@
                     <div v-if="act.activity_type === 'SUPPL_ACTIVITY'">Følgeydelse</div>
                 </dd>
                 <dt>Bevilges efter §</dt>
-                <dd v-if="appr">{{ displaySection(appr.section) }}</dd>
+                <dd v-if="appr" v-html="displaySection(appr.section)"></dd>
                 <dt>Ydelse</dt>
-                <dd>{{ activityId2name(act.details) }}</dd>
+                <dd v-html="activityId2name(act.details)"></dd>
                 <dt>Startdato</dt>
                 <dd>{{ displayDate(act.start_date) }}</dd>
                 <template v-if="act.end_date">

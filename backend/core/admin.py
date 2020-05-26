@@ -342,6 +342,7 @@ class MainActivityDetailsInline(ClassificationInline):
     extra = 0
     verbose_name = _("Tilladt hovedydelse")
     verbose_name_plural = _("Tilladte hovedydelser")
+    ordering = ("activity_details__name",)
 
 
 class SupplementaryActivityDetailsInline(ClassificationInline):
@@ -351,6 +352,7 @@ class SupplementaryActivityDetailsInline(ClassificationInline):
     extra = 0
     verbose_name = _("Tilladt følgeudgift")
     verbose_name_plural = _("Tilladte følgeudgifter")
+    ordering = ("activitydetails__name",)
 
 
 @admin.register(Section)

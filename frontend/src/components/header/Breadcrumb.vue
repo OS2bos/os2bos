@@ -28,9 +28,7 @@
             <router-link :to="b.link" v-if="b.link">
                 {{ b.title }}
             </router-link>
-            <span v-if="!b.link">
-                {{ b.title }}
-            </span>
+            <span v-if="!b.link" v-html="b.title"></span>
         </p>
     </nav>
 
