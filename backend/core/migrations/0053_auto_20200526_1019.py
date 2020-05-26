@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="ActivityDetailsSupplementaryActivityProxy",
+            name="ActivityDetailsSectionProxy",
             fields=[],
             options={
                 "verbose_name": "aktivitetsdetalje",
