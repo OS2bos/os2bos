@@ -37,9 +37,11 @@ variables:
   IMAGE_SHA: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}
   IMAGE_DEV: ${CI_REGISTRY_IMAGE}:dev
 
+
   IMAGE: magentaaps/bevillingsplatform
   IMAGE_TAG: ${IMAGE}:${CI_COMMIT_TAG}
   IMAGE_LATEST: ${IMAGE}:latest
+  IMAGE_BRANCH: {CI_REGISTRY_IMAGE}:${CI_COMMIT_BRANCH}
 
 
 # Lint stage
@@ -206,6 +208,15 @@ FrontendTest:
     - echo ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
     - docker pull ${IMAGE_SHA}
 
+Release test:
+  <<: *release-default
+  except:
+    refs:
+      - master
+      - develop
+  script:
+    - docker tag ${IMAGE_SHA} ${IMAGE_BRANCH}
+    - docker push ${IMAGE_BRANCH}
 
 Release dev:
   <<: *release-default
@@ -276,6 +287,26 @@ Deploy dev:
   environment:
     name: develop
     url: https://cburtest.magenta.dk
+
+deploy-test:
+  <<: *deploy-default
+  needs: ["Release test"]
+  except:
+    refs:
+      - master
+      - develop
+  when: manual
+  variables:
+    DEPLOYMENT_NAMESPACE: cbur.magenta.dev
+    SALTAPI_URL: https://ctrldev1.magenta-aps.dk/api/
+    SALTAPI_EAUTH: file
+    GIT_STRATEGY: none
+  script:
+    - echo deploying ${CI_COMMIT_BRANCH} at ${CI_COMMIT_SHA}
+    - pepper --client runner --fail-any state.orchestrate ${DEPLOYMENT_NAMESPACE}
+  environment:
+    name: test
+    url: https://cburdev.magenta.dk
 
 .deploy-rc:
   <<: *deploy-default
