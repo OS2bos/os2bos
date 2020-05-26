@@ -19,7 +19,13 @@ function municipalityId2name(id) {
         let muni = muni_list.find(function(element) {
             return element.id === id;
         })
-        return muni.name
+        if (muni && muni.active === false) {
+            return `<strong>(${ muni.name })</strong>`
+        } else if (muni) {
+            return muni.name
+        } else if (!muni) {
+            return '-'
+        }
     } else {
         return 'Ikke tilgængelig'
     }
@@ -36,7 +42,13 @@ function targetGroupId2name(id) {
         let target = targetGroup_list.find(function(element) {
             return element.id === id;
         })
-        return target.name
+        if (target && target.active === false) {
+            return `<strong>(${ target.name })</strong>`
+        } else if (target) {
+            return target.name
+        } else if (!target) {
+            return '-'
+        }
     } else {
         return 'Ikke tilgængelig'
     }
@@ -53,7 +65,13 @@ function districtId2name(id) {
         let dist = dist_list.find(function(element) {
             return element.id === id;
         })
-        return dist.name
+        if (dist && dist.active === false) {
+            return `<strong>(${ dist.name })</strong>`
+        } else if (dist) {
+            return dist.name
+        } else if (!dist) {
+            return '-'
+        }
     } else {
         return 'Ikke tilgængelig'
     }
@@ -71,7 +89,13 @@ function effortId2name(id) {
         let effort = effort_list.find(function(element) {
             return element.id === parseInt(id)
         })
-        return effort.name
+        if (effort && effort.active === false) {
+            return `<strong>(${ effort.name })</strong>`
+        } else if (effort) {
+            return effort.name
+        } else if (!effort) {
+            return '-'
+        }
     } else {
         return 'Ikke tilgængelig'
     }
@@ -88,7 +112,13 @@ function activityId2name(id) {
         let act = act_list.find(function(element) {
             return element.id === id;
         })
-        return act.name
+        if (act && act.active === false) {
+            return `<strong>(${ act.name })</strong>`
+        } else if (act) {
+            return act.name
+        } else if (!act) {
+            return '-'
+        }
     } else {
         return 'Ikke tilgængelig'
     }
@@ -105,7 +135,13 @@ function sectionId2name(id) {
         let sec = section_list.find(function(element) {
             return element.id === parseInt(id);
         })
-        return `${ sec.paragraph } ${ sec.text }`
+        if (sec && sec.active === false) {
+            return `<strong>(${ sec.paragraph } ${ sec.text })</strong>`
+        } else if (sec) {
+            return `${ sec.paragraph } ${ sec.text }`
+        } else if (!sec) {
+            return '-'
+        }
     } else {
         return 'Ikke tilgængelig'
     }
@@ -139,7 +175,13 @@ function approvalId2name(id) {
         let approval = approval_list.find(function(element) {
             return element.id === parseInt(id);
         })
-        return approval.name
+        if (approval && approval.active === false) {
+            return `<strong>(${ approval.name })</strong>`
+        } else if (approval) {
+            return approval.name
+        } else if (!approval) {
+            return '-'
+        }
     } else {
         return 'Ikke tilgængelig'
     }
@@ -205,10 +247,12 @@ function displayEffort(id) {
         let effort_step = effort_step_list.find(function(e) {
             return e.id === parseInt(id);
         })
-        if (effort_step) {
+        if (effort_step && effort_step.active === false) {
+            return `<strong>(${ effort_step.name })</strong>`
+        } else if (effort_step) {
             return effort_step.name
-        } else {
-            return 'Ukendt'
+        } else if (!effort_step) {
+            return '-'
         }
     } else {
         return 'Ikke tilgængelig'

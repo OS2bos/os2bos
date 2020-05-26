@@ -40,7 +40,7 @@
                                     </tr>
                                     <tr v-for="act in main_act_list" :key="act.id">
                                         <td><span v-html="displayStatus(act.status)"></span> </td>
-                                        <td>{{ activityId2name(act.details) }}</td>
+                                        <td v-html="activityId2name(act.details)"></td>
                                         <td>{{ displayDate(act.start_date) }} - {{ displayDate(act.end_date) }}</td>
                                         <td class="right">{{ displayDigits(act.total_cost_this_year) }} kr</td>
                                         <td class="right">{{ displayDigits(act.total_cost_full_year) }} kr</td>
@@ -50,7 +50,7 @@
                                     </tr>
                                     <tr v-for="act in suppl_act_list" :key="act.id">
                                         <td><span v-html="displayStatus(act.status)"></span> </td>
-                                        <td>{{ activityId2name(act.details) }}</td>
+                                        <td v-html="activityId2name(act.details)"></td>
                                         <td>{{ displayDate(act.start_date) }} - {{ displayDate(act.end_date) }}</td>
                                         <td class="right">{{ displayDigits(act.total_cost_this_year) }} kr</td>
                                         <td class="right">{{ displayDigits(act.total_cost_full_year) }} kr</td>
@@ -77,7 +77,8 @@
                                                 :key="appro_lvl.name" 
                                                 :for="`radio-btn-${ appro_lvl.id }`"
                                                 style="text-transform: capitalize;">
-                                                {{ appro_lvl.name }}
+                                                <span v-if="appro_lvl.active === true">{{ appro_lvl.name }}</span>
+                                                <strong v-if="appro_lvl.active === false">{{ appro_lvl.name }}</strong>
                                             </label>
                                         </template>
                                     </fieldset>

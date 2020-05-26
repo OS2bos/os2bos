@@ -30,9 +30,7 @@
                 <dl class="info" style="width: 50%;">
                     <dt>Ydelse</dt>
                     <dd v-if="payment.activity__id">
-                        <a @click="navToLink(`/activity/${ payment.activity__id }`)">
-                            {{ activityId2name(payment.activity__details__id) }}
-                        </a>
+                        <a @click="navToLink(`/activity/${ payment.activity__id }`)" v-html="activityId2name(payment.activity__details__id)"></a>
                     </dd>
                     <dt>Betalingsnøgle</dt>
                     <dd>{{ payment.payment_schedule__payment_id }}</dd>

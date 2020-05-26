@@ -93,7 +93,9 @@
                             <label 
                                 :key="effort.name" 
                                 :for="`inputCheckbox${ effort.id }`">
+                                <span v-if="effort.active === false">(</span>
                                 {{ effort.name }}
+                                <span v-if="effort.active === false">)</span>
                             </label>
                         </template>
                     </fieldset>

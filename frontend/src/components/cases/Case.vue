@@ -31,7 +31,7 @@
                     </dd>
                 
                     <dt>Indsatstrappen</dt>
-                    <dd>{{ displayEffortName(cas.effort_step) }}</dd>
+                    <dd v-html="displayEffortName(cas.effort_step)"></dd>
                 
                     <dt>Skaleringstrappe</dt>
                     <dd>
@@ -46,17 +46,17 @@
                 </dl>
                 <dl>
                     <dt>Målgruppe</dt>
-                    <dd>{{ displaytargetGroup(cas.target_group) }}</dd>
+                    <dd v-html="displaytargetGroup(cas.target_group)"></dd>
 
                     <template v-if="cas.target_group === 1">
                         <dt>Skoledistrikt</dt>
-                        <dd>{{ displayDistrictName(cas.district) }}</dd>
+                        <dd v-html="displayDistrictName(cas.district)"></dd>
                     </template>
 
                     <div v-if="cas.efforts.length">
                         <dt>Indsatser</dt>
                         <template v-for="effort in cas.efforts">
-                            <dd :key="effort.id">{{ displayEffort(effort) }}</dd>
+                            <dd :key="effort.id" v-html="displayEffort(effort)"></dd>
                         </template>
                     </div>
                 </dl>
@@ -72,13 +72,13 @@
                 </dl>
                 <dl>
                     <dt>Betalingskommune</dt>
-                    <dd>{{ displayMuniName(cas.paying_municipality) }}</dd>
+                    <dd v-html="displayMuniName(cas.paying_municipality)"></dd>
                 
                     <dt>Handlekommune</dt>
-                    <dd>{{ displayMuniName(cas.acting_municipality) }}</dd>
+                    <dd v-html="displayMuniName(cas.acting_municipality)"></dd>
                 
                     <dt>Bopælsskommune</dt>
-                    <dd>{{ displayMuniName(cas.residence_municipality) }}</dd>
+                    <dd v-html="displayMuniName(cas.residence_municipality)"></dd>
 
                 </dl>
 
