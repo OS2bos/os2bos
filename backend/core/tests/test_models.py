@@ -86,7 +86,8 @@ class ActivityDetailsSectionProxyTestCase(TestCase):
             ActivityDetailsSectionProxy.objects.first()
         )
         self.assertEqual(
-            str(activity_details_section_proxy), "000000 - Test aktivitet"
+            str(activity_details_section_proxy),
+            "000000 - Test aktivitet - ABL-105-2",
         )
 
 
