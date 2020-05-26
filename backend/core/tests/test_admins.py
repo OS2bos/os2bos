@@ -24,7 +24,7 @@ from core.admin import (
     ClassificationInline,
     ActivityAdmin,
     SectionAdmin,
-    SectionInline,
+    SectionInfoInline,
     EffortStepAdmin,
 )
 from core.tests.testing_utils import (
@@ -473,7 +473,7 @@ class TestClassificationAdmin(TestCase):
 class TestClassificationInline(TestCase):
     def test_has_view_permissions_grant_user_false(self):
         site = AdminSite()
-        classification_inline = SectionInline(ClassificationAdmin, site)
+        classification_inline = SectionInfoInline(ClassificationAdmin, site)
         self.assertIsInstance(classification_inline, ClassificationInline)
         request = MockRequest()
 
@@ -482,7 +482,7 @@ class TestClassificationInline(TestCase):
 
     def test_has_add_permission_grant_user_false(self):
         site = AdminSite()
-        classification_inline = SectionInline(ClassificationAdmin, site)
+        classification_inline = SectionInfoInline(ClassificationAdmin, site)
         self.assertIsInstance(classification_inline, ClassificationInline)
 
         request = MockRequest()
@@ -492,7 +492,7 @@ class TestClassificationInline(TestCase):
 
     def test_has_change_permission_grant_user_false(self):
         site = AdminSite()
-        classification_inline = SectionInline(ClassificationAdmin, site)
+        classification_inline = SectionInfoInline(ClassificationAdmin, site)
         self.assertIsInstance(classification_inline, ClassificationInline)
 
         request = MockRequest()
@@ -502,7 +502,7 @@ class TestClassificationInline(TestCase):
 
     def test_has_delete_permission_grant_user_false(self):
         site = AdminSite()
-        classification_inline = SectionInline(ClassificationAdmin, site)
+        classification_inline = SectionInfoInline(ClassificationAdmin, site)
         self.assertIsInstance(classification_inline, ClassificationInline)
 
         request = MockRequest()
@@ -512,7 +512,7 @@ class TestClassificationInline(TestCase):
 
     def test_has_view_permissions_workflow_engine_user_true(self):
         site = AdminSite()
-        classification_inline = SectionInline(ClassificationAdmin, site)
+        classification_inline = SectionInfoInline(ClassificationAdmin, site)
         self.assertIsInstance(classification_inline, ClassificationInline)
 
         request = MockRequest()
@@ -522,7 +522,7 @@ class TestClassificationInline(TestCase):
 
     def test_has_add_permission_workflow_engine_user_true(self):
         site = AdminSite()
-        classification_inline = SectionInline(ClassificationAdmin, site)
+        classification_inline = SectionInfoInline(ClassificationAdmin, site)
         self.assertIsInstance(classification_inline, ClassificationInline)
 
         request = MockRequest()
@@ -532,7 +532,7 @@ class TestClassificationInline(TestCase):
 
     def test_has_change_permission_workflow_engine_user_true(self):
         site = AdminSite()
-        classification_inline = SectionInline(ClassificationAdmin, site)
+        classification_inline = SectionInfoInline(ClassificationAdmin, site)
         self.assertIsInstance(classification_inline, ClassificationInline)
 
         request = MockRequest()
@@ -542,7 +542,7 @@ class TestClassificationInline(TestCase):
 
     def test_has_delete_permission_workflow_engine_user_true(self):
         site = AdminSite()
-        classification_inline = SectionInline(ClassificationAdmin, site)
+        classification_inline = SectionInfoInline(ClassificationAdmin, site)
         self.assertIsInstance(classification_inline, ClassificationInline)
 
         request = MockRequest()
