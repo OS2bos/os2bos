@@ -28,5 +28,13 @@ export default {
         return false
       }
     }
+  },
+  watch: {
+    user: function(new_val) {
+      if (new_val) {
+        this.$store.dispatch('fetchTeam', new_val.team)
+      }
+      this.update()
+    }
   }
 }

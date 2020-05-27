@@ -34,11 +34,7 @@
                 return this.$store.getters.getAuth
             },
             user: function() {
-                let user = this.$store.getters.getUser
-                if (user) {
-                    this.$store.dispatch('fetchTeam', user.team)
-                }
-                return user
+                return this.$store.getters.getUser
             },
             team: function() {
                 return this.$store.getters.getTeam

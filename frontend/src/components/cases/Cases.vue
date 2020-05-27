@@ -16,7 +16,7 @@
                 <ul class="filter-fields">
                     <li>
                         <label for="field-sbsysid">SBSYS ID</label>
-                        <input type="search" @input="update()" id="field-sbsysid" v-model="$route.query.sbsys_id">
+                        <input type="search" @input="update" id="field-sbsysid" v-model="$route.query.sbsys_id">
                     </li>
 
                     <li>
@@ -49,15 +49,15 @@
 
                 <ul class="filter-fields">
                     <li>
-                        <input type="radio" v-model="$route.query.expired" id="field-expired-1" @change="update()" :value="null">
+                        <input type="radio" v-model="$route.query.expired" id="field-expired-1" @change="update" :value="null">
                         <label for="field-expired-1">Aktive og lukkede sager</label>
                     </li>
                     <li>
-                        <input type="radio" v-model="$route.query.expired" id="field-expired-2" @change="update()" :value="false">
+                        <input type="radio" v-model="$route.query.expired" id="field-expired-2" @change="update" :value="false">
                         <label for="field-expired-2">Kun aktive sager</label>
                     </li>
                     <li>
-                        <input type="radio" v-model="$route.query.expired" id="field-expired-3" @change="update()" :value="true">
+                        <input type="radio" v-model="$route.query.expired" id="field-expired-3" @change="update" :value="true">
                         <label for="field-expired-3">Kun lukkede sager</label>
                     </li>
                 </ul>
@@ -212,18 +212,6 @@
             },
             teams: function() {
                 return this.$store.getters.getTeams
-            },
-            user: function() {
-                let user = this.$store.getters.getUser
-                if (user) {
-                    this.$store.dispatch('fetchTeam', user.team)
-                }
-                return user
-            }
-        },
-        watch: {
-            user: function() {
-                this.update()
             }
         },
         methods: {
