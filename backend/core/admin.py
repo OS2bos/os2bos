@@ -313,8 +313,8 @@ class SectionInfoInline(ClassificationInline):
 
     model = ActivityDetails.main_activity_for.through
     extra = 0
-    verbose_name = _("Hovedydelse for paragraffer")
-    verbose_name_plural = _("Hovedydelse for paragraffer")
+    verbose_name = _("Tilladt paragraf (for hovedydelse)")
+    verbose_name_plural = _("Tilladte paragraffer (for hovedydelse)")
 
 
 class SupplementaryActivityInline(ClassificationInline):
@@ -322,8 +322,8 @@ class SupplementaryActivityInline(ClassificationInline):
 
     model = ActivityDetailsSectionProxy
     extra = 0
-    verbose_name = _("Følgeudgift for paragraffer")
-    verbose_name_plural = _("Følgeudgift for paragraffer")
+    verbose_name = _("Tilladt paragraf (for følgeudgift)")
+    verbose_name_plural = _("Tilladte paragraffer (for følgeudgift)")
 
 
 @admin.register(ActivityDetails)
