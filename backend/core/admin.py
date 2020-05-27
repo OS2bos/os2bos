@@ -200,7 +200,7 @@ class TargetGroupForm(forms.ModelForm):
 
     def required_fields_for_case_choices():
         """Define the choices for the required_fields_for_case field."""
-        excluded_fields = ["revision"]
+        excluded_fields = ["revision", "target_group"]
 
         choices = [
             (field.name, field.verbose_name)

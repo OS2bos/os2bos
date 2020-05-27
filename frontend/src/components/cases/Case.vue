@@ -29,15 +29,25 @@
                     <dd>
                         {{ cas.cpr_number }}, {{ cas.name }}
                     </dd>
+
+                    <template v-if="cas.effort_step">
+                        <dt>Indsatstrappen</dt>
+                        <dd v-html="displayEffortName(cas.effort_step)"></dd>
+                    </template>
                 
-                    <dt>Indsatstrappen</dt>
-                    <dd v-html="displayEffortName(cas.effort_step)"></dd>
-                
-                    <dt>Skaleringstrappe</dt>
-                    <dd>
-                        {{ cas.scaling_step }}<br>
-                        <router-link :to="`/case/${ cas.id }/assessment`" style="display: inline-block; margin-top: .5rem;">Se vurderinger</router-link>
-                    </dd>
+                    <template v-if="cas.scaling_step">
+                        <dt>Skaleringstrappe</dt>
+                        <dd>
+                            {{ cas.scaling_step }}<br>
+                        </dd>
+                    </template>
+
+                    <template v-if="cas.effort_step || cas.scaling_step">
+                        <dt>Vurderinger</dt>
+                        <dd>
+                            <router-link :to="`/case/${ cas.id }/assessment`" style="display: inline-block; margin-top: .5rem;">Se vurderinger</router-link>
+                        </dd>
+                    </template>
 
                     <template v-if="cas.note">
                         <dt>Supplerende oplysninger</dt>
@@ -48,7 +58,7 @@
                     <dt>Målgruppe</dt>
                     <dd v-html="displaytargetGroup(cas.target_group)"></dd>
 
-                    <template v-if="cas.target_group === 1">
+                    <template v-if="cas.target_group">
                         <dt>Skoledistrikt</dt>
                         <dd v-html="displayDistrictName(cas.district)"></dd>
                     </template>
