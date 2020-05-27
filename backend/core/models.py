@@ -1425,7 +1425,7 @@ class ActivityDetailsSectionProxy(
 
 
 # Set the verbose_name of the 'section' foreign key for use in django admin.
-ActivityDetailsSectionProxy._meta.get_field("section").verbose_name = _(
+ActivityDetailsSectionProxy._meta.get_field("section").verbose_name = gettext(
     "paragraf"
 )
 
@@ -1433,7 +1433,7 @@ ActivityDetailsSectionProxy._meta.get_field("section").verbose_name = _(
 # django admin.
 ActivityDetailsSectionProxy._meta.get_field(
     "activitydetails"
-).verbose_name = _("aktivitetsdetalje")
+).verbose_name = gettext("aktivitetsdetalje")
 
 
 class SectionInfo(models.Model):
