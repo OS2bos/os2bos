@@ -11,7 +11,7 @@
 
     <div class="case-search">
         <div class="case-search-filters">
-        <h2>Filtre</h2>
+            <h2 class="case-search-filters--title">Filtrér sager</h2>
             <form @submit.prevent>
                 <ul class="filter-fields">
                     <li>
@@ -170,7 +170,7 @@
                     },
                     {
                         key: 'cpr_number',
-                        title: 'CPR nr.',
+                        title: 'CPR/Navn',
                         display_func: this.displayCPRName
                     },
                     {
@@ -223,10 +223,10 @@
                 return `<a href="${ to }"><i class="material-icons">folder_shared</i> ${ d.sbsys_id }</a>`
             },
             displayCPRName: function(id) {
-                return `<dl><dt>CPR</dt><dd>${ id.cpr_number }</dd><dt>Navn</dt><dd>${ id.name }</dd>`
+                return `${ id.cpr_number }<br>${ id.name }`
             },
             displayTargetGroupDistrict: function(id) {
-                let str = `<dl><dt>Målgruppe</dt><dd>${ targetGroupId2name(id.target_group) }</dd>`
+                let str = `${ targetGroupId2name(id.target_group) }`
                 if (id.target_group === 1) { 
                     str += `<dt>Skoledistrikt</dt><dd>${ districtId2name(id.district) }</dd></dl>`
                 }
@@ -236,7 +236,7 @@
                 return displayEffort(id.effort_step)
             },
             displayUserTeam: function(id) {
-                return `<dl><dt>Sagsbehandler</dt><dd>${ userId2name(id.case_worker) }</dd><dt>Team</dt><dd>${ teamId2name(id.team).name }</dd></dl>`
+                return `${ userId2name(id.case_worker) }<dl><dt>Team</dt><dd>${ teamId2name(id.team).name }</dd></dl>`
             },
             displayDate: function(d) {
                 return json2js(d.modified)
@@ -250,7 +250,7 @@
                 }
             },
             displayAppr: function(id) {
-                return `<dl><dt>Foreløbige</dt><dd>${ id.num_draft_or_expected_appropriations }</dd><dt>I alt</dt><dd>${ id.num_appropriations }</dd></dl>`
+                return `<dl class="appropriation-status"><dt>Foreløbige</dt><dd>${ id.num_draft_or_expected_appropriations }</dd><dt>I alt</dt><dd>${ id.num_appropriations }</dd></dl>`
             },
             diagChangeWorker: function(worker_id) {
                 this.diag_field_case_worker = worker_id
@@ -320,11 +320,22 @@
 
     .case-search-filters {
         background-color: var(--grey1);
-        padding: 1rem 1rem 0rem;
+        padding: 0 1.5rem 1rem;
+        margin-bottom: 3rem;
+    }
+
+    .case-search-filters--title {
+        font-size: 1.125rem;
+        padding: 1.5rem 0 .5rem;
+    }
+
+    .case-search-filters > form {
+        padding: 0;
     }
 
     .case-search-filters .filter-fields {
         margin: 0;
+        padding: 0;
         display: flex;
         flex-wrap: wrap;
         align-items: flex-start;
@@ -332,12 +343,11 @@
 
     .case-search-filters .filter-fields li {
         list-style: none;
-        padding: .5rem .5rem;
+        padding: .5rem 1rem .5rem 0;
     }
 
-    .case-search-filters h2,
-    .case-search-filters form {
-        padding: 0;
+    .case-search-filters .filter-fields label {
+        margin: 0;
     }
 
     .case-search-move-btn {
@@ -353,6 +363,19 @@
 
     .datagrid-td-status {
         width: 8rem;
+    }
+
+    .case-search .appropriation-status {
+        display: grid;
+        grid-template-columns: auto auto;
+    }
+
+    .case-search .appropriation-status dt {
+        padding-top: 0;
+    }
+
+    .case-search .appropriation-status dd {
+
     }
 
 </style>

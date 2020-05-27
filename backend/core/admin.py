@@ -38,6 +38,8 @@ from core.models import (
     TargetGroup,
     Effort,
     Rate,
+    SectionEffortStepProxy,
+    ActivityDetailsSectionProxy,
 )
 
 for klass in (
@@ -306,13 +308,29 @@ class CustomUserAdmin(BaseUserAdmin):
     ) + BaseUserAdmin.fieldsets
 
 
+class SectionInfoInline(ClassificationInline):
+    """SectionInfoInline for ActivityDetailsAdmin."""
+
+    model = ActivityDetails.main_activity_for.through
+    extra = 0
+    verbose_name = _("Tilladt paragraf (for hovedydelse)")
+    verbose_name_plural = _("Tilladte paragraffer (for hovedydelse)")
+
+
+class SupplementaryActivityInline(ClassificationInline):
+    """SupplementaryActivityInline for ActivityDetailsAdmin."""
+
+    model = ActivityDetailsSectionProxy
+    extra = 0
+    verbose_name = _("Tilladt paragraf (for følgeudgift)")
+    verbose_name_plural = _("Tilladte paragraffer (for følgeudgift)")
+
+
 @admin.register(ActivityDetails)
 class ActivityDetailsAdmin(ClassificationAdmin):
     """Widgets: Filter_horizontal for many to many links, add search field."""
 
     filter_horizontal = (
-        "main_activity_for",
-        "supplementary_activity_for",
         "service_providers",
         "main_activities",
     )
@@ -322,6 +340,8 @@ class ActivityDetailsAdmin(ClassificationAdmin):
         "activity_id",
         "active",
     )
+    exclude = ("supplementary_activity_for", "main_activity_for")
+    inlines = (SectionInfoInline, SupplementaryActivityInline)
 
 
 class MainActivityDetailsInline(ClassificationInline):
@@ -337,7 +357,7 @@ class MainActivityDetailsInline(ClassificationInline):
 class SupplementaryActivityDetailsInline(ClassificationInline):
     """SupplementaryActivityDetailsInline for SectionAdmin."""
 
-    model = ActivityDetails.supplementary_activity_for.through
+    model = ActivityDetailsSectionProxy
     extra = 0
     verbose_name = _("Tilladt følgeudgift")
     verbose_name_plural = _("Tilladte følgeudgifter")
@@ -407,6 +427,7 @@ class ServiceProviderAdmin(ClassificationAdmin):
 
     list_display = (
         "name",
+        "cvr_number",
         "active",
     )
 
@@ -439,13 +460,13 @@ class ApprovalLevelAdmin(ClassificationAdmin):
     )
 
 
-class SectionInline(ClassificationInline):
-    """SectionInline for EffortStepAdmin."""
+class SectionEffortStepProxyInline(ClassificationInline):
+    """SectionEffortStepProxyInline for EffortStepAdmin."""
 
-    model = EffortStep.sections.through
+    model = SectionEffortStepProxy
     extra = 0
-    verbose_name = _("Trin tilladt for paragraf")
-    verbose_name_plural = _("Trin tilladt for paragraffer")
+    verbose_name = _("Tilladt paragraf")
+    verbose_name_plural = _("Tilladte paragraffer")
 
 
 @admin.register(EffortStep)
@@ -462,7 +483,7 @@ class EffortStepAdmin(ClassificationAdmin):
         "active",
     )
 
-    inlines = (SectionInline,)
+    inlines = (SectionEffortStepProxyInline,)
 
     def list_sections(self, obj):
         """HTML list of sections for Django admin purposes."""

@@ -34,6 +34,7 @@ from core.tests.testing_utils import (
     create_service_provider,
     create_section_info,
     create_related_person,
+    create_effort_step,
 )
 from core.models import (
     Municipality,
@@ -58,7 +59,36 @@ from core.models import (
     STATUS_EXPECTED,
     STATUS_DRAFT,
     Rate,
+    SectionEffortStepProxy,
+    ActivityDetailsSectionProxy,
 )
+
+
+class SectionEffortStepProxyTestCase(TestCase):
+    def test_section_effort_step_proxy_str(self):
+        section = create_section(text="test beskrivelse")
+        effort_step = create_effort_step()
+        section.allowed_for_steps.add(effort_step)
+
+        section_effort_step_proxy = SectionEffortStepProxy.objects.first()
+        self.assertEqual(
+            str(section_effort_step_proxy), "ABL-105-2 test beskrivelse"
+        )
+
+
+class ActivityDetailsSectionProxyTestCase(TestCase):
+    def test_activity_details_section_proxy_str(self):
+        activity_details = create_activity_details()
+        section = create_section()
+        activity_details.supplementary_activity_for.add(section)
+
+        activity_details_section_proxy = (
+            ActivityDetailsSectionProxy.objects.first()
+        )
+        self.assertEqual(
+            str(activity_details_section_proxy),
+            "000000 - Test aktivitet - ABL-105-2",
+        )
 
 
 class AppropriationTestCase(TestCase, BasicTestMixin):

@@ -17,7 +17,7 @@ from django.db import models, transaction
 from django.contrib.postgres.fields import ArrayField
 from django.db.models import Q, F
 from django.contrib.auth.models import AbstractUser
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext, gettext_lazy as _
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django_audit_fields.models import AuditModelMixin
@@ -148,7 +148,7 @@ class Effort(Classification):
     allowed_for_target_groups = models.ManyToManyField(
         TargetGroup,
         related_name="efforts",
-        verbose_name=_("tilladt for målgrupper"),
+        verbose_name=_("målgrupper"),
         blank=True,
     )
 
@@ -986,13 +986,13 @@ class Section(Classification):
     allowed_for_target_groups = models.ManyToManyField(
         TargetGroup,
         related_name="sections",
-        verbose_name=_("tilladt for målgrupper"),
+        verbose_name=_("målgrupper"),
         blank=True,
     )
     allowed_for_steps = models.ManyToManyField(
         EffortStep,
         related_name="sections",
-        verbose_name=_("tilladt for trin i indsatstrappen"),
+        verbose_name=_("trin i indsatstrappen"),
         blank=True,
     )
     law_text_name = models.CharField(
@@ -1001,6 +1001,26 @@ class Section(Classification):
 
     def __str__(self):
         return f"{self.paragraph}"
+
+
+class SectionEffortStepProxy(Section.allowed_for_steps.through):
+    """Proxy model for the allowed_for_steps (EffortStep) m2m field on Section.
+
+    We use a proxy so we can override __str__ and m2m verbose_name for use in
+    django admin without an explicit through model.
+    """
+
+    class Meta:
+        proxy = True
+
+    def __str__(self):
+        return f"{self.section.paragraph} {self.section.text}"
+
+
+# Set the verbose_name of the 'section' foreign key for use in django admin.
+SectionEffortStepProxy._meta.get_field("section").verbose_name = gettext(
+    "paragraf"
+)
 
 
 class Appropriation(AuditModelMixin, models.Model):
@@ -1378,12 +1398,45 @@ class ActivityDetails(Classification):
         "self",
         related_name="supplementary_activities",
         symmetrical=False,
-        verbose_name=_("tilladte hovedaktiviteter"),
+        verbose_name=_("hovedydelser"),
+        help_text=_(
+            "Denne aktivitetsdetalje kan være følgeudgift for"
+            " disse hovedydelser.<br>"
+        ),
         blank=True,
     )
 
     def __str__(self):
         return f"{self.activity_id} - {self.name}"
+
+
+class ActivityDetailsSectionProxy(
+    ActivityDetails.supplementary_activity_for.through
+):
+    """
+    Proxy model for supplementary_activity_for (Section) on ActivityDetails.
+
+    We use a proxy model so we can override __str__ and m2m verbose_name for
+    use in django admin without an explicit through model.
+    """
+
+    class Meta:
+        proxy = True
+
+    def __str__(self):
+        return f"{self.activitydetails} - {self.section}"
+
+
+# Set the verbose_name of the 'section' foreign key for use in django admin.
+ActivityDetailsSectionProxy._meta.get_field("section").verbose_name = gettext(
+    "paragraf"
+)
+
+# Set the verbose_name of the 'activitydetails' foreign key for use in
+# django admin.
+ActivityDetailsSectionProxy._meta.get_field(
+    "activitydetails"
+).verbose_name = gettext("aktivitetsdetalje")
 
 
 class SectionInfo(models.Model):
@@ -1417,6 +1470,10 @@ class SectionInfo(models.Model):
     supplementary_activity_main_account_number = models.CharField(
         max_length=128,
         verbose_name=_("hovedkontonummer for følgeudgift"),
+        help_text=_(
+            "Et hovedkontonummer der skal bruges, hvis en følgeudgift"
+            " har denne aktivitetsdetalje som hovedydelse.<br>"
+        ),
         blank=True,
     )
 
