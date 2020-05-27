@@ -7,6 +7,7 @@
 
 
 import axios from '../components/http/Http.js'
+import { fetchData } from '../components/webworker/Worker.js'
 
 const state = {
     municipalities: null,
@@ -131,24 +132,13 @@ const actions = {
         .catch(err => console.log(err))
     },
     fetchLists: function({dispatch}) {
-        return Promise.all([
-            dispatch('fetchTeams'),
-            dispatch('fetchMunis'),
-            dispatch('fetchTargetGroups'),
-            dispatch('fetchDistricts'),
-            dispatch('fetchActivityDetails'),
-            dispatch('fetchSections'),
-            dispatch('fetchApprovals'),
-            dispatch('fetchEffortSteps'),
-            dispatch('fetchEfforts'),
-            dispatch('fetchServiceProviders')
-        ])
-        .then(() => {
-            // Nothing yet
-        })
-        .catch(err => {
-            console.log(err)
-        })   
+        dispatch('fetchTeams')
+        dispatch('fetchTargetGroups')
+        dispatch('fetchDistricts')
+        dispatch('fetchApprovals')
+        dispatch('fetchEffortSteps')
+        dispatch('fetchEfforts')
+        fetchData()
     }
 }
 

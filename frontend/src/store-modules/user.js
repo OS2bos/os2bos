@@ -59,7 +59,7 @@ const actions = {
             console.log(err)
         })
     },
-    fetchUser: async function({commit, state, dispatch}, user_id) {
+    fetchUser: async function({commit, dispatch}, user_id) {
         if (state.users) {
             let user = state.users.find(function(u) {
                 return u.id === user_id
@@ -75,18 +75,28 @@ const actions = {
             }, 500)
         }
     },
-    fetchTeams: function({commit, state}) {
+    fetchTeams: function({commit}) {
         return axios.get('/teams/')
         .then(res => {
             commit('setTeams', res.data)
         })
         .catch(err => console.log(err))
     },
-    fetchTeam: function({commit}, team_id) {
-        let team = state.teams.find(function(t) {
-            return t.id === team_id
-        })
-        commit('setTeam', team)
+    fetchTeam: function({commit, dispatch}, team_id) {
+        function getTeam() {
+            let team = state.teams.find(function(t) {
+                return t.id === team_id
+            })
+            commit('setTeam', team)
+        }
+        if (state.teams) {
+            getTeam()
+        } else {
+            dispatch('fetchTeams')
+            .then(() => {
+                getTeam()
+            })
+        }
     }
 
 }
