@@ -483,7 +483,7 @@ class TargetGroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TargetGroup
-        exclude = ("required_fields_for_case",)
+        fields = "__all__"
 
 
 class EffortSerializer(serializers.ModelSerializer):

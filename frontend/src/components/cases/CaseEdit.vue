@@ -61,10 +61,9 @@
                             :list="municipalities" 
                             :default="42" />
                     </fieldset>
-
                 </div>
-                <div class="row-item">
 
+                <div class="row-item">
                     <fieldset>
                         <label class="required" for="selectTargetGroup">Målgruppe:</label>
                         <list-picker
@@ -75,30 +74,32 @@
                             required />
                         <error err-key="target_group" />
                     
-                        <template v-if="cas.target_group === 1">
+                        <template v-if="requiredDistrict === true">
                             <label class="required" for="selectDistrict">Skoledistrikt (nuværende eller oprindeligt)</label>
                             <list-picker :dom-id="'selectDistrict'" :selected-id="cas.district" @selection="changeDistrict" :list="districts" required />
                         </template>
                     </fieldset>
 
-                    <fieldset>
-                        <legend style="margin-bottom: .75rem;">Andet:</legend>
-                        <template v-for="effort in effort_available">
-                            <input 
-                                :key="effort.id"
-                                :id="`inputCheckbox${ effort.id }`" 
-                                type="checkbox" 
-                                :value="effort.id" 
-                                v-model="cas.efforts">
-                            <label 
-                                :key="effort.name" 
-                                :for="`inputCheckbox${ effort.id }`">
-                                <span v-if="effort.active === false">(</span>
-                                {{ effort.name }}
-                                <span v-if="effort.active === false">)</span>
-                            </label>
-                        </template>
-                    </fieldset>
+                    <template v-if="effort_available">
+                        <fieldset>
+                            <legend style="margin-bottom: .75rem;">Andet:</legend>
+                            <template v-for="effort in effort_available">
+                                <input 
+                                    :key="effort.id"
+                                    :id="`inputCheckbox${ effort.id }`" 
+                                    type="checkbox" 
+                                    :value="effort.id" 
+                                    v-model="cas.efforts">
+                                <label 
+                                    :key="effort.name" 
+                                    :for="`inputCheckbox${ effort.id }`">
+                                    <span v-if="effort.active === false">(</span>
+                                    {{ effort.name }}
+                                    <span v-if="effort.active === false">)</span>
+                                </label>
+                            </template>
+                        </fieldset>
+                    </template>
                 </div>
                 
                 <div class="row-item" >
@@ -194,6 +195,14 @@
                     if (!kle.match("27.24.00") && kle.length >= 8) {
                         return true
                     }
+                }
+            },
+            requiredDistrict: function() {
+                if (this.cas.target_group) {
+                    let target = this.targetGroups.filter(tar => tar.id === this.cas.target_group)
+                    return target[0].required_fields_for_case.filter(tar => tar === 'district').length === 1
+                } else {
+                    return false
                 }
             }
         },
