@@ -411,6 +411,7 @@ class TargetGroupViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
 
     queryset = TargetGroup.objects.all()
     serializer_class = TargetGroupSerializer
+    filterset_fields = "__all__"
 
 
 class EffortViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
