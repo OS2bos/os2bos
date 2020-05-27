@@ -892,10 +892,13 @@ class Case(AuditModelMixin, models.Model):
         verbose_name=_("indsatstrappe"),
         on_delete=models.PROTECT,
         null=True,
+        blank=True,
     )
     scaling_step = models.PositiveSmallIntegerField(
         verbose_name=_("skaleringstrappe"),
         choices=[(i, i) for i in range(1, 11)],
+        null=True,
+        blank=True,
     )
     assessment_comment = models.TextField(
         verbose_name=_("supplerende oplysninger til vurdering"), blank=True
