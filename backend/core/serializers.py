@@ -351,7 +351,6 @@ class BaseAppropriationSerializer(serializers.ModelSerializer):
     case__sbsys_id = serializers.ReadOnlyField(source="case.sbsys_id")
 
     num_draft_or_expected_activities = serializers.SerializerMethodField()
-    main_activity = ActivitySerializer(read_only=True)
 
     @staticmethod
     def setup_eager_loading(queryset):
@@ -380,6 +379,7 @@ class ListAppropriationSerializer(BaseAppropriationSerializer):
 class AppropriationSerializer(BaseAppropriationSerializer):
     """Serializer for a single Appropriation model."""
 
+    main_activity = ActivitySerializer(read_only=True)
     activities = serializers.SerializerMethodField()
 
     def get_activities(self, appropriation):
