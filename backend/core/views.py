@@ -411,7 +411,6 @@ class TargetGroupViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
 
     queryset = TargetGroup.objects.all()
     serializer_class = TargetGroupSerializer
-    exclude = ("required_fields_for_case",)
 
 
 class EffortViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
