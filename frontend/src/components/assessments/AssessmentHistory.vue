@@ -35,9 +35,7 @@
                         <i class="material-icons">account_circle</i>
                         {{ displayUserName(h.case_worker) }}
                     </td>
-                    <td :class="`step-effort-${h.effort_step}`">
-                        {{ displayEffortName(h.effort_step) }}
-                    </td>
+                    <td :class="`step-effort-${h.effort_step}`" v-html="displayEffortName(h.effort_step)"></td>
                     <td :class="`step-scale-${h.scaling_step}`">
                         {{ h.scaling_step }}
                     </td>
