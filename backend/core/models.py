@@ -1445,6 +1445,12 @@ class SectionInfo(models.Model):
     class Meta:
         verbose_name = _("paragraf-info")
         verbose_name_plural = _("paragraf-info")
+        constraints = [
+            models.UniqueConstraint(
+                fields=["activity_details", "section"],
+                name="unique_section_activity_details",
+            )
+        ]
 
     activity_details = models.ForeignKey(
         ActivityDetails,
