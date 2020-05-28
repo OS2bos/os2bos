@@ -333,8 +333,8 @@ class ActivitySerializer(WritableNestedModelSerializer):
         fields = "__all__"
 
 
-class AppropriationSerializer(serializers.ModelSerializer):
-    """Serializer for the Appropriation model."""
+class BaseAppropriationSerializer(serializers.ModelSerializer):
+    """Base Serializer for the Appropriation model."""
 
     status = serializers.ReadOnlyField()
     total_granted_this_year = serializers.ReadOnlyField()
@@ -352,7 +352,6 @@ class AppropriationSerializer(serializers.ModelSerializer):
 
     num_draft_or_expected_activities = serializers.SerializerMethodField()
     main_activity = ActivitySerializer(read_only=True)
-    activities = serializers.SerializerMethodField()
 
     @staticmethod
     def setup_eager_loading(queryset):
@@ -367,6 +366,22 @@ class AppropriationSerializer(serializers.ModelSerializer):
             modified_by__isnull=True,
         ).count()
 
+    class Meta:
+        model = Appropriation
+        fields = "__all__"
+
+
+class ListAppropriationSerializer(BaseAppropriationSerializer):
+    """Serializer for the Appropriation model for a list."""
+
+    pass
+
+
+class AppropriationSerializer(BaseAppropriationSerializer):
+    """Serializer for a single Appropriation model."""
+
+    activities = serializers.SerializerMethodField()
+
     def get_activities(self, appropriation):
         """Get activities on appropriation."""
         activities = appropriation.activities.exclude(status=STATUS_DELETED)
@@ -374,10 +389,6 @@ class AppropriationSerializer(serializers.ModelSerializer):
             instance=activities, many=True, read_only=True
         )
         return serializer.data
-
-    class Meta:
-        model = Appropriation
-        fields = "__all__"
 
 
 class PaymentMethodDetailsSerializer(serializers.ModelSerializer):
