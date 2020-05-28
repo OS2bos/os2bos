@@ -3536,7 +3536,7 @@ class SectionInfoTestCase(TestCase, BasicTestMixin):
             IntegrityError,
             "duplicate key value violates unique "
             'constraint "unique_section_activity_details"',
-        ) as e:
+        ):
             create_section_info(details, section)
 
 
