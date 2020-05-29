@@ -8,7 +8,6 @@
 
 <template>
 
-
     <section class="case-search">
         <header class="case-search-header">
             <h1>Sager</h1>
@@ -382,10 +381,6 @@
 
     .case-search .appropriation-status dt {
         padding-top: 0;
-    }
-
-    .case-search .appropriation-status dd {
-
     }
 
 </style>

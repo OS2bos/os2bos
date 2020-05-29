@@ -9,6 +9,60 @@
     
     <div class="payment-search">
 
+        <div class="payment-search-filters">
+            <h2 class="payment-search-filters--title">Filtrér betalinger</h2>
+            <form>
+                <ul class="filter-fields">
+                    <li>
+                        <label for="field-pay-key">Betalingsnøgle</label>
+                        <input id="field-pay-key" type="search" @input="update()" v-model="$route.query.payment_schedule__payment_id">
+                    </li>
+
+                    <li>
+                        <label for="field-cpr">Hovedsag CPR nr.</label>
+                        <input id="field-cpr" type="search" @input="changeCpr" v-model="$route.query.case__cpr_number">
+                    </li>
+
+                    <li>
+                        <label for="field-payee">Betalingsmodtager</label>
+                        <input id="field-payee" type="search" @input="update()" v-model="$route.query.recipient_id">
+                    </li>
+
+                    <li>
+                        <label for="field-pay-method">Betalingsmåde</label>
+                        <list-picker 
+                            domId="field-pay-method"
+                            :list="payment_methods"
+                            @selection="changePaymentMethod" />
+                    </li>
+
+                    <li>
+                        <label for="field-from">Fra dato</label>
+                        <input id="field-from" type="date" @input="update()" v-model="$route.query.paid_date_or_date__gte">
+                    </li>
+                    <li>
+                        <label for="field-to">Til dato</label>
+                        <input id="field-to" type="date" @input="update()" v-model="$route.query.paid_date_or_date__lte">
+                    </li>
+                </ul>
+
+                <ul class="filter-fields">
+                    <li>
+                        <input type="radio" id="field-paid-1" checked name="field-paid" :value="null" v-model="$route.query.paid" @change="update()">
+                        <label for="field-paid-1">Betalte og ubetalte</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="field-paid-2" name="field-paid" :value="true" v-model="$route.query.paid" @change="update()">
+                        <label for="field-paid-2">Kun betalte</label>
+                    </li>
+                    <li>
+                        <input type="radio" id="field-paid-3" name="field-paid" :value="false" v-model="$route.query.paid" @change="update()">
+                        <label for="field-paid-3">Kun ubetalte</label>
+                    </li>
+                </ul>
+            </form>
+        </div>
+
         <div class="payment-search-list">
             <h1>Betalinger</h1>
             <template v-if="results">
@@ -18,12 +72,13 @@
                         <tr>
                             <th>Betaling nr</th>
                             <th>Betalingsnøgle</th>
-                            <th>Betalingsmåde</th>
-                            <th>Udbetales til</th>
-                            <th>CPR nr</th>
-                            <th>Betalingsdato</th>
-                            <th>Betalt</th>
-                            <th class="right">Beløb</th>
+                            <th>Betalingsmåde/modtager</th>
+                            <th>Hovedsag CPR nr./ kontostreng</th>
+                            <th>Planlagt betalingsdato</th>
+                            <th>Planlagt beløb</th>
+                            <th>Betalt dato</th>
+                            <th>Betalt beløb</th>
+                            <th>Reference</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -38,15 +93,16 @@
                                 <div v-if="p.payment_method === 'INTERNAL'">Intern afregning</div>
                                 <div v-if="p.payment_method === 'CASH'">Udbetaling</div>
                                 <div v-if="p.payment_method === 'SD'">SD-løn</div>
-                            </td>
-                            <td> 
                                 {{ p.recipient_name }}<br>
                                 <span v-if="p.recipient_type === 'COMPANY'">
                                     CVR
                                 </span>
                                 {{ p.recipient_id }}
                             </td>
-                            <td> {{ p.case__cpr_number }} </td>
+                            <td>
+                                {{ p.case__cpr_number }} <br>
+                                {{ p.account_string }}
+                            </td>
                             <td>
                                 <span v-if="p.paid_date" style="white-space: nowrap;">
                                     {{ displayDate(p.paid_date) }}<br>
@@ -56,16 +112,24 @@
                                 </span>
                             </td>
                             <td>
-                                <span v-if="p.paid"><i class="material-icons">check</i></span>
-                                <span v-else>-</span>
-                            </td>
-                            <td class="right">
                                 <span v-if="p.paid_amount" style="white-space: nowrap;">
                                     {{ displayDigits(p.paid_amount) }} kr.<br>
                                 </span>
                                 <span class="dim" style="white-space: nowrap;">
                                     {{ displayDigits(p.amount) }} kr.
                                 </span>
+                            </td>
+                            <td>
+                                <input type="date" :id="`field-date-${ p.id }`" v-model="p.paid_date" required>
+                            </td>
+                            <td>
+                                <input type="number" :id="`field-amount-${ p.id }`" step="0.01" v-model="p.paid_amount" required>
+                            </td>
+                            <td>
+                                <input type="text" :id="`field-note-${ p.id }`" v-model="p.note">
+                            </td>
+                            <td>
+                                <button class="modal-confirm-btn" type="submit">Gem</button>
                             </td>
                         </tr>
                     </tbody>
@@ -76,45 +140,6 @@
 
                 <button v-if="results.length > 1" :disabled="disableBtn" class="more" @click="loadResults()">Vis flere</button>
             </template>
-
-        </div>
-
-        <div class="payment-search-filters">
-            <h2>Filtre</h2>
-            <form>
-                <fieldset>
-                    <label for="field-pay-key">Betalingsnøgle</label>
-                    <input id="field-pay-key" type="search" @input="update()" v-model="$route.query.payment_schedule__payment_id">
-                </fieldset>
-                <fieldset>
-                    <legend>Tidsrum</legend>
-                    <label for="field-from">Fra dato</label>
-                    <input id="field-from" type="date" @input="update()" v-model="$route.query.paid_date_or_date__gte">
-                    <label for="field-to">Til dato</label>
-                    <input id="field-to" type="date" @input="update()" v-model="$route.query.paid_date_or_date__lte">
-                </fieldset>
-                <fieldset>
-                    <input type="radio" id="field-paid-1" checked name="field-paid" :value="null" v-model="$route.query.paid" @change="update()">
-                    <label for="field-paid-1">Betalte og ubetalte</label>
-                    <input type="radio" id="field-paid-2" name="field-paid" :value="true" v-model="$route.query.paid" @change="update()">
-                    <label for="field-paid-2">Kun betalte</label>
-                    <input type="radio" id="field-paid-3" name="field-paid" :value="false" v-model="$route.query.paid" @change="update()">
-                    <label for="field-paid-3">Kun ubetalte</label>
-                </fieldset>
-                <fieldset>
-                    <label for="field-cpr">Hovedsag CPR</label>
-                    <input id="field-cpr" type="search" @input="changeCpr" v-model="$route.query.case__cpr_number">
-                </fieldset>
-                <fieldset>
-                    <label for="field-payee">Betalingsmodtager</label>
-                    <input id="field-payee" type="search" @input="update()" v-model="$route.query.recipient_id">
-                    <label for="field-pay-method">Betalingsmåde</label>
-                    <list-picker 
-                        domId="field-pay-method"
-                        :list="payment_methods"
-                        @selection="changePaymentMethod" />
-                </fieldset>
-            </form>
         </div>
 
     </div>
@@ -222,13 +247,13 @@
 <style>
 
     .payment-search {
-        padding: 2rem;
-        display: flex;
-        flex-flow: row nowrap;
+        padding: 0 2rem 2rem;
     }
 
     .payment-search-list {
+        margin-top: 2rem;
         order: 2;
+        flex-grow: 1;
     }
 
     .payment-search-list .more .material-icons {
@@ -242,9 +267,30 @@
         margin: 0 2rem 1rem 0;
     }
 
-    .payment-search-filters h2,
-    .payment-search-filters form {
+    .payment-search-filters--title {
+        font-size: 1.125rem;
+        padding: 1.5rem 0 .5rem;
+    }
+
+    .payment-search-filters > form {
         padding: 0;
+    }
+
+    .payment-search-filters .filter-fields {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+
+    .payment-search-filters .filter-fields li {
+        list-style: none;
+        padding: .5rem 1rem .5rem 0;
+    }
+
+    .payment-search-filters .filter-fields label {
+        margin: 0;
     }
 
     .payment-search .more {
@@ -253,6 +299,10 @@
 
     .nopays {
         margin: 1rem 0;
+    }
+
+    .input-pay {
+        width: 5rem;
     }
 
 </style>
