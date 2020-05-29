@@ -45,6 +45,7 @@ from core.models import (
 
 from core.serializers import (
     CaseSerializer,
+    ListAppropriationSerializer,
     AppropriationSerializer,
     ActivitySerializer,
     PaymentScheduleSerializer,
@@ -167,9 +168,18 @@ class AppropriationViewSet(AuditViewSet):
     all its activities.
     """
 
-    serializer_class = AppropriationSerializer
-
+    serializer_action_classes = {
+        "list": ListAppropriationSerializer,
+        "retrieve": AppropriationSerializer,
+    }
     filterset_class = AppropriationFilter
+
+    def get_serializer_class(self):
+        """Use a different Serializer depending on the action."""
+        try:
+            return self.serializer_action_classes[self.action]
+        except (KeyError, AttributeError):
+            return AppropriationSerializer
 
     def get_queryset(self):
         """Avoid Django's default lazy loading to improve performance."""
