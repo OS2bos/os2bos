@@ -3528,6 +3528,17 @@ class SectionInfoTestCase(TestCase, BasicTestMixin):
             "1234",
         )
 
+    def test_duplicate_activity_details_section_disallowed(self):
+        details = create_activity_details()
+        section = create_section()
+        create_section_info(details, section)
+        with self.assertRaisesRegex(
+            IntegrityError,
+            "duplicate key value violates unique "
+            'constraint "unique_section_activity_details"',
+        ):
+            create_section_info(details, section)
+
 
 class RelatedPersonTestCase(TestCase, BasicTestMixin):
     @classmethod
