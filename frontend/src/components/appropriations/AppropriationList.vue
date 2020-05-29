@@ -93,6 +93,7 @@
                         class: 'nowrap'
                     },
                     {
+                        key: 'num_activities',
                         title: 'I alt',
                         class: 'nowrap'
                     },
