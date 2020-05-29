@@ -351,6 +351,7 @@ class BaseAppropriationSerializer(serializers.ModelSerializer):
     case__sbsys_id = serializers.ReadOnlyField(source="case.sbsys_id")
 
     num_draft_or_expected_activities = serializers.SerializerMethodField()
+    num_activities = serializers.SerializerMethodField()
 
     @staticmethod
     def setup_eager_loading(queryset):
@@ -363,6 +364,11 @@ class BaseAppropriationSerializer(serializers.ModelSerializer):
         return appropriation.activities.filter(
             Q(status=STATUS_DRAFT) | Q(status=STATUS_EXPECTED),
             modified_by__isnull=True,
+        ).count()
+
+    def get_num_activities(self, appropriation):
+        return appropriation.activities.filter(
+            modified_by__isnull=True
         ).count()
 
     class Meta:
