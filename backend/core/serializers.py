@@ -367,9 +367,11 @@ class BaseAppropriationSerializer(serializers.ModelSerializer):
         ).count()
 
     def get_num_activities(self, appropriation):
-        return appropriation.activities.filter(
-            modified_by__isnull=True
-        ).count()
+        return (
+            appropriation.activities.filter(modified_by__isnull=True)
+            .exclude(status=STATUS_DELETED)
+            .count()
+        )
 
     class Meta:
         model = Appropriation
