@@ -93,8 +93,8 @@
                         class: 'nowrap'
                     },
                     {
+                        key: 'num_activities',
                         title: 'I alt',
-                        display_func: this.actCountTotal,
                         class: 'nowrap'
                     },
                     {
@@ -193,24 +193,17 @@
             },
             statusLabel: function(appr) {
                 let label = 'DRAFT'
-                for (let act in appr.activities) {
-                    if (appr.activities[act].status === 'GRANTED') {
+                    if (appr.status === 'GRANTED') {
                         label = 'GRANTED'
                     }
-                }
-                for (let act in appr.activities) {
-                    if (appr.activities[act].status === 'EXPECTED') {
+                    if (appr.status === 'EXPECTED') {
                         label = 'EXPECTED'
                     }
-                }
                 return displayStatus(label)
             },
             displayID: function(d) {
                 let to = `#/appropriation/${ d.id }/`
                 return `<a href="${ to }"><i class="material-icons">folder_open</i> ${ d.sbsys_id }</a>`
-            },
-            actCountTotal: function(appr) {
-                return appr.activities.length
             }
         },
         created: function() {

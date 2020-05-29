@@ -190,16 +190,12 @@
             },
             statusLabel: function(appr) {
                 let label = 'DRAFT'
-                for (let act in appr.activities) {
-                    if (appr.activities[act].status === 'GRANTED') {
+                    if (appr.status === 'GRANTED') {
                         label = 'GRANTED'
                     }
-                }
-                for (let act in appr.activities) {
-                    if (appr.activities[act].status === 'EXPECTED') {
+                    if (appr.status === 'EXPECTED') {
                         label = 'EXPECTED'
                     }
-                }
                 return displayStatus(label)
             },
             displayID: function(d) {
