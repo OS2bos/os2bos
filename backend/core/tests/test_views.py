@@ -1140,3 +1140,45 @@ class TestClassificationMixin(AuthenticatedTestCase, BasicTestMixin):
         self.client.login(username=self.username, password=self.password)
         response = self.client.get(url)
         self.assertEqual(response.json()[0]["id"], section.id)
+
+
+class TestAuditModelViewSetMixin(AuthenticatedTestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_perform_create(self):
+        url = reverse("case-list")
+        json = create_case_as_json(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        self.user.team = self.team
+        self.user.save()
+
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.post(url, json)
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json()["user_created"], self.username)
+
+    def test_perform_update(self):
+        url = reverse("case-list")
+        json = create_case_as_json(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        self.user.team = self.team
+        self.user.save()
+
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.post(url, json)
+
+        # Assert user_created is set but user_modified is not on creation.
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json()["user_created"], self.username)
+        self.assertEqual(response.json()["user_modified"], "")
+        breakpoint()
+        # Assert user_modified is now set on modification.
+        url = reverse("case-detail", kwargs={"pk": response.json()["id"]})
+        response = self.client.patch(url, json={"cpr_number": "0123456789"})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["user_modified"], self.username)
