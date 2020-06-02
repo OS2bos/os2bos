@@ -11,7 +11,6 @@ import logging
 
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.utils import timezone
 
 from rest_framework import status
 
@@ -54,14 +53,17 @@ class AuditMixin:
 
 
 class AuditModelViewSetMixin:
+    """Mixin for AuditModel Viewsets."""
+
     def perform_create(self, serializer):
-        breakpoint()
+        """Set user_created on creation."""
         current_user = self.request.user
-        serializer.save(user_created=current_user)
+        serializer.save(user_created=current_user.username)
 
     def perform_update(self, serializer):
+        """Set user_modified on modification."""
         current_user = self.request.user
-        serializer.save(user_modified=current_user)
+        serializer.save(user_modified=current_user.username)
 
 
 class ClassificationViewSetMixin:
@@ -77,6 +79,8 @@ class ClassificationViewSetMixin:
 
 
 class AuditModelMixin(models.Model):
+    """Mixin for tracking created/modified datetime and user."""
+
     created = models.DateTimeField(
         auto_now_add=True, null=True, verbose_name=_("oprettet")
     )

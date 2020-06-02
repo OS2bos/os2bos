@@ -80,6 +80,7 @@ from core.utils import get_person_info
 from core.mixins import (
     AuditMixin,
     ClassificationViewSetMixin,
+    AuditModelViewSetMixin,
 )
 
 from core.authentication import CsrfExemptSessionAuthentication
@@ -107,7 +108,7 @@ class ReadOnlyViewset(viewsets.ReadOnlyModelViewSet):
     permission_classes = (IsUserAllowed,)
 
 
-class CaseViewSet(AuditViewSet):
+class CaseViewSet(AuditModelViewSetMixin, AuditViewSet):
     """Viewset exposing Case in the REST API.
 
     Note the custom actions ``history`` and ``change_case_worker``.
@@ -126,10 +127,6 @@ class CaseViewSet(AuditViewSet):
             user_created=current_user.username,
             team=team,
         )
-
-    def perform_update(self, serializer):
-        current_user = self.request.user
-        serializer.save(user_modified=current_user.username)
 
     @action(detail=True, methods=["get"])
     def history(self, request, pk=None):
@@ -174,7 +171,7 @@ class CaseViewSet(AuditViewSet):
         return Response(CaseSerializer(cases, many=True).data)
 
 
-class AppropriationViewSet(AuditViewSet):
+class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
     """Expose appropriations in REST API.
 
     Note the custom action ``grant`` for approving an appropriation and
@@ -186,14 +183,6 @@ class AppropriationViewSet(AuditViewSet):
         "retrieve": AppropriationSerializer,
     }
     filterset_class = AppropriationFilter
-
-    def perform_create(self, serializer):
-        current_user = self.request.user
-        serializer.save(user_created=current_user.username)
-
-    def perform_update(self, serializer):
-        current_user = self.request.user
-        serializer.save(user_modified=current_user.username)
 
     def get_serializer_class(self):
         """Use a different Serializer depending on the action."""
@@ -233,20 +222,12 @@ class AppropriationViewSet(AuditViewSet):
         return response
 
 
-class ActivityViewSet(AuditViewSet):
+class ActivityViewSet(AuditModelViewSetMixin, AuditViewSet):
     """Expose activities in REST API."""
 
     serializer_class = ActivitySerializer
 
     filterset_fields = "__all__"
-
-    def perform_create(self, serializer):
-        current_user = self.request.user
-        serializer.save(user_created=current_user.username)
-
-    def perform_update(self, serializer):
-        current_user = self.request.user
-        serializer.save(user_modified=current_user.username)
 
     def get_queryset(self):
         """Avoid Django's default lazy loading to improve performance."""
@@ -312,21 +293,13 @@ class PaymentViewSet(AuditViewSet):
     filterset_fields = "__all__"
 
 
-class RelatedPersonViewSet(AuditViewSet):
+class RelatedPersonViewSet(AuditModelViewSetMixin, AuditViewSet):
     """Expose related persons - typically family relations - in REST API."""
 
     queryset = RelatedPerson.objects.all()
     serializer_class = RelatedPersonSerializer
 
     filterset_fields = "__all__"
-
-    def perform_create(self, serializer):
-        current_user = self.request.user
-        serializer.save(user_created=current_user)
-
-    def perform_update(self, serializer):
-        current_user = self.request.user
-        serializer.save(user_modified=current_user)
 
     @action(detail=False, methods=["get"])
     def fetch_from_serviceplatformen(self, request):
