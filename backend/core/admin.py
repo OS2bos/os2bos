@@ -330,17 +330,18 @@ class SupplementaryActivityInline(ClassificationInline):
 class ActivityDetailsAdmin(ClassificationAdmin):
     """Widgets: Filter_horizontal for many to many links, add search field."""
 
-    filter_horizontal = (
-        "service_providers",
-        "main_activities",
-    )
+    filter_horizontal = ("main_activities",)
     search_fields = ("activity_id", "name")
     list_display = (
         "name",
         "activity_id",
         "active",
     )
-    exclude = ("supplementary_activity_for", "main_activity_for")
+    exclude = (
+        "supplementary_activity_for",
+        "main_activity_for",
+        "service_providers",
+    )
     inlines = (SectionInfoInline, SupplementaryActivityInline)
 
 
