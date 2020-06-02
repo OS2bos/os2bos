@@ -1147,7 +1147,7 @@ class TestAuditModelViewSetMixin(AuthenticatedTestCase, BasicTestMixin):
     def setUpTestData(cls):
         cls.basic_setup()
 
-    def test_perform_create(self):
+    def test_case_perform_create(self):
         url = reverse("case-list")
         json = create_case_as_json(
             self.case_worker, self.team, self.municipality, self.district
@@ -1161,7 +1161,7 @@ class TestAuditModelViewSetMixin(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.json()["user_created"], self.username)
 
-    def test_perform_update(self):
+    def test_case_perform_update(self):
         url = reverse("case-list")
         json = create_case_as_json(
             self.case_worker, self.team, self.municipality, self.district
@@ -1176,9 +1176,49 @@ class TestAuditModelViewSetMixin(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.json()["user_created"], self.username)
         self.assertEqual(response.json()["user_modified"], "")
-        breakpoint()
         # Assert user_modified is now set on modification.
         url = reverse("case-detail", kwargs={"pk": response.json()["id"]})
         response = self.client.patch(url, json={"cpr_number": "0123456789"})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["user_modified"], self.username)
+
+    def test_related_person_perform_create(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+
+        url = reverse("relatedperson-list")
+        self.client.login(username=self.username, password=self.password)
+
+        json = {"relation_type": "Far", "name": "Test", "main_case": case.id}
+        response = self.client.post(url, json)
+
+        # Assert user_created is set but user_modified is not on creation.
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json()["user_created"], self.username)
+        self.assertEqual(response.json()["user_modified"], "")
+
+    def test_related_person_perform_update(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+
+        url = reverse("relatedperson-list")
+        self.client.login(username=self.username, password=self.password)
+
+        json = {"relation_type": "Far", "name": "Test", "main_case": case.id}
+        response = self.client.post(url, json)
+
+        # Assert user_created is set but user_modified is not on creation.
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json()["user_created"], self.username)
+        self.assertEqual(response.json()["user_modified"], "")
+
+        # Assert user_modified is now set on modification.
+        url = reverse(
+            "relatedperson-detail", kwargs={"pk": response.json()["id"]}
+        )
+        response = self.client.patch(url, json={"name": "Test patch"})
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["user_modified"], self.username)
