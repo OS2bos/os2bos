@@ -277,7 +277,7 @@ Deploy dev:
     name: develop
     url: https://cburtest.magenta.dk
 
-deploy-test:
+Deploy test:
   <<: *deploy-default
   needs: ["Unittest"]
   except:
@@ -292,7 +292,7 @@ deploy-test:
     GIT_STRATEGY: none
   script:
     - echo deploying ${IMAGE_SHA}
-    - pepper --client runner --fail-any state.orchestrate ${DEPLOYMENT_NAMESPACE}
+    - pepper --client runner --fail-any state.orchestrate ${DEPLOYMENT_NAMESPACE} pillar='{"OS2BOS_APPLICATION_DOCKER_IMAGE":"${IMAGE_SHA}"}'
   environment:
     name: test
     url: https://cburdev.magenta.dk
