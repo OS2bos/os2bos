@@ -9,6 +9,10 @@
 
 import logging
 
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
+
 from rest_framework import status
 
 
@@ -49,6 +53,17 @@ class AuditMixin:
         return response
 
 
+class AuditModelViewSetMixin:
+    def perform_create(self, serializer):
+        breakpoint()
+        current_user = self.request.user
+        serializer.save(user_created=current_user)
+
+    def perform_update(self, serializer):
+        current_user = self.request.user
+        serializer.save(user_modified=current_user)
+
+
 class ClassificationViewSetMixin:
     """Superclass for Classifications only exposing the active."""
 
@@ -59,3 +74,24 @@ class ClassificationViewSetMixin:
         if user.is_authenticated and user.is_workflow_engine_or_admin():
             return queryset
         return queryset.filter(active=True)
+
+
+class AuditModelMixin(models.Model):
+    created = models.DateTimeField(
+        auto_now_add=True, null=True, verbose_name=_("oprettet")
+    )
+    modified = models.DateTimeField(
+        auto_now=True, null=True, verbose_name=_("modificeret")
+    )
+
+    user_created = models.CharField(
+        blank=True, max_length=128, verbose_name=_("bruger der har oprettet")
+    )
+    user_modified = models.CharField(
+        blank=True,
+        max_length=128,
+        verbose_name=_("bruger der har modificeret"),
+    )
+
+    class Meta:
+        abstract = True

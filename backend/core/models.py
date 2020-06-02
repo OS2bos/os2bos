@@ -20,10 +20,10 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext, gettext_lazy as _
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
-from django_audit_fields.models import AuditModelMixin
 from simple_history.models import HistoricalRecords
 from constance import config
 
+from core.mixins import AuditModelMixin
 from core.managers import PaymentQuerySet, CaseQuerySet
 from core.utils import send_appropriation, create_rrule
 

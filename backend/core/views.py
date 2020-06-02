@@ -77,7 +77,10 @@ from core.filters import (
 )
 from core.utils import get_person_info
 
-from core.mixins import AuditMixin, ClassificationViewSetMixin
+from core.mixins import (
+    AuditMixin,
+    ClassificationViewSetMixin,
+)
 
 from core.authentication import CsrfExemptSessionAuthentication
 
@@ -118,7 +121,15 @@ class CaseViewSet(AuditViewSet):
         """Create new case - customized to set team from user."""
         current_user = self.request.user
         team = current_user.team
-        serializer.save(case_worker=current_user, team=team)
+        serializer.save(
+            case_worker=current_user,
+            user_created=current_user.username,
+            team=team,
+        )
+
+    def perform_update(self, serializer):
+        current_user = self.request.user
+        serializer.save(user_modified=current_user.username)
 
     @action(detail=True, methods=["get"])
     def history(self, request, pk=None):
@@ -176,6 +187,14 @@ class AppropriationViewSet(AuditViewSet):
     }
     filterset_class = AppropriationFilter
 
+    def perform_create(self, serializer):
+        current_user = self.request.user
+        serializer.save(user_created=current_user.username)
+
+    def perform_update(self, serializer):
+        current_user = self.request.user
+        serializer.save(user_modified=current_user.username)
+
     def get_serializer_class(self):
         """Use a different Serializer depending on the action."""
         try:
@@ -220,6 +239,14 @@ class ActivityViewSet(AuditViewSet):
     serializer_class = ActivitySerializer
 
     filterset_fields = "__all__"
+
+    def perform_create(self, serializer):
+        current_user = self.request.user
+        serializer.save(user_created=current_user.username)
+
+    def perform_update(self, serializer):
+        current_user = self.request.user
+        serializer.save(user_modified=current_user.username)
 
     def get_queryset(self):
         """Avoid Django's default lazy loading to improve performance."""
@@ -292,6 +319,14 @@ class RelatedPersonViewSet(AuditViewSet):
     serializer_class = RelatedPersonSerializer
 
     filterset_fields = "__all__"
+
+    def perform_create(self, serializer):
+        current_user = self.request.user
+        serializer.save(user_created=current_user)
+
+    def perform_update(self, serializer):
+        current_user = self.request.user
+        serializer.save(user_modified=current_user)
 
     @action(detail=False, methods=["get"])
     def fetch_from_serviceplatformen(self, request):
