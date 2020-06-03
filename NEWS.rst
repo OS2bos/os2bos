@@ -1,3 +1,25 @@
+Version 3.0.0, 2020-06-03
+
+New in this version:
+
+Features
+^^^^^^^^
+
+- New Django Admin user interface and permission profile for handling classifications.
+- Frontend overviews have been improved.
+- Account number have been refactored.
+- Classifications can be marked active on/off.
+- Efforts are now a classification.
+- Target groups are now a classification.
+- ActivityDetails now have a description.
+- Related persons are now editable and can be marked 'manual' or 'from Serviceplatformen'.
+- Allow hiding expired activities in the frontend.
+- Improved search for payments.
+- Fixed dropdown menus with only one choice.
+- Frontend and Appropriation endpoint performance improvements.
+- Many smaller fixes to texts.
+- Update dependencies to new versions.
+
 Version 2.6.1, 2020-04-03
 
 Hotfix:
