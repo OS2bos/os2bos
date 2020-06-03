@@ -5,7 +5,6 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
 
-
 <template>
     <form @submit.prevent="saveChanges()" class="approval modal-form">
         <div class="modal-mask">
@@ -64,9 +63,8 @@
                                 <div style="width: 50%;">
                                     <fieldset style="display: block;">
                                         <legend style="margin-bottom: .75rem">Bevilling foretaget på følgende niveau</legend>
-                                        <template v-for="appro_lvl in approval_level_list">
+                                        <div v-for="appro_lvl in approval_level_list" :key="appro_lvl.id">
                                             <input 
-                                                :key="appro_lvl.id"
                                                 :id="`radio-btn-${ appro_lvl.id }`" 
                                                 type="radio" 
                                                 :value="appro_lvl.id" 
@@ -74,13 +72,12 @@
                                                 name="approval-group"
                                                 required>
                                             <label 
-                                                :key="appro_lvl.name" 
                                                 :for="`radio-btn-${ appro_lvl.id }`"
                                                 style="text-transform: capitalize;">
                                                 <span v-if="appro_lvl.active === true">{{ appro_lvl.name }}</span>
                                                 <strong v-if="appro_lvl.active === false">{{ appro_lvl.name }}</strong>
                                             </label>
-                                        </template>
+                                        </div>
                                     </fieldset>
                                 </div>
                                 <div style="width: 50%;">

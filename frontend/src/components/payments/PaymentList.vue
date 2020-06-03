@@ -5,7 +5,6 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
 
-
 <template>
 
     <section class="payment_schedule">
@@ -77,7 +76,7 @@
         },
         computed: {
             payments: function() {
-                return this.$store.getters.getPaymentSchedule.payments
+                return this.$store.getters.getPaymentPlan.payments
             },
             payments_by_year: function() {
                 if (this.payments) {
@@ -103,7 +102,7 @@
         },
         methods: {
             update: function() {
-                this.$store.dispatch('fetchPaymentSchedule', this.pId)
+                this.$store.dispatch('fetchPaymentPlan', this.pId)
             },
             displayDate: function(dt) {
                 return json2jsDate(dt)

@@ -19,9 +19,7 @@
 
 .notification {
     align-items: center;
-    background-color: var(--grey7);
     box-shadow: 0 .25rem .5rem hsla(0,0%,0%,.33);
-    color: var(--grey0);
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
@@ -32,6 +30,12 @@
     top: -5rem;
     transition: all .5s;
     width: 100%;
+}
+
+.notification,
+.notification .msg {
+    background-color: var(--grey10);
+    color: var(--grey0);
 }
 
 .notification.show {
@@ -47,12 +51,16 @@
     content: '✔';
 }
 
-.notification.success {
-    background-color: hsl(var(--color2), 100%, 25%);
+.notification.success,
+.notification.success .msg,
+.notification.success .msg::before {
+    background-color: var(--success);
     color: var(--grey0);
 }
 
-.notification.notification-error {
+.notification.notification-error,
+.notification.notification-error .msg,
+.notification.notification-error .msg::before {
     background-color: var(--danger);
     color: var(--grey0);
 }
@@ -67,6 +75,7 @@
     margin: 0;
     border: none;
     height: auto;
+    box-shadow: none;
 }
 
 .notification .remove-alert::before {

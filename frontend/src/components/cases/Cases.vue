@@ -9,22 +9,26 @@
 <template>
 
 
-    <div class="case-search">
+    <section class="case-search">
+        <header class="case-search-header">
+            <h1>Sager</h1>
+            <button v-if="permissionCheck === true" class="create" @click="$router.push('/case-create/')">+ Tilknyt hovedsag</button>
+        </header>
         <div class="case-search-filters">
             <h2 class="case-search-filters--title">Filtrér sager</h2>
             <form @submit.prevent>
-                <ul class="filter-fields">
-                    <li>
+                <fieldset class="filter-fields">
+                    <div>
                         <label for="field-sbsysid">SBSYS ID</label>
                         <input type="search" @input="update" id="field-sbsysid" v-model="$route.query.sbsys_id">
-                    </li>
+                    </div>
 
-                    <li>
+                    <div>
                         <label for="field-cpr">CPR-nr</label>
                         <input type="search" @input="changeCpr" id="field-cpr" v-model="$route.query.cpr_number">
-                    </li>
+                    </div>
 
-                    <li>
+                    <div>
                         <label for="field-team">Team</label>
                         <list-picker 
                             v-if="teams"
@@ -33,9 +37,9 @@
                             :list="teams"
                             @selection="changeTeam"
                             display-key="name" />
-                    </li>
+                    </div>
 
-                    <li>
+                    <div>
                         <label for="field-case-worker">Sagsbehandler</label>
                         <list-picker 
                             v-if="users"
@@ -44,23 +48,23 @@
                             :list="users"
                             @selection="changeWorker"
                             display-key="fullname" />
-                    </li>
-                </ul>
+                    </div>
+                </fieldset>
 
-                <ul class="filter-fields">
-                    <li>
+                <fieldset class="filter-fields">
+                    <div>
                         <input type="radio" v-model="$route.query.expired" id="field-expired-1" @change="update" :value="null">
                         <label for="field-expired-1">Aktive og lukkede sager</label>
-                    </li>
-                    <li>
+                    </div>
+                    <div>
                         <input type="radio" v-model="$route.query.expired" id="field-expired-2" @change="update" :value="false">
                         <label for="field-expired-2">Kun aktive sager</label>
-                    </li>
-                    <li>
+                    </div>
+                    <div>
                         <input type="radio" v-model="$route.query.expired" id="field-expired-3" @change="update" :value="true">
                         <label for="field-expired-3">Kun lukkede sager</label>
-                    </li>
-                </ul>
+                    </div>
+                </fieldset>
             </form>
         </div>
         
@@ -73,10 +77,6 @@
                        @selection="updateSelectedCases"
                        :selectable="permissionCheck">
 
-                <div slot="datagrid-header">
-                    <h1 style="padding: 0;">Sager</h1>
-                    <button v-if="permissionCheck === true" class="create" @click="$router.push('/case-create/')">+ Tilknyt hovedsag</button>
-                </div>
                 <p slot="datagrid-footer" v-if="cases.length < 1">
                     Kan ikke finde nogen resultater, der matcher de valgte kriterier
                 </p>
@@ -122,7 +122,7 @@
             </dialog-box>
 
         </div>
-    </div>
+    </section>
 
 </template>
 
@@ -228,7 +228,7 @@
             displayTargetGroupDistrict: function(id) {
                 let str = `${ targetGroupId2name(id.target_group) }`
                 if (id.target_group === 1) { 
-                    str += `<dt>Skoledistrikt</dt><dd>${ districtId2name(id.district) }</dd></dl>`
+                    str += `<dl><dt>Skoledistrikt</dt><dd>${ districtId2name(id.district) }</dd></dl>`
                 }
                 return str
             },
@@ -303,15 +303,19 @@
         padding: 0 2rem 2rem;
     }
 
+    .case-search-header {
+        display: flex;
+        align-items: center;
+    }
+
     .case-search-list {
-        margin-top: 2rem;
+        margin-top: 1rem;
         order: 2;
         flex-grow: 1;
     }
 
     .case-search .create {
-        float: left;
-        margin: -2rem 0 0 5rem;
+        margin: 0 1rem;
     }
 
     .case-search-list .more .material-icons {
@@ -321,7 +325,7 @@
     .case-search-filters {
         background-color: var(--grey1);
         padding: 0 1.5rem 1rem;
-        margin-bottom: 3rem;
+        margin-bottom: 1rem;
     }
 
     .case-search-filters--title {
@@ -331,19 +335,25 @@
 
     .case-search-filters > form {
         padding: 0;
+        display: flex;
+        flex-flow: row wrap;
+        align-items: flex-end;
+        justify-content: flex-start;
     }
 
     .case-search-filters .filter-fields {
+        flex: 0 1 auto;
         margin: 0;
         padding: 0;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: flex-start;
     }
 
-    .case-search-filters .filter-fields li {
-        list-style: none;
+    .case-search-filters .filter-fields:first-child {
+        padding-right: .25rem;
+    }
+
+    .case-search-filters .filter-fields > div {
         padding: .5rem 1rem .5rem 0;
+        display: inline-block;
     }
 
     .case-search-filters .filter-fields label {
