@@ -1,0 +1,32 @@
+<!-- Copyright (C) 2020 Magenta ApS, http://magenta.dk.
+   - Contact: info@magenta.dk.
+   -
+   - This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
+
+<template>
+
+    <dl>
+        <dt>Forklaring af ydelse</dt>
+        <dd>{{ model }}</dd>
+    </dl>
+
+</template>
+
+<script>
+import mixin from '../../mixins/ActivityEditMixin.js'
+import Error from '../../forms/Error.vue'
+
+export default {
+    components: {
+        Error
+    },
+    mixins: [
+        mixin
+    ],
+    created: function() {
+        this.property = 'description'
+    }
+}
+</script>

@@ -125,6 +125,27 @@ function activityId2name(id) {
 }
 
 /**
+ * Convert activity id to human readable name
+ * @param {number} id activity ID
+ * @returns {string} activity description
+ */
+function activityId2description(id) {
+    const act_list = store.getters.getActivityDetails
+    if (act_list) {
+        let act = act_list.find(function(element) {
+            return element.id === id;
+        })
+        if (act.description) {
+            return act.description
+        } else if (!act.description) {
+            return '-'
+        }
+    } else {
+        return 'Ikke tilgængelig'
+    }
+}
+
+/**
  * Convert section id to human readable name
  * @param {number} id section ID
  * @returns {string} section name
@@ -337,6 +358,7 @@ export {
     districtId2name,
     effortId2name,
     activityId2name,
+    activityId2description,
     sectionId2name,
     userId2name,
     displayStatus,
