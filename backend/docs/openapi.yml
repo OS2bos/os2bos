@@ -144,16 +144,10 @@ paths:
         description: assessment_comment
         schema:
           type: string
-      - name: refugee_integration
+      - name: efforts
         required: false
         in: query
-        description: refugee_integration
-        schema:
-          type: string
-      - name: cross_department_measure
-        required: false
-        in: query
-        description: cross_department_measure
+        description: efforts
         schema:
           type: string
       - name: note
@@ -180,6 +174,12 @@ paths:
                       type: integer
                       readOnly: true
                     expired:
+                      type: string
+                      readOnly: true
+                    num_appropriations:
+                      type: string
+                      readOnly: true
+                    num_draft_or_expected_appropriations:
                       type: string
                       readOnly: true
                     revision:
@@ -223,10 +223,6 @@ paths:
                     name:
                       type: string
                       maxLength: 128
-                    target_group:
-                      enum:
-                      - FAMILY_DEPT
-                      - DISABILITY_DEPT
                     scaling_step:
                       enum:
                       - 1
@@ -239,14 +235,11 @@ paths:
                       - 8
                       - 9
                       - 10
+                      nullable: true
                       minimum: 0
                       maximum: 32767
                     assessment_comment:
                       type: string
-                    refugee_integration:
-                      type: boolean
-                    cross_department_measure:
-                      type: boolean
                     note:
                       type: string
                     case_worker:
@@ -262,15 +255,20 @@ paths:
                       type: integer
                     residence_municipality:
                       type: integer
+                    target_group:
+                      type: integer
+                      nullable: true
                     effort_step:
                       type: integer
                       nullable: true
+                    efforts:
+                      type: array
+                      items:
+                        type: integer
                   required:
                   - sbsys_id
                   - cpr_number
                   - name
-                  - target_group
-                  - scaling_step
                   - case_worker
                   - paying_municipality
                   - acting_municipality
@@ -325,10 +323,6 @@ paths:
                 name:
                   type: string
                   maxLength: 128
-                target_group:
-                  enum:
-                  - FAMILY_DEPT
-                  - DISABILITY_DEPT
                 scaling_step:
                   enum:
                   - 1
@@ -341,14 +335,11 @@ paths:
                   - 8
                   - 9
                   - 10
+                  nullable: true
                   minimum: 0
                   maximum: 32767
                 assessment_comment:
                   type: string
-                refugee_integration:
-                  type: boolean
-                cross_department_measure:
-                  type: boolean
                 note:
                   type: string
                 case_worker:
@@ -364,15 +355,20 @@ paths:
                   type: integer
                 residence_municipality:
                   type: integer
+                target_group:
+                  type: integer
+                  nullable: true
                 effort_step:
                   type: integer
                   nullable: true
+                efforts:
+                  type: array
+                  items:
+                    type: integer
               required:
               - sbsys_id
               - cpr_number
               - name
-              - target_group
-              - scaling_step
               - case_worker
               - paying_municipality
               - acting_municipality
@@ -391,6 +387,12 @@ paths:
                     type: integer
                     readOnly: true
                   expired:
+                    type: string
+                    readOnly: true
+                  num_appropriations:
+                    type: string
+                    readOnly: true
+                  num_draft_or_expected_appropriations:
                     type: string
                     readOnly: true
                   revision:
@@ -434,10 +436,6 @@ paths:
                   name:
                     type: string
                     maxLength: 128
-                  target_group:
-                    enum:
-                    - FAMILY_DEPT
-                    - DISABILITY_DEPT
                   scaling_step:
                     enum:
                     - 1
@@ -450,14 +448,11 @@ paths:
                     - 8
                     - 9
                     - 10
+                    nullable: true
                     minimum: 0
                     maximum: 32767
                   assessment_comment:
                     type: string
-                  refugee_integration:
-                    type: boolean
-                  cross_department_measure:
-                    type: boolean
                   note:
                     type: string
                   case_worker:
@@ -473,15 +468,20 @@ paths:
                     type: integer
                   residence_municipality:
                     type: integer
+                  target_group:
+                    type: integer
+                    nullable: true
                   effort_step:
                     type: integer
                     nullable: true
+                  efforts:
+                    type: array
+                    items:
+                      type: integer
                 required:
                 - sbsys_id
                 - cpr_number
                 - name
-                - target_group
-                - scaling_step
                 - case_worker
                 - paying_municipality
                 - acting_municipality
@@ -633,16 +633,10 @@ paths:
         description: assessment_comment
         schema:
           type: string
-      - name: refugee_integration
+      - name: efforts
         required: false
         in: query
-        description: refugee_integration
-        schema:
-          type: string
-      - name: cross_department_measure
-        required: false
-        in: query
-        description: cross_department_measure
+        description: efforts
         schema:
           type: string
       - name: note
@@ -667,6 +661,12 @@ paths:
                     type: integer
                     readOnly: true
                   expired:
+                    type: string
+                    readOnly: true
+                  num_appropriations:
+                    type: string
+                    readOnly: true
+                  num_draft_or_expected_appropriations:
                     type: string
                     readOnly: true
                   revision:
@@ -710,10 +710,6 @@ paths:
                   name:
                     type: string
                     maxLength: 128
-                  target_group:
-                    enum:
-                    - FAMILY_DEPT
-                    - DISABILITY_DEPT
                   scaling_step:
                     enum:
                     - 1
@@ -726,14 +722,11 @@ paths:
                     - 8
                     - 9
                     - 10
+                    nullable: true
                     minimum: 0
                     maximum: 32767
                   assessment_comment:
                     type: string
-                  refugee_integration:
-                    type: boolean
-                  cross_department_measure:
-                    type: boolean
                   note:
                     type: string
                   case_worker:
@@ -749,15 +742,20 @@ paths:
                     type: integer
                   residence_municipality:
                     type: integer
+                  target_group:
+                    type: integer
+                    nullable: true
                   effort_step:
                     type: integer
                     nullable: true
+                  efforts:
+                    type: array
+                    items:
+                      type: integer
                 required:
                 - sbsys_id
                 - cpr_number
                 - name
-                - target_group
-                - scaling_step
                 - case_worker
                 - paying_municipality
                 - acting_municipality
@@ -908,16 +906,10 @@ paths:
         description: assessment_comment
         schema:
           type: string
-      - name: refugee_integration
+      - name: efforts
         required: false
         in: query
-        description: refugee_integration
-        schema:
-          type: string
-      - name: cross_department_measure
-        required: false
-        in: query
-        description: cross_department_measure
+        description: efforts
         schema:
           type: string
       - name: note
@@ -974,10 +966,6 @@ paths:
                 name:
                   type: string
                   maxLength: 128
-                target_group:
-                  enum:
-                  - FAMILY_DEPT
-                  - DISABILITY_DEPT
                 scaling_step:
                   enum:
                   - 1
@@ -990,14 +978,11 @@ paths:
                   - 8
                   - 9
                   - 10
+                  nullable: true
                   minimum: 0
                   maximum: 32767
                 assessment_comment:
                   type: string
-                refugee_integration:
-                  type: boolean
-                cross_department_measure:
-                  type: boolean
                 note:
                   type: string
                 case_worker:
@@ -1013,15 +998,20 @@ paths:
                   type: integer
                 residence_municipality:
                   type: integer
+                target_group:
+                  type: integer
+                  nullable: true
                 effort_step:
                   type: integer
                   nullable: true
+                efforts:
+                  type: array
+                  items:
+                    type: integer
               required:
               - sbsys_id
               - cpr_number
               - name
-              - target_group
-              - scaling_step
               - case_worker
               - paying_municipality
               - acting_municipality
@@ -1040,6 +1030,12 @@ paths:
                     type: integer
                     readOnly: true
                   expired:
+                    type: string
+                    readOnly: true
+                  num_appropriations:
+                    type: string
+                    readOnly: true
+                  num_draft_or_expected_appropriations:
                     type: string
                     readOnly: true
                   revision:
@@ -1083,10 +1079,6 @@ paths:
                   name:
                     type: string
                     maxLength: 128
-                  target_group:
-                    enum:
-                    - FAMILY_DEPT
-                    - DISABILITY_DEPT
                   scaling_step:
                     enum:
                     - 1
@@ -1099,14 +1091,11 @@ paths:
                     - 8
                     - 9
                     - 10
+                    nullable: true
                     minimum: 0
                     maximum: 32767
                   assessment_comment:
                     type: string
-                  refugee_integration:
-                    type: boolean
-                  cross_department_measure:
-                    type: boolean
                   note:
                     type: string
                   case_worker:
@@ -1122,15 +1111,20 @@ paths:
                     type: integer
                   residence_municipality:
                     type: integer
+                  target_group:
+                    type: integer
+                    nullable: true
                   effort_step:
                     type: integer
                     nullable: true
+                  efforts:
+                    type: array
+                    items:
+                      type: integer
                 required:
                 - sbsys_id
                 - cpr_number
                 - name
-                - target_group
-                - scaling_step
                 - case_worker
                 - paying_municipality
                 - acting_municipality
@@ -1281,16 +1275,10 @@ paths:
         description: assessment_comment
         schema:
           type: string
-      - name: refugee_integration
+      - name: efforts
         required: false
         in: query
-        description: refugee_integration
-        schema:
-          type: string
-      - name: cross_department_measure
-        required: false
-        in: query
-        description: cross_department_measure
+        description: efforts
         schema:
           type: string
       - name: note
@@ -1347,10 +1335,6 @@ paths:
                 name:
                   type: string
                   maxLength: 128
-                target_group:
-                  enum:
-                  - FAMILY_DEPT
-                  - DISABILITY_DEPT
                 scaling_step:
                   enum:
                   - 1
@@ -1363,14 +1347,11 @@ paths:
                   - 8
                   - 9
                   - 10
+                  nullable: true
                   minimum: 0
                   maximum: 32767
                 assessment_comment:
                   type: string
-                refugee_integration:
-                  type: boolean
-                cross_department_measure:
-                  type: boolean
                 note:
                   type: string
                 case_worker:
@@ -1386,9 +1367,16 @@ paths:
                   type: integer
                 residence_municipality:
                   type: integer
+                target_group:
+                  type: integer
+                  nullable: true
                 effort_step:
                   type: integer
                   nullable: true
+                efforts:
+                  type: array
+                  items:
+                    type: integer
           application/x-www-form-urlencoded:
             schema: *id003
           multipart/form-data:
@@ -1403,6 +1391,12 @@ paths:
                     type: integer
                     readOnly: true
                   expired:
+                    type: string
+                    readOnly: true
+                  num_appropriations:
+                    type: string
+                    readOnly: true
+                  num_draft_or_expected_appropriations:
                     type: string
                     readOnly: true
                   revision:
@@ -1446,10 +1440,6 @@ paths:
                   name:
                     type: string
                     maxLength: 128
-                  target_group:
-                    enum:
-                    - FAMILY_DEPT
-                    - DISABILITY_DEPT
                   scaling_step:
                     enum:
                     - 1
@@ -1462,14 +1452,11 @@ paths:
                     - 8
                     - 9
                     - 10
+                    nullable: true
                     minimum: 0
                     maximum: 32767
                   assessment_comment:
                     type: string
-                  refugee_integration:
-                    type: boolean
-                  cross_department_measure:
-                    type: boolean
                   note:
                     type: string
                   case_worker:
@@ -1485,15 +1472,20 @@ paths:
                     type: integer
                   residence_municipality:
                     type: integer
+                  target_group:
+                    type: integer
+                    nullable: true
                   effort_step:
                     type: integer
                     nullable: true
+                  efforts:
+                    type: array
+                    items:
+                      type: integer
                 required:
                 - sbsys_id
                 - cpr_number
                 - name
-                - target_group
-                - scaling_step
                 - case_worker
                 - paying_municipality
                 - acting_municipality
@@ -1644,16 +1636,10 @@ paths:
         description: assessment_comment
         schema:
           type: string
-      - name: refugee_integration
+      - name: efforts
         required: false
         in: query
-        description: refugee_integration
-        schema:
-          type: string
-      - name: cross_department_measure
-        required: false
-        in: query
-        description: cross_department_measure
+        description: efforts
         schema:
           type: string
       - name: note
@@ -1692,6 +1678,12 @@ paths:
                     type: integer
                     readOnly: true
                   expired:
+                    type: string
+                    readOnly: true
+                  num_appropriations:
+                    type: string
+                    readOnly: true
+                  num_draft_or_expected_appropriations:
                     type: string
                     readOnly: true
                   revision:
@@ -1735,10 +1727,6 @@ paths:
                   name:
                     type: string
                     maxLength: 128
-                  target_group:
-                    enum:
-                    - FAMILY_DEPT
-                    - DISABILITY_DEPT
                   scaling_step:
                     enum:
                     - 1
@@ -1751,14 +1739,11 @@ paths:
                     - 8
                     - 9
                     - 10
+                    nullable: true
                     minimum: 0
                     maximum: 32767
                   assessment_comment:
                     type: string
-                  refugee_integration:
-                    type: boolean
-                  cross_department_measure:
-                    type: boolean
                   note:
                     type: string
                   case_worker:
@@ -1774,15 +1759,20 @@ paths:
                     type: integer
                   residence_municipality:
                     type: integer
+                  target_group:
+                    type: integer
+                    nullable: true
                   effort_step:
                     type: integer
                     nullable: true
+                  efforts:
+                    type: array
+                    items:
+                      type: integer
                 required:
                 - sbsys_id
                 - cpr_number
                 - name
-                - target_group
-                - scaling_step
                 - case_worker
                 - paying_municipality
                 - acting_municipality
@@ -1790,7 +1780,7 @@ paths:
           description: ''
   /api/appropriations/:
     get:
-      operationId: listAppropriations
+      operationId: listListAppropriations
       description: 'Expose appropriations in REST API.
 
 
@@ -1867,13 +1857,19 @@ paths:
       - name: case
         required: false
         in: query
-        description: case
+        description: Sag
         schema:
           type: string
       - name: note
         required: false
         in: query
         description: note
+        schema:
+          type: string
+      - name: main_activity__details
+        required: false
+        in: query
+        description: Aktivitetsdetalje for hovedaktivitet
         schema:
           type: string
       responses:
@@ -1887,7 +1883,13 @@ paths:
                     id:
                       type: integer
                       readOnly: true
+                    status:
+                      type: string
+                      readOnly: true
                     total_granted_this_year:
+                      type: string
+                      readOnly: true
+                    total_granted_full_year:
                       type: string
                       readOnly: true
                     total_expected_this_year:
@@ -1896,13 +1898,31 @@ paths:
                     total_expected_full_year:
                       type: string
                       readOnly: true
+                    total_cost_expected:
+                      type: string
+                      readOnly: true
+                    total_cost_granted:
+                      type: string
+                      readOnly: true
                     granted_from_date:
                       type: string
                       readOnly: true
                     granted_to_date:
                       type: string
                       readOnly: true
-                    activities:
+                    case__cpr_number:
+                      type: string
+                      readOnly: true
+                    case__name:
+                      type: string
+                      readOnly: true
+                    case__sbsys_id:
+                      type: string
+                      readOnly: true
+                    num_draft_or_expected_activities:
+                      type: string
+                      readOnly: true
+                    num_activities:
                       type: string
                       readOnly: true
                     revision:
@@ -2019,7 +2039,13 @@ paths:
                   id:
                     type: integer
                     readOnly: true
+                  status:
+                    type: string
+                    readOnly: true
                   total_granted_this_year:
+                    type: string
+                    readOnly: true
+                  total_granted_full_year:
                     type: string
                     readOnly: true
                   total_expected_this_year:
@@ -2028,11 +2054,291 @@ paths:
                   total_expected_full_year:
                     type: string
                     readOnly: true
+                  total_cost_expected:
+                    type: string
+                    readOnly: true
+                  total_cost_granted:
+                    type: string
+                    readOnly: true
                   granted_from_date:
                     type: string
                     readOnly: true
                   granted_to_date:
                     type: string
+                    readOnly: true
+                  case__cpr_number:
+                    type: string
+                    readOnly: true
+                  case__name:
+                    type: string
+                    readOnly: true
+                  case__sbsys_id:
+                    type: string
+                    readOnly: true
+                  num_draft_or_expected_activities:
+                    type: string
+                    readOnly: true
+                  num_activities:
+                    type: string
+                    readOnly: true
+                  main_activity:
+                    properties:
+                      id:
+                        type: integer
+                        readOnly: true
+                      monthly_payment_plan:
+                        type: string
+                        readOnly: true
+                      total_cost:
+                        type: string
+                        readOnly: true
+                      total_cost_this_year:
+                        type: string
+                        readOnly: true
+                      total_cost_full_year:
+                        type: string
+                        readOnly: true
+                      total_granted_this_year:
+                        type: string
+                        readOnly: true
+                      total_expected_this_year:
+                        type: string
+                        readOnly: true
+                      payment_plan:
+                        properties:
+                          id:
+                            type: integer
+                            readOnly: true
+                          payments:
+                            type: array
+                            items:
+                              properties:
+                                id:
+                                  type: integer
+                                  readOnly: true
+                                account_string:
+                                  type: string
+                                  readOnly: true
+                                payment_schedule__payment_id:
+                                  type: string
+                                  readOnly: true
+                                case__cpr_number:
+                                  type: string
+                                  readOnly: true
+                                activity__id:
+                                  type: string
+                                  readOnly: true
+                                activity__status:
+                                  type: string
+                                  readOnly: true
+                                activity__details__id:
+                                  type: string
+                                  readOnly: true
+                                payment_schedule__fictive:
+                                  type: string
+                                  readOnly: true
+                                is_payable_manually:
+                                  type: string
+                                  readOnly: true
+                                date:
+                                  type: string
+                                  format: date
+                                recipient_type:
+                                  enum:
+                                  - INTERNAL
+                                  - PERSON
+                                  - COMPANY
+                                recipient_id:
+                                  type: string
+                                  maxLength: 128
+                                recipient_name:
+                                  type: string
+                                  maxLength: 128
+                                payment_method:
+                                  enum:
+                                  - CASH
+                                  - SD
+                                  - INVOICE
+                                  - INTERNAL
+                                amount:
+                                  type: number
+                                  multipleOf: 0.01
+                                  maximum: 1000000000000
+                                  minimum: -1000000000000
+                                paid_amount:
+                                  type: number
+                                  multipleOf: 0.01
+                                  maximum: 1000000000000
+                                  minimum: -1000000000000
+                                  nullable: true
+                                paid:
+                                  type: boolean
+                                paid_date:
+                                  type: string
+                                  format: date
+                                  nullable: true
+                                note:
+                                  type: string
+                                payment_schedule:
+                                  type: integer
+                              required:
+                              - date
+                              - recipient_type
+                              - recipient_id
+                              - recipient_name
+                              - payment_method
+                              - amount
+                              - payment_schedule
+                            readOnly: true
+                          account:
+                            type: string
+                            readOnly: true
+                          recipient_type:
+                            enum:
+                            - INTERNAL
+                            - PERSON
+                            - COMPANY
+                          recipient_id:
+                            type: string
+                            maxLength: 128
+                          recipient_name:
+                            type: string
+                            maxLength: 128
+                          payment_method:
+                            enum:
+                            - CASH
+                            - SD
+                            - INVOICE
+                            - INTERNAL
+                          payment_frequency:
+                            enum:
+                            - DAILY
+                            - WEEKLY
+                            - BIWEEKLY
+                            - MONTHLY
+                            nullable: true
+                          payment_day_of_month:
+                            type: integer
+                            maximum: 31
+                            minimum: 1
+                          payment_type:
+                            enum:
+                            - ONE_TIME_PAYMENT
+                            - RUNNING_PAYMENT
+                            - PER_HOUR_PAYMENT
+                            - PER_DAY_PAYMENT
+                            - PER_KM_PAYMENT
+                          payment_units:
+                            type: number
+                            multipleOf: 0.01
+                            maximum: 1000000000000
+                            minimum: &id005 0.00
+                            nullable: true
+                          payment_amount:
+                            type: number
+                            multipleOf: 0.01
+                            maximum: 1000000000000
+                            minimum: -1000000000000
+                          fictive:
+                            type: boolean
+                          payment_id:
+                            type: integer
+                            readOnly: true
+                          payment_method_details:
+                            type: integer
+                            nullable: true
+                        required:
+                        - recipient_type
+                        - recipient_id
+                        - recipient_name
+                        - payment_method
+                        - payment_type
+                        - payment_amount
+                        type: object
+                      details__name:
+                        type: string
+                        readOnly: true
+                      revision:
+                        type: string
+                        readOnly: true
+                        description: System field. Git repository tag:branch:commit.
+                      created:
+                        type: string
+                        format: date-time
+                      modified:
+                        type: string
+                        format: date-time
+                      user_created:
+                        type: string
+                        description: Updated by admin.save_model
+                        maxLength: 50
+                      user_modified:
+                        type: string
+                        description: Updated by admin.save_model
+                        maxLength: 50
+                      hostname_created:
+                        type: string
+                        description: System field. (modified on create only)
+                        maxLength: 60
+                      hostname_modified:
+                        type: string
+                        description: System field. (modified on every save)
+                        maxLength: 50
+                      device_created:
+                        type: string
+                        maxLength: 10
+                      device_modified:
+                        type: string
+                        maxLength: 10
+                      status:
+                        enum:
+                        - DRAFT
+                        - EXPECTED
+                        - GRANTED
+                      approval_note:
+                        type: string
+                      appropriation_date:
+                        type: string
+                        format: date
+                        nullable: true
+                      start_date:
+                        type: string
+                        format: date
+                      end_date:
+                        type: string
+                        format: date
+                        nullable: true
+                      activity_type:
+                        enum:
+                        - MAIN_ACTIVITY
+                        - SUPPL_ACTIVITY
+                      note:
+                        type: string
+                        nullable: true
+                        maxLength: 1000
+                      details:
+                        type: integer
+                      approval_level:
+                        type: integer
+                        nullable: true
+                      approval_user:
+                        type: integer
+                        nullable: true
+                      modifies:
+                        type: integer
+                        nullable: true
+                      appropriation:
+                        type: integer
+                      service_provider:
+                        type: integer
+                        nullable: true
+                    required:
+                    - status
+                    - start_date
+                    - activity_type
+                    - details
+                    - appropriation
+                    type: object
                     readOnly: true
                   activities:
                     type: string
@@ -2168,13 +2474,19 @@ paths:
       - name: case
         required: false
         in: query
-        description: case
+        description: Sag
         schema:
           type: string
       - name: note
         required: false
         in: query
         description: note
+        schema:
+          type: string
+      - name: main_activity__details
+        required: false
+        in: query
+        description: Aktivitetsdetalje for hovedaktivitet
         schema:
           type: string
       responses:
@@ -2186,7 +2498,13 @@ paths:
                   id:
                     type: integer
                     readOnly: true
+                  status:
+                    type: string
+                    readOnly: true
                   total_granted_this_year:
+                    type: string
+                    readOnly: true
+                  total_granted_full_year:
                     type: string
                     readOnly: true
                   total_expected_this_year:
@@ -2195,11 +2513,291 @@ paths:
                   total_expected_full_year:
                     type: string
                     readOnly: true
+                  total_cost_expected:
+                    type: string
+                    readOnly: true
+                  total_cost_granted:
+                    type: string
+                    readOnly: true
                   granted_from_date:
                     type: string
                     readOnly: true
                   granted_to_date:
                     type: string
+                    readOnly: true
+                  case__cpr_number:
+                    type: string
+                    readOnly: true
+                  case__name:
+                    type: string
+                    readOnly: true
+                  case__sbsys_id:
+                    type: string
+                    readOnly: true
+                  num_draft_or_expected_activities:
+                    type: string
+                    readOnly: true
+                  num_activities:
+                    type: string
+                    readOnly: true
+                  main_activity:
+                    properties:
+                      id:
+                        type: integer
+                        readOnly: true
+                      monthly_payment_plan:
+                        type: string
+                        readOnly: true
+                      total_cost:
+                        type: string
+                        readOnly: true
+                      total_cost_this_year:
+                        type: string
+                        readOnly: true
+                      total_cost_full_year:
+                        type: string
+                        readOnly: true
+                      total_granted_this_year:
+                        type: string
+                        readOnly: true
+                      total_expected_this_year:
+                        type: string
+                        readOnly: true
+                      payment_plan:
+                        properties:
+                          id:
+                            type: integer
+                            readOnly: true
+                          payments:
+                            type: array
+                            items:
+                              properties:
+                                id:
+                                  type: integer
+                                  readOnly: true
+                                account_string:
+                                  type: string
+                                  readOnly: true
+                                payment_schedule__payment_id:
+                                  type: string
+                                  readOnly: true
+                                case__cpr_number:
+                                  type: string
+                                  readOnly: true
+                                activity__id:
+                                  type: string
+                                  readOnly: true
+                                activity__status:
+                                  type: string
+                                  readOnly: true
+                                activity__details__id:
+                                  type: string
+                                  readOnly: true
+                                payment_schedule__fictive:
+                                  type: string
+                                  readOnly: true
+                                is_payable_manually:
+                                  type: string
+                                  readOnly: true
+                                date:
+                                  type: string
+                                  format: date
+                                recipient_type:
+                                  enum:
+                                  - INTERNAL
+                                  - PERSON
+                                  - COMPANY
+                                recipient_id:
+                                  type: string
+                                  maxLength: 128
+                                recipient_name:
+                                  type: string
+                                  maxLength: 128
+                                payment_method:
+                                  enum:
+                                  - CASH
+                                  - SD
+                                  - INVOICE
+                                  - INTERNAL
+                                amount:
+                                  type: number
+                                  multipleOf: 0.01
+                                  maximum: 1000000000000
+                                  minimum: -1000000000000
+                                paid_amount:
+                                  type: number
+                                  multipleOf: 0.01
+                                  maximum: 1000000000000
+                                  minimum: -1000000000000
+                                  nullable: true
+                                paid:
+                                  type: boolean
+                                paid_date:
+                                  type: string
+                                  format: date
+                                  nullable: true
+                                note:
+                                  type: string
+                                payment_schedule:
+                                  type: integer
+                              required:
+                              - date
+                              - recipient_type
+                              - recipient_id
+                              - recipient_name
+                              - payment_method
+                              - amount
+                              - payment_schedule
+                            readOnly: true
+                          account:
+                            type: string
+                            readOnly: true
+                          recipient_type:
+                            enum:
+                            - INTERNAL
+                            - PERSON
+                            - COMPANY
+                          recipient_id:
+                            type: string
+                            maxLength: 128
+                          recipient_name:
+                            type: string
+                            maxLength: 128
+                          payment_method:
+                            enum:
+                            - CASH
+                            - SD
+                            - INVOICE
+                            - INTERNAL
+                          payment_frequency:
+                            enum:
+                            - DAILY
+                            - WEEKLY
+                            - BIWEEKLY
+                            - MONTHLY
+                            nullable: true
+                          payment_day_of_month:
+                            type: integer
+                            maximum: 31
+                            minimum: 1
+                          payment_type:
+                            enum:
+                            - ONE_TIME_PAYMENT
+                            - RUNNING_PAYMENT
+                            - PER_HOUR_PAYMENT
+                            - PER_DAY_PAYMENT
+                            - PER_KM_PAYMENT
+                          payment_units:
+                            type: number
+                            multipleOf: 0.01
+                            maximum: 1000000000000
+                            minimum: *id005
+                            nullable: true
+                          payment_amount:
+                            type: number
+                            multipleOf: 0.01
+                            maximum: 1000000000000
+                            minimum: -1000000000000
+                          fictive:
+                            type: boolean
+                          payment_id:
+                            type: integer
+                            readOnly: true
+                          payment_method_details:
+                            type: integer
+                            nullable: true
+                        required:
+                        - recipient_type
+                        - recipient_id
+                        - recipient_name
+                        - payment_method
+                        - payment_type
+                        - payment_amount
+                        type: object
+                      details__name:
+                        type: string
+                        readOnly: true
+                      revision:
+                        type: string
+                        readOnly: true
+                        description: System field. Git repository tag:branch:commit.
+                      created:
+                        type: string
+                        format: date-time
+                      modified:
+                        type: string
+                        format: date-time
+                      user_created:
+                        type: string
+                        description: Updated by admin.save_model
+                        maxLength: 50
+                      user_modified:
+                        type: string
+                        description: Updated by admin.save_model
+                        maxLength: 50
+                      hostname_created:
+                        type: string
+                        description: System field. (modified on create only)
+                        maxLength: 60
+                      hostname_modified:
+                        type: string
+                        description: System field. (modified on every save)
+                        maxLength: 50
+                      device_created:
+                        type: string
+                        maxLength: 10
+                      device_modified:
+                        type: string
+                        maxLength: 10
+                      status:
+                        enum:
+                        - DRAFT
+                        - EXPECTED
+                        - GRANTED
+                      approval_note:
+                        type: string
+                      appropriation_date:
+                        type: string
+                        format: date
+                        nullable: true
+                      start_date:
+                        type: string
+                        format: date
+                      end_date:
+                        type: string
+                        format: date
+                        nullable: true
+                      activity_type:
+                        enum:
+                        - MAIN_ACTIVITY
+                        - SUPPL_ACTIVITY
+                      note:
+                        type: string
+                        nullable: true
+                        maxLength: 1000
+                      details:
+                        type: integer
+                      approval_level:
+                        type: integer
+                        nullable: true
+                      approval_user:
+                        type: integer
+                        nullable: true
+                      modifies:
+                        type: integer
+                        nullable: true
+                      appropriation:
+                        type: integer
+                      service_provider:
+                        type: integer
+                        nullable: true
+                    required:
+                    - status
+                    - start_date
+                    - activity_type
+                    - details
+                    - appropriation
+                    type: object
                     readOnly: true
                   activities:
                     type: string
@@ -2334,7 +2932,7 @@ paths:
       - name: case
         required: false
         in: query
-        description: case
+        description: Sag
         schema:
           type: string
       - name: note
@@ -2343,10 +2941,16 @@ paths:
         description: note
         schema:
           type: string
+      - name: main_activity__details
+        required: false
+        in: query
+        description: Aktivitetsdetalje for hovedaktivitet
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
-            schema: &id005
+            schema: &id006
               properties:
                 created:
                   type: string
@@ -2390,9 +2994,9 @@ paths:
               - sbsys_id
               - case
           application/x-www-form-urlencoded:
-            schema: *id005
+            schema: *id006
           multipart/form-data:
-            schema: *id005
+            schema: *id006
       responses:
         '200':
           content:
@@ -2402,7 +3006,13 @@ paths:
                   id:
                     type: integer
                     readOnly: true
+                  status:
+                    type: string
+                    readOnly: true
                   total_granted_this_year:
+                    type: string
+                    readOnly: true
+                  total_granted_full_year:
                     type: string
                     readOnly: true
                   total_expected_this_year:
@@ -2411,11 +3021,291 @@ paths:
                   total_expected_full_year:
                     type: string
                     readOnly: true
+                  total_cost_expected:
+                    type: string
+                    readOnly: true
+                  total_cost_granted:
+                    type: string
+                    readOnly: true
                   granted_from_date:
                     type: string
                     readOnly: true
                   granted_to_date:
                     type: string
+                    readOnly: true
+                  case__cpr_number:
+                    type: string
+                    readOnly: true
+                  case__name:
+                    type: string
+                    readOnly: true
+                  case__sbsys_id:
+                    type: string
+                    readOnly: true
+                  num_draft_or_expected_activities:
+                    type: string
+                    readOnly: true
+                  num_activities:
+                    type: string
+                    readOnly: true
+                  main_activity:
+                    properties:
+                      id:
+                        type: integer
+                        readOnly: true
+                      monthly_payment_plan:
+                        type: string
+                        readOnly: true
+                      total_cost:
+                        type: string
+                        readOnly: true
+                      total_cost_this_year:
+                        type: string
+                        readOnly: true
+                      total_cost_full_year:
+                        type: string
+                        readOnly: true
+                      total_granted_this_year:
+                        type: string
+                        readOnly: true
+                      total_expected_this_year:
+                        type: string
+                        readOnly: true
+                      payment_plan:
+                        properties:
+                          id:
+                            type: integer
+                            readOnly: true
+                          payments:
+                            type: array
+                            items:
+                              properties:
+                                id:
+                                  type: integer
+                                  readOnly: true
+                                account_string:
+                                  type: string
+                                  readOnly: true
+                                payment_schedule__payment_id:
+                                  type: string
+                                  readOnly: true
+                                case__cpr_number:
+                                  type: string
+                                  readOnly: true
+                                activity__id:
+                                  type: string
+                                  readOnly: true
+                                activity__status:
+                                  type: string
+                                  readOnly: true
+                                activity__details__id:
+                                  type: string
+                                  readOnly: true
+                                payment_schedule__fictive:
+                                  type: string
+                                  readOnly: true
+                                is_payable_manually:
+                                  type: string
+                                  readOnly: true
+                                date:
+                                  type: string
+                                  format: date
+                                recipient_type:
+                                  enum:
+                                  - INTERNAL
+                                  - PERSON
+                                  - COMPANY
+                                recipient_id:
+                                  type: string
+                                  maxLength: 128
+                                recipient_name:
+                                  type: string
+                                  maxLength: 128
+                                payment_method:
+                                  enum:
+                                  - CASH
+                                  - SD
+                                  - INVOICE
+                                  - INTERNAL
+                                amount:
+                                  type: number
+                                  multipleOf: 0.01
+                                  maximum: 1000000000000
+                                  minimum: -1000000000000
+                                paid_amount:
+                                  type: number
+                                  multipleOf: 0.01
+                                  maximum: 1000000000000
+                                  minimum: -1000000000000
+                                  nullable: true
+                                paid:
+                                  type: boolean
+                                paid_date:
+                                  type: string
+                                  format: date
+                                  nullable: true
+                                note:
+                                  type: string
+                                payment_schedule:
+                                  type: integer
+                              required:
+                              - date
+                              - recipient_type
+                              - recipient_id
+                              - recipient_name
+                              - payment_method
+                              - amount
+                              - payment_schedule
+                            readOnly: true
+                          account:
+                            type: string
+                            readOnly: true
+                          recipient_type:
+                            enum:
+                            - INTERNAL
+                            - PERSON
+                            - COMPANY
+                          recipient_id:
+                            type: string
+                            maxLength: 128
+                          recipient_name:
+                            type: string
+                            maxLength: 128
+                          payment_method:
+                            enum:
+                            - CASH
+                            - SD
+                            - INVOICE
+                            - INTERNAL
+                          payment_frequency:
+                            enum:
+                            - DAILY
+                            - WEEKLY
+                            - BIWEEKLY
+                            - MONTHLY
+                            nullable: true
+                          payment_day_of_month:
+                            type: integer
+                            maximum: 31
+                            minimum: 1
+                          payment_type:
+                            enum:
+                            - ONE_TIME_PAYMENT
+                            - RUNNING_PAYMENT
+                            - PER_HOUR_PAYMENT
+                            - PER_DAY_PAYMENT
+                            - PER_KM_PAYMENT
+                          payment_units:
+                            type: number
+                            multipleOf: 0.01
+                            maximum: 1000000000000
+                            minimum: *id005
+                            nullable: true
+                          payment_amount:
+                            type: number
+                            multipleOf: 0.01
+                            maximum: 1000000000000
+                            minimum: -1000000000000
+                          fictive:
+                            type: boolean
+                          payment_id:
+                            type: integer
+                            readOnly: true
+                          payment_method_details:
+                            type: integer
+                            nullable: true
+                        required:
+                        - recipient_type
+                        - recipient_id
+                        - recipient_name
+                        - payment_method
+                        - payment_type
+                        - payment_amount
+                        type: object
+                      details__name:
+                        type: string
+                        readOnly: true
+                      revision:
+                        type: string
+                        readOnly: true
+                        description: System field. Git repository tag:branch:commit.
+                      created:
+                        type: string
+                        format: date-time
+                      modified:
+                        type: string
+                        format: date-time
+                      user_created:
+                        type: string
+                        description: Updated by admin.save_model
+                        maxLength: 50
+                      user_modified:
+                        type: string
+                        description: Updated by admin.save_model
+                        maxLength: 50
+                      hostname_created:
+                        type: string
+                        description: System field. (modified on create only)
+                        maxLength: 60
+                      hostname_modified:
+                        type: string
+                        description: System field. (modified on every save)
+                        maxLength: 50
+                      device_created:
+                        type: string
+                        maxLength: 10
+                      device_modified:
+                        type: string
+                        maxLength: 10
+                      status:
+                        enum:
+                        - DRAFT
+                        - EXPECTED
+                        - GRANTED
+                      approval_note:
+                        type: string
+                      appropriation_date:
+                        type: string
+                        format: date
+                        nullable: true
+                      start_date:
+                        type: string
+                        format: date
+                      end_date:
+                        type: string
+                        format: date
+                        nullable: true
+                      activity_type:
+                        enum:
+                        - MAIN_ACTIVITY
+                        - SUPPL_ACTIVITY
+                      note:
+                        type: string
+                        nullable: true
+                        maxLength: 1000
+                      details:
+                        type: integer
+                      approval_level:
+                        type: integer
+                        nullable: true
+                      approval_user:
+                        type: integer
+                        nullable: true
+                      modifies:
+                        type: integer
+                        nullable: true
+                      appropriation:
+                        type: integer
+                      service_provider:
+                        type: integer
+                        nullable: true
+                    required:
+                    - status
+                    - start_date
+                    - activity_type
+                    - details
+                    - appropriation
+                    type: object
                     readOnly: true
                   activities:
                     type: string
@@ -2550,7 +3440,7 @@ paths:
       - name: case
         required: false
         in: query
-        description: case
+        description: Sag
         schema:
           type: string
       - name: note
@@ -2559,10 +3449,16 @@ paths:
         description: note
         schema:
           type: string
+      - name: main_activity__details
+        required: false
+        in: query
+        description: Aktivitetsdetalje for hovedaktivitet
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
-            schema: &id006
+            schema: &id007
               properties:
                 created:
                   type: string
@@ -2603,9 +3499,9 @@ paths:
                 case:
                   type: integer
           application/x-www-form-urlencoded:
-            schema: *id006
+            schema: *id007
           multipart/form-data:
-            schema: *id006
+            schema: *id007
       responses:
         '200':
           content:
@@ -2615,7 +3511,13 @@ paths:
                   id:
                     type: integer
                     readOnly: true
+                  status:
+                    type: string
+                    readOnly: true
                   total_granted_this_year:
+                    type: string
+                    readOnly: true
+                  total_granted_full_year:
                     type: string
                     readOnly: true
                   total_expected_this_year:
@@ -2624,11 +3526,291 @@ paths:
                   total_expected_full_year:
                     type: string
                     readOnly: true
+                  total_cost_expected:
+                    type: string
+                    readOnly: true
+                  total_cost_granted:
+                    type: string
+                    readOnly: true
                   granted_from_date:
                     type: string
                     readOnly: true
                   granted_to_date:
                     type: string
+                    readOnly: true
+                  case__cpr_number:
+                    type: string
+                    readOnly: true
+                  case__name:
+                    type: string
+                    readOnly: true
+                  case__sbsys_id:
+                    type: string
+                    readOnly: true
+                  num_draft_or_expected_activities:
+                    type: string
+                    readOnly: true
+                  num_activities:
+                    type: string
+                    readOnly: true
+                  main_activity:
+                    properties:
+                      id:
+                        type: integer
+                        readOnly: true
+                      monthly_payment_plan:
+                        type: string
+                        readOnly: true
+                      total_cost:
+                        type: string
+                        readOnly: true
+                      total_cost_this_year:
+                        type: string
+                        readOnly: true
+                      total_cost_full_year:
+                        type: string
+                        readOnly: true
+                      total_granted_this_year:
+                        type: string
+                        readOnly: true
+                      total_expected_this_year:
+                        type: string
+                        readOnly: true
+                      payment_plan:
+                        properties:
+                          id:
+                            type: integer
+                            readOnly: true
+                          payments:
+                            type: array
+                            items:
+                              properties:
+                                id:
+                                  type: integer
+                                  readOnly: true
+                                account_string:
+                                  type: string
+                                  readOnly: true
+                                payment_schedule__payment_id:
+                                  type: string
+                                  readOnly: true
+                                case__cpr_number:
+                                  type: string
+                                  readOnly: true
+                                activity__id:
+                                  type: string
+                                  readOnly: true
+                                activity__status:
+                                  type: string
+                                  readOnly: true
+                                activity__details__id:
+                                  type: string
+                                  readOnly: true
+                                payment_schedule__fictive:
+                                  type: string
+                                  readOnly: true
+                                is_payable_manually:
+                                  type: string
+                                  readOnly: true
+                                date:
+                                  type: string
+                                  format: date
+                                recipient_type:
+                                  enum:
+                                  - INTERNAL
+                                  - PERSON
+                                  - COMPANY
+                                recipient_id:
+                                  type: string
+                                  maxLength: 128
+                                recipient_name:
+                                  type: string
+                                  maxLength: 128
+                                payment_method:
+                                  enum:
+                                  - CASH
+                                  - SD
+                                  - INVOICE
+                                  - INTERNAL
+                                amount:
+                                  type: number
+                                  multipleOf: 0.01
+                                  maximum: 1000000000000
+                                  minimum: -1000000000000
+                                paid_amount:
+                                  type: number
+                                  multipleOf: 0.01
+                                  maximum: 1000000000000
+                                  minimum: -1000000000000
+                                  nullable: true
+                                paid:
+                                  type: boolean
+                                paid_date:
+                                  type: string
+                                  format: date
+                                  nullable: true
+                                note:
+                                  type: string
+                                payment_schedule:
+                                  type: integer
+                              required:
+                              - date
+                              - recipient_type
+                              - recipient_id
+                              - recipient_name
+                              - payment_method
+                              - amount
+                              - payment_schedule
+                            readOnly: true
+                          account:
+                            type: string
+                            readOnly: true
+                          recipient_type:
+                            enum:
+                            - INTERNAL
+                            - PERSON
+                            - COMPANY
+                          recipient_id:
+                            type: string
+                            maxLength: 128
+                          recipient_name:
+                            type: string
+                            maxLength: 128
+                          payment_method:
+                            enum:
+                            - CASH
+                            - SD
+                            - INVOICE
+                            - INTERNAL
+                          payment_frequency:
+                            enum:
+                            - DAILY
+                            - WEEKLY
+                            - BIWEEKLY
+                            - MONTHLY
+                            nullable: true
+                          payment_day_of_month:
+                            type: integer
+                            maximum: 31
+                            minimum: 1
+                          payment_type:
+                            enum:
+                            - ONE_TIME_PAYMENT
+                            - RUNNING_PAYMENT
+                            - PER_HOUR_PAYMENT
+                            - PER_DAY_PAYMENT
+                            - PER_KM_PAYMENT
+                          payment_units:
+                            type: number
+                            multipleOf: 0.01
+                            maximum: 1000000000000
+                            minimum: *id005
+                            nullable: true
+                          payment_amount:
+                            type: number
+                            multipleOf: 0.01
+                            maximum: 1000000000000
+                            minimum: -1000000000000
+                          fictive:
+                            type: boolean
+                          payment_id:
+                            type: integer
+                            readOnly: true
+                          payment_method_details:
+                            type: integer
+                            nullable: true
+                        required:
+                        - recipient_type
+                        - recipient_id
+                        - recipient_name
+                        - payment_method
+                        - payment_type
+                        - payment_amount
+                        type: object
+                      details__name:
+                        type: string
+                        readOnly: true
+                      revision:
+                        type: string
+                        readOnly: true
+                        description: System field. Git repository tag:branch:commit.
+                      created:
+                        type: string
+                        format: date-time
+                      modified:
+                        type: string
+                        format: date-time
+                      user_created:
+                        type: string
+                        description: Updated by admin.save_model
+                        maxLength: 50
+                      user_modified:
+                        type: string
+                        description: Updated by admin.save_model
+                        maxLength: 50
+                      hostname_created:
+                        type: string
+                        description: System field. (modified on create only)
+                        maxLength: 60
+                      hostname_modified:
+                        type: string
+                        description: System field. (modified on every save)
+                        maxLength: 50
+                      device_created:
+                        type: string
+                        maxLength: 10
+                      device_modified:
+                        type: string
+                        maxLength: 10
+                      status:
+                        enum:
+                        - DRAFT
+                        - EXPECTED
+                        - GRANTED
+                      approval_note:
+                        type: string
+                      appropriation_date:
+                        type: string
+                        format: date
+                        nullable: true
+                      start_date:
+                        type: string
+                        format: date
+                      end_date:
+                        type: string
+                        format: date
+                        nullable: true
+                      activity_type:
+                        enum:
+                        - MAIN_ACTIVITY
+                        - SUPPL_ACTIVITY
+                      note:
+                        type: string
+                        nullable: true
+                        maxLength: 1000
+                      details:
+                        type: integer
+                      approval_level:
+                        type: integer
+                        nullable: true
+                      approval_user:
+                        type: integer
+                        nullable: true
+                      modifies:
+                        type: integer
+                        nullable: true
+                      appropriation:
+                        type: integer
+                      service_provider:
+                        type: integer
+                        nullable: true
+                    required:
+                    - status
+                    - start_date
+                    - activity_type
+                    - details
+                    - appropriation
+                    type: object
                     readOnly: true
                   activities:
                     type: string
@@ -2763,13 +3945,19 @@ paths:
       - name: case
         required: false
         in: query
-        description: case
+        description: Sag
         schema:
           type: string
       - name: note
         required: false
         in: query
         description: note
+        schema:
+          type: string
+      - name: main_activity__details
+        required: false
+        in: query
+        description: Aktivitetsdetalje for hovedaktivitet
         schema:
           type: string
       responses:
@@ -2886,12 +4074,6 @@ paths:
         required: false
         in: query
         description: activity_type
-        schema:
-          type: string
-      - name: payment_plan
-        required: false
-        in: query
-        description: payment_plan
         schema:
           type: string
       - name: modifies
@@ -3075,7 +4257,7 @@ paths:
                           type: number
                           multipleOf: 0.01
                           maximum: 1000000000000
-                          minimum: &id007 0.00
+                          minimum: *id005
                           nullable: true
                         payment_amount:
                           type: number
@@ -3098,6 +4280,9 @@ paths:
                       - payment_type
                       - payment_amount
                       type: object
+                    details__name:
+                      type: string
+                      readOnly: true
                     revision:
                       type: string
                       readOnly: true
@@ -3316,7 +4501,7 @@ paths:
                       type: number
                       multipleOf: 0.01
                       maximum: 1000000000000
-                      minimum: *id007
+                      minimum: *id005
                       nullable: true
                     payment_amount:
                       type: number
@@ -3574,7 +4759,7 @@ paths:
                         type: number
                         multipleOf: 0.01
                         maximum: 1000000000000
-                        minimum: *id007
+                        minimum: *id005
                         nullable: true
                       payment_amount:
                         type: number
@@ -3597,6 +4782,9 @@ paths:
                     - payment_type
                     - payment_amount
                     type: object
+                  details__name:
+                    type: string
+                    readOnly: true
                   revision:
                     type: string
                     readOnly: true
@@ -3797,12 +4985,6 @@ paths:
         description: activity_type
         schema:
           type: string
-      - name: payment_plan
-        required: false
-        in: query
-        description: payment_plan
-        schema:
-          type: string
       - name: modifies
         required: false
         in: query
@@ -3982,7 +5164,7 @@ paths:
                         type: number
                         multipleOf: 0.01
                         maximum: 1000000000000
-                        minimum: *id007
+                        minimum: *id005
                         nullable: true
                       payment_amount:
                         type: number
@@ -4005,6 +5187,9 @@ paths:
                     - payment_type
                     - payment_amount
                     type: object
+                  details__name:
+                    type: string
+                    readOnly: true
                   revision:
                     type: string
                     readOnly: true
@@ -4204,12 +5389,6 @@ paths:
         description: activity_type
         schema:
           type: string
-      - name: payment_plan
-        required: false
-        in: query
-        description: payment_plan
-        schema:
-          type: string
       - name: modifies
         required: false
         in: query
@@ -4367,7 +5546,7 @@ paths:
                       type: number
                       multipleOf: 0.01
                       maximum: 1000000000000
-                      minimum: *id007
+                      minimum: *id005
                       nullable: true
                     payment_amount:
                       type: number
@@ -4625,7 +5804,7 @@ paths:
                         type: number
                         multipleOf: 0.01
                         maximum: 1000000000000
-                        minimum: *id007
+                        minimum: *id005
                         nullable: true
                       payment_amount:
                         type: number
@@ -4648,6 +5827,9 @@ paths:
                     - payment_type
                     - payment_amount
                     type: object
+                  details__name:
+                    type: string
+                    readOnly: true
                   revision:
                     type: string
                     readOnly: true
@@ -4847,12 +6029,6 @@ paths:
         description: activity_type
         schema:
           type: string
-      - name: payment_plan
-        required: false
-        in: query
-        description: payment_plan
-        schema:
-          type: string
       - name: modifies
         required: false
         in: query
@@ -5010,7 +6186,7 @@ paths:
                       type: number
                       multipleOf: 0.01
                       maximum: 1000000000000
-                      minimum: *id007
+                      minimum: *id005
                       nullable: true
                     payment_amount:
                       type: number
@@ -5262,7 +6438,7 @@ paths:
                         type: number
                         multipleOf: 0.01
                         maximum: 1000000000000
-                        minimum: *id007
+                        minimum: *id005
                         nullable: true
                       payment_amount:
                         type: number
@@ -5285,6 +6461,9 @@ paths:
                     - payment_type
                     - payment_amount
                     type: object
+                  details__name:
+                    type: string
+                    readOnly: true
                   revision:
                     type: string
                     readOnly: true
@@ -5489,12 +6668,6 @@ paths:
         description: activity_type
         schema:
           type: string
-      - name: payment_plan
-        required: false
-        in: query
-        description: payment_plan
-        schema:
-          type: string
       - name: modifies
         required: false
         in: query
@@ -5661,7 +6834,7 @@ paths:
                       type: number
                       multipleOf: 0.01
                       maximum: 1000000000000
-                      minimum: *id007
+                      minimum: *id005
                       nullable: true
                     payment_amount:
                       type: number
@@ -5732,7 +6905,7 @@ paths:
                   type: number
                   multipleOf: 0.01
                   maximum: 1000000000000
-                  minimum: *id007
+                  minimum: *id005
                   nullable: true
                 payment_amount:
                   type: number
@@ -5887,7 +7060,7 @@ paths:
                     type: number
                     multipleOf: 0.01
                     maximum: 1000000000000
-                    minimum: *id007
+                    minimum: *id005
                     nullable: true
                   payment_amount:
                     type: number
@@ -6053,7 +7226,7 @@ paths:
                     type: number
                     multipleOf: 0.01
                     maximum: 1000000000000
-                    minimum: *id007
+                    minimum: *id005
                     nullable: true
                   payment_amount:
                     type: number
@@ -6130,7 +7303,7 @@ paths:
                   type: number
                   multipleOf: 0.01
                   maximum: 1000000000000
-                  minimum: *id007
+                  minimum: *id005
                   nullable: true
                 payment_amount:
                   type: number
@@ -6285,7 +7458,7 @@ paths:
                     type: number
                     multipleOf: 0.01
                     maximum: 1000000000000
-                    minimum: *id007
+                    minimum: *id005
                     nullable: true
                   payment_amount:
                     type: number
@@ -6362,7 +7535,7 @@ paths:
                   type: number
                   multipleOf: 0.01
                   maximum: 1000000000000
-                  minimum: *id007
+                  minimum: *id005
                   nullable: true
                 payment_amount:
                   type: number
@@ -6510,7 +7683,7 @@ paths:
                     type: number
                     multipleOf: 0.01
                     maximum: 1000000000000
-                    minimum: *id007
+                    minimum: *id005
                     nullable: true
                   payment_amount:
                     type: number
@@ -8001,6 +9174,60 @@ paths:
       operationId: listRelatedPersons
       description: Expose related persons - typically family relations - in REST API.
       parameters:
+      - name: revision
+        required: false
+        in: query
+        description: revision
+        schema:
+          type: string
+      - name: created
+        required: false
+        in: query
+        description: created
+        schema:
+          type: string
+      - name: modified
+        required: false
+        in: query
+        description: modified
+        schema:
+          type: string
+      - name: user_created
+        required: false
+        in: query
+        description: user_created
+        schema:
+          type: string
+      - name: user_modified
+        required: false
+        in: query
+        description: user_modified
+        schema:
+          type: string
+      - name: hostname_created
+        required: false
+        in: query
+        description: hostname_created
+        schema:
+          type: string
+      - name: hostname_modified
+        required: false
+        in: query
+        description: hostname_modified
+        schema:
+          type: string
+      - name: device_created
+        required: false
+        in: query
+        description: device_created
+        schema:
+          type: string
+      - name: device_modified
+        required: false
+        in: query
+        description: device_modified
+        schema:
+          type: string
       - name: relation_type
         required: false
         in: query
@@ -8025,6 +9252,12 @@ paths:
         description: related_case
         schema:
           type: string
+      - name: from_serviceplatformen
+        required: false
+        in: query
+        description: from_serviceplatformen
+        schema:
+          type: string
       - name: main_case
         required: false
         in: query
@@ -8042,6 +9275,38 @@ paths:
                     id:
                       type: integer
                       readOnly: true
+                    revision:
+                      type: string
+                      readOnly: true
+                      description: System field. Git repository tag:branch:commit.
+                    created:
+                      type: string
+                      format: date-time
+                    modified:
+                      type: string
+                      format: date-time
+                    user_created:
+                      type: string
+                      description: Updated by admin.save_model
+                      maxLength: 50
+                    user_modified:
+                      type: string
+                      description: Updated by admin.save_model
+                      maxLength: 50
+                    hostname_created:
+                      type: string
+                      description: System field. (modified on create only)
+                      maxLength: 60
+                    hostname_modified:
+                      type: string
+                      description: System field. (modified on every save)
+                      maxLength: 50
+                    device_created:
+                      type: string
+                      maxLength: 10
+                    device_modified:
+                      type: string
+                      maxLength: 10
                     relation_type:
                       type: string
                       maxLength: 128
@@ -8054,6 +9319,8 @@ paths:
                     related_case:
                       type: string
                       maxLength: 128
+                    from_serviceplatformen:
+                      type: boolean
                     main_case:
                       type: integer
                   required:
@@ -8070,6 +9337,34 @@ paths:
           application/json:
             schema: &id020
               properties:
+                created:
+                  type: string
+                  format: date-time
+                modified:
+                  type: string
+                  format: date-time
+                user_created:
+                  type: string
+                  description: Updated by admin.save_model
+                  maxLength: 50
+                user_modified:
+                  type: string
+                  description: Updated by admin.save_model
+                  maxLength: 50
+                hostname_created:
+                  type: string
+                  description: System field. (modified on create only)
+                  maxLength: 60
+                hostname_modified:
+                  type: string
+                  description: System field. (modified on every save)
+                  maxLength: 50
+                device_created:
+                  type: string
+                  maxLength: 10
+                device_modified:
+                  type: string
+                  maxLength: 10
                 relation_type:
                   type: string
                   maxLength: 128
@@ -8082,6 +9377,8 @@ paths:
                 related_case:
                   type: string
                   maxLength: 128
+                from_serviceplatformen:
+                  type: boolean
                 main_case:
                   type: integer
               required:
@@ -8101,6 +9398,38 @@ paths:
                   id:
                     type: integer
                     readOnly: true
+                  revision:
+                    type: string
+                    readOnly: true
+                    description: System field. Git repository tag:branch:commit.
+                  created:
+                    type: string
+                    format: date-time
+                  modified:
+                    type: string
+                    format: date-time
+                  user_created:
+                    type: string
+                    description: Updated by admin.save_model
+                    maxLength: 50
+                  user_modified:
+                    type: string
+                    description: Updated by admin.save_model
+                    maxLength: 50
+                  hostname_created:
+                    type: string
+                    description: System field. (modified on create only)
+                    maxLength: 60
+                  hostname_modified:
+                    type: string
+                    description: System field. (modified on every save)
+                    maxLength: 50
+                  device_created:
+                    type: string
+                    maxLength: 10
+                  device_modified:
+                    type: string
+                    maxLength: 10
                   relation_type:
                     type: string
                     maxLength: 128
@@ -8113,6 +9442,8 @@ paths:
                   related_case:
                     type: string
                     maxLength: 128
+                  from_serviceplatformen:
+                    type: boolean
                   main_case:
                     type: integer
                 required:
@@ -8126,7 +9457,10 @@ paths:
       description: 'Fetch relations for a person using the CPR from Serviceplatformen.
 
 
-        Returns the data as serialized RelatedPersons data.'
+        Returns the data as serialized RelatedPersons data.
+
+
+        GET params: cpr'
       parameters: []
       responses:
         '200':
@@ -8137,6 +9471,38 @@ paths:
                   id:
                     type: integer
                     readOnly: true
+                  revision:
+                    type: string
+                    readOnly: true
+                    description: System field. Git repository tag:branch:commit.
+                  created:
+                    type: string
+                    format: date-time
+                  modified:
+                    type: string
+                    format: date-time
+                  user_created:
+                    type: string
+                    description: Updated by admin.save_model
+                    maxLength: 50
+                  user_modified:
+                    type: string
+                    description: Updated by admin.save_model
+                    maxLength: 50
+                  hostname_created:
+                    type: string
+                    description: System field. (modified on create only)
+                    maxLength: 60
+                  hostname_modified:
+                    type: string
+                    description: System field. (modified on every save)
+                    maxLength: 50
+                  device_created:
+                    type: string
+                    maxLength: 10
+                  device_modified:
+                    type: string
+                    maxLength: 10
                   relation_type:
                     type: string
                     maxLength: 128
@@ -8149,6 +9515,8 @@ paths:
                   related_case:
                     type: string
                     maxLength: 128
+                  from_serviceplatformen:
+                    type: boolean
                   main_case:
                     type: integer
                 required:
@@ -8167,6 +9535,60 @@ paths:
         description: A unique integer value identifying this relateret person.
         schema:
           type: string
+      - name: revision
+        required: false
+        in: query
+        description: revision
+        schema:
+          type: string
+      - name: created
+        required: false
+        in: query
+        description: created
+        schema:
+          type: string
+      - name: modified
+        required: false
+        in: query
+        description: modified
+        schema:
+          type: string
+      - name: user_created
+        required: false
+        in: query
+        description: user_created
+        schema:
+          type: string
+      - name: user_modified
+        required: false
+        in: query
+        description: user_modified
+        schema:
+          type: string
+      - name: hostname_created
+        required: false
+        in: query
+        description: hostname_created
+        schema:
+          type: string
+      - name: hostname_modified
+        required: false
+        in: query
+        description: hostname_modified
+        schema:
+          type: string
+      - name: device_created
+        required: false
+        in: query
+        description: device_created
+        schema:
+          type: string
+      - name: device_modified
+        required: false
+        in: query
+        description: device_modified
+        schema:
+          type: string
       - name: relation_type
         required: false
         in: query
@@ -8189,6 +9611,12 @@ paths:
         required: false
         in: query
         description: related_case
+        schema:
+          type: string
+      - name: from_serviceplatformen
+        required: false
+        in: query
+        description: from_serviceplatformen
         schema:
           type: string
       - name: main_case
@@ -8206,6 +9634,38 @@ paths:
                   id:
                     type: integer
                     readOnly: true
+                  revision:
+                    type: string
+                    readOnly: true
+                    description: System field. Git repository tag:branch:commit.
+                  created:
+                    type: string
+                    format: date-time
+                  modified:
+                    type: string
+                    format: date-time
+                  user_created:
+                    type: string
+                    description: Updated by admin.save_model
+                    maxLength: 50
+                  user_modified:
+                    type: string
+                    description: Updated by admin.save_model
+                    maxLength: 50
+                  hostname_created:
+                    type: string
+                    description: System field. (modified on create only)
+                    maxLength: 60
+                  hostname_modified:
+                    type: string
+                    description: System field. (modified on every save)
+                    maxLength: 50
+                  device_created:
+                    type: string
+                    maxLength: 10
+                  device_modified:
+                    type: string
+                    maxLength: 10
                   relation_type:
                     type: string
                     maxLength: 128
@@ -8218,6 +9678,8 @@ paths:
                   related_case:
                     type: string
                     maxLength: 128
+                  from_serviceplatformen:
+                    type: boolean
                   main_case:
                     type: integer
                 required:
@@ -8233,6 +9695,60 @@ paths:
         in: path
         required: true
         description: A unique integer value identifying this relateret person.
+        schema:
+          type: string
+      - name: revision
+        required: false
+        in: query
+        description: revision
+        schema:
+          type: string
+      - name: created
+        required: false
+        in: query
+        description: created
+        schema:
+          type: string
+      - name: modified
+        required: false
+        in: query
+        description: modified
+        schema:
+          type: string
+      - name: user_created
+        required: false
+        in: query
+        description: user_created
+        schema:
+          type: string
+      - name: user_modified
+        required: false
+        in: query
+        description: user_modified
+        schema:
+          type: string
+      - name: hostname_created
+        required: false
+        in: query
+        description: hostname_created
+        schema:
+          type: string
+      - name: hostname_modified
+        required: false
+        in: query
+        description: hostname_modified
+        schema:
+          type: string
+      - name: device_created
+        required: false
+        in: query
+        description: device_created
+        schema:
+          type: string
+      - name: device_modified
+        required: false
+        in: query
+        description: device_modified
         schema:
           type: string
       - name: relation_type
@@ -8259,6 +9775,12 @@ paths:
         description: related_case
         schema:
           type: string
+      - name: from_serviceplatformen
+        required: false
+        in: query
+        description: from_serviceplatformen
+        schema:
+          type: string
       - name: main_case
         required: false
         in: query
@@ -8270,6 +9792,34 @@ paths:
           application/json:
             schema: &id021
               properties:
+                created:
+                  type: string
+                  format: date-time
+                modified:
+                  type: string
+                  format: date-time
+                user_created:
+                  type: string
+                  description: Updated by admin.save_model
+                  maxLength: 50
+                user_modified:
+                  type: string
+                  description: Updated by admin.save_model
+                  maxLength: 50
+                hostname_created:
+                  type: string
+                  description: System field. (modified on create only)
+                  maxLength: 60
+                hostname_modified:
+                  type: string
+                  description: System field. (modified on every save)
+                  maxLength: 50
+                device_created:
+                  type: string
+                  maxLength: 10
+                device_modified:
+                  type: string
+                  maxLength: 10
                 relation_type:
                   type: string
                   maxLength: 128
@@ -8282,6 +9832,8 @@ paths:
                 related_case:
                   type: string
                   maxLength: 128
+                from_serviceplatformen:
+                  type: boolean
                 main_case:
                   type: integer
               required:
@@ -8301,6 +9853,38 @@ paths:
                   id:
                     type: integer
                     readOnly: true
+                  revision:
+                    type: string
+                    readOnly: true
+                    description: System field. Git repository tag:branch:commit.
+                  created:
+                    type: string
+                    format: date-time
+                  modified:
+                    type: string
+                    format: date-time
+                  user_created:
+                    type: string
+                    description: Updated by admin.save_model
+                    maxLength: 50
+                  user_modified:
+                    type: string
+                    description: Updated by admin.save_model
+                    maxLength: 50
+                  hostname_created:
+                    type: string
+                    description: System field. (modified on create only)
+                    maxLength: 60
+                  hostname_modified:
+                    type: string
+                    description: System field. (modified on every save)
+                    maxLength: 50
+                  device_created:
+                    type: string
+                    maxLength: 10
+                  device_modified:
+                    type: string
+                    maxLength: 10
                   relation_type:
                     type: string
                     maxLength: 128
@@ -8313,6 +9897,8 @@ paths:
                   related_case:
                     type: string
                     maxLength: 128
+                  from_serviceplatformen:
+                    type: boolean
                   main_case:
                     type: integer
                 required:
@@ -8330,6 +9916,60 @@ paths:
         description: A unique integer value identifying this relateret person.
         schema:
           type: string
+      - name: revision
+        required: false
+        in: query
+        description: revision
+        schema:
+          type: string
+      - name: created
+        required: false
+        in: query
+        description: created
+        schema:
+          type: string
+      - name: modified
+        required: false
+        in: query
+        description: modified
+        schema:
+          type: string
+      - name: user_created
+        required: false
+        in: query
+        description: user_created
+        schema:
+          type: string
+      - name: user_modified
+        required: false
+        in: query
+        description: user_modified
+        schema:
+          type: string
+      - name: hostname_created
+        required: false
+        in: query
+        description: hostname_created
+        schema:
+          type: string
+      - name: hostname_modified
+        required: false
+        in: query
+        description: hostname_modified
+        schema:
+          type: string
+      - name: device_created
+        required: false
+        in: query
+        description: device_created
+        schema:
+          type: string
+      - name: device_modified
+        required: false
+        in: query
+        description: device_modified
+        schema:
+          type: string
       - name: relation_type
         required: false
         in: query
@@ -8354,6 +9994,12 @@ paths:
         description: related_case
         schema:
           type: string
+      - name: from_serviceplatformen
+        required: false
+        in: query
+        description: from_serviceplatformen
+        schema:
+          type: string
       - name: main_case
         required: false
         in: query
@@ -8365,6 +10011,34 @@ paths:
           application/json:
             schema: &id022
               properties:
+                created:
+                  type: string
+                  format: date-time
+                modified:
+                  type: string
+                  format: date-time
+                user_created:
+                  type: string
+                  description: Updated by admin.save_model
+                  maxLength: 50
+                user_modified:
+                  type: string
+                  description: Updated by admin.save_model
+                  maxLength: 50
+                hostname_created:
+                  type: string
+                  description: System field. (modified on create only)
+                  maxLength: 60
+                hostname_modified:
+                  type: string
+                  description: System field. (modified on every save)
+                  maxLength: 50
+                device_created:
+                  type: string
+                  maxLength: 10
+                device_modified:
+                  type: string
+                  maxLength: 10
                 relation_type:
                   type: string
                   maxLength: 128
@@ -8377,6 +10051,8 @@ paths:
                 related_case:
                   type: string
                   maxLength: 128
+                from_serviceplatformen:
+                  type: boolean
                 main_case:
                   type: integer
           application/x-www-form-urlencoded:
@@ -8392,6 +10068,38 @@ paths:
                   id:
                     type: integer
                     readOnly: true
+                  revision:
+                    type: string
+                    readOnly: true
+                    description: System field. Git repository tag:branch:commit.
+                  created:
+                    type: string
+                    format: date-time
+                  modified:
+                    type: string
+                    format: date-time
+                  user_created:
+                    type: string
+                    description: Updated by admin.save_model
+                    maxLength: 50
+                  user_modified:
+                    type: string
+                    description: Updated by admin.save_model
+                    maxLength: 50
+                  hostname_created:
+                    type: string
+                    description: System field. (modified on create only)
+                    maxLength: 60
+                  hostname_modified:
+                    type: string
+                    description: System field. (modified on every save)
+                    maxLength: 50
+                  device_created:
+                    type: string
+                    maxLength: 10
+                  device_modified:
+                    type: string
+                    maxLength: 10
                   relation_type:
                     type: string
                     maxLength: 128
@@ -8404,6 +10112,8 @@ paths:
                   related_case:
                     type: string
                     maxLength: 128
+                  from_serviceplatformen:
+                    type: boolean
                   main_case:
                     type: integer
                 required:
@@ -8421,6 +10131,60 @@ paths:
         description: A unique integer value identifying this relateret person.
         schema:
           type: string
+      - name: revision
+        required: false
+        in: query
+        description: revision
+        schema:
+          type: string
+      - name: created
+        required: false
+        in: query
+        description: created
+        schema:
+          type: string
+      - name: modified
+        required: false
+        in: query
+        description: modified
+        schema:
+          type: string
+      - name: user_created
+        required: false
+        in: query
+        description: user_created
+        schema:
+          type: string
+      - name: user_modified
+        required: false
+        in: query
+        description: user_modified
+        schema:
+          type: string
+      - name: hostname_created
+        required: false
+        in: query
+        description: hostname_created
+        schema:
+          type: string
+      - name: hostname_modified
+        required: false
+        in: query
+        description: hostname_modified
+        schema:
+          type: string
+      - name: device_created
+        required: false
+        in: query
+        description: device_created
+        schema:
+          type: string
+      - name: device_modified
+        required: false
+        in: query
+        description: device_modified
+        schema:
+          type: string
       - name: relation_type
         required: false
         in: query
@@ -8445,6 +10209,12 @@ paths:
         description: related_case
         schema:
           type: string
+      - name: from_serviceplatformen
+        required: false
+        in: query
+        description: from_serviceplatformen
+        schema:
+          type: string
       - name: main_case
         required: false
         in: query
@@ -8458,7 +10228,19 @@ paths:
     get:
       operationId: listMunicipalitys
       description: Expose municipalities in REST API.
-      parameters: []
+      parameters:
+      - name: active
+        required: false
+        in: query
+        description: active
+        schema:
+          type: string
+      - name: name
+        required: false
+        in: query
+        description: name
+        schema:
+          type: string
       responses:
         '200':
           content:
@@ -8470,6 +10252,8 @@ paths:
                     id:
                       type: integer
                       readOnly: true
+                    active:
+                      type: boolean
                     name:
                       type: string
                       maxLength: 128
@@ -8487,6 +10271,18 @@ paths:
         description: A unique integer value identifying this kommune.
         schema:
           type: string
+      - name: active
+        required: false
+        in: query
+        description: active
+        schema:
+          type: string
+      - name: name
+        required: false
+        in: query
+        description: name
+        schema:
+          type: string
       responses:
         '200':
           content:
@@ -8496,6 +10292,8 @@ paths:
                   id:
                     type: integer
                     readOnly: true
+                  active:
+                    type: boolean
                   name:
                     type: string
                     maxLength: 128
@@ -8506,7 +10304,19 @@ paths:
     get:
       operationId: listSchoolDistricts
       description: Expose school districts in REST API.
-      parameters: []
+      parameters:
+      - name: active
+        required: false
+        in: query
+        description: active
+        schema:
+          type: string
+      - name: name
+        required: false
+        in: query
+        description: name
+        schema:
+          type: string
       responses:
         '200':
           content:
@@ -8518,6 +10328,8 @@ paths:
                     id:
                       type: integer
                       readOnly: true
+                    active:
+                      type: boolean
                     name:
                       type: string
                       maxLength: 128
@@ -8535,6 +10347,18 @@ paths:
         description: A unique integer value identifying this distrikt.
         schema:
           type: string
+      - name: active
+        required: false
+        in: query
+        description: active
+        schema:
+          type: string
+      - name: name
+        required: false
+        in: query
+        description: name
+        schema:
+          type: string
       responses:
         '200':
           content:
@@ -8544,6 +10368,8 @@ paths:
                   id:
                     type: integer
                     readOnly: true
+                  active:
+                    type: boolean
                   name:
                     type: string
                     maxLength: 128
@@ -8609,6 +10435,12 @@ paths:
       operationId: listSections
       description: Expose law sections in REST API.
       parameters:
+      - name: active
+        required: false
+        in: query
+        description: active
+        schema:
+          type: string
       - name: paragraph
         required: false
         in: query
@@ -8621,16 +10453,10 @@ paths:
         description: text
         schema:
           type: string
-      - name: allowed_for_family_target_group
+      - name: allowed_for_target_groups
         required: false
         in: query
-        description: allowed_for_family_target_group
-        schema:
-          type: string
-      - name: allowed_for_disability_target_group
-        required: false
-        in: query
-        description: allowed_for_disability_target_group
+        description: allowed_for_target_groups
         schema:
           type: string
       - name: allowed_for_steps
@@ -8656,18 +10482,20 @@ paths:
                     id:
                       type: integer
                       readOnly: true
+                    active:
+                      type: boolean
                     paragraph:
                       type: string
                       maxLength: 128
                     text:
                       type: string
-                    allowed_for_family_target_group:
-                      type: boolean
-                    allowed_for_disability_target_group:
-                      type: boolean
                     law_text_name:
                       type: string
                       maxLength: 128
+                    allowed_for_target_groups:
+                      type: array
+                      items:
+                        type: integer
                     allowed_for_steps:
                       type: array
                       items:
@@ -8688,6 +10516,12 @@ paths:
         description: A unique integer value identifying this paragraf.
         schema:
           type: string
+      - name: active
+        required: false
+        in: query
+        description: active
+        schema:
+          type: string
       - name: paragraph
         required: false
         in: query
@@ -8700,16 +10534,10 @@ paths:
         description: text
         schema:
           type: string
-      - name: allowed_for_family_target_group
+      - name: allowed_for_target_groups
         required: false
         in: query
-        description: allowed_for_family_target_group
-        schema:
-          type: string
-      - name: allowed_for_disability_target_group
-        required: false
-        in: query
-        description: allowed_for_disability_target_group
+        description: allowed_for_target_groups
         schema:
           type: string
       - name: allowed_for_steps
@@ -8733,18 +10561,20 @@ paths:
                   id:
                     type: integer
                     readOnly: true
+                  active:
+                    type: boolean
                   paragraph:
                     type: string
                     maxLength: 128
                   text:
                     type: string
-                  allowed_for_family_target_group:
-                    type: boolean
-                  allowed_for_disability_target_group:
-                    type: boolean
                   law_text_name:
                     type: string
                     maxLength: 128
+                  allowed_for_target_groups:
+                    type: array
+                    items:
+                      type: integer
                   allowed_for_steps:
                     type: array
                     items:
@@ -8783,6 +10613,18 @@ paths:
         description: sbsys_template_id
         schema:
           type: string
+      - name: main_activity_main_account_number
+        required: false
+        in: query
+        description: main_activity_main_account_number
+        schema:
+          type: string
+      - name: supplementary_activity_main_account_number
+        required: false
+        in: query
+        description: supplementary_activity_main_account_number
+        schema:
+          type: string
       responses:
         '200':
           content:
@@ -8799,6 +10641,14 @@ paths:
                       maxLength: 128
                     sbsys_template_id:
                       type: string
+                      maxLength: 128
+                    main_activity_main_account_number:
+                      type: string
+                      maxLength: 128
+                    supplementary_activity_main_account_number:
+                      type: string
+                      description: "Et hovedkontonummer der skal bruges, hvis en f\xF8\
+                        lgeudgift har denne aktivitetsdetalje som hovedydelse.<br>"
                       maxLength: 128
                     activity_details:
                       type: integer
@@ -8843,6 +10693,18 @@ paths:
         description: sbsys_template_id
         schema:
           type: string
+      - name: main_activity_main_account_number
+        required: false
+        in: query
+        description: main_activity_main_account_number
+        schema:
+          type: string
+      - name: supplementary_activity_main_account_number
+        required: false
+        in: query
+        description: supplementary_activity_main_account_number
+        schema:
+          type: string
       responses:
         '200':
           content:
@@ -8858,6 +10720,14 @@ paths:
                   sbsys_template_id:
                     type: string
                     maxLength: 128
+                  main_activity_main_account_number:
+                    type: string
+                    maxLength: 128
+                  supplementary_activity_main_account_number:
+                    type: string
+                    description: "Et hovedkontonummer der skal bruges, hvis en f\xF8\
+                      lgeudgift har denne aktivitetsdetalje som hovedydelse.<br>"
+                    maxLength: 128
                   activity_details:
                     type: integer
                   section:
@@ -8871,10 +10741,22 @@ paths:
       operationId: listActivityDetails
       description: Expose activity details in REST API.
       parameters:
+      - name: active
+        required: false
+        in: query
+        description: active
+        schema:
+          type: string
       - name: name
         required: false
         in: query
         description: name
+        schema:
+          type: string
+      - name: description
+        required: false
+        in: query
+        description: description
         schema:
           type: string
       - name: activity_id
@@ -8930,9 +10812,13 @@ paths:
                     id:
                       type: integer
                       readOnly: true
+                    active:
+                      type: boolean
                     name:
                       type: string
                       maxLength: 128
+                    description:
+                      type: string
                     activity_id:
                       type: string
                       maxLength: 128
@@ -8961,6 +10847,8 @@ paths:
                       type: array
                       items:
                         type: integer
+                      description: "Denne aktivitetsdetalje kan v\xE6re f\xF8lgeudgift\
+                        \ for disse hovedydelser.<br>"
                   required:
                   - name
                   - activity_id
@@ -8978,10 +10866,22 @@ paths:
         description: A unique integer value identifying this aktivitetsdetalje.
         schema:
           type: string
+      - name: active
+        required: false
+        in: query
+        description: active
+        schema:
+          type: string
       - name: name
         required: false
         in: query
         description: name
+        schema:
+          type: string
+      - name: description
+        required: false
+        in: query
+        description: description
         schema:
           type: string
       - name: activity_id
@@ -9035,9 +10935,13 @@ paths:
                   id:
                     type: integer
                     readOnly: true
+                  active:
+                    type: boolean
                   name:
                     type: string
                     maxLength: 128
+                  description:
+                    type: string
                   activity_id:
                     type: string
                     maxLength: 128
@@ -9066,6 +10970,8 @@ paths:
                     type: array
                     items:
                       type: integer
+                    description: "Denne aktivitetsdetalje kan v\xE6re f\xF8lgeudgift\
+                      \ for disse hovedydelser.<br>"
                 required:
                 - name
                 - activity_id
@@ -9076,7 +10982,31 @@ paths:
     get:
       operationId: listServiceProviders
       description: Expose service providers in REST API.
-      parameters: []
+      parameters:
+      - name: active
+        required: false
+        in: query
+        description: active
+        schema:
+          type: string
+      - name: cvr_number
+        required: false
+        in: query
+        description: cvr_number
+        schema:
+          type: string
+      - name: name
+        required: false
+        in: query
+        description: name
+        schema:
+          type: string
+      - name: vat_factor
+        required: false
+        in: query
+        description: vat_factor
+        schema:
+          type: string
       responses:
         '200':
           content:
@@ -9088,6 +11018,8 @@ paths:
                     id:
                       type: integer
                       readOnly: true
+                    active:
+                      type: boolean
                     cvr_number:
                       type: string
                       maxLength: 8
@@ -9113,6 +11045,30 @@ paths:
         description: "A unique integer value identifying this leverand\xF8r."
         schema:
           type: string
+      - name: active
+        required: false
+        in: query
+        description: active
+        schema:
+          type: string
+      - name: cvr_number
+        required: false
+        in: query
+        description: cvr_number
+        schema:
+          type: string
+      - name: name
+        required: false
+        in: query
+        description: name
+        schema:
+          type: string
+      - name: vat_factor
+        required: false
+        in: query
+        description: vat_factor
+        schema:
+          type: string
       responses:
         '200':
           content:
@@ -9122,6 +11078,8 @@ paths:
                   id:
                     type: integer
                     readOnly: true
+                  active:
+                    type: boolean
                   cvr_number:
                     type: string
                     maxLength: 8
@@ -9140,7 +11098,19 @@ paths:
     get:
       operationId: listApprovalLevels
       description: Expose approval levels in REST API.
-      parameters: []
+      parameters:
+      - name: active
+        required: false
+        in: query
+        description: active
+        schema:
+          type: string
+      - name: name
+        required: false
+        in: query
+        description: name
+        schema:
+          type: string
       responses:
         '200':
           content:
@@ -9152,6 +11122,8 @@ paths:
                     id:
                       type: integer
                       readOnly: true
+                    active:
+                      type: boolean
                     name:
                       type: string
                       maxLength: 128
@@ -9169,6 +11141,18 @@ paths:
         description: A unique integer value identifying this bevillingsniveau.
         schema:
           type: string
+      - name: active
+        required: false
+        in: query
+        description: active
+        schema:
+          type: string
+      - name: name
+        required: false
+        in: query
+        description: name
+        schema:
+          type: string
       responses:
         '200':
           content:
@@ -9178,6 +11162,8 @@ paths:
                   id:
                     type: integer
                     readOnly: true
+                  active:
+                    type: boolean
                   name:
                     type: string
                     maxLength: 128
@@ -9224,6 +11210,7 @@ paths:
                       - readonly
                       - edit
                       - grant
+                      - workflow_engine
                       - admin
                   required:
                   - username
@@ -9273,6 +11260,7 @@ paths:
                     - readonly
                     - edit
                     - grant
+                    - workflow_engine
                     - admin
                 required:
                 - username
@@ -9283,6 +11271,12 @@ paths:
       operationId: listAccounts
       description: Expose accounts in REST API.
       parameters:
+      - name: active
+        required: false
+        in: query
+        description: active
+        schema:
+          type: string
       - name: main_account_number
         required: false
         in: query
@@ -9327,6 +11321,8 @@ paths:
                     number:
                       type: string
                       readOnly: true
+                    active:
+                      type: boolean
                     main_account_number:
                       type: string
                       maxLength: 128
@@ -9356,6 +11352,12 @@ paths:
         description: A unique integer value identifying this konto.
         schema:
           type: string
+      - name: active
+        required: false
+        in: query
+        description: active
+        schema:
+          type: string
       - name: main_account_number
         required: false
         in: query
@@ -9398,6 +11400,8 @@ paths:
                   number:
                     type: string
                     readOnly: true
+                  active:
+                    type: boolean
                   main_account_number:
                     type: string
                     maxLength: 128
@@ -9420,7 +11424,25 @@ paths:
     get:
       operationId: listEffortSteps
       description: Expose effort steps in REST API.
-      parameters: []
+      parameters:
+      - name: active
+        required: false
+        in: query
+        description: active
+        schema:
+          type: string
+      - name: name
+        required: false
+        in: query
+        description: name
+        schema:
+          type: string
+      - name: number
+        required: false
+        in: query
+        description: number
+        schema:
+          type: string
       responses:
         '200':
           content:
@@ -9432,6 +11454,8 @@ paths:
                     id:
                       type: integer
                       readOnly: true
+                    active:
+                      type: boolean
                     name:
                       type: string
                       maxLength: 128
@@ -9454,6 +11478,24 @@ paths:
         description: A unique integer value identifying this indsatstrappetrin.
         schema:
           type: string
+      - name: active
+        required: false
+        in: query
+        description: active
+        schema:
+          type: string
+      - name: name
+        required: false
+        in: query
+        description: name
+        schema:
+          type: string
+      - name: number
+        required: false
+        in: query
+        description: number
+        schema:
+          type: string
       responses:
         '200':
           content:
@@ -9463,6 +11505,8 @@ paths:
                   id:
                     type: integer
                     readOnly: true
+                  active:
+                    type: boolean
                   name:
                     type: string
                     maxLength: 128
@@ -9473,6 +11517,182 @@ paths:
                 required:
                 - name
                 - number
+          description: ''
+  /api/target_groups/:
+    get:
+      operationId: listTargetGroups
+      description: Expose target groups in REST API.
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    id:
+                      type: integer
+                      readOnly: true
+                    active:
+                      type: boolean
+                    name:
+                      type: string
+                      maxLength: 128
+                    required_fields_for_case:
+                      type: array
+                      items:
+                        type: string
+                      nullable: true
+                  required:
+                  - name
+          description: ''
+  /api/target_groups/{id}/:
+    get:
+      operationId: retrieveTargetGroup
+      description: Expose target groups in REST API.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: "A unique integer value identifying this m\xE5lgruppe."
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  active:
+                    type: boolean
+                  name:
+                    type: string
+                    maxLength: 128
+                  required_fields_for_case:
+                    type: array
+                    items:
+                      type: string
+                    nullable: true
+                required:
+                - name
+          description: ''
+  /api/efforts/:
+    get:
+      operationId: listEfforts
+      description: Expose efforts in REST API.
+      parameters:
+      - name: active
+        required: false
+        in: query
+        description: active
+        schema:
+          type: string
+      - name: name
+        required: false
+        in: query
+        description: name
+        schema:
+          type: string
+      - name: description
+        required: false
+        in: query
+        description: description
+        schema:
+          type: string
+      - name: allowed_for_target_groups
+        required: false
+        in: query
+        description: allowed_for_target_groups
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    id:
+                      type: integer
+                      readOnly: true
+                    active:
+                      type: boolean
+                    name:
+                      type: string
+                      maxLength: 128
+                    description:
+                      type: string
+                      maxLength: 128
+                    allowed_for_target_groups:
+                      type: array
+                      items:
+                        type: integer
+                  required:
+                  - name
+          description: ''
+  /api/efforts/{id}/:
+    get:
+      operationId: retrieveEffort
+      description: Expose efforts in REST API.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this indsats.
+        schema:
+          type: string
+      - name: active
+        required: false
+        in: query
+        description: active
+        schema:
+          type: string
+      - name: name
+        required: false
+        in: query
+        description: name
+        schema:
+          type: string
+      - name: description
+        required: false
+        in: query
+        description: description
+        schema:
+          type: string
+      - name: allowed_for_target_groups
+        required: false
+        in: query
+        description: allowed_for_target_groups
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  active:
+                    type: boolean
+                  name:
+                    type: string
+                    maxLength: 128
+                  description:
+                    type: string
+                    maxLength: 128
+                  allowed_for_target_groups:
+                    type: array
+                    items:
+                      type: integer
+                required:
+                - name
           description: ''
   /api/token/:
     post:
@@ -9594,10 +11814,6 @@ paths:
                 name:
                   type: string
                   maxLength: 128
-                target_group:
-                  enum:
-                  - FAMILY_DEPT
-                  - DISABILITY_DEPT
                 scaling_step:
                   enum:
                   - 1
@@ -9610,14 +11826,11 @@ paths:
                   - 8
                   - 9
                   - 10
+                  nullable: true
                   minimum: 0
                   maximum: 32767
                 assessment_comment:
                   type: string
-                refugee_integration:
-                  type: boolean
-                cross_department_measure:
-                  type: boolean
                 note:
                   type: string
                 case_worker:
@@ -9633,9 +11846,16 @@ paths:
                   type: integer
                 residence_municipality:
                   type: integer
+                target_group:
+                  type: integer
+                  nullable: true
                 effort_step:
                   type: integer
                   nullable: true
+                efforts:
+                  type: array
+                  items:
+                    type: integer
           application/x-www-form-urlencoded:
             schema: *id026
           multipart/form-data:
@@ -9650,6 +11870,12 @@ paths:
                     type: integer
                     readOnly: true
                   expired:
+                    type: string
+                    readOnly: true
+                  num_appropriations:
+                    type: string
+                    readOnly: true
+                  num_draft_or_expected_appropriations:
                     type: string
                     readOnly: true
                   revision:
@@ -9693,10 +11919,6 @@ paths:
                   name:
                     type: string
                     maxLength: 128
-                  target_group:
-                    enum:
-                    - FAMILY_DEPT
-                    - DISABILITY_DEPT
                   scaling_step:
                     enum:
                     - 1
@@ -9709,14 +11931,11 @@ paths:
                     - 8
                     - 9
                     - 10
+                    nullable: true
                     minimum: 0
                     maximum: 32767
                   assessment_comment:
                     type: string
-                  refugee_integration:
-                    type: boolean
-                  cross_department_measure:
-                    type: boolean
                   note:
                     type: string
                   case_worker:
@@ -9732,15 +11951,20 @@ paths:
                     type: integer
                   residence_municipality:
                     type: integer
+                  target_group:
+                    type: integer
+                    nullable: true
                   effort_step:
                     type: integer
                     nullable: true
+                  efforts:
+                    type: array
+                    items:
+                      type: integer
                 required:
                 - sbsys_id
                 - cpr_number
                 - name
-                - target_group
-                - scaling_step
                 - case_worker
                 - paying_municipality
                 - acting_municipality
@@ -9813,7 +12037,13 @@ paths:
                   id:
                     type: integer
                     readOnly: true
+                  status:
+                    type: string
+                    readOnly: true
                   total_granted_this_year:
+                    type: string
+                    readOnly: true
+                  total_granted_full_year:
                     type: string
                     readOnly: true
                   total_expected_this_year:
@@ -9822,11 +12052,291 @@ paths:
                   total_expected_full_year:
                     type: string
                     readOnly: true
+                  total_cost_expected:
+                    type: string
+                    readOnly: true
+                  total_cost_granted:
+                    type: string
+                    readOnly: true
                   granted_from_date:
                     type: string
                     readOnly: true
                   granted_to_date:
                     type: string
+                    readOnly: true
+                  case__cpr_number:
+                    type: string
+                    readOnly: true
+                  case__name:
+                    type: string
+                    readOnly: true
+                  case__sbsys_id:
+                    type: string
+                    readOnly: true
+                  num_draft_or_expected_activities:
+                    type: string
+                    readOnly: true
+                  num_activities:
+                    type: string
+                    readOnly: true
+                  main_activity:
+                    properties:
+                      id:
+                        type: integer
+                        readOnly: true
+                      monthly_payment_plan:
+                        type: string
+                        readOnly: true
+                      total_cost:
+                        type: string
+                        readOnly: true
+                      total_cost_this_year:
+                        type: string
+                        readOnly: true
+                      total_cost_full_year:
+                        type: string
+                        readOnly: true
+                      total_granted_this_year:
+                        type: string
+                        readOnly: true
+                      total_expected_this_year:
+                        type: string
+                        readOnly: true
+                      payment_plan:
+                        properties:
+                          id:
+                            type: integer
+                            readOnly: true
+                          payments:
+                            type: array
+                            items:
+                              properties:
+                                id:
+                                  type: integer
+                                  readOnly: true
+                                account_string:
+                                  type: string
+                                  readOnly: true
+                                payment_schedule__payment_id:
+                                  type: string
+                                  readOnly: true
+                                case__cpr_number:
+                                  type: string
+                                  readOnly: true
+                                activity__id:
+                                  type: string
+                                  readOnly: true
+                                activity__status:
+                                  type: string
+                                  readOnly: true
+                                activity__details__id:
+                                  type: string
+                                  readOnly: true
+                                payment_schedule__fictive:
+                                  type: string
+                                  readOnly: true
+                                is_payable_manually:
+                                  type: string
+                                  readOnly: true
+                                date:
+                                  type: string
+                                  format: date
+                                recipient_type:
+                                  enum:
+                                  - INTERNAL
+                                  - PERSON
+                                  - COMPANY
+                                recipient_id:
+                                  type: string
+                                  maxLength: 128
+                                recipient_name:
+                                  type: string
+                                  maxLength: 128
+                                payment_method:
+                                  enum:
+                                  - CASH
+                                  - SD
+                                  - INVOICE
+                                  - INTERNAL
+                                amount:
+                                  type: number
+                                  multipleOf: 0.01
+                                  maximum: 1000000000000
+                                  minimum: -1000000000000
+                                paid_amount:
+                                  type: number
+                                  multipleOf: 0.01
+                                  maximum: 1000000000000
+                                  minimum: -1000000000000
+                                  nullable: true
+                                paid:
+                                  type: boolean
+                                paid_date:
+                                  type: string
+                                  format: date
+                                  nullable: true
+                                note:
+                                  type: string
+                                payment_schedule:
+                                  type: integer
+                              required:
+                              - date
+                              - recipient_type
+                              - recipient_id
+                              - recipient_name
+                              - payment_method
+                              - amount
+                              - payment_schedule
+                            readOnly: true
+                          account:
+                            type: string
+                            readOnly: true
+                          recipient_type:
+                            enum:
+                            - INTERNAL
+                            - PERSON
+                            - COMPANY
+                          recipient_id:
+                            type: string
+                            maxLength: 128
+                          recipient_name:
+                            type: string
+                            maxLength: 128
+                          payment_method:
+                            enum:
+                            - CASH
+                            - SD
+                            - INVOICE
+                            - INTERNAL
+                          payment_frequency:
+                            enum:
+                            - DAILY
+                            - WEEKLY
+                            - BIWEEKLY
+                            - MONTHLY
+                            nullable: true
+                          payment_day_of_month:
+                            type: integer
+                            maximum: 31
+                            minimum: 1
+                          payment_type:
+                            enum:
+                            - ONE_TIME_PAYMENT
+                            - RUNNING_PAYMENT
+                            - PER_HOUR_PAYMENT
+                            - PER_DAY_PAYMENT
+                            - PER_KM_PAYMENT
+                          payment_units:
+                            type: number
+                            multipleOf: 0.01
+                            maximum: 1000000000000
+                            minimum: *id005
+                            nullable: true
+                          payment_amount:
+                            type: number
+                            multipleOf: 0.01
+                            maximum: 1000000000000
+                            minimum: -1000000000000
+                          fictive:
+                            type: boolean
+                          payment_id:
+                            type: integer
+                            readOnly: true
+                          payment_method_details:
+                            type: integer
+                            nullable: true
+                        required:
+                        - recipient_type
+                        - recipient_id
+                        - recipient_name
+                        - payment_method
+                        - payment_type
+                        - payment_amount
+                        type: object
+                      details__name:
+                        type: string
+                        readOnly: true
+                      revision:
+                        type: string
+                        readOnly: true
+                        description: System field. Git repository tag:branch:commit.
+                      created:
+                        type: string
+                        format: date-time
+                      modified:
+                        type: string
+                        format: date-time
+                      user_created:
+                        type: string
+                        description: Updated by admin.save_model
+                        maxLength: 50
+                      user_modified:
+                        type: string
+                        description: Updated by admin.save_model
+                        maxLength: 50
+                      hostname_created:
+                        type: string
+                        description: System field. (modified on create only)
+                        maxLength: 60
+                      hostname_modified:
+                        type: string
+                        description: System field. (modified on every save)
+                        maxLength: 50
+                      device_created:
+                        type: string
+                        maxLength: 10
+                      device_modified:
+                        type: string
+                        maxLength: 10
+                      status:
+                        enum:
+                        - DRAFT
+                        - EXPECTED
+                        - GRANTED
+                      approval_note:
+                        type: string
+                      appropriation_date:
+                        type: string
+                        format: date
+                        nullable: true
+                      start_date:
+                        type: string
+                        format: date
+                      end_date:
+                        type: string
+                        format: date
+                        nullable: true
+                      activity_type:
+                        enum:
+                        - MAIN_ACTIVITY
+                        - SUPPL_ACTIVITY
+                      note:
+                        type: string
+                        nullable: true
+                        maxLength: 1000
+                      details:
+                        type: integer
+                      approval_level:
+                        type: integer
+                        nullable: true
+                      approval_user:
+                        type: integer
+                        nullable: true
+                      modifies:
+                        type: integer
+                        nullable: true
+                      appropriation:
+                        type: integer
+                      service_provider:
+                        type: integer
+                        nullable: true
+                    required:
+                    - status
+                    - start_date
+                    - activity_type
+                    - details
+                    - appropriation
+                    type: object
                     readOnly: true
                   activities:
                     type: string
