@@ -7,7 +7,7 @@
 
 
 /**
- * Check that an activity has payment type PERSON/CASH 
+ * Check that an activity has payment method PERSON/CASH
  * and that its starting date is no earlier than tomorrow
  * @param {string} start_date Start date string for the activity
  * @param {string} method Payment method string for the activity (from activity.payment_plan)

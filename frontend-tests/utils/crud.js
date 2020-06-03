@@ -10,7 +10,7 @@ async function createActivity(t, act_data) {
     }
 
     if (act_data.expected_type === 'expectation') {
-        await t.click(Selector('label').withAttribute('for', 'field-status-expected'))
+        await t.click(Selector('label').withAttribute('for', 'status'))
     }
 
     await axe(t, null, axeOptions)
@@ -22,38 +22,36 @@ async function createActivity(t, act_data) {
     }
 
     await t
-        .typeText('#field-startdate', act_data.start)
+        .typeText('#pay-date-start', act_data.start)
 
     if (act_data.end) {
-        await t.typeText('#field-enddate', act_data.end)
+        await t.typeText('#pay-date-end', act_data.end)
     }
     if (act_data.note) {
-        await t.typeText('#field-text', act_data.note)
+        await t.typeText('#note', act_data.note)
     }
-
-    await t.click('#pay-type-2')
 
     if (act_data.amount) {
-        await t.typeText('#field-amount-1', act_data.amount, {replace: true})
+        await t
+            .click(Selector('label').withAttribute('for', 'pay-cost-type-fixed'))
+            .typeText('#field-amount-1', act_data.amount, {replace: true})
     }
 
     await t
-        .click('#pay-freq')
-        .click(Selector('#pay-freq option').withAttribute('value', 'MONTHLY'))
-        .click('#pay-day-of-month')
-        .click(Selector('#pay-day-of-month option').nth(1))
-        .click('#field-payee')
-        .click(Selector('#field-payee option').nth(1))
+        .click('#pay_freq_month')
+        .click('#pay_day_of_month')
+        .click(Selector('#pay_day_of_month option').nth(1))
+        .click('#pay-receiver-type-company')
 
     if (act_data.payee_id) {
-        await t.typeText('#field-payee-id', act_data.payee_id)
+        await t.typeText('#pay-receiver-id', act_data.payee_id)
     }
     if (act_data.payee_name) {
-        await t.typeText('#field-payee-name', act_data.payee_name)
+        await t.typeText('#pay-receiver-name', act_data.payee_name)
     }
 
     await t
-        .click(Selector('input').withAttribute('type', 'submit'))
+        .click('#activity-submit')
         .expect(Selector('h1').withText('Bevillingsskrivelse')).ok()
 }
 

@@ -22,8 +22,8 @@
 
         <case-edit :case-obj="cas" v-if="edit_mode" @close="reload()" />
 
-        <div class="row" v-if="!edit_mode">
-            <div class="case-info case-info-grid row-item">
+        <div class="case-info-main" v-if="!edit_mode">
+            <div class="case-info case-info-grid">
                 <dl>
                     <dt>Sagspart (CPR, navn)</dt>
                     <dd>
@@ -93,8 +93,8 @@
                 </dl>
 
             </div>
-            
-            <family-overview :case-id="cas.id" class="row-item" />
+
+            <family-overview :case-id="cas.id" />
             
         </div>
 
@@ -225,25 +225,30 @@
         font-size: 3rem;
     }
 
-    .case-info-grid {
-        align-content: flex-start;
-        align-items: flex-start;
+    .case-info-main {
         background-color: var(--grey1);
-        display: flex;
-        flex-flow: row wrap;
-        margin: 0 0 2rem;
-        padding: 1.5rem 0 0;
+        padding: 1.5rem 2rem 2rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        margin-bottom: 2.5rem;
+    }
+
+    .case-info-grid {
+        height: auto;
+        display: grid;
+        grid-template-columns: repeat( auto-fit, minmax(15rem, 1fr) );
+        grid-template-rows: max-content max-content;
+        gap: 2rem;
     }
 
     .case-info-grid dl {
-        margin: 0 2rem 2rem;
-        flex: 0 1 auto;
+        border-right: solid 1px var(--grey0);
+        padding-right: 2rem;
     }
 
     .case .familyoverview {
-        margin: 0 0 2rem;
-        border: solid 1px var(--grey2);
-        padding: 1rem 2rem;
+        margin: 0 0 0 2rem;
+        padding: 0;
     }
 
 </style>

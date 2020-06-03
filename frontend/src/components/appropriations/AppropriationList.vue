@@ -16,7 +16,10 @@
                    :selectable="false">
             
             <div slot="datagrid-header" class="appropriations-header">
-                <h2 style="padding: 0;">Bevillingsskrivelser</h2>
+                <h2 style="padding: 0;">
+                    <i class="material-icons">folder_open</i>
+                    Bevillingsskrivelser
+                </h2>
                 <button v-if="permissionCheck === true" class="appropriation-create-btn" @click="$router.push(`/case/${ caseId }/appropriation-create/`)">+ Opret bevillingsskrivelse</button>
             </div>
 

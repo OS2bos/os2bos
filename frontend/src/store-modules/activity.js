@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 
+import Vue from 'vue'
 import axios from '../components/http/Http.js'
 import { epoch2DateStr } from '../components/filters/Date.js'
 
@@ -28,6 +29,13 @@ const getters = {
     },
     getActivityDetail (state) {
         return state.activity_detail ? state.activity_detail : false
+    },
+    getActivityProperty: (state) => (prop) => {
+        if (state.activity && state.activity[prop]) {
+            return state.activity[prop]
+        } else {
+            return null
+        }
     }
 }
 
@@ -43,6 +51,18 @@ const mutations = {
     },
     setActDetail (state, act_detail) {
         state.activity_detail = act_detail
+    },
+    setActivityProperty (state, obj) {
+        if (state.activity === null) {
+            state.activity = {}
+        }
+        if (obj.val === "") {
+            obj.val = null
+        }
+        Vue.set(state.activity, obj.prop, obj.val)
+    },
+    removeActivityProperty (state, prop) {
+        delete state.activity[prop]
     },
     clearActivity (state) {
         state.activity = null
@@ -83,9 +103,10 @@ const actions = {
     fetchActivity: function({commit, dispatch}, act_id) {
         axios.get(`/activities/${ act_id }/`)
         .then(res => {
-            dispatch('fetchAppropriation', res.data.appropriation)
             commit('setActivity', res.data)
-            commit('setPaymentSchedule', res.data.payment_plan)
+            commit('setPaymentPlan', res.data.payment_plan)
+            dispatch('fetchAppropriation', res.data.appropriation)
+            return res.data
         })
         .catch(err => console.log(err))
     },
@@ -99,7 +120,7 @@ const actions = {
     fetchActivityDetail: function({commit}, act_detail_id) {
         axios.get(`/activity_details/${ act_detail_id }/`)
         .then(res => {
-            commit('setActDetails', res.data)
+            commit('setActDetail', res.data)
         })
         .catch(err => console.log(err))
     }

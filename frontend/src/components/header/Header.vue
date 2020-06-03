@@ -61,8 +61,10 @@
         flex-flow: row nowrap;
         justify-content: space-between;
         align-items: center;
-        padding: 2rem;
+        padding: 1rem 2rem .75rem;
         background-color: var(--grey0);
+        box-shadow: 0 .25rem 1rem hsla(var(--color1), 83%, 62%, .125);
+        margin: 0 0 1rem;
     }
 
     .header-link {
@@ -94,10 +96,22 @@
         margin: 0 2rem;
     }
 
-    .globalheader .globalnav > a {
+    .globalheader .globalnav > a,
+    .globalheader .globalnav > a:link,
+    .globalheader .globalnav > a:visited {
         display: inline-block;
         padding: .5rem;
         margin: 0 0 0 1rem;
+        border: solid 1px transparent;
+    }
+
+    .globalheader .globalnav > a:hover,
+    .globalheader .globalnav > a:active {
+        border-bottom-color: var(--primary);
+    }
+
+    .globalheader .globalnav > a:focus {
+        border-color: var(--warning);
     }
 
 </style>

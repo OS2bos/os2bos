@@ -227,6 +227,11 @@
 
     .datagrid td {
         vertical-align: middle;
+        padding: .5rem;
+    }
+
+    .datagrid td:first-child {
+        padding-left: 1.5rem;
     }
 
     .datagrid td.datagrid-action {

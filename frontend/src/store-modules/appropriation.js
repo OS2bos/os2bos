@@ -16,7 +16,7 @@ import { json2jsEpoch } from '../components/filters/Date.js'
 const state = {
     appropriations: null,
     appropriation: null,
-    appr_main_activities: null // Contains a list of main_activities and collects their start and end dates
+    appr_main_activities: false // Contains a list of main_activities and collects their start and end dates
 }
 
 const getters = {

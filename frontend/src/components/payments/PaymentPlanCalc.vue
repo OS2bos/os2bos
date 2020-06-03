@@ -5,7 +5,6 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
 
-
 <template>
 
     <div class="payment-plan">
@@ -30,38 +29,21 @@
         },
         computed: {
             payment: function() {
-                return this.$store.getters.getPayment
+                return this.$store.getters.getPaymentPlan
             },
             abstract: function() {
                 let str = 'Udgiften bliver '
 
+                if (this.payment.payment_cost_type === 'RATE') {
+                    // TODO TODO
+                }
+
                 switch(this.payment.payment_type) {
                     case 'ONE_TIME_PAYMENT':
-                        str += `${ cost2da(this.payment.payment_amount) } kr én gang`
+                        str += `${ cost2da(this.payment.payment_amount) }`
                         break
                     case 'RUNNING_PAYMENT':
                         str += `${ cost2da(this.payment.payment_amount) } kr hver ${ this.freq_name }`
-                        break
-                    case 'PER_HOUR_PAYMENT':
-                        if (this.payment.payment_units) {
-                            str += `${ cost2da(this.payment.payment_units) } timer á ${ cost2da(this.payment.payment_amount) } kr hver ${ this.freq_name }`
-                        } else {
-                            str = '-'
-                        }
-                        break
-                    case 'PER_DAY_PAYMENT':
-                        if (this.payment.payment_units) {
-                            str += `${ cost2da(this.payment.payment_units) } døgn á ${ cost2da(this.payment.payment_amount) } kr hver ${ this.freq_name }`
-                        } else {
-                            str = '-'
-                        }
-                        break
-                    case 'PER_KM_PAYMENT':
-                        if (this.payment.payment_units) {
-                            str += `${ cost2da(this.payment.payment_units) } kilometer á ${ cost2da(this.payment.payment_amount) } kr hver ${ this.freq_name }`
-                        } else {
-                            str = '-'
-                        }
                         break
                     default:
                         str += 'intet'

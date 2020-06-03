@@ -10,7 +10,10 @@
 
     <section class="appropriation" v-if="appr">
         <header class="appropriation-header">
-            <h1 style="display: inline-block;">Bevillingsskrivelse</h1>
+            <h1 style="display: inline-block;">
+                <i class="material-icons">folder_open</i>
+                Bevillingsskrivelse
+            </h1>
             <button v-if="permissionCheck === true" @click="show_edit = !show_edit" class="appr-edit-btn">Redigér</button>
         </header>
 

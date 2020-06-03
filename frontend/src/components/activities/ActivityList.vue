@@ -5,14 +5,16 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
 
-
 <template>
 
     <section class="activities">
         <header class="activities-header" style="margin-bottom: 0;">
             <div class="create-content">
-                <h2 style="padding: 0;">Bevilgede ydelser</h2>
-                <button v-if="permissionCheck === true" class="activities-create-btn" title="Ny aktivitet" @click="$router.push(`/appropriation/${ apprId }/activity-create/`)" style="margin: 0 1rem;">
+                <h2 style="padding: 0;">
+                    <i class="material-icons">style</i>
+                    Bevilgede ydelser
+                </h2>
+                <button v-if="permissionCheck === true" class="btn activities-create-btn" title="Ny aktivitet" @click="createActivity">
                     + Tilføj ydelse
                 </button>
             </div>
@@ -117,7 +119,7 @@
                 </template>
                 <tr class="lastrow">
                     <td colspan="6" style="padding-left: 0;">
-                        <button v-if="permissionCheck === true && this.user.profile !== 'edit'" @click="initPreApprove()" :disabled="approvable_acts.length < 1">✔ Godkend valgte</button>
+                        <button v-if="permissionCheck === true && this.user.profile !== 'edit'" @click="initPreApprove" :disabled="approvable_acts.length < 1">✔ Godkend valgte</button>
                     </td>
                     <td class="right"><strong>I alt</strong></td>
                     <td class="nowrap right">
@@ -429,6 +431,13 @@
                 }
                 
                 this.diag_open = true
+            },
+            createActivity: function() {
+                if (this.main_acts.length > 0) {
+                    this.$router.push('/activity/create?type=supplementary')
+                } else {
+                    this.$router.push('/activity/create?type=main')
+                }
             }
         },
         beforeCreate: function() {
@@ -473,7 +482,7 @@
     }
 
     .activities-create-btn {
-        margin: 0 0 1rem;
+        margin: 0 1rem;
     }
 
     .activities-checkbox-btn {

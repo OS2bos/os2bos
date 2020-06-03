@@ -2,8 +2,6 @@
 
 import { Selector } from 'testcafe'
 import { login } from '../utils/logins.js'
-import { createActivity } from '../utils/crud.js'
-import { axe, axeOptions } from '../utils/axe.js'
 import baseurl from '../utils/url.js'
 
 let appro_lvl_name = 'etaten'

@@ -216,11 +216,13 @@
         },
         methods: {
             fetchEfforts: function() {
-                axios.get(`/efforts/?allowed_for_target_groups=${ this.cas.target_group }`)
-                .then(res => {
-                    this.effort_available = res.data    
-                })
-                .catch(err => console.log(err))
+                if (this.cas.target_group) {
+                    axios.get(`/efforts/?allowed_for_target_groups=${ this.cas.target_group }`)
+                    .then(res => {
+                        this.effort_available = res.data    
+                    })
+                    .catch(err => console.log(err))
+                }
             },
             changeMuni: function(ev, type) {
                 this.cas[type] = ev
