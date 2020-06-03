@@ -18,16 +18,25 @@
             @selection="changeActivityType"
             :list="act_details"
             required />
-                        
+               
         <error :err-key="this.property" />
+
+        <template v-if="model">
+            <dt>Forklaring af ydelse</dt>
+            <dd>{{ act2description(model) }}</dd>
+        </template>
+
     </fieldset>
 
     <dl v-else>
         <template v-if="model">
             <dt>Ydelse</dt>
-            <dd>{{ act2name(model) }}</dd>
+            <dd v-html="act2name(model)"></dd>
+            <dt>Forklaring af ydelse</dt>
+            <dd>{{ act2description(model) }}</dd>
         </template>
     </dl>
+
 
 </template>
 
@@ -36,7 +45,7 @@ import axios from '../../http/Http.js'
 import mixin from '../../mixins/ActivityEditMixin.js'
 import Error from '../../forms/Error.vue'
 import ListPicker from '../../forms/ListPicker.vue'
-import { activityId2name } from '../../filters/Labels.js'
+import { activityId2name, activityId2description } from '../../filters/Labels.js'
 
 export default {
     components: {
@@ -84,6 +93,9 @@ export default {
         },
         act2name: function(id) {
             return activityId2name(id)
+        },
+        act2description: function(id) {
+            return activityId2description(id)
         },
         generateActivityList: function() {
             if (this.editable) {
