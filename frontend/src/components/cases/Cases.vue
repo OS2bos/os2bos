@@ -13,21 +13,20 @@
             <h1>Sager</h1>
             <button v-if="permissionCheck === true" class="create" @click="$router.push('/case-create/')">+ Tilknyt hovedsag</button>
         </header>
-        <div class="case-search-filters">
-            <h2 class="case-search-filters--title">Filtrér sager</h2>
+        <div class="search-filter">
             <form @submit.prevent>
                 <fieldset class="filter-fields">
-                    <div>
+                    <div class="filter-field">
                         <label for="field-sbsysid">SBSYS ID</label>
                         <input type="search" @input="update" id="field-sbsysid" v-model="$route.query.sbsys_id">
                     </div>
 
-                    <div>
+                    <div class="filter-field">
                         <label for="field-cpr">CPR-nr</label>
                         <input type="search" @input="changeCpr" id="field-cpr" v-model="$route.query.cpr_number">
                     </div>
 
-                    <div>
+                    <div class="filter-field">
                         <label for="field-team">Team</label>
                         <list-picker 
                             v-if="teams"
@@ -38,7 +37,7 @@
                             display-key="name" />
                     </div>
 
-                    <div>
+                    <div class="filter-field">
                         <label for="field-case-worker">Sagsbehandler</label>
                         <list-picker 
                             v-if="users"
@@ -50,16 +49,16 @@
                     </div>
                 </fieldset>
 
-                <fieldset class="filter-fields">
-                    <div>
+                <fieldset class="filter-fields radio-filters">
+                    <div class="filter-field">
                         <input type="radio" v-model="$route.query.expired" id="field-expired-1" @change="update" :value="null">
                         <label for="field-expired-1">Aktive og lukkede sager</label>
                     </div>
-                    <div>
+                    <div class="filter-field">
                         <input type="radio" v-model="$route.query.expired" id="field-expired-2" @change="update" :value="false">
                         <label for="field-expired-2">Kun aktive sager</label>
                     </div>
-                    <div>
+                    <div class="filter-field">
                         <input type="radio" v-model="$route.query.expired" id="field-expired-3" @change="update" :value="true">
                         <label for="field-expired-3">Kun lukkede sager</label>
                     </div>
@@ -307,6 +306,10 @@
         align-items: center;
     }
 
+    .case-search .radio-filters {
+        margin-top: 1rem;
+    }
+
     .case-search-list {
         margin-top: 1rem;
         order: 2;
@@ -318,44 +321,6 @@
     }
 
     .case-search-list .more .material-icons {
-        margin: 0;
-    }
-
-    .case-search-filters {
-        background-color: var(--grey1);
-        padding: 0 1.5rem 1rem;
-        margin-bottom: 1rem;
-    }
-
-    .case-search-filters--title {
-        font-size: 1.125rem;
-        padding: 1.5rem 0 .5rem;
-    }
-
-    .case-search-filters > form {
-        padding: 0;
-        display: flex;
-        flex-flow: row wrap;
-        align-items: flex-end;
-        justify-content: flex-start;
-    }
-
-    .case-search-filters .filter-fields {
-        flex: 0 1 auto;
-        margin: 0;
-        padding: 0;
-    }
-
-    .case-search-filters .filter-fields:first-child {
-        padding-right: .25rem;
-    }
-
-    .case-search-filters .filter-fields > div {
-        padding: .5rem 1rem .5rem 0;
-        display: inline-block;
-    }
-
-    .case-search-filters .filter-fields label {
         margin: 0;
     }
 

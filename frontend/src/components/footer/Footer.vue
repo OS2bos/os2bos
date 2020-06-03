@@ -17,7 +17,11 @@
 <style>
 
     .globalfooter {
+        margin: 1rem 0 0;
+        min-height: 2rem;
         padding: 1rem;
+        background-color: var(--grey1);
+        box-shadow: inset 0 .25rem 1rem hsla(0, 0%, 62%, .25);
     }    
 
 </style>

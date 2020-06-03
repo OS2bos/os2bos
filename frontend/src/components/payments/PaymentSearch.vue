@@ -7,66 +7,69 @@
 
 <template>
     
-    <div class="payment-search">
+    <section class="payment-search">
+        
+        <header>
+            <h1>Betalinger</h1>
+        </header>
 
-        <div class="payment-search-filters">
-            <h2 class="payment-search-filters--title">Filtrér betalinger</h2>
+        <div class="search-filter">
             <form>
-                <ul class="filter-fields">
-                    <li>
+                <fieldset class="filter-fields">
+                    <div class="filter-field">
                         <label for="field-pay-key">Betalingsnøgle</label>
                         <input id="field-pay-key" type="search" @input="update()" v-model="$route.query.payment_schedule__payment_id">
-                    </li>
+                    </div>
 
-                    <li>
+                    <div class="filter-field">
                         <label for="field-cpr">Hovedsag CPR nr.</label>
                         <input id="field-cpr" type="search" @input="changeCpr" v-model="$route.query.case__cpr_number">
-                    </li>
+                    </div>
 
-                    <li>
+                    <div class="filter-field">
                         <label for="field-payee">Betalingsmodtager</label>
                         <input id="field-payee" type="search" @input="update()" v-model="$route.query.recipient_id">
-                    </li>
+                    </div>
 
-                    <li>
+                    <div class="filter-field">
                         <label for="field-pay-method">Betalingsmåde</label>
                         <list-picker 
                             domId="field-pay-method"
                             :list="payment_methods"
                             @selection="changePaymentMethod" />
-                    </li>
+                    </div>
 
-                    <li>
+                    <div class="filter-field">
                         <label for="field-from">Fra dato</label>
                         <input id="field-from" type="date" @input="update()" v-model="$route.query.paid_date_or_date__gte">
-                    </li>
-                    <li>
+                    </div>
+
+                    <div class="filter-field">
                         <label for="field-to">Til dato</label>
                         <input id="field-to" type="date" @input="update()" v-model="$route.query.paid_date_or_date__lte">
-                    </li>
-                </ul>
+                    </div>
+                </fieldset>
 
-                <ul class="filter-fields">
-                    <li>
+                <fieldset class="filter-fields radio-filters">
+                    <div class="filter-field">
                         <input type="radio" id="field-paid-1" checked name="field-paid" :value="null" v-model="$route.query.paid" @change="update()">
                         <label for="field-paid-1">Betalte og ubetalte</label>
-                    </li>
-                    <li>
+                    </div>
+                    <div class="filter-field">
                         <input type="radio" id="field-paid-2" name="field-paid" :value="true" v-model="$route.query.paid" @change="update()">
                         <label for="field-paid-2">Kun betalte</label>
-                    </li>
-                    <li>
+                    </div>
+                    <div class="filter-field">
                         <input type="radio" id="field-paid-3" name="field-paid" :value="false" v-model="$route.query.paid" @change="update()">
                         <label for="field-paid-3">Kun ubetalte</label>
-                    </li>
-                </ul>
+                    </div>
+                </fieldset>
             </form>
         </div>
 
         <div class="payment-search-list">
-            <h1>Betalinger</h1>
             <template v-if="results">
-            <span>{{results.length}} af {{payments.count}}</span>
+                <p>Viser {{results.length}} af {{payments.count}} betalinger</p>
                 <table v-if="results.length > 0">
                     <thead>
                         <tr>
@@ -159,7 +162,7 @@
             </template>
         </div>
 
-    </div>
+    </section>
 
 </template>
 
@@ -302,45 +305,17 @@
         padding: 0 2rem 2rem;
     }
 
+    .payment-search .radio-filters {
+        margin-top: 1rem;
+    }
+
     .payment-search-list {
         margin-top: 2rem;
-        order: 2;
+        
         flex-grow: 1;
     }
 
     .payment-search-list .more .material-icons {
-        margin: 0;
-    }
-
-    .payment-search-filters {
-        order: 1;
-        background-color: var(--grey1);
-        padding: 0 1.5rem 1rem;
-    }
-
-    .payment-search-filters--title {
-        font-size: 1.125rem;
-        padding: 1.5rem 0 .5rem;
-    }
-
-    .payment-search-filters > form {
-        padding: 0;
-    }
-
-    .payment-search-filters .filter-fields {
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: flex-start;
-    }
-
-    .payment-search-filters .filter-fields li {
-        list-style: none;
-        padding: .5rem 1rem .5rem 0;
-    }
-
-    .payment-search-filters .filter-fields label {
         margin: 0;
     }
 
