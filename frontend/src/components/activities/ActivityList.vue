@@ -9,26 +9,25 @@
 <template>
 
     <section class="activities">
-        <header class="activities-header">
+        <header class="activities-header" style="margin-bottom: 0;">
             <div class="create-content">
                 <h2 style="padding: 0;">Bevilgede ydelser</h2>
                 <button v-if="permissionCheck === true" class="activities-create-btn" title="Ny aktivitet" @click="$router.push(`/appropriation/${ apprId }/activity-create/`)" style="margin: 0 1rem;">
                     + Tilføj ydelse
                 </button>
             </div>
-
-            <div class="buttons-content">
-                <input class="activities-checkbox-btn" type="checkbox" id="discontinuedActs" v-model="isOpenAct">
-                <label for="discontinuedActs">{{ buttonAct }}</label>
-
-                <select class="selected-btn" v-model="selectedValue">
-                    <option value="1">Udgift i år</option>
-                    <option value="2">Udgift pr år</option>
-                    <option value="3">Samlet udgift</option>
-                </select>
-            </div>
         </header>
-        <table v-if="!no_acts">
+
+        <fieldset style="text-align: right; padding: 0 1.5rem; margin: 0;">
+            <label for="act-cost-toggle" style="margin: 0 .5rem 0 0; display: inline-block; font-weight: bold;">Vis udgifter</label>
+            <select id="act-cost-toggle" class="selected-btn" v-model="selectedValue" style="margin: 0; display: inline-block;">
+                <option value="1">i år</option>
+                <option value="2">pr. år</option>
+                <option value="3">samlede</option>
+            </select>
+        </fieldset>
+        
+        <table v-if="!no_acts" style="margin-top: 0;">
             <thead>
                 <tr>
                     <th style="width: 3.5rem; padding: .5rem 0 0 1.25rem;">
@@ -43,20 +42,36 @@
                     <th>Senest ændret</th>
                     <th class="right">
                         <span v-if="selectedValue === '1'">Udgift i år</span>
-                        <span v-if="selectedValue === '2'">Udgift pr år</span>
+                        <span v-if="selectedValue === '2'">Udgift pr. år</span>
                         <span v-if="selectedValue === '3'">Samlet udgift</span>
                     </th>
                     <th class="right">
                         <span v-if="selectedValue === '1'">Forventet udgift i år</span>
-                        <span v-if="selectedValue === '2'">Forventet udgift pr år</span>
+                        <span v-if="selectedValue === '2'">Forventet udgift pr. år</span>
                         <span v-if="selectedValue === '3'">Forventet samlet udgift</span>
                     </th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <th></th>
-                    <th colspan="7" class="table-heading" style="padding-top: .5rem;">Hovedydelse</th>
+                    <th class="table-heading"></th>
+                    <th colspan="7" class="table-heading">Hovedydelse</th>
+                </tr>
+                <tr v-if="count_old_main_acts > 0">
+                    <td colspan="9" class="act-list-collapse-td">
+                        <button class="act-list-collapse-button" @click="show_old_main_acts = !show_old_main_acts">
+                            <span v-if="!show_old_main_acts">
+                                <span class="material-icons">expand_more</span>
+                                Vis {{ count_old_main_acts }} udgåede hovedydelser
+                                <span class="material-icons">expand_more</span>
+                            </span>
+                            <span v-else>
+                                <span class="material-icons">expand_less</span>
+                                Skjul {{ count_old_main_acts }} udgåede hovedydelser
+                                <span class="material-icons">expand_less</span>
+                            </span>
+                        </button>
+                    </td>
                 </tr>
                 <template v-for="chunk in main_acts">
                     <act-list-item 
@@ -70,8 +85,24 @@
                         @check="checkOneInList(a, ...arguments)" />
                 </template>
                 <tr v-if="suppl_acts.length > 0">
-                    <th></th>
+                    <th class="table-heading"></th>
                     <th colspan="7" class="table-heading">Følgeydelser</th>
+                </tr>
+                <tr v-if="count_old_suppl_acts > 0">
+                    <td colspan="9" class="act-list-collapse-td">
+                        <button class="act-list-collapse-button" @click="show_old_suppl_acts = !show_old_suppl_acts">
+                            <span v-if="!show_old_suppl_acts">
+                                <span class="material-icons">expand_more</span>
+                                Vis {{ count_old_suppl_acts }} udgåede følgeydelser
+                                <span class="material-icons">expand_more</span>
+                            </span>
+                            <span v-else>
+                                <span class="material-icons">expand_less</span>
+                                Skjul {{ count_old_suppl_acts }} udgåede følgeydelser
+                                <span class="material-icons">expand_less</span>
+                            </span>
+                        </button>
+                    </td>
                 </tr>
                 <template v-for="chunk in suppl_acts">
                     <act-list-item 
@@ -126,7 +157,7 @@
     import axios from '../http/Http.js'
     import { cost2da } from '../filters/Numbers.js'
     import { displayStatus } from '../filters/Labels.js'
-    import { json2jsEpoch, epoch2DateStr } from '../filters/Date.js'
+    import { json2jsEpoch } from '../filters/Date.js'
     import ActListItem from './ActivityListItem.vue'
     import ApprovalDiag from './Approval.vue'
     import UserRights from '../mixins/UserRights.js'
@@ -151,9 +182,11 @@
                 approvable_acts: [],
                 diag_open: false,
                 diag_approval_warning: null,
-                isOpenAct: false,
-                buttonAct: 'Se udgåede ydelser',
-                selectedValue: '1'
+                selectedValue: '1',
+                show_old_main_acts: false,
+                show_old_suppl_acts: false,
+                count_old_main_acts: 0,
+                count_old_suppl_acts: 0
             }
         },
         computed: {
@@ -176,11 +209,13 @@
                 this.update()
             },
             acts: function() {
-                this.chunks = []
                 this.splitActList(this.acts)
             },
-            isOpenAct: function() {
-                this.update()
+            show_old_main_acts: function() {
+                this.splitActList(this.acts)
+            },
+            show_old_suppl_acts: function() {
+                this.splitActList(this.acts)
             },
             selectedValue: function() {
                 this.update()
@@ -247,9 +282,21 @@
                 return costs
             },
             splitActList: function(act_list) {
+                this.chunks = []
+                this.main_acts = []
+                this.suppl_acts = []
+                this.count_old_main_acts = 0
+                this.count_old_suppl_acts = 0
 
                 // Group activities together by 'modifies'
                 for (let act of act_list) {
+                    if (act.is_old) {
+                        if (act.activity_type === 'MAIN_ACTIVITY') {
+                            this.count_old_main_acts++
+                        } else {
+                            this.count_old_suppl_acts++
+                        }
+                    }
                     act.checked = false
                     if (act.modifies === null) {
                         let chunk = [act]
@@ -289,56 +336,42 @@
                     }
                 }
 
-                // Populate main and supplementary activities lists
-                if (!this.isOpenAct) {
-                    this.main_acts = this.chunks.filter(function(c) {
-                        let nowDate = epoch2DateStr(new Date())
-                        let activeDates = c[0].end_date >= nowDate || c[0].end_date === null
-                        return c[0].activity_type === 'MAIN_ACTIVITY' &&  activeDates
-                    })
-                } else {
-                    this.main_acts = this.chunks.filter(function(c) {
-                        return c[0].activity_type === 'MAIN_ACTIVITY'
-                    })
-                }
+                // Populate main activities lists
+                this.main_acts = this.chunks.filter(c => {
+                    if (c[0].activity_type === 'MAIN_ACTIVITY') {
+                        if (this.show_old_main_acts) {
+                            return c
+                        } else if (!this.show_old_main_acts && !c[0].is_old) {
+                            return c
+                        }   
+                    }
+                })
 
-                if (!this.isOpenAct) {
-                    let unsorted_suppl_acts = this.chunks.filter(function(c) {
-                        let nowDate = epoch2DateStr(new Date())
-                        let activeDates = c[0].end_date >= nowDate || c[0].end_date === null
-                        return c[0].activity_type === 'SUPPL_ACTIVITY' && activeDates
-                    })
-                    // Sort supplementary list by start date
-                    unsorted_suppl_acts.sort(function(a,b) {
-                        const a_start_date = new Date(a[0].start_date).getTime(),
-                            b_start_date = new Date(b[0].start_date).getTime()
-                        if (a_start_date > b_start_date) {
-                            return 1
-                        } else if (b_start_date > a_start_date) {
-                            return -1
-                        } else {
-                            return 0
+                // Populate supplementary activities lists
+                let unsorted_suppl_acts = this.chunks.filter(c => {
+                    if (c[0].activity_type === 'SUPPL_ACTIVITY') {
+                        if (this.show_old_suppl_acts) {
+                            return c
+                        } else if (!this.show_old_suppl_acts && !c[0].is_old) {
+                            return c
                         }
-                    })
-                    this.suppl_acts = unsorted_suppl_acts
-                } else {
-                    let unsorted_suppl_acts = this.chunks.filter(function(c) {
-                        return c[0].activity_type === 'SUPPL_ACTIVITY'
-                    })
-                     // Sort supplementary list by start date
-                    unsorted_suppl_acts.sort(function(a,b) {
-                        const a_start_date = new Date(a[0].start_date).getTime(),
-                            b_start_date = new Date(b[0].start_date).getTime()
-                        if (a_start_date > b_start_date) {
-                            return 1
-                        } else if (b_start_date > a_start_date) {
-                            return -1
-                        } else {
-                            return 0
-                        }
-                    })
-                    this.suppl_acts = unsorted_suppl_acts
-                }
+                    }
+                })
+                this.suppl_acts = this.sortSupplementaryActs(unsorted_suppl_acts)
+            },
+            sortSupplementaryActs: function(acts) {
+                // Sort supplementary list by start date
+                return acts.sort(function(a,b) {
+                    const a_start_date = new Date(a[0].start_date).getTime(),
+                        b_start_date = new Date(b[0].start_date).getTime()
+                    if (a_start_date > b_start_date) {
+                        return 1
+                    } else if (b_start_date > a_start_date) {
+                        return -1
+                    } else {
+                        return 0
+                    }
+                })
             },
             toggleHandler: function(toggl_id) {     
                 for (let comp of this.$refs[toggl_id]) {
@@ -468,7 +501,21 @@
     }
 
     .activities .table-heading {
-        padding-left: .75rem;
+        padding: .75rem .75rem .5rem;
+    }
+
+    .act-list-collapse-td {
+        padding: 0 !important;
+        text-align: center;
+        background-color: transparent;
+    }
+
+    .act-list-collapse-button {
+        padding: 0;
+        display: block;
+        margin: 0 auto;
+        width: 100%;
+        border: solid 1px var(--grey1);
     }
 
 </style>
