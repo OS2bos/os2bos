@@ -70,7 +70,7 @@
                 <table v-if="results.length > 0">
                     <thead>
                         <tr>
-                            <th>Betaling nr</th>
+                            <th>ID</th>
                             <th>Betalingsnøgle</th>
                             <th>Betalingsmåde/modtager</th>
                             <th>Hovedsag CPR nr./ kontostreng</th>
@@ -84,7 +84,7 @@
                     <tbody>
                         <tr v-for="p in results" :key="p.id">
                             <td>
-                                <payment-modal :p-id="p.id" @update="update()"/>
+                                <a @click="navToLink(`/activity/${ p.activity__id }`)">{{ p.id }} - {{ activityId2name(p.activity__details__id) }}</a>
                                 <span class="dim" v-if="p.payment_schedule__fictive">(Fiktiv)</span>
                             </td>
                             <td> {{ p.payment_schedule__payment_id }} </td>
@@ -104,33 +104,50 @@
                                 {{ p.account_string }}
                             </td>
                             <td>
-                                <span v-if="p.paid_date" style="white-space: nowrap;">
-                                    {{ displayDate(p.paid_date) }}<br>
-                                </span>
                                 <span class="dim" style="white-space: nowrap;">
                                     {{ displayDate(p.date) }}
                                 </span>
                             </td>
                             <td>
-                                <span v-if="p.paid_amount" style="white-space: nowrap;">
-                                    {{ displayDigits(p.paid_amount) }} kr.<br>
-                                </span>
                                 <span class="dim" style="white-space: nowrap;">
                                     {{ displayDigits(p.amount) }} kr.
                                 </span>
                             </td>
+
+                         <template v-if="paymentlock && !p.is_payable_manually">
                             <td>
-                                <input type="date" :id="`field-date-${ p.id }`" v-model="p.paid_date" required>
+                                {{ displayDate(p.paid_date) }}
                             </td>
                             <td>
-                                <input type="number" :id="`field-amount-${ p.id }`" step="0.01" v-model="p.paid_amount" required>
+                                {{ displayDigits(p.paid_amount) }} kr.
+                            </td>
+                            <td>
+                                <span v-if="p.note">{{ p.note }}</span>
+                                <span v-else>-</span>
+                            </td>
+                            <td></td>
+                         </template>
+
+                         <template v-if="permissionCheck === true && p.activity__status === 'GRANTED' && p.is_payable_manually">
+                            <td>
+                                <input type="date" :id="`field-date-${ p.id }`" v-model="p.date" required>
+                            </td>
+                            <td>
+                                <input type="number" :id="`field-amount-${ p.id }`" step="0.01" v-model="p.amount" required>
                             </td>
                             <td>
                                 <input type="text" :id="`field-note-${ p.id }`" v-model="p.note">
                             </td>
                             <td>
-                                <button class="modal-confirm-btn" type="submit">Gem</button>
+                                <button 
+                                    v-if="p.activity__status === 'GRANTED'" 
+                                    type="button" 
+                                    :disabled="p.amount && p.date ? false : true" 
+                                    @click="pay()">
+                                    Betal
+                                </button>
                             </td>
+                         </template>
                         </tr>
                     </tbody>
                 </table>
@@ -148,11 +165,16 @@
 
 <script>
 
+    import axios from '../http/Http.js'
+    import Error from '../forms/Error.vue'
+    import notify from '../notifications/Notify.js'
     import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
     import PaymentModal from './PaymentModal.vue'
     import CaseFilters from '../mixins/CaseFilters.js'
     import ListPicker from '../forms/ListPicker.vue'
+    import UserRights from '../mixins/UserRights.js'
+    import { activityId2name } from '../filters/Labels.js'
 
     export default {
         
@@ -161,11 +183,17 @@
             ListPicker
         },
         mixins: [
-            CaseFilters
+            CaseFilters, UserRights
         ],
         data: function() {
             return {
                 input_timeout: null,
+                paymentlock: true,
+                p: {
+                    amount: null,
+                    date: null,
+                    note: null
+                },
                 payment_methods: [
                     {
                         id: 0,
@@ -204,6 +232,9 @@
                 if (this.payments.next === null) {
                     return true
                 }
+            },
+            payment: function() {
+                return this.$store.getters.getPayment
             }
         },
         watch: {
@@ -229,11 +260,32 @@
                     this.$store.dispatch('fetchPayments', this.$route.query)
                 }, 300)
             },
+            pay: function() {
+                let data = {
+                    paid_amount: this.p.amount,
+                    paid_date: this.p.date,
+                    note: this.p.note ? this.p.note : '',
+                    paid: true
+                }
+                axios.patch(`/payments/${ this.payment.id }/`, data)
+                .then(res => {
+                    notify('Betaling godkendt', 'success')
+                    this.update()
+                    this.$emit('update')
+                })
+                .catch(err => this.$store.dispatch('parseErrorOutput', err))
+            },
             displayDate: function(dt) {
                 return json2jsDate(dt)
             },
             displayDigits: function(num) {
                 return cost2da(num)
+            },
+            activityId2name: function(id) {
+                return activityId2name(id)
+            },
+            navToLink: function(path) {
+                this.$router.push(path)
             }
         },
         created: function() {
@@ -263,8 +315,7 @@
     .payment-search-filters {
         order: 1;
         background-color: var(--grey1);
-        padding: 1.5rem 1rem .5rem;
-        margin: 0 2rem 1rem 0;
+        padding: 0 1.5rem 1rem;
     }
 
     .payment-search-filters--title {
@@ -299,10 +350,6 @@
 
     .nopays {
         margin: 1rem 0;
-    }
-
-    .input-pay {
-        width: 5rem;
     }
 
 </style>
