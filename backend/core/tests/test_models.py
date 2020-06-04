@@ -3594,7 +3594,7 @@ class VariableRateTestCase(TestCase):
         variable_rate = create_variable_rate()
         today = date.today()
         tomorrow = date.today() + timedelta(days=1)
-        rate_per_day = create_rate_per_date(
+        create_rate_per_date(
             variable_rate, rate=100, start_date=today, end_date=tomorrow
         )
 
