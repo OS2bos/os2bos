@@ -51,7 +51,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="d in filteredData" :key="d.id">
+                <tr v-for="d in filteredData" :key="d.id" :class="`datagrid-r-${ d.id}`">
                     <td v-if="selectable" style="width: 4.5rem;">
                         <input type="checkbox"
                             :id="`datagrid-select-${ d.id }`"
@@ -63,10 +63,17 @@
                         </label>
                     </td>
                     <template v-for="c in columns">
-                        <td v-html="c.display_func ? c.display_func(d) : d[c.key]" 
+                        <td v-if="c.display_component"
                             :key="c.key" 
                             :class="c.class"
                             :title="d[c.key]">
+                            <virtual-component :component="c.display_component" :row-id="d.id"></virtual-component>
+                        </td>
+                        <td v-else
+                            :key="c.key" 
+                            :class="c.class"
+                            :title="d[c.key]"
+                            v-html="c.display_func ? c.display_func(d) : d[c.key]">
                         </td>
                     </template>
                 </tr>
@@ -84,12 +91,31 @@
 
 <script>
 
+    import Vue from 'vue'
+
+    const VirtualComponent = Vue.component('virtual-component', {
+        render: function (createElement) {
+            return createElement(this.component, {
+                props: {
+                    rowId: this.rowId
+                }
+            })
+        },
+        props: [
+            'rowId',
+            'component'
+        ]
+    })
+
     export default {
 
         props: {
             dataList: [Array, Boolean],
             columns: Array,
             selectable: Boolean
+        },
+        components: {
+            VirtualComponent
         },
         data: function () {
             var sortOrders = {}

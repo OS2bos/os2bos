@@ -158,12 +158,15 @@
     import { activityId2name, displayPayMethod } from '../filters/Labels.js'
     import DataGrid from '../datagrid/DataGrid.vue'
 
+    import SaveButton from './datagrid-components/SaveButton.vue'
+
     export default {
         
         components: {
             DataGrid,
             PaymentModal,
-            ListPicker
+            ListPicker,
+            SaveButton
         },
         mixins: [
             CaseFilters, 
@@ -250,7 +253,7 @@
                         display_func: this.displayNote
                     },
                     {
-                        display_func: this.displayRowAction,
+                        display_component: SaveButton,
                         class: 'center'
                     }
                 ]
@@ -357,11 +360,6 @@
                     return payment.note
                 }
             },
-            displayRowAction: function(payment) {
-                if (this.permissionCheck === true && payment.activity__status === 'GRANTED' && payment.is_payable_manually) {
-                    return `<button type="button">Betal</button>`
-                }
-            },
             navToLink: function(path) {
                 this.$router.push(path)
             }
@@ -387,6 +385,11 @@
     .payment-search-list {
         margin-top: 2rem;
         flex-grow: 1;
+    }
+
+    .payment-search .datagrid-container {
+        width: 100%;
+        overflow: auto;
     }
 
     .payment-search .datagrid {
