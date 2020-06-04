@@ -3640,6 +3640,10 @@ class RateTestCase(TestCase):
 class RatePerDateTestCase(TestCase):
     def test_str(self):
         rate = create_rate(name="test rate")
-        rate_per_date = create_rate_per_date(rate)
+        today = date.today()
+        tomorrow = date.today() + timedelta(days=1)
+        rate_per_date = create_rate_per_date(
+            rate, rate=100, start_date=today, end_date=tomorrow
+        )
 
-        self.assertEqual(str(rate_per_date), "100 - test rate")
+        self.assertEqual(str(rate_per_date), f"100 - {today} - {tomorrow}")

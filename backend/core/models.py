@@ -365,7 +365,7 @@ class RatePerDate(models.Model):
     )
 
     def __str__(self):
-        return f"{self.rate} - {self.main_rate}"
+        return f"{self.rate} - {self.start_date} - {self.end_date}"
 
 
 class Price(VariableRate):
