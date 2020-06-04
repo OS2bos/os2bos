@@ -115,10 +115,19 @@
 
     .right {
         text-align: right;
-    }    
+    }
+
+    .center {
+        text-align: center;
+    }
 
     .dim {
         opacity: .6;
+    }
+
+    .label-header {
+        opacity: .66;
+        font-size: .85rem;
     }
 
     .expected {

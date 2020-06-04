@@ -69,7 +69,23 @@
 
         <div class="payment-search-list">
             <template v-if="results">
-                <p>Viser {{results.length}} af {{payments.count}} betalinger</p>
+                
+
+                <data-grid v-if="results.length > 0"
+                    ref="data-grid"
+                    :data-list="results"
+                    :columns="columns">
+
+                    <p slot="datagrid-header">
+                        Viser {{results.length}} af {{payments.count}} betalinger
+                    </p>
+
+                    <p slot="datagrid-footer" v-if="results.length < 1">
+                        Kan ikke finde nogen betalinger, der matcher de valgte kriterier
+                    </p>
+
+                </data-grid>
+
                 <table v-if="results.length > 0">
                     <thead>
                         <tr>
@@ -87,7 +103,7 @@
                     <tbody>
                         <tr v-for="p in results" :key="p.id">
                             <td>
-                                <a @click="navToLink(`/activity/${ p.activity__id }`)">{{ p.id }} - {{ activityId2name(p.activity__details__id) }}</a>
+                                <a @click="navToLink(`/activity/${ p.activity__id }`)">{{ p.id }} - {{ p.activity__details__id }}</a>
                                 <span class="dim" v-if="p.payment_schedule__fictive">(Fiktiv)</span>
                             </td>
                             <td> {{ p.payment_schedule__payment_id }} </td>
@@ -108,55 +124,17 @@
                             </td>
                             <td>
                                 <span class="dim" style="white-space: nowrap;">
-                                    {{ displayDate(p.date) }}
+                                    
                                 </span>
                             </td>
                             <td>
                                 <span class="dim" style="white-space: nowrap;">
-                                    {{ displayDigits(p.amount) }} kr.
+                                    
                                 </span>
                             </td>
-
-                         <template v-if="paymentlock && !p.is_payable_manually">
-                            <td>
-                                {{ displayDate(p.paid_date) }}
-                            </td>
-                            <td>
-                                {{ displayDigits(p.paid_amount) }} kr.
-                            </td>
-                            <td>
-                                <span v-if="p.note">{{ p.note }}</span>
-                                <span v-else>-</span>
-                            </td>
-                            <td></td>
-                         </template>
-
-                         <template v-if="permissionCheck === true && p.activity__status === 'GRANTED' && p.is_payable_manually">
-                            <td>
-                                <input type="date" :id="`field-date-${ p.id }`" v-model="p.date" required>
-                            </td>
-                            <td>
-                                <input type="number" :id="`field-amount-${ p.id }`" step="0.01" v-model="p.amount" required>
-                            </td>
-                            <td>
-                                <input type="text" :id="`field-note-${ p.id }`" v-model="p.note">
-                            </td>
-                            <td>
-                                <button 
-                                    v-if="p.activity__status === 'GRANTED'" 
-                                    type="button" 
-                                    :disabled="p.amount && p.date ? false : true" 
-                                    @click="pay()">
-                                    Betal
-                                </button>
-                            </td>
-                         </template>
                         </tr>
                     </tbody>
                 </table>
-                <p class="nopays" v-if="results.length < 1">
-                    Kan ikke finde nogen betalinger
-                </p>
 
                 <button v-if="results.length > 1" :disabled="disableBtn" class="more" @click="loadResults()">Vis flere</button>
             </template>
@@ -177,16 +155,19 @@
     import CaseFilters from '../mixins/CaseFilters.js'
     import ListPicker from '../forms/ListPicker.vue'
     import UserRights from '../mixins/UserRights.js'
-    import { activityId2name } from '../filters/Labels.js'
+    import { activityId2name, displayPayMethod } from '../filters/Labels.js'
+    import DataGrid from '../datagrid/DataGrid.vue'
 
     export default {
         
         components: {
+            DataGrid,
             PaymentModal,
             ListPicker
         },
         mixins: [
-            CaseFilters, UserRights
+            CaseFilters, 
+            UserRights
         ],
         data: function() {
             return {
@@ -218,6 +199,60 @@
                         name: 'SD-løn',
                         sys_name: 'SD'
                     }
+                ],
+                columns: [
+                    {
+                        key: 'id',
+                        title: 'Betaling',
+                        display_func: this.displayId,
+                        class: 'datagrid-action'
+                    },
+                    {
+                        key: 'payment_schedule__payment_id',
+                        title: 'Betalingsnøgle',
+                        class: 'center'
+                    },
+                    {
+                        key: 'recipient_name',
+                        title: 'Betalingsmodtager',
+                        display_func: this.displayReceiver
+                    },
+                    {
+                        key: 'case__cpr_number',
+                        title: 'Hovedsag CPR-nr / Kontostreng',
+                        display_func: this.displayCprAccount
+                    },
+                    {
+                        key: 'date',
+                        title: 'Planlagt betalingsdato',
+                        display_func: this.displayPlannedPayDate
+                    },
+                    {
+                        key: 'amount',
+                        title: 'Planlagt beløb',
+                        display_func: this.displayPlannedAmount,
+                        class: 'right'
+                    },
+                    {
+                        key: 'paid_date',
+                        title: 'Betalt dato',
+                        display_func: this.displayPayDate
+                    },
+                    {
+                        key: 'paid_amount',
+                        title: 'Betalt beløb',
+                        display_func: this.displayAmount,
+                        class: 'right'
+                    },
+                    {
+                        key: 'note',
+                        title: 'Reference',
+                        display_func: this.displayNote
+                    },
+                    {
+                        display_func: this.displayRowAction,
+                        class: 'center'
+                    }
                 ]
             }
         },
@@ -246,6 +281,20 @@
             }
         },
         methods: {
+            displayId: function(payment) {
+                return `<a href="/#/activity/${ payment.activity__id }">#${ payment.id } - ${ activityId2name(payment.activity__details__id) }</a>`
+            },
+            displayReceiver: function(payment) {
+                let str = `<span class="label-header">${ displayPayMethod(payment.payment_method) }</span><br> ${ payment.recipient_name}`
+                if (payment.recipient_type === 'COMPANY') {
+                    str += `<br><span class="label-header">cvr</span> ${ payment.recipient_id}`
+                } else if (payment.recipient_type === 'PERSON') {
+                    str += `<br><span class="label-header">cpr</span> ${ payment.recipient_id}`
+                } else {
+                    str += `<br>${ payment.recipient_id}`
+                }
+                return str
+            },
             loadResults: function() {
                 this.$store.dispatch('fetchMorePayments')
             },
@@ -278,14 +327,40 @@
                 })
                 .catch(err => this.$store.dispatch('parseErrorOutput', err))
             },
-            displayDate: function(dt) {
-                return json2jsDate(dt)
+            displayPlannedPayDate: function(payment) {
+                return json2jsDate(payment.date)
             },
-            displayDigits: function(num) {
-                return cost2da(num)
+            displayPayDate: function(payment) {
+                if (this.permissionCheck === true && payment.activity__status === 'GRANTED' && payment.is_payable_manually) {
+                    return `<input ref="row-date-${payment.id}" type="date" id="field-date-${ payment.id }">`
+                } else {
+                    return json2jsDate(payment.paid_date)
+                }
             },
-            activityId2name: function(id) {
-                return activityId2name(id)
+            displayPlannedAmount: function(payment) {
+                return `${ cost2da(payment.amount) } kr`
+            },
+            displayAmount: function(payment) {
+                if (this.permissionCheck === true && payment.activity__status === 'GRANTED' && payment.is_payable_manually) {
+                    return `<input ref="row-amount-${payment.id}" class="field-amount" type="number" id="field-amount-${ payment.id }" step="0.1" required>`
+                } else {
+                    return `${ cost2da(payment.paid_amount) } kr`
+                }  
+            },
+            displayCprAccount: function(payment) {
+                return `<span class="label-header">cpr</span> ${ payment.case__cpr_number } <br>${ payment.account_string }`
+            },
+            displayNote: function(payment) {
+                if (this.permissionCheck === true && payment.activity__status === 'GRANTED' && payment.is_payable_manually) {
+                    return `<input ref="row-note-${payment.id}" class="field-note" type="text" id="field-note-${ payment.id }">`
+                } else {
+                    return payment.note
+                }
+            },
+            displayRowAction: function(payment) {
+                if (this.permissionCheck === true && payment.activity__status === 'GRANTED' && payment.is_payable_manually) {
+                    return `<button type="button">Betal</button>`
+                }
             },
             navToLink: function(path) {
                 this.$router.push(path)
@@ -311,8 +386,28 @@
 
     .payment-search-list {
         margin-top: 2rem;
-        
         flex-grow: 1;
+    }
+
+    .payment-search .datagrid {
+        table-layout: inherit;
+    }
+
+    .payment-search .datagrid td a:link,
+    .payment-search .datagrid td a:visited,
+    .payment-search .datagrid td a:hover, 
+    .payment-search .datagrid td a:active {
+        transition: none;
+        padding-left: 1.5rem;
+        
+    }
+
+    .payment-search .field-amount {
+        width: 7rem;
+    }
+
+    .payment-search .field-note {
+        width: 7rem;
     }
 
     .payment-search-list .more .material-icons {
@@ -321,10 +416,6 @@
 
     .payment-search .more {
         width: 100%;
-    }
-
-    .nopays {
-        margin: 1rem 0;
     }
 
 </style>
