@@ -136,13 +136,18 @@ class ActivityAdmin(ModelAdminAuditFieldsMixin, admin.ModelAdmin):
     account_number.short_description = _("kontonummer")
 
 
-class RatePerDateInline(admin.TabularInline):
+class RatePerDateInline(ClassificationInline):
     """RatePerDateInline for VariablerateAdmin."""
 
     model = RatePerDate
 
     readonly_fields = ["rate", "start_date", "end_date"]
     extra = 0
+    can_delete = False
+
+    def has_add_permission(self, request):
+        """Override has_add_permission for RatePerDateInline."""
+        return False
 
 
 class VariableRateAdminForm(forms.ModelForm):
@@ -162,6 +167,21 @@ class VariableRateAdminForm(forms.ModelForm):
     end_date = forms.DateField(
         label=_("Slutdato"), required=False, widget=forms.SelectDateWidget()
     )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        rate_start_date = cleaned_data.get("start_date")
+        rate_end_date = cleaned_data.get("end_date")
+
+        if (
+            rate_start_date
+            and rate_end_date
+            and rate_start_date > rate_end_date
+        ):
+            raise forms.ValidationError(
+                _("Slutdato skal være mindre end startdato")
+            )
+        return cleaned_data
 
 
 class VariableRateAdmin(ClassificationAdmin):

@@ -1,5 +1,6 @@
-from datetime import date
+from datetime import date, timedelta
 
+from django import forms
 from django.test import TestCase
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth import get_user_model
@@ -15,6 +16,7 @@ from core.models import (
     Activity,
     EffortStep,
     Rate,
+    RatePerDate,
 )
 from core.admin import (
     PaymentAdmin,
@@ -28,6 +30,7 @@ from core.admin import (
     SectionInfoInline,
     EffortStepAdmin,
     RateAdmin,
+    RatePerDateInline,
 )
 from core.tests.testing_utils import (
     AuthenticatedTestCase,
@@ -423,6 +426,50 @@ class RateAdminTestCase(TestCase):
         rate_admin.save_model(request, rate, rate_form, True)
 
         self.assertEqual(rate.rates_per_date.count(), 0)
+
+    def test_start_after_end_error(self):
+        rate = create_rate()
+
+        request = MockRequest()
+        site = AdminSite()
+        rate_admin = RateAdmin(Rate, site)
+
+        self.assertEqual(rate.rates_per_date.count(), 0)
+
+        start_date = date.today()
+        end_date = date.today() - timedelta(days=1)
+
+        rate_form_class = rate_admin.get_form(request, rate)
+        form_data = {
+            "name": rate.name,
+            "rate": 100,
+            "start_date": start_date,
+            "end_date": end_date,
+        }
+        rate_form = rate_form_class(form_data, instance=rate)
+        is_valid = rate_form.is_valid()
+
+        self.assertFalse(is_valid)
+        self.assertIn(
+            "Slutdato skal være mindre end startdato",
+            rate_form.errors["__all__"],
+        )
+
+
+class RatePerDateInlineTestCase(TestCase):
+    def test_has_add_permissions_false(self):
+        site = AdminSite()
+        rate_per_date_inline = RatePerDateInline(RatePerDate, site)
+        request = MockRequest()
+
+        self.assertFalse(rate_per_date_inline.has_add_permission(request))
+
+    def test_can_delete_false(self):
+        site = AdminSite()
+        rate_per_date_inline = RatePerDateInline(RatePerDate, site)
+        request = MockRequest()
+
+        self.assertFalse(rate_per_date_inline.can_delete)
 
 
 class TestClassificationAdmin(TestCase):
