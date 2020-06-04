@@ -14,6 +14,7 @@ from core.models import (
     Section,
     Activity,
     EffortStep,
+    Rate,
 )
 from core.admin import (
     PaymentAdmin,
@@ -26,6 +27,7 @@ from core.admin import (
     SectionAdmin,
     SectionInfoInline,
     EffortStepAdmin,
+    RateAdmin,
 )
 from core.tests.testing_utils import (
     AuthenticatedTestCase,
@@ -40,6 +42,7 @@ from core.tests.testing_utils import (
     create_section,
     create_activity_details,
     create_effort_step,
+    create_rate,
 )
 
 User = get_user_model()
@@ -386,6 +389,40 @@ class TestEffortStepAdmin(TestCase):
             f'<div><a href="/api/admin/core/section/{section.id}/'
             f'change/">ABL-105-2 - </a></div>',
         )
+
+
+class RateAdminTestCase(TestCase):
+    def test_save_model_success(self):
+        rate = create_rate()
+
+        request = MockRequest()
+        site = AdminSite()
+        rate_admin = RateAdmin(Rate, site)
+
+        self.assertEqual(rate.rates_per_date.count(), 0)
+
+        rate_form_class = rate_admin.get_form(request, rate)
+        rate_form = rate_form_class(
+            {"name": rate.name, "rate": 100}, instance=rate
+        )
+        rate_admin.save_model(request, rate, rate_form, True)
+
+        self.assertEqual(rate.rates_per_date.count(), 1)
+
+    def test_save_model_invalid_form(self):
+        rate = create_rate()
+
+        request = MockRequest()
+        site = AdminSite()
+        rate_admin = RateAdmin(Rate, site)
+
+        self.assertEqual(rate.rates_per_date.count(), 0)
+
+        rate_form_class = rate_admin.get_form(request, rate)
+        rate_form = rate_form_class({"name": rate.name}, instance=rate)
+        rate_admin.save_model(request, rate, rate_form, True)
+
+        self.assertEqual(rate.rates_per_date.count(), 0)
 
 
 class TestClassificationAdmin(TestCase):

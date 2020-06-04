@@ -35,6 +35,9 @@ from core.tests.testing_utils import (
     create_section_info,
     create_related_person,
     create_effort_step,
+    create_variable_rate,
+    create_rate,
+    create_rate_per_date,
 )
 from core.models import (
     Municipality,
@@ -3588,12 +3591,24 @@ class EffortTestCase(TestCase):
 
 class VariableRateTestCase(TestCase):
     def test_str(self):
-        rate = Rate.objects.create(name="Min rate")
+        variable_rate = create_variable_rate()
+        today = date.today()
+        tomorrow = date.today() + timedelta(days=1)
+        rate_per_day = create_rate_per_date(
+            variable_rate, rate=100, start_date=today, end_date=tomorrow
+        )
+
+        self.assertEqual(str(variable_rate), f"{today}, {tomorrow}: 100.00")
+
+
+class RateTestCase(TestCase):
+    def test_str(self):
+        rate = create_rate()
         rate.set_rate_amount(Decimal(25), start_date=date.today())
 
         self.assertEqual(rate.rate_amount, Decimal(25))
 
-        self.assertEqual(str(rate), f"{date.today()}, None: 25.00")
+        self.assertEqual(str(rate), f"{rate.name}")
 
         tomorrow = date.today() + timedelta(days=1)
         next_week = date.today() + timedelta(days=7)
@@ -3608,11 +3623,11 @@ class VariableRateTestCase(TestCase):
         )
 
     def test_start_minus_inf(self):
-        rate = Rate.objects.create(name="Min rate")
+        rate = create_rate()
         rate.set_rate_amount(Decimal(25))
 
     def test_start_after_end(self):
-        rate = Rate.objects.create(name="Min rate")
+        rate = create_rate()
         next_week = date.today() + timedelta(days=7)
         with self.assertRaises(
             ValueError, msg="Slutdato skal være mindre end startdato",
@@ -3620,3 +3635,11 @@ class VariableRateTestCase(TestCase):
             rate.set_rate_amount(
                 Decimal(25), start_date=next_week, end_date=date.today()
             )
+
+
+class RatePerDateTestCase(TestCase):
+    def test_str(self):
+        rate = create_rate(name="test rate")
+        rate_per_date = create_rate_per_date(rate)
+
+        self.assertEqual(str(rate_per_date), "100 - test rate")

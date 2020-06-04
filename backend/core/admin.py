@@ -137,6 +137,8 @@ class ActivityAdmin(ModelAdminAuditFieldsMixin, admin.ModelAdmin):
 
 
 class RatePerDateInline(admin.TabularInline):
+    """RatePerDateInline for VariablerateAdmin."""
+
     model = RatePerDate
 
     readonly_fields = ["rate", "start_date", "end_date"]
@@ -171,6 +173,7 @@ class VariableRateAdmin(ClassificationAdmin):
     form = VariableRateAdminForm
 
     def save_model(self, request, obj, form, change):
+        """Override save_model to set rate after model save."""
         if form.is_valid():
             super().save_model(request, obj, form, change)
             obj.set_rate_amount(
