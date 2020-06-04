@@ -70,7 +70,6 @@
         <div class="payment-search-list">
             <template v-if="results">
                 
-
                 <data-grid v-if="results.length > 0"
                     ref="data-grid"
                     :data-list="results"
@@ -85,56 +84,6 @@
                     </p>
 
                 </data-grid>
-
-                <table v-if="results.length > 0">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Betalingsnøgle</th>
-                            <th>Betalingsmåde/modtager</th>
-                            <th>Hovedsag CPR nr./ kontostreng</th>
-                            <th>Planlagt betalingsdato</th>
-                            <th>Planlagt beløb</th>
-                            <th>Betalt dato</th>
-                            <th>Betalt beløb</th>
-                            <th>Reference</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="p in results" :key="p.id">
-                            <td>
-                                <a @click="navToLink(`/activity/${ p.activity__id }`)">{{ p.id }} - {{ p.activity__details__id }}</a>
-                                <span class="dim" v-if="p.payment_schedule__fictive">(Fiktiv)</span>
-                            </td>
-                            <td> {{ p.payment_schedule__payment_id }} </td>
-                            <td> 
-                                <div v-if="p.payment_method === 'INVOICE'">Faktura</div>
-                                <div v-if="p.payment_method === 'INTERNAL'">Intern afregning</div>
-                                <div v-if="p.payment_method === 'CASH'">Udbetaling</div>
-                                <div v-if="p.payment_method === 'SD'">SD-løn</div>
-                                {{ p.recipient_name }}<br>
-                                <span v-if="p.recipient_type === 'COMPANY'">
-                                    CVR
-                                </span>
-                                {{ p.recipient_id }}
-                            </td>
-                            <td>
-                                {{ p.case__cpr_number }} <br>
-                                {{ p.account_string }}
-                            </td>
-                            <td>
-                                <span class="dim" style="white-space: nowrap;">
-                                    
-                                </span>
-                            </td>
-                            <td>
-                                <span class="dim" style="white-space: nowrap;">
-                                    
-                                </span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
 
                 <button v-if="results.length > 1" :disabled="disableBtn" class="more" @click="loadResults()">Vis flere</button>
             </template>
