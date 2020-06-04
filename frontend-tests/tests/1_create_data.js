@@ -3,7 +3,7 @@
 import { Selector, RequestLogger } from 'testcafe'
 import { login } from '../utils/logins.js'
 import { createActivity } from '../utils/crud.js'
-import { axe, axeOptions } from '../utils/axe.js'
+import { axe } from '../utils/axe.js'
 import baseurl from '../utils/url.js'
 
 function leadZero(number) {
@@ -119,7 +119,7 @@ test('Create Case', async t => {
     
     await t.click(Selector('button').withText('+ Tilknyt hovedsag'))
     
-    await axe(t, null, axeOptions)
+    await axe(t)
 
     await t
         .typeText('#field-sbsys-id', testdata.case1.name)
@@ -136,7 +136,7 @@ test('Create Case', async t => {
         .click(Selector('a.header-link'))
         .expect(Selector('.cases table a').withText(testdata.case1.name)).ok()
     
-    await axe(t, null, axeOptions)
+    await axe(t)
 })
 
 test('Create Appropriation', async t => {
@@ -145,7 +145,7 @@ test('Create Appropriation', async t => {
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('.appropriation-create-btn'))
     
-    await axe(t, null, axeOptions)
+    await axe(t)
 
     await t
         .typeText('#field-sbsysid', testdata.appr1.name)
@@ -156,7 +156,7 @@ test('Create Appropriation', async t => {
         .click(Selector('a').withText(testdata.case1.name))
         .expect(Selector('.datagrid-action a').innerText).contains(testdata.appr1.name)
     
-    await axe(t, null, axeOptions)
+    await axe(t)
 })
 
 test('Create activities', async t => {
@@ -178,7 +178,7 @@ test('Create activities', async t => {
 
     await t.expect(Selector('.activities table tr.act-list-item a').exists).ok()
     
-    await axe(t, null, axeOptions)
+    await axe(t)
 })
 
 test('Approve appropriation', async t => {
@@ -189,7 +189,7 @@ test('Approve appropriation', async t => {
         .click('#check-all')
         .click(Selector('button').withText('Godkend valgte'))
     
-    await axe(t, null, axeOptions)
+    await axe(t)
 
     await t
         .click(Selector('label').withAttribute('for','radio-btn-1'))
@@ -197,7 +197,7 @@ test('Approve appropriation', async t => {
         .click('button[type="submit"]')
         .expect(Selector('.mini-label .label-GRANTED').exists).ok()
     
-    await axe(t, null, axeOptions)
+    await axe(t)
 })
 
 test('Add adjustment activities', async t => {
@@ -220,7 +220,7 @@ test('Add adjustment activities', async t => {
         .expect(Selector('.label-EXPECTED')).ok()
         .expect(Selector('h1').withText('Bevillingsskrivelse').exists).ok()
     
-    await axe(t, null, axeOptions)
+    await axe(t)
 })
 
 test('Create appropriation with one main activity option', async t => {
@@ -229,7 +229,7 @@ test('Create appropriation with one main activity option', async t => {
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('.appropriation-create-btn'))
     
-    await axe(t, null, axeOptions)
+    await axe(t)
 
     await t
         .typeText('#field-sbsysid', testdata.appr2.name)
@@ -240,7 +240,7 @@ test('Create appropriation with one main activity option', async t => {
         .click(Selector('a').withText(testdata.case1.name))
         .expect(Selector('.datagrid-action a').innerText).contains(testdata.appr2.name)
     
-    await axe(t, null, axeOptions)
+    await axe(t)
 })
 
 test('Create activities with one main activity option', async t => {
@@ -260,7 +260,7 @@ test('Create activities with one main activity option', async t => {
 
     await t.expect(Selector('.activities table tr.act-list-item a').exists).ok()
     
-    await axe(t, null, axeOptions)
+    await axe(t)
 })
 
 test('Approve appropriation with one main activity option', async t => {
@@ -271,7 +271,7 @@ test('Approve appropriation with one main activity option', async t => {
         .click('#check-all')
         .click(Selector('button').withText('Godkend valgte'))
     
-    await axe(t, null, axeOptions)
+    await axe(t)
 
     await t
         .click(Selector('label').withAttribute('for','radio-btn-3'))
@@ -279,5 +279,5 @@ test('Approve appropriation with one main activity option', async t => {
         .click('button[type="submit"]')
         .expect(Selector('.mini-label .label-GRANTED').exists).ok()
     
-    await axe(t, null, axeOptions)
+    await axe(t)
 })
