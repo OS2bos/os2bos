@@ -87,6 +87,9 @@
 
                 <button v-if="results.length > 1" :disabled="disableBtn" class="more" @click="loadResults()">Vis flere</button>
             </template>
+            <p v-else>
+                Der er ingen betalinger, der matcher de valgte kriterier
+            </p>
         </div>
 
     </section>
