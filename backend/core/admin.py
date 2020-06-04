@@ -140,6 +140,7 @@ class RatePerDateInline(admin.TabularInline):
     model = RatePerDate
 
     readonly_fields = ["rate", "start_date", "end_date"]
+    extra = 0
 
 
 class VariableRateAdminForm(forms.ModelForm):
@@ -149,11 +150,16 @@ class VariableRateAdminForm(forms.ModelForm):
         model = VariableRate
         fields = []
 
-    rate = forms.DecimalField(label=_("rate"))
+    rate = forms.DecimalField(label=_("Takst"))
     start_date = forms.DateField(
-        label=_("start date"), initial=datetime.date.today(), required=False
+        label=_("Startdato"),
+        initial=datetime.date.today(),
+        required=False,
+        widget=forms.SelectDateWidget(),
     )
-    end_date = forms.DateField(label=_("end date"), required=False)
+    end_date = forms.DateField(
+        label=_("Slutdato"), required=False, widget=forms.SelectDateWidget()
+    )
 
 
 class VariableRateAdmin(ClassificationAdmin):
@@ -162,23 +168,32 @@ class VariableRateAdmin(ClassificationAdmin):
     inlines = [
         RatePerDateInline,
     ]
-
-    def get_form(self, request, obj=None, **kwargs):
-
-        kwargs["form"] = VariableRateAdminForm
-        return super().get_form(request, obj, **kwargs)
+    form = VariableRateAdminForm
 
     def save_model(self, request, obj, form, change):
-        if form.rate or form.start_date or form.end_date:
-            obj.set_rate_amount(form.rate, form.start_date, form.end_date)
-        super().save_model(request, obj, form, change)
+        if form.is_valid():
+            super().save_model(request, obj, form, change)
+            obj.set_rate_amount(
+                form.cleaned_data["rate"],
+                form.cleaned_data["start_date"],
+                form.cleaned_data["end_date"],
+            )
+
+
+class RateForm(VariableRateAdminForm):
+    """RateForm for RateAdmin."""
+
+    class Meta:
+        model = Rate
+        fields = "__all__"
 
 
 @admin.register(Rate)
 class RateAdmin(VariableRateAdmin):
     """ModelAdmin for Rate."""
 
-    form = VariableRateAdminForm
+    list_display = ("name", "description")
+    form = RateForm
 
 
 @admin.register(Payment)

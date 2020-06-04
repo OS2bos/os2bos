@@ -345,6 +345,10 @@ class VariableRate(models.Model):
 class RatePerDate(models.Model):
     """Handle the date variation of VariableRates."""
 
+    class Meta:
+        verbose_name = _("takst for datoer")
+        verbose_name_plural = _("takster for datoer")
+
     rate = models.DecimalField(
         max_digits=14, decimal_places=2, verbose_name=_("takst")
     )
@@ -359,6 +363,9 @@ class RatePerDate(models.Model):
     main_rate = models.ForeignKey(
         VariableRate, on_delete=models.CASCADE, related_name="rates_per_date"
     )
+
+    def __str__(self):
+        return f"{self.rate} - {self.main_rate}"
 
 
 class Price(VariableRate):
@@ -386,6 +393,9 @@ class Rate(VariableRate):
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     description = models.TextField(verbose_name=_("beskrivelse"), blank=True)
+
+    def __str__(self):
+        return f"{self.name}"
 
 
 class PaymentSchedule(models.Model):
