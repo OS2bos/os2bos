@@ -1,6 +1,5 @@
 from datetime import date, timedelta
 
-from django import forms
 from django.test import TestCase
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth import get_user_model
@@ -467,7 +466,6 @@ class RatePerDateInlineTestCase(TestCase):
     def test_can_delete_false(self):
         site = AdminSite()
         rate_per_date_inline = RatePerDateInline(RatePerDate, site)
-        request = MockRequest()
 
         self.assertFalse(rate_per_date_inline.can_delete)
 

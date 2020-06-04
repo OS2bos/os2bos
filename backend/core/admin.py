@@ -169,6 +169,7 @@ class VariableRateAdminForm(forms.ModelForm):
     )
 
     def clean(self):
+        """Override ModelForm clean."""
         cleaned_data = super().clean()
         rate_start_date = cleaned_data.get("start_date")
         rate_end_date = cleaned_data.get("end_date")
