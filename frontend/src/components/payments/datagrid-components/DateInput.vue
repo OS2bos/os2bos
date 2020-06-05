@@ -6,12 +6,21 @@
    - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
 
 <template>
-    <input type="date" v-model="date">
+    <input v-if="permissionCheck === true" type="date" v-model="date">
     <!-- TODO Show date instead of input field when amount is not changeable -->
+    <span v-else>
+        {{ date }}
+    </span>
 </template>
 
 <script>
+
+import UserRights from '../../mixins/UserRights.js'
+
 export default {
+    mixins: [ 
+        UserRights
+    ],
     props: {
         rowId: Number
     },

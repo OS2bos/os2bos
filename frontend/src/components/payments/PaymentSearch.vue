@@ -113,6 +113,7 @@
     import SaveButton from './datagrid-components/SaveButton.vue'
     import AmountInput from './datagrid-components/AmountInput.vue'
     import DateInput from './datagrid-components/DateInput.vue'
+    import NoteInput from './datagrid-components/NoteInput.vue'
 
     export default {
         
@@ -122,7 +123,8 @@
             ListPicker,
             SaveButton,
             AmountInput,
-            DateInput
+            DateInput,
+            NoteInput
         },
         mixins: [
             CaseFilters, 
@@ -195,7 +197,6 @@
                     {
                         key: 'paid_amount',
                         title: 'Betalt beløb',
-                        class: 'right',
                         display_component: AmountInput
                     },
                     {
@@ -204,10 +205,9 @@
                         display_component: DateInput
                     },
                     {
-                        // TODO Use a display_component instead of display_func - like with paid_amount
                         key: 'note',
                         title: 'Reference',
-                        display_func: this.displayNote
+                        display_component: NoteInput
                     },
                     {
                         display_component: SaveButton,

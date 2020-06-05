@@ -6,13 +6,17 @@
    - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
 
 <template>
-    <button type="button" @click="submitHandler">Gem</button>
+    <button v-if="permissionCheck === true" type="button" @click="submitHandler">Gem</button>
 </template>
 
 <script>
 import axios from '../../http/Http.js'
+import UserRights from '../../mixins/UserRights.js'
 
 export default {
+    mixins: [ 
+        UserRights
+    ],
     props: {
         rowId: Number
     },

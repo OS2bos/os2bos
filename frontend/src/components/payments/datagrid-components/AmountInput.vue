@@ -6,13 +6,22 @@
    - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
 
 <template>
-    <input type="number" v-model="amount">
+    <input v-if="permissionCheck === true" class="field-amount" type="number" v-model="amount">
 
     <!-- TODO Show number instead of input field when amount is not changeable -->
+    <span v-else>
+        {{ amount }}
+    </span>
 </template>
 
 <script>
+
+import UserRights from '../../mixins/UserRights.js'
+
 export default {
+    mixins: [ 
+        UserRights
+    ],
     props: {
         rowId: Number
     },
@@ -32,3 +41,11 @@ export default {
     }
 }
 </script>
+
+<style>
+
+    .field-amount {
+        width: 7rem;
+    }
+
+</style>
