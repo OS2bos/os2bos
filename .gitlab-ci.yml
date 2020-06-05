@@ -118,13 +118,10 @@ Build app image:
 
 # Test stage
 ############
-
-
-Unittest:
+.test-default: &test-default
   stage: test
   needs: ["Build app image"]
-  image:
-    name: ${IMAGE_SHA}
+  image: ${IMAGE_SHA}
   tags:
     - docker
   services:
@@ -136,6 +133,9 @@ Unittest:
     POSTGRES_PASSWORD: bev
     BEV_USER_CONFIG_PATH: $CI_PROJECT_DIR/dev-environment/dev-settings.ini
     COVERAGE_FILE: $CI_PROJECT_DIR/.coverage
+
+Unittest:
+  <<: *test-default
   script:
     - cd /code/backend &&
       pytest
@@ -147,7 +147,6 @@ Unittest:
       --cov-report term
       --cov-fail-under=100
       -p no:cacheprovider
-
   coverage: '/TOTAL.*\s+(\d+%)$/'
   artifacts:
     when: always
@@ -156,28 +155,44 @@ Unittest:
     reports:
       junit: $CI_PROJECT_DIR/junit.xml
 
+FrontendTest:
+  <<: *test-default
+  variables:
+    FF_NETWORK_PER_BUILD: 1
+    POSTGRES_USER: bev
+    POSTGRES_PASSWORD: bev
+    BEV_USER_CONFIG_PATH: $CI_PROJECT_DIR/dev-environment/dev-settings.ini
+    API_SERVER: http://bev:5000
+    IDP_SERVER: http://idp:8080
+    SAML_PUBLIC_HOST: http://idp:8080/
+    SIMPLESAMLPHP_BASEURLPATH: http://bev:5000/simplesaml/
+    SIMPLESAMLPHP_SP_ENTITY_ID: http://bev:5000
+    SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE: http://bev:5000/api/saml2_auth/acs/
 
-.integration-test:
-  stage: test
-  needs: ["Build app image"]
-  # TODO when you implement integration tests in ci, remember to add it to the
-  # `needs` array for ".release-default".
-  tags:
-    - docker
+  image: magentalabs/frontend-test:v0.2 #includes npm, chrome, firefox and ffmpeg
+  services:
+    - name: postgres:11
+      alias: db
+    - name: ${IMAGE_SHA}
+      alias: bev
+    - name: magentalabs/os2bos-idp-test:2.0.0
+      alias: idp
   before_script:
-    # Login to GitLab registry
-    - echo ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
-    - docker pull ${IMAGE_SHA}
+    - cd frontend-tests
+    - npm install
   script:
-    - # TODO run tests
-
+    - ./node_modules/.bin/testcafe chrome:headless tests/*.js --baseurl http://bev:5000/ --screenshot $CI_PROJECT_DIR/artifacts --video $CI_PROJECT_DIR/artifacts
+  artifacts:
+    when: always
+    paths:
+      - $CI_PROJECT_DIR/artifacts
 
 # Release stage
 ###############
 
 .release-default: &release-default
   stage: release
-  needs: ["Unittest"]
+  needs: ["Unittest", "FrontendTest"]
   image: docker:19.03.1
   variables:
     GIT_STRATEGY: none # We do not need the source code
