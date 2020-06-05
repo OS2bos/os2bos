@@ -534,7 +534,7 @@ class PaymentSchedule(models.Model):
         choices=payment_cost_choices,
     )
 
-    rate = models.ForeignKey(
+    payment_rate = models.ForeignKey(
         Rate,
         null=True,
         blank=True,
