@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0059_migrate_to_new_auditmodelmixin'),
+        ('core', '0062_migrate_to_new_auditmodelmixin'),
     ]
 
     operations = [
