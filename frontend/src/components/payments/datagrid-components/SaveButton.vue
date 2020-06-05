@@ -6,16 +6,18 @@
    - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
 
 <template>
-    <button v-if="permissionCheck === true" type="button" @click="submitHandler">Gem</button>
+    <button v-if="permissionCheck === true && isPayableManually" type="button" @click="submitHandler">Gem</button>
 </template>
 
 <script>
 import axios from '../../http/Http.js'
 import UserRights from '../../mixins/UserRights.js'
+import IsPayableManually from '../../mixins/IsPayableManually'
 
 export default {
     mixins: [ 
-        UserRights
+        UserRights,
+        IsPayableManually
     ],
     props: {
         rowId: Number

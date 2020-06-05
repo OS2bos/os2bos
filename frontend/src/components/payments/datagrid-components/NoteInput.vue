@@ -7,7 +7,7 @@
 
 <template>
 
-    <input v-if="permissionCheck === true" class="field-note" type="text" v-model="note">
+    <input v-if="permissionCheck === true && isPayableManually" class="field-note" type="text" v-model="note">
 
     <span v-else>
       {{ note }}
@@ -18,10 +18,12 @@
 <script>
 
 import UserRights from '../../mixins/UserRights.js'
+import IsPayableManually from '../../mixins/IsPayableManually'
 
 export default {
     mixins: [ 
-        UserRights
+        UserRights,
+        IsPayableManually
     ],
     props: {
         rowId: Number

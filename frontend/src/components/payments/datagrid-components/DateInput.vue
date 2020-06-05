@@ -6,8 +6,8 @@
    - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
 
 <template>
-    <input v-if="permissionCheck === true" type="date" v-model="date">
-    <!-- TODO Show date instead of input field when amount is not changeable -->
+    <input v-if="permissionCheck === true && isPayableManually" type="date" v-model="date">
+
     <span v-else>
         {{ date }}
     </span>
@@ -16,10 +16,12 @@
 <script>
 
 import UserRights from '../../mixins/UserRights.js'
+import IsPayableManually from '../../mixins/IsPayableManually'
 
 export default {
     mixins: [ 
-        UserRights
+        UserRights,
+        IsPayableManually
     ],
     props: {
         rowId: Number
