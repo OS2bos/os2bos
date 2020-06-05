@@ -35,6 +35,7 @@ from core.models import (
     Team,
     EffortStep,
     TargetGroup,
+    InternalPaymentRecipient,
     Effort,
     STATUS_DELETED,
     STATUS_DRAFT,
@@ -503,6 +504,14 @@ class TargetGroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TargetGroup
+        fields = "__all__"
+
+
+class InternalPaymentRecipientSerializer(serializers.ModelSerializer):
+    """Serializer for the InternalPaymentRecipient model."""
+
+    class Meta:
+        model = InternalPaymentRecipient
         fields = "__all__"
 
 

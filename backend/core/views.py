@@ -37,6 +37,7 @@ from core.models import (
     ApprovalLevel,
     EffortStep,
     TargetGroup,
+    InternalPaymentRecipient,
     Effort,
     STATUS_DELETED,
     STATUS_DRAFT,
@@ -65,6 +66,7 @@ from core.serializers import (
     ApprovalLevelSerializer,
     EffortStepSerializer,
     TargetGroupSerializer,
+    InternalPaymentRecipientSerializer,
     EffortSerializer,
 )
 from core.filters import (
@@ -421,6 +423,13 @@ class TargetGroupViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
 
     queryset = TargetGroup.objects.all()
     serializer_class = TargetGroupSerializer
+
+
+class InternalPaymentRecipientViewSet(ReadOnlyViewset):
+    """Expose internal payment recipients in REST API."""
+
+    queryset = InternalPaymentRecipient.objects.all()
+    serializer_class = InternalPaymentRecipientSerializer
 
 
 class EffortViewSet(ClassificationViewSetMixin, ReadOnlyViewset):

@@ -133,6 +133,19 @@ class TargetGroup(Classification):
         return f"{self.name}"
 
 
+class InternalPaymentRecipient(models.Model):
+    """Recipient model for INTERNAL payment activities."""
+
+    class Meta:
+        verbose_name = _("intern betalingsmodtager")
+        verbose_name_plural = _("interne betalingsmodtagere")
+
+    name = models.CharField(max_length=128, verbose_name=_("navn"))
+
+    def __str__(self):
+        return f"{self.name}"
+
+
 class Effort(Classification):
     """Effort for a case."""
 
@@ -395,7 +408,9 @@ class PaymentSchedule(models.Model):
         verbose_name=_("betalingsmodtager"),
         choices=recipient_choices,
     )
-    recipient_id = models.CharField(max_length=128, verbose_name=_("ID"))
+    recipient_id = models.CharField(
+        max_length=128, verbose_name=_("ID"), blank=True
+    )
     recipient_name = models.CharField(max_length=128, verbose_name=_("navn"))
 
     payment_method = models.CharField(

@@ -62,7 +62,7 @@ export default {
         mixin
     ],
     watch: {
-        model: function(new_val) {
+        model: function(new_val, old_val) {
 
             /****** RULES ******/ 
             
@@ -78,6 +78,18 @@ export default {
                 this.$store.commit('setPaymentPlanProperty', {
                     prop: 'payment_method',
                     val: 'INTERNAL'
+                })
+            }
+
+            // If receiver type changes, reset name and ID
+            if (new_val !== old_val) {
+                this.$store.commit('setPaymentPlanProperty', {
+                    prop: 'recipient_name',
+                    val: null
+                })
+                this.$store.commit('setPaymentPlanProperty', {
+                    prop: 'recipient_id',
+                    val: null
                 })
             }
         }

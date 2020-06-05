@@ -9,10 +9,10 @@
 <template>
                 
     <fieldset v-if="editable">
-        <label for="pay-receiver-id" class="required">
+        <label for="pay-receiver-id" :class="{required: payment_plan.recipient_type !== 'INTERNAL'}">
             {{ id_str }}
         </label>
-        <input type="text" id="pay-receiver-id" v-model="model" required>
+        <input type="text" id="pay-receiver-id" v-model="model" :required="payment_plan.recipient_type !== 'INTERNAL'">
         <error :err-key="property" />
     </fieldset>
 

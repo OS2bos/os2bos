@@ -21,10 +21,10 @@
                
         <error :err-key="this.property" />
 
-        <template v-if="model">
+        <dl v-if="model">
             <dt>Forklaring af ydelse</dt>
             <dd>{{ act2description(model) }}</dd>
-        </template>
+        </dl>
 
     </fieldset>
 

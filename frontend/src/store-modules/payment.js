@@ -12,7 +12,8 @@ import Vue from 'vue'
 const state = {
     payments: null,
     payment_plan: null,
-    payment: null
+    payment: null,
+    internal_payment_recipients: null
 }
 
 const getters = {
@@ -31,6 +32,9 @@ const getters = {
     },
     getPayments (state) {
         return state.payments ? state.payments : false
+    },
+    getInternalPaymentRecipients (state) {
+        return state.internal_payment_recipients ? state.internal_payment_recipients : false
     }
 }
 
@@ -67,6 +71,9 @@ const mutations = {
             payment_cost_type: 'FIXED', // FIXED, RATE, or PER_UNIT
             payment_amount: 0
         }
+    },
+    setInternalPaymentRecipients (state, internal_payment_recipients) {
+        state.internal_payment_recipients = internal_payment_recipients
     }
 }
 
@@ -103,6 +110,13 @@ const actions = {
         axios.get(`/payments/${ payment_id }`)
         .then(res => {
             commit('setPayment', res.data)
+        })
+        .catch(err => console.log(err))
+    },
+    fetchInternalPaymentRecipients: function({commit}) {
+        axios.get(`/internal_payment_recipients/`)
+        .then(res => {
+            commit('setInternalPaymentRecipients', res.data)
         })
         .catch(err => console.log(err))
     }

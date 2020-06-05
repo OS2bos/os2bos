@@ -157,6 +157,18 @@ export default {
                 new_act.end_date = new_act.start_date
             }
 
+            // Clean up null valued items in new_act
+            for (let prop in new_act) {
+                if (new_act[prop] === null) {
+                    delete new_act[prop]
+                }
+            }
+            for (let prop in new_act.payment_plan) {
+                if (new_act.payment_plan[prop] === null) {
+                    delete new_act.payment_plan[prop]
+                }
+            }
+
             axios.post('/activities/', new_act)
             .then(res => {
                 this.cleanAndExit()
