@@ -11,9 +11,6 @@ from django.db import migrations, models
 import django.db.models.deletion
 import django.db.models.expressions
 import django.utils.timezone
-import django_audit_fields.fields.hostname_modification_field
-import django_audit_fields.fields.userfield
-import django_audit_fields.models.audit_model_mixin
 import django_revision.revision_field
 import simple_history.models
 import uuid
@@ -83,12 +80,12 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('revision', django_revision.revision_field.RevisionField(blank=True, editable=False, help_text='System field. Git repository tag:branch:commit.', max_length=75, null=True, verbose_name='Revision')),
-                ('created', models.DateTimeField(blank=True, default=django_audit_fields.models.audit_model_mixin.utcnow)),
-                ('modified', models.DateTimeField(blank=True, default=django_audit_fields.models.audit_model_mixin.utcnow)),
-                ('user_created', django_audit_fields.fields.userfield.UserField(blank=True, help_text='Updated by admin.save_model', max_length=50, verbose_name='user created')),
-                ('user_modified', django_audit_fields.fields.userfield.UserField(blank=True, help_text='Updated by admin.save_model', max_length=50, verbose_name='user modified')),
+                ('created', models.DateTimeField(blank=True, default=django.utils.timezone.now)),
+                ('modified', models.DateTimeField(blank=True, default=django.utils.timezone.now)),
+                ('user_created', models.CharField(blank=True, help_text='Updated by admin.save_model', max_length=50, verbose_name='user created')),
+                ('user_modified', models.CharField(blank=True, help_text='Updated by admin.save_model', max_length=50, verbose_name='user modified')),
                 ('hostname_created', models.CharField(blank=True, default=_socket.gethostname, help_text='System field. (modified on create only)', max_length=60)),
-                ('hostname_modified', django_audit_fields.fields.hostname_modification_field.HostnameModificationField(blank=True, help_text='System field. (modified on every save)', max_length=50)),
+                ('hostname_modified', models.CharField(blank=True, help_text='System field. (modified on every save)', max_length=50)),
                 ('device_created', models.CharField(blank=True, max_length=10)),
                 ('device_modified', models.CharField(blank=True, max_length=10)),
                 ('sbsys_id', models.CharField(max_length=128, unique=True, verbose_name='SBSYS-ID')),
@@ -250,12 +247,12 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.IntegerField(auto_created=True, blank=True, db_index=True, verbose_name='ID')),
                 ('revision', django_revision.revision_field.RevisionField(blank=True, editable=False, help_text='System field. Git repository tag:branch:commit.', max_length=75, null=True, verbose_name='Revision')),
-                ('created', models.DateTimeField(blank=True, default=django_audit_fields.models.audit_model_mixin.utcnow)),
-                ('modified', models.DateTimeField(blank=True, default=django_audit_fields.models.audit_model_mixin.utcnow)),
-                ('user_created', django_audit_fields.fields.userfield.UserField(blank=True, help_text='Updated by admin.save_model', max_length=50, verbose_name='user created')),
-                ('user_modified', django_audit_fields.fields.userfield.UserField(blank=True, help_text='Updated by admin.save_model', max_length=50, verbose_name='user modified')),
+                ('created', models.DateTimeField(blank=True, default=django.utils.timezone.now)),
+                ('modified', models.DateTimeField(blank=True, default=django.utils.timezone.now)),
+                ('user_created', models.CharField(blank=True, help_text='Updated by admin.save_model', max_length=50, verbose_name='user created')),
+                ('user_modified', models.CharField(blank=True, help_text='Updated by admin.save_model', max_length=50, verbose_name='user modified')),
                 ('hostname_created', models.CharField(blank=True, default=_socket.gethostname, help_text='System field. (modified on create only)', max_length=60)),
-                ('hostname_modified', django_audit_fields.fields.hostname_modification_field.HostnameModificationField(blank=True, help_text='System field. (modified on every save)', max_length=50)),
+                ('hostname_modified', models.CharField(blank=True, help_text='System field. (modified on every save)', max_length=50)),
                 ('device_created', models.CharField(blank=True, max_length=10)),
                 ('device_modified', models.CharField(blank=True, max_length=10)),
                 ('effort_step', models.PositiveSmallIntegerField(choices=[(1, 'Trin 1: Tidlig indsats i almenområdet'), (2, 'Trin 2: Forebyggelse'), (3, 'Trin 3: Hjemmebaserede indsatser'), (4, 'Trin 4: Anbringelse i slægt eller netværk'), (5, 'Trin 5: Anbringelse i forskellige typer af plejefamilier'), (6, 'Trin 6: Anbringelse i institutionstilbud')], verbose_name='indsatstrappe')),
@@ -311,12 +308,12 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('revision', django_revision.revision_field.RevisionField(blank=True, editable=False, help_text='System field. Git repository tag:branch:commit.', max_length=75, null=True, verbose_name='Revision')),
-                ('created', models.DateTimeField(blank=True, default=django_audit_fields.models.audit_model_mixin.utcnow)),
-                ('modified', models.DateTimeField(blank=True, default=django_audit_fields.models.audit_model_mixin.utcnow)),
-                ('user_created', django_audit_fields.fields.userfield.UserField(blank=True, help_text='Updated by admin.save_model', max_length=50, verbose_name='user created')),
-                ('user_modified', django_audit_fields.fields.userfield.UserField(blank=True, help_text='Updated by admin.save_model', max_length=50, verbose_name='user modified')),
+                ('created', models.DateTimeField(blank=True, default=django.utils.timezone.now)),
+                ('modified', models.DateTimeField(blank=True, default=django.utils.timezone.now)),
+                ('user_created', models.CharField(blank=True, help_text='Updated by admin.save_model', max_length=50, verbose_name='user created')),
+                ('user_modified', models.CharField(blank=True, help_text='Updated by admin.save_model', max_length=50, verbose_name='user modified')),
                 ('hostname_created', models.CharField(blank=True, default=_socket.gethostname, help_text='System field. (modified on create only)', max_length=60)),
-                ('hostname_modified', django_audit_fields.fields.hostname_modification_field.HostnameModificationField(blank=True, help_text='System field. (modified on every save)', max_length=50)),
+                ('hostname_modified', models.CharField(blank=True, help_text='System field. (modified on every save)', max_length=50)),
                 ('device_created', models.CharField(blank=True, max_length=10)),
                 ('device_modified', models.CharField(blank=True, max_length=10)),
                 ('sbsys_id', models.CharField(max_length=128, unique=True, verbose_name='SBSYS-ID')),
@@ -349,12 +346,12 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('revision', django_revision.revision_field.RevisionField(blank=True, editable=False, help_text='System field. Git repository tag:branch:commit.', max_length=75, null=True, verbose_name='Revision')),
-                ('created', models.DateTimeField(blank=True, default=django_audit_fields.models.audit_model_mixin.utcnow)),
-                ('modified', models.DateTimeField(blank=True, default=django_audit_fields.models.audit_model_mixin.utcnow)),
-                ('user_created', django_audit_fields.fields.userfield.UserField(blank=True, help_text='Updated by admin.save_model', max_length=50, verbose_name='user created')),
-                ('user_modified', django_audit_fields.fields.userfield.UserField(blank=True, help_text='Updated by admin.save_model', max_length=50, verbose_name='user modified')),
+                ('created', models.DateTimeField(blank=True, default=django.utils.timezone.now)),
+                ('modified', models.DateTimeField(blank=True, default=django.utils.timezone.now)),
+                ('user_created', models.CharField(blank=True, help_text='Updated by admin.save_model', max_length=50, verbose_name='user created')),
+                ('user_modified', models.CharField(blank=True, help_text='Updated by admin.save_model', max_length=50, verbose_name='user modified')),
                 ('hostname_created', models.CharField(blank=True, default=_socket.gethostname, help_text='System field. (modified on create only)', max_length=60)),
-                ('hostname_modified', django_audit_fields.fields.hostname_modification_field.HostnameModificationField(blank=True, help_text='System field. (modified on every save)', max_length=50)),
+                ('hostname_modified', models.CharField(blank=True, help_text='System field. (modified on every save)', max_length=50)),
                 ('device_created', models.CharField(blank=True, max_length=10)),
                 ('device_modified', models.CharField(blank=True, max_length=10)),
                 ('status', models.CharField(choices=[('DRAFT', 'kladde'), ('EXPECTED', 'forventet'), ('GRANTED', 'bevilget')], max_length=128, verbose_name='status')),
