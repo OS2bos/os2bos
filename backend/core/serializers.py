@@ -197,9 +197,6 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
 
     payments = PaymentSerializer(many=True, read_only=True)
     account = serializers.ReadOnlyField()
-    payment_amount = serializers.DecimalField(
-        max_digits=20, decimal_places=2, required=False
-    )
     payment_pricing_date = serializers.DateField(required=False)
 
     @staticmethod
@@ -238,6 +235,8 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
             raise serializers.ValidationError(
                 _("En engangsbetaling må ikke have en betalingsfrekvens")
             )
+
+        # TODO: Validate payment/rate/unit info
 
         return data
 
