@@ -12,17 +12,21 @@
         <payment-receiver-type :editable="true" />
         <template v-if="payment_plan.recipient_type">
             <payment-service-provider v-if="payment_plan.recipient_type === 'COMPANY'" />
+            
             <cpr-look-up 
                 v-if="payment_plan.recipient_type === 'PERSON'" 
                 :cpr.sync="recipient_id" 
                 :name.sync="recipient_name" />
 
+            <payment-internal-receiver v-if="payment_plan.recipient_type === 'INTERNAL'" /> 
+
             <payment-receiver-id 
                 :editable="true" 
                 v-if="payment_plan.recipient_type && payment_plan.recipient_type !== 'PERSON'" />
+            
             <payment-receiver-name 
-                :editable="true" 
-                v-if="payment_plan.recipient_type && payment_plan.recipient_type !== 'PERSON'" />
+                :editable="true"
+                v-if="payment_plan.recipient_type && payment_plan.recipient_type === 'COMPANY'" />
 
             <payment-method :editable="true" v-if="payment_plan.recipient_type === 'PERSON'" />
 
@@ -40,6 +44,7 @@ import PaymentReceiverId from '../../payments/edittypes/PaymentReceiverId.vue'
 import PaymentReceiverName from '../../payments/edittypes/PaymentReceiverName.vue'
 import PaymentMethod from '../../payments/edittypes/PaymentMethod.vue'
 import PaymentMethodDetails from '../../payments/edittypes/PaymentMethodDetails.vue'
+import PaymentInternalReceiver from '../../payments/edittypes/PaymentInternalReceiverName.vue'
 
 export default {
     components: {
@@ -49,7 +54,8 @@ export default {
         PaymentReceiverName,
         PaymentMethod,
         PaymentMethodDetails,
-        CprLookUp
+        CprLookUp,
+        PaymentInternalReceiver
     },
     computed: {
         payment_plan: function() {

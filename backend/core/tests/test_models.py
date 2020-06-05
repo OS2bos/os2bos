@@ -48,6 +48,7 @@ from core.models import (
     PaymentMethodDetails,
     ServiceProvider,
     EffortStep,
+    InternalPaymentRecipient,
     Effort,
     CASH,
     SD,
@@ -3567,6 +3568,15 @@ class EffortStepTestCase(TestCase, BasicTestMixin):
         effort_step = EffortStep.objects.create(name="Name", number=127)
 
         self.assertEqual(str(effort_step), "Name")
+
+
+class InternalPaymentRecipientTestCase(TestCase):
+    def test_str(self):
+        internal_payment_recipient = InternalPaymentRecipient.objects.create(
+            name="Familiehuset"
+        )
+
+        self.assertEqual(str(internal_payment_recipient), "Familiehuset")
 
 
 class EffortTestCase(TestCase):

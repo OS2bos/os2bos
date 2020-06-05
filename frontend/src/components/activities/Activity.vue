@@ -95,14 +95,20 @@
                 <div>
                     <payment-receiver-type :editable="is_editable" />
                     <payment-service-provider v-if="is_editable && payment_plan.recipient_type === 'COMPANY'" />
+                    <payment-internal-receiver v-if="payment_plan.recipient_type === 'INTERNAL'" /> 
                     <cpr-look-up 
                         v-if="is_editable && payment_plan.recipient_type === 'PERSON'" 
                         :cpr.sync="payment_plan.recipient_id" 
                         :name.sync="payment_plan.recipient_name" />
-                    <template v-else>
-                        <payment-receiver-id :editable="is_editable" />
-                        <payment-receiver-name :editable="is_editable" />
-                    </template>
+
+                    <payment-receiver-id 
+                        :editable="is_editable" 
+                        v-if="payment_plan.recipient_type && payment_plan.recipient_type !== 'PERSON'" />
+            
+                    <payment-receiver-name 
+                        :editable="is_editable"
+                        v-if="payment_plan.recipient_type && payment_plan.recipient_type === 'COMPANY'" />
+
                 </div>
 
                 <div>
@@ -177,6 +183,7 @@ import { cost2da } from '../filters/Numbers.js'
 import { activityId2name, sectionId2name, displayStatus, userId2name, approvalId2name } from '../filters/Labels.js'
 import notify from '../notifications/Notify.js'
 import UserRights from '../mixins/UserRights.js'
+import PaymentInternalReceiver from '../payments/edittypes/PaymentInternalReceiverName.vue'
 
 export default {
 
@@ -187,7 +194,8 @@ export default {
     components: {
         PaymentSchedule,
         PaymentServiceProvider,
-        CprLookUp
+        CprLookUp,
+        PaymentInternalReceiver
     },
     data: function() {
         return {
@@ -325,6 +333,7 @@ export default {
             if (new_act.payment_plan.payment_type === 'ONE_TIME_PAYMENT') {
                 new_act.end_date = new_act.start_date
             }
+
             axios.patch(`/activities/${ this.$route.params.actId }/`, new_act)
             .then(res => {
                 this.$router.push(`/appropriation/${ this.appropriation.id }`)
