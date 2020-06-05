@@ -6,42 +6,48 @@
    - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
 
 <template>
-    <button type="button" :disabled="disabled" @click="submitHandler">Gem</button>
+    <button type="button" @click="submitHandler">Gem</button>
 </template>
 
 <script>
+import axios from '../../http/Http.js'
+
 export default {
     props: {
         rowId: Number
     },
     data: function() {
         return {
-            date_el: null,
-            amount_el: null
+            date: null,
+            amount: null
         }
     },
     computed: {
+        row_data: function() {
+            return this.$store.getters.getPayments
+        },
         disabled: function() {
-            if (this.date_el && this.amount_el) {
-                console.log(this.date_el.value, this.amount_el.value)
-                if (this.date_el.value === "" || !this.amount_el.value) {
-                    return true
-                } else {
-                    return false
-                }
-            }
+            // TODO Update this boolean to set the SAVE button disabled when no values are entered
+            return false
+        }
+    },
+    watch: {
+        row_data: function() {
+            let payment = this.row_data.results.filter(p => {
+                return p.id === this.rowId
+            })
+            console.log(payment)
+            this.date = payment.paid_date
+            this.amount = payment.paid_amount
         }
     },
     methods: {
         submitHandler: function() {
             
-            console.log(this.date_el.value, this.amount_el.value)
-
+            // TODO Submit values from input fields in same row. 
+            // Get values from current state.payments and use this.rowId to identify the correct payment
+            
         }
-    },
-    mounted: function() {
-        this.date_el = document.getElementById(`field-date-${ this.rowId }`)
-        this.amount_el = document.getElementById(`field-amount-${ this.rowId }`)
     }
 }
 </script>

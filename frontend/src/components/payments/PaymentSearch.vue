@@ -111,6 +111,8 @@
     import DataGrid from '../datagrid/DataGrid.vue'
 
     import SaveButton from './datagrid-components/SaveButton.vue'
+    import AmountInput from './datagrid-components/AmountInput.vue'
+    import DateInput from './datagrid-components/DateInput.vue'
 
     export default {
         
@@ -118,7 +120,9 @@
             DataGrid,
             PaymentModal,
             ListPicker,
-            SaveButton
+            SaveButton,
+            AmountInput,
+            DateInput
         },
         mixins: [
             CaseFilters, 
@@ -178,28 +182,29 @@
                         display_func: this.displayCprAccount
                     },
                     {
-                        key: 'date',
-                        title: 'Planlagt betalingsdato',
-                        display_func: this.displayPlannedPayDate
-                    },
-                    {
                         key: 'amount',
                         title: 'Planlagt beløb',
                         display_func: this.displayPlannedAmount,
                         class: 'right'
                     },
                     {
-                        key: 'paid_date',
-                        title: 'Betalt dato',
-                        display_func: this.displayPayDate
+                        key: 'date',
+                        title: 'Planlagt betalingsdato',
+                        display_func: this.displayPlannedPayDate
                     },
                     {
                         key: 'paid_amount',
                         title: 'Betalt beløb',
-                        display_func: this.displayAmount,
-                        class: 'right'
+                        class: 'right',
+                        display_component: AmountInput
                     },
                     {
+                        key: 'paid_date',
+                        title: 'Betalt dato',
+                        display_component: DateInput
+                    },
+                    {
+                        // TODO Use a display_component instead of display_func - like with paid_amount
                         key: 'note',
                         title: 'Reference',
                         display_func: this.displayNote
