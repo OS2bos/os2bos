@@ -11,7 +11,6 @@ from django.db import migrations, models
 import django.db.models.deletion
 import django.db.models.expressions
 import django.utils.timezone
-import django_revision.revision_field
 import simple_history.models
 import uuid
 
@@ -79,7 +78,7 @@ class Migration(migrations.Migration):
             name='Case',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('revision', django_revision.revision_field.RevisionField(blank=True, editable=False, help_text='System field. Git repository tag:branch:commit.', max_length=75, null=True, verbose_name='Revision')),
+                ('revision', models.CharField(blank=True, editable=False, help_text='System field. Git repository tag:branch:commit.', max_length=75, null=True, verbose_name='Revision')),
                 ('created', models.DateTimeField(blank=True, default=django.utils.timezone.now)),
                 ('modified', models.DateTimeField(blank=True, default=django.utils.timezone.now)),
                 ('user_created', models.CharField(blank=True, help_text='Updated by admin.save_model', max_length=50, verbose_name='user created')),
@@ -246,7 +245,7 @@ class Migration(migrations.Migration):
             name='HistoricalCase',
             fields=[
                 ('id', models.IntegerField(auto_created=True, blank=True, db_index=True, verbose_name='ID')),
-                ('revision', django_revision.revision_field.RevisionField(blank=True, editable=False, help_text='System field. Git repository tag:branch:commit.', max_length=75, null=True, verbose_name='Revision')),
+                ('revision', models.CharField(blank=True, editable=False, help_text='System field. Git repository tag:branch:commit.', max_length=75, null=True, verbose_name='Revision')),
                 ('created', models.DateTimeField(blank=True, default=django.utils.timezone.now)),
                 ('modified', models.DateTimeField(blank=True, default=django.utils.timezone.now)),
                 ('user_created', models.CharField(blank=True, help_text='Updated by admin.save_model', max_length=50, verbose_name='user created')),
@@ -307,7 +306,7 @@ class Migration(migrations.Migration):
             name='Appropriation',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('revision', django_revision.revision_field.RevisionField(blank=True, editable=False, help_text='System field. Git repository tag:branch:commit.', max_length=75, null=True, verbose_name='Revision')),
+                ('revision', models.CharField(blank=True, editable=False, help_text='System field. Git repository tag:branch:commit.', max_length=75, null=True, verbose_name='Revision')),
                 ('created', models.DateTimeField(blank=True, default=django.utils.timezone.now)),
                 ('modified', models.DateTimeField(blank=True, default=django.utils.timezone.now)),
                 ('user_created', models.CharField(blank=True, help_text='Updated by admin.save_model', max_length=50, verbose_name='user created')),
@@ -345,7 +344,7 @@ class Migration(migrations.Migration):
             name='Activity',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('revision', django_revision.revision_field.RevisionField(blank=True, editable=False, help_text='System field. Git repository tag:branch:commit.', max_length=75, null=True, verbose_name='Revision')),
+                ('revision', models.CharField(blank=True, editable=False, help_text='System field. Git repository tag:branch:commit.', max_length=75, null=True, verbose_name='Revision')),
                 ('created', models.DateTimeField(blank=True, default=django.utils.timezone.now)),
                 ('modified', models.DateTimeField(blank=True, default=django.utils.timezone.now)),
                 ('user_created', models.CharField(blank=True, help_text='Updated by admin.save_model', max_length=50, verbose_name='user created')),
