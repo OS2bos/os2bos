@@ -32,6 +32,6 @@ def migrate_to_new_auditmodelmixin(apps, schema_editor):
 
 class Migration(migrations.Migration):
 
-    dependencies = [("core", "0061_auto_20200602_1122")]
+    dependencies = [("core", "0061_auto_20200602_1059")]
 
     operations = [migrations.RunPython(migrate_to_new_auditmodelmixin)]
