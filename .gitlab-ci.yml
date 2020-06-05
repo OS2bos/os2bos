@@ -49,6 +49,7 @@ variables:
   stage: lint
   needs: []
   image: python:3.7
+  resource_group: lint
   tags:
     - docker
 
@@ -88,6 +89,7 @@ Build docs:
   stage: build
   needs: []
   image: python:3.7
+  resource_group: build
   tags:
     - docker
   before_script:
@@ -136,6 +138,7 @@ Build app image:
 
 Unittest:
   <<: *test-default
+  resource_group: test
   script:
     - cd /code/backend &&
       pytest
