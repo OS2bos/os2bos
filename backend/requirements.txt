@@ -9,7 +9,7 @@ edc_utils
 # |
 django-audit-fields
 django-simple-history==2.10.0
-django-filter==2.2.0
+django-filter==2.3.0
 # ^ This is a requirement for "djangorestframework-filters"
 # |
 djangorestframework-filters==1.0.0.dev0
