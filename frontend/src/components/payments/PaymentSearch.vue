@@ -276,51 +276,15 @@
                     this.$store.dispatch('fetchPayments', this.$route.query)
                 }, 300)
             },
-            pay: function() {
-                let data = {
-                    paid_amount: this.p.amount,
-                    paid_date: this.p.date,
-                    note: this.p.note ? this.p.note : '',
-                    paid: true
-                }
-                axios.patch(`/payments/${ this.payment.id }/`, data)
-                .then(res => {
-                    notify('Betaling godkendt', 'success')
-                    this.update()
-                    this.$emit('update')
-                })
-                .catch(err => this.$store.dispatch('parseErrorOutput', err))
-            },
             displayPlannedPayDate: function(payment) {
                 return json2jsDate(payment.date)
             },
-            // displayPayDate: function(payment) {
-            //     if (this.permissionCheck === true && payment.activity__status === 'GRANTED' && payment.is_payable_manually) {
-            //         return `<input ref="row-date-${payment.id}" type="date" id="field-date-${ payment.id }">`
-            //     } else {
-            //         return json2jsDate(payment.paid_date)
-            //     }
-            // },
             displayPlannedAmount: function(payment) {
                 return `${ cost2da(payment.amount) } kr`
             },
-            // displayAmount: function(payment) {
-            //     if (this.permissionCheck === true && payment.activity__status === 'GRANTED' && payment.is_payable_manually) {
-            //         return `<input ref="row-amount-${payment.id}" class="field-amount" type="number" id="field-amount-${ payment.id }" step="0.1" required>`
-            //     } else {
-            //         return `${ cost2da(payment.paid_amount) } kr`
-            //     }  
-            // },
             displayCprAccount: function(payment) {
                 return `<span class="label-header">cpr</span> ${ payment.case__cpr_number } <br>${ payment.account_string }`
             },
-            // displayNote: function(payment) {
-            //     if (this.permissionCheck === true && payment.activity__status === 'GRANTED' && payment.is_payable_manually) {
-            //         return `<input ref="row-note-${payment.id}" class="field-note" type="text" id="field-note-${ payment.id }">`
-            //     } else {
-            //         return payment.note
-            //     }
-            // },
             navToLink: function(path) {
                 this.$router.push(path)
             }
@@ -328,7 +292,6 @@
         created: function() {
             this.update()
         }
-
     }
 
 </script>
