@@ -62,7 +62,6 @@ from core.models import (
     STATUS_GRANTED,
     STATUS_EXPECTED,
     STATUS_DRAFT,
-    Rate,
     SectionEffortStepProxy,
     ActivityDetailsSectionProxy,
 )
