@@ -9,7 +9,7 @@
     <input v-if="permissionCheck === true && isPayableManually" class="field-amount" type="number" v-model="amount">
 
     <span v-else>
-        {{ amount }}
+        {{  displayDigits(amount) }} kr.
     </span>
 </template>
 
@@ -17,6 +17,7 @@
 
 import UserRights from '../../mixins/UserRights.js'
 import IsPayableManually from '../../mixins/IsPayableManually'
+import { cost2da } from '../../filters/Numbers.js'
 
 export default {
     mixins: [ 
@@ -39,6 +40,11 @@ export default {
                 val: new_val
             })
         }
+    },
+    methods: {
+        displayDigits: function(num) {
+            return cost2da(num)
+        },
     },
     created: function() {
         this.amount = this.payments.filter(p => {
