@@ -214,6 +214,7 @@ class TargetGroupForm(forms.ModelForm):
         return choices
 
     required_fields_for_case = forms.MultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple,
         choices=required_fields_for_case_choices(),
         label=_("Påkrævede felter på sag"),
         required=False,
