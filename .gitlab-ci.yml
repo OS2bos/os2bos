@@ -172,6 +172,7 @@ FrontendTest:
       alias: db
     - name: ${IMAGE_SHA}
       alias: bev
+      entrypoint: ['/code/CI/seed-database-entrypoint.sh']
     - name: magentalabs/os2bos-idp-test:2.0.0
       alias: idp
   before_script:
