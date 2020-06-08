@@ -172,7 +172,7 @@ FrontendTest:
       alias: db
     - name: ${IMAGE_SHA}
       alias: bev
-      entrypoint: ['/code/CI/seed-database-entrypoint.sh']
+      entrypoint: ["/code/docker/docker-entrypoint.sh", "./manage.py initialize_database"]
     - name: magentalabs/os2bos-idp-test:2.0.0
       alias: idp
   before_script:
