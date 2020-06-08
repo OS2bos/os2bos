@@ -39,14 +39,11 @@ export default {
                 val: new_val
             })
         }
+    },
+    created: function() {
+        this.amount = this.payments.filter(p => {
+            return p.id === this.rowId
+        })[0].paid_amount
     }
 }
 </script>
-
-<style>
-
-    .field-amount {
-        width: 7rem;
-    }
-
-</style>

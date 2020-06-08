@@ -39,6 +39,11 @@ export default {
                 val: new_val
             })
         }
+    },
+    created: function() {
+        this.date = this.payments.filter(p => {
+            return p.id === this.rowId
+        })[0].paid_date
     }
 }
 </script>

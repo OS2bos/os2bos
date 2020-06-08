@@ -41,14 +41,11 @@ export default {
                 val: new_val
             })
         }
+    },
+    created: function() {
+        this.note = this.payments.filter(p => {
+            return p.id === this.rowId
+        })[0].note
     }
 }
 </script>
-
-<style>
-
-    .field-note {
-        width: 7rem;
-    }
-
-</style>
