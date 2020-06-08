@@ -348,6 +348,7 @@ class RatePerDate(models.Model):
     class Meta:
         verbose_name = _("takst for datoer")
         verbose_name_plural = _("takster for datoer")
+        ordering = ("start_date",)
 
     rate = models.DecimalField(
         max_digits=14, decimal_places=2, verbose_name=_("takst")

@@ -174,7 +174,7 @@ class VariableRateAdminForm(forms.ModelForm):
 
         Set initial value for rate and start_date.
         """
-        super(VariableRateAdminForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         # Find RatePerDate ordered by newest and start_date.
         newest = (
             self.instance.rates_per_date.annotate(
@@ -303,7 +303,7 @@ class TargetGroupForm(forms.ModelForm):
 
         Set initial value for required_fields_for_case.
         """
-        super(TargetGroupForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         # Set initial value as a list
         self.initial[
             "required_fields_for_case"
