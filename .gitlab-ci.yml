@@ -162,7 +162,7 @@ FrontendTest:
     POSTGRES_USER: bev
     POSTGRES_PASSWORD: bev
     BEV_USER_CONFIG_PATH: $CI_PROJECT_DIR/dev-environment/dev-settings.ini
-    SAML_PUBLIC_HOST: http://bev:5000/
+    SAML_PUBLIC_HOST: http://bev:5000
     SIMPLESAMLPHP_BASEURLPATH: http://idp:8080/simplesaml
     SIMPLESAMLPHP_SP_ENTITY_ID: http://bev:5000
     SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE: http://bev:5000/api/saml2_auth/acs/
