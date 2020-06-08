@@ -189,7 +189,8 @@ FrontendTest:
 
 .release-default: &release-default
   stage: release
-  needs: ["Unittest", "FrontendTest"]
+  needs: ['Unittest']
+  #needs: ["Unittest", "FrontendTest"] require also frontendTest to pass
   image: docker:19.03.1
   variables:
     GIT_STRATEGY: none # We do not need the source code
