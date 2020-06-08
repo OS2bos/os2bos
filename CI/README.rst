@@ -1,8 +1,8 @@
 magentalabs/os2bos-idp-test
 ---------------------------
-This dir and Dockerfile only exists because gitlab ci currently dosent have a way
-to either mount og copy in theauthsources.php to the idb service container needed by the fronten tests.
-When this is implemented one way or the other in gitlab we.
+This dir and Dockerfile only exists because Gitlab CI currently Do not have a way
+to either mount or copy in "dev-environment/theauthsources.php" to the IDP service container (needed by the frontend tests).
+
 The image is stored on docker hub at magentalabs/os2bos-idp-test
 The version string reflects the simplesamlphp version
 so magentalabs/os2bos-idp-test-2.0.0 inherits from magentalabs/simplesamlphp:2.0.0.
