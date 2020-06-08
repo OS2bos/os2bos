@@ -13,7 +13,6 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from django.utils.html import escape, mark_safe, format_html_join
-from django.db.models.functions import Greatest
 from django.urls import reverse
 from django import forms
 
