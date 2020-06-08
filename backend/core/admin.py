@@ -200,7 +200,7 @@ class VariableRateAdminForm(forms.ModelForm):
         if (
             rate_start_date
             and rate_end_date
-            and rate_start_date > rate_end_date
+            and not rate_start_date < rate_end_date
         ):
             raise forms.ValidationError(
                 _("Slutdato skal være mindre end startdato")
