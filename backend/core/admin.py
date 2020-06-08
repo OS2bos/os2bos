@@ -13,6 +13,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from django.utils.html import escape, mark_safe, format_html_join
+from django.db.models.functions import Greatest
 from django.urls import reverse
 from django import forms
 
@@ -167,6 +168,28 @@ class VariableRateAdminForm(forms.ModelForm):
     end_date = forms.DateField(
         label=_("Slutdato"), required=False, widget=forms.SelectDateWidget()
     )
+
+    def __init__(self, *args, **kwargs):
+        """__init__ for VariableRateAdminForm.
+
+        Set initial value for rate and start_date.
+        """
+        super(VariableRateAdminForm, self).__init__(*args, **kwargs)
+        # Find RatePerDate ordered by newest and start_date.
+        newest = (
+            self.instance.rates_per_date.annotate(
+                newest_date=Greatest("start_date", "end_date")
+            )
+            .order_by("-newest_date", "-start_date")
+            .first()
+        )
+        # If any object exists set the initial rate and start_date.
+        if newest:
+            if newest.newest_date:
+                self.initial[
+                    "start_date"
+                ] = newest.newest_date + datetime.timedelta(days=1)
+            self.initial["rate"] = newest.rate
 
     def clean(self):
         """Override ModelForm clean."""
