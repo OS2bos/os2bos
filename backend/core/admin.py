@@ -175,21 +175,13 @@ class VariableRateAdminForm(forms.ModelForm):
         Set initial value for rate and start_date.
         """
         super().__init__(*args, **kwargs)
-        # Find RatePerDate ordered by newest and start_date.
-        newest = (
-            self.instance.rates_per_date.annotate(
-                newest_date=Greatest("start_date", "end_date")
-            )
-            .order_by("-newest_date", "-start_date")
-            .first()
-        )
-        # If any object exists set the initial rate and start_date.
-        if newest:
-            if newest.newest_date:
-                self.initial[
-                    "start_date"
-                ] = newest.newest_date + datetime.timedelta(days=1)
-            self.initial["rate"] = newest.rate
+        # Find RatePerDate ordered by start_date.
+        latest = self.instance.rates_per_date.order_by("-start_date").first()
+        # If any object exists set the initial rate, start_date and end_date.
+        if latest:
+            self.initial["start_date"] = latest.start_date
+            self.initial["end_date"] = latest.end_date
+            self.initial["rate"] = latest.rate
 
     def clean(self):
         """Override ModelForm clean."""

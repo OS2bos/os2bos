@@ -327,11 +327,14 @@ class VariableRate(models.Model):
                     if isinstance(interval.upper, date)
                     else None
                 )
+                period_rate_dict = d[
+                    P.closedopen(interval.lower, interval.upper)
+                    or date.today()
+                ]
+                rate = period_rate_dict.values()[0]
+
                 rpd = RatePerDate(
-                    start_date=start,
-                    end_date=end,
-                    rate=d[start or end or date.today()],
-                    main_rate=self,
+                    start_date=start, end_date=end, rate=rate, main_rate=self,
                 )
                 rpd.save()
 
@@ -348,7 +351,7 @@ class RatePerDate(models.Model):
     class Meta:
         verbose_name = _("takst for datoer")
         verbose_name_plural = _("takster for datoer")
-        ordering = ("start_date",)
+        ordering = ("-start_date",)
 
     rate = models.DecimalField(
         max_digits=14, decimal_places=2, verbose_name=_("takst")

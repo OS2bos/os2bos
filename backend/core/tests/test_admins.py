@@ -473,13 +473,11 @@ class RateAdminTestCase(TestCase):
         rate_form_class = rate_admin.get_form(request, rate)
         rate_form = rate_form_class(instance=rate)
 
-        self.assertEqual(
-            rate_form["start_date"].value(),
-            two_days_from_now + timedelta(days=1),
-        )
+        self.assertEqual(rate_form["start_date"].value(), tomorrow)
+        self.assertEqual(rate_form["end_date"].value(), two_days_from_now)
         self.assertEqual(rate_form["rate"].value(), 125)
 
-    def test_init_sets_start_date_today(self):
+    def test_init_sets_start_date_today_on(self):
         request = MockRequest()
         site = AdminSite()
         rate_admin = RateAdmin(Rate, site)
@@ -488,9 +486,24 @@ class RateAdminTestCase(TestCase):
         rate = create_rate()
         create_rate_per_date(rate, rate=125, start_date=None, end_date=None)
         rate_form_class = rate_admin.get_form(request, rate)
-        rate_form = rate_form_class(instance=rate)
+        rate_form = rate_form_class()
 
         self.assertEqual(rate_form["start_date"].value(), today)
+        self.assertEqual(rate_form["end_date"].value(), None)
+        self.assertEqual(rate_form["rate"].value(), None)
+
+    def test_init_sets_start_and_end_existing_on_none(self):
+        request = MockRequest()
+        site = AdminSite()
+        rate_admin = RateAdmin(Rate, site)
+
+        rate = create_rate()
+        create_rate_per_date(rate, rate=125, start_date=None, end_date=None)
+        rate_form_class = rate_admin.get_form(request, rate)
+        rate_form = rate_form_class(instance=rate)
+
+        self.assertEqual(rate_form["start_date"].value(), None)
+        self.assertEqual(rate_form["end_date"].value(), None)
         self.assertEqual(rate_form["rate"].value(), 125)
 
 

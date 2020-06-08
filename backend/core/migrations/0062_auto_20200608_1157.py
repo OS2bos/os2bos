@@ -16,6 +16,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterModelOptions(
             name='rateperdate',
-            options={'ordering': ('start_date',), 'verbose_name': 'takst for datoer', 'verbose_name_plural': 'takster for datoer'},
+            options={'ordering': ('-start_date',), 'verbose_name': 'takst for datoer', 'verbose_name_plural': 'takster for datoer'},
         ),
     ]
