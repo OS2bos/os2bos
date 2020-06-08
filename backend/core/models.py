@@ -473,6 +473,8 @@ class PaymentSchedule(models.Model):
         verbose_name=_("betales d."),
         default=1,
         validators=[MinValueValidator(1), MaxValueValidator(31)],
+        blank=True,
+        null=True,
     )
 
     payment_type = models.CharField(
