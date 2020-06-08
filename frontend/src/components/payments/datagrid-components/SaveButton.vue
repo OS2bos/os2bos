@@ -6,13 +6,14 @@
    - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
 
 <template>
-    <button v-if="permissionCheck === true && isPayableManually" type="button" @click="submitHandler">Gem</button>
+    <button v-if="permissionCheck === true && isPayableManually" type="button" @click="submitHandler()">{{buttonTxt}}</button>
 </template>
 
 <script>
 import axios from '../../http/Http.js'
 import UserRights from '../../mixins/UserRights.js'
 import IsPayableManually from '../../mixins/IsPayableManually'
+import notify from '../../notifications/Notify.js'
 
 export default {
     mixins: [ 
@@ -24,35 +25,35 @@ export default {
     },
     data: function() {
         return {
-            date: null,
-            amount: null
+            buttonTxt: 'Gem'
         }
     },
     computed: {
-        row_data: function() {
-            return this.$store.getters.getPayments
-        },
         disabled: function() {
             // TODO Update this boolean to set the SAVE button disabled when no values are entered
-            return false
-        }
-    },
-    watch: {
-        row_data: function() {
-            let payment = this.row_data.results.filter(p => {
-                return p.id === this.rowId
-            })
-            console.log(payment)
-            this.date = payment.paid_date
-            this.amount = payment.paid_amount
         }
     },
     methods: {
+        update: function() {
+            this.$store.dispatch('fetchPayments', this.$route.query)
+        },
         submitHandler: function() {
-            
-            // TODO Submit values from input fields in same row. 
-            // Get values from current state.payments and use this.rowId to identify the correct payment
-            
+            let payment = this.payments.find(p => {
+                return p.id === this.rowId
+            })
+            let data = {
+                    paid_amount: payment.paid_amount,
+                    paid_date: payment.paid_date,
+                    note: payment.note ? payment.note : '',
+                    paid: true
+            }
+            axios.patch(`/payments/${ this.rowId }/`, data)
+            .then(res => {
+                this.buttonTxt = 'Gemt'
+                notify('Betaling godkendt', 'success')
+                this.update()
+            })
+            .catch(err => this.$store.dispatch('parseErrorOutput', err))
         }
     }
 }
