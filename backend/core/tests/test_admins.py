@@ -45,6 +45,7 @@ from core.tests.testing_utils import (
     create_activity_details,
     create_effort_step,
     create_rate,
+    create_rate_per_date,
 )
 
 User = get_user_model()
@@ -453,6 +454,44 @@ class RateAdminTestCase(TestCase):
             "Slutdato skal være mindre end startdato",
             rate_form.errors["__all__"],
         )
+
+    def test_init_sets_start_date_and_rate(self):
+        request = MockRequest()
+        site = AdminSite()
+        rate_admin = RateAdmin(Rate, site)
+        today = date.today()
+        tomorrow = today + timedelta(days=1)
+        two_days_from_now = tomorrow + timedelta(days=1)
+
+        rate = create_rate()
+        create_rate_per_date(
+            rate, rate=100, start_date=today, end_date=tomorrow
+        )
+        create_rate_per_date(
+            rate, rate=125, start_date=tomorrow, end_date=two_days_from_now
+        )
+        rate_form_class = rate_admin.get_form(request, rate)
+        rate_form = rate_form_class(instance=rate)
+
+        self.assertEqual(
+            rate_form["start_date"].value(),
+            two_days_from_now + timedelta(days=1),
+        )
+        self.assertEqual(rate_form["rate"].value(), 125)
+
+    def test_init_sets_start_date_today(self):
+        request = MockRequest()
+        site = AdminSite()
+        rate_admin = RateAdmin(Rate, site)
+        today = date.today()
+
+        rate = create_rate()
+        create_rate_per_date(rate, rate=125, start_date=None, end_date=None)
+        rate_form_class = rate_admin.get_form(request, rate)
+        rate_form = rate_form_class(instance=rate)
+
+        self.assertEqual(rate_form["start_date"].value(), today)
+        self.assertEqual(rate_form["rate"].value(), 125)
 
 
 class RatePerDateInlineTestCase(TestCase):
