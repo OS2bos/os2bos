@@ -428,6 +428,7 @@ CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
 SBSYS_APPROPRIATION_TEMPLATE = "core/html/appropriation_letter.html"
 SBSYS_XML_TEMPLATE = "core/xml/os2forms.xml"
 
+SAML_PUBLIC_HOST = os.getenv("SAML_PUBLIC_HOST", settings.get("SAML_PUBLIC_HOST"))
 SAML2_AUTH = {
     # Metadata is required, choose either remote url or local
     # file path
