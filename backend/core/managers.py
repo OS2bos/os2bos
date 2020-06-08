@@ -161,6 +161,7 @@ class PaymentScheduleManager(models.Manager):
     def create(self, *args, **kwargs):
         """Create a new PaymentSchedule."""
         from core.models import PaymentSchedule as P
+
         payment_pricing_date = kwargs.pop("payment_pricing_date", None)
         payment_schedule = super().create(*args, **kwargs)
         # TODO: Handle this all correctly

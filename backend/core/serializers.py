@@ -17,6 +17,7 @@ from drf_writable_nested import WritableNestedModelSerializer
 
 from core.models import (
     Case,
+    Price,
     Appropriation,
     Activity,
     RelatedPerson,
@@ -192,12 +193,26 @@ class PaymentSerializer(serializers.ModelSerializer):
         exclude = ("saved_account_string",)
 
 
+class PriceSerializer(serializers.ModelSerializer):
+    """Serializer for the Price model."""
+
+    class Meta:
+        model = Price
+        exclude = "payment_schedule"
+
+    current_amount = serializers.ReadOnlyField(source="amount")
+    amount = serializers.DecimalField(required=False, max_digits=10,
+            decimal_places=2)
+    start_date = serializers.DateField(required=False)
+    end_date = serializers.DateField(required=False)
+
+
 class PaymentScheduleSerializer(WritableNestedModelSerializer):
     """Serializer for the PaymentSchedule model."""
 
     payments = PaymentSerializer(many=True, read_only=True)
+    price = PriceSerializer(many=False)
     account = serializers.ReadOnlyField()
-    payment_pricing_date = serializers.DateField(required=False)
 
     @staticmethod
     def setup_eager_loading(queryset):
