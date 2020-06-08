@@ -6,7 +6,7 @@
    - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
 
 <template>
-    <button v-if="permissionCheck === true && isPayableManually" type="button" @click="submitHandler()">{{buttonTxt}}</button>
+    <button v-if="permissionCheck === true && isPayableManually" type="button" @click="submitHandler()" :disabled="disabled">{{buttonTxt}}</button>
 </template>
 
 <script>
@@ -30,7 +30,14 @@ export default {
     },
     computed: {
         disabled: function() {
-            // TODO Update this boolean to set the SAVE button disabled when no values are entered
+            let payment = this.payments.find(p => {
+                return p.id === this.rowId
+            })
+            if (payment.paid_amount && payment.paid_date) {
+                return false
+            } else {
+                return true
+            }
         }
     },
     methods: {
