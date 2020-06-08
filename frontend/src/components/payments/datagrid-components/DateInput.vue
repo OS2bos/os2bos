@@ -9,7 +9,7 @@
     <input v-if="permissionCheck === true && isPayableManually" type="date" v-model="date">
 
     <span v-else>
-        {{ date }}
+        {{ displayPayDate(date) }}
     </span>
 </template>
 
@@ -17,6 +17,7 @@
 
 import UserRights from '../../mixins/UserRights.js'
 import IsPayableManually from '../../mixins/IsPayableManually'
+import { json2jsDate } from '../../filters/Date.js'
 
 export default {
     mixins: [ 
@@ -38,6 +39,11 @@ export default {
                 prop: 'paid_date', 
                 val: new_val
             })
+        }
+    },
+    methods: {
+        displayPayDate: function(payment) {
+            return json2jsDate(payment)
         }
     },
     created: function() {
