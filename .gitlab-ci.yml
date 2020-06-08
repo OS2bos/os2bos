@@ -183,6 +183,7 @@ FrontendTest:
     when: always
     paths:
       - $CI_PROJECT_DIR/artifacts
+  allow_failure: true
 
 # Release stage
 ###############
