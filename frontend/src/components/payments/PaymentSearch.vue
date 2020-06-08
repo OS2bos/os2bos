@@ -242,7 +242,11 @@
         },
         methods: {
             displayId: function(payment) {
-                return `<a href="/#/activity/${ payment.activity__id }">#${ payment.id } - ${ activityId2name(payment.activity__details__id) }</a>`
+                let str = `<a href="/#/activity/${ payment.activity__id }">#${ payment.id } - ${ activityId2name(payment.activity__details__id) }</a>`
+                if (payment.payment_schedule__fictive) {
+                    str += `<span class="fictive">(Fiktiv)</span>`
+                }
+                return str
             },
             displayReceiver: function(payment) {
                 let str = `<span class="label-header">${ displayPayMethod(payment.payment_method) }</span><br> ${ payment.recipient_name}`
@@ -290,33 +294,33 @@
             displayPlannedPayDate: function(payment) {
                 return json2jsDate(payment.date)
             },
-            displayPayDate: function(payment) {
-                if (this.permissionCheck === true && payment.activity__status === 'GRANTED' && payment.is_payable_manually) {
-                    return `<input ref="row-date-${payment.id}" type="date" id="field-date-${ payment.id }">`
-                } else {
-                    return json2jsDate(payment.paid_date)
-                }
-            },
+            // displayPayDate: function(payment) {
+            //     if (this.permissionCheck === true && payment.activity__status === 'GRANTED' && payment.is_payable_manually) {
+            //         return `<input ref="row-date-${payment.id}" type="date" id="field-date-${ payment.id }">`
+            //     } else {
+            //         return json2jsDate(payment.paid_date)
+            //     }
+            // },
             displayPlannedAmount: function(payment) {
                 return `${ cost2da(payment.amount) } kr`
             },
-            displayAmount: function(payment) {
-                if (this.permissionCheck === true && payment.activity__status === 'GRANTED' && payment.is_payable_manually) {
-                    return `<input ref="row-amount-${payment.id}" class="field-amount" type="number" id="field-amount-${ payment.id }" step="0.1" required>`
-                } else {
-                    return `${ cost2da(payment.paid_amount) } kr`
-                }  
-            },
+            // displayAmount: function(payment) {
+            //     if (this.permissionCheck === true && payment.activity__status === 'GRANTED' && payment.is_payable_manually) {
+            //         return `<input ref="row-amount-${payment.id}" class="field-amount" type="number" id="field-amount-${ payment.id }" step="0.1" required>`
+            //     } else {
+            //         return `${ cost2da(payment.paid_amount) } kr`
+            //     }  
+            // },
             displayCprAccount: function(payment) {
                 return `<span class="label-header">cpr</span> ${ payment.case__cpr_number } <br>${ payment.account_string }`
             },
-            displayNote: function(payment) {
-                if (this.permissionCheck === true && payment.activity__status === 'GRANTED' && payment.is_payable_manually) {
-                    return `<input ref="row-note-${payment.id}" class="field-note" type="text" id="field-note-${ payment.id }">`
-                } else {
-                    return payment.note
-                }
-            },
+            // displayNote: function(payment) {
+            //     if (this.permissionCheck === true && payment.activity__status === 'GRANTED' && payment.is_payable_manually) {
+            //         return `<input ref="row-note-${payment.id}" class="field-note" type="text" id="field-note-${ payment.id }">`
+            //     } else {
+            //         return payment.note
+            //     }
+            // },
             navToLink: function(path) {
                 this.$router.push(path)
             }
@@ -376,6 +380,10 @@
 
     .payment-search .more {
         width: 100%;
+    }
+
+    .payment-search .fictive {
+        padding: 0rem 1.5rem; 
     }
 
 </style>
