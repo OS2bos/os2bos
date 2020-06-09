@@ -72,6 +72,12 @@ const mutations = {
             payment_amount: 0
         }
     },
+    setPaymentEditRowData (state, obj) {
+        let payment_idx = state.payments.results.findIndex(p => {
+            return p.id === obj.idx
+        })
+        Vue.set(state.payments.results[payment_idx], obj.prop, obj.val)
+    },
     setInternalPaymentRecipients (state, internal_payment_recipients) {
         state.internal_payment_recipients = internal_payment_recipients
     }
