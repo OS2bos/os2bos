@@ -15,9 +15,43 @@
                 Bevillingsskrivelse
             </h1>
             <button v-if="permissionCheck === true" @click="show_edit = !show_edit" class="appr-edit-btn">Redigér</button>
+            <button v-if="appr.status === 'DRAFT'" class="appr-delete-btn" @click="preDeleteCheck()">Slet</button>
         </header>
 
         <appropriation-edit :appr-obj="appr" v-if="show_edit" @close="update()" />
+
+        <!-- Delete activity modal -->
+        <div v-if="showModal">
+            <form @submit.prevent="deleteAppr()" class="modal-form">
+                <div class="modal-mask">
+                    <div class="modal-wrapper">
+                        <div class="modal-container">
+
+                            <div class="modal-header">
+                                <slot name="header">
+                                    <h2>Slet</h2>
+                                </slot>
+                            </div>
+
+                            <div class="modal-body">
+                                <slot name="body">
+                                    <p>
+                                        Er du sikker på, at du vil slette denne kladde?
+                                    </p>
+                                </slot>
+                            </div>
+
+                            <div class="modal-footer">
+                                <slot name="footer">
+                                    <button type="button" class="modal-cancel-btn" @click="cancel">Annullér</button>
+                                    <button class="modal-delete-btn" type="submit">Slet</button>
+                                </slot>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
 
         <div class="appr-grid" v-if="cas">
 
@@ -77,6 +111,7 @@
     import { municipalityId2name, districtId2name, sectionId2name, displayStatus, userId2name, approvalId2name } from '../filters/Labels.js'
     import store from '../../store.js'
     import UserRights from '../mixins/UserRights.js'
+    import notify from '../notifications/Notify.js'
 
     export default {
 
@@ -88,7 +123,8 @@
         },
         data: function() {
             return {
-                show_edit: false
+                show_edit: false,
+                showModal: false
             }
         },
         beforeRouteEnter: function(to, from, next) {
@@ -157,7 +193,21 @@
             },
             displayUserName: function(id) {
                 return userId2name(id)
-            }
+            },
+            preDeleteCheck: function() {
+                this.showModal = true
+            },
+            cancel: function() {
+                this.showModal = false
+            },
+            deleteAppr: function() {
+                axios.delete(`/appropriations/${ this.appr.id }/`)
+                .then(res => {
+                    this.$router.push(`/case/${ this.cas.id }`)
+                    notify('Bevillings kladde slettet', 'success')
+                })
+                .catch(err => this.$store.dispatch('parseErrorOutput', err))
+            },
         }
     }
     
@@ -186,6 +236,29 @@
 
     .appropriation .appr-edit-btn {
         margin: 0 1rem;
+    }
+
+    .appropriation .appr-delete-btn,
+    .modal-delete-btn {
+        margin: 0;
+        border-color: var(--danger);
+        color: var(--danger);
+        background-color: transparent;
+    }
+    .modal-delete-btn {
+        float: right;
+        margin-left: 0.5rem;
+    }
+
+    .appropriation .appr-delete-btn:focus,
+    .appropriation .appr-delete-btn:hover,
+    .appropriation .appr-delete-btn:active,
+    .modal-delete-btn:focus,
+    .modal-delete-btn:hover,
+    .modal-delete-btn:active {
+        background-color: var(--danger);
+        color: var(--grey0);
+        border-color: var(--danger);
     }
 
     .appropriation .approval-btn {
