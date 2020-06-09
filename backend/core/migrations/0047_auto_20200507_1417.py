@@ -3,7 +3,6 @@
 import _socket
 from django.db import migrations, models
 import django.utils.timezone
-import django_revision.revision_field
 import django.utils.timezone
 
 
@@ -52,7 +51,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='relatedperson',
             name='revision',
-            field=django_revision.revision_field.RevisionField(blank=True, editable=False, help_text='System field. Git repository tag:branch:commit.', max_length=75, null=True, verbose_name='Revision'),
+            field=models.CharField(blank=True, editable=False, help_text='System field. Git repository tag:branch:commit.', max_length=75, null=True, verbose_name='Revision'),
         ),
         migrations.AddField(
             model_name='relatedperson',
