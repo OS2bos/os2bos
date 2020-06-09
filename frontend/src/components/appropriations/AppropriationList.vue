@@ -49,7 +49,7 @@
     import axios from '../http/Http.js'
     import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
-    import { sectionId2name, displayStatus } from '../filters/Labels.js'
+    import { sectionId2name, displayStatus, activityId2name } from '../filters/Labels.js'
     import UserRights from '../mixins/UserRights.js'
     import DataGrid from '../datagrid/DataGrid.vue'
 
@@ -85,7 +85,7 @@
                         class: 'nowrap'
                     },
                     {
-                        key: 'details__name',
+                        key: 'main_activity__details__id',
                         title: 'Hovedydelse',
                         display_func: this.displayMainAct,
                         class: 'nowrap'
@@ -190,9 +190,7 @@
                 return `§ ${ sectionId2name(appr.section) }`
             },
             displayMainAct: function(appr) {
-                if (appr.main_activity) {
-                    return appr.main_activity.details__name
-                }
+                return `${ activityId2name(appr.main_activity__details__id) }`
             },
             statusLabel: function(appr) {
                 let label = 'DRAFT'
