@@ -316,6 +316,12 @@
         overflow: auto;
     }
 
+    .payment-search-filters {
+        order: 1;
+        background-color: var(--grey1);
+        padding: 0 1.5rem 1rem;
+    }
+
     .payment-search .datagrid {
         table-layout: inherit;
     }
@@ -346,7 +352,7 @@
     }
 
     .payment-search .fictive {
-        padding: 0rem 1.5rem; 
+        padding: 0rem 1.5rem;
     }
 
 </style>
