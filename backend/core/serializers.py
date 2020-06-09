@@ -351,7 +351,7 @@ class BaseAppropriationSerializer(serializers.ModelSerializer):
     case__name = serializers.ReadOnlyField(source="case.name")
     case__sbsys_id = serializers.ReadOnlyField(source="case.sbsys_id")
     main_activity__details__activity_id = serializers.ReadOnlyField(
-        source="main_activity.details.activity_id"
+        source="main_activity.details.activity_id", default=None
     )
 
     num_draft_or_expected_activities = serializers.SerializerMethodField()
