@@ -14,6 +14,7 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from django.utils.html import escape, mark_safe, format_html_join
 from django.urls import reverse
+from django.db.models import F
 from django import forms
 
 from django_audit_fields.admin import ModelAdminAuditFieldsMixin
@@ -175,7 +176,9 @@ class VariableRateAdminForm(forms.ModelForm):
         """
         super().__init__(*args, **kwargs)
         # Find RatePerDate ordered by start_date.
-        latest = self.instance.rates_per_date.order_by("-start_date").first()
+        latest = self.instance.rates_per_date.order_by(
+            F("start_date").asc(nulls_first=True)
+        ).last()
         # If any object exists set the initial rate, start_date and end_date.
         if latest:
             self.initial["start_date"] = latest.start_date
