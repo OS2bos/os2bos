@@ -6,6 +6,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """Customize django-admin interface."""
 
+import datetime
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
@@ -13,6 +14,7 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from django.utils.html import escape, mark_safe, format_html_join
 from django.urls import reverse
+from django.db.models import F
 from django import forms
 
 from django_audit_fields.admin import ModelAdminAuditFieldsMixin
@@ -37,6 +39,8 @@ from core.models import (
     EffortStep,
     TargetGroup,
     Effort,
+    RatePerDate,
+    VariableRate,
     Rate,
     SectionEffortStepProxy,
     ActivityDetailsSectionProxy,
@@ -46,7 +50,6 @@ for klass in (
     PaymentMethodDetails,
     Team,
     SectionInfo,
-    Rate,
 ):
     admin.site.register(klass, admin.ModelAdmin)
 
@@ -134,6 +137,106 @@ class ActivityAdmin(ModelAdminAuditFieldsMixin, admin.ModelAdmin):
     account_number.short_description = _("kontonummer")
 
 
+class RatePerDateInline(ClassificationInline):
+    """RatePerDateInline for VariablerateAdmin."""
+
+    model = RatePerDate
+
+    readonly_fields = ["rate", "start_date", "end_date"]
+    extra = 0
+    can_delete = False
+
+    def has_add_permission(self, request):
+        """Override has_add_permission for RatePerDateInline."""
+        return False
+
+
+class VariableRateAdminForm(forms.ModelForm):
+    """Form for handling the specifics of date dependency."""
+
+    class Meta:
+        model = VariableRate
+        fields = []
+
+    rate = forms.DecimalField(label=_("Takst"))
+    start_date = forms.DateField(
+        label=_("Startdato"),
+        initial=datetime.date.today(),
+        required=False,
+        widget=forms.SelectDateWidget(),
+    )
+    end_date = forms.DateField(
+        label=_("Slutdato"), required=False, widget=forms.SelectDateWidget()
+    )
+
+    def __init__(self, *args, **kwargs):
+        """__init__ for VariableRateAdminForm.
+
+        Set initial value for rate and start_date.
+        """
+        super().__init__(*args, **kwargs)
+        # Find RatePerDate ordered by start_date.
+        latest = self.instance.rates_per_date.order_by(
+            F("start_date").asc(nulls_first=True)
+        ).last()
+        # If any object exists set the initial rate, start_date and end_date.
+        if latest:
+            self.initial["start_date"] = latest.start_date
+            self.initial["end_date"] = latest.end_date
+            self.initial["rate"] = latest.rate
+
+    def clean(self):
+        """Override ModelForm clean."""
+        cleaned_data = super().clean()
+        rate_start_date = cleaned_data.get("start_date")
+        rate_end_date = cleaned_data.get("end_date")
+
+        if (
+            rate_start_date
+            and rate_end_date
+            and not rate_start_date < rate_end_date
+        ):
+            raise forms.ValidationError(
+                _("Slutdato skal være mindre end startdato")
+            )
+        return cleaned_data
+
+
+class VariableRateAdmin(ClassificationAdmin):
+    """ModelAdmin for VariableRate subclasses."""
+
+    inlines = [
+        RatePerDateInline,
+    ]
+    form = VariableRateAdminForm
+
+    def save_model(self, request, obj, form, change):
+        """Override save_model to set rate after model save."""
+        if form.is_valid():
+            super().save_model(request, obj, form, change)
+            obj.set_rate_amount(
+                form.cleaned_data["rate"],
+                form.cleaned_data["start_date"],
+                form.cleaned_data["end_date"],
+            )
+
+
+class RateForm(VariableRateAdminForm):
+    """RateForm for RateAdmin."""
+
+    class Meta:
+        model = Rate
+        fields = "__all__"
+
+
+@admin.register(Rate)
+class RateAdmin(VariableRateAdmin):
+    """ModelAdmin for Rate."""
+
+    list_display = ("name", "description")
+    form = RateForm
+
+
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
     """Dislay read only fields on payment."""
@@ -194,7 +297,7 @@ class TargetGroupForm(forms.ModelForm):
 
         Set initial value for required_fields_for_case.
         """
-        super(TargetGroupForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         # Set initial value as a list
         self.initial[
             "required_fields_for_case"

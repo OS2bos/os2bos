@@ -31,6 +31,9 @@ from core.models import (
     SD,
     EffortStep,
     TargetGroup,
+    VariableRate,
+    Rate,
+    RatePerDate,
 )
 
 
@@ -307,3 +310,23 @@ def create_effort_step(name="Trin 1: Tidlig indsats i almenområdet", number=1):
     effort_step, _ = EffortStep.objects.get_or_create(name=name, number=number)
 
     return effort_step
+
+
+def create_variable_rate():
+    variable_rate, _ = VariableRate.objects.get_or_create()
+    return variable_rate
+
+
+def create_rate(name="Test rate", description="test description"):
+    rate, _ = Rate.objects.get_or_create(name=name, description=description)
+    return rate
+
+
+def create_rate_per_date(main_rate, rate=100, start_date=None, end_date=None):
+    rate_per_date, _ = RatePerDate.objects.get_or_create(
+        main_rate=main_rate,
+        rate=rate,
+        start_date=start_date,
+        end_date=end_date,
+    )
+    return rate_per_date

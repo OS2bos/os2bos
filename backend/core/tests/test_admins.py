@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 
 from django.test import TestCase
 from django.contrib.admin.sites import AdminSite
@@ -14,6 +14,8 @@ from core.models import (
     Section,
     Activity,
     EffortStep,
+    Rate,
+    RatePerDate,
 )
 from core.admin import (
     PaymentAdmin,
@@ -26,6 +28,8 @@ from core.admin import (
     SectionAdmin,
     SectionInfoInline,
     EffortStepAdmin,
+    RateAdmin,
+    RatePerDateInline,
 )
 from core.tests.testing_utils import (
     AuthenticatedTestCase,
@@ -40,6 +44,8 @@ from core.tests.testing_utils import (
     create_section,
     create_activity_details,
     create_effort_step,
+    create_rate,
+    create_rate_per_date,
 )
 
 User = get_user_model()
@@ -386,6 +392,134 @@ class TestEffortStepAdmin(TestCase):
             f'<div><a href="/api/admin/core/section/{section.id}/'
             f'change/">ABL-105-2 - </a></div>',
         )
+
+
+class RateAdminTestCase(TestCase):
+    def test_save_model_success(self):
+        rate = create_rate()
+
+        request = MockRequest()
+        site = AdminSite()
+        rate_admin = RateAdmin(Rate, site)
+
+        self.assertEqual(rate.rates_per_date.count(), 0)
+
+        rate_form_class = rate_admin.get_form(request, rate)
+        rate_form = rate_form_class(
+            {"name": rate.name, "rate": 100}, instance=rate
+        )
+        rate_admin.save_model(request, rate, rate_form, True)
+
+        self.assertEqual(rate.rates_per_date.count(), 1)
+
+    def test_save_model_invalid_form(self):
+        rate = create_rate()
+
+        request = MockRequest()
+        site = AdminSite()
+        rate_admin = RateAdmin(Rate, site)
+
+        self.assertEqual(rate.rates_per_date.count(), 0)
+
+        rate_form_class = rate_admin.get_form(request, rate)
+        rate_form = rate_form_class({"name": rate.name}, instance=rate)
+        rate_admin.save_model(request, rate, rate_form, True)
+
+        self.assertEqual(rate.rates_per_date.count(), 0)
+
+    def test_start_after_end_error(self):
+        rate = create_rate()
+
+        request = MockRequest()
+        site = AdminSite()
+        rate_admin = RateAdmin(Rate, site)
+
+        self.assertEqual(rate.rates_per_date.count(), 0)
+
+        start_date = date.today()
+        end_date = date.today() - timedelta(days=1)
+
+        rate_form_class = rate_admin.get_form(request, rate)
+        form_data = {
+            "name": rate.name,
+            "rate": 100,
+            "start_date": start_date,
+            "end_date": end_date,
+        }
+        rate_form = rate_form_class(form_data, instance=rate)
+        is_valid = rate_form.is_valid()
+
+        self.assertFalse(is_valid)
+        self.assertIn(
+            "Slutdato skal være mindre end startdato",
+            rate_form.errors["__all__"],
+        )
+
+    def test_init_sets_start_date_and_rate(self):
+        request = MockRequest()
+        site = AdminSite()
+        rate_admin = RateAdmin(Rate, site)
+        today = date.today()
+        tomorrow = today + timedelta(days=1)
+        two_days_from_now = tomorrow + timedelta(days=1)
+
+        rate = create_rate()
+        create_rate_per_date(
+            rate, rate=100, start_date=today, end_date=tomorrow
+        )
+        create_rate_per_date(
+            rate, rate=125, start_date=tomorrow, end_date=two_days_from_now
+        )
+        rate_form_class = rate_admin.get_form(request, rate)
+        rate_form = rate_form_class(instance=rate)
+
+        self.assertEqual(rate_form["start_date"].value(), tomorrow)
+        self.assertEqual(rate_form["end_date"].value(), two_days_from_now)
+        self.assertEqual(rate_form["rate"].value(), 125)
+
+    def test_init_sets_start_date_today_on(self):
+        request = MockRequest()
+        site = AdminSite()
+        rate_admin = RateAdmin(Rate, site)
+        today = date.today()
+
+        rate = create_rate()
+        create_rate_per_date(rate, rate=125, start_date=None, end_date=None)
+        rate_form_class = rate_admin.get_form(request, rate)
+        rate_form = rate_form_class()
+
+        self.assertEqual(rate_form["start_date"].value(), today)
+        self.assertEqual(rate_form["end_date"].value(), None)
+        self.assertEqual(rate_form["rate"].value(), None)
+
+    def test_init_sets_start_and_end_existing_on_none(self):
+        request = MockRequest()
+        site = AdminSite()
+        rate_admin = RateAdmin(Rate, site)
+
+        rate = create_rate()
+        create_rate_per_date(rate, rate=125, start_date=None, end_date=None)
+        rate_form_class = rate_admin.get_form(request, rate)
+        rate_form = rate_form_class(instance=rate)
+
+        self.assertEqual(rate_form["start_date"].value(), None)
+        self.assertEqual(rate_form["end_date"].value(), None)
+        self.assertEqual(rate_form["rate"].value(), 125)
+
+
+class RatePerDateInlineTestCase(TestCase):
+    def test_has_add_permissions_false(self):
+        site = AdminSite()
+        rate_per_date_inline = RatePerDateInline(RatePerDate, site)
+        request = MockRequest()
+
+        self.assertFalse(rate_per_date_inline.has_add_permission(request))
+
+    def test_can_delete_false(self):
+        site = AdminSite()
+        rate_per_date_inline = RatePerDateInline(RatePerDate, site)
+
+        self.assertFalse(rate_per_date_inline.can_delete)
 
 
 class TestClassificationAdmin(TestCase):
