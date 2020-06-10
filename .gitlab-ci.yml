@@ -292,8 +292,8 @@ Deploy test:
     GIT_STRATEGY: none
     PILLAR_OVERRIDE: "{\"OS2BOS_APPLICATION_DOCKER_IMAGE\":\"${IMAGE_SHA}\"}"
   script:
-    - echo deploying ${IMAGE_SHA}
-    - pepper --client runner --fail-any state.orchestrate ${DEPLOYMENT_NAMESPACE} pillar=$PILLAR_OVERRIDE
+    - echo deploying ${PILLAR_OVERRIDE}
+    - pepper --client runner --fail-any state.orchestrate ${DEPLOYMENT_NAMESPACE} pillar=$(echo $PILLAR_OVERRIDE)
   environment:
     name: test
     url: https://cburdev.magenta.dk
