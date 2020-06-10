@@ -13,9 +13,7 @@
     },
     isPayableManually: function() {
       let pay = this.payments.filter(pay => pay.id === this.rowId)
-      for (let p in pay) {
-          return pay[p].activity__status === 'GRANTED' && pay[p].is_payable_manually && pay[p].paid === false
-      }
+      return pay[0].activity__status === 'GRANTED' && pay[0].is_payable_manually && pay[0].paid === false
     }
   }
 }
