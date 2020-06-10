@@ -18,6 +18,7 @@ from drf_writable_nested import WritableNestedModelSerializer
 from core.models import (
     Case,
     Price,
+    RatePerDate,
     Appropriation,
     Activity,
     RelatedPerson,
@@ -193,26 +194,58 @@ class PaymentSerializer(serializers.ModelSerializer):
         exclude = ("saved_account_string",)
 
 
+class RatePerDateSerializer(serializers.ModelSerializer):
+    """Serializer for the RatePerDate model."""
+
+    class Meta:
+        model = RatePerDate
+        fields = (
+            "rate",
+            "start_date",
+            "end_date",
+        )
+
+
 class PriceSerializer(serializers.ModelSerializer):
     """Serializer for the Price model."""
+
+    rates_per_date = RatePerDateSerializer(many=True, read_only=True)
 
     class Meta:
         model = Price
         exclude = ("payment_schedule",)
 
     current_amount = serializers.ReadOnlyField(source="amount")
-    amount = serializers.DecimalField(
-        required=False, max_digits=10, decimal_places=2
-    )
+    amount = serializers.DecimalField(max_digits=10, decimal_places=2)
     start_date = serializers.DateField(required=False)
     end_date = serializers.DateField(required=False)
+
+    def create(self, validated_data):
+        """Set rate amount on Price."""
+        instance = super().create(validated_data)
+        instance.set_rate_amount(
+            amount=validated_data["amount"],
+            start_date=validated_data["start_date"],
+            end_date=validated_data["end_date"],
+        )
+        return instance
+
+    def update(self, instance, validated_data):
+        """Update rate amount on Price for dates."""
+        instance = super().update(instance, validated_data)
+        instance.set_rate_amount(
+            amount=validated_data["amount"],
+            start_date=validated_data["start_date"],
+            end_date=validated_data["end_date"],
+        )
+        return instance
 
 
 class PaymentScheduleSerializer(WritableNestedModelSerializer):
     """Serializer for the PaymentSchedule model."""
 
     payments = PaymentSerializer(many=True, read_only=True)
-    price = PriceSerializer(many=False)
+    price = PriceSerializer(required=False)
     account = serializers.ReadOnlyField()
 
     @staticmethod

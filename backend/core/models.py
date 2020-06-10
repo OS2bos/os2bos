@@ -507,7 +507,11 @@ class PaymentSchedule(models.Model):
         validators=[MinValueValidator(Decimal("0.00"))],
     )
     payment_amount = models.DecimalField(
-        max_digits=14, decimal_places=2, verbose_name=_("beløb")
+        max_digits=14,
+        decimal_places=2,
+        verbose_name=_("beløb"),
+        null=True,
+        blank=True,
     )
     fictive = models.BooleanField(default=False, verbose_name=_("fiktiv"))
     payment_id = models.PositiveIntegerField(

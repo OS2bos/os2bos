@@ -22,6 +22,7 @@ from core.models import (
     Case,
     Appropriation,
     Activity,
+    Price,
     PaymentSchedule,
     Payment,
     Municipality,
@@ -49,6 +50,7 @@ from core.serializers import (
     ListAppropriationSerializer,
     AppropriationSerializer,
     ActivitySerializer,
+    PriceSerializer,
     PaymentScheduleSerializer,
     PaymentSerializer,
     RelatedPersonSerializer,
@@ -265,6 +267,13 @@ class PaymentMethodDetailsViewSet(AuditViewSet):
 
     queryset = PaymentMethodDetails.objects.all()
     serializer_class = PaymentMethodDetailsSerializer
+
+
+class PriceViewset(AuditViewSet):
+    """Expose Price objects in REST API."""
+
+    queryset = Price.objects.all()
+    serializer_class = PriceSerializer
 
 
 class PaymentScheduleViewSet(AuditViewSet):
