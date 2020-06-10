@@ -15,7 +15,7 @@
                 Bevillingsskrivelse
             </h1>
             <button v-if="permissionCheck === true" @click="show_edit = !show_edit" class="appr-edit-btn">Redigér</button>
-            <button v-if="appr.status === 'DRAFT'" class="appr-delete-btn" @click="preDeleteCheck()">Slet</button>
+            <button v-if="appr.num_activities === 0" class="appr-delete-btn" @click="preDeleteCheck()">Slet</button>
         </header>
 
         <appropriation-edit :appr-obj="appr" v-if="show_edit" @close="update()" />
@@ -36,7 +36,7 @@
                             <div class="modal-body">
                                 <slot name="body">
                                     <p>
-                                        Er du sikker på, at du vil slette denne kladde?
+                                        Er du sikker på, at du vil slette denne bevillingsskrivelse?
                                     </p>
                                 </slot>
                             </div>
@@ -204,7 +204,7 @@
                 axios.delete(`/appropriations/${ this.appr.id }/`)
                 .then(res => {
                     this.$router.push(`/case/${ this.cas.id }`)
-                    notify('Bevillings kladde slettet', 'success')
+                    notify('Bevillingsskrivelse slettet', 'success')
                 })
                 .catch(err => this.$store.dispatch('parseErrorOutput', err))
             },
@@ -239,7 +239,7 @@
     }
 
     .appropriation .appr-delete-btn,
-    .modal-delete-btn {
+    .appropriation .modal-delete-btn {
         margin: 0;
         border-color: var(--danger);
         color: var(--danger);

@@ -373,7 +373,7 @@ export default {
     }
 
     .activity .act-delete-btn,
-    .modal-delete-btn {
+    .activity .modal-delete-btn {
         margin: 0;
         border-color: var(--danger);
         color: var(--danger);
