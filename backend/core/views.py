@@ -77,7 +77,11 @@ from core.filters import (
 )
 from core.utils import get_person_info
 
-from core.mixins import AuditMixin, ClassificationViewSetMixin
+from core.mixins import (
+    AuditMixin,
+    ClassificationViewSetMixin,
+    AuditModelViewSetMixin,
+)
 
 from core.authentication import CsrfExemptSessionAuthentication
 
@@ -104,7 +108,7 @@ class ReadOnlyViewset(viewsets.ReadOnlyModelViewSet):
     permission_classes = (IsUserAllowed,)
 
 
-class CaseViewSet(AuditViewSet):
+class CaseViewSet(AuditModelViewSetMixin, AuditViewSet):
     """Viewset exposing Case in the REST API.
 
     Note the custom actions ``history`` and ``change_case_worker``.
@@ -118,7 +122,11 @@ class CaseViewSet(AuditViewSet):
         """Create new case - customized to set team from user."""
         current_user = self.request.user
         team = current_user.team
-        serializer.save(case_worker=current_user, team=team)
+        serializer.save(
+            case_worker=current_user,
+            user_created=current_user.username,
+            team=team,
+        )
 
     @action(detail=True, methods=["get"])
     def history(self, request, pk=None):
@@ -163,7 +171,7 @@ class CaseViewSet(AuditViewSet):
         return Response(CaseSerializer(cases, many=True).data)
 
 
-class AppropriationViewSet(AuditViewSet):
+class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
     """Expose appropriations in REST API.
 
     Note the custom action ``grant`` for approving an appropriation and
@@ -214,7 +222,7 @@ class AppropriationViewSet(AuditViewSet):
         return response
 
 
-class ActivityViewSet(AuditViewSet):
+class ActivityViewSet(AuditModelViewSetMixin, AuditViewSet):
     """Expose activities in REST API."""
 
     serializer_class = ActivitySerializer
@@ -285,7 +293,7 @@ class PaymentViewSet(AuditViewSet):
     filterset_fields = "__all__"
 
 
-class RelatedPersonViewSet(AuditViewSet):
+class RelatedPersonViewSet(AuditModelViewSetMixin, AuditViewSet):
     """Expose related persons - typically family relations - in REST API."""
 
     queryset = RelatedPerson.objects.all()

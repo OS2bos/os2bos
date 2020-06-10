@@ -17,7 +17,6 @@ from django.urls import reverse
 from django.db.models import F
 from django import forms
 
-from django_audit_fields.admin import ModelAdminAuditFieldsMixin
 
 from core.models import (
     Municipality,
@@ -111,21 +110,21 @@ class ClassificationAdmin(admin.ModelAdmin):
 
 
 @admin.register(Case)
-class CaseAdmin(ModelAdminAuditFieldsMixin, admin.ModelAdmin):
+class CaseAdmin(admin.ModelAdmin):
     """ModelAdmin for Case."""
 
     pass
 
 
 @admin.register(Appropriation)
-class AppropriationAdmin(ModelAdminAuditFieldsMixin, admin.ModelAdmin):
+class AppropriationAdmin(admin.ModelAdmin):
     """ModelAdmin for Appropriation."""
 
     pass
 
 
 @admin.register(Activity)
-class ActivityAdmin(ModelAdminAuditFieldsMixin, admin.ModelAdmin):
+class ActivityAdmin(admin.ModelAdmin):
     """ModelAdmin for Activity."""
 
     readonly_fields = ("account_number",)
@@ -538,7 +537,7 @@ class ServiceProviderAdmin(ClassificationAdmin):
 
 
 @admin.register(RelatedPerson)
-class RelatedPersonAdmin(ModelAdminAuditFieldsMixin, admin.ModelAdmin):
+class RelatedPersonAdmin(admin.ModelAdmin):
     """ModelAdmin for RelatedPerson."""
 
     pass
