@@ -42,6 +42,7 @@ variables:
   IMAGE_LATEST: ${IMAGE}:latest
 
 
+
 # Lint stage
 #############
 
@@ -206,7 +207,6 @@ FrontendTest:
     - echo ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
     - docker pull ${IMAGE_SHA}
 
-
 Release dev:
   <<: *release-default
   only:
@@ -276,6 +276,27 @@ Deploy dev:
   environment:
     name: develop
     url: https://cburtest.magenta.dk
+
+Deploy test:
+  <<: *deploy-default
+  needs: ["Unittest"]
+  except:
+    refs:
+      - master
+      - develop
+  when: manual
+  variables:
+    DEPLOYMENT_NAMESPACE: cbur.magenta.dev
+    SALTAPI_URL: https://ctrldev1.magenta-aps.dk/api/
+    SALTAPI_EAUTH: file
+    GIT_STRATEGY: none
+    PILLAR_OVERRIDE: "{\"OS2BOS_APPLICATION_DOCKER_IMAGE\":\"${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}\"}"
+  script:
+    - echo deploying ${PILLAR_OVERRIDE}
+    - pepper --client runner --fail-any state.orchestrate ${DEPLOYMENT_NAMESPACE} pillar=$(echo $PILLAR_OVERRIDE)
+  environment:
+    name: test
+    url: https://cburdev.magenta.dk
 
 .deploy-rc:
   <<: *deploy-default
