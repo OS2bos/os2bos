@@ -290,7 +290,7 @@ Deploy test:
     SALTAPI_URL: https://ctrldev1.magenta-aps.dk/api/
     SALTAPI_EAUTH: file
     GIT_STRATEGY: none
-    PILLAR_OVERRIDE: {"OS2BOS_APPLICATION_DOCKER_IMAGE":"${IMAGE_SHA}"}
+    PILLAR_OVERRIDE: "{\"OS2BOS_APPLICATION_DOCKER_IMAGE\":\"${IMAGE_SHA}\"}"
   script:
     - echo deploying ${IMAGE_SHA}
     - pepper --client runner --fail-any state.orchestrate ${DEPLOYMENT_NAMESPACE} pillar=$PILLAR_OVERRIDE
