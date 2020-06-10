@@ -20,7 +20,7 @@
             </div>
         </header>
 
-        <fieldset style="text-align: right; padding: 0 1.5rem; margin: 0;">
+        <fieldset v-if="!no_acts" style="text-align: right; padding: 0 1.5rem; margin: 0;">
             <label for="act-cost-toggle" style="margin: 0 .5rem 0 0; display: inline-block; font-weight: bold;">Vis udgifter</label>
             <select id="act-cost-toggle" class="selected-btn" v-model="selectedValue" style="margin: 0; display: inline-block;">
                 <option value="1">i år</option>
