@@ -15,7 +15,8 @@
                 <slot name="datagrid-header"></slot>
             </div>
 
-            <form class="datagrid-filter" @submit.prevent>
+            <!-- Disable filter -->
+            <!-- <form class="datagrid-filter" @submit.prevent>
                 <label :for="`filter-field-${ componentId }`" title="Find i liste"></label>
                 <input type="search"
                     name="query"
@@ -23,7 +24,7 @@
                     :id="`filter-field-${ componentId }`"
                     placeholder="Find i liste ..."
                     :disabled="dataList.length < 1 ? true : false">
-            </form>
+            </form> -->
 
         </header>
     
