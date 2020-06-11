@@ -1,54 +1,125 @@
 import { Selector } from 'testcafe'
-import { axe, axeOptions } from '../utils/axe.js'
+import { axe } from '../utils/axe.js'
+import { useSelectBox } from './utils.js'
+
+async function editActivity(t, act_data) {
+    await activityFormInput(t, act_data)
+}
 
 async function createActivity(t, act_data) {
+    await t.click(Selector('.activities-create-btn'))
+    await activityFormInput(t, act_data)
+}
 
-    if (act_data.expected_type === 'adjustment') {
-        await t.click(Selector('.act-edit-btn'))
-    } else {
-        await t.click(Selector('.activities-create-btn'))
+async function activityFormInput(t, act_data) {
+
+    /*
+    Example act_data
+    act_data: {
+        status: 'DRAFT',
+        fictive: false,
+        details__name: null,
+        note: 'This is a nice little note',
+        payment_type: 'RUNNING_PAYMENT',
+        start_date: null,
+        end_date: null,
+        payment_frequency: 'MONTHLY',
+        pay_day_of_month: 1,
+        amount: '100.00',
+        recipient_type: 'COMPANY',
+        recipient_id: '12341234',
+        recipient_name: 'CompanyName & Co',
+        payment_method: 'INVOICE'
     }
+    */
 
-    if (act_data.expected_type === 'expectation') {
+    if (act_data.status === 'EXPECTED') {
         await t.click(Selector('label').withAttribute('for', 'status'))
     }
-
-    await axe(t, null, axeOptions)
-
-    if (act_data.type === 1) {
-        await t
-            .click('#fieldSelectAct')
-            .click(Selector('#fieldSelectAct option').nth(act_data.type))
+    if (act_data.fictive) {
+        await t.click(Selector('label').withAttribute('for', 'pay-fictional'))
     }
-
-    await t
-        .typeText('#pay-date-start', act_data.start)
-
-    if (act_data.end) {
-        await t.typeText('#pay-date-end', act_data.end)
+    if (act_data.details__name) {
+        await useSelectBox(t, '#fieldSelectAct', act_data.details__name)
+    } else {
+        await useSelectBox(t, '#fieldSelectAct', null)
     }
     if (act_data.note) {
-        await t.typeText('#note', act_data.note)
+        await t.typeText('#note', act_data.note, {replace: true})
     }
-
+    if (act_data.payment_type === 'RUNNING_PAYMENT') {
+        await t.click(Selector('label').withAttribute('for', 'pay-type-running'))
+        if (act_data.start_date) {
+            await t.typeText('#pay-date-start', act_data.start_date, {replace: true})
+        }
+        if (act_data.end_date) {
+            await t.typeText('#pay-date-end', act_data.end_date, {replace: true})
+        }
+    } else {
+        await t.click(Selector('label').withAttribute('for', 'pay-type-single'))
+        if (act_data.start_date) {
+            await t.typeText('#pay-date-single', act_data.start_date, {replace: true})
+        }
+    }
+    
+    switch(act_data.payment_frequency) {
+        case 'MONTHLY':
+            await t.click(Selector('label').withAttribute('for', 'pay_freq_month'))
+            if (act_data.pay_day_of_month) {
+                await useSelectBox(t, '#pay_day_of_month', act_data.pay_day_of_month)
+            }
+            break
+        case 'BIWEEKLY':
+            await t.click(Selector('label').withAttribute('for', 'pay_freq_biweek'))
+            break
+        case 'WEEKLY':
+            await t.click(Selector('label').withAttribute('for', 'pay_freq_week'))
+            break
+        case 'DAILY':
+            await t.click(Selector('label').withAttribute('for', 'pay_freq_day'))
+            break
+        default:
+    }
+    
+    // TODO: INSERT CHOICE OF PAYMENT COST TYPE ("RATE", "FIXED", "PER_UNIT")
+    await t.click(Selector('label').withAttribute('for', 'pay-cost-type-fixed'))
+    
     if (act_data.amount) {
-        await t
-            .click(Selector('label').withAttribute('for', 'pay-cost-type-fixed'))
-            .typeText('#field-amount-1', act_data.amount, {replace: true})
+        await t.typeText('#field-amount-1', act_data.amount, {replace: true})
+    }
+    switch(act_data.recipient_type) {
+        // TODO:  
+        case 'COMPANY':
+            await t.click(Selector('label').withAttribute('for', 'pay-receiver-type-company'))
+            await useSelectBox(t, '#field-select-company', act_data.recipient_name)
+            break
+        case 'PERSON':
+            await t
+                .click(Selector('label').withAttribute('for', 'pay-receiver-type-person'))
+                .typeText('#field-cpr', act_data.recipient_id)
+            switch(act_data.payment_method) {
+                case 'SD':
+                    await t
+                        .click(Selector('label').withAttribute('for', 'pay-method-sd'))
+                        // TODO: Hardcoding payment method details for now
+                        .click(Selector('label').withAttribute('for', 'pay-method-detail-1'))
+                    break
+                case 'CASH':
+                    await t.click(Selector('label').withAttribute('for', 'pay-method-cash'))
+                    break
+                default:
+            }
+            break
+        case 'INTERNAL':
+            // TODO: No internal reciever select box present as of yet
+            await t.click(Selector('label').withAttribute('for', 'pay-receiver-type-internal'))
+            await useSelectBox(t, '#field-select-internal', act_data.recipient_name)    
+            await t.typeText('#pay-receiver-id', act_data.recipient_id)
+            break
+        default:
     }
 
-    await t
-        .click('#pay_freq_month')
-        .click('#pay_day_of_month')
-        .click(Selector('#pay_day_of_month option').nth(1))
-        .click('#pay-receiver-type-company')
-
-    if (act_data.payee_id) {
-        await t.typeText('#pay-receiver-id', act_data.payee_id)
-    }
-    if (act_data.payee_name) {
-        await t.typeText('#pay-receiver-name', act_data.payee_name)
-    }
+    await axe(t)
 
     await t
         .click('#activity-submit')
@@ -95,5 +166,6 @@ export {
     approveActivities,
     createActivity,
     createAppropriation,
-    createCase
+    createCase,
+    editActivity
 }

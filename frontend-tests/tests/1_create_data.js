@@ -1,8 +1,8 @@
 // Testing with Testcafe : https://devexpress.github.io/testcafe/documentation/getting-started/
 
-import { Selector, RequestLogger } from 'testcafe'
+import { Selector } from 'testcafe'
 import { login } from '../utils/logins.js'
-import { createActivity } from '../utils/crud.js'
+import { createActivity, editActivity } from '../utils/crud.js'
 import { axe } from '../utils/axe.js'
 import baseurl from '../utils/url.js'
 
@@ -44,78 +44,77 @@ const testdata = {
         section: 'SEL-54-a Tilknytning af koordinator'
     },
     act1: {
-        type: 1,
-        start: str1mth,
-        end: str10mth,
         note: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+        payment_type: 'RUNNING_PAYMENT',
+        start_date: str1mth,
+        end_date: str10mth,
+        payment_frequency: 'MONTHLY',
+        pay_day_of_month: '2',
         amount: '3095.50',
-        payee_id: '78362883763',
-        payee_name: 'Fiktivt Firma ApS'
+        recipient_type: 'COMPANY',
+        recipient_name: 'Base Camp',
+        recipient_id: '12341234',
+        details__name: 'Kvindekrisecentre'
     },
     act2: {
-        type: 1,
-        start: str2mth,
-        end: str5mth,
-        note: 'En lille note',
+        details__name: 'Tolk',
+        payment_type: 'RUNNING_PAYMENT',
+        start_date: str2mth,
+        end_date: str5mth,
+        payment_frequency: 'MONTHLY',
+        pay_day_of_month: '1',
         amount: '595.95',
-        payee_id: '8923',
-        payee_name: 'Testbevillingscentralen A/S'
+        recipient_type: 'COMPANY',
+        recipient_id: '89238762',
+        recipient_name: 'Testbevillingscentralen A/S',
     },
     act3: {
-        type: 1,
-        start: str5mth,
-        end: str10mth,
         note: 'En anden lille note',
+        payment_type: 'ONE_TIME_PAYMENT',
+        start_date: str5mth,
+        end_date: str10mth,
         amount: '150',
-        payee_id: '8937-2342-2342',
-        payee_name: 'TESTiT A/S'
+        recipient_type: 'PERSON',
+        recipient_id: '777777-7777',
+        payment_method: 'SD'
     },
     act4: {
-        expected_type: 'adjustment',
-        type: 1,
-        start: str2mth,
-        end: str15mth,
-        note: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        amount: '3595.50',
-        payee_id: '78362883763',
-        payee_name: 'Fiktivt Firma ApS'
+        start_date: str2mth,
+        end_date: str15mth,
+        amount: '3595.50'
     },
     act5: {
-        expected_type: 'expectation',
-        type: 1,
-        start: str2mth,
-        end: str5mth,
+        status: 'EXPECTED',
+        payment_type: 'RUNNING_PAYMENT',
+        payment_frequency: 'WEEKLY',
+        start_date: str2mth,
+        end_date: str5mth,
         note: 'En anden lille note',
         amount: '9.95',
-        payee_id: '8937-2342-2342',
-        payee_name: 'TESTiT A/S'
-    },
-    act6: {
-        type: 1,
-        start: str2mth,
-        end: str5mth,
-        note: 'Denne ydelse vil blive slettet',
-        amount: '999.95',
-        payee_id: '8937-2342-2342',
-        payee_name: 'TESTiT A/S'
+        recipient_type: 'INTERNAL',
+        recipient_id: 'xxxx-xxxx',
+        recipient_name: 'Familiehuset'
     },
     act7: {
-        type: 2,
-        start: str2mth,
-        note: 'Bemærk denne lille note',
-        amount: '750',
-        payee_id: '3337-4123-1221',
-        payee_name: 'TEST-DATA A/S'
+        start_date: str2mth,
+        end_date: str5mth,
+        payment_type: 'RUNNING_PAYMENT',
+        payment_frequency: 'BIWEEKLY',
+        note: 'Denne ydelse vil blive slettet',
+        amount: '999.95',
+        recipient_type: 'COMPANY',
+        recipient_id: '89372342',
+        recipient_name: 'TESTiT A/S'
     }
 }
 
-fixture('Create some data') // declare the fixture
+fixture('Login and create some data') // declare the fixture
     .page(baseurl)  // specify the start page
     .beforeEach(async t => { 
-        await login(t) 
+        await login(t)
     })
 
-test('Create Case', async t => {
+test('Create case and appropriation', async t => {
     
     await t.click(Selector('button').withText('+ Tilknyt hovedsag'))
     
@@ -135,22 +134,15 @@ test('Create Case', async t => {
         .click(Selector('input').withAttribute('type', 'submit'))
         .click(Selector('a.header-link'))
         .expect(Selector('.cases table a').withText(testdata.case1.name)).ok()
-    
-    await axe(t)
-})
-
-test('Create Appropriation', async t => {
-
-    await t
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('.appropriation-create-btn'))
-    
-    await axe(t)
-
-    await t
         .typeText('#field-sbsysid', testdata.appr1.name)
         .click('#field-lawref')
         .click(Selector('#field-lawref option').withText(testdata.appr1.section))
+    
+    await axe(t)
+
+    await t
         .click(Selector('input').withAttribute('type', 'submit'))
         .click(Selector('a.header-link'))
         .click(Selector('a').withText(testdata.case1.name))
@@ -173,8 +165,6 @@ test('Create activities', async t => {
         .click(Selector('a.header-link'))
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
-
-    testdata.act1.act_detail = await Selector('.activities table tr.act-list-item a').nth(0).innerText
 
     await t.expect(Selector('.activities table tr.act-list-item a').exists).ok()
     
@@ -205,9 +195,10 @@ test('Add adjustment activities', async t => {
     await t
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector('a').withText(testdata.act1.act_detail))
+        .click(Selector('a').withText(testdata.act1.details__name))
+        .click('.act-edit-btn')
     
-    await createActivity(t, testdata.act4)
+    await editActivity(t, testdata.act4)
 
     await t
         .click(Selector('a.header-link'))
@@ -255,10 +246,7 @@ test('Create activities with one main activity option', async t => {
         .click(Selector('a.header-link'))
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr2.name))
-
-    testdata.act1.act_detail = await Selector('.activities table tr.act-list-item a').nth(0).innerText
-
-    await t.expect(Selector('.activities table tr.act-list-item a').exists).ok()
+        .expect(Selector('.activities table tr.act-list-item a').exists).ok()
     
     await axe(t)
 })
