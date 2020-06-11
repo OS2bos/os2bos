@@ -27,7 +27,7 @@
                 <pay-date-start :editable="false" />
                 <pay-date-end :editable="false" />
             </div>
-
+     
             <payment-frequency :editable="false" />
             
             <div>
@@ -48,12 +48,12 @@
                 <payment-receiver-id :editable="false" />
                 <payment-receiver-name :editable="false" />
             </div>
-            
+               
             <div>
                 <payment-method :editable="false" />
                 <payment-method-details :editable="false" />
             </div>
-
+   
             <note :editable="false" />
         </div>
 

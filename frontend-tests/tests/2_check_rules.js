@@ -4,7 +4,7 @@ import { Selector } from 'testcafe'
 import { login } from '../utils/logins.js'
 import baseurl from '../utils/url.js'
 import { leadZero, randNum, createDate } from '../utils/utils.js'
-import { createCase, createAppropriation, createActivity, approveActivities } from '../utils/crud.js'
+import { createCase, createAppropriation, createActivity, approveActivities, editActivity } from '../utils/crud.js'
 
 const today = new Date(),
     anotherday = new Date(new Date().setDate(today.getDate() + 2)),
@@ -26,16 +26,15 @@ const today = new Date(),
             end_date: `${ anotherday.getFullYear() }-${ leadZero(anotherday.getMonth() + 1) }-${ leadZero(anotherday.getDate()) }`
         },
         act2: {
-            type: 1,
-            start: createDate(3),
+            payment_type: 'RUNNING_PAYMENT',
+            start_date: createDate(3),
+            payment_frequency: 'WEEKLY',
             amount: '12',
-            payee_id: '89837837728',
-            payee_name: 'Fiktiv Virksomhed I/S'
+            recipient_type: 'COMPANY'
         },
         act3: {
-            expected_type: 'adjustment',
-            type: 1,
-            start: createDate(5),
+            status: 'EXPECTED',
+            start_date: createDate(5),
             amount: '15'
         }
 
@@ -71,13 +70,14 @@ test('Check that an activity may only have one modifier', async t => {
     await createActivity(t, testdata.act2)
     await approveActivities(t)
     
-    await t.click(Selector('.act-list-item a'))
-
-    await createActivity(t, testdata.act3)
+    await t
+        .click(Selector('.act-list-item a'))
+        .click('.act-edit-btn')
+    
+    await editActivity(t, testdata.act3)
 
     await t
         .click(Selector('.meta-row'))
         .click(Selector('.sub-row a'))
         .expect(Selector('button').withText('Lav forventet justering').exists).notOk()
-
 })

@@ -12,7 +12,7 @@
     </fieldset>
 
     <p v-else class="field-fictional-noedit" style="margin: 0;">
-        <strong v-if="model === true">>
+        <strong v-if="model === true">
             Dette er en fiktiv betaling
         </strong>
     </p>
