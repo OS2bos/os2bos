@@ -7,7 +7,7 @@ import { leadZero, randNum, createDate } from '../utils/utils.js'
 import { createCase, createAppropriation, createActivity, approveActivities, editActivity } from '../utils/crud.js'
 
 const today = new Date(),
-    anotherday = new Date(new Date().setDate(today.getDate() + 2)),
+    anotherday = new Date(new Date().setDate(today.getDate() + 4)),
     testdata = {
         case1: {
             name: `${ randNum() }.${ randNum() }.${ randNum() }-regel-test`
