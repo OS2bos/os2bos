@@ -135,6 +135,7 @@ def create_payment_schedule(
     recipient_id="0205891234",
     recipient_name="Jens Testersen",
     payment_day_of_month=1,
+    payment_cost_type=PaymentSchedule.FIXED_PRICE,
     fictive=False,
     **kwargs,
 ):

@@ -245,8 +245,14 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
     """Serializer for the PaymentSchedule model."""
 
     payments = PaymentSerializer(many=True, read_only=True)
-    price = PriceSerializer(required=False)
+    price_per_unit = PriceSerializer(
+        required=False, allow_null=True, source="price"
+    )
     account = serializers.ReadOnlyField()
+
+    class Meta:
+        model = PaymentSchedule
+        exclude = ("activity",)
 
     @staticmethod
     def setup_eager_loading(queryset):
@@ -355,10 +361,6 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
                 )
 
         return data
-
-    class Meta:
-        model = PaymentSchedule
-        exclude = ("activity",)
 
 
 class ActivitySerializer(WritableNestedModelSerializer):

@@ -707,6 +707,7 @@ class PaymentScheduleSerializerTestCase(TestCase, BasicTestMixin):
             "recipient_id": "123456789",
             "recipient_name": "Jens Test",
             "payment_method": CASH,
+            "payment_cost_type": PaymentSchedule.FIXED_PRICE,
         }
         serializer = PaymentScheduleSerializer(data=data)
         is_valid = serializer.is_valid()
@@ -749,6 +750,7 @@ class PaymentScheduleSerializerTestCase(TestCase, BasicTestMixin):
             "recipient_id": "123456789",
             "recipient_name": "Jens Test",
             "payment_method": CASH,
+            "payment_cost_type": PaymentSchedule.FIXED_PRICE,
         }
         serializer = PaymentScheduleSerializer(data=data)
         is_valid = serializer.is_valid()
@@ -761,7 +763,9 @@ class PaymentScheduleSerializerTestCase(TestCase, BasicTestMixin):
         )
         data = PaymentScheduleSerializer(payment_schedule).data
         serializer = PaymentScheduleSerializer(data=data)
-        self.assertTrue(serializer.is_valid())
+        valid = serializer.is_valid()
+        print("ERRORS:", serializer.errors)
+        self.assertTrue(valid)
 
     def test_validate_error_payment_and_recipient_not_allowed(self):
         payment_schedule = create_payment_schedule()
@@ -774,6 +778,28 @@ class PaymentScheduleSerializerTestCase(TestCase, BasicTestMixin):
             "ugyldig betalingsmetode for betalingsmodtager",
             serializer.errors["non_field_errors"][0],
         )
+
+    def test_payment_cost_type_per_unit_price(self):
+        # Create a valid running payment, monthly combination.
+        data = {
+            "payment_type": PaymentSchedule.RUNNING_PAYMENT,
+            "payment_frequency": PaymentSchedule.MONTHLY,
+            "payment_units": 1,
+            "payment_cost_type": PaymentSchedule.PER_UNIT_PRICE,
+            "recipient_type": PaymentSchedule.PERSON,
+            "recipient_id": "123456789",
+            "recipient_name": "Jens Test",
+            "payment_method": CASH,
+            "price_per_unit": {
+                "amount": 100,
+                "start_date": "2020-06-09",
+                "end_date": "2030-06-01",
+            },
+        }
+        serializer = PaymentScheduleSerializer(data=data)
+        is_valid = serializer.is_valid()
+
+        self.assertTrue(is_valid)
 
 
 class PaymentSerializerTestCase(TestCase, BasicTestMixin):
