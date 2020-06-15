@@ -307,7 +307,9 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
                     _("Takst skal ikke angives ved fast beløb")
                 )
             # Price data can't be given.
-            if data.get("price") and data["price"].get("amount", None):
+            if data.get("price_per_unit") and data["price_per_unit"].get(
+                "amount", None
+            ):
                 raise serializers.ValidationError(
                     _("Beløb pr. enhed skal ikke angives ved fast takst")
                 )
@@ -338,13 +340,13 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
             # Payment amount can't be given.
             if data.get("payment_amount", None):
                 raise serializers.ValidationError(
-                    _("Beløbsfeltet skal ikke udfyldes ved pris pr.  enhed")
+                    _("Beløbsfeltet skal ikke udfyldes ved pris pr. enhed")
                 )
         elif payment_cost_type == PaymentSchedule.GLOBAL_RATE_PRICE:
             # Units need to be given.
             if not data.get("payment_units", None):
                 raise serializers.ValidationError(
-                    _("Enheder skal angives fast takst")
+                    _("Enheder skal angives ved fast takst")
                 )
             # Rate needs to be given.
             if not data.get("payment_rate", None):
@@ -355,7 +357,9 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
                     _("Beløbsfeltet skal ikke udfyldes ved fast takst")
                 )
             # Price data can't be given.
-            if data.get("price") and data["price"].get("amount", None):
+            if data.get("price_per_unit") and data["price_per_unit"].get(
+                "amount", None
+            ):
                 raise serializers.ValidationError(
                     _("Beløb pr. enhed skal ikke angives ved fast takst")
                 )
