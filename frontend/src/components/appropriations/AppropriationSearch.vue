@@ -148,6 +148,12 @@
                         display_func: this.displaySection,
                         class: 'nowrap'
                     },
+                     {
+                        key: 'main_activity__details__id',
+                        title: 'Hovedydelse',
+                        display_func: this.displayMainAct,
+                        class: 'nowrap'
+                    },
                     {
                         key: 'case__cpr_number',
                         display_func: this.displayCPRName,
@@ -220,8 +226,8 @@
             displaySection: function(d) {
                 return `§ ${ sectionId2name(d.section) }`
             },
-            displayActName: function(id) {
-                return activityId2name(id)
+            displayMainAct: function(appr) {
+                return `${ activityId2name(appr.main_activity__details__id) }`
             },
             displayGranted: function(appr) {
                 return `${ cost2da(appr.total_granted_full_year) } kr.`
