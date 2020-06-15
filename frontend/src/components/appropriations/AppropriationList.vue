@@ -24,7 +24,7 @@
             </div>
 
             <tr slot="datagrid-table-footer" class="summary">
-                <td colspan="8"></td>
+                <td colspan="7"></td>
                 <td class="right">Samlet</td>
                 <td class="right nowrap"><strong>{{ displayDigits(total_granted) }} kr</strong></td>
                 <td class="expected right nowrap">
@@ -97,13 +97,9 @@
                         class: 'nowrap'
                     },
                     {
-                        key: 'num_draft_or_expected_activities',
-                        title: 'Foreløbige',
-                        class: 'nowrap'
-                    },
-                    {
                         key: 'num_activities',
-                        title: 'I alt',
+                        title: 'Ydelser',
+                        display_func: this.displayActs,
                         class: 'nowrap'
                     },
                     {
@@ -205,6 +201,9 @@
             displayMainAct: function(appr) {
                 return `${ activityId2name(appr.main_activity__details__id) }`
             },
+            displayActs: function(id) {
+                return `<dl class="num-acts"><dt>Foreløbige</dt><dd>${ id.num_draft_or_expected_activities }</dd><dt>Aktive i alt</dt><dd>${ id.num_activities }</dd></dl>`
+            },
             statusLabel: function(appr) {
                 let label = 'DRAFT'
                     if (appr.status === 'GRANTED') {
@@ -260,6 +259,15 @@
 
     th.datagrid-td-status {
         padding-left: 1rem;
+    }
+
+    .appropriations .num-acts {
+        display: grid;
+        grid-template-columns: auto auto;
+    }
+
+    .appropriations .num-acts dt {
+        padding-top: 0;
     }
 
 </style>

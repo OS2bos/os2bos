@@ -166,6 +166,12 @@
                         title: 'CPR nr.',
                     },
                     {
+                        key: 'num_activities',
+                        title: 'Ydelser',
+                        display_func: this.displayActs,
+                        class: 'nowrap'
+                    },
+                    {
                         key: 'total_granted_full_year',
                         title: 'Udgift pr år',
                         display_func: this.displayGranted,
@@ -249,7 +255,10 @@
                 if (appr.total_expected_this_year > 0 && appr.total_expected_this_year !== appr.total_granted_this_year) {
                     return `${ cost2da(appr.total_expected_full_year) } kr.`
                 }
-            }
+            },
+            displayActs: function(id) {
+                return `<dl class="num-acts"><dt>Foreløbige</dt><dd>${ id.num_draft_or_expected_activities }</dd><dt>Aktive i alt</dt><dd>${ id.num_activities }</dd></dl>`
+            },
         },
         mounted: function() {
             this.update()
@@ -270,6 +279,15 @@
 
     .datagrid-td-status {
         width: 8rem;
+    }
+
+    .appropriation-search .num-acts {
+        display: grid;
+        grid-template-columns: auto auto;
+    }
+
+    .appropriation-search .num-acts dt {
+        padding-top: 0;
     }
 
 </style>
