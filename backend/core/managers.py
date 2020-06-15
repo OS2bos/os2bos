@@ -116,6 +116,57 @@ class PaymentQuerySet(models.QuerySet):
         )
 
 
+class ActivityQuerySet(models.QuerySet):
+    """QuerySet and Manager for the Activity model."""
+
+    def ongoing(self):
+        """Only include ongoing, i.e. non-expired Activities."""
+        # On activity level we only care about end_date.
+        today = timezone.now().date()
+        return self.filter(end_date__gte=today)
+
+    def expired(self):
+        """Only include expired activities."""
+        # On activity level we only care about end_date.
+        today = timezone.now().date()
+        return self.filter(end_date__lt=today)
+
+
+class AppropriationQuerySet(models.QuerySet):
+    """QuerySet and Manager for the Appropriation model."""
+
+    def ongoing(self):
+        """Only include ongoing, i.e. non-expired Appropriations."""
+        expired_ids = self.expired().values_list("id", flat=True)
+        return self.exclude(id__in=expired_ids)
+
+    def expired(self):
+        """Only include expired Appropriations."""
+        from core.models import MAIN_ACTIVITY
+
+        today = timezone.now().date()
+
+        main_expired_q = Q(
+            activities__end_date__lt=today,
+            activities__activity_type=MAIN_ACTIVITY,
+        )
+        main_q = Q(activities__activity_type=MAIN_ACTIVITY)
+        # exclude appropriations with no activities and filter for activities
+        # where the number of main activities and expired main activities
+        # are the same
+        return (
+            self.exclude(activities__isnull=True)
+            .annotate(
+                expired_main_activities_count=Count(
+                    "activities", filter=main_expired_q
+                )
+            )
+            .annotate(main_activities_count=Count("activities", filter=main_q))
+            .exclude(expired_main_activities_count=0, main_activities_count=0)
+            .filter(expired_main_activities_count=F("main_activities_count"))
+        ).distinct()
+
+
 class CaseQuerySet(models.QuerySet):
     """Distinguish between expired and ongoing cases."""
 
