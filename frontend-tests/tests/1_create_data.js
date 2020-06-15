@@ -43,6 +43,11 @@ const testdata = {
         name: `xx.xx.xx-${ rand }-bevil${ rand }`,
         section: 'SEL-54-a Tilknytning af koordinator'
     },
+    appr3: {
+        id: 3,
+        name: `${ rand }.xx.xx-${ rand }-bevil${ rand }`,
+        section: 'SEL-52-3.4 Døgnophold for hele familien'
+    },
     act1: {
         note: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
         payment_type: 'RUNNING_PAYMENT',
@@ -210,6 +215,25 @@ test('Add adjustment activities', async t => {
     await t
         .expect(Selector('.label-EXPECTED')).ok()
         .expect(Selector('h1').withText('Bevillingsskrivelse').exists).ok()
+    
+    await axe(t)
+})
+
+test('Delete appropriation draft', async t => {
+
+    await t
+        .click(Selector('a').withText(testdata.case1.name))
+        .click(Selector('.appropriation-create-btn'))
+    
+    await axe(t)
+
+    await t
+        .typeText('#field-sbsysid', testdata.appr3.name)
+        .click('#field-lawref')
+        .click(Selector('#field-lawref option').withText(testdata.appr3.section))
+        .click(Selector('input').withAttribute('type', 'submit'))
+        .click(Selector('.appr-delete-btn'))
+        .click(Selector('.modal-delete-btn'))
     
     await axe(t)
 })
