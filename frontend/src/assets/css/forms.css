@@ -36,4 +36,6 @@ legend {
 label {
     display: block;
     margin: .75rem 0 0;
+    font-size: .85em;
+    opacity: .66;
 }

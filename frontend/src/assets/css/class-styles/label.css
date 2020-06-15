@@ -1,0 +1,48 @@
+/* Copyright (C) 2019 Magenta ApS, http://magenta.dk.
+ * Contact: info@magenta.dk.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+.label {
+    padding: .25rem .5rem;
+    border-radius: .25rem;
+    display: inline-block;
+    text-transform: capitalize;
+}
+
+.label-DRAFT {
+    background-color: hsl(0,0%,80%);
+    color: hsl(0,0%,20%);
+}
+
+.label-BUDGETED {
+    background-color: hsl(var(--color3), 90%, 80%);
+    color: hsl(var(--color3), 90%, 20%);
+}
+
+.label-EXPECTED {
+    background-color: hsl(var(--color3), 90%, 80%);
+    color: hsl(var(--color3), 90%, 20%);
+}
+
+.label-GRANTED {
+    background-color: hsl(var(--color2), 100%, 25%);
+    color: var(--grey0);
+}
+
+.label-CLOSED {
+    background-color: hsl(var(--color4), 100%, 60%);
+    color: var(--grey0);
+}
+
+.label-DISCONTINUED {
+    background-color: hsl(var(--color4), 50%, 80%);
+    color: hsl(var(--color4), 100%, 20%);
+}
+
+.mini-label .label {
+    padding: .15rem .5rem;
+    font-size: .85rem;
+}

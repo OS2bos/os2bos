@@ -45,13 +45,13 @@
                         :key="c.key"
                         @click="sortBy(c.key)"
                         :class="`datagrid-filter-th ${ c.class ? c.class : '' }${ sortKey === c.key ? ' active' : '' }`">
-                        <span class="arrow" :class="sortOrders[c.key] > 0 ? 'asc' : 'dsc'"></span>
-                        {{ c.title }}
+                        <span v-if="c.key" class="datagrid-th-arrow" :class="sortOrders[c.key] > 0 ? 'asc' : 'dsc'"></span>
+                        <span class="datagrid-th-title">{{ c.title }}</span>
                     </th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="d in filteredData" :key="d.id">
+                <tr v-for="d in filteredData" :key="d.id" :class="`datagrid-r-${ d.id}`">
                     <td v-if="selectable" style="width: 4.5rem;">
                         <input type="checkbox"
                             :id="`datagrid-select-${ d.id }`"
@@ -63,10 +63,17 @@
                         </label>
                     </td>
                     <template v-for="c in columns">
-                        <td v-html="c.display_func ? c.display_func(d) : d[c.key]" 
+                        <td v-if="c.display_component"
                             :key="c.key" 
                             :class="c.class"
                             :title="d[c.key]">
+                            <virtual-component :component="c.display_component" :row-id="d.id"></virtual-component>
+                        </td>
+                        <td v-else
+                            :key="c.key" 
+                            :class="c.class"
+                            :title="d[c.key]"
+                            v-html="c.display_func ? c.display_func(d) : d[c.key]">
                         </td>
                     </template>
                 </tr>
@@ -84,12 +91,31 @@
 
 <script>
 
+    import Vue from 'vue'
+
+    const VirtualComponent = Vue.component('virtual-component', {
+        render: function (createElement) {
+            return createElement(this.component, {
+                props: {
+                    rowId: this.rowId
+                }
+            })
+        },
+        props: [
+            'rowId',
+            'component'
+        ]
+    })
+
     export default {
 
         props: {
             dataList: [Array, Boolean],
             columns: Array,
             selectable: Boolean
+        },
+        components: {
+            VirtualComponent
         },
         data: function () {
             var sortOrders = {}
@@ -137,8 +163,10 @@
         },
         methods: {
             sortBy: function(key) {
-                this.sortKey = key
-                this.sortOrders[key] = this.sortOrders[key] * -1
+                if (key) {
+                    this.sortKey = key
+                    this.sortOrders[key] = this.sortOrders[key] * -1
+                }
             },
             toggleAll(check) {
                 let checkboxes = document.querySelectorAll('.datagrid-single-checkbox')
@@ -188,39 +216,43 @@
     .datagrid th {
         background-color: var(--grey0);
         color: var(--grey10);
+        opacity: .66;
         cursor: pointer;
         user-select: none;
         vertical-align: middle;
+        font-weight: normal;
+        font-size: .85rem;
     }
 
     .datagrid-filter-th {
         padding-left: 0;
+        white-space: nowrap;
     }
 
     .datagrid th.active {
         color: var(--grey6);
     }
 
-    .datagrid th.active .arrow {
+    .datagrid th.active .datagrid-th-arrow {
         opacity: 1; 
     }
 
-    .datagrid .arrow {
+    .datagrid .datagrid-th-arrow {
         display: inline-block;
         vertical-align: middle;
         width: 0;
         height: 0;
-        margin: 0 .25rem 0 .66rem;
+        margin: 0 .25rem 0 .5rem;
         opacity: 0.5;
     }
 
-    .datagrid .arrow.asc {
+    .datagrid .datagrid-th-arrow.asc {
         border-left: 4px solid transparent;
         border-right: 4px solid transparent;
         border-top: 4px solid var(--grey6);
     }
 
-    .datagrid .arrow.dsc {
+    .datagrid .datagrid-th-arrow.dsc {
         border-left: 4px solid transparent;
         border-right: 4px solid transparent;
         border-bottom: 4px solid var(--grey6);
@@ -250,6 +282,7 @@
     .datagrid td a:hover,
     .datagrid td a:active {
         padding-left: 1.25rem;
+        color: var(--grey10);
     }
 
     .datagrid-header {
