@@ -382,7 +382,7 @@ class Price(VariableRate):
         "PaymentSchedule",
         on_delete=models.CASCADE,
         verbose_name=_("betalingsplan"),
-        related_name="price",
+        related_name="price_per_unit",
         null=True,
         blank=True,
     )

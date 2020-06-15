@@ -245,9 +245,7 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
     """Serializer for the PaymentSchedule model."""
 
     payments = PaymentSerializer(many=True, read_only=True)
-    price_per_unit = PriceSerializer(
-        required=False, allow_null=True, source="price"
-    )
+    price_per_unit = PriceSerializer(required=False, allow_null=True)
     account = serializers.ReadOnlyField()
 
     class Meta:
