@@ -80,18 +80,6 @@ export default {
                     val: 'INTERNAL'
                 })
             }
-
-            // If receiver type changes, reset name and ID
-            if (new_val !== old_val) {
-                this.$store.commit('setPaymentPlanProperty', {
-                    prop: 'recipient_name',
-                    val: null
-                })
-                this.$store.commit('setPaymentPlanProperty', {
-                    prop: 'recipient_id',
-                    val: null
-                })
-            }
         }
     },
     methods: {

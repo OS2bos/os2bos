@@ -94,25 +94,28 @@
 
                 <div>
                     <payment-receiver-type :editable="is_editable" />
-                    <payment-service-provider v-if="is_editable && payment_plan.recipient_type === 'COMPANY'" />
-                    <payment-internal-receiver v-if="payment_plan.recipient_type === 'INTERNAL'" /> 
-                    <cpr-look-up 
-                        v-if="is_editable && payment_plan.recipient_type === 'PERSON'" 
-                        :cpr.sync="payment_plan.recipient_id" 
-                        :name.sync="payment_plan.recipient_name" />
 
-                    <payment-receiver-id 
-                        :editable="is_editable" 
-                        v-if="payment_plan.recipient_type && payment_plan.recipient_type !== 'PERSON'" />
-            
-                    <payment-receiver-name 
-                        :editable="is_editable"
-                        v-if="payment_plan.recipient_type && payment_plan.recipient_type === 'COMPANY'" />
+                    <template v-if="payment_plan.recipient_type === 'INTERNAL'" >
+                        <payment-internal-receiver :editable="is_editable" /> 
+                        <payment-receiver-id :editable="is_editable" />
+                    </template>
 
+                    <template v-if="payment_plan.recipient_type === 'COMPANY'" >
+                        <payment-service-provider v-if="is_editable" />
+                        <payment-receiver-name :editable="is_editable" />
+                        <payment-receiver-id :editable="is_editable"  />
+                    </template>
+
+                    <template v-if="payment_plan.recipient_type === 'PERSON'" >
+                        <cpr-look-up 
+                            v-if="is_editable" 
+                            :cpr.sync="payment_plan.recipient_id" 
+                            :name.sync="payment_plan.recipient_name" />
+                    </template>
                 </div>
 
-                <div>
-                    <payment-method v-if="payment_plan.recipient_type === 'PERSON'" :editable="is_editable" />
+                <div v-if="payment_plan.recipient_type === 'PERSON'">
+                    <payment-method :editable="is_editable" />
                     <payment-method-details v-if="payment_plan.payment_method === 'SD'" :editable="is_editable" />
                 </div>
 
@@ -166,7 +169,7 @@
         <h2 style="padding: 2rem 0 0;">
             Betalinger <span style="opacity: .66;">betalingsnøgle {{ pay.payment_id }}</span>
         </h2>
-        <payment-schedule :p-id="pay.payment_id" v-if="!show_edit" />
+        <payment-schedule :p-id="pay.payment_id" />
         
     </section>
 
@@ -200,7 +203,6 @@ export default {
     data: function() {
         return {
             payments: null,
-            show_edit: false,
             edit_mode: 'edit',
             showModal: false
         }
@@ -262,7 +264,6 @@ export default {
     methods: {
         reload: function() {
             this.showModal = false
-            this.show_edit =  false
             this.$store.dispatch('fetchActivity', this.$route.params.actId)
             .then(() => {
                 this.$store.commit('setActDetail', this.act.details)
