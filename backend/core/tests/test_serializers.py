@@ -963,7 +963,7 @@ class PaymentScheduleSerializerTestCase(TestCase, BasicTestMixin):
             serializer.errors["non_field_errors"][0],
         )
         # Always hit all branches
-        del(data["price_per_unit"])
+        del data["price_per_unit"]
         serializer = PaymentScheduleSerializer(data=data)
         is_valid = serializer.is_valid()
         self.assertTrue(is_valid)

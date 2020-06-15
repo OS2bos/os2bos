@@ -545,8 +545,6 @@ class PaymentSchedule(models.Model):
         on_delete=models.PROTECT,
         verbose_name=_("takst"),
     )
-    # To allow it in serializers - TODO: Get rid of this
-    payment_pricing_date = None
 
     @property
     def next_payment(self):

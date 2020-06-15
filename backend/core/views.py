@@ -269,7 +269,7 @@ class PaymentMethodDetailsViewSet(AuditViewSet):
     serializer_class = PaymentMethodDetailsSerializer
 
 
-class PriceViewset(AuditViewSet):
+class PriceViewSet(AuditViewSet):
     """Expose Price objects in REST API."""
 
     queryset = Price.objects.all()

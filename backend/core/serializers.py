@@ -342,7 +342,9 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
                 raise serializers.ValidationError(
                     _("Beløbsfeltet skal ikke udfyldes ved pris pr. enhed")
                 )
-        elif payment_cost_type == PaymentSchedule.GLOBAL_RATE_PRICE:
+        elif (
+            payment_cost_type == PaymentSchedule.GLOBAL_RATE_PRICE
+        ):  # pragma: no cover
             # Units need to be given.
             if not data.get("payment_units", None):
                 raise serializers.ValidationError(
