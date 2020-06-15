@@ -29,6 +29,10 @@
             <span v-else v-html="activityId2name(act.details)"></span>
             <span class="dim" v-if="act.payment_plan.fictive">(Fiktiv)</span>
         </td>
+        <td class="nowrap">
+            <span v-if="act.note">{{ act.note }}</span>
+            <span v-else>-</span>
+        </td>
         <td>
             {{ act.payment_plan.recipient_name }}
             <span v-if="act.payment_plan.recipient_type === 'COMPANY'">

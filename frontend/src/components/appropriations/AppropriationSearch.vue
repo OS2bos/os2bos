@@ -148,7 +148,13 @@
                         display_func: this.displaySection,
                         class: 'nowrap'
                     },
-                     {
+                    {
+                        key: 'note',
+                        title: 'Supplerende oplysninger',
+                        display_func: this.displayNote,
+                        class: 'nowrap'
+                    },
+                    {
                         key: 'main_activity__details__id',
                         title: 'Hovedydelse',
                         display_func: this.displayMainAct,
@@ -225,6 +231,13 @@
             },
             displaySection: function(d) {
                 return `§ ${ sectionId2name(d.section) }`
+            },
+            displayNote: function(appr) {
+                if (appr.note) {
+                    return `${ appr.note }`
+                } else {
+                    return `-`
+                }
             },
             displayMainAct: function(appr) {
                 return `${ activityId2name(appr.main_activity__details__id) }`

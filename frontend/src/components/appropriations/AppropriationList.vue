@@ -24,7 +24,7 @@
             </div>
 
             <tr slot="datagrid-table-footer" class="summary">
-                <td colspan="7"></td>
+                <td colspan="8"></td>
                 <td class="right">Samlet</td>
                 <td class="right nowrap"><strong>{{ displayDigits(total_granted) }} kr</strong></td>
                 <td class="expected right nowrap">
@@ -82,6 +82,12 @@
                         key: 'section',
                         title: 'Bevillingsparagraf',
                         display_func: this.displaySection,
+                        class: 'nowrap'
+                    },
+                    {
+                        key: 'note',
+                        title: 'Supplerende oplysninger',
+                        display_func: this.displayNote,
                         class: 'nowrap'
                     },
                     {
@@ -177,6 +183,13 @@
             },
             displayDigits: function(num) {
                 return cost2da(num)
+            },
+            displayNote: function(appr) {
+                if (appr.note) {
+                    return `${ appr.note }`
+                } else {
+                    return `-`
+                }
             },
             displayGranted: function(appr) {
                 return `${ cost2da(appr.total_granted_full_year) } kr.`

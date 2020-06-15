@@ -38,6 +38,7 @@
                     </th>
                     <th style="width: 6rem;">Status</th>
                     <th>Ydelse</th>
+                    <th>Supplerende oplysninger</th>
                     <th>Udbetales til</th>
                     <th>Start</th>
                     <th>Slut</th>
@@ -118,7 +119,7 @@
                         @check="checkOneInList(a, ...arguments)" />
                 </template>
                 <tr class="lastrow">
-                    <td colspan="6" style="padding-left: 0;">
+                    <td colspan="7" style="padding-left: 0;">
                         <button v-if="permissionCheck === true && this.user.profile !== 'edit'" @click="initPreApprove" :disabled="approvable_acts.length < 1">✔ Godkend valgte</button>
                     </td>
                     <td class="right"><strong>I alt</strong></td>
