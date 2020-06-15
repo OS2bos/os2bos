@@ -206,7 +206,7 @@ class RatePerDateSerializer(serializers.ModelSerializer):
         )
 
 
-class PriceSerializer(serializers.ModelSerializer):
+class PriceSerializer(WritableNestedModelSerializer):
     """Serializer for the Price model."""
 
     rates_per_date = RatePerDateSerializer(many=True, read_only=True)
@@ -215,28 +215,30 @@ class PriceSerializer(serializers.ModelSerializer):
         model = Price
         exclude = ("payment_schedule",)
 
-    current_amount = serializers.ReadOnlyField(source="amount")
+    current_amount = serializers.ReadOnlyField(source="rate_amount")
     amount = serializers.DecimalField(max_digits=10, decimal_places=2)
     start_date = serializers.DateField(required=False)
     end_date = serializers.DateField(required=False)
 
     def create(self, validated_data):
         """Set rate amount on Price."""
+        amount = validated_data.pop("amount")
+        start_date = validated_data.pop("start_date")
+        end_date = validated_data.pop("end_date")
         instance = super().create(validated_data)
         instance.set_rate_amount(
-            amount=validated_data["amount"],
-            start_date=validated_data["start_date"],
-            end_date=validated_data["end_date"],
+            amount=amount, start_date=start_date, end_date=end_date,
         )
         return instance
 
     def update(self, instance, validated_data):
         """Update rate amount on Price for dates."""
+        amount = validated_data.pop("amount")
+        start_date = validated_data.pop("start_date")
+        end_date = validated_data.pop("end_date")
         instance = super().update(instance, validated_data)
         instance.set_rate_amount(
-            amount=validated_data["amount"],
-            start_date=validated_data["start_date"],
-            end_date=validated_data["end_date"],
+            amount=amount, start_date=start_date, end_date=end_date,
         )
         return instance
 
@@ -322,9 +324,9 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
                 )
             # Price data needs to be given.
             # If not given, start and end date default to None.
-            if not data.get("price", None) or not data["price"].get(
-                "amount", None
-            ):
+            if not data.get("price_per_unit", None) or not data[
+                "price_per_unit"
+            ].get("amount", None):
                 raise serializers.ValidationError(
                     _("Beløb pr. enhed skal angives")
                 )

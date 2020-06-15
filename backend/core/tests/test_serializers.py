@@ -780,7 +780,7 @@ class PaymentScheduleSerializerTestCase(TestCase, BasicTestMixin):
         )
 
     def test_payment_cost_type_per_unit_price(self):
-        # Create a valid running payment, monthly combination.
+        """Create a valid running payment, monthly combination."""
         data = {
             "payment_type": PaymentSchedule.RUNNING_PAYMENT,
             "payment_frequency": PaymentSchedule.MONTHLY,
@@ -800,6 +800,58 @@ class PaymentScheduleSerializerTestCase(TestCase, BasicTestMixin):
         is_valid = serializer.is_valid()
 
         self.assertTrue(is_valid)
+        # Test creation of Price instance.
+        instance = serializer.save()
+        self.assertTrue(instance.price_per_unit is not None)
+        # Test update of Price instance.
+        data["price_per_unit"]["amount"] = 150
+        data["price_per_unit"]["start_date"] = date.today()
+        data["price_per_unit"]["end_date"] = date.today() + timedelta(days=7)
+
+        new_serializer = PaymentScheduleSerializer(data=data)
+        is_valid = new_serializer.is_valid()
+        self.assertTrue(is_valid)
+        new_serializer.save()
+
+        self.assertEqual(instance.price_per_unit.rate_amount, 150)
+
+    def test_validation_errors(self):
+        data = {
+            "payment_type": PaymentSchedule.RUNNING_PAYMENT,
+            "payment_frequency": PaymentSchedule.MONTHLY,
+            "payment_units": 1,
+            "payment_cost_type": PaymentSchedule.FIXED_PRICE,
+            "recipient_type": PaymentSchedule.PERSON,
+            "recipient_id": "123456789",
+            "recipient_name": "Jens Test",
+            "payment_method": CASH,
+            "price_per_unit": {
+                "amount": 100,
+                "start_date": "2020-06-09",
+                "end_date": "2030-06-01",
+            },
+        }
+        serializer = PaymentScheduleSerializer(data=data)
+        is_valid = serializer.is_valid()
+
+        self.assertFalse(is_valid)
+        self.assertEqual(
+            "Beløb skal udfyldes ved fast beløb",
+            serializer.errors["non_field_errors"][0],
+        )
+
+        data["payment_amount"] = 100
+        data["payment_rate"] = 10
+        serializer = PaymentScheduleSerializer(data=data)
+        is_valid = serializer.is_valid()
+        # TODO: Figure out how to create a rate.
+        self.assertFalse(is_valid)
+        """
+        self.assertEqual(
+            "Takst skal ikke angives ved fast beløb",
+            serializer.errors["non_field_errors"][0],
+        )
+        """
 
 
 class PaymentSerializerTestCase(TestCase, BasicTestMixin):
