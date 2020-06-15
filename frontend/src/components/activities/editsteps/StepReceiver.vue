@@ -10,27 +10,29 @@
     <div class="act-create-step">
         <h2>Beløbsmodtager</h2>
         <payment-receiver-type :editable="true" />
+
         <template v-if="payment_plan.recipient_type">
-            <payment-service-provider v-if="payment_plan.recipient_type === 'COMPANY'" />
+
+            <template v-if="payment_plan.recipient_type === 'INTERNAL'">
+                <payment-internal-receiver :editable="true" /> 
+                <payment-receiver-id :editable="true" />
+            </template>
+
+            <template v-if="payment_plan.recipient_type === 'COMPANY'">
+                <payment-service-provider />
+                <payment-receiver-id :editable="true" />
+                <payment-receiver-name :editable="true" />
+            </template>
+
+            <template v-if="payment_plan.recipient_type === 'PERSON'">
+                <cpr-look-up 
+                    :cpr.sync="recipient_id" 
+                    :name.sync="recipient_name" />
+
+                <payment-method :editable="true" />
+                <payment-method-details :editable="true" v-if="payment_plan.payment_method === 'SD'" />
+            </template>
             
-            <cpr-look-up 
-                v-if="payment_plan.recipient_type === 'PERSON'" 
-                :cpr.sync="recipient_id" 
-                :name.sync="recipient_name" />
-
-            <payment-internal-receiver v-if="payment_plan.recipient_type === 'INTERNAL'" /> 
-
-            <payment-receiver-id 
-                :editable="true" 
-                v-if="payment_plan.recipient_type && payment_plan.recipient_type !== 'PERSON'" />
-            
-            <payment-receiver-name 
-                :editable="true"
-                v-if="payment_plan.recipient_type && payment_plan.recipient_type === 'COMPANY'" />
-
-            <payment-method :editable="true" v-if="payment_plan.recipient_type === 'PERSON'" />
-
-            <payment-method-details :editable="true" v-if="payment_plan.payment_method === 'SD'" />
         </template>
     </div>
 

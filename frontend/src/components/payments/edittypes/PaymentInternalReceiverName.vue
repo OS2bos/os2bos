@@ -6,7 +6,7 @@
    - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
 
 <template>
-    <fieldset>
+    <fieldset v-if="editable">
         <label for="field-select-internal" class="required">Navn</label>
 
         <select v-model="model" id="field-select-internal" required>
@@ -17,6 +17,11 @@
 
         <error :err-key="property" />
     </fieldset>
+
+    <dl v-else>
+        <dt>Navn</dt>
+        <dd>{{ model }}</dd>
+    </dl>
 </template>
 
 <script>
@@ -37,6 +42,7 @@ export default {
     },
     created: function() {
         this.property = 'recipient_name'
+        //console.log('created model', this.model)
     }
 }
 </script>
