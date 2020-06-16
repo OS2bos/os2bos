@@ -19,6 +19,9 @@ def migrate_old_prices(apps, schema_editor):
             or payment_schedule.payment_type == "PER_DAY_PAYMENT"
             or payment_schedule.payment_type == "PER_KM_PAYMENT"
         ):
+            # Set the payment_cost_type
+            payment_schedule.payment_cost_type = "PER_UNIT"
+            payment_schedule.save()
             # These payment types should have a Price with a single period.
             price = Price.objects.create(payment_schedule=payment_schedule)
             price.set_rate_amount(
