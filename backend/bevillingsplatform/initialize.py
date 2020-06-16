@@ -31,6 +31,7 @@ def initialize():
     initialize_teams()
     initialize_approval_levels()
     initialize_payment_method_details()
+    initialize_rates()
 
 
 def initialize_municipalities():
@@ -127,3 +128,9 @@ def initialize_teams():
             user = User.objects.get(username=name)
             user.team = team
             user.save()
+
+
+def initialize_rates():
+    """Initialize all the rates and rates per date for Ballerup."""
+    call_command("loaddata", "rates.json", app_label="core")
+    call_command("loaddata", "ratesperdate.json", app_label="core")
