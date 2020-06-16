@@ -6,6 +6,8 @@ def migrate_old_prices(apps, schema_editor):
     Price = apps.get_model("core", "Price")
 
     for payment_schedule in PaymentSchedule.objects.all():
+        # Historical PaymentSchedule model does not have attributes
+        # so we use the hard-coded values of "payment_type".
         if (
             payment_schedule.payment_type == "ONE_TIME_PAYMENT"
             or payment_schedule.payment_type == "RUNNING_PAYMENT"
@@ -19,7 +21,7 @@ def migrate_old_prices(apps, schema_editor):
             or payment_schedule.payment_type == "PER_DAY_PAYMENT"
             or payment_schedule.payment_type == "PER_KM_PAYMENT"
         ):
-            # Set the payment_cost_type
+            # Set the payment_cost_type.
             payment_schedule.payment_cost_type = "PER_UNIT"
             payment_schedule.save()
             # These payment types should have a Price with a single period
