@@ -71,18 +71,20 @@ class CaseSerializer(serializers.ModelSerializer):
     """
 
     expired = serializers.ReadOnlyField()
-    num_appropriations = serializers.SerializerMethodField()
-    num_draft_or_expected_appropriations = serializers.SerializerMethodField()
+    num_ongoing_appropriations = serializers.SerializerMethodField()
+    num_ongoing_draft_or_expected_appropriations = (
+        serializers.SerializerMethodField()
+    )
 
     class Meta:
         model = Case
         fields = "__all__"
 
-    def get_num_appropriations(self, case):
+    def get_num_ongoing_appropriations(self, case):
         """Get number of related ongoing appropriations."""
         return case.appropriations.ongoing().count()
 
-    def get_num_draft_or_expected_appropriations(self, case):
+    def get_num_ongoing_draft_or_expected_appropriations(self, case):
         """Get number of related expected or draft ongoing appropriations."""
         return len(
             [
