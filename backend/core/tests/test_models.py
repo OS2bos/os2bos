@@ -3015,25 +3015,9 @@ class PaymentScheduleTestCase(TestCase):
                 Decimal("100"),
                 Decimal("100"),
             ),
-            (
-                PaymentSchedule.PER_HOUR_PAYMENT,
-                PaymentSchedule.DAILY,
-                Decimal("100"),
-                5,
-                Decimal("100"),
-                Decimal("500"),
-            ),
-            (
-                PaymentSchedule.PER_KM_PAYMENT,
-                PaymentSchedule.DAILY,
-                Decimal("100"),
-                10,
-                Decimal("100"),
-                Decimal("1000"),
-            ),
         ]
     )
-    def test_calculate_per_payment_amount(
+    def test_calculate_per_payment_amount_for_fixed_price(
         self,
         payment_type,
         payment_frequency,
@@ -3048,9 +3032,12 @@ class PaymentScheduleTestCase(TestCase):
             payment_amount=payment_amount,
             payment_units=payment_units,
         )
-
+        today = date.today()
+        end = today + timedelta(days=365)
+        rrule_frequency = payment_schedule.create_rrule(today, until=end)
+        price_date = list(rrule_frequency)[0]
         amount = payment_schedule.calculate_per_payment_amount(
-            vat_factor=vat_factor
+            vat_factor, price_date
         )
 
         self.assertEqual(amount, expected)
@@ -3072,17 +3059,6 @@ class PaymentScheduleTestCase(TestCase):
         with self.assertRaises(ValueError):
             create_payment_schedule(
                 recipient_type=recipient_type, payment_method=payment_method
-            )
-
-    def test_calculate_per_payment_amount_invalid_payment_type(self):
-        payment_schedule = create_payment_schedule(
-            payment_type="ugyldig betalingstype",
-            payment_frequency=PaymentSchedule.DAILY,
-        )
-
-        with self.assertRaises(ValueError):
-            payment_schedule.calculate_per_payment_amount(
-                vat_factor=Decimal("100")
             )
 
     def test_generate_payments(self):
