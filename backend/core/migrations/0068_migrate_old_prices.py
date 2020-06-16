@@ -7,17 +7,17 @@ def migrate_old_prices(apps, schema_editor):
 
     for payment_schedule in PaymentSchedule.objects.all():
         if (
-            payment_schedule.payment_type == PaymentSchedule.ONE_TIME_PAYMENT
-            or payment_schedule.payment_type == PaymentSchedule.RUNNING_PAYMENT
+            payment_schedule.payment_type == "ONE_TIME_PAYMENT"
+            or payment_schedule.payment_type == "RUNNING_PAYMENT"
         ):
             # These payment types are already handled by setting
             # a default payment_cost_type of FIXED_PRICE
             continue
 
         elif (
-            payment_schedule.payment_type == PaymentSchedule.PER_HOUR_PAYMENT
-            or payment_schedule.payment_type == PaymentSchedule.PER_DAY_PAYMENT
-            or payment_schedule.payment_type == PaymentSchedule.PER_KM_PAYMENT
+            payment_schedule.payment_type == "PER_HOUR_PAYMENT"
+            or payment_schedule.payment_type == "PER_DAY_PAYMENT"
+            or payment_schedule.payment_type == "PER_KM_PAYMENT"
         ):
             # These payment types should have a Price with a single period.
             price = Price.objects.create(payment_schedule=payment_schedule)
