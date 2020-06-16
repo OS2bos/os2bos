@@ -131,7 +131,7 @@ def initialize_teams():
 
 
 def initialize_rates():
-    """Initialize the variable rate, rates and rates per date for Ballerup."""
+    """Initialize the variable rates, rates and rates per date for Ballerup."""
     call_command("loaddata", "variablerates.json", app_label="core")
     call_command("loaddata", "rates.json", app_label="core")
     call_command("loaddata", "ratesperdate.json", app_label="core")
