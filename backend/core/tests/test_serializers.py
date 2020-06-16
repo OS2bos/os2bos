@@ -765,7 +765,6 @@ class PaymentScheduleSerializerTestCase(TestCase, BasicTestMixin):
         data = PaymentScheduleSerializer(payment_schedule).data
         serializer = PaymentScheduleSerializer(data=data)
         valid = serializer.is_valid()
-        print("ERRORS:", serializer.errors)
         self.assertTrue(valid)
 
     def test_validate_error_payment_and_recipient_not_allowed(self):
