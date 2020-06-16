@@ -590,6 +590,24 @@ class ActivityQuerySetTestCase(TestCase, BasicTestMixin):
         self.assertNotIn(expired_activity, Activity.objects.all().ongoing())
         self.assertIn(ongoing_activity, Activity.objects.all().ongoing())
 
+    def test_ongoing_no_end_date(self):
+        today = timezone.now().date()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+
+        ongoing_activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=today - timedelta(days=4),
+            end_date=None,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+
+        self.assertIn(ongoing_activity, Activity.objects.all().ongoing())
+
 
 class AppropriationQuerySetTestCase(TestCase, BasicTestMixin):
     @classmethod

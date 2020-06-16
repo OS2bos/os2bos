@@ -123,7 +123,7 @@ class ActivityQuerySet(models.QuerySet):
         """Only include ongoing, i.e. non-expired Activities."""
         # On activity level we only care about end_date.
         today = timezone.now().date()
-        return self.filter(end_date__gte=today)
+        return self.filter(Q(end_date__isnull=True) | Q(end_date__gte=today))
 
     def expired(self):
         """Only include expired activities."""
