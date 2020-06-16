@@ -3,10 +3,20 @@
         "model": "core.rateperdate",
         "pk": 1,
         "fields": {
-            "rate": "32.00",
+            "rate": "145.00",
             "start_date": null,
             "end_date": null,
             "main_rate": 1
+        }
+    },
+    {
+        "model": "core.rateperdate",
+        "pk": 2,
+        "fields": {
+            "rate": "4423.00",
+            "start_date": null,
+            "end_date": null,
+            "main_rate": 2
         }
     },
     {
@@ -15,35 +25,15 @@
         "fields": {
             "rate": "189.00",
             "start_date": null,
-            "end_date": "2018-01-01",
-            "main_rate": 2
-        }
-    },
-    {
-        "model": "core.rateperdate",
-        "pk": 4,
-        "fields": {
-            "rate": "181.00",
-            "start_date": "2018-01-01",
-            "end_date": null,
-            "main_rate": 2
-        }
-    },
-    {
-        "model": "core.rateperdate",
-        "pk": 5,
-        "fields": {
-            "rate": "68.00",
-            "start_date": null,
             "end_date": null,
             "main_rate": 3
         }
     },
     {
         "model": "core.rateperdate",
-        "pk": 6,
+        "pk": 4,
         "fields": {
-            "rate": "136.00",
+            "rate": "202.00",
             "start_date": null,
             "end_date": null,
             "main_rate": 4
@@ -51,9 +41,9 @@
     },
     {
         "model": "core.rateperdate",
-        "pk": 7,
+        "pk": 5,
         "fields": {
-            "rate": "274.00",
+            "rate": "176.00",
             "start_date": null,
             "end_date": null,
             "main_rate": 5
@@ -61,9 +51,9 @@
     },
     {
         "model": "core.rateperdate",
-        "pk": 8,
+        "pk": 6,
         "fields": {
-            "rate": "202.00",
+            "rate": "10999.00",
             "start_date": null,
             "end_date": null,
             "main_rate": 6
@@ -71,9 +61,9 @@
     },
     {
         "model": "core.rateperdate",
-        "pk": 9,
+        "pk": 7,
         "fields": {
-            "rate": "176.00",
+            "rate": "32.00",
             "start_date": null,
             "end_date": null,
             "main_rate": 7
@@ -81,9 +71,9 @@
     },
     {
         "model": "core.rateperdate",
-        "pk": 10,
+        "pk": 8,
         "fields": {
-            "rate": "10999.00",
+            "rate": "68.00",
             "start_date": null,
             "end_date": null,
             "main_rate": 8
@@ -91,9 +81,9 @@
     },
     {
         "model": "core.rateperdate",
-        "pk": 11,
+        "pk": 9,
         "fields": {
-            "rate": "145.00",
+            "rate": "136.00",
             "start_date": null,
             "end_date": null,
             "main_rate": 9
@@ -101,9 +91,9 @@
     },
     {
         "model": "core.rateperdate",
-        "pk": 12,
+        "pk": 10,
         "fields": {
-            "rate": "4423.00",
+            "rate": "274.00",
             "start_date": null,
             "end_date": null,
             "main_rate": 10
@@ -111,9 +101,9 @@
     },
     {
         "model": "core.rateperdate",
-        "pk": 13,
+        "pk": 11,
         "fields": {
-            "rate": "6240.00",
+            "rate": "33.00",
             "start_date": null,
             "end_date": null,
             "main_rate": 11
@@ -121,9 +111,9 @@
     },
     {
         "model": "core.rateperdate",
-        "pk": 14,
+        "pk": 12,
         "fields": {
-            "rate": "116.00",
+            "rate": "1017.00",
             "start_date": null,
             "end_date": null,
             "main_rate": 12
@@ -131,9 +121,9 @@
     },
     {
         "model": "core.rateperdate",
-        "pk": 15,
+        "pk": 13,
         "fields": {
-            "rate": "136.00",
+            "rate": "1180.00",
             "start_date": null,
             "end_date": null,
             "main_rate": 13
@@ -141,9 +131,9 @@
     },
     {
         "model": "core.rateperdate",
-        "pk": 16,
+        "pk": 14,
         "fields": {
-            "rate": "159.00",
+            "rate": "480.00",
             "start_date": null,
             "end_date": null,
             "main_rate": 14
@@ -151,9 +141,9 @@
     },
     {
         "model": "core.rateperdate",
-        "pk": 17,
+        "pk": 15,
         "fields": {
-            "rate": "175.00",
+            "rate": "116.00",
             "start_date": null,
             "end_date": null,
             "main_rate": 15
@@ -161,9 +151,9 @@
     },
     {
         "model": "core.rateperdate",
-        "pk": 18,
+        "pk": 16,
         "fields": {
-            "rate": "10170.00",
+            "rate": "136.00",
             "start_date": null,
             "end_date": null,
             "main_rate": 16
@@ -171,9 +161,9 @@
     },
     {
         "model": "core.rateperdate",
-        "pk": 19,
+        "pk": 17,
         "fields": {
-            "rate": "3914.00",
+            "rate": "159.00",
             "start_date": null,
             "end_date": null,
             "main_rate": 17
@@ -181,9 +171,9 @@
     },
     {
         "model": "core.rateperdate",
-        "pk": 20,
+        "pk": 18,
         "fields": {
-            "rate": "5866.00",
+            "rate": "175.00",
             "start_date": null,
             "end_date": null,
             "main_rate": 18
@@ -191,9 +181,9 @@
     },
     {
         "model": "core.rateperdate",
-        "pk": 21,
+        "pk": 19,
         "fields": {
-            "rate": "900.00",
+            "rate": "6240.00",
             "start_date": null,
             "end_date": null,
             "main_rate": 19
@@ -201,9 +191,9 @@
     },
     {
         "model": "core.rateperdate",
-        "pk": 22,
+        "pk": 20,
         "fields": {
-            "rate": "3249.00",
+            "rate": "10170.00",
             "start_date": null,
             "end_date": null,
             "main_rate": 20
@@ -211,9 +201,9 @@
     },
     {
         "model": "core.rateperdate",
-        "pk": 23,
+        "pk": 21,
         "fields": {
-            "rate": "783.00",
+            "rate": "3914.00",
             "start_date": null,
             "end_date": null,
             "main_rate": 21
@@ -221,9 +211,9 @@
     },
     {
         "model": "core.rateperdate",
-        "pk": 24,
+        "pk": 22,
         "fields": {
-            "rate": "34.00",
+            "rate": "5866.00",
             "start_date": null,
             "end_date": null,
             "main_rate": 22
@@ -231,7 +221,7 @@
     },
     {
         "model": "core.rateperdate",
-        "pk": 25,
+        "pk": 23,
         "fields": {
             "rate": "238.00",
             "start_date": null,
@@ -241,7 +231,7 @@
     },
     {
         "model": "core.rateperdate",
-        "pk": 26,
+        "pk": 24,
         "fields": {
             "rate": "354.00",
             "start_date": null,
@@ -251,7 +241,7 @@
     },
     {
         "model": "core.rateperdate",
-        "pk": 27,
+        "pk": 25,
         "fields": {
             "rate": "587.00",
             "start_date": null,
@@ -261,7 +251,7 @@
     },
     {
         "model": "core.rateperdate",
-        "pk": 28,
+        "pk": 26,
         "fields": {
             "rate": "54.00",
             "start_date": null,
@@ -271,9 +261,9 @@
     },
     {
         "model": "core.rateperdate",
-        "pk": 29,
+        "pk": 27,
         "fields": {
-            "rate": "33.00",
+            "rate": "783.00",
             "start_date": null,
             "end_date": null,
             "main_rate": 27
@@ -281,12 +271,32 @@
     },
     {
         "model": "core.rateperdate",
-        "pk": 30,
+        "pk": 28,
         "fields": {
-            "rate": "1017.00",
+            "rate": "900.00",
             "start_date": null,
             "end_date": null,
             "main_rate": 28
+        }
+    },
+    {
+        "model": "core.rateperdate",
+        "pk": 29,
+        "fields": {
+            "rate": "3249.00",
+            "start_date": null,
+            "end_date": null,
+            "main_rate": 29
+        }
+    },
+    {
+        "model": "core.rateperdate",
+        "pk": 30,
+        "fields": {
+            "rate": "34.00",
+            "start_date": null,
+            "end_date": null,
+            "main_rate": 30
         }
     }
 ]
