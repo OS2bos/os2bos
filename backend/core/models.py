@@ -603,6 +603,7 @@ class PaymentSchedule(models.Model):
             **kwargs,
         )
 
+    '''
     def calculate_per_payment_amount(self, vat_factor):
         """Calculate amount from payment type and units."""
         if self.payment_type in [self.ONE_TIME_PAYMENT, self.RUNNING_PAYMENT]:
@@ -617,6 +618,21 @@ class PaymentSchedule(models.Model):
             )
         else:
             raise ValueError(_("ukendt betalingstype"))
+    '''
+
+    def calculate_per_payment_amount(self, vat_factor, date):
+        """Calculate amount from payment type and units."""
+        if self.payment_cost_type == self.FIXED_PRICE:
+            amount = self.payment_amount
+        elif self.payment_cost_type == self.PER_UNIT_PRICE:
+            amount = self.payment_units * self.price_per_unit.get_rate_amount(
+                date
+            )
+        elif self.payment_cost_type == self.GLOBAL_RATE_PRICE:
+            amount = self.payment_units * self.payment_rate.get_rate_amount(
+                date
+            )
+        return (amount / 100) * vat_factor
 
     def generate_payments(self, start, end=None, vat_factor=Decimal("100")):
         """Generate payments with a start and end date."""
@@ -638,7 +654,7 @@ class PaymentSchedule(models.Model):
                 recipient_id=self.recipient_id,
                 recipient_name=self.recipient_name,
                 payment_method=self.payment_method,
-                amount=self.calculate_per_payment_amount(vat_factor),
+                amount=self.calculate_per_payment_amount(vat_factor, date_obj),
                 payment_schedule=self,
             )
 
@@ -1887,13 +1903,13 @@ class Activity(AuditModelMixin, models.Model):
         now = timezone.now()
         start_date = date(now.year, month=1, day=1)
         end_date = date(now.year, month=12, day=31)
-        num_payments = len(
-            list(self.payment_plan.create_rrule(start_date, until=end_date))
+        payment_amounts = (
+            self.payment_plan.calculate_per_payment_amount(vat_factor, date)
+            for date in self.payment_plan.create_rrule(
+                start_date, until=end_date
+            )
         )
-        return (
-            self.payment_plan.calculate_per_payment_amount(vat_factor)
-            * num_payments
-        )
+        return sum(payment_amounts)
 
     @property
     def triggers_payment_email(self):
