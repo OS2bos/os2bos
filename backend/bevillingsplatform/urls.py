@@ -50,6 +50,7 @@ router.register(r"activities", views.ActivityViewSet, "activity")
 router.register(
     r"payment_schedules", views.PaymentScheduleViewSet, "paymentschedule"
 )
+router.register(r"prices", views.PriceViewSet, "price")
 router.register(r"payment_method_details", views.PaymentMethodDetailsViewSet)
 router.register(r"payments", views.PaymentViewSet)
 router.register(r"related_persons", views.RelatedPersonViewSet)

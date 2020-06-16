@@ -382,7 +382,7 @@ class Price(VariableRate):
         "PaymentSchedule",
         on_delete=models.CASCADE,
         verbose_name=_("betalingsplan"),
-        related_name="price",
+        related_name="price_per_unit",
         null=True,
         blank=True,
     )
@@ -507,11 +507,43 @@ class PaymentSchedule(models.Model):
         validators=[MinValueValidator(Decimal("0.00"))],
     )
     payment_amount = models.DecimalField(
-        max_digits=14, decimal_places=2, verbose_name=_("beløb")
+        max_digits=14,
+        decimal_places=2,
+        verbose_name=_("beløb"),
+        null=True,
+        blank=True,
     )
     fictive = models.BooleanField(default=False, verbose_name=_("fiktiv"))
     payment_id = models.PositiveIntegerField(
         editable=False, verbose_name=_("betalings-ID"), blank=True, null=True
+    )
+
+    # Things related to the new price model.
+    # TODO: For starters, establish in parallel with the old way.
+    # Later, remove the old way of doing things.
+    FIXED_PRICE = "FIXED"
+    PER_UNIT_PRICE = "PER_UNIT"
+    GLOBAL_RATE_PRICE = "GLOBAL_RATE"
+
+    payment_cost_choices = (
+        (FIXED_PRICE, _("fast beløb")),
+        (PER_UNIT_PRICE, _("pris pr. enhed")),
+        (GLOBAL_RATE_PRICE, _("takst")),
+    )
+
+    payment_cost_type = models.CharField(
+        max_length=128,
+        verbose_name=_("betalingstype"),
+        default=FIXED_PRICE,
+        choices=payment_cost_choices,
+    )
+
+    payment_rate = models.ForeignKey(
+        Rate,
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        verbose_name=_("takst"),
     )
 
     @property

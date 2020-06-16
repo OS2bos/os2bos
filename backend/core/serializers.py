@@ -17,6 +17,8 @@ from drf_writable_nested import WritableNestedModelSerializer
 
 from core.models import (
     Case,
+    Price,
+    RatePerDate,
     Appropriation,
     Activity,
     RelatedPerson,
@@ -192,11 +194,65 @@ class PaymentSerializer(serializers.ModelSerializer):
         exclude = ("saved_account_string",)
 
 
+class RatePerDateSerializer(serializers.ModelSerializer):
+    """Serializer for the RatePerDate model."""
+
+    class Meta:
+        model = RatePerDate
+        fields = (
+            "rate",
+            "start_date",
+            "end_date",
+        )
+
+
+class PriceSerializer(WritableNestedModelSerializer):
+    """Serializer for the Price model."""
+
+    rates_per_date = RatePerDateSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Price
+        exclude = ("payment_schedule",)
+
+    current_amount = serializers.ReadOnlyField(source="rate_amount")
+    amount = serializers.DecimalField(max_digits=10, decimal_places=2)
+    start_date = serializers.DateField(required=False)
+    end_date = serializers.DateField(required=False)
+
+    def create(self, validated_data):
+        """Set rate amount on Price."""
+        amount = validated_data.pop("amount")
+        start_date = validated_data.pop("start_date")
+        end_date = validated_data.pop("end_date")
+        instance = super().create(validated_data)
+        instance.set_rate_amount(
+            amount=amount, start_date=start_date, end_date=end_date,
+        )
+        return instance
+
+    def update(self, instance, validated_data):
+        """Update rate amount on Price for dates."""
+        amount = validated_data.pop("amount")
+        start_date = validated_data.pop("start_date")
+        end_date = validated_data.pop("end_date")
+        instance = super().update(instance, validated_data)
+        instance.set_rate_amount(
+            amount=amount, start_date=start_date, end_date=end_date,
+        )
+        return instance
+
+
 class PaymentScheduleSerializer(WritableNestedModelSerializer):
     """Serializer for the PaymentSchedule model."""
 
     payments = PaymentSerializer(many=True, read_only=True)
+    price_per_unit = PriceSerializer(required=False, allow_null=True)
     account = serializers.ReadOnlyField()
+
+    class Meta:
+        model = PaymentSchedule
+        exclude = ("activity",)
 
     @staticmethod
     def setup_eager_loading(queryset):
@@ -235,11 +291,82 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
                 _("En engangsbetaling må ikke have en betalingsfrekvens")
             )
 
-        return data
+        # Validate payment/rate/unit info
+        payment_cost_type = data["payment_cost_type"]
 
-    class Meta:
-        model = PaymentSchedule
-        exclude = ("activity",)
+        if payment_cost_type == PaymentSchedule.FIXED_PRICE:
+            # Payment amount needs to be given, apart from that s'all
+            # good.
+            if not (data.get("payment_amount", None)):
+                raise serializers.ValidationError(
+                    _("Beløb skal udfyldes ved fast beløb")
+                )
+            # Rate can't be given.
+            if data.get("payment_rate", None):
+                raise serializers.ValidationError(
+                    _("Takst skal ikke angives ved fast beløb")
+                )
+            # Price data can't be given.
+            if data.get("price_per_unit") and data["price_per_unit"].get(
+                "amount", None
+            ):
+                raise serializers.ValidationError(
+                    _("Beløb pr. enhed skal ikke angives ved fast takst")
+                )
+            # Units can't be given.
+            if data.get("payment_units", None):
+                raise serializers.ValidationError(
+                    _("Enheder skal ikke angives ved fast beløb")
+                )
+        elif payment_cost_type == PaymentSchedule.PER_UNIT_PRICE:
+            # Units need to be given.
+            if not data.get("payment_units", None):
+                raise serializers.ValidationError(
+                    _("Enheder skal angives ved pris pr. enhed")
+                )
+            # Price data needs to be given.
+            # If not given, start and end date default to None.
+            if not data.get("price_per_unit", None) or not data[
+                "price_per_unit"
+            ].get("amount", None):
+                raise serializers.ValidationError(
+                    _("Beløb pr. enhed skal angives")
+                )
+            # Rate can't be given.
+            if data.get("payment_rate", None):
+                raise serializers.ValidationError(
+                    _("Takst skal ikke angives ved pris pr. enhed")
+                )
+            # Payment amount can't be given.
+            if data.get("payment_amount", None):
+                raise serializers.ValidationError(
+                    _("Beløbsfeltet skal ikke udfyldes ved pris pr. enhed")
+                )
+        elif (
+            payment_cost_type == PaymentSchedule.GLOBAL_RATE_PRICE
+        ):  # pragma: no cover
+            # Units need to be given.
+            if not data.get("payment_units", None):
+                raise serializers.ValidationError(
+                    _("Enheder skal angives ved fast takst")
+                )
+            # Rate needs to be given.
+            if not data.get("payment_rate", None):
+                raise serializers.ValidationError(_("Takst skal angives"))
+            # Payment amount can't be given.
+            if data.get("payment_amount", None):
+                raise serializers.ValidationError(
+                    _("Beløbsfeltet skal ikke udfyldes ved fast takst")
+                )
+            # Price data can't be given.
+            if data.get("price_per_unit") and data["price_per_unit"].get(
+                "amount", None
+            ):
+                raise serializers.ValidationError(
+                    _("Beløb pr. enhed skal ikke angives ved fast takst")
+                )
+
+        return data
 
 
 class ActivitySerializer(WritableNestedModelSerializer):
