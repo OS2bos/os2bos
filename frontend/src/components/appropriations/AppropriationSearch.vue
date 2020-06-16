@@ -166,7 +166,7 @@
                         title: 'CPR nr.',
                     },
                     {
-                        key: 'num_activities',
+                        key: 'num_ongoing_activities',
                         title: 'Ydelser',
                         display_func: this.displayActs,
                         class: 'nowrap'
@@ -257,7 +257,7 @@
                 }
             },
             displayActs: function(id) {
-                return `<dl class="num-acts"><dt>Foreløbige</dt><dd>${ id.num_draft_or_expected_activities }</dd><dt>Aktive i alt</dt><dd>${ id.num_activities }</dd></dl>`
+                return `<dl class="num-acts"><dt>Foreløbige</dt><dd>${ id.num_ongoing_draft_or_expected_activities }</dd><dt>Aktive i alt</dt><dd>${ id.num_ongoing_activities }</dd></dl>`
             },
         },
         mounted: function() {
