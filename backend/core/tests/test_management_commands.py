@@ -195,7 +195,9 @@ class TestEnsureDbConnection(TestCase):
 
     @override_settings(INITIALIZE_DATABASE=True)
     @mock.patch("core.management.commands.initialize_database.initialize")
-    def test_ensure_db_connection_success_and_initialize(self, initialize_mock):
+    def test_ensure_db_connection_success_and_initialize(
+            self, initialize_mock
+    ):
         # default settings should be able to connect to a database.
         with self.assertRaises(SystemExit) as cm:
             call_command("ensure_db_connection")
