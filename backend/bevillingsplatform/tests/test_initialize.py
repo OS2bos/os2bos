@@ -17,6 +17,7 @@ from core.models import (
     Account,
     ActivityDetails,
     PaymentMethodDetails,
+    RatePerDate,
 )
 
 
@@ -55,3 +56,8 @@ class InitializeTestCase(TestCase):
         initialize()
         payment_method_details_count = PaymentMethodDetails.objects.count()
         self.assertEqual(payment_method_details_count, 2)
+
+    def test_initialize_generates_rates(self):
+        initialize()
+        rates_per_date_count = RatePerDate.objects.count()
+        self.assertEqual(rates_per_date_count, 30)
