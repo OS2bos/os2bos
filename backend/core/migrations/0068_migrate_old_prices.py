@@ -7,7 +7,7 @@ import portion as P
 
 
 def create_interval(start_date, end_date):
-    """Create new interval for rates."""
+    """create_interval method from current Price model."""
     if start_date is None:
         start_date = -P.inf
     if end_date is None:
@@ -18,7 +18,7 @@ def create_interval(start_date, end_date):
 
 
 def set_rate_amount(apps, price, amount, start_date=None, end_date=None):
-    """Set amount, merge with existing periods."""
+    """set_rate_amount method from current Price model."""
     RatePerDate = apps.get_model("core", "RatePerDate")
     new_period = create_interval(start_date, end_date)
 
