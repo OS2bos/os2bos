@@ -196,7 +196,7 @@ class TestEnsureDbConnection(TestCase):
     @override_settings(INITIALIZE_DATABASE=True)
     @mock.patch("bevillingsplatform.initialize.initialize")
     def test_ensure_db_connection_success_and_initialize(
-            self, initialize_mock
+        self, initialize_mock
     ):
         # default settings should be able to connect to a database.
         with self.assertRaises(SystemExit) as cm:

@@ -33,7 +33,7 @@ class Command(BaseCommand):
             try:
                 connections["default"].ensure_connection()
                 self.stdout.write("%s Connected to database." % attempt)
-                if getattr(settings, 'INITIALIZE_DATABASE', False) is True:
+                if getattr(settings, "INITIALIZE_DATABASE", False) is True:
                     initialize()
                     self.stdout.write("Initialized database with test data")
                 sys.exit(0)
