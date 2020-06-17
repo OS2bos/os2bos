@@ -1,4 +1,54 @@
+from datetime import date
+
 from django.db import migrations
+from django.utils.translation import gettext_lazy as _
+
+import portion as P
+
+
+def create_interval(start_date, end_date):
+    """Create new interval for rates."""
+    if start_date is None:
+        start_date = -P.inf
+    if end_date is None:
+        end_date = P.inf
+    if not start_date < end_date:
+        raise ValueError(_("Slutdato skal være mindre end startdato"))
+    return P.closedopen(start_date, end_date)
+
+
+def set_rate_amount(apps, price, amount, start_date=None, end_date=None):
+    """Set amount, merge with existing periods."""
+    RatePerDate = apps.get_model("core", "RatePerDate")
+    new_period = create_interval(start_date, end_date)
+
+    existing_periods = price.rates_per_date.all()
+    d = P.IntervalDict()
+    for period in existing_periods:
+        interval = create_interval(period.start_date, period.end_date)
+        d[interval] = period.rate
+
+    # We generate all periods from scratch to avoid complicated
+    # merging logic.
+    existing_periods.delete()
+
+    d[new_period] = amount
+    for period in d.keys():
+        for interval in list(period):
+            # In case of composite intervals
+            start = (
+                interval.lower if isinstance(interval.lower, date) else None
+            )
+            end = interval.upper if isinstance(interval.upper, date) else None
+            period_rate_dict = d[
+                P.closedopen(interval.lower, interval.upper) or date.today()
+            ]
+            rate = period_rate_dict.values()[0]
+
+            rpd = RatePerDate(
+                start_date=start, end_date=end, rate=rate, main_rate=price
+            )
+            rpd.save()
 
 
 def migrate_old_prices(apps, schema_editor):
@@ -27,8 +77,12 @@ def migrate_old_prices(apps, schema_editor):
             # These payment types should have a Price with a single period
             # of unbounded start and end.
             price = Price.objects.create(payment_schedule=payment_schedule)
-            price.set_rate_amount(
-                payment_schedule.payment_amount, start_date=None, end_date=None
+            set_rate_amount(
+                apps,
+                price,
+                payment_schedule.payment_amount,
+                start_date=None,
+                end_date=None,
             )
 
 
