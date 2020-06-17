@@ -18,6 +18,7 @@ from drf_writable_nested import WritableNestedModelSerializer
 from core.models import (
     Case,
     Price,
+    Rate,
     RatePerDate,
     Appropriation,
     Activity,
@@ -204,6 +205,16 @@ class RatePerDateSerializer(serializers.ModelSerializer):
             "start_date",
             "end_date",
         )
+
+
+class RateSerializer(serializers.ModelSerializer):
+    """Serializer for the Rate model."""
+
+    rates_per_date = RatePerDateSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Rate
+        fields = "__all__"
 
 
 class PriceSerializer(WritableNestedModelSerializer):
