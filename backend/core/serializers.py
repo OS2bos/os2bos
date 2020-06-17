@@ -227,9 +227,11 @@ class PriceSerializer(WritableNestedModelSerializer):
         exclude = ("payment_schedule",)
 
     current_amount = serializers.ReadOnlyField(source="rate_amount")
-    amount = serializers.DecimalField(max_digits=10, decimal_places=2)
-    start_date = serializers.DateField(required=False)
-    end_date = serializers.DateField(required=False)
+    amount = serializers.DecimalField(
+        max_digits=10, decimal_places=2, write_only=True
+    )
+    start_date = serializers.DateField(required=False, write_only=True)
+    end_date = serializers.DateField(required=False, write_only=True)
 
     def create(self, validated_data):
         """Set rate amount on Price."""
