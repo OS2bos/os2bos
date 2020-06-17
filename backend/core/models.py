@@ -276,6 +276,9 @@ class Team(models.Model):
 class VariableRate(models.Model):
     """Superclass for time-dependent rates and prices."""
 
+    class Meta:
+        abstract = True
+
     @staticmethod
     def create_interval(start_date, end_date):
         """Create new interval for rates."""
@@ -388,7 +391,7 @@ class Price(VariableRate):
     )
 
 
-class Rate(VariableRate):
+class Rate(VariableRate, Classification):
     """A centrally fixed rate."""
 
     class Meta:
