@@ -88,7 +88,7 @@ SECURE_PROXY_SSL_HEADER = (
 )
 
 INITIALIZE_DATABASE = settings.getboolean(
-    'INITIALIZE_DATABASE', fallback=False,
+    "INITIALIZE_DATABASE", fallback=False,
 )
 
 # Application definition
