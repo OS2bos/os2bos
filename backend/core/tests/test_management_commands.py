@@ -194,7 +194,7 @@ class TestEnsureDbConnection(TestCase):
         self.assertEqual(cm.exception.code, 0)
 
     @override_settings(INITIALIZE_DATABASE=True)
-    @mock.patch("core.management.commands.initialize_database.initialize")
+    @mock.patch("bevillingsplatform.initialize.initialize")
     def test_ensure_db_connection_success_and_initialize(
             self, initialize_mock
     ):
