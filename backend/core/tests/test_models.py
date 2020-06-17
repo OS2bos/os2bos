@@ -3102,6 +3102,18 @@ class PaymentScheduleTestCase(TestCase):
 
         self.assertEqual(amount, expected)
 
+    def test_calculate_per_payment_amount_invalid_payment_type(self):
+        payment_schedule = create_payment_schedule(
+            payment_type="whatever",
+            payment_cost_type="ugyldig betalingstype",
+            payment_frequency=PaymentSchedule.DAILY,
+        )
+
+        with self.assertRaises(ValueError):
+            payment_schedule.calculate_per_payment_amount(
+                vat_factor=Decimal("100"), date=date.today()
+            )
+
     @parameterized.expand(
         [
             (PaymentSchedule.INTERNAL, CASH),

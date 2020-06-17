@@ -603,23 +603,6 @@ class PaymentSchedule(models.Model):
             **kwargs,
         )
 
-    '''
-    def calculate_per_payment_amount(self, vat_factor):
-        """Calculate amount from payment type and units."""
-        if self.payment_type in [self.ONE_TIME_PAYMENT, self.RUNNING_PAYMENT]:
-            return self.payment_amount / 100 * vat_factor
-        elif self.payment_type in [
-            self.PER_HOUR_PAYMENT,
-            self.PER_DAY_PAYMENT,
-            self.PER_KM_PAYMENT,
-        ]:
-            return (
-                (self.payment_units * self.payment_amount) / 100 * vat_factor
-            )
-        else:
-            raise ValueError(_("ukendt betalingstype"))
-    '''
-
     def calculate_per_payment_amount(self, vat_factor, date):
         """Calculate amount from payment type and units."""
         if self.payment_cost_type == self.FIXED_PRICE:
@@ -632,6 +615,10 @@ class PaymentSchedule(models.Model):
             amount = self.payment_units * self.payment_rate.get_rate_amount(
                 date
             )
+        else:
+            # Keep coverage happy.
+            raise ValueError(_("ukendt betalingstype"))
+
         return (amount / 100) * vat_factor
 
     def generate_payments(self, start, end=None, vat_factor=Decimal("100")):
