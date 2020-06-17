@@ -9,10 +9,10 @@
 import sys
 import time
 from django.core.management.base import BaseCommand
+from django.core.management import call_command
 from django.db import connections
 from django.conf import settings
 from django.db.utils import OperationalError
-from bevillingsplatform.initialize import initialize
 
 
 class Command(BaseCommand):
@@ -34,8 +34,7 @@ class Command(BaseCommand):
                 connections["default"].ensure_connection()
                 self.stdout.write("%s Connected to database." % attempt)
                 if getattr(settings, "INITIALIZE_DATABASE", False) is True:
-                    initialize()
-                    self.stdout.write("Initialized database with test data")
+                    call_command("initialize_database")
                 sys.exit(0)
 
             except OperationalError as e:
