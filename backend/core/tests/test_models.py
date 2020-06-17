@@ -48,6 +48,8 @@ from core.models import (
     ApprovalLevel,
     Team,
     PaymentSchedule,
+    Rate,
+    Price,
     PaymentMethodDetails,
     ServiceProvider,
     EffortStep,
@@ -3036,6 +3038,64 @@ class PaymentScheduleTestCase(TestCase):
         end = today + timedelta(days=365)
         rrule_frequency = payment_schedule.create_rrule(today, until=end)
         price_date = list(rrule_frequency)[0]
+        amount = payment_schedule.calculate_per_payment_amount(
+            vat_factor, price_date
+        )
+
+        self.assertEqual(amount, expected)
+
+    def test_calculate_per_payment_amount_for_perunit_price(self):
+        payment_type = PaymentSchedule.RUNNING_PAYMENT
+        payment_frequency = PaymentSchedule.DAILY
+        price_per_unit = Decimal(199)
+        payment_units = 5
+        vat_factor = 100
+        expected = Decimal(5 * 199)
+
+        payment_schedule = create_payment_schedule(
+            payment_amount=None,
+            payment_type=payment_type,
+            payment_frequency=payment_frequency,
+            payment_units=payment_units,
+            payment_cost_type=PaymentSchedule.PER_UNIT_PRICE,
+        )
+        payment_schedule.price_per_unit = Price.objects.create()
+        payment_schedule.price_per_unit.set_rate_amount(price_per_unit)
+        today = date.today()
+        end = today + timedelta(days=365)
+        rrule_frequency = payment_schedule.create_rrule(today, until=end)
+        price_date = list(rrule_frequency)[0]
+
+        amount = payment_schedule.calculate_per_payment_amount(
+            vat_factor, price_date
+        )
+
+        self.assertEqual(amount, expected)
+
+    def test_calculate_per_payment_amount_for_rate(self):
+        payment_type = PaymentSchedule.RUNNING_PAYMENT
+        payment_frequency = PaymentSchedule.DAILY
+        price_per_unit = Decimal(237)
+        payment_units = 5
+        vat_factor = 100
+        expected = Decimal(5 * 237)
+        rate = Rate.objects.create(name="Test rate")
+        rate.set_rate_amount(price_per_unit)
+
+        payment_schedule = create_payment_schedule(
+            payment_amount=None,
+            payment_type=payment_type,
+            payment_frequency=payment_frequency,
+            payment_units=payment_units,
+            payment_cost_type=PaymentSchedule.GLOBAL_RATE_PRICE,
+            payment_rate=rate,
+        )
+
+        today = date.today()
+        end = today + timedelta(days=365)
+        rrule_frequency = payment_schedule.create_rrule(today, until=end)
+        price_date = list(rrule_frequency)[0]
+
         amount = payment_schedule.calculate_per_payment_amount(
             vat_factor, price_date
         )
