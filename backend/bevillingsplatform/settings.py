@@ -87,6 +87,9 @@ SECURE_PROXY_SSL_HEADER = (
     else ("HTTP_X_FORWARDED_PROTO", "https")
 )
 
+INITIALIZE_DATABASE = settings.getboolean(
+    'INITIALIZE_DATABASE', fallback=False,
+)
 
 # Application definition
 
