@@ -41,9 +41,9 @@ ARG SUPERCRONIC_SHA1SUM=5ddf8ea26b56d4a7ff6faecdd8966610d5cb9d85
 LABEL org.opencontainers.image.title="Bevillingsplatform" \
       org.opencontainers.image.vendor="Magenta ApS" \
       org.opencontainers.image.licenses="MIT"
-      #org.opencontainers.image.url="" \
-      #org.opencontainers.image.documentation="" \
-      #org.opencontainers.image.source=""
+      org.opencontainers.image.url="https://os2.eu/produkt/os2bos" \
+      org.opencontainers.image.documentation="https://os2bos.readthedocs.io" \
+      org.opencontainers.image.source="https://github.com/OS2bos/os2bos"
 
 
 # Force the stdout and stderr streams from python to be unbuffered. See
