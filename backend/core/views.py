@@ -22,6 +22,7 @@ from core.models import (
     Case,
     Appropriation,
     Activity,
+    Rate,
     Price,
     PaymentSchedule,
     Payment,
@@ -50,6 +51,7 @@ from core.serializers import (
     ListAppropriationSerializer,
     AppropriationSerializer,
     ActivitySerializer,
+    RateSerializer,
     PriceSerializer,
     PaymentScheduleSerializer,
     PaymentSerializer,
@@ -370,6 +372,13 @@ class TeamViewSet(ReadOnlyViewset):
 
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
+
+
+class RateViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
+    """Expose law sections in REST API."""
+
+    queryset = Rate.objects.all()
+    serializer_class = RateSerializer
 
 
 class SectionViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
