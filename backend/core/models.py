@@ -306,6 +306,11 @@ class VariableRate(models.Model):
     @transaction.atomic
     def set_rate_amount(self, amount, start_date=None, end_date=None):
         """Set amount, merge with existing periods."""
+        # Date only, no datetime.
+        if isinstance(start_date, datetime):
+            start_date = start_date.date()
+        if isinstance(end_date, datetime):
+            end_date = end_date.date()
         new_period = self.create_interval(start_date, end_date)
 
         existing_periods = self.rates_per_date.all()
