@@ -5,7 +5,6 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-import sys
 from django.core.management.base import BaseCommand
 from bevillingsplatform.initialize import initialize
 from django.conf import settings
@@ -32,7 +31,6 @@ class Command(BaseCommand):
             print(
                 "The INITIALIZE_DATABASE setting needs to be sat to true to initialize the database"
             )
-            sys.exit(1)
 
         # Display action
         print("Seed database with (static) basic data")
