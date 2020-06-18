@@ -237,7 +237,8 @@ class TestInitializeDatabase(TestCase):
     @mock.patch("from bevillingsplatform.initialize.initialize")
     def test_initialize_database_without_settings(self, initialize_mock):
         # when the setting is not provided or is false
-        # the management command executes but initialize() should never be called
+        # the management command is executed
+        # but initialize() should never be called
         call_command("initialize_database")
         self.assertFalse(initialize_mock.called)
 
