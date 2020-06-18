@@ -11,6 +11,7 @@ from django.dispatch import receiver
 from core.models import (
     Activity,
     PaymentSchedule,
+    Price,
     Payment,
     Price,
     STATUS_EXPECTED,
@@ -100,6 +101,15 @@ def send_activity_payment_email_on_delete(sender, instance, **kwargs):
 def save_payment_schedule_on_save_price(sender, instance, created, **kwargs):
     """Save payment schedule too when saving price."""
     if instance.payment_schedule:
+        instance.payment_schedule.save()
+
+
+@receiver(
+    post_save, sender=Price, dispatch_uid="on_save_price",
+)
+def on_save_price(sender, instance, created, **kwargs):
+    if not created:
+        # When creating, this is taken care of already.
         instance.payment_schedule.save()
 
 
