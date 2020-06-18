@@ -150,6 +150,7 @@ def create_payment_schedule(
         recipient_name=recipient_name,
         payment_day_of_month=payment_day_of_month,
         fictive=fictive,
+        payment_cost_type=payment_cost_type,
         **kwargs,
     )
     return payment_schedule
