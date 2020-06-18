@@ -18,6 +18,9 @@ set -ex
 # Run Migrate
 ./manage.py migrate
 
+# Initialize database if setting is True
+./manage.py initialize_database
+
 # Generate static content
 ./manage.py collectstatic --no-input --clear
 

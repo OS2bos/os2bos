@@ -225,6 +225,7 @@ class TestEnsureDbConnection(TestCase):
 
 
 class TestInitializeDatabase(TestCase):
+    @override_settings(INITIALIZE_DATABASE=True)
     @mock.patch("core.management.commands.initialize_database.initialize")
     def test_initialize_database(self, initialize_mock):
         # the initialize function is tested
@@ -232,6 +233,14 @@ class TestInitializeDatabase(TestCase):
         # so we can simply test it is called.
         call_command("initialize_database")
         self.assertTrue(initialize_mock.called)
+
+    @mock.patch("bevillingsplatform.initialize.initialize")
+    def test_initialize_database_without_settings(self, initialize_mock):
+        # when the setting is not provided or is false
+        # the management command is executed
+        # but initialize() should never be called
+        call_command("initialize_database")
+        self.assertFalse(initialize_mock.called)
 
 
 class TestSendExpiredEmails(TestCase, BasicTestMixin):

@@ -32,7 +32,6 @@ class Command(BaseCommand):
                 connections["default"].ensure_connection()
                 self.stdout.write("%s Connected to database." % attempt)
                 sys.exit(0)
-
             except OperationalError as e:
                 self.stdout.write(str(e))
                 self.stdout.write(

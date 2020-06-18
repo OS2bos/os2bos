@@ -87,6 +87,9 @@ SECURE_PROXY_SSL_HEADER = (
     else ("HTTP_X_FORWARDED_PROTO", "https")
 )
 
+INITIALIZE_DATABASE = settings.getboolean(
+    "INITIALIZE_DATABASE", fallback=False,
+)
 
 # Application definition
 
@@ -428,10 +431,6 @@ CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
 SBSYS_APPROPRIATION_TEMPLATE = "core/html/appropriation_letter.html"
 SBSYS_XML_TEMPLATE = "core/xml/os2forms.xml"
 
-SAML_PUBLIC_HOST = os.getenv(
-    "SAML_PUBLIC_HOST", settings.get("SAML_PUBLIC_HOST")
-)
-
 SAML2_AUTH = {
     # Metadata is required, choose either remote url or local
     # file path
@@ -442,8 +441,8 @@ SAML2_AUTH = {
         "STAFF_STATUS": False,
         "SUPERUSER_STATUS": False,
     },
-    "ASSERTION_URL": SAML_PUBLIC_HOST,
-    "ENTITY_ID": SAML_PUBLIC_HOST,
+    "ASSERTION_URL": settings.get("SAML_PUBLIC_HOST"),
+    "ENTITY_ID": settings.get("SAML_PUBLIC_HOST"),
     "ATTRIBUTES_MAP": {
         "email": "email",
         "username": "username",
@@ -455,7 +454,7 @@ SAML2_AUTH = {
         "BEFORE_LOGIN": "core.utils.saml_before_login",
     },
     "USE_JWT": True,
-    "FRONTEND_URL": SAML_PUBLIC_HOST + "#/",
+    "FRONTEND_URL": settings.get("SAML_PUBLIC_HOST") + "#/",
     "CERT_FILE": "",
     "KEY_FILE": "",
     "AUTHN_REQUESTS_SIGNED": False,

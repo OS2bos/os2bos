@@ -5,10 +5,9 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-
 from django.core.management.base import BaseCommand
-
 from bevillingsplatform.initialize import initialize
+from django.conf import settings
 
 
 class Command(BaseCommand):
@@ -29,6 +28,8 @@ class Command(BaseCommand):
     help = "Call initialize function to seed the database"
 
     def handle(self, *args, **options):
+        if not settings.INITIALIZE_DATABASE:
+            return
 
         # Display action
         print("Seed database with (static) basic data")
