@@ -7,7 +7,7 @@
 
 
 from decimal import Decimal
-from datetime import date, timedelta
+from datetime import datetime, date, timedelta
 from dateutil import rrule
 from unittest import mock
 from freezegun import freeze_time
@@ -48,7 +48,6 @@ from core.models import (
     ApprovalLevel,
     Team,
     PaymentSchedule,
-    Rate,
     Price,
     PaymentMethodDetails,
     ServiceProvider,
@@ -3079,7 +3078,7 @@ class PaymentScheduleTestCase(TestCase):
         payment_units = 5
         vat_factor = 100
         expected = Decimal(5 * 237)
-        rate = Rate.objects.create(name="Test rate")
+        rate = create_rate()
         rate.set_rate_amount(price_per_unit)
 
         payment_schedule = create_payment_schedule(
@@ -3101,6 +3100,13 @@ class PaymentScheduleTestCase(TestCase):
         )
 
         self.assertEqual(amount, expected)
+
+    def test_datetime_in_set_rate_amount(self):
+        rate = create_rate()
+        date1 = datetime.today()
+        date2 = datetime.today() + timedelta(days=1)
+        rate.set_rate_amount(Decimal(100), start_date=date1, end_date=date2)
+        self.assertEqual(rate.get_rate_amount(date1), Decimal(100))
 
     def test_calculate_per_payment_amount_invalid_payment_type(self):
         payment_schedule = create_payment_schedule(
