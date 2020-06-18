@@ -38,7 +38,7 @@ from core.models import (
     TargetGroup,
     Effort,
     RatePerDate,
-    HistoricalRatePerDate,
+    HistoricalRatePerDateProxy,
     VariableRate,
     Rate,
     SectionEffortStepProxy,
@@ -149,9 +149,11 @@ class RatePerDateInline(ClassificationInline):
 class HistoricalRatePerDateInline(ClassificationInline):
     """HistoricalRatePerDateInline for VariablerateAdmin."""
 
-    model = HistoricalRatePerDate
+    model = HistoricalRatePerDateProxy
     verbose_name = _("Historisk takst for datoer")
     verbose_name_plural = _("Historiske takster for datoer")
+
+    exclude = ("history_change_reason",)
 
     extra = 0
     can_delete = False

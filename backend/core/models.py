@@ -17,7 +17,7 @@ from django.db import models, transaction
 from django.contrib.postgres.fields import ArrayField
 from django.db.models import Q, F
 from django.contrib.auth.models import AbstractUser
-from django.utils.translation import gettext, gettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
 from simple_history.models import HistoricalRecords
@@ -1087,26 +1087,6 @@ class Section(Classification):
         return f"{self.paragraph}"
 
 
-class SectionEffortStepProxy(Section.allowed_for_steps.through):
-    """Proxy model for the allowed_for_steps (EffortStep) m2m field on Section.
-
-    We use a proxy so we can override __str__ and m2m verbose_name for use in
-    django admin without an explicit through model.
-    """
-
-    class Meta:
-        proxy = True
-
-    def __str__(self):
-        return f"{self.section.paragraph} {self.section.text}"
-
-
-# Set the verbose_name of the 'section' foreign key for use in django admin.
-SectionEffortStepProxy._meta.get_field("section").verbose_name = gettext(
-    "paragraf"
-)
-
-
 class Appropriation(AuditModelMixin, models.Model):
     """An appropriation of funds in a Case - corresponds to a Sag in SBSYS."""
 
@@ -1494,35 +1474,6 @@ class ActivityDetails(Classification):
 
     def __str__(self):
         return f"{self.activity_id} - {self.name}"
-
-
-class ActivityDetailsSectionProxy(
-    ActivityDetails.supplementary_activity_for.through
-):
-    """
-    Proxy model for supplementary_activity_for (Section) on ActivityDetails.
-
-    We use a proxy model so we can override __str__ and m2m verbose_name for
-    use in django admin without an explicit through model.
-    """
-
-    class Meta:
-        proxy = True
-
-    def __str__(self):
-        return f"{self.activitydetails} - {self.section}"
-
-
-# Set the verbose_name of the 'section' foreign key for use in django admin.
-ActivityDetailsSectionProxy._meta.get_field("section").verbose_name = gettext(
-    "paragraf"
-)
-
-# Set the verbose_name of the 'activitydetails' foreign key for use in
-# django admin.
-ActivityDetailsSectionProxy._meta.get_field(
-    "activitydetails"
-).verbose_name = gettext("aktivitetsdetalje")
 
 
 class SectionInfo(models.Model):
