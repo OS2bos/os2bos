@@ -236,8 +236,8 @@ class PriceSerializer(WritableNestedModelSerializer):
     def create(self, validated_data):
         """Set rate amount on Price."""
         amount = validated_data.pop("amount")
-        start_date = validated_data.pop("start_date")
-        end_date = validated_data.pop("end_date")
+        start_date = validated_data.pop("start_date", None)
+        end_date = validated_data.pop("end_date", None)
         instance = super().create(validated_data)
         instance.set_rate_amount(
             amount=amount, start_date=start_date, end_date=end_date,
@@ -247,8 +247,8 @@ class PriceSerializer(WritableNestedModelSerializer):
     def update(self, instance, validated_data):
         """Update rate amount on Price for dates."""
         amount = validated_data.pop("amount")
-        start_date = validated_data.pop("start_date")
-        end_date = validated_data.pop("end_date")
+        start_date = validated_data.pop("start_date", None)
+        end_date = validated_data.pop("end_date", None)
         instance = super().update(instance, validated_data)
         instance.set_rate_amount(
             amount=amount, start_date=start_date, end_date=end_date,
