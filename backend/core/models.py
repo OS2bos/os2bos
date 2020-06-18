@@ -6,7 +6,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """These are the Django models, defining the database layout."""
 
-from datetime import date, timedelta
+from datetime import datetime, date, timedelta
 from decimal import Decimal
 from dateutil.relativedelta import relativedelta
 
@@ -283,12 +283,17 @@ class VariableRate(models.Model):
             start_date = -P.inf
         if end_date is None:
             end_date = P.inf
+
         if not start_date < end_date:
             raise ValueError(_("Slutdato skal være mindre end startdato"))
         return P.closedopen(start_date, end_date)
 
     def get_rate_amount(self, rate_date=date.today()):
         """Look up period in RatesPerDate."""
+        # Date only, no datetime.
+        if isinstance(rate_date, datetime):
+            rate_date = rate_date.date()
+
         periods = self.rates_per_date.all()
         d = P.IntervalDict()
         for p in periods:
