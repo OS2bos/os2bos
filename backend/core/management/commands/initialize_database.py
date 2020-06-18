@@ -29,9 +29,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if getattr(settings, "INITIALIZE_DATABASE", False) is not True:
-            print(
-                "The INITIALIZE_DATABASE setting needs to be sat to true to initialize the database"
-            )
+            return
 
         # Display action
         print("Seed database with (static) basic data")
