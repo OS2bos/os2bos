@@ -28,7 +28,7 @@ class Command(BaseCommand):
     help = "Call initialize function to seed the database"
 
     def handle(self, *args, **options):
-        if getattr(settings, "INITIALIZE_DATABASE", False) is not True:
+        if settings.INITIALIZE_DATABASE is not True:
             return
 
         # Display action
