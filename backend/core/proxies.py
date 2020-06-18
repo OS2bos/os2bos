@@ -75,7 +75,8 @@ class HistoricalRatePerDateProxy(HistoricalRatePerDate):
         return f"{self.rate} - {self.start_date} - {self.end_date}"
 
 
-# Set the verbose_name of the 'history' foreign key for use in django admin.
+# Set the verbose_name of the 'history_date' foreign key
+# for use in django admin.
 HistoricalRatePerDateProxy._meta.get_field(
     "history_date"
 ).verbose_name = gettext("historik dato")
