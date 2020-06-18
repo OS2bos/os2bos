@@ -12,6 +12,7 @@ from core.models import (
     Activity,
     PaymentSchedule,
     Price,
+    Rate,
     Payment,
     Price,
     STATUS_EXPECTED,
@@ -107,10 +108,17 @@ def save_payment_schedule_on_save_price(sender, instance, created, **kwargs):
 @receiver(
     post_save, sender=Price, dispatch_uid="on_save_price",
 )
-def on_save_price(sender, instance, created, **kwargs):
+def ping_payment_schedule_on_save_price(sender, instance, created, **kwargs):
     if not created:
         # When creating, this is taken care of already.
         instance.payment_schedule.save()
+
+
+@receiver(
+    post_save, sender=Rate, dispatch_uid="on_save_rate",
+)
+def set_dirty_on_save_rate(sender, instance, created, **kwargs):
+    Rate.objects.filter(pk=instance.pk).update(needs_update=False)
 
 
 @receiver(

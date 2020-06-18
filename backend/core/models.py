@@ -415,6 +415,9 @@ class Rate(VariableRate, Classification):
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     description = models.TextField(verbose_name=_("beskrivelse"), blank=True)
+    needs_update = models.BooleanField(
+        verbose_name=_("skal genberegnes"), default=False
+    )
 
     def __str__(self):
         return f"{self.name}"
