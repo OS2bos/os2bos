@@ -150,6 +150,8 @@ class HistoricalRatePerDateInline(ClassificationInline):
     """HistoricalRatePerDateInline for VariablerateAdmin."""
 
     model = HistoricalRatePerDate
+    verbose_name = _("Historisk takst for datoer")
+    verbose_name_plural = _("Historiske takster for datoer")
 
     extra = 0
     can_delete = False
