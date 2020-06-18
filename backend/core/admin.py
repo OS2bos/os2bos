@@ -38,11 +38,13 @@ from core.models import (
     TargetGroup,
     Effort,
     RatePerDate,
-    HistoricalRatePerDateProxy,
     VariableRate,
     Rate,
+)
+from core.proxies import (
     SectionEffortStepProxy,
     ActivityDetailsSectionProxy,
+    HistoricalRatePerDateProxy,
 )
 
 for klass in (PaymentMethodDetails, Team, SectionInfo):
