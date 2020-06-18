@@ -394,6 +394,7 @@ class Price(VariableRate):
 
     class Meta:
         verbose_name = _("pris")
+        verbose_name_plural = _("priser")
 
     payment_schedule = models.OneToOneField(
         "PaymentSchedule",

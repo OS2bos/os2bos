@@ -40,6 +40,7 @@ from core.models import (
     RatePerDate,
     VariableRate,
     Rate,
+    Price,
 )
 from core.proxies import (
     SectionEffortStepProxy,
@@ -253,6 +254,23 @@ class RateAdmin(VariableRateAdmin):
     form = RateForm
 
 
+class PriceForm(VariableRateAdminForm):
+    """PriceForm for PriceAdmin."""
+
+    class Meta:
+        Model = Price
+        fields = "__all__"
+
+
+@admin.register(Price)
+class PriceAdmin(VariableRateAdmin):
+    """ModelAdmin for Price."""
+
+    readonly_fields = ("payment_schedule",)
+    list_display = ("payment_schedule",)
+    form = PriceForm
+
+
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
     """Dislay read only fields on payment."""
@@ -362,7 +380,12 @@ class EffortAdmin(ClassificationAdmin):
 class PaymentScheduleAdmin(admin.ModelAdmin):
     """Display read only fields on payment schedule."""
 
-    readonly_fields = ("payment_id", "account_string", "account_string_new")
+    readonly_fields = (
+        "payment_id",
+        "account_string",
+        "account_string_new",
+        "price_per_unit",
+    )
     search_fields = ("payment_id",)
     list_display = (
         "id",

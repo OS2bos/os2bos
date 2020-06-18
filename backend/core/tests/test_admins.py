@@ -16,6 +16,7 @@ from core.models import (
     EffortStep,
     Rate,
     RatePerDate,
+    HistoricalRatePerDate,
 )
 from core.admin import (
     PaymentAdmin,
@@ -30,6 +31,7 @@ from core.admin import (
     EffortStepAdmin,
     RateAdmin,
     RatePerDateInline,
+    HistoricalRatePerDateInline,
 )
 from core.tests.testing_utils import (
     AuthenticatedTestCase,
@@ -286,7 +288,7 @@ class TestActivityAdmin(AuthenticatedTestCase, BasicTestMixin):
         site = AdminSite()
         activity_admin = ActivityAdmin(Activity, site)
         self.assertEqual(
-            activity_admin.account_number(activity), activity.account_number,
+            activity_admin.account_number(activity), activity.account_number
         )
 
 
@@ -520,6 +522,30 @@ class RatePerDateInlineTestCase(TestCase):
         rate_per_date_inline = RatePerDateInline(RatePerDate, site)
 
         self.assertFalse(rate_per_date_inline.can_delete)
+
+
+class HistoricalRatePerDateInlineTestCase(TestCase):
+    def test_has_add_permissions_false(self):
+        site = AdminSite()
+        historical_rate_per_date_inline = HistoricalRatePerDateInline(
+            HistoricalRatePerDate, site
+        )
+        request = MockRequest()
+
+        self.assertFalse(
+            historical_rate_per_date_inline.has_add_permission(request)
+        )
+
+    def test_has_change_permissions_false(self):
+        site = AdminSite()
+        historical_rate_per_date_inline = HistoricalRatePerDateInline(
+            HistoricalRatePerDate, site
+        )
+        request = MockRequest()
+
+        self.assertFalse(
+            historical_rate_per_date_inline.has_change_permission(request)
+        )
 
 
 class TestClassificationAdmin(TestCase):
