@@ -388,7 +388,7 @@ class Price(VariableRate):
     )
 
 
-class Rate(VariableRate):
+class Rate(VariableRate, Classification):
     """A centrally fixed rate."""
 
     class Meta:

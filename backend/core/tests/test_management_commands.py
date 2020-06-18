@@ -193,6 +193,17 @@ class TestEnsureDbConnection(TestCase):
             call_command("ensure_db_connection")
         self.assertEqual(cm.exception.code, 0)
 
+    @override_settings(INITIALIZE_DATABASE=True)
+    @mock.patch("core.management.commands.initialize_database.initialize")
+    def test_ensure_db_connection_success_and_initialize(
+        self, initialize_mock
+    ):
+        # default settings should be able to connect to a database.
+        with self.assertRaises(SystemExit) as cm:
+            call_command("ensure_db_connection")
+        self.assertEqual(cm.exception.code, 0)
+        self.assertTrue(initialize_mock.called)
+
     def test_ensure_db_connection_fail(self):
         # Mock the ensure_connection method to raise an OperationalError.
         db_mock = mock.MagicMock()
