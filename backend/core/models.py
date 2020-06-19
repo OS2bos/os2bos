@@ -319,17 +319,17 @@ class VariableRate(models.Model):
         new_period = self.create_interval(start_date, end_date)
 
         existing_periods = self.rates_per_date.all()
-        d = P.IntervalDict()
+        interval_dict = P.IntervalDict()
         for period in existing_periods:
             interval = self.create_interval(period.start_date, period.end_date)
-            d[interval] = period.rate
+            interval_dict[interval] = period.rate
 
         # We generate all periods from scratch to avoid complicated
         # merging logic.
         existing_periods.delete()
 
-        d[new_period] = amount
-        for period in d.keys():
+        interval_dict[new_period] = amount
+        for period in interval_dict.keys():
             for interval in list(period):
                 # In case of composite intervals
                 start = (
@@ -342,7 +342,7 @@ class VariableRate(models.Model):
                     if isinstance(interval.upper, date)
                     else None
                 )
-                period_rate_dict = d[
+                period_rate_dict = interval_dict[
                     P.closedopen(interval.lower, interval.upper)
                     or date.today()
                 ]

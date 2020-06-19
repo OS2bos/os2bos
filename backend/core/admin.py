@@ -155,6 +155,7 @@ class HistoricalRatePerDateInline(ClassificationInline):
     model = HistoricalRatePerDateProxy
     verbose_name = _("Historisk takst for datoer")
     verbose_name_plural = _("Historiske takster for datoer")
+    classes = ("collapse",)
 
     exclude = ("history_change_reason",)
 
@@ -229,7 +230,7 @@ class VariableRateAdmin(ClassificationAdmin):
 
     def save_model(self, request, obj, form, change):
         """Override save_model to set rate after model save."""
-        if form.is_valid():
+        if form.is_valid() and form.has_changed():
             super().save_model(request, obj, form, change)
             obj.set_rate_amount(
                 form.cleaned_data["rate"],
