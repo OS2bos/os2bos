@@ -34,7 +34,6 @@ from core.tests.testing_utils import (
     create_service_provider,
     create_section_info,
     create_related_person,
-    create_effort_step,
     create_variable_rate,
     create_rate,
     create_rate_per_date,
@@ -63,36 +62,7 @@ from core.models import (
     STATUS_GRANTED,
     STATUS_EXPECTED,
     STATUS_DRAFT,
-    SectionEffortStepProxy,
-    ActivityDetailsSectionProxy,
 )
-
-
-class SectionEffortStepProxyTestCase(TestCase):
-    def test_section_effort_step_proxy_str(self):
-        section = create_section(text="test beskrivelse")
-        effort_step = create_effort_step()
-        section.allowed_for_steps.add(effort_step)
-
-        section_effort_step_proxy = SectionEffortStepProxy.objects.first()
-        self.assertEqual(
-            str(section_effort_step_proxy), "ABL-105-2 test beskrivelse"
-        )
-
-
-class ActivityDetailsSectionProxyTestCase(TestCase):
-    def test_activity_details_section_proxy_str(self):
-        activity_details = create_activity_details()
-        section = create_section()
-        activity_details.supplementary_activity_for.add(section)
-
-        activity_details_section_proxy = (
-            ActivityDetailsSectionProxy.objects.first()
-        )
-        self.assertEqual(
-            str(activity_details_section_proxy),
-            "000000 - Test aktivitet - ABL-105-2",
-        )
 
 
 class AppropriationTestCase(TestCase, BasicTestMixin):
@@ -1249,7 +1219,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         appropriation = create_appropriation(case=case)
 
-        activity = create_activity(case, appropriation, status=STATUS_GRANTED,)
+        activity = create_activity(case, appropriation, status=STATUS_GRANTED)
         create_payment_schedule(
             payment_type=PaymentSchedule.ONE_TIME_PAYMENT, activity=activity
         )
@@ -1334,7 +1304,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         appropriation = create_appropriation(case=case)
 
-        activity = create_activity(case, appropriation, status=STATUS_DRAFT,)
+        activity = create_activity(case, appropriation, status=STATUS_DRAFT)
         payment_schedule = create_payment_schedule(activity=activity)
 
         self.assertEqual(activity.payment_plan.payments.count(), 10)
@@ -1353,7 +1323,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             name="Test leverandør", vat_factor=Decimal("90")
         )
         activity = create_activity(
-            case, appropriation, service_provider=service_provider,
+            case, appropriation, service_provider=service_provider
         )
         create_payment_schedule(activity=activity)
 
@@ -1411,7 +1381,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             end_date=date.today() + timedelta(days=14),
         )
         create_payment_schedule(
-            payment_amount=Decimal("-500"), activity=activity,
+            payment_amount=Decimal("-500"), activity=activity
         )
         self.assertEqual(activity.total_cost, Decimal("-7500"))
 
@@ -1424,7 +1394,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         end_date = date(year=2020, month=1, day=1)
         # 32 days, daily payments of 500.
         activity = create_activity(
-            case, appropriation, start_date=start_date, end_date=end_date,
+            case, appropriation, start_date=start_date, end_date=end_date
         )
         create_payment_schedule(activity=activity)
         self.assertEqual(activity.total_cost, Decimal("16000"))
@@ -1718,7 +1688,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         appropriation = create_appropriation(case=case)
         # 31 days, daily payments of 500.
         activity = create_activity(
-            case, appropriation, start_date=start_date, end_date=end_date,
+            case, appropriation, start_date=start_date, end_date=end_date
         )
         create_payment_schedule(activity=activity)
 
@@ -1734,7 +1704,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         appropriation = create_appropriation(case=case)
         # payments for all days in year, daily payments of 500.
         activity = create_activity(
-            case, appropriation, start_date=start_date, end_date=end_date,
+            case, appropriation, start_date=start_date, end_date=end_date
         )
         create_payment_schedule(activity=activity)
 
@@ -1774,7 +1744,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         appropriation = create_appropriation(case=case)
         # 32 days, daily payments of 500.
         activity = create_activity(
-            case, appropriation, start_date=start_date, end_date=end_date,
+            case, appropriation, start_date=start_date, end_date=end_date
         )
         create_payment_schedule(activity=activity)
         expected = [
@@ -1795,7 +1765,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         appropriation = create_appropriation(case=case)
         # 32 days, daily payments of 500.
         activity = create_activity(
-            case, appropriation, start_date=start_date, end_date=end_date,
+            case, appropriation, start_date=start_date, end_date=end_date
         )
         create_payment_schedule(
             payment_amount=Decimal("-500"), activity=activity
@@ -3548,7 +3518,7 @@ class SectionInfoTestCase(TestCase, BasicTestMixin):
         details = create_activity_details()
         section = create_section()
         section_info = create_section_info(
-            details, section, main_activity_main_account_number="1234",
+            details, section, main_activity_main_account_number="1234"
         )
 
         self.assertEqual(
@@ -3683,7 +3653,7 @@ class RateTestCase(TestCase):
         rate = create_rate()
         next_week = date.today() + timedelta(days=7)
         with self.assertRaises(
-            ValueError, msg="Slutdato skal være mindre end startdato",
+            ValueError, msg="Slutdato skal være mindre end startdato"
         ):
             rate.set_rate_amount(
                 Decimal(25), start_date=next_week, end_date=date.today()

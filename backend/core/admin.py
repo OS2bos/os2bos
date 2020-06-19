@@ -17,7 +17,6 @@ from django.urls import reverse
 from django.db.models import F
 from django import forms
 
-
 from core.models import (
     Municipality,
     PaymentSchedule,
@@ -41,15 +40,15 @@ from core.models import (
     RatePerDate,
     VariableRate,
     Rate,
+    Price,
+)
+from core.proxies import (
     SectionEffortStepProxy,
     ActivityDetailsSectionProxy,
+    HistoricalRatePerDateProxy,
 )
 
-for klass in (
-    PaymentMethodDetails,
-    Team,
-    SectionInfo,
-):
+for klass in (PaymentMethodDetails, Team, SectionInfo):
     admin.site.register(klass, admin.ModelAdmin)
 
 
@@ -150,6 +149,28 @@ class RatePerDateInline(ClassificationInline):
         return False
 
 
+class HistoricalRatePerDateInline(ClassificationInline):
+    """HistoricalRatePerDateInline for VariablerateAdmin."""
+
+    model = HistoricalRatePerDateProxy
+    verbose_name = _("Historisk takst for datoer")
+    verbose_name_plural = _("Historiske takster for datoer")
+    classes = ("collapse",)
+
+    exclude = ("history_change_reason",)
+
+    extra = 0
+    can_delete = False
+
+    def has_add_permission(self, request):
+        """Override has_add_permission for HistoricalRatePerDateInline."""
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        """Override has_change_permission for HistoricalRatePerDateInline."""
+        return False
+
+
 class VariableRateAdminForm(forms.ModelForm):
     """Form for handling the specifics of date dependency."""
 
@@ -204,14 +225,12 @@ class VariableRateAdminForm(forms.ModelForm):
 class VariableRateAdmin(ClassificationAdmin):
     """ModelAdmin for VariableRate subclasses."""
 
-    inlines = [
-        RatePerDateInline,
-    ]
+    inlines = [RatePerDateInline, HistoricalRatePerDateInline]
     form = VariableRateAdminForm
 
     def save_model(self, request, obj, form, change):
         """Override save_model to set rate after model save."""
-        if form.is_valid():
+        if form.is_valid() and form.has_changed():
             super().save_model(request, obj, form, change)
             obj.set_rate_amount(
                 form.cleaned_data["rate"],
@@ -234,6 +253,23 @@ class RateAdmin(VariableRateAdmin):
 
     list_display = ("name", "description")
     form = RateForm
+
+
+class PriceForm(VariableRateAdminForm):
+    """PriceForm for PriceAdmin."""
+
+    class Meta:
+        Model = Price
+        fields = "__all__"
+
+
+@admin.register(Price)
+class PriceAdmin(VariableRateAdmin):
+    """ModelAdmin for Price."""
+
+    readonly_fields = ("payment_schedule",)
+    list_display = ("payment_schedule",)
+    form = PriceForm
 
 
 @admin.register(Payment)
@@ -328,10 +364,7 @@ class TargetGroupAdmin(ClassificationAdmin):
     """ModelAdmin for TargetGroup with custom ModelForm."""
 
     fields = ("name", "required_fields_for_case", "active")
-    list_display = (
-        "name",
-        "active",
-    )
+    list_display = ("name", "active")
     form = TargetGroupForm
 
 
@@ -341,17 +374,19 @@ class EffortAdmin(ClassificationAdmin):
 
     filter_horizontal = ("allowed_for_target_groups",)
 
-    list_display = (
-        "name",
-        "active",
-    )
+    list_display = ("name", "active")
 
 
 @admin.register(PaymentSchedule)
 class PaymentScheduleAdmin(admin.ModelAdmin):
     """Display read only fields on payment schedule."""
 
-    readonly_fields = ("payment_id", "account_string", "account_string_new")
+    readonly_fields = (
+        "payment_id",
+        "account_string",
+        "account_string_new",
+        "price_per_unit",
+    )
     search_fields = ("payment_id",)
     list_display = (
         "id",
@@ -390,10 +425,7 @@ class AccountAdmin(ClassificationAdmin):
     """Display account number (konteringsnummer) as read only field."""
 
     readonly_fields = ("number",)
-    list_display = (
-        "main_account_number",
-        "active",
-    )
+    list_display = ("main_account_number", "active")
 
     def number(self, obj):
         """Get account number."""
@@ -435,11 +467,7 @@ class ActivityDetailsAdmin(ClassificationAdmin):
 
     filter_horizontal = ("main_activities",)
     search_fields = ("activity_id", "name")
-    list_display = (
-        "name",
-        "activity_id",
-        "active",
-    )
+    list_display = ("name", "activity_id", "active")
     exclude = (
         "supplementary_activity_for",
         "main_activity_for",
@@ -483,10 +511,7 @@ class SectionAdmin(ClassificationAdmin):
     )
     filter_horizontal = ("allowed_for_target_groups", "allowed_for_steps")
 
-    inlines = (
-        MainActivityDetailsInline,
-        SupplementaryActivityDetailsInline,
-    )
+    inlines = (MainActivityDetailsInline, SupplementaryActivityDetailsInline)
 
     def list_main_activity_for(self, obj):
         """HTML list of main activities for Django admin purposes."""
@@ -494,7 +519,7 @@ class SectionAdmin(ClassificationAdmin):
             "\n",
             '<div><a href="{}">{}</a></div>',
             (
-                (reverse("admin:core_activitydetails_change", args=[x.id]), x,)
+                (reverse("admin:core_activitydetails_change", args=[x.id]), x)
                 for x in obj.main_activities.all()
             ),
         )
@@ -529,11 +554,7 @@ class ServiceProviderAdmin(ClassificationAdmin):
 
     search_fields = ("name", "cvr_number")
 
-    list_display = (
-        "name",
-        "cvr_number",
-        "active",
-    )
+    list_display = ("name", "cvr_number", "active")
 
 
 @admin.register(RelatedPerson)
@@ -548,20 +569,14 @@ class MunicipalityAdmin(ClassificationAdmin):
     """ModelAdmin for Municipality."""
 
     search_fields = ("name",)
-    list_display = (
-        "name",
-        "active",
-    )
+    list_display = ("name", "active")
 
 
 @admin.register(ApprovalLevel)
 class ApprovalLevelAdmin(ClassificationAdmin):
     """ModelAdmin for ApprovalLevel."""
 
-    list_display = (
-        "name",
-        "active",
-    )
+    list_display = ("name", "active")
 
 
 class SectionEffortStepProxyInline(ClassificationInline):
@@ -577,15 +592,8 @@ class SectionEffortStepProxyInline(ClassificationInline):
 class EffortStepAdmin(ClassificationAdmin):
     """ModelAdmin for EffortStep."""
 
-    search_fields = (
-        "name",
-        "number",
-    )
-    list_display = (
-        "name",
-        "list_sections",
-        "active",
-    )
+    search_fields = ("name", "number")
+    list_display = ("name", "list_sections", "active")
 
     inlines = (SectionEffortStepProxyInline,)
 
@@ -611,7 +619,4 @@ class EffortStepAdmin(ClassificationAdmin):
 class SchoolDistrictAdmin(ClassificationAdmin):
     """ModelAdmin for SchoolDistrict."""
 
-    list_display = (
-        "name",
-        "active",
-    )
+    list_display = ("name", "active")
