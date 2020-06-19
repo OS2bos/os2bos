@@ -104,6 +104,13 @@ def generate_payments_on_post_save(sender, instance, created, **kwargs):
     """Generate payments for activity before saving."""
     if not hasattr(instance, "activity") or not instance.activity:
         return
+    if (
+            instance.payment_cost_type == PaymentSchedule.PER_UNIT_PRICE and
+            not hasattr(instance, "price_per_unit")
+        ):
+        return
+        print("I was called!")
+'''
     activity = instance.activity
 
     vat_factor = activity.vat_factor
@@ -124,3 +131,4 @@ def generate_payments_on_post_save(sender, instance, created, **kwargs):
             instance.synchronize_payments(
                 activity.start_date, activity.end_date, vat_factor
             )
+'''
