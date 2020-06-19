@@ -24,7 +24,12 @@ from simple_history.models import HistoricalRecords
 from constance import config
 
 from core.mixins import AuditModelMixin
-from core.managers import PaymentQuerySet, CaseQuerySet
+from core.managers import (
+    PaymentQuerySet,
+    CaseQuerySet,
+    ActivityQuerySet,
+    AppropriationQuerySet,
+)
 from core.utils import send_appropriation, create_rrule
 
 # Payment methods and choice list.
@@ -1119,16 +1124,6 @@ class Appropriation(AuditModelMixin, models.Model):
         verbose_name=_("paragraf"),
     )
 
-    @property
-    def status(self):
-        """Calculate appropriation status from status of activities."""
-        if self.activities.filter(status=STATUS_EXPECTED).exists():
-            return STATUS_EXPECTED
-        if self.activities.filter(status=STATUS_GRANTED).exists():
-            return STATUS_GRANTED
-
-        return STATUS_DRAFT
-
     case = models.ForeignKey(
         Case,
         on_delete=models.CASCADE,
@@ -1138,6 +1133,18 @@ class Appropriation(AuditModelMixin, models.Model):
     note = models.TextField(
         verbose_name=_("supplerende oplysninger"), blank=True
     )
+
+    objects = AppropriationQuerySet.as_manager()
+
+    @property
+    def status(self):
+        """Calculate appropriation status from status of activities."""
+        if self.activities.filter(status=STATUS_EXPECTED).exists():
+            return STATUS_EXPECTED
+        if self.activities.filter(status=STATUS_GRANTED).exists():
+            return STATUS_GRANTED
+
+        return STATUS_DRAFT
 
     @property
     def granted_from_date(self):
@@ -1601,6 +1608,8 @@ class Activity(AuditModelMixin, models.Model):
                 name="unique_main_activity",
             ),
         ]
+
+    objects = ActivityQuerySet.as_manager()
 
     details = models.ForeignKey(
         ActivityDetails,

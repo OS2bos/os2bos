@@ -183,7 +183,7 @@
                         display_func: this.displayEffortName
                     },
                     {
-                        key: 'num_appropriations',
+                        key: 'num_ongoing_appropriations',
                         title: 'Bevillinger',
                         display_func: this.displayAppr,
                         class: 'nowrap'
@@ -248,7 +248,7 @@
                 }
             },
             displayAppr: function(id) {
-                return `<dl class="appropriation-status"><dt>Foreløbige</dt><dd>${ id.num_draft_or_expected_appropriations }</dd><dt>I alt</dt><dd>${ id.num_appropriations }</dd></dl>`
+                return `<dl class="appropriation-status"><dt>Foreløbige</dt><dd>${ id.num_ongoing_draft_or_expected_appropriations }</dd><dt>Aktive i alt</dt><dd>${ id.num_ongoing_appropriations }</dd></dl>`
             },
             diagChangeWorker: function(worker_id) {
                 this.diag_field_case_worker = worker_id
