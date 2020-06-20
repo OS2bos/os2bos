@@ -639,6 +639,21 @@ class PaymentSchedule(models.Model):
 
         return (amount / 100) * vat_factor
 
+    def is_ready_to_generate_payments(self):
+        """Don't generate payments unless object is ready.
+
+        Note: This is *not* a validation. It's necessary because Django Rest
+        Framework can perform partial saves and the post-save logic needs to be
+        able to cope with that.
+        """
+        if not hasattr(self, "activity") or not self.activity:
+            return False
+        if self.payment_cost_type == self.PER_UNIT_PRICE and not hasattr(
+            self, "price_per_unit"
+        ):
+            return False
+        return True
+
     def generate_payments(self, start, end=None, vat_factor=Decimal("100")):
         """Generate payments with a start and end date."""
         # If no end is specified, choose end of the next year.

@@ -12,6 +12,7 @@ from core.models import (
     Activity,
     PaymentSchedule,
     Payment,
+    Price,
     STATUS_EXPECTED,
     STATUS_DRAFT,
 )
@@ -95,6 +96,13 @@ def send_activity_payment_email_on_delete(sender, instance, **kwargs):
     send_activity_deleted_email(instance)
 
 
+@receiver(post_save, sender=Price, dispatch_uid="on_save_price")
+def ping_payment_schedule_on_save_price(sender, instance, created, **kwargs):
+    """Save payment schedule too when saving price."""
+    if instance.payment_schedule:
+        instance.payment_schedule.save()
+
+
 @receiver(
     post_save,
     sender=PaymentSchedule,
@@ -102,33 +110,24 @@ def send_activity_payment_email_on_delete(sender, instance, **kwargs):
 )
 def generate_payments_on_post_save(sender, instance, created, **kwargs):
     """Generate payments for activity before saving."""
-    if not hasattr(instance, "activity") or not instance.activity:
-        return
-    if (
-            instance.payment_cost_type == PaymentSchedule.PER_UNIT_PRICE and
-            not hasattr(instance, "price_per_unit")
-        ):
-        return
-        print("I was called!")
-'''
-    activity = instance.activity
+    if instance.is_ready_to_generate_payments():
+        activity = instance.activity
 
-    vat_factor = activity.vat_factor
+        vat_factor = activity.vat_factor
 
-    if created and not instance.payments.exists():
-        instance.generate_payments(
-            activity.start_date, activity.end_date, vat_factor
-        )
-    elif instance.payments.exists():
-        # If status is either STATUS_DRAFT or STATUS_EXPECTED we delete
-        # and regenerate payments.
-        if activity.status in [STATUS_DRAFT, STATUS_EXPECTED]:
-            instance.payments.all().delete()
+        if created and not instance.payments.exists():
             instance.generate_payments(
                 activity.start_date, activity.end_date, vat_factor
             )
-        else:
-            instance.synchronize_payments(
-                activity.start_date, activity.end_date, vat_factor
-            )
-'''
+        elif instance.payments.exists():
+            # If status is either STATUS_DRAFT or STATUS_EXPECTED we delete
+            # and regenerate payments.
+            if activity.status in [STATUS_DRAFT, STATUS_EXPECTED]:
+                instance.payments.all().delete()
+                instance.generate_payments(
+                    activity.start_date, activity.end_date, vat_factor
+                )
+            else:
+                instance.synchronize_payments(
+                    activity.start_date, activity.end_date, vat_factor
+                )
