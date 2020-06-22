@@ -26,7 +26,7 @@ class Command(BaseCommand):
             payment_schedules = PaymentSchedule.objects.filter(
                 payment_cost_type=PaymentSchedule.GLOBAL_RATE_PRICE,
                 payment_rate__in=rates,
-                activity__in=Activity.ongoing.all(),
+                activity__in=Activity.objects.ongoing(),
             )
             for payment_schedule in payment_schedules:
                 payment_schedule.save()
