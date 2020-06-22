@@ -545,12 +545,12 @@ def export_prism_payments_for_date(date=None):
     if not date:
         date = tomorrow
 
+    # Retrieve payments for the default date.
     payments = due_payments_for_prism(date)
 
-    # Payments on PaymentDateExclusion dates should be paid two days prior.
+    # Include payments on PaymentDateExclusion dates.
     payment_date_exclusions_found = False
     days_delta = 1
-    # Include payments on PaymentDateExclusion dates.
     while models.PaymentDateExclusion.objects.filter(
         date=date + relativedelta(days=days_delta)
     ).exists():
@@ -559,12 +559,12 @@ def export_prism_payments_for_date(date=None):
             due_payments_for_prism(date + relativedelta(days=days_delta))
         )
         days_delta += 1
-        print(date + relativedelta(days=days_delta))
+
+    # Also include payments for the last day after PaymentDateExclusion dates.
     if payment_date_exclusions_found:
         payments = payments.union(
             due_payments_for_prism(date + relativedelta(days=days_delta))
         )
-        print(date + relativedelta(days=days_delta))
 
     if not payments.exists():
         # No payments
