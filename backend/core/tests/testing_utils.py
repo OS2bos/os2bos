@@ -34,6 +34,7 @@ from core.models import (
     VariableRate,
     Rate,
     RatePerDate,
+    PaymentDateExclusion,
 )
 
 
