@@ -545,7 +545,6 @@ def export_prism_payments_for_date(date=None):
     if not date:
         date = tomorrow
 
-    days_delta = 1
     payments = due_payments_for_prism(date)
 
     # Payments on PaymentDateExclusion dates should be paid two days prior.
