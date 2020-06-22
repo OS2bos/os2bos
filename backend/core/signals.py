@@ -97,7 +97,7 @@ def send_activity_payment_email_on_delete(sender, instance, **kwargs):
 
 
 @receiver(post_save, sender=Price, dispatch_uid="on_save_price")
-def ping_payment_schedule_on_save_price(sender, instance, created, **kwargs):
+def save_payment_schedule_on_save_price(sender, instance, created, **kwargs):
     """Save payment schedule too when saving price."""
     if instance.payment_schedule:
         instance.payment_schedule.save()

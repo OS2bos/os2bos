@@ -132,8 +132,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         serializer.is_valid()
         # Test creation of Price instance.
         instance = serializer.save()
-        self.assertTrue(instance.payment_plan.price_per_unit is not None)
-        print("ERRORS:", serializer.errors)
+        self.assertIsNotNone(instance.payment_plan.price_per_unit)
 
     def test_validate_start_before_end(self):
         activity_details = ActivityDetails.objects.create(
