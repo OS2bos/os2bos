@@ -98,6 +98,42 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             "startdato skal være før eller identisk med slutdato",
         )
 
+    def test_has_per_unit_price(self):
+        activity_details = ActivityDetails.objects.create(
+            max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        data = {
+            "activity_type": MAIN_ACTIVITY,
+            "appropriation": appropriation.pk,
+            "details": activity_details.pk,
+            "payment_plan": {
+                "payment_amount": 0,
+                "payment_cost_type": "PER_UNIT",
+                "payment_frequency": "BIWEEKLY",
+                "payment_method": "INVOICE",
+                "payment_type": "RUNNING_PAYMENT",
+                "payment_units": "6",
+                "price_per_unit": {
+                    "amount": "180",
+                    "start_date": "2020-06-19",
+                },
+                "recipient_id": "75736215",
+                "recipient_name": "AKTIV WEEKEND",
+                "recipient_type": "COMPANY",
+            },
+            "start_date": date.today(),
+            "status": "DRAFT",
+        }
+        serializer = ActivitySerializer(data=data)
+        serializer.is_valid()
+        # Test creation of Price instance.
+        instance = serializer.save()
+        self.assertIsNotNone(instance.payment_plan.price_per_unit)
+
     def test_validate_start_before_end(self):
         activity_details = ActivityDetails.objects.create(
             max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
