@@ -644,7 +644,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
                 date(2020, 4, 11),  # Saturday - weekend
                 date(
                     2020, 4, 12
-                ),  # Easter Sunday - holiday / sunday - weekend
+                ),  # Easter Sunday - holiday / Sunday - weekend
                 date(2020, 4, 13),  # Easter Monday
                 date(2020, 4, 14),  # Should be paid 2 "normal" days prior
             ],
