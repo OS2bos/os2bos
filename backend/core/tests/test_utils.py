@@ -42,6 +42,7 @@ from core.utils import (
     generate_payments_report_list,
     generate_granted_payments_report_list,
     generate_expected_payments_report_list,
+    generate_payment_date_exclusion_dates,
 )
 from core.tests.testing_utils import (
     BasicTestMixin,
