@@ -2070,7 +2070,7 @@ class Account(Classification):
 
 
 class PaymentDateExclusion(models.Model):
-    """Class holding Prism payment exclusion dates."""
+    """Model for Prism payment exclusion dates."""
 
     date = models.DateField(unique=True, verbose_name=_("dato"))
 
