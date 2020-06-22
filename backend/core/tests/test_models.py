@@ -3071,6 +3071,40 @@ class PaymentScheduleTestCase(TestCase):
 
         self.assertEqual(amount, expected)
 
+    def test_calculate_per_payment_amount_for_undefined_rate(self):
+        payment_type = PaymentSchedule.RUNNING_PAYMENT
+        payment_frequency = PaymentSchedule.DAILY
+        price_per_unit = Decimal(237)
+        payment_units = 5
+        vat_factor = 100
+        expected = Decimal(0)
+        rate = create_rate()
+        today = date.today()
+        tomorrow = today + timedelta(days=1)
+        rate.set_rate_amount(
+            price_per_unit, start_date=today, end_date=tomorrow
+        )
+
+        payment_schedule = create_payment_schedule(
+            payment_amount=None,
+            payment_type=payment_type,
+            payment_frequency=payment_frequency,
+            payment_units=payment_units,
+            payment_cost_type=PaymentSchedule.GLOBAL_RATE_PRICE,
+            payment_rate=rate,
+        )
+
+        start_date = today + timedelta(days=3)
+        end = today + timedelta(days=365)
+        rrule_frequency = payment_schedule.create_rrule(start_date, until=end)
+        price_date = list(rrule_frequency)[0]
+
+        amount = payment_schedule.calculate_per_payment_amount(
+            vat_factor, price_date
+        )
+
+        self.assertEqual(amount, expected)
+
     def test_datetime_in_set_rate_amount(self):
         rate = create_rate()
         date1 = datetime.today()

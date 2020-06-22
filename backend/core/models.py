@@ -304,7 +304,7 @@ class VariableRate(models.Model):
         for p in periods:
             i = self.create_interval(p.start_date, p.end_date)
             d[i] = p.rate
-        return d.get(rate_date)
+        return d.get(rate_date, 0)
 
     rate_amount = property(get_rate_amount)
 
