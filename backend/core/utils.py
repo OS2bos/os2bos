@@ -191,7 +191,7 @@ def send_appropriation(appropriation, included_activities=None):
     today = datetime.date.today()
 
     # Fetch all currently granted main activities.
-    approved_main_activities = (
+    approved_main_activities_ids = (
         appropriation.activities.filter(
             activity_type=models.MAIN_ACTIVITY, status=models.STATUS_GRANTED
         )
@@ -199,44 +199,38 @@ def send_appropriation(appropriation, included_activities=None):
         .values_list("id", flat=True)
     )
     # Fetch all main activities from the explicitly included queryset.
-    included_main_activities_qs = included_activities_qs.filter(
+    included_main_activities_ids = included_activities_qs.filter(
         activity_type=models.MAIN_ACTIVITY
     ).values_list("id", flat=True)
 
     # Annotate is_new so we can highlight them in the template.
     main_activities = models.Activity.objects.filter(
-        Q(id__in=approved_main_activities)
-        | Q(id__in=included_main_activities_qs)
+        Q(id__in=approved_main_activities_ids)
+        | Q(id__in=included_main_activities_ids)
     ).annotate(
         is_new=Case(
-            When(
-                id__in=included_activities_qs.values_list("id", flat=True),
-                then=True,
-            ),
+            When(id__in=included_main_activities_ids, then=True),
             default=False,
             output_field=BooleanField(),
         )
     )
 
     # Fetch all currently granted supplementary activities.
-    approved_suppl_activities = appropriation.activities.filter(
+    approved_suppl_activities_ids = appropriation.activities.filter(
         activity_type=models.SUPPL_ACTIVITY, status=models.STATUS_GRANTED
     ).exclude(end_date__lt=today)
 
     # Fetch all supplementary activities from the explicitly included queryset.
-    included_suppl_activities_qs = included_activities_qs.filter(
+    included_suppl_activities_ids = included_activities_qs.filter(
         activity_type=models.SUPPL_ACTIVITY
     )
     # Annotate is_new so we can highlight them in the template.
     suppl_activities = models.Activity.objects.filter(
-        Q(id__in=approved_suppl_activities)
-        | Q(id__in=included_suppl_activities_qs)
+        Q(id__in=approved_suppl_activities_ids)
+        | Q(id__in=included_suppl_activities_ids)
     ).annotate(
         is_new=Case(
-            When(
-                id__in=included_activities_qs.values_list("id", flat=True),
-                then=True,
-            ),
+            When(id__in=included_suppl_activities_ids, then=True),
             default=False,
             output_field=BooleanField(),
         )
