@@ -27,7 +27,8 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.utils.html import strip_tags
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Q, BooleanField
+from django.db.models.expressions import Case, When
 
 from constance import config
 
@@ -188,30 +189,63 @@ def send_appropriation(appropriation, included_activities=None):
         )
 
     today = datetime.date.today()
+
+    # Fetch all currently granted main activities.
     approved_main_activities = (
         appropriation.activities.filter(
             activity_type=models.MAIN_ACTIVITY, status=models.STATUS_GRANTED
         )
         .exclude(end_date__lt=today)
-        .union(
-            included_activities_qs.filter(activity_type=models.MAIN_ACTIVITY)
+        .values_list("id", flat=True)
+    )
+    # Fetch all main activities from the explicitly included queryset.
+    included_main_activities_qs = included_activities_qs.filter(
+        activity_type=models.MAIN_ACTIVITY
+    ).values_list("id", flat=True)
+
+    # Annotate is_new so we can highlight them in the template.
+    main_activities = models.Activity.objects.filter(
+        Q(id__in=approved_main_activities)
+        | Q(id__in=included_main_activities_qs)
+    ).annotate(
+        is_new=Case(
+            When(
+                id__in=included_activities_qs.values_list("id", flat=True),
+                then=True,
+            ),
+            default=False,
+            output_field=BooleanField(),
         )
     )
 
-    approved_suppl_activities = (
-        appropriation.activities.filter(
-            activity_type=models.SUPPL_ACTIVITY, status=models.STATUS_GRANTED
-        )
-        .exclude(end_date__lt=today)
-        .union(
-            included_activities_qs.filter(activity_type=models.SUPPL_ACTIVITY)
+    # Fetch all currently granted supplementary activities.
+    approved_suppl_activities = appropriation.activities.filter(
+        activity_type=models.SUPPL_ACTIVITY, status=models.STATUS_GRANTED
+    ).exclude(end_date__lt=today)
+
+    # Fetch all supplementary activities from the explicitly included queryset.
+    included_suppl_activities_qs = included_activities_qs.filter(
+        activity_type=models.SUPPL_ACTIVITY
+    )
+    # Annotate is_new so we can highlight them in the template.
+    suppl_activities = models.Activity.objects.filter(
+        Q(id__in=approved_suppl_activities)
+        | Q(id__in=included_suppl_activities_qs)
+    ).annotate(
+        is_new=Case(
+            When(
+                id__in=included_activities_qs.values_list("id", flat=True),
+                then=True,
+            ),
+            default=False,
+            output_field=BooleanField(),
         )
     )
 
     render_context = {
         "appropriation": appropriation,
-        "main_activities": approved_main_activities,
-        "supplementary_activities": approved_suppl_activities,
+        "main_activities": main_activities,
+        "supplementary_activities": suppl_activities,
     }
 
     # Get SBSYS template and KLE number from main activity.
