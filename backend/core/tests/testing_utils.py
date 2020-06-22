@@ -332,3 +332,11 @@ def create_rate_per_date(main_rate, rate=100, start_date=None, end_date=None):
         end_date=end_date,
     )
     return rate_per_date
+
+
+def create_payment_date_exclusion(date=date.today()):
+    payment_date_exclusion, _ = PaymentDateExclusion.objects.get_or_create(
+        date=date
+    )
+
+    return payment_date_exclusion

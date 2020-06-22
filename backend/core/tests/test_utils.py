@@ -49,6 +49,8 @@ from core.tests.testing_utils import (
     create_section_info,
     create_account,
     create_payment_schedule,
+    create_activity_details,
+    create_payment_date_exclusion,
 )
 
 
@@ -458,6 +460,107 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         # Repeat the previous processing to have an example with no due
         # payments.
         export_prism_payments_for_date()
+
+    @freeze_time("2019-08-01")
+    def test_export_prism_payments_for_date_with_payment_exclusions(self):
+        now = timezone.now()
+        start_date = now
+        end_date = now + timedelta(days=3)
+        # Create an activity etc which is required.
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        main_activity_details = create_activity_details()
+        create_account(
+            section=section,
+            main_activity=main_activity_details,
+            supplementary_activity=None,
+        )
+        create_section_info(
+            main_activity_details,
+            section,
+            main_activity_main_account_number="1234",
+        )
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            details=main_activity_details,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=activity,
+        )
+
+        create_payment_date_exclusion(date=now + timedelta(days=1))
+        create_payment_date_exclusion(date=now + timedelta(days=2))
+
+        export_prism_payments_for_date(date=start_date)
+        # Assert inclusion dates have been paid also.
+        self.assertCountEqual(
+            payment_schedule.payments.filter(paid=True).values_list(
+                "date", flat=True
+            ),
+            [date(2019, 8, 1), date(2019, 8, 2), date(2019, 8, 3)],
+        )
+
+    @freeze_time("2020-04-07")
+    def test_export_prism_payments_with_payment_exclusions_easter(self):
+        now = timezone.now()
+        start_date = now
+        end_date = now + timedelta(days=7)
+        # Create an activity etc which is required.
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        main_activity_details = create_activity_details()
+        create_account(
+            section=section,
+            main_activity=main_activity_details,
+            supplementary_activity=None,
+        )
+        create_section_info(
+            main_activity_details,
+            section,
+            main_activity_main_account_number="1234",
+        )
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            details=main_activity_details,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=activity,
+        )
+        exclusion_dates = generate_payment_date_exclusion_dates(years=[2020])
+        for exclusion_date in exclusion_dates:
+            create_payment_date_exclusion(date=exclusion_date)
+
+        export_prism_payments_for_date(date=start_date)
 
 
 class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):

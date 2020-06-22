@@ -34,6 +34,8 @@ from constance import config
 from weasyprint import HTML
 from weasyprint.fonts import FontConfiguration
 
+from holidays import Denmark as danish_holidays
+
 from service_person_stamdata_udvidet import get_citizen
 
 from core import models
@@ -543,7 +545,20 @@ def export_prism_payments_for_date(date=None):
     if not date:
         date = tomorrow
 
+    days_delta = 1
     payments = due_payments_for_prism(date)
+
+    # Payments on PaymentDateExclusion dates should be paid two days prior.
+    days_delta = 2
+    # Include payments on PaymentDateExclusion dates.
+    while models.PaymentDateExclusion.objects.filter(
+        date=date + relativedelta(days=days_delta)
+    ).exists():
+        payments = payments.union(
+            due_payments_for_prism(date + relativedelta(days=days_delta))
+        )
+        days_delta += 1
+
     if not payments.exists():
         # No payments
         return
@@ -727,3 +742,33 @@ def create_rrule(
     else:
         raise ValueError(_("ukendt betalingsfrekvens"))
     return rrule_frequency
+
+
+def generate_payment_date_exclusion_dates(years=None):
+    """
+    Generate "default" dates for payment date exclusions for a number of years.
+
+
+    The default are danish holidays and weekends.
+    """
+    if not years:
+        years = [date.today().year]
+
+    danish_holiday_dates = list(danish_holidays(years=years))
+
+    start_date = date(min(years), 1, 1)
+    end_date = date(max(years), 12, 31)
+
+    weekend_dates = [
+        dt.date()
+        for dt in (
+            rrule.rrule(
+                dtstart=start_date,
+                until=end_date,
+                freq=rrule.WEEKLY,
+                byweekday=(rrule.SA, rrule.SU),
+            )
+        )
+    ]
+
+    return sorted(list(set(danish_holiday_dates + weekend_dates)))
