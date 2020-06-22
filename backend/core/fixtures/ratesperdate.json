@@ -5,7 +5,7 @@
         "fields": {
             "rate": "145.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 1
         }
     },
@@ -15,7 +15,7 @@
         "fields": {
             "rate": "4423.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 2
         }
     },
@@ -25,7 +25,7 @@
         "fields": {
             "rate": "189.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 3
         }
     },
@@ -35,7 +35,7 @@
         "fields": {
             "rate": "202.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 4
         }
     },
@@ -45,7 +45,7 @@
         "fields": {
             "rate": "176.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 5
         }
     },
@@ -55,7 +55,7 @@
         "fields": {
             "rate": "10999.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 6
         }
     },
@@ -65,7 +65,7 @@
         "fields": {
             "rate": "32.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 7
         }
     },
@@ -75,7 +75,7 @@
         "fields": {
             "rate": "68.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 8
         }
     },
@@ -85,7 +85,7 @@
         "fields": {
             "rate": "136.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 9
         }
     },
@@ -95,7 +95,7 @@
         "fields": {
             "rate": "274.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 10
         }
     },
@@ -105,7 +105,7 @@
         "fields": {
             "rate": "33.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 11
         }
     },
@@ -115,7 +115,7 @@
         "fields": {
             "rate": "1017.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 12
         }
     },
@@ -125,7 +125,7 @@
         "fields": {
             "rate": "1180.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 13
         }
     },
@@ -135,7 +135,7 @@
         "fields": {
             "rate": "480.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 14
         }
     },
@@ -145,7 +145,7 @@
         "fields": {
             "rate": "116.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 15
         }
     },
@@ -155,7 +155,7 @@
         "fields": {
             "rate": "136.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 16
         }
     },
@@ -165,7 +165,7 @@
         "fields": {
             "rate": "159.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 17
         }
     },
@@ -175,7 +175,7 @@
         "fields": {
             "rate": "175.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 18
         }
     },
@@ -185,7 +185,7 @@
         "fields": {
             "rate": "6240.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 19
         }
     },
@@ -195,7 +195,7 @@
         "fields": {
             "rate": "10170.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 20
         }
     },
@@ -205,7 +205,7 @@
         "fields": {
             "rate": "3914.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 21
         }
     },
@@ -215,7 +215,7 @@
         "fields": {
             "rate": "5866.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 22
         }
     },
@@ -225,7 +225,7 @@
         "fields": {
             "rate": "238.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 23
         }
     },
@@ -235,7 +235,7 @@
         "fields": {
             "rate": "354.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 24
         }
     },
@@ -245,7 +245,7 @@
         "fields": {
             "rate": "587.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 25
         }
     },
@@ -255,7 +255,7 @@
         "fields": {
             "rate": "54.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 26
         }
     },
@@ -265,7 +265,7 @@
         "fields": {
             "rate": "783.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 27
         }
     },
@@ -275,7 +275,7 @@
         "fields": {
             "rate": "900.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 28
         }
     },
@@ -285,7 +285,7 @@
         "fields": {
             "rate": "3249.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 29
         }
     },
@@ -295,7 +295,7 @@
         "fields": {
             "rate": "34.00",
             "start_date": "2020-01-01",
-            "end_date": "2020-12-31",
+            "end_date": null,
             "main_rate": 30
         }
     }
