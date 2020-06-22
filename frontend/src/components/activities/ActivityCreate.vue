@@ -12,7 +12,7 @@
             Opret ydelse
         </h1>
         
-        <div class="act-create-header">
+        <div :class="`act-create-header activity-${ act.status }`">
             <dl>
                 <dt>Foranstaltningssag</dt>
                 <dd>{{ appropriation.sbsys_id }}</dd>
@@ -29,7 +29,7 @@
             </dl>
         </div>
 
-        <form @submit.prevent="" class="act-create-form">
+        <form @submit.prevent="" :class="`act-create-form activity-${ act.status }`">
             <div class="act-create-main">
                 <step-activity class="row-item" />
                 <step-frequency class="row-item" />
@@ -230,12 +230,15 @@ export default {
     }
 
     .act-create-step {
-        background-color: var(--grey1);
         padding-right: 2rem;
     }
 
     .act-create-nav > a {
         margin-right: 2rem;
+    }
+
+    .activity-EXPECTED {
+        background-color: hsl(40, 90%, 80%);
     }
 
 </style>
