@@ -634,6 +634,7 @@ class PaymentDateExclusion(ClassificationAdmin):
     list_display = ("date", "weekday")
 
     def weekday(self, obj):
+        """Return translated weekday of date."""
         return _(obj.date.strftime("%A"))
 
     weekday.short_description = _("Ugedag")

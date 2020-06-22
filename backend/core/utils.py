@@ -747,7 +747,6 @@ def generate_payment_date_exclusion_dates(years=None):
     """
     Generate "default" dates for payment date exclusions for a number of years.
 
-
     The default are danish holidays and weekends.
     """
     if not years:
