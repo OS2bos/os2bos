@@ -41,6 +41,7 @@ from core.models import (
     VariableRate,
     Rate,
     Price,
+    PaymentDateExclusion,
 )
 from core.proxies import (
     SectionEffortStepProxy,
@@ -620,3 +621,19 @@ class SchoolDistrictAdmin(ClassificationAdmin):
     """ModelAdmin for SchoolDistrict."""
 
     list_display = ("name", "active")
+
+
+@admin.register(PaymentDateExclusion)
+class PaymentDateExclusion(ClassificationAdmin):
+    """ModelAdmin for PaymentDateExclusion."""
+
+    search_fields = ("date",)
+
+    list_filter = (("date", admin.DateFieldListFilter),)
+
+    list_display = ("date", "weekday")
+
+    def weekday(self, obj):
+        return _(obj.date.strftime("%A"))
+
+    weekday.short_description = _("Ugedag")
