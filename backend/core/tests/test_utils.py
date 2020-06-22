@@ -651,6 +651,25 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         )
 
 
+class TestGeneratePaymentDateExclusionDates(TestCase):
+    def test_generate_payment_date_exclusion_dates(self):
+        # Generate exclusion dates for 2019 and 2020.
+        dates = generate_payment_date_exclusion_dates([2019, 2020])
+
+        self.assertTrue(
+            all([date.year == 2019 or date.year == 2020 for date in dates])
+        )
+        self.assertEqual(len(dates), 225)
+
+    @freeze_time("2020-01-01")
+    def test_generate_payment_date_exclusion_dates_no_params(self):
+        # Generate exclusion dates with no params so default is 2020.
+        dates = generate_payment_date_exclusion_dates()
+
+        self.assertTrue(all([date.year == 2020 for date in dates]))
+        self.assertEqual(len(dates), 112)
+
+
 class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
     @classmethod
     def setUpTestData(cls):

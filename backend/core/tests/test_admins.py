@@ -17,6 +17,7 @@ from core.models import (
     Rate,
     RatePerDate,
     HistoricalRatePerDate,
+    PaymentDateExclusion,
 )
 from core.admin import (
     PaymentAdmin,
@@ -32,6 +33,7 @@ from core.admin import (
     RateAdmin,
     RatePerDateInline,
     HistoricalRatePerDateInline,
+    PaymentDateExclusionAdmin,
 )
 from core.tests.testing_utils import (
     AuthenticatedTestCase,
@@ -48,6 +50,7 @@ from core.tests.testing_utils import (
     create_effort_step,
     create_rate,
     create_rate_per_date,
+    create_payment_date_exclusion,
 )
 
 User = get_user_model()
@@ -545,6 +548,22 @@ class HistoricalRatePerDateInlineTestCase(TestCase):
 
         self.assertFalse(
             historical_rate_per_date_inline.has_change_permission(request)
+        )
+
+
+class PaymentDateExclusionAdminTestCase(TestCase):
+    def test_weekday(self):
+        site = AdminSite()
+        payment_date_exclusion_admin = PaymentDateExclusionAdmin(
+            PaymentDateExclusion, site
+        )
+        payment_date_exclusion = create_payment_date_exclusion(
+            date=date(2020, 1, 1)
+        )
+
+        self.assertEqual(
+            payment_date_exclusion_admin.weekday(payment_date_exclusion),
+            "onsdag",
         )
 
 

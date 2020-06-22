@@ -624,7 +624,7 @@ class SchoolDistrictAdmin(ClassificationAdmin):
 
 
 @admin.register(PaymentDateExclusion)
-class PaymentDateExclusion(ClassificationAdmin):
+class PaymentDateExclusionAdmin(ClassificationAdmin):
     """ModelAdmin for PaymentDateExclusion."""
 
     search_fields = ("date",)
