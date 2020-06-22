@@ -3700,9 +3700,18 @@ class RateTestCase(TestCase):
 
         rate.set_rate_amount(Decimal(10), start_date=None, end_date=None)
         rate.set_rate_amount(Decimal(20), start_date=today, end_date=None)
+        rate.save()
 
         self.assertEqual(rate.get_rate_amount(yesterday), Decimal(10))
         self.assertEqual(rate.get_rate_amount(today), Decimal(20))
+
+    def test_needs_update(self):
+        rate = create_rate()
+
+        self.assertFalse(rate.needs_update)
+
+        rate.set_rate_amount(Decimal(10), start_date=None, end_date=None)
+        self.assertTrue(rate.needs_update)
 
 
 class RatePerDateTestCase(TestCase):

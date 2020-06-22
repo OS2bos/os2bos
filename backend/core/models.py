@@ -352,6 +352,9 @@ class VariableRate(models.Model):
                     start_date=start, end_date=end, rate=rate, main_rate=self
                 )
                 rpd.save()
+        # RatesPerDate belongs to this object so notify that they have
+        # changed.
+        self.save()
 
     def __str__(self):
         return ";".join(
