@@ -520,10 +520,10 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         )
 
     @freeze_time("2020-04-07")
-    def test_export_prism_payments_with_payment_exclusions_easter(self):
+    def test_export_prism_payments_with_payment_exclusions_easter_2020(self):
         now = timezone.now()
         start_date = now
-        end_date = now + timedelta(days=7)
+        end_date = now + timedelta(days=14)
         # Create an activity etc which is required.
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -552,7 +552,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
             status=STATUS_GRANTED,
             details=main_activity_details,
         )
-        create_payment_schedule(
+        payment_schedule = create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
             recipient_type=PaymentSchedule.PERSON,
@@ -564,7 +564,25 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         for exclusion_date in exclusion_dates:
             create_payment_date_exclusion(date=exclusion_date)
 
-        export_prism_payments_for_date(date=start_date)
+        export_prism_payments_for_date(date=None)
+        breakpoint()
+        # Export run on 2020-04-07 should have inclusion dates paid also.
+        self.assertCountEqual(
+            payment_schedule.payments.filter(paid=True).values_list(
+                "date", flat=True
+            ),
+            [
+                date(2020, 4, 8),  # "Normal" day
+                date(2020, 4, 9),  # Maundy Thursday - holiday
+                date(2020, 4, 10),  # Good Friday - holiday
+                date(2020, 4, 11),  # Saturday - weekend
+                date(
+                    2020, 4, 12
+                ),  # Easter Sunday - holiday / sunday - weekend
+                date(2020, 4, 13),  # Easter Monday
+                date(2020, 4, 14),  # Should be paid 2 "normal" days prior
+            ],
+        )
 
 
 class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
