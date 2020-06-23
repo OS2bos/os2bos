@@ -660,6 +660,14 @@ class PaymentSchedule(models.Model):
             return False
         return True
 
+    def recalculate_prices(self):
+        """Recalculate price on all payments."""
+        for p in self.payments.filter(paid_amount__isnull=True):
+            p.amount = self.calculate_per_payment_amount(
+                self.activity.vat_factor, p.date
+            )
+            p.save()
+
     def generate_payments(self, start, end=None, vat_factor=Decimal("100")):
         """Generate payments with a start and end date."""
         # If no end is specified, choose end of the next year.

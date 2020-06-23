@@ -140,3 +140,4 @@ def generate_payments_on_post_save(sender, instance, created, **kwargs):
                 instance.synchronize_payments(
                     activity.start_date, activity.end_date, vat_factor
                 )
+                instance.recalculate_prices()

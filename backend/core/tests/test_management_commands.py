@@ -723,7 +723,6 @@ class TestRecalculateOnChangedRate(TestCase, BasicTestMixin):
             self.assertEqual(payment_schedule.payments.count(), 4)
             payment = payment_schedule.payments.all()[0]
             self.assertEqual(payment.amount, 10)
-
             rate.set_rate_amount(15)
 
             call_command("recalculate_on_changed_rate")

@@ -29,6 +29,6 @@ class Command(BaseCommand):
                 activity__in=Activity.objects.ongoing(),
             )
             for payment_schedule in payment_schedules:
-                payment_schedule.save()
+                payment_schedule.recalculate_prices()
         except Exception:
             logger.exception("An exception occurred during export to PRISME")
