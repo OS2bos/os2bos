@@ -22,7 +22,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         """Find rates and corresponding schedules, recalculate."""
         try:
+            logger.info("Start recalculating payment schedules.")
             rates = Rate.objects.filter(needs_recalculation=True)
+            logger.info("Recalculating rates: {}".format(list(rates)))
             payment_schedules = PaymentSchedule.objects.filter(
                 payment_cost_type=PaymentSchedule.GLOBAL_RATE_PRICE,
                 payment_rate__in=rates,
@@ -30,7 +32,11 @@ class Command(BaseCommand):
             )
             for payment_schedule in payment_schedules:
                 payment_schedule.recalculate_prices()
+                logger.info(
+                    f"Recalculated payment schedule: {payment_schedule}"
+                )
             rates.update(needs_recalculation=False)
+            logger.info("Success: Done recalculating payment schedules.")
         except Exception:
             logger.exception(
                 "An exception occurred while recalculating payments"
