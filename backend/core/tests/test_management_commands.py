@@ -729,3 +729,16 @@ class TestRecalculateOnChangedRate(TestCase, BasicTestMixin):
 
             payment.refresh_from_db()
             self.assertEqual(payment.amount, 15)
+
+    @mock.patch("core.management.commands.recalculate_on_changed_rate.logger")
+    @mock.patch("core.models.PaymentSchedule.objects.filter")
+    def test_recalculate_on_changed_rate_error(
+        self, recalculate_mock, logger_mock
+    ):
+        recalculate_mock.side_effect = OSError("test")
+
+        call_command("recalculate_on_changed_rate")
+
+        logger_mock.exception.assert_called_with(
+            "An exception occurred while recalculating payments"
+        )

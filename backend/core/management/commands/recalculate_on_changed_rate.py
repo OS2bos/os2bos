@@ -31,4 +31,6 @@ class Command(BaseCommand):
             for payment_schedule in payment_schedules:
                 payment_schedule.recalculate_prices()
         except Exception:
-            logger.exception("An exception occurred during export to PRISME")
+            logger.exception(
+                "An exception occurred while recalculating payments"
+            )
