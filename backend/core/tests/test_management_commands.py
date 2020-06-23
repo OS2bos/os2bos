@@ -498,7 +498,7 @@ class TestGeneratePaymentDateExclusions(TestCase):
         "core.management.commands.generate_payment_date_exclusions."
         "PaymentDateExclusion.objects.get_or_create"
     )
-    def test_generate_payment_date_exclusions_success(
+    def test_generate_payment_date_exclusions_exception_raised(
         self, get_or_create_mock, logger_mock
     ):
 
