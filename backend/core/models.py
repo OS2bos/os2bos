@@ -352,7 +352,7 @@ class VariableRate(models.Model):
                     start_date=start, end_date=end, rate=rate, main_rate=self
                 )
                 rpd.save()
-        # RatesPerDate belongs to this object so notify that they have
+        # RatesPerDate belong to this object so notify that they have
         # changed.
         self.save()
 
@@ -660,6 +660,7 @@ class PaymentSchedule(models.Model):
             return False
         return True
 
+    @transaction.atomic
     def recalculate_prices(self):
         """Recalculate price on all payments."""
         for p in self.payments.filter(paid_amount__isnull=True):

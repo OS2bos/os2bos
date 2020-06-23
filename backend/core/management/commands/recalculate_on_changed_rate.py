@@ -1,4 +1,4 @@
-# Copyright (C) 2019 Magenta ApS, http://magenta.dk.
+# Copyright (C) 2020 Magenta ApS, http://magenta.dk.
 # Contact: info@magenta.dk.
 #
 # This Source Code Form is subject to the terms of the Mozilla Public
@@ -13,7 +13,7 @@ from django.core.management.base import BaseCommand
 from core.models import Rate, PaymentSchedule, Activity
 
 
-logger = logging.getLogger("bevillingsplatform.export_to_prism")
+logger = logging.getLogger("bevillingsplatform.recalculate_on_changed_rate")
 
 
 class Command(BaseCommand):
@@ -30,6 +30,7 @@ class Command(BaseCommand):
             )
             for payment_schedule in payment_schedules:
                 payment_schedule.recalculate_prices()
+            rates.update(needs_update=False)
         except Exception:
             logger.exception(
                 "An exception occurred while recalculating payments"
