@@ -2,7 +2,7 @@
 
 import { Selector } from 'testcafe'
 import { login } from '../utils/logins.js'
-import { createActivity, editActivity } from '../utils/crud.js'
+import { createActivity, editActivity, createAppropriation, createCase } from '../utils/crud.js'
 import { axe } from '../utils/axe.js'
 import baseurl from '../utils/url.js'
 
@@ -20,7 +20,8 @@ function makeDateStr(date, offset) {
 }
 
 let today = new Date(),
-    rand = Math.floor(Math.random() * 100 )
+    rand = Math.floor(Math.random() * 100 ),
+    rand2 = Math.floor(Math.random() * 10 )
 
 let str1mth = makeDateStr(today, 1),
     str2mth = makeDateStr(today, 2),
@@ -31,21 +32,25 @@ let str1mth = makeDateStr(today, 1),
 const testdata = {
     case1: {
         id: 1,
-        name: `xx.xx.xx-${ rand }-yy`
+        name: `xx.xx.xx-${ rand }-${ rand2 }`,
+        effort_step: '3',
+        scaling_step: '6',
+        target_group: 'Familieafdelingen',
+        district: 'Baltorp'
     },
     appr1: {
         id: 1,
-        name: `xx.xx.xx-${ rand }-bevil${ rand }`,
+        name: `xx.xx.xx-${ rand }-${ rand2 }-bevil${ rand }`,
         section: 'SEL-109 Botilbud, kriseramte kvinder'
     },
     appr2: {
         id: 2,
-        name: `xx.xx.xx-${ rand }-bevil${ rand }`,
+        name: `yy.yy.yy-${ rand2 }-bevil${ rand }`,
         section: 'SEL-54-a Tilknytning af koordinator'
     },
     appr3: {
         id: 3,
-        name: `${ rand }.xx.xx-${ rand }-bevil${ rand }`,
+        name: `${ rand2 }.zz.zz-${ rand }-bevil${ rand2 }`,
         section: 'SEL-52-3.4 Døgnophold for hele familien'
     },
     act1: {
@@ -55,10 +60,9 @@ const testdata = {
         end_date: str10mth,
         payment_frequency: 'MONTHLY',
         pay_day_of_month: '2',
-        amount: '3095.50',
+        payment_amount: '3095.50',
         recipient_type: 'COMPANY',
         recipient_name: 'Base Camp',
-        recipient_id: '12341234',
         details__name: 'Kvindekrisecentre'
     },
     act2: {
@@ -68,17 +72,17 @@ const testdata = {
         end_date: str5mth,
         payment_frequency: 'MONTHLY',
         pay_day_of_month: '1',
-        amount: '595.95',
+        payment_amount: '595.95',
         recipient_type: 'COMPANY',
-        recipient_id: '89238762',
-        recipient_name: 'Testbevillingscentralen A/S',
+        recipient_name: 'CEKTOS',
     },
     act3: {
+        details__name: 'Tolk',
         note: 'En anden lille note',
         payment_type: 'ONE_TIME_PAYMENT',
         start_date: str5mth,
         end_date: str10mth,
-        amount: '150',
+        payment_amount: '150',
         recipient_type: 'PERSON',
         recipient_id: '777777-7777',
         payment_method: 'SD'
@@ -86,16 +90,17 @@ const testdata = {
     act4: {
         start_date: str2mth,
         end_date: str15mth,
-        amount: '3595.50'
+        payment_amount: '3595.50'
     },
     act5: {
+        details__name: 'Egenbetaling',
         status: 'EXPECTED',
         payment_type: 'RUNNING_PAYMENT',
         payment_frequency: 'WEEKLY',
         start_date: str2mth,
         end_date: str5mth,
         note: 'En anden lille note',
-        amount: '9.95',
+        payment_amount: '9.95',
         recipient_type: 'INTERNAL',
         recipient_id: 'xxxx-xxxx',
         recipient_name: 'Familiehuset'
@@ -106,10 +111,10 @@ const testdata = {
         payment_type: 'RUNNING_PAYMENT',
         payment_frequency: 'BIWEEKLY',
         note: 'Denne ydelse vil blive slettet',
-        amount: '999.95',
+        payment_amount: '999.95',
         recipient_type: 'COMPANY',
         recipient_id: '89372342',
-        recipient_name: 'TESTiT A/S'
+        recipient_name: 'Hjortholm Kostskole'
     }
 }
 
@@ -121,39 +126,17 @@ fixture('Login and create some data') // declare the fixture
 
 test('Create case and appropriation', async t => {
     
-    await t.click(Selector('button').withText('+ Tilknyt hovedsag'))
-    
     await axe(t)
 
-    await t
-        .typeText('#field-sbsys-id', testdata.case1.name)
-        .typeText('#field-cpr', '000000-0000')
-        .click('#selectTargetGroup')
-        .click(Selector('#selectTargetGroup option').withText('Familieafdelingen'))
-        .click('#selectDistrict')
-        .click(Selector('#selectDistrict option').withText('Baltorp'))
-        .click('#field-indsatstrappe')
-        .click(Selector('#field-indsatstrappe option').withText('Trin 3: Hjemmebaserede indsatser'))
-        .click('#field-skaleringstrappe')
-        .click(Selector('#field-skaleringstrappe option').withText('5'))
-        .click(Selector('input').withAttribute('type', 'submit'))
-        .click(Selector('a.header-link'))
-        .expect(Selector('.cases table a').withText(testdata.case1.name)).ok()
-        .click(Selector('a').withText(testdata.case1.name))
-        .click(Selector('.appropriation-create-btn'))
-        .typeText('#field-sbsysid', testdata.appr1.name)
-        .click('#field-lawref')
-        .click(Selector('#field-lawref option').withText(testdata.appr1.section))
-    
+    await createCase(t, testdata.case1)
+
     await axe(t)
 
-    await t
-        .click(Selector('input').withAttribute('type', 'submit'))
-        .click(Selector('a.header-link'))
-        .click(Selector('a').withText(testdata.case1.name))
-        .expect(Selector('.datagrid-action a').innerText).contains(testdata.appr1.name)
-    
+    await createAppropriation(t, testdata.appr1)
+
     await axe(t)
+
+    await t.expect(Selector('.crumb-2 span').innerText).contains(testdata.appr1.name)
 })
 
 test('Create activities', async t => {
@@ -213,8 +196,8 @@ test('Add adjustment activities', async t => {
     await createActivity(t, testdata.act5)
     
     await t
-        .expect(Selector('.label-EXPECTED')).ok()
         .expect(Selector('h1').withText('Bevillingsskrivelse').exists).ok()
+        .expect(Selector('.label-EXPECTED')).ok()
     
     await axe(t)
 })
@@ -242,20 +225,13 @@ test('Create appropriation with one main activity option', async t => {
 
     await t
         .click(Selector('a').withText(testdata.case1.name))
-        .click(Selector('.appropriation-create-btn'))
     
-    await axe(t)
-
+    await createAppropriation(t, testdata.appr2)
+        
     await t
-        .typeText('#field-sbsysid', testdata.appr2.name)
-        .click('#field-lawref')
-        .click(Selector('#field-lawref option').withText(testdata.appr2.section))
-        .click(Selector('input').withAttribute('type', 'submit'))
         .click(Selector('a.header-link'))
         .click(Selector('a').withText(testdata.case1.name))
-        .expect(Selector('.datagrid-action a').innerText).contains(testdata.appr2.name)
-    
-    await axe(t)
+        .expect(Selector('.datagrid-action > a').withText(testdata.appr2.name).exists).ok()
 })
 
 test('Create activities with one main activity option', async t => {
@@ -266,13 +242,9 @@ test('Create activities with one main activity option', async t => {
     
     await createActivity(t, testdata.act7)
 
-    await t
-        .click(Selector('a.header-link'))
-        .click(Selector('a').withText(testdata.case1.name))
-        .click(Selector('a').withText(testdata.appr2.name))
-        .expect(Selector('.activities table tr.act-list-item a').exists).ok()
-    
     await axe(t)
+
+    await t.expect(Selector('.activities table tr.act-list-item a').exists).ok()
 })
 
 test('Approve appropriation with one main activity option', async t => {

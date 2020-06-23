@@ -77,17 +77,16 @@
 
                 <div>
                     <cost-type :editable="false" />
-                    <cost-type-fixed :editable="is_editable" /> <!-- TODO: REMOVE WHEN API IS WORKING -->
                     <template v-if="payment_plan.payment_cost_type === 'FIXED'">
                         <cost-type-fixed :editable="is_editable" />
                     </template>
-                    <template v-if="payment_plan.payment_cost_type === 'RATE'">
+                    <template v-if="payment_plan.payment_cost_type === 'GLOBAL_RATE'">
                         <cost-type-rate :editable="is_editable" />
                     </template>
                     <template v-if="payment_plan.payment_cost_type === 'PER_UNIT'">
                         <cost-type-per-unit :editable="is_editable" />
                     </template>
-                    <template v-if="payment_plan.payment_cost_type === 'PER_UNIT' || payment_plan.payment_cost_type === 'RATE'">
+                    <template v-if="payment_plan.payment_cost_type === 'PER_UNIT' || payment_plan.payment_cost_type === 'GLOBAL_RATE'">
                         <pay-plan-calc />
                     </template>
                 </div>

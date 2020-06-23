@@ -15,7 +15,7 @@
             <cost-type-fixed :editable="true" />
         </template>
 
-        <template v-if="payment_plan.payment_cost_type === 'RATE'">
+        <template v-if="payment_plan.payment_cost_type === 'GLOBAL_RATE'">
             <cost-type-rate :editable="true" />
         </template>
 
@@ -23,9 +23,7 @@
             <cost-type-per-unit :editable="true" />
         </template>
 
-        <template v-if="payment_plan.payment_cost_type === 'PER_UNIT' || payment_plan.payment_cost_type === 'RATE'">
-            <pay-plan-calc />
-        </template>
+        <pay-plan-calc />
 
     </div>
 </template>

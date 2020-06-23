@@ -10,7 +10,7 @@
     <fieldset v-if="editable">
         <legend class="required">Vælg afregningsenhed</legend>
         
-        <input type="radio" v-model="model" id="pay-cost-type-rate" required value="RATE">
+        <input type="radio" v-model="model" id="pay-cost-type-rate" required value="GLOBAL_RATE">
         <label for="pay-cost-type-rate">Fast takst</label>
 
         <template v-if="payment_plan.payment_type !== 'ONE_TIME_PAYMENT'">
@@ -61,16 +61,16 @@ export default {
                 })
             }
 
-            // Reset pricing date if cost type is not PER_UNIT
+            // Reset pricing info if cost type is not PER_UNIT
             if (new_val !== 'PER_UNIT') {
                 this.$store.commit('setPaymentPlanProperty', { 
-                    prop: 'payment_pricing_date',
+                    prop: 'price_per_unit',
                     val: null
                 })
             }
 
             // Reset rate if cost type is not RATE
-            if (new_val !== 'RATE') {
+            if (new_val !== 'GLOBAL_RATE') {
                 this.$store.commit('setPaymentPlanProperty', { 
                     prop: 'payment_rate',
                     val: null

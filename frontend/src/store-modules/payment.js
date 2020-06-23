@@ -13,7 +13,8 @@ const state = {
     payments: null,
     payment_plan: null,
     payment: null,
-    internal_payment_recipients: null
+    internal_payment_recipients: null,
+    rates: null
 }
 
 const getters = {
@@ -35,6 +36,9 @@ const getters = {
     },
     getInternalPaymentRecipients (state) {
         return state.internal_payment_recipients ? state.internal_payment_recipients : false
+    },
+    getRates (state) {
+        return state.rates ? state.rates : false
     }
 }
 
@@ -53,7 +57,7 @@ const mutations = {
             payment_type: 'RUNNING_PAYMENT',
             payment_frequency: 'MONTHLY',
             payment_day_of_month: 1,
-            payment_cost_type: 'FIXED', // FIXED, RATE, or PER_UNIT
+            payment_cost_type: 'FIXED', // FIXED, GLOBAL_RATE, or PER_UNIT
             payment_amount: 0
         }
     },
@@ -68,7 +72,7 @@ const mutations = {
             payment_type: 'RUNNING_PAYMENT',
             payment_frequency: 'MONTHLY',
             payment_day_of_month: 1,
-            payment_cost_type: 'FIXED', // FIXED, RATE, or PER_UNIT
+            payment_cost_type: 'FIXED', // FIXED, GLOBAL_RATE, or PER_UNIT
             payment_amount: 0
         }
     },
@@ -80,6 +84,9 @@ const mutations = {
     },
     setInternalPaymentRecipients (state, internal_payment_recipients) {
         state.internal_payment_recipients = internal_payment_recipients
+    },
+    setRates (state, rates) {
+        state.rates = rates
     }
 }
 
@@ -123,6 +130,13 @@ const actions = {
         axios.get(`/internal_payment_recipients/`)
         .then(res => {
             commit('setInternalPaymentRecipients', res.data)
+        })
+        .catch(err => console.log(err))
+    },
+    fetchRates: function({commit}) {
+        axios.get(`/rates/`)
+        .then(res => {
+            commit('setRates', res.data)
         })
         .catch(err => console.log(err))
     }
