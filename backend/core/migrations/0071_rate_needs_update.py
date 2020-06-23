@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='rate',
-            name='needs_update',
+            name='needs_recalculation',
             field=models.BooleanField(default=False, verbose_name='skal genberegnes'),
         ),
     ]

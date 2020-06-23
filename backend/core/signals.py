@@ -98,10 +98,10 @@ def send_activity_payment_email_on_delete(sender, instance, **kwargs):
 
 
 @receiver(post_save, sender=Rate, dispatch_uid="on_save_rate")
-def set_needs_update_on_save_rate(sender, instance, created, **kwargs):
+def set_needs_recalculation_on_save_rate(sender, instance, created, **kwargs):
     """Set "needs update" flag when changing a rate."""
     if not created:
-        Rate.objects.filter(pk=instance.pk).update(needs_update=True)
+        Rate.objects.filter(pk=instance.pk).update(needs_recalculation=True)
         instance.refresh_from_db()
 
 
