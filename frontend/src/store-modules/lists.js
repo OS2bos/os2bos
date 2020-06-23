@@ -139,6 +139,7 @@ const actions = {
         dispatch('fetchEffortSteps')
         dispatch('fetchEfforts')
         dispatch('fetchInternalPaymentRecipients')
+        dispatch('fetchRates')
         fetchData()
     }
 }

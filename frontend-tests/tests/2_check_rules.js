@@ -10,37 +10,47 @@ const today = new Date(),
     anotherday = new Date(new Date().setDate(today.getDate() + 4)),
     testdata = {
         case1: {
-            name: `${ randNum() }.${ randNum() }.${ randNum() }-regel-test`
+            name: `${ randNum() }.${ randNum() }.${ randNum() }-regel-test`,
+            effort_step: '4',
+            scaling_step: '4',
+            target_group: 'Handicapafdelingen'
         },
         case2: {
-            name: `${ randNum() }.${ randNum() }.${ randNum() }-regel-test`
+            name: `${ randNum() }.${ randNum() }.${ randNum() }-regel-test`,
+            effort_step: '2',
+            scaling_step: '8',
+            target_group: 'Familieafdelingen',
+            district: 'Baltorp'
         },
         appr1: {
-            name: `${ randNum() }.${ randNum() }.${ randNum() }-regel-test-bevilling`
+            name: `${ randNum() }.${ randNum() }.${ randNum() }-regel-test-bevilling`,
+            section: 'SEL-109 Botilbud, kriseramte kvinder'
         },
         appr2: {
-            name: `${ randNum() }.${ randNum() }.${ randNum() }-regel-test-bevilling`
+            name: `${ randNum() }.${ randNum() }.${ randNum() }-regel-test-bevilling`,
+            section: 'SEL-109 Botilbud, kriseramte kvinder'
         },
         act1: {
             start_today: `${ today.getFullYear() }-${ leadZero(today.getMonth() + 1) }-${ leadZero(today.getDate()) }`,
             end_date: `${ anotherday.getFullYear() }-${ leadZero(anotherday.getMonth() + 1) }-${ leadZero(anotherday.getDate()) }`
         },
         act2: {
+            details__name: 'Kvindekrisecentre',
             payment_type: 'RUNNING_PAYMENT',
             start_date: createDate(3),
             payment_frequency: 'WEEKLY',
-            amount: '12',
+            payment_amount: '12',
             recipient_type: 'COMPANY'
         },
         act3: {
             status: 'EXPECTED',
             start_date: createDate(5),
-            amount: '15'
+            payment_amount: '15'
         }
 
     }
 
-fixture `Check payments start date`
+fixture('Check payments start date')
     .page(baseurl)
     .beforeEach(async t => { 
         await login(t) 

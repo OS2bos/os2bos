@@ -9,13 +9,14 @@
 
     <fieldset v-if="editable">
 
-        <label class="required" for="field-amount-1">Takst</label>
-        <select v-model="model" required id="field-amount-1">
+        <label class="required" for="field-rates">Takst</label>
+        <select v-model="model" required id="field-rates">
             <option 
                 v-for="choice in rate_choices"
                 :key="choice.id"
-                :value="choice.id">
-                {{ choice.name }}
+                :value="choice.id"
+                :title="choice.name">
+                {{ truncateName(choice.name) }}
             </option>
         </select>
 
@@ -29,7 +30,9 @@
     <dl v-else>
         <dt>Takst x antal</dt>
         <dd>
-            {{ model }} x {{ units }} kr
+            {{ displayRateName(model) }},<br>
+            {{ displayRateAmount(model) }} kr x {{ units }}<br>
+            ({{ model * units }} kr)
         </dd>
     </dl>
 
@@ -38,6 +41,7 @@
 <script>
 import mixin from '../../mixins/PaymentPlanEditMixin.js'
 import Error from '../../forms/Error.vue'
+import { rateId2details } from '../../filters/Labels.js'
 
 export default {
     components: {
@@ -46,16 +50,10 @@ export default {
     mixins: [
         mixin
     ],
-    data: function() {
-        return {
-            rate_choices: [
-                {id: 1,name: 'Takst 1'},
-                {id: 2,name: 'Takst 2'},
-                {id: 3,name: 'Takst 3'}
-            ]
-        }
-    },
     computed: {
+        rate_choices: function() {
+            return this.$store.getters.getRates
+        },
         units: {
             get: function() {
                 return this.$store.getters.getPaymentPlanProperty('payment_units')
@@ -66,6 +64,26 @@ export default {
                     val: new_val
                 })
             }
+        }
+    },
+    methods: {
+        truncateName: function(str) {
+            if (str.length > 35) {
+                return str.substr(0,30) + '...'
+            } else {
+                return str
+            }
+        },
+        displayRateAmount: function(rate_id) {
+            if (rateId2details(rate_id) !== '-') {
+                return rateId2details(rate_id).rates_per_date[0].rate
+            } else {
+                return rateId2details(rate_id)
+            }
+            
+        },
+        displayRateName: function(rate_id) {
+            return rateId2details(rate_id).name
         }
     },
     created: function() {

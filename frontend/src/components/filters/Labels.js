@@ -352,6 +352,18 @@ function displayPayMethod(method) {
     }
 }
 
+function rateId2details(id) {
+    const rates = store.getters.getRates
+    if (rates && id) {
+        let rate = rates.find(function(element) {
+            return element.id === parseInt(id);
+        })
+        return rate
+    } else {
+        return '-'
+    }
+}
+
 export {
     municipalityId2name,
     targetGroupId2name,
@@ -370,5 +382,6 @@ export {
     displayPayFreq,
     displayCostType,
     displayPayReceiverType,
-    displayPayMethod
+    displayPayMethod,
+    rateId2details
 }

@@ -24,12 +24,16 @@ async function activityFormInput(t, act_data) {
         start_date: null,
         end_date: null,
         payment_frequency: 'MONTHLY',
-        pay_day_of_month: 1,
-        amount: '100.00',
+        pay_day_of_month: '1',
+        payment_cost_type: 'FIXED', // or 'GLOBAL_RATE'|'PER_UNIT'
+        payment_amount: '100.00',
+        payment_units: '2.5',
         recipient_type: 'COMPANY',
         recipient_id: '12341234',
         recipient_name: 'CompanyName & Co',
-        payment_method: 'INVOICE'
+        payment_method: 'INVOICE',
+        price_amount: '100.00', // if payment_cost_type === 'PER_UNIT'
+        price_start_date: '2020-01-31', // if payment_cost_type === 'PER_UNIT'
     }
     */
 
@@ -40,9 +44,9 @@ async function activityFormInput(t, act_data) {
         await t.click(Selector('label').withAttribute('for', 'pay-fictional'))
     }
     if (act_data.details__name) {
-        await useSelectBox(t, '#fieldSelectAct', act_data.details__name)
-    } else {
-        await useSelectBox(t, '#fieldSelectAct', null)
+        setTimeout(async function() {
+            await useSelectBox(t, '#fieldSelectAct', act_data.details__name)
+        }, 1000)
     }
     if (act_data.note) {
         await t.typeText('#note', act_data.note, {replace: true})
@@ -81,17 +85,39 @@ async function activityFormInput(t, act_data) {
         default:
     }
     
-    // TODO: INSERT CHOICE OF PAYMENT COST TYPE ("RATE", "FIXED", "PER_UNIT")
-    await t.click(Selector('label').withAttribute('for', 'pay-cost-type-fixed'))
-    
-    if (act_data.amount) {
-        await t.typeText('#field-amount-1', act_data.amount, {replace: true})
+    if (act_data.payment_cost_type) {
+        switch(act_data.payment_cost_type) {
+            case 'GLOBAL_RATE':
+                await t.click(Selector('label').withAttribute('for', 'pay-cost-type-rate'))
+                await useSelectBox(t, '#field-rates')
+                await t.typeText('#pay-units', act_data.payment_units, {replace: true})
+                break
+            case 'PER_UNIT':
+                await t
+                    .click(Selector('label').withAttribute('for', 'pay-cost-type-per-unit'))
+                    .typeText('#pay-cost-pr-unit', act_data.price_amount, {replace: true})
+                    .typeText('#pay-units', act_data.payment_units, {replace: true})
+                    .typeText('#pay-cost-exec-date', act_data.price_start_date, {replace: true})
+                break
+            default:
+                await t.click(Selector('label').withAttribute('for', 'pay-cost-type-fixed'))
+                await t.typeText('#field-amount-1', act_data.payment_amount, {replace: true})
+        }
+    } else {
+        await t.click(Selector('label').withAttribute('for', 'pay-cost-type-fixed'))
+        await t.typeText('#field-amount-1', act_data.payment_amount, {replace: true})
     }
+    
     switch(act_data.recipient_type) {
         // TODO:  
         case 'COMPANY':
             await t.click(Selector('label').withAttribute('for', 'pay-receiver-type-company'))
-            await useSelectBox(t, '#field-select-company', act_data.recipient_name)
+            if (act_data.recipient_id) {
+                await t.typeText('#pay-receiver-id', act_data.recipient_id, {replace: true})
+                await t.typeText('#pay-receiver-name', act_data.recipient_name, {replace: true})
+            } else {
+                await useSelectBox(t, '#field-select-company', act_data.recipient_name)
+            }
             break
         case 'PERSON':
             await t
@@ -128,29 +154,49 @@ async function activityFormInput(t, act_data) {
 
 async function createCase(t, case_data) {
 
+    /*
+    Example case_data
+    case_data: {
+        name: 'xx.xx.xx',
+        effort_step: 'Trin 3',
+        scaling_step: '5',
+        target_group: 'Familieafdelingen',
+        district: 'Baltorp'
+    }
+    */
+    
     await t
         .click(Selector('button').withText('+ Tilknyt hovedsag'))
         .typeText('#field-sbsys-id', case_data.name)
         .typeText('#field-cpr', '000000-0000')
-        .click('#selectTargetGroup')
-        .click(Selector('#selectTargetGroup option').withText('Familieafdelingen'))
-        .click('#selectDistrict')
-        .click(Selector('#selectDistrict option').withText('Baltorp'))
-        .click('#field-indsatstrappe')
-        .click(Selector('#field-indsatstrappe option').withText('Trin 3: Hjemmebaserede indsatser'))
-        .click('#field-skaleringstrappe')
-        .click(Selector('#field-skaleringstrappe option').withText('5'))
-        .click(Selector('input').withAttribute('type', 'submit'))
+
+    await useSelectBox(t, '#selectTargetGroup', case_data.target_group)
+    if (case_data.target_group === 'Familieafdelingen') {
+        await useSelectBox(t, '#selectDistrict', case_data.district)
+    }
+    await useSelectBox(t, '#field-indsatstrappe', case_data.effort_step)
+    await useSelectBox(t, '#field-skaleringstrappe', case_data.scaling_step)
+
+    await t.click(Selector('input').withAttribute('type', 'submit'))
 }
 
 async function createAppropriation(t, appr_data) {
 
+    /*
+    Example appr_data
+    appr_data: {
+        name: 'xx.xx.xx-yy',
+        section: 'SEL-109 Botilbud'        
+    }
+    */
+
     await t
         .click(Selector('.appropriation-create-btn'))
         .typeText('#field-sbsysid', appr_data.name)
-        .click('#field-lawref')
-        .click(Selector('#field-lawref option').nth(1))
-        .click(Selector('input').withAttribute('type', 'submit'))
+    
+    await useSelectBox(t, '#field-lawref', appr_data.section)
+
+    await t.click(Selector('input').withAttribute('type', 'submit'))
 }
 
 async function approveActivities(t) {

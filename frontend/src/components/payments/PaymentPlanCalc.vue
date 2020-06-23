@@ -1,4 +1,4 @@
-<!-- Copyright (C) 2019 Magenta ApS, http://magenta.dk.
+<!-- Copyright (C) 2020 Magenta ApS, http://magenta.dk.
    - Contact: info@magenta.dk.
    -
    - This Source Code Form is subject to the terms of the Mozilla Public
@@ -8,91 +8,118 @@
 <template>
 
     <div class="payment-plan">
-        <p style="font-size: 1.5rem;">Forventet udgift</p>
-        <p>{{ abstract }}</p>
-        <p v-if="yearly_cost">Det er ca. <strong>{{ yearly_cost }} kr.</strong> pr. år</p>
+        <h3 class="payment-plan-header">Udgift:</h3>
+        <p>{{ summary }} {{ subtotal }} kr {{ freq_name }} </p>
+        <p>Årligt <strong>ca. {{ displayCost(total) }} kr</strong></p> 
     </div>
 
 </template>
 
 <script>
 
-    import { cost2da } from '../filters/Numbers.js'
+    import axios from '../http/Http.js'
+    import { rateId2details } from '../filters/Labels.js'
 
     export default {
 
         data: function() {
             return {
-                freq_factor: 0,
-                month_factor: 0
+                summary: null
             }
         },
         computed: {
             payment: function() {
                 return this.$store.getters.getPaymentPlan
             },
-            abstract: function() {
-                let str = 'Udgiften bliver '
-
-                if (this.payment.payment_cost_type === 'RATE') {
-                    // TODO TODO
-                }
-
-                switch(this.payment.payment_type) {
-                    case 'ONE_TIME_PAYMENT':
-                        str += `${ cost2da(this.payment.payment_amount) }`
-                        break
-                    case 'RUNNING_PAYMENT':
-                        str += `${ cost2da(this.payment.payment_amount) } kr hver ${ this.freq_name }`
-                        break
-                    default:
-                        str += 'intet'
-                }
-
-                return str
+            rates: function() {
+                return this.$store.getters.getRates
             },
-            yearly_cost: function() {
-                let num = 0
-                switch(this.payment.payment_type) {
-                    case 'ONE_TIME_PAYMENT':
-                        num = this.payment.payment_amount
+            freq_factor: function() {
+                switch(this.payment.payment_frequency) {
+                    case 'MONTHLY':
+                        return 12
                         break
-                    case 'RUNNING_PAYMENT':
-                        num = this.payment.payment_amount * this.freq_factor
+                    case 'BIWEEKLY':
+                        return 26
+                        break
+                    case 'WEEKLY':
+                        return 52
+                        break
+                    case 'DAILY':
+                        return 365
                         break
                     default:
-                        num = this.payment.payment_amount * this.freq_factor * this.payment.payment_units
+                        return 1
                 }
-                return cost2da(num)
+            },
+            total: function() {
+                if (this.subtotal && this.freq_factor) {
+                    return this.subtotal * this.freq_factor
+                } else {
+                    return 0
+                }
+            },
+            subtotal: function() {
+                let cost_type = this.payment.payment_cost_type,
+                    price_per_unit = this.payment.price_per_unit,
+                    units = this.payment.payment_units,
+                    rate = this.payment.payment_rate,
+                    amount = this.payment.payment_amount
+
+                if (cost_type === 'GLOBAL_RATE') {
+                    if (rate) {
+                        this.summary = `${ rateId2details(rate).rates_per_date[0].rate } kr x ${ units } =`
+                        return rateId2details(rate).rates_per_date[0].rate * units
+                    } else {
+                        return null
+                    }
+                } else if (cost_type === 'PER_UNIT') {
+                    if (price_per_unit && units) {
+                        this.summary = `${ price_per_unit.amount } kr x ${ units } =`
+                        return parseInt(price_per_unit.amount) * parseInt(units)
+                    } else {
+                        return null
+                    }
+                } else {
+                    this.summary = null
+                    return amount
+                }
             },
             freq_name: function() {
                 switch(this.payment.payment_frequency) {
                     case 'MONTHLY':
-                        this.freq_factor = 12
-                        this.month_factor = 1
-                        return 'måned'
+                        return 'månedligt'
                         break
                     case 'BIWEEKLY':
-                        this.freq_factor = 26
-                        this.month_factor = 2
-                        return '2. uge'
+                        return 'hver 14. dag'
                         break
                     case 'WEEKLY':
-                        this.freq_factor = 52
-                        this.month_factor = 4
-                        return 'uge'
+                        return 'ugentligt'
                         break
                     case 'DAILY':
-                        this.freq_factor = 365
-                        this.month_factor = 31
-                        return 'dag'
+                        return 'dagligt'
                         break
                     default:
-                        return '-'
+                        return ''
+                }
+            }
+        },
+        methods: {
+            displayCost: function(cost) {
+                let new_cost = this.roundNum(cost)
+                return new Intl.NumberFormat(['da', 'en'], {maximumFractionDigits: 0, minimumFractionDigits: 0} ).format(new_cost)
+            },
+            roundNum: function(num) {
+                //If cost is more than 100, round up cost to nearest hundred
+                if (num > 100) {
+                    let new_num = num / 100
+                    new_num = Math.floor(new_num)
+                    return new_num * 100
+                } else {
+                    return num
                 }
             }
         }
-
     }
     
 </script>
@@ -100,13 +127,13 @@
 <style>
 
     .payment-plan {
-        white-space: nowrap;
-        padding: 1rem 2rem;
+        max-width: 100%;
+        padding: .5rem 1rem;
+        border: solid .125rem var(--warning);
     }
 
-    .payment-plan h3 {
-        font-size: 1.25rem;
-        padding-top: .25rem;
+    .payment-plan-header {
+        padding: 0.25rem 0;
     }
 
 </style>

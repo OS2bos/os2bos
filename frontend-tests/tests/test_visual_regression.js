@@ -1,3 +1,4 @@
+/*
 import vrt from '../utils/vrt.js'
 import { login } from '../utils/logins.js'
 import baseurl from '../utils/url.js'
@@ -12,3 +13,4 @@ test.skip('Homepage', async t => {
     await vrt('check_for_visual_regression', 'homepage', `url: ${ baseurl }`)
 
 })
+*/
