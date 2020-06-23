@@ -11,8 +11,9 @@ from django.dispatch import receiver
 from core.models import (
     Activity,
     PaymentSchedule,
-    Payment,
     Price,
+    Rate,
+    Payment,
     STATUS_EXPECTED,
     STATUS_DRAFT,
 )
@@ -96,6 +97,14 @@ def send_activity_payment_email_on_delete(sender, instance, **kwargs):
     send_activity_deleted_email(instance)
 
 
+@receiver(post_save, sender=Rate, dispatch_uid="on_save_rate")
+def set_needs_recalculation_on_save_rate(sender, instance, created, **kwargs):
+    """Set "needs update" flag when changing a rate."""
+    if not created:
+        Rate.objects.filter(pk=instance.pk).update(needs_recalculation=True)
+        instance.refresh_from_db()
+
+
 @receiver(post_save, sender=Price, dispatch_uid="on_save_price")
 def save_payment_schedule_on_save_price(sender, instance, created, **kwargs):
     """Save payment schedule too when saving price."""
@@ -131,3 +140,4 @@ def generate_payments_on_post_save(sender, instance, created, **kwargs):
                 instance.synchronize_payments(
                     activity.start_date, activity.end_date, vat_factor
                 )
+                instance.recalculate_prices()

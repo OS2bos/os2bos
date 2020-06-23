@@ -24,6 +24,7 @@ from core.models import (
 from core.tests.testing_utils import (
     BasicTestMixin,
     create_payment_schedule,
+    create_rate,
     create_payment,
     create_case,
     create_appropriation,
@@ -683,3 +684,61 @@ class TestImportSections(TestCase):
 
         open_mock.assert_called_with("/tmp/test")
         self.assertEqual(Section.objects.count(), 1)
+
+
+class TestRecalculateOnChangedRate(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_recalculate_on_changed(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+
+        rate = create_rate()
+        rate.set_rate_amount(10)
+        # Should generate payments to 2020-12-01.
+        start_date = date(year=2020, month=1, day=1)
+        end_date = start_date + timedelta(days=91)
+        with freeze_time("2020-01-01"):
+            activity = create_activity(
+                case=case,
+                appropriation=appropriation,
+                activity_type=MAIN_ACTIVITY,
+                status=STATUS_GRANTED,
+                start_date=start_date,
+                end_date=end_date,
+            )
+            payment_schedule = create_payment_schedule(
+                payment_frequency=PaymentSchedule.MONTHLY,
+                payment_type=PaymentSchedule.RUNNING_PAYMENT,
+                payment_units=1,
+                payment_amount=None,
+                activity=activity,
+                payment_cost_type=PaymentSchedule.GLOBAL_RATE_PRICE,
+                payment_rate=rate,
+            )
+            self.assertEqual(payment_schedule.payments.count(), 4)
+            payment = payment_schedule.payments.all()[0]
+            self.assertEqual(payment.amount, 10)
+            rate.set_rate_amount(15)
+
+            call_command("recalculate_on_changed_rate")
+
+            payment.refresh_from_db()
+            self.assertEqual(payment.amount, 15)
+
+    @mock.patch("core.management.commands.recalculate_on_changed_rate.logger")
+    @mock.patch("core.models.PaymentSchedule.objects.filter")
+    def test_recalculate_on_changed_rate_error(
+        self, recalculate_mock, logger_mock
+    ):
+        recalculate_mock.side_effect = OSError("test")
+
+        call_command("recalculate_on_changed_rate")
+
+        logger_mock.exception.assert_called_with(
+            "An exception occurred while recalculating payments"
+        )

@@ -3704,6 +3704,14 @@ class RateTestCase(TestCase):
         self.assertEqual(rate.get_rate_amount(yesterday), Decimal(10))
         self.assertEqual(rate.get_rate_amount(today), Decimal(20))
 
+    def test_needs_recalculation(self):
+        rate = create_rate()
+
+        self.assertFalse(rate.needs_recalculation)
+
+        rate.set_rate_amount(Decimal(10), start_date=None, end_date=None)
+        self.assertTrue(rate.needs_recalculation)
+
 
 class RatePerDateTestCase(TestCase):
     def test_str(self):

@@ -352,6 +352,9 @@ class VariableRate(models.Model):
                     start_date=start, end_date=end, rate=rate, main_rate=self
                 )
                 rpd.save()
+        # RatesPerDate belong to this object so notify that they have
+        # changed.
+        self.save()
 
     def __str__(self):
         return ";".join(
@@ -415,6 +418,9 @@ class Rate(VariableRate, Classification):
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     description = models.TextField(verbose_name=_("beskrivelse"), blank=True)
+    needs_recalculation = models.BooleanField(
+        verbose_name=_("skal genberegnes"), default=False
+    )
 
     def __str__(self):
         return f"{self.name}"
@@ -653,6 +659,15 @@ class PaymentSchedule(models.Model):
         ):
             return False
         return True
+
+    @transaction.atomic
+    def recalculate_prices(self):
+        """Recalculate price on all payments."""
+        for p in self.payments.filter(paid_amount__isnull=True):
+            p.amount = self.calculate_per_payment_amount(
+                self.activity.vat_factor, p.date
+            )
+            p.save()
 
     def generate_payments(self, start, end=None, vat_factor=Decimal("100")):
         """Generate payments with a start and end date."""
