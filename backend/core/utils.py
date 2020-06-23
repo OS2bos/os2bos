@@ -539,7 +539,13 @@ def write_prism_file(date, payments, tomorrow, new_account_string=False):
 
 @transaction.atomic
 def export_prism_payments_for_date(date=None):
-    """Process payments and output a file for PRISME."""
+    """Process payments and output a file for PRISME.
+
+    Default date for exporting payments is tomorrow.
+
+    We check the day after tomorrow for one or several payment date exclusions
+    and include payments for those found.
+    """
     # Date = tomorrow if not given. We need "tomorrow" to set payment date.
     tomorrow = datetime.datetime.now() + relativedelta(days=1)
     if not date:
@@ -550,21 +556,28 @@ def export_prism_payments_for_date(date=None):
 
     # Include payments on PaymentDateExclusion dates.
     payment_date_exclusions_found = False
+    consecutive_days = 1
     days_delta = 1
-    while models.PaymentDateExclusion.objects.filter(
-        date=date + relativedelta(days=days_delta)
-    ).exists():
-        payment_date_exclusions_found = True
-        payments = payments.union(
-            due_payments_for_prism(date + relativedelta(days=days_delta))
-        )
-        days_delta += 1
+    while consecutive_days < 2:
+        while models.PaymentDateExclusion.objects.filter(
+            date=date + relativedelta(days=days_delta)
+        ).exists():
+            payment_date_exclusions_found = True
+            payments = payments.union(
+                due_payments_for_prism(date + relativedelta(days=days_delta))
+            )
+            days_delta += 1
+            consecutive_days = 0
 
-    # Also include payments for the last day after PaymentDateExclusion dates.
-    if payment_date_exclusions_found:
-        payments = payments.union(
-            due_payments_for_prism(date + relativedelta(days=days_delta))
-        )
+        # Also include payments for the first day after
+        # PaymentDateExclusion dates.
+        if payment_date_exclusions_found:
+            payments = payments.union(
+                due_payments_for_prism(date + relativedelta(days=days_delta))
+            )
+        consecutive_days += 1
+        days_delta += 1
+        payment_date_exclusions_found = False
 
     if not payments.exists():
         # No payments

@@ -584,6 +584,83 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
             ],
         )
 
+    @freeze_time("2024-12-19")
+    def test_export_prism_payments_with_exclusions_christmas_2024(self):
+        now = timezone.now()
+        start_date = now
+        end_date = now + timedelta(days=14)
+        # Create an activity etc which is required.
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        main_activity_details = create_activity_details()
+        create_account(
+            section=section,
+            main_activity=main_activity_details,
+            supplementary_activity=None,
+        )
+        create_section_info(
+            main_activity_details,
+            section,
+            main_activity_main_account_number="1234",
+        )
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            details=main_activity_details,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=activity,
+        )
+
+        # Generate payment exclusion dates and export.
+        exclusion_dates = generate_payment_date_exclusion_dates(
+            years=[2024, 2025]
+        )
+        for exclusion_date in exclusion_dates:
+            create_payment_date_exclusion(date=exclusion_date)
+        # Create Christmas Eve and New Years Eve as well.
+        create_payment_date_exclusion(date=date(2024, 12, 24))
+        create_payment_date_exclusion(date=date(2024, 12, 31))
+
+        export_prism_payments_for_date(date=None)
+
+        # Assert Thursday includes Friday + weekend + Monday.
+        self.assertCountEqual(
+            payment_schedule.payments.filter(paid=True).values_list(
+                "date", flat=True
+            ),
+            [
+                date(2024, 12, 20),  # Friday
+                date(2024, 12, 21),  # Saturday
+                date(2024, 12, 22),  # Sunday
+                date(2024, 12, 23),  # Monday
+                date(2024, 12, 24),  # Christmas Eve
+                date(2024, 12, 25),  # Christmas Day
+                date(2024, 12, 26),  # 2nd Christmas Day
+                date(2024, 12, 27),  # Friday
+                date(2024, 12, 28),  # Saturday
+                date(2024, 12, 29),  # Sunday
+                date(2024, 12, 30),  # Monday
+                date(2024, 12, 31),  # New Years Eve
+                date(2025, 1, 1),  # New Years Day
+                date(2025, 1, 2),  # First day after exclusion dates.
+            ],
+        )
+
     @freeze_time("2020-04-07")
     def test_export_prism_payments_with_exclusions_easter_2020(self):
         now = timezone.now()
