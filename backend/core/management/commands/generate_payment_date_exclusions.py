@@ -24,8 +24,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            "-y",
-            "--years",
+            "years",
             default=None,
             type=int,
             nargs="*",
@@ -33,7 +32,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        """Parse comma-separated years and generate dates."""
+        """Parse years, generate dates and create payment date exclusions."""
         years = options["years"]
         try:
             dates = generate_payment_date_exclusion_dates(years)

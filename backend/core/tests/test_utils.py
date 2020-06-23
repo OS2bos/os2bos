@@ -658,7 +658,7 @@ class TestGeneratePaymentDateExclusionDates(TestCase):
         dates = generate_payment_date_exclusion_dates(years)
 
         self.assertTrue(all([date.year in years for date in dates]))
-        self.assertEqual(len(dates), 225)
+        self.assertEqual(len(dates), 448)
 
     @freeze_time("2020-01-01")
     def test_generate_payment_date_exclusion_dates_no_params(self):
@@ -667,7 +667,7 @@ class TestGeneratePaymentDateExclusionDates(TestCase):
         dates = generate_payment_date_exclusion_dates()
 
         self.assertTrue(all([date.year in [2020, 2021] for date in dates]))
-        self.assertEqual(len(dates), 112)
+        self.assertEqual(len(dates), 223)
 
 
 class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
