@@ -20,7 +20,7 @@
             </template>
         </header>
 
-        <div class="act-edit-header">
+        <div :class="`act-edit-header activity-${ act.status }`">
             <dl>
                 <dt>Foranstaltningssag</dt>
                 <dd>{{ appropriation.sbsys_id }}</dd>
@@ -41,7 +41,7 @@
             </dl>
         </div>
 
-        <form @submit.prevent="saveChanges" class="act-edit-form">
+        <form @submit.prevent="saveChanges" :class="`act-edit-form activity-${ act.status }`">
             <div class="act-edit-main">
 
                 <div>
@@ -426,7 +426,6 @@ export default {
         display: grid;
         grid-template-columns: repeat( auto-fit, minmax(20rem, 1fr) );
         gap: 2rem;
-        background-color: var(--grey1);
         padding: 0;
     }
 

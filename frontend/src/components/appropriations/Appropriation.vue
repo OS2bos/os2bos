@@ -15,7 +15,7 @@
                 Bevillingsskrivelse
             </h1>
             <button v-if="permissionCheck === true" @click="show_edit = !show_edit" class="appr-edit-btn">Redigér</button>
-            <button v-if="appr.num_activities === 0" class="appr-delete-btn" @click="preDeleteCheck()">Slet</button>
+            <button v-if="appr.num_ongoing_activities === 0" class="appr-delete-btn" @click="preDeleteCheck()">Slet</button>
         </header>
 
         <appropriation-edit :appr-obj="appr" v-if="show_edit" @close="update()" />

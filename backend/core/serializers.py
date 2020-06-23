@@ -66,26 +66,30 @@ class UserSerializer(serializers.ModelSerializer):
 class CaseSerializer(serializers.ModelSerializer):
     """Serializer for the Case model.
 
-    Note validation to ensure that cases in the family department are
-    always associated with a school district.
+    Note validation to ensure that cases are always valid
+    according to required_fields_for_case
     """
 
     expired = serializers.ReadOnlyField()
-    num_appropriations = serializers.ReadOnlyField(
-        source="appropriations.count"
+    num_ongoing_appropriations = serializers.SerializerMethodField()
+    num_ongoing_draft_or_expected_appropriations = (
+        serializers.SerializerMethodField()
     )
-    num_draft_or_expected_appropriations = serializers.SerializerMethodField()
 
     class Meta:
         model = Case
         fields = "__all__"
 
-    def get_num_draft_or_expected_appropriations(self, case):
-        """Get number of related expected or draft appropriations."""
+    def get_num_ongoing_appropriations(self, case):
+        """Get number of related ongoing appropriations."""
+        return case.appropriations.ongoing().count()
+
+    def get_num_ongoing_draft_or_expected_appropriations(self, case):
+        """Get number of related expected or draft ongoing appropriations."""
         return len(
             [
                 appr
-                for appr in case.appropriations.all()
+                for appr in case.appropriations.ongoing()
                 if (
                     appr.status == STATUS_EXPECTED
                     or appr.status == STATUS_DRAFT
@@ -494,8 +498,10 @@ class BaseAppropriationSerializer(serializers.ModelSerializer):
         source="main_activity.details.id", default=None
     )
 
-    num_draft_or_expected_activities = serializers.SerializerMethodField()
-    num_activities = serializers.SerializerMethodField()
+    num_ongoing_draft_or_expected_activities = (
+        serializers.SerializerMethodField()
+    )
+    num_ongoing_activities = serializers.SerializerMethodField()
 
     @staticmethod
     def setup_eager_loading(queryset):
@@ -503,18 +509,23 @@ class BaseAppropriationSerializer(serializers.ModelSerializer):
         queryset = queryset.prefetch_related("case", "activities")
         return queryset
 
-    def get_num_draft_or_expected_activities(self, appropriation):
-        """Get number of related draft or expected activities."""
-        return appropriation.activities.filter(
-            Q(status=STATUS_DRAFT) | Q(status=STATUS_EXPECTED),
-            modified_by__isnull=True,
-        ).count()
+    def get_num_ongoing_draft_or_expected_activities(self, appropriation):
+        """Get number of ongoing related draft or expected activities."""
+        return (
+            appropriation.activities.filter(
+                Q(status=STATUS_DRAFT) | Q(status=STATUS_EXPECTED),
+                modified_by__isnull=True,
+            )
+            .ongoing()
+            .count()
+        )
 
-    def get_num_activities(self, appropriation):
-        """Get number of activities."""
+    def get_num_ongoing_activities(self, appropriation):
+        """Get number of ongoing activities."""
         return (
             appropriation.activities.filter(modified_by__isnull=True)
             .exclude(status=STATUS_DELETED)
+            .ongoing()
             .count()
         )
 

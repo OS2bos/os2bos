@@ -25,7 +25,10 @@ from core.models import (
     PaymentSchedule,
     Case,
     MAIN_ACTIVITY,
+    SUPPL_ACTIVITY,
     STATUS_GRANTED,
+    Activity,
+    Appropriation,
 )
 
 
@@ -523,3 +526,152 @@ class CaseQuerySetTestCase(TestCase, BasicTestMixin):
         ongoing_cases = Case.objects.all().ongoing()
         self.assertEqual(expired_cases.count(), 1)
         self.assertEqual(ongoing_cases.count(), 0)
+
+
+class ActivityQuerySetTestCase(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_expired(self):
+        today = timezone.now().date()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+
+        expired_activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=today - timedelta(days=4),
+            end_date=today - timedelta(days=3),
+            activity_type=SUPPL_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+
+        ongoing_activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=today - timedelta(days=4),
+            end_date=today,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+
+        self.assertIn(expired_activity, Activity.objects.all().expired())
+        self.assertNotIn(ongoing_activity, Activity.objects.all().expired())
+
+    def test_ongoing(self):
+        today = timezone.now().date()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+
+        # create an expired main activity
+        expired_activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=today - timedelta(days=4),
+            end_date=today - timedelta(days=3),
+            activity_type=SUPPL_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+
+        ongoing_activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=today - timedelta(days=4),
+            end_date=today,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+
+        self.assertNotIn(expired_activity, Activity.objects.all().ongoing())
+        self.assertIn(ongoing_activity, Activity.objects.all().ongoing())
+
+    def test_ongoing_no_end_date(self):
+        today = timezone.now().date()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+
+        ongoing_activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=today - timedelta(days=4),
+            end_date=None,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+
+        self.assertIn(ongoing_activity, Activity.objects.all().ongoing())
+
+
+class AppropriationQuerySetTestCase(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_ongoing(self):
+        today = timezone.now().date()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+
+        self.assertIn(appropriation, Appropriation.objects.ongoing())
+
+        # create an expired supplementary activity
+        # but an ongoing main activity.
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=today - timedelta(days=4),
+            end_date=today - timedelta(days=3),
+            activity_type=SUPPL_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=today - timedelta(days=4),
+            end_date=today,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+
+        self.assertIn(appropriation, Appropriation.objects.ongoing())
+
+    def test_expired(self):
+        today = timezone.now().date()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+
+        self.assertNotIn(appropriation, Appropriation.objects.expired())
+
+        # create an expired supplementary activity
+        # and an expired main activity.
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=today - timedelta(days=4),
+            end_date=today - timedelta(days=3),
+            activity_type=SUPPL_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+
+        create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=today - timedelta(days=4),
+            end_date=today - timedelta(days=1),
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+
+        self.assertIn(appropriation, Appropriation.objects.expired())

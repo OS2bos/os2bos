@@ -17,14 +17,19 @@ from django.db import models, transaction
 from django.contrib.postgres.fields import ArrayField
 from django.db.models import Q, F
 from django.contrib.auth.models import AbstractUser
-from django.utils.translation import gettext, gettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
 from simple_history.models import HistoricalRecords
 from constance import config
 
 from core.mixins import AuditModelMixin
-from core.managers import PaymentQuerySet, CaseQuerySet
+from core.managers import (
+    PaymentQuerySet,
+    CaseQuerySet,
+    ActivityQuerySet,
+    AppropriationQuerySet,
+)
 from core.utils import send_appropriation, create_rrule
 
 # Payment methods and choice list.
@@ -299,7 +304,7 @@ class VariableRate(models.Model):
         for p in periods:
             i = self.create_interval(p.start_date, p.end_date)
             d[i] = p.rate
-        return d.get(rate_date)
+        return d.get(rate_date, 0)
 
     rate_amount = property(get_rate_amount)
 
@@ -314,17 +319,17 @@ class VariableRate(models.Model):
         new_period = self.create_interval(start_date, end_date)
 
         existing_periods = self.rates_per_date.all()
-        d = P.IntervalDict()
+        interval_dict = P.IntervalDict()
         for period in existing_periods:
             interval = self.create_interval(period.start_date, period.end_date)
-            d[interval] = period.rate
+            interval_dict[interval] = period.rate
 
         # We generate all periods from scratch to avoid complicated
         # merging logic.
         existing_periods.delete()
 
-        d[new_period] = amount
-        for period in d.keys():
+        interval_dict[new_period] = amount
+        for period in interval_dict.keys():
             for interval in list(period):
                 # In case of composite intervals
                 start = (
@@ -337,14 +342,14 @@ class VariableRate(models.Model):
                     if isinstance(interval.upper, date)
                     else None
                 )
-                period_rate_dict = d[
+                period_rate_dict = interval_dict[
                     P.closedopen(interval.lower, interval.upper)
                     or date.today()
                 ]
                 rate = period_rate_dict.values()[0]
 
                 rpd = RatePerDate(
-                    start_date=start, end_date=end, rate=rate, main_rate=self,
+                    start_date=start, end_date=end, rate=rate, main_rate=self
                 )
                 rpd.save()
 
@@ -378,6 +383,8 @@ class RatePerDate(models.Model):
         VariableRate, on_delete=models.CASCADE, related_name="rates_per_date"
     )
 
+    history = HistoricalRecords()
+
     def __str__(self):
         return f"{self.rate} - {self.start_date} - {self.end_date}"
 
@@ -387,6 +394,7 @@ class Price(VariableRate):
 
     class Meta:
         verbose_name = _("pris")
+        verbose_name_plural = _("priser")
 
     payment_schedule = models.OneToOneField(
         "PaymentSchedule",
@@ -630,6 +638,21 @@ class PaymentSchedule(models.Model):
             raise ValueError(_("ukendt betalingstype"))
 
         return (amount / 100) * vat_factor
+
+    def is_ready_to_generate_payments(self):
+        """Don't generate payments unless object is ready.
+
+        Note: This is *not* a validation. It's necessary because Django Rest
+        Framework can perform partial saves and the post-save logic needs to be
+        able to cope with that.
+        """
+        if not hasattr(self, "activity") or not self.activity:
+            return False
+        if self.payment_cost_type == self.PER_UNIT_PRICE and not hasattr(
+            self, "price_per_unit"
+        ):
+            return False
+        return True
 
     def generate_payments(self, start, end=None, vat_factor=Decimal("100")):
         """Generate payments with a start and end date."""
@@ -981,7 +1004,7 @@ class Case(AuditModelMixin, models.Model):
         verbose_name=_("supplerende oplysninger til vurdering"), blank=True
     )
     efforts = models.ManyToManyField(
-        Effort, related_name="cases", verbose_name=_("indsatser"), blank=True,
+        Effort, related_name="cases", verbose_name=_("indsatser"), blank=True
     )
     note = models.TextField(verbose_name=_("note"), blank=True)
 
@@ -1080,26 +1103,6 @@ class Section(Classification):
         return f"{self.paragraph}"
 
 
-class SectionEffortStepProxy(Section.allowed_for_steps.through):
-    """Proxy model for the allowed_for_steps (EffortStep) m2m field on Section.
-
-    We use a proxy so we can override __str__ and m2m verbose_name for use in
-    django admin without an explicit through model.
-    """
-
-    class Meta:
-        proxy = True
-
-    def __str__(self):
-        return f"{self.section.paragraph} {self.section.text}"
-
-
-# Set the verbose_name of the 'section' foreign key for use in django admin.
-SectionEffortStepProxy._meta.get_field("section").verbose_name = gettext(
-    "paragraf"
-)
-
-
 class Appropriation(AuditModelMixin, models.Model):
     """An appropriation of funds in a Case - corresponds to a Sag in SBSYS."""
 
@@ -1119,16 +1122,6 @@ class Appropriation(AuditModelMixin, models.Model):
         verbose_name=_("paragraf"),
     )
 
-    @property
-    def status(self):
-        """Calculate appropriation status from status of activities."""
-        if self.activities.filter(status=STATUS_EXPECTED).exists():
-            return STATUS_EXPECTED
-        if self.activities.filter(status=STATUS_GRANTED).exists():
-            return STATUS_GRANTED
-
-        return STATUS_DRAFT
-
     case = models.ForeignKey(
         Case,
         on_delete=models.CASCADE,
@@ -1138,6 +1131,18 @@ class Appropriation(AuditModelMixin, models.Model):
     note = models.TextField(
         verbose_name=_("supplerende oplysninger"), blank=True
     )
+
+    objects = AppropriationQuerySet.as_manager()
+
+    @property
+    def status(self):
+        """Calculate appropriation status from status of activities."""
+        if self.activities.filter(status=STATUS_EXPECTED).exists():
+            return STATUS_EXPECTED
+        if self.activities.filter(status=STATUS_GRANTED).exists():
+            return STATUS_GRANTED
+
+        return STATUS_DRAFT
 
     @property
     def granted_from_date(self):
@@ -1487,35 +1492,6 @@ class ActivityDetails(Classification):
         return f"{self.activity_id} - {self.name}"
 
 
-class ActivityDetailsSectionProxy(
-    ActivityDetails.supplementary_activity_for.through
-):
-    """
-    Proxy model for supplementary_activity_for (Section) on ActivityDetails.
-
-    We use a proxy model so we can override __str__ and m2m verbose_name for
-    use in django admin without an explicit through model.
-    """
-
-    class Meta:
-        proxy = True
-
-    def __str__(self):
-        return f"{self.activitydetails} - {self.section}"
-
-
-# Set the verbose_name of the 'section' foreign key for use in django admin.
-ActivityDetailsSectionProxy._meta.get_field("section").verbose_name = gettext(
-    "paragraf"
-)
-
-# Set the verbose_name of the 'activitydetails' foreign key for use in
-# django admin.
-ActivityDetailsSectionProxy._meta.get_field(
-    "activitydetails"
-).verbose_name = gettext("aktivitetsdetalje")
-
-
 class SectionInfo(models.Model):
     """For a main activity, KLE no. and SBSYS ID for the relevant sections."""
 
@@ -1601,6 +1577,8 @@ class Activity(AuditModelMixin, models.Model):
                 name="unique_main_activity",
             ),
         ]
+
+    objects = ActivityQuerySet.as_manager()
 
     details = models.ForeignKey(
         ActivityDetails,
