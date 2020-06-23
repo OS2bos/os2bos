@@ -758,7 +758,8 @@ def generate_payment_date_exclusion_dates(years=None):
     The default are danish holidays and weekends.
     """
     if not years:
-        years = [date.today().year]
+        current_year = date.today().year
+        years = [current_year, current_year + 1]
 
     danish_holiday_dates = list(danish_holidays(years=years))
 
