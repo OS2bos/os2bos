@@ -14,6 +14,6 @@ def populate_payment_date_exclusions(apps, schema_editor):
 
 class Migration(migrations.Migration):
 
-    dependencies = [("core", "0071_paymentdateexclusion")]
+    dependencies = [("core", "0072_paymentdateexclusion")]
 
     operations = [migrations.RunPython(populate_payment_date_exclusions)]
