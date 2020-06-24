@@ -554,7 +554,8 @@ def export_prism_payments_for_date(date=None):
     # Retrieve payments for the default date.
     payments = due_payments_for_prism(date)
 
-    # Include payments on PaymentDateExclusion dates.
+    # We include payments until we reach two consecutive days
+    # with no exclusions.
     payment_date_exclusions_found = False
     consecutive_days = 1
     days_delta = 1
