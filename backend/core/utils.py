@@ -571,7 +571,7 @@ def export_prism_payments_for_date(date=None):
             consecutive_days = 0
 
         # Also include payments for the first day after
-        # PaymentDateExclusion dates.
+        # one or more PaymentDateExclusion dates.
         if payment_date_exclusions_found:
             payments = payments.union(
                 due_payments_for_prism(date + relativedelta(days=days_delta))
