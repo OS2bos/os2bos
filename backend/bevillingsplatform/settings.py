@@ -322,6 +322,17 @@ LOGGING = {
                 fallback=os.path.join(LOG_DIR, "send_expired_emails.log"),
             ),
         },
+        "recalculate_on_changed_rate": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "formatter": "verbose",
+            "filename": settings.get(
+                "RECALCULATE_ON_CHANGED_RATE_LOG_FILE",
+                fallback=os.path.join(
+                    LOG_DIR, "recalculate_on_changed_rate.log"
+                ),
+            ),
+        },
     },
     "formatters": {
         "verbose": {
