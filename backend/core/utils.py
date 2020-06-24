@@ -39,6 +39,9 @@ from holidays import Denmark as danish_holidays
 from service_person_stamdata_udvidet import get_citizen
 
 from core import models
+from core.data.extra_payment_date_exclusion_tuples import (
+    extra_payment_date_exclusion_tuples,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -792,4 +795,17 @@ def generate_payment_date_exclusion_dates(years=None):
         )
     ]
 
-    return sorted(list(set(danish_holiday_dates + weekend_dates)))
+    extra_payment_date_exclusions = []
+    payment_date_exclusion_tuples = extra_payment_date_exclusion_tuples
+    for year in years:
+        for day, month in payment_date_exclusion_tuples:
+            extra_payment_date_exclusions.append(
+                date(day=day, month=month, year=year)
+            )
+
+    exclusion_dates = []
+    exclusion_dates.extend(danish_holiday_dates)
+    exclusion_dates.extend(weekend_dates)
+    exclusion_dates.extend(extra_payment_date_exclusions)
+
+    return sorted(list(set(exclusion_dates)))

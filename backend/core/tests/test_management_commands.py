@@ -480,6 +480,7 @@ class TestGeneratePaymentsReports(TestCase, BasicTestMixin):
 
 
 class TestGeneratePaymentDateExclusions(TestCase):
+    @mock.patch("core.utils.extra_payment_date_exclusion_tuples", [])
     @mock.patch(
         "core.management.commands.generate_payment_date_exclusions.logger"
     )

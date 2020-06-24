@@ -465,7 +465,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         # payments.
         export_prism_payments_for_date()
 
-    @freeze_time("2020-06-03")
+    @freeze_time("2020-05-13")
     def test_export_prism_payments_with_exclusions_wednesday(self):
         now = timezone.now()
         start_date = now
@@ -519,7 +519,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
             payment_schedule.payments.filter(paid=True).values_list(
                 "date", flat=True
             ),
-            [date(2020, 6, 4)],  # Thursday
+            [date(2020, 5, 14)],  # Thursday
         )
 
     @freeze_time("2020-06-04")
@@ -729,6 +729,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
 
 
 class TestGeneratePaymentDateExclusionDates(TestCase):
+    @mock.patch("core.utils.extra_payment_date_exclusion_tuples", [])
     def test_generate_payment_date_exclusion_dates(self):
         # Generate exclusion dates for 2019, 2020, 2021, and 2022.
         years = [2019, 2020, 2021, 2022]
@@ -737,6 +738,7 @@ class TestGeneratePaymentDateExclusionDates(TestCase):
         self.assertTrue(all([date.year in years for date in dates]))
         self.assertEqual(len(dates), 448)
 
+    @mock.patch("core.utils.extra_payment_date_exclusion_tuples", [])
     @freeze_time("2020-01-01")
     def test_generate_payment_date_exclusion_dates_no_params(self):
         # Generate exclusion dates with no params so default
@@ -745,6 +747,29 @@ class TestGeneratePaymentDateExclusionDates(TestCase):
 
         self.assertTrue(all([date.year in [2020, 2021] for date in dates]))
         self.assertEqual(len(dates), 223)
+
+    @mock.patch(
+        "core.utils.extra_payment_date_exclusion_tuples",
+        [(1, 5), (5, 6), (24, 12), (31, 12)],
+    )
+    @freeze_time("2020-01-01")
+    def test_generate_payment_date_exclusion_dates_with_extra_tuples(self):
+        dates = generate_payment_date_exclusion_dates()
+
+        self.assertTrue(all([date.year in [2020, 2021] for date in dates]))
+        extra_dates = [
+            date(year=2020, month=5, day=1),
+            date(year=2020, month=6, day=5),
+            date(year=2020, month=12, day=24),
+            date(year=2020, month=12, day=31),
+            date(year=2021, month=5, day=1),
+            date(year=2021, month=6, day=5),
+            date(year=2021, month=12, day=24),
+            date(year=2021, month=12, day=31),
+        ]
+        for extra_date in extra_dates:
+            self.assertIn(extra_date, dates)
+        self.assertEqual(len(dates), 229)
 
 
 class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
