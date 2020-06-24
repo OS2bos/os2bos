@@ -370,6 +370,11 @@ LOGGING = {
             "level": "INFO",
             "propagate": True,
         },
+        "bevillingsplatform.recalculate_on_changed_rate": {
+            "handlers": ["recalculate_on_changed_rate"],
+            "level": "INFO",
+            "propagate": True,
+        },
     },
 }
 
