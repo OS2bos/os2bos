@@ -2067,3 +2067,17 @@ class Account(Classification):
                 name="unique_account_number",
             )
         ]
+
+
+class PaymentDateExclusion(models.Model):
+    """Model for Prism payment exclusion dates."""
+
+    date = models.DateField(unique=True, verbose_name=_("dato"))
+
+    def __str__(self):
+        return f"{self.date}"
+
+    class Meta:
+        verbose_name = _("betalingsdato undtagelse")
+        verbose_name_plural = _("betalingsdato undtagelser")
+        ordering = ("-date",)

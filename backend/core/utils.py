@@ -34,9 +34,14 @@ from constance import config
 from weasyprint import HTML
 from weasyprint.fonts import FontConfiguration
 
+from holidays import Denmark as danish_holidays
+
 from service_person_stamdata_udvidet import get_citizen
 
 from core import models
+from core.data.extra_payment_date_exclusion_tuples import (
+    extra_payment_date_exclusion_tuples,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -537,13 +542,47 @@ def write_prism_file(date, payments, tomorrow, new_account_string=False):
 
 @transaction.atomic
 def export_prism_payments_for_date(date=None):
-    """Process payments and output a file for PRISME."""
+    """Process payments and output a file for PRISME.
+
+    Default date for exporting payments is tomorrow.
+
+    We check the day after tomorrow for one or several payment date exclusions
+    and include payments for those found.
+    """
     # Date = tomorrow if not given. We need "tomorrow" to set payment date.
     tomorrow = datetime.datetime.now() + relativedelta(days=1)
     if not date:
         date = tomorrow
 
+    # Retrieve payments for the default date.
     payments = due_payments_for_prism(date)
+
+    # We include payments until we reach two consecutive days
+    # with no exclusions.
+    payment_date_exclusions_found = False
+    consecutive_days = 1
+    days_delta = 1
+    while consecutive_days < 2:
+        while models.PaymentDateExclusion.objects.filter(
+            date=date + relativedelta(days=days_delta)
+        ).exists():
+            payment_date_exclusions_found = True
+            payments = payments.union(
+                due_payments_for_prism(date + relativedelta(days=days_delta))
+            )
+            days_delta += 1
+            consecutive_days = 0
+
+        # Also include payments for the first day after
+        # one or more PaymentDateExclusion dates.
+        if payment_date_exclusions_found:
+            payments = payments.union(
+                due_payments_for_prism(date + relativedelta(days=days_delta))
+            )
+        consecutive_days += 1
+        days_delta += 1
+        payment_date_exclusions_found = False
+
     if not payments.exists():
         # No payments
         return
@@ -727,3 +766,46 @@ def create_rrule(
     else:
         raise ValueError(_("ukendt betalingsfrekvens"))
     return rrule_frequency
+
+
+def generate_payment_date_exclusion_dates(years=None):
+    """
+    Generate "default" dates for payment date exclusions for a number of years.
+
+    The default are danish holidays and weekends.
+    """
+    if not years:
+        current_year = date.today().year
+        years = [current_year, current_year + 1]
+
+    danish_holiday_dates = list(danish_holidays(years=years))
+
+    start_date = date(min(years), 1, 1)
+    end_date = date(max(years), 12, 31)
+
+    weekend_dates = [
+        dt.date()
+        for dt in (
+            rrule.rrule(
+                dtstart=start_date,
+                until=end_date,
+                freq=rrule.WEEKLY,
+                byweekday=(rrule.SA, rrule.SU),
+            )
+        )
+    ]
+
+    extra_payment_date_exclusions = []
+    payment_date_exclusion_tuples = extra_payment_date_exclusion_tuples
+    for year in years:
+        for day, month in payment_date_exclusion_tuples:
+            extra_payment_date_exclusions.append(
+                date(day=day, month=month, year=year)
+            )
+
+    exclusion_dates = []
+    exclusion_dates.extend(danish_holiday_dates)
+    exclusion_dates.extend(weekend_dates)
+    exclusion_dates.extend(extra_payment_date_exclusions)
+
+    return sorted(list(set(exclusion_dates)))

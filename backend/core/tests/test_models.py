@@ -37,6 +37,7 @@ from core.tests.testing_utils import (
     create_variable_rate,
     create_rate,
     create_rate_per_date,
+    create_payment_date_exclusion,
 )
 from core.models import (
     Municipality,
@@ -3723,3 +3724,10 @@ class RatePerDateTestCase(TestCase):
         )
 
         self.assertEqual(str(rate_per_date), f"100 - {today} - {tomorrow}")
+
+
+class PaymentDateExclusionTestCase(TestCase):
+    def test_str(self):
+        payment_date_exclusion = create_payment_date_exclusion()
+
+        self.assertEqual(str(payment_date_exclusion), str(date.today()))

@@ -88,7 +88,7 @@ SECURE_PROXY_SSL_HEADER = (
 )
 
 INITIALIZE_DATABASE = settings.getboolean(
-    "INITIALIZE_DATABASE", fallback=False,
+    "INITIALIZE_DATABASE", fallback=False
 )
 
 # Application definition
@@ -333,6 +333,17 @@ LOGGING = {
                 ),
             ),
         },
+        "generate_payment_date_exclusions": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "formatter": "verbose",
+            "filename": settings.get(
+                "GENERATE_PAYMENT_DATE_EXCLUSION_LOG_FILE",
+                fallback=os.path.join(
+                    LOG_DIR, "generate_payment_date_exclusions.log"
+                ),
+            ),
+        },
     },
     "formatters": {
         "verbose": {
@@ -372,6 +383,11 @@ LOGGING = {
         },
         "bevillingsplatform.recalculate_on_changed_rate": {
             "handlers": ["recalculate_on_changed_rate"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        "bevillingsplatform.generate_payment_date_exclusions": {
+            "handlers": ["generate_payment_date_exclusions"],
             "level": "INFO",
             "propagate": True,
         },
