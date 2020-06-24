@@ -322,6 +322,17 @@ LOGGING = {
                 fallback=os.path.join(LOG_DIR, "send_expired_emails.log"),
             ),
         },
+        "recalculate_on_changed_rate": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "formatter": "verbose",
+            "filename": settings.get(
+                "RECALCULATE_ON_CHANGED_RATE_LOG_FILE",
+                fallback=os.path.join(
+                    LOG_DIR, "recalculate_on_changed_rate.log"
+                ),
+            ),
+        },
     },
     "formatters": {
         "verbose": {
@@ -356,6 +367,11 @@ LOGGING = {
         },
         "bevillingsplatform.send_expired_emails": {
             "handlers": ["send_expired_emails"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        "bevillingsplatform.recalculate_on_changed_rate": {
+            "handlers": ["recalculate_on_changed_rate"],
             "level": "INFO",
             "propagate": True,
         },
