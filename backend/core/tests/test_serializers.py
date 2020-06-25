@@ -54,7 +54,7 @@ class AppropriationSerializerTestCase(TestCase, BasicTestMixin):
         )
         appropriation = create_appropriation(case=case)
 
-        activity = create_activity(case=case, appropriation=appropriation,)
+        activity = create_activity(case=case, appropriation=appropriation)
         create_payment_schedule(
             payment_amount=Decimal("500.0"),
             payment_frequency=PaymentSchedule.WEEKLY,
@@ -692,7 +692,7 @@ class CaseSerializerTestCase(TestCase, BasicTestMixin):
         self.assertFalse(is_valid)
         self.assertEqual(
             serializer.errors["non_field_errors"][0],
-            "En sag med den givne målgruppe skal have feltet district",
+            "En sag med den givne målgruppe skal have feltet Skoledistrikt",
         )
 
     def test_validate_success_no_district_for_handicap_dept(self):
@@ -726,6 +726,41 @@ class CaseSerializerTestCase(TestCase, BasicTestMixin):
         is_valid = serializer.is_valid()
 
         self.assertTrue(is_valid)
+
+    def test_validate_success_effort_step_partial(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        target_group = case.target_group
+        target_group.required_fields_for_case = ["effort_step"]
+        target_group.save()
+
+        data = CaseSerializer(case).data
+        data.pop("effort_step")
+
+        serializer = CaseSerializer(case, data=data, partial=True)
+        is_valid = serializer.is_valid()
+
+        self.assertTrue(is_valid)
+
+    def test_validate_error_effort_step_partial(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        case.effort_step = None
+        case.save()
+
+        target_group = case.target_group
+        target_group.required_fields_for_case = ["effort_step"]
+        target_group.save()
+
+        data = CaseSerializer(case).data
+        data.pop("effort_step")
+
+        serializer = CaseSerializer(case, data=data, partial=True)
+        is_valid = serializer.is_valid()
+
+        self.assertFalse(is_valid)
 
 
 class PaymentScheduleSerializerTestCase(TestCase, BasicTestMixin):
@@ -1021,7 +1056,7 @@ class PaymentSerializerTestCase(TestCase, BasicTestMixin):
         appropriation = create_appropriation(case=case)
 
         activity = create_activity(
-            case=case, appropriation=appropriation, status=STATUS_GRANTED,
+            case=case, appropriation=appropriation, status=STATUS_GRANTED
         )
         payment_schedule = create_payment_schedule(
             payment_method=INTERNAL,
@@ -1095,7 +1130,7 @@ class PaymentSerializerTestCase(TestCase, BasicTestMixin):
         appropriation = create_appropriation(case=case)
 
         activity = create_activity(
-            case=case, appropriation=appropriation, status=STATUS_EXPECTED,
+            case=case, appropriation=appropriation, status=STATUS_EXPECTED
         )
         payment_schedule = create_payment_schedule(
             payment_method=INTERNAL,
