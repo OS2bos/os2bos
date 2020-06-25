@@ -25,7 +25,6 @@ def initialize():
     initialize_sections()
     initialize_activity_details()
     initialize_section_infos()
-    initialize_accounts()
     initialize_service_providers()
     initialize_users()
     initialize_teams()
@@ -80,15 +79,6 @@ def initialize_section_infos():
 
     """
     call_command("loaddata", "sectioninfos.json", app_label="core")
-
-
-def initialize_accounts():
-    """Initialize all the relevant accounts.
-
-    Data should be the output of "manage.py dumpdata core.account".
-
-    """
-    call_command("loaddata", "accounts.json", app_label="core")
 
 
 def initialize_service_providers():

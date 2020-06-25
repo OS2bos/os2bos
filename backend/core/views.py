@@ -33,7 +33,6 @@ from core.models import (
     Section,
     SectionInfo,
     ActivityDetails,
-    Account,
     ServiceProvider,
     PaymentMethodDetails,
     ApprovalLevel,
@@ -62,7 +61,6 @@ from core.serializers import (
     SectionSerializer,
     SectionInfoSerializer,
     ActivityDetailsSerializer,
-    AccountSerializer,
     UserSerializer,
     HistoricalCaseSerializer,
     ServiceProviderSerializer,
@@ -402,14 +400,6 @@ class ActivityDetailsViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
 
     queryset = ActivityDetails.objects.all()
     serializer_class = ActivityDetailsSerializer
-    filterset_fields = "__all__"
-
-
-class AccountViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
-    """Expose accounts in REST API."""
-
-    queryset = Account.objects.all()
-    serializer_class = AccountSerializer
     filterset_fields = "__all__"
 
 

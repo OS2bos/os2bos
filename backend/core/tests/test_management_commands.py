@@ -17,7 +17,6 @@ from core.models import (
     STATUS_EXPECTED,
     PaymentSchedule,
     ActivityDetails,
-    Account,
     ServiceProvider,
     Section,
 )
@@ -584,81 +583,6 @@ class TestImportActivityDetails(TestCase):
         call_command("import_activity_details")
 
         self.assertEqual(ActivityDetails.objects.count(), 0)
-
-
-class TestImportAccounts(TestCase):
-    def test_import_accounts(self):
-        # The import_accounts script requires activity details and sections
-        # to have been populated first.
-        call_command("import_sections")
-        call_command("import_activity_details")
-
-        self.assertEqual(Account.objects.count(), 0)
-
-        call_command("import_accounts")
-
-        self.assertEqual(Account.objects.count(), 870)
-
-    def test_import_accounts_with_path(self):
-        call_command("import_sections")
-        call_command("import_activity_details")
-
-        self.assertEqual(Account.objects.count(), 0)
-
-        csv_data = (
-            # Headers.
-            "Aktivitet,Aktivitetnavn,Tollerance,MaxAfvigelse,"
-            "Hovedaktivitet på,Følgeudgift på ,Kle nr.,SBSYS id,"
-            "Hovedaktivitet,Hovedaktivitetsnavn,Kont1,Konto2,Konto3,"
-            "Kontering,PGF betegnelse,Helle,Kolonne1,Leif\n"
-            # 1st entry.
-            "015031,Soc.pæd. opholdssteder,10%,5000,SEL-52-3.7,,27.27.42,"
-            "882,, ,528201003,,15031,528201003-15031,"
-            "SEL-52-3.7 Anbringelse udenfor hjemmet,,,\n"
-        )
-        open_mock = mock.mock_open(read_data=csv_data)
-        with mock.patch(
-            "core.management.commands.import_accounts.open", open_mock
-        ):
-            call_command("import_accounts", "--path=/tmp/test")
-
-        open_mock.assert_called_with("/tmp/test")
-        self.assertEqual(Account.objects.count(), 1)
-
-    def test_import_accounts_no_activity_id(self):
-        call_command("import_sections")
-        call_command("import_activity_details")
-
-        self.assertEqual(Account.objects.count(), 0)
-
-        csv_data = (
-            # Headers.
-            "Aktivitet,Aktivitetnavn,Tollerance,MaxAfvigelse,"
-            "Hovedaktivitet på,Følgeudgift på ,Kle nr.,SBSYS id,"
-            "Hovedaktivitet,Hovedaktivitetsnavn,Kont1,Konto2,Konto3,"
-            "Kontering,PGF betegnelse,Helle,Kolonne1,Leif\n"
-            # Entry with no activity id.
-            ",Soc.pæd. opholdssteder,10%,5000,SEL-52-3.7,,27.27.42,"
-            "882,, ,528201003,,15031,528201003-15031,"
-            "SEL-52-3.7 Anbringelse udenfor hjemmet,,,\n"
-        )
-        open_mock = mock.mock_open(read_data=csv_data)
-        with mock.patch(
-            "core.management.commands.import_accounts.open", open_mock
-        ):
-            call_command("import_accounts")
-
-        self.assertEqual(Account.objects.count(), 0)
-
-    def test_import_accounts_no_activity_details(self):
-        call_command("import_sections")
-        # Don't import activity details to hit DoesNotExist cases.
-
-        self.assertEqual(Account.objects.count(), 0)
-
-        call_command("import_accounts")
-
-        self.assertEqual(Account.objects.count(), 0)
 
 
 class TestImportServiceProviders(TestCase):

@@ -26,7 +26,6 @@ from core.models import (
     ServiceProvider,
     Section,
     SectionInfo,
-    Account,
     RelatedPerson,
     SD,
     EffortStep,
@@ -237,23 +236,6 @@ def create_section(paragraph="ABL-105-2", allowed_for_steps=None, **kwargs):
     for step in allowed_for_steps:
         section.allowed_for_steps.add(EffortStep.objects.get(number=step))
     return section
-
-
-def create_account(
-    main_activity,
-    supplementary_activity,
-    section,
-    main_account_number="645511002",
-    activity_number="030004",
-):
-    account = Account.objects.create(
-        main_activity=main_activity,
-        supplementary_activity=supplementary_activity,
-        section=section,
-        main_account_number=main_account_number,
-        activity_number=activity_number,
-    )
-    return account
 
 
 def create_service_provider(cvr_number, name):
