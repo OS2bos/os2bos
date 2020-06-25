@@ -286,6 +286,25 @@ class TestTargetGroupAdmin(TestCase):
 
         self.assertEqual(initial_required_fields, ["district"])
 
+    def test_target_group_required_fields_for_case_choices(self):
+        target_group = create_target_group(
+            name="familieafdelingen", required_fields_for_case=["district"]
+        )
+        site = AdminSite()
+        request = MockRequest()
+        target_group_admin = TargetGroupAdmin(TargetGroup, site)
+        target_group_form_class = target_group_admin.get_form(
+            request, target_group
+        )
+        self.assertCountEqual(
+            target_group_form_class.required_fields_for_case_choices(),
+            [
+                ("district", "skoledistrikt"),
+                ("effort_step", "indsatstrappe"),
+                ("scaling_step", "skaleringstrappe"),
+            ],
+        )
+
 
 class TestSectionAdmin(TestCase):
     def test_list_main_activity_for(self):
