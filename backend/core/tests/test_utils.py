@@ -51,7 +51,6 @@ from core.tests.testing_utils import (
     create_activity,
     create_section,
     create_section_info,
-    create_account,
     create_payment_schedule,
     create_activity_details,
     create_payment_date_exclusion,
@@ -360,10 +359,10 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
             max_tolerance_in_dkk=5000,
             max_tolerance_in_percent=10,
         )
-        create_account(
+        create_section_info(
+            details=main_activity_details,
             section=section,
-            main_activity=main_activity_details,
-            supplementary_activity=None,
+            main_activity_main_account_number="12345",
         )
         activity = create_activity(
             case,
@@ -421,11 +420,6 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
             max_tolerance_in_dkk=5000,
             max_tolerance_in_percent=10,
         )
-        create_account(
-            section=section,
-            main_activity=main_activity_details,
-            supplementary_activity=None,
-        )
         create_section_info(
             main_activity_details,
             section,
@@ -479,11 +473,6 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
             sbsys_id="XXX-YYY", case=case, section=section
         )
         main_activity_details = create_activity_details()
-        create_account(
-            section=section,
-            main_activity=main_activity_details,
-            supplementary_activity=None,
-        )
         create_section_info(
             main_activity_details,
             section,
@@ -536,11 +525,6 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
             sbsys_id="XXX-YYY", case=case, section=section
         )
         main_activity_details = create_activity_details()
-        create_account(
-            section=section,
-            main_activity=main_activity_details,
-            supplementary_activity=None,
-        )
         create_section_info(
             main_activity_details,
             section,
@@ -598,11 +582,6 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
             sbsys_id="XXX-YYY", case=case, section=section
         )
         main_activity_details = create_activity_details()
-        create_account(
-            section=section,
-            main_activity=main_activity_details,
-            supplementary_activity=None,
-        )
         create_section_info(
             main_activity_details,
             section,
@@ -675,11 +654,6 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
             sbsys_id="XXX-YYY", case=case, section=section
         )
         main_activity_details = create_activity_details()
-        create_account(
-            section=section,
-            main_activity=main_activity_details,
-            supplementary_activity=None,
-        )
         create_section_info(
             main_activity_details,
             section,

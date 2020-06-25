@@ -28,7 +28,6 @@ from core.models import (
     SchoolDistrict,
     Section,
     ActivityDetails,
-    Account,
     ServiceProvider,
     PaymentMethodDetails,
     Team,
@@ -277,7 +276,7 @@ class PriceAdmin(VariableRateAdmin):
 class PaymentAdmin(admin.ModelAdmin):
     """Dislay read only fields on payment."""
 
-    readonly_fields = ("payment_id", "account_string", "account_string_new")
+    readonly_fields = ("payment_id", "account_string")
     search_fields = ("payment_schedule__payment_id",)
 
     list_display = (
@@ -315,13 +314,8 @@ class PaymentAdmin(admin.ModelAdmin):
         """Get account string."""
         return obj.account_string
 
-    def account_string_new(self, obj):
-        """Get new account string."""
-        return obj.account_string_new
-
     payment_id.short_description = _("betalings-ID")
     account_string.short_description = _("kontostreng")
-    account_string_new.short_description = _("ny kontostreng")
     payment_schedule_str.short_description = _("betalingsplan")
 
 
@@ -382,12 +376,7 @@ class EffortAdmin(ClassificationAdmin):
 class PaymentScheduleAdmin(admin.ModelAdmin):
     """Display read only fields on payment schedule."""
 
-    readonly_fields = (
-        "payment_id",
-        "account_string",
-        "account_string_new",
-        "price_per_unit",
-    )
+    readonly_fields = ("payment_id", "account_string", "price_per_unit")
     search_fields = ("payment_id",)
     list_display = (
         "id",
@@ -413,26 +402,7 @@ class PaymentScheduleAdmin(admin.ModelAdmin):
         """Get account string."""
         return obj.account_string
 
-    def account_string_new(self, obj):
-        """Get new account string."""
-        return obj.account_string_new
-
     account_string.short_description = _("kontostreng")
-    account_string_new.short_description = _("ny kontostreng")
-
-
-@admin.register(Account)
-class AccountAdmin(ClassificationAdmin):
-    """Display account number (konteringsnummer) as read only field."""
-
-    readonly_fields = ("number",)
-    list_display = ("main_account_number", "active")
-
-    def number(self, obj):
-        """Get account number."""
-        return obj.number
-
-    number.short_description = _("konteringsnummer")
 
 
 @admin.register(User)

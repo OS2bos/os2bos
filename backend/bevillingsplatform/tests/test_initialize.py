@@ -14,7 +14,6 @@ from core.models import (
     SchoolDistrict,
     Section,
     SectionInfo,
-    Account,
     ActivityDetails,
     PaymentMethodDetails,
     RatePerDate,
@@ -46,11 +45,6 @@ class InitializeTestCase(TestCase):
         initialize()
         section_infos = SectionInfo.objects.count()
         self.assertEqual(section_infos, 86)
-
-    def test_initialize_generates_accounts(self):
-        initialize()
-        accounts_count = Account.objects.count()
-        self.assertEqual(accounts_count, 883)
 
     def test_initialize_generates_payment_method_details(self):
         initialize()

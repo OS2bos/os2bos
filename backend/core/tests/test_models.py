@@ -30,7 +30,6 @@ from core.tests.testing_utils import (
     create_section,
     create_activity_details,
     create_payment,
-    create_account,
     create_service_provider,
     create_section_info,
     create_related_person,
@@ -44,7 +43,6 @@ from core.models import (
     SchoolDistrict,
     ActivityDetails,
     Activity,
-    Account,
     ApprovalLevel,
     Team,
     PaymentSchedule,
@@ -1893,108 +1891,6 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         activity.delete()
         self.assertEqual(len(mail.outbox), 0)
 
-    def test_account_main_activity(self):
-        start_date = date(year=2019, month=12, day=1)
-        end_date = date(year=2020, month=1, day=1)
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
-        section = create_section()
-        appropriation = create_appropriation(case=case, section=section)
-
-        activity = create_activity(
-            case,
-            appropriation,
-            start_date=start_date,
-            end_date=end_date,
-            status=STATUS_GRANTED,
-            activity_type=MAIN_ACTIVITY,
-        )
-        create_payment_schedule(activity=activity)
-
-        account = create_account(
-            main_activity=activity.details,
-            supplementary_activity=None,
-            section=section,
-        )
-        self.assertEqual(activity.account, account)
-
-    def test_account_supplementary_activity(self):
-        start_date = date(year=2019, month=12, day=1)
-        end_date = date(year=2020, month=1, day=1)
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
-        section = create_section()
-        appropriation = create_appropriation(case=case, section=section)
-        main_activity_details = ActivityDetails.objects.create(
-            name="Betaling til andre kommuner/region for specialtandpleje",
-            activity_id="010001",
-            max_tolerance_in_dkk=5000,
-            max_tolerance_in_percent=10,
-        )
-        supplementary_activity_details = ActivityDetails.objects.create(
-            name="Tandbørste",
-            activity_id="010002",
-            max_tolerance_in_dkk=5000,
-            max_tolerance_in_percent=10,
-        )
-
-        main_activity = create_activity(
-            case,
-            appropriation,
-            start_date=start_date,
-            end_date=end_date,
-            status=STATUS_GRANTED,
-            activity_type=MAIN_ACTIVITY,
-            details=main_activity_details,
-        )
-        create_payment_schedule(activity=main_activity)
-        supplementary_activity = create_activity(
-            case,
-            appropriation,
-            start_date=start_date,
-            end_date=end_date,
-            status=STATUS_GRANTED,
-            activity_type=SUPPL_ACTIVITY,
-            details=supplementary_activity_details,
-        )
-        create_payment_schedule(activity=supplementary_activity)
-        account = create_account(
-            main_activity=main_activity.details,
-            supplementary_activity=supplementary_activity.details,
-            section=section,
-        )
-        self.assertEqual(supplementary_activity.account, account)
-
-    def test_account_no_account(self):
-        start_date = date(year=2019, month=12, day=1)
-        end_date = date(year=2020, month=1, day=1)
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
-        section = create_section()
-        appropriation = create_appropriation(case=case, section=section)
-        main_activity_details = ActivityDetails.objects.create(
-            name="Betaling til andre kommuner/region for specialtandpleje",
-            activity_id="010001",
-            max_tolerance_in_dkk=5000,
-            max_tolerance_in_percent=10,
-        )
-
-        main_activity = create_activity(
-            case,
-            appropriation,
-            start_date=start_date,
-            end_date=end_date,
-            status=STATUS_GRANTED,
-            activity_type=MAIN_ACTIVITY,
-            details=main_activity_details,
-        )
-        create_payment_schedule(activity=main_activity)
-
-        self.assertIsNone(main_activity.account)
-
     def test_validate_expected_true(self):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -2414,100 +2310,6 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         self.assertIsNone(suppl_activity.account_number)
 
 
-class AccountTestCase(TestCase):
-    def test_account_str(self):
-        section = create_section()
-        main_activity_details = ActivityDetails.objects.create(
-            name="Betaling til andre kommuner/region for specialtandpleje",
-            activity_id="010001",
-            max_tolerance_in_dkk=5000,
-            max_tolerance_in_percent=10,
-        )
-        supplementary_activity_details = ActivityDetails.objects.create(
-            name="Betaling til andre kommuner/region for specialtandpleje",
-            activity_id="010002",
-            max_tolerance_in_dkk=5000,
-            max_tolerance_in_percent=10,
-        )
-        account = Account.objects.create(
-            main_account_number="123456",
-            activity_number="1234",
-            section=section,
-            main_activity=main_activity_details,
-            supplementary_activity=supplementary_activity_details,
-        )
-
-        self.assertEqual(
-            str(account),
-            f"123456-1234 - {main_activity_details} - "
-            f"{supplementary_activity_details} - "
-            f"{section}",
-        )
-
-    def test_account_number_with_activity_number(self):
-        section = create_section()
-        main_activity_details = ActivityDetails.objects.create(
-            name="Betaling til andre kommuner/region for specialtandpleje",
-            activity_id="010001",
-            max_tolerance_in_dkk=5000,
-            max_tolerance_in_percent=10,
-        )
-        supplementary_activity_details = ActivityDetails.objects.create(
-            name="Betaling til andre kommuner/region for specialtandpleje",
-            activity_id="010002",
-            max_tolerance_in_dkk=5000,
-            max_tolerance_in_percent=10,
-        )
-        account = Account.objects.create(
-            main_account_number="123456",
-            activity_number="1234",
-            section=section,
-            main_activity=main_activity_details,
-            supplementary_activity=supplementary_activity_details,
-        )
-
-        self.assertEqual(account.number, "123456-1234")
-
-    def test_account_number_with_supplementary_activity(self):
-        section = create_section()
-        main_activity_details = ActivityDetails.objects.create(
-            name="Betaling til andre kommuner/region for specialtandpleje",
-            activity_id="010001",
-            max_tolerance_in_dkk=5000,
-            max_tolerance_in_percent=10,
-        )
-        supplementary_activity_details = ActivityDetails.objects.create(
-            name="Betaling til andre kommuner/region for specialtandpleje",
-            activity_id="010002",
-            max_tolerance_in_dkk=5000,
-            max_tolerance_in_percent=10,
-        )
-        account = Account.objects.create(
-            main_account_number="123456",
-            section=section,
-            main_activity=main_activity_details,
-            supplementary_activity=supplementary_activity_details,
-        )
-
-        self.assertEqual(account.number, "123456-010002")
-
-    def test_account_number_with_only_main_activity(self):
-        section = create_section()
-        main_activity_details = ActivityDetails.objects.create(
-            name="Betaling til andre kommuner/region for specialtandpleje",
-            activity_id="010001",
-            max_tolerance_in_dkk=5000,
-            max_tolerance_in_percent=10,
-        )
-        account = Account.objects.create(
-            main_account_number="123456",
-            section=section,
-            main_activity=main_activity_details,
-        )
-
-        self.assertEqual(account.number, "123456-010001")
-
-
 class ApprovalLevelTestCase(TestCase):
     def test_approvallevel_str(self):
         approval_level = ApprovalLevel.objects.create(name="egenkompetence")
@@ -2539,12 +2341,10 @@ class PaymentTestCase(TestCase, BasicTestMixin):
             recipient_type=PaymentSchedule.PERSON,
             activity=activity,
         )
-        account = create_account(
-            main_activity=activity.details,
-            supplementary_activity=None,
+        section_info = create_section_info(
+            details=activity.details,
             section=section,
-            main_account_number="12345",
-            activity_number="123",
+            main_activity_main_account_number="12345",
         )
         payment = create_payment(
             payment_schedule=payment_schedule,
@@ -2553,13 +2353,14 @@ class PaymentTestCase(TestCase, BasicTestMixin):
             recipient_type=PaymentSchedule.PERSON,
             payment_method=CASH,
         )
-        # Account should come from ACCOUNT_NUMBER_DEPARTMENT,
-        # the account of the activity, and ACCOUNT_NUMBER_KIND.
+        # account_string should come from ACCOUNT_NUMBER_DEPARTMENT,
+        # the section_info of the activity, the activity id
+        # and ACCOUNT_NUMBER_KIND.
         self.assertEqual(
             payment.account_string,
             f"{config.ACCOUNT_NUMBER_DEPARTMENT}-"
-            f"{account.main_account_number}-"
-            f"{account.activity_number}-"
+            f"{section_info.main_activity_main_account_number}-"
+            f"{activity.details.activity_id}-"
             f"{config.ACCOUNT_NUMBER_KIND}",
         )
 
@@ -2598,7 +2399,7 @@ class PaymentTestCase(TestCase, BasicTestMixin):
         # Account should come from ACCOUNT_NUMBER_DEPARTMENT,
         # the section_info of the activity, and ACCOUNT_NUMBER_KIND.
         self.assertEqual(
-            payment.account_string_new,
+            payment.account_string,
             f"{config.ACCOUNT_NUMBER_DEPARTMENT}-"
             f"{section_info.main_activity_main_account_number}-"
             f"{activity.details.activity_id}-"
@@ -2620,37 +2421,6 @@ class PaymentTestCase(TestCase, BasicTestMixin):
         )
         payment_schedule = create_payment_schedule(activity=activity)
 
-        create_account(
-            main_activity=activity.details,
-            supplementary_activity=None,
-            section=section,
-            main_account_number="12345",
-            activity_number="",
-        )
-        payment = create_payment(
-            payment_schedule=payment_schedule,
-            date=date(year=2019, month=1, day=11),
-            amount=Decimal("500.0"),
-            saved_account_string="123-1234-123",
-        )
-        # Account should come from the saved account.
-        self.assertEqual(payment.account_string, "123-1234-123")
-
-    def test_payment_account_new_already_saved(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
-        section = create_section()
-        appropriation = create_appropriation(case=case, section=section)
-
-        activity = create_activity(
-            case,
-            appropriation,
-            status=STATUS_GRANTED,
-            activity_type=MAIN_ACTIVITY,
-        )
-        payment_schedule = create_payment_schedule(activity=activity)
-
         create_section_info(
             details=activity.details,
             section=section,
@@ -2663,7 +2433,7 @@ class PaymentTestCase(TestCase, BasicTestMixin):
             saved_account_string="123-1234-123",
         )
         # Account should come from the saved account.
-        self.assertEqual(payment.account_string_new, "123-1234-123")
+        self.assertEqual(payment.account_string, "123-1234-123")
 
     def test_payment_account_with_unset_department_and_kind(self):
         case = create_case(
@@ -2683,38 +2453,6 @@ class PaymentTestCase(TestCase, BasicTestMixin):
             recipient_type=PaymentSchedule.PERSON,
             activity=activity,
         )
-        create_account(
-            main_activity=activity.details,
-            supplementary_activity=None,
-            section=section,
-            main_account_number="12345",
-            activity_number="1234",
-        )
-        payment = create_payment(
-            payment_schedule=payment_schedule,
-            date=date(year=2019, month=1, day=11),
-            amount=Decimal("500.0"),
-        )
-        self.assertEqual(payment.account_string, "XXX-12345-1234-XXX")
-
-    def test_payment_account_new_with_unset_department_and_kind(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
-        section = create_section()
-        appropriation = create_appropriation(case=case, section=section)
-
-        activity = create_activity(
-            case,
-            appropriation,
-            status=STATUS_GRANTED,
-            activity_type=MAIN_ACTIVITY,
-        )
-        payment_schedule = create_payment_schedule(
-            payment_method=SD,
-            recipient_type=PaymentSchedule.PERSON,
-            activity=activity,
-        )
         create_section_info(
             details=activity.details,
             section=section,
@@ -2725,7 +2463,7 @@ class PaymentTestCase(TestCase, BasicTestMixin):
             date=date(year=2019, month=1, day=11),
             amount=Decimal("500.0"),
         )
-        self.assertEqual(payment.account_string_new, "XXX-12345-000000-XXX")
+        self.assertEqual(payment.account_string, "XXX-12345-000000-XXX")
 
     def test_payment_save_account_string_saved(self):
         case = create_case(
@@ -2740,22 +2478,22 @@ class PaymentTestCase(TestCase, BasicTestMixin):
             status=STATUS_GRANTED,
             activity_type=MAIN_ACTIVITY,
         )
-        payment_schedule = create_payment_schedule(activity=activity)
-        account = create_account(
-            main_activity=activity.details,
-            supplementary_activity=None,
+
+        section_info = create_section_info(
+            details=activity.details,
             section=section,
-            main_account_number="12345",
-            activity_number="1234",
+            main_activity_main_account_number="12345",
         )
+        payment_schedule = create_payment_schedule(activity=activity)
+
         payment = create_payment(
             payment_schedule=payment_schedule,
             date=date(year=2019, month=1, day=11),
             amount=Decimal("500.0"),
         )
 
-        # Account should come from the saved account while not paid.
-        self.assertEqual(payment.account_string, "XXX-12345-1234-XXX")
+        # Account should come from the section info while not paid.
+        self.assertEqual(payment.account_string, "XXX-12345-000000-XXX")
         self.assertEqual(payment.saved_account_string, "")
 
         # Set payment paid which should save the saved_account_string
@@ -2764,15 +2502,14 @@ class PaymentTestCase(TestCase, BasicTestMixin):
         payment.paid_amount = Decimal("500.0")
         payment.save()
         payment.refresh_from_db()
-        self.assertEqual(payment.saved_account_string, "XXX-12345-1234-XXX")
+        self.assertEqual(payment.saved_account_string, "XXX-12345-000000-XXX")
 
-        # Change account numbers
-        account.main_account_number = "67890"
-        account.activity_number = "6789"
-        account.save()
+        # Change section_info main_account number.
+        section_info.main_activity_main_account_number = "67890"
+        section_info.save()
 
         # Payment account_string should use the saved_account_string
-        self.assertEqual(payment.account_string, "XXX-12345-1234-XXX")
+        self.assertEqual(payment.account_string, "XXX-12345-000000-XXX")
 
     def test_save_not_all_paid_fields_set(self):
         payment_schedule = create_payment_schedule()

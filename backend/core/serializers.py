@@ -31,7 +31,6 @@ from core.models import (
     Section,
     SectionInfo,
     ActivityDetails,
-    Account,
     HistoricalCase,
     ServiceProvider,
     ApprovalLevel,
@@ -204,11 +203,7 @@ class RatePerDateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RatePerDate
-        fields = (
-            "rate",
-            "start_date",
-            "end_date",
-        )
+        fields = ("rate", "start_date", "end_date")
 
 
 class RateSerializer(serializers.ModelSerializer):
@@ -244,7 +239,7 @@ class PriceSerializer(WritableNestedModelSerializer):
         end_date = validated_data.pop("end_date", None)
         instance = super().create(validated_data)
         instance.set_rate_amount(
-            amount=amount, start_date=start_date, end_date=end_date,
+            amount=amount, start_date=start_date, end_date=end_date
         )
         return instance
 
@@ -255,7 +250,7 @@ class PriceSerializer(WritableNestedModelSerializer):
         end_date = validated_data.pop("end_date", None)
         instance = super().update(instance, validated_data)
         instance.set_rate_amount(
-            amount=amount, start_date=start_date, end_date=end_date,
+            amount=amount, start_date=start_date, end_date=end_date
         )
         return instance
 
@@ -616,16 +611,6 @@ class ActivityDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ActivityDetails
-        fields = "__all__"
-
-
-class AccountSerializer(serializers.ModelSerializer):
-    """Serializer for the Account model."""
-
-    number = serializers.ReadOnlyField()
-
-    class Meta:
-        model = Account
         fields = "__all__"
 
 

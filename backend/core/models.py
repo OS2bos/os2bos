@@ -748,39 +748,6 @@ class PaymentSchedule(models.Model):
         if (
             not hasattr(self, "activity")
             or not self.activity
-            or not self.activity.account
-        ):
-            account_number = config.ACCOUNT_NUMBER_UNKNOWN
-        else:
-            account_number = self.activity.account.number
-
-        return f"{department}-{account_number}-{kind}"
-
-    @property
-    def account_string_new(self):
-        """Calculate account string from activity.
-
-        TODO: eventually replace account_string with this.
-        """
-        if (
-            self.recipient_type == PaymentSchedule.PERSON
-            and self.payment_method == CASH
-        ):
-            department = config.ACCOUNT_NUMBER_DEPARTMENT
-            kind = config.ACCOUNT_NUMBER_KIND
-        else:
-            # Set department and kind to 'XXX'
-            # to signify they are not used.
-            department = "XXX"
-            kind = "XXX"
-
-        # Account string is "unknown" when there is no
-        # activity or account.
-        # The explicit inclusion of "unknown" is a demand due to the
-        # PRISME integration.
-        if (
-            not hasattr(self, "activity")
-            or not self.activity
             or not self.activity.account_number
         ):
             account_number = config.ACCOUNT_NUMBER_UNKNOWN
@@ -920,17 +887,6 @@ class Payment(models.Model):
             return self.saved_account_string
 
         return self.payment_schedule.account_string
-
-    @property
-    def account_string_new(self):
-        """Return saved account string if any, else calculate from schedule.
-
-        TODO: eventually replace account_string with this.
-        """
-        if self.saved_account_string:
-            return self.saved_account_string
-
-        return self.payment_schedule.account_string_new
 
     def __str__(self):
         recipient_type_str = self.get_recipient_type_display()
@@ -1751,35 +1707,8 @@ class Activity(AuditModelMixin, models.Model):
         return True
 
     @property
-    def account(self):
-        """Calculate the account to use with this activity."""
-        if self.activity_type == MAIN_ACTIVITY:
-            accounts = Account.objects.filter(
-                section=self.appropriation.section,
-                main_activity=self.details,
-                supplementary_activity=None,
-            )
-        else:
-            main_activity = self.appropriation.main_activity
-            if not main_activity:
-                return None
-            accounts = Account.objects.filter(
-                section=self.appropriation.section,
-                main_activity=main_activity.details,
-                supplementary_activity=self.details,
-            )
-        if accounts.exists():
-            account = accounts.first()
-        else:
-            account = None
-        return account
-
-    @property
     def account_number(self):
-        """Calculate the account_number to use with this activity.
-
-        TODO: eventually replace account.number with this.
-        """
+        """Calculate the account_number to use with this activity."""
         if self.activity_type == MAIN_ACTIVITY:
             section_info = SectionInfo.objects.filter(
                 activity_details=self.details,
@@ -1998,75 +1927,6 @@ class RelatedPerson(AuditModelMixin, models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.cpr_number} - {self.main_case}"
-
-
-class Account(Classification):
-    """Class containing account numbers.
-
-    Should have a number for each
-    (main activity, supplementary activity, section) pair.
-    """
-
-    main_account_number = models.CharField(
-        max_length=128, verbose_name=_("hovedkontonummer")
-    )
-    activity_number = models.CharField(
-        max_length=128, verbose_name=_("aktivitetsnummer"), blank=True
-    )
-
-    main_activity = models.ForeignKey(
-        ActivityDetails,
-        null=False,
-        on_delete=models.CASCADE,
-        related_name="main_accounts",
-        verbose_name=_("hovedaktivitet"),
-    )
-    supplementary_activity = models.ForeignKey(
-        ActivityDetails,
-        null=True,
-        blank=True,
-        on_delete=models.CASCADE,
-        related_name="supplementary_accounts",
-        verbose_name=_("følgeudgift"),
-    )
-    section = models.ForeignKey(
-        Section,
-        null=False,
-        on_delete=models.CASCADE,
-        related_name="accounts",
-        verbose_name=_("paragraf"),
-    )
-
-    @property
-    def number(self):
-        """Calculate the account number of this activity."""
-        if not self.activity_number:
-            if self.supplementary_activity:
-                activity_number = self.supplementary_activity.activity_id
-            else:
-                activity_number = self.main_activity.activity_id
-        else:
-            activity_number = self.activity_number
-
-        return f"{self.main_account_number}-{activity_number}"
-
-    def __str__(self):
-        return (
-            f"{self.number} - "
-            f"{self.main_activity} - "
-            f"{self.supplementary_activity} - "
-            f"{self.section}"
-        )
-
-    class Meta:
-        verbose_name = _("konto")
-        verbose_name_plural = _("konti")
-        constraints = [
-            models.UniqueConstraint(
-                fields=["main_activity", "supplementary_activity", "section"],
-                name="unique_account_number",
-            )
-        ]
 
 
 class PaymentDateExclusion(models.Model):
