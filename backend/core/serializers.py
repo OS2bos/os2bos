@@ -90,7 +90,7 @@ class CaseSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, data):
-        """Check that if target_group is family, district is given."""
+        """Check if required fields for case are present."""
         if (
             "target_group" in data
             and data["target_group"].required_fields_for_case
@@ -99,11 +99,19 @@ class CaseSerializer(serializers.ModelSerializer):
                 "target_group"
             ].required_fields_for_case
             for field in required_fields_for_case:
-                if field not in data or not data[field]:
+                if (
+                    self.partial
+                    and not getattr(self.instance, field)
+                    and (field not in data or not data[field])
+                ) or (
+                    not self.partial and (field not in data or not data[field])
+                ):
+                    serializer_fields = self.get_fields()
+                    field_label = serializer_fields[field].label
                     raise serializers.ValidationError(
                         _(
                             f"En sag med den givne "
-                            f"målgruppe skal have feltet {field}"
+                            f"målgruppe skal have feltet {field_label}"
                         )
                     )
         return data
