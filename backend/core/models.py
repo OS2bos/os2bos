@@ -1708,8 +1708,7 @@ class Activity(AuditModelMixin, models.Model):
 
     @property
     def account_number(self):
-        """Calculate the account_number to use with this activity.
-        """
+        """Calculate the account_number to use with this activity."""
         if self.activity_type == MAIN_ACTIVITY:
             section_info = SectionInfo.objects.filter(
                 activity_details=self.details,
