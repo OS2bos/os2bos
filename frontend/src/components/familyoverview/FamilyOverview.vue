@@ -219,6 +219,10 @@
         text-align: center;
     }
 
+    .fam-minilist-name {
+        width: 10rem;
+    }
+
     a.fam-list-name {
         display: inline;
     }
