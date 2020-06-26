@@ -271,12 +271,16 @@ class TestSendExpiredEmails(TestCase, BasicTestMixin):
         )
         # Only created email should be sent initially.
         self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(mail.outbox[0].subject, "Aktivitet oprettet")
+        self.assertEqual(
+            mail.outbox[0].subject, "Aktivitet oprettet - 0205891234"
+        )
 
         call_command("send_expired_emails")
         # Then expired email.
         self.assertEqual(len(mail.outbox), 2)
-        self.assertEqual(mail.outbox[1].subject, "Aktivitet udgået")
+        self.assertEqual(
+            mail.outbox[1].subject, "Aktivitet udgået - 0205891234"
+        )
 
     def test_send_expired_emails_doesnt_trigger_email(self):
         today = timezone.now().date()
