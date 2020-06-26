@@ -81,13 +81,13 @@ test('Check that an activity may only have one modifier', async t => {
     await approveActivities(t)
     
     await t
-        .click(Selector('.act-list-item a'))
+        .click(Selector('.act-list-row a'))
         .click('.act-edit-btn')
     
     await editActivity(t, testdata.act3)
 
     await t
-        .click(Selector('.meta-row'))
-        .click(Selector('.sub-row a'))
+        .click(Selector('.act-list-meta-row'))
+        .click(Selector('.act-list-sub-row a'))
         .expect(Selector('button').withText('Lav forventet justering').exists).notOk()
 })

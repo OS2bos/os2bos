@@ -154,7 +154,7 @@ test('Create activities', async t => {
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
 
-    await t.expect(Selector('.activities table tr.act-list-item a').exists).ok()
+    await t.expect(Selector('.act-list-row a').exists).ok()
     
     await axe(t)
 })
@@ -244,7 +244,7 @@ test('Create activities with one main activity option', async t => {
 
     await axe(t)
 
-    await t.expect(Selector('.activities table tr.act-list-item a').exists).ok()
+    await t.expect(Selector('.act-list-row a').exists).ok()
 })
 
 test('Approve appropriation with one main activity option', async t => {

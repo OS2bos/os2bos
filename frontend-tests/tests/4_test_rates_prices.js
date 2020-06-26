@@ -77,7 +77,7 @@ test('Create case, appropriation, and activity with global rate', async t => {
     await createAppropriation(t, testdata.appr1)
     await createActivity(t, testdata.act1)
     
-    await t.expect(Selector('.act-list-item a').withText(testdata.act1.details__name.substr(0,5)).exists).ok()
+    await t.expect(Selector('.act-list-row a').withText(testdata.act1.details__name.substr(0,5)).exists).ok()
 })
 
 test('Create case, appropriation, and activity with per unit pricing', async t => {
@@ -88,5 +88,5 @@ test('Create case, appropriation, and activity with per unit pricing', async t =
 
     await createActivity(t, testdata.act2)
     
-    await t.expect(Selector('.act-list-item a').withText(testdata.act2.details__name.substr(0,5)).exists).ok()
+    await t.expect(Selector('.act-list-row a').withText(testdata.act2.details__name.substr(0,5)).exists).ok()
 })

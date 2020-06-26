@@ -17,6 +17,7 @@ import payment from './store-modules/payment.js'
 import appropriation from './store-modules/appropriation.js'
 import main_case from './store-modules/case.js'
 import error from './store-modules/error.js'
+import actliststore from './components/activities/activitylist/act-list-store.js'
 
 Vue.use(Vuex)
 
@@ -30,6 +31,7 @@ export default new Vuex.Store({
         payment,
         appropriation,
         main_case,
-        error
+        error,
+        actliststore
     }
 })
