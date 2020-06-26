@@ -142,28 +142,32 @@ def send_activity_email(subject, template, activity):
 
 def send_activity_created_email(activity):
     """Send an email because an activity was created."""
-    subject = _("Aktivitet oprettet")
+    cpr_number = activity.appropriation.case.cpr_number
+    subject = _("Aktivitet oprettet - %s") % cpr_number
     template = "emails/activity_created.html"
     send_activity_email(subject, template, activity)
 
 
 def send_activity_updated_email(activity):
     """Send an email because an activity was updated."""
-    subject = _("Aktivitet opdateret")
+    cpr_number = activity.appropriation.case.cpr_number
+    subject = _("Aktivitet opdateret - %s") % cpr_number
     template = "emails/activity_updated.html"
     send_activity_email(subject, template, activity)
 
 
 def send_activity_expired_email(activity):
     """Send an email because an activity has expired."""
-    subject = _("Aktivitet udgået")
+    cpr_number = activity.appropriation.case.cpr_number
+    subject = _("Aktivitet udgået - %s") % cpr_number
     template = "emails/activity_expired.html"
     send_activity_email(subject, template, activity)
 
 
 def send_activity_deleted_email(activity):
     """Send an email because an activity has been deleted."""
-    subject = _("Aktivitet slettet")
+    cpr_number = activity.appropriation.case.cpr_number
+    subject = _("Aktivitet slettet - %s") % cpr_number
     template = "emails/activity_deleted.html"
     send_activity_email(subject, template, activity)
 
