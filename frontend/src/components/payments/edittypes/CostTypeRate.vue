@@ -30,8 +30,8 @@
         <dt>Takst x antal</dt>
         <dd>
             {{ displayRateName(model) }},<br>
-            {{ displayRateAmount(model) }} kr x {{ units }}<br>
-            ({{ model * units }} kr)
+            {{ displayCost(displayRateAmount(model)) }} kr x {{ units }}<br>
+            ({{ displayRateAmount(model) * units }} kr)
         </dd>
     </dl>
 
@@ -41,6 +41,7 @@
 import mixin from '../../mixins/PaymentPlanEditMixin.js'
 import Error from '../../forms/Error.vue'
 import { rateId2details } from '../../filters/Labels.js'
+import { cost2da } from '../../filters/Numbers.js'
 import PaymentUnits from './PaymentUnits.vue'
 
 export default {
@@ -66,6 +67,9 @@ export default {
             } else {
                 return str
             }
+        },
+        displayCost: function(cost) {
+            return cost2da(cost)
         },
         displayRateAmount: function(rate_id) {
             if (rateId2details(rate_id) !== '-') {

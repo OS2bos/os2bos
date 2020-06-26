@@ -39,7 +39,9 @@ td {
 }
 
 th {
-    font-weight: bold;
+    font-weight: normal;
+    font-size: .85em;
+    opacity: .66;
 }
 
 td {
