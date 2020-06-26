@@ -45,7 +45,6 @@ from core.models import (
 for klass in (
     PaymentMethodDetails,
     Team,
-    SectionInfo,
     Rate,
 ):
     admin.site.register(klass, admin.ModelAdmin)
@@ -511,3 +510,10 @@ class SchoolDistrictAdmin(ClassificationAdmin):
         "name",
         "active",
     )
+
+
+@admin.register(SectionInfo)
+class SectionInfoAdmin(ClassificationAdmin):
+    """ModelAdmin for SectionInfo."""
+
+    list_display = ("activity_details", "section", "kle_number")
