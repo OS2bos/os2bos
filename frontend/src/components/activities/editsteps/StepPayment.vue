@@ -20,7 +20,7 @@
         </template>
 
         <template v-if="payment_plan.payment_cost_type === 'PER_UNIT'">
-            <cost-type-per-unit :editable="true" />
+            <cost-type-per-unit-edit :editable="true" />
         </template>
 
         <pay-plan-calc />
@@ -32,7 +32,7 @@
 import CostType from '../../payments/edittypes/CostType.vue'
 import CostTypeFixed from '../../payments/edittypes/CostTypeFixed.vue'
 import CostTypeRate from '../../payments/edittypes/CostTypeRate.vue'
-import CostTypePerUnit from '../../payments/edittypes/CostTypePerUnit.vue'
+import CostTypePerUnitEdit from '../../payments/edittypes/CostTypePerUnitEdit.vue'
 import PayPlanCalc from '../../payments/PaymentPlanCalc.vue'
 
 export default {
@@ -41,8 +41,8 @@ export default {
         CostType,
         CostTypeFixed,
         CostTypeRate,
-        CostTypePerUnit,
-        PayPlanCalc
+        PayPlanCalc,
+        CostTypePerUnitEdit
     },
     computed: {
         payment_plan: function() {

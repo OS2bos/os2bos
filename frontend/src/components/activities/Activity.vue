@@ -84,10 +84,9 @@
                         <cost-type-rate :editable="is_editable" />
                     </template>
                     <template v-if="payment_plan.payment_cost_type === 'PER_UNIT'">
-                        <cost-type-per-unit :editable="is_editable" />
-                    </template>
-                    <template v-if="payment_plan.payment_cost_type === 'PER_UNIT' || payment_plan.payment_cost_type === 'GLOBAL_RATE'">
-                        <pay-plan-calc />
+                        <payment-units />
+                        <cost-type-per-unit-display />
+                        <per-unit-history />
                     </template>
                 </div>
 
@@ -186,6 +185,8 @@ import { activityId2name, sectionId2name, displayStatus, userId2name, approvalId
 import notify from '../notifications/Notify.js'
 import UserRights from '../mixins/UserRights.js'
 import PaymentInternalReceiver from '../payments/edittypes/PaymentInternalReceiverName.vue'
+import PerUnitHistory from '../payments/PaymentPerUnitHistory.vue'
+import PaymentUnits from '../payments/edittypes/PaymentUnits.vue'
 
 export default {
 
@@ -197,7 +198,9 @@ export default {
         PaymentSchedule,
         PaymentServiceProvider,
         CprLookUp,
-        PaymentInternalReceiver
+        PaymentInternalReceiver,
+        PerUnitHistory,
+        PaymentUnits
     },
     data: function() {
         return {

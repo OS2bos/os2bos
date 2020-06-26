@@ -20,7 +20,7 @@ import PaymentFrequency from '../payments/edittypes/PaymentFrequency.vue'
 import CostType from '../payments/edittypes/CostType.vue'
 import CostTypeFixed from '../payments/edittypes/CostTypeFixed.vue'
 import CostTypeRate from '../payments/edittypes/CostTypeRate.vue'
-import CostTypePerUnit from '../payments/edittypes/CostTypePerUnit.vue'
+import CostTypePerUnitDisplay from '../payments/edittypes/CostTypePerUnitDisplay.vue'
 import PayPlanCalc from '../payments/PaymentPlanCalc.vue'
 
 import PaymentReceiverType from '../payments/edittypes/PaymentReceiverType.vue'
@@ -44,7 +44,7 @@ export default {
         CostType,
         CostTypeFixed,
         CostTypeRate,
-        CostTypePerUnit,
+        CostTypePerUnitDisplay,
         PayPlanCalc,
         PaymentReceiverType,
         PaymentReceiverId,

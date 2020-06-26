@@ -39,7 +39,7 @@
                     <cost-type-rate :editable="false" />
                 </template>
                 <template v-if="payment_plan.payment_cost_type === 'PER_UNIT'">
-                    <cost-type-per-unit :editable="false" />
+                    <cost-type-per-unit-display :editable="false" />
                 </template>
             </div>
 
