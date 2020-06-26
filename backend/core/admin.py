@@ -48,7 +48,7 @@ from core.proxies import (
     HistoricalRatePerDateProxy,
 )
 
-for klass in (PaymentMethodDetails, Team, SectionInfo):
+for klass in (PaymentMethodDetails, Team):
     admin.site.register(klass, admin.ModelAdmin)
 
 
@@ -608,3 +608,10 @@ class PaymentDateExclusionAdmin(ClassificationAdmin):
         return _(obj.date.strftime("%A"))
 
     weekday.short_description = _("Ugedag")
+
+
+@admin.register(SectionInfo)
+class SectionInfoAdmin(ClassificationAdmin):
+    """ModelAdmin for SectionInfo."""
+
+    list_display = ("activity_details", "section", "kle_number")
