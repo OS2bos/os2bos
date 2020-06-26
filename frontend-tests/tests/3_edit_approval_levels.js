@@ -28,8 +28,8 @@ test('Check existence of approval level', async t => {
 
     await t
         .click(Selector('a').withAttribute('href', '#/'))
-        .click(Selector('td.datagrid-action a'))
-        .click(Selector('td.datagrid-action a'))
+        .click(Selector('.datagrid-action a'))
+        .click(Selector('.datagrid-action a'))
         .click(Selector('label').withAttribute('for', 'check-all'))
         .click(Selector('button').withText('Godkend valgte'))
         .expect(Selector('label').withText(appro_lvl_name[0].toUpperCase()).exists).ok()
