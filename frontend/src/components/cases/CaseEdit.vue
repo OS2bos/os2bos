@@ -370,4 +370,8 @@
         border-color: transparent;
     }
 
+    .case-edit .listpicker {
+        width: auto;
+    }
+
 </style>

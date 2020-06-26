@@ -24,7 +24,10 @@
                 <label class="required" for="field-lawref">Bevilling efter §</label>
                 <p v-if="preselectedPara"><strong>{{ sections[0].paragraph }} {{ sections[0].text }}</strong></p>
                 <select v-if="!preselectedPara" id="field-lawref" class="listpicker" v-model="appr.section" required :disabled="appr.granted_from_date">
-                    <option v-for="s in sections" :value="s.id" :key="s.id">
+                    <option 
+                        v-for="s in sections" 
+                        :value="s.id" 
+                        :key="s.id">
                         <span v-if="s.active === false">(</span>
                         {{ s.paragraph }} {{ s.text }}
                         <span v-if="s.active === false">)</span>
