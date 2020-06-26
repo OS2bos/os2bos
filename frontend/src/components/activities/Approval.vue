@@ -6,100 +6,87 @@
    - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
 
 <template>
-    <form @submit.prevent="saveChanges()" class="approval modal-form">
-        <div class="modal-mask">
-            <div class="modal-wrapper">
-                <div class="modal-container">
+    <form @submit.prevent="saveChanges" class="approval modal-form">
+        <modal-dialog @closedialog="closeDiag">
+            
+            <h2 slot="header" style="padding: 0;">Godkend ydelser</h2>
 
-                    <div class="modal-header">
-                        <slot name="header">
-                            <h2>Godkend ydelser</h2>
-                        </slot>
-                    </div>
+            <div slot="body">
+                <warning :content="warning" />
+                <warning :content="payDateRule" />
 
-                    <div class="modal-body">
-                        <slot name="body">
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Ydelse</th>
+                            <th>Periode</th>
+                            <th class="right">Udgift i år</th>
+                            <th class="right">Udgift, årligt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-if="main_act_list.length > 0">
+                            <th colspan="5">Hovedydelse</th>
+                        </tr>
+                        <tr v-for="act in main_act_list" :key="act.id">
+                            <td><span v-html="displayStatus(act.status)"></span> </td>
+                            <td v-html="activityId2name(act.details)"></td>
+                            <td>{{ displayDate(act.start_date) }} - {{ displayDate(act.end_date) }}</td>
+                            <td class="right">{{ displayDigits(act.total_cost_this_year) }} kr</td>
+                            <td class="right">{{ displayDigits(act.total_cost_full_year) }} kr</td>
+                        </tr>
+                        <tr v-if="suppl_act_list.length > 0">
+                            <th colspan="5">Følgeydelser</th>
+                        </tr>
+                        <tr v-for="act in suppl_act_list" :key="act.id">
+                            <td><span v-html="displayStatus(act.status)"></span> </td>
+                            <td v-html="activityId2name(act.details)"></td>
+                            <td>{{ displayDate(act.start_date) }} - {{ displayDate(act.end_date) }}</td>
+                            <td class="right">{{ displayDigits(act.total_cost_this_year) }} kr</td>
+                            <td class="right">{{ displayDigits(act.total_cost_full_year) }} kr</td>
+                        </tr>
+                    </tbody>
+                </table>
 
-                            <warning :content="warning" />
-                            <warning :content="payDateRule" />
+                <error />
 
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th>Ydelse</th>
-                                        <th>Periode</th>
-                                        <th class="right">Udgift i år</th>
-                                        <th class="right">Udgift, årligt</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-if="main_act_list.length > 0">
-                                        <th colspan="5">Hovedydelse</th>
-                                    </tr>
-                                    <tr v-for="act in main_act_list" :key="act.id">
-                                        <td><span v-html="displayStatus(act.status)"></span> </td>
-                                        <td v-html="activityId2name(act.details)"></td>
-                                        <td>{{ displayDate(act.start_date) }} - {{ displayDate(act.end_date) }}</td>
-                                        <td class="right">{{ displayDigits(act.total_cost_this_year) }} kr</td>
-                                        <td class="right">{{ displayDigits(act.total_cost_full_year) }} kr</td>
-                                    </tr>
-                                    <tr v-if="suppl_act_list.length > 0">
-                                        <th colspan="5">Følgeydelser</th>
-                                    </tr>
-                                    <tr v-for="act in suppl_act_list" :key="act.id">
-                                        <td><span v-html="displayStatus(act.status)"></span> </td>
-                                        <td v-html="activityId2name(act.details)"></td>
-                                        <td>{{ displayDate(act.start_date) }} - {{ displayDate(act.end_date) }}</td>
-                                        <td class="right">{{ displayDigits(act.total_cost_this_year) }} kr</td>
-                                        <td class="right">{{ displayDigits(act.total_cost_full_year) }} kr</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                            <error />
-
-                            <div class="row">
-                                <div style="width: 50%;">
-                                    <fieldset style="display: block;">
-                                        <legend style="margin-bottom: .75rem">Bevilling foretaget på følgende niveau</legend>
-                                        <div v-for="appro_lvl in approval_level_list" :key="appro_lvl.id">
-                                            <input 
-                                                :id="`radio-btn-${ appro_lvl.id }`" 
-                                                type="radio" 
-                                                :value="appro_lvl.id" 
-                                                v-model="appr.approval_level" 
-                                                name="approval-group"
-                                                required>
-                                            <label 
-                                                :for="`radio-btn-${ appro_lvl.id }`"
-                                                style="text-transform: capitalize;">
-                                                <span v-if="appro_lvl.active === true">{{ appro_lvl.name }}</span>
-                                                <strong v-if="appro_lvl.active === false">{{ appro_lvl.name }}</strong>
-                                            </label>
-                                        </div>
-                                    </fieldset>
-                                </div>
-                                <div style="width: 50%;">
-                                    <fieldset style="margin-top: .25rem; display: block;">
-                                        <label for="field-text">Evt. bemærkning</label>
-                                        <textarea id="field-text" v-model="appr.approval_note" style="height: 14rem;"></textarea>
-                                    </fieldset>
-                                </div>
+                <div class="row">
+                    <div style="width: 50%;">
+                        <fieldset style="display: block;">
+                            <legend style="margin-bottom: .75rem">Bevilling foretaget på følgende niveau</legend>
+                            <div v-for="appro_lvl in approval_level_list" :key="appro_lvl.id">
+                                <input 
+                                    :id="`radio-btn-${ appro_lvl.id }`" 
+                                    type="radio" 
+                                    :value="appro_lvl.id" 
+                                    v-model="appr.approval_level" 
+                                    name="approval-group"
+                                    required>
+                                <label 
+                                    :for="`radio-btn-${ appro_lvl.id }`"
+                                    style="text-transform: capitalize;">
+                                    <span v-if="appro_lvl.active === true">{{ appro_lvl.name }}</span>
+                                    <strong v-if="appro_lvl.active === false">{{ appro_lvl.name }}</strong>
+                                </label>
                             </div>
-
-                        </slot>
+                        </fieldset>
                     </div>
-
-                    <div class="modal-footer">
-                        <slot name="footer">
-                            <button type="button" class="modal-cancel-btn" @click="closeDiag()">Annullér</button>
-                            <button class="modal-confirm-btn" type="submit">Godkend</button>
-                        </slot>
+                    <div style="width: 50%;">
+                        <fieldset style="margin-top: .25rem; display: block;">
+                            <label for="field-text">Evt. bemærkning</label>
+                            <textarea id="field-text" v-model="appr.approval_note" style="height: 14rem;"></textarea>
+                        </fieldset>
                     </div>
                 </div>
             </div>
-        </div>
+            
+            <div slot="footer">
+                <button type="submit">Godkend</button>
+                <button type="button" @click="closeDiag">Annullér</button>
+            </div>
+
+        </modal-dialog>
     </form>
 </template>
 
@@ -113,12 +100,14 @@
     import { json2jsDate } from '../filters/Date.js'
     import Warning from '../warnings/Warning.vue'
     import { checkRulePayDate } from '../filters/Rules.js'
+    import ModalDialog from '../dialog/Dialog.vue'
 
     export default {
 
         components: {
             Error,
-            Warning
+            Warning,
+            ModalDialog
         },
         props: [
             'acts',
@@ -206,12 +195,19 @@
 <style>
 
     .approval .modal-container {
-        min-width: 50rem;
+        max-width: 95vw;
+        max-height: 95vh;
     }
 
     .approval .modal-body {
         overflow-x: hidden;
         overflow-y: auto;
+    }
+
+    .approval .modal-footer {
+        box-shadow: 0 -.25rem 1rem hsla(var(--color1), 83%, 62%, .125);
+        padding: 2rem;
+        margin: 0 -2rem -2rem;
     }
 
 </style>

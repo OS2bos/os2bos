@@ -89,10 +89,8 @@
                 Flyt sager
             </button>            
 
-            <dialog-box v-if="show_modal">
-                <div slot="header">
-                    <h2>Flyt sager til en medarbejder</h2>
-                </div>
+            <dialog-box v-if="show_modal" @closedialog="closeMoveDiag">
+                <h2 slot="header" style="padding: 0;">Flyt sager til en medarbejder</h2>
                 <div slot="body">
                     <div class="row" style="justify-content: space-between;">
                         <div class="move-cases-list">
@@ -114,8 +112,8 @@
                     </div>
                 </div>
                 <div slot="footer">
-                    <button @click="moveCases()">Flyt</button>
-                    <button @click="closeMoveDiag()" class="modal-cancel-btn">Annuller</button>
+                    <button type="submit" @click="moveCases">Flyt</button>
+                    <button type="button" @click="closeMoveDiag">Annuller</button>
                 </div>
             </dialog-box>
 

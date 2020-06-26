@@ -20,8 +20,7 @@
             </option>
         </select>
 
-        <label for="pay-units" class="required">Antal</label>
-        <input type="number" id="pay-units" v-model="units" required step="0.1">
+        <payment-units />
         
         <error :err-key="property" />
 
@@ -42,10 +41,12 @@
 import mixin from '../../mixins/PaymentPlanEditMixin.js'
 import Error from '../../forms/Error.vue'
 import { rateId2details } from '../../filters/Labels.js'
+import PaymentUnits from './PaymentUnits.vue'
 
 export default {
     components: {
-        Error
+        Error,
+        PaymentUnits
     },
     mixins: [
         mixin
@@ -54,16 +55,8 @@ export default {
         rate_choices: function() {
             return this.$store.getters.getRates
         },
-        units: {
-            get: function() {
-                return this.$store.getters.getPaymentPlanProperty('payment_units')
-            },
-            set: function(new_val) {
-                this.$store.commit('setPaymentPlanProperty', { 
-                    prop: 'payment_units',
-                    val: new_val
-                })
-            }
+        units: function(){
+            return this.$store.getters.getPaymentPlanProperty('payment_units')
         }
     },
     methods: {

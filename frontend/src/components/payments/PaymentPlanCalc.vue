@@ -9,8 +9,8 @@
 
     <div class="payment-plan">
         <h3 class="payment-plan-header">Udgift:</h3>
-        <p>{{ summary }} {{ subtotal }} kr {{ freq_name }} </p>
-        <p>Årligt <strong>ca. {{ displayCost(total) }} kr</strong></p> 
+        <p>{{ summary }} {{ displayExactCost(subtotal) }} kr {{ freq_name }} </p>
+        <p v-if="total > 0">Årligt ca. <strong>{{ displayCost(total) }} kr</strong></p> 
     </div>
 
 </template>
@@ -19,6 +19,7 @@
 
     import axios from '../http/Http.js'
     import { rateId2details } from '../filters/Labels.js'
+    import { cost2da } from '../filters/Numbers.js'
 
     export default {
 
@@ -75,8 +76,8 @@
                     }
                 } else if (cost_type === 'PER_UNIT') {
                     if (price_per_unit && units) {
-                        this.summary = `${ price_per_unit.amount } kr x ${ units } =`
-                        return parseInt(price_per_unit.amount) * parseInt(units)
+                        this.summary = `${ price_per_unit.amount ? price_per_unit.amount : '-' } kr x ${ units } =`
+                        return parseFloat(price_per_unit.amount) * parseFloat(units)
                     } else {
                         return null
                     }
@@ -108,6 +109,14 @@
             displayCost: function(cost) {
                 let new_cost = this.roundNum(cost)
                 return new Intl.NumberFormat(['da', 'en'], {maximumFractionDigits: 0, minimumFractionDigits: 0} ).format(new_cost)
+            },
+            displayExactCost: function(cost) {
+                if (cost) {
+                    return cost2da(cost)
+                } else {
+                    return '-'
+                }
+                
             },
             roundNum: function(num) {
                 //If cost is more than 100, round up cost to nearest hundred
