@@ -69,14 +69,14 @@
 
                 if (cost_type === 'GLOBAL_RATE') {
                     if (rate) {
-                        this.summary = `${ rateId2details(rate).rates_per_date[0].rate } kr x ${ units } =`
+                        this.summary = `${ cost2da(rateId2details(rate).rates_per_date[0].rate) } kr x ${ units } =`
                         return rateId2details(rate).rates_per_date[0].rate * units
                     } else {
                         return null
                     }
                 } else if (cost_type === 'PER_UNIT') {
                     if (price_per_unit && units) {
-                        this.summary = `${ price_per_unit.amount ? price_per_unit.amount : '-' } kr x ${ units } =`
+                        this.summary = `${ price_per_unit.amount ? cost2da(price_per_unit.amount) : '-' } kr x ${ units } =`
                         return parseFloat(price_per_unit.amount) * parseFloat(units)
                     } else {
                         return null

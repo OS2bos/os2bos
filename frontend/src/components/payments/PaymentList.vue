@@ -9,12 +9,14 @@
 
     <section class="payment_schedule">
 
-        <label for="field-year-picker">Vis betalinger fra år</label>
-        <select id="field-year-picker" v-model="current_year">
-            <option v-for="y in years" :value="y" :key="y.id">{{ y }}</option>
-        </select>
+        <fieldset class="payment-schedule-selector">
+            <label for="field-year-picker">Vis betalinger fra år</label>
+            <select id="field-year-picker" v-model="current_year">
+                <option v-for="y in years" :value="y" :key="y.id">{{ y }}</option>
+            </select>
+        </fieldset>
         
-        <table>
+        <table v-if="payments_by_year.length > 0">
             <thead>
                 <tr>
                     <th>Betaling nr</th>
@@ -44,10 +46,12 @@
                 </tr>
                 <tr>
                     <th colspan="3" class="right dim">I alt pr valgte år</th>
-                    <th class="right dim">{{ displayDigits(sum) }} kr.</th>
+                    <td class="right dim">{{ displayDigits(sum) }} kr.</td>
                 </tr>
             </tbody>
         </table>
+
+        <p v-else style="margin-top: 2rem;">Der er ingen betalinger for det valgte år</p>
 
     </section>
 
@@ -134,6 +138,17 @@
         flex-flow: row nowrap;
         justify-content: flex-start;
         align-items: center;
+    }
+
+    .payment-schedule-selector {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        margin: 1rem 0 0;
+    }
+
+    .payment-schedule-selector label {
+        margin: 0 .5rem 0 0;
     }
 
 </style>

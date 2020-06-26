@@ -48,11 +48,6 @@
                             <router-link :to="`/case/${ cas.id }/assessment`" style="display: inline-block; margin-top: .5rem;">Se vurderinger</router-link>
                         </dd>
                     </template>
-
-                    <template v-if="cas.note">
-                        <dt>Supplerende oplysninger</dt>
-                        <dd>{{ cas.note }}</dd>
-                    </template>
                 </dl>
                 <dl>
                     <dt>Målgruppe</dt>
@@ -91,11 +86,15 @@
                     <dd v-html="displayMuniName(cas.residence_municipality)"></dd>
 
                 </dl>
-
             </div>
 
             <family-overview :case-id="cas.id" />
             
+            <dl v-if="cas.note" class="case-notes">
+                <dt>Supplerende oplysninger</dt>
+                <dd>{{ cas.note }}</dd>
+            </dl>
+
         </div>
 
         <appropriations :case-id="cas.id" />
@@ -249,6 +248,13 @@
     .case .familyoverview {
         margin: 0 0 0 2rem;
         padding: 0;
+    }
+
+    .case .case-notes {
+        margin-top: 2rem;
+        border-top: solid 1px var(--grey0);
+        padding-top: 1.5rem;
+        grid-column: 1/3;
     }
 
 </style>
