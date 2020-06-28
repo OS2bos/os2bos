@@ -10,7 +10,7 @@ pydocstyle==5.0.2
 parameterized==0.7.4
 freezegun==0.3.15
 Sphinx==3.1.1
-sphinxcontrib-websupport==1.2.2
+sphinxcontrib-websupport==1.2.3
 sphinx_rtd_theme==0.5.0
 sphinxcontrib_django==0.5.1
 
