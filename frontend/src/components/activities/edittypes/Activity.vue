@@ -28,9 +28,10 @@
     <dl v-else>
         <template v-if="model">
             <dt>Ydelse</dt>
-            <dd v-html="act2name(model)"></dd>
-            <dt>Forklaring af ydelse</dt>
-            <dd>{{ act2description(model) }}</dd>
+            <dd>
+                <p><strong v-html="act2name(model)"></strong></p>
+                <p>{{ act2description(model) }}</p>
+            </dd>
         </template>
     </dl>
 
