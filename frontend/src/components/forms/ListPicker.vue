@@ -10,7 +10,10 @@
 
     <select :id="domId" class="listpicker" @change="emitChange" v-model="selection" :required="required">
         <option :value="null">---</option>
-        <option v-for="l in sortList" :value="l.id" :key="l.id">
+        <option 
+            v-for="l in sortList" 
+            :value="l.id" 
+            :key="l.id">
             <span v-if="l.active === false">(</span>
             {{ l[displayKey] }} {{ l[displayKey2]}}
             <span v-if="l.active === false">)</span>
@@ -89,3 +92,11 @@
     }
 
 </script>
+
+<style>
+
+    .listpicker {
+        width: 100%;
+    }
+
+</style>
