@@ -313,7 +313,7 @@ function displayPayFreq(freq) {
 
 function displayCostType(type) {
     switch(type) {
-        case 'RATE':
+        case 'GLOBAL_RATE':
             return 'Takst' 
         case 'PER_UNIT':
             return 'Enhedspris' 
