@@ -15,7 +15,6 @@ as "aktiviteter.csv" in the current directory.
 NOTE: This requires the Section models to have been populated first.
 """
 import os
-from collections import defaultdict
 import csv
 
 from django.db import transaction
