@@ -8,7 +8,7 @@
 <template>
 
     <fieldset v-if="editable">
-        <label for="pay-date-end">Slutdato</label>
+        <label for="pay-date-end" style="margin-top: 0;">Slutdato</label>
         <p v-if="endDateSet && act.activity_type !== 'MAIN_ACTIVITY'">
             Senest {{ displayDate(endDateSet) }}
         </p>
