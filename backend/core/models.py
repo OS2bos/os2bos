@@ -1546,6 +1546,39 @@ class SectionInfo(models.Model):
         return f"{self.activity_details} - {self.section}"
 
 
+class AccountAlias(models.Model):
+    """Model that serves as a mapping from an account string to account alias.
+
+    Map account string from PaymentSchedule to an
+    "account alias" used by Ballerup.
+    """
+
+    class Meta:
+        verbose_name = _("kontoalias")
+        verbose_name_plural = _("kontoalias")
+        constraints = [
+            models.UniqueConstraint(
+                fields=["activity_details", "section_info"],
+                name="unique_section_info_activity_details",
+            )
+        ]
+
+    # main activity section_info.
+    section_info = models.ForeignKey(
+        SectionInfo, verbose_name=_("paragraf-info"), on_delete=models.CASCADE
+    )
+    # supplementary activity.
+    activity_details = models.ForeignKey(
+        ActivityDetails,
+        verbose_name=_("aktivitetsdetalje"),
+        on_delete=models.CASCADE,
+    )
+
+    alias = models.CharField(
+        max_length=128, verbose_name=_("kontoalias"), blank=True
+    )
+
+
 class Activity(AuditModelMixin, models.Model):
     """An activity is a specific service provided within an appropriation."""
 

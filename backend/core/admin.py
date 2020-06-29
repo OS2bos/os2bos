@@ -43,6 +43,7 @@ from core.models import (
     Rate,
     Price,
     PaymentDateExclusion,
+    AccountAlias,
 )
 from core.proxies import (
     SectionEffortStepProxy,
@@ -596,3 +597,10 @@ class SectionInfoAdmin(ClassificationAdmin):
     """ModelAdmin for SectionInfo."""
 
     list_display = ("activity_details", "section", "kle_number")
+
+
+@admin.register(AccountAlias)
+class AccountAliasAdmin(ClassificationAdmin):
+    """ModelAdmin for SectionInfo."""
+
+    list_display = ("activity_details", "section_info", "alias")

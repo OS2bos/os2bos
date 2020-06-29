@@ -1,0 +1,93 @@
+# Copyright (C) 2019 Magenta ApS, http://magenta.dk.
+# Contact: info@magenta.dk.
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+
+"""
+This script imports ActivityDetails from the "Klassifikationer" spreadsheet.
+
+Currently this requires the sheet "Aktiviteter" be saved
+as "aktiviteter.csv" in the current directory.
+
+NOTE: This requires the Section models to have been populated first.
+"""
+import os
+from collections import defaultdict
+import csv
+
+from django.db import transaction
+from django.core.management.base import BaseCommand
+
+from core.models import ActivityDetails, SectionInfo, AccountAlias
+
+
+class Command(BaseCommand):
+    help = """
+    This script imports Account Aliases.
+
+    Currently this requires the account alias mapping sheet be saved
+    as "account_aliases.csv".
+    """
+
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "-p",
+            "--path",
+            type=str,
+            help="set the path to read the account_aliases.csv file",
+        )
+
+    @transaction.atomic
+    def handle(self, *args, **options):
+        path = options["path"]
+        # if no path is given use a default relative path.
+        if not path:
+            path = os.path.join(
+                os.path.dirname(__file__),
+                "..",
+                "..",
+                "data",
+                "account_aliases.csv",
+            )
+        with open(path) as csvfile:
+            reader = csv.reader(csvfile)
+            rows = [row for row in reader]
+            # dict with (activity_id, set of main activity ids) pairs.
+            # containing which supplementary activities can have which
+            # main activities.
+
+            for row in rows[1:]:
+                account_alias = row[0]
+                mapping = row[2].rstrip("-")
+                _, account_number, details_id, _ = mapping.split("-")
+
+                activity_details = ActivityDetails.objects.filter(
+                    activity_id=details_id
+                )
+                if not activity_details.exists():
+                    print(
+                        f"activity details with activity_id: "
+                        f"{details_id} does not exist."
+                    )
+                    continue
+                activity_details = activity_details.first()
+
+                section_info = SectionInfo.objects.filter(
+                    main_activity_main_account_number=account_number
+                )
+                if not section_info.exists():
+                    print(
+                        f"section info with account number: "
+                        f"{account_number} does not exist."
+                    )
+                    continue
+                section_info = section_info.first()
+
+                AccountAlias.objects.update_or_create(
+                    activity_details=activity_details,
+                    section_info=section_info,
+                    defaults={"alias": account_alias},
+                )
