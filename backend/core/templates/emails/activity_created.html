@@ -13,6 +13,9 @@
 <p>Aktivitetstype: {{ activity.get_activity_type_display }}</p>
 <p>Bevillingsparagraf: {{ activity.appropriation.section.paragraph }}</p>
 <p>Barnets CPR nummer: {{ activity.appropriation.case.cpr_number }}</p>
+<p>Barnets navn: {{ activity.appropriation.case.name }}</p>
+<p>Sagens sagsbehandler: {{ activity.appropriation.case.case_worker }}</p>
+<p>Bevilgende sagsbehandler: {{ activity.approval_user }}</p>
 <p>Start dato: {{ activity.start_date }}</p>
 <p>Slut dato: {{ activity.end_date }}</p>
 <p>Beløb: {{ activity.payment_plan.payment_amount }}</p>
