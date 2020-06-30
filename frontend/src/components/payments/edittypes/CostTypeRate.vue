@@ -7,33 +7,35 @@
 
 <template>
 
-    <fieldset v-if="editable">
+    <div>
+        <fieldset v-if="editable">
 
-        <label class="required" for="field-rates">Takst</label>
-        <select v-model="model" required id="field-rates">
-            <option 
-                v-for="choice in rate_choices"
-                :key="choice.id"
-                :value="choice.id"
-                :title="choice.name">
-                {{ truncateName(choice.name) }}
-            </option>
-        </select>
+            <label class="required" for="field-rates">Takst</label>
+            <select v-model="model" required id="field-rates">
+                <option 
+                    v-for="choice in rate_choices"
+                    :key="choice.id"
+                    :value="choice.id"
+                    :title="choice.name">
+                    {{ truncateName(choice.name) }}
+                </option>
+            </select>
 
-        <payment-units />
-        
-        <error :err-key="property" />
+            <payment-units />
+            
+            <error :err-key="property" />
 
-    </fieldset>
+        </fieldset>
 
-    <dl v-else>
-        <dt>Takst x antal</dt>
-        <dd>
-            {{ displayRateName(model) }},<br>
-            {{ displayCost(displayRateAmount(model)) }} kr x {{ units }}<br>
-            ({{ displayRateAmount(model) * units }} kr)
-        </dd>
-    </dl>
+        <dl>
+            <dt>Takst x antal</dt>
+            <dd>
+                {{ displayRateName(model) }},<br>
+                {{ displayCost(displayRateAmount(model)) }} kr x {{ units }}<br>
+                ({{ displayRateAmount(model) * units }} kr)
+            </dd>
+        </dl>
+    </div>
 
 </template>
 
@@ -43,6 +45,7 @@ import Error from '../../forms/Error.vue'
 import { rateId2details } from '../../filters/Labels.js'
 import { cost2da } from '../../filters/Numbers.js'
 import PaymentUnits from './PaymentUnits.vue'
+import { isCurrent } from '../../filters/Date.js'
 
 export default {
     components: {
@@ -72,10 +75,15 @@ export default {
             return cost2da(cost)
         },
         displayRateAmount: function(rate_id) {
-            if (rateId2details(rate_id) !== '-') {
-                return rateId2details(rate_id).rates_per_date[0].rate
+            const rate_data = rateId2details(rate_id),
+                  today = new Date()
+            if (rate_data !== '-') {
+                let current_rate = rate_data.rates_per_date.find(function(rate) {
+                    return isCurrent(rate.start_date, rate.end_date)
+                })
+                return current_rate.rate
             } else {
-                return rateId2details(rate_id)
+                return rate_data
             }
             
         },

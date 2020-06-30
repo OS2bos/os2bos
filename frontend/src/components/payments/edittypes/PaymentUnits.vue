@@ -7,11 +7,11 @@
 
 <template>
 
-    <div>
+    <fieldset v-if="editable">
         <label for="pay-units" class="required">Antal</label>
         <input type="number" id="pay-units" v-model="model" required step="0.01">
         <error :err-key="property" />
-    </div>
+    </fieldset>
 
 </template>
 

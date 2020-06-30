@@ -11,8 +11,6 @@
 
         <fieldset v-if="editable">
 
-            <payment-units />
-
             <label class="required" for="pay-cost-pr-unit">Enhedspris</label>
             <input type="number" id="pay-cost-pr-unit" v-model="amount" required step="0.01"> kr
 
@@ -32,12 +30,10 @@ import mixin from '../../mixins/PaymentPlanEditMixin.js'
 import Error from '../../forms/Error.vue'
 import { cost2da } from '../../filters/Numbers.js'
 import { json2jsDate } from '../../filters/Date.js'
-import PaymentUnits from './PaymentUnits.vue'
 
 export default {
     components: {
-        Error,
-        PaymentUnits
+        Error
     },
     mixins: [
         mixin

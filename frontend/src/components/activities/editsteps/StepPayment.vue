@@ -16,10 +16,12 @@
         </template>
 
         <template v-if="payment_plan.payment_cost_type === 'GLOBAL_RATE'">
+            <payment-units :editable="true" />
             <cost-type-rate :editable="true" />
         </template>
 
         <template v-if="payment_plan.payment_cost_type === 'PER_UNIT'">
+            <payment-units :editable="true" />
             <cost-type-per-unit-edit :editable="true" />
         </template>
 
@@ -34,6 +36,7 @@ import CostTypeFixed from '../../payments/edittypes/CostTypeFixed.vue'
 import CostTypeRate from '../../payments/edittypes/CostTypeRate.vue'
 import CostTypePerUnitEdit from '../../payments/edittypes/CostTypePerUnitEdit.vue'
 import PayPlanCalc from '../../payments/PaymentPlanCalc.vue'
+import PaymentUnits from '../../payments/edittypes/PaymentUnits.vue'
 
 export default {
 
@@ -42,7 +45,8 @@ export default {
         CostTypeFixed,
         CostTypeRate,
         PayPlanCalc,
-        CostTypePerUnitEdit
+        CostTypePerUnitEdit,
+        PaymentUnits
     },
     computed: {
         payment_plan: function() {

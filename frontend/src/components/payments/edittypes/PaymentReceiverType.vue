@@ -38,12 +38,6 @@
             required>
         <label for="pay-receiver-type-person">Person</label>
 
-        <dl v-if="model === 'COMPANY' || model === 'INTERNAL'">
-            <dt>Betalingsmåde</dt>
-            <dd v-if="model === 'COMPANY'">Faktura</dd>
-            <dd v-if="model === 'INTERNAL'">Intern afregning</dd>
-        </dl>
-
         <error :err-key="property" />
 
     </fieldset>

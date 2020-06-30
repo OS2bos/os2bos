@@ -51,6 +51,7 @@ import StepReceiver from './editsteps/StepReceiver.vue'
 import StepSummary from './editsteps/StepSummary.vue'
 import axios from '../http/Http.js'
 import store from '../../store.js'
+import { sanitizeActivity } from './ActivitySave.js'
 
 export default { 
     components: {
@@ -152,28 +153,30 @@ export default {
             }
 
             let new_act = this.act
+
             new_act.payment_plan = this.payment_plan
-            if (new_act.payment_plan.payment_type === 'ONE_TIME_PAYMENT') {
-                new_act.end_date = new_act.start_date
-            }
 
-            // Clean up null valued items in new_act
-            for (let prop in new_act) {
-                if (new_act[prop] === null) {
-                    delete new_act[prop]
+            if (this.$route.query.mode !== 'expected') {
+                // Clean up null valued items in new_act
+                for (let prop in new_act) {
+                    if (new_act[prop] === null) {
+                        delete new_act[prop]
+                    }
+                }
+                for (let prop in new_act.payment_plan) {
+                    if (new_act.payment_plan[prop] === null) {
+                        delete new_act.payment_plan[prop]
+                    }
                 }
             }
-            for (let prop in new_act.payment_plan) {
-                if (new_act.payment_plan[prop] === null) {
-                    delete new_act.payment_plan[prop]
-                }
-            }
 
-            axios.post('/activities/', new_act)
+            const sanitized_act = sanitizeActivity(new_act)
+
+            axios.post('/activities/', sanitized_act)
             .then(res => {
                 this.cleanAndExit()
             })
-            .catch(err => this.$store.dispatch('parseErrorOutput', err))
+            .catch(err => this.$store.dispatch('parseErrorOutput', err))            
         },
         cancelCreate: function() {
             this.cleanAndExit()
@@ -202,10 +205,6 @@ export default {
         margin: 0;
     }
 
-    .act-create-header > dl:last-child {
-        border: none;
-    }
-
     .act-create-header > dl > dt {
         padding-top: 0;
     }
@@ -223,10 +222,6 @@ export default {
 
     .act-create-main > * {
         border-right: solid 1px var(--grey0);
-    }
-    
-    .act-create-main > *:last-child {
-        border: none;
     }
 
     .act-create-step {
