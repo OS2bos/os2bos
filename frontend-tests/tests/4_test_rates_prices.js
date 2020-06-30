@@ -2,7 +2,7 @@
 
 import { Selector } from 'testcafe'
 import { login } from '../utils/logins.js'
-import { createActivity, createCase, createAppropriation } from '../utils/crud.js'
+import { createActivity, createCase, createAppropriation, approveActivities } from '../utils/crud.js'
 import baseurl from '../utils/url.js'
 
 function leadZero(number) {
@@ -25,7 +25,8 @@ let today = new Date(),
 let str1mth = makeDateStr(today, 1),
     str2mth = makeDateStr(today, 2),
     str5mth = makeDateStr(today, 5),
-    str10mth = makeDateStr(today, 10)
+    str10mth = makeDateStr(today, 10),
+    strToday = makeDateStr(today)
     
 const testdata = {
     case1: {
@@ -80,13 +81,34 @@ test('Create case, appropriation, and activity with global rate', async t => {
     await t.expect(Selector('.act-list-row a').withText(testdata.act1.details__name.substr(0,5)).exists).ok()
 })
 
-test('Create case, appropriation, and activity with per unit pricing', async t => {
+test.skip('Create activity with per unit pricing', async t => {
     await t
         .click(Selector('a.header-link'))
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
 
     await createActivity(t, testdata.act2)
+
+    const act_link = Selector('.act-list-row a').withText(testdata.act2.details__name.substr(0,5))
     
-    await t.expect(Selector('.act-list-row a').withText(testdata.act2.details__name.substr(0,5)).exists).ok()
+    await t
+        .expect(act_link.exists).ok()
+        .click(act_link)
+        .typeText('#pay-units', '30,5', {replace: true}) // Edit units
+        .click('input[type="submit"]')
+        .expect(act_link.exists).ok() // Expect to save with no trouble
+        .click(act_link)
+        .click('.prices-history button')
+        .typeText('#pay-cost-pr-unit', '3000') // Edit price
+        .typeText('#pay-cost-exec-date', strToday)
+        .click('.modal-footer input[type="submit"]')
+        .click('input[type="submit"]')
+        .expect(act_link.exists).ok() // Expect to save with no trouble
+
+    await approveActivities(t)
+
+    await t
+        .click(act_link)
+        .expect(Selector('.perunitdisplay').withText('3000,00 kr x 30,50').exists).ok()  // price and unit should be visible and correct after approve 
+
 })

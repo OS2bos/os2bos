@@ -81,10 +81,11 @@
                         <cost-type-fixed :editable="is_editable" />
                     </template>
                     <template v-if="payment_plan.payment_cost_type === 'GLOBAL_RATE'">
+                        <payment-units :editable="is_editable" />
                         <cost-type-rate :editable="is_editable" />
                     </template>
                     <template v-if="payment_plan.payment_cost_type === 'PER_UNIT'">
-                        <payment-units />
+                        <payment-units :editable="is_editable" />
                         <cost-type-per-unit-display />
                         <per-unit-history />
                     </template>
@@ -110,10 +111,11 @@
                             :cpr.sync="payment_plan.recipient_id" 
                             :name.sync="payment_plan.recipient_name" />
                     </template>
+
+                    <payment-method :editable="is_editable && payment_plan.recipient_type === 'PERSON'" />
                 </div>
 
                 <div v-if="payment_plan.recipient_type === 'PERSON'">
-                    <payment-method :editable="is_editable" />
                     <payment-method-details v-if="payment_plan.payment_method === 'SD'" :editable="is_editable" />
                 </div>
 
@@ -187,6 +189,7 @@ import UserRights from '../mixins/UserRights.js'
 import PaymentInternalReceiver from '../payments/edittypes/PaymentInternalReceiverName.vue'
 import PerUnitHistory from '../payments/PaymentPerUnitHistory.vue'
 import PaymentUnits from '../payments/edittypes/PaymentUnits.vue'
+import { sanitizeActivity } from './ActivitySave.js'
 
 export default {
 
@@ -333,11 +336,10 @@ export default {
 
             let new_act = this.act
             new_act.payment_plan = this.payment_plan
-            if (new_act.payment_plan.payment_type === 'ONE_TIME_PAYMENT') {
-                new_act.end_date = new_act.start_date
-            }
 
-            axios.patch(`/activities/${ this.$route.params.actId }/`, new_act)
+            const sanitized_act = sanitizeActivity(new_act)
+
+            axios.patch(`/activities/${ this.$route.params.actId }/`, sanitized_act)
             .then(res => {
                 this.$router.push(`/appropriation/${ this.appropriation.id }`)
             })
@@ -402,7 +404,7 @@ export default {
         background-color: var(--grey1);
         padding: 1rem 2rem;
         display: grid;
-        grid-template-columns: repeat( auto-fit, minmax(20rem, 1fr) );
+        grid-template-columns: repeat( auto-fill, minmax(20rem, 1fr) );
         gap: 2rem;
         margin-bottom: .25rem;
     }
@@ -412,23 +414,20 @@ export default {
         border-right: 1px solid var(--grey0);
     }
 
-    .act-edit-header > dl:last-child {
-        border: none;
-    }
-
     .act-edit-header > dl > dt {
         padding-top: 0;
     }
 
     .act-edit-form {
-        padding: 1.5rem 2rem 2rem;
+        padding: 0;
     }
 
     .act-edit-main {
         display: grid;
-        grid-template-columns: repeat( auto-fit, minmax(20rem, 1fr) );
+        grid-template-columns: repeat( auto-fill, minmax(20rem, 1fr) );
         gap: 2rem;
-        padding: 0;
+        
+        padding: 1.5rem 2rem 2rem;
     }
 
     .act-edit-main > * {
