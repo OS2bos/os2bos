@@ -6,6 +6,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """Data serializers used by the REST API."""
 
+from django.db.models import Q
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from django import forms
@@ -33,8 +34,11 @@ from core.models import (
     ApprovalLevel,
     Team,
     EffortStep,
-    FAMILY_DEPT,
+    TargetGroup,
+    Effort,
     STATUS_DELETED,
+    STATUS_DRAFT,
+    STATUS_EXPECTED,
 )
 from core.utils import create_rrule
 
@@ -63,19 +67,53 @@ class CaseSerializer(serializers.ModelSerializer):
     """
 
     expired = serializers.ReadOnlyField()
+    num_appropriations = serializers.ReadOnlyField(
+        source="appropriations.count"
+    )
+    num_draft_or_expected_appropriations = serializers.SerializerMethodField()
 
     class Meta:
         model = Case
         fields = "__all__"
 
+    def get_num_draft_or_expected_appropriations(self, case):
+        """Get number of related expected or draft appropriations."""
+        return len(
+            [
+                appr
+                for appr in case.appropriations.all()
+                if (
+                    appr.status == STATUS_EXPECTED
+                    or appr.status == STATUS_DRAFT
+                )
+            ]
+        )
+
     def validate(self, data):
-        """Check that if target_group is family, district is given."""
+        """Check if required fields for case are present."""
         if (
-            "target_group" in data and data["target_group"] == FAMILY_DEPT
-        ) and ("district" not in data or not data["district"]):
-            raise serializers.ValidationError(
-                _("En sag med familie målgruppe skal have et distrikt")
-            )
+            "target_group" in data
+            and data["target_group"].required_fields_for_case
+        ):
+            required_fields_for_case = data[
+                "target_group"
+            ].required_fields_for_case
+            for field in required_fields_for_case:
+                if (
+                    self.partial
+                    and not getattr(self.instance, field)
+                    and (field not in data or not data[field])
+                ) or (
+                    not self.partial and (field not in data or not data[field])
+                ):
+                    serializer_fields = self.get_fields()
+                    field_label = serializer_fields[field].label
+                    raise serializers.ValidationError(
+                        _(
+                            f"En sag med den givne "
+                            f"målgruppe skal have feltet {field_label}"
+                        )
+                    )
         return data
 
 
@@ -222,11 +260,12 @@ class ActivitySerializer(WritableNestedModelSerializer):
     total_expected_this_year = serializers.ReadOnlyField()
 
     payment_plan = PaymentScheduleSerializer(partial=True, required=False)
+    details__name = serializers.ReadOnlyField(source="details.name")
 
     @staticmethod
     def setup_eager_loading(queryset):
         """Set up eager loading for improved performance."""
-        queryset = queryset.select_related("payment_plan")
+        queryset = queryset.select_related("payment_plan", "details")
         return queryset
 
     def validate(self, data):
@@ -302,22 +341,63 @@ class ActivitySerializer(WritableNestedModelSerializer):
         fields = "__all__"
 
 
-class AppropriationSerializer(serializers.ModelSerializer):
-    """Serializer for the Appropriation model."""
+class BaseAppropriationSerializer(serializers.ModelSerializer):
+    """Base Serializer for the Appropriation model."""
 
+    status = serializers.ReadOnlyField()
     total_granted_this_year = serializers.ReadOnlyField()
+    total_granted_full_year = serializers.ReadOnlyField()
     total_expected_this_year = serializers.ReadOnlyField()
     total_expected_full_year = serializers.ReadOnlyField()
+    total_cost_expected = serializers.ReadOnlyField()
+    total_cost_granted = serializers.ReadOnlyField()
+
     granted_from_date = serializers.ReadOnlyField()
     granted_to_date = serializers.ReadOnlyField()
+    case__cpr_number = serializers.ReadOnlyField(source="case.cpr_number")
+    case__name = serializers.ReadOnlyField(source="case.name")
+    case__sbsys_id = serializers.ReadOnlyField(source="case.sbsys_id")
 
-    activities = serializers.SerializerMethodField()
+    num_draft_or_expected_activities = serializers.SerializerMethodField()
+    num_activities = serializers.SerializerMethodField()
 
     @staticmethod
     def setup_eager_loading(queryset):
         """Set up eager loading for improved performance."""
-        queryset = queryset.prefetch_related("activities")
+        queryset = queryset.prefetch_related("case", "activities")
         return queryset
+
+    def get_num_draft_or_expected_activities(self, appropriation):
+        """Get number of related draft or expected activities."""
+        return appropriation.activities.filter(
+            Q(status=STATUS_DRAFT) | Q(status=STATUS_EXPECTED),
+            modified_by__isnull=True,
+        ).count()
+
+    def get_num_activities(self, appropriation):
+        """Get number of activities."""
+        return (
+            appropriation.activities.filter(modified_by__isnull=True)
+            .exclude(status=STATUS_DELETED)
+            .count()
+        )
+
+    class Meta:
+        model = Appropriation
+        fields = "__all__"
+
+
+class ListAppropriationSerializer(BaseAppropriationSerializer):
+    """Serializer for the Appropriation model for a list."""
+
+    pass
+
+
+class AppropriationSerializer(BaseAppropriationSerializer):
+    """Serializer for a single Appropriation model."""
+
+    main_activity = ActivitySerializer(read_only=True)
+    activities = serializers.SerializerMethodField()
 
     def get_activities(self, appropriation):
         """Get activities on appropriation."""
@@ -326,10 +406,6 @@ class AppropriationSerializer(serializers.ModelSerializer):
             instance=activities, many=True, read_only=True
         )
         return serializer.data
-
-    class Meta:
-        model = Appropriation
-        fields = "__all__"
 
 
 class PaymentMethodDetailsSerializer(serializers.ModelSerializer):
@@ -427,4 +503,20 @@ class EffortStepSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EffortStep
+        fields = "__all__"
+
+
+class TargetGroupSerializer(serializers.ModelSerializer):
+    """Serializer for the TargetGroup model."""
+
+    class Meta:
+        model = TargetGroup
+        fields = "__all__"
+
+
+class EffortSerializer(serializers.ModelSerializer):
+    """Serializer for the Effort model."""
+
+    class Meta:
+        model = Effort
         fields = "__all__"

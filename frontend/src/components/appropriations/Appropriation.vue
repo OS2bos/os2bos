@@ -40,18 +40,18 @@
                         <dt>Sagsbehandler</dt>
                         <dd>{{ displayUserName(cas.case_worker) }}</dd>
                         <dt>Betalingskommune</dt>
-                        <dd>{{ displayMuniName(cas.paying_municipality) }}</dd>
+                        <dd v-html="displayMuniName(cas.paying_municipality)"></dd>
                         <dt>Handlekommune</dt>
-                        <dd>{{ displayMuniName(cas.acting_municipality) }}</dd>
+                        <dd v-html="displayMuniName(cas.acting_municipality)"></dd>
                         <dt>Bopælskommune</dt>
-                        <dd>{{ displayMuniName(cas.residence_municipality) }}</dd>
+                        <dd v-html="displayMuniName(cas.residence_municipality)"></dd>
                     </dl>
                 </div>
                 
                 <div class="sagslaw appr-grid-box">
                     <dl> 
                         <dt>Bevilges efter §</dt>
-                        <dd>{{ displaySection(appr.section) }}</dd>
+                        <dd v-html="displaySection(appr.section)"></dd>
                     </dl>
                 </div>
             </template>
@@ -127,7 +127,7 @@
                     this.$store.commit('setBreadcrumb', [
                         {
                             link: '/',
-                            title: 'Mine sager'
+                            title: 'Sager'
                         },
                         {
                             link: `/case/${ this.appr.case }`,

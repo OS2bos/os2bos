@@ -29,15 +29,25 @@
                     <dd>
                         {{ cas.cpr_number }}, {{ cas.name }}
                     </dd>
+
+                    <template v-if="cas.effort_step">
+                        <dt>Indsatstrappen</dt>
+                        <dd v-html="displayEffortName(cas.effort_step)"></dd>
+                    </template>
                 
-                    <dt>Indsatstrappen</dt>
-                    <dd>{{ displayEffortName(cas.effort_step) }}</dd>
-                
-                    <dt>Skaleringstrappe</dt>
-                    <dd>
-                        {{ cas.scaling_step }}<br>
-                        <router-link :to="`/case/${ cas.id }/assessment`" style="display: inline-block; margin-top: .5rem;">Se vurderinger</router-link>
-                    </dd>
+                    <template v-if="cas.scaling_step">
+                        <dt>Skaleringstrappe</dt>
+                        <dd>
+                            {{ cas.scaling_step }}<br>
+                        </dd>
+                    </template>
+
+                    <template v-if="cas.effort_step || cas.scaling_step">
+                        <dt>Vurderinger</dt>
+                        <dd>
+                            <router-link :to="`/case/${ cas.id }/assessment`" style="display: inline-block; margin-top: .5rem;">Se vurderinger</router-link>
+                        </dd>
+                    </template>
 
                     <template v-if="cas.note">
                         <dt>Supplerende oplysninger</dt>
@@ -46,31 +56,19 @@
                 </dl>
                 <dl>
                     <dt>Målgruppe</dt>
-                    <dd>
-                        <span v-if="cas.target_group === 'DISABILITY_DEPT'">
-                            Handicapafdelingen
-                        </span>
-                        <span v-if="cas.target_group === 'FAMILY_DEPT'">
-                            Familieafdelingen
-                        </span>
-                    </dd>
+                    <dd v-html="displaytargetGroup(cas.target_group)"></dd>
 
-                    <template v-if="cas.target_group === 'FAMILY_DEPT'">
+                    <template v-if="cas.target_group">
                         <dt>Skoledistrikt</dt>
-                        <dd>{{ displayDistrictName(cas.district) }}</dd>
+                        <dd v-html="displayDistrictName(cas.district)"></dd>
                     </template>
 
-                    <template v-if="cas.cross_department_measure || cas.refugee_integration">
+                    <div v-if="cas.efforts.length">
                         <dt>Indsatser</dt>
-                        <dd>
-                            <div v-if="cas.cross_department_measure">
-                                Tværgående ungeindsats
-                            </div>
-                            <div v-if="cas.refugee_integration">
-                                Integrationsindsatsen
-                            </div>
-                        </dd>
-                    </template>
+                        <template v-for="effort in cas.efforts">
+                            <dd :key="effort.id" v-html="displayEffort(effort)"></dd>
+                        </template>
+                    </div>
                 </dl>
                 <dl>
                     <dt>Sagsbehandler</dt>
@@ -84,13 +82,13 @@
                 </dl>
                 <dl>
                     <dt>Betalingskommune</dt>
-                    <dd>{{ displayMuniName(cas.paying_municipality) }}</dd>
+                    <dd v-html="displayMuniName(cas.paying_municipality)"></dd>
                 
                     <dt>Handlekommune</dt>
-                    <dd>{{ displayMuniName(cas.acting_municipality) }}</dd>
+                    <dd v-html="displayMuniName(cas.acting_municipality)"></dd>
                 
                     <dt>Bopælsskommune</dt>
-                    <dd>{{ displayMuniName(cas.residence_municipality) }}</dd>
+                    <dd v-html="displayMuniName(cas.residence_municipality)"></dd>
 
                 </dl>
 
@@ -112,7 +110,7 @@
     import Appropriations from '../appropriations/AppropriationList.vue'
     import FamilyOverview from '../familyoverview/FamilyOverview.vue'
     import axios from '../http/Http.js'
-    import { municipalityId2name, districtId2name, displayEffort, userId2name, teamId2name } from '../filters/Labels.js'
+    import { municipalityId2name, targetGroupId2name, districtId2name, effortId2name, displayEffort, userId2name, teamId2name } from '../filters/Labels.js'
     import store from '../../store.js'
     import UserRights from '../mixins/UserRights.js'
 
@@ -149,29 +147,16 @@
         },
         watch: {
             cas: function() {
-                if (this.cas.case_worker === this.user.id) {
-                    this.$store.commit('setBreadcrumb', [
-                        {
-                            link: '/',
-                            title: 'Mine sager'
-                        },
-                        {
-                            link: false,
-                            title: `${ this.cas.sbsys_id}, ${ this.cas.name}`
-                        }
-                    ])
-                } else {
-                    this.$store.commit('setBreadcrumb', [
-                        {
-                            link: '/cases/',
-                            title: 'Alle sager'
-                        },
-                        {
-                            link: false,
-                            title: `${ this.cas.sbsys_id}, ${ this.cas.name}`
-                        }
-                    ])
-                }
+                this.$store.commit('setBreadcrumb', [
+                    {
+                        link: '/',
+                        title: 'Sager'
+                    },
+                    {
+                        link: false,
+                        title: `${ this.cas.sbsys_id}, ${ this.cas.name}`
+                    }
+                ])
             },
             user: function() {
                 this.reload()
@@ -187,6 +172,12 @@
             },
             displayDistrictName: function(id) {
                 return districtId2name(id)
+            },
+            displaytargetGroup: function(id) {
+                return targetGroupId2name(id)
+            },
+            displayEffort: function(id) {
+                return effortId2name(id)
             },
             displayEffortName: function(id) {
                 return displayEffort(id)

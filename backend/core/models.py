@@ -6,16 +6,18 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """These are the Django models, defining the database layout."""
 
-
 from datetime import date, timedelta
 from decimal import Decimal
 from dateutil.relativedelta import relativedelta
 
+import portion as P
+
 from django import forms
 from django.db import models, transaction
+from django.contrib.postgres.fields import ArrayField
 from django.db.models import Q, F
 from django.contrib.auth.models import AbstractUser
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext, gettext_lazy as _
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django_audit_fields.models import AuditModelMixin
@@ -24,14 +26,6 @@ from constance import config
 
 from core.managers import PaymentQuerySet, CaseQuerySet
 from core.utils import send_appropriation, create_rrule
-
-# Target group - definitions and choice list.
-FAMILY_DEPT = "FAMILY_DEPT"
-DISABILITY_DEPT = "DISABILITY_DEPT"
-target_group_choices = (
-    (FAMILY_DEPT, _("familieafdelingen")),
-    (DISABILITY_DEPT, _("handicapafdelingen")),
-)
 
 # Payment methods and choice list.
 CASH = "CASH"
@@ -59,8 +53,6 @@ STATUS_DRAFT = "DRAFT"
 STATUS_EXPECTED = "EXPECTED"
 STATUS_GRANTED = "GRANTED"
 STATUS_DELETED = "DELETED"
-# Below, a "virtual" status only relevant for appropriations.
-STATUS_EXPIRED = "EXPIRED"
 
 status_choices = (
     (STATUS_DRAFT, _("kladde")),
@@ -69,12 +61,22 @@ status_choices = (
 )
 
 
-class Municipality(models.Model):
+class Classification(models.Model):
+    """Abstract base class for Classifications."""
+
+    active = models.BooleanField(default=True, verbose_name=_("aktiv"))
+
+    class Meta:
+        abstract = True
+
+
+class Municipality(Classification):
     """Represents a Danish municipality."""
 
     class Meta:
         verbose_name = _("kommune")
         verbose_name_plural = _("kommuner")
+        ordering = ("name",)
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
 
@@ -82,12 +84,13 @@ class Municipality(models.Model):
         return f"{self.name}"
 
 
-class SchoolDistrict(models.Model):
+class SchoolDistrict(Classification):
     """Represents a Danish school district."""
 
     class Meta:
         verbose_name = _("distrikt")
         verbose_name_plural = _("distrikter")
+        ordering = ("name",)
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
 
@@ -95,16 +98,59 @@ class SchoolDistrict(models.Model):
         return f"{self.name}"
 
 
-class EffortStep(models.Model):
+class EffortStep(Classification):
     """Evaluation step for grading the effort deemed necessary in a case."""
 
     class Meta:
         verbose_name = _("indsatstrappetrin")
         verbose_name_plural = _("indsatstrappe")
-        ordering = ["number"]
+        ordering = ("number",)
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     number = models.PositiveIntegerField(verbose_name="Nummer", unique=True)
+
+    def __str__(self):
+        return f"{self.name}"
+
+
+class TargetGroup(Classification):
+    """Target group for a case."""
+
+    class Meta:
+        verbose_name = _("målgruppe")
+        verbose_name_plural = _("målgrupper")
+        ordering = ("name",)
+
+    name = models.CharField(max_length=128, verbose_name=_("navn"))
+    required_fields_for_case = ArrayField(
+        models.CharField(max_length=128),
+        blank=True,
+        null=True,
+        verbose_name="påkrævede felter på sag",
+    )
+
+    def __str__(self):
+        return f"{self.name}"
+
+
+class Effort(Classification):
+    """Effort for a case."""
+
+    class Meta:
+        verbose_name = _("indsats")
+        verbose_name_plural = _("indsatser")
+        ordering = ("name",)
+
+    name = models.CharField(max_length=128, verbose_name=_("navn"))
+    description = models.CharField(
+        max_length=128, verbose_name=_("beskrivelse"), blank=True
+    )
+    allowed_for_target_groups = models.ManyToManyField(
+        TargetGroup,
+        related_name="efforts",
+        verbose_name=_("målgrupper"),
+        blank=True,
+    )
 
     def __str__(self):
         return f"{self.name}"
@@ -153,6 +199,7 @@ class User(AbstractUser):
     READONLY = "readonly"
     EDIT = "edit"
     GRANT = "grant"
+    WORKFLOW_ENGINE = "workflow_engine"
     ADMIN = "admin"
 
     @classmethod
@@ -167,7 +214,8 @@ class User(AbstractUser):
             cls.READONLY: 0,
             cls.EDIT: 1,
             cls.GRANT: 2,
-            cls.ADMIN: 3,
+            cls.WORKFLOW_ENGINE: 3,
+            cls.ADMIN: 4,
         }
         if not perms:
             return ""
@@ -180,6 +228,7 @@ class User(AbstractUser):
         (READONLY, _("Kun læse")),
         (EDIT, _("Læse og skrive")),
         (GRANT, _("Bevilge")),
+        (WORKFLOW_ENGINE, ("Redigere klassifikationer")),
         (ADMIN, _("Admin")),
     )
     profile = models.CharField(
@@ -188,6 +237,12 @@ class User(AbstractUser):
         choices=profile_choices,
         blank=True,
     )
+
+    def is_workflow_engine_or_admin(self):
+        """Return if user has workflow or admin permission."""
+        if self.profile in [User.WORKFLOW_ENGINE, User.ADMIN]:
+            return True
+        return False
 
 
 class Team(models.Model):
@@ -203,6 +258,120 @@ class Team(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+
+class VariableRate(models.Model):
+    """Superclass for time-dependent rates and prices."""
+
+    @staticmethod
+    def create_interval(start_date, end_date):
+        """Create new interval for rates."""
+        if start_date is None:
+            start_date = -P.inf
+        if end_date is None:
+            end_date = P.inf
+        if not start_date < end_date:
+            raise ValueError(_("Slutdato skal være mindre end startdato"))
+        return P.closedopen(start_date, end_date)
+
+    def get_rate_amount(self, rate_date=date.today()):
+        """Look up period in RatesPerDate."""
+        periods = self.rates_per_date.all()
+        d = P.IntervalDict()
+        for p in periods:
+            i = self.create_interval(p.start_date, p.end_date)
+            d[i] = p.rate
+        return d.get(rate_date)
+
+    rate_amount = property(get_rate_amount)
+
+    @transaction.atomic
+    def set_rate_amount(self, amount, start_date=None, end_date=None):
+        """Set amount, merge with existing periods."""
+        new_period = self.create_interval(start_date, end_date)
+
+        existing_periods = self.rates_per_date.all()
+        d = P.IntervalDict()
+        for period in existing_periods:
+            interval = self.create_interval(period.start_date, period.end_date)
+            d[interval] = period.rate
+
+        # We generate all periods from scratch to avoid complicated
+        # merging logic.
+        existing_periods.delete()
+
+        d[new_period] = amount
+        for period in d.keys():
+            for interval in list(period):
+                # In case of composite intervals
+                start = (
+                    interval.lower
+                    if isinstance(interval.lower, date)
+                    else None
+                )
+                end = (
+                    interval.upper
+                    if isinstance(interval.upper, date)
+                    else None
+                )
+                rpd = RatePerDate(
+                    start_date=start,
+                    end_date=end,
+                    rate=d[start or end or date.today()],
+                    main_rate=self,
+                )
+                rpd.save()
+
+    def __str__(self):
+        return ";".join(
+            f"{r.start_date}, {r.end_date}: {r.rate}"
+            for r in self.rates_per_date.all()
+        )
+
+
+class RatePerDate(models.Model):
+    """Handle the date variation of VariableRates."""
+
+    rate = models.DecimalField(
+        max_digits=14, decimal_places=2, verbose_name=_("takst")
+    )
+
+    # Date dependency
+    start_date = models.DateField(
+        null=True, blank=True, verbose_name=_("startdato")
+    )
+    end_date = models.DateField(
+        null=True, blank=True, verbose_name=_("slutdato")
+    )
+    main_rate = models.ForeignKey(
+        VariableRate, on_delete=models.CASCADE, related_name="rates_per_date"
+    )
+
+
+class Price(VariableRate):
+    """A price on an individual payment plan."""
+
+    class Meta:
+        verbose_name = _("pris")
+
+    payment_schedule = models.OneToOneField(
+        "PaymentSchedule",
+        on_delete=models.CASCADE,
+        verbose_name=_("betalingsplan"),
+        related_name="price",
+        null=True,
+        blank=True,
+    )
+
+
+class Rate(VariableRate):
+    """A centrally fixed rate."""
+
+    class Meta:
+        verbose_name = _("takst")
+
+    name = models.CharField(max_length=128, verbose_name=_("navn"))
+    description = models.TextField(verbose_name=_("beskrivelse"), blank=True)
 
 
 class PaymentSchedule(models.Model):
@@ -472,6 +641,39 @@ class PaymentSchedule(models.Model):
 
         return f"{department}-{account_number}-{kind}"
 
+    @property
+    def account_string_new(self):
+        """Calculate account string from activity.
+
+        TODO: eventually replace account_string with this.
+        """
+        if (
+            self.recipient_type == PaymentSchedule.PERSON
+            and self.payment_method == CASH
+        ):
+            department = config.ACCOUNT_NUMBER_DEPARTMENT
+            kind = config.ACCOUNT_NUMBER_KIND
+        else:
+            # Set department and kind to 'XXX'
+            # to signify they are not used.
+            department = "XXX"
+            kind = "XXX"
+
+        # Account string is "unknown" when there is no
+        # activity or account.
+        # The explicit inclusion of "unknown" is a demand due to the
+        # PRISME integration.
+        if (
+            not hasattr(self, "activity")
+            or not self.activity
+            or not self.activity.account_number
+        ):
+            account_number = config.ACCOUNT_NUMBER_UNKNOWN
+        else:
+            account_number = self.activity.account_number
+
+        return f"{department}-{account_number}-{kind}"
+
     def __str__(self):
         recipient_type_str = self.get_recipient_type_display()
         payment_frequency_str = self.get_payment_frequency_display()
@@ -604,6 +806,17 @@ class Payment(models.Model):
 
         return self.payment_schedule.account_string
 
+    @property
+    def account_string_new(self):
+        """Return saved account string if any, else calculate from schedule.
+
+        TODO: eventually replace account_string with this.
+        """
+        if self.saved_account_string:
+            return self.saved_account_string
+
+        return self.payment_schedule.account_string_new
+
     def __str__(self):
         recipient_type_str = self.get_recipient_type_display()
         return (
@@ -667,29 +880,31 @@ class Case(AuditModelMixin, models.Model):
         related_name="resident_clients",
         on_delete=models.PROTECT,
     )
-    target_group = models.CharField(
-        max_length=128,
+    target_group = models.ForeignKey(
+        TargetGroup,
         verbose_name=_("målgruppe"),
-        choices=target_group_choices,
+        on_delete=models.PROTECT,
+        related_name="cases",
+        null=True,
     )
     effort_step = models.ForeignKey(
         EffortStep,
         verbose_name=_("indsatstrappe"),
         on_delete=models.PROTECT,
         null=True,
+        blank=True,
     )
     scaling_step = models.PositiveSmallIntegerField(
         verbose_name=_("skaleringstrappe"),
         choices=[(i, i) for i in range(1, 11)],
+        null=True,
+        blank=True,
     )
     assessment_comment = models.TextField(
         verbose_name=_("supplerende oplysninger til vurdering"), blank=True
     )
-    refugee_integration = models.BooleanField(
-        verbose_name=_("integrationsindsatsen"), default=False
-    )
-    cross_department_measure = models.BooleanField(
-        verbose_name=_("tværgående ungeindsats"), default=False
+    efforts = models.ManyToManyField(
+        Effort, related_name="cases", verbose_name=_("indsatser"), blank=True,
     )
     note = models.TextField(verbose_name=_("note"), blank=True)
 
@@ -740,12 +955,13 @@ class Case(AuditModelMixin, models.Model):
         )
 
 
-class ApprovalLevel(models.Model):
+class ApprovalLevel(Classification):
     """Organizational level on which an appropriation was approved."""
 
     class Meta:
         verbose_name = _("bevillingsniveau")
         verbose_name_plural = _("bevillingsniveauer")
+        ordering = ("name",)
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
 
@@ -753,7 +969,7 @@ class ApprovalLevel(models.Model):
         return f"{self.name}"
 
 
-class Section(models.Model):
+class Section(Classification):
     """Law sections and the corresponding KLE codes.
 
     Each section is associated with the target group for which it is
@@ -763,19 +979,20 @@ class Section(models.Model):
     class Meta:
         verbose_name = _("paragraf")
         verbose_name_plural = _("paragraffer")
+        ordering = ("paragraph",)
 
     paragraph = models.CharField(max_length=128, verbose_name=_("paragraf"))
     text = models.TextField(verbose_name=_("forklarende tekst"))
-    allowed_for_family_target_group = models.BooleanField(
-        verbose_name=_("tilladt for familieafdelingen"), default=False
-    )
-    allowed_for_disability_target_group = models.BooleanField(
-        verbose_name=_("tilladt for handicapafdelingen"), default=False
+    allowed_for_target_groups = models.ManyToManyField(
+        TargetGroup,
+        related_name="sections",
+        verbose_name=_("målgrupper"),
+        blank=True,
     )
     allowed_for_steps = models.ManyToManyField(
         EffortStep,
         related_name="sections",
-        verbose_name=_("tilladt for trin i indsatstrappen"),
+        verbose_name=_("trin i indsatstrappen"),
         blank=True,
     )
     law_text_name = models.CharField(
@@ -784,6 +1001,26 @@ class Section(models.Model):
 
     def __str__(self):
         return f"{self.paragraph}"
+
+
+class SectionEffortStepProxy(Section.allowed_for_steps.through):
+    """Proxy model for the allowed_for_steps (EffortStep) m2m field on Section.
+
+    We use a proxy so we can override __str__ and m2m verbose_name for use in
+    django admin without an explicit through model.
+    """
+
+    class Meta:
+        proxy = True
+
+    def __str__(self):
+        return f"{self.section.paragraph} {self.section.text}"
+
+
+# Set the verbose_name of the 'section' foreign key for use in django admin.
+SectionEffortStepProxy._meta.get_field("section").verbose_name = gettext(
+    "paragraf"
+)
 
 
 class Appropriation(AuditModelMixin, models.Model):
@@ -808,14 +1045,12 @@ class Appropriation(AuditModelMixin, models.Model):
     @property
     def status(self):
         """Calculate appropriation status from status of activities."""
-        if not self.activities.exists() or not self.main_activity:
-            return STATUS_DRAFT
-        # We now know that there is at least one activity and a main activity.
-        today = timezone.now().date()
-        if self.main_activity.end_date < today:
-            return STATUS_EXPIRED
-        # Now, the status should follow the main activity's status.
-        return self.main_activity.status
+        if self.activities.filter(status=STATUS_EXPECTED).exists():
+            return STATUS_EXPECTED
+        if self.activities.filter(status=STATUS_GRANTED).exists():
+            return STATUS_GRANTED
+
+        return STATUS_DRAFT
 
     case = models.ForeignKey(
         Case,
@@ -863,15 +1098,24 @@ class Appropriation(AuditModelMixin, models.Model):
 
         This includes both main and supplementary activities.
         """
-        granted_activities = self.activities.all().filter(
-            status=STATUS_GRANTED
-        )
+        granted_activities = self.activities.filter(status=STATUS_GRANTED)
 
         this_years_payments = Payment.objects.filter(
             payment_schedule__activity__in=granted_activities
         ).in_this_year()
 
         return this_years_payments.amount_sum()
+
+    @property
+    def total_granted_full_year(self):
+        """Retrieve total amount granted for this year.
+
+        Extrapolate for the full year (January 1 - December 31).
+        """
+        all_activities = self.activities.filter(status=STATUS_GRANTED)
+        return sum(
+            activity.total_cost_full_year for activity in all_activities
+        )
 
     @property
     def total_expected_this_year(self):
@@ -899,6 +1143,24 @@ class Appropriation(AuditModelMixin, models.Model):
         return sum(
             activity.total_cost_full_year for activity in all_activities
         )
+
+    @property
+    def total_cost_expected(self):
+        """Retrieve total amount expected."""
+        activities = self.activities.filter(
+            Q(status=STATUS_GRANTED) | Q(status=STATUS_EXPECTED)
+        )
+        return sum(activity.total_cost for activity in activities)
+
+    @property
+    def total_cost_granted(self):
+        """Retrieve total amount granted."""
+        all_granted_activities = self.activities.filter(status=STATUS_GRANTED)
+        payments = Payment.objects.filter(
+            payment_schedule__activity__in=all_granted_activities
+        )
+
+        return payments.amount_sum()
 
     @property
     def main_activity(self):
@@ -1063,12 +1325,13 @@ class Appropriation(AuditModelMixin, models.Model):
         return f"{self.sbsys_id} - {self.section}"
 
 
-class ServiceProvider(models.Model):
+class ServiceProvider(Classification):
     """Class containing information for a specific service provider."""
 
     class Meta:
         verbose_name = _("leverandør")
         verbose_name_plural = _("leverandører")
+        ordering = ("name",)
 
     cvr_number = models.CharField(
         max_length=8, blank=True, verbose_name=_("cvr-nummer")
@@ -1088,7 +1351,7 @@ class ServiceProvider(models.Model):
         return f"{self.cvr_number} - {self.name}"
 
 
-class ActivityDetails(models.Model):
+class ActivityDetails(Classification):
     """Class containing all services offered by this municipality.
 
     Each service is associated with the legal articles for which it is
@@ -1098,8 +1361,10 @@ class ActivityDetails(models.Model):
     class Meta:
         verbose_name = _("aktivitetsdetalje")
         verbose_name_plural = _("aktivitetsdetaljer")
+        ordering = ("name",)
 
     name = models.CharField(max_length=128, verbose_name=_("Navn"))
+    description = models.TextField(verbose_name=_("beskrivelse"), blank=True)
     activity_id = models.CharField(
         max_length=128, verbose_name=_("aktivitets ID"), unique=True
     )
@@ -1133,12 +1398,45 @@ class ActivityDetails(models.Model):
         "self",
         related_name="supplementary_activities",
         symmetrical=False,
-        verbose_name=_("tilladte hovedaktiviteter"),
+        verbose_name=_("hovedydelser"),
+        help_text=_(
+            "Denne aktivitetsdetalje kan være følgeudgift for"
+            " disse hovedydelser.<br>"
+        ),
         blank=True,
     )
 
     def __str__(self):
         return f"{self.activity_id} - {self.name}"
+
+
+class ActivityDetailsSectionProxy(
+    ActivityDetails.supplementary_activity_for.through
+):
+    """
+    Proxy model for supplementary_activity_for (Section) on ActivityDetails.
+
+    We use a proxy model so we can override __str__ and m2m verbose_name for
+    use in django admin without an explicit through model.
+    """
+
+    class Meta:
+        proxy = True
+
+    def __str__(self):
+        return f"{self.activitydetails} - {self.section}"
+
+
+# Set the verbose_name of the 'section' foreign key for use in django admin.
+ActivityDetailsSectionProxy._meta.get_field("section").verbose_name = gettext(
+    "paragraf"
+)
+
+# Set the verbose_name of the 'activitydetails' foreign key for use in
+# django admin.
+ActivityDetailsSectionProxy._meta.get_field(
+    "activitydetails"
+).verbose_name = gettext("aktivitetsdetalje")
 
 
 class SectionInfo(models.Model):
@@ -1147,6 +1445,12 @@ class SectionInfo(models.Model):
     class Meta:
         verbose_name = _("paragraf-info")
         verbose_name_plural = _("paragraf-info")
+        constraints = [
+            models.UniqueConstraint(
+                fields=["activity_details", "section"],
+                name="unique_section_activity_details",
+            )
+        ]
 
     activity_details = models.ForeignKey(
         ActivityDetails,
@@ -1163,6 +1467,34 @@ class SectionInfo(models.Model):
     sbsys_template_id = models.CharField(
         max_length=128, verbose_name=_("SBSYS skabelon-id"), blank=True
     )
+
+    main_activity_main_account_number = models.CharField(
+        max_length=128,
+        verbose_name=_("hovedkontonummer for hovedaktivitet"),
+        blank=True,
+    )
+    supplementary_activity_main_account_number = models.CharField(
+        max_length=128,
+        verbose_name=_("hovedkontonummer for følgeudgift"),
+        help_text=_(
+            "Et hovedkontonummer der skal bruges, hvis en følgeudgift"
+            " har denne aktivitetsdetalje som hovedydelse.<br>"
+        ),
+        blank=True,
+    )
+
+    def get_main_activity_main_account_number(self):
+        """Get the main activity main account number."""
+        return self.main_activity_main_account_number
+
+    def get_supplementary_activity_main_account_number(self):
+        """Get the supplementary activity main account number.
+
+        If no such number exists, take the one for the main activity.
+        """
+        if self.supplementary_activity_main_account_number:
+            return self.supplementary_activity_main_account_number
+        return self.main_activity_main_account_number
 
     def __str__(self):
         return f"{self.activity_details} - {self.section}"
@@ -1373,6 +1705,37 @@ class Activity(AuditModelMixin, models.Model):
         return account
 
     @property
+    def account_number(self):
+        """Calculate the account_number to use with this activity.
+
+        TODO: eventually replace account.number with this.
+        """
+        if self.activity_type == MAIN_ACTIVITY:
+            section_info = SectionInfo.objects.filter(
+                activity_details=self.details,
+                section=self.appropriation.section,
+            ).first()
+            if not section_info:
+                return None
+            main_account_number = (
+                section_info.get_main_activity_main_account_number()
+            )
+        else:
+            main_activity = self.appropriation.main_activity
+            if not main_activity:
+                return None
+            section_info = SectionInfo.objects.filter(
+                activity_details=main_activity.details,
+                section=self.appropriation.section,
+            ).first()
+            if not section_info:
+                return None
+            main_account_number = (
+                section_info.get_supplementary_activity_main_account_number()
+            )
+        return f"{main_account_number}-{self.details.activity_id}"
+
+    @property
     def monthly_payment_plan(self):
         """Calculate the payment plan for this activity, grouped by months."""
         payments = Payment.objects.filter(payment_schedule__activity=self)
@@ -1517,7 +1880,7 @@ class Activity(AuditModelMixin, models.Model):
             self.payment_plan.save()
 
 
-class RelatedPerson(models.Model):
+class RelatedPerson(AuditModelMixin, models.Model):
     """A person related to a Case, e.g. as a parent or sibling."""
 
     class Meta:
@@ -1533,6 +1896,9 @@ class RelatedPerson(models.Model):
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     related_case = models.CharField(
         max_length=128, verbose_name=_("SBSYS-sag"), blank=True
+    )
+    from_serviceplatformen = models.BooleanField(
+        blank=True, default=True, verbose_name=_("fra Serviceplatformen")
     )
 
     main_case = models.ForeignKey(
@@ -1550,17 +1916,21 @@ class RelatedPerson(models.Model):
             "relation": "relation_type",
             "adresseringsnavn": "name",
         }
-        return {
+        converted_data = {
             converter_dict[k]: v
             for (k, v) in data.items()
             if k in converter_dict
         }
+        extra_fields = {"from_serviceplatformen": True}
+        converted_data.update(extra_fields)
+
+        return converted_data
 
     def __str__(self):
         return f"{self.name} - {self.cpr_number} - {self.main_case}"
 
 
-class Account(models.Model):
+class Account(Classification):
     """Class containing account numbers.
 
     Should have a number for each

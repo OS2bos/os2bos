@@ -29,8 +29,8 @@ from core.models import (
     Account,
     RelatedPerson,
     SD,
-    FAMILY_DEPT,
     EffortStep,
+    TargetGroup,
 )
 
 
@@ -76,10 +76,10 @@ def create_case(
     sbsys_id="13212",
     scaling_step=1,
     effort_step=1,
-    target_group=FAMILY_DEPT,
+    target_group="Familieafdelingen",
     cpr_number="0205891234",
 ):
-
+    target_group = TargetGroup.objects.get(name=target_group)
     effort_step = EffortStep.objects.get(number=effort_step)
 
     case = Case.objects.create(
@@ -106,7 +106,7 @@ def create_case_as_json(
         "sbsys_id": "xxx-yyyx",
         "cpr_number": "1112130014",
         "name": "Mak Mouse",
-        "target_group": "FAMILY_DEPT",
+        "target_group": 1,
         "refugee_integration": True,
         "cross_department_measure": True,
         "case_worker": case_worker.id,
@@ -259,14 +259,24 @@ def create_service_provider(cvr_number, name):
 
 
 def create_section_info(
-    details, section, kle_number="27.18.02", sbsys_template_id="900"
+    details,
+    section,
+    kle_number="27.18.02",
+    sbsys_template_id="900",
+    main_activity_main_account_number="1234",
+    supplementary_activity_main_account_number="5678",
 ):
-    section_info = SectionInfo.objects.create(
-        activity_details=details,
-        section=section,
-        kle_number=kle_number,
-        sbsys_template_id=sbsys_template_id,
-    )
+    params = {
+        "activity_details": details,
+        "section": section,
+        "kle_number": kle_number,
+        "sbsys_template_id": sbsys_template_id,
+        "main_activity_main_account_number": main_activity_main_account_number,
+        "supplementary_activity_"
+        "main_account_number": supplementary_activity_main_account_number,
+    }
+
+    section_info = SectionInfo.objects.create(**params)
     return section_info
 
 
@@ -280,3 +290,20 @@ def create_related_person(main_case, name="Jens Jensen", relation_type="far"):
 def create_user(username):
     user = User.objects.create(username=username)
     return user
+
+
+def create_target_group(
+    name="Familieafdelingen", required_fields_for_case=None
+):
+    if required_fields_for_case is None:
+        required_fields_for_case = ["district"]
+    target_group, _ = TargetGroup.objects.get_or_create(
+        name=name, required_fields_for_case=required_fields_for_case
+    )
+    return target_group
+
+
+def create_effort_step(name="Trin 1: Tidlig indsats i almenområdet", number=1):
+    effort_step, _ = EffortStep.objects.get_or_create(name=name, number=number)
+
+    return effort_step

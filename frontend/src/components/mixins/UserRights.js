@@ -15,6 +15,9 @@ export default {
       if (this.user.profile === 'admin') {
         return true
       }
+      if (this.user.profile === 'workflow_engine') {
+        return true
+      }
       if (this.user.profile === 'grant') {
         return true
       }
@@ -24,6 +27,14 @@ export default {
       if (this.user.profile === 'readonly') {
         return false
       }
+    }
+  },
+  watch: {
+    user: function(new_val) {
+      if (new_val) {
+        this.$store.dispatch('fetchTeam', new_val.team)
+      }
+      this.update()
     }
   }
 }

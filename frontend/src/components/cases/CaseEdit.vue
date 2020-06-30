@@ -37,55 +37,69 @@
                     <fieldset>
                         <legend>Kommune:</legend>
 
-                        <label class="required" for="selectField1">Betalingskommune:</label>
+                        <label class="required" for="selectPayingMunicipality">Betalingskommune:</label>
                         <list-picker 
-                            :dom-id="'selectField1'" 
+                            :dom-id="'selectPayingMunicipality'" 
                             :selected-id="cas.paying_municipality" 
                             @selection="changeMuni($event, 'paying_municipality')" 
                             :list="municipalities" 
                             :default="42" />
                     
-                        <label class="required" for="selectField2">Handlekommune:</label>
+                        <label class="required" for="selectActingMunicipality">Handlekommune:</label>
                         <list-picker 
-                            :dom-id="'selectField2'" 
+                            :dom-id="'selectActingMunicipality'" 
                             :selected-id="cas.acting_municipality" 
                             @selection="changeMuni($event, 'acting_municipality')" 
                             :list="municipalities" 
                             :default="42" />
                     
-                        <label class="required" for="selectField3">Bopælsskommune:</label>
+                        <label class="required" for="selectResidenceMunicipality">Bopælsskommune:</label>
                         <list-picker 
-                            :dom-id="'selectField3'" 
+                            :dom-id="'selectResidenceMunicipality'" 
                             :selected-id="cas.residence_municipality" 
                             @selection="changeMuni($event, 'residence_municipality')" 
                             :list="municipalities" 
                             :default="42" />
                     </fieldset>
-
                 </div>
-                <div class="row-item">
 
+                <div class="row-item">
                     <fieldset>
-                        <legend style="margin-bottom: .75rem;" class="required">Målgruppe:</legend>
-                        <input id="inputRadio1" type="radio" value="FAMILY_DEPT" v-model="cas.target_group" name="target-group" required>
-                        <label for="inputRadio1">Familieafdelingen</label>
-                        <input id="inputRadio2" type="radio" value="DISABILITY_DEPT" v-model="cas.target_group" name="target-group" required>
-                        <label for="inputRadio2">Handicapafdelingen</label>
+                        <label class="required" for="selectTargetGroup">Målgruppe:</label>
+                        <list-picker
+                            :dom-id="'selectTargetGroup'" 
+                            :selected-id="cas.target_group" 
+                            @selection="changeTargetGroup" 
+                            :list="targetGroups" 
+                            required />
                         <error err-key="target_group" />
                     
-                        <template v-if="cas.target_group === 'FAMILY_DEPT'">
-                            <label class="required" for="selectField4">Skoledistrikt (nuværende eller oprindeligt)</label>
-                            <list-picker :dom-id="'selectField4'" :selected-id="cas.district" @selection="changeDistrict" :list="districts" required />
+                        <template v-if="requiredDistrict === true">
+                            <label class="required" for="selectDistrict">Skoledistrikt (nuværende eller oprindeligt)</label>
+                            <list-picker :dom-id="'selectDistrict'" :selected-id="cas.district" @selection="changeDistrict" :list="districts" required />
                         </template>
                     </fieldset>
 
-                    <fieldset>
-                        <legend style="margin-bottom: .75rem;">Andet:</legend>
-                        <input id="inputCheckbox1" type="checkbox" v-model="cas.refugee_integration">
-                        <label for="inputCheckbox1">Integrationsindsatsen</label>
-                        <input id="inputCheckbox2" type="checkbox" v-model="cas.cross_department_measure">
-                        <label for="inputCheckbox2">Tværgående ungeindsats</label>
-                    </fieldset>
+                    <template v-if="effort_available">
+                        <fieldset>
+                            <legend style="margin-bottom: .75rem;">Andet:</legend>
+                            <template v-for="effort in effort_available">
+                                <input 
+                                    :key="effort.id"
+                                    :id="`inputCheckbox${ effort.id }`" 
+                                    type="checkbox" 
+                                    :value="effort.id" 
+                                    v-model="cas.efforts">
+                                <label 
+                                    :key="effort.name" 
+                                    :for="`inputCheckbox${ effort.id }`">
+                                    <span v-if="effort.active === false">(</span>
+                                    {{ effort.name }}
+                                    <span v-if="effort.active === false">)</span>
+                                </label>
+                            </template>
+                        </fieldset>
+                    </template>
                 </div>
                 
                 <div class="row-item" >
@@ -143,7 +157,11 @@
         ],
         data: function() {
             return {
-                cas: {},
+                effort_available: null,
+                cas: {
+                    efforts: [],
+                    target_group: null
+                },
                 create_mode: true,
                 assessment_changes: false,
                 relations: null
@@ -153,8 +171,14 @@
             municipalities: function() {
                 return this.$store.getters.getMunis
             },
+            targetGroups: function() {
+                return this.$store.getters.getTargetGroups
+            },
             districts: function() {
                 return this.$store.getters.getDistricts
+            },
+            efforts: function() {
+                return this.$store.getters.getEfforts
             },
             user: function() {
                 return this.$store.getters.getUser
@@ -172,11 +196,38 @@
                         return true
                     }
                 }
+            },
+            requiredDistrict: function() {
+                if (this.cas.target_group) {
+                    let target = this.targetGroups.filter(tar => tar.id === this.cas.target_group)
+                    return target[0].required_fields_for_case.filter(tar => tar === 'district').length === 1
+                } else {
+                    return false
+                }
             }
         },
+        watch: {
+            cas: {
+                handler() {
+                    this.fetchEfforts()
+                },
+                deep: true
+            },
+        },
         methods: {
+            fetchEfforts: function() {
+                axios.get(`/efforts/?allowed_for_target_groups=${ this.cas.target_group }`)
+                .then(res => {
+                    this.effort_available = res.data    
+                })
+                .catch(err => console.log(err))
+            },
             changeMuni: function(ev, type) {
                 this.cas[type] = ev
+            },
+            changeTargetGroup: function(tar) {
+                this.cas.target_group = tar
+                this.$forceUpdate()
             },
             changeDistrict: function(dist) {
                 this.cas.district = dist
@@ -230,8 +281,7 @@
                     acting_municipality: this.cas.acting_municipality,
                     residence_municipality: this.cas.residence_municipality,
                     target_group: this.cas.target_group,
-                    refugee_integration: this.cas.refugee_integration,
-                    cross_department_measure: this.cas.cross_department_measure,
+                    efforts: this.cas.efforts,
                     note: this.cas.note ? this.cas.note : ''
                 }
                 if (this.assessment_changes) {
@@ -275,6 +325,7 @@
                 this.cas = this.caseObj
                 this.fetchTeamInfo()
             }
+            this.fetchEfforts()
             this.$store.commit('clearErrors')
         }
     }

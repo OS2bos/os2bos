@@ -8,7 +8,61 @@
 
 <template>
 
+
     <div class="case-search">
+        <div class="case-search-filters">
+            <h2 class="case-search-filters--title">Filtrér sager</h2>
+            <form @submit.prevent>
+                <ul class="filter-fields">
+                    <li>
+                        <label for="field-sbsysid">SBSYS ID</label>
+                        <input type="search" @input="update" id="field-sbsysid" v-model="$route.query.sbsys_id">
+                    </li>
+
+                    <li>
+                        <label for="field-cpr">CPR-nr</label>
+                        <input type="search" @input="changeCpr" id="field-cpr" v-model="$route.query.cpr_number">
+                    </li>
+
+                    <li>
+                        <label for="field-team">Team</label>
+                        <list-picker 
+                            v-if="teams"
+                            :dom-id="'field-team'" 
+                            :selected-id="query.team"
+                            :list="teams"
+                            @selection="changeTeam"
+                            display-key="name" />
+                    </li>
+
+                    <li>
+                        <label for="field-case-worker">Sagsbehandler</label>
+                        <list-picker 
+                            v-if="users"
+                            :dom-id="'field-case-worker'" 
+                            :selected-id="query.case_worker"
+                            :list="users"
+                            @selection="changeWorker"
+                            display-key="fullname" />
+                    </li>
+                </ul>
+
+                <ul class="filter-fields">
+                    <li>
+                        <input type="radio" v-model="$route.query.expired" id="field-expired-1" @change="update" :value="null">
+                        <label for="field-expired-1">Aktive og lukkede sager</label>
+                    </li>
+                    <li>
+                        <input type="radio" v-model="$route.query.expired" id="field-expired-2" @change="update" :value="false">
+                        <label for="field-expired-2">Kun aktive sager</label>
+                    </li>
+                    <li>
+                        <input type="radio" v-model="$route.query.expired" id="field-expired-3" @change="update" :value="true">
+                        <label for="field-expired-3">Kun lukkede sager</label>
+                    </li>
+                </ul>
+            </form>
+        </div>
         
         <div class="case-search-list">
 
@@ -20,9 +74,9 @@
                        :selectable="permissionCheck">
 
                 <div slot="datagrid-header">
-                    <h1 style="padding: 0;">Find sager</h1>
+                    <h1 style="padding: 0;">Sager</h1>
+                    <button v-if="permissionCheck === true" class="create" @click="$router.push('/case-create/')">+ Tilknyt hovedsag</button>
                 </div>
-
                 <p slot="datagrid-footer" v-if="cases.length < 1">
                     Kan ikke finde nogen resultater, der matcher de valgte kriterier
                 </p>
@@ -68,50 +122,6 @@
             </dialog-box>
 
         </div>
-
-        <div class="case-search-filters">
-            <h2>Filtre</h2>
-            <form @submit.prevent>
-                <fieldset>
-
-                    <label for="field-sbsysid">SBSYS ID</label>
-                    <input type="search" @input="update()" id="field-sbsysid" v-model="$route.query.sbsys_id">
-
-                    <label for="field-cpr">CPR-nr</label>
-                    <input type="search" @input="changeCpr" id="field-cpr" v-model="$route.query.cpr_number">
-
-                    <label for="field-team">Team</label>
-                    <list-picker 
-                        v-if="teams"
-                        :dom-id="'field-team'" 
-                        :selected-id="query.team"
-                        :list="teams"
-                        @selection="changeTeam"
-                        display-key="name" />
-                
-                    <label for="field-case-worker">Sagsbehandler</label>
-                    <list-picker 
-                        v-if="users"
-                        :dom-id="'field-case-worker'" 
-                        :selected-id="query.case_worker"
-                        :list="users"
-                        @selection="changeWorker"
-                        display-key="fullname" />
-                
-                </fieldset>
-                <fieldset>
-
-                    <input type="radio" v-model="$route.query.expired" id="field-expired-1" @change="update()" :value="null">
-                    <label for="field-expired-1">Aktive og lukkede sager</label>
-                    <input type="radio" v-model="$route.query.expired" id="field-expired-2" @change="update()" :value="false">
-                    <label for="field-expired-2">Kun aktive sager</label>
-                    <input type="radio" v-model="$route.query.expired" id="field-expired-3" @change="update()" :value="true">
-                    <label for="field-expired-3">Kun lukkede sager</label>
-
-                </fieldset>
-            </form>
-        </div>
-
     </div>
 
 </template>
@@ -126,6 +136,7 @@
     import notify from '../notifications/Notify.js'
     import CaseFilters from '../mixins/CaseFilters.js'
     import UserRights from '../mixins/UserRights.js'
+    import { targetGroupId2name, districtId2name, displayEffort, userId2name, teamId2name } from '../filters/Labels.js'
 
     export default {
 
@@ -140,6 +151,7 @@
         ],
         data: function() {
             return {
+                preselected: null,
                 selected_cases: [],
                 show_modal: false,
                 diag_field_case_worker: null,
@@ -158,11 +170,30 @@
                     },
                     {
                         key: 'cpr_number',
-                        title: 'CPR nr.',
+                        title: 'CPR/Navn',
+                        display_func: this.displayCPRName
                     },
                     {
-                        key: 'name',
-                        title: 'Navn',
+                        key: 'target_group',
+                        title: 'Målgruppe',
+                        display_func: this.displayTargetGroupDistrict,
+                        class: 'nowrap'
+                    },
+                    {
+                        key: 'effort_step',
+                        title: 'Indsatstrappen',
+                        display_func: this.displayEffortName
+                    },
+                    {
+                        key: 'num_appropriations',
+                        title: 'Bevillinger',
+                        display_func: this.displayAppr,
+                        class: 'nowrap'
+                    },
+                    {
+                        key: 'case_worker',
+                        title: 'Sagsbehandler',
+                        display_func: this.displayUserTeam
                     },
                     {
                         key: 'modified',
@@ -191,6 +222,22 @@
                 let to = `#/case/${ d.id }/`
                 return `<a href="${ to }"><i class="material-icons">folder_shared</i> ${ d.sbsys_id }</a>`
             },
+            displayCPRName: function(id) {
+                return `${ id.cpr_number }<br>${ id.name }`
+            },
+            displayTargetGroupDistrict: function(id) {
+                let str = `${ targetGroupId2name(id.target_group) }`
+                if (id.target_group === 1) { 
+                    str += `<dt>Skoledistrikt</dt><dd>${ districtId2name(id.district) }</dd></dl>`
+                }
+                return str
+            },
+            displayEffortName: function(id) {
+                return displayEffort(id.effort_step)
+            },
+            displayUserTeam: function(id) {
+                return `${ userId2name(id.case_worker) }<dl><dt>Team</dt><dd>${ teamId2name(id.team).name }</dd></dl>`
+            },
             displayDate: function(d) {
                 return json2js(d.modified)
             },
@@ -201,6 +248,9 @@
                 if (d.expired) {
                     return `<div class="mini-label"><span class="label label-CLOSED">Lukket</span></div>`
                 }
+            },
+            displayAppr: function(id) {
+                return `<dl class="appropriation-status"><dt>Foreløbige</dt><dd>${ id.num_draft_or_expected_appropriations }</dd><dt>I alt</dt><dd>${ id.num_appropriations }</dd></dl>`
             },
             diagChangeWorker: function(worker_id) {
                 this.diag_field_case_worker = worker_id
@@ -251,13 +301,17 @@
 
     .case-search {
         padding: 0 2rem 2rem;
-        display: flex;
-        flex-flow: row nowrap;
     }
 
     .case-search-list {
+        margin-top: 2rem;
         order: 2;
         flex-grow: 1;
+    }
+
+    .case-search .create {
+        float: left;
+        margin: -2rem 0 0 5rem;
     }
 
     .case-search-list .more .material-icons {
@@ -265,15 +319,35 @@
     }
 
     .case-search-filters {
-        order: 1;
         background-color: var(--grey1);
-        padding: 1.5rem 1rem 0;
-        margin: 1.25rem 1.25rem 0 0;
+        padding: 0 1.5rem 1rem;
+        margin-bottom: 3rem;
     }
 
-    .case-search-filters h2,
-    .case-search-filters form {
+    .case-search-filters--title {
+        font-size: 1.125rem;
+        padding: 1.5rem 0 .5rem;
+    }
+
+    .case-search-filters > form {
         padding: 0;
+    }
+
+    .case-search-filters .filter-fields {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+
+    .case-search-filters .filter-fields li {
+        list-style: none;
+        padding: .5rem 1rem .5rem 0;
+    }
+
+    .case-search-filters .filter-fields label {
+        margin: 0;
     }
 
     .case-search-move-btn {
@@ -289,6 +363,19 @@
 
     .datagrid-td-status {
         width: 8rem;
+    }
+
+    .case-search .appropriation-status {
+        display: grid;
+        grid-template-columns: auto auto;
+    }
+
+    .case-search .appropriation-status dt {
+        padding-top: 0;
+    }
+
+    .case-search .appropriation-status dd {
+
     }
 
 </style>

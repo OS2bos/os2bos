@@ -19,8 +19,16 @@ export default {
         }
     },
     methods: {
-        update: function() {
-            this.$store.dispatch('fetchCases', this.$route.query)
+        update: function(worker_id) {
+            if (this.user.id) {
+                if (this.$route.query.case_worker != worker_id || this.$route.query.case_worker === null) {
+                    this.$store.dispatch('fetchCases', this.$route.query)
+                } else {
+                    this.$route.query.case_worker = this.user.id
+                    this.$route.query.expired = false
+                    this.$store.dispatch('fetchCases', this.$route.query)
+                }
+            }
         },
         changeCpr: function(ev) {
             let cpr = ev.target.value.replace('-','')

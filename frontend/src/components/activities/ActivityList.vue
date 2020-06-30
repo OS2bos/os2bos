@@ -9,13 +9,25 @@
 <template>
 
     <section class="activities">
-        <header style="display: flex; flex-flow: row nowrap; align-items: center; margin: 2rem 0;">
-            <h2 style="padding: 0;">Bevilgede ydelser</h2>
-            <button v-if="permissionCheck === true" class="activities-create-btn" title="Ny aktivitet" @click="$router.push(`/appropriation/${ apprId }/activity-create/`)" style="margin: 0 1rem;">
-                + Tilføj ydelse
-            </button>
+        <header class="activities-header" style="margin-bottom: 0;">
+            <div class="create-content">
+                <h2 style="padding: 0;">Bevilgede ydelser</h2>
+                <button v-if="permissionCheck === true" class="activities-create-btn" title="Ny aktivitet" @click="$router.push(`/appropriation/${ apprId }/activity-create/`)" style="margin: 0 1rem;">
+                    + Tilføj ydelse
+                </button>
+            </div>
         </header>
-        <table v-if="!no_acts">
+
+        <fieldset style="text-align: right; padding: 0 1.5rem; margin: 0;">
+            <label for="act-cost-toggle" style="margin: 0 .5rem 0 0; display: inline-block; font-weight: bold;">Vis udgifter</label>
+            <select id="act-cost-toggle" class="selected-btn" v-model="selectedValue" style="margin: 0; display: inline-block;">
+                <option value="1">i år</option>
+                <option value="2">pr. år</option>
+                <option value="3">samlede</option>
+            </select>
+        </fieldset>
+        
+        <table v-if="!no_acts" style="margin-top: 0;">
             <thead>
                 <tr>
                     <th style="width: 3.5rem; padding: .5rem 0 0 1.25rem;">
@@ -27,14 +39,39 @@
                     <th>Udbetales til</th>
                     <th>Start</th>
                     <th>Slut</th>
-                    <th class="right">Udgift i år</th>
-                    <th class="right">Forventet udgift i år</th>
+                    <th>Senest ændret</th>
+                    <th class="right">
+                        <span v-if="selectedValue === '1'">Udgift i år</span>
+                        <span v-if="selectedValue === '2'">Udgift pr. år</span>
+                        <span v-if="selectedValue === '3'">Samlet udgift</span>
+                    </th>
+                    <th class="right">
+                        <span v-if="selectedValue === '1'">Forventet udgift i år</span>
+                        <span v-if="selectedValue === '2'">Forventet udgift pr. år</span>
+                        <span v-if="selectedValue === '3'">Forventet samlet udgift</span>
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <th></th>
-                    <th colspan="7" class="table-heading" style="padding-top: .5rem;">Hovedydelse</th>
+                    <th class="table-heading"></th>
+                    <th colspan="7" class="table-heading">Hovedydelse</th>
+                </tr>
+                <tr v-if="count_old_main_acts > 0">
+                    <td colspan="9" class="act-list-collapse-td">
+                        <button class="act-list-collapse-button" @click="show_old_main_acts = !show_old_main_acts">
+                            <span v-if="!show_old_main_acts">
+                                <span class="material-icons">expand_more</span>
+                                Vis {{ count_old_main_acts }} udgåede hovedydelser
+                                <span class="material-icons">expand_more</span>
+                            </span>
+                            <span v-else>
+                                <span class="material-icons">expand_less</span>
+                                Skjul {{ count_old_main_acts }} udgåede hovedydelser
+                                <span class="material-icons">expand_less</span>
+                            </span>
+                        </button>
+                    </td>
                 </tr>
                 <template v-for="chunk in main_acts">
                     <act-list-item 
@@ -43,12 +80,29 @@
                         :act="a"
                         :key="a.id"
                         :checked="a.checked"
+                        :selectedValue="selectedValue"
                         @toggle="toggleHandler"
                         @check="checkOneInList(a, ...arguments)" />
                 </template>
                 <tr v-if="suppl_acts.length > 0">
-                    <th></th>
+                    <th class="table-heading"></th>
                     <th colspan="7" class="table-heading">Følgeydelser</th>
+                </tr>
+                <tr v-if="count_old_suppl_acts > 0">
+                    <td colspan="9" class="act-list-collapse-td">
+                        <button class="act-list-collapse-button" @click="show_old_suppl_acts = !show_old_suppl_acts">
+                            <span v-if="!show_old_suppl_acts">
+                                <span class="material-icons">expand_more</span>
+                                Vis {{ count_old_suppl_acts }} udgåede følgeydelser
+                                <span class="material-icons">expand_more</span>
+                            </span>
+                            <span v-else>
+                                <span class="material-icons">expand_less</span>
+                                Skjul {{ count_old_suppl_acts }} udgåede følgeydelser
+                                <span class="material-icons">expand_less</span>
+                            </span>
+                        </button>
+                    </td>
                 </tr>
                 <template v-for="chunk in suppl_acts">
                     <act-list-item 
@@ -57,20 +111,29 @@
                         :act="a" 
                         :key="a.id"
                         :checked="a.checked"
+                        :selectedValue="selectedValue"
                         @toggle="toggleHandler"
                         @check="checkOneInList(a, ...arguments)" />
                 </template>
                 <tr class="lastrow">
-                    <td colspan="5" style="padding-left: 0;">
+                    <td colspan="6" style="padding-left: 0;">
                         <button v-if="permissionCheck === true && this.user.profile !== 'edit'" @click="initPreApprove()" :disabled="approvable_acts.length < 1">✔ Godkend valgte</button>
                     </td>
                     <td class="right"><strong>I alt</strong></td>
                     <td class="nowrap right">
-                        <strong>{{ displayDigits(appropriation.total_granted_this_year) }} kr.</strong>
+                        <strong v-if="selectedValue <= '1'">{{ displayDigits(appropriation.total_granted_this_year) }} kr.</strong>
+                        <strong v-if="selectedValue === '2'">{{ displayDigits(appropriation.total_granted_full_year) }} kr.</strong>
+                        <strong v-if="selectedValue === '3'">{{ displayDigits(appropriation.total_cost_granted) }} kr.</strong>
                     </td>
                     <td class="nowrap expected right">
-                        <span v-if="appropriation.total_expected_this_year !== appropriation.total_granted_this_year">
+                        <span v-if="appropriation.total_expected_this_year !== appropriation.total_granted_this_year && selectedValue <= '1'">
                             {{ displayDigits(appropriation.total_expected_this_year) }} kr.
+                        </span>
+                        <span v-if="appropriation.total_expected_this_year !== appropriation.total_granted_this_year && selectedValue === '2'">
+                            {{ displayDigits(appropriation.total_expected_full_year) }} kr.
+                        </span>
+                        <span v-if="appropriation.total_expected_this_year !== appropriation.total_granted_this_year && selectedValue === '3'">
+                            {{  displayDigits(appropriation.total_cost_expected) }} kr.
                         </span>
                     </td>
                 </tr>
@@ -118,7 +181,12 @@
                 check_all_approvable: false,
                 approvable_acts: [],
                 diag_open: false,
-                diag_approval_warning: null
+                diag_approval_warning: null,
+                selectedValue: '1',
+                show_old_main_acts: false,
+                show_old_suppl_acts: false,
+                count_old_main_acts: 0,
+                count_old_suppl_acts: 0
             }
         },
         computed: {
@@ -141,8 +209,16 @@
                 this.update()
             },
             acts: function() {
-                this.chunks = []
                 this.splitActList(this.acts)
+            },
+            show_old_main_acts: function() {
+                this.splitActList(this.acts)
+            },
+            show_old_suppl_acts: function() {
+                this.splitActList(this.acts)
+            },
+            selectedValue: function() {
+                this.update()
             }
         },
         methods: {
@@ -182,6 +258,9 @@
                 }
                 return best_date
             },
+            getBestModified(arr) {
+                return arr[arr.length - 1].modified
+            },
             checkExpected(arr) {
                 return arr.find(function(a) {
                     return a.status === 'EXPECTED'
@@ -203,9 +282,21 @@
                 return costs
             },
             splitActList: function(act_list) {
+                this.chunks = []
+                this.main_acts = []
+                this.suppl_acts = []
+                this.count_old_main_acts = 0
+                this.count_old_suppl_acts = 0
 
                 // Group activities together by 'modifies'
                 for (let act of act_list) {
+                    if (act.is_old) {
+                        if (act.activity_type === 'MAIN_ACTIVITY') {
+                            this.count_old_main_acts++
+                        } else {
+                            this.count_old_suppl_acts++
+                        }
+                    }
                     act.checked = false
                     if (act.modifies === null) {
                         let chunk = [act]
@@ -233,6 +324,7 @@
                                 status: this.checkExpected(chunk),
                                 start_date: this.getBestDate(chunk,'start'),
                                 end_date: this.getBestDate(chunk,'end'),
+                                modified: this.getBestModified(chunk),
                                 activity_type: last_chunk.activity_type,
                                 approved: costs.approved,
                                 expected: costs.expected,
@@ -244,18 +336,34 @@
                     }
                 }
 
-                // Populate main and supplementary activities lists
-                this.main_acts = this.chunks.filter(function(c) {
-                    return c[0].activity_type === 'MAIN_ACTIVITY'
-                })
-                let unsorted_suppl_acts = this.chunks.filter(function(c) {
-                    return c[0].activity_type === 'SUPPL_ACTIVITY'
+                // Populate main activities lists
+                this.main_acts = this.chunks.filter(c => {
+                    if (c[0].activity_type === 'MAIN_ACTIVITY') {
+                        if (this.show_old_main_acts) {
+                            return c
+                        } else if (!this.show_old_main_acts && !c[0].is_old) {
+                            return c
+                        }   
+                    }
                 })
 
+                // Populate supplementary activities lists
+                let unsorted_suppl_acts = this.chunks.filter(c => {
+                    if (c[0].activity_type === 'SUPPL_ACTIVITY') {
+                        if (this.show_old_suppl_acts) {
+                            return c
+                        } else if (!this.show_old_suppl_acts && !c[0].is_old) {
+                            return c
+                        }
+                    }
+                })
+                this.suppl_acts = this.sortSupplementaryActs(unsorted_suppl_acts)
+            },
+            sortSupplementaryActs: function(acts) {
                 // Sort supplementary list by start date
-                unsorted_suppl_acts.sort(function(a,b) {
+                return acts.sort(function(a,b) {
                     const a_start_date = new Date(a[0].start_date).getTime(),
-                          b_start_date = new Date(b[0].start_date).getTime()
+                        b_start_date = new Date(b[0].start_date).getTime()
                     if (a_start_date > b_start_date) {
                         return 1
                     } else if (b_start_date > a_start_date) {
@@ -264,7 +372,6 @@
                         return 0
                     }
                 })
-                this.suppl_acts = unsorted_suppl_acts
             },
             toggleHandler: function(toggl_id) {     
                 for (let comp of this.$refs[toggl_id]) {
@@ -341,14 +448,41 @@
     }
 
     .activities-header {
+        width: 100%;
+        margin: 2rem 0;
         display: flex;
         flex-flow: row nowrap;
         justify-content: flex-start;
         align-items: center;
     }
 
+    .create-content {
+        width: 50%;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .buttons-content {
+        width: 50%;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-end;
+        align-items: center;
+    }
+
     .activities-create-btn {
         margin: 0 0 1rem;
+    }
+
+    .activities-checkbox-btn {
+        margin: 0;
+    }
+
+    .selected-btn {
+        margin: 0 .5rem;
+        border-color: var(--primary);
     }
 
     .activities .act-label {
@@ -367,7 +501,21 @@
     }
 
     .activities .table-heading {
-        padding-left: .75rem;
+        padding: .75rem .75rem .5rem;
+    }
+
+    .act-list-collapse-td {
+        padding: 0 !important;
+        text-align: center;
+        background-color: transparent;
+    }
+
+    .act-list-collapse-button {
+        padding: 0;
+        display: block;
+        margin: 0 auto;
+        width: 100%;
+        border: solid 1px var(--grey1);
     }
 
 </style>

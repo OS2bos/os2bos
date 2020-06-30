@@ -39,6 +39,8 @@ from core.tests.testing_utils import (
     create_user,
 )
 
+User = get_user_model()
+
 
 class TestRelatedPersonsViewSet(AuthenticatedTestCase):
     def test_fetch_from_serviceplatformen_no_cpr(self):
@@ -97,26 +99,31 @@ class TestRelatedPersonsViewSet(AuthenticatedTestCase):
         self.assertEqual(response.status_code, 200)
         expected_format = {
             "name": "Bo Jensen",
+            "from_serviceplatformen": True,
             "relations": [
                 {
                     "cpr_number": "0123456780",
                     "relation_type": "aegtefaelle",
                     "name": "Iben Jensen",
+                    "from_serviceplatformen": True,
                 },
                 {
                     "cpr_number": "2123456789",
                     "relation_type": "barn",
                     "name": "Ib Jensen",
+                    "from_serviceplatformen": True,
                 },
                 {
                     "cpr_number": "0000000000",
                     "relation_type": "mor",
                     "name": "Ingeborg Jensen",
+                    "from_serviceplatformen": True,
                 },
                 {
                     "cpr_number": "0000000000",
                     "relation_type": "far",
                     "name": "Gunnar Jensen",
+                    "from_serviceplatformen": True,
                 },
             ],
         }
@@ -190,10 +197,10 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         )
         # Change to different effort steps.
         orla = case.case_worker
-        leif = get_user_model().objects.create(username="Leif")
+        leif = User.objects.create(username="Leif")
         case.case_worker = leif
         case.save()
-        lone = get_user_model().objects.create(username="Lone")
+        lone = User.objects.create(username="Lone")
         case.case_worker = lone
         case.save()
 
@@ -1089,3 +1096,47 @@ class TestSectionViewSet(AuthenticatedTestCase, BasicTestMixin):
         self.client.login(username=self.username, password=self.password)
         response = self.client.get(url, data={"allowed_for_steps": 1})
         self.assertEqual(response.status_code, 200)
+
+
+class TestClassificationMixin(AuthenticatedTestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_get_queryset_active_allowed_as_grant_user(self):
+        section = create_section(active=True)
+        url = reverse("section-list")
+        # User has grant permissions.
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(url)
+        self.assertEqual(response.json()[0]["id"], section.id)
+
+    def test_get_queryset_inactive_disallowed_as_grant_user(self):
+        create_section(active=False)
+        url = reverse("section-list")
+        # User has grant permissions.
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(url)
+        self.assertEqual(response.json(), [])
+
+    def test_queryset_active_allowed_as_workflow_user(self):
+        self.user.profile = User.WORKFLOW_ENGINE
+        self.user.save()
+
+        section = create_section(active=True)
+        url = reverse("section-list")
+        # User has grant permissions.
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(url)
+        self.assertEqual(response.json()[0]["id"], section.id)
+
+    def test_queryset_inactive_allowed_as_workflow_user(self):
+        self.user.profile = User.WORKFLOW_ENGINE
+        self.user.save()
+
+        section = create_section(active=False)
+        url = reverse("section-list")
+        # User has grant permissions.
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(url)
+        self.assertEqual(response.json()[0]["id"], section.id)

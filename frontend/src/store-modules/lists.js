@@ -7,19 +7,25 @@
 
 
 import axios from '../components/http/Http.js'
+import { fetchData } from '../components/webworker/Worker.js'
 
 const state = {
     municipalities: null,
+    target_group: null,
     districts: null,
     sections: null,
     approval_levels: null,
     service_providers: null,
-    effort_steps: null
+    effort_steps: null,
+    efforts: null
 }
 
 const getters = {
     getMunis (state) {
         return state.municipalities ? state.municipalities : false
+    },
+    getTargetGroups (state) {
+        return state.target_group ? state.target_group : false
     },
     getDistricts (state) {
         return state.districts ? state.districts : false
@@ -35,23 +41,21 @@ const getters = {
     },
     getEffortSteps ( state ) {
         return state.effort_steps ? state.effort_steps : false
+    },
+    getEfforts ( state ) {
+        return state.efforts ? state.efforts : false
     }
 }
 
 const mutations = {
     setMunis (state, munis) {
-        state.municipalities = munis.sort(function(a,b) {
-            if (a.name > b.name) { return 1 } 
-            if (a.name < b.name) { return -1 }
-            return 0
-        })
+        state.municipalities = munis
+    },
+    setTarget (state, target) {
+        state.target_group = target
     },
     setDist (state, districts) {
-        state.districts = districts.sort(function(a,b) {
-            if (a.name > b.name) { return 1 } 
-            if (a.name < b.name) { return -1 }
-            return 0
-        })
+        state.districts = districts
     },
     setSections (state, sections) {
         state.sections = sections
@@ -60,14 +64,13 @@ const mutations = {
         state.approval_levels = approvals
     },
     setServiceProviders (state, sp_list) {
-        state.service_providers = sp_list.sort(function(a,b) {
-            if (a.name > b.name) { return 1 } 
-            if (a.name < b.name) { return -1 }
-            return 0
-        })
+        state.service_providers = sp_list
     },
     setEffortSteps (state, effort_steps) {
         state.effort_steps = effort_steps
+    },
+    setEfforts (state, efforts) {
+        state.efforts = efforts
     }
 }
 
@@ -76,6 +79,13 @@ const actions = {
         return axios.get('/municipalities/')
         .then(res => {
             commit('setMunis', res.data)
+        })
+        .catch(err => console.log(err))
+    },
+    fetchTargetGroups: function({commit}) {
+        return axios.get('/target_groups/')
+        .then(res => {
+            commit('setTarget', res.data)
         })
         .catch(err => console.log(err))
     },
@@ -114,23 +124,21 @@ const actions = {
         })
         .catch(err => console.log(err))
     },
-    fetchLists: function({dispatch}) {
-        return Promise.all([
-            dispatch('fetchTeams'),
-            dispatch('fetchMunis'),
-            dispatch('fetchDistricts'),
-            dispatch('fetchActivityDetails'),
-            dispatch('fetchSections'),
-            dispatch('fetchApprovals'),
-            dispatch('fetchEffortSteps'),
-            dispatch('fetchServiceProviders')
-        ])
-        .then(() => {
-            // Nothing yet
+    fetchEfforts: function({commit}) {
+        return axios.get('/efforts/')
+        .then(res => {
+            commit('setEfforts', res.data)
         })
-        .catch(err => {
-            console.log(err)
-        })   
+        .catch(err => console.log(err))
+    },
+    fetchLists: function({dispatch}) {
+        dispatch('fetchTeams')
+        dispatch('fetchTargetGroups')
+        dispatch('fetchDistricts')
+        dispatch('fetchApprovals')
+        dispatch('fetchEffortSteps')
+        dispatch('fetchEfforts')
+        fetchData()
     }
 }
 

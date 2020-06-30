@@ -1,6 +1,6 @@
 // Testing with Testcafe : https://devexpress.github.io/testcafe/documentation/getting-started/
 
-import { Selector } from 'testcafe'
+import { Selector, RequestLogger } from 'testcafe'
 import { login } from '../utils/logins.js'
 import { createActivity } from '../utils/crud.js'
 import { axe, axeOptions } from '../utils/axe.js'
@@ -37,6 +37,11 @@ const testdata = {
         id: 1,
         name: `xx.xx.xx-${ rand }-bevil${ rand }`,
         section: 'SEL-109 Botilbud, kriseramte kvinder'
+    },
+    appr2: {
+        id: 2,
+        name: `xx.xx.xx-${ rand }-bevil${ rand }`,
+        section: 'SEL-54-a Tilknytning af koordinator'
     },
     act1: {
         type: 1,
@@ -93,6 +98,14 @@ const testdata = {
         amount: '999.95',
         payee_id: '8937-2342-2342',
         payee_name: 'TESTiT A/S'
+    },
+    act7: {
+        type: 2,
+        start: str2mth,
+        note: 'Bemærk denne lille note',
+        amount: '750',
+        payee_id: '3337-4123-1221',
+        payee_name: 'TEST-DATA A/S'
     }
 }
 
@@ -111,9 +124,10 @@ test('Create Case', async t => {
     await t
         .typeText('#field-sbsys-id', testdata.case1.name)
         .typeText('#field-cpr', '000000-0000')
-        .click(Selector('label').withAttribute('for', 'inputRadio1'))
-        .click('#selectField4')
-        .click(Selector('#selectField4 option').withText('Baltorp'))
+        .click('#selectTargetGroup')
+        .click(Selector('#selectTargetGroup option').withText('Familieafdelingen'))
+        .click('#selectDistrict')
+        .click(Selector('#selectDistrict option').withText('Baltorp'))
         .click('#field-indsatstrappe')
         .click(Selector('#field-indsatstrappe option').withText('Trin 3: Hjemmebaserede indsatser'))
         .click('#field-skaleringstrappe')
@@ -209,29 +223,61 @@ test('Add adjustment activities', async t => {
     await axe(t, null, axeOptions)
 })
 
-test.skip('Create and delete activity', async t => {
+test('Create appropriation with one main activity option', async t => {
 
     await t
         .click(Selector('a').withText(testdata.case1.name))
-        .click(Selector('a').withText(testdata.appr1.name))
-    
-    await createActivity(t, testdata.act6)
-
-    await t
-        .click(Selector('a.header-link'))
-        .click(Selector('a').withText(testdata.case1.name))
-        .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector(`tr[title="${ testdata.act6.note }"] a`))
-        .expect(Selector('.label-DRAFT')).ok()
-        .click(Selector('.act-delete-btn'))
+        .click(Selector('.appropriation-create-btn'))
     
     await axe(t, null, axeOptions)
 
     await t
-        .click('button.modal-delete-btn')
-        .expect(Selector('.notification .msg').innerText).contains('Ydelse slettet')
-        //.expect(Selector(`tr[title="${ testdata.act6.note }"]`).exists).notOk()
-        //.expect(Selector('h1').withText('Bevillingsskrivelse').exists).ok()
+        .typeText('#field-sbsysid', testdata.appr2.name)
+        .click('#field-lawref')
+        .click(Selector('#field-lawref option').withText(testdata.appr2.section))
+        .click(Selector('input').withAttribute('type', 'submit'))
+        .click(Selector('a.header-link'))
+        .click(Selector('a').withText(testdata.case1.name))
+        .expect(Selector('.datagrid-action a').innerText).contains(testdata.appr2.name)
+    
+    await axe(t, null, axeOptions)
+})
+
+test('Create activities with one main activity option', async t => {
+
+    await t
+        .click(Selector('a').withText(testdata.case1.name))
+        .click(Selector('a').withText(testdata.appr2.name))
+    
+    await createActivity(t, testdata.act7)
+
+    await t
+        .click(Selector('a.header-link'))
+        .click(Selector('a').withText(testdata.case1.name))
+        .click(Selector('a').withText(testdata.appr2.name))
+
+    testdata.act1.act_detail = await Selector('.activities table tr.act-list-item a').nth(0).innerText
+
+    await t.expect(Selector('.activities table tr.act-list-item a').exists).ok()
+    
+    await axe(t, null, axeOptions)
+})
+
+test('Approve appropriation with one main activity option', async t => {
+
+    await t
+        .click(Selector('a').withText(testdata.case1.name))
+        .click(Selector('a').withText(testdata.appr2.name))
+        .click('#check-all')
+        .click(Selector('button').withText('Godkend valgte'))
+    
+    await axe(t, null, axeOptions)
+
+    await t
+        .click(Selector('label').withAttribute('for','radio-btn-3'))
+        .typeText('#field-text', 'Godkendt grundet svære omstændigheder')
+        .click('button[type="submit"]')
+        .expect(Selector('.mini-label .label-GRANTED').exists).ok()
     
     await axe(t, null, axeOptions)
 })

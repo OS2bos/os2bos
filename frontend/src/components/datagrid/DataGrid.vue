@@ -16,11 +16,11 @@
             </div>
 
             <form class="datagrid-filter" @submit.prevent>
-                <label for="filter-field" title="Find i liste"></label>
+                <label :for="`filter-field-${ componentId }`" title="Find i liste"></label>
                 <input type="search"
-                    name="query" 
+                    name="query"
                     v-model="filterKey"
-                    id="filter-field"
+                    :id="`filter-field-${ componentId }`"
                     placeholder="Find i liste ..."
                     :disabled="dataList.length < 1 ? true : false">
             </form>
@@ -86,7 +86,7 @@
     export default {
 
         props: {
-            dataList: Array,
+            dataList: [Array, Boolean],
             columns: Array,
             selectable: Boolean
         },
@@ -96,6 +96,7 @@
                 sortOrders[c.key] = 1
             })
             return {
+                componentId: null,
                 sortKey: '',
                 sortOrders: sortOrders,
                 selection: [],
@@ -165,6 +166,9 @@
                 }
                 this.$emit('selection', this.selection)
             }
+        },
+        mounted: function() {
+            this.componentId = this._uid
         }
     }
     

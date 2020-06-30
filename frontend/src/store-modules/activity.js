@@ -7,6 +7,7 @@
 
 
 import axios from '../components/http/Http.js'
+import { epoch2DateStr } from '../components/filters/Date.js'
 
 const state = {
     activity: null,
@@ -53,15 +54,27 @@ const mutations = {
 
 const actions = {
     fetchActivities: function({commit}, appropriation_id) {
+        function checkActivityAge(acts) {
+            let now = epoch2DateStr(new Date())
+            acts.map(function(act) {
+                if (act.start_date < now && act.end_date <= now) {
+                    act.is_old = true
+                } else {
+                    act.is_old = false
+                }
+            })
+        }
         if (appropriation_id) {
             return axios.get(`/activities/?appropriation=${ appropriation_id }`)
             .then(res => {
+                checkActivityAge(res.data)
                 commit('setActivityList', res.data)
             })
             .catch(err => console.log(err))
         } else {
             return axios.get(`/activities/`)
             .then(res => {
+                checkActivityAge(res.data)
                 commit('setActivityList', res.data)
             })
             .catch(err => console.log(err))

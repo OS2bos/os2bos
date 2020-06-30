@@ -21,7 +21,7 @@
             </div>
 
             <tr slot="datagrid-table-footer" class="summary">
-                <td colspan="5"></td>
+                <td colspan="7"></td>
                 <td class="right">Samlet</td>
                 <td class="right nowrap"><strong>{{ displayDigits(total_granted) }} kr</strong></td>
                 <td class="expected right nowrap">
@@ -82,8 +82,19 @@
                         class: 'nowrap'
                     },
                     {
-                        key: 'note',
-                        title: 'Supplerende info',
+                        key: 'details__name',
+                        title: 'Hovedydelse',
+                        display_func: this.displayMainAct,
+                        class: 'nowrap'
+                    },
+                    {
+                        key: 'num_draft_or_expected_activities',
+                        title: 'Foreløbige',
+                        class: 'nowrap'
+                    },
+                    {
+                        key: 'num_activities',
+                        title: 'I alt',
                         class: 'nowrap'
                     },
                     {
@@ -99,14 +110,14 @@
                         class: 'nowrap'
                     },
                     {
-                        key: 'total_granted_this_year',
-                        title: 'Udgift i år',
+                        key: 'total_granted_full_year',
+                        title: 'Udgift pr år',
                         display_func: this.displayGranted,
                         class: 'right nowrap'
                     },
                     {
-                        key: 'total_expected_this_year',
-                        title: 'Forventet udgift i år',
+                        key: 'total_expected_full_year',
+                        title: 'Forventet udgift pr år',
                         display_func: this.displayExpected,
                         class: 'expected right nowrap'
                     }
@@ -116,7 +127,7 @@
         computed: {
             total_granted: function() {
                 function getTotal(total, a) {
-                    return total + a.total_granted_this_year
+                    return total + a.total_granted_full_year
                 }
                 if (this.apprs) {
                     return this.apprs.reduce(getTotal, 0)
@@ -133,7 +144,7 @@
             },
             total_expected: function() {
                 function getTotal(total, a) {
-                    return total + a.total_expected_this_year
+                    return total + a.total_expected_full_year
                 }
                 if (this.apprs) {
                     return this.apprs.reduce(getTotal, 0)
@@ -165,28 +176,29 @@
                 return cost2da(num)
             },
             displayGranted: function(appr) {
-                return `${ cost2da(appr.total_granted_this_year) } kr.`
+                return `${ cost2da(appr.total_granted_full_year) } kr.`
             },
             displayExpected: function(appr) {
                 if (appr.total_expected_this_year > 0 && appr.total_expected_this_year !== appr.total_granted_this_year) {
-                    return `${ cost2da(appr.total_expected_this_year) } kr.`
+                    return `${ cost2da(appr.total_expected_full_year) } kr.`
                 }
             },
             displaySection: function(appr) {
                 return `§ ${ sectionId2name(appr.section) }`
             },
+            displayMainAct: function(appr) {
+                if (appr.main_activity) {
+                    return appr.main_activity.details__name
+                }
+            },
             statusLabel: function(appr) {
                 let label = 'DRAFT'
-                for (let act in appr.activities) {
-                    if (appr.activities[act].status === 'GRANTED') {
+                    if (appr.status === 'GRANTED') {
                         label = 'GRANTED'
                     }
-                }
-                for (let act in appr.activities) {
-                    if (appr.activities[act].status === 'EXPECTED') {
+                    if (appr.status === 'EXPECTED') {
                         label = 'EXPECTED'
                     }
-                }
                 return displayStatus(label)
             },
             displayID: function(d) {

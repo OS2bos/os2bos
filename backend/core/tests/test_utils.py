@@ -46,6 +46,7 @@ from core.tests.testing_utils import (
     create_appropriation,
     create_activity,
     create_section,
+    create_section_info,
     create_account,
     create_payment_schedule,
 )
@@ -419,6 +420,11 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
             main_activity=main_activity_details,
             supplementary_activity=None,
         )
+        create_section_info(
+            main_activity_details,
+            section,
+            main_activity_main_account_number="1234",
+        )
         activity = create_activity(
             case,
             appropriation,
@@ -516,7 +522,7 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
                 "case_worker": "Orla Frøsnapper",
                 "leader": "Orla Frøsnapper",
                 "team": "FCK",
-                "target_group": "FAMILY_DEPT",
+                "target_group": case.target_group,
                 "main_activity_id": (
                     appropriation.main_activity.details.activity_id
                 ),

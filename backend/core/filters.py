@@ -16,7 +16,16 @@ from django.utils.translation import gettext
 
 import rest_framework_filters as filters
 
-from core.models import Case, PaymentSchedule, Activity, Payment, Section
+from core.models import (
+    Case,
+    PaymentSchedule,
+    Activity,
+    Payment,
+    Section,
+    Appropriation,
+    ActivityDetails,
+    MAIN_ACTIVITY,
+)
 
 
 class CaseFilter(filters.FilterSet):
@@ -44,6 +53,52 @@ class CaseForPaymentFilter(filters.FilterSet):
     class Meta:
         model = Case
         fields = {"cpr_number": ["exact"]}
+
+
+class CaseForAppropriationFilter(filters.FilterSet):
+    """Filter cases on CPR number, team and case_worker."""
+
+    class Meta:
+        model = Case
+        fields = {
+            "cpr_number": ["exact"],
+            "team": ["exact"],
+            "case_worker": ["exact"],
+            "sbsys_id": ["exact"],
+        }
+
+
+class ActivityDetailsForAppropriationFilter(filters.FilterSet):
+    """Filter activity details on ID."""
+
+    class Meta:
+        model = ActivityDetails
+        fields = {"id": ["exact"]}
+
+
+class AppropriationFilter(filters.FilterSet):
+    """Filter appropriation."""
+
+    case = filters.RelatedFilter(
+        CaseForAppropriationFilter,
+        field_name="case",
+        label=Case._meta.verbose_name.title(),
+        queryset=Case.objects.all(),
+    )
+
+    main_activity__details = filters.RelatedFilter(
+        ActivityDetailsForAppropriationFilter,
+        field_name="activities__details",
+        label=gettext("Aktivitetsdetalje for hovedaktivitet"),
+        queryset=ActivityDetails.objects.filter(
+            activity__activity_type=MAIN_ACTIVITY,
+            activity__modifies__isnull=True,
+        ),
+    )
+
+    class Meta:
+        model = Appropriation
+        fields = "__all__"
 
 
 class PaymentScheduleFilter(filters.FilterSet):

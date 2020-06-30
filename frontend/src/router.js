@@ -16,13 +16,12 @@ const router = new Router({
     routes: [
         {
             path: '/',
-            name: 'my-cases',
-            component: () => import(/* webpackPreload: true */ './components/cases/MyCases.vue')
+            redirect: '/cases/'
         },
         {
             path: '/cases/',
             name: 'cases',
-            component: () => import(/* webpackChunkName: "cases" */ './components/cases/Cases.vue')
+            component: () => import(/* webpackPreload: true */ './components/cases/Cases.vue')
         },
         {
             path: '/case/:caseId',
@@ -71,6 +70,11 @@ const router = new Router({
             name: 'activity-create',
             component: () => import(/* webpackChunkName: "activityedit" */ './components/activities/ActivityEdit.vue'),
             props: { mode: 'create' }
+        },
+        {
+            path: '/appropriation-search/',
+            name: 'appropriation-search',
+            component: () => import(/* webpackChunkName: "appropriationsearch" */ './components/appropriations/AppropriationSearch.vue')
         },
         {
             path: '/payments/',

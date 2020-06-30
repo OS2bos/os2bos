@@ -16,9 +16,10 @@
             </router-link>
             <div class="row" style="width: auto; align-items: center;">
                 <nav id="globalnav" v-if="auth" class="globalnav" aria-label="Hovedmenu">
-                    <router-link to="/">Mine sager</router-link>
-                    <router-link to="/cases/">Find sager</router-link>
+                    <router-link to="/">Sager</router-link>
+                    <router-link to="/appropriation-search/">Bevillinger</router-link>
                     <router-link to="/payments/">Betalinger</router-link>
+                    <a v-if="user.profile === 'workflow_engine'" href="/api/admin/">Klassifikationer</a>
                     <a v-if="user.profile === 'admin'" href="/api/admin/">Administration</a>
                 </nav>
                 <user-actions />

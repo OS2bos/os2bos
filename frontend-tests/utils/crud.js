@@ -15,9 +15,13 @@ async function createActivity(t, act_data) {
 
     await axe(t, null, axeOptions)
 
+    if (act_data.type === 1) {
+        await t
+            .click('#fieldSelectAct')
+            .click(Selector('#fieldSelectAct option').nth(act_data.type))
+    }
+
     await t
-        .click('#fieldSelectAct')
-        .click(Selector('#fieldSelectAct option').nth(act_data.type))
         .typeText('#field-startdate', act_data.start)
 
     if (act_data.end) {
@@ -59,9 +63,10 @@ async function createCase(t, case_data) {
         .click(Selector('button').withText('+ Tilknyt hovedsag'))
         .typeText('#field-sbsys-id', case_data.name)
         .typeText('#field-cpr', '000000-0000')
-        .click(Selector('label').withAttribute('for', 'inputRadio1'))
-        .click('#selectField4')
-        .click(Selector('#selectField4 option').withText('Baltorp'))
+        .click('#selectTargetGroup')
+        .click(Selector('#selectTargetGroup option').withText('Familieafdelingen'))
+        .click('#selectDistrict')
+        .click(Selector('#selectDistrict option').withText('Baltorp'))
         .click('#field-indsatstrappe')
         .click(Selector('#field-indsatstrappe option').withText('Trin 3: Hjemmebaserede indsatser'))
         .click('#field-skaleringstrappe')

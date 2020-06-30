@@ -8,29 +8,19 @@
 
 <template>
     <section class="familyoverview">
-        <header class="familyoverview-header">
-            <h2>Familieoversigt</h2>
-            <button v-if="permissionCheck === true" class="familyoverview-create-btn" @click="$router.push(`/case/${ caseId }/familyoverview-create/`)">+ Opret familierelation</button>
-        </header>
-        <ul class="familyoverview-list list" v-if="fam && fam.length > 0">
-            <li v-for="f in fam" :key="f.id" class="familyoverview-list-item">
-                <dl>
-                    <dt class="relation">{{ f.relation_type }}</dt>
-                    <dd class="person">
-                        {{ f.cpr_number }},
-                        <router-link v-if="permissionCheck === true" :to="`/case/${ caseId }/familyoverview-edit/${ f.id }`">
-                            {{ f.name }}
-                        </router-link>
-                        <span v-if="permissionCheck === false">{{ f.name }}</span>
-                    </dd>
-                </dl>
-                <dl v-if="f.related_case" style="margin-left: 1rem;">
-                    <dt>Relateret sag</dt>
-                    <dd>{{ f.related_case }}</dd>
-                </dl>
-            </li>
-        </ul>
-        <p v-if="!fam || fam.length < 1">Der er endnu ingen relationer</p>
+            <data-grid
+                ref="data-grid"
+                :data-list="fam"
+                :columns="columns"
+                :selectable="false">
+
+                <div class="familyoverview-header" slot="datagrid-header">
+                    <h2>Relationer</h2>
+                   <button v-if="permissionCheck === true" class="familyoverview-create-btn" @click="$router.push(`/case/${ caseId }/familyoverview-create/`)">+ Opret relation</button>
+                </div>
+
+            </data-grid>
+            <p v-if="!fam || fam.length < 1">Der er endnu ingen relationer</p>
     </section>
 
 </template>
@@ -40,21 +30,54 @@
     import axios from '../http/Http.js'
     import FamilyOverviewEdit from './FamilyOverviewEdit.vue'
     import UserRights from '../mixins/UserRights.js'
+    import DataGrid from '../datagrid/DataGrid.vue'
+    import { json2jsDate } from '../filters/Date.js'
+    import { userId2name } from '../filters/Labels.js'
 
     export default {
 
         mixins: [UserRights],
 
          components: {
-             FamilyOverviewEdit
+             FamilyOverviewEdit,
+             DataGrid
         },
         props: [
             'caseId'
         ],
         data: function() {
             return {
-                fam: null,
-                show_edit: false
+                fam: [],
+                show_edit: false,
+                columns: [
+                     {
+                        key: 'name',
+                        title: 'Navn',
+                        display_func: this.displayName,
+                    },
+                    {
+                        title: 'Oprettet',
+                        display_func: this.displayCreated,
+                        class: 'nowrap'
+                    },
+                    {
+                        key: 'related_case',
+                        title: 'Relateret sag',
+                        display_func: this.displayRelatedCase,
+                        class: 'nowrap'
+                    },
+                    {
+                        key: 'modified',
+                        title: 'Dato',
+                        display_func: this.displayCreatedDate,
+                        class: 'nowrap'
+                    }
+                ]
+            }
+        },
+        computed: {
+            cas: function() {
+                return this.$store.getters.getCase
             }
         },
         watch: {
@@ -69,6 +92,31 @@
                     this.fam = res.data
                 })
                 .catch(err => console.log(err))
+            },
+            displayName: function(id) {
+                if (this.permissionCheck === true && id.from_serviceplatformen === false) {
+                    let to = `#/case/${ this.caseId }/familyoverview-edit/${ id.id }`
+                    return `<dl><dt>${ id.relation_type }</dt><dd><a href="${ to }">${ id.name }</a><br>${ id.cpr_number }</dd></dl>`
+                } else {
+                    return `<dl><dt>${ id.relation_type }</dt><dd>${ id.name }<br>${ id.cpr_number }</dd></dl>`
+                }
+            },
+            displayCreatedDate: function(id) {
+                return json2jsDate(id.modified)
+            },
+            displayRelatedCase: function(id) {
+                if (id.related_case) {
+                    return `${ id.related_case }`
+                } else {
+                    return `-`
+                }
+            },
+            displayCreated: function(id) {
+                if (id.from_serviceplatformen === true) {
+                    return `Automatisk`
+                } else {
+                    return `${ id.user_modified }`
+                }
             }
         },
         created: function() {
