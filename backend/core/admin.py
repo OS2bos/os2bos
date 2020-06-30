@@ -603,4 +603,4 @@ class SectionInfoAdmin(ClassificationAdmin):
 class AccountAliasAdmin(ClassificationAdmin):
     """ModelAdmin for SectionInfo."""
 
-    list_display = ("activity_details", "section_info", "alias")
+    list_display = ("section_info", "activity_details", "alias")
