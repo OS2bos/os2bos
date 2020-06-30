@@ -1,4 +1,5 @@
 Version 3.0.0, 2020-06-03
+-------------------------
 
 New in this version:
 
@@ -21,8 +22,9 @@ Features
 - Update dependencies to new versions.
 
 Version 2.6.1, 2020-04-03
+-------------------------
 
-Hotfix:
+Hotfix release
 
 Bug fixes
 ^^^^^^^^^
@@ -73,7 +75,7 @@ Features
 Version 2.4.2, 2020-02-24
 -------------------------
 
-Hotfix:
+Hotfix release
 
 Bug fixes
 ^^^^^^^^^
