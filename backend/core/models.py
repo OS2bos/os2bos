@@ -1834,8 +1834,8 @@ class Activity(AuditModelMixin, models.Model):
     def triggers_payment_email(self):
         """Decide if this activity triggers an email when saved.
 
-        If this activity is not granted or doesn't have a payment plan we don't
-        send an email.
+        If this activity is not granted, doesn't have a payment plan or
+        is a one time payment we don't send an email.
         """
         if not self.status == STATUS_GRANTED:
             return False
