@@ -47,9 +47,14 @@
             }
 
             section {
-                page-break-inside: avoid;
+                page-break-before: auto;
+                page-break-after: auto;
                 border-top: solid 1px #ccc;
                 padding: 10pt 0;
+            }
+
+            .section-supplementary {
+                page-break-before: always;
             }
 
             header {
@@ -71,6 +76,7 @@
             }
 
             h2 {
+                page-break-before: always;
                 font-size: 13pt;
                 margin: 20pt 0 10pt;
                 padding: 0;
@@ -398,7 +404,7 @@
             {% endfor %}
 
             {% for a in supplementary_activities %}
-                <section>
+                <section class="section-supplementary">
                     <table>
                         <thead>
                             <tr>
@@ -567,7 +573,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th class="align-right">Samlede omkostninger, indeværende år</th>
+                        <th class="align-right" style="border-top: solid 2pt #000; padding: 5pt 10pt;">Samlede omkostninger, indeværende år</th>
                     </tr>
                 </thead>
                 <tbody>
