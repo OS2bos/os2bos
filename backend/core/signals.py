@@ -124,11 +124,12 @@ def generate_payments_on_post_save(sender, instance, created, **kwargs):
 
         vat_factor = activity.vat_factor
 
-        if created and not instance.payments.exists():
+        if not instance.payments.exists():
+            # Generate payments once, sync or regenerate afterwards.
             instance.generate_payments(
                 activity.start_date, activity.end_date, vat_factor
             )
-        elif instance.payments.exists():
+        else:
             # If status is either STATUS_DRAFT or STATUS_EXPECTED we delete
             # and regenerate payments.
             if activity.status in [STATUS_DRAFT, STATUS_EXPECTED]:
