@@ -427,7 +427,13 @@
                     </dl>
                     {% endif %}
 
-                    <h3>{{ a.details.name }} <span class="muted">Følgeydelse</span></h3>
+                    {% if a.is_new is False %}
+                    <h3>{{ a.details.name }} <span class="muted">Følgeydelse</span>{{ a.is_new }}</h3>
+                    {% endif %}
+                    {% if a.is_new %}
+                    <h3><u>{{ a.details.name }}</u> <span class="muted">Følgeydelse</span>{{ a.is_new }}</h3>
+                    {% endif %}
+
                     {% if a.note %}
                         <dl>
                             <dt>Supplerende information</dt>
