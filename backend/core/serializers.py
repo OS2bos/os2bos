@@ -341,8 +341,9 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
                 )
         elif payment_cost_type == PaymentSchedule.PER_UNIT_PRICE:
             # Units need to be given.
-            if not data.get("payment_units", None):  #pragma: no cover
+            if not data.get("payment_units", None):
                 if not instance or instance.payment_units is None:
+                    # pragma: no cover
                     raise serializers.ValidationError(
                         _("Enheder skal angives ved pris pr. enhed")
                     )
