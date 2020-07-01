@@ -15,9 +15,11 @@ set -ex
 
 ./manage.py ensure_db_connection --wait 30
 
-# Run Migrate
-./manage.py migrate
-
+if [ "$SKIP_MIGRATIONS" != "yes" ];
+then
+  # Run Migrate
+  ./manage.py migrate
+fi
 # Initialize database if setting is True
 ./manage.py initialize_database
 
