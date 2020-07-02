@@ -493,3 +493,7 @@ SAML2_AUTH = {
 }
 
 SILENCED_SYSTEM_CHECKS = ["rest_framework.W001"]
+
+DO_ENABLE_PAST_EDITING = settings.getboolean(
+    "DO_ENABLE_PAST_EDITING", fallback=False
+)
