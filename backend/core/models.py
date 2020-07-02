@@ -829,6 +829,20 @@ class Payment(models.Model):
         verbose_name=_("betalingsplan"),
     )
 
+    history = HistoricalRecords(
+        excluded_fields=[
+            "date",
+            "recipient_type",
+            "recipient_id",
+            "recipient_name",
+            "payment_method",
+            "amount",
+            "note",
+            "saved_account_string",
+            "payment_schedule",
+        ]
+    )
+
     def save(self, *args, **kwargs):
         """Save this payment - validate payment method and completeness."""
         if not self.payment_schedule.is_payment_and_recipient_allowed(
