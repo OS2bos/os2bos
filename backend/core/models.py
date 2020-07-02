@@ -869,6 +869,13 @@ class Payment(models.Model):
                     "hvis dens aktivitet er bevilget"
                 )
             )
+
+        # Don't save historical info unless the paid_* fields are in use.
+        if self.paid_amount is None or self.paid_date is None:
+            self.skip_history_when_saving = True
+        else:
+            self.skip_history_when_saving = False
+
         super().save(*args, **kwargs)
 
     @staticmethod
