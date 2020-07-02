@@ -3,7 +3,7 @@ portion==2.0.2
 psycopg2-binary==2.8.5
 gunicorn==20.0.4
 djangorestframework==3.11.0
-django-extensions==3.0.1
+django-extensions==3.0.2
 django-simple-history==2.11.0
 django-filter==2.3.0
 # ^ This is a requirement for "djangorestframework-filters"
