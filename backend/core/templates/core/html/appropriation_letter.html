@@ -171,6 +171,12 @@
                 padding-left: 0;
             }
 
+            .icon {
+                font-size: 24pt;
+                font-weight: bold;
+                color: #000;
+            }
+
         </style>
     </head>
     <body>
@@ -243,6 +249,11 @@
                         <tr>
                             <th></th>
                             <th class="align-right">Godkendelsesdato</th>
+                            {% if a.is_new %}
+                            <th style="padding: 0; text-align: right;">
+                                <span class="icon">&#10040;</span>
+                            </th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>
@@ -260,7 +271,16 @@
                 </dl>
                 {% endif %}
 
-                <h3>{{ a.details.name }} <span class="muted">Hovedydelse</span></h3>
+                <h3>
+                    {% if a.is_new is False %}
+                        {{ a.details.name }}
+                    {% endif %}
+                    {% if a.is_new %}
+                        <u>{{ a.details.name }}</u>
+                    {% endif %}
+                    <span class="muted">Hovedydelse</span>
+                </h3>
+
                 {% if a.note %}
                     <dl>
                         <dt>Supplerende information</dt>
@@ -409,7 +429,14 @@
                         <thead>
                             <tr>
                                 <th></th>
-                                <th class="align-right">Godkendelsesdato</th>
+                                <th class="align-right">
+                                    Godkendelsesdato
+                                </th>
+                                {% if a.is_new %}
+                                <th style="padding: 0; text-align: right;">
+                                    <span class="icon">&#10040;</span>
+                                </th>
+                                {% endif %}
                             </tr>
                         </thead>
                         <tbody>
@@ -427,12 +454,15 @@
                     </dl>
                     {% endif %}
 
-                    {% if a.is_new is False %}
-                    <h3>{{ a.details.name }} <span class="muted">Følgeydelse</span>{{ a.is_new }}</h3>
-                    {% endif %}
-                    {% if a.is_new %}
-                    <h3><u>{{ a.details.name }}</u> <span class="muted">Følgeydelse</span>{{ a.is_new }}</h3>
-                    {% endif %}
+                    <h3>
+                        {% if a.is_new is False %}
+                            {{ a.details.name }} 
+                        {% endif %}
+                        {% if a.is_new %}
+                            <u>{{ a.details.name }}</u>
+                        {% endif %}
+                        <span class="muted">Følgeydelse</span>
+                    </h3>
 
                     {% if a.note %}
                         <dl>
