@@ -436,8 +436,12 @@ export default {
     }
 
     .act-edit-actions {
-        padding: 0;
+        padding: 0 2rem 2rem;
         margin: 0;
+    }
+
+    .act-edit-actions hr {
+        margin: 0 0 2rem;
     }
 
     .activity .payment_schedule {
