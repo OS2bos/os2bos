@@ -41,7 +41,12 @@
                         </div>
                         <div>        
                             <label for="pay-cost-exec-date" class="required">Ny pris gælder fra</label>
-                            <input type="date" id="pay-cost-exec-date" required v-model="new_start_date">
+                            <input 
+                                type="date" 
+                                id="pay-cost-exec-date" 
+                                required 
+                                v-model="new_start_date"
+                                :min="today">
                             <error :err-key="'start_date'" />
                         </div>
                     </fieldset>
@@ -60,7 +65,7 @@
 
 <script>
 import ModalDialog from '../dialog/Dialog.vue'
-import { json2jsDate } from '../filters/Date.js'
+import { json2jsDate, epoch2DateStr } from '../filters/Date.js'
 import Error from '../forms/Error.vue'
 import axios from '../http/Http.js'
 
@@ -73,7 +78,8 @@ export default {
         return {
             modal_open: false,
             new_price: null,
-            new_start_date: null
+            new_start_date: epoch2DateStr(new Date()),
+            today: epoch2DateStr(new Date())
         }
     },
     computed: {
@@ -106,7 +112,7 @@ export default {
         },
         resetValues: function() {
             this.new_price = null
-            this.new_start_date = null
+            this.new_start_date = epoch2DateStr(new Date())
         }
     }
 }
