@@ -109,6 +109,9 @@ def set_needs_recalculation_on_save_rate(sender, instance, created, **kwargs):
 def save_payment_schedule_on_save_price(sender, instance, created, **kwargs):
     """Save payment schedule too when saving price."""
     if instance.payment_schedule:
+        generate_payments_on_post_save(
+            PaymentSchedule, instance.payment_schedule, created, **kwargs
+        )
         instance.payment_schedule.save()
 
 
