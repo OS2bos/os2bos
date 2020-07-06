@@ -9,21 +9,9 @@
 
     <dl v-if="model">
         <dt>Enhedspris x antal</dt>
-        <dd v-if="model.current_amount" class="perunitdisplay">
-            {{ displayDigits(model.current_amount) }} kr x {{ displayDigits(units) }}<br>
-            ({{ displayDigits((model.current_amount * units)) }} kr)
-        </dd>
-        <dd v-else>
-            {{ model.amount ? displayDigits(model.amount) : '-' }} kr x {{ displayDigits(units) }}<br>
-            ({{ model.amount ? displayDigits((model.amount * units)) : '-' }} kr)
-        </dd>
+        <dd v-html="displayPriceRate(model, units)"></dd>
         <dt>Enhedspris gælder</dt>
-        <dd v-if="model.start_date">
-            Fra {{ displayDate(model.start_date) }}
-        </dd>
-        <dd v-else>
-            {{ displayCurrentDates(model) }}
-        </dd>
+        <dd>{{ displayPriceDate(model) }}</dd>
     </dl>
 
 </template>
@@ -32,7 +20,7 @@
 import mixin from '../../mixins/PaymentPlanEditMixin.js'
 import Error from '../../forms/Error.vue'
 import { cost2da } from '../../filters/Numbers.js'
-import { json2jsDate } from '../../filters/Date.js'
+import { json2jsDate, epoch2DateStr } from '../../filters/Date.js'
 import PerUnitHistory from '../PaymentPerUnitHistory.vue'
 import PaymentUnits from './PaymentUnits.vue'
 
@@ -67,18 +55,25 @@ export default {
         displayDate: function(date) {
             return json2jsDate(date)
         },
-        displayCurrentDates: function(price_per_unit) {
+        getBestRate: function(price_per_unit) {
             if (price_per_unit.rates_per_date) {
-                const current = price_per_unit.rates_per_date.find(function(rate) {
-                    return parseFloat(rate.rate) === parseFloat(price_per_unit.current_amount)
+                return price_per_unit.rates_per_date.find(function(rate) {
+                        return rate.start_date >= epoch2DateStr(new Date())
                 })
-                if (current) {
-                    return `${ json2jsDate(current.start_date) } - ${ json2jsDate(current.end_date) }`
-                } else {
-                    return `${ json2jsDate(price_per_unit.rates_per_date[0].start_date) } - ${ json2jsDate(price_per_unit.rates_per_date[0].end_date) }`
+            } else {
+                return {
+                    rate: price_per_unit.amount,
+                    start_date: price_per_unit.start_date
                 }
-                
-            }   
+            }
+        },
+        displayPriceRate: function(price_per_unit, units) {
+            const current = this.getBestRate(price_per_unit)
+            return `${ this.displayDigits(current.rate) } kr x ${ this.displayDigits(units) }<br> ( ${ this.displayDigits(units * current.rate) } kr)`
+        },
+        displayPriceDate: function(price_per_unit) {
+            const current = this.getBestRate(price_per_unit)
+            return `${ json2jsDate(current.start_date) } - ${ json2jsDate(current.end_date) }`
         }
     },
     created: function() {
