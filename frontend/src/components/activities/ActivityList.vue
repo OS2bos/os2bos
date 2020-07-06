@@ -21,7 +21,7 @@
         </header>
 
         <fieldset class="act-list-actions" v-if="!no_acts">
-            <div>
+            <div style="margin-left: 1.25rem;">
                 <input 
                     v-if="permissionCheck === true && this.user.profile !== 'edit'" 
                     type="checkbox" 
