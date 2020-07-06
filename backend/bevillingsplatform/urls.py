@@ -118,7 +118,7 @@ urlpatterns = [
         ),
         name="swagger-ui",
     ),
-    path('api/healtcheck/', status)
+    path('api/healtcheck/', status),
 ]
 
 # Static files are served by WhiteNoise in both development and production.
