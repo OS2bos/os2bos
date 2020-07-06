@@ -171,10 +171,17 @@
                 padding-left: 0;
             }
 
+            .flex-icon {
+                display: flex;
+                flex-flow: row-reverse;
+                align-items: center;
+            }
+
             .icon {
-                font-size: 24pt;
+                font-size: 18pt;
                 font-weight: bold;
                 color: #000;
+                padding-left: 2pt;
             }
 
         </style>
@@ -248,18 +255,22 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th class="align-right">Godkendelsesdato</th>
-                            {% if a.is_new %}
-                            <th style="padding: 0; text-align: right;">
-                                <span class="icon">&#10040;</span>
+                            <th class="align-right">
+                                <span class="flex-icon">Godkendelsesdato</span>
                             </th>
-                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td><strong class="approval-stamp" style="vertical-align: middle;">Godkendt</strong> ved {{ a.approval_level.name }}</td>
-                            <td class="align-right" style="vertical-align: middle;">{{ a.appropriation_date }}</td>
+                            <td class="align-right" style="vertical-align: middle;">
+                                <span class="flex-icon">
+                                    {% if a.is_new %}
+                                    <span class="icon">&#10040;</span>
+                                    {% endif %}
+                                    <span>{{ a.appropriation_date }}</span>
+                                </span>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -272,11 +283,10 @@
                 {% endif %}
 
                 <h3>
-                    {% if a.is_new is False %}
-                        {{ a.details.name }}
-                    {% endif %}
                     {% if a.is_new %}
-                        <u>{{ a.details.name }}</u>
+                        <em>Opdateret:</em> {{ a.details.name }}
+                    {% else %}
+                        {{ a.details.name }}
                     {% endif %}
                     <span class="muted">Hovedydelse</span>
                 </h3>
@@ -430,19 +440,21 @@
                             <tr>
                                 <th></th>
                                 <th class="align-right">
-                                    Godkendelsesdato
+                                    <span class="flex-icon">Godkendelsesdato</span>
                                 </th>
-                                {% if a.is_new %}
-                                <th style="padding: 0; text-align: right;">
-                                    <span class="icon">&#10040;</span>
-                                </th>
-                                {% endif %}
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td><strong class="approval-stamp" style="vertical-align: middle;">Godkendt</strong> ved {{ a.approval_level.name }}</td>
-                                <td class="align-right" style="vertical-align: middle;">{{ a.appropriation_date }}</td>
+                                <td class="align-right">
+                                    <span class="flex-icon">
+                                        {% if a.is_new %}
+                                        <span class="icon">&#10040;</span>
+                                        {% endif %}
+                                        <span>{{ a.appropriation_date }}</span>
+                                    </span>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -455,11 +467,10 @@
                     {% endif %}
 
                     <h3>
-                        {% if a.is_new is False %}
-                            {{ a.details.name }} 
-                        {% endif %}
                         {% if a.is_new %}
-                            <u>{{ a.details.name }}</u>
+                            <em>Opdateret:</em> {{ a.details.name }}
+                        {% else %}
+                            {{ a.details.name }}
                         {% endif %}
                         <span class="muted">Følgeydelse</span>
                     </h3>
