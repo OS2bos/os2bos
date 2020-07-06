@@ -168,9 +168,12 @@ export default {
                         delete new_act.payment_plan[prop]
                     }
                 }
+            } else {
+                // We are POSTing an EXPECTED activity
+                delete new_act.payment_plan.id // Don't try to overwrite previous payment_plan
             }
 
-            const sanitized_act = sanitizeActivity(new_act)
+            const sanitized_act = sanitizeActivity(new_act, 'post')
 
             axios.post('/activities/', sanitized_act)
             .then(res => {
