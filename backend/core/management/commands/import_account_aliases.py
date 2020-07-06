@@ -6,14 +6,6 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-"""
-This script imports ActivityDetails from the "Klassifikationer" spreadsheet.
-
-Currently this requires the sheet "Aktiviteter" be saved
-as "aktiviteter.csv" in the current directory.
-
-NOTE: This requires the Section models to have been populated first.
-"""
 import os
 import csv
 
