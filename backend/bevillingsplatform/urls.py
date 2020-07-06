@@ -31,7 +31,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 from django.views.static import serve
 from django.views.generic import TemplateView
-
+from watchman.views import status
 import django_saml2_auth
 
 from rest_framework import routers
@@ -118,6 +118,7 @@ urlpatterns = [
         ),
         name="swagger-ui",
     ),
+    path('api/healtcheck/', status)
 ]
 
 # Static files are served by WhiteNoise in both development and production.
