@@ -110,6 +110,7 @@ INSTALLED_APPS = [
     "core.apps.CoreConfig",
     "django_saml2_auth",
     "mailer",
+    "watchman",
 ]
 
 MIDDLEWARE = [
@@ -493,3 +494,9 @@ SAML2_AUTH = {
 }
 
 SILENCED_SYSTEM_CHECKS = ["rest_framework.W001"]
+
+WATCHMAN_CHECKS = (
+    'watchman.checks.caches',
+    'watchman.checks.databases',
+    # disable storage check since fileupload is not used.
+)
