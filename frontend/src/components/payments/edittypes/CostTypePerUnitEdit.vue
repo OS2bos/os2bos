@@ -9,22 +9,26 @@
 
     <div>
 
-        <fieldset v-if="editable">
+        <template v-if="editable">
 
-            <label class="required" for="pay-cost-pr-unit">Enhedspris</label>
-            <input type="number" id="pay-cost-pr-unit" v-model="amount" required step="0.01"> kr
+            <fieldset>
+                <label class="required" for="pay-cost-pr-unit">Enhedspris</label>
+                <input type="number" id="pay-cost-pr-unit" v-model="amount" required step="0.01"> kr
+            </fieldset>
 
-            <label for="pay-cost-exec-date" class="required">Pris gælder fra dato</label>
-            <input 
-                type="date" 
-                id="pay-cost-exec-date" 
-                v-model="start_date" 
-                :min="today"
-                required>
-            
-            <error :err-key="property" />
+            <fieldset>
+                <label for="pay-cost-exec-date" class="required">Pris gælder fra dato</label>
+                <input 
+                    type="date" 
+                    id="pay-cost-exec-date" 
+                    v-model="start_date" 
+                    :min="today"
+                    required>
+                
+                <error :err-key="property" />
+            </fieldset>
 
-        </fieldset>
+        </template>
 
     </div>
 
