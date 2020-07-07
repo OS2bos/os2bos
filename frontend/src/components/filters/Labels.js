@@ -364,6 +364,25 @@ function rateId2details(id) {
     }
 }
 
+/**
+ * Convert rate id to human readable name
+ * @param {number} id activity ID
+ * @returns {string} activity description
+ */
+function rateId2description(id) {
+    const rates = store.getters.getRates
+    if (rates && id) {
+        let rate = rates.find(function(element) {
+            return element.id === parseInt(id);
+        })
+        if (rate.description) {
+            return rate.description
+        }
+    } else {
+        return '-'
+    }
+}
+
 export {
     municipalityId2name,
     targetGroupId2name,
@@ -383,5 +402,6 @@ export {
     displayCostType,
     displayPayReceiverType,
     displayPayMethod,
-    rateId2details
+    rateId2details,
+    rateId2description
 }
