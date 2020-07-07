@@ -1565,12 +1565,16 @@ class AccountAlias(models.Model):
 
     # main activity section_info.
     section_info = models.ForeignKey(
-        SectionInfo, verbose_name=_("paragraf-info"), on_delete=models.CASCADE
+        SectionInfo,
+        verbose_name=_("paragraf-info"),
+        related_name="account_aliases",
+        on_delete=models.CASCADE,
     )
     # supplementary activity.
     activity_details = models.ForeignKey(
         ActivityDetails,
         verbose_name=_("aktivitetsdetalje"),
+        related_name="account_aliases",
         on_delete=models.CASCADE,
     )
 

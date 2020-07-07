@@ -16,8 +16,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('alias', models.CharField(blank=True, max_length=128, verbose_name='kontoalias')),
-                ('activity_details', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.ActivityDetails', verbose_name='aktivitetsdetalje')),
-                ('section_info', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.SectionInfo', verbose_name='paragraf-info')),
+                ('activity_details', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.ActivityDetails', verbose_name='aktivitetsdetalje', related_name='account_aliases')),
+                ('section_info', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.SectionInfo', verbose_name='paragraf-info', related_name='account_aliases')),
             ],
             options={
                 'verbose_name': 'kontoalias',
