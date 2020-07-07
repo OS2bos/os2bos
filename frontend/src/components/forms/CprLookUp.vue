@@ -9,26 +9,30 @@
 
     <div class="cpr-lookup">
 
-        <label class="required" for="field-cpr">CPR-nr</label>
-        <input 
-            id="field-cpr" 
-            type="text" 
-            v-model="instance_cpr" 
-            @input="lookupCPR(instance_cpr)"
-            maxlength="11" minlength="10"
-            pattern="[0-9-]{10,11}"
-            title="Det indtastede skal være et gyldigt personnummer"
-            required>
-        <error err-key="cpr_number" />
+        <fieldset>
+            <label class="required" for="field-cpr">CPR-nr</label>
+            <input 
+                id="field-cpr" 
+                type="text" 
+                v-model="instance_cpr" 
+                @input="lookupCPR(instance_cpr)"
+                maxlength="11" minlength="10"
+                pattern="[0-9-]{10,11}"
+                title="Det indtastede skal være et gyldigt personnummer"
+                required>
+            <error err-key="cpr_number" />
+        </fieldset>
         
-        <label class="required" for="field-name">Navn</label>
-        <input 
-            id="field-name"
-            type="text"
-            v-model="instance_name"
-            @input="$emit('update:name', instance_name)"
-            required>
-        <error err-key="name" />
+        <fieldset>
+            <label class="required" for="field-name">Navn</label>
+            <input 
+                id="field-name"
+                type="text"
+                v-model="instance_name"
+                @input="$emit('update:name', instance_name)"
+                required>
+            <error err-key="name" />
+        </fieldset>
         
     </div>
 
