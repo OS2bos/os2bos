@@ -19,6 +19,7 @@ from core.models import (
     ActivityDetails,
     ServiceProvider,
     Section,
+    AccountAlias,
 )
 from core.tests.testing_utils import (
     BasicTestMixin,
@@ -645,6 +646,42 @@ class TestImportSections(TestCase):
 
         open_mock.assert_called_with("/tmp/test")
         self.assertEqual(Section.objects.count(), 1)
+
+
+class TestImportAccountAliases(TestCase):
+    def test_import_account_aliases(self):
+        # We need to import sections and activity details initially.
+        call_command("import_sections")
+        call_command("import_activity_details")
+
+        self.assertEqual(AccountAlias.objects.count(), 0)
+
+        call_command("import_account_aliases")
+
+        self.assertEqual(AccountAlias.objects.count(), 77)
+
+    def test_import_account_aliases_with_path(self):
+        # We need to import sections and activity details initially.
+        call_command("import_sections")
+        call_command("import_activity_details")
+
+        self.assertEqual(AccountAlias.objects.count(), 0)
+
+        # CSV data with headers and a single account alias entry.
+        csv_data = (
+            "Finanskontoalias,Type,Angivelse af finanskontoalias,Ændret af,"
+            "Brugergruppe/bruger\n"
+            "BOS0000002,Delt,01005-528211002-015027-529CPR---,jun,"
+        )
+        open_mock = mock.mock_open(read_data=csv_data)
+
+        with mock.patch(
+            "core.management.commands.import_account_aliases.open", open_mock
+        ):
+            call_command("import_account_aliases", "--path=/tmp/test")
+
+        open_mock.assert_called_with("/tmp/test")
+        self.assertEqual(AccountAlias.objects.count(), 1)
 
 
 class TestRecalculateOnChangedRate(TestCase, BasicTestMixin):

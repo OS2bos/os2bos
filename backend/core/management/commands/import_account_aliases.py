@@ -46,9 +46,6 @@ class Command(BaseCommand):
         with open(path) as csvfile:
             reader = csv.reader(csvfile)
             rows = [row for row in reader]
-            # dict with (activity_id, set of main activity ids) pairs.
-            # containing which supplementary activities can have which
-            # main activities.
 
             for row in rows[1:]:
                 account_alias = row[0]
