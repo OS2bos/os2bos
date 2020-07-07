@@ -34,7 +34,7 @@
                 {{ displayRateDescription(model) }}
             </dd>
 
-            <dt>Takst</dt>
+            <dt>Takst x antal</dt>
             <dd>
                 {{ displayCost(displayRateAmount(model)) }} kr x {{ units }}<br>
                 ({{ displayCost( displayRateAmount(model) * units ) }} kr)
