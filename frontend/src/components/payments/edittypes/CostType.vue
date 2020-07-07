@@ -11,7 +11,7 @@
         <legend class="required">Vælg afregningsenhed</legend>
         
         <input type="radio" v-model="model" id="pay-cost-type-rate" required value="GLOBAL_RATE">
-        <label for="pay-cost-type-rate">Fast takst</label>
+        <label for="pay-cost-type-rate">Takst</label>
 
         <template v-if="payment_plan.payment_type !== 'ONE_TIME_PAYMENT'">
             <input type="radio" v-model="model" id="pay-cost-type-per-unit" required value="PER_UNIT">
