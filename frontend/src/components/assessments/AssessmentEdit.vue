@@ -10,10 +10,11 @@
 
     <div class="assessment">
     
-        <h2 v-if="!create_mode">Opdatér vurdering</h2>
+        <h2 v-if="!create_mode && requiredScalingStep === true || requiredEffortStep === true">Opdatér vurdering</h2>
 
         <fieldset>
-            <legend>Vurdering</legend>
+            <legend>Vurdering:</legend>
+            <p v-if="requiredScalingStep === false && requiredEffortStep === false">Den valgte målgruppe giver ikke mulighed for at vælge vurdering.</p>
 
             <template v-if="requiredEffortStep === true">
                 <label class="required" for="field-indsatstrappe">Indsatstrappen</label>
@@ -44,8 +45,10 @@
                 <error err-key="scaling_step" />
             </template>
         
-            <label for="textArea">Supplerende information til vurdering</label>
-            <textarea maxlength="100" id="textArea" v-model="cas.assessment_comment" @change="updateNote()"></textarea>
+            <template v-if="requiredScalingStep === true || requiredEffortStep === true">
+                <label for="textArea">Supplerende information til vurdering</label>
+                <textarea maxlength="100" id="textArea" v-model="cas.assessment_comment" @change="updateNote()"></textarea>
+            </template>
         </fieldset>
 
     </div>

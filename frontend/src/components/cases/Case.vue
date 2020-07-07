@@ -30,12 +30,12 @@
                         {{ cas.cpr_number }}, {{ cas.name }}
                     </dd>
 
-                    <template v-if="cas.effort_step">
+                    <template v-if="cas.effort_step && requiredEffortStep === true">
                         <dt>Indsatstrappen</dt>
                         <dd v-html="displayEffortName(cas.effort_step)"></dd>
                     </template>
                 
-                    <template v-if="cas.scaling_step">
+                    <template v-if="cas.scaling_step && requiredScalingStep === true">
                         <dt>Skaleringstrappe</dt>
                         <dd>
                             {{ cas.scaling_step }}<br>
@@ -142,6 +142,25 @@
             },
             user: function() {
                 return this.$store.getters.getUser
+            },
+            targetGroups: function() {
+                return this.$store.getters.getTargetGroups
+            },
+            requiredEffortStep: function() {
+                if (this.cas.target_group) {
+                    let target = this.targetGroups.filter(tar => tar.id === this.cas.target_group)
+                    return target[0].required_fields_for_case.filter(tar => tar === 'effort_step').length === 1
+                } else {
+                    return false
+                }
+            },
+            requiredScalingStep: function() {
+                if (this.cas.target_group) {
+                    let target = this.targetGroups.filter(tar => tar.id === this.cas.target_group)
+                    return target[0].required_fields_for_case.filter(tar => tar === 'scaling_step').length === 1
+                } else {
+                    return false
+                }
             }
         },
         watch: {
