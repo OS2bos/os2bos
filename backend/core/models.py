@@ -756,6 +756,18 @@ class PaymentSchedule(models.Model):
 
         return f"{department}-{account_number}-{kind}"
 
+    @property
+    def account_alias(self):
+        """Calculate account alias from activity."""
+        if (
+            not hasattr(self, "activity")
+            or not self.activity
+            or not self.activity.account_alias
+        ):
+            return ""
+        else:
+            return self.activity.account_alias
+
     def __str__(self):
         recipient_type_str = self.get_recipient_type_display()
         payment_frequency_str = self.get_payment_frequency_display()
@@ -821,6 +833,9 @@ class Payment(models.Model):
 
     saved_account_string = models.CharField(
         max_length=128, verbose_name=_("gemt kontostreng"), blank=True
+    )
+    saved_account_alias = models.CharField(
+        max_length=128, verbose_name=_("gemt kontoalias"), blank=True
     )
     payment_schedule = models.ForeignKey(
         PaymentSchedule,
@@ -911,6 +926,14 @@ class Payment(models.Model):
             return self.saved_account_string
 
         return self.payment_schedule.account_string
+
+    @property
+    def account_alias(self):
+        """Return saved account alias if any, else calculate from schedule."""
+        if self.saved_account_alias:
+            return self.saved_account_alias
+
+        return self.payment_schedule.account_alias
 
     def __str__(self):
         recipient_type_str = self.get_recipient_type_display()
@@ -1570,7 +1593,7 @@ class AccountAlias(models.Model):
         related_name="account_aliases",
         on_delete=models.CASCADE,
     )
-    # supplementary activity.
+
     activity_details = models.ForeignKey(
         ActivityDetails,
         verbose_name=_("aktivitetsdetalje"),
@@ -1792,6 +1815,35 @@ class Activity(AuditModelMixin, models.Model):
                 section_info.get_supplementary_activity_main_account_number()
             )
         return f"{main_account_number}-{self.details.activity_id}"
+
+    @property
+    def account_alias(self):
+        """Calculate the account_alias to use with this activity."""
+        if self.activity_type == MAIN_ACTIVITY:
+            section_info = SectionInfo.objects.filter(
+                activity_details=self.details,
+                section=self.appropriation.section,
+            ).first()
+            if not section_info:
+                return None
+        else:
+            main_activity = self.appropriation.main_activity
+            if not main_activity:
+                return None
+            section_info = SectionInfo.objects.filter(
+                activity_details=main_activity.details,
+                section=self.appropriation.section,
+            ).first()
+            if not section_info:
+                return None
+
+        account_alias = AccountAlias.objects.filter(
+            section_info=section_info, activity_details=self.details
+        ).first()
+        if not account_alias:
+            return None
+
+        return account_alias.alias
 
     @property
     def monthly_payment_plan(self):

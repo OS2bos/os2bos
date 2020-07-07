@@ -28,4 +28,9 @@ class Migration(migrations.Migration):
             model_name='accountalias',
             constraint=models.UniqueConstraint(fields=('activity_details', 'section_info'), name='unique_section_info_activity_details'),
         ),
+        migrations.AddField(
+            model_name='payment',
+            name='saved_account_alias',
+            field=models.CharField(blank=True, max_length=128, verbose_name='gemt kontoalias'),
+        ),
     ]
