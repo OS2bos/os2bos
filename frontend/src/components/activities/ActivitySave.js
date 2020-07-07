@@ -11,10 +11,6 @@ function sanitizeActivity(activity) {
             new_act.payment_plan.payment_amount = null // per_unit_price.amount is used instead
             new_act.payment_plan.payment_rate = null // rate does not apply
             delete new_act.payment_plan.price_per_unit.rates_per_date // API endpoint won't accept this in PATCH request
-            if (new_act.payment_plan.price_per_unit.amount === null || new_act.payment_plan.price_per_unit.amount === undefined) {
-                // We must send amount with POST or PATCH request. If amount is not defined, use current_amount
-                new_act.payment_plan.price_per_unit.amount = new_act.payment_plan.price_per_unit.current_amount
-            }
         break
         case 'GLOBAL_RATE':
             new_act.payment_plan.payment_amount = null // amount does not apply

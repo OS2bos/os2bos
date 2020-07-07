@@ -27,12 +27,12 @@
 
         </fieldset>
 
-        <dl>
+        <dl style="margin-bottom: 1rem;">
             <dt>Takst x antal</dt>
             <dd>
                 {{ displayRateName(model) }},<br>
                 {{ displayCost(displayRateAmount(model)) }} kr x {{ units }}<br>
-                ({{ displayRateAmount(model) * units }} kr)
+                ({{ displayCost( displayRateAmount(model) * units ) }} kr)
             </dd>
         </dl>
     </div>

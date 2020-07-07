@@ -15,7 +15,12 @@
             <input type="number" id="pay-cost-pr-unit" v-model="amount" required step="0.01"> kr
 
             <label for="pay-cost-exec-date" class="required">Pris gælder fra dato</label>
-            <input type="date" id="pay-cost-exec-date" v-model="start_date" required>
+            <input 
+                type="date" 
+                id="pay-cost-exec-date" 
+                v-model="start_date" 
+                :min="today"
+                required>
             
             <error :err-key="property" />
 
@@ -29,7 +34,7 @@
 import mixin from '../../mixins/PaymentPlanEditMixin.js'
 import Error from '../../forms/Error.vue'
 import { cost2da } from '../../filters/Numbers.js'
-import { json2jsDate } from '../../filters/Date.js'
+import { json2jsDate, epoch2DateStr } from '../../filters/Date.js'
 
 export default {
     components: {
@@ -38,6 +43,11 @@ export default {
     mixins: [
         mixin
     ],
+    data: function() {
+        return {
+            today: epoch2DateStr(new Date())
+        }
+    },
     computed: {
         amount: {
             get: function() {
@@ -50,7 +60,7 @@ export default {
                 if (this.model === null) {
                     this.model = {
                         amount: new_val,
-                        start_date: null
+                        start_date: this.today
                     }
                 } else {
                     this.model.amount = new_val
@@ -64,6 +74,8 @@ export default {
             get: function() {
                 if (this.model) {
                     return this.model.start_date
+                } else {
+                    return this.today
                 }
             },
             set: function(new_val) {
