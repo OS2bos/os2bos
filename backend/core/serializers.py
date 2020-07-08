@@ -314,6 +314,11 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
         # Validate payment/rate/unit info
         payment_cost_type = data["payment_cost_type"]
         instance = self.instance
+        if not self.instance and self.parent:
+            # XXX: Get instance from parent form data, we need it.
+            instance_id = self.parent.initial_data["payment_plan"].get("id")
+            if instance_id:
+                instance = PaymentSchedule.objects.get(id=instance_id)
 
         if payment_cost_type == PaymentSchedule.FIXED_PRICE:
             # Payment amount needs to be given, apart from that s'all
