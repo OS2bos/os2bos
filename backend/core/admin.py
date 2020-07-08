@@ -185,9 +185,6 @@ class VariableRateAdminForm(forms.ModelForm):
         required=False,
         widget=forms.SelectDateWidget(),
     )
-    end_date = forms.DateField(
-        label=_("Slutdato"), required=False, widget=forms.SelectDateWidget()
-    )
 
     def __init__(self, *args, **kwargs):
         """__init__ for VariableRateAdminForm.
@@ -199,27 +196,10 @@ class VariableRateAdminForm(forms.ModelForm):
         latest = self.instance.rates_per_date.order_by(
             F("start_date").asc(nulls_first=True)
         ).last()
-        # If any object exists set the initial rate, start_date and end_date.
+        # If any object exists set the initial rate and start_date.
         if latest:
             self.initial["start_date"] = latest.start_date
-            self.initial["end_date"] = latest.end_date
             self.initial["rate"] = latest.rate
-
-    def clean(self):
-        """Override ModelForm clean."""
-        cleaned_data = super().clean()
-        rate_start_date = cleaned_data.get("start_date")
-        rate_end_date = cleaned_data.get("end_date")
-
-        if (
-            rate_start_date
-            and rate_end_date
-            and not rate_start_date < rate_end_date
-        ):
-            raise forms.ValidationError(
-                _("Slutdato skal være mindre end startdato")
-            )
-        return cleaned_data
 
 
 class VariableRateAdmin(ClassificationAdmin):
@@ -233,9 +213,7 @@ class VariableRateAdmin(ClassificationAdmin):
         if form.is_valid() and form.has_changed():
             super().save_model(request, obj, form, change)
             obj.set_rate_amount(
-                form.cleaned_data["rate"],
-                form.cleaned_data["start_date"],
-                form.cleaned_data["end_date"],
+                form.cleaned_data["rate"], form.cleaned_data["start_date"],
             )
 
 
