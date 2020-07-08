@@ -336,6 +336,7 @@ export default {
 
             let new_act = this.act
             new_act.payment_plan = this.payment_plan
+            delete new_act.payment_plan.price_per_unit // API endpoint won't accept this in PATCH request
 
             const sanitized_act = sanitizeActivity(new_act)
 
