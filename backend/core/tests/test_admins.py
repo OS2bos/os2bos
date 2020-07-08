@@ -396,34 +396,6 @@ class RateAdminTestCase(TestCase):
 
         self.assertEqual(rate.rates_per_date.count(), 0)
 
-    def test_start_after_end_error(self):
-        rate = create_rate()
-
-        request = MockRequest()
-        site = AdminSite()
-        rate_admin = RateAdmin(Rate, site)
-
-        self.assertEqual(rate.rates_per_date.count(), 0)
-
-        start_date = date.today()
-        end_date = date.today() - timedelta(days=1)
-
-        rate_form_class = rate_admin.get_form(request, rate)
-        form_data = {
-            "name": rate.name,
-            "rate": 100,
-            "start_date": start_date,
-            "end_date": end_date,
-        }
-        rate_form = rate_form_class(form_data, instance=rate)
-        is_valid = rate_form.is_valid()
-
-        self.assertFalse(is_valid)
-        self.assertIn(
-            "Slutdato skal være mindre end startdato",
-            rate_form.errors["__all__"],
-        )
-
     def test_init_sets_start_date_and_rate(self):
         request = MockRequest()
         site = AdminSite()
@@ -443,7 +415,6 @@ class RateAdminTestCase(TestCase):
         rate_form = rate_form_class(instance=rate)
 
         self.assertEqual(rate_form["start_date"].value(), tomorrow)
-        self.assertEqual(rate_form["end_date"].value(), two_days_from_now)
         self.assertEqual(rate_form["rate"].value(), 125)
 
     def test_init_sets_start_date_today_on(self):
@@ -458,7 +429,6 @@ class RateAdminTestCase(TestCase):
         rate_form = rate_form_class()
 
         self.assertEqual(rate_form["start_date"].value(), today)
-        self.assertEqual(rate_form["end_date"].value(), None)
         self.assertEqual(rate_form["rate"].value(), None)
 
     def test_init_sets_start_and_end_existing_on_none(self):
@@ -472,7 +442,6 @@ class RateAdminTestCase(TestCase):
         rate_form = rate_form_class(instance=rate)
 
         self.assertEqual(rate_form["start_date"].value(), None)
-        self.assertEqual(rate_form["end_date"].value(), None)
         self.assertEqual(rate_form["rate"].value(), 125)
 
 
