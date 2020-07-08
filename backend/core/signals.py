@@ -61,7 +61,7 @@ def set_payment_id_on_paymentschedule_save(
 def set_saved_account_alias_on_payment_save(
     sender, instance, created, **kwargs
 ):
-    """Set the saved_account_string on Payment save."""
+    """Set the saved_account_alias on Payment save."""
     if (
         instance.paid
         and not instance.saved_account_alias
