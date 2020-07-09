@@ -693,6 +693,14 @@ def generate_payments_report_list(payments):
             if appropriation.main_activity
             else None
         )
+        # Get the historical effort_step and scaling_step.
+        if payment.paid_date:
+            historical_case = case.history.as_of(payment.paid_date)
+            effort_step = historical_case.effort_step
+            scaling_step = historical_case.scaling_step
+        else:
+            effort_step = case.effort_step
+            scaling_step = case.scaling_step
 
         payment_dict = {
             # payment specific.
@@ -731,8 +739,8 @@ def generate_payments_report_list(payments):
             "case_worker": str(case.case_worker),
             "team": str(case.team) if case.team else None,
             "leader": str(case.team.leader) if case.team else None,
-            "effort_step": str(case.effort_step),
-            "scaling_step": str(case.scaling_step),
+            "effort_step": str(effort_step),
+            "scaling_step": str(scaling_step),
             "paying_municipality": str(case.paying_municipality),
         }
         payments_report_list.append(payment_dict)
