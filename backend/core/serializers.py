@@ -313,6 +313,12 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
 
         # Validate payment/rate/unit info
         payment_cost_type = data["payment_cost_type"]
+        instance = self.instance
+        if not instance and self.parent:
+            # XXX: Get instance from parent form data, we need it.
+            instance_id = self.parent.initial_data["payment_plan"].get("id")
+            if instance_id:
+                instance = PaymentSchedule.objects.get(id=instance_id)
 
         if payment_cost_type == PaymentSchedule.FIXED_PRICE:
             # Payment amount needs to be given, apart from that s'all
@@ -341,17 +347,20 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
         elif payment_cost_type == PaymentSchedule.PER_UNIT_PRICE:
             # Units need to be given.
             if not data.get("payment_units", None):
-                raise serializers.ValidationError(
-                    _("Enheder skal angives ved pris pr. enhed")
-                )
+                if not instance or instance.payment_units is None:
+                    raise serializers.ValidationError(
+                        _("Enheder skal angives ved pris pr. enhed")
+                    )
             # Price data needs to be given.
             # If not given, start and end date default to None.
-            if not data.get("price_per_unit", None) or not data[
-                "price_per_unit"
-            ].get("amount", None):
-                raise serializers.ValidationError(
-                    _("Beløb pr. enhed skal angives")
-                )
+            if (
+                not data.get("price_per_unit", None)
+                or data["price_per_unit"].get("amount", None) is None
+            ):
+                if not instance or not instance.price_per_unit:
+                    raise serializers.ValidationError(
+                        _("Beløb pr. enhed skal angives")
+                    )
             # Rate can't be given.
             if data.get("payment_rate", None):
                 raise serializers.ValidationError(

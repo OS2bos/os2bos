@@ -10,7 +10,6 @@ function sanitizeActivity(activity) {
         case 'PER_UNIT':
             new_act.payment_plan.payment_amount = null // per_unit_price.amount is used instead
             new_act.payment_plan.payment_rate = null // rate does not apply
-            delete new_act.payment_plan.price_per_unit.rates_per_date // API endpoint won't accept this in PATCH request
         break
         case 'GLOBAL_RATE':
             new_act.payment_plan.payment_amount = null // amount does not apply
