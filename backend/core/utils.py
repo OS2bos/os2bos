@@ -694,8 +694,11 @@ def generate_payments_report_list(payments):
         )
         # Get the historical effort_step and scaling_step.
         if payment.paid_date:
-            paid_datetime = datetime.datetime.combine(
-                payment.paid_date, datetime.time.max
+            paid_datetime = timezone.make_aware(
+                datetime.datetime.combine(
+                    payment.paid_date, datetime.time.max
+                ),
+                timezone=timezone.utc,
             )
             historical_case = case.history.as_of(paid_datetime)
             effort_step = historical_case.effort_step
