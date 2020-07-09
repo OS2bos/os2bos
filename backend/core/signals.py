@@ -6,7 +6,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """Signals for acting on events occuring on model objects."""
 
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import pre_save, post_save, post_delete
 from django.dispatch import receiver
 from core.models import (
     Activity,
@@ -25,13 +25,11 @@ from core.utils import (
 
 
 @receiver(
-    post_save,
+    pre_save,
     sender=Payment,
     dispatch_uid="set_saved_account_string_on_payment_save",
 )
-def set_saved_account_string_on_payment_save(
-    sender, instance, created, **kwargs
-):
+def set_saved_account_string_on_payment_save(sender, instance, **kwargs):
     """Set the saved_account_string on Payment save."""
     if (
         instance.paid
@@ -39,7 +37,6 @@ def set_saved_account_string_on_payment_save(
         and instance.account_string
     ):
         instance.saved_account_string = instance.account_string
-        instance.save()
 
 
 @receiver(

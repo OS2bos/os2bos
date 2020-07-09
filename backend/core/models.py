@@ -871,12 +871,13 @@ class Payment(models.Model):
             )
 
         # Don't save historical info unless the paid_* fields are in use.
-        if self.paid_amount is None or self.paid_date is None:
+        if not self.paid:
             self.skip_history_when_saving = True
-        else:
-            self.skip_history_when_saving = False
 
         super().save(*args, **kwargs)
+
+        if hasattr(self, "skip_history_when_saving"):
+            del self.skip_history_when_saving
 
     @staticmethod
     def paid_allowed_for_payment_and_recipient(payment_method, recipient_type):
