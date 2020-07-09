@@ -1,3 +1,27 @@
+Version 3.1.0, 2020-07-09
+-------------------------
+
+New in this version:
+
+Features
+^^^^^^^^
+- Add Prices and Rates.
+- Add counts for draft, expected and ongoing activities.
+- Don't send activity emails for one time payments.
+- Prism payments account for holidays and weekends with PaymentDateExclusions.
+- Main account refactoring, use new account string and remove old Account model.
+- Emphasize new activities in appropriation email.
+- Add pagination for Appropriation PDF.
+- Add notes for Activity.
+- Make Appropriation drafts deleteable.
+- Display payment method when recipient is internal or company.
+- Add child name, and case worker fields to activity emails.
+- Set creation and modification user correctly for Case, Appropriation, Activity, RelatedPerson.
+- Remove Service Providers from ActivityDetails Admin.
+- Numerous styling fixes.
+- Add labels to Docker files.
+- Update dependencies to new versions.
+
 Version 3.0.0, 2020-06-03
 -------------------------
 
