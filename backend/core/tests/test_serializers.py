@@ -904,6 +904,14 @@ class PaymentScheduleSerializerTestCase(TestCase, BasicTestMixin):
         updated_instance = no_price_serializer.save()
         self.assertEqual(updated_instance.price_per_unit.rate_amount, 150)
         self.assertEqual(updated_instance.payment_units, 3)
+        # Update an existing instance with no payment units, provoking
+        # an error.
+        del new_data["payment_units"]
+        no_units_serializer = PaymentScheduleSerializer(
+            data=new_data, instance=no_price_serializer.instance
+        )
+        # Having no units is OK because the instance already has them.
+        self.assertTrue(no_units_serializer.is_valid())
 
     def test_rate_validation_errors(self):
         data = {
