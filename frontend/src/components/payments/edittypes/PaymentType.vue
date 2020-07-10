@@ -7,7 +7,7 @@
 
 <template>
 
-    <fieldset v-if="editable">
+    <fieldset v-if="editable && act.status !== 'EXPECTED'">
         <legend class="required">Afregning</legend>
         <input 
             type="radio" 
@@ -43,6 +43,11 @@ export default {
     mixins: [
         mixin
     ],
+    computed: {
+        act: function() {
+            return this.$store.getters.getActivity
+        }
+    },
     watch: {
         model: function(new_val) {
 
