@@ -10,6 +10,7 @@ import os
 import csv
 
 from django.db import transaction
+from django.db.models import Q
 from django.core.management.base import BaseCommand
 
 from core.models import ActivityDetails, SectionInfo, AccountAlias
@@ -50,28 +51,41 @@ class Command(BaseCommand):
             for row in rows[1:]:
                 account_alias = row[0]
                 mapping = row[2].rstrip("-")
-                _, account_number, details_id, _ = mapping.split("-")
-
-                activity_details = ActivityDetails.objects.filter(
-                    activity_id=details_id
-                )
-                if not activity_details.exists():
-                    print(
-                        f"activity details with activity_id: "
-                        f"{details_id} does not exist."
-                    )
-                    continue
-                activity_details = activity_details.first()
+                _, account_number, activity_id, _ = mapping.split("-")
 
                 section_info = SectionInfo.objects.filter(
-                    main_activity_main_account_number=account_number
+                    Q(main_activity_main_account_number=account_number)
+                    | Q(
+                        supplementary_activity_main_account_number=account_number
+                    )
                 )
                 if not section_info.exists():
                     print(
-                        f"section info with account number: "
+                        f"section info with main activity account number: "
                         f"{account_number} does not exist."
                     )
                     continue
+
+                # If the activity_id of the corresponding section info details
+                # corresponds to activity id of the alias
+                if section_info.activity_details.activity_id == activity_id:
+                    AccountAlias.objects.update_or_create(
+                        section_info=section_info,
+                        activity_details=None,
+                        defaults={"alias": account_alias},
+                    )
+                else:
+                    activity_details = ActivityDetails.objects.filter(
+                        activity_id=activity_id
+                    )
+                    if not activity_details.exists():
+                        print(
+                            f"activity details with activity_id: "
+                            f"{activity_id} does not exist."
+                        )
+                        continue
+                    activity_details = activity_details.first()
+
                 section_info = section_info.first()
 
                 AccountAlias.objects.update_or_create(
