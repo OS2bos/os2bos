@@ -9,7 +9,7 @@
 
     <dl v-if="model">
         <dt>Enhedspris x antal</dt>
-        <dd v-html="displayPriceRate(model, units)"></dd>
+        <dd class="perunitdisplay" v-html="displayPriceRate(model, units)"></dd>
         <dt>Enhedspris gælder</dt>
         <dd>{{ displayPriceDate(model) }}</dd>
     </dl>

@@ -149,7 +149,7 @@ async function activityFormInput(t, act_data) {
 
     await t
         .click('#activity-submit')
-        .expect(Selector('h1').withText('Bevillingsskrivelse')).ok()
+        .expect(Selector('h1').withText('Bevillingsskrivelse').exists).ok()
 }
 
 async function createCase(t, case_data) {
