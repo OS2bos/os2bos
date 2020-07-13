@@ -197,7 +197,7 @@ test('Add adjustment activities', async t => {
     
     await t
         .expect(Selector('h1').withText('Bevillingsskrivelse').exists).ok()
-        .expect(Selector('.label-EXPECTED')).ok()
+        .expect(Selector('.label-EXPECTED').exists).ok()
     
     await axe(t)
 })
