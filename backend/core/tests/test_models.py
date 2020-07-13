@@ -37,7 +37,6 @@ from core.tests.testing_utils import (
     create_rate,
     create_rate_per_date,
     create_payment_date_exclusion,
-    create_activity_details,
     create_account_alias,
 )
 from core.models import (
@@ -2433,7 +2432,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         # No section info is found.
         self.assertIsNone(suppl_activity.account_alias)
 
-    def test_account_number_supplementary_activity_no_main_activity(self):
+    def test_account_alias_supplementary_activity_no_main_activity(self):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
