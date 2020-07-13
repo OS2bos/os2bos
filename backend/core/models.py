@@ -1607,6 +1607,9 @@ class AccountAlias(models.Model):
         max_length=128, verbose_name=_("kontoalias"), blank=True
     )
 
+    def __str__(self):
+        return f"{self.section_info} - {self.activity_details}"
+
 
 class Activity(AuditModelMixin, models.Model):
     """An activity is a specific service provided within an appropriation."""

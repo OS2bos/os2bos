@@ -658,7 +658,7 @@ class TestImportAccountAliases(TestCase):
 
         call_command("import_account_aliases")
 
-        self.assertEqual(AccountAlias.objects.count(), 77)
+        self.assertEqual(AccountAlias.objects.count(), 306)
 
     def test_import_account_aliases_with_path(self):
         # We need to import sections and activity details initially.
