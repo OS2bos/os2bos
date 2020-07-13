@@ -51,19 +51,17 @@ class Command(BaseCommand):
             for row in rows[1:]:
                 account_alias = row[0]
                 mapping = row[2].rstrip("-")
-                _, account_number, activity_id, _ = mapping.split("-")
+                _, acc_number, activity_id, _ = mapping.split("-")
 
                 # Find the relevant SectionInfos.
                 section_infos = SectionInfo.objects.filter(
-                    Q(main_activity_main_account_number=account_number)
-                    | Q(
-                        supplementary_activity_main_account_number=account_number
-                    )
+                    Q(main_activity_main_account_number=acc_number)
+                    | Q(supplementary_activity_main_account_number=acc_number)
                 )
                 if not section_infos.exists():
                     print(
                         f"section info with main activity account number: "
-                        f"{account_number} does not exist."
+                        f"{acc_number} does not exist."
                     )
                     continue
 
