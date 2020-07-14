@@ -8,6 +8,7 @@
 
 from django.db.models import Q
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django import forms
 
@@ -39,9 +40,11 @@ from core.models import (
     TargetGroup,
     InternalPaymentRecipient,
     Effort,
+    PaymentDateExclusion,
     STATUS_DELETED,
     STATUS_DRAFT,
     STATUS_EXPECTED,
+    CASH,
 )
 from core.utils import create_rrule
 
@@ -426,7 +429,7 @@ class ActivitySerializer(WritableNestedModelSerializer):
             and data["start_date"] > data["end_date"]
         ):
             raise serializers.ValidationError(
-                _("startdato skal være før eller identisk med slutdato")
+                _("Startdato skal være før eller identisk med slutdato")
             )
 
         # One time payments should have a payment date in the payment plan.
@@ -471,6 +474,33 @@ class ActivitySerializer(WritableNestedModelSerializer):
             if not has_payments:
                 raise serializers.ValidationError(
                     _("Betalingsparametre resulterer ikke i nogen betalinger")
+                )
+
+        # Cash payments that are not fictive should have a "valid" start_date
+        # based on payment date exclusions.
+        is_cash = (
+            "payment_method" in data["payment_plan"]
+            and data["payment_plan"]["payment_method"] == CASH
+        )
+        is_fictive = (
+            "fictive" in data["payment_plan"]
+            and data["payment_plan"]["fictive"]
+        )
+
+        if is_cash and not is_fictive:
+            start_date = data["start_date"]
+            today = timezone.now().date()
+            all_exclusions = PaymentDateExclusion.objects.all()
+            is_valid_start_date = all_exclusions.is_valid_activity_start_date(
+                start_date
+            )
+            if start_date < today or not is_valid_start_date:
+                raise serializers.ValidationError(
+                    _(
+                        "Startdato skal være i fremtiden og "
+                        "to dage forinden en betalingsdato undtagelse "
+                        "for kontante betalinger"
+                    )
                 )
 
         if "modifies" in data and data["modifies"]:

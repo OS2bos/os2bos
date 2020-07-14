@@ -29,6 +29,7 @@ from core.managers import (
     CaseQuerySet,
     ActivityQuerySet,
     AppropriationQuerySet,
+    PaymentDateExclusionQuerySet,
 )
 from core.utils import send_appropriation, create_rrule
 
@@ -2067,6 +2068,8 @@ class PaymentDateExclusion(models.Model):
     """Model for Prism payment exclusion dates."""
 
     date = models.DateField(unique=True, verbose_name=_("dato"))
+
+    objects = PaymentDateExclusionQuerySet.as_manager()
 
     def __str__(self):
         return f"{self.date}"
