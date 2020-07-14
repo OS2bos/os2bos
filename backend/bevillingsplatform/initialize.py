@@ -129,4 +129,5 @@ def initialize_rates():
 
 
 def initialize_account_aliases():
+    """Initialize the account aliases."""
     call_command("loaddata", "accountaliases.json", app_label="core")
