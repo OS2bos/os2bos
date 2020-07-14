@@ -1599,8 +1599,6 @@ class AccountAlias(models.Model):
         verbose_name=_("aktivitetsdetalje"),
         related_name="account_aliases",
         on_delete=models.CASCADE,
-        blank=True,
-        null=True,
     )
 
     alias = models.CharField(
