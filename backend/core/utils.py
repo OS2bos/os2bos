@@ -715,6 +715,7 @@ def generate_payments_report_list(payments):
             "date": payment.date,
             "paid_date": payment.paid_date,
             "account_string": payment.account_string,
+            "account_alias": payment.account_alias,
             # payment_schedule specific.
             "payment_schedule__payment_id": payment_schedule.payment_id,
             "payment_schedule__"
