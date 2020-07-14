@@ -95,7 +95,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         serializer.is_valid()
         self.assertEqual(
             serializer.errors["non_field_errors"][0],
-            "startdato skal være før eller identisk med slutdato",
+            "Startdato skal være før eller identisk med slutdato",
         )
 
     def test_has_per_unit_price(self):
@@ -1071,7 +1071,7 @@ class PaymentScheduleSerializerTestCase(TestCase, BasicTestMixin):
         is_valid = serializer.is_valid()
         self.assertFalse(is_valid)
         self.assertEqual(
-            "Takst skal angives", serializer.errors["non_field_errors"][0],
+            "Takst skal angives", serializer.errors["non_field_errors"][0]
         )
 
         data["payment_rate"] = rate
