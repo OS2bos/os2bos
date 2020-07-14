@@ -213,7 +213,9 @@ class PaymentDateExclusionQuerySet(models.QuerySet):
 
     def is_valid_activity_start_date(self, date):
         """
-        Checks whether payment date exclusions exists within
+        Determine if a start_date is valid based on payment date exclusions.
+
+        Check whether payment date exclusions exists within
         two days in the future of the activity start date.
         """
         two_days_from_date = date + relativedelta(days=2)
