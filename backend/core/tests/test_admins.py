@@ -88,6 +88,19 @@ class TestPaymentAdmin(AuthenticatedTestCase, BasicTestMixin):
             payment_admin.account_string(payment), payment.account_string
         )
 
+    def test_account_alias(self):
+        payment_schedule = create_payment_schedule()
+
+        payment = create_payment(
+            payment_schedule=payment_schedule,
+            date=date(year=2019, month=1, day=1),
+        )
+        site = AdminSite()
+        payment_admin = PaymentAdmin(Payment, site)
+        self.assertEqual(
+            payment_admin.account_alias(payment), payment.account_alias
+        )
+
     def test_payment_schedule_str(self):
         payment_schedule = create_payment_schedule()
 
@@ -140,6 +153,16 @@ class TestPaymentScheduleAdmin(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(
             payment_schedule_admin.account_string(payment_schedule),
             payment_schedule.account_string,
+        )
+
+    def test_account_alias(self):
+        payment_schedule = create_payment_schedule()
+
+        site = AdminSite()
+        payment_schedule_admin = PaymentScheduleAdmin(PaymentSchedule, site)
+        self.assertEqual(
+            payment_schedule_admin.account_alias(payment_schedule),
+            payment_schedule.account_alias,
         )
 
     def test_admin_changelist_not_admin_user_disallowed(self):
@@ -264,6 +287,20 @@ class TestActivityAdmin(AuthenticatedTestCase, BasicTestMixin):
         activity_admin = ActivityAdmin(Activity, site)
         self.assertEqual(
             activity_admin.account_number(activity), activity.account_number
+        )
+
+    def test_account_alias(self):
+        section = create_section()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(section=section, case=case)
+        activity = create_activity(case=case, appropriation=appropriation)
+
+        site = AdminSite()
+        activity_admin = ActivityAdmin(Activity, site)
+        self.assertEqual(
+            activity_admin.account_alias(activity), activity.account_alias
         )
 
 
