@@ -476,18 +476,23 @@ class ActivitySerializer(WritableNestedModelSerializer):
                     _("Betalingsparametre resulterer ikke i nogen betalinger")
                 )
 
-        # Cash payments that are not fictive should have a "valid" start_date
-        # based on payment date exclusions.
+        # Cash person payments that are not fictive should have a "valid"
+        # start_date based on payment date exclusions.
         is_cash = (
             "payment_method" in data["payment_plan"]
             and data["payment_plan"]["payment_method"] == CASH
+        )
+        is_person_recipient = (
+            "recipient_type" in data["payment_plan"]
+            and data["payment_plan"]["recipient_type"]
+            == PaymentSchedule.PERSON
         )
         is_fictive = (
             "fictive" in data["payment_plan"]
             and data["payment_plan"]["fictive"]
         )
 
-        if is_cash and not is_fictive:
+        if is_cash and is_person_recipient and not is_fictive:
             start_date = data["start_date"]
             today = timezone.now().date()
             all_exclusions = PaymentDateExclusion.objects.all()
