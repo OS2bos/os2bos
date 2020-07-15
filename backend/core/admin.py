@@ -231,6 +231,7 @@ class RateAdmin(VariableRateAdmin):
 
     list_display = ("name", "description")
     form = RateForm
+    exclude = ("needs_recalculation",)
 
 
 class PriceForm(VariableRateAdminForm):
