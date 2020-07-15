@@ -17,6 +17,8 @@ from django.urls import reverse
 from django.db.models import F
 from django import forms
 
+from simple_history.admin import SimpleHistoryAdmin
+
 from core.models import (
     Municipality,
     PaymentSchedule,
@@ -252,7 +254,7 @@ class PriceAdmin(VariableRateAdmin):
 
 
 @admin.register(Payment)
-class PaymentAdmin(admin.ModelAdmin):
+class PaymentAdmin(SimpleHistoryAdmin):
     """Dislay read only fields on payment."""
 
     readonly_fields = ("payment_id", "account_string")

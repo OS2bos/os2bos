@@ -11,8 +11,10 @@
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.utils.translation import gettext_lazy as _
+from django.conf import settings
 
 from rest_framework import viewsets
+from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
@@ -454,3 +456,14 @@ class EffortViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     queryset = Effort.objects.all()
     serializer_class = EffortSerializer
     filterset_fields = "__all__"
+
+
+class IsEditingPastPaymentsAllowed(APIView):
+    """Expose the ALLOW_EDIT_OF_PAST_PAYMENTS setting in the API."""
+
+    authentication_classes = (CsrfExemptSessionAuthentication,)
+
+    def get(self, request, format=None):
+        """Return the Django setting allowing changes to the past."""
+        is_enabled = settings.ALLOW_EDIT_OF_PAST_PAYMENTS
+        return Response(is_enabled)

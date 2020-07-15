@@ -828,6 +828,22 @@ class Payment(models.Model):
         related_name="payments",
         verbose_name=_("betalingsplan"),
     )
+    # The history excludes most fields - it's only a history of the paid
+    # amounts, i.e. of that which can be edited manually by users when
+    # changing records for past payments.
+    history = HistoricalRecords(
+        excluded_fields=[
+            "date",
+            "recipient_type",
+            "recipient_id",
+            "recipient_name",
+            "payment_method",
+            "amount",
+            "note",
+            "saved_account_string",
+            "payment_schedule",
+        ]
+    )
 
     def save(self, *args, **kwargs):
         """Save this payment - validate payment method and completeness."""
@@ -855,7 +871,15 @@ class Payment(models.Model):
                     "hvis dens aktivitet er bevilget"
                 )
             )
+
+        # Don't save historical info unless the paid_* fields are in use.
+        if not self.paid:
+            self.skip_history_when_saving = True
+
         super().save(*args, **kwargs)
+
+        if hasattr(self, "skip_history_when_saving"):
+            del self.skip_history_when_saving
 
     @staticmethod
     def paid_allowed_for_payment_and_recipient(payment_method, recipient_type):

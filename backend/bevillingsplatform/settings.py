@@ -493,3 +493,7 @@ SAML2_AUTH = {
 }
 
 SILENCED_SYSTEM_CHECKS = ["rest_framework.W001"]
+
+ALLOW_EDIT_OF_PAST_PAYMENTS = settings.getboolean(
+    "ALLOW_EDIT_OF_PAST_PAYMENTS", fallback=False
+)
