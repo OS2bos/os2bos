@@ -1232,7 +1232,7 @@ class TestIsEditingPastPaymentsAllowed(AuthenticatedTestCase, BasicTestMixin):
 
     def test_is_past_editing_enabled(self):
         self.client.login(username=self.username, password=self.password)
-        url = reverse("past_editing_enabled")
+        url = reverse("editing_past_payments_allowed")
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), settings.ALLOW_EDIT_OF_PAST_PAYMENTS)
