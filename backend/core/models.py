@@ -828,7 +828,9 @@ class Payment(models.Model):
         related_name="payments",
         verbose_name=_("betalingsplan"),
     )
-
+    # The history excludes most fields - it's only a history of the paid
+    # amounts, i.e. of that which can be edited manually by users when
+    # changing records for past payments.
     history = HistoricalRecords(
         excluded_fields=[
             "date",

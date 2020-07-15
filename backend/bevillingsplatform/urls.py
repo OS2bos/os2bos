@@ -118,6 +118,11 @@ urlpatterns = [
         ),
         name="swagger-ui",
     ),
+    path(
+        "api/past_editing_enabled/",
+        views.IsPastEditingEnabled.as_view(),
+        name="past_editing_enabled",
+    ),
 ]
 
 # Static files are served by WhiteNoise in both development and production.
