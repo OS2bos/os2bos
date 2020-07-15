@@ -984,8 +984,6 @@ class Case(AuditModelMixin, models.Model):
     # else.
     history = HistoricalRecords(
         excluded_fields=[
-            "refugee_integration",
-            "cross_department_measure",
             "target_group",
             "residence_municipality",
             "acting_municipality",

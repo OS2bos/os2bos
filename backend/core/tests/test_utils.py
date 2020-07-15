@@ -54,6 +54,7 @@ from core.tests.testing_utils import (
     create_payment_schedule,
     create_activity_details,
     create_payment_date_exclusion,
+    create_effort_step,
 )
 
 
@@ -959,3 +960,67 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         self.assertEqual(
             sum([x["amount"] for x in report_list]), Decimal("6664")
         )
+
+    def test_generate_payments_report_list_use_historical_case(self):
+        # Pay payments on 2020-01-01.
+        with freeze_time("2020-01-01"):
+            now = timezone.now()
+            start_date = now
+            end_date = now + timedelta(days=5)
+            case = create_case(
+                self.case_worker, self.team, self.municipality, self.district
+            )
+            section = create_section()
+            appropriation = create_appropriation(
+                sbsys_id="XXX-YYY", case=case, section=section
+            )
+            granted_activity = create_activity(
+                case,
+                appropriation,
+                start_date=start_date,
+                end_date=end_date,
+                activity_type=MAIN_ACTIVITY,
+                status=STATUS_GRANTED,
+            )
+            payment_schedule = create_payment_schedule(
+                payment_frequency=PaymentSchedule.DAILY,
+                payment_type=PaymentSchedule.RUNNING_PAYMENT,
+                recipient_type=PaymentSchedule.PERSON,
+                payment_method=CASH,
+                payment_amount=Decimal(666),
+                activity=granted_activity,
+            )
+            payment_schedule.payments.update(paid=True)
+            payment_schedule.payments.update(paid_date=now)
+
+        self.assertEqual(case.effort_step.number, 1)
+        self.assertEqual(case.scaling_step, 1)
+
+        # A day has passed.
+        with freeze_time("2020-01-02"):
+            effort_step = create_effort_step(name="Trin 2", number=2)
+            case.effort_step = effort_step
+            case.scaling_step = 2
+            case.save()
+
+            report = generate_payments_report_list(
+                payment_schedule.payments.all()
+            )
+
+            self.assertTrue(
+                all(
+                    [
+                        payment_dict["effort_step"]
+                        == "Trin 1: Tidlig indsats i almenområdet"
+                        for payment_dict in report
+                    ]
+                )
+            )
+            self.assertTrue(
+                all(
+                    [
+                        payment_dict["scaling_step"] == "1"
+                        for payment_dict in report
+                    ]
+                )
+            )

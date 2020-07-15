@@ -292,7 +292,9 @@ def create_target_group(
 
 
 def create_effort_step(name="Trin 1: Tidlig indsats i almenområdet", number=1):
-    effort_step, _ = EffortStep.objects.get_or_create(name=name, number=number)
+    effort_step, _ = EffortStep.objects.get_or_create(
+        number=number, defaults={"name": name}
+    )
 
     return effort_step
 
