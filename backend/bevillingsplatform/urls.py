@@ -120,7 +120,7 @@ urlpatterns = [
     ),
     path(
         "api/past_editing_enabled/",
-        views.IsPastEditingEnabled.as_view(),
+        views.IsEditingPastPaymentsAllowed.as_view(),
         name="past_editing_enabled",
     ),
 ]

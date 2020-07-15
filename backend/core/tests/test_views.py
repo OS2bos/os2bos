@@ -1225,7 +1225,7 @@ class TestAuditModelViewSetMixin(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.json()["user_modified"], self.username)
 
 
-class TestIsPastEditingEnabled(AuthenticatedTestCase, BasicTestMixin):
+class TestIsEditingPastPaymentsAllowed(AuthenticatedTestCase, BasicTestMixin):
     @classmethod
     def setUpTestData(cls):
         cls.basic_setup()
@@ -1235,4 +1235,4 @@ class TestIsPastEditingEnabled(AuthenticatedTestCase, BasicTestMixin):
         url = reverse("past_editing_enabled")
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), settings.DO_ENABLE_PAST_EDITING)
+        self.assertEqual(response.json(), settings.ALLOW_EDIT_OF_PAST_PAYMENTS)

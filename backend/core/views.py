@@ -458,12 +458,12 @@ class EffortViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     filterset_fields = "__all__"
 
 
-class IsPastEditingEnabled(APIView):
-    """Expose the DO_ENABLE_PAST_EDITING setting in the API."""
+class IsEditingPastPaymentsAllowed(APIView):
+    """Expose the ALLOW_EDIT_OF_PAST_PAYMENTS setting in the API."""
 
     authentication_classes = (CsrfExemptSessionAuthentication,)
 
     def get(self, request, format=None):
         """Return the Django setting allowing changes to the past."""
-        is_enabled = settings.DO_ENABLE_PAST_EDITING
+        is_enabled = settings.ALLOW_EDIT_OF_PAST_PAYMENTS
         return Response(is_enabled)
