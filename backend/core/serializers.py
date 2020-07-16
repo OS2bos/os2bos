@@ -150,6 +150,7 @@ class PaymentSerializer(serializers.ModelSerializer):
     """
 
     account_string = serializers.ReadOnlyField()
+    account_alias = serializers.ReadOnlyField()
     payment_schedule__payment_id = serializers.ReadOnlyField(
         source="payment_schedule.payment_id", default=None
     )
@@ -203,7 +204,7 @@ class PaymentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Payment
-        exclude = ("saved_account_string",)
+        exclude = ("saved_account_string", "saved_account_alias")
 
 
 class RatePerDateSerializer(serializers.ModelSerializer):
@@ -268,7 +269,6 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
 
     payments = PaymentSerializer(many=True, read_only=True)
     price_per_unit = PriceSerializer(required=False, allow_null=True)
-    account = serializers.ReadOnlyField()
 
     class Meta:
         model = PaymentSchedule

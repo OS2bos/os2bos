@@ -395,7 +395,7 @@ def format_prism_financial_record(payment, line_no, record_no):
         "103": f"{config.PRISM_MACHINE_NO:05d}",
         "104": f"{record_no:07d}",
         "110": f"{payment.date.strftime('%Y%m%d')}",
-        "111": f"{payment.account_string}",
+        "111": f"{payment.account_alias}",
         "112": f"{int(payment.amount*100):012d} ",
         "113": "D",
         "114": f"{payment.date.year}",
@@ -715,6 +715,7 @@ def generate_payments_report_list(payments):
             "date": payment.date,
             "paid_date": payment.paid_date,
             "account_string": payment.account_string,
+            "account_alias": payment.account_alias,
             # payment_schedule specific.
             "payment_schedule__payment_id": payment_schedule.payment_id,
             "payment_schedule__"

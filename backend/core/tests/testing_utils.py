@@ -34,6 +34,7 @@ from core.models import (
     Rate,
     RatePerDate,
     PaymentDateExclusion,
+    AccountAlias,
 )
 
 
@@ -325,3 +326,13 @@ def create_payment_date_exclusion(date=date.today()):
     )
 
     return payment_date_exclusion
+
+
+def create_account_alias(section_info, activity_details, alias="BOS0000001"):
+    account_alias, _ = AccountAlias.objects.get_or_create(
+        section_info=section_info,
+        activity_details=activity_details,
+        alias=alias,
+    )
+
+    return account_alias

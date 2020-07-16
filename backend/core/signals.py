@@ -55,6 +55,24 @@ def set_payment_id_on_paymentschedule_save(
 
 @receiver(
     post_save,
+    sender=Payment,
+    dispatch_uid="set_saved_account_alias_on_payment_save",
+)
+def set_saved_account_alias_on_payment_save(
+    sender, instance, created, **kwargs
+):
+    """Set the saved_account_alias on Payment save."""
+    if (
+        instance.paid
+        and not instance.saved_account_alias
+        and instance.account_alias
+    ):
+        instance.saved_account_alias = instance.account_alias
+        instance.save()
+
+
+@receiver(
+    post_save,
     sender=PaymentSchedule,
     dispatch_uid="send_activity_created_email_on_paymentschedule_create",
 )
