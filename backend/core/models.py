@@ -14,8 +14,8 @@ import portion as P
 
 from django import forms
 from django.db import models, transaction
-from django.contrib.postgres.fields import ArrayField
 from django.db.models import Q, F
+from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
@@ -1795,11 +1795,12 @@ class Activity(AuditModelMixin, models.Model):
     def account_number(self):
         """Calculate the account_number to use with this activity."""
         if self.activity_type == MAIN_ACTIVITY:
-            section_info = SectionInfo.objects.filter(
-                activity_details=self.details,
-                section=self.appropriation.section,
-            ).first()
-            if not section_info:
+            try:
+                section_info = SectionInfo.objects.get(
+                    activity_details=self.details,
+                    section=self.appropriation.section,
+                )
+            except SectionInfo.DoesNotExist:
                 return None
             main_account_number = (
                 section_info.get_main_activity_main_account_number()
@@ -1808,11 +1809,12 @@ class Activity(AuditModelMixin, models.Model):
             main_activity = self.appropriation.main_activity
             if not main_activity:
                 return None
-            section_info = SectionInfo.objects.filter(
-                activity_details=main_activity.details,
-                section=self.appropriation.section,
-            ).first()
-            if not section_info:
+            try:
+                section_info = SectionInfo.objects.get(
+                    activity_details=main_activity.details,
+                    section=self.appropriation.section,
+                )
+            except SectionInfo.DoesNotExist:
                 return None
             main_account_number = (
                 section_info.get_supplementary_activity_main_account_number()
@@ -1823,27 +1825,30 @@ class Activity(AuditModelMixin, models.Model):
     def account_alias(self):
         """Calculate the account_alias to use with this activity."""
         if self.activity_type == MAIN_ACTIVITY:
-            section_info = SectionInfo.objects.filter(
-                activity_details=self.details,
-                section=self.appropriation.section,
-            ).first()
-            if not section_info:
+            try:
+                section_info = SectionInfo.objects.get(
+                    activity_details=self.details,
+                    section=self.appropriation.section,
+                )
+            except SectionInfo.DoesNotExist:
                 return None
         else:
             main_activity = self.appropriation.main_activity
             if not main_activity:
                 return None
-            section_info = SectionInfo.objects.filter(
-                activity_details=main_activity.details,
-                section=self.appropriation.section,
-            ).first()
-            if not section_info:
+            try:
+                section_info = SectionInfo.objects.get(
+                    activity_details=main_activity.details,
+                    section=self.appropriation.section,
+                )
+            except SectionInfo.DoesNotExist:
                 return None
 
-        account_alias = AccountAlias.objects.filter(
-            section_info=section_info, activity_details=self.details
-        ).first()
-        if not account_alias:
+        try:
+            account_alias = AccountAlias.objects.get(
+                section_info=section_info, activity_details=self.details
+            )
+        except AccountAlias.DoesNotExist:
             return None
 
         return account_alias.alias
