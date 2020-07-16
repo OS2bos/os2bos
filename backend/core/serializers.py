@@ -429,12 +429,15 @@ class ActivitySerializer(WritableNestedModelSerializer):
                 _("startdato skal være før eller identisk med slutdato")
             )
 
-        # one time payments should have the same start and end date.
+        # One time payments should have a payment date in the payment plan.
         is_one_time_payment = (
             data["payment_plan"]["payment_type"]
             == PaymentSchedule.ONE_TIME_PAYMENT
         )
-        if is_one_time_payment and ("payment_date" not in data):
+        if is_one_time_payment and (
+            "payment_date" not in data["payment_plan"]
+            or data["payment_plan"]["payment_date"] is None
+        ):
             raise serializers.ValidationError(
                 _("der skal angives en betalingsdato for engangsbetaling")
             )

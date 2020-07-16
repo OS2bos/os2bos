@@ -1745,7 +1745,6 @@ class Activity(AuditModelMixin, models.Model):
                 self.modifies.payment_plan.payments.all().delete()
                 self.modifies.start_date = self.start_date
                 self.modifies.end_date = self.end_date
-                self.modifies.payment_date = self.payment_date
             else:
                 while (
                     self.modifies is not None

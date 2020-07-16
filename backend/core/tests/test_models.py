@@ -1221,13 +1221,14 @@ class ActivityTestCase(TestCase, BasicTestMixin):
 
         activity = create_activity(case, appropriation, status=STATUS_GRANTED)
         create_payment_schedule(
-            payment_type=PaymentSchedule.ONE_TIME_PAYMENT, activity=activity
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            activity=activity,
+            payment_date=date.today(),
         )
 
         self.assertEqual(activity.payment_plan.payments.count(), 1)
         self.assertEqual(
-            activity.payment_plan.payments.first().date,
-            date(year=2019, month=1, day=1),
+            activity.payment_plan.payments.first().date, date.today()
         )
         # A new end_date should not affect the one time payment.
         activity.end_date = date(year=2019, month=1, day=13)
@@ -1235,8 +1236,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
 
         self.assertEqual(activity.payment_plan.payments.count(), 1)
         self.assertEqual(
-            activity.payment_plan.payments.first().date,
-            date(year=2019, month=1, day=1),
+            activity.payment_plan.payments.first().date, date.today()
         )
 
     def test_grant_already_granted(self):
@@ -2873,6 +2873,7 @@ class PaymentScheduleTestCase(TestCase):
         payment_schedule = create_payment_schedule(
             payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
             payment_frequency=PaymentSchedule.DAILY,
+            payment_date=date.today(),
         )
 
         rrule = payment_schedule.create_rrule(
@@ -2881,9 +2882,7 @@ class PaymentScheduleTestCase(TestCase):
         )
 
         self.assertEqual(len(list(rrule)), 1)
-        self.assertEqual(
-            list(rrule)[0].date(), date(year=2019, month=1, day=1)
-        )
+        self.assertEqual(list(rrule)[0].date(), date.today())
 
     def test_create_rrule_incorrect_frequency(self):
         payment_schedule = create_payment_schedule(

@@ -478,6 +478,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             payment_amount=Decimal("500.0"),
             payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
             payment_frequency="",
+            payment_date=date.today(),
         )
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -509,6 +510,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         payment_schedule = create_payment_schedule(
             payment_amount=Decimal("500.0"),
             payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            payment_date=date.today(),
             payment_frequency="",
         )
         case = create_case(
@@ -532,6 +534,42 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             "end_date": end_date,
             "details": details.id,
             "payment_plan": PaymentScheduleSerializer(payment_schedule).data,
+        }
+        serializer = ActivitySerializer(data=data)
+        is_valid = serializer.is_valid()
+        self.assertTrue(is_valid)
+
+    def test_validate_one_time_payment_no_payment_date(self):
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            payment_frequency="",
+        )
+        payment_schedule_data = PaymentScheduleSerializer(
+            payment_schedule
+        ).data
+
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        start_date = date.today()
+        end_date = date.today() + timedelta(days=1)
+        details, unused = ActivityDetails.objects.get_or_create(
+            activity_id="000000",
+            name="Test aktivitet",
+            max_tolerance_in_percent=10,
+            max_tolerance_in_dkk=1000,
+        )
+        data = {
+            "case": case.id,
+            "appropriation": appropriation.id,
+            "start_date": start_date,
+            "status": STATUS_EXPECTED,
+            "activity_type": MAIN_ACTIVITY,
+            "end_date": end_date,
+            "details": details.id,
+            "payment_plan": payment_schedule_data,
         }
         serializer = ActivitySerializer(data=data)
         is_valid = serializer.is_valid()
