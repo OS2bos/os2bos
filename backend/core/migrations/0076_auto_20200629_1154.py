@@ -33,4 +33,9 @@ class Migration(migrations.Migration):
             name='saved_account_alias',
             field=models.CharField(blank=True, max_length=128, verbose_name='gemt kontoalias'),
         ),
+        migrations.AddField(
+            model_name='historicalpayment',
+            name='saved_account_alias',
+            field=models.CharField(blank=True, max_length=128, verbose_name='gemt kontoalias'),
+        ),
     ]
