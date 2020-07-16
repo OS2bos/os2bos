@@ -509,7 +509,12 @@ class PaymentSchedule(models.Model):
     # This field only applies to one time payments.
     # For these payments, OTOH, it must be specified.
     payment_date = models.DateField(
-        verbose_name=_("betalingsdato"), blank=True, null=True
+        verbose_name=_("betalingsdato"),
+        blank=True,
+        null=True,
+        help_text=_(
+            "dette felt er obligatorisk for og angår kun engangsbetalinger"
+        ),
     )
     # This field only applies to monthly payments.
     # It may be replaced by a more general way of handling payment dates
