@@ -11,7 +11,7 @@ def import_account_aliases(apps, schema_editor):
     ActivityDetails = apps.get_model("core", "ActivityDetails")
 
     path = os.path.join(
-        os.path.dirname(__file__), "..", "data", "account_aliases.csv",
+        os.path.dirname(__file__), "..", "data", "account_aliases.csv"
     )
     with open(path) as csvfile:
         reader = csv.reader(csvfile)
@@ -56,6 +56,6 @@ def import_account_aliases(apps, schema_editor):
 
 class Migration(migrations.Migration):
 
-    dependencies = [("core", "0075_auto_20200629_1154")]
+    dependencies = [("core", "0076_auto_20200629_1154")]
 
     operations = [migrations.RunPython(import_account_aliases)]

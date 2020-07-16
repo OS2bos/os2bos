@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0074_delete_account'),
+        ('core', '0075_historicalpayment'),
     ]
 
     operations = [
