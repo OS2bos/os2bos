@@ -344,6 +344,15 @@ LOGGING = {
                 ),
             ),
         },
+        "serviceplatformen": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "formatter": "verbose",
+            "filename": settings.get(
+                "SERVICEPLATFORMEN_LOG_FILE",
+                fallback=os.path.join(LOG_DIR, "serviceplatformen.log"),
+            ),
+        },
     },
     "formatters": {
         "verbose": {
@@ -388,6 +397,11 @@ LOGGING = {
         },
         "bevillingsplatform.generate_payment_date_exclusions": {
             "handlers": ["generate_payment_date_exclusions"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        "bevillingsplatform.serviceplatformen": {
+            "handlers": ["serviceplatformen"],
             "level": "INFO",
             "propagate": True,
         },

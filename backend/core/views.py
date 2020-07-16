@@ -6,7 +6,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 """Views and viewsets exposed by the REST interface."""
-
+import logging
 
 from django.contrib.auth import get_user_model
 from django.db import transaction
@@ -90,6 +90,11 @@ from core.mixins import (
 from core.authentication import CsrfExemptSessionAuthentication
 
 from core.permissions import IsUserAllowed
+
+
+serviceplatformen_logger = logging.getLogger(
+    "bevillingsplatform.serviceplatformen"
+)
 
 
 # Working models, read/write
@@ -321,6 +326,9 @@ class RelatedPersonViewSet(AuditModelViewSetMixin, AuditViewSet):
         GET params: cpr
         """
         cpr = request.query_params.get("cpr")
+        serviceplatformen_logger.info(
+            f"fetch_from_serviceplatformen: {cpr} - {request.user}"
+        )
         if not cpr:
             return Response(
                 {"errors": _("Intet CPR nummer angivet")},
