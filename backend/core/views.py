@@ -326,7 +326,9 @@ class RelatedPersonViewSet(AuditModelViewSetMixin, AuditViewSet):
         GET params: cpr
         """
         cpr = request.query_params.get("cpr")
-        serviceplatformen_logger.info(f"%(funcName)s - {cpr} - {request.user}")
+        serviceplatformen_logger.info(
+            f"fetch_from_serviceplatformen: {cpr} - {request.user}"
+        )
         if not cpr:
             return Response(
                 {"errors": _("Intet CPR nummer angivet")},
