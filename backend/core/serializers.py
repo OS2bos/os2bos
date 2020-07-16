@@ -434,11 +434,9 @@ class ActivitySerializer(WritableNestedModelSerializer):
             data["payment_plan"]["payment_type"]
             == PaymentSchedule.ONE_TIME_PAYMENT
         )
-        if is_one_time_payment and (
-            "end_date" not in data or data["end_date"] != data["start_date"]
-        ):
+        if is_one_time_payment and ("payment_date" not in data):
             raise serializers.ValidationError(
-                _("startdato og slutdato skal være ens for engangsbetaling")
+                _("der skal angives en betalingsdato for engangsbetaling")
             )
 
         # Monthly payments that are not expected adjustments should have a

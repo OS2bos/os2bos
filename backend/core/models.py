@@ -505,6 +505,12 @@ class PaymentSchedule(models.Model):
         null=True,
         blank=True,
     )
+
+    # This field only applies to one time payments.
+    # For these payments, OTOH, it must be specified.
+    payment_date = models.DateField(
+        verbose_name=_("betalingsdato"), blank=True, null=True
+    )
     # This field only applies to monthly payments.
     # It may be replaced by a more general way of handling payment dates
     # independently of the activity's start date.
@@ -619,6 +625,8 @@ class PaymentSchedule(models.Model):
 
     def create_rrule(self, start, **kwargs):
         """Create a dateutil.rrule for this schedule specifically."""
+        if self.payment_type == self.ONE_TIME_PAYMENT:
+            start = self.payment_date
         return create_rrule(
             self.payment_type,
             self.payment_frequency,
@@ -1730,15 +1738,14 @@ class Activity(AuditModelMixin, models.Model):
             # "Merge" by ending current activity the day before the new
             # start_date.
             #
-            # In case of a one_time_payment we end the on the same day and
-            # delete all payments for the old one.
+            # In case of a one_time_payment we delete the payment, copy the
+            # modified information and re-generate.
             payment_type = self.modifies.payment_plan.payment_type
             if payment_type == PaymentSchedule.ONE_TIME_PAYMENT:
                 self.modifies.payment_plan.payments.all().delete()
                 self.modifies.start_date = self.start_date
-                # With one time payments, end date and start date must
-                # always be the same.
-                self.modifies.end_date = self.start_date
+                self.modifies.end_date = self.end_date
+                self.modifies.payment_date = self.payment_date
             else:
                 while (
                     self.modifies is not None
