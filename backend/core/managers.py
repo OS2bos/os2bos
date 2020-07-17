@@ -206,21 +206,3 @@ class CaseQuerySet(models.QuerySet):
             .exclude(expired_main_activities_count=0, main_activities_count=0)
             .filter(expired_main_activities_count=F("main_activities_count"))
         ).distinct()
-
-
-class PaymentDateExclusionQuerySet(models.QuerySet):
-    """QuerySet and Manager for the PaymentDateExclusion model."""
-
-    def is_valid_activity_start_date(self, date):
-        """
-        Determine if a start_date is valid based on payment date exclusions.
-
-        Check whether payment date exclusions exists within
-        two days in the future of the activity start date.
-        """
-        two_days_from_date = date + relativedelta(days=2)
-        return (
-            not self.exclude(date__lt=date)
-            .exclude(date__gt=two_days_from_date)
-            .exists()
-        )

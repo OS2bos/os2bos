@@ -9,7 +9,7 @@
 from datetime import datetime, date, timedelta
 from decimal import Decimal
 from dateutil.relativedelta import relativedelta
-
+from dateutil import rrule
 import portion as P
 
 from django import forms
@@ -29,7 +29,6 @@ from core.managers import (
     CaseQuerySet,
     ActivityQuerySet,
     AppropriationQuerySet,
-    PaymentDateExclusionQuerySet,
 )
 from core.utils import send_appropriation, create_rrule
 
@@ -2013,6 +2012,38 @@ class Activity(AuditModelMixin, models.Model):
         if hasattr(self, "payment_plan") and self.payment_plan:
             self.payment_plan.save()
 
+    @staticmethod
+    def is_valid_cash_activity_start_date(start_date):
+        """
+        Determine if a date is valid for a cash activity start_date.
+
+        A start_date is valid if at least two consecutive days
+        without payment date exclusions exist between today and the start_date.
+        """
+        today = timezone.now().date()
+        exclusions = PaymentDateExclusion.objects.all()
+
+        # We start counting days from tomorrow.
+        tomorrow = today + relativedelta(days=1)
+        tomorrow_to_start_date_in_days = [
+            dt.date()
+            for dt in rrule.rrule(
+                rrule.DAILY, dtstart=tomorrow, until=start_date
+            )
+        ]
+
+        consecutive_days = 0
+        for date in tomorrow_to_start_date_in_days:
+            if exclusions.filter(date=date).exists():
+                consecutive_days = 0
+            else:
+                consecutive_days += 1
+
+            if consecutive_days == 2:
+                return True
+
+        return False
+
 
 class RelatedPerson(AuditModelMixin, models.Model):
     """A person related to a Case, e.g. as a parent or sibling."""
@@ -2068,8 +2099,6 @@ class PaymentDateExclusion(models.Model):
     """Model for Prism payment exclusion dates."""
 
     date = models.DateField(unique=True, verbose_name=_("dato"))
-
-    objects = PaymentDateExclusionQuerySet.as_manager()
 
     def __str__(self):
         return f"{self.date}"

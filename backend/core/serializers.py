@@ -495,8 +495,8 @@ class ActivitySerializer(WritableNestedModelSerializer):
         if is_cash and is_person_recipient and not is_fictive:
             start_date = data["start_date"]
             today = timezone.now().date()
-            all_exclusions = PaymentDateExclusion.objects.all()
-            is_valid_start_date = all_exclusions.is_valid_activity_start_date(
+
+            is_valid_start_date = Activity.is_valid_cash_activity_start_date(
                 start_date
             )
             if start_date < today or not is_valid_start_date:

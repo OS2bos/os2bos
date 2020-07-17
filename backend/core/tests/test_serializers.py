@@ -706,9 +706,58 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         is_valid = serializer.is_valid()
         self.assertTrue(is_valid)
 
-    @freeze_time("2020-01-01")
+    @freeze_time("2020-01-09")
     def test_validate_cash_person_payment_with_exclusions_disallowed(self):
         # Create an activity with a start_date within two days
+        # of a future payment exclusion date.
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+
+        details, unused = ActivityDetails.objects.get_or_create(
+            activity_id="000000",
+            name="Test aktivitet",
+            max_tolerance_in_percent=10,
+            max_tolerance_in_dkk=1000,
+        )
+        # The 11th is a Saturday.
+        start_date = date(2020, 1, 11)
+        end_date = date(2020, 1, 13)
+
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+        )
+
+        data = {
+            "case": case.id,
+            "appropriation": appropriation.id,
+            "start_date": start_date,
+            "end_date": end_date,
+            "details": details.id,
+            "status": STATUS_GRANTED,
+            "activity_type": MAIN_ACTIVITY,
+            "payment_plan": PaymentScheduleSerializer(payment_schedule).data,
+        }
+
+        serializer = ActivitySerializer(data=data)
+        is_valid = serializer.is_valid()
+
+        self.assertFalse(is_valid)
+        self.assertEqual(
+            serializer.errors["non_field_errors"][0],
+            "Startdato skal være i fremtiden og "
+            "to dage forinden en betalingsdato undtagelse "
+            "for kontante betalinger",
+        )
+
+    @freeze_time("2020-01-08")
+    def test_validate_cash_person_payment_with_exclusions_allowed(self):
+        # Create an activity with a start_date not within two days
         # of a future payment exclusion date.
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -746,19 +795,11 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
 
         serializer = ActivitySerializer(data=data)
         is_valid = serializer.is_valid()
+        self.assertTrue(is_valid)
 
-        self.assertFalse(is_valid)
-        self.assertEqual(
-            serializer.errors["non_field_errors"][0],
-            "Startdato skal være i fremtiden og "
-            "to dage forinden en betalingsdato undtagelse "
-            "for kontante betalinger",
-        )
-
-    @freeze_time("2020-01-06")
-    def test_validate_cash_person_payment_with_exclusions_allowed(self):
-        # Create an activity with a start_date not within two days
-        # of a future payment exclusion date.
+    @freeze_time("2020-01-08")
+    def test_validate_cash_person_payment_tomorrow_disallowed(self):
+        # Create an activity with a start_date of tomorrow
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
@@ -770,9 +811,9 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             max_tolerance_in_percent=10,
             max_tolerance_in_dkk=1000,
         )
-        # The 6th is a Monday.
-        start_date = date(2020, 1, 6)
-        end_date = date(2020, 1, 9)
+
+        start_date = date(2020, 1, 9)
+        end_date = date(2020, 1, 13)
 
         payment_schedule = create_payment_schedule(
             payment_amount=Decimal("500.0"),
@@ -795,7 +836,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
 
         serializer = ActivitySerializer(data=data)
         is_valid = serializer.is_valid()
-        self.assertTrue(is_valid)
+        self.assertFalse(is_valid)
 
 
 class CaseSerializerTestCase(TestCase, BasicTestMixin):
