@@ -28,8 +28,6 @@ from django.db.models.functions import (
     LPad,
 )
 
-from dateutil.relativedelta import relativedelta
-
 
 class PaymentQuerySet(models.QuerySet):
     """Handle payments properly - some are paid and others are not.

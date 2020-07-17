@@ -40,7 +40,6 @@ from core.models import (
     TargetGroup,
     InternalPaymentRecipient,
     Effort,
-    PaymentDateExclusion,
     STATUS_DELETED,
     STATUS_DRAFT,
     STATUS_EXPECTED,
@@ -476,26 +475,23 @@ class ActivitySerializer(WritableNestedModelSerializer):
                     _("Betalingsparametre resulterer ikke i nogen betalinger")
                 )
 
-        # Cash person payments that are not fictive should have a "valid"
-        # start_date based on payment date exclusions.
+        # Cash payments that are not fictive should have a "valid" start_date
+        # based on payment date exclusions.
         is_cash = (
             "payment_method" in data["payment_plan"]
             and data["payment_plan"]["payment_method"] == CASH
-        )
-        is_person_recipient = (
-            "recipient_type" in data["payment_plan"]
-            and data["payment_plan"]["recipient_type"]
-            == PaymentSchedule.PERSON
         )
         is_fictive = (
             "fictive" in data["payment_plan"]
             and data["payment_plan"]["fictive"]
         )
 
-        if is_cash and is_person_recipient and not is_fictive:
-            start_date = data["start_date"]
+        if is_cash and not is_fictive:
+            if is_one_time_payment:
+                start_date = data["payment_plan"]["payment_date"]
+            else:
+                start_date = data["start_date"]
             today = timezone.now().date()
-
             is_valid_start_date = Activity.is_valid_cash_activity_start_date(
                 start_date
             )
