@@ -64,7 +64,10 @@
                         <dt>SBSYS-hovedsag</dt>
                         <dd>{{ cas.sbsys_id }}</dd>
                         <dt>Sagspart (CPR, navn)</dt>
-                        <dd>{{ cas.cpr_number }}, {{ cas.name }}</dd>
+                        <dd>
+                            {{ cas.cpr_number }}<br>
+                            {{ cas.name }}
+                        </dd>
                         <template v-if="appr.note">
                             <dt>Supplerende oplysninger</dt>
                             <dd>{{ appr.note }}</dd>
