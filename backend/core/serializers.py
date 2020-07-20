@@ -481,12 +481,17 @@ class ActivitySerializer(WritableNestedModelSerializer):
             "payment_method" in data["payment_plan"]
             and data["payment_plan"]["payment_method"] == CASH
         )
+        is_person_recipient = (
+            "recipient_type" in data["payment_plan"]
+            and data["payment_plan"]["recipient_type"]
+            == PaymentSchedule.PERSON
+        )
         is_fictive = (
             "fictive" in data["payment_plan"]
             and data["payment_plan"]["fictive"]
         )
 
-        if is_cash and not is_fictive:
+        if is_cash and is_person_recipient and not is_fictive:
             if is_one_time_payment:
                 start_date = data["payment_plan"]["payment_date"]
             else:

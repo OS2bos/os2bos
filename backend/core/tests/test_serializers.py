@@ -837,6 +837,12 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         serializer = ActivitySerializer(data=data)
         is_valid = serializer.is_valid()
         self.assertFalse(is_valid)
+        self.assertEqual(
+            serializer.errors["non_field_errors"][0],
+            "Startdato skal være i fremtiden og "
+            "to dage forinden en betalingsdato undtagelse "
+            "for kontante betalinger",
+        )
 
     @freeze_time("2020-01-08")
     def test_validate_cash_payment_one_time_tomorrow_disallowed(self):
@@ -879,6 +885,12 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         serializer = ActivitySerializer(data=data)
         is_valid = serializer.is_valid()
         self.assertFalse(is_valid)
+        self.assertEqual(
+            serializer.errors["non_field_errors"][0],
+            "Startdato skal være i fremtiden og "
+            "to dage forinden en betalingsdato undtagelse "
+            "for kontante betalinger",
+        )
 
 
 class CaseSerializerTestCase(TestCase, BasicTestMixin):
