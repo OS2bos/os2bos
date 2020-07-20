@@ -482,7 +482,7 @@ class ActivitySerializer(WritableNestedModelSerializer):
             and data_copy["payment_plan"]["price_per_unit"]
         ):
             data_copy["payment_plan"]["price_per_unit"] = PriceSerializer(
-                data=data_copy["payment_plan"].pop("price_per_unit")
+                data=data_copy["payment_plan"]["price_per_unit"]
             ).instance
         data_copy["payment_plan"] = PaymentSchedule(
             **data_copy.pop("payment_plan")
