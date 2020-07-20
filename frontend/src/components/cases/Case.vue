@@ -27,7 +27,8 @@
                 <dl>
                     <dt>Sagspart (CPR, navn)</dt>
                     <dd>
-                        {{ cas.cpr_number }}, {{ cas.name }}
+                        {{ cas.cpr_number }}<br>
+                        {{ cas.name }}
                     </dd>
 
                     <template v-if="cas.effort_step && requiredEffortStep === true">
