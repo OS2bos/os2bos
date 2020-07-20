@@ -477,45 +477,32 @@ class ActivitySerializer(WritableNestedModelSerializer):
 
         # Cash payments that are not fictive should have a "valid" start_date
         # based on payment date exclusions.
-        is_cash = (
-            "payment_method" in data["payment_plan"]
-            and data["payment_plan"]["payment_method"] == CASH
-        )
-        is_person_recipient = (
-            "recipient_type" in data["payment_plan"]
-            and data["payment_plan"]["recipient_type"]
-            == PaymentSchedule.PERSON
-        )
-        is_fictive = (
-            "fictive" in data["payment_plan"]
-            and data["payment_plan"]["fictive"]
-        )
+        data_copy = data.copy()
 
-        if is_cash and is_person_recipient and not is_fictive:
-            if is_one_time_payment:
-                start_date = data["payment_plan"]["payment_date"]
-            else:
-                start_date = data["start_date"]
-            today = timezone.now().date()
-            is_valid_start_date = Activity.is_valid_cash_activity_start_date(
-                start_date
-            )
-            if start_date < today or not is_valid_start_date:
-                raise serializers.ValidationError(
-                    _(
-                        "Startdato skal være i fremtiden og "
-                        "der skal være mindst to udbetalingsdage i række"
-                        " fra nu og til startdatoen"
-                    )
+        if (
+            "price_per_unit" in data_copy["payment_plan"]
+            and data_copy["payment_plan"]["price_per_unit"]
+        ):
+            data_copy["payment_plan"]["price_per_unit"] = PriceSerializer(
+                data=data_copy["payment_plan"].pop("price_per_unit")
+            ).instance
+        data_copy["payment_plan"] = PaymentSchedule(
+            **data_copy.pop("payment_plan")
+        )
+        instance = Activity(**data_copy)
+
+        is_valid_start_date = instance.is_valid_activity_start_date()
+        if not is_valid_start_date:
+            raise serializers.ValidationError(
+                _(
+                    "Startdato skal være i fremtiden og "
+                    "der skal være mindst to udbetalingsdage i række"
+                    " fra nu og til startdatoen"
                 )
+            )
 
         if "modifies" in data and data["modifies"]:
             # run the validate_expected flow.
-            data_copy = data.copy()
-            data_copy["payment_plan"] = PaymentSchedule(
-                **data_copy.pop("payment_plan")
-            )
-            instance = Activity(**data_copy)
             try:
                 instance.validate_expected()
             except forms.ValidationError as e:
