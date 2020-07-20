@@ -9,7 +9,7 @@
 from datetime import datetime, date, timedelta
 from decimal import Decimal
 from dateutil.relativedelta import relativedelta
-
+from dateutil import rrule
 import portion as P
 
 from django import forms
@@ -599,7 +599,7 @@ class PaymentSchedule(models.Model):
         allowed = {
             PaymentSchedule.INTERNAL: [INTERNAL],
             PaymentSchedule.PERSON: [CASH, SD],
-            PaymentSchedule.COMPANY: [INVOICE, CASH],
+            PaymentSchedule.COMPANY: [INVOICE],
         }
         return payment_method in allowed[recipient_type]
 
@@ -2011,6 +2011,49 @@ class Activity(AuditModelMixin, models.Model):
         self.appropriation.save()
         if hasattr(self, "payment_plan") and self.payment_plan:
             self.payment_plan.save()
+
+    def is_valid_activity_start_date(self):
+        """Determine if a date is valid for a activity start_date."""
+        # A start_date is valid for cash activities if at least two
+        # consecutive days without payment date exclusions exist between
+        # today and the start_date.
+        if (
+            self.payment_plan.payment_method == CASH
+            and self.payment_plan.recipient_type == PaymentSchedule.PERSON
+            and not self.payment_plan.fictive
+        ):
+            today = timezone.now().date()
+            start_date = (
+                self.payment_plan.payment_date
+                if self.payment_plan.payment_type
+                == PaymentSchedule.ONE_TIME_PAYMENT
+                else self.start_date
+            )
+            if start_date < today:
+                return False
+            exclusions = PaymentDateExclusion.objects.all()
+
+            # We start counting days from tomorrow.
+            tomorrow = today + relativedelta(days=1)
+            tomorrow_to_start_date_in_days = [
+                dt.date()
+                for dt in rrule.rrule(
+                    rrule.DAILY, dtstart=tomorrow, until=start_date
+                )
+            ]
+
+            consecutive_days = 0
+            for day_date in tomorrow_to_start_date_in_days:
+                if exclusions.filter(date=day_date).exists():
+                    consecutive_days = 0
+                else:
+                    consecutive_days += 1
+
+                if consecutive_days == 2:
+                    return True
+
+            return False
+        return True
 
 
 class RelatedPerson(AuditModelMixin, models.Model):

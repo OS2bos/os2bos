@@ -426,7 +426,7 @@ class ActivitySerializer(WritableNestedModelSerializer):
             and data["start_date"] > data["end_date"]
         ):
             raise serializers.ValidationError(
-                _("startdato skal være før eller identisk med slutdato")
+                _("Startdato skal være før eller identisk med slutdato")
             )
 
         # One time payments should have a payment date in the payment plan.
@@ -473,13 +473,34 @@ class ActivitySerializer(WritableNestedModelSerializer):
                     _("Betalingsparametre resulterer ikke i nogen betalinger")
                 )
 
+        # Cash payments that are not fictive should have a "valid" start_date
+        # based on payment date exclusions.
+        data_copy = data.copy()
+
+        if (
+            "price_per_unit" in data_copy["payment_plan"]
+            and data_copy["payment_plan"]["price_per_unit"]
+        ):
+            data_copy["payment_plan"]["price_per_unit"] = PriceSerializer(
+                data=data_copy["payment_plan"]["price_per_unit"]
+            ).instance
+        data_copy["payment_plan"] = PaymentSchedule(
+            **data_copy.pop("payment_plan")
+        )
+        instance = Activity(**data_copy)
+
+        is_valid_start_date = instance.is_valid_activity_start_date()
+        if not is_valid_start_date:
+            raise serializers.ValidationError(
+                _(
+                    "Startdato skal være i fremtiden og "
+                    "der skal være mindst to udbetalingsdage i række"
+                    " fra nu og til startdatoen"
+                )
+            )
+
         if "modifies" in data and data["modifies"]:
             # run the validate_expected flow.
-            data_copy = data.copy()
-            data_copy["payment_plan"] = PaymentSchedule(
-                **data_copy.pop("payment_plan")
-            )
-            instance = Activity(**data_copy)
             try:
                 instance.validate_expected()
             except forms.ValidationError as e:
