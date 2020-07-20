@@ -751,8 +751,8 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         self.assertEqual(
             serializer.errors["non_field_errors"][0],
             "Startdato skal være i fremtiden og "
-            "to dage forinden en betalingsdato undtagelse "
-            "for kontante betalinger",
+            "der skal være mindst to udbetalingsdage i række"
+            " fra nu og til startdatoen",
         )
 
     @freeze_time("2020-01-08")
@@ -840,8 +840,8 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         self.assertEqual(
             serializer.errors["non_field_errors"][0],
             "Startdato skal være i fremtiden og "
-            "to dage forinden en betalingsdato undtagelse "
-            "for kontante betalinger",
+            "der skal være mindst to udbetalingsdage i række"
+            " fra nu og til startdatoen",
         )
 
     @freeze_time("2020-01-08")
@@ -888,8 +888,8 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         self.assertEqual(
             serializer.errors["non_field_errors"][0],
             "Startdato skal være i fremtiden og "
-            "to dage forinden en betalingsdato undtagelse "
-            "for kontante betalinger",
+            "der skal være mindst to udbetalingsdage i række"
+            " fra nu og til startdatoen",
         )
 
 

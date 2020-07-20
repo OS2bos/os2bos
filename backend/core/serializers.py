@@ -504,8 +504,8 @@ class ActivitySerializer(WritableNestedModelSerializer):
                 raise serializers.ValidationError(
                     _(
                         "Startdato skal være i fremtiden og "
-                        "to dage forinden en betalingsdato undtagelse "
-                        "for kontante betalinger"
+                        "der skal være mindst to udbetalingsdage i række"
+                        " fra nu og til startdatoen"
                     )
                 )
 
