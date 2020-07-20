@@ -10,7 +10,7 @@
     <div class="prices-history" v-if="prices">
         <button type="button" @click="modal_open = !modal_open">Se priser</button>
 
-        <form @submit.prevent="saveNewPrice">
+        <form @submit.prevent="saveNewPrice" class="modal-form">
             <modal-dialog v-if="modal_open" @closedialog="cancelDialog">
                 <h3 slot="header" class="prices-history-header">
                     <span>Priser</span>
