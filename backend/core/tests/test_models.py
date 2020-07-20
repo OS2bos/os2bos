@@ -3268,7 +3268,6 @@ class PaymentScheduleTestCase(TestCase):
             (PaymentSchedule.PERSON, CASH),
             (PaymentSchedule.INTERNAL, INTERNAL),
             (PaymentSchedule.COMPANY, INVOICE),
-            (PaymentSchedule.COMPANY, CASH),
         ]
     )
     def test_payment_and_recipient_allowed_save(
@@ -3293,6 +3292,7 @@ class PaymentScheduleTestCase(TestCase):
             (PaymentSchedule.INTERNAL, INVOICE),
             (PaymentSchedule.COMPANY, INTERNAL),
             (PaymentSchedule.COMPANY, SD),
+            (PaymentSchedule.COMPANY, CASH),
         ]
     )
     def test_payment_and_recipient_disallowed_save(

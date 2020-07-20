@@ -8,7 +8,6 @@
 
 from django.db.models import Q
 from django.contrib.auth import get_user_model
-from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django import forms
 
@@ -43,7 +42,6 @@ from core.models import (
     STATUS_DELETED,
     STATUS_DRAFT,
     STATUS_EXPECTED,
-    CASH,
 )
 from core.utils import create_rrule
 
