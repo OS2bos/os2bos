@@ -33,6 +33,7 @@ from core.tests.testing_utils import (
     create_service_provider,
     create_section_info,
     create_related_person,
+    create_target_group,
     create_variable_rate,
     create_rate,
     create_rate_per_date,
@@ -3674,6 +3675,30 @@ class EffortStepTestCase(TestCase, BasicTestMixin):
         effort_step = EffortStep.objects.create(name="Name", number=127)
 
         self.assertEqual(str(effort_step), "Name")
+
+
+class TargetGroupTestCase(TestCase):
+    def test_str(self):
+        target_group = create_target_group(
+            name="familieafdelingen", required_fields_for_case="district"
+        )
+        self.assertEqual(str(target_group), "familieafdelingen")
+
+    def test_get_required_fields_for_case(self):
+        target_group = create_target_group(
+            name="familieafdelingen", required_fields_for_case="district"
+        )
+
+        self.assertEqual(
+            target_group.get_required_fields_for_case(), ["district"]
+        )
+
+    def test_get_required_fields_for_case_empty(self):
+        target_group = create_target_group(
+            name="familieafdelingen", required_fields_for_case=""
+        )
+
+        self.assertEqual(target_group.get_required_fields_for_case(), [])
 
 
 class InternalPaymentRecipientTestCase(TestCase):
