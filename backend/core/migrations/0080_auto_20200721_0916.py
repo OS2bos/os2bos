@@ -12,6 +12,7 @@ def migrate_targetgroups(apps, schema_editor):
         ):
             csv_required = ",".join(target_group.required_fields_for_case)
             target_group.required_fields_for_case_csv = csv_required
+            target_group.required_fields_for_case = None
             target_group.save()
 
 
