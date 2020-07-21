@@ -167,9 +167,9 @@
         </div>
         
         <h2 style="padding: 2rem 0 0;">
-            Betalinger <span style="opacity: .66;">betalingsnøgle {{ pay.payment_id }}</span>
+            Betalinger <span style="opacity: .66;">betalingsnøgle {{ payment_plan.payment_id }}</span>
         </h2>
-        <payment-schedule :p-id="pay.payment_id" />
+        <payment-schedule :p-id="payment_plan.payment_id" />
         
     </section>
 
@@ -219,9 +219,6 @@ export default {
             } else {
                 return false
             }
-        },
-        pay: function() {
-            return this.$store.getters.getPaymentPlan
         },
         cas: function() {
             return this.$store.getters.getCase
@@ -447,6 +444,10 @@ export default {
 
     .activity .payment_schedule {
         margin: 0 0 1rem;
+    }
+
+    .activity-EXPECTED {
+        background-color: hsl(40, 90%, 80%);
     }
 
 </style>
