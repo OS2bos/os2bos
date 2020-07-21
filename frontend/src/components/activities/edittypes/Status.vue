@@ -27,37 +27,24 @@ export default {
     mixins: [
         mixin
     ],
-    data: function() {
-        return {
-            status: null
-        }
-    },
-    watch: {
-        status: function(new_val) {
-            if (this.editable) {
-                if (new_val) {
-                    this.model = 'EXPECTED'
-                } else {
-                    this.model = 'DRAFT'
-                }
+    computed: {
+        status: {
+            get: function() {
+                return this.model === 'EXPECTED' ? true : false 
+            }, 
+            set: function(new_val) {
+                if (this.editable) {
+                    if (new_val) {
+                        this.model = 'EXPECTED'
+                    } else {
+                        this.model = 'DRAFT'
+                    }
+                }   
             }
-        },
-    },
-    methods: {
-        setStatusModel: function() {
-            if (this.model === 'EXPECTED') {
-                this.status = true
-            } else {
-                this.status = false
-            }
-        },
-        statusLabel: function(status) {
-            return displayStatus(status)
         }
     },
     created: function() {
         this.property = 'status'
-        this.setStatusModel()
     }
 }
 </script>
