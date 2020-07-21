@@ -127,11 +127,9 @@ class TargetGroup(Classification):
         ordering = ("name",)
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
-    required_fields_for_case = ArrayField(
-        models.CharField(max_length=128),
-        blank=True,
-        null=True,
-        verbose_name="påkrævede felter på sag",
+    # required fields as CSV delimited CharField.
+    required_fields_for_case = models.CharField(
+        max_length=128, blank=True, verbose_name=_("påkrævede felter på sag")
     )
 
     def __str__(self):
