@@ -1222,7 +1222,7 @@ class CaseSerializerTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         target_group = create_target_group(
-            name="Familieafdelingen", required_fields_for_case=["district"]
+            name="Familieafdelingen", required_fields_for_case="district"
         )
         data = CaseSerializer(case).data
         data["target_group"] = target_group.id
@@ -1243,7 +1243,7 @@ class CaseSerializerTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         target_group = create_target_group(
-            name="Handicapafdelingen", required_fields_for_case=[]
+            name="Handicapafdelingen", required_fields_for_case=""
         )
         data = CaseSerializer(case).data
         data["target_group"] = target_group.id
@@ -1274,7 +1274,7 @@ class CaseSerializerTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         target_group = case.target_group
-        target_group.required_fields_for_case = ["effort_step"]
+        target_group.required_fields_for_case = "effort_step"
         target_group.save()
 
         data = CaseSerializer(case).data
@@ -1293,7 +1293,7 @@ class CaseSerializerTestCase(TestCase, BasicTestMixin):
         case.save()
 
         target_group = case.target_group
-        target_group.required_fields_for_case = ["effort_step"]
+        target_group.required_fields_for_case = "effort_step"
         target_group.save()
 
         data = CaseSerializer(case).data

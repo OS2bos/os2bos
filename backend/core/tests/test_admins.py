@@ -307,7 +307,7 @@ class TestActivityAdmin(AuthenticatedTestCase, BasicTestMixin):
 class TestTargetGroupAdmin(TestCase):
     def test_target_group_required_fields_for_case_initial(self):
         target_group = create_target_group(
-            name="familieafdelingen", required_fields_for_case=["district"]
+            name="familieafdelingen", required_fields_for_case="district"
         )
         site = AdminSite()
         request = MockRequest()
@@ -325,7 +325,7 @@ class TestTargetGroupAdmin(TestCase):
 
     def test_target_group_required_fields_for_case_choices(self):
         target_group = create_target_group(
-            name="familieafdelingen", required_fields_for_case=["district"]
+            name="familieafdelingen", required_fields_for_case="district"
         )
         site = AdminSite()
         request = MockRequest()

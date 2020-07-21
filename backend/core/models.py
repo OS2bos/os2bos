@@ -132,6 +132,10 @@ class TargetGroup(Classification):
         max_length=128, blank=True, verbose_name=_("påkrævede felter på sag")
     )
 
+    def get_required_fields_for_case(self):
+        """ Return required_fields_for_case from CSV to list."""
+        return self.required_fields_for_case.split(",")
+
     def __str__(self):
         return f"{self.name}"
 

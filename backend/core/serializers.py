@@ -104,7 +104,7 @@ class CaseSerializer(serializers.ModelSerializer):
         ):
             required_fields_for_case = data[
                 "target_group"
-            ].required_fields_for_case
+            ].get_required_fields_for_case()
             for field in required_fields_for_case:
                 if (
                     self.partial
