@@ -44,6 +44,7 @@ from core.models import (
     Price,
     PaymentDateExclusion,
     AccountAlias,
+    InternalPaymentRecipient,
 )
 from core.proxies import (
     SectionEffortStepProxy,
@@ -586,6 +587,13 @@ class EffortStepAdmin(ClassificationAdmin):
         )
 
     list_sections.short_description = _("Tilladte paragraffer")
+
+
+@admin.register(InternalPaymentRecipient)
+class InternalPaymentRecipientAdmin(ClassificationAdmin):
+    """ModelAdmin for InternalPaymentRecipient."""
+
+    list_display = ("name",)
 
 
 @admin.register(SchoolDistrict)
