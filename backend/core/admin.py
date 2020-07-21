@@ -327,7 +327,7 @@ class TargetGroupForm(forms.ModelForm):
         ] = self.instance.required_fields_for_case.split(",")
 
     def clean_required_fields_for_case(self):
-        # Clean required_fields_for_case as comma-separated string.
+        """Clean required_fields_for_case as comma-separated string."""
         cleaned = ",".join(self.cleaned_data["required_fields_for_case"])
         return cleaned
 
