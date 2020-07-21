@@ -15,7 +15,6 @@ import portion as P
 from django import forms
 from django.db import models, transaction
 from django.db.models import Q, F
-from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone

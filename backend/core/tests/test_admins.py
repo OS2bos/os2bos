@@ -342,6 +342,29 @@ class TestTargetGroupAdmin(TestCase):
             ],
         )
 
+    def test_target_group_clean_required_fields_for_case(self):
+        target_group = create_target_group(
+            name="familieafdelingen",
+            required_fields_for_case="district,effort_step",
+        )
+        site = AdminSite()
+        request = MockRequest()
+        target_group_admin = TargetGroupAdmin(TargetGroup, site)
+        target_group_form_class = target_group_admin.get_form(
+            request, target_group
+        )
+        target_group_data = {
+            "name": "familieafdelingen",
+            "required_fields_for_case": ["district", "effort_step"],
+        }
+        target_group_form = target_group_form_class(target_group_data)
+
+        self.assertTrue(target_group_form.is_valid())
+        self.assertEqual(
+            target_group_form.cleaned_data["required_fields_for_case"],
+            "district,effort_step",
+        )
+
 
 class TestSectionAdmin(TestCase):
     def test_list_main_activity_for(self):
