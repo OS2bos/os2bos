@@ -7,7 +7,9 @@ def migrate_targetgroups(apps, schema_editor):
     TargetGroup = apps.get_model("core", "TargetGroup")
 
     for target_group in TargetGroup.objects.all():
-        if target_group.required_fields_for_case:
+        if target_group.required_fields_for_case and isinstance(
+            target_group.required_fields_for_case, list
+        ):
             csv_required = ",".join(target_group.required_fields_for_case)
             target_group.required_fields_for_case_csv = csv_required
             target_group.save()

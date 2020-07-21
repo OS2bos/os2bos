@@ -9,11 +9,12 @@ def set_targetgroup_required_fields(apps, schema_editor):
         required_fields = target_group.required_fields_for_case
         if not required_fields:
             continue
-        if "scaling_step" not in required_fields:
-            required_fields.append("scaling_step")
-        if "effort_step" not in required_fields:
-            required_fields.append("effort_step")
-        target_group.required_fields_for_case = required_fields
+        required_fields_list = required_fields.split(",")
+        if "scaling_step" not in required_fields_list:
+            required_fields_list.append("scaling_step")
+        if "effort_step" not in required_fields_list:
+            required_fields_list.append("effort_step")
+        target_group.required_fields_for_case = ",".join(required_fields_list)
         target_group.save()
 
 

@@ -3643,11 +3643,7 @@ class SectionInfoTestCase(TestCase, BasicTestMixin):
         details = create_activity_details()
         section = create_section()
         create_section_info(details, section)
-        with self.assertRaisesRegex(
-            IntegrityError,
-            "duplicate key value violates unique "
-            'constraint "unique_section_activity_details"',
-        ):
+        with self.assertRaises(IntegrityError):
             create_section_info(details, section)
 
 

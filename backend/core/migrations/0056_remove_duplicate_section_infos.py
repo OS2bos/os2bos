@@ -9,7 +9,8 @@ def delete_duplicate_section_infos(apps, schema_editor):
     # Find distinct section infos on section and activity_details.
     distinct_section_info_pks = (
         SectionInfo.objects.all()
-        .distinct("section", "activity_details")
+        .values("section", "activity_details")
+        .distinct()
         .values_list("pk", flat=True)
     )
     # Exclude distinct section infos from all to get duplicates.

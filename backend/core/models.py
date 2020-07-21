@@ -133,6 +133,8 @@ class TargetGroup(Classification):
 
     def get_required_fields_for_case(self):
         """Return required_fields_for_case from CSV to list."""
+        if not self.required_fields_for_case:
+            return []
         return self.required_fields_for_case.split(",")
 
     def __str__(self):
