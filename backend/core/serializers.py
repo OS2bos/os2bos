@@ -434,6 +434,12 @@ class ActivitySerializer(WritableNestedModelSerializer):
             data["payment_plan"]["payment_type"]
             == PaymentSchedule.ONE_TIME_PAYMENT
         )
+
+        if "start_date" not in data and not is_one_time_payment:
+            raise serializers.ValidationError(
+                _("der skal angives en startdato for ydelsen")
+            )
+
         if is_one_time_payment and (
             "payment_date" not in data["payment_plan"]
             or data["payment_plan"]["payment_date"] is None

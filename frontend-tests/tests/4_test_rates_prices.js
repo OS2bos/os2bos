@@ -22,8 +22,8 @@ function makeDateStr(date, offset) {
 }
 
 let today = new Date(),
-    rand = Math.floor(Math.random() * 100 ),
-    rand2 = Math.floor(Math.random() * 100 )
+    rand = Math.floor(Math.random() * 500 ),
+    rand2 = Math.floor(Math.random() * 500 )
 
 let str1mth = makeDateStr(today, 1),
     str2mth = makeDateStr(today, 2),
@@ -91,7 +91,7 @@ test('Create activity with per unit pricing', async t => {
 
     await createActivity(t, testdata.act2)
 
-    const act_link_text = testdata.act2.details__name.substr(0,4)
+    const act_link_text = testdata.act2.details__name.substr(0,3)
     
     await t
         .expect(Selector('.act-list-row a').withText(act_link_text).exists).ok()

@@ -2,10 +2,6 @@ function sanitizeActivity(activity) {
     
     let new_act = activity
 
-    if (new_act.payment_plan.payment_type === 'ONE_TIME_PAYMENT') {
-        new_act.end_date = new_act.start_date // One time payments have the end date set to equal the start date
-    }
-
     switch(new_act.payment_plan.payment_cost_type) {
         case 'PER_UNIT':
             new_act.payment_plan.payment_amount = null // per_unit_price.amount is used instead

@@ -21,6 +21,7 @@ async function activityFormInput(t, act_data) {
         details__name: null,
         note: 'This is a nice little note',
         payment_type: 'RUNNING_PAYMENT',
+        payment_date: null,
         start_date: null,
         end_date: null,
         payment_frequency: 'MONTHLY',
@@ -59,10 +60,20 @@ async function activityFormInput(t, act_data) {
         if (act_data.end_date) {
             await t.typeText('#pay-date-end', act_data.end_date, {replace: true})
         }
-    } else {
+    } else if (act_data.payment_type === 'ONE_TIME_PAYMENT') {
         await t.click(Selector('label').withAttribute('for', 'pay-type-single'))
+        if (act_data.payment_date) {
+            await t.typeText('#pay-date-single', act_data.payment_date, {replace: true})
+        }
+    } else {
         if (act_data.start_date) {
-            await t.typeText('#pay-date-single', act_data.start_date, {replace: true})
+            await t.typeText('#pay-date-start', act_data.start_date, {replace: true})
+        }
+        if (act_data.end_date) {
+            await t.typeText('#pay-date-end', act_data.end_date, {replace: true})
+        }
+        if (act_data.payment_date) {
+            await t.typeText('#pay-date-single', act_data.payment_date, {replace: true})
         }
     }
     

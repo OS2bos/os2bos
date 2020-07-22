@@ -7,7 +7,7 @@
 
 <template>
 
-    <fieldset v-if="editable && act.status !== 'EXPECTED'">
+    <fieldset v-if="editable && !act.modifies">
         <legend class="required">Afregning</legend>
         <input 
             type="radio" 
