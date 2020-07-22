@@ -67,6 +67,17 @@
                     <payment-type :editable="false" />
                     <template v-if="payment_plan.payment_type === 'ONE_TIME_PAYMENT'">
                         <pay-date-single :editable="is_editable" />
+
+                        <fieldset v-if="is_editable">
+                            <legend>Betaling dækker periode</legend>
+                            <div class="row">
+                                <pay-date-single-period-start :editable="true" />
+                                <pay-date-single-period-end :editable="true" />
+                            </div>
+                        </fieldset>
+
+                        <pay-date-single-period-display v-else />
+
                     </template>
                     <div v-if="payment_plan.payment_type === 'RUNNING_PAYMENT'">
                         <pay-date-start :editable="is_editable" />
@@ -324,7 +335,7 @@ export default {
         },
         saveChanges: function() {
 
-            if (!this.checkDateMax(this.act.start_date)) {
+            if (this.act.start_date && !this.checkDateMax(this.act.start_date)) {
                 return
             }
             if (this.act.end_date && !this.checkDateMax(this.act.end_date)) {

@@ -20,6 +20,8 @@
                 <payment-type :editable="false" />
                 <template v-if="payment_plan.payment_type === 'ONE_TIME_PAYMENT'">
                     <pay-date-single :editable="false" />
+                    <pay-date-single-period-display />
+
                 </template>
             </div>
 

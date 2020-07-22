@@ -265,6 +265,54 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         serializer.is_valid()
         self.assertEqual(serializer.errors, {})
 
+    def test_validate_no_start_date(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        now = timezone.now().date()
+        start_date = now - timedelta(days=6)
+        end_date = now + timedelta(days=12)
+        details, unused = ActivityDetails.objects.get_or_create(
+            activity_id="000000",
+            name="Test aktivitet",
+            max_tolerance_in_percent=10,
+            max_tolerance_in_dkk=1000,
+        )
+        # create an already granted activity.
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=start_date,
+            end_date=end_date,
+            details=details,
+        )
+        create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_frequency=PaymentSchedule.WEEKLY,
+            activity=activity,
+        )
+        modifies_payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("600.0"),
+            payment_frequency=PaymentSchedule.WEEKLY,
+        )
+        # let the granted activity be modified by another expected activity.
+        data = {
+            "case": case.id,
+            "appropriation": appropriation.id,
+            "status": STATUS_EXPECTED,
+            "activity_type": MAIN_ACTIVITY,
+            "modifies": activity.id,
+            "details": details.id,
+            "payment_plan": PaymentScheduleSerializer(
+                modifies_payment_schedule
+            ).data,
+        }
+        serializer = ActivitySerializer(data=data)
+        serializer.is_valid()
+
     def test_validate_expected_invalid_date(self):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district

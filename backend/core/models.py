@@ -1683,7 +1683,9 @@ class Activity(AuditModelMixin, models.Model):
         verbose_name=_("bevillingsdato"), null=True, blank=True
     )
 
-    start_date = models.DateField(verbose_name=_("startdato"))
+    start_date = models.DateField(
+        verbose_name=_("startdato"), null=True, blank=True
+    )
     end_date = models.DateField(
         verbose_name=_("slutdato"), null=True, blank=True
     )
@@ -1692,7 +1694,7 @@ class Activity(AuditModelMixin, models.Model):
         max_length=128, verbose_name=_("type"), choices=type_choices
     )
 
-    # An expected change modifies another actitvity and will eventually
+    # An expected change modifies another activity and will eventually
     # be merged with it.
     modifies = models.ForeignKey(
         "self",
@@ -1792,7 +1794,7 @@ class Activity(AuditModelMixin, models.Model):
             )
 
         # Check that this modification is in the future.
-        if self.start_date < today:
+        if self.start_date and self.start_date < today:
             raise forms.ValidationError(
                 _(
                     "den forventede justerings startdato skal"

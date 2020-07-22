@@ -43,7 +43,6 @@ const today = new Date(),
             recipient_type: 'COMPANY'
         },
         act3: {
-            status: 'EXPECTED',
             start_date: createDate(5),
             payment_amount: '15'
         }
