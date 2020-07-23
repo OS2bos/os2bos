@@ -346,7 +346,7 @@ export default {
             new_act.payment_plan = this.payment_plan
             delete new_act.payment_plan.price_per_unit // API endpoint won't accept this in PATCH request
 
-            const sanitized_act = sanitizeActivity(new_act)
+            const sanitized_act = sanitizeActivity(new_act, 'patch')
 
             axios.patch(`/activities/${ this.$route.params.actId }/`, sanitized_act)
             .then(res => {
