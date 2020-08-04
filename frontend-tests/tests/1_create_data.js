@@ -5,19 +5,7 @@ import { login } from '../utils/logins.js'
 import { createActivity, editActivity, createAppropriation, createCase } from '../utils/crud.js'
 import { axe } from '../utils/axe.js'
 import baseurl from '../utils/url.js'
-
-function leadZero(number) {
-    if (number < 10) {
-        return `0${ number }`
-    } else {
-        return number
-    }
-}
-
-function makeDateStr(date, offset) {
-    let new_date = new Date(date.setMonth(date.getMonth() + offset + 1))
-    return `${new_date.getFullYear()}-${leadZero(new_date.getMonth() + 1)}-01`
-}
+import { makeDateStr } from '../utils/utils.js'
 
 let today = new Date(),
     rand = Math.floor(Math.random() * 1000 ),
@@ -60,6 +48,7 @@ const testdata = {
         end_date: str10mth,
         payment_frequency: 'MONTHLY',
         pay_day_of_month: '2',
+        payment_cost_type: 'FIXED',
         payment_amount: '3095.50',
         recipient_type: 'COMPANY',
         recipient_name: 'Base Camp',
@@ -72,6 +61,7 @@ const testdata = {
         end_date: str5mth,
         payment_frequency: 'MONTHLY',
         pay_day_of_month: '1',
+        payment_cost_type: 'FIXED',
         payment_amount: '595.95',
         recipient_type: 'COMPANY',
         recipient_name: 'CEKTOS',
@@ -80,7 +70,8 @@ const testdata = {
         details__name: 'Tolk',
         note: 'En anden lille note',
         payment_type: 'ONE_TIME_PAYMENT',
-        payment_date: str5mth, 
+        payment_date: str5mth,
+        payment_cost_type: 'FIXED',
         payment_amount: '150',
         recipient_type: 'PERSON',
         recipient_id: '777777-7777',
@@ -99,6 +90,7 @@ const testdata = {
         start_date: str2mth,
         end_date: str5mth,
         note: 'En anden lille note',
+        payment_cost_type: 'FIXED',
         payment_amount: '9.95',
         recipient_type: 'INTERNAL',
         recipient_id: 'xxxx-xxxx',
@@ -110,6 +102,7 @@ const testdata = {
         payment_type: 'RUNNING_PAYMENT',
         payment_frequency: 'BIWEEKLY',
         note: 'Denne ydelse vil blive slettet',
+        payment_cost_type: 'FIXED',
         payment_amount: '999.95',
         recipient_type: 'COMPANY',
         recipient_id: '89372342',
@@ -184,7 +177,7 @@ test('Add adjustment activities', async t => {
         .click(Selector('a').withText(testdata.appr1.name))
         .click(Selector('a').withText(testdata.act1.details__name))
         .click('.act-edit-btn')
-    
+
     await editActivity(t, testdata.act4)
 
     await t

@@ -39,6 +39,7 @@ const today = new Date(),
             payment_type: 'RUNNING_PAYMENT',
             start_date: createDate(3),
             payment_frequency: 'WEEKLY',
+            payment_cost_type: 'FIXED',
             payment_amount: '12',
             recipient_type: 'COMPANY'
         },
@@ -58,6 +59,7 @@ fixture('Check payments start date')
 test('Start date rule check for activities with "CASH" payment', async t => {
 
     await createCase(t, testdata.case1)
+
     await createAppropriation(t, testdata.appr1)
 
     await t

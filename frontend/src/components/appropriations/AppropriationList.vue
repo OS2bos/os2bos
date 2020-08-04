@@ -20,7 +20,7 @@
                     <i class="material-icons">folder_open</i>
                     Bevillingsskrivelser
                 </h2>
-                <button v-if="permissionCheck === true" class="appropriation-create-btn" @click="$router.push(`/case/${ caseId }/appropriation-create/`)">+ Opret bevillingsskrivelse</button>
+                <button v-if="user_can_edit === true" class="appropriation-create-btn" @click="$router.push(`/case/${ caseId }/appropriation-create/`)">+ Opret bevillingsskrivelse</button>
             </div>
 
             <tr slot="datagrid-table-footer" class="summary">
@@ -50,12 +50,14 @@
     import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
     import { sectionId2name, displayStatus, activityId2name } from '../filters/Labels.js'
-    import UserRights from '../mixins/UserRights.js'
+    import PermissionLogic from '../mixins/PermissionLogic.js'
     import DataGrid from '../datagrid/DataGrid.vue'
 
     export default {
 
-        mixins: [UserRights],
+        mixins: [
+            PermissionLogic
+        ],
         components: {
             DataGrid
         },

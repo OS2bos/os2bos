@@ -24,7 +24,6 @@ function checkRulePayDate(start_date, method) {
     return false
 }
 
-
 export {
     checkRulePayDate
 }

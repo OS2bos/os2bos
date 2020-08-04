@@ -6,46 +6,40 @@
    - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
 
 <template>
-
-    <input v-if="permissionCheck === true && isPayableManually" class="field-note" type="text" v-model="note">
-
+    <input v-if="visible" class="field-note" type="text" v-model="note">
     <span v-else>
-      {{ note }}
+        {{ note }}
     </span>
-
 </template>
 
 <script>
 
-import UserRights from '../../mixins/UserRights.js'
-import IsPayableManually from '../../mixins/IsPayableManually'
+import PermissionLogic from '../../mixins/PermissionLogic.js'
 
 export default {
     mixins: [ 
-        UserRights,
-        IsPayableManually
+        PermissionLogic
     ],
-    props: {
-        rowId: Number
-    },
-    data: function() {
-        return {
-            note: null
+    props: [
+        'rowid',
+        'compdata'
+    ],
+    computed: {
+        note: {
+            get: function() {
+                return this.compdata.note
+            },
+            set: function(new_val) {
+                this.$store.commit('setPaymentEditRowData', {
+                    idx: this.rowid,
+                    prop: 'note', 
+                    val: new_val
+                })
+            }
+        },
+        visible: function() {
+            return this.is_payable(this.compdata)
         }
-    },
-    watch: {
-        note: function(new_val) {
-            this.$store.commit('setPaymentEditRowData', {
-                idx: this.rowId,
-                prop: 'note', 
-                val: new_val
-            })
-        }
-    },
-    created: function() {
-        this.note = this.payments.filter(p => {
-            return p.id === this.rowId
-        })[0].note
     }
 }
 </script>

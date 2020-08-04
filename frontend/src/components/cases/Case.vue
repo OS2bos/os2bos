@@ -16,7 +16,7 @@
                 Hovedsag {{ cas.sbsys_id }}
             </h1>
             <div v-if="!edit_mode" class="actions">
-                <button v-if="permissionCheck === true" @click="edit_mode = !edit_mode">Redigér</button>
+                <button v-if="user_can_edit === true" @click="edit_mode = !edit_mode">Redigér</button>
             </div>
         </header>
 
@@ -112,12 +112,12 @@
     import axios from '../http/Http.js'
     import { municipalityId2name, targetGroupId2name, districtId2name, effortId2name, displayEffort, userId2name, teamId2name } from '../filters/Labels.js'
     import store from '../../store.js'
-    import UserRights from '../mixins/UserRights.js'
+    import PermissionLogic from '../mixins/PermissionLogic.js'
 
     export default {
-
-        mixins: [UserRights],
-
+        mixins: [
+            PermissionLogic
+        ],
         components: {
             CaseEdit,
             Appropriations,
@@ -140,9 +140,6 @@
         computed: {
             cas: function() {
                 return this.$store.getters.getCase
-            },
-            user: function() {
-                return this.$store.getters.getUser
             },
             targetGroups: function() {
                 return this.$store.getters.getTargetGroups

@@ -2,24 +2,9 @@
 
 import { Selector } from 'testcafe'
 import { login } from '../utils/logins.js'
+import { makeDateStr } from '../utils/utils.js'
 import { createActivity, createCase, createAppropriation, approveActivities } from '../utils/crud.js'
 import baseurl from '../utils/url.js'
-
-function leadZero(number) {
-    if (number < 10) {
-        return `0${ number }`
-    } else {
-        return number
-    }
-}
-
-function makeDateStr(date, offset) {
-    if (!offset) {
-        offset = 0
-    }
-    let new_date = new Date(date.setMonth(date.getMonth() + offset + 1))
-    return `${new_date.getFullYear()}-${leadZero(new_date.getMonth() + 1)}-01`
-}
 
 let today = new Date(),
     rand = Math.floor(Math.random() * 500 ),

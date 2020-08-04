@@ -8,7 +8,7 @@
 
 <template>
 
-    <header>
+    <header class="globalheader-wrapper">
         <div class="globalheader">
             <router-link to="/" class="header-link" title="Bevilling og Styring">
                 <img class="global-logo" src="/logo.png" alt="">
@@ -56,6 +56,10 @@
 
 <style>
 
+    .globalheader-wrapper {
+        margin: 0 0 1rem;
+    }
+
     .globalheader {
         display: flex;
         flex-flow: row nowrap;
@@ -64,7 +68,7 @@
         padding: 1rem 2rem .75rem;
         background-color: var(--grey0);
         box-shadow: 0 .25rem 1rem hsla(var(--color1), 83%, 62%, .125);
-        margin: 0 0 1rem;
+        margin: 0;
     }
 
     .header-link {

@@ -479,12 +479,15 @@ class PaymentSchedule(models.Model):
     PER_HOUR_PAYMENT = "PER_HOUR_PAYMENT"
     PER_DAY_PAYMENT = "PER_DAY_PAYMENT"
     PER_KM_PAYMENT = "PER_KM_PAYMENT"
+    INDIVIDUAL_PAYMENT = "INDIVIDUAL_PAYMENT"
+
     payment_type_choices = (
         ((ONE_TIME_PAYMENT), _("Engangsudgift")),
         ((RUNNING_PAYMENT), _("Fast beløb, løbende")),
         ((PER_HOUR_PAYMENT), _("Takst pr. time")),
         ((PER_DAY_PAYMENT), _("Takst pr. døgn")),
         ((PER_KM_PAYMENT), _("Takst pr. kilometer")),
+        ((INDIVIDUAL_PAYMENT), _("Individuel")),
     )
 
     DAILY = "DAILY"
@@ -568,9 +571,11 @@ class PaymentSchedule(models.Model):
 
     payment_cost_type = models.CharField(
         max_length=128,
-        verbose_name=_("betalingstype"),
+        verbose_name=_("betalingspristype"),
         default=FIXED_PRICE,
         choices=payment_cost_choices,
+        null=True,
+        blank=True,
     )
 
     payment_rate = models.ForeignKey(
@@ -684,6 +689,10 @@ class PaymentSchedule(models.Model):
 
     def generate_payments(self, start, end=None, vat_factor=Decimal("100")):
         """Generate payments with a start and end date."""
+        # Individual is a special case and should not be handled.
+        if self.payment_type == self.INDIVIDUAL_PAYMENT:
+            return
+
         # If no end is specified, choose end of the next year.
         if not end:
             today = date.today()
@@ -716,8 +725,12 @@ class PaymentSchedule(models.Model):
 
         newest_payment = self.payments.order_by("-date").first()
 
-        # One time payment is a special case and should not be handled.
-        if self.payment_type == self.ONE_TIME_PAYMENT:
+        # One time payment and Individual are special cases
+        # and should not be handled.
+        if (
+            self.payment_type == self.ONE_TIME_PAYMENT
+            or self.payment_type == self.INDIVIDUAL_PAYMENT
+        ):
             return
         # The new start_date should be based on the next payment date
         # from create_rrule.
@@ -1949,6 +1962,13 @@ class Activity(AuditModelMixin, models.Model):
         """
         if not hasattr(self, "payment_plan") or not self.payment_plan:
             return Decimal(0.0)
+        # Individual payments are a special case and should just
+        # use total_cost.
+        if (
+            self.payment_plan.payment_type
+            == PaymentSchedule.INDIVIDUAL_PAYMENT
+        ):
+            return self.total_cost
 
         vat_factor = self.vat_factor
         now = timezone.now()
