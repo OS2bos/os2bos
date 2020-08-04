@@ -69,6 +69,9 @@ class Command(BaseCommand):
             # dict with (activity_id, paragraph) -> (kle_number, sbsys_id)
             kle_and_sbsys_dict = {}
 
+            # dict with (activity_id, paragraph) -> (main_account_number)
+            main_account_number_dict = {}
+
             for row in rows[1:]:
                 activity_id = row[0]
                 if not activity_id:
@@ -94,9 +97,24 @@ class Command(BaseCommand):
                     section_supplementary_dict[activity_id].add(
                         suppl_activity_on
                     )
+                paragraph = (
+                    suppl_activity_on
+                    if suppl_activity_on
+                    else main_activity_on
+                )
+
                 main_activity = row[8]
                 if main_activity:
                     main_activity_dict[activity_id].add(main_activity)
+
+                account_number = row[13]
+                main_account_number = account_number.split("-")[0]
+                # if no main activity column is present
+                # we know the row is a main activity.
+                if not main_activity and main_account_number:
+                    main_account_number_dict[
+                        activity_id, paragraph
+                    ] = main_account_number
 
                 try:
                     ad, created = ActivityDetails.objects.update_or_create(
@@ -139,12 +157,17 @@ class Command(BaseCommand):
                         kle_number, sbsys_id = kle_and_sbsys_dict[
                             details_obj.activity_id, paragraph
                         ]
+                        main_account_number = main_account_number_dict.get(
+                            (details_obj.activity_id, paragraph), ""
+                        )
                         SectionInfo.objects.update_or_create(
                             activity_details=details_obj,
                             section=main_activity_for,
                             defaults={
                                 "kle_number": kle_number,
                                 "sbsys_template_id": sbsys_id,
+                                "main_activity_"
+                                "main_account_number": main_account_number,
                             },
                         )
 

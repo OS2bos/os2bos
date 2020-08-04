@@ -40,6 +40,8 @@
                     <dd class="dim">{{ displayDate(payment.date) }}</dd>
                     <dt>Kontostreng</dt>
                     <dd>{{ payment.account_string ? payment.account_string : 'ukendt' }}</dd>
+                    <dt>Kontoalias</dt>
+                    <dd>{{ payment.account_alias ? payment.account_alias : 'ukendt' }}</dd>
                     <template v-if="payment.payment_schedule__fictive">
                         <dt>Betaling</dt>
                         <dd>Fiktiv</dd>

@@ -12,6 +12,7 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
+from django.conf import settings
 
 from freezegun import freeze_time
 
@@ -1222,3 +1223,16 @@ class TestAuditModelViewSetMixin(AuthenticatedTestCase, BasicTestMixin):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["user_modified"], self.username)
+
+
+class TestIsEditingPastPaymentsAllowed(AuthenticatedTestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_is_past_editing_enabled(self):
+        self.client.login(username=self.username, password=self.password)
+        url = reverse("editing_past_payments_allowed")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), settings.ALLOW_EDIT_OF_PAST_PAYMENTS)

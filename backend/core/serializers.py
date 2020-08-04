@@ -150,6 +150,7 @@ class PaymentSerializer(serializers.ModelSerializer):
     """
 
     account_string = serializers.ReadOnlyField()
+    account_alias = serializers.ReadOnlyField()
     payment_schedule__payment_id = serializers.ReadOnlyField(
         source="payment_schedule.payment_id", default=None
     )
@@ -203,7 +204,7 @@ class PaymentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Payment
-        exclude = ("saved_account_string",)
+        exclude = ("saved_account_string", "saved_account_alias")
 
 
 class RatePerDateSerializer(serializers.ModelSerializer):
@@ -268,7 +269,6 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
 
     payments = PaymentSerializer(many=True, read_only=True)
     price_per_unit = PriceSerializer(required=False, allow_null=True)
-    account = serializers.ReadOnlyField()
 
     class Meta:
         model = PaymentSchedule
@@ -426,19 +426,26 @@ class ActivitySerializer(WritableNestedModelSerializer):
             and data["start_date"] > data["end_date"]
         ):
             raise serializers.ValidationError(
-                _("startdato skal være før eller identisk med slutdato")
+                _("Startdato skal være før eller identisk med slutdato")
             )
 
-        # one time payments should have the same start and end date.
+        # One time payments should have a payment date in the payment plan.
         is_one_time_payment = (
             data["payment_plan"]["payment_type"]
             == PaymentSchedule.ONE_TIME_PAYMENT
         )
+
+        if "start_date" not in data and not is_one_time_payment:
+            raise serializers.ValidationError(
+                _("der skal angives en startdato for ydelsen")
+            )
+
         if is_one_time_payment and (
-            "end_date" not in data or data["end_date"] != data["start_date"]
+            "payment_date" not in data["payment_plan"]
+            or data["payment_plan"]["payment_date"] is None
         ):
             raise serializers.ValidationError(
-                _("startdato og slutdato skal være ens for engangsbetaling")
+                _("der skal angives en betalingsdato for engangsbetaling")
             )
 
         # Monthly payments that are not expected adjustments should have a
@@ -472,13 +479,34 @@ class ActivitySerializer(WritableNestedModelSerializer):
                     _("Betalingsparametre resulterer ikke i nogen betalinger")
                 )
 
+        # Cash payments that are not fictive should have a "valid" start_date
+        # based on payment date exclusions.
+        data_copy = data.copy()
+
+        if (
+            "price_per_unit" in data_copy["payment_plan"]
+            and data_copy["payment_plan"]["price_per_unit"]
+        ):
+            data_copy["payment_plan"]["price_per_unit"] = PriceSerializer(
+                data=data_copy["payment_plan"]["price_per_unit"]
+            ).instance
+        data_copy["payment_plan"] = PaymentSchedule(
+            **data_copy.pop("payment_plan")
+        )
+        instance = Activity(**data_copy)
+
+        is_valid_start_date = instance.is_valid_activity_start_date()
+        if not is_valid_start_date:
+            raise serializers.ValidationError(
+                _(
+                    "Startdato skal være i fremtiden og "
+                    "der skal være mindst to udbetalingsdage i række"
+                    " fra nu og til startdatoen"
+                )
+            )
+
         if "modifies" in data and data["modifies"]:
             # run the validate_expected flow.
-            data_copy = data.copy()
-            data_copy["payment_plan"] = PaymentSchedule(
-                **data_copy.pop("payment_plan")
-            )
-            instance = Activity(**data_copy)
             try:
                 instance.validate_expected()
             except forms.ValidationError as e:

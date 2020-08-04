@@ -27,7 +27,8 @@
                 <dl>
                     <dt>Sagspart (CPR, navn)</dt>
                     <dd>
-                        {{ cas.cpr_number }}, {{ cas.name }}
+                        {{ cas.cpr_number }}<br>
+                        {{ cas.name }}
                     </dd>
 
                     <template v-if="cas.effort_step && requiredEffortStep === true">
@@ -42,7 +43,7 @@
                         </dd>
                     </template>
 
-                    <template v-if="cas.effort_step || cas.scaling_step">
+                    <template v-if="requiredEffortStep === true || requiredScalingStep === true">
                         <dt>Vurderinger</dt>
                         <dd>
                             <router-link :to="`/case/${ cas.id }/assessment`" style="display: inline-block; margin-top: .5rem;">Se vurderinger</router-link>

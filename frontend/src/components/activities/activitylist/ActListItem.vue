@@ -25,7 +25,7 @@
             <div class="mini-label" v-html="statusLabel(activity.status)"></div>
         </div>
         <div :title="activityId2name(activity.details)">
-            <router-link :to="`/activity/${ activity.id }`" v-html="activityId2name(activity.details)" />
+            <router-link :to="`/activity/${ activity.id }/`" v-html="activityId2name(activity.details)" />
             <br>
             <span class="dim" v-if="activity.payment_plan && activity.payment_plan.fictive">(Fiktiv)</span>
         </div>

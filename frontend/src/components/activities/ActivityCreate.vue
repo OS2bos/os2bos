@@ -105,6 +105,7 @@ export default {
                     recipient_name: pay_plan.recipient_name,
                     payment_method: pay_plan.payment_method,
                     payment_frequency: pay_plan.payment_frequency,
+                    payment_date: pay_plan.payment_date,
                     payment_day_of_month: pay_plan.payment_day_of_month,
                     payment_type: pay_plan.payment_type,
                     payment_units: pay_plan.payment_units,
@@ -145,7 +146,7 @@ export default {
             this.$router.push(`/appropriation/${ this.appropriation.id }/`)
         },
         saveActivity: function() {
-            if (!this.checkDateMax(this.act.start_date)) {
+            if (this.act.start_date && !this.checkDateMax(this.act.start_date)) {
                 return
             }
             if (this.act.end_date && !this.checkDateMax(this.act.end_date)) {

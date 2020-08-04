@@ -13,6 +13,9 @@ import Fictional from '../payments/edittypes/Fictional.vue'
 
 import PaymentType from '../payments/edittypes/PaymentType.vue'
 import PayDateSingle from '../activities/edittypes/PayDateSingle.vue'
+import PayDateSinglePeriodStart from '../activities/edittypes/PayDateSinglePeriodStart.vue'
+import PayDateSinglePeriodEnd from '../activities/edittypes/PayDateSinglePeriodEnd.vue'
+import PayDateSinglePeriodDisplay from '../activities/edittypes/PayDateSinglePeriodDisplay.vue'
 import PayDateStart from '../activities/edittypes/PayDateStart.vue'
 import PayDateEnd from '../activities/edittypes/PayDateEnd.vue'
 import PaymentFrequency from '../payments/edittypes/PaymentFrequency.vue'
@@ -38,6 +41,8 @@ export default {
         Fictional,
         PaymentType,
         PayDateSingle,
+        PayDateSinglePeriodStart,
+        PayDateSinglePeriodEnd,
         PayDateStart,
         PayDateEnd,
         PaymentFrequency,
@@ -50,7 +55,8 @@ export default {
         PaymentReceiverId,
         PaymentReceiverName,
         PaymentMethod,
-        PaymentMethodDetails
+        PaymentMethodDetails,
+        PayDateSinglePeriodDisplay
     },
     computed: {
         act: function() {
