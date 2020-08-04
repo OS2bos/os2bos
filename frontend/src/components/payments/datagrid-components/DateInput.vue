@@ -6,8 +6,7 @@
    - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
 
 <template>
-    <input v-if="permissionCheck === true && isPayableManually" type="date" v-model="date">
-
+    <input v-if="visible" type="date" v-model="date">
     <span v-else>
         {{ displayPayDate(date) }}
     </span>
@@ -15,41 +14,38 @@
 
 <script>
 
-import UserRights from '../../mixins/UserRights.js'
-import IsPayableManually from '../../mixins/IsPayableManually'
+import PermissionLogic from '../../mixins/PermissionLogic.js'
 import { json2jsDate } from '../../filters/Date.js'
 
 export default {
     mixins: [ 
-        UserRights,
-        IsPayableManually
+        PermissionLogic
     ],
-    props: {
-        rowId: Number
-    },
-    data: function() {
-        return {
-            date: null
-        }
-    },
-    watch: {
-        date: function(new_val) {
-            this.$store.commit('setPaymentEditRowData', {
-                idx: this.rowId,
-                prop: 'paid_date', 
-                val: new_val
-            })
+    props: [
+        'rowid',
+        'compdata'
+    ],
+    computed: {
+        date: {
+            get: function() {
+                return this.compdata.paid_date
+            },
+            set: function(new_val) {
+                this.$store.commit('setPaymentEditRowData', {
+                    idx: this.rowid,
+                    prop: 'paid_date',
+                    val: new_val
+                })
+            }
+        },
+        visible: function() {
+            return this.is_payable(this.compdata)
         }
     },
     methods: {
         displayPayDate: function(payment) {
             return json2jsDate(payment)
         }
-    },
-    created: function() {
-        this.date = this.payments.filter(p => {
-            return p.id === this.rowId
-        })[0].paid_date
     }
 }
 </script>

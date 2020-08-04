@@ -104,6 +104,7 @@ const actions = {
         axios.get(`/activities/${ act_id }/`)
         .then(res => {
             commit('setActivity', res.data)
+            commit('setActDetail', res.data.details)
             commit('setPaymentPlan', res.data.payment_plan)
             dispatch('fetchAppropriation', res.data.appropriation)
             return res.data

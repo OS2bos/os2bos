@@ -466,6 +466,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             ).data,
         }
         serializer = ActivitySerializer(data=data)
+
         serializer.is_valid()
 
     def test_validate_expected_true_ongoing_with_next_payment(self):
@@ -519,6 +520,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         }
         serializer = ActivitySerializer(data=data)
         is_valid = serializer.is_valid()
+
         self.assertTrue(is_valid)
 
     def test_validate_one_time_payment_with_payment_frequency(self):
@@ -551,8 +553,8 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             "payment_plan": PaymentScheduleSerializer(payment_schedule).data,
         }
         serializer = ActivitySerializer(data=data)
-        is_valid = serializer.is_valid()
-        self.assertTrue(is_valid)
+
+        self.assertTrue(serializer.is_valid())
 
     def test_validate_one_time_payment_different_dates(self):
         payment_schedule = create_payment_schedule(
@@ -584,8 +586,8 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             "payment_plan": PaymentScheduleSerializer(payment_schedule).data,
         }
         serializer = ActivitySerializer(data=data)
-        is_valid = serializer.is_valid()
-        self.assertTrue(is_valid)
+
+        self.assertTrue(serializer.is_valid())
 
     def test_validate_one_time_payment_no_payment_date(self):
         payment_schedule = create_payment_schedule(
@@ -620,8 +622,8 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             "payment_plan": payment_schedule_data,
         }
         serializer = ActivitySerializer(data=data)
-        is_valid = serializer.is_valid()
-        self.assertFalse(is_valid)
+
+        self.assertFalse(serializer.is_valid())
 
     def test_validate_monthly_payment_with_invalid_parameters(self):
         # Create an "invalid" monthly activity with start and end date 1st
@@ -655,8 +657,8 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             "payment_plan": PaymentScheduleSerializer(payment_schedule).data,
         }
         serializer = ActivitySerializer(data=data)
-        is_valid = serializer.is_valid()
-        self.assertFalse(is_valid)
+
+        self.assertFalse(serializer.is_valid())
         self.assertEqual(
             serializer.errors["non_field_errors"][0],
             "Betalingsparametre resulterer ikke i nogen betalinger",
@@ -980,6 +982,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
 
         serializer = ActivitySerializer(data=data)
         is_valid = serializer.is_valid()
+
         self.assertFalse(is_valid)
         self.assertEqual(
             serializer.errors["non_field_errors"][0],
@@ -987,6 +990,225 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             "der skal være mindst to udbetalingsdage i række"
             " fra nu og til startdatoen",
         )
+
+    def test_individual_payment_disallow_payment_frequency(self):
+        activity_details = ActivityDetails.objects.create(
+            max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        data = {
+            "activity_type": MAIN_ACTIVITY,
+            "appropriation": appropriation.pk,
+            "details": activity_details.pk,
+            "payment_plan": {
+                "payment_frequency": "BIWEEKLY",
+                "payment_method": "INVOICE",
+                "payment_type": "INDIVIDUAL_PAYMENT",
+                "recipient_id": "75736215",
+                "recipient_name": "AKTIV WEEKEND",
+                "recipient_type": "COMPANY",
+            },
+            "start_date": date.today(),
+            "status": "DRAFT",
+        }
+        serializer = ActivitySerializer(data=data)
+
+        self.assertFalse(serializer.is_valid())
+        self.assertEqual(
+            serializer.errors["payment_plan"]["non_field_errors"][0],
+            "En engangsbetaling eller individuel betaling må"
+            " ikke have en betalingsfrekvens",
+        )
+
+    def test_individual_payment_disallow_payment_amount(self):
+        activity_details = ActivityDetails.objects.create(
+            max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        data = {
+            "activity_type": MAIN_ACTIVITY,
+            "appropriation": appropriation.pk,
+            "details": activity_details.pk,
+            "payment_plan": {
+                "payment_amount": 500,
+                "payment_method": "INVOICE",
+                "payment_type": "INDIVIDUAL_PAYMENT",
+                "recipient_id": "75736215",
+                "recipient_name": "AKTIV WEEKEND",
+                "recipient_type": "COMPANY",
+            },
+            "start_date": date.today(),
+            "status": "DRAFT",
+        }
+        serializer = ActivitySerializer(data=data)
+
+        self.assertFalse(serializer.is_valid())
+        self.assertEqual(
+            serializer.errors["payment_plan"]["non_field_errors"][0],
+            "En individuel betaling må ikke have et beløb",
+        )
+
+    def test_individual_payment_disallow_payment_cost_type(self):
+        activity_details = ActivityDetails.objects.create(
+            max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        data = {
+            "activity_type": MAIN_ACTIVITY,
+            "appropriation": appropriation.pk,
+            "details": activity_details.pk,
+            "payment_plan": {
+                "payment_cost_type": "FIXED",
+                "payment_method": "INVOICE",
+                "payment_type": "INDIVIDUAL_PAYMENT",
+                "recipient_id": "75736215",
+                "recipient_name": "AKTIV WEEKEND",
+                "recipient_type": "COMPANY",
+            },
+            "start_date": date.today(),
+            "status": "DRAFT",
+        }
+        serializer = ActivitySerializer(data=data)
+
+        self.assertFalse(serializer.is_valid())
+        self.assertEqual(
+            serializer.errors["payment_plan"]["non_field_errors"][0],
+            "En individuel betaling må ikke have en betalingspristype",
+        )
+
+    def test_individual_payment_disallow_payment_day_of_month(self):
+        activity_details = ActivityDetails.objects.create(
+            max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        data = {
+            "activity_type": MAIN_ACTIVITY,
+            "appropriation": appropriation.pk,
+            "details": activity_details.pk,
+            "payment_plan": {
+                "payment_day_of_month": 1,
+                "payment_method": "INVOICE",
+                "payment_type": "INDIVIDUAL_PAYMENT",
+                "recipient_id": "75736215",
+                "recipient_name": "AKTIV WEEKEND",
+                "recipient_type": "COMPANY",
+            },
+            "start_date": date.today(),
+            "status": "DRAFT",
+        }
+        serializer = ActivitySerializer(data=data)
+
+        self.assertFalse(serializer.is_valid())
+        self.assertEqual(
+            serializer.errors["payment_plan"]["non_field_errors"][0],
+            "En individuel betaling må ikke have en månedlig betalingsdato",
+        )
+
+    def test_individual_payment_disallow_payment_units(self):
+        activity_details = ActivityDetails.objects.create(
+            max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        data = {
+            "activity_type": MAIN_ACTIVITY,
+            "appropriation": appropriation.pk,
+            "details": activity_details.pk,
+            "payment_plan": {
+                "payment_units": 10,
+                "payment_method": "INVOICE",
+                "payment_type": "INDIVIDUAL_PAYMENT",
+                "recipient_id": "75736215",
+                "recipient_name": "AKTIV WEEKEND",
+                "recipient_type": "COMPANY",
+            },
+            "start_date": date.today(),
+            "status": "DRAFT",
+        }
+        serializer = ActivitySerializer(data=data)
+
+        self.assertFalse(serializer.is_valid())
+        self.assertEqual(
+            serializer.errors["payment_plan"]["non_field_errors"][0],
+            "en individuel betaling må ikke have betalingsenheder",
+        )
+
+    def test_individual_payment_disallow_modifies(self):
+        activity_details = ActivityDetails.objects.create(
+            max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+
+        activity = create_activity(
+            case=case, appropriation=appropriation, status=STATUS_GRANTED
+        )
+        create_payment_schedule(activity=activity)
+
+        data = {
+            "activity_type": MAIN_ACTIVITY,
+            "appropriation": appropriation.pk,
+            "details": activity_details.pk,
+            "payment_plan": {
+                "payment_method": "INVOICE",
+                "payment_type": "INDIVIDUAL_PAYMENT",
+                "recipient_id": "75736215",
+                "recipient_name": "AKTIV WEEKEND",
+                "recipient_type": "COMPANY",
+            },
+            "start_date": date.today(),
+            "status": "DRAFT",
+            "modifies": activity.id,
+        }
+        serializer = ActivitySerializer(data=data)
+
+        self.assertFalse(serializer.is_valid())
+        self.assertEqual(
+            serializer.errors["non_field_errors"][0],
+            "en individuel betaling kan ikke være en forventet justering",
+        )
+
+    def test_individual_payment_success(self):
+        activity_details = ActivityDetails.objects.create(
+            max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
+        )
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        data = {
+            "activity_type": MAIN_ACTIVITY,
+            "appropriation": appropriation.pk,
+            "details": activity_details.pk,
+            "payment_plan": {
+                "payment_method": "INVOICE",
+                "payment_type": "INDIVIDUAL_PAYMENT",
+                "recipient_id": "75736215",
+                "recipient_name": "AKTIV WEEKEND",
+                "recipient_type": "COMPANY",
+            },
+            "start_date": date.today(),
+            "status": "DRAFT",
+        }
+        serializer = ActivitySerializer(data=data)
+
+        self.assertTrue(serializer.is_valid())
 
 
 class CaseSerializerTestCase(TestCase, BasicTestMixin):
@@ -1107,7 +1329,8 @@ class PaymentScheduleSerializerTestCase(TestCase, BasicTestMixin):
         self.assertFalse(is_valid)
         self.assertEqual(
             serializer.errors["non_field_errors"][0],
-            "En engangsbetaling må ikke have en betalingsfrekvens",
+            "En engangsbetaling eller individuel betaling"
+            " må ikke have en betalingsfrekvens",
         )
 
     def test_validate_error_non_one_time_payment_without_frequency(self):
@@ -1128,7 +1351,7 @@ class PaymentScheduleSerializerTestCase(TestCase, BasicTestMixin):
         self.assertEqual(
             serializer.errors["non_field_errors"][0],
             "En betalingstype der ikke er en engangsbetaling"
-            " skal have en betalingsfrekvens",
+            " eller individuel betaling skal have en betalingsfrekvens",
         )
 
     def test_validate_one_time_payment_without_frequency(self):
@@ -1353,7 +1576,7 @@ class PaymentScheduleSerializerTestCase(TestCase, BasicTestMixin):
         is_valid = serializer.is_valid()
         self.assertFalse(is_valid)
         self.assertEqual(
-            "Takst skal angives", serializer.errors["non_field_errors"][0],
+            "Takst skal angives", serializer.errors["non_field_errors"][0]
         )
 
         data["payment_rate"] = rate
@@ -1501,3 +1724,35 @@ class PaymentSerializerTestCase(TestCase, BasicTestMixin):
             "Denne betaling må ikke markeres betalt manuelt",
             serializer.errors["non_field_errors"][0],
         )
+
+    def test_create_individual_payment(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+
+        activity = create_activity(
+            case=case, appropriation=appropriation, status=STATUS_EXPECTED
+        )
+        payment_schedule = create_payment_schedule(
+            activity=activity,
+            payment_type=PaymentSchedule.INDIVIDUAL_PAYMENT,
+            payment_frequency=None,
+            payment_amount=None,
+            payment_cost_type=None,
+        )
+        today = timezone.now().date()
+
+        data = {
+            "date": today,
+            "recipient_type": PaymentSchedule.INTERNAL,
+            "recipient_id": "test",
+            "recipient_name": "test",
+            "payment_method": INTERNAL,
+            "amount": Decimal("500"),
+            "payment_schedule": payment_schedule.id,
+            "paid": False,
+        }
+        serializer = PaymentSerializer(data=data)
+
+        self.assertTrue(serializer.is_valid())

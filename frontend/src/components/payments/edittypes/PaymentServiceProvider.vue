@@ -6,7 +6,7 @@
    - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
 
 <template v-if="model === 'COMPANY'">
-    <fieldset>
+    <fieldset v-if="service_providers">
         <label for="field-select-company">Mulige leverandører</label>
         <select v-model="service_provider" id="field-select-company">
             <option v-for="s in service_providers" :key="s.id" :value="s" :title="s.name">
@@ -24,17 +24,18 @@ export default {
         }
     },
     computed: {
+        store_sps: function() {
+            return this.$store.getters.getServiceProviders
+        },
         activity_detail: function() {
             return this.$store.getters.getActivityDetail
         },
-        service_providers_data: function() {
-            return this.$store.getters.getServiceProviders
-        },
         service_providers: function() {
-            if (this.activity_detail) {
+            if (this.activity_detail && this.store_sps) {
+                let sps = this.store_sps
                 let arr = []
                 for (let s in this.activity_detail.service_providers) {
-                    let sp = this.service_providers_data.find(function(element) {
+                    let sp = sps.find(function(element) {
                         return element.id = this.activity_detail.service_providers[s].id
                     })
                     arr.push(sp)
@@ -42,7 +43,7 @@ export default {
                 if (arr.length > 0) {
                     return arr
                 } else {
-                    return this.service_providers_data
+                    return sps
                 }
             } else {
                 return false

@@ -9,25 +9,29 @@
 export default {
 
     computed: {
+        user: function() {
+            return this.$store.getters.getUser
+        },
         query: function() {
             return this.$route.query
         }
     },
     watch: {
+        user: function() {
+            this.update()
+        },
         query: function() {
             this.update()
         }
     },
     methods: {
         update: function(worker_id) {
-            if (this.user.id) {
-                if (this.$route.query.case_worker != worker_id || this.$route.query.case_worker === null) {
-                    this.$store.dispatch('fetchCases', this.$route.query)
-                } else {
-                    this.$route.query.case_worker = this.user.id
-                    this.$route.query.expired = false
-                    this.$store.dispatch('fetchCases', this.$route.query)
-                }
+            if (this.$route.query.case_worker != worker_id || this.$route.query.case_worker === null) {
+                this.$store.dispatch('fetchCases', this.$route.query)
+            } else if (this.user.id) {
+                this.$route.query.case_worker = this.user.id
+                this.$route.query.expired = false
+                this.$store.dispatch('fetchCases', this.$route.query)
             }
         },
         changeCpr: function(ev) {

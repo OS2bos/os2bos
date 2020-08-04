@@ -6,23 +6,24 @@
    - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
 
 <template>
-    <button v-if="permissionCheck === true && isPayableManually" type="button" @click="submitHandler()" :disabled="disabled">{{buttonTxt}}</button>
+    <button v-if="visible" type="button" @click="submitHandler()" :disabled="disabled">
+        {{buttonTxt}}
+    </button>
 </template>
 
 <script>
 import axios from '../../http/Http.js'
-import UserRights from '../../mixins/UserRights.js'
-import IsPayableManually from '../../mixins/IsPayableManually'
+import PermissionLogic from '../../mixins/PermissionLogic.js'
 import notify from '../../notifications/Notify.js'
 
 export default {
     mixins: [ 
-        UserRights,
-        IsPayableManually
+        PermissionLogic
     ],
-    props: {
-        rowId: Number
-    },
+    props: [
+        'rowid',
+        'compdata'
+    ],
     data: function() {
         return {
             buttonTxt: 'Gem'
@@ -30,38 +31,47 @@ export default {
     },
     computed: {
         disabled: function() {
-            let payment = this.payments.find(p => {
-                return p.id === this.rowId
-            })
-            if (payment.paid_amount && payment.paid_date) {
+            if (this.compdata.paid_amount && this.compdata.paid_date) {
                 return false
             } else {
                 return true
             }
+        }, 
+        visible: function() {
+            return this.is_payable(this.compdata)
         }
     },
     methods: {
         update: function() {
+            this.$route.query.activity = this.compdata.activity__id
             this.$store.dispatch('fetchPayments', this.$route.query)
         },
         submitHandler: function() {
-            let payment = this.payments.find(p => {
-                return p.id === this.rowId
-            })
             let data = {
-                    paid_amount: payment.paid_amount,
-                    paid_date: payment.paid_date,
-                    note: payment.note ? payment.note : '',
+                    paid_amount: this.compdata.paid_amount,
+                    paid_date: this.compdata.paid_date,
+                    note: this.compdata.note ? this.compdata.note : '',
                     paid: true
             }
-            axios.patch(`/payments/${ this.rowId }/`, data)
+            if (this.user.profile === 'workflow_engine' && this.compdata.paid) {
+                axios.get(`/editing_past_payments_allowed/`)
+                .then(res => {
+                    this.patchPayments(data)
+                })
+                .catch(err => this.$store.dispatch('parseErrorOutput', err))
+            } else {
+                this.patchPayments(data)        
+            }
+        },
+        patchPayments: function(data) {
+            axios.patch(`/payments/${ this.rowid }/`, data)
             .then(res => {
                 this.buttonTxt = 'Gemt'
                 notify('Betaling godkendt', 'success')
                 this.update()
             })
             .catch(err => this.$store.dispatch('parseErrorOutput', err))
-        }
+        }  
     }
 }
 </script>

@@ -14,7 +14,7 @@
                     <i class="material-icons">style</i>
                     Bevilgede ydelser
                 </h2>
-                <button v-if="permissionCheck === true" class="btn activities-create-btn" title="Ny aktivitet" @click="createActivity">
+                <button v-if="user_can_edit === true" class="btn activities-create-btn" title="Ny aktivitet" @click="createActivity">
                     + Tilføj ydelse
                 </button>
             </div>
@@ -23,7 +23,7 @@
         <fieldset class="act-list-actions" v-if="!no_acts">
             <div style="margin-left: 1.25rem;">
                 <input 
-                    v-if="permissionCheck === true && this.user.profile !== 'edit'" 
+                    v-if="user_can_edit === true && this.user.profile !== 'edit'" 
                     type="checkbox" 
                     id="check-all"
                     @change="setAllChecked">
@@ -52,7 +52,7 @@
             <div class="act-list-row act-list-footer">
                 <div style="grid-column: 1/8;">
                     <button 
-                        v-if="permissionCheck === true && this.user.profile !== 'edit'" 
+                        v-if="user_can_edit === true && this.user.profile !== 'edit'" 
                         @click="initPreApprove"
                         :disabled="approvable_acts.length < 1">
                             ✔ Godkend valgte
@@ -101,13 +101,13 @@
     import { displayStatus } from '../filters/Labels.js'
     import { json2jsEpoch } from '../filters/Date.js'
     import ApprovalDiag from './Approval.vue'
-    import UserRights from '../mixins/UserRights.js'
+    import PermissionLogic from '../mixins/PermissionLogic.js'
     import ActList from './activitylist/ActList.vue'
 
     export default {
 
         mixins: [
-            UserRights
+            PermissionLogic
         ],
         components: {
             ApprovalDiag,

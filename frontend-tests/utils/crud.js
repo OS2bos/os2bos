@@ -45,36 +45,33 @@ async function activityFormInput(t, act_data) {
         await t.click(Selector('label').withAttribute('for', 'pay-fictional'))
     }
     if (act_data.details__name) {
-        setTimeout(async function() {
-            await useSelectBox(t, '#fieldSelectAct', act_data.details__name)
-        }, 1000)
+        await useSelectBox(t, '#fieldSelectAct', act_data.details__name)
     }
     if (act_data.note) {
         await t.typeText('#note', act_data.note, {replace: true})
     }
-    if (act_data.payment_type === 'RUNNING_PAYMENT') {
-        await t.click(Selector('label').withAttribute('for', 'pay-type-running'))
-        if (act_data.start_date) {
-            await t.typeText('#pay-date-start', act_data.start_date, {replace: true})
-        }
-        if (act_data.end_date) {
-            await t.typeText('#pay-date-end', act_data.end_date, {replace: true})
-        }
-    } else if (act_data.payment_type === 'ONE_TIME_PAYMENT') {
-        await t.click(Selector('label').withAttribute('for', 'pay-type-single'))
-        if (act_data.payment_date) {
-            await t.typeText('#pay-date-single', act_data.payment_date, {replace: true})
-        }
-    } else {
-        if (act_data.start_date) {
-            await t.typeText('#pay-date-start', act_data.start_date, {replace: true})
-        }
-        if (act_data.end_date) {
-            await t.typeText('#pay-date-end', act_data.end_date, {replace: true})
-        }
-        if (act_data.payment_date) {
-            await t.typeText('#pay-date-single', act_data.payment_date, {replace: true})
-        }
+
+    switch(act_data.payment_type) {
+        case 'RUNNING_PAYMENT':
+            await t.click(Selector('label').withAttribute('for', 'pay-type-running'))
+            break
+        case 'INDIVIDUAL_PAYMENT':
+            await t.click(Selector('label').withAttribute('for', 'pay-type-individual'))
+            break
+        case 'ONE_TIME_PAYMENT':
+            await t.click(Selector('label').withAttribute('for', 'pay-type-single'))
+            break
+        default: 
+    }
+
+    if (act_data.start_date) {
+        await t.typeText('#pay-date-start', act_data.start_date, {replace: true})
+    }
+    if (act_data.end_date) {
+        await t.typeText('#pay-date-end', act_data.end_date, {replace: true})
+    }
+    if (act_data.payment_date) {
+        await t.typeText('#pay-date-single', act_data.payment_date, {replace: true})
     }
     
     switch(act_data.payment_frequency) {
@@ -96,27 +93,24 @@ async function activityFormInput(t, act_data) {
         default:
     }
     
-    if (act_data.payment_cost_type) {
-        switch(act_data.payment_cost_type) {
-            case 'GLOBAL_RATE':
-                await t.click(Selector('label').withAttribute('for', 'pay-cost-type-rate'))
-                await useSelectBox(t, '#field-rates')
-                await t.typeText('#pay-units', act_data.payment_units, {replace: true})
-                break
-            case 'PER_UNIT':
-                await t
-                    .click(Selector('label').withAttribute('for', 'pay-cost-type-per-unit'))
-                    .typeText('#pay-cost-pr-unit', act_data.price_amount, {replace: true})
-                    .typeText('#pay-units', act_data.payment_units, {replace: true})
-                    .typeText('#pay-cost-exec-date', act_data.price_start_date, {replace: true})
-                break
-            default:
-                await t.click(Selector('label').withAttribute('for', 'pay-cost-type-fixed'))
-                await t.typeText('#field-amount-1', act_data.payment_amount, {replace: true})
-        }
-    } else {
-        await t.click(Selector('label').withAttribute('for', 'pay-cost-type-fixed'))
-        await t.typeText('#field-amount-1', act_data.payment_amount, {replace: true})
+    switch(act_data.payment_cost_type) {
+        case 'GLOBAL_RATE':
+            await t.click(Selector('label').withAttribute('for', 'pay-cost-type-rate'))
+            await useSelectBox(t, '#field-rates')
+            await t.typeText('#pay-units', act_data.payment_units, {replace: true})
+            break
+        case 'PER_UNIT':
+            await t
+                .click(Selector('label').withAttribute('for', 'pay-cost-type-per-unit'))
+                .typeText('#pay-cost-pr-unit', act_data.price_amount, {replace: true})
+                .typeText('#pay-units', act_data.payment_units, {replace: true})
+                .typeText('#pay-cost-exec-date', act_data.price_start_date, {replace: true})
+            break
+        case 'FIXED':
+            await t.click(Selector('label').withAttribute('for', 'pay-cost-type-fixed'))
+            await t.typeText('#field-amount-1', act_data.payment_amount, {replace: true})
+            break
+        default:
     }
     
     switch(act_data.recipient_type) {
@@ -219,10 +213,21 @@ async function approveActivities(t) {
         .click('button[type="submit"]')
 }
 
+async function createPayment(t, payment_data) {
+
+    await t
+        .click(Selector('.payment-create-btn'))
+        .typeText('#field-payment-planned-amount', payment_data.amount, {replace: true})
+        .typeText('#field-payment-planned-date', payment_data.date, {replace: true})
+        .click(Selector('#submit-planned-payment-btn'))
+        .expect(Selector('h2').withText('Opret ny betaling').exists).notOk()
+}
+
 export {
     approveActivities,
     createActivity,
     createAppropriation,
     createCase,
-    editActivity
+    editActivity,
+    createPayment
 }

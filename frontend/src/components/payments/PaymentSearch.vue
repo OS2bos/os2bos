@@ -18,7 +18,7 @@
                 <fieldset class="filter-fields">
                     <div class="filter-field">
                         <label for="field-pay-key">Betalingsnøgle</label>
-                        <input id="field-pay-key" type="search" @input="update()" v-model="$route.query.payment_schedule__payment_id">
+                        <input id="field-pay-key" type="search" @input="update" v-model="$route.query.payment_schedule__payment_id">
                     </div>
 
                     <div class="filter-field">
@@ -28,7 +28,7 @@
 
                     <div class="filter-field">
                         <label for="field-payee">Betalingsmodtager</label>
-                        <input id="field-payee" type="search" @input="update()" v-model="$route.query.recipient_id">
+                        <input id="field-payee" type="search" @input="update" v-model="$route.query.recipient_id">
                     </div>
 
                     <div class="filter-field">
@@ -41,26 +41,26 @@
 
                     <div class="filter-field">
                         <label for="field-from">Fra dato</label>
-                        <input id="field-from" type="date" @input="update()" v-model="$route.query.paid_date_or_date__gte">
+                        <input id="field-from" type="date" @input="update" v-model="$route.query.paid_date_or_date__gte">
                     </div>
 
                     <div class="filter-field">
                         <label for="field-to">Til dato</label>
-                        <input id="field-to" type="date" @input="update()" v-model="$route.query.paid_date_or_date__lte">
+                        <input id="field-to" type="date" @input="update" v-model="$route.query.paid_date_or_date__lte">
                     </div>
                 </fieldset>
 
                 <fieldset class="filter-fields radio-filters">
                     <div class="filter-field">
-                        <input type="radio" id="field-paid-1" checked name="field-paid" :value="null" v-model="$route.query.paid" @change="update()">
+                        <input type="radio" id="field-paid-1" checked name="field-paid" :value="null" v-model="$route.query.paid" @change="update">
                         <label for="field-paid-1">Betalte og ubetalte</label>
                     </div>
                     <div class="filter-field">
-                        <input type="radio" id="field-paid-2" name="field-paid" :value="true" v-model="$route.query.paid" @change="update()">
+                        <input type="radio" id="field-paid-2" name="field-paid" :value="true" v-model="$route.query.paid" @change="update">
                         <label for="field-paid-2">Kun betalte</label>
                     </div>
                     <div class="filter-field">
-                        <input type="radio" id="field-paid-3" name="field-paid" :value="false" v-model="$route.query.paid" @change="update()">
+                        <input type="radio" id="field-paid-3" name="field-paid" :value="false" v-model="$route.query.paid" @change="update">
                         <label for="field-paid-3">Kun ubetalte</label>
                     </div>
                 </fieldset>
@@ -68,24 +68,24 @@
         </div>
 
         <div class="payment-search-list">
-            <template v-if="results">
+            <template v-if="payments">
                 
-                <data-grid v-if="results.length > 0"
+                <data-grid v-if="payments.length > 0"
                     ref="data-grid"
-                    :data-list="results"
+                    :data-list="payments"
                     :columns="columns">
 
                     <p slot="datagrid-header">
-                        Viser {{results.length}} af {{payments.count}} betalinger
+                        Viser {{ payments.length }} af {{ payments_meta.count }} betalinger
                     </p>
 
-                    <p slot="datagrid-footer" v-if="results.length < 1">
+                    <p slot="datagrid-footer" v-if="payments.length < 1">
                         Kan ikke finde nogen betalinger, der matcher de valgte kriterier
                     </p>
 
                 </data-grid>
 
-                <button v-if="results.length > 1" :disabled="disableBtn" class="more" @click="loadResults()">Vis flere</button>
+                <button v-if="payments.length > 1" :disabled="disableBtn" class="more" @click="loadResults()">Vis flere</button>
             </template>
             <p v-else>
                 Der er ingen betalinger, der matcher de valgte kriterier
@@ -106,10 +106,9 @@
     import PaymentModal from './PaymentModal.vue'
     import CaseFilters from '../mixins/CaseFilters.js'
     import ListPicker from '../forms/ListPicker.vue'
-    import UserRights from '../mixins/UserRights.js'
+    import PermissionLogic from '../mixins/PermissionLogic.js'
     import { activityId2name, displayPayMethod } from '../filters/Labels.js'
     import DataGrid from '../datagrid/DataGrid.vue'
-
     import SaveButton from './datagrid-components/SaveButton.vue'
     import AmountInput from './datagrid-components/AmountInput.vue'
     import DateInput from './datagrid-components/DateInput.vue'
@@ -128,7 +127,7 @@
         },
         mixins: [
             CaseFilters, 
-            UserRights
+            PermissionLogic
         ],
         data: function() {
             return {
@@ -163,10 +162,16 @@
                 ],
                 columns: [
                     {
+                        key: 'paid',
+                        title: 'Betalt',
+                        display_func: this.displayPaidIcon,
+                        class: 'center'
+                    },
+                    {
                         key: 'id',
                         title: 'Betaling',
                         display_func: this.displayId,
-                        class: 'datagrid-action'
+                        class: 'datagrid-action nowrap'
                     },
                     {
                         key: 'payment_schedule__payment_id',
@@ -221,17 +226,17 @@
             }
         },
         computed: {
+            payments_meta: function() {
+                return this.$store.getters.getPaymentsMeta
+            },
             payments: function() {
                 return this.$store.getters.getPayments
-            },
-            results: function() {
-                return this.payments.results
             },
             query: function() {
                 return this.$route.query
             },
             disableBtn: function () {
-                if (this.payments.next === null) {
+                if (this.payments_meta.next === null) {
                     return true
                 }
             },
@@ -275,10 +280,7 @@
                 this.update()
             },
             update: function() {
-                clearTimeout(this.input_timeout)
-                this.input_timeout = setTimeout(() => {
-                    this.$store.dispatch('fetchPayments', this.$route.query)
-                }, 300)
+                this.$store.dispatch('fetchPayments', this.$route.query)                
             },
             displayPlannedPayDate: function(payment) {
                 return json2jsDate(payment.date)
@@ -289,12 +291,16 @@
             displayCprAccount: function(payment) {
                 return `<span class="label-header">cpr</span> ${ payment.case__cpr_number } <br>${ payment.account_string }`
             },
+            displayPaidIcon: function(payment) {
+                if (payment.paid) {
+                    return '<i class="material-icons">check</i>'
+                } else {
+                    return '-'
+                }
+            },
             navToLink: function(path) {
                 this.$router.push(path)
             }
-        },
-        created: function() {
-            this.update()
         }
     }
 
@@ -330,13 +336,8 @@
         table-layout: inherit;
     }
 
-    .payment-search .datagrid td a:link,
-    .payment-search .datagrid td a:visited,
-    .payment-search .datagrid td a:hover, 
-    .payment-search .datagrid td a:active {
-        transition: none;
-        padding-left: 1.5rem;
-        
+    .payment-search .datagrid .datagrid-action {
+        padding-left: .75rem;
     }
 
     .payment-search .field-amount {

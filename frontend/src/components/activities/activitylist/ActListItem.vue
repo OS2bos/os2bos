@@ -10,7 +10,7 @@
         <div style="padding: .5rem 0 0 1.25rem;">
             <template v-if="activity.status !== 'GRANTED'">
                 <input 
-                    v-if="permissionCheck === true && this.user.profile !== 'edit'" 
+                    v-if="user_can_edit === true && this.user.profile !== 'edit'" 
                     type="checkbox" 
                     :id="`check-${ activity.id }`" 
                     v-model="is_checked">
@@ -24,8 +24,8 @@
         <div>
             <div class="mini-label" v-html="statusLabel(activity.status)"></div>
         </div>
-        <div :title="activityId2name(activity.details)">
-            <router-link :to="`/activity/${ activity.id }`" v-html="activityId2name(activity.details)" />
+        <div :title="activityId2name(activity.details)" class="data-grid-action nowrap">
+            <router-link :to="`/activity/${ activity.id }/`" v-html="activityId2name(activity.details)" />
             <br>
             <span class="dim" v-if="activity.payment_plan && activity.payment_plan.fictive">(Fiktiv)</span>
         </div>
@@ -58,12 +58,12 @@
 
 <script>
 import ActListMixin from './ActListMixin.js'
-import UserRights from '../../mixins/UserRights.js'
+import PermissionLogic from '../../mixins/PermissionLogic.js'
 
 export default {
     mixins: [
         ActListMixin,
-        UserRights
+        PermissionLogic
     ],
     props: [
         'activity',
@@ -98,6 +98,19 @@ export default {
 
     .act-list-row.act-list-sub-row {
         background-color: hsl(var(--color1), 66%, 92%);
+    }
+
+    .act-list-row .data-grid-action > a {
+        display: inline-block;
+        text-decoration: none;
+        border: none;
+        transition: transform .33s;
+    }
+
+    .act-list-row .data-grid-action > a:hover, 
+    .act-list-row .data-grid-action > a:active,
+    .act-list-row .data-grid-action > a:focus {
+        transform: translate(.75rem, 0);
     }
 
 </style>

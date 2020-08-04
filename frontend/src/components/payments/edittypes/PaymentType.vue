@@ -21,6 +21,12 @@
             id="pay-type-single" 
             value="ONE_TIME_PAYMENT">
         <label for="pay-type-single">Engangsudgift</label>
+        <input 
+            type="radio" 
+            v-model="model" 
+            id="pay-type-individual" 
+            value="INDIVIDUAL_PAYMENT">
+        <label for="pay-type-individual">Individuel betalingsplan</label>
         <error :err-key="property" />
     </fieldset>
     
@@ -53,8 +59,8 @@ export default {
 
             /****** RULES ******/ 
             
-            // If one time payment, reset payment frequency and end date
-            if (new_val === 'ONE_TIME_PAYMENT') {
+            // If one time payment or individual, reset payment frequency and end date
+            if (new_val === 'ONE_TIME_PAYMENT' || new_val === 'INDIVIDUAL_PAYMENT') {
                 this.$store.commit('setPaymentPlanProperty',{
                     prop: 'end_date', 
                     val: null

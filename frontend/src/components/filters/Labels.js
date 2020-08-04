@@ -289,10 +289,15 @@ function displayActivityType(type) {
 }
 
 function displayPayType(type) {
-    if (type === 'RUNNING_PAYMENT') {
-        return 'Løbende ydelse'
-    } else {
-        return 'Enkeltudgift'
+    switch(type) {
+        case 'RUNNING_PAYMENT':
+            return 'Løbende ydelse'
+        case 'ONE_TIME_PAYMENT':
+            return 'Enkeltudgift'
+        case 'INDIVIDUAL_PAYMENT':
+            return 'Individuel betalingsplan'
+        default:
+            return '-'
     }
 }
 

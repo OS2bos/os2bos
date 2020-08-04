@@ -11,7 +11,7 @@
     <section class="case-search">
         <header class="case-search-header">
             <h1>Sager</h1>
-            <button v-if="permissionCheck === true" class="create" @click="$router.push('/case-create/')">+ Tilknyt hovedsag</button>
+            <button v-if="user_can_edit === true" class="create" @click="$router.push('/case-create/')">+ Tilknyt hovedsag</button>
         </header>
         <div class="search-filter">
             <form @submit.prevent>
@@ -67,13 +67,12 @@
         </div>
         
         <div class="case-search-list">
-
             <data-grid v-if="cases"
                        ref="data-grid"
                        :data-list="cases"
                        :columns="columns"
                        @selection="updateSelectedCases"
-                       :selectable="permissionCheck">
+                       :selectable="user_can_edit">
 
                 <p slot="datagrid-footer" v-if="cases.length < 1">
                     Kan ikke finde nogen resultater, der matcher de valgte kriterier
@@ -81,7 +80,7 @@
 
             </data-grid>
 
-            <button v-if="cases.length > 0 && permissionCheck"
+            <button v-if="cases.length > 0 && user_can_edit"
                     :disabled="selected_cases.length < 1" 
                     class="case-search-move-btn"
                     @click="show_modal = true">
@@ -131,7 +130,7 @@
     import DialogBox from '../dialog/Dialog.vue'
     import notify from '../notifications/Notify.js'
     import CaseFilters from '../mixins/CaseFilters.js'
-    import UserRights from '../mixins/UserRights.js'
+    import PermissionLogic from '../mixins/PermissionLogic.js'
     import { targetGroupId2name, districtId2name, displayEffort, userId2name, teamId2name } from '../filters/Labels.js'
 
     export default {
@@ -143,7 +142,7 @@
         },
         mixins: [
             CaseFilters,
-            UserRights
+            PermissionLogic
         ],
         data: function() {
             return {
@@ -162,7 +161,7 @@
                         key: 'sbsys_id',
                         title: 'SBSYS ID',
                         display_func: this.displayID,
-                        class: 'datagrid-action'
+                        class: 'datagrid-action nowrap'
                     },
                     {
                         key: 'cpr_number',
@@ -284,9 +283,8 @@
                 this.show_modal = false
                 this.update()
             }
-            
         },
-        mounted: function() {
+        created: function() {
             this.update()
         }
     }

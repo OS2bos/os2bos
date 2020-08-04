@@ -39,7 +39,7 @@
                     <span class="material-icons">zoom_out</span>
                     Vis mindre
                 </button>
-                <button type="submit" v-if="permissionCheck === true" class="familyoverview-create-btn" @click="$router.push(`/case/${ caseId }/familyoverview-create/`)">+ Opret relation</button>
+                <button type="submit" v-if="user_can_edit === true" class="familyoverview-create-btn" @click="$router.push(`/case/${ caseId }/familyoverview-create/`)">+ Opret relation</button>
             </div>
 
         </data-grid>
@@ -53,16 +53,17 @@
 
     import axios from '../http/Http.js'
     import FamilyOverviewEdit from './FamilyOverviewEdit.vue'
-    import UserRights from '../mixins/UserRights.js'
+    import PermissionLogic from '../mixins/PermissionLogic.js'
     import DataGrid from '../datagrid/DataGrid.vue'
     import { json2jsDate } from '../filters/Date.js'
     import { userId2name } from '../filters/Labels.js'
 
     export default {
 
-        mixins: [UserRights],
-
-         components: {
+        mixins: [
+            PermissionLogic
+        ],
+        components: {
              FamilyOverviewEdit,
              DataGrid
         },
@@ -120,7 +121,7 @@
                 .catch(err => console.log(err))
             },
             displayName: function(id) {
-                if (this.permissionCheck === true && id.from_serviceplatformen === false) {
+                if (this.user_can_edit === true && id.from_serviceplatformen === false) {
                     let to = `#/case/${ this.caseId }/familyoverview-edit/${ id.id }`
                     return `<span class="fam-list-type">${ id.relation_type }</span><a class="fam-list-name" href="${ to }">${ id.name }</a><span class="fam-list-cpr">${ id.cpr_number }</span>`
                 } else {

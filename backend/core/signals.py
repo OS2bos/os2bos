@@ -137,7 +137,10 @@ def save_payment_schedule_on_save_price(sender, instance, created, **kwargs):
 )
 def generate_payments_on_post_save(sender, instance, created, **kwargs):
     """Generate payments for activity before saving."""
-    if instance.is_ready_to_generate_payments():
+    if (
+        instance.is_ready_to_generate_payments()
+        and not instance.payment_type == PaymentSchedule.INDIVIDUAL_PAYMENT
+    ):
         activity = instance.activity
 
         vat_factor = activity.vat_factor

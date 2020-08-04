@@ -21,7 +21,6 @@
                 <template v-if="payment_plan.payment_type === 'ONE_TIME_PAYMENT'">
                     <pay-date-single :editable="false" />
                     <pay-date-single-period-display />
-
                 </template>
             </div>
 
@@ -30,9 +29,9 @@
                 <pay-date-end :editable="false" />
             </div>
      
-            <payment-frequency :editable="false" />
+            <payment-frequency :editable="false" v-if="!is_individual_payment_type(payment_plan)" />
             
-            <div>
+            <div v-if="!is_individual_payment_type(payment_plan)">
                 <cost-type :editable="false" />
                 <template v-if="payment_plan.payment_cost_type === 'FIXED'">
                     <cost-type-fixed :editable="false" />
@@ -76,11 +75,13 @@ import Error from '../../forms/Error.vue'
 import Warning from '../../warnings/Warning.vue'
 import notify from '../../notifications/Notify'
 import { checkRulePayDate } from '../../filters/Rules.js'
+import PermissionLogic from '../../mixins/PermissionLogic.js'
 
 export default {
     
     mixins: [
-        ActDisplayMixin
+        ActDisplayMixin,
+        PermissionLogic
     ],
     components: {
         Error,

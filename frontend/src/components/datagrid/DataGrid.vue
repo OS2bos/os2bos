@@ -67,7 +67,7 @@
                             :key="c.key" 
                             :class="c.class"
                             :title="d[c.key]">
-                            <virtual-component :component="c.display_component" :row-id="d.id"></virtual-component>
+                            <virtual-component :component="c.display_component" :rowid="d.id" :compdata="d"></virtual-component>
                         </td>
                         <td v-else
                             :key="c.key" 
@@ -97,12 +97,14 @@
         render: function (createElement) {
             return createElement(this.component, {
                 props: {
-                    rowId: this.rowId
+                    rowid: this.rowid,
+                    compdata: this.compdata
                 }
             })
         },
         props: [
-            'rowId',
+            'rowid',
+            'compdata',
             'component'
         ]
     })
@@ -271,17 +273,28 @@
         padding: 0;
     }
 
-    .datagrid td.datagrid-action a {
+    .datagrid td.datagrid-action > a:link,
+    .datagrid td.datagrid-action > a:visited,
+    .datagrid button.datagrid-action-btn {
         display: block;
         border: none;
         padding: .75rem;
-        border-radius: .125rem;
-        transition: padding .33s;
+        background-color: transparent;
+        text-align: left;
+        transition: transform .33s;
+        box-shadow: none;
+        font-size: 1rem;
+        height: auto;
+        margin: 0;
     }
 
-    .datagrid td a:hover,
-    .datagrid td a:active {
-        padding-left: 1.25rem;
+    .datagrid td.datagrid-action > a:hover,
+    .datagrid td.datagrid-action > a:active,
+    .datagrid td.datagrid-action > a:focus,
+    .datagrid button.datagrid-action-btn:hover,
+    .datagrid button.datagrid-action-btn:active,
+    .datagrid button.datagrid-action-btn:focus {
+        transform: translate(.5rem,0);
         color: var(--grey10);
     }
 
