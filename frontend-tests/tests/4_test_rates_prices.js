@@ -14,19 +14,21 @@ function leadZero(number) {
 }
 
 function makeDateStr(date, offset) {
+    if (!offset) {
+        offset = 0
+    }
     let new_date = new Date(date.setMonth(date.getMonth() + offset + 1))
     return `${new_date.getFullYear()}-${leadZero(new_date.getMonth() + 1)}-01`
 }
 
 let today = new Date(),
-    rand = Math.floor(Math.random() * 100 ),
-    rand2 = Math.floor(Math.random() * 100 )
+    rand = Math.floor(Math.random() * 500 ),
+    rand2 = Math.floor(Math.random() * 500 )
 
 let str1mth = makeDateStr(today, 1),
     str2mth = makeDateStr(today, 2),
     str5mth = makeDateStr(today, 5),
-    str10mth = makeDateStr(today, 10),
-    strToday = makeDateStr(today)
+    str10mth = makeDateStr(today, 10)
     
 const testdata = {
     case1: {
@@ -78,7 +80,7 @@ test('Create case, appropriation, and activity with global rate', async t => {
     await createAppropriation(t, testdata.appr1)
     await createActivity(t, testdata.act1)
     
-    await t.expect(Selector('.act-list-row a').withText(testdata.act1.details__name.substr(0,5)).exists).ok()
+    await t.expect(Selector('.act-list-row a').withText(testdata.act1.details__name.substr(0,4)).exists).ok()
 })
 
 test.skip('Create activity with per unit pricing', async t => {
@@ -89,26 +91,25 @@ test.skip('Create activity with per unit pricing', async t => {
 
     await createActivity(t, testdata.act2)
 
-    const act_link = Selector('.act-list-row a').withText(testdata.act2.details__name.substr(0,5))
+    const act_link_text = testdata.act2.details__name.substr(0,3)
     
     await t
-        .expect(act_link.exists).ok()
-        .click(act_link)
-        .typeText('#pay-units', '30,5', {replace: true}) // Edit units
+        .expect(Selector('.act-list-row a').withText(act_link_text).exists).ok()
+        .click(Selector('.act-list-row a').withText(act_link_text))
+        .typeText('#pay-units', '30.5', {replace: true}) // Edit units
         .click('input[type="submit"]')
-        .expect(act_link.exists).ok() // Expect to save with no trouble
-        .click(act_link)
+        .expect(Selector('.act-list-row a').withText(act_link_text).exists).ok() // Expect to save with no trouble
+        .click(Selector('.act-list-row a').withText(act_link_text))
         .click('.prices-history button')
-        .typeText('#pay-cost-pr-unit', '3000') // Edit price
-        .typeText('#pay-cost-exec-date', strToday)
+        .typeText('#pay-cost-pr-unit', '3000', {replace: true}) // Edit price
         .click('.modal-footer input[type="submit"]')
         .click('input[type="submit"]')
-        .expect(act_link.exists).ok() // Expect to save with no trouble
+        .expect(Selector('.act-list-row a').withText(act_link_text).exists).ok() // Expect to save with no trouble
 
     await approveActivities(t)
 
     await t
-        .click(act_link)
-        .expect(Selector('.perunitdisplay').withText('3000,00 kr x 30,50').exists).ok()  // price and unit should be visible and correct after approve 
+        .click(Selector('.act-list-row a').withText(act_link_text))
+        .expect(Selector('.perunitdisplay').innerText).contains('3.000,00 kr x 30,50')  // price and unit should be visible and correct after approve 
 
 })

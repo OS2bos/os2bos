@@ -76,6 +76,7 @@ export default {
         preselectedAct: function() {
             if (this.act_details && this.act_details.length === 1) {
                 this.model = this.act_details[0].id
+                this.$store.commit('setActDetail', this.model)
                 return true
             } else {
                 return false

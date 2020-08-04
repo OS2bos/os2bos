@@ -184,6 +184,10 @@
                         display_func: this.displayCprAccount
                     },
                     {
+                        key: 'account_alias',
+                        title: 'Kontoalias'
+                    },
+                    {
                         key: 'amount',
                         title: 'Planlagt beløb',
                         display_func: this.displayPlannedAmount,

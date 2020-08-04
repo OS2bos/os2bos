@@ -95,7 +95,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         serializer.is_valid()
         self.assertEqual(
             serializer.errors["non_field_errors"][0],
-            "startdato skal være før eller identisk med slutdato",
+            "Startdato skal være før eller identisk med slutdato",
         )
 
     def test_has_per_unit_price(self):
@@ -264,6 +264,54 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         serializer = ActivitySerializer(data=data)
         serializer.is_valid()
         self.assertEqual(serializer.errors, {})
+
+    def test_validate_no_start_date(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        now = timezone.now().date()
+        start_date = now - timedelta(days=6)
+        end_date = now + timedelta(days=12)
+        details, unused = ActivityDetails.objects.get_or_create(
+            activity_id="000000",
+            name="Test aktivitet",
+            max_tolerance_in_percent=10,
+            max_tolerance_in_dkk=1000,
+        )
+        # create an already granted activity.
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=start_date,
+            end_date=end_date,
+            details=details,
+        )
+        create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_frequency=PaymentSchedule.WEEKLY,
+            activity=activity,
+        )
+        modifies_payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("600.0"),
+            payment_frequency=PaymentSchedule.WEEKLY,
+        )
+        # let the granted activity be modified by another expected activity.
+        data = {
+            "case": case.id,
+            "appropriation": appropriation.id,
+            "status": STATUS_EXPECTED,
+            "activity_type": MAIN_ACTIVITY,
+            "modifies": activity.id,
+            "details": details.id,
+            "payment_plan": PaymentScheduleSerializer(
+                modifies_payment_schedule
+            ).data,
+        }
+        serializer = ActivitySerializer(data=data)
+        serializer.is_valid()
 
     def test_validate_expected_invalid_date(self):
         case = create_case(
@@ -478,6 +526,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             payment_amount=Decimal("500.0"),
             payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
             payment_frequency="",
+            payment_date=date.today(),
         )
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -509,6 +558,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         payment_schedule = create_payment_schedule(
             payment_amount=Decimal("500.0"),
             payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            payment_date=date.today(),
             payment_frequency="",
         )
         case = create_case(
@@ -532,6 +582,42 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             "end_date": end_date,
             "details": details.id,
             "payment_plan": PaymentScheduleSerializer(payment_schedule).data,
+        }
+        serializer = ActivitySerializer(data=data)
+        is_valid = serializer.is_valid()
+        self.assertTrue(is_valid)
+
+    def test_validate_one_time_payment_no_payment_date(self):
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            payment_frequency="",
+        )
+        payment_schedule_data = PaymentScheduleSerializer(
+            payment_schedule
+        ).data
+
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        start_date = date.today()
+        end_date = date.today() + timedelta(days=1)
+        details, unused = ActivityDetails.objects.get_or_create(
+            activity_id="000000",
+            name="Test aktivitet",
+            max_tolerance_in_percent=10,
+            max_tolerance_in_dkk=1000,
+        )
+        data = {
+            "case": case.id,
+            "appropriation": appropriation.id,
+            "start_date": start_date,
+            "status": STATUS_EXPECTED,
+            "activity_type": MAIN_ACTIVITY,
+            "end_date": end_date,
+            "details": details.id,
+            "payment_plan": payment_schedule_data,
         }
         serializer = ActivitySerializer(data=data)
         is_valid = serializer.is_valid()
@@ -667,6 +753,240 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         serializer = ActivitySerializer(data=data)
         is_valid = serializer.is_valid()
         self.assertTrue(is_valid)
+
+    @freeze_time("2020-01-09")
+    def test_validate_cash_payment_with_exclusions_disallowed(self):
+        # Create an activity with a start_date within two days
+        # of a future payment exclusion date.
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+
+        details, unused = ActivityDetails.objects.get_or_create(
+            activity_id="000000",
+            name="Test aktivitet",
+            max_tolerance_in_percent=10,
+            max_tolerance_in_dkk=1000,
+        )
+        # The 11th is a Saturday.
+        start_date = date(2020, 1, 11)
+        end_date = date(2020, 1, 13)
+
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+        )
+
+        data = {
+            "case": case.id,
+            "appropriation": appropriation.id,
+            "start_date": start_date,
+            "end_date": end_date,
+            "details": details.id,
+            "status": STATUS_GRANTED,
+            "activity_type": MAIN_ACTIVITY,
+            "payment_plan": PaymentScheduleSerializer(payment_schedule).data,
+        }
+
+        serializer = ActivitySerializer(data=data)
+        is_valid = serializer.is_valid()
+
+        self.assertFalse(is_valid)
+        self.assertEqual(
+            serializer.errors["non_field_errors"][0],
+            "Startdato skal være i fremtiden og "
+            "der skal være mindst to udbetalingsdage i række"
+            " fra nu og til startdatoen",
+        )
+
+    @freeze_time("2020-01-09")
+    def test_validate_cash_payment_in_the_past_disallowed(self):
+        # Create an activity with a start_date in the past
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+
+        details, unused = ActivityDetails.objects.get_or_create(
+            activity_id="000000",
+            name="Test aktivitet",
+            max_tolerance_in_percent=10,
+            max_tolerance_in_dkk=1000,
+        )
+        # The 11th is a Saturday.
+        start_date = date(2020, 1, 8)
+        end_date = date(2020, 1, 13)
+
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+        )
+
+        data = {
+            "case": case.id,
+            "appropriation": appropriation.id,
+            "start_date": start_date,
+            "end_date": end_date,
+            "details": details.id,
+            "status": STATUS_GRANTED,
+            "activity_type": MAIN_ACTIVITY,
+            "payment_plan": PaymentScheduleSerializer(payment_schedule).data,
+        }
+
+        serializer = ActivitySerializer(data=data)
+        is_valid = serializer.is_valid()
+
+        self.assertFalse(is_valid)
+        self.assertEqual(
+            serializer.errors["non_field_errors"][0],
+            "Startdato skal være i fremtiden og "
+            "der skal være mindst to udbetalingsdage i række"
+            " fra nu og til startdatoen",
+        )
+
+    @freeze_time("2020-01-08")
+    def test_validate_cash_payment_with_exclusions_allowed(self):
+        # Create an activity with a start_date not within two days
+        # of a future payment exclusion date.
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+
+        details, unused = ActivityDetails.objects.get_or_create(
+            activity_id="000000",
+            name="Test aktivitet",
+            max_tolerance_in_percent=10,
+            max_tolerance_in_dkk=1000,
+        )
+        # The 10th is a Friday.
+        start_date = date(2020, 1, 10)
+        end_date = date(2020, 1, 13)
+
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+        )
+
+        data = {
+            "case": case.id,
+            "appropriation": appropriation.id,
+            "start_date": start_date,
+            "end_date": end_date,
+            "details": details.id,
+            "status": STATUS_GRANTED,
+            "activity_type": MAIN_ACTIVITY,
+            "payment_plan": PaymentScheduleSerializer(payment_schedule).data,
+        }
+
+        serializer = ActivitySerializer(data=data)
+        is_valid = serializer.is_valid()
+        self.assertTrue(is_valid)
+
+    @freeze_time("2020-01-08")
+    def test_validate_cash_payment_tomorrow_disallowed(self):
+        # Create an activity with a start_date of tomorrow
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+
+        details, unused = ActivityDetails.objects.get_or_create(
+            activity_id="000000",
+            name="Test aktivitet",
+            max_tolerance_in_percent=10,
+            max_tolerance_in_dkk=1000,
+        )
+
+        start_date = date(2020, 1, 9)
+        end_date = date(2020, 1, 13)
+
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+        )
+
+        data = {
+            "case": case.id,
+            "appropriation": appropriation.id,
+            "start_date": start_date,
+            "end_date": end_date,
+            "details": details.id,
+            "status": STATUS_GRANTED,
+            "activity_type": MAIN_ACTIVITY,
+            "payment_plan": PaymentScheduleSerializer(payment_schedule).data,
+        }
+
+        serializer = ActivitySerializer(data=data)
+        is_valid = serializer.is_valid()
+        self.assertFalse(is_valid)
+        self.assertEqual(
+            serializer.errors["non_field_errors"][0],
+            "Startdato skal være i fremtiden og "
+            "der skal være mindst to udbetalingsdage i række"
+            " fra nu og til startdatoen",
+        )
+
+    @freeze_time("2020-01-08")
+    def test_validate_cash_payment_one_time_tomorrow_disallowed(self):
+        # Create an activity with a start_date of tomorrow
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+
+        details, unused = ActivityDetails.objects.get_or_create(
+            activity_id="000000",
+            name="Test aktivitet",
+            max_tolerance_in_percent=10,
+            max_tolerance_in_dkk=1000,
+        )
+
+        start_date = date(2020, 1, 1)
+        end_date = date(2020, 2, 1)
+
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            payment_frequency=None,
+            payment_method=CASH,
+            payment_date=date(2020, 1, 9),
+            recipient_type=PaymentSchedule.PERSON,
+        )
+
+        data = {
+            "case": case.id,
+            "appropriation": appropriation.id,
+            "start_date": start_date,
+            "end_date": end_date,
+            "details": details.id,
+            "status": STATUS_GRANTED,
+            "activity_type": MAIN_ACTIVITY,
+            "payment_plan": PaymentScheduleSerializer(payment_schedule).data,
+        }
+
+        serializer = ActivitySerializer(data=data)
+        is_valid = serializer.is_valid()
+        self.assertFalse(is_valid)
+        self.assertEqual(
+            serializer.errors["non_field_errors"][0],
+            "Startdato skal være i fremtiden og "
+            "der skal være mindst to udbetalingsdage i række"
+            " fra nu og til startdatoen",
+        )
 
 
 class CaseSerializerTestCase(TestCase, BasicTestMixin):

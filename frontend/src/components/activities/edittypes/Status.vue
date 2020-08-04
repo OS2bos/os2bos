@@ -7,7 +7,7 @@
 
 <template>
 
-    <fieldset v-if="editable">
+    <fieldset v-if="editable && !modify_mode">
         <input type="checkbox" v-model="status" id="status">
         <label for="status">Forventet ydelse</label>
     </fieldset>
@@ -27,37 +27,37 @@ export default {
     mixins: [
         mixin
     ],
-    data: function() {
-        return {
-            status: null
-        }
-    },
-    watch: {
-        status: function(new_val) {
-            if (this.editable) {
-                if (new_val) {
-                    this.model = 'EXPECTED'
-                } else {
-                    this.model = 'DRAFT'
+    computed: {
+        status: {
+            get: function() {
+                return this.model === 'EXPECTED' ? true : false 
+            }, 
+            set: function(new_val) {
+                if (this.editable) {
+                    if (new_val) {
+                        this.model = 'EXPECTED'
+                    } else {
+                        this.model = 'DRAFT'
+                    }
                 }
             }
         },
-    },
-    methods: {
-        setStatusModel: function() {
-            if (this.model === 'EXPECTED') {
-                this.status = true
+        modify_mode: function() {
+            const act = this.$store.getters.getActivity
+            if (act.modifies) {
+                return true
             } else {
-                this.status = false
+                return false
             }
-        },
+        }
+    }, 
+    methods: {
         statusLabel: function(status) {
             return displayStatus(status)
         }
     },
     created: function() {
         this.property = 'status'
-        this.setStatusModel()
     }
 }
 </script>

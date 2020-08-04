@@ -12,7 +12,6 @@ import logging
 import requests
 import datetime
 import itertools
-from datetime import date
 
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
@@ -396,7 +395,7 @@ def format_prism_financial_record(payment, line_no, record_no):
         "103": f"{config.PRISM_MACHINE_NO:05d}",
         "104": f"{record_no:07d}",
         "110": f"{payment.date.strftime('%Y%m%d')}",
-        "111": f"{payment.account_string}",
+        "111": f"{payment.account_alias}",
         "112": f"{int(payment.amount*100):012d} ",
         "113": "D",
         "114": f"{payment.date.year}",
@@ -613,9 +612,9 @@ def export_prism_payments_for_date(date=None):
 def generate_granted_payments_report_list():
     """Generate a payments report of only granted payments."""
     current_year = timezone.now().year
-    end_of_current_year = date.max.replace(year=current_year)
+    end_of_current_year = datetime.date.max.replace(year=current_year)
     two_years_ago = current_year - 2
-    beginning_of_two_years_ago = date.min.replace(year=two_years_ago)
+    beginning_of_two_years_ago = datetime.date.min.replace(year=two_years_ago)
 
     granted_activities = models.Activity.objects.filter(
         status=models.STATUS_GRANTED
@@ -640,9 +639,9 @@ def generate_granted_payments_report_list():
 def generate_expected_payments_report_list():
     """Generate a payments report of granted AND expected payments."""
     current_year = timezone.now().year
-    end_of_current_year = date.max.replace(year=current_year)
+    end_of_current_year = datetime.date.max.replace(year=current_year)
     two_years_ago = current_year - 2
-    beginning_of_two_years_ago = date.min.replace(year=two_years_ago)
+    beginning_of_two_years_ago = datetime.date.min.replace(year=two_years_ago)
 
     expected_activities = models.Activity.objects.filter(
         Q(status=models.STATUS_GRANTED) | Q(status=models.STATUS_EXPECTED)
@@ -693,6 +692,20 @@ def generate_payments_report_list(payments):
             if appropriation.main_activity
             else None
         )
+        # Get the historical effort_step and scaling_step.
+        if payment.paid_date:
+            paid_datetime = timezone.make_aware(
+                datetime.datetime.combine(
+                    payment.paid_date, datetime.time.max
+                ),
+                timezone=timezone.utc,
+            )
+            historical_case = case.history.as_of(paid_datetime)
+            effort_step = historical_case.effort_step
+            scaling_step = historical_case.scaling_step
+        else:
+            effort_step = case.effort_step
+            scaling_step = case.scaling_step
 
         payment_dict = {
             # payment specific.
@@ -702,6 +715,7 @@ def generate_payments_report_list(payments):
             "date": payment.date,
             "paid_date": payment.paid_date,
             "account_string": payment.account_string,
+            "account_alias": payment.account_alias,
             # payment_schedule specific.
             "payment_schedule__payment_id": payment_schedule.payment_id,
             "payment_schedule__"
@@ -731,8 +745,8 @@ def generate_payments_report_list(payments):
             "case_worker": str(case.case_worker),
             "team": str(case.team) if case.team else None,
             "leader": str(case.team.leader) if case.team else None,
-            "effort_step": str(case.effort_step),
-            "scaling_step": str(case.scaling_step),
+            "effort_step": str(effort_step),
+            "scaling_step": str(scaling_step),
             "paying_municipality": str(case.paying_municipality),
         }
         payments_report_list.append(payment_dict)
@@ -782,13 +796,13 @@ def generate_payment_date_exclusion_dates(years=None):
     The default are danish holidays and weekends.
     """
     if not years:
-        current_year = date.today().year
+        current_year = datetime.date.today().year
         years = [current_year, current_year + 1]
 
     danish_holiday_dates = list(danish_holidays(years=years))
 
-    start_date = date(min(years), 1, 1)
-    end_date = date(max(years), 12, 31)
+    start_date = datetime.date(min(years), 1, 1)
+    end_date = datetime.date(max(years), 12, 31)
 
     weekend_dates = [
         dt.date()
@@ -807,7 +821,7 @@ def generate_payment_date_exclusion_dates(years=None):
     for year in years:
         for day, month in payment_date_exclusion_tuples:
             extra_payment_date_exclusions.append(
-                date(day=day, month=month, year=year)
+                datetime.date(day=day, month=month, year=year)
             )
 
     exclusion_dates = []

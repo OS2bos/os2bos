@@ -77,7 +77,8 @@ export default {
         start_date: {
             get: function() {
                 if (this.model) {
-                    return this.model.start_date
+                    let mdl = this.model
+                    return mdl.start_date ? mdl.start_date : this.today
                 } else {
                     return this.today
                 }

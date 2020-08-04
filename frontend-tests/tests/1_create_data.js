@@ -20,8 +20,8 @@ function makeDateStr(date, offset) {
 }
 
 let today = new Date(),
-    rand = Math.floor(Math.random() * 100 ),
-    rand2 = Math.floor(Math.random() * 10 )
+    rand = Math.floor(Math.random() * 1000 ),
+    rand2 = Math.floor(Math.random() * 1000 )
 
 let str1mth = makeDateStr(today, 1),
     str2mth = makeDateStr(today, 2),
@@ -80,8 +80,7 @@ const testdata = {
         details__name: 'Tolk',
         note: 'En anden lille note',
         payment_type: 'ONE_TIME_PAYMENT',
-        start_date: str5mth,
-        end_date: str10mth,
+        payment_date: str5mth, 
         payment_amount: '150',
         recipient_type: 'PERSON',
         recipient_id: '777777-7777',
@@ -197,7 +196,7 @@ test('Add adjustment activities', async t => {
     
     await t
         .expect(Selector('h1').withText('Bevillingsskrivelse').exists).ok()
-        .expect(Selector('.label-EXPECTED')).ok()
+        .expect(Selector('.label-EXPECTED').exists).ok()
     
     await axe(t)
 })

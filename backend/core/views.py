@@ -6,13 +6,15 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 """Views and viewsets exposed by the REST interface."""
-
+import logging
 
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.utils.translation import gettext_lazy as _
+from django.conf import settings
 
 from rest_framework import viewsets
+from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
@@ -88,6 +90,11 @@ from core.mixins import (
 from core.authentication import CsrfExemptSessionAuthentication
 
 from core.permissions import IsUserAllowed
+
+
+serviceplatformen_logger = logging.getLogger(
+    "bevillingsplatform.serviceplatformen"
+)
 
 
 # Working models, read/write
@@ -319,6 +326,9 @@ class RelatedPersonViewSet(AuditModelViewSetMixin, AuditViewSet):
         GET params: cpr
         """
         cpr = request.query_params.get("cpr")
+        serviceplatformen_logger.info(
+            f"fetch_from_serviceplatformen: {cpr} - {request.user}"
+        )
         if not cpr:
             return Response(
                 {"errors": _("Intet CPR nummer angivet")},
@@ -454,3 +464,14 @@ class EffortViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     queryset = Effort.objects.all()
     serializer_class = EffortSerializer
     filterset_fields = "__all__"
+
+
+class IsEditingPastPaymentsAllowed(APIView):
+    """Expose the ALLOW_EDIT_OF_PAST_PAYMENTS setting in the API."""
+
+    authentication_classes = (CsrfExemptSessionAuthentication,)
+
+    def get(self, request, format=None):
+        """Return the Django setting allowing changes to the past."""
+        is_enabled = settings.ALLOW_EDIT_OF_PAST_PAYMENTS
+        return Response(is_enabled)

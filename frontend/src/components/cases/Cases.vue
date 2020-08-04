@@ -166,8 +166,11 @@
                     },
                     {
                         key: 'cpr_number',
-                        title: 'CPR/Navn',
-                        display_func: this.displayCPRName
+                        title: 'CPR'
+                    },
+                    {
+                        key: 'name',
+                        title: 'Navn'
                     },
                     {
                         key: 'target_group',
@@ -217,9 +220,6 @@
             displayID: function(d) {
                 let to = `#/case/${ d.id }/`
                 return `<a href="${ to }"><i class="material-icons">folder_shared</i> ${ d.sbsys_id }</a>`
-            },
-            displayCPRName: function(id) {
-                return `${ id.cpr_number }<br>${ id.name }`
             },
             displayTargetGroupDistrict: function(id) {
                 let str = `${ targetGroupId2name(id.target_group) }`

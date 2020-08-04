@@ -9,13 +9,13 @@
 from datetime import datetime, date, timedelta
 from decimal import Decimal
 from dateutil.relativedelta import relativedelta
-
+from dateutil import rrule
 import portion as P
 
 from django import forms
 from django.db import models, transaction
-from django.contrib.postgres.fields import ArrayField
 from django.db.models import Q, F
+from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
@@ -505,6 +505,17 @@ class PaymentSchedule(models.Model):
         null=True,
         blank=True,
     )
+
+    # This field only applies to one time payments.
+    # For these payments, OTOH, it must be specified.
+    payment_date = models.DateField(
+        verbose_name=_("betalingsdato"),
+        blank=True,
+        null=True,
+        help_text=_(
+            "dette felt er obligatorisk for og angår kun engangsbetalinger"
+        ),
+    )
     # This field only applies to monthly payments.
     # It may be replaced by a more general way of handling payment dates
     # independently of the activity's start date.
@@ -588,7 +599,7 @@ class PaymentSchedule(models.Model):
         allowed = {
             PaymentSchedule.INTERNAL: [INTERNAL],
             PaymentSchedule.PERSON: [CASH, SD],
-            PaymentSchedule.COMPANY: [INVOICE, CASH],
+            PaymentSchedule.COMPANY: [INVOICE],
         }
         return payment_method in allowed[recipient_type]
 
@@ -619,6 +630,8 @@ class PaymentSchedule(models.Model):
 
     def create_rrule(self, start, **kwargs):
         """Create a dateutil.rrule for this schedule specifically."""
+        if self.payment_type == self.ONE_TIME_PAYMENT:
+            start = self.payment_date
         return create_rrule(
             self.payment_type,
             self.payment_frequency,
@@ -756,6 +769,18 @@ class PaymentSchedule(models.Model):
 
         return f"{department}-{account_number}-{kind}"
 
+    @property
+    def account_alias(self):
+        """Calculate account alias from activity."""
+        if (
+            not hasattr(self, "activity")
+            or not self.activity
+            or not self.activity.account_alias
+        ):
+            return ""
+        else:
+            return self.activity.account_alias
+
     def __str__(self):
         recipient_type_str = self.get_recipient_type_display()
         payment_frequency_str = self.get_payment_frequency_display()
@@ -822,11 +847,30 @@ class Payment(models.Model):
     saved_account_string = models.CharField(
         max_length=128, verbose_name=_("gemt kontostreng"), blank=True
     )
+    saved_account_alias = models.CharField(
+        max_length=128, verbose_name=_("gemt kontoalias"), blank=True
+    )
     payment_schedule = models.ForeignKey(
         PaymentSchedule,
         on_delete=models.CASCADE,
         related_name="payments",
         verbose_name=_("betalingsplan"),
+    )
+    # The history excludes most fields - it's only a history of the paid
+    # amounts, i.e. of that which can be edited manually by users when
+    # changing records for past payments.
+    history = HistoricalRecords(
+        excluded_fields=[
+            "date",
+            "recipient_type",
+            "recipient_id",
+            "recipient_name",
+            "payment_method",
+            "amount",
+            "note",
+            "saved_account_string",
+            "payment_schedule",
+        ]
     )
 
     def save(self, *args, **kwargs):
@@ -855,7 +899,15 @@ class Payment(models.Model):
                     "hvis dens aktivitet er bevilget"
                 )
             )
+
+        # Don't save historical info unless the paid_* fields are in use.
+        if not self.paid:
+            self.skip_history_when_saving = True
+
         super().save(*args, **kwargs)
+
+        if hasattr(self, "skip_history_when_saving"):
+            del self.skip_history_when_saving
 
     @staticmethod
     def paid_allowed_for_payment_and_recipient(payment_method, recipient_type):
@@ -887,6 +939,14 @@ class Payment(models.Model):
             return self.saved_account_string
 
         return self.payment_schedule.account_string
+
+    @property
+    def account_alias(self):
+        """Return saved account alias if any, else calculate from schedule."""
+        if self.saved_account_alias:
+            return self.saved_account_alias
+
+        return self.payment_schedule.account_alias
 
     def __str__(self):
         recipient_type_str = self.get_recipient_type_display()
@@ -984,8 +1044,6 @@ class Case(AuditModelMixin, models.Model):
     # else.
     history = HistoricalRecords(
         excluded_fields=[
-            "refugee_integration",
-            "cross_department_measure",
             "target_group",
             "residence_municipality",
             "acting_municipality",
@@ -1524,6 +1582,46 @@ class SectionInfo(models.Model):
         return f"{self.activity_details} - {self.section}"
 
 
+class AccountAlias(models.Model):
+    """Model that serves as a mapping from an account string to account alias.
+
+    Map account string from PaymentSchedule to an
+    "account alias" used by Ballerup.
+    """
+
+    class Meta:
+        verbose_name = _("kontoalias")
+        verbose_name_plural = _("kontoalias")
+        constraints = [
+            models.UniqueConstraint(
+                fields=["activity_details", "section_info"],
+                name="unique_section_info_activity_details",
+            )
+        ]
+
+    # main activity section_info.
+    section_info = models.ForeignKey(
+        SectionInfo,
+        verbose_name=_("paragraf-info"),
+        related_name="account_aliases",
+        on_delete=models.CASCADE,
+    )
+
+    activity_details = models.ForeignKey(
+        ActivityDetails,
+        verbose_name=_("aktivitetsdetalje"),
+        related_name="account_aliases",
+        on_delete=models.CASCADE,
+    )
+
+    alias = models.CharField(
+        max_length=128, verbose_name=_("kontoalias"), blank=True
+    )
+
+    def __str__(self):
+        return f"{self.section_info} - {self.activity_details}"
+
+
 class Activity(AuditModelMixin, models.Model):
     """An activity is a specific service provided within an appropriation."""
 
@@ -1585,7 +1683,9 @@ class Activity(AuditModelMixin, models.Model):
         verbose_name=_("bevillingsdato"), null=True, blank=True
     )
 
-    start_date = models.DateField(verbose_name=_("startdato"))
+    start_date = models.DateField(
+        verbose_name=_("startdato"), null=True, blank=True
+    )
     end_date = models.DateField(
         verbose_name=_("slutdato"), null=True, blank=True
     )
@@ -1594,7 +1694,7 @@ class Activity(AuditModelMixin, models.Model):
         max_length=128, verbose_name=_("type"), choices=type_choices
     )
 
-    # An expected change modifies another actitvity and will eventually
+    # An expected change modifies another activity and will eventually
     # be merged with it.
     modifies = models.ForeignKey(
         "self",
@@ -1645,15 +1745,13 @@ class Activity(AuditModelMixin, models.Model):
             # "Merge" by ending current activity the day before the new
             # start_date.
             #
-            # In case of a one_time_payment we end the on the same day and
-            # delete all payments for the old one.
+            # In case of a one_time_payment we delete the payment, copy the
+            # modified information and re-generate.
             payment_type = self.modifies.payment_plan.payment_type
             if payment_type == PaymentSchedule.ONE_TIME_PAYMENT:
                 self.modifies.payment_plan.payments.all().delete()
                 self.modifies.start_date = self.start_date
-                # With one time payments, end date and start date must
-                # always be the same.
-                self.modifies.end_date = self.start_date
+                self.modifies.end_date = self.end_date
             else:
                 while (
                     self.modifies is not None
@@ -1696,7 +1794,7 @@ class Activity(AuditModelMixin, models.Model):
             )
 
         # Check that this modification is in the future.
-        if self.start_date < today:
+        if self.start_date and self.start_date < today:
             raise forms.ValidationError(
                 _(
                     "den forventede justerings startdato skal"
@@ -1710,11 +1808,12 @@ class Activity(AuditModelMixin, models.Model):
     def account_number(self):
         """Calculate the account_number to use with this activity."""
         if self.activity_type == MAIN_ACTIVITY:
-            section_info = SectionInfo.objects.filter(
-                activity_details=self.details,
-                section=self.appropriation.section,
-            ).first()
-            if not section_info:
+            try:
+                section_info = SectionInfo.objects.get(
+                    activity_details=self.details,
+                    section=self.appropriation.section,
+                )
+            except SectionInfo.DoesNotExist:
                 return None
             main_account_number = (
                 section_info.get_main_activity_main_account_number()
@@ -1723,16 +1822,49 @@ class Activity(AuditModelMixin, models.Model):
             main_activity = self.appropriation.main_activity
             if not main_activity:
                 return None
-            section_info = SectionInfo.objects.filter(
-                activity_details=main_activity.details,
-                section=self.appropriation.section,
-            ).first()
-            if not section_info:
+            try:
+                section_info = SectionInfo.objects.get(
+                    activity_details=main_activity.details,
+                    section=self.appropriation.section,
+                )
+            except SectionInfo.DoesNotExist:
                 return None
             main_account_number = (
                 section_info.get_supplementary_activity_main_account_number()
             )
         return f"{main_account_number}-{self.details.activity_id}"
+
+    @property
+    def account_alias(self):
+        """Calculate the account_alias to use with this activity."""
+        if self.activity_type == MAIN_ACTIVITY:
+            try:
+                section_info = SectionInfo.objects.get(
+                    activity_details=self.details,
+                    section=self.appropriation.section,
+                )
+            except SectionInfo.DoesNotExist:
+                return None
+        else:
+            main_activity = self.appropriation.main_activity
+            if not main_activity:
+                return None
+            try:
+                section_info = SectionInfo.objects.get(
+                    activity_details=main_activity.details,
+                    section=self.appropriation.section,
+                )
+            except SectionInfo.DoesNotExist:
+                return None
+
+        try:
+            account_alias = AccountAlias.objects.get(
+                section_info=section_info, activity_details=self.details
+            )
+        except AccountAlias.DoesNotExist:
+            return None
+
+        return account_alias.alias
 
     @property
     def monthly_payment_plan(self):
@@ -1881,6 +2013,49 @@ class Activity(AuditModelMixin, models.Model):
         self.appropriation.save()
         if hasattr(self, "payment_plan") and self.payment_plan:
             self.payment_plan.save()
+
+    def is_valid_activity_start_date(self):
+        """Determine if a date is valid for a activity start_date."""
+        # A start_date is valid for cash activities if at least two
+        # consecutive days without payment date exclusions exist between
+        # today and the start_date.
+        if (
+            self.payment_plan.payment_method == CASH
+            and self.payment_plan.recipient_type == PaymentSchedule.PERSON
+            and not self.payment_plan.fictive
+        ):
+            today = timezone.now().date()
+            start_date = (
+                self.payment_plan.payment_date
+                if self.payment_plan.payment_type
+                == PaymentSchedule.ONE_TIME_PAYMENT
+                else self.start_date
+            )
+            if start_date < today:
+                return False
+            exclusions = PaymentDateExclusion.objects.all()
+
+            # We start counting days from tomorrow.
+            tomorrow = today + relativedelta(days=1)
+            tomorrow_to_start_date_in_days = [
+                dt.date()
+                for dt in rrule.rrule(
+                    rrule.DAILY, dtstart=tomorrow, until=start_date
+                )
+            ]
+
+            consecutive_days = 0
+            for day_date in tomorrow_to_start_date_in_days:
+                if exclusions.filter(date=day_date).exists():
+                    consecutive_days = 0
+                else:
+                    consecutive_days += 1
+
+                if consecutive_days == 2:
+                    return True
+
+            return False
+        return True
 
 
 class RelatedPerson(AuditModelMixin, models.Model):

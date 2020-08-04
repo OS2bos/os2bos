@@ -17,6 +17,7 @@ from core.models import (
     ActivityDetails,
     PaymentMethodDetails,
     RatePerDate,
+    AccountAlias,
 )
 
 
@@ -55,3 +56,8 @@ class InitializeTestCase(TestCase):
         initialize()
         rates_per_date_count = RatePerDate.objects.count()
         self.assertEqual(rates_per_date_count, 30)
+
+    def test_initialize_generates_account_aliases(self):
+        initialize()
+        account_aliases_count = AccountAlias.objects.count()
+        self.assertEqual(account_aliases_count, 301)
