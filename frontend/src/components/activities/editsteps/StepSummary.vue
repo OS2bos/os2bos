@@ -64,8 +64,8 @@
         <fieldset style="margin-bottom: 0; padding-bottom: 2rem;">
             <warning :content="payDateRule" />
             <hr>
-            <input type="submit" id="activity-submit" @click="save" style="margin-right: .5rem;" value="Gem">
-            <button @click="cancel">Annuller</button>
+            <input type="submit" id="activity-submit" style="margin-right: .5rem;" value="Gem">
+            <button type="button" @click="cancel">Annuller</button>
         </fieldset>
     </div>
 </template>
@@ -95,9 +95,6 @@ export default {
         }
     },
     methods: {
-        save: function() {
-            this.$emit('save')
-        },
         cancel: function() {
             this.$emit('cancel')
         }

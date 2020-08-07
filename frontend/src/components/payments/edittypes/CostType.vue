@@ -10,15 +10,15 @@
     <fieldset v-if="editable">
         <legend class="required">Vælg afregningsenhed</legend>
         
-        <input type="radio" v-model="model" id="pay-cost-type-rate" required value="GLOBAL_RATE">
+        <input type="radio" v-model="model" id="pay-cost-type-rate" required value="GLOBAL_RATE" name="cost-type">
         <label for="pay-cost-type-rate">Takst</label>
 
         <template v-if="payment_plan.payment_type !== 'ONE_TIME_PAYMENT'">
-            <input type="radio" v-model="model" id="pay-cost-type-per-unit" required value="PER_UNIT">
+            <input type="radio" v-model="model" id="pay-cost-type-per-unit" required value="PER_UNIT" name="cost-type">
             <label for="pay-cost-type-per-unit">Enhedspris</label>
         </template>
 
-        <input type="radio" v-model="model" id="pay-cost-type-fixed" required value="FIXED">
+        <input type="radio" v-model="model" id="pay-cost-type-fixed" required value="FIXED" name="cost-type">
         <label for="pay-cost-type-fixed">Beløb</label>
 
         <error :err-key="property" />
