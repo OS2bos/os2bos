@@ -29,7 +29,7 @@
             </dl>
         </div>
 
-        <form @submit.prevent="" :class="`act-create-form activity-${ act.status }`">
+        <form @submit.prevent="saveActivity" :class="`act-create-form activity-${ act.status }`">
             <div class="act-create-main">
                 <step-activity class="row-item" />
                 <step-frequency class="row-item" />
@@ -37,7 +37,7 @@
                 <step-receiver class="row-item" />
             </div>
             <hr>
-            <step-summary class="row-item" v-on:save="saveActivity" v-on:cancel="cancelCreate" />
+            <step-summary class="row-item" v-on:cancel="cancelCreate" />
         </form>
     
     </div>
