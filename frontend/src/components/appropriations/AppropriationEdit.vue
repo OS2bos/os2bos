@@ -86,7 +86,7 @@
         },
         methods: {
             fetchSections: function() {
-                axios.get(`/sections/?allowed_for_steps=${ this.cas.effort_step }&${ this.cas_target}`)
+                axios.get(`/sections/?allowed_for_steps=${ this.cas.effort_step ? this.cas.effort_step : '' }&${ this.cas_target}`)
                 .then(res => {
                     this.sections = res.data
                 })
