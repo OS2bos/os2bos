@@ -37,6 +37,7 @@ from core.tests.testing_utils import (
     create_rate,
     create_rate_per_date,
     create_payment_date_exclusion,
+    create_account_alias,
 )
 from core.models import (
     Municipality,
@@ -1220,13 +1221,14 @@ class ActivityTestCase(TestCase, BasicTestMixin):
 
         activity = create_activity(case, appropriation, status=STATUS_GRANTED)
         create_payment_schedule(
-            payment_type=PaymentSchedule.ONE_TIME_PAYMENT, activity=activity
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            activity=activity,
+            payment_date=date.today(),
         )
 
         self.assertEqual(activity.payment_plan.payments.count(), 1)
         self.assertEqual(
-            activity.payment_plan.payments.first().date,
-            date(year=2019, month=1, day=1),
+            activity.payment_plan.payments.first().date, date.today()
         )
         # A new end_date should not affect the one time payment.
         activity.end_date = date(year=2019, month=1, day=13)
@@ -1234,8 +1236,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
 
         self.assertEqual(activity.payment_plan.payments.count(), 1)
         self.assertEqual(
-            activity.payment_plan.payments.first().date,
-            date(year=2019, month=1, day=1),
+            activity.payment_plan.payments.first().date, date.today()
         )
 
     def test_grant_already_granted(self):
@@ -1719,6 +1720,27 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         self.assertEqual(
             activity.total_cost_full_year, Decimal("500") * days_in_year
         )
+
+    def test_total_cost_full_year_individual_payment(self):
+        now = timezone.now()
+        start_date = date(year=now.year, month=12, day=1)
+        end_date = date(year=now.year, month=12, day=15)
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        # There is no way to extrapolate for full year with individual
+        # payments so we just return total_cost
+        activity = create_activity(
+            case, appropriation, start_date=start_date, end_date=end_date
+        )
+        payment_schedule = create_payment_schedule(
+            activity=activity, payment_type=PaymentSchedule.INDIVIDUAL_PAYMENT
+        )
+
+        create_payment(payment_schedule, amount=Decimal("500"))
+
+        self.assertEqual(activity.total_cost_full_year, Decimal("500"))
 
     def test_total_cost_for_year_no_payment_plan(self):
         now = timezone.now()
@@ -2309,6 +2331,165 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         # No main activity is found.
         self.assertIsNone(suppl_activity.account_number)
 
+    def test_account_alias_main_activity(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+
+        activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=activity,
+        )
+        section_info = create_section_info(
+            details=activity.details,
+            section=section,
+            main_activity_main_account_number="12345",
+        )
+        account_alias = create_account_alias(section_info, activity.details)
+
+        self.assertEqual(activity.account_alias, account_alias.alias)
+
+    def test_account_alias_main_activity_no_section_info(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+
+        activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=activity,
+        )
+        # No section info is found.
+        self.assertIsNone(activity.account_alias)
+
+    def test_account_alias_supplementary_activity(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+
+        main_activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=main_activity,
+        )
+        section_info = create_section_info(
+            details=main_activity.details,
+            section=section,
+            main_activity_main_account_number="12345",
+        )
+        suppl_activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=SUPPL_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=suppl_activity,
+        )
+        account_alias = create_account_alias(
+            section_info, main_activity.details
+        )
+
+        self.assertEqual(suppl_activity.account_alias, account_alias.alias)
+
+    def test_account_alias_supplementary_activity_no_section_info(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+
+        main_activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=main_activity,
+        )
+        suppl_activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=SUPPL_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=suppl_activity,
+        )
+        # No section info is found.
+        self.assertIsNone(suppl_activity.account_alias)
+
+    def test_account_alias_supplementary_activity_no_main_activity(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+
+        suppl_activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=SUPPL_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=suppl_activity,
+        )
+        # No main activity is found.
+        self.assertIsNone(suppl_activity.account_alias)
+
+    def test_individual_payment_activity_no_payments(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        # payments are not generated.
+        activity = create_activity(case, appropriation)
+        create_payment_schedule(
+            activity=activity, payment_type=PaymentSchedule.INDIVIDUAL_PAYMENT
+        )
+
+        self.assertEqual(activity.payment_plan.payments.count(), 0)
+
+        activity.end_date = date(year=2019, month=1, day=13)
+        # synchronize_payments is not called either.
+        activity.save()
+        self.assertEqual(activity.payment_plan.payments.count(), 0)
+
 
 class ApprovalLevelTestCase(TestCase):
     def test_approvallevel_str(self):
@@ -2511,6 +2692,53 @@ class PaymentTestCase(TestCase, BasicTestMixin):
         # Payment account_string should use the saved_account_string
         self.assertEqual(payment.account_string, "XXX-12345-000000-XXX")
 
+    def test_payment_save_account_alias_saved(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+
+        activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+        )
+
+        section_info = create_section_info(
+            details=activity.details,
+            section=section,
+            main_activity_main_account_number="12345",
+        )
+        account_alias = create_account_alias(section_info, activity.details)
+        payment_schedule = create_payment_schedule(activity=activity)
+
+        payment = create_payment(
+            payment_schedule=payment_schedule,
+            date=date(year=2019, month=1, day=11),
+            amount=Decimal("500.0"),
+        )
+
+        # account alias should come from the section info while not paid.
+        self.assertEqual(payment.account_alias, "BOS0000001")
+        self.assertEqual(payment.saved_account_alias, "")
+
+        # Set payment paid which should save the saved_account_string
+        payment.paid = True
+        payment.paid_date = date(year=2019, month=2, day=1)
+        payment.paid_amount = Decimal("500.0")
+        payment.save()
+        payment.refresh_from_db()
+        self.assertEqual(payment.saved_account_alias, "BOS0000001")
+
+        # Change alias.
+        account_alias.alias = "BOS0000002"
+        section_info.save()
+
+        # Payment account_string should use the saved_account_string
+        self.assertEqual(payment.account_alias, "BOS0000001")
+
     def test_save_not_all_paid_fields_set(self):
         payment_schedule = create_payment_schedule()
 
@@ -2682,6 +2910,7 @@ class PaymentScheduleTestCase(TestCase):
         payment_schedule = create_payment_schedule(
             payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
             payment_frequency=PaymentSchedule.DAILY,
+            payment_date=date.today(),
         )
 
         rrule = payment_schedule.create_rrule(
@@ -2690,9 +2919,7 @@ class PaymentScheduleTestCase(TestCase):
         )
 
         self.assertEqual(len(list(rrule)), 1)
-        self.assertEqual(
-            list(rrule)[0].date(), date(year=2019, month=1, day=1)
-        )
+        self.assertEqual(list(rrule)[0].date(), date.today())
 
     def test_create_rrule_incorrect_frequency(self):
         payment_schedule = create_payment_schedule(
@@ -2923,6 +3150,20 @@ class PaymentScheduleTestCase(TestCase):
         self.assertIsNotNone(payment_schedule.payments)
         self.assertEqual(payment_schedule.payments.count(), 24)
 
+    def test_generate_payments_individual_payment(self):
+        payment_schedule = create_payment_schedule(
+            payment_type=PaymentSchedule.INDIVIDUAL_PAYMENT,
+            payment_frequency=None,
+            payment_amount=None,
+            payment_cost_type=None,
+        )
+        start_date = date(year=2019, month=1, day=1)
+        end_date = date(year=2019, month=1, day=10)
+
+        payment_schedule.generate_payments(start_date, end_date)
+
+        self.assertEqual(payment_schedule.payments.count(), 0)
+
     def test_synchronize_payments_no_end_needs_further_payments(self):
         # Test the case where end is unbounded and payments are generated till
         # end of next year then middle of next year is reached
@@ -3072,13 +3313,32 @@ class PaymentScheduleTestCase(TestCase):
         with self.assertRaises(ValueError):
             payment_schedule.synchronize_payments(start_date, end_date)
 
+    def test_synchronize_payments_individual_payment(self):
+        payment_schedule = create_payment_schedule(
+            payment_type=PaymentSchedule.INDIVIDUAL_PAYMENT,
+            payment_frequency=None,
+            payment_amount=None,
+            payment_cost_type=None,
+        )
+        # No payments should be generated whatsoever.
+        start_date = date(year=2019, month=1, day=1)
+        end_date = date(year=2019, month=3, day=1)
+        payment_schedule.generate_payments(start_date, end_date)
+
+        self.assertEqual(payment_schedule.payments.count(), 0)
+
+        # No payments should be synchronized either.
+        end_date = date(year=2019, month=4, day=1)
+        payment_schedule.synchronize_payments(start_date, end_date)
+
+        self.assertEqual(payment_schedule.payments.count(), 0)
+
     @parameterized.expand(
         [
             (PaymentSchedule.PERSON, SD),
             (PaymentSchedule.PERSON, CASH),
             (PaymentSchedule.INTERNAL, INTERNAL),
             (PaymentSchedule.COMPANY, INVOICE),
-            (PaymentSchedule.COMPANY, CASH),
         ]
     )
     def test_payment_and_recipient_allowed_save(
@@ -3103,6 +3363,7 @@ class PaymentScheduleTestCase(TestCase):
             (PaymentSchedule.INTERNAL, INVOICE),
             (PaymentSchedule.COMPANY, INTERNAL),
             (PaymentSchedule.COMPANY, SD),
+            (PaymentSchedule.COMPANY, CASH),
         ]
     )
     def test_payment_and_recipient_disallowed_save(
@@ -3468,3 +3729,19 @@ class PaymentDateExclusionTestCase(TestCase):
         payment_date_exclusion = create_payment_date_exclusion()
 
         self.assertEqual(str(payment_date_exclusion), str(date.today()))
+
+
+class AccountAliasTestCase(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_str(self):
+        section = create_section()
+        activity_details = create_activity_details()
+        section_info = create_section_info(activity_details, section)
+        account_alias = create_account_alias(section_info, activity_details)
+
+        self.assertEqual(
+            str(account_alias), f"{section_info} - {activity_details}"
+        )

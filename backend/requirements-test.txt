@@ -3,6 +3,7 @@
 tox==3.16.1
 black==19.10b0
 pytest==5.4.3
+coverage==5.2
 pytest-django==3.9.0
 pytest-cov==2.10.0
 flake8==3.8.3

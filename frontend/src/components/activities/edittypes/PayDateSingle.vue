@@ -22,7 +22,7 @@
             v-model="model" 
             id="pay-date-single" 
             :max="endDateSet"
-            :min="startDateSet" 
+            :min="startDateSet"
             pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
             placeholder="åååå-mm-dd"
             required>
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import mixin from '../../mixins/ActivityEditMixin.js'
+import mixin from '../../mixins/PaymentPlanEditMixin.js'
 import datemixin from '../../mixins/ActivityDateEditMixin.js'
 import Error from '../../forms/Error.vue'
 
@@ -50,7 +50,7 @@ export default {
         datemixin
     ],
     created: function() {
-        this.property = 'start_date'
+        this.property = 'payment_date'
     }
 }
 </script>

@@ -162,8 +162,11 @@
                     },
                     {
                         key: 'case__cpr_number',
-                        display_func: this.displayCPRName,
                         title: 'CPR nr.',
+                    },
+                    {
+                        key: 'case__name',
+                        title: 'Navn',
                     },
                     {
                         key: 'num_ongoing_activities',
@@ -231,9 +234,6 @@
             displayID: function(d) {
                 let to = `#/appropriation/${ d.id }/`
                 return `<a href="${ to }"><i class="material-icons">folder_shared</i> ${ d.sbsys_id }</a>`
-            },
-            displayCPRName: function(d) {
-                return `${ d.case__cpr_number } <br> ${ d.case__name }`
             },
             displaySection: function(d) {
                 return `§ ${ sectionId2name(d.section) }`

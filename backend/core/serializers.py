@@ -150,6 +150,7 @@ class PaymentSerializer(serializers.ModelSerializer):
     """
 
     account_string = serializers.ReadOnlyField()
+    account_alias = serializers.ReadOnlyField()
     payment_schedule__payment_id = serializers.ReadOnlyField(
         source="payment_schedule.payment_id", default=None
     )
@@ -181,7 +182,11 @@ class PaymentSerializer(serializers.ModelSerializer):
         recipient_type = (
             data.get("recipient_type", None) or self.instance.recipient_type
         )
-        paid = data.get("paid", None) or self.instance.paid
+        paid = (
+            data["paid"]
+            if "paid" in data and data["paid"] is not None
+            else self.instance.paid
+        )
         payment_schedule = (
             data.get("payment_schedule", None)
             or self.instance.payment_schedule
@@ -203,7 +208,7 @@ class PaymentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Payment
-        exclude = ("saved_account_string",)
+        exclude = ("saved_account_string", "saved_account_alias")
 
 
 class RatePerDateSerializer(serializers.ModelSerializer):
@@ -268,7 +273,6 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
 
     payments = PaymentSerializer(many=True, read_only=True)
     price_per_unit = PriceSerializer(required=False, allow_null=True)
-    account = serializers.ReadOnlyField()
 
     class Meta:
         model = PaymentSchedule
@@ -293,26 +297,67 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
                 _("ugyldig betalingsmetode for betalingsmodtager")
             )
 
+        # Validate one_time and individual payment.
         one_time_payment = (
             data["payment_type"] == PaymentSchedule.ONE_TIME_PAYMENT
         )
-        payment_frequency = (
-            "payment_frequency" in data and data["payment_frequency"]
+        individual_payment = (
+            data["payment_type"] == PaymentSchedule.INDIVIDUAL_PAYMENT
         )
-        if not one_time_payment and not payment_frequency:
+        payment_frequency = data.get("payment_frequency", None)
+        if (
+            not one_time_payment and not individual_payment
+        ) and not payment_frequency:
             raise serializers.ValidationError(
                 _(
-                    "En betalingstype der ikke er en engangsbetaling "
-                    "skal have en betalingsfrekvens"
+                    "En betalingstype der ikke er en engangsbetaling eller"
+                    " individuel betaling skal have en betalingsfrekvens"
                 )
             )
-        elif one_time_payment and payment_frequency:
+        elif (one_time_payment or individual_payment) and payment_frequency:
             raise serializers.ValidationError(
-                _("En engangsbetaling må ikke have en betalingsfrekvens")
+                _(
+                    "En engangsbetaling eller individuel betaling må"
+                    " ikke have en betalingsfrekvens"
+                )
             )
 
+        payment_cost_type = data.get("payment_cost_type", None)
+        payment_amount = data.get("payment_amount", None)
+        payment_day_of_month = data.get("payment_day_of_month", None)
+        payment_units = data.get("payment_units", None)
+
+        if individual_payment:
+            if payment_cost_type:
+                raise serializers.ValidationError(
+                    _(
+                        "En individuel betaling må ikke have"
+                        " en betalingspristype"
+                    )
+                )
+            if payment_amount:
+                raise serializers.ValidationError(
+                    _("En individuel betaling må ikke have et beløb")
+                )
+            if payment_day_of_month:
+                raise serializers.ValidationError(
+                    _(
+                        "En individuel betaling må ikke have"
+                        " en månedlig betalingsdato"
+                    )
+                )
+            if payment_units:
+                raise serializers.ValidationError(
+                    _("en individuel betaling må ikke have betalingsenheder")
+                )
+
         # Validate payment/rate/unit info
-        payment_cost_type = data["payment_cost_type"]
+        instance = self.instance
+        if not instance and self.parent:
+            # XXX: Get instance from parent form data, we need it.
+            instance_id = self.parent.initial_data["payment_plan"].get("id")
+            if instance_id:
+                instance = PaymentSchedule.objects.get(id=instance_id)
 
         if payment_cost_type == PaymentSchedule.FIXED_PRICE:
             # Payment amount needs to be given, apart from that s'all
@@ -341,17 +386,20 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
         elif payment_cost_type == PaymentSchedule.PER_UNIT_PRICE:
             # Units need to be given.
             if not data.get("payment_units", None):
-                raise serializers.ValidationError(
-                    _("Enheder skal angives ved pris pr. enhed")
-                )
+                if not instance or instance.payment_units is None:
+                    raise serializers.ValidationError(
+                        _("Enheder skal angives ved pris pr. enhed")
+                    )
             # Price data needs to be given.
             # If not given, start and end date default to None.
-            if not data.get("price_per_unit", None) or not data[
-                "price_per_unit"
-            ].get("amount", None):
-                raise serializers.ValidationError(
-                    _("Beløb pr. enhed skal angives")
-                )
+            if (
+                not data.get("price_per_unit", None)
+                or data["price_per_unit"].get("amount", None) is None
+            ):
+                if not instance or not instance.price_per_unit:
+                    raise serializers.ValidationError(
+                        _("Beløb pr. enhed skal angives")
+                    )
             # Rate can't be given.
             if data.get("payment_rate", None):
                 raise serializers.ValidationError(
@@ -417,19 +465,40 @@ class ActivitySerializer(WritableNestedModelSerializer):
             and data["start_date"] > data["end_date"]
         ):
             raise serializers.ValidationError(
-                _("startdato skal være før eller identisk med slutdato")
+                _("Startdato skal være før eller identisk med slutdato")
             )
 
-        # one time payments should have the same start and end date.
+        # One time payments should have a payment date in the payment plan.
         is_one_time_payment = (
             data["payment_plan"]["payment_type"]
             == PaymentSchedule.ONE_TIME_PAYMENT
         )
+
+        if "start_date" not in data and not is_one_time_payment:
+            raise serializers.ValidationError(
+                _("der skal angives en startdato for ydelsen")
+            )
+
         if is_one_time_payment and (
-            "end_date" not in data or data["end_date"] != data["start_date"]
+            "payment_date" not in data["payment_plan"]
+            or data["payment_plan"]["payment_date"] is None
         ):
             raise serializers.ValidationError(
-                _("startdato og slutdato skal være ens for engangsbetaling")
+                _("der skal angives en betalingsdato for engangsbetaling")
+            )
+
+        # Individual payments cannot be an expected adjustment.
+        modifies = "modifies" in data and data["modifies"]
+        is_individual_payment = (
+            data["payment_plan"]["payment_type"]
+            == PaymentSchedule.INDIVIDUAL_PAYMENT
+        )
+        if is_individual_payment and modifies:
+            raise serializers.ValidationError(
+                _(
+                    "en individuel betaling kan ikke"
+                    " være en forventet justering"
+                )
             )
 
         # Monthly payments that are not expected adjustments should have a
@@ -442,7 +511,7 @@ class ActivitySerializer(WritableNestedModelSerializer):
         if (
             is_monthly_payment
             and ("end_date" in data and data["end_date"])
-            and not ("modifies" in data and data["modifies"])
+            and not modifies
         ):
             start_date = data["start_date"]
             end_date = data["end_date"]
@@ -463,13 +532,34 @@ class ActivitySerializer(WritableNestedModelSerializer):
                     _("Betalingsparametre resulterer ikke i nogen betalinger")
                 )
 
-        if "modifies" in data and data["modifies"]:
-            # run the validate_expected flow.
-            data_copy = data.copy()
-            data_copy["payment_plan"] = PaymentSchedule(
-                **data_copy.pop("payment_plan")
+        # Cash payments that are not fictive should have a "valid" start_date
+        # based on payment date exclusions.
+        data_copy = data.copy()
+
+        if (
+            "price_per_unit" in data_copy["payment_plan"]
+            and data_copy["payment_plan"]["price_per_unit"]
+        ):
+            data_copy["payment_plan"]["price_per_unit"] = PriceSerializer(
+                data=data_copy["payment_plan"]["price_per_unit"]
+            ).instance
+        data_copy["payment_plan"] = PaymentSchedule(
+            **data_copy.pop("payment_plan")
+        )
+        instance = Activity(**data_copy)
+
+        is_valid_start_date = instance.is_valid_activity_start_date()
+        if not is_valid_start_date:
+            raise serializers.ValidationError(
+                _(
+                    "Startdato skal være i fremtiden og "
+                    "der skal være mindst to udbetalingsdage i række"
+                    " fra nu og til startdatoen"
+                )
             )
-            instance = Activity(**data_copy)
+
+        if modifies:
+            # run the validate_expected flow.
             try:
                 instance.validate_expected()
             except forms.ValidationError as e:

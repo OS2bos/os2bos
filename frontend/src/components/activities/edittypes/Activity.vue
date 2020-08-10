@@ -9,7 +9,7 @@
 
     <fieldset v-if="editable">
         <label class="required" for="fieldSelectAct">Ydelse</label>
-        <p v-if="preselectedAct"><strong>{{ act_details[0].name }}</strong></p>
+        <p v-if="preselectedAct" id="preselected-activity"><strong>{{ act_details[0].name }}</strong></p>
         <list-picker
             v-if="!preselectedAct && act_details"
             :dom-id="'fieldSelectAct'"
@@ -76,6 +76,7 @@ export default {
         preselectedAct: function() {
             if (this.act_details && this.act_details.length === 1) {
                 this.model = this.act_details[0].id
+                this.$store.commit('setActDetail', this.model)
                 return true
             } else {
                 return false

@@ -58,11 +58,11 @@
 
 <script>
 import ActivityListGroup from './ActListGroup.vue'
-import UserRights from '../../mixins/UserRights.js'
+import PermissionLogic from '../../mixins/PermissionLogic.js'
 
 export default {
     mixins: [
-        UserRights
+        PermissionLogic
     ],
     components: {
         ActivityListGroup

@@ -88,6 +88,19 @@ class TestPaymentAdmin(AuthenticatedTestCase, BasicTestMixin):
             payment_admin.account_string(payment), payment.account_string
         )
 
+    def test_account_alias(self):
+        payment_schedule = create_payment_schedule()
+
+        payment = create_payment(
+            payment_schedule=payment_schedule,
+            date=date(year=2019, month=1, day=1),
+        )
+        site = AdminSite()
+        payment_admin = PaymentAdmin(Payment, site)
+        self.assertEqual(
+            payment_admin.account_alias(payment), payment.account_alias
+        )
+
     def test_payment_schedule_str(self):
         payment_schedule = create_payment_schedule()
 
@@ -140,6 +153,16 @@ class TestPaymentScheduleAdmin(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(
             payment_schedule_admin.account_string(payment_schedule),
             payment_schedule.account_string,
+        )
+
+    def test_account_alias(self):
+        payment_schedule = create_payment_schedule()
+
+        site = AdminSite()
+        payment_schedule_admin = PaymentScheduleAdmin(PaymentSchedule, site)
+        self.assertEqual(
+            payment_schedule_admin.account_alias(payment_schedule),
+            payment_schedule.account_alias,
         )
 
     def test_admin_changelist_not_admin_user_disallowed(self):
@@ -264,6 +287,20 @@ class TestActivityAdmin(AuthenticatedTestCase, BasicTestMixin):
         activity_admin = ActivityAdmin(Activity, site)
         self.assertEqual(
             activity_admin.account_number(activity), activity.account_number
+        )
+
+    def test_account_alias(self):
+        section = create_section()
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(section=section, case=case)
+        activity = create_activity(case=case, appropriation=appropriation)
+
+        site = AdminSite()
+        activity_admin = ActivityAdmin(Activity, site)
+        self.assertEqual(
+            activity_admin.account_alias(activity), activity.account_alias
         )
 
 
@@ -396,34 +433,6 @@ class RateAdminTestCase(TestCase):
 
         self.assertEqual(rate.rates_per_date.count(), 0)
 
-    def test_start_after_end_error(self):
-        rate = create_rate()
-
-        request = MockRequest()
-        site = AdminSite()
-        rate_admin = RateAdmin(Rate, site)
-
-        self.assertEqual(rate.rates_per_date.count(), 0)
-
-        start_date = date.today()
-        end_date = date.today() - timedelta(days=1)
-
-        rate_form_class = rate_admin.get_form(request, rate)
-        form_data = {
-            "name": rate.name,
-            "rate": 100,
-            "start_date": start_date,
-            "end_date": end_date,
-        }
-        rate_form = rate_form_class(form_data, instance=rate)
-        is_valid = rate_form.is_valid()
-
-        self.assertFalse(is_valid)
-        self.assertIn(
-            "Slutdato skal være mindre end startdato",
-            rate_form.errors["__all__"],
-        )
-
     def test_init_sets_start_date_and_rate(self):
         request = MockRequest()
         site = AdminSite()
@@ -443,7 +452,6 @@ class RateAdminTestCase(TestCase):
         rate_form = rate_form_class(instance=rate)
 
         self.assertEqual(rate_form["start_date"].value(), tomorrow)
-        self.assertEqual(rate_form["end_date"].value(), two_days_from_now)
         self.assertEqual(rate_form["rate"].value(), 125)
 
     def test_init_sets_start_date_today_on(self):
@@ -458,7 +466,6 @@ class RateAdminTestCase(TestCase):
         rate_form = rate_form_class()
 
         self.assertEqual(rate_form["start_date"].value(), today)
-        self.assertEqual(rate_form["end_date"].value(), None)
         self.assertEqual(rate_form["rate"].value(), None)
 
     def test_init_sets_start_and_end_existing_on_none(self):
@@ -472,7 +479,6 @@ class RateAdminTestCase(TestCase):
         rate_form = rate_form_class(instance=rate)
 
         self.assertEqual(rate_form["start_date"].value(), None)
-        self.assertEqual(rate_form["end_date"].value(), None)
         self.assertEqual(rate_form["rate"].value(), 125)
 
 

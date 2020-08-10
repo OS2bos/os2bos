@@ -6,7 +6,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """Signals for acting on events occuring on model objects."""
 
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import pre_save, post_save, post_delete
 from django.dispatch import receiver
 from core.models import (
     Activity,
@@ -25,13 +25,11 @@ from core.utils import (
 
 
 @receiver(
-    post_save,
+    pre_save,
     sender=Payment,
     dispatch_uid="set_saved_account_string_on_payment_save",
 )
-def set_saved_account_string_on_payment_save(
-    sender, instance, created, **kwargs
-):
+def set_saved_account_string_on_payment_save(sender, instance, **kwargs):
     """Set the saved_account_string on Payment save."""
     if (
         instance.paid
@@ -39,7 +37,6 @@ def set_saved_account_string_on_payment_save(
         and instance.account_string
     ):
         instance.saved_account_string = instance.account_string
-        instance.save()
 
 
 @receiver(
@@ -53,6 +50,24 @@ def set_payment_id_on_paymentschedule_save(
     """Set the payment_id as the PaymentSchedule ID on creation."""
     if created:
         instance.payment_id = instance.id
+        instance.save()
+
+
+@receiver(
+    post_save,
+    sender=Payment,
+    dispatch_uid="set_saved_account_alias_on_payment_save",
+)
+def set_saved_account_alias_on_payment_save(
+    sender, instance, created, **kwargs
+):
+    """Set the saved_account_alias on Payment save."""
+    if (
+        instance.paid
+        and not instance.saved_account_alias
+        and instance.account_alias
+    ):
+        instance.saved_account_alias = instance.account_alias
         instance.save()
 
 
@@ -122,7 +137,10 @@ def save_payment_schedule_on_save_price(sender, instance, created, **kwargs):
 )
 def generate_payments_on_post_save(sender, instance, created, **kwargs):
     """Generate payments for activity before saving."""
-    if instance.is_ready_to_generate_payments():
+    if (
+        instance.is_ready_to_generate_payments()
+        and not instance.payment_type == PaymentSchedule.INDIVIDUAL_PAYMENT
+    ):
         activity = instance.activity
 
         vat_factor = activity.vat_factor

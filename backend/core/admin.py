@@ -17,6 +17,8 @@ from django.urls import reverse
 from django.db.models import F
 from django import forms
 
+from simple_history.admin import SimpleHistoryAdmin
+
 from core.models import (
     Municipality,
     PaymentSchedule,
@@ -41,6 +43,7 @@ from core.models import (
     Rate,
     Price,
     PaymentDateExclusion,
+    AccountAlias,
 )
 from core.proxies import (
     SectionEffortStepProxy,
@@ -126,13 +129,18 @@ class AppropriationAdmin(admin.ModelAdmin):
 class ActivityAdmin(admin.ModelAdmin):
     """ModelAdmin for Activity."""
 
-    readonly_fields = ("account_number",)
+    readonly_fields = ("account_number", "account_alias")
 
     def account_number(self, obj):
         """Get account number."""
         return obj.account_number
 
+    def account_alias(self, obj):
+        """Get account alias."""
+        return obj.account_alias
+
     account_number.short_description = _("kontonummer")
+    account_alias.short_description = _("kontoalias")
 
 
 class RatePerDateInline(ClassificationInline):
@@ -185,9 +193,6 @@ class VariableRateAdminForm(forms.ModelForm):
         required=False,
         widget=forms.SelectDateWidget(),
     )
-    end_date = forms.DateField(
-        label=_("Slutdato"), required=False, widget=forms.SelectDateWidget()
-    )
 
     def __init__(self, *args, **kwargs):
         """__init__ for VariableRateAdminForm.
@@ -199,27 +204,10 @@ class VariableRateAdminForm(forms.ModelForm):
         latest = self.instance.rates_per_date.order_by(
             F("start_date").asc(nulls_first=True)
         ).last()
-        # If any object exists set the initial rate, start_date and end_date.
+        # If any object exists set the initial rate and start_date.
         if latest:
             self.initial["start_date"] = latest.start_date
-            self.initial["end_date"] = latest.end_date
             self.initial["rate"] = latest.rate
-
-    def clean(self):
-        """Override ModelForm clean."""
-        cleaned_data = super().clean()
-        rate_start_date = cleaned_data.get("start_date")
-        rate_end_date = cleaned_data.get("end_date")
-
-        if (
-            rate_start_date
-            and rate_end_date
-            and not rate_start_date < rate_end_date
-        ):
-            raise forms.ValidationError(
-                _("Slutdato skal være mindre end startdato")
-            )
-        return cleaned_data
 
 
 class VariableRateAdmin(ClassificationAdmin):
@@ -233,9 +221,7 @@ class VariableRateAdmin(ClassificationAdmin):
         if form.is_valid() and form.has_changed():
             super().save_model(request, obj, form, change)
             obj.set_rate_amount(
-                form.cleaned_data["rate"],
-                form.cleaned_data["start_date"],
-                form.cleaned_data["end_date"],
+                form.cleaned_data["rate"], form.cleaned_data["start_date"],
             )
 
 
@@ -253,6 +239,7 @@ class RateAdmin(VariableRateAdmin):
 
     list_display = ("name", "description")
     form = RateForm
+    exclude = ("needs_recalculation",)
 
 
 class PriceForm(VariableRateAdminForm):
@@ -273,10 +260,10 @@ class PriceAdmin(VariableRateAdmin):
 
 
 @admin.register(Payment)
-class PaymentAdmin(admin.ModelAdmin):
+class PaymentAdmin(SimpleHistoryAdmin):
     """Dislay read only fields on payment."""
 
-    readonly_fields = ("payment_id", "account_string")
+    readonly_fields = ("payment_id", "account_string", "account_alias")
     search_fields = ("payment_schedule__payment_id",)
 
     list_display = (
@@ -314,8 +301,13 @@ class PaymentAdmin(admin.ModelAdmin):
         """Get account string."""
         return obj.account_string
 
+    def account_alias(self, obj):
+        """Get account alias."""
+        return obj.account_alias
+
     payment_id.short_description = _("betalings-ID")
     account_string.short_description = _("kontostreng")
+    account_alias.short_description = _("kontoalias")
     payment_schedule_str.short_description = _("betalingsplan")
 
 
@@ -376,7 +368,12 @@ class EffortAdmin(ClassificationAdmin):
 class PaymentScheduleAdmin(admin.ModelAdmin):
     """Display read only fields on payment schedule."""
 
-    readonly_fields = ("payment_id", "account_string", "price_per_unit")
+    readonly_fields = (
+        "payment_id",
+        "account_string",
+        "account_alias",
+        "price_per_unit",
+    )
     search_fields = ("payment_id",)
     list_display = (
         "id",
@@ -402,7 +399,12 @@ class PaymentScheduleAdmin(admin.ModelAdmin):
         """Get account string."""
         return obj.account_string
 
+    def account_alias(self, obj):
+        """Get account alias."""
+        return obj.account_alias
+
     account_string.short_description = _("kontostreng")
+    account_alias.short_description = _("kontoalias")
 
 
 @admin.register(User)
@@ -615,3 +617,10 @@ class SectionInfoAdmin(ClassificationAdmin):
     """ModelAdmin for SectionInfo."""
 
     list_display = ("activity_details", "section", "kle_number")
+
+
+@admin.register(AccountAlias)
+class AccountAliasAdmin(ClassificationAdmin):
+    """ModelAdmin for SectionInfo."""
+
+    list_display = ("section_info", "activity_details", "alias")

@@ -28,9 +28,14 @@
         </fieldset>
 
         <dl style="margin-bottom: 1rem;">
+            <dt>Takst</dt>
+            <dd>
+                <strong>{{ displayRateName(model) }}</strong>,<br>
+                {{ displayRateDescription(model) }}
+            </dd>
+
             <dt>Takst x antal</dt>
             <dd>
-                {{ displayRateName(model) }},<br>
                 {{ displayCost(displayRateAmount(model)) }} kr x {{ units }}<br>
                 ({{ displayCost( displayRateAmount(model) * units ) }} kr)
             </dd>
@@ -42,7 +47,7 @@
 <script>
 import mixin from '../../mixins/PaymentPlanEditMixin.js'
 import Error from '../../forms/Error.vue'
-import { rateId2details } from '../../filters/Labels.js'
+import { rateId2details, rateId2description } from '../../filters/Labels.js'
 import { cost2da } from '../../filters/Numbers.js'
 import PaymentUnits from './PaymentUnits.vue'
 import { isCurrent } from '../../filters/Date.js'
@@ -89,6 +94,9 @@ export default {
         },
         displayRateName: function(rate_id) {
             return rateId2details(rate_id).name
+        },
+        displayRateDescription: function(rate_id) {
+            return rateId2description(rate_id)
         }
     },
     created: function() {

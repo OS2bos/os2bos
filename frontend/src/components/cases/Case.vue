@@ -16,7 +16,7 @@
                 Hovedsag {{ cas.sbsys_id }}
             </h1>
             <div v-if="!edit_mode" class="actions">
-                <button v-if="permissionCheck === true" @click="edit_mode = !edit_mode">Redigér</button>
+                <button v-if="user_can_edit === true" @click="edit_mode = !edit_mode">Redigér</button>
             </div>
         </header>
 
@@ -27,22 +27,23 @@
                 <dl>
                     <dt>Sagspart (CPR, navn)</dt>
                     <dd>
-                        {{ cas.cpr_number }}, {{ cas.name }}
+                        {{ cas.cpr_number }}<br>
+                        {{ cas.name }}
                     </dd>
 
-                    <template v-if="cas.effort_step">
+                    <template v-if="cas.effort_step && requiredEffortStep === true">
                         <dt>Indsatstrappen</dt>
                         <dd v-html="displayEffortName(cas.effort_step)"></dd>
                     </template>
                 
-                    <template v-if="cas.scaling_step">
+                    <template v-if="cas.scaling_step && requiredScalingStep === true">
                         <dt>Skaleringstrappe</dt>
                         <dd>
                             {{ cas.scaling_step }}<br>
                         </dd>
                     </template>
 
-                    <template v-if="cas.effort_step || cas.scaling_step">
+                    <template v-if="requiredEffortStep === true || requiredScalingStep === true">
                         <dt>Vurderinger</dt>
                         <dd>
                             <router-link :to="`/case/${ cas.id }/assessment`" style="display: inline-block; margin-top: .5rem;">Se vurderinger</router-link>
@@ -111,12 +112,12 @@
     import axios from '../http/Http.js'
     import { municipalityId2name, targetGroupId2name, districtId2name, effortId2name, displayEffort, userId2name, teamId2name } from '../filters/Labels.js'
     import store from '../../store.js'
-    import UserRights from '../mixins/UserRights.js'
+    import PermissionLogic from '../mixins/PermissionLogic.js'
 
     export default {
-
-        mixins: [UserRights],
-
+        mixins: [
+            PermissionLogic
+        ],
         components: {
             CaseEdit,
             Appropriations,
@@ -140,8 +141,24 @@
             cas: function() {
                 return this.$store.getters.getCase
             },
-            user: function() {
-                return this.$store.getters.getUser
+            targetGroups: function() {
+                return this.$store.getters.getTargetGroups
+            },
+            requiredEffortStep: function() {
+                if (this.cas.target_group) {
+                    let target = this.targetGroups.filter(tar => tar.id === this.cas.target_group)
+                    return target[0].required_fields_for_case.filter(tar => tar === 'effort_step').length === 1
+                } else {
+                    return false
+                }
+            },
+            requiredScalingStep: function() {
+                if (this.cas.target_group) {
+                    let target = this.targetGroups.filter(tar => tar.id === this.cas.target_group)
+                    return target[0].required_fields_for_case.filter(tar => tar === 'scaling_step').length === 1
+                } else {
+                    return false
+                }
             }
         },
         watch: {

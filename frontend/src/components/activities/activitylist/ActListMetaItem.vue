@@ -48,13 +48,13 @@
 
 <script>
 import ActListMixin from './ActListMixin.js'
-import UserRights from '../../mixins/UserRights.js'
+import PermissionLogic from '../../mixins/PermissionLogic.js'
 import ActivityListItem from './ActListItem.vue'
 
 export default {
     mixins: [
         ActListMixin,
-        UserRights
+        PermissionLogic
     ],
     props: [
         'metaActivity'

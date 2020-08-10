@@ -34,6 +34,7 @@ from core.models import (
     Rate,
     RatePerDate,
     PaymentDateExclusion,
+    AccountAlias,
 )
 
 
@@ -292,7 +293,9 @@ def create_target_group(
 
 
 def create_effort_step(name="Trin 1: Tidlig indsats i almenområdet", number=1):
-    effort_step, _ = EffortStep.objects.get_or_create(name=name, number=number)
+    effort_step, _ = EffortStep.objects.get_or_create(
+        number=number, defaults={"name": name}
+    )
 
     return effort_step
 
@@ -323,3 +326,13 @@ def create_payment_date_exclusion(date=date.today()):
     )
 
     return payment_date_exclusion
+
+
+def create_account_alias(section_info, activity_details, alias="BOS0000001"):
+    account_alias, _ = AccountAlias.objects.get_or_create(
+        section_info=section_info,
+        activity_details=activity_details,
+        alias=alias,
+    )
+
+    return account_alias

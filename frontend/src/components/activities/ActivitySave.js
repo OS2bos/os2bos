@@ -1,16 +1,25 @@
-function sanitizeActivity(activity) {
+import { epoch2DateStr } from '../filters/Date.js'
+import PermissionLogic from '../mixins/PermissionLogic.js'
+
+function sanitizeActivity(activity, request_mode) {
+    
+    const today = epoch2DateStr(new Date()),
+        in_one_week = epoch2DateStr(new Date().setDate(new Date().getDate() + 7))
     
     let new_act = activity
-
-    if (new_act.payment_plan.payment_type === 'ONE_TIME_PAYMENT') {
-        new_act.end_date = new_act.start_date // One time payments have the end date set to equal the start date
-    }
 
     switch(new_act.payment_plan.payment_cost_type) {
         case 'PER_UNIT':
             new_act.payment_plan.payment_amount = null // per_unit_price.amount is used instead
             new_act.payment_plan.payment_rate = null // rate does not apply
-            delete new_act.payment_plan.price_per_unit.rates_per_date // API endpoint won't accept this in PATCH request
+            if (new_act.status === 'EXPECTED' && request_mode === 'post') { // When posting an expected activity, backend only accepts unchanged price_per_unit if amount is set to the same as current_amount
+                if (!new_act.payment_plan.price_per_unit.amount) {
+                    new_act.payment_plan.price_per_unit.amount = new_act.payment_plan.price_per_unit.current_amount
+                }
+                if (!new_act.payment_plan.price_per_unit.start_date) {
+                    new_act.payment_plan.price_per_unit.start_date = today
+                }
+            }
         break
         case 'GLOBAL_RATE':
             new_act.payment_plan.payment_amount = null // amount does not apply
@@ -22,6 +31,18 @@ function sanitizeActivity(activity) {
             new_act.payment_plan.price_per_unit = null // price per unit does not apply
             new_act.payment_plan.payment_units = null // units do not apply
     }
+
+    if (PermissionLogic.methods.is_individual_payment_type(new_act.payment_plan) && request_mode === 'post') {
+        new_act.start_date = in_one_week
+        new_act.payment_plan.payment_cost_type = null // Individual payment plan does not need cost type, but it must be null so backend does not assign 'FIXED' as default
+        delete new_act.payment_plan.payment_units // Individual payment plan must not have units
+        delete new_act.payment_plan.payment_rate // Individual payment plan must not have rate
+        delete new_act.payment_plan.price_per_unit // Individual payment plan must not have price pr unit
+        delete new_act.payment_plan.payment_amount  // Individual payment plan must not have amount
+    }
+
+    delete new_act.monthly_payment_plan // no need to supply the monthly payment plan. DB already knows it
+    delete new_act.payment_plan.payments // no need to supply the payments. DB already knows it
 
     return new_act
 }

@@ -14,7 +14,7 @@
                 Udgift til <span v-html="actId2name(act.details)"></span>
                 <span v-if="act.payment_plan.fictive" class="dim">(Fiktiv)</span>
             </h1>
-            <template v-if="permissionCheck === true">
+            <template v-if="user_can_edit === true">
                 <router-link v-if="can_adjust" class="btn act-edit-btn" style="margin-left: 1rem;" :to="`/activity/create?mode=expected`">+ Lav forventet justering</router-link>
                 <button v-if="act.status !== 'GRANTED'" class="act-delete-btn" @click="preDeleteCheck()" style="margin-left: 1rem;">Slet</button>
             </template>
@@ -67,6 +67,17 @@
                     <payment-type :editable="false" />
                     <template v-if="payment_plan.payment_type === 'ONE_TIME_PAYMENT'">
                         <pay-date-single :editable="is_editable" />
+
+                        <fieldset v-if="is_editable">
+                            <legend>Betaling dækker periode</legend>
+                            <div class="row">
+                                <pay-date-single-period-start :editable="true" />
+                                <pay-date-single-period-end :editable="true" />
+                            </div>
+                        </fieldset>
+
+                        <pay-date-single-period-display v-else />
+
                     </template>
                     <div v-if="payment_plan.payment_type === 'RUNNING_PAYMENT'">
                         <pay-date-start :editable="is_editable" />
@@ -75,7 +86,7 @@
                     </div>
                 </div>
 
-                <div>
+                <div v-if="!is_individual_payment_type(payment_plan)">
                     <cost-type :editable="false" />
                     <template v-if="payment_plan.payment_cost_type === 'FIXED'">
                         <cost-type-fixed :editable="is_editable" />
@@ -126,7 +137,7 @@
             <fieldset v-if="is_editable" class="act-edit-actions">
                 <hr>
                 <input type="submit" value="Gem" style="margin-right: .5rem;">
-                <button type="button" @click="reset">Fortryd</button>
+                <button type="button" @click="reset">Annullér</button>
             </fieldset>
 
         </form>
@@ -166,10 +177,7 @@
             </form>
         </div>
         
-        <h2 style="padding: 2rem 0 0;">
-            Betalinger <span style="opacity: .66;">betalingsnøgle {{ pay.payment_id }}</span>
-        </h2>
-        <payment-schedule :p-id="pay.payment_id" />
+        <payment-schedule :p-id="payment_plan.payment_id" />
         
     </section>
 
@@ -185,17 +193,18 @@ import { json2jsDate } from '../filters/Date.js'
 import { cost2da } from '../filters/Numbers.js'
 import { activityId2name, sectionId2name, displayStatus, userId2name, approvalId2name } from '../filters/Labels.js'
 import notify from '../notifications/Notify.js'
-import UserRights from '../mixins/UserRights.js'
 import PaymentInternalReceiver from '../payments/edittypes/PaymentInternalReceiverName.vue'
 import PerUnitHistory from '../payments/PaymentPerUnitHistory.vue'
 import PaymentUnits from '../payments/edittypes/PaymentUnits.vue'
 import { sanitizeActivity } from './ActivitySave.js'
+import PermissionLogic from '../mixins/PermissionLogic.js'
+
 
 export default {
 
     mixins: [
         ActDisplayMixin,
-        UserRights
+        PermissionLogic
     ],
     components: {
         PaymentSchedule,
@@ -203,11 +212,11 @@ export default {
         CprLookUp,
         PaymentInternalReceiver,
         PerUnitHistory,
-        PaymentUnits
+        PaymentUnits,
+        PermissionLogic
     },
     data: function() {
         return {
-            payments: null,
             edit_mode: 'edit',
             showModal: false
         }
@@ -219,9 +228,6 @@ export default {
             } else {
                 return false
             }
-        },
-        pay: function() {
-            return this.$store.getters.getPaymentPlan
         },
         cas: function() {
             return this.$store.getters.getCase
@@ -270,9 +276,6 @@ export default {
         reload: function() {
             this.showModal = false
             this.$store.dispatch('fetchActivity', this.$route.params.actId)
-            .then(() => {
-                this.$store.commit('setActDetail', this.act.details)
-            })
         },
         displayDate: function(dt) {
             return json2jsDate(dt)
@@ -327,7 +330,7 @@ export default {
         },
         saveChanges: function() {
 
-            if (!this.checkDateMax(this.act.start_date)) {
+            if (this.act.start_date && !this.checkDateMax(this.act.start_date)) {
                 return
             }
             if (this.act.end_date && !this.checkDateMax(this.act.end_date)) {
@@ -336,8 +339,9 @@ export default {
 
             let new_act = this.act
             new_act.payment_plan = this.payment_plan
+            delete new_act.payment_plan.price_per_unit // API endpoint won't accept this in PATCH request
 
-            const sanitized_act = sanitizeActivity(new_act)
+            const sanitized_act = sanitizeActivity(new_act, 'patch')
 
             axios.patch(`/activities/${ this.$route.params.actId }/`, sanitized_act)
             .then(res => {
@@ -446,6 +450,10 @@ export default {
 
     .activity .payment_schedule {
         margin: 0 0 1rem;
+    }
+
+    .activity-EXPECTED {
+        background-color: hsl(40, 90%, 80%);
     }
 
 </style>

@@ -36,6 +36,7 @@ const mutations = {
     },
     setUser (state, user) {
         state.user = user
+        this.dispatch('fetchTeam', user.team)
     },
     setTeams (state, teams) {
         state.teams = teams

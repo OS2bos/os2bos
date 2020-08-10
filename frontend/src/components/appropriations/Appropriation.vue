@@ -14,7 +14,7 @@
                 <i class="material-icons">folder_open</i>
                 Bevillingsskrivelse
             </h1>
-            <button v-if="permissionCheck === true" @click="show_edit = !show_edit" class="appr-edit-btn">Redigér</button>
+            <button v-if="user_can_edit === true" @click="show_edit = !show_edit" class="appr-edit-btn">Redigér</button>
             <button v-if="appr.num_ongoing_activities === 0" class="appr-delete-btn" @click="preDeleteCheck()">Slet</button>
         </header>
 
@@ -64,7 +64,10 @@
                         <dt>SBSYS-hovedsag</dt>
                         <dd>{{ cas.sbsys_id }}</dd>
                         <dt>Sagspart (CPR, navn)</dt>
-                        <dd>{{ cas.cpr_number }}, {{ cas.name }}</dd>
+                        <dd>
+                            {{ cas.cpr_number }}<br>
+                            {{ cas.name }}
+                        </dd>
                         <template v-if="appr.note">
                             <dt>Supplerende oplysninger</dt>
                             <dd>{{ appr.note }}</dd>
@@ -110,13 +113,14 @@
     import { json2jsDate } from '../filters/Date.js'
     import { municipalityId2name, districtId2name, sectionId2name, displayStatus, userId2name, approvalId2name } from '../filters/Labels.js'
     import store from '../../store.js'
-    import UserRights from '../mixins/UserRights.js'
+    import PermissionLogic from '../mixins/PermissionLogic.js'
     import notify from '../notifications/Notify.js'
 
     export default {
 
-        mixins: [UserRights],
-
+        mixins: [
+            PermissionLogic
+        ],
         components: {
             ActivityList,
             AppropriationEdit
