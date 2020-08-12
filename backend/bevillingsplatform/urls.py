@@ -31,7 +31,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 from django.views.static import serve
 from django.views.generic import TemplateView
-
+from watchman.views import status
 import django_saml2_auth
 
 from rest_framework import routers
@@ -123,6 +123,7 @@ urlpatterns = [
         views.IsEditingPastPaymentsAllowed.as_view(),
         name="editing_past_payments_allowed",
     ),
+    path("api/healthcheck/", status),
 ]
 
 # Static files are served by WhiteNoise in both development and production.

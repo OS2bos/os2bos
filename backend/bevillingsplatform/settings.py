@@ -110,6 +110,7 @@ INSTALLED_APPS = [
     "core.apps.CoreConfig",
     "django_saml2_auth",
     "mailer",
+    "watchman",
 ]
 
 MIDDLEWARE = [
@@ -510,4 +511,10 @@ SILENCED_SYSTEM_CHECKS = ["rest_framework.W001"]
 
 ALLOW_EDIT_OF_PAST_PAYMENTS = settings.getboolean(
     "ALLOW_EDIT_OF_PAST_PAYMENTS", fallback=False
+)
+
+WATCHMAN_CHECKS = (
+    "watchman.checks.caches",
+    "watchman.checks.databases",
+    # disable storage check since fileupload is not used.
 )
