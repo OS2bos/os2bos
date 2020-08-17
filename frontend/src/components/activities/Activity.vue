@@ -233,7 +233,7 @@ export default {
             return this.$store.getters.getCase
         },
         can_adjust: function() {
-            // Adjust only if parent activity was granted ans has no other modifying activities
+            // Adjust only if parent activity was granted and has no other modifying activities
             if (this.appropriation && this.act.status === 'GRANTED') {
                 let modifier = this.appropriation.activities.filter(ac => {
                     return ac.modifies === this.act.id
