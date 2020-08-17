@@ -20,6 +20,7 @@
     import axios from '../http/Http.js'
     import { rateId2details } from '../filters/Labels.js'
     import { cost2da } from '../filters/Numbers.js'
+    import { epoch2DateStr } from '../filters/Date.js'
 
     export default {
 
@@ -69,7 +70,7 @@
 
                 if (cost_type === 'GLOBAL_RATE') {
                     if (rate) {
-                        this.summary = `${ cost2da(rateId2details(rate).rates_per_date[0].rate) } kr x ${ units } =`
+                        this.summary = `${ cost2da(this.getCurrentRate(rateId2details(rate).rates_per_date)) } kr x ${ units } =`
                         return rateId2details(rate).rates_per_date[0].rate * units
                     } else {
                         return null
@@ -127,6 +128,21 @@
                 } else {
                     return num
                 }
+            },
+            getCurrentRate: function(rates) {
+                const now = epoch2DateStr(new Date())
+                let live_rates = rates.filter(function(rate) {
+                    if (rate.end_date) {
+                        if (now >= rate.end_date) {
+                            return false
+                        } else {
+                            return true
+                        }
+                    } else {
+                        return true
+                    }
+                })
+                return live_rates[0].rate
             }
         }
     }
