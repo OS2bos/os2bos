@@ -178,7 +178,7 @@
                 }
                 axios.patch(`/appropriations/${ this.apprId }/grant/`, data)
                 .then(() => {
-                    notify('Bevilling godkendt', 'success')
+                    notify('Bevillingsskrivelsen vil blive journaliseret i SBSYS', 'success')
                     this.$store.dispatch('fetchActivities', this.apprId)
                     this.$store.dispatch('fetchAppropriation', this.apprId)
                     this.closeDiag()
