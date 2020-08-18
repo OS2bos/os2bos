@@ -67,11 +67,15 @@ test('Start date rule check for activities with "CASH" payment', async t => {
         .click('#fieldSelectAct')
         .click(Selector('#fieldSelectAct option').nth(1))
         .typeText('#pay-date-start', testdata.act1.start_today)
+        .typeText('#field-amount-1', '100', {replace: true})
         .click(Selector('label').withAttribute('for', 'pay-receiver-type-person'))
+        .typeText('#field-cpr', '9999999999')
         .click(Selector('label').withAttribute('for', 'pay-method-cash'))
-        .expect(Selector('.warning').exists).ok()
+        .click('#activity-submit')
+        .expect(Selector('.error-msg').exists).ok()
         .typeText('#pay-date-start', testdata.act1.end_date)
-        .expect(Selector('.warning').exists).notOk()
+        .click('#activity-submit')
+        .expect(Selector('h1').withText('Bevillingsskrivelse').exists).ok()
 })
 
 test('Check that an activity may only have one modifier', async t => {

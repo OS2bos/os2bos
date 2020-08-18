@@ -61,7 +61,6 @@
         <error />
 
         <fieldset style="margin-bottom: 0; padding-bottom: 2rem;">
-            <warning :content="payDateRule" />
             <hr>
             <input type="submit" id="activity-submit" @click="save" style="margin-right: .5rem;" value="Gem">
             <button @click="cancel">Annuller</button>
@@ -72,9 +71,7 @@
 <script>
 import ActDisplayMixin from '../../mixins/ActivityDisplayMixin.js'
 import Error from '../../forms/Error.vue'
-import Warning from '../../warnings/Warning.vue'
 import notify from '../../notifications/Notify'
-import { checkRulePayDate } from '../../filters/Rules.js'
 import PermissionLogic from '../../mixins/PermissionLogic.js'
 
 export default {
@@ -84,15 +81,11 @@ export default {
         PermissionLogic
     ],
     components: {
-        Error,
-        Warning,
+        Error
     },
     computed: {
         act: function() {
             return this.$store.getters.getActivity
-        },
-        payDateRule: function() {
-            return checkRulePayDate(this.act.start_date, this.payment_plan.payment_method)
         }
     },
     methods: {
