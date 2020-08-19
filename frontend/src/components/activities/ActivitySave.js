@@ -32,6 +32,10 @@ function sanitizeActivity(activity, request_mode) {
             new_act.payment_plan.payment_units = null // units do not apply
     }
 
+    if (new_act.payment_plan.payment_frequency !== 'MONTHLY') {
+        delete new_act.payment_plan.payment_day_of_month // Only monthly payments must supply a day of month
+    }
+
     if (PermissionLogic.methods.is_individual_payment_type(new_act.payment_plan) && request_mode === 'post') {
         new_act.start_date = in_one_week // Posted activity MUST have a start date and it must be somewhere in the next few days depending on weekends and holidays. Since we don't know about specific holidays, we set it at about a week from now.
         new_act.payment_plan.payment_cost_type = null // Individual payment plan does not need cost type, but it must be null so backend does not assign 'FIXED' as default

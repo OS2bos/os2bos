@@ -7,33 +7,39 @@
 
 <template>
 
-    <fieldset v-if="editable && !act.modifies">
-        <legend class="required">Afregning</legend>
-        <input 
-            type="radio" 
-            v-model="model" 
-            id="pay-type-running" 
-            value="RUNNING_PAYMENT">
-        <label for="pay-type-running">Løbende ydelse</label>
-        <input 
-            type="radio" 
-            v-model="model" 
-            id="pay-type-single" 
-            value="ONE_TIME_PAYMENT">
-        <label for="pay-type-single">Engangsudgift</label>
-        <input 
-            type="radio" 
-            v-model="model" 
-            id="pay-type-individual" 
-            value="INDIVIDUAL_PAYMENT">
-        <label for="pay-type-individual">Individuel betalingsplan</label>
-        <error :err-key="property" />
-    </fieldset>
-    
-    <dl v-else>
-        <dt>Afregning</dt>
-        <dd>{{ dispPayType(model) }}</dd>
-    </dl>
+    <div>
+        <fieldset v-if="editable && !act.modifies">
+            <legend class="required">Afregning</legend>
+            <input 
+                type="radio" 
+                v-model="model" 
+                id="pay-type-running" 
+                value="RUNNING_PAYMENT">
+            <label for="pay-type-running">Løbende ydelse</label>
+            <input 
+                type="radio" 
+                v-model="model" 
+                id="pay-type-single" 
+                value="ONE_TIME_PAYMENT">
+            <label for="pay-type-single">Engangsudgift</label>
+            <input 
+                type="radio" 
+                v-model="model" 
+                id="pay-type-individual" 
+                value="INDIVIDUAL_PAYMENT">
+            <label for="pay-type-individual">Individuel betalingsplan</label>
+            <error :err-key="property" />
+        </fieldset>
+        
+        <dl v-else>
+            <dt>Afregning</dt>
+            <dd>{{ dispPayType(model) }}</dd>
+        </dl>
+
+        <p v-if="model === 'INDIVIDUAL_PAYMENT'">
+            Ved individuel betalingsplan opretter du betalinger ved at gå til "Betalinger" for denne ydelse og vælge <strong>"Tilføj betaling"</strong>
+        </p>
+    </div>
 
 </template>
 
