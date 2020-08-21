@@ -178,10 +178,15 @@
                 }
                 axios.patch(`/appropriations/${ this.apprId }/grant/`, data)
                 .then(() => {
-                    notify('Bevillingsskrivelsen vil blive journaliseret i SBSYS', 'success')
                     this.$store.dispatch('fetchActivities', this.apprId)
                     this.$store.dispatch('fetchAppropriation', this.apprId)
                     this.closeDiag()
+                    notify('Bevillingsskrivelse er godkendt', 'success')
+                    notify('Bevillingsskrivelsen vil blive journaliseret i SBSYS')
+                    for (let a in this.act_list) {
+                        notify(`Der er givet besked til administrationen om din ændring af ${ this.act_list[a].details__name }`)
+                    }
+                    
                 })
                 .catch(err => {
                     this.$store.dispatch('parseErrorOutput', err)
