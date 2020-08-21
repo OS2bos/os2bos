@@ -9,14 +9,13 @@
 import './notify.css'
 
 function notify(message, type, response) {
-    /* Method 'notify': Displays a notification on the page for 7 seconds
+    /* Method 'notify': Displays a notification on the page for 10 seconds
      * argument 'message': The message to be displayed, ex. 'Something was updated'
      * optional argument 'type': The type of message to be displayed. Available options: 'success', 'error'
      * optional argument 'response': Responsetext/Responsebody from JSON error response. Comes in the form of { [key]: [message_value] }
      */
 
     let notify_container
-
     let notify_el = document.createElement('div')
 
     // Check if notification container already exists
@@ -58,7 +57,7 @@ function notify(message, type, response) {
                     notify_container.removeChild(notify_el)
                 }
             }, 500)
-        }, 7000)
+        }, 10000)
     }, 100)
 
     // Enable user to remove notification from view
