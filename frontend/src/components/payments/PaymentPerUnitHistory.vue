@@ -26,7 +26,7 @@
                         </thead>
                         <tbody>
                             <tr v-for="p in prices.rates_per_date" :key="p.start_date">
-                                <td>{{ p.rate }} kr</td>
+                                <td>{{ displayDigits(p.rate) }} kr</td>
                                 <td>{{ displayDate(p.start_date) }}</td>
                                 <td>{{ displayDate(p.end_date) }}</td>
                             </tr>
@@ -66,6 +66,7 @@
 <script>
 import ModalDialog from '../dialog/Dialog.vue'
 import { json2jsDate, epoch2DateStr } from '../filters/Date.js'
+import { cost2da } from '../filters/Numbers.js'
 import Error from '../forms/Error.vue'
 import axios from '../http/Http.js'
 
@@ -105,6 +106,9 @@ export default {
         },
         displayDate: function(date) {
             return json2jsDate(date)
+        },
+        displayDigits: function(num) {
+            return cost2da(num)
         },
         cancelDialog: function() {
             this.modal_open = !this.modal_open
