@@ -68,6 +68,9 @@ export default {
             .then(res => {
                 this.buttonTxt = 'Gemt'
                 notify('Betaling godkendt', 'success')
+                if (this.payment.payment_method === 'SD' || this.payment.payment_method === 'CASH' && this.compdata.paid_date > this.compdata.date) {
+                    notify('OBS: Rettede beløb og dato vil automatisk blive overskrevet, når der senere kommer en betaling der følger planlagt beløb og planlagt dato.')
+                }
                 this.update()
             })
             .catch(err => this.$store.dispatch('parseErrorOutput', err))

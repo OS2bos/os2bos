@@ -23,6 +23,8 @@
 
         <div slot="body">
 
+            <warning v-if="can_create_payment" class="warning warning-icon" :content="warning" />
+
             <div class="payment-edit-body">
                 <div>
 
@@ -161,6 +163,7 @@
     import Error from '../../forms/Error.vue'
     import PermissionLogic from '../../mixins/PermissionLogic.js'
     import notify from '../../notifications/Notify.js'
+    import Warning from '../../warnings/Warning.vue'
     import { json2jsDate } from '../../filters/Date.js'
     import { cost2da } from '../../filters/Numbers.js'
     import { activityId2name } from '../../filters/Labels.js'
@@ -172,7 +175,8 @@
         ],
         components: {
             Error,
-            ModalDialog
+            ModalDialog,
+            Warning
         },
         props: [
             'payment'
@@ -186,7 +190,8 @@
                 },
                 pay_diag_open: false,
                 paymentlock: true,
-                delete_diag_open: false
+                delete_diag_open: false,
+                warning: 'OBS: Vær opmærksom på, at du kan oprette ny bevilling eller lave rettelser til eksisterende ved at lave en forventning.'
             }
         },
         computed: {  
@@ -245,6 +250,9 @@
                         this.closeDiag()
                         this.update()
                         notify('Betaling opdateret', 'success')
+                        if (this.payment.payment_method === 'SD' || this.payment.payment_method === 'CASH' && this.paid.paid_date > this.p.date) {
+                            notify('OBS: Rettede beløb og dato vil automatisk blive overskrevet, når der senere kommer en betaling der følger planlagt beløb og planlagt dato.')
+                        }
                     })
                     .catch(err => this.$store.dispatch('parseErrorOutput', err))
             },
@@ -273,7 +281,7 @@
 <style>
 
     .payment-edit .modal-container {
-        width: 40rem;
+        width: 60rem;
     }
 
     .payment-edit-header {
@@ -291,6 +299,11 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 2rem;
+    }
+
+    .warning {
+        padding: .75rem .75rem;
+        font-size: .9rem;
     }
 
 </style>
