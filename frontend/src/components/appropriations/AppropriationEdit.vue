@@ -22,10 +22,10 @@
                 <error err-key="sbsys_id" />
 
                 <label class="required" for="field-lawref">Bevilling efter §</label>
-                <p v-if="preselectedPara"><strong>{{ sections[0].paragraph }} {{ sections[0].text }}</strong></p>
-                <select v-if="!preselectedPara" id="field-lawref" class="listpicker" v-model="appr.section" required :disabled="appr.granted_from_date">
+                <p v-if="sections && sections.length === 1"><strong>{{ sections[0].paragraph }} {{ sections[0].text }}</strong></p>
+                <select v-else id="field-lawref" class="listpicker" v-model="appr.section" required :disabled="appr.granted_from_date">
                     <option 
-                        v-for="s in sections" 
+                        v-for="s in sections"
                         :value="s.id" 
                         :key="s.id">
                         <span v-if="s.active === false">(</span>
@@ -77,20 +77,25 @@
             },
             all_sections: function() {
                 return this.$store.getters.getSections
-            },
-            preselectedPara: function() {
-                if (this.sections && this.sections.length === 1) {
-                    return this.appr.section = this.sections[0].id
-                }
             }
         },
         methods: {
             fetchSections: function() {
                 axios.get(`/sections/?allowed_for_steps=${ this.cas.effort_step ? this.cas.effort_step : '' }&${ this.cas_target}`)
                 .then(res => {
-                    this.sections = res.data
+                    this.populateSectionList(res.data)
                 })
                 .catch(err => console.log(err))
+            },
+            populateSectionList: function(sections) {
+                if (sections.length > 1) {
+                    this.sections = sections
+                } else if (sections.length === 1) {
+                    this.changeSection(sections[0].id)
+                    this.sections = sections
+                } else {
+                    this.sections = this.all_sections
+                }
             },
             changeSection: function(section_id) {
                 this.appr.section = section_id
@@ -102,7 +107,7 @@
                     axios.get(`/sectioninfos/?kle_number=${ kle[0] }`)
                     .then(res => {
                         if (res.data.length === 1) {
-                            this.appr.section = res.data[0].section
+                            this.changeSection(res.data[0].section)
                             this.$forceUpdate()
                         } else if (res.data.length === 0) {
                             this.appr.section = null

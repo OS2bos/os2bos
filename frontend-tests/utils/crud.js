@@ -176,11 +176,15 @@ async function createCase(t, case_data) {
         .typeText('#field-cpr', '000000-0000')
 
     await useSelectBox(t, '#selectTargetGroup', case_data.target_group)
-    if (case_data.target_group === 'Familieafdelingen') {
+    if (case_data.district) {
         await useSelectBox(t, '#selectDistrict', case_data.district)
     }
-    await useSelectBox(t, '#field-indsatstrappe', case_data.effort_step)
-    await useSelectBox(t, '#field-skaleringstrappe', case_data.scaling_step)
+    if (case_data.effort_step) {
+        await useSelectBox(t, '#field-indsatstrappe', case_data.effort_step)
+    }
+    if (case_data.scaling_step) {
+        await useSelectBox(t, '#field-skaleringstrappe', case_data.scaling_step)
+    }
 
     await t.click(Selector('input').withAttribute('type', 'submit'))
 }

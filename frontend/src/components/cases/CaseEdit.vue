@@ -80,7 +80,7 @@
                         </template>
                     </fieldset>
 
-                    <template v-if="effort_available">
+                    <template v-if="effort_available && effort_available.length > 0">
                         <fieldset>
                             <legend style="margin-bottom: .75rem;">Andet:</legend>
                             <template v-for="effort in effort_available">
