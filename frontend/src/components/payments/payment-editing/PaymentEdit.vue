@@ -202,8 +202,8 @@
             },
             add2Days: function() {
                 let d = new Date(this.p.date)
-                let da = d.setDate(d.getDate() + 2)
-                return epoch2DateStr(da)
+                let date = d.setDate(d.getDate() + 2)
+                return epoch2DateStr(date)
             }
         },
         methods: {

@@ -15,6 +15,7 @@
 import axios from '../../http/Http.js'
 import PermissionLogic from '../../mixins/PermissionLogic.js'
 import notify from '../../notifications/Notify.js'
+import { epoch2DateStr } from '../../filters/Date.js'
 
 export default {
     mixins: [ 
@@ -39,6 +40,11 @@ export default {
         }, 
         visible: function() {
             return this.is_payable(this.compdata)
+        },
+        add2Days: function() {
+            let d = new Date(this.compdata.date)
+            let date = d.setDate(d.getDate() + 2)
+            return epoch2DateStr(date)
         }
     },
     methods: {
@@ -68,7 +74,7 @@ export default {
             .then(res => {
                 this.buttonTxt = 'Gemt'
                 notify('Betaling godkendt', 'success')
-                if (this.payment.payment_method === 'SD' || this.payment.payment_method === 'CASH' && this.compdata.paid_date > this.compdata.date) {
+                if (this.compdata.payment_method === 'SD' || this.compdata.payment_method === 'CASH' && this.compdata.paid_date >= this.compdata.date && this.compdata.paid_date <= this.add2Days) {
                     notify('OBS: Rettede beløb og dato vil automatisk blive overskrevet, når der senere kommer en betaling der følger planlagt beløb og planlagt dato.')
                 }
                 this.update()
