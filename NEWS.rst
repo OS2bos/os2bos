@@ -1,3 +1,18 @@
+Version 3.1.1, 2020-08-31
+-------------------------
+
+New in this version:
+
+Bug fixes
+^^^^^^^^^
+- Fix instance of prices being displayed with non-Danish decimal separator.
+- Approximate payment calculator now uses current rate if rates are
+  used.
+- Enable input field validation in browser when creating activities.
+- Updates list of service providers in UI based on current activity detail.
+- Include global rate and price per unit information in payment email
+  and PDF.
+
 Version 3.1.0, 2020-07-09
 -------------------------
 
