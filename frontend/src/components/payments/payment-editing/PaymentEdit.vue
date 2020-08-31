@@ -200,9 +200,9 @@
                     return true
                 }
             },
-            add2Days: function() {
+            backIntime: function() {
                 let d = new Date(this.p.date)
-                let date = d.setDate(d.getDate() + 2)
+                let date = d.setDate(d.getDate() - 2)
                 return epoch2DateStr(date)
             }
         },
@@ -250,7 +250,7 @@
                         this.closeDiag()
                         this.update()
                         notify('Betaling opdateret', 'success')
-                        if (this.payment.payment_method === 'SD' || this.payment.payment_method === 'CASH' && this.paid.paid_date >= this.p.date && this.paid.paid_date <= this.add2Days) {
+                        if (this.payment.payment_method === 'SD' || this.payment.payment_method === 'CASH' && this.paid.paid_date > this.p.date || this.paid.paid_date >= this.backIntime) {
                             notify('OBS: Rettede beløb og dato vil automatisk blive overskrevet, når der senere kommer en betaling der følger planlagt beløb og planlagt dato.')
                         }
                     })

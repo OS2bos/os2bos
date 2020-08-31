@@ -41,9 +41,9 @@ export default {
         visible: function() {
             return this.is_payable(this.compdata)
         },
-        add2Days: function() {
+        backIntime: function() {
             let d = new Date(this.compdata.date)
-            let date = d.setDate(d.getDate() + 2)
+            let date = d.setDate(d.getDate() - 2)
             return epoch2DateStr(date)
         }
     },
@@ -74,7 +74,7 @@ export default {
             .then(res => {
                 this.buttonTxt = 'Gemt'
                 notify('Betaling godkendt', 'success')
-                if (this.compdata.payment_method === 'SD' || this.compdata.payment_method === 'CASH' && this.compdata.paid_date >= this.compdata.date && this.compdata.paid_date <= this.add2Days) {
+                if (this.compdata.payment_method === 'SD' || this.compdata.payment_method === 'CASH' && this.compdata.paid_date > this.compdata.date || this.compdata.paid_date >= this.backIntime) {
                     notify('OBS: Rettede beløb og dato vil automatisk blive overskrevet, når der senere kommer en betaling der følger planlagt beløb og planlagt dato.')
                 }
                 this.update()
