@@ -958,26 +958,11 @@ class Payment(models.Model):
         if hasattr(self, "skip_history_when_saving"):
             del self.skip_history_when_saving
 
-    @staticmethod
-    def paid_allowed_for_payment_and_recipient(payment_method, recipient_type):
-        """Determine whether "paid" can be manually set."""
-        disallowed = {PaymentSchedule.PERSON: [CASH, SD]}
-
-        if (
-            recipient_type in disallowed
-            and payment_method in disallowed[recipient_type]
-        ):
-            return False
-        return True
-
     @property
     def is_payable_manually(self):
         """Determine whether it is payable manually (in the frontend)."""
         return (
-            self.paid_allowed_for_payment_and_recipient(
-                self.payment_method, self.recipient_type
-            )
-            and not self.payment_schedule.fictive
+            not self.payment_schedule.fictive
             and self.payment_schedule.can_be_paid
         )
 

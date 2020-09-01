@@ -172,16 +172,7 @@ class PaymentSerializer(serializers.ModelSerializer):
     is_payable_manually = serializers.ReadOnlyField(default=False)
 
     def validate(self, data):
-        """Validate this payment.
-
-        The payment method must be allowed for this recipient, etc.
-        """
-        payment_method = (
-            data.get("payment_method", None) or self.instance.payment_method
-        )
-        recipient_type = (
-            data.get("recipient_type", None) or self.instance.recipient_type
-        )
+        """Validate this payment."""
         paid = (
             data["paid"]
             if "paid" in data and data["paid"] is not None
@@ -192,14 +183,8 @@ class PaymentSerializer(serializers.ModelSerializer):
             or self.instance.payment_schedule
         )
 
-        paid_allowed = self.Meta.model.paid_allowed_for_payment_and_recipient(
-            payment_method, recipient_type
-        )
-
         if paid and (
-            not paid_allowed
-            or payment_schedule.fictive
-            or not payment_schedule.can_be_paid
+            payment_schedule.fictive or not payment_schedule.can_be_paid
         ):
             raise serializers.ValidationError(
                 _("Denne betaling må ikke markeres betalt manuelt")
