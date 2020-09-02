@@ -42,10 +42,10 @@ class NewPaymentPermission(IsUserAllowed):
         is_permitted = super().has_permission(request, view)
 
         if is_permitted and request.method == "POST":
-            schedule_id = request.POST.get("payment_plan")
+            schedule_id = request.data.get("payment_schedule")
             if schedule_id:
                 ps = PaymentSchedule.objects.get(id=schedule_id)
-                a = ps.activity.appropriation
+                a = ps.activity
                 is_permitted = (
                     ps.payment_type == PaymentSchedule.INDIVIDUAL_PAYMENT
                     and a.status in [STATUS_EXPECTED, STATUS_DRAFT]
