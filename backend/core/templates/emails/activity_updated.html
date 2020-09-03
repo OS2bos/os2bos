@@ -18,8 +18,9 @@
 <p>Bevilgende sagsbehandler: {{ activity.approval_user }}</p>
 <p>Start dato: {{ activity.start_date }}</p>
 <p>Slut dato: {{ activity.end_date }}</p>
-<p>Beløb: {{ activity.payment_plan.payment_amount }}</p>
+<p>Beløb: {{ activity.payment_plan.per_payment_amount }} {% if activity.payment_plan.get_payment_cost_type != "FIXED" %} (kan ændre sig over tid){% endif %}</p>
 <p>Betalingstype: {{ activity.payment_plan.get_payment_type_display }}</p>
+<p>Afregningsenhed: {{ activity.payment_plan.get_payment_cost_type_display|capfirst }}</p>
 {% if activity.payment_plan.payment_frequency %}
     <p>Betalingsfrekvens: {{ activity.payment_plan.get_payment_frequency_display }}</p>
 {% endif %}

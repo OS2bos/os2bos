@@ -87,7 +87,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         appropriation = create_appropriation(section=section, case=case)
         si = appropriation.section_info
         self.assertEqual(si, None)
-        now = timezone.now()
+        now = timezone.now().date()
         start_date = date(year=now.year, month=1, day=1)
         end_date = date(year=now.year, month=1, day=10)
         create_activity(
@@ -103,7 +103,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
 
     def test_total_granted_this_year(self):
         # generate a start and end span of 10 days
-        now = timezone.now()
+        now = timezone.now().date()
         start_date = date(year=now.year, month=1, day=1)
         end_date = date(year=now.year, month=1, day=10)
 
@@ -144,7 +144,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
 
     def test_total_granted_full_year(self):
-        now = timezone.now()
+        now = timezone.now().date()
         start_date = date(year=now.year, month=1, day=1)
         end_date = date(year=now.year, month=1, day=10)
 
@@ -189,7 +189,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
 
     def test_appropriation_status(self):
 
-        now = timezone.now()
+        now = timezone.now().date()
         start_date = date(year=now.year, month=1, day=1)
         end_date = date(year=now.year + 1, month=1, day=10)
 
@@ -218,7 +218,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
 
     def test_total_expected_this_year(self):
         # generate a start and end span of 3 days
-        now = timezone.now()
+        now = timezone.now().date()
         start_date = now
         end_date = now + timedelta(days=2)
         # create main activity with GRANTED.
@@ -325,7 +325,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
 
     def test_total_expected_within_start_end_range(self):
         # generate a start and end span of 10 days
-        now = timezone.now()
+        now = timezone.now().date()
         start_date = now + timedelta(days=1)
         end_date = now + timedelta(days=10)
 
@@ -374,7 +374,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
 
     def test_total_expected_full_year(self):
         # generate a start and end span of 10 days
-        now = timezone.now()
+        now = timezone.now().date()
         start_date = date(year=now.year, month=1, day=1)
         end_date = date(year=now.year, month=1, day=10)
         # create main activity with GRANTED.
@@ -445,7 +445,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         self.assertEqual(activity, appropriation.main_activity)
 
     def test_start_and_end_dates(self):
-        now = timezone.now()
+        now = timezone.now().date()
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
@@ -506,7 +506,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
         section = create_section()
         appropriation = create_appropriation(case=case, section=section)
-        now = timezone.now()
+        now = timezone.now().date()
         start_date = now + timedelta(days=6)
         end_date = now + timedelta(days=12)
         activity = create_activity(
@@ -527,7 +527,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             user,
         )
 
-        today = now.date()
+        today = now
         self.assertEqual(
             appropriation.activities.first().appropriation_date, today
         )
@@ -539,7 +539,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
         section = create_section()
         appropriation = create_appropriation(case=case, section=section)
-        now = timezone.now()
+        now = timezone.now().date()
         start_date = now + timedelta(days=6)
         activity = create_activity(
             case=case,
@@ -565,7 +565,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
         section = create_section()
         appropriation = create_appropriation(case=case, section=section)
-        now = timezone.now()
+        now = timezone.now().date()
         start_date = now + timedelta(days=6)
         activity = create_activity(
             case=case,
@@ -602,7 +602,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
         suppl_activity.refresh_from_db()
         self.assertEqual(
-            suppl_activity.end_date, (start_date + timedelta(days=2)).date()
+            suppl_activity.end_date, (start_date + timedelta(days=2))
         )
 
     def test_grant_no_stop_before_suppl_start(self):
@@ -612,7 +612,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
         section = create_section()
         appropriation = create_appropriation(case=case, section=section)
-        now = timezone.now()
+        now = timezone.now().date()
         start_date = now + timedelta(days=6)
         main_activity = create_activity(
             case=case,
@@ -2835,7 +2835,11 @@ class PaymentMethodDetailsTestCase(TestCase):
         self.assertEqual(str(pmd), "Hovedkort")
 
 
-class PaymentScheduleTestCase(TestCase):
+class PaymentScheduleTestCase(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
     @parameterized.expand(
         [
             (
@@ -3070,6 +3074,54 @@ class PaymentScheduleTestCase(TestCase):
 
         self.assertEqual(amount, expected)
 
+    def test_rate_or_price_amount(self):
+        payment_type = PaymentSchedule.RUNNING_PAYMENT
+        payment_frequency = PaymentSchedule.DAILY
+        price_per_unit = Decimal(237)
+        payment_units = 5
+        rate = create_rate()
+        today = date.today()
+        tomorrow = today + timedelta(days=1)
+        rate.set_rate_amount(
+            price_per_unit, start_date=today, end_date=tomorrow
+        )
+
+        payment_schedule = create_payment_schedule(
+            payment_amount=None,
+            payment_type=payment_type,
+            payment_frequency=payment_frequency,
+            payment_units=payment_units,
+            payment_cost_type=PaymentSchedule.GLOBAL_RATE_PRICE,
+            payment_rate=rate,
+        )
+
+        self.assertEqual(payment_schedule.rate_or_price_amount, Decimal(237))
+        payment_schedule = create_payment_schedule(
+            payment_amount=None,
+            payment_type=payment_type,
+            payment_frequency=payment_frequency,
+            payment_units=payment_units,
+            payment_cost_type=PaymentSchedule.PER_UNIT_PRICE,
+        )
+        payment_schedule.price_per_unit = Price.objects.create()
+        payment_schedule.price_per_unit.set_rate_amount(Decimal(10))
+        self.assertEqual(payment_schedule.rate_or_price_amount, Decimal(10))
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        activity = create_activity(case=case, appropriation=appropriation,)
+        payment_schedule.activity = activity
+        self.assertEqual(payment_schedule.rate_or_price_amount, Decimal(10))
+
+        payment_schedule = create_payment_schedule(
+            payment_type=payment_type,
+            payment_frequency=payment_frequency,
+            payment_amount=Decimal(10),
+            payment_units=payment_units,
+        )
+        self.assertEqual(payment_schedule.rate_or_price_amount, 0)
+
     def test_datetime_in_set_rate_amount(self):
         rate = create_rate()
         date1 = datetime.today()
@@ -3084,10 +3136,9 @@ class PaymentScheduleTestCase(TestCase):
             payment_frequency=PaymentSchedule.DAILY,
         )
 
-        with self.assertRaises(ValueError):
-            payment_schedule.calculate_per_payment_amount(
-                vat_factor=Decimal("100"), date=date.today()
-            )
+        payment_schedule.calculate_per_payment_amount(
+            vat_factor=Decimal("100"), date=date.today()
+        )
 
     @parameterized.expand(
         [
