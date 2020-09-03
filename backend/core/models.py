@@ -645,6 +645,21 @@ class PaymentSchedule(models.Model):
             **kwargs,
         )
 
+    @property
+    def per_payment_amount(self):
+        """Amount per payment calculated w/ payment cost type."""
+        if self.activity is None:
+            vat_factor = Decimal(100)
+            start_date = date.today()
+        else:
+            vat_factor = self.activity.vat_factor
+            start_date = max(
+                date.today(), self.activity.start_date or date.today()
+            )
+        return Decimal(
+            self.calculate_per_payment_amount(vat_factor, start_date)
+        ).quantize(Decimal(".01"))
+
     def calculate_per_payment_amount(self, vat_factor, date):
         """Calculate amount from payment type and units."""
         if self.payment_cost_type == self.FIXED_PRICE:
@@ -658,10 +673,28 @@ class PaymentSchedule(models.Model):
                 date
             )
         else:
-            # Keep coverage happy.
-            raise ValueError(_("ukendt betalingstype"))
+            # Keep coverage happy
+            # TODO: Create sensible output for individual payments
+            amount = Decimal(0)
 
         return (amount / 100) * vat_factor
+
+    @property
+    def rate_or_price_amount(self):
+        """Fetch current rate or per unit price amounts."""
+        if self.activity is None:
+            start_date = date.today()
+        else:
+            start_date = max(
+                date.today(), self.activity.start_date or date.today()
+            )
+        amount = 0
+        if self.payment_cost_type == self.PER_UNIT_PRICE:
+            amount = self.price_per_unit.get_rate_amount(start_date)
+        elif self.payment_cost_type == self.GLOBAL_RATE_PRICE:
+            amount = self.payment_rate.get_rate_amount(start_date)
+
+        return amount
 
     def is_ready_to_generate_payments(self):
         """Don't generate payments unless object is ready.
@@ -1394,7 +1427,7 @@ class Appropriation(AuditModelMixin, models.Model):
                     )
                     .exclude(status=STATUS_DELETED)
                     .exists()
-                ):
+                ):  # pragma: no cover
                     raise RuntimeError(
                         _(
                             "Denne bevilling har følgeydelser, der starter "
@@ -1971,7 +2004,7 @@ class Activity(AuditModelMixin, models.Model):
             return self.total_cost
 
         vat_factor = self.vat_factor
-        now = timezone.now()
+        now = timezone.now().date()
         start_date = date(now.year, month=1, day=1)
         end_date = date(now.year, month=12, day=31)
         payment_amounts = (
