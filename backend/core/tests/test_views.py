@@ -987,6 +987,34 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
             ),
         )
 
+    def test_post(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        now = timezone.now()
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=date(year=now.year, month=1, day=1),
+            end_date=date(year=now.year, month=1, day=1),
+        )
+        create_payment_schedule(activity=activity)
+
+        url = reverse("payment-list")
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        payment = response.json()["results"][0]
+        payment = {k: v for k, v in payment.items() if v is not None}
+        response = self.client.post(url, payment)
+        self.assertEqual(response.status_code, 403)
+        del payment["payment_schedule"]
+        response = self.client.post(url, payment)
+        self.assertEqual(response.status_code, 400)
+
 
 class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
     @classmethod
