@@ -285,7 +285,7 @@ def create_target_group(
     name="Familieafdelingen", required_fields_for_case=None
 ):
     if required_fields_for_case is None:
-        required_fields_for_case = ["district"]
+        required_fields_for_case = "district"
     target_group, _ = TargetGroup.objects.get_or_create(
         name=name, required_fields_for_case=required_fields_for_case
     )

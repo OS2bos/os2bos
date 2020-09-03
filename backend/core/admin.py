@@ -222,7 +222,7 @@ class VariableRateAdmin(ClassificationAdmin):
         if form.is_valid() and form.has_changed():
             super().save_model(request, obj, form, change)
             obj.set_rate_amount(
-                form.cleaned_data["rate"], form.cleaned_data["start_date"],
+                form.cleaned_data["rate"], form.cleaned_data["start_date"]
             )
 
 
@@ -321,10 +321,15 @@ class TargetGroupForm(forms.ModelForm):
         Set initial value for required_fields_for_case.
         """
         super().__init__(*args, **kwargs)
-        # Set initial value as a list
+        # Set initial value as comma-separated string.
         self.initial[
             "required_fields_for_case"
-        ] = self.instance.required_fields_for_case
+        ] = self.instance.required_fields_for_case.split(",")
+
+    def clean_required_fields_for_case(self):
+        """Clean required_fields_for_case as comma-separated string."""
+        cleaned = ",".join(self.cleaned_data["required_fields_for_case"])
+        return cleaned
 
     def required_fields_for_case_choices():
         """Define the choices for the required_fields_for_case field."""

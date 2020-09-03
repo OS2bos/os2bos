@@ -565,7 +565,9 @@ def export_prism_payments_for_date(date=None):
         date = tomorrow
 
     # Retrieve payments for the default date.
-    payments = due_payments_for_prism(date)
+    payment_ids = list(
+        due_payments_for_prism(date).values_list("id", flat=True)
+    )
 
     # We include payments until we reach two consecutive days
     # with no exclusions.
@@ -577,8 +579,12 @@ def export_prism_payments_for_date(date=None):
             date=date + relativedelta(days=days_delta)
         ).exists():
             payment_date_exclusions_found = True
-            payments = payments.union(
-                due_payments_for_prism(date + relativedelta(days=days_delta))
+            payment_ids.extend(
+                list(
+                    due_payments_for_prism(
+                        date + relativedelta(days=days_delta)
+                    ).values_list("id", flat=True)
+                )
             )
             days_delta += 1
             consecutive_days = 0
@@ -586,13 +592,18 @@ def export_prism_payments_for_date(date=None):
         # Also include payments for the first day after
         # one or more PaymentDateExclusion dates.
         if payment_date_exclusions_found:
-            payments = payments.union(
-                due_payments_for_prism(date + relativedelta(days=days_delta))
+            payment_ids.extend(
+                list(
+                    due_payments_for_prism(
+                        date + relativedelta(days=days_delta)
+                    ).values_list("id", flat=True)
+                )
             )
         consecutive_days += 1
         days_delta += 1
         payment_date_exclusions_found = False
 
+    payments = models.Payment.objects.filter(id__in=payment_ids)
     if not payments.exists():
         # No payments
         return

@@ -4,7 +4,7 @@
         "pk": 1,
         "fields": {
             "name": "Familieafdelingen",
-            "required_fields_for_case": ["district", "effort_step", "scaling_step"]
+            "required_fields_for_case": "district,effort_step,scaling_step"
         }
     },
     {
@@ -12,7 +12,7 @@
         "pk": 2,
         "fields": {
             "name": "Handicapafdelingen",
-            "required_fields_for_case": ["effort_step", "scaling_step"]
+            "required_fields_for_case": "effort_step,scaling_step"
         }
     }
 ]

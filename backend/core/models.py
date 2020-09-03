@@ -15,7 +15,6 @@ import portion as P
 from django import forms
 from django.db import models, transaction
 from django.db.models import Q, F
-from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
@@ -127,12 +126,16 @@ class TargetGroup(Classification):
         ordering = ("name",)
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
-    required_fields_for_case = ArrayField(
-        models.CharField(max_length=128),
-        blank=True,
-        null=True,
-        verbose_name="påkrævede felter på sag",
+    # required fields as CSV delimited CharField.
+    required_fields_for_case = models.CharField(
+        max_length=1024, blank=True, verbose_name=_("påkrævede felter på sag")
     )
+
+    def get_required_fields_for_case(self):
+        """Return required_fields_for_case from CSV to list."""
+        if not self.required_fields_for_case:
+            return []
+        return self.required_fields_for_case.split(",")
 
     def __str__(self):
         return f"{self.name}"
