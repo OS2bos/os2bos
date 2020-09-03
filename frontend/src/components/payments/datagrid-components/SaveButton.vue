@@ -40,17 +40,11 @@ export default {
         }, 
         visible: function() {
             return this.is_payable(this.compdata)
-        },
-        backIntime: function() {
-            let d = new Date(this.compdata.date)
-            let date = d.setDate(d.getDate() - 2)
-            return epoch2DateStr(date)
         }
     },
     methods: {
         update: function() {
-            this.$route.query.activity = this.compdata.activity__id
-            this.$store.dispatch('fetchPayments', this.$route.query)
+            this.$emit('update')
         },
         submitHandler: function() {
             let data = {
@@ -60,6 +54,7 @@ export default {
                     paid: true
             }
             if (this.user.profile === 'workflow_engine' && this.compdata.paid) {
+                // TODO: Clear up what this is actually for
                 axios.get(`/editing_past_payments_allowed/`)
                 .then(res => {
                     this.patchPayments(data)
@@ -73,10 +68,7 @@ export default {
             axios.patch(`/payments/${ this.rowid }/`, data)
             .then(res => {
                 this.buttonTxt = 'Gemt'
-                notify('Betaling godkendt', 'success')
-                if (this.compdata.payment_method === 'SD' || this.compdata.payment_method === 'CASH' && this.compdata.paid_date > this.compdata.date || this.compdata.paid_date >= this.backIntime) {
-                    notify('OBS: Rettede beløb og dato vil automatisk blive overskrevet, når der senere kommer en betaling der følger planlagt beløb og planlagt dato.')
-                }
+                notify('Betaling registreret', 'success')
                 this.update()
             })
             .catch(err => this.$store.dispatch('parseErrorOutput', err))

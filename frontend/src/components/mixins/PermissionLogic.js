@@ -5,6 +5,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
+import { epoch2DateStr } from '../filters/Date.js'
+
 export default {
     computed: {
         user: function() {
@@ -78,6 +80,14 @@ export default {
                 }
             } else {
                 return false
+            }
+        },
+        warn_edit_payment: function(payment) {
+            if (payment.payment_method === 'SD' || payment.payment_method === 'CASH') {
+                let two_days_ago = epoch2DateStr(new Date().setDate(new Date().getDate() - 2))
+                if (two_days_ago < payment.date) {
+                    return 'OBS: Rettede beløb og dato vil automatisk blive overskrevet, hvis planlagt betalingsdato er i fremtiden.'
+                }
             }
         }
     }

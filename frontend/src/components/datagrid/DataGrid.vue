@@ -67,7 +67,7 @@
                             :key="c.key" 
                             :class="c.class"
                             :title="d[c.key]">
-                            <virtual-component :component="c.display_component" :rowid="d.id" :compdata="d"></virtual-component>
+                            <virtual-component :component="c.display_component" :rowid="d.id" :compdata="d" @update="emitUpdate"></virtual-component>
                         </td>
                         <td v-else
                             :key="c.key" 
@@ -99,6 +99,9 @@
                 props: {
                     rowid: this.rowid,
                     compdata: this.compdata
+                },
+                on: {
+                    update: this.emitUpdate
                 }
             })
         },
@@ -106,7 +109,12 @@
             'rowid',
             'compdata',
             'component'
-        ]
+        ],
+        methods: {
+            emitUpdate: function() {
+                this.$emit('update')
+            }
+        }
     })
 
     export default {
@@ -196,6 +204,9 @@
                     this.selection.push(entry)
                 }
                 this.$emit('selection', this.selection)
+            },
+            emitUpdate: function() {
+                this.$emit('update')
             }
         },
         mounted: function() {

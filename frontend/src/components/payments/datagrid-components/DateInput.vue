@@ -6,7 +6,11 @@
    - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
 
 <template>
-    <input v-if="visible" type="date" v-model="date">
+    
+    <div v-if="visible">
+        <popover :condition="display_warning">{{ display_warning }}</popover>
+        <input :ref="`dateInput${ rowid }`" v-if="visible" type="date" v-model="date">
+    </div>
     <span v-else>
         {{ displayPayDate(date) }}
     </span>
@@ -16,6 +20,7 @@
 
 import PermissionLogic from '../../mixins/PermissionLogic.js'
 import { json2jsDate } from '../../filters/Date.js'
+import Popover from '../../warnings/Popover.vue'
 
 export default {
     mixins: [ 
@@ -25,6 +30,14 @@ export default {
         'rowid',
         'compdata'
     ],
+    components: {
+        Popover
+    },
+    data: function() {
+        return {
+            display_warning: null
+        }
+    },
     computed: {
         date: {
             get: function() {
@@ -45,6 +58,19 @@ export default {
     methods: {
         displayPayDate: function(payment) {
             return json2jsDate(payment)
+        },
+        focusHandler: function() {
+            this.display_warning = this.warn_edit_payment(this.compdata)
+        },
+        blurHandler: function() {
+            this.display_warning = null
+        }
+    },
+    mounted: function() {
+        let input_id = `dateInput${ this.rowid }`
+        if (this.$refs[input_id]) {
+            this.$refs[input_id].addEventListener('focus', this.focusHandler)
+            this.$refs[input_id].addEventListener('blur', this.blurHandler)
         }
     }
 }

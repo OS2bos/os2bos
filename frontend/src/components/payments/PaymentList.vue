@@ -32,7 +32,9 @@
         <data-grid v-if="payments_by_year.length > 0"
             ref="data-grid"
             :data-list="payments_by_year"
-            :columns="columns">
+            :columns="columns"
+            class="payment_schedule_list"
+            @update="update">
 
             <p slot="datagrid-header">
                 Viser {{payments_by_year.length}} betalinger for {{ current_year }}
@@ -138,23 +140,25 @@
                         key: 'amount',
                         title: 'Planlagt beløb',
                         display_func: this.displayPlannedAmount,
-                        class: 'right'
+                        class: 'right nowrap'
                     },
                     {
                         key: 'date',
                         title: 'Planlagt dato',
-                        display_func: this.displayPlannedPayDate
+                        display_func: this.displayPlannedPayDate,
+                        class: 'nowrap'
                     },
                     {
                         key: 'paid_amount',
                         title: 'Betalt beløb',
                         display_component: AmountInput,
-                        class: 'right'
+                        class: 'right nowrap'
                     },
                     {
                         key: 'paid_date',
                         title: 'Betalt dato',
-                        display_component: DateInput
+                        display_component: DateInput,
+                        class: 'nowrap'
                     },
                     {
                         key: 'note',
@@ -348,6 +352,10 @@
         float: right;
         margin-top: 0;
         min-width: 40rem;
+    }
+
+    .payment_schedule_list td {
+        overflow: visible;
     }
 
 </style>

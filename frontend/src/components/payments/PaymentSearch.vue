@@ -73,7 +73,8 @@
                 <data-grid v-if="payments.length > 0"
                     ref="data-grid"
                     :data-list="payments"
-                    :columns="columns">
+                    :columns="columns"
+                    @update="update">
 
                     <p slot="datagrid-header">
                         Viser {{ payments.length }} af {{ payments_meta.count }} betalinger
@@ -206,12 +207,14 @@
                     {
                         key: 'paid_amount',
                         title: 'Betalt beløb',
-                        display_component: AmountInput
+                        display_component: AmountInput,
+                        class: 'nowrap'
                     },
                     {
                         key: 'paid_date',
                         title: 'Betalt dato',
-                        display_component: DateInput
+                        display_component: DateInput,
+                        class: 'nowrap'
                     },
                     {
                         key: 'note',
@@ -350,6 +353,10 @@
 
     .payment-search-list .more .material-icons {
         margin: 0;
+    }
+
+    .payment-search-list td {
+        overflow: visible;
     }
 
     .payment-search .more {
