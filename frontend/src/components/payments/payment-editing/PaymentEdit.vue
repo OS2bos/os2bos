@@ -62,7 +62,8 @@
                             <input type="number" step="0.01" v-model="paid.paid_amount" id="field-pay-amount" required>
 
                             <label for="field-pay-date" class="required">Betal dato</label>
-                            <input type="date" v-model="paid.paid_date" id="field-pay-date" required>
+                            <popover :condition="display_warning">{{ display_warning }}</popover>
+                            <input :ref="`dateInput${ payment.id }`" type="date" v-model="paid.paid_date" id="field-pay-date" required>
 
                             <label for="field-pay-note">Referencetekst</label>
                             <input type="text" v-model="paid.note" id="field-pay-note">
@@ -161,10 +162,11 @@
     import Error from '../../forms/Error.vue'
     import PermissionLogic from '../../mixins/PermissionLogic.js'
     import notify from '../../notifications/Notify.js'
-    import { json2jsDate } from '../../filters/Date.js'
+    import { json2jsDate, epoch2DateStr } from '../../filters/Date.js'
     import { cost2da } from '../../filters/Numbers.js'
     import { activityId2name } from '../../filters/Labels.js'
     import ModalDialog from '../../dialog/Dialog.vue'
+    import Popover from '../../warnings/Popover.vue'
 
     export default {
         mixins: [
@@ -172,7 +174,8 @@
         ],
         components: {
             Error,
-            ModalDialog
+            ModalDialog,
+            Popover
         },
         props: [
             'payment'
@@ -186,7 +189,8 @@
                 },
                 pay_diag_open: false,
                 paymentlock: true,
-                delete_diag_open: false
+                delete_diag_open: false,
+                display_warning: null
             }
         },
         computed: {  
@@ -244,7 +248,7 @@
                     .then(res => {
                         this.closeDiag()
                         this.update()
-                        notify('Betaling opdateret', 'success')
+                        notify('Betaling registreret', 'success')
                     })
                     .catch(err => this.$store.dispatch('parseErrorOutput', err))
             },
@@ -263,9 +267,21 @@
                     notify('Betaling slettet', 'success')                    
                 })
                 .catch(err => this.$store.dispatch('parseErrorOutput', err))
+            },
+            focusHandler: function() {
+                this.display_warning = this.warn_edit_payment(this.payment)
+            },
+            blurHandler: function() {
+                this.display_warning = null
+            }
+        },
+        mounted: function() {
+            let input_id = `dateInput${ this.payment.id }`
+            if (this.$refs[input_id]) {
+                this.$refs[input_id].addEventListener('focus', this.focusHandler)
+                this.$refs[input_id].addEventListener('blur', this.blurHandler)
             }
         }
-
     }
 
 </script>
