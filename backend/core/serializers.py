@@ -347,7 +347,7 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
         if payment_cost_type == PaymentSchedule.FIXED_PRICE:
             # Payment amount needs to be given, apart from that s'all
             # good.
-            if not (data.get("payment_amount", None)):
+            if data.get("payment_amount", None) is None:
                 raise serializers.ValidationError(
                     _("Beløb skal udfyldes ved fast beløb")
                 )
