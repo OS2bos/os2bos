@@ -336,7 +336,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
 
     def test_format_prism_financial_record(self):
         # Create a payment that is due today
-        now = timezone.now()
+        now = timezone.now().date()
         start_date = now - timedelta(days=1)
         end_date = now + timedelta(days=1)
 
@@ -404,7 +404,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
 
     def test_export_prism_payments_for_date(self):
         # Create a payment that is due today
-        now = timezone.now()
+        now = timezone.now().date()
         start_date = now - timedelta(days=1)
         end_date = now + timedelta(days=1)
         # Create an activity etc which is required.
@@ -462,7 +462,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
 
     @freeze_time("2020-05-13")
     def test_export_prism_payments_with_exclusions_wednesday(self):
-        now = timezone.now()
+        now = timezone.now().date()
         start_date = now
         end_date = now + timedelta(days=14)
         # Create an activity etc which is required.
@@ -514,7 +514,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
 
     @freeze_time("2020-06-04")
     def test_export_prism_payments_with_exclusions_thursday_with_weekend(self):
-        now = timezone.now()
+        now = timezone.now().date()
         start_date = now
         end_date = now + timedelta(days=14)
         # Create an activity etc which is required.
@@ -571,7 +571,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
 
     @freeze_time("2024-12-19")
     def test_export_prism_payments_with_exclusions_christmas_2024(self):
-        now = timezone.now()
+        now = timezone.now().date()
         start_date = now
         end_date = now + timedelta(days=14)
         # Create an activity etc which is required.
@@ -643,7 +643,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
 
     @freeze_time("2020-04-07")
     def test_export_prism_payments_with_exclusions_easter_2020(self):
-        now = timezone.now()
+        now = timezone.now().date()
         start_date = now
         end_date = now + timedelta(days=14)
         # Create an activity etc which is required.
@@ -753,7 +753,7 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         cls.basic_setup()
 
     def test_generate_payments_report_list(self):
-        now = timezone.now()
+        now = timezone.now().date()
         start_date = now
         end_date = now + timedelta(days=5)
 
@@ -822,7 +822,7 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         self.assertIsNotNone(first_elem["date"])
 
     def test_generate_payments_report_list_missing_activity(self):
-        now = timezone.now()
+        now = timezone.now().date()
         start_date = now
         end_date = now + timedelta(days=5)
         payment_schedule = create_payment_schedule(
@@ -848,7 +848,7 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         self.assertEqual(len(report_list), 0)
 
     def test_generate_payments_report_list_granted_payments(self):
-        now = timezone.now()
+        now = timezone.now().date()
         # Create a granted activity.
         start_date = now
         end_date = now + timedelta(days=5)
@@ -904,7 +904,7 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         self.assertEqual(len(report_list), 6)
 
     def test_generate_payments_report_list_expected_payments(self):
-        now = timezone.now()
+        now = timezone.now().date()
         # Create a granted activity.
         start_date = now
         end_date = now + timedelta(days=5)
@@ -964,7 +964,7 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
     def test_generate_payments_report_list_use_historical_case(self):
         # Pay payments on 2020-01-01.
         with freeze_time("2020-01-01"):
-            now = timezone.now()
+            now = timezone.now().date()
             start_date = now
             end_date = now + timedelta(days=5)
             case = create_case(
