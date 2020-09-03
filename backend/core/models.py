@@ -2031,6 +2031,9 @@ class Activity(AuditModelMixin, models.Model):
         if self.payment_plan.payment_type == PaymentSchedule.ONE_TIME_PAYMENT:
             return False
 
+        if self.payment_plan.recipient_type == PaymentSchedule.INTERNAL:
+            return False
+
         return True
 
     @property
