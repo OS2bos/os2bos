@@ -128,7 +128,7 @@ class TargetGroup(Classification):
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     # required fields as CSV delimited CharField.
     required_fields_for_case = models.CharField(
-        max_length=128, blank=True, verbose_name=_("påkrævede felter på sag")
+        max_length=1024, blank=True, verbose_name=_("påkrævede felter på sag")
     )
 
     def get_required_fields_for_case(self):

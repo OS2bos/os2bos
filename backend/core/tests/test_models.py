@@ -3111,7 +3111,7 @@ class PaymentScheduleTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(case=case)
-        activity = create_activity(case=case, appropriation=appropriation,)
+        activity = create_activity(case=case, appropriation=appropriation)
         payment_schedule.activity = activity
         self.assertEqual(payment_schedule.rate_or_price_amount, Decimal(10))
 

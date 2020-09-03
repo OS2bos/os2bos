@@ -19,7 +19,7 @@ def migrate_targetgroups(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0079_migrate_payment_schedules'),
+        ('core', '0081_auto_20200722_1424'),
     ]
 
     operations = [
