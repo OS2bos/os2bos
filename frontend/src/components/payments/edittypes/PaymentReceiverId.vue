@@ -17,10 +17,10 @@
     </fieldset>
 
     <dl v-else>
-        <dt>
-            {{ id_str }}
-        </dt>
-        <dd>{{ model }}</dd>
+        <template v-if="model">
+            <dt>{{ id_str }}</dt>
+            <dd>{{ model }}</dd>
+        </template>
     </dl>
 
 </template>

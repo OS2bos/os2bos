@@ -140,10 +140,14 @@ export default {
                 return true
             }
         },
-        cleanAndExit: function() {
+        cleanAndExit: function(act_id) {
             this.$store.commit('clearActivity')
             this.$store.commit('clearPaymentPlan')
-            this.$router.push(`/appropriation/${ this.appropriation.id }/`)
+            if (act_id) {
+                this.$router.push(`/activity/${ act_id }/`)
+            } else {
+                this.$router.push(`/appropriation/${ this.appropriation.id }/`)
+            }
         },
         saveActivity: function() {
             if (this.act.start_date && !this.checkDateMax(this.act.start_date)) {
@@ -178,12 +182,12 @@ export default {
 
             axios.post('/activities/', sanitized_act)
             .then(res => {
-                this.cleanAndExit()
+                this.cleanAndExit(res.data.id)
             })
             .catch(err => this.$store.dispatch('parseErrorOutput', err))            
         },
         cancelCreate: function() {
-            this.cleanAndExit()
+            this.cleanAndExit(false)
         }
     }
 }
