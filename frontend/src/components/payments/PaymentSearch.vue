@@ -186,12 +186,13 @@
                     },
                     {
                         key: 'case__cpr_number',
-                        title: 'Hovedsag CPR-nr / Kontostreng',
-                        display_func: this.displayCprAccount
+                        title: 'Hovedsag CPR-nr'
                     },
                     {
-                        key: 'account_alias',
-                        title: 'Kontoalias'
+                        key: 'account_string',
+                        title: 'Kontostreng',
+                        display_func: this.displayAccounts,
+                        class: 'nowrap'
                     },
                     {
                         key: 'amount',
@@ -291,8 +292,14 @@
             displayPlannedAmount: function(payment) {
                 return `${ cost2da(payment.amount) } kr`
             },
-            displayCprAccount: function(payment) {
-                return `<span class="label-header">cpr</span> ${ payment.case__cpr_number } <br>${ payment.account_string }`
+            displayAccounts: function(payment) {
+                let str = `${ payment.account_string }`
+                if (payment.account_alias){
+                    str += `<dl><dt>Kontoalias</dt><dd>${ payment.account_alias }</dd></dl>`
+                } else {
+                    str
+                }
+                return str
             },
             displayPaidIcon: function(payment) {
                 if (payment.paid) {
