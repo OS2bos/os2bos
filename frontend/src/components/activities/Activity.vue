@@ -233,8 +233,8 @@ export default {
             return this.$store.getters.getCase
         },
         can_adjust: function() {
-            // Adjust only if parent activity was granted and has no other modifying activities and individual payment
-            if (this.appropriation && this.act.status === 'GRANTED' && this.act.payment_plan.payment_type !== 'INDIVIDUAL_PAYMENT') {
+            // Adjust only if parent activity was granted and has no other modifying activities
+            if (this.appropriation && this.act.status === 'GRANTED') {
                 let modifier = this.appropriation.activities.filter(ac => {
                     return ac.modifies === this.act.id
                 })
