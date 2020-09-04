@@ -238,7 +238,7 @@ export default {
     }
 
     .act-edit-actions {
-        padding: 0 0 2rem;
+        padding: 0 2rem 2rem;
         margin: 0;
     }
 
