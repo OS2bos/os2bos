@@ -728,6 +728,14 @@ class TargetGroupSerializer(serializers.ModelSerializer):
         model = TargetGroup
         fields = "__all__"
 
+    def to_representation(self, instance):
+        """Convert `required_fields_for_case` to list."""
+        ret = super().to_representation(instance)
+        ret[
+            "required_fields_for_case"
+        ] = instance.get_required_fields_for_case()
+        return ret
+
 
 class InternalPaymentRecipientSerializer(serializers.ModelSerializer):
     """Serializer for the InternalPaymentRecipient model."""

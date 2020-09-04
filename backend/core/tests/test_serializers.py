@@ -40,6 +40,7 @@ from core.serializers import (
     PaymentScheduleSerializer,
     AppropriationSerializer,
     PaymentSerializer,
+    TargetGroupSerializer,
 )
 
 
@@ -1756,3 +1757,10 @@ class PaymentSerializerTestCase(TestCase, BasicTestMixin):
         serializer = PaymentSerializer(data=data)
 
         self.assertTrue(serializer.is_valid())
+
+
+class TargetGroupSerializerTestCase(TestCase):
+    def test_to_representation(self):
+        tg = create_target_group()
+        serializer = TargetGroupSerializer(tg)
+        serializer.to_representation(tg)
