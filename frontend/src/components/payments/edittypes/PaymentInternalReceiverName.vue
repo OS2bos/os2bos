@@ -42,7 +42,6 @@ export default {
     },
     created: function() {
         this.property = 'recipient_name'
-        //console.log('created model', this.model)
     }
 }
 </script>
