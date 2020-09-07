@@ -52,3 +52,16 @@ class NewPaymentPermission(IsUserAllowed):
                 )
 
         return is_permitted
+
+
+class DeletePaymentPermission(permissions.BasePermission):
+    """Check if a payment can be deleted."""
+
+    def has_object_permission(self, request, view, obj):
+        """Payments on granted activities may not be deleted."""
+
+        if request.method == "DELETE":
+            activity = obj.payment_schedule.activity
+            return activity.status in [STATUS_EXPECTED, STATUS_DRAFT]
+        else:
+            return True
