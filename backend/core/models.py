@@ -1426,8 +1426,12 @@ class Appropriation(AuditModelMixin, models.Model):
                 for a in self.activities.filter(
                     activity_type=SUPPL_ACTIVITY
                 ).exclude(end_date__lte=main_activity.end_date):
-                    a.end_date = main_activity.end_date
-                    a.save()
+                    if (
+                        a.payment_plan.payment_type
+                        != PaymentSchedule.ONE_TIME_PAYMENT
+                    ):  # pragma: no cover
+                        a.end_date = main_activity.end_date
+                        a.save()
                     if a.status == STATUS_GRANTED:
                         # If we're not already granting a modification
                         # of this activity, we need to re-grant it.
@@ -1455,7 +1459,13 @@ class Appropriation(AuditModelMixin, models.Model):
                 None if None in granted_end_dates else max(granted_end_dates)
             )
             for a in to_be_granted:
-                if a.end_date is None or (end_date and a.end_date > end_date):
+                if (
+                    a.end_date is None or (end_date and a.end_date > end_date)
+                ) and (
+                    hasattr(a, "payment_plan")
+                    and a.payment_plan.payment_type
+                    != PaymentSchedule.ONE_TIME_PAYMENT
+                ):
                     a.end_date = end_date
                     a.save()
         approval_level = ApprovalLevel.objects.get(id=approval_level)
