@@ -42,7 +42,7 @@
             </dl>
         </div>
 
-        <activity-edit v-if="edit_mode" @save="reload" @cancel="edit_mode = false" :class="`activity-${ act.status }`" />
+        <activity-edit v-if="edit_mode" @save="reload" @cancel="reload" :class="`activity-${ act.status }`" />
         
         <activity-summary v-else :class="`activity-${ act.status }`" />
 

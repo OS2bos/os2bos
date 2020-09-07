@@ -73,7 +73,7 @@
                 </div>
 
                 <div>
-                    <payment-receiver-type :editable="is_editable" />
+                    <payment-receiver-type :editable="false" />
 
                     <template v-if="payment_plan.recipient_type === 'INTERNAL'" >
                         <payment-internal-receiver :editable="is_editable" /> 

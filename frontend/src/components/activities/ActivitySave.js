@@ -34,7 +34,7 @@ function sanitizeActivity(activity, request_mode) {
     }
 
     if (new_act.payment_plan.payment_frequency !== 'MONTHLY') {
-        delete new_act.payment_plan.payment_day_of_month // Only monthly payments must supply a day of month
+        new_act.payment_plan.payment_day_of_month = null // Only monthly payments must supply a day of month
     }
 
     if (PermissionLogic.methods.is_individual_payment_type(new_act.payment_plan) && request_mode === 'post') {
