@@ -1148,7 +1148,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             "en individuel betaling må ikke have betalingsenheder",
         )
 
-    def test_individual_payment_disallow_modifies(self):
+    def test_individual_payment_allow_modifies(self):
         activity_details = ActivityDetails.objects.create(
             max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
         )
@@ -1179,11 +1179,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         }
         serializer = ActivitySerializer(data=data)
 
-        self.assertFalse(serializer.is_valid())
-        self.assertEqual(
-            serializer.errors["non_field_errors"][0],
-            "en individuel betaling kan ikke være en forventet justering",
-        )
+        self.assertTrue(serializer.is_valid())
 
     def test_individual_payment_success(self):
         activity_details = ActivityDetails.objects.create(

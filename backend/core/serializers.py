@@ -498,22 +498,9 @@ class ActivitySerializer(WritableNestedModelSerializer):
                 _("der skal angives en betalingsdato for engangsbetaling")
             )
 
-        # Individual payments cannot be an expected adjustment.
-        modifies = "modifies" in data and data["modifies"]
-        is_individual_payment = (
-            data["payment_plan"]["payment_type"]
-            == PaymentSchedule.INDIVIDUAL_PAYMENT
-        )
-        if is_individual_payment and modifies:
-            raise serializers.ValidationError(
-                _(
-                    "en individuel betaling kan ikke"
-                    " være en forventet justering"
-                )
-            )
-
         # Monthly payments that are not expected adjustments should have a
         # valid start_date, end_date and day_of_month that results in payments.
+        modifies = "modifies" in data and data["modifies"]
         is_monthly_payment = (
             "payment_frequency" in data["payment_plan"]
             and data["payment_plan"]["payment_frequency"]
