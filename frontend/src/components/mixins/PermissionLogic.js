@@ -52,7 +52,7 @@ export default {
             }
         },
         can_delete_payment: function() {
-            if (this.$store.state.payment.payment_plan.payment_type === 'INDIVIDUAL_PAYMENT' && this.user.profile !== 'readonly') {
+            if (this.$store.state.payment.payment_plan.payment_type === 'INDIVIDUAL_PAYMENT' && this.current_act.status !== 'GRANTED' && this.user.profile !== 'readonly') {
                 return true
             } else {
                 return false
