@@ -97,7 +97,6 @@ test('Create activity with per unit pricing', async t => {
 
     await t
         .click(Selector('.act-list-row a').withText(act_link_text))
-        .debug()
         .expect(Selector('.perunitdisplay').innerText).contains('3.000,00 kr x 30,50')  // price and unit should be visible and correct after approve 
 
 })
