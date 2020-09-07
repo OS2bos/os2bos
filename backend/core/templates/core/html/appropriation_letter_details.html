@@ -96,7 +96,11 @@
         <tbody>
             <tr>
                 <td>
-                    {{ a.payment_plan.get_payment_cost_type_display|capfirst }}
+                    {% if a.payment_plan.payment_type != "INDIVIDUAL_PAYMENT" %}
+                        {{ a.payment_plan.get_payment_cost_type_display|capfirst }}
+                    {% else %}
+                        -
+                    {% endif %}
                     {% if a.payment_plan.payment_cost_type == "GLOBAL_RATE" %}
                         <br>
                         {{ a.payment_plan.payment_rate.name }}<br>
@@ -110,7 +114,13 @@
                 {% if a.payment_plan.payment_units %}
                     <td>{{ a.payment_plan.payment_units }}</td>
                 {% endif %}
-                <td class="align-right">{{ a.payment_plan.per_payment_amount }} kr</td>
+                <td class="align-right">
+                    {% if a.payment_plan.payment_type != "INDIVIDUAL_PAYMENT" %}
+                        {{ a.payment_plan.per_payment_amount }} kr
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
                 <td>
                     {% if a.payment_plan.payment_frequency == "MONTHLY" %}
                         Månedlig den {{a.payment_plan.payment_day_of_month}}.
@@ -122,6 +132,8 @@
                         Daglig
                     {% elif a.payment_plan.payment_type == "ONE_TIME_PAYMENT" %}
                         Engangsudgift
+                    {% elif a.payment_plan.payment_type == "INDIVIDUAL_PAYMENT" %}
+                        Individuel betalingsplan
                     {% else %}
                         -
                     {% endif %}
