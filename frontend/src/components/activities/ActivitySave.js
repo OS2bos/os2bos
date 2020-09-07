@@ -1,5 +1,6 @@
 import { epoch2DateStr } from '../filters/Date.js'
 import PermissionLogic from '../mixins/PermissionLogic.js'
+import store from '../../store.js'
 
 function sanitizeActivity(activity, request_mode) {
     
@@ -48,6 +49,14 @@ function sanitizeActivity(activity, request_mode) {
 
     if (PermissionLogic.methods.is_individual_payment_type(new_act.payment_plan)) {
         delete new_act.payment_plan.payment_day_of_month // Individual payment plan can't have payment day of month
+
+        if (new_act.payment_plan.recipient_type === 'INTERNAL' && !new_act.payment_plan.recipient_id) { // If no recipient ID is supplied, make one up using ID derived from recipient's name
+            const internal_recipients = store.getters.getInternalPaymentRecipients
+            const internal_recipient = internal_recipients.find(function(recip) {
+                return recip.name === new_act.payment_plan.recipient_name
+            })
+            new_act.payment_plan.recipient_id = internal_recipient.id
+        }
     }
 
     delete new_act.monthly_payment_plan // no need to supply the monthly payment plan. DB already knows it
