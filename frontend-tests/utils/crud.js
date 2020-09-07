@@ -154,6 +154,8 @@ async function activityFormInput(t, act_data) {
 
     await t
         .click('#activity-submit')
+        .expect(Selector('h1').withText('Udgift til').exists).ok()
+        .click(Selector('a').withText('Bevillingsskrivelse'))
         .expect(Selector('h1').withText('Bevillingsskrivelse').exists).ok()
 }
 

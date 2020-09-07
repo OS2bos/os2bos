@@ -14,8 +14,10 @@
     </fieldset>
 
     <dl v-else>
-        <dt>Supplerende oplysninger</dt>
-        <dd>{{ model ? model : '-' }}</dd>
+        <template v-if="model">
+            <dt>Supplerende oplysninger</dt>
+            <dd>{{ model }}</dd>
+        </template>
     </dl>
 
 </template>

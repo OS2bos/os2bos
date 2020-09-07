@@ -33,8 +33,10 @@
     </fieldset>
 
     <dl v-else>
-        <dt>Skattekort</dt>
-        <dd>{{ displayPaymentDetail(model) }}</dd>
+        <template v-if="model">
+            <dt>Skattekort</dt>
+            <dd>{{ displayPaymentDetail(model) }}</dd>
+        </template>
     </dl>
 
 </template>

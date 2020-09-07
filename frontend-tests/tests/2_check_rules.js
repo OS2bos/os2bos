@@ -75,7 +75,7 @@ test('Start date rule check for activities with "CASH" payment', async t => {
         .expect(Selector('.error-msg').exists).ok()
         .typeText('#pay-date-start', testdata.act1.end_date, {replace: true})
         .click('#activity-submit')
-        .expect(Selector('h1').withText('Bevillingsskrivelse').exists).ok()
+        .expect(Selector('h1').withText('Udgift til').exists).ok()
 })
 
 test('Check that an activity may only have one modifier', async t => {
