@@ -1041,6 +1041,35 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
         response = self.client.delete(detail_url)
         self.assertEqual(response.status_code, 403)
 
+    def test_put(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        now = timezone.now()
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_DRAFT,
+            start_date=date(year=now.year, month=1, day=1),
+            end_date=date(year=now.year, month=1, day=1),
+        )
+        create_payment_schedule(activity=activity)
+
+        url = reverse("payment-list")
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        payment = response.json()["results"][0]
+        payment_pk = payment["id"]
+        detail_url = reverse("payment-detail", kwargs={"pk": payment_pk})
+        payment = {k: v for k, v in payment.items() if v is not None}
+        response = self.client.put(
+            detail_url, payment, content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+
 
 class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
     @classmethod
