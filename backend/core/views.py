@@ -89,7 +89,11 @@ from core.mixins import (
 
 from core.authentication import CsrfExemptSessionAuthentication
 
-from core.permissions import IsUserAllowed, NewPaymentPermission
+from core.permissions import (
+    IsUserAllowed,
+    NewPaymentPermission,
+    DeletePaymentPermission,
+)
 
 
 serviceplatformen_logger = logging.getLogger(
@@ -304,7 +308,10 @@ class PaymentViewSet(AuditViewSet):
     serializer_class = PaymentSerializer
     queryset = Payment.objects.all()
     pagination_class = PageNumberPagination
-    permission_classes = (NewPaymentPermission,)
+    permission_classes = (
+        NewPaymentPermission,
+        DeletePaymentPermission,
+    )
 
     filterset_class = PaymentFilter
     filterset_fields = "__all__"
