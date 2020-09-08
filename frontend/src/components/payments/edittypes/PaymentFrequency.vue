@@ -18,6 +18,7 @@
                     id="pay_freq_month" 
                     name="pay_freq" 
                     value="MONTHLY" 
+                    @change="resetValue"
                     required>
                 <label for="pay_freq_month">Månedligt</label>
             </div>
@@ -38,6 +39,7 @@
             id="pay_freq_biweek" 
             name="pay_freq" 
             value="BIWEEKLY" 
+            @change="resetValue"
             required>
         <label for="pay_freq_biweek">Hver 14. dag</label>
 
@@ -47,6 +49,7 @@
             id="pay_freq_week" 
             name="pay_freq" 
             value="WEEKLY" 
+            @change="resetValue"
             required>
         <label for="pay_freq_week">Ugentligt</label>
 
@@ -56,6 +59,7 @@
             id="pay_freq_day" 
             name="pay_freq" 
             value="DAILY" 
+            @change="resetValue"
             required>
         <label for="pay_freq_day">Dagligt</label>
 
@@ -109,23 +113,15 @@ export default {
             }
         }
     },
-    watch: {
-        model: function(new_val) {
-
-            /****** RULES ******/ 
-
-            // Reset payment day of month if not monthly
-            if (new_val !== 'MONTHLY') {
-                this.$store.commit('setPaymentPlanProperty', { 
-                    prop: 'payment_day_of_month',
-                    val: null
-                })
-            }
-        }
-    },
     methods: {
         dispPayFreq: function(freq) {
             return displayPayFreq(freq)
+        },
+        resetValue: function() {
+            this.$store.commit('setPaymentPlanProperty', { 
+                prop: 'payment_day_of_month',
+                val: null
+            })
         }
     },
     created: function() {

@@ -17,6 +17,7 @@
             v-model="model" 
             name="pay-receiver-type"
             value="INTERNAL"
+            @change="resetValues"
             required>
         <label for="pay-receiver-type-internal">Intern</label>
 
@@ -26,6 +27,7 @@
             v-model="model" 
             name="pay-receiver-type"
             value="COMPANY"
+            @change="resetValues"
             required>
         <label for="pay-receiver-type-company">Firma</label>
 
@@ -35,6 +37,7 @@
             v-model="model" 
             name="pay-receiver-type"
             value="PERSON"
+            @change="resetValues"
             required>
         <label for="pay-receiver-type-person">Person</label>
 
@@ -85,6 +88,16 @@ export default {
     methods: {
         dispPayReceiverType: function(type) {
             return displayPayReceiverType(type)
+        },
+        resetValues: function() {
+            this.$store.commit('setPaymentPlanProperty', {
+                prop: 'recipient_id',
+                val: null
+            })
+            this.$store.commit('setPaymentPlanProperty', {
+                prop: 'recipient_name',
+                val: null
+            })
         }
     },
     created: function() {
