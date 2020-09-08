@@ -22,3 +22,4 @@ pysaml2==6.1.0
 django-mailer==2.0.1
 holidays==0.10.3
 django-watchman==1.1.1
+django-currentuser==0.5.1

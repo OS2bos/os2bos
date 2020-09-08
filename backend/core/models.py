@@ -19,7 +19,10 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
+
 from simple_history.models import HistoricalRecords
+from django_currentuser.middleware import get_current_user
+
 from constance import config
 
 from core.mixins import AuditModelMixin
@@ -352,7 +355,11 @@ class VariableRate(models.Model):
                 rate = period_rate_dict.values()[0]
 
                 rpd = RatePerDate(
-                    start_date=start, end_date=end, rate=rate, main_rate=self
+                    start_date=start,
+                    end_date=end,
+                    rate=rate,
+                    main_rate=self,
+                    changed_by=get_current_user(),
                 )
                 rpd.save()
         # RatesPerDate belong to this object so notify that they have
@@ -387,6 +394,17 @@ class RatePerDate(models.Model):
     )
     main_rate = models.ForeignKey(
         VariableRate, on_delete=models.CASCADE, related_name="rates_per_date"
+    )
+
+    # Also log who changed this, and when.
+    changed_date = models.DateTimeField(auto_now_add=True, null=True)
+    changed_by = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        related_name="rate_and_price_changes",
+        verbose_name=_("Ændret af"),
+        null=True,
+        blank=True,
     )
 
     history = HistoricalRecords()
