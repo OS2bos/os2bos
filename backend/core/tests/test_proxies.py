@@ -1,6 +1,7 @@
 from django.test import TestCase
 
 from core.tests.testing_utils import (
+    BasicTestMixin,
     create_section,
     create_effort_step,
     create_activity_details,
@@ -42,7 +43,11 @@ class ActivityDetailsSectionProxyTestCase(TestCase):
         )
 
 
-class HistoricalRatePerDateProxyTestCase(TestCase):
+class HistoricalRatePerDateProxyTestCase(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
     def test_historical_rate_per_date_proxy_str(self):
         rate = create_rate()
         create_rate_per_date(rate)
