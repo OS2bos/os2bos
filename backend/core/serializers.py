@@ -201,7 +201,13 @@ class RatePerDateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RatePerDate
-        fields = ("rate", "start_date", "end_date")
+        fields = (
+            "rate",
+            "start_date",
+            "end_date",
+            "changed_date",
+            "changed_by",
+        )
 
 
 class RateSerializer(serializers.ModelSerializer):
