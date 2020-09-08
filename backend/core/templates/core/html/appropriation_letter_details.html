@@ -81,13 +81,17 @@
     <table>
         <thead>
             <tr>
-                <th>Afregningsenhed</th>
+                {% if a.payment_plan.payment_type != "INDIVIDUAL_PAYMENT" %}
+                    <th>Afregningsenhed</th>
+                {% endif %}     
                 {% if a.payment_plan.payment_units %}
                     <th>Antal</th>
-                {% endif %}                 
-                <th class="align-right">
-                    {% if a.payment_plan.payment_cost_type != "FIXED"  %}Ca.{% endif %} Beløb
-                </th>
+                {% endif %}     
+                {% if a.payment_plan.payment_type != "INDIVIDUAL_PAYMENT" %}            
+                    <th class="align-right">
+                        Beløb
+                    </th>
+                {% endif %}     
                 <th>Betalingsfrekvens</th>
                 <th class="align-right">Omkostninger, indeværende år</th>
                 <th class="align-right">Omkostninger, totalt</th>
@@ -95,32 +99,28 @@
         </thead>
         <tbody>
             <tr>
-                <td>
-                    {% if a.payment_plan.payment_type != "INDIVIDUAL_PAYMENT" %}
+                {% if a.payment_plan.payment_type != "INDIVIDUAL_PAYMENT" %}
+                    <td>
                         {{ a.payment_plan.get_payment_cost_type_display|capfirst }}
-                    {% else %}
-                        -
-                    {% endif %}
-                    {% if a.payment_plan.payment_cost_type == "GLOBAL_RATE" %}
-                        <br>
-                        {{ a.payment_plan.payment_rate.name }}<br>
-                        ca. {{ a.payment_plan.rate_or_price_amount }} kr
-                    {% endif %}
-                    {% if a.payment_plan.payment_cost_type == "PER_UNIT" %}
-                        <br>
-                        ca. {{ a.payment_plan.rate_or_price_amount }} kr
-                    {% endif %}
-                </td>
+                        {% if a.payment_plan.payment_cost_type == "GLOBAL_RATE" %}
+                            <br>
+                            {{ a.payment_plan.payment_rate.name }}<br>
+                            {{ a.payment_plan.rate_or_price_amount }} kr <sup>*</sup>
+                        {% endif %}
+                        {% if a.payment_plan.payment_cost_type == "PER_UNIT" %}
+                            <br>
+                            {{ a.payment_plan.rate_or_price_amount }} kr <sup>*</sup>
+                        {% endif %}
+                    </td>
+                {% endif %}
                 {% if a.payment_plan.payment_units %}
                     <td>{{ a.payment_plan.payment_units }}</td>
                 {% endif %}
-                <td class="align-right">
-                    {% if a.payment_plan.payment_type != "INDIVIDUAL_PAYMENT" %}
-                        {{ a.payment_plan.per_payment_amount }} kr
-                    {% else %}
-                        -
-                    {% endif %}
-                </td>
+                {% if a.payment_plan.payment_type != "INDIVIDUAL_PAYMENT" %}
+                    <td class="align-right">
+                        {{ a.payment_plan.per_payment_amount }} kr {% if a.payment_plan.payment_cost_type != "FIXED"  %}<sup>*</sup>{% endif %}
+                    </td>
+                {% endif %}
                 <td>
                     {% if a.payment_plan.payment_frequency == "MONTHLY" %}
                         Månedlig den {{a.payment_plan.payment_day_of_month}}.
@@ -143,6 +143,9 @@
             </tr>
         </tbody>
     </table>
+    {% if a.payment_plan.payment_cost_type != "FIXED" and a.payment_plan.payment_type != "INDIVIDUAL_PAYMENT" %}
+        <p><sup>*</sup> Beløb kan afvige fra det angivne</p>
+    {% endif %}
     <dl>
         <dt>
             Betales via
