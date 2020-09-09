@@ -57,9 +57,14 @@ export default {
         },
         getBestRate: function(price_per_unit) {
             if (price_per_unit.rates_per_date) {
-                return price_per_unit.rates_per_date.find(function(rate) {
+                    let found_rate = price_per_unit.rates_per_date.find(function(rate) {
                         return rate.start_date >= epoch2DateStr(new Date())
                 })
+                if (!found_rate) {
+                    return price_per_unit.rates_per_date[0]
+                } else {
+                    return found_rate
+                }
             } else {
                 return {
                     rate: price_per_unit.amount,
