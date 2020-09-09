@@ -497,17 +497,11 @@ class PaymentSchedule(models.Model):
 
     ONE_TIME_PAYMENT = "ONE_TIME_PAYMENT"
     RUNNING_PAYMENT = "RUNNING_PAYMENT"
-    PER_HOUR_PAYMENT = "PER_HOUR_PAYMENT"
-    PER_DAY_PAYMENT = "PER_DAY_PAYMENT"
-    PER_KM_PAYMENT = "PER_KM_PAYMENT"
     INDIVIDUAL_PAYMENT = "INDIVIDUAL_PAYMENT"
 
     payment_type_choices = (
         ((ONE_TIME_PAYMENT), _("Engangsudgift")),
         ((RUNNING_PAYMENT), _("Fast beløb, løbende")),
-        ((PER_HOUR_PAYMENT), _("Takst pr. time")),
-        ((PER_DAY_PAYMENT), _("Takst pr. døgn")),
-        ((PER_KM_PAYMENT), _("Takst pr. kilometer")),
         ((INDIVIDUAL_PAYMENT), _("Individuel")),
     )
 
