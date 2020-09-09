@@ -65,7 +65,6 @@ const mutations = {
         state.payment_plan = {
             payment_type: 'RUNNING_PAYMENT',
             payment_frequency: 'MONTHLY',
-            payment_day_of_month: 1,
             payment_cost_type: 'FIXED', // FIXED, GLOBAL_RATE, or PER_UNIT
             payment_amount: 0
         }
@@ -83,7 +82,6 @@ const mutations = {
         state.payment = {
             payment_type: 'RUNNING_PAYMENT',
             payment_frequency: 'MONTHLY',
-            payment_day_of_month: 1,
             payment_cost_type: 'FIXED', // FIXED, GLOBAL_RATE, or PER_UNIT
             payment_amount: 0
         }

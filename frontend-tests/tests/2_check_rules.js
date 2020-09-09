@@ -31,6 +31,7 @@ const today = new Date(),
             section: 'SEL-109 Botilbud, kriseramte kvinder'
         },
         act1: {
+            day_of_month: '4', 
             start_today: `${ today.getFullYear() }-${ leadZero(today.getMonth() + 1) }-${ leadZero(today.getDate()) }`,
             end_date: `${ anotherday.getFullYear() }-${ leadZero(anotherday.getMonth() + 1) }-${ leadZero(anotherday.getDate()) }`
         },
@@ -67,6 +68,8 @@ test('Start date rule check for activities with "CASH" payment', async t => {
         .click('#fieldSelectAct')
         .click(Selector('#fieldSelectAct option').nth(1))
         .typeText('#pay-date-start', testdata.act1.start_today)
+        .click('#pay_day_of_month')
+        .click(Selector('#pay_day_of_month option').withText(testdata.act1.day_of_month))
         .typeText('#field-amount-1', '100', {replace: true})
         .click(Selector('label').withAttribute('for', 'pay-receiver-type-person'))
         .typeText('#field-cpr', '9999999999')

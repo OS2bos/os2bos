@@ -43,7 +43,7 @@ const testdata = {
         payment_type: 'RUNNING_PAYMENT',
         start_date: strday1,
         end_date: str5mth,
-        payment_frequency: 'Weekly',
+        payment_frequency: 'WEEKLY',
         payment_cost_type: 'FIXED',
         payment_amount: '12.95',
         recipient_type: 'COMPANY',
