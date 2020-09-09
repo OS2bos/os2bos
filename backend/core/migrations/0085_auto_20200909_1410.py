@@ -15,7 +15,7 @@ def migrate_existing_payment_schedules(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0083_auto_20200903_1247'),
+        ('core', '0084_auto_20200908_1613'),
     ]
 
     operations = [
