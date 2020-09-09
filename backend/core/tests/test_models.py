@@ -3717,7 +3717,11 @@ class EffortTestCase(TestCase):
         self.assertEqual(str(effort), "Integrationsindsatsen")
 
 
-class VariableRateTestCase(TestCase):
+class VariableRateTestCase(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
     def test_str(self):
         variable_rate = create_variable_rate()
         today = date.today()
@@ -3729,7 +3733,11 @@ class VariableRateTestCase(TestCase):
         self.assertEqual(str(variable_rate), f"{today}, {tomorrow}: 100.00")
 
 
-class RateTestCase(TestCase):
+class RateTestCase(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
     def test_str(self):
         rate = create_rate()
         rate.set_rate_amount(Decimal(25), start_date=date.today())
@@ -3784,7 +3792,11 @@ class RateTestCase(TestCase):
         self.assertTrue(rate.needs_recalculation)
 
 
-class RatePerDateTestCase(TestCase):
+class RatePerDateTestCase(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
     def test_str(self):
         rate = create_rate(name="test rate")
         today = date.today()

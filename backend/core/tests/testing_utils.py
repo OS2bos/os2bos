@@ -12,6 +12,8 @@ from datetime import date
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
+from django_currentuser.middleware import _set_current_user
+
 from core.models import (
     Case,
     Municipality,
@@ -61,6 +63,7 @@ class BasicTestMixin:
         cls.case_worker, _ = User.objects.get_or_create(
             username="Orla Frøsnapper"
         )
+        _set_current_user(cls.case_worker)
         cls.team, _ = Team.objects.get_or_create(
             name="FCK", leader=cls.case_worker
         )

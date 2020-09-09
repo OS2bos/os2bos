@@ -423,7 +423,11 @@ class TestEffortStepAdmin(TestCase):
         )
 
 
-class RateAdminTestCase(TestCase):
+class RateAdminTestCase(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
     def test_save_model_success(self):
         rate = create_rate()
 
