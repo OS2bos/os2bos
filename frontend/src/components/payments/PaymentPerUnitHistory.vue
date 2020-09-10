@@ -22,6 +22,8 @@
                                 <th>Pris</th>
                                 <th>Gælder fra</th>
                                 <th>Gælder til</th>
+                                <th>Sagsbehandler</th>
+                                <th>Senest ændret</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -29,6 +31,8 @@
                                 <td>{{ displayDigits(p.rate) }} kr</td>
                                 <td>{{ displayDate(p.start_date) }}</td>
                                 <td>{{ displayDate(p.end_date) }}</td>
+                                <td>{{ displayUserName(p.changed_by) }}</td>
+                                <td>{{ displayDate(p.changed_date) }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -67,6 +71,7 @@
 import ModalDialog from '../dialog/Dialog.vue'
 import { json2jsDate, epoch2DateStr } from '../filters/Date.js'
 import { cost2da } from '../filters/Numbers.js'
+import { userId2name } from '../filters/Labels.js'
 import Error from '../forms/Error.vue'
 import axios from '../http/Http.js'
 
@@ -109,6 +114,9 @@ export default {
         },
         displayDigits: function(num) {
             return cost2da(num)
+        },
+        displayUserName: function(id) {
+            return userId2name(id)
         },
         cancelDialog: function() {
             this.modal_open = !this.modal_open
