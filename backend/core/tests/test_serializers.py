@@ -1804,6 +1804,12 @@ class PaymentSerializerTestCase(TestCase, BasicTestMixin):
         }
         serializer = PaymentSerializer(data=data)
         self.assertTrue(serializer.is_valid())
+        serializer.save()
+
+        data["date"] = start_date + timedelta(days=1)
+        older_serializer = PaymentSerializer(data=data)
+        self.assertTrue(older_serializer.is_valid())
+        older_serializer.save()
 
         expectation = create_activity(
             case=case,
