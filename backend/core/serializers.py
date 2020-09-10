@@ -198,10 +198,6 @@ class PaymentSerializer(serializers.ModelSerializer):
                 if "date" in data and data["date"] is not None
                 else self.instance.date
             )
-            if not date:
-                raise serializers.ValidationError(
-                    _("Angiv venligst en dato for betalingen")
-                )
             activity = payment_schedule.activity
             if (activity.start_date and date < activity.start_date) or (
                 activity.end_date and date > activity.end_date
