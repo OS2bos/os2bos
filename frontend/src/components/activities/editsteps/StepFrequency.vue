@@ -22,10 +22,12 @@
             </fieldset>
         </template>
 
-        <template v-if="payment_plan.payment_type === 'RUNNING_PAYMENT'">
+        <template v-if="payment_plan.payment_type !== 'ONE_TIME_PAYMENT'">
             <pay-date-start :editable="true" />
             <pay-date-end :editable="true" />
+        </template>
 
+        <template v-if="payment_plan.payment_type === 'RUNNING_PAYMENT'">
             <payment-frequency :editable="true" />
         </template>
 

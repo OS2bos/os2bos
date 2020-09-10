@@ -49,9 +49,11 @@
                         <pay-date-single-period-display v-else />
 
                     </template>
-                    <div v-if="payment_plan.payment_type === 'RUNNING_PAYMENT'">
+                    <div v-if="payment_plan.payment_type !== 'ONE_TIME_PAYMENT'">
                         <pay-date-start :editable="is_editable" />
                         <pay-date-end :editable="is_editable" />
+                    </div>
+                    <div v-if="payment_plan.payment_type === 'RUNNING_PAYMENT'">
                         <payment-frequency :editable="is_editable" />
                     </div>
                 </div>

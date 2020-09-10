@@ -189,6 +189,26 @@ class PaymentSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 _("Denne betaling må ikke markeres betalt manuelt")
             )
+
+        # Validate that dates are inside the start and end interval of the
+        # activity - only relevant for individual payments.
+        if payment_schedule.payment_type == PaymentSchedule.INDIVIDUAL_PAYMENT:
+            date = (
+                data["date"]
+                if "date" in data and data["date"] is not None
+                else self.instance.date
+            )
+            activity = payment_schedule.activity
+            if (activity.start_date and date < activity.start_date) or (
+                activity.end_date and date > activity.end_date
+            ):
+                raise serializers.ValidationError(
+                    _(
+                        "Betalingen skal ligge inden for "
+                        "aktivitetens start- og slut-dato"
+                    )
+                )
+
         return data
 
     class Meta:

@@ -1731,9 +1731,14 @@ class PaymentSerializerTestCase(TestCase, BasicTestMixin):
             self.case_worker, self.team, self.municipality, self.district
         )
         appropriation = create_appropriation(case=case)
-
+        start_date = date.today() - timedelta(days=1)
+        end_date = date.today() + timedelta(days=1)
         activity = create_activity(
-            case=case, appropriation=appropriation, status=STATUS_EXPECTED
+            case=case,
+            appropriation=appropriation,
+            status=STATUS_EXPECTED,
+            start_date=start_date,
+            end_date=end_date,
         )
         payment_schedule = create_payment_schedule(
             activity=activity,
@@ -1757,6 +1762,16 @@ class PaymentSerializerTestCase(TestCase, BasicTestMixin):
         serializer = PaymentSerializer(data=data)
 
         self.assertTrue(serializer.is_valid())
+
+        date_outside_activity = date.today() + timedelta(days=10)
+        data["date"] = date_outside_activity
+
+        failing_serializer = PaymentSerializer(data=data)
+        self.assertFalse(failing_serializer.is_valid())
+
+        del data["date"]
+        nodate_serializer = PaymentSerializer(data=data)
+        self.assertFalse(nodate_serializer.is_valid())
 
 
 class TargetGroupSerializerTestCase(TestCase):

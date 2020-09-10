@@ -22,7 +22,7 @@
             </template>
         </div>
 
-        <div v-if="payment_plan.payment_type === 'RUNNING_PAYMENT'">
+        <div v-if="payment_plan.payment_type !== 'ONE_TIME_PAYMENT'">
             <pay-date-start :editable="false" />
             <pay-date-end :editable="false" />
         </div>
