@@ -162,24 +162,37 @@ def generate_payments_on_post_save(sender, instance, created, **kwargs):
                         activity.start_date, activity.end_date, vat_factor
                     )
                     instance.recalculate_prices()
-        elif activity.status == STATUS_EXPECTED and activity.modifies:
-            # Individual schedules - if this is an expectation and has no
-            # payments, copy all payments from the activity it modifies whose
-            # payment dates come after the expectation's start date and before
-            # its end date.
-            #
-            # When the expectation is granted, these payments (i.e., all
-            # payments after the expectation's start date) are deleted on the
-            # original activity. This is done in the activity's `grant()`
-            # function.
+        else:
+            # instance.payment_type == PaymentSchedule.INDIVIDUAL_PAYMENT
+            if activity.status == STATUS_EXPECTED and activity.modifies:
+                # Individual schedules - if this is an expectation and has no
+                # payments, copy all payments from the activity it modifies
+                # whose payment dates come after the expectation's start date
+                # and before its end date.
+                #
+                # When the expectation is granted, these payments (i.e., all
+                # payments after the expectation's start date) are deleted on
+                # the original activity. This is done in the activity's
+                # `grant()` function.
 
-            if not instance.payments.exists():
-                old_payments = activity.modifies.payment_plan.payments.all()
-                for payment in old_payments:
-                    if payment.date >= activity.start_date and (
-                        activity.end_date is None
-                        or payment.date <= activity.end_date
-                    ):
-                        payment.pk = None
-                        payment.payment_schedule = instance
-                        payment.save()
+                if not instance.payments.exists():
+                    old_payments = (
+                        activity.modifies.payment_plan.payments.all()
+                    )
+                    for payment in old_payments:
+                        if payment.date >= activity.start_date and (
+                            activity.end_date is None
+                            or payment.date <= activity.end_date
+                        ):
+                            payment.pk = None
+                            payment.payment_schedule = instance
+                            payment.save()
+            # If this is a draft or expectation, copy recipient info to
+            # payments.
+            if activity.status in [STATUS_DRAFT, STATUS_EXPECTED]:
+                instance.payments.update(
+                    recipient_type=instance.recipient_type,
+                    recipient_id=instance.recipient_id,
+                    recipient_name=instance.recipient_name,
+                    payment_method=instance.payment_method,
+                )
