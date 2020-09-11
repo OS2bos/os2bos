@@ -20,6 +20,7 @@ from core.models import (
     INTERNAL,
     MAIN_ACTIVITY,
     STATUS_EXPECTED,
+    STATUS_DRAFT,
     STATUS_GRANTED,
     STATUS_DELETED,
     PaymentSchedule,
@@ -1148,7 +1149,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             "en individuel betaling må ikke have betalingsenheder",
         )
 
-    def test_individual_payment_disallow_modifies(self):
+    def test_individual_payment_allow_modifies(self):
         activity_details = ActivityDetails.objects.create(
             max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
         )
@@ -1174,16 +1175,12 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
                 "recipient_type": "COMPANY",
             },
             "start_date": date.today(),
-            "status": "DRAFT",
+            "status": STATUS_EXPECTED,
             "modifies": activity.id,
         }
         serializer = ActivitySerializer(data=data)
 
-        self.assertFalse(serializer.is_valid())
-        self.assertEqual(
-            serializer.errors["non_field_errors"][0],
-            "en individuel betaling kan ikke være en forventet justering",
-        )
+        self.assertTrue(serializer.is_valid())
 
     def test_individual_payment_success(self):
         activity_details = ActivityDetails.objects.create(
@@ -1736,7 +1733,7 @@ class PaymentSerializerTestCase(TestCase, BasicTestMixin):
         activity = create_activity(
             case=case,
             appropriation=appropriation,
-            status=STATUS_EXPECTED,
+            status=STATUS_DRAFT,
             start_date=start_date,
             end_date=end_date,
         )
@@ -1772,6 +1769,63 @@ class PaymentSerializerTestCase(TestCase, BasicTestMixin):
         del data["date"]
         nodate_serializer = PaymentSerializer(data=data)
         self.assertFalse(nodate_serializer.is_valid())
+
+    def test_create_individual_payment_modifies(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        start_date = date.today() + timedelta(days=1)
+        end_date = date.today() + timedelta(days=10)
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            status=STATUS_GRANTED,
+            start_date=start_date,
+            end_date=end_date,
+        )
+        payment_schedule = create_payment_schedule(
+            activity=activity,
+            payment_type=PaymentSchedule.INDIVIDUAL_PAYMENT,
+            payment_frequency=None,
+            payment_amount=None,
+            payment_cost_type=None,
+        )
+
+        data = {
+            "date": start_date + timedelta(days=5),
+            "recipient_type": PaymentSchedule.INTERNAL,
+            "recipient_id": "test",
+            "recipient_name": "test",
+            "payment_method": INTERNAL,
+            "amount": Decimal("500"),
+            "payment_schedule": payment_schedule.id,
+            "paid": False,
+        }
+        serializer = PaymentSerializer(data=data)
+        self.assertTrue(serializer.is_valid())
+        serializer.save()
+
+        data["date"] = start_date + timedelta(days=1)
+        older_serializer = PaymentSerializer(data=data)
+        self.assertTrue(older_serializer.is_valid())
+        older_serializer.save()
+
+        expectation = create_activity(
+            case=case,
+            appropriation=appropriation,
+            status=STATUS_EXPECTED,
+            start_date=start_date + timedelta(days=5),
+            end_date=end_date,
+            modifies=activity,
+        )
+        payment_schedule = create_payment_schedule(
+            activity=expectation,
+            payment_type=PaymentSchedule.INDIVIDUAL_PAYMENT,
+            payment_frequency=None,
+            payment_amount=None,
+            payment_cost_type=None,
+        )
 
 
 class TargetGroupSerializerTestCase(TestCase):

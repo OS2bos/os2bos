@@ -1829,6 +1829,12 @@ class Activity(AuditModelMixin, models.Model):
                     )
             # In all cases ...
             if self.modifies:
+                # First, handle individual payments if any.
+                if payment_type == PaymentSchedule.INDIVIDUAL_PAYMENT:
+                    for p in self.modifies.payment_plan.payments.all():
+                        if p.date >= self.start_date:
+                            p.delete()
+                # Save modified activity.
                 self.modifies.save()
                 # When an expected activity that has a modifies is granted,
                 # we change the expected activitys payment_id to be that of

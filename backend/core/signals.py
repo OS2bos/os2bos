@@ -137,28 +137,49 @@ def save_payment_schedule_on_save_price(sender, instance, created, **kwargs):
 )
 def generate_payments_on_post_save(sender, instance, created, **kwargs):
     """Generate payments for activity before saving."""
-    if (
-        instance.is_ready_to_generate_payments()
-        and not instance.payment_type == PaymentSchedule.INDIVIDUAL_PAYMENT
-    ):
+    if instance.is_ready_to_generate_payments():
+
         activity = instance.activity
 
         vat_factor = activity.vat_factor
 
-        if created and not instance.payments.exists():
-            instance.generate_payments(
-                activity.start_date, activity.end_date, vat_factor
-            )
-        elif instance.payments.exists():
-            # If status is either STATUS_DRAFT or STATUS_EXPECTED we delete
-            # and regenerate payments.
-            if activity.status in [STATUS_DRAFT, STATUS_EXPECTED]:
-                instance.payments.all().delete()
+        if instance.payment_type != PaymentSchedule.INDIVIDUAL_PAYMENT:
+            # "Normal" schedules where payments can be generated.
+            if created and not instance.payments.exists():
                 instance.generate_payments(
                     activity.start_date, activity.end_date, vat_factor
                 )
-            else:
-                instance.synchronize_payments(
-                    activity.start_date, activity.end_date, vat_factor
-                )
-                instance.recalculate_prices()
+            elif instance.payments.exists():
+                # If status is either STATUS_DRAFT or STATUS_EXPECTED we delete
+                # and regenerate payments.
+                if activity.status in [STATUS_DRAFT, STATUS_EXPECTED]:
+                    instance.payments.all().delete()
+                    instance.generate_payments(
+                        activity.start_date, activity.end_date, vat_factor
+                    )
+                else:
+                    instance.synchronize_payments(
+                        activity.start_date, activity.end_date, vat_factor
+                    )
+                    instance.recalculate_prices()
+        elif activity.status == STATUS_EXPECTED and activity.modifies:
+            # Individual schedules - if this is an expectation and has no
+            # payments, copy all payments from the activity it modifies whose
+            # payment dates come after the expectation's start date and before
+            # its end date.
+            #
+            # When the expectation is granted, these payments (i.e., all
+            # payments after the expectation's start date) are deleted on the
+            # original activity. This is done in the activity's `grant()`
+            # function.
+
+            if not instance.payments.exists():
+                old_payments = activity.modifies.payment_plan.payments.all()
+                for payment in old_payments:
+                    if payment.date >= activity.start_date and (
+                        activity.end_date is None
+                        or payment.date <= activity.end_date
+                    ):
+                        payment.pk = None
+                        payment.payment_schedule = instance
+                        payment.save()
