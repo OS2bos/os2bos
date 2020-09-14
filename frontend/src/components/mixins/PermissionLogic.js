@@ -71,7 +71,7 @@ export default {
             if (payment.activity__status === 'GRANTED') {
                 if (this.user.profile === 'workflow_engine' || this.user.profile === 'admin') {
                     return true
-                } else if (payment.is_payable_manually && !payment.paid && this.user.profile !== 'readonly') {
+                } else if (payment.is_payable_manually && !payment.paid && this.user.profile !== 'readonly' && payment.payment_method !== 'SD' && payment.payment_method !== 'CASH') {
                     return true
                 } else {
                     return false
