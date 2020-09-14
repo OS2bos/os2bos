@@ -8,7 +8,14 @@
 
 from rest_framework import permissions
 
-from core.models import User, PaymentSchedule, STATUS_DRAFT, STATUS_EXPECTED
+from core.models import (
+    User,
+    PaymentSchedule,
+    STATUS_DRAFT,
+    STATUS_EXPECTED,
+    SD,
+    CASH,
+)
 
 
 class IsUserAllowed(permissions.BasePermission):
@@ -62,5 +69,27 @@ class DeletePaymentPermission(permissions.BasePermission):
         if request.method == "DELETE":
             activity = obj.payment_schedule.activity
             return activity.status in [STATUS_EXPECTED, STATUS_DRAFT]
+        else:
+            return True
+
+
+class EditPaymentPermission(permissions.BasePermission):
+    """Check if this payment may be edited by the current user."""
+
+    def has_object_permission(self, request, view, obj):
+        """Check that this user is allowed to apply these changes."""
+        if request.method in ["PUT", "PATCH"]:
+            profile = request.user.profile
+            is_admin = profile in [User.WORKFLOW_ENGINE, User.ADMIN]
+            is_individual_draft = (
+                obj.payment_schedule.payment_type
+                == PaymentSchedule.INDIVIDUAL_PAYMENT
+                and obj.payment_schedule.activity.status
+                in [STATUS_EXPECTED, STATUS_DRAFT]
+            )
+            non_admins_allowed = not (
+                obj.paid or obj.payment_method in [CASH, SD]
+            )
+            return is_individual_draft or (is_admin or non_admins_allowed)
         else:
             return True
