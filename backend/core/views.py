@@ -93,6 +93,7 @@ from core.permissions import (
     IsUserAllowed,
     NewPaymentPermission,
     DeletePaymentPermission,
+    EditPaymentPermission,
 )
 
 
@@ -309,8 +310,9 @@ class PaymentViewSet(AuditViewSet):
     queryset = Payment.objects.all()
     pagination_class = PageNumberPagination
     permission_classes = (
-        NewPaymentPermission,
+        EditPaymentPermission,
         DeletePaymentPermission,
+        NewPaymentPermission,
     )
 
     filterset_class = PaymentFilter

@@ -26,6 +26,7 @@ from core.models import (
     STATUS_GRANTED,
     STATUS_DRAFT,
     STATUS_EXPECTED,
+    INTERNAL,
 )
 
 from core.tests.testing_utils import (
@@ -1055,8 +1056,11 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
             start_date=date(year=now.year, month=1, day=1),
             end_date=date(year=now.year, month=1, day=1),
         )
-        create_payment_schedule(activity=activity)
-
+        create_payment_schedule(
+            activity=activity,
+            payment_method=INTERNAL,
+            recipient_type=PaymentSchedule.INTERNAL,
+        )
         url = reverse("payment-list")
         self.client.login(username=self.username, password=self.password)
         response = self.client.get(url)

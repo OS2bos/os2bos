@@ -80,10 +80,16 @@ class EditPaymentPermission(permissions.BasePermission):
         """Check that this user is allowed to apply these changes."""
         if request.method in ["PUT", "PATCH"]:
             profile = request.user.profile
-            return not (
-                profile == User.EDIT
-                and obj.payment_method in [CASH, SD]
-                and obj.payment_type != PaymentSchedule.INDIVIDUAL_PAYMENT
+            is_admin = profile in [User.WORKFLOW_ENGINE, User.ADMIN]
+            is_individual_draft = (
+                obj.payment_schedule.payment_type
+                == PaymentSchedule.INDIVIDUAL_PAYMENT
+                and obj.payment_schedule.activity.status
+                in [STATUS_EXPECTED, STATUS_DRAFT]
             )
+            non_admins_allowed = not (
+                obj.paid or obj.payment_method in [CASH, SD]
+            )
+            return is_individual_draft or (is_admin or non_admins_allowed)
         else:
             return True
