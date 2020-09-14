@@ -47,12 +47,8 @@ function sanitizeActivity(activity, request_mode) {
     if (PermissionLogic.methods.is_individual_payment_type(new_act.payment_plan)) {
         delete new_act.payment_plan.payment_day_of_month // Individual payment plan can't have payment day of month
 
-        if (new_act.payment_plan.recipient_type === 'INTERNAL' && !new_act.payment_plan.recipient_id) { // If no recipient ID is supplied, make one up using ID derived from recipient's name
-            const internal_recipients = store.state.payment.internal_payment_recipients
-            const internal_recipient = internal_recipients.find(function(recip) {
-                return recip.name === new_act.payment_plan.recipient_name
-            })
-            new_act.payment_plan.recipient_id = "NUL_REFERENCE_" + internal_recipient.id
+        if (new_act.payment_plan.recipient_type === 'INTERNAL' && !new_act.payment_plan.recipient_id) {
+            new_act.payment_plan.recipient_id = "Ikke udfyldt" // If no recipient ID is supplied, set recipient_id to not filled
         }
     }
 
