@@ -940,7 +940,7 @@ class Payment(models.Model):
             self.payment_method, self.recipient_type
         ):
             raise ValueError(
-                _("ugyldig betalingsmetode for betalingsmodtager")
+                _("Ugyldig betalingsmetode for betalingsmodtager")
             )
 
         paid_fields = (
@@ -950,7 +950,7 @@ class Payment(models.Model):
         )
         if any(paid_fields) and not all(paid_fields):
             raise ValueError(
-                _("ved en betalt betaling skal alle betalingsfelter sættes")
+                _("Ved en betalt betaling skal alle betalingsfelter sættes")
             )
 
         if self.paid and not self.payment_schedule.can_be_paid:
