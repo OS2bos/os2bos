@@ -14,6 +14,8 @@ from freezegun import freeze_time
 from django.test import TestCase
 from django.utils import timezone
 
+from rest_framework import serializers
+
 from core.models import (
     ActivityDetails,
     CASH,
@@ -1666,6 +1668,27 @@ class PaymentSerializerTestCase(TestCase, BasicTestMixin):
             "Denne betaling må ikke markeres betalt manuelt",
             serializer.errors["non_field_errors"][0],
         )
+
+    def test_validate_two_payments_same_date_not_allowed(self):
+        payment_schedule = create_payment_schedule(
+            payment_method=CASH, recipient_type=PaymentSchedule.PERSON
+        )
+        payment = create_payment(
+            payment_schedule,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+        )
+        data = PaymentSerializer(payment).data
+        del data["id"]
+        serializer = PaymentSerializer(data=data)
+        self.assertTrue(serializer.is_valid())
+        try:
+            serializer.save()
+        except serializers.ValidationError as e:
+            self.assertEqual(
+                "En ydelse kan kun have én betaling på en given dato",
+                str(e.get_full_details()[0]["message"]),
+            )
 
     def test_validate_error_paid_not_allowed_fictive(self):
         payment_schedule = create_payment_schedule(
