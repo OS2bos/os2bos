@@ -13,7 +13,7 @@ from dateutil import rrule
 import portion as P
 
 from django import forms
-from django.db import models, transaction
+from django.db import models, transaction, IntegrityError
 from django.db.models import Q, F
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
@@ -965,7 +965,12 @@ class Payment(models.Model):
         if not self.paid:
             self.skip_history_when_saving = True
 
-        super().save(*args, **kwargs)
+        try:
+            super().save(*args, **kwargs)
+        except IntegrityError:
+            raise ValueError(
+                _("En ydelse kan kun have én betaling på en given dato")
+            )
 
         if hasattr(self, "skip_history_when_saving"):
             del self.skip_history_when_saving
