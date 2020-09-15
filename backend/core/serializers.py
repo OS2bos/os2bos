@@ -211,6 +211,13 @@ class PaymentSerializer(serializers.ModelSerializer):
 
         return data
 
+    def save(self):
+        """Save instance, catch and sanitize ValidationError."""
+        try:
+            super().save()
+        except ValueError as e:
+            raise serializers.ValidationError(str(e))
+
     class Meta:
         model = Payment
         exclude = ("saved_account_string", "saved_account_alias")
