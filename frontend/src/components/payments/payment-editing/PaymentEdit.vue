@@ -281,6 +281,7 @@
                 this.$refs[input_id].addEventListener('focus', this.focusHandler)
                 this.$refs[input_id].addEventListener('blur', this.blurHandler)
             }
+            this.$store.commit('clearErrors')
         }
     }
 
