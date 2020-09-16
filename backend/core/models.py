@@ -590,7 +590,7 @@ class PaymentSchedule(models.Model):
         default=FIXED_PRICE,
         choices=payment_cost_choices,
         null=True,
-        blank=True,
+        blank=False,
     )
 
     payment_rate = models.ForeignKey(

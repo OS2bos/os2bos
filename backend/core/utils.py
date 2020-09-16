@@ -718,6 +718,18 @@ def generate_payments_report_list(payments):
             effort_step = case.effort_step
             scaling_step = case.scaling_step
 
+        price_per_unit = (
+            payment_schedule.price_per_unit.get_rate_amount(payment.date)
+            if payment_schedule.payment_cost_type
+            == payment_schedule.PER_UNIT_PRICE
+            else (
+                payment_schedule.payment_rate.get_rate_amount(payment.date)
+                if payment_schedule.payment_cost_type
+                == payment_schedule.GLOBAL_RATE_PRICE
+                else ""
+            )
+        )
+
         payment_dict = {
             # payment specific.
             "id": payment.pk,
@@ -737,6 +749,9 @@ def generate_payments_report_list(payments):
             "recipient_id": payment_schedule.recipient_id,
             "recipient_name": payment_schedule.recipient_name,
             "payment_method": payment_schedule.payment_method,
+            "payment_cost_type": payment_schedule.payment_cost_type,
+            "price_per_unit": price_per_unit,
+            "units": payment_schedule.payment_units,
             # activity specific.
             "activity__details__activity_id": activity.details.activity_id,
             "activity__details__name": activity.details.name,
@@ -756,6 +771,7 @@ def generate_payments_report_list(payments):
             "case_worker": str(case.case_worker),
             "team": str(case.team) if case.team else None,
             "leader": str(case.team.leader) if case.team else None,
+            "efforts": ",".join([e.name for e in case.efforts.all()]),
             "effort_step": str(effort_step),
             "scaling_step": str(scaling_step),
             "paying_municipality": str(case.paying_municipality),
