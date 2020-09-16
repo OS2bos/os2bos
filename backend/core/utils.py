@@ -718,22 +718,17 @@ def generate_payments_report_list(payments):
             effort_step = case.effort_step
             scaling_step = case.scaling_step
 
-        if (
-            payment_schedule.payment_cost_type
+        price_per_unit = (
+            payment_schedule.price_per_unit.get_rate_amount(payment.date)
+            if payment_schedule.payment_cost_type
             == payment_schedule.PER_UNIT_PRICE
-        ):
-            price_per_unit = payment_schedule.price_per_unit.get_rate_amount(
-                payment.date
+            else (
+                payment_schedule.payment_rate.get_rate_amount(payment.date)
+                if payment_schedule.payment_cost_type
+                == payment_schedule.GLOBAL_RATE_PRICE
+                else ""
             )
-        elif (
-            payment_schedule.payment_cost_type
-            == payment_schedule.GLOBAL_RATE_PRICE
-        ):
-            price_per_unit = payment_schedule.payment_rate.get_rate_amount(
-                payment.date
-            )
-        else:
-            price_per_unit = ""
+        )
 
         payment_dict = {
             # payment specific.
