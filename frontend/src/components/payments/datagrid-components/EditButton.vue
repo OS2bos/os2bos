@@ -24,7 +24,6 @@ export default {
         PaymentEditDiag
     },
     props: [
-        'rowid',
         'compdata'
     ],
     data: function() {

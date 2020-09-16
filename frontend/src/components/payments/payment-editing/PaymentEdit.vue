@@ -215,10 +215,6 @@
             displayDigits: function(num) {
                 return cost2da(num)
             },
-            update: function() {
-                this.$store.dispatch('fetchPayment', this.p.id)
-                this.$store.dispatch('fetchPaymentPlan', this.p.payment_schedule)
-            },
             pay: function() {
                 let data = {
                     paid_amount: this.paid.paid_amount,
@@ -246,13 +242,15 @@
             patchPayment: function(data) {
                 axios.patch(`/payments/${ this.payment.id }/`, data)
                     .then(res => {
+                        this.$store.dispatch('fetchPayment', this.p.id)
                         this.closeDiag()
-                        this.update()
                         notify('Betaling registreret', 'success')
                     })
                     .catch(err => this.$store.dispatch('parseErrorOutput', err))
             },
             closeDiag: function() {
+                this.$store.dispatch('fetchPaymentPlan', this.p.payment_schedule)
+                this.$store.commit('clearErrors')
                 this.$emit('closedialog')
             },
             navToLink: function(path) {
@@ -263,7 +261,6 @@
                 axios.delete(`/payments/${ this.p.id }/`)
                 .then(res => {
                     this.closeDiag()
-                    this.$store.dispatch('fetchPaymentPlan', this.p.payment_schedule)
                     notify('Betaling slettet', 'success')                    
                 })
                 .catch(err => this.$store.dispatch('parseErrorOutput', err))
@@ -281,7 +278,6 @@
                 this.$refs[input_id].addEventListener('focus', this.focusHandler)
                 this.$refs[input_id].addEventListener('blur', this.blurHandler)
             }
-            this.$store.commit('clearErrors')
         }
     }
 

@@ -45,8 +45,6 @@
             </p>
 
         </data-grid>        
-
-        <payment-edit-modal v-if="pay_edit_diag_open" @closedialog="pay_create_diag_open = false" @paymentsaved="update" :plan="payment_plan" />
         
         <table v-if="payments_by_year.length > 0" class="payments-sum">
             <thead>
@@ -74,7 +72,6 @@
     import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
     import { activityId2name, displayPayMethod } from '../filters/Labels.js'
-    import PaymentEditModal from './payment-editing/PaymentEdit.vue'
     import PaymentCreateModal from './payment-editing/PaymentCreate.vue'
     import PermissionLogic from '../mixins/PermissionLogic.js'
     import DataGrid from '../datagrid/DataGrid.vue'
@@ -87,7 +84,6 @@
     export default {
 
         components: {
-            PaymentEditModal,
             PaymentCreateModal,
             DataGrid,
             SaveButton,
@@ -108,7 +104,6 @@
                 years: [],
                 current_year: null,
                 pay_create_diag_open: false,
-                pay_edit_diag_open: false,
                 columns: [
                     {
                         key: 'paid',

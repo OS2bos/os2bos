@@ -61,6 +61,7 @@ export default {
     methods: {
         closeDiag: function() {
             this.$emit('closedialog')
+            this.$store.commit('clearErrors')
         },
         savePayment: function() {
             
@@ -84,9 +85,3 @@ export default {
     
 }
 </script>
-
-<style>
-    .payment-create {
-
-    }
-</style>
