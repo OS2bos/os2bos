@@ -35,6 +35,7 @@ const testdata = {
     act1: {
         details__name: 'Kvindekrisecentre',
         payment_type: 'INDIVIDUAL_PAYMENT',
+        start_date: strday1,
         recipient_type: 'COMPANY',
         recipient_name: 'Base Camp'
     },
