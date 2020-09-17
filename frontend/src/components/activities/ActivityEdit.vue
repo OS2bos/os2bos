@@ -70,7 +70,7 @@
                     <template v-if="payment_plan.payment_cost_type === 'PER_UNIT'">
                         <payment-units :editable="is_editable" />
                         <cost-type-per-unit-display />
-                        <per-unit-history />
+                        <per-unit-history :editable="is_editable"/>
                     </template>
                 </div>
 

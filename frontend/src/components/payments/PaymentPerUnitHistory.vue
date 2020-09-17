@@ -37,7 +37,7 @@
                         </tbody>
                     </table>
 
-                    <fieldset>
+                    <fieldset v-if="editable === true">
                         <div>
                             <label class="required" for="pay-cost-pr-unit">Ny enhedspris</label>
                             <input type="number" id="pay-cost-pr-unit" required step="0.01" v-model="new_price"> kr
@@ -56,10 +56,12 @@
                     </fieldset>
                 </div>
                 <div slot="footer">
-                    <input type="submit" value="Gem">
-                    <button type="button" @click="cancelDialog">
-                        Annullér
-                    </button>
+                    <template v-if="editable === true">
+                        <input type="submit" value="Gem">
+                        <button type="button" @click="cancelDialog">
+                            Annullér
+                        </button>
+                    </template>
                 </div>
             </modal-dialog>
         </form>
@@ -80,6 +82,9 @@ export default {
         ModalDialog,
         Error
     },
+    props: [
+        'editable'
+    ],
     data: function() {
         return {
             modal_open: false,
