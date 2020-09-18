@@ -45,7 +45,9 @@ export default {
         can_edit_payment: function() {
             if (this.$store.state.payment.payment_plan.payment_type === 'INDIVIDUAL_PAYMENT' && this.current_act.status !== 'GRANTED' && this.user.profile !== 'readonly') {
                 return true
-            } else if (this.user.profile === 'workflow_engine' || this.user.profile === 'admin' && this.current_act.status !== 'GRANTED') {
+            } else if (this.user.profile === 'workflow_engine' && this.current_act.status !== 'GRANTED') {
+                return true  
+            } else if (this.user.profile === 'admin' && this.current_act.status !== 'GRANTED') {
                 return true  
             } else {
                 return false
