@@ -233,6 +233,7 @@ class PaymentSerializer(serializers.ModelSerializer):
             super().save()
         except ValueError as e:
             raise serializers.ValidationError(str(e))
+        return self.instance
 
     class Meta:
         model = Payment

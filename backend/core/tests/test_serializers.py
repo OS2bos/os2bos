@@ -1850,6 +1850,47 @@ class PaymentSerializerTestCase(TestCase, BasicTestMixin):
             payment_cost_type=None,
         )
 
+    def test_edit_granted_payment_not_allowed(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        start_date = date.today() + timedelta(days=1)
+        end_date = date.today() + timedelta(days=10)
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            status=STATUS_GRANTED,
+            start_date=start_date,
+            end_date=end_date,
+        )
+        payment_schedule = create_payment_schedule(
+            activity=activity,
+            payment_type=PaymentSchedule.INDIVIDUAL_PAYMENT,
+            payment_frequency=None,
+            payment_amount=None,
+            payment_cost_type=None,
+        )
+
+        data = {
+            "date": start_date + timedelta(days=5),
+            "recipient_type": PaymentSchedule.INTERNAL,
+            "recipient_id": "test",
+            "recipient_name": "test",
+            "payment_method": INTERNAL,
+            "amount": Decimal("500"),
+            "payment_schedule": payment_schedule.id,
+            "paid": False,
+        }
+        serializer = PaymentSerializer(data=data)
+        self.assertTrue(serializer.is_valid())
+        payment = serializer.save()
+        data["amount"] = Decimal(600)
+        serializer = PaymentSerializer(payment, data=data)
+        # You're not allowed to do change the amount of a granted
+        # payment.
+        self.assertFalse(serializer.is_valid())
+
 
 class TargetGroupSerializerTestCase(TestCase):
     def test_to_representation(self):
