@@ -42,6 +42,7 @@ from core.models import (
     STATUS_DELETED,
     STATUS_DRAFT,
     STATUS_EXPECTED,
+    STATUS_GRANTED,
 )
 from core.utils import create_rrule
 
@@ -208,6 +209,21 @@ class PaymentSerializer(serializers.ModelSerializer):
                         "aktivitetens start- og slut-dato"
                     )
                 )
+
+        # If this payment's activity has been granted, it may
+        # not* be changed.
+        if (
+            (self.instance and self.instance.pk)
+            and self.instance.payment_schedule.activity.status
+            == STATUS_GRANTED
+            and (
+                ("amount" in data and data["amount"] != self.instance.amount)
+                or ("date" in data and data["date"] != self.instance.date)
+            )
+        ):
+            raise serializers.ValidationError(
+                _("Dato eller beløb må ikke ændres på en godkendt betaling")
+            )
 
         return data
 
