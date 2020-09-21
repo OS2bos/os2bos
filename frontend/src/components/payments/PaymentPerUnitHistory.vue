@@ -8,7 +8,10 @@
 <template>
 
     <div class="prices-history" v-if="prices">
-        <button type="button" @click="modal_open = !modal_open">Se priser</button>
+        <button type="button" @click="modal_open = !modal_open">
+            <span v-if="editable">Redigér priser</span>
+            <span v-else>Se priser</span>
+        </button>
 
         <form @submit.prevent="saveNewPrice" class="modal-form">
             <modal-dialog v-if="modal_open" @closedialog="cancelDialog">
@@ -22,7 +25,7 @@
                                 <th>Pris</th>
                                 <th>Gælder fra</th>
                                 <th>Gælder til</th>
-                                <th>Sagsbehandler</th>
+                                <th>Ændret af</th>
                                 <th>Senest ændret</th>
                             </tr>
                         </thead>
@@ -62,6 +65,9 @@
                             Annullér
                         </button>
                     </template>
+                    <button v-else type="button" @click="cancelDialog">
+                        Luk
+                    </button>
                 </div>
             </modal-dialog>
         </form>
@@ -82,9 +88,12 @@ export default {
         ModalDialog,
         Error
     },
-    props: [
-        'editable'
-    ],
+    props: {
+        editable: {
+            type: Boolean,
+            default: false
+        }
+    },
     data: function() {
         return {
             modal_open: false,
