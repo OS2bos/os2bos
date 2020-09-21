@@ -29,7 +29,7 @@
         <template v-if="model">
             <dt>Ydelse</dt>
             <dd>
-                <p><strong v-html="act2name(model)"></strong></p>
+                <p class="word-break"><strong v-html="act2name(model)"></strong></p>
                 <p>{{ act2description(model) }}</p>
             </dd>
         </template>
@@ -121,3 +121,11 @@ export default {
     }
 }
 </script>
+
+<style>
+
+    .word-break {
+        word-break: break-word;
+    }
+
+</style>
