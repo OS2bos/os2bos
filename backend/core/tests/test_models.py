@@ -2980,6 +2980,20 @@ class PaymentScheduleTestCase(TestCase, BasicTestMixin):
 
         self.assertEqual(amount, expected)
 
+    def test_calculate_per_payment_amount_no_activity(self):
+        payment_type = PaymentSchedule.INDIVIDUAL_PAYMENT
+        payment_frequency = PaymentSchedule.DAILY
+        payment_units = 5
+
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal(0),
+            payment_type=payment_type,
+            payment_frequency=payment_frequency,
+            payment_units=payment_units,
+        )
+        payment_schedule.activity = None
+        self.assertEqual(payment_schedule.per_payment_amount, Decimal("0"))
+
     def test_calculate_per_payment_amount_for_perunit_price(self):
         payment_type = PaymentSchedule.RUNNING_PAYMENT
         payment_frequency = PaymentSchedule.DAILY
