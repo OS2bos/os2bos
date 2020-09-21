@@ -1795,7 +1795,15 @@ class Activity(AuditModelMixin, models.Model):
         self.approval_level = approval_level
         self.approval_note = approval_note
         self.approval_user = approval_user
-
+        # Don't approve an activity without any payments.
+        if (
+            hasattr(self, "payment_plan")
+            and self.payment_plan.payments.count() == 0
+            and self.status != STATUS_GRANTED
+        ):
+            raise RuntimeError(
+                _("Du kan ikke godkende en ydelse uden nogen betalinger")
+            )
         if self.status == STATUS_GRANTED:
             # Re-granting - nothing more to do.
             pass
@@ -1832,7 +1840,6 @@ class Activity(AuditModelMixin, models.Model):
                     self.modifies.end_date = self.start_date - timedelta(
                         days=1
                     )
-            # In all cases ...
             if self.modifies:
                 # First, handle individual payments if any.
                 if payment_type == PaymentSchedule.INDIVIDUAL_PAYMENT:

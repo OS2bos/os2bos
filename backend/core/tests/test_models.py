@@ -1276,9 +1276,9 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         expected_activity = create_activity(
             case,
             appropriation,
-            payment_plan=payment_schedule,
+            payment_plan=create_payment_schedule(),
             start_date=date.today() + timedelta(days=1),
-            end_date=date.today() + timedelta(days=5),
+            end_date=date.today() + timedelta(days=30),
             status=STATUS_EXPECTED,
             modifies=activity,
         )
@@ -1291,13 +1291,10 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             expected_activity.payment_plan.id,
         )
 
-        # Grant the expected modifies activity, payment_id should now
-        # correspond to the original payment_id.
-        expected_activity.grant(approval_level, "note", user)
-        self.assertEqual(
-            activity.payment_plan.payment_id,
-            expected_activity.payment_plan.payment_id,
-        )
+        # Grant the expected modified activity.
+        # This is not allowed as there are no payments on it.
+        with self.assertRaises(RuntimeError):
+            expected_activity.grant(approval_level, "note", user)
 
     def test_regenerate_payments_on_draft_save(self):
         case = create_case(
@@ -2982,6 +2979,20 @@ class PaymentScheduleTestCase(TestCase, BasicTestMixin):
         )
 
         self.assertEqual(amount, expected)
+
+    def test_calculate_per_payment_amount_no_activity(self):
+        payment_type = PaymentSchedule.INDIVIDUAL_PAYMENT
+        payment_frequency = PaymentSchedule.DAILY
+        payment_units = 5
+
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal(0),
+            payment_type=payment_type,
+            payment_frequency=payment_frequency,
+            payment_units=payment_units,
+        )
+        payment_schedule.activity = None
+        self.assertEqual(payment_schedule.per_payment_amount, Decimal("0"))
 
     def test_calculate_per_payment_amount_for_perunit_price(self):
         payment_type = PaymentSchedule.RUNNING_PAYMENT
