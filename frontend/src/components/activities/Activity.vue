@@ -81,7 +81,7 @@
             </form>
         </div>
         
-        <payment-schedule :p-id="payment_plan.payment_id" />
+        <payment-schedule :p-id="payment_plan.payment_id" :edit_mode="edit_mode"/>
         
     </section>
 
