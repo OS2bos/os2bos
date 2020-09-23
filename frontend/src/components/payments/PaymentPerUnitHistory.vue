@@ -9,7 +9,7 @@
 
     <div class="prices-history" v-if="prices">
         <button type="button" @click="modal_open = !modal_open">
-            <span v-if="editable">Redigér priser</span>
+            <span v-if="can_edit_price">Redigér priser</span>
             <span v-else>Se priser</span>
         </button>
 
@@ -40,7 +40,7 @@
                         </tbody>
                     </table>
 
-                    <fieldset v-if="editable === true">
+                    <fieldset v-if="can_edit_price">
                         <div>
                             <label class="required" for="pay-cost-pr-unit">Ny enhedspris</label>
                             <input type="number" id="pay-cost-pr-unit" required step="0.01" v-model="new_price"> kr
@@ -59,7 +59,7 @@
                     </fieldset>
                 </div>
                 <div slot="footer">
-                    <template v-if="editable === true">
+                    <template v-if="can_edit_price">
                         <input type="submit" value="Gem">
                         <button type="button" @click="cancelDialog">
                             Annullér
@@ -82,12 +82,16 @@ import { cost2da } from '../filters/Numbers.js'
 import { userId2name } from '../filters/Labels.js'
 import Error from '../forms/Error.vue'
 import axios from '../http/Http.js'
+import PermissionLogic from '../mixins/PermissionLogic.js'
 
 export default {
     components: {
         ModalDialog,
         Error
     },
+    mixins: [
+        PermissionLogic
+    ],
     props: {
         editable: {
             type: Boolean,

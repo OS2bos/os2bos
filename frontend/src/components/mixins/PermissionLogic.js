@@ -59,6 +59,13 @@ export default {
             } else {
                 return false
             }
+        },
+        can_edit_price: function() {
+            if (this.$store.state.payment.payment_plan.payment_type === 'RUNNING_PAYMENT' && this.user.profile !== 'readonly') {
+                return true
+            } else {
+                return false
+            }
         }
     },
     methods: {
