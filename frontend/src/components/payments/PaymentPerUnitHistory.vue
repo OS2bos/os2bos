@@ -8,7 +8,10 @@
 <template>
 
     <div class="prices-history" v-if="prices">
-        <button type="button" @click="modal_open = !modal_open">Se priser</button>
+        <button type="button" @click="modal_open = !modal_open">
+            <span v-if="can_edit_price">Redigér priser</span>
+            <span v-else>Se priser</span>
+        </button>
 
         <form @submit.prevent="saveNewPrice" class="modal-form">
             <modal-dialog v-if="modal_open" @closedialog="cancelDialog">
@@ -22,7 +25,7 @@
                                 <th>Pris</th>
                                 <th>Gælder fra</th>
                                 <th>Gælder til</th>
-                                <th>Sagsbehandler</th>
+                                <th>Ændret af</th>
                                 <th>Senest ændret</th>
                             </tr>
                         </thead>
@@ -37,7 +40,7 @@
                         </tbody>
                     </table>
 
-                    <fieldset>
+                    <fieldset v-if="can_edit_price">
                         <div>
                             <label class="required" for="pay-cost-pr-unit">Ny enhedspris</label>
                             <input type="number" id="pay-cost-pr-unit" required step="0.01" v-model="new_price"> kr
@@ -56,9 +59,14 @@
                     </fieldset>
                 </div>
                 <div slot="footer">
-                    <input type="submit" value="Gem">
-                    <button type="button" @click="cancelDialog">
-                        Annullér
+                    <template v-if="can_edit_price">
+                        <input type="submit" value="Gem">
+                        <button type="button" @click="cancelDialog">
+                            Annullér
+                        </button>
+                    </template>
+                    <button v-else type="button" @click="cancelDialog">
+                        Luk
                     </button>
                 </div>
             </modal-dialog>
@@ -74,11 +82,21 @@ import { cost2da } from '../filters/Numbers.js'
 import { userId2name } from '../filters/Labels.js'
 import Error from '../forms/Error.vue'
 import axios from '../http/Http.js'
+import PermissionLogic from '../mixins/PermissionLogic.js'
 
 export default {
     components: {
         ModalDialog,
         Error
+    },
+    mixins: [
+        PermissionLogic
+    ],
+    props: {
+        editable: {
+            type: Boolean,
+            default: false
+        }
     },
     data: function() {
         return {

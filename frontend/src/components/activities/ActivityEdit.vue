@@ -70,7 +70,7 @@
                     <template v-if="payment_plan.payment_cost_type === 'PER_UNIT'">
                         <payment-units :editable="is_editable" />
                         <cost-type-per-unit-display />
-                        <per-unit-history />
+                        <per-unit-history :editable="is_editable"/>
                     </template>
                 </div>
 
@@ -126,7 +126,6 @@ import { json2jsDate } from '../filters/Date.js'
 import { userId2name, approvalId2name } from '../filters/Labels.js'
 import notify from '../notifications/Notify.js'
 import PaymentInternalReceiver from '../payments/edittypes/PaymentInternalReceiverName.vue'
-import PerUnitHistory from '../payments/PaymentPerUnitHistory.vue'
 import PaymentUnits from '../payments/edittypes/PaymentUnits.vue'
 import { sanitizeActivity } from './ActivitySave.js'
 import PermissionLogic from '../mixins/PermissionLogic.js'
@@ -142,7 +141,6 @@ export default {
         PaymentServiceProvider,
         CprLookUp,
         PaymentInternalReceiver,
-        PerUnitHistory,
         PaymentUnits
     },
     computed: {
