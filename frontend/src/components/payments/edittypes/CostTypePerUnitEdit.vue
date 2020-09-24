@@ -16,13 +16,13 @@
                 <input type="number" id="pay-cost-pr-unit" v-model="amount" required step="0.01"> kr
             </fieldset>
 
-            <fieldset>
+            <fieldset v-if="create">
                 <label for="pay-cost-exec-date" class="required">Pris gælder fra dato</label>
                 <input 
                     type="date" 
                     id="pay-cost-exec-date" 
                     v-model="start_date" 
-                    :min="today"
+                    :min="act.start_date"
                     required>
                 
                 <error :err-key="property" />
@@ -47,12 +47,16 @@ export default {
     mixins: [
         mixin
     ],
-    data: function() {
-        return {
-            today: epoch2DateStr(new Date())
+    props: {
+        create: {
+            type: Boolean,
+            default: false
         }
     },
     computed: {
+        act: function() {
+            return this.$store.getters.getActivity
+        },
         amount: {
             get: function() {
                 if (this.model) {
@@ -64,7 +68,7 @@ export default {
                 if (this.model === null) {
                     this.model = {
                         amount: new_val,
-                        start_date: this.today
+                        start_date: this.act.start_date
                     }
                 } else {
                     this.model.amount = new_val
@@ -78,16 +82,16 @@ export default {
             get: function() {
                 if (this.model) {
                     let mdl = this.model
-                    return mdl.start_date ? mdl.start_date : this.today
-                } else {
-                    return this.today
+                    return mdl.start_date ? mdl.start_date : this.act.start_date
+                }  else {
+                    return this.act.start_date
                 }
             },
             set: function(new_val) {
-                if (this.model === null) {
+               if (this.model === null) {
                     this.model = {
                         amount: null,
-                        start_date: new_val
+                        start_date: this.act.start_date
                     }
                 } else {
                     this.model.start_date = new_val
