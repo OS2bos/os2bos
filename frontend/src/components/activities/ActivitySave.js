@@ -1,10 +1,7 @@
-import { epoch2DateStr } from '../filters/Date.js'
 import PermissionLogic from '../mixins/PermissionLogic.js'
 import store from '../../store.js'
 
 function sanitizeActivity(activity, request_mode) {
-    
-    const today = epoch2DateStr(new Date())
     
     let new_act = activity
 
@@ -17,7 +14,7 @@ function sanitizeActivity(activity, request_mode) {
                     new_act.payment_plan.price_per_unit.amount = new_act.payment_plan.price_per_unit.current_amount
                 }
                 if (!new_act.payment_plan.price_per_unit.start_date) {
-                    new_act.payment_plan.price_per_unit.start_date = today
+                    new_act.payment_plan.price_per_unit.start_date = new_act.start_date
                 }
             }
         break
