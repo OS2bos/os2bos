@@ -134,7 +134,11 @@ export default {
             return cost2da(num)
         },
         displayUserName: function(id) {
-            return userId2name(id)
+            if (id) {
+                return userId2name(id)
+            } else {
+                return '-'
+            }
         },
         cancelDialog: function() {
             this.modal_open = !this.modal_open
