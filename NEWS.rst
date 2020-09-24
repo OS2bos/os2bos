@@ -1,3 +1,99 @@
+Version 3.2.0, 2020-09-24
+-------------------------
+
+New in this version:
+
+Bug fixes
+^^^^^^^^^
+
+- Don't send payment emails to internal recipients.
+- Allow payments of 0 kroner.
+- One time payment activities should not have main acticity end date
+  set when granting.
+- Proper data cleanup in GUI when user changes payment method or type.
+- Allow display of Prices with no start date.
+- Don't allow individual payments outside of main activity's period.
+- Layout/hyphenation issue fixed.
+
+Features
+^^^^^^^^
+
+- Individual payment plans.
+- Stop using Postgres-specific DB field for "required fields for target
+  group".
+- Python packages are upgraded to include the latest security fixes.
+- Warn users that future changes to SD and Cash payments will be
+  overwritten.
+- Allow relevant users to edit payments of type Cash and SD Løn.
+- Only allow creation of new payments for individual payment plan and
+  only on drafts or expectations.
+- UX for Activity creation updated - user goes to the activity in read
+  only mode after creating, not to the appropriation.
+- Account alias and account string are shown in the same column.
+- Delete button is not shown for granted payments and deleting granted
+  payments is prevented by the backend.
+- Appropriation PDF is updated to include individual payments.
+- Audit information, responsible user and time stamp is added to rates
+  and prices.
+- Price history in fronted is updated to include audit fields.
+- Payment per kilometer etc. are cleaned up and replaced by "running payment"
+  in the database.
+- Handle expectations for activities with individual payment plan.
+- Update recipient on future payments when saving drafts and
+  expectations.
+- Backend restrictions on editing payments: Admin and workflow users
+  can edit SD or Cash - other users can only mark non-paid payments (of
+  the other types) as paid. Nobody can edit the amount of granted
+  payments.
+- CSV export files are modified to support the changes introduced in
+  Phase 3.
+- PRISME export will output to files, one with account alias, one
+  without.
+- Don't allow granting an activity with no payments.
+- Don't allow user to add new payments if activity is in edit mode.
+
+
+
+
+Version 3.1.1, 2020-08-31
+-------------------------
+
+New in this version:
+
+Bug fixes
+^^^^^^^^^
+- Fix instance of prices being displayed with non-Danish decimal separator.
+- Approximate payment calculator now uses current rate if rates are
+  used.
+- Enable input field validation in browser when creating activities.
+- Updates list of service providers in UI based on current activity detail.
+- Include global rate and price per unit information in payment email
+  and PDF.
+
+Version 3.1.0, 2020-07-09
+-------------------------
+
+New in this version:
+
+Features
+^^^^^^^^
+- Add Prices and Rates.
+- Add counts for draft, expected and ongoing activities.
+- Don't send activity emails for one time payments.
+- Prism payments account for holidays and weekends with PaymentDateExclusions.
+- Main account refactoring, use new account string and remove old Account model.
+- Emphasize new activities in appropriation email.
+- Add pagination for Appropriation PDF.
+- Add notes for Activity.
+- Make Appropriation drafts deleteable.
+- Display payment method when recipient is internal or company.
+- Add child name, and case worker fields to activity emails.
+- Set creation and modification user correctly for Case, Appropriation, Activity, RelatedPerson.
+- Remove Service Providers from ActivityDetails Admin.
+- Numerous styling fixes.
+- Add labels to Docker files.
+- Update dependencies to new versions.
+
 Version 3.0.0, 2020-06-03
 -------------------------
 
