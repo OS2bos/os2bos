@@ -175,6 +175,7 @@ export default {
                 }
             } else {
                 // We are POSTing an EXPECTED activity
+                new_act.payment_plan.price_per_unit.start_date = new_act.start_date // Set act start_date to cost per unit start_date
                 delete new_act.payment_plan.id // Don't try to overwrite previous payment_plan
             }
 
