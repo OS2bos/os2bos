@@ -88,6 +88,7 @@ test('Create activity with per unit pricing', async t => {
         .click(Selector('.act-edit-btn'))
         .click('.prices-history button')
         .typeText('#pay-cost-pr-unit', '3000', {replace: true}) // Edit price
+        .typeText('#pay-cost-exec-date', str10mth) // Set a date
         .click('.modal-footer input[type="submit"]')
         .click('input[type="submit"]')
         .expect(Selector('h1').withText('Udgift til').exists).ok() // Expect to save with no trouble
