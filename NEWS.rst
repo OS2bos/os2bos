@@ -1,4 +1,4 @@
-Version 3.2.0, 2020-09-24
+Version 3.2.0, 2020-09-30
 -------------------------
 
 New in this version:
@@ -55,8 +55,6 @@ Features
 - Don't allow user to add new payments if activity is in edit mode.
 
 
-
-
 Version 3.1.1, 2020-08-31
 -------------------------
 
@@ -71,6 +69,7 @@ Bug fixes
 - Updates list of service providers in UI based on current activity detail.
 - Include global rate and price per unit information in payment email
   and PDF.
+
 
 Version 3.1.0, 2020-07-09
 -------------------------
@@ -96,6 +95,7 @@ Features
 - Add labels to Docker files.
 - Update dependencies to new versions.
 
+
 Version 3.0.0, 2020-06-03
 -------------------------
 
@@ -119,6 +119,7 @@ Features
 - Many smaller fixes to texts.
 - Update dependencies to new versions.
 
+
 Version 2.6.1, 2020-04-03
 -------------------------
 
@@ -128,6 +129,7 @@ Bug fixes
 ^^^^^^^^^
 
 * Use correct dates for PRISM exports for Sunday and Monday.
+
 
 Version 2.6.0, 2020-03-31
 -------------------------
@@ -151,6 +153,7 @@ Bug fixes
 
 - Remove validation for monthly expected adjustments.
 
+
 Version 2.5.0, 2020-03-06
 -------------------------
 
@@ -170,6 +173,7 @@ Features
 - Allow the docker backend service to be debuggable with docker attach.
 - Update dependencies to new versions.
 
+
 Version 2.4.2, 2020-02-24
 -------------------------
 
@@ -179,6 +183,7 @@ Bug fixes
 ^^^^^^^^^
 
 * Fix fonts urlpattern for loading fonts as assets.
+
 
 Version 2.4.1, 2020-02-24
 -------------------------
@@ -196,6 +201,7 @@ Bug fixes
 * Fix duplicate payments generation.
 * Remove duplicate payments in a migration.
 * Add database constraint which prevents duplicate payments on date.
+
 
 Version 2.4.0, 2020-01-24
 -------------------------
@@ -219,6 +225,7 @@ Bug fixes
 * Change field 17 of PRISM file to the unique Payment pk.
 * Handle missing effort steps gracefully in GUI.
 
+
 Version 2.3.0, 2020-01-09
 -------------------------
 
@@ -236,6 +243,7 @@ Bug fixes
 ^^^^^^^^^
 
 * Fix incorrect tests dependent on current year.
+
 
 Version 2.2.3, 2019-12-12
 -------------------------
@@ -256,6 +264,7 @@ New in this version:
 * Fix failing tests.
 * Fix paths in settings.
 * Update Django from 2.2.1 to 2.2.4
+
 
 Version 2.2.2, 2019-11-28
 -------------------------
@@ -366,6 +375,7 @@ New in this version:
 * Fix redirect when setting a payment paid.
 * Add missing verbose names in Django admin.
 
+
 Version 1.1.1, 2019-10-30
 -------------------------
 
@@ -379,6 +389,7 @@ New in this version:
 * Fix not being able to grant an expected main activity.
 * Fix invalid XML in OS2forms.xml.
 * Add missing constraint for creating supplementary activities based on allowed main activities.
+
 
 Version 1.1.0, 2019-10-04
 -------------------------
