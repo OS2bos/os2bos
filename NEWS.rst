@@ -14,6 +14,8 @@ Bug fixes
 - Allow display of Prices with no start date.
 - Don't allow individual payments outside of main activity's period.
 - Layout/hyphenation issue fixed.
+- Date dependent price per unit must be valid at least from activity's
+  start date.
 
 Features
 ^^^^^^^^
