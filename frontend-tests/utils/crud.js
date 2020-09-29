@@ -104,7 +104,9 @@ async function activityFormInput(t, act_data) {
                 .click(Selector('label').withAttribute('for', 'pay-cost-type-per-unit'))
                 .typeText('#pay-cost-pr-unit', act_data.price_amount, {replace: true})
                 .typeText('#pay-units', act_data.payment_units, {replace: true})
-                .typeText('#pay-cost-exec-date', act_data.price_start_date, {replace: true})
+                if (act_data.price_start_date === null) {
+                    await t.typeText('#pay-cost-exec-date', act_data.price_start_date, {replace: true})
+                }
             break
         case 'FIXED':
             await t.click(Selector('label').withAttribute('for', 'pay-cost-type-fixed'))
