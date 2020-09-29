@@ -53,7 +53,7 @@
                                 id="pay-cost-exec-date" 
                                 required 
                                 v-model="new_start_date"
-                                :min="today">
+                                :min="act.start_date">
                             <error :err-key="'start_date'" />
                         </div>
                     </fieldset>
@@ -92,21 +92,17 @@ export default {
     mixins: [
         PermissionLogic
     ],
-    props: {
-        editable: {
-            type: Boolean,
-            default: false
-        }
-    },
     data: function() {
         return {
             modal_open: false,
             new_price: null,
-            new_start_date: epoch2DateStr(new Date()),
-            today: epoch2DateStr(new Date())
+            new_start_date: null
         }
     },
     computed: {
+        act: function() {
+            return this.$store.getters.getActivity
+        },
         prices: function() {
             return this.$store.getters.getPaymentPlanProperty('price_per_unit')
         }
@@ -134,7 +130,11 @@ export default {
             return cost2da(num)
         },
         displayUserName: function(id) {
-            return userId2name(id)
+            if (id) {
+                return userId2name(id)
+            } else {
+                return '-'
+            }
         },
         cancelDialog: function() {
             this.modal_open = !this.modal_open
@@ -142,7 +142,7 @@ export default {
         },
         resetValues: function() {
             this.new_price = null
-            this.new_start_date = epoch2DateStr(new Date())
+            this.new_start_date = null
         }
     }
 }
