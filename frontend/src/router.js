@@ -61,15 +61,14 @@ const router = new Router({
             component: () => import(/* webpackChunkName: "appropriationedit" */ './components/appropriations/AppropriationEdit.vue')
         },
         {
+            path: '/activity/create',
+            name: 'activitycreate',
+            component: () => import(/* webpackChunkName: "activitycreate" */ './components/activities/ActivityCreate.vue')  
+        },
+        {
             path: '/activity/:actId',
             name: 'activity',
             component: () => import(/* webpackChunkName: "activity" */ './components/activities/Activity.vue')
-        },
-        {
-            path: '/appropriation/:apprid/activity-create/',
-            name: 'activity-create',
-            component: () => import(/* webpackChunkName: "activityedit" */ './components/activities/ActivityEdit.vue'),
-            props: { mode: 'create' }
         },
         {
             path: '/appropriation-search/',
@@ -80,11 +79,6 @@ const router = new Router({
             path: '/payments/',
             name: 'payments',
             component: () => import(/* webpackChunkName: "payments" */ './components/payments/PaymentSearch.vue')
-        },
-        {
-            path: '/payment/:payId',
-            name: 'payment',
-            component: () => import(/* webpackChunkName: "payment" */ './components/payments/Payment.vue')
         },
         {
             // 404 page. This route must declared last

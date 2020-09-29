@@ -25,7 +25,7 @@
 
 <script>
 
-    import PaymentComponent from './Payment.vue'
+    import PaymentComponent from './payment-editing/PaymentEdit.vue'
 
     export default {
         

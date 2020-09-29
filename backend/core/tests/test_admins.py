@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 
 from django.test import TestCase
 from django.contrib.admin.sites import AdminSite
@@ -8,17 +8,18 @@ from django.urls import reverse
 from core.models import (
     Payment,
     PaymentSchedule,
-    ActivityDetails,
-    Account,
     TargetGroup,
     Section,
     Activity,
     EffortStep,
+    Rate,
+    RatePerDate,
+    HistoricalRatePerDate,
+    PaymentDateExclusion,
 )
 from core.admin import (
     PaymentAdmin,
     PaymentScheduleAdmin,
-    AccountAdmin,
     TargetGroupAdmin,
     ClassificationAdmin,
     ClassificationInline,
@@ -26,13 +27,16 @@ from core.admin import (
     SectionAdmin,
     SectionInfoInline,
     EffortStepAdmin,
+    RateAdmin,
+    RatePerDateInline,
+    HistoricalRatePerDateInline,
+    PaymentDateExclusionAdmin,
 )
 from core.tests.testing_utils import (
     AuthenticatedTestCase,
     BasicTestMixin,
     create_payment,
     create_payment_schedule,
-    create_account,
     create_target_group,
     create_activity,
     create_case,
@@ -40,6 +44,9 @@ from core.tests.testing_utils import (
     create_section,
     create_activity_details,
     create_effort_step,
+    create_rate,
+    create_rate_per_date,
+    create_payment_date_exclusion,
 )
 
 User = get_user_model()
@@ -81,7 +88,7 @@ class TestPaymentAdmin(AuthenticatedTestCase, BasicTestMixin):
             payment_admin.account_string(payment), payment.account_string
         )
 
-    def test_account_string_new(self):
+    def test_account_alias(self):
         payment_schedule = create_payment_schedule()
 
         payment = create_payment(
@@ -91,8 +98,7 @@ class TestPaymentAdmin(AuthenticatedTestCase, BasicTestMixin):
         site = AdminSite()
         payment_admin = PaymentAdmin(Payment, site)
         self.assertEqual(
-            payment_admin.account_string_new(payment),
-            payment.account_string_new,
+            payment_admin.account_alias(payment), payment.account_alias
         )
 
     def test_payment_schedule_str(self):
@@ -149,14 +155,14 @@ class TestPaymentScheduleAdmin(AuthenticatedTestCase, BasicTestMixin):
             payment_schedule.account_string,
         )
 
-    def test_account_string_new(self):
+    def test_account_alias(self):
         payment_schedule = create_payment_schedule()
 
         site = AdminSite()
         payment_schedule_admin = PaymentScheduleAdmin(PaymentSchedule, site)
         self.assertEqual(
-            payment_schedule_admin.account_string_new(payment_schedule),
-            payment_schedule.account_string_new,
+            payment_schedule_admin.account_alias(payment_schedule),
+            payment_schedule.account_alias,
         )
 
     def test_admin_changelist_not_admin_user_disallowed(self):
@@ -280,41 +286,28 @@ class TestActivityAdmin(AuthenticatedTestCase, BasicTestMixin):
         site = AdminSite()
         activity_admin = ActivityAdmin(Activity, site)
         self.assertEqual(
-            activity_admin.account_number(activity), activity.account_number,
+            activity_admin.account_number(activity), activity.account_number
         )
 
-
-class TestAccountAdmin(TestCase):
-    def test_account_number(self):
+    def test_account_alias(self):
         section = create_section()
-        main_activity_details = ActivityDetails.objects.create(
-            name="Betaling til andre kommuner/region for specialtandpleje",
-            activity_id="010001",
-            max_tolerance_in_dkk=5000,
-            max_tolerance_in_percent=10,
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
         )
-        supplementary_activity_details = ActivityDetails.objects.create(
-            name="Betaling til andre kommuner/region for specialtandpleje",
-            activity_id="010002",
-            max_tolerance_in_dkk=5000,
-            max_tolerance_in_percent=10,
-        )
-        account = create_account(
-            section=section,
-            main_activity=main_activity_details,
-            supplementary_activity=supplementary_activity_details,
-        )
+        appropriation = create_appropriation(section=section, case=case)
+        activity = create_activity(case=case, appropriation=appropriation)
 
         site = AdminSite()
-        account_admin = AccountAdmin(Account, site)
-
-        self.assertEqual(account_admin.number(account), account.number)
+        activity_admin = ActivityAdmin(Activity, site)
+        self.assertEqual(
+            activity_admin.account_alias(activity), activity.account_alias
+        )
 
 
 class TestTargetGroupAdmin(TestCase):
     def test_target_group_required_fields_for_case_initial(self):
         target_group = create_target_group(
-            name="familieafdelingen", required_fields_for_case=["district"]
+            name="familieafdelingen", required_fields_for_case="district"
         )
         site = AdminSite()
         request = MockRequest()
@@ -332,7 +325,7 @@ class TestTargetGroupAdmin(TestCase):
 
     def test_target_group_required_fields_for_case_choices(self):
         target_group = create_target_group(
-            name="familieafdelingen", required_fields_for_case=["district"]
+            name="familieafdelingen", required_fields_for_case="district"
         )
         site = AdminSite()
         request = MockRequest()
@@ -347,6 +340,29 @@ class TestTargetGroupAdmin(TestCase):
                 ("effort_step", "indsatstrappe"),
                 ("scaling_step", "skaleringstrappe"),
             ],
+        )
+
+    def test_target_group_clean_required_fields_for_case(self):
+        target_group = create_target_group(
+            name="familieafdelingen",
+            required_fields_for_case="district,effort_step",
+        )
+        site = AdminSite()
+        request = MockRequest()
+        target_group_admin = TargetGroupAdmin(TargetGroup, site)
+        target_group_form_class = target_group_admin.get_form(
+            request, target_group
+        )
+        target_group_data = {
+            "name": "familieafdelingen",
+            "required_fields_for_case": ["district", "effort_step"],
+        }
+        target_group_form = target_group_form_class(target_group_data)
+
+        self.assertTrue(target_group_form.is_valid())
+        self.assertEqual(
+            target_group_form.cleaned_data["required_fields_for_case"],
+            "district,effort_step",
         )
 
 
@@ -404,6 +420,147 @@ class TestEffortStepAdmin(TestCase):
             effort_step_admin.list_sections(effort_step),
             f'<div><a href="/api/admin/core/section/{section.id}/'
             f'change/">ABL-105-2 - </a></div>',
+        )
+
+
+class RateAdminTestCase(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_save_model_success(self):
+        rate = create_rate()
+
+        request = MockRequest()
+        site = AdminSite()
+        rate_admin = RateAdmin(Rate, site)
+
+        self.assertEqual(rate.rates_per_date.count(), 0)
+
+        rate_form_class = rate_admin.get_form(request, rate)
+        rate_form = rate_form_class(
+            {"name": rate.name, "rate": 100}, instance=rate
+        )
+        rate_admin.save_model(request, rate, rate_form, True)
+
+        self.assertEqual(rate.rates_per_date.count(), 1)
+
+    def test_save_model_invalid_form(self):
+        rate = create_rate()
+
+        request = MockRequest()
+        site = AdminSite()
+        rate_admin = RateAdmin(Rate, site)
+
+        self.assertEqual(rate.rates_per_date.count(), 0)
+
+        rate_form_class = rate_admin.get_form(request, rate)
+        rate_form = rate_form_class({"name": rate.name}, instance=rate)
+        rate_admin.save_model(request, rate, rate_form, True)
+
+        self.assertEqual(rate.rates_per_date.count(), 0)
+
+    def test_init_sets_start_date_and_rate(self):
+        request = MockRequest()
+        site = AdminSite()
+        rate_admin = RateAdmin(Rate, site)
+        today = date.today()
+        tomorrow = today + timedelta(days=1)
+        two_days_from_now = tomorrow + timedelta(days=1)
+
+        rate = create_rate()
+        create_rate_per_date(
+            rate, rate=100, start_date=today, end_date=tomorrow
+        )
+        create_rate_per_date(
+            rate, rate=125, start_date=tomorrow, end_date=two_days_from_now
+        )
+        rate_form_class = rate_admin.get_form(request, rate)
+        rate_form = rate_form_class(instance=rate)
+
+        self.assertEqual(rate_form["start_date"].value(), tomorrow)
+        self.assertEqual(rate_form["rate"].value(), 125)
+
+    def test_init_sets_start_date_today_on(self):
+        request = MockRequest()
+        site = AdminSite()
+        rate_admin = RateAdmin(Rate, site)
+        today = date.today()
+
+        rate = create_rate()
+        create_rate_per_date(rate, rate=125, start_date=None, end_date=None)
+        rate_form_class = rate_admin.get_form(request, rate)
+        rate_form = rate_form_class()
+
+        self.assertEqual(rate_form["start_date"].value(), today)
+        self.assertEqual(rate_form["rate"].value(), None)
+
+    def test_init_sets_start_and_end_existing_on_none(self):
+        request = MockRequest()
+        site = AdminSite()
+        rate_admin = RateAdmin(Rate, site)
+
+        rate = create_rate()
+        create_rate_per_date(rate, rate=125, start_date=None, end_date=None)
+        rate_form_class = rate_admin.get_form(request, rate)
+        rate_form = rate_form_class(instance=rate)
+
+        self.assertEqual(rate_form["start_date"].value(), None)
+        self.assertEqual(rate_form["rate"].value(), 125)
+
+
+class RatePerDateInlineTestCase(TestCase):
+    def test_has_add_permissions_false(self):
+        site = AdminSite()
+        rate_per_date_inline = RatePerDateInline(RatePerDate, site)
+        request = MockRequest()
+
+        self.assertFalse(rate_per_date_inline.has_add_permission(request))
+
+    def test_can_delete_false(self):
+        site = AdminSite()
+        rate_per_date_inline = RatePerDateInline(RatePerDate, site)
+
+        self.assertFalse(rate_per_date_inline.can_delete)
+
+
+class HistoricalRatePerDateInlineTestCase(TestCase):
+    def test_has_add_permissions_false(self):
+        site = AdminSite()
+        historical_rate_per_date_inline = HistoricalRatePerDateInline(
+            HistoricalRatePerDate, site
+        )
+        request = MockRequest()
+
+        self.assertFalse(
+            historical_rate_per_date_inline.has_add_permission(request)
+        )
+
+    def test_has_change_permissions_false(self):
+        site = AdminSite()
+        historical_rate_per_date_inline = HistoricalRatePerDateInline(
+            HistoricalRatePerDate, site
+        )
+        request = MockRequest()
+
+        self.assertFalse(
+            historical_rate_per_date_inline.has_change_permission(request)
+        )
+
+
+class PaymentDateExclusionAdminTestCase(TestCase):
+    def test_weekday(self):
+        site = AdminSite()
+        payment_date_exclusion_admin = PaymentDateExclusionAdmin(
+            PaymentDateExclusion, site
+        )
+        payment_date_exclusion = create_payment_date_exclusion(
+            date=date(2020, 1, 1)
+        )
+
+        self.assertEqual(
+            payment_date_exclusion_admin.weekday(payment_date_exclusion),
+            "onsdag",
         )
 
 

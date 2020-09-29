@@ -16,42 +16,38 @@
                 Hovedsag {{ cas.sbsys_id }}
             </h1>
             <div v-if="!edit_mode" class="actions">
-                <button v-if="permissionCheck === true" @click="edit_mode = !edit_mode">Redigér</button>
+                <button v-if="user_can_edit === true" @click="edit_mode = !edit_mode">Redigér</button>
             </div>
         </header>
 
         <case-edit :case-obj="cas" v-if="edit_mode" @close="reload()" />
 
-        <div class="row" v-if="!edit_mode">
-            <div class="case-info case-info-grid row-item">
+        <div class="case-info-main" v-if="!edit_mode">
+            <div class="case-info case-info-grid">
                 <dl>
                     <dt>Sagspart (CPR, navn)</dt>
                     <dd>
-                        {{ cas.cpr_number }}, {{ cas.name }}
+                        {{ cas.cpr_number }}<br>
+                        {{ cas.name }}
                     </dd>
 
-                    <template v-if="cas.effort_step">
+                    <template v-if="cas.effort_step && requiredEffortStep === true">
                         <dt>Indsatstrappen</dt>
                         <dd v-html="displayEffortName(cas.effort_step)"></dd>
                     </template>
                 
-                    <template v-if="cas.scaling_step">
+                    <template v-if="cas.scaling_step && requiredScalingStep === true">
                         <dt>Skaleringstrappe</dt>
                         <dd>
                             {{ cas.scaling_step }}<br>
                         </dd>
                     </template>
 
-                    <template v-if="cas.effort_step || cas.scaling_step">
+                    <template v-if="requiredEffortStep === true || requiredScalingStep === true">
                         <dt>Vurderinger</dt>
                         <dd>
                             <router-link :to="`/case/${ cas.id }/assessment`" style="display: inline-block; margin-top: .5rem;">Se vurderinger</router-link>
                         </dd>
-                    </template>
-
-                    <template v-if="cas.note">
-                        <dt>Supplerende oplysninger</dt>
-                        <dd>{{ cas.note }}</dd>
                     </template>
                 </dl>
                 <dl>
@@ -91,11 +87,15 @@
                     <dd v-html="displayMuniName(cas.residence_municipality)"></dd>
 
                 </dl>
-
             </div>
+
+            <family-overview :case-id="cas.id" />
             
-            <family-overview :case-id="cas.id" class="row-item" />
-            
+            <dl v-if="cas.note" class="case-notes">
+                <dt>Supplerende oplysninger</dt>
+                <dd>{{ cas.note }}</dd>
+            </dl>
+
         </div>
 
         <appropriations :case-id="cas.id" />
@@ -112,12 +112,12 @@
     import axios from '../http/Http.js'
     import { municipalityId2name, targetGroupId2name, districtId2name, effortId2name, displayEffort, userId2name, teamId2name } from '../filters/Labels.js'
     import store from '../../store.js'
-    import UserRights from '../mixins/UserRights.js'
+    import PermissionLogic from '../mixins/PermissionLogic.js'
 
     export default {
-
-        mixins: [UserRights],
-
+        mixins: [
+            PermissionLogic
+        ],
         components: {
             CaseEdit,
             Appropriations,
@@ -141,8 +141,24 @@
             cas: function() {
                 return this.$store.getters.getCase
             },
-            user: function() {
-                return this.$store.getters.getUser
+            targetGroups: function() {
+                return this.$store.getters.getTargetGroups
+            },
+            requiredEffortStep: function() {
+                if (this.cas.target_group) {
+                    let target = this.targetGroups.filter(tar => tar.id === this.cas.target_group)
+                    return target[0].required_fields_for_case.filter(tar => tar === 'effort_step').length === 1
+                } else {
+                    return false
+                }
+            },
+            requiredScalingStep: function() {
+                if (this.cas.target_group) {
+                    let target = this.targetGroups.filter(tar => tar.id === this.cas.target_group)
+                    return target[0].required_fields_for_case.filter(tar => tar === 'scaling_step').length === 1
+                } else {
+                    return false
+                }
             }
         },
         watch: {
@@ -225,25 +241,37 @@
         font-size: 3rem;
     }
 
-    .case-info-grid {
-        align-content: flex-start;
-        align-items: flex-start;
+    .case-info-main {
         background-color: var(--grey1);
-        display: flex;
-        flex-flow: row wrap;
-        margin: 0 0 2rem;
-        padding: 1.5rem 0 0;
+        padding: 1.5rem 2rem 2rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        margin-bottom: 2.5rem;
+    }
+
+    .case-info-grid {
+        height: auto;
+        display: grid;
+        grid-template-columns: repeat( auto-fit, minmax(15rem, 1fr) );
+        grid-template-rows: max-content max-content;
+        gap: 2rem;
     }
 
     .case-info-grid dl {
-        margin: 0 2rem 2rem;
-        flex: 0 1 auto;
+        border-right: solid 1px var(--grey0);
+        padding-right: 2rem;
     }
 
     .case .familyoverview {
-        margin: 0 0 2rem;
-        border: solid 1px var(--grey2);
-        padding: 1rem 2rem;
+        margin: 0 0 0 2rem;
+        padding: 0;
+    }
+
+    .case .case-notes {
+        margin-top: 2rem;
+        border-top: solid 1px var(--grey0);
+        padding-top: 1.5rem;
+        grid-column: 1/3;
     }
 
 </style>

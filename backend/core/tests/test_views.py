@@ -12,6 +12,7 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
+from django.conf import settings
 
 from freezegun import freeze_time
 
@@ -25,6 +26,7 @@ from core.models import (
     STATUS_GRANTED,
     STATUS_DRAFT,
     STATUS_EXPECTED,
+    INTERNAL,
 )
 
 from core.tests.testing_utils import (
@@ -986,6 +988,92 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
             ),
         )
 
+    def test_post(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        now = timezone.now()
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=date(year=now.year, month=1, day=1),
+            end_date=date(year=now.year, month=1, day=1),
+        )
+        create_payment_schedule(activity=activity)
+
+        url = reverse("payment-list")
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        payment = response.json()["results"][0]
+        payment = {k: v for k, v in payment.items() if v is not None}
+        response = self.client.post(url, payment)
+        self.assertEqual(response.status_code, 403)
+        del payment["payment_schedule"]
+        response = self.client.post(url, payment)
+        self.assertEqual(response.status_code, 400)
+
+    def test_delete(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        now = timezone.now()
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=date(year=now.year, month=1, day=1),
+            end_date=date(year=now.year, month=1, day=1),
+        )
+        create_payment_schedule(activity=activity)
+
+        url = reverse("payment-list")
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        payment = response.json()["results"][0]
+        payment_pk = payment["id"]
+        detail_url = reverse("payment-detail", kwargs={"pk": payment_pk})
+        response = self.client.delete(detail_url)
+        self.assertEqual(response.status_code, 403)
+
+    def test_put(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        now = timezone.now()
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_DRAFT,
+            start_date=date(year=now.year, month=1, day=1),
+            end_date=date(year=now.year, month=1, day=1),
+        )
+        create_payment_schedule(
+            activity=activity,
+            payment_method=INTERNAL,
+            recipient_type=PaymentSchedule.INTERNAL,
+        )
+        url = reverse("payment-list")
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        payment = response.json()["results"][0]
+        payment_pk = payment["id"]
+        detail_url = reverse("payment-detail", kwargs={"pk": payment_pk})
+        payment = {k: v for k, v in payment.items() if v is not None}
+        response = self.client.put(
+            detail_url, payment, content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+
 
 class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
     @classmethod
@@ -1140,3 +1228,98 @@ class TestClassificationMixin(AuthenticatedTestCase, BasicTestMixin):
         self.client.login(username=self.username, password=self.password)
         response = self.client.get(url)
         self.assertEqual(response.json()[0]["id"], section.id)
+
+
+class TestAuditModelViewSetMixin(AuthenticatedTestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_case_perform_create(self):
+        url = reverse("case-list")
+        json = create_case_as_json(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        self.user.team = self.team
+        self.user.save()
+
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.post(url, json)
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json()["user_created"], self.username)
+
+    def test_case_perform_update(self):
+        url = reverse("case-list")
+        json = create_case_as_json(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        self.user.team = self.team
+        self.user.save()
+
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.post(url, json)
+
+        # Assert user_created is set but user_modified is not on creation.
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json()["user_created"], self.username)
+        self.assertEqual(response.json()["user_modified"], "")
+        # Assert user_modified is now set on modification.
+        url = reverse("case-detail", kwargs={"pk": response.json()["id"]})
+        response = self.client.patch(url, json={"cpr_number": "0123456789"})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["user_modified"], self.username)
+
+    def test_related_person_perform_create(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+
+        url = reverse("relatedperson-list")
+        self.client.login(username=self.username, password=self.password)
+
+        json = {"relation_type": "Far", "name": "Test", "main_case": case.id}
+        response = self.client.post(url, json)
+
+        # Assert user_created is set but user_modified is not on creation.
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json()["user_created"], self.username)
+        self.assertEqual(response.json()["user_modified"], "")
+
+    def test_related_person_perform_update(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+
+        url = reverse("relatedperson-list")
+        self.client.login(username=self.username, password=self.password)
+
+        json = {"relation_type": "Far", "name": "Test", "main_case": case.id}
+        response = self.client.post(url, json)
+
+        # Assert user_created is set but user_modified is not on creation.
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json()["user_created"], self.username)
+        self.assertEqual(response.json()["user_modified"], "")
+
+        # Assert user_modified is now set on modification.
+        url = reverse(
+            "relatedperson-detail", kwargs={"pk": response.json()["id"]}
+        )
+        response = self.client.patch(url, json={"name": "Test patch"})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["user_modified"], self.username)
+
+
+class TestIsEditingPastPaymentsAllowed(AuthenticatedTestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_is_past_editing_enabled(self):
+        self.client.login(username=self.username, password=self.password)
+        url = reverse("editing_past_payments_allowed")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), settings.ALLOW_EDIT_OF_PAST_PAYMENTS)

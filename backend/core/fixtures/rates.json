@@ -1,0 +1,242 @@
+[
+    {
+        "model": "core.rate",
+        "pk": 1,
+        "fields": {
+            "name": "Vederlag pr. d\u00f8gn",
+            "description": "(afrundet fra 145,42 kr.)"
+        }
+    },
+    {
+        "model": "core.rate",
+        "pk": 2,
+        "fields": {
+            "name": "1 gange normalvederlag pr. m\u00e5ned",
+            "description": "(145,42 kr. x 365/12)"
+        }
+    },
+    {
+        "model": "core.rate",
+        "pk": 3,
+        "fields": {
+            "name": "Kost og logi, herunder daglige forn\u00f8denheder, pr. d\u00f8gn pr. barn (under 10 \u00e5r)",
+            "description": "Pr. d\u00f8gn pr. barn (under 10 \u00e5r)"
+        }
+    },
+    {
+        "model": "core.rate",
+        "pk": 4,
+        "fields": {
+            "name": "Kost og logi, herunder daglige forn\u00f8denheder, pr. d\u00f8gn pr. barn eller ung (p\u00e5 10 \u00e5r eller derover)",
+            "description": "Pr. d\u00f8gn pr. barn eller ung (p\u00e5 10 \u00e5r og derover)"
+        }
+    },
+    {
+        "model": "core.rate",
+        "pk": 5,
+        "fields": {
+            "name": "Kost og logi, herunder daglige forn\u00f8denheder, for 3. og eventuelt 4. barn fra samme kommune (uanset alder)",
+            "description": "For 3. og eventuelt 4. barn fra samme kommune (uanset alder)"
+        }
+    },
+    {
+        "model": "core.rate",
+        "pk": 6,
+        "fields": {
+            "name": "\u00d8vrige udgifter; opholdssted",
+            "description": "\u00d8vrige udgifter pr. m\u00e5ned kan tage udgangspunkt i det vejledende bel\u00f8b"
+        }
+    },
+    {
+        "model": "core.rate",
+        "pk": 7,
+        "fields": {
+            "name": "Lommepenge, 3-10 \u00e5r pr. uge",
+            "description": "3-10 \u00e5r pr uge"
+        }
+    },
+    {
+        "model": "core.rate",
+        "pk": 8,
+        "fields": {
+            "name": "Lommepenge, 11-13 \u00e5r pr. uge",
+            "description": "11-13 \u00e5r pr. uge"
+        }
+    },
+    {
+        "model": "core.rate",
+        "pk": 9,
+        "fields": {
+            "name": "Lommepenge, 14-15 \u00e5r pr. uge",
+            "description": "14-15 \u00e5r pr. uge"
+        }
+    },
+    {
+        "model": "core.rate",
+        "pk": 10,
+        "fields": {
+            "name": "Lommepenge, 16 \u00e5r og \u00e6ldre pr. uge",
+            "description": "16 \u00e5r og \u00e6ldre pr. uge"
+        }
+    },
+    {
+        "model": "core.rate",
+        "pk": 11,
+        "fields": {
+            "name": "Arbejdsdus\u00f8r, dus\u00f8r for arbejde i opholdssted",
+            "description": "For unge p\u00e5 16 \u00e5r og \u00e6ldre, pr. time"
+        }
+    },
+    {
+        "model": "core.rate",
+        "pk": 12,
+        "fields": {
+            "name": "Arbejdsdus\u00f8r, dus\u00f8r for arbejde i opholdssted",
+            "description": "For unge p\u00e5 16 \u00e5r og \u00e6ldre, pr. uge"
+        }
+    },
+    {
+        "model": "core.rate",
+        "pk": 13,
+        "fields": {
+            "name": "Arbejdsdus\u00f8r, l\u00f8n for arbejde uden for opholdssted",
+            "description": "Betaling for kost, logi og vask udg\u00f8r h\u00f8jst pr. uge"
+        }
+    },
+    {
+        "model": "core.rate",
+        "pk": 14,
+        "fields": {
+            "name": "Arbejdsdus\u00f8r, l\u00f8n for arbejde uden for opholdssted",
+            "description": "Den unge beholder halvdelen af det indtjente til lommepenge og bekl\u00e6dning, dog mindst pr. uge"
+        }
+    },
+    {
+        "model": "core.rate",
+        "pk": 15,
+        "fields": {
+            "name": "Bekl\u00e6dning, for b\u00f8rn p\u00e5 0-10 \u00e5r ydes pr. uge",
+            "description": "For b\u00f8rn p\u00e5 0-10 \u00e5r ydes pr. uge"
+        }
+    },
+    {
+        "model": "core.rate",
+        "pk": 16,
+        "fields": {
+            "name": "Bekl\u00e6dning, for b\u00f8rn p\u00e5 11-13 \u00e5r ydes pr. uge",
+            "description": "For b\u00f8rn p\u00e5 11-13 \u00e5r ydes pr. uge"
+        }
+    },
+    {
+        "model": "core.rate",
+        "pk": 17,
+        "fields": {
+            "name": "Bekl\u00e6dning, for b\u00f8rn p\u00e5 14-15 \u00e5r ydes pr. uge",
+            "description": "For b\u00f8rn p\u00e5 14-15 \u00e5r ydes pr. uge"
+        }
+    },
+    {
+        "model": "core.rate",
+        "pk": 18,
+        "fields": {
+            "name": "Bekl\u00e6dning, for b\u00f8rn p\u00e5 16 \u00e5r og \u00e6ldre ydes pr. uge",
+            "description": "For b\u00f8rn p\u00e5 16 \u00e5r og \u00e6ldre ydes pr. uge"
+        }
+    },
+    {
+        "model": "core.rate",
+        "pk": 19,
+        "fields": {
+            "name": "Konfirmation",
+            "description": "Ved konfirmation"
+        }
+    },
+    {
+        "model": "core.rate",
+        "pk": 20,
+        "fields": {
+            "name": "Ind- og udskrivning, supplerende udstyr ved indskrivning",
+            "description": "Supplerende udstyr ved indskrivning, afh\u00e6ngig af en konkret vurdering, op til"
+        }
+    },
+    {
+        "model": "core.rate",
+        "pk": 21,
+        "fields": {
+            "name": "Ind- og udskrivning, ved udskrivning af b\u00f8rn i alderen 0-15 \u00e5r",
+            "description": "Ved udskrivning af b\u00f8rn i alderen 0-15 \u00e5r, afh\u00e6ngig af en konkret vurdering"
+        }
+    },
+    {
+        "model": "core.rate",
+        "pk": 22,
+        "fields": {
+            "name": "Ind- og udskrivning, ved udskrivning af unge p\u00e5 16 \u00e5r og derover",
+            "description": "Ved udskrivning af unge p\u00e5 16 \u00e5r og derover, afh\u00e6ngig af en konkret vurdering"
+        }
+    },
+    {
+        "model": "core.rate",
+        "pk": 23,
+        "fields": {
+            "name": "Gaver, til b\u00f8rn under 14 \u00e5r",
+            "description": "Til b\u00f8rn under 14 \u00e5r kan ydes til f\u00f8dselsdag og jul"
+        }
+    },
+    {
+        "model": "core.rate",
+        "pk": 24,
+        "fields": {
+            "name": "Gaver, til unge over 14 \u00e5r",
+            "description": "Til unge over 14 \u00e5r kan ydes til f\u00f8dselsdag og jul"
+        }
+    },
+    {
+        "model": "core.rate",
+        "pk": 25,
+        "fields": {
+            "name": "Gaver, ved eksamen, konfirmation og svendepr\u00f8ve",
+            "description": "Ved eksamen, konfirmation og svendepr\u00f8ve"
+        }
+    },
+    {
+        "model": "core.rate",
+        "pk": 26,
+        "fields": {
+            "name": "Kostpenge",
+            "description": "Ved ferier af mindst 3 sammenh\u00e6ngende fulde d\u00f8gn. Den enkelte kommune kan dog overveje af hensyn til barnets/den unges kontakt med biologisk familie at yde kostpenge ved aflastningsophold m.v.af mindre end tre d\u00f8gns varighed, n\u00e5r s\u00e6rlige forhold taler herfor.Efter anmodning fra for\u00e6ldre eller andre, kan der ydes kostpenge til b\u00f8rn og unge ved frav\u00e6r fra d\u00f8gninstitutionen eller plejehjemmet. Bel\u00f8bet udredes af institutionen eller plejehjemmet.Kostpenge b\u00f8r svare til det bel\u00f8b, som anbringelsesstedet sparer ved barnets frav\u00e6r. Bel\u00f8bet udredes af institutionen eller plejehjemmet, s\u00e5fremt det modtager kost og logiandelen af plejevederlaget under feriefrav\u00e6ret."
+        }
+    },
+    {
+        "model": "core.rate",
+        "pk": 27,
+        "fields": {
+            "name": "Ferietilskud",
+            "description": "Til elever over 16 \u00e5r, der betaler for opholdet p\u00e5 institutionen, frigives under ferie af h\u00f8jst 5 ugers varighed pr. uge.\nBel\u00f8bet ydes udover de egentlige lommepenge"
+        }
+    },
+    {
+        "model": "core.rate",
+        "pk": 28,
+        "fields": {
+            "name": "Kontaktperson",
+            "description": "Honorar udg\u00f8r pr. m\u00e5ned. I s\u00e6rligt vanskelige tilf\u00e6lde kan vederlaget, under hensyn til omfanget af vedkommende kontaktpersonsopgave, fasts\u00e6ttes til det dobbelte eller tredobbelte af normalhonoraret. Der kan udover vederlaget ydes k\u00f8rselsgodtg\u00f8relse efter de almindelige g\u00e6ldende regler."
+        }
+    },
+    {
+        "model": "core.rate",
+        "pk": 29,
+        "fields": {
+            "name": "Administration og tilsyn",
+            "description": "Udgifter til administration og tilsyn pr. m\u00e5ned kan maksimalt udg\u00f8re"
+        }
+    },
+    {
+        "model": "core.rate",
+        "pk": 30,
+        "fields": {
+            "name": "Praktikgodtg\u00f8relse, jf. \u00a7 52, stk. 3, nr.8",
+            "description": "Godtg\u00f8relsen udg\u00f8r pr. time"
+        }
+    }
+]

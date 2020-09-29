@@ -31,7 +31,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 from django.views.static import serve
 from django.views.generic import TemplateView
-
+from watchman.views import status
 import django_saml2_auth
 
 from rest_framework import routers
@@ -50,6 +50,8 @@ router.register(r"activities", views.ActivityViewSet, "activity")
 router.register(
     r"payment_schedules", views.PaymentScheduleViewSet, "paymentschedule"
 )
+router.register(r"rates", views.RateViewSet, "rate")
+router.register(r"prices", views.PriceViewSet, "price")
 router.register(r"payment_method_details", views.PaymentMethodDetailsViewSet)
 router.register(r"payments", views.PaymentViewSet)
 router.register(r"related_persons", views.RelatedPersonViewSet)
@@ -62,9 +64,11 @@ router.register(r"activity_details", views.ActivityDetailsViewSet)
 router.register(r"service_providers", views.ServiceProviderViewSet)
 router.register(r"approval_levels", views.ApprovalLevelViewSet)
 router.register(r"users", views.UserViewSet)
-router.register(r"accounts", views.AccountViewSet)
 router.register(r"effort_steps", views.EffortStepViewSet)
 router.register(r"target_groups", views.TargetGroupViewSet)
+router.register(
+    r"internal_payment_recipients", views.InternalPaymentRecipientViewSet
+)
 router.register(r"efforts", views.EffortViewSet)
 
 urlpatterns = [
@@ -114,6 +118,12 @@ urlpatterns = [
         ),
         name="swagger-ui",
     ),
+    path(
+        "api/editing_past_payments_allowed/",
+        views.IsEditingPastPaymentsAllowed.as_view(),
+        name="editing_past_payments_allowed",
+    ),
+    path("api/healthcheck/", status),
 ]
 
 # Static files are served by WhiteNoise in both development and production.

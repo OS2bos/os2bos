@@ -1,123 +1,115 @@
-<!-- Copyright (C) 2019 Magenta ApS, http://magenta.dk.
+<!-- Copyright (C) 2020 Magenta ApS, http://magenta.dk.
    - Contact: info@magenta.dk.
    -
    - This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
 
-
 <template>
-    <section :class="`activity-edit activity-${ mode } expected-${ act_status_expected }`">
-        <form @submit.prevent="saveChanges()">
-            <header class="header activity-edit-header"> 
 
-                <h1 v-if="mode === 'create'">
-                    <template v-if="act_status_expected">Tilføj forventet </template>
-                    <template v-else>Tilføj </template>
-                    <template v-if="!appr_main_acts">hovedydelse</template>
-                    <template v-else>følgeydelse</template>
-                </h1>
-                <h1 v-if="mode === 'edit'">Redigér Ydelse</h1>
-                <div v-if="mode === 'clone'">
-                    <h1>Opret forventet justering</h1>
-                    <p>
-                        Du er ved at lave en forventet justering til ydelsen:<br> 
-                        <strong>{{ displayActName(act.details) }}</strong>
-                    </p>
+    <section class="activity-edit">
+        <header class="activity-edit-header">
+            <h2>Redigér ydelse</h2>
+        </header>
+        <form @submit.prevent="saveChanges" class="activity-edit-form" v-if="act">
+           
+            <div class="act-edit-main">
+                <div>
+                    <dl v-if="act.status === 'GRANTED'">
+                        <dt>
+                            Godkendt af
+                        </dt>
+                        <dd>
+                            <p>
+                                <em>{{ displayUserName(act.approval_user) }}</em> d. {{ displayDate(act.appropriation_date) }}<br>
+                                ({{ displayApprLevel(act.approval_level) }} kompetence)
+                            </p>
+                            <p v-if="act.approval_note">Note: {{ act.approval_note }}</p>
+                        </dd>
+                    </dl>
+                    <activity :editable="false" />
+                    <type />
+                    <status :editable="is_editable" />
+                    <fictional :editable="is_editable" />
+                </div>
+                
+                <div>
+                    <payment-type :editable="false" />
+                    <template v-if="payment_plan.payment_type === 'ONE_TIME_PAYMENT'">
+                        <pay-date-single :editable="is_editable" />
+
+                        <fieldset v-if="is_editable">
+                            <legend>Betaling dækker periode</legend>
+                            <div class="row">
+                                <pay-date-single-period-start :editable="true" />
+                                <pay-date-single-period-end :editable="true" />
+                            </div>
+                        </fieldset>
+
+                        <pay-date-single-period-display v-else />
+
+                    </template>
+                    <div v-if="payment_plan.payment_type !== 'ONE_TIME_PAYMENT'">
+                        <pay-date-start :editable="is_editable" />
+                        <pay-date-end :editable="is_editable" />
+                    </div>
+                    <div v-if="payment_plan.payment_type === 'RUNNING_PAYMENT'">
+                        <payment-frequency :editable="is_editable" />
+                    </div>
                 </div>
 
-                <fieldset v-if="mode === 'create'" style="margin: 0 0 0 2rem;">
-                    <input type="checkbox" id="field-status-expected" v-model="act_status_expected">
-                    <label for="field-status-expected" style="margin: 0;">Opret forventet Ydelse</label>
-                </fieldset>
-
-            </header>
-        
-            <error />
-
-            <div class="row">
-
-                <div class="row-item">
-                    <fieldset>
-                        <dl>
-                            <dt>Foranstaltningssag</dt>
-                            <dd>{{ appropriation.sbsys_id }}</dd>
-
-                            <dt>SBSYS-hovedsag</dt>
-                            <dd>{{ cas.sbsys_id }}</dd>
-
-                            <dt>Sagspart (CPR, navn)</dt>
-                            <dd>
-                                {{ cas.cpr_number }}, {{ cas.name }}
-                            </dd>
-                        </dl>
-                    </fieldset>
-
-                    <fieldset class="payment-basic">
-                        <legend>Hvad skal betales?</legend>
-
-                        <label class="required" for="fieldSelectAct">Ydelse</label>
-                        <p v-if="preselectedAct"><strong>{{ act_details[0].name }}</strong></p>
-                        <list-picker v-if="!preselectedAct" :dom-id="'fieldSelectAct'" :disabled="disableAct" :selected-id="act.details" @selection="changeActivity" :list="act_details" required />
-                        <error err-key="details" />
-
-                        <label class="required" for="field-startdate">
-                            Startdato
-                            <span v-if="startDateSet && this.act.activity_type !== 'MAIN_ACTIVITY'">
-                                - tidligst {{ displayDate(startDateSet) }}
-                            </span>
-                        </label>
-                        <input 
-                            type="date" 
-                            id="field-startdate" 
-                            v-model="act.start_date" 
-                            :max="endDateSet"
-                            :min="startDateSet" 
-                            pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
-                            placeholder="åååå-mm-dd"
-                            required>
-                        <error err-key="start_date" />
-                    
-                        <label for="field-enddate">
-                            Slutdato
-                            <span v-if="endDateSet && this.act.activity_type !== 'MAIN_ACTIVITY'">
-                                - senest {{ displayDate(endDateSet) }}
-                            </span>
-                        </label>
-                        <input 
-                            type="date" 
-                            id="field-enddate" 
-                            v-model="act.end_date" 
-                            :max="endDateSet"
-                            :min="startDateSet"
-                            pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
-                            placeholder="åååå-mm-dd">
-                    
-                        <label for="field-text">Supplerende information</label>
-                        <textarea id="field-text" v-model="act.note" style="height: 8rem;"></textarea>
-                    </fieldset>
+                <div v-if="!is_individual_payment_type(payment_plan)">
+                    <cost-type :editable="false" />
+                    <template v-if="payment_plan.payment_cost_type === 'FIXED'">
+                        <cost-type-fixed :editable="is_editable" />
+                    </template>
+                    <template v-if="payment_plan.payment_cost_type === 'GLOBAL_RATE'">
+                        <payment-units :editable="is_editable" />
+                        <cost-type-rate :editable="is_editable" />
+                    </template>
+                    <template v-if="payment_plan.payment_cost_type === 'PER_UNIT'">
+                        <payment-units :editable="is_editable" />
+                        <cost-type-per-unit-display />
+                        <per-unit-history :editable="is_editable"/>
+                    </template>
                 </div>
 
-                <div class="row-item">
-                    <pay-type-edit />
-                    <pay-plan />
+                <div>
+                    <payment-receiver-type :editable="false" />
+
+                    <template v-if="payment_plan.recipient_type === 'INTERNAL'" >
+                        <payment-internal-receiver :editable="is_editable" /> 
+                        <payment-receiver-id :editable="is_editable" />
+                    </template>
+
+                    <template v-if="payment_plan.recipient_type === 'COMPANY'" >
+                        <payment-service-provider v-if="is_editable" />
+                        <payment-receiver-name :editable="is_editable" />
+                        <payment-receiver-id :editable="is_editable"  />
+                    </template>
+
+                    <template v-if="payment_plan.recipient_type === 'PERSON'" >
+                        <cpr-look-up 
+                            v-if="is_editable" 
+                            :cpr.sync="payment_plan.recipient_id" 
+                            :name.sync="payment_plan.recipient_name" />
+                    </template>
+
+                    <payment-method :editable="is_editable && payment_plan.recipient_type === 'PERSON'" />
                 </div>
 
-                <div class="row-item">
-                    <payment-receiver-edit />
-
-                    <fieldset>
-                        <input type="checkbox" id="field-fictive" v-model="payment.fictive">
-                        <label for="field-fictive">Fiktiv Betaling</label>
-                    </fieldset>
+                <div v-if="payment_plan.recipient_type === 'PERSON'">
+                    <payment-method-details v-if="payment_plan.payment_method === 'SD'" :editable="is_editable" />
                 </div>
+
+                <note :editable="is_editable" />
 
             </div>
-
-            <fieldset class="form-actions">
-                <warning :content="payDateRule" />
-                <input type="submit" value="Gem" :disabled="disableAct">
-                <button class="cancel-btn" type="button" @click="cancel()">Annullér</button>
+        
+            <fieldset v-if="is_editable" class="act-edit-actions">
+                <hr>
+                <input type="submit" value="Gem" style="margin-right: .5rem;">
+                <button type="button" @click="reset">Annullér</button>
             </fieldset>
 
         </form>
@@ -126,308 +118,140 @@
 </template>
 
 <script>
+import ActDisplayMixin from '../mixins/ActivityDisplayMixin.js'
+import axios from '../http/Http.js'
+import PaymentServiceProvider from '../payments/edittypes/PaymentServiceProvider.vue'
+import CprLookUp from '../forms/CprLookUp.vue'
+import { json2jsDate } from '../filters/Date.js'
+import { userId2name, approvalId2name } from '../filters/Labels.js'
+import notify from '../notifications/Notify.js'
+import PaymentInternalReceiver from '../payments/edittypes/PaymentInternalReceiverName.vue'
+import PaymentUnits from '../payments/edittypes/PaymentUnits.vue'
+import { sanitizeActivity } from './ActivitySave.js'
+import PermissionLogic from '../mixins/PermissionLogic.js'
 
-    import axios from '../http/Http.js'
-    import { activityId2name } from '../filters/Labels.js'
-    import { epoch2DateStr, tenYearsAgo, inEighteenYears } from '../filters/Date.js'
-    import { json2jsDate } from '../filters/Date.js'
-    import Error from '../forms/Error.vue'
-    import ListPicker from '../forms/ListPicker.vue'
-    import PayTypeEdit from '../payment-details/payment-type/PaymentTypeEdit.vue'
-    import PayPlan from '../payment-details/PaymentPlan.vue'
-    import PaymentReceiverEdit from '../payment-details/payment-receiver/PaymentReceiverEdit.vue'
-    import notify from '../notifications/Notify'
-    import Warning from '../warnings/Warning.vue'
-    import { checkRulePayDate } from '../filters/Rules.js'
 
-    export default {
+export default {
 
-        components: {
-            Error,
-            ListPicker,
-            PayTypeEdit,
-            PayPlan,
-            PaymentReceiverEdit,
-            Warning
+    mixins: [
+        ActDisplayMixin,
+        PermissionLogic
+    ],
+    components: {
+        PaymentServiceProvider,
+        CprLookUp,
+        PaymentInternalReceiver,
+        PaymentUnits
+    },
+    computed: {
+        is_editable: function() {
+            if (this.act && this.act.status !== 'GRANTED') {
+                return true
+            } else {
+                return false
+            }
+        }
+    },
+    methods: {
+        displayDate: function(dt) {
+            return json2jsDate(dt)
         },
-        props: [
-            'mode', // Can be either 'create', 'edit', or 'clone'
-            'activityObj'
-        ],
-        data: function() {
-            return {
-                act: {},
-                act_status_expected: false,
-                act_details: null
+        displayUserName: function(user_id) {
+            return userId2name(user_id)
+        },
+        displayApprLevel: function(appr_lvl_id) {
+            return approvalId2name(appr_lvl_id)
+        },
+        checkDateMax: function(datestr) {
+            const maxpast = parseInt( new Date().getFullYear() ) - 10,
+                maxfuture = parseInt( new Date().getFullYear() ) + 18,
+                date_regex = /[0-9]{4}-[0-9]{2}-[0-9]{2}/g
+                
+            if (!datestr.match(date_regex)) {
+                notify('Er du sikker på, at du har angivet dato som åååå-mm-dd?', 'error')
+                return false
+            }
+            if (parseInt(datestr.substr(0,4)) < maxpast) {
+                notify('Dato må maks. være 10 år tilbage i tiden', 'error')
+                return false
+            } else if (parseInt(datestr.substr(0,4)) > maxfuture) {
+                notify('Dato må maks. være 18 år fremme i tiden', 'error')
+                return false
+            } else {
+                return true
             }
         },
-        computed: {
-            cas: function() {
-                return this.$store.getters.getCase
-            },
-            appropriation: function() {
-                return this.$store.getters.getAppropriation
-            },
-            appr_main_acts: function() {
-                return this.$store.getters.getAppropriationMainActs
-            },
-            disableAct: function () {
-                if (this.act_details && this.act_details.length < 1) {
-                    return true
-                }
-            },
-            startDateSet: function() {
-                if (this.act.activity_type !== 'MAIN_ACTIVITY' && this.mode !== 'clone') {
-                    return epoch2DateStr(this.appropriation.granted_from_date)
-                }
-                if (this.mode === 'clone' && this.act.activity_type !== 'MAIN_ACTIVITY') {
-                    this.act.start_date = null
-                    return epoch2DateStr(this.appropriation.granted_from_date)
-                }
-                if (this.mode === 'clone' && this.act.activity_type === 'MAIN_ACTIVITY') {
-                    this.act.start_date = null
-                }
-                return tenYearsAgo()
-            },
-            endDateSet: function() {
-                if (this.act.activity_type !== 'MAIN_ACTIVITY' && this.mode !== 'clone') {
-                    return epoch2DateStr(this.appropriation.granted_to_date)
-                }
-                if (this.mode === 'clone' && this.act.activity_type !== 'MAIN_ACTIVITY') {
-                    this.act.end_date = null
-                    return epoch2DateStr(this.appropriation.granted_to_date)
-                }
-                if (this.mode === 'clone' && this.act.activity_type === 'MAIN_ACTIVITY') {
-                    this.act.end_date = null
-                }
-                return inEighteenYears()
-            },
-            payment: function() {
-                return this.$store.getters.getPayment
-            },
-            payment_method: function() {
-                return this.$store.getters.getPaymentMethod
-            },
-            payDateRule: function() {
-                return checkRulePayDate(this.act.start_date, this.$store.getters.getPaymentMethod)
-            },
-            preselectedAct: function() {
-                if (this.act_details && this.act_details.length === 1) {
-                    this.$store.commit('setActDetail', this.act_details[0].id)
-                    return this.act.details = this.act_details[0].id
-                }
-            }
-        },
-        watch: {
-            activityObj: function() {
-                this.update()
-            },
-            preselectedAct: function() {
-                this.update()
-            }
-        },
-        methods: {
-            update: function() {
-                this.$store.commit('clearPayment')
-                if (this.activityObj) {
-                    this.act = this.activityObj
-                    this.$store.commit('setPayment', this.act.payment_plan)
-                } else {
-                    if (!this.appr_main_acts) {
-                        this.act.activity_type = 'MAIN_ACTIVITY'
-                    } else {
-                        this.act.activity_type = 'SUPPL_ACTIVITY'
-                    }
-                }
-                this.activityList()
-            },
-            changeActivity: function(act) {
-                this.act.details = act
-                this.$store.commit('setActDetail', act)
-            },
-            displayActName: function(id) {
-                return activityId2name(id)
-            },
-            displayDate: function(dt) {
-                return json2jsDate(dt)
-            },
-            checkDateMax: function(datestr) {
-                const maxpast = parseInt( new Date().getFullYear() ) - 10,
-                    maxfuture = parseInt( new Date().getFullYear() ) + 18,
-                    date_regex = /[0-9]{4}-[0-9]{2}-[0-9]{2}/g
-                    
-                if (!datestr.match(date_regex)) {
-                    notify('Er du sikker på, at du har angivet dato som åååå-mm-dd?', 'error')
-                    return false
-                }
-                if (parseInt(datestr.substr(0,4)) < maxpast) {
-                    notify('Dato må maks. være 10 år tilbage i tiden', 'error')
-                    return false
-                } else if (parseInt(datestr.substr(0,4)) > maxfuture) {
-                    notify('Dato må maks. være 18 år fremme i tiden', 'error')
-                    return false
-                } else {
-                    return true
-                }
-            },
-            saveChanges: function() {
-                if (!this.checkDateMax(this.act.start_date)) {
-                    return
-                }
-                if (this.act.end_date && !this.checkDateMax(this.act.end_date)) {
-                    return
-                }
-                let data = {
-                    activity_type: this.act.activity_type,
-                    start_date: this.act.start_date,
-                    end_date: this.act.end_date ? this.act.end_date : null,
-                    details: this.act.details,
-                    note: this.act.note,
-                    payment_plan: this.payment
-                }
-                if (this.payment.payment_type === 'ONE_TIME_PAYMENT') {
-                    data.end_date = data.start_date
-                }
-                if (this.mode === 'create') {
-                    data.appropriation = this.$route.params.apprid
-                    data.status = this.act_status_expected ? 'EXPECTED' : 'DRAFT'
-                    data.payment_plan.id = null
-                } else if (this.mode === 'clone') {
-                    data.appropriation = this.activityObj.appropriation
-                    data.modifies = this.act.id
-                    data.status = 'EXPECTED'
-                    data.payment_plan.id = null
-                } else {
-                    data.id = this.act.id
-                    data.appropriation = this.activityObj.appropriation
-                }
+        saveChanges: function() {
 
-                if (this.mode === 'create' || this.mode === 'clone') {
-                    
-                    // POSTING an activity
-                    axios.post(`/activities/`, data)
-                    .then(res => {
-                        this.$router.push(`/appropriation/${ this.appropriation.id }`)
-                        this.$store.dispatch('fetchActivity', res.data.id)
-                        this.$store.commit('clearPayment')
-                    })
-                    .catch(err => this.$store.dispatch('parseErrorOutput', err))
-
-                } else {
-
-                    // PATCHING an activity
-                    axios.patch(`/activities/${ this.act.id }/`, data)
-                    .then(res => {
-                        this.$router.push(`/appropriation/${ this.appropriation.id }`)
-                        this.$store.dispatch('fetchActivity', res.data.id)
-                        this.$store.commit('clearPayment')
-                    })
-                    .catch(err => this.$store.dispatch('parseErrorOutput', err))
-                }
-            },
-            cancel: function() {
-                this.$store.commit('clearPayment')
-                if (this.mode !== 'create') {
-                    // Fetch activity anew, since store should be polluted with cancelled edit info
-                    this.$store.dispatch('fetchActivity', this.act.id) 
-                    this.$emit('close')
-                } else {
-                    this.$router.push(`/appropriation/${ this.$route.params.apprid }`)
-                }  
-            },
-            activityList: function() {
-                let actList
-                if (this.act.activity_type === 'MAIN_ACTIVITY') {
-                    actList = `main_activity_for=${ this.appropriation.section }`
-                } else {
-                    actList = `supplementary_activity_for=${ this.appropriation.section }&main_activities=${ this.appr_main_acts.activities[0].details }`
-                }
-                axios.get(`/activity_details/?${ actList }`)
-                .then(res => {
-                    this.act_details = res.data
-                })
-                .catch(err => console.log(err))
+            if (this.act.start_date && !this.checkDateMax(this.act.start_date)) {
+                return
             }
+            if (this.act.end_date && !this.checkDateMax(this.act.end_date)) {
+                return
+            }
+
+            let new_act = this.act
+            new_act.payment_plan = this.payment_plan
+            delete new_act.payment_plan.price_per_unit // API endpoint won't accept this in PATCH request
+
+            const sanitized_act = sanitizeActivity(new_act, 'patch')
+
+            axios.patch(`/activities/${ this.$route.params.actId }/`, sanitized_act)
+            .then(res => {
+                this.$emit('save')
+            })
+            .catch(err => this.$store.dispatch('parseErrorOutput', err))
         },
-        created: function() {
-            this.update()
-            this.$store.commit('clearErrors')
+        reset: function() {
+            this.$emit('cancel')
         }
     }
+}
     
 </script>
 
 <style>
 
     .activity-edit {
-        margin: 1rem 2rem 2rem;
-        background-color: var(--grey1);
+        margin: 0 0 1rem;
     }
 
-    .activity-edit .activity-edit-header {
+    .activity-edit-header {
         background-color: var(--grey2);
         padding: .5rem 2rem;
-        display: flex;
-        flex-flow: row nowrap;
-        align-items: center;
     }
 
-    .activity-edit.activity-clone,
-    .activity-edit.expected-true {
-        background-color: hsl(40, 90%, 80%);
+    .activity-edit-form {
+        padding: 0;
     }
 
-    .activity-edit.activity-clone .activity-edit-header,
-    .activity-edit.expected-true .activity-edit-header {
+    .act-edit-main {
+        display: grid;
+        grid-template-columns: repeat( auto-fill, minmax(20rem, 1fr) );
+        gap: 2rem;
+        padding: 1.5rem 2rem 2rem;
+    }
+
+    .act-edit-main > * {
+        border-right: 1px solid var(--grey0);
+        padding-right: 2rem;
+    }
+
+    .act-edit-actions {
+        padding: 0 2rem 2rem;
+        margin: 0;
+    }
+
+    .act-edit-actions hr {
+        margin: 0 0 2rem;
+    }
+
+    .activity-EXPECTED .activity-edit-header {
         background-color: hsl(40, 90%, 70%);
     }
 
-    .activity-edit form {
-        background-color: transparent;
-        padding: 0;
-    }
-
-    .activity-edit .row-item {
-        margin: 0;
-        padding: 1rem 2rem 2rem;
-        border: solid 1px var(--grey2);
-    }
-
-    .activity-edit select {
-        width: 100%;
-    }
-
-    .activity-edit .payment-amount > * {
-        flex: 0 1 15rem;
-        border: none;
-    }
-
-    .activity-edit .payment-payee,
-    .activity-edit .payment-means {
-        max-width: 30rem;
-        border: none;
-        margin: 0;
-        padding: 0;
-    }
-
-    .activity-edit .payment-means {
-        margin-top: 1rem;
-    }
-
-    .activity-edit .payment-plan {
-        border: solid .25rem hsl(40, 90%, 70%);
+    .activity-EXPECTED .activity-edit-form {
         background-color: hsl(40, 90%, 80%);
-    }
-
-    .activity-edit .form-actions {
-        padding: 2rem 2rem 2rem;
-    }
-
-    .activity-edit .cancel-btn {
-        margin-left: 0.5rem;
-        background-color: transparent;
-        color: var(--primary);
-        border-color: transparent;
     }
 
 </style>

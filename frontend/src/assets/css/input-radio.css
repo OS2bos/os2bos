@@ -38,7 +38,7 @@ input[type="radio"] + label::before {
     content: '';
     display: inline-block;
     height: 1.5rem;
-    margin: .125rem .5rem .125rem 0;
+    margin: .125rem .25rem .125rem 0;
     text-align: center;
     transition: all .1s ease-out;
     width: 1.5rem;

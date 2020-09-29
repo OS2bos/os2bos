@@ -16,8 +16,11 @@
                    :selectable="false">
             
             <div slot="datagrid-header" class="appropriations-header">
-                <h2 style="padding: 0;">Bevillingsskrivelser</h2>
-                <button v-if="permissionCheck === true" class="appropriation-create-btn" @click="$router.push(`/case/${ caseId }/appropriation-create/`)">+ Opret bevillingsskrivelse</button>
+                <h2 style="padding: 0;">
+                    <i class="material-icons">folder_open</i>
+                    Bevillingsskrivelser
+                </h2>
+                <button v-if="user_can_edit === true" class="appropriation-create-btn" @click="$router.push(`/case/${ caseId }/appropriation-create/`)">+ Opret bevillingsskrivelse</button>
             </div>
 
             <tr slot="datagrid-table-footer" class="summary">
@@ -46,13 +49,15 @@
     import axios from '../http/Http.js'
     import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
-    import { sectionId2name, displayStatus } from '../filters/Labels.js'
-    import UserRights from '../mixins/UserRights.js'
+    import { sectionId2name, displayStatus, activityId2name } from '../filters/Labels.js'
+    import PermissionLogic from '../mixins/PermissionLogic.js'
     import DataGrid from '../datagrid/DataGrid.vue'
 
     export default {
 
-        mixins: [UserRights],
+        mixins: [
+            PermissionLogic
+        ],
         components: {
             DataGrid
         },
@@ -82,19 +87,21 @@
                         class: 'nowrap'
                     },
                     {
-                        key: 'details__name',
+                        key: 'note',
+                        title: 'Supplerende oplysninger',
+                        display_func: this.displayNote,
+                        class: 'nowrap'
+                    },
+                    {
+                        key: 'main_activity__details__id',
                         title: 'Hovedydelse',
                         display_func: this.displayMainAct,
                         class: 'nowrap'
                     },
                     {
-                        key: 'num_draft_or_expected_activities',
-                        title: 'Foreløbige',
-                        class: 'nowrap'
-                    },
-                    {
-                        key: 'num_activities',
-                        title: 'I alt',
+                        key: 'num_ongoing_activities',
+                        title: 'Ydelser',
+                        display_func: this.displayActs,
                         class: 'nowrap'
                     },
                     {
@@ -175,6 +182,13 @@
             displayDigits: function(num) {
                 return cost2da(num)
             },
+            displayNote: function(appr) {
+                if (appr.note) {
+                    return `${ appr.note }`
+                } else {
+                    return `-`
+                }
+            },
             displayGranted: function(appr) {
                 return `${ cost2da(appr.total_granted_full_year) } kr.`
             },
@@ -187,9 +201,10 @@
                 return `§ ${ sectionId2name(appr.section) }`
             },
             displayMainAct: function(appr) {
-                if (appr.main_activity) {
-                    return appr.main_activity.details__name
-                }
+                return `${ activityId2name(appr.main_activity__details__id) }`
+            },
+            displayActs: function(id) {
+                return `<dl class="num-acts"><dt>Foreløbige</dt><dd>${ id.num_ongoing_draft_or_expected_activities }</dd><dt>Aktive i alt</dt><dd>${ id.num_ongoing_activities }</dd></dl>`
             },
             statusLabel: function(appr) {
                 let label = 'DRAFT'
@@ -246,6 +261,15 @@
 
     th.datagrid-td-status {
         padding-left: 1rem;
+    }
+
+    .appropriations .num-acts {
+        display: grid;
+        grid-template-columns: auto auto;
+    }
+
+    .appropriations .num-acts dt {
+        padding-top: 0;
     }
 
 </style>

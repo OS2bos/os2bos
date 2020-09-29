@@ -14,6 +14,9 @@
 
                 <div class="modal-header">
                     <slot name="header"></slot>
+                    <button type="button" @click="close" title="Luk dialogbox" class="modal-close">
+                        <i class="material-icons">close</i>
+                    </button>
                 </div>
 
                 <div class="modal-body">
@@ -32,19 +35,26 @@
 <script>
 
     export default {
-        
+        methods: {
+            close: function() {
+                this.$emit('closedialog')
+            }
+        }
     }
 
 </script>
 
 <style>
 
-    .dialog {
-
+    .dialog .modal-header {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: space-between;
     }
 
     .dialog .modal-container {
-        padding: 2rem;
+        padding: 1rem 2rem 2rem;
     }
 
     .dialog .modal-footer {
@@ -53,6 +63,15 @@
 
     .dialog .modal-footer button {
         margin-left: .5rem;
+    }
+
+    .dialog .modal-close {
+        border: none;
+        box-shadow: none;
+        height: 2.5rem;
+        width: 3rem;
+        text-align: center;
+        margin: 0 -1rem 0 0;
     }
 
 </style>

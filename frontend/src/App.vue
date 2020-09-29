@@ -51,11 +51,6 @@
 
 <style>
 
-    form {
-        background-color: var(--grey1);
-        padding: .5rem 1rem;
-    }
-
     #app {
         display: flex;
         flex-flow: column nowrap;
@@ -86,55 +81,6 @@
     .material-icons {
         font-size: 2rem;
         vertical-align: middle;
-    }
-
-    .label {
-        padding: .25rem .5rem;
-        border-radius: .25rem;
-        display: inline-block;
-        text-transform: capitalize;
-    }
-
-    legend.required::after,
-    label.required::after {
-        content: "*";
-        color: var(--danger);
-        margin: 0 .25rem;
-    }
-
-    .mini-label .label {
-        padding: .15rem .5rem;
-        font-size: .85rem;
-    }
-
-    .label-DRAFT {
-        background-color: hsl(0,0%,80%);
-        color: hsl(0,0%,20%);
-    }
-
-    .label-BUDGETED {
-        background-color: hsl(var(--color3), 90%, 80%);
-        color: hsl(var(--color3), 90%, 20%);
-    }
-
-    .label-EXPECTED {
-        background-color: hsl(var(--color3), 90%, 80%);
-        color: hsl(var(--color3), 90%, 20%);
-    }
-
-    .label-GRANTED {
-        background-color: hsl(var(--color2), 100%, 25%);
-        color: var(--grey0);
-    }
-
-    .label-CLOSED {
-        background-color: hsl(var(--color4), 100%, 60%);
-        color: var(--grey0);
-    }
-
-    .label-DISCONTINUED {
-        background-color: hsl(var(--color4), 50%, 80%);
-        color: hsl(var(--color4), 100%, 20%);
     }
 
     .danger {
@@ -169,82 +115,23 @@
 
     .right {
         text-align: right;
-    }    
+    }
+
+    .center {
+        text-align: center;
+    }
 
     .dim {
         opacity: .6;
     }
 
+    .label-header {
+        opacity: .66;
+        font-size: .85rem;
+    }
+
     .expected {
         color: hsl(var(--color3), 100%, 28%);
-    }
-
-    /* modal box */
-    .modal-mask {
-        position: fixed;
-        z-index: 9998;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, .5);
-        display: table;
-        transition: opacity .3s ease;
-    }
-
-    .modal-wrapper {
-        display: table-cell;
-        vertical-align: middle;
-    }
-
-    .modal-container {
-        margin: 0px auto;
-        padding: 3rem 3.5rem;
-        background-color: var(--grey0);
-        border-radius: 2px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
-        transition: all .3s ease;
-        max-height: 90vh;
-        max-width: 90vh;
-        display: flex;
-        flex-flow: column nowrap;
-    }
-
-    .modal-body {
-        margin: 0.5rem 0;
-        flex: 0 1 auto;
-        overflow: auto;
-    }
-
-    .modal-confirm-btn {
-        float: right;
-    }
-
-    .modal-cancel-btn {
-        float: right;
-        margin-left: 0.5rem;
-        background-color: transparent;
-        color: var(--primary);
-        border-color: transparent;
-    }
-
-    .modal-enter {
-        opacity: 0;
-    }
-
-    .modal-leave-active {
-        opacity: 0;
-    }
-
-    .modal-enter .modal-container,
-    .modal-leave-active .modal-container {
-        -webkit-transform: scale(1.1);
-        transform: scale(1.1);
-    }
-
-    .modal-form {
-        background-color: none;
-        padding: 0;
     }
 
 </style>

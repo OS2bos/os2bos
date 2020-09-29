@@ -6,7 +6,7 @@ def migrate_sections(apps, schema_editor):
     Section = apps.get_model("core", "Section")
 
     family_target_group, _ = TargetGroup.objects.get_or_create(
-        name="Familieafdelingen", required_fields_for_case=["district"]
+        name="Familieafdelingen", required_fields_for_case="district"
     )
     disability_target_group, _ = TargetGroup.objects.get_or_create(
         name="Handicapafdelingen"

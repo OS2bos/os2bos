@@ -1,26 +1,50 @@
-<!-- Copyright (C) 2019 Magenta ApS, http://magenta.dk.
+<!-- Copyright (C) 2020 Magenta ApS, http://magenta.dk.
    - Contact: info@magenta.dk.
    -
    - This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
 
-
 <template>
 
-    <section class="activity" v-if="act">
+    <section v-if="act && act.id" class="activity">
         <header class="activity-header">
             <h1>
                 <i class="material-icons">style</i>
-                Udgift til <span v-html="activityId2name(act.details)"></span>
+                Udgift til <span v-html="actId2name(act.details)"></span>
                 <span v-if="act.payment_plan.fictive" class="dim">(Fiktiv)</span>
             </h1>
-            <template v-if="permissionCheck === true">
-                <button v-if="act.status !== 'GRANTED'" @click="show_edit = !show_edit" class="act-edit-btn">Redigér</button>
-                <button v-if="can_adjust" @click="createExpected()" class="act-edit-btn">+ Lav forventet justering</button>
+            <template v-if="user_can_edit === true && !edit_mode">
+                <router-link v-if="can_adjust" class="btn act-edit-btn" style="margin-left: 1rem;" :to="`/activity/create?mode=expected`">+ Lav forventet justering</router-link>
+                <button v-if="act.status !== 'GRANTED'" class="act-edit-btn" @click="edit_mode = true" style="margin-left: 1rem;">Redigér</button>
                 <button v-if="act.status !== 'GRANTED'" class="act-delete-btn" @click="preDeleteCheck()">Slet</button>
             </template>
         </header>
+
+        <div :class="`act-edit-header activity-${ act.status }`" v-if="!edit_mode">
+            <dl>
+                <dt>Foranstaltningssag</dt>
+                <dd>{{ appropriation.sbsys_id }}</dd>
+            </dl>
+            <dl>
+                <dt>SBSYS-hovedsag</dt>
+                <dd>{{ cas.sbsys_id }}</dd>
+            </dl>
+            <dl>
+                <dt>Sagspart (CPR, navn)</dt>
+                <dd>
+                    {{ cas.cpr_number }}, {{ cas.name }}
+                </dd>
+            </dl>
+            <dl>
+                <dt>Bevilges efter §</dt>
+                <dd v-if="appropriation">{{ displaySection(appropriation.section) }}</dd>
+            </dl>
+        </div>
+
+        <activity-edit v-if="edit_mode" @save="reload" @cancel="reload" :class="`activity-${ act.status }`" />
+        
+        <activity-summary v-else :class="`activity-${ act.status }`" />
 
         <!-- Delete activity modal -->
         <div v-if="showModal">
@@ -47,7 +71,7 @@
 
                             <div class="modal-footer">
                                 <slot name="footer">
-                                    <button type="button" class="modal-cancel-btn" @click="reload()">Annullér</button>
+                                    <button type="button" class="modal-cancel-btn" @click="reload">Annullér</button>
                                     <button class="modal-delete-btn" type="submit">Slet</button>
                                 </slot>
                             </div>
@@ -56,278 +80,112 @@
                 </div>
             </form>
         </div>
-
-        <div v-if="show_edit">
-            <activity-edit :activity-obj="act" v-if="show_edit" @save="reload()" @close="show_edit = !show_edit" :mode="edit_mode" />
-        </div>
-
-        <div class="activity-info" v-if="!show_edit">
-            <dl>
-                <dt>Foranstaltningssag</dt>
-                <dd>{{ appr.sbsys_id }}</dd>
-
-                <dt>SBSYS-hovedsag</dt>
-                <dd>{{ cas.sbsys_id }}</dd>
-
-                <dt>Sagspart (CPR, navn)</dt>
-                <dd>
-                    {{ cas.cpr_number }}, {{ cas.name }}
-                </dd>
-
-                <dt>Status</dt>
-                <dd>
-                    <div v-html="statusLabel(act.status)"></div>
-                </dd>
-                <template v-if="act.status === 'GRANTED'">
-                    <dt>
-                        Godkendt af
-                    </dt>
-                    <dd>
-                        <p>
-                            <em>{{ displayUserName(act.approval_user) }}</em> d. {{ displayDate(act.appropriation_date) }}<br>
-                            (<span v-html="displayApprLevel(act.approval_level)"></span> kompetence)
-                        </p>
-                        <p v-if="act.approval_note">Note: {{ act.approval_note }}</p>
-                    </dd>
-                </template>
-                <dt>
-                    Type
-                </dt>
-                <dd>
-                    <div v-if="act.activity_type === 'MAIN_ACTIVITY'">Hovedydelse</div>
-                    <div v-if="act.activity_type === 'SUPPL_ACTIVITY'">Følgeydelse</div>
-                </dd>
-                <dt>Bevilges efter §</dt>
-                <dd v-if="appr" v-html="displaySection(appr.section)"></dd>
-                <dt>Ydelse</dt>
-                <dd v-html="activityId2name(act.details)"></dd>
-                <dt>Startdato</dt>
-                <dd>{{ displayDate(act.start_date) }}</dd>
-                <template v-if="act.end_date">
-                    <dt>Slutdato</dt>
-                    <dd>{{ displayDate(act.end_date) }}</dd>
-                </template>
-                <template v-if="act.note">
-                    <dt>Supplerende information</dt>
-                    <dd>{{ act.note }}</dd>
-                </template>
-            </dl>
-            
-            <div v-if="pay">
-                <dl>
-                    <dt>Afregningsenhed</dt>
-                    <dd>
-                        <div v-if="pay.payment_type === 'ONE_TIME_PAYMENT'">Engangsudgift</div>
-                        <div v-if="pay.payment_type === 'RUNNING_PAYMENT'">Fast beløb, løbende</div>
-                        <div v-if="pay.payment_type === 'PER_HOUR_PAYMENT'">Takst pr. time</div>
-                        <div v-if="pay.payment_type === 'PER_DAY_PAYMENT'">Takst pr. døgn</div>
-                        <div v-if="pay.payment_type === 'PER_KM_PAYMENT'">Takst pr. kilometer</div>
-                    </dd>
-                    <dd>
-                        <div v-if="pay.payment_frequency === 'DAILY'">Dagligt</div>
-                        <div v-if="pay.payment_frequency === 'WEEKLY'">Ugentligt</div>
-                        <div v-if="pay.payment_frequency === 'BIWEEKLY'">Hver 2. uge</div>
-                        <div v-if="pay.payment_frequency === 'MONTHLY'">Månedligt den {{pay.payment_day_of_month}}.</div>
-                    </dd>
-                    <dt>
-                        <div v-if="pay.payment_type === 'PER_HOUR_PAYMENT'">Timer</div>
-                        <div v-if="pay.payment_type === 'PER_DAY_PAYMENT'">Døgn</div>
-                        <div v-if="pay.payment_type === 'PER_KM_PAYMENT'">Kilometer</div>
-                    </dt>
-                    <dd v-if="pay.payment_type === 'PER_HOUR_PAYMENT' || pay.payment_type === 'PER_DAY_PAYMENT' || pay.payment_type === 'PER_KM_PAYMENT'">
-                        {{ displayDigits(pay.payment_units) }}
-                    </dd>
-                    <dt>Beløb</dt>
-                    <dd>{{ displayDigits(pay.payment_amount) }} kr.</dd>
-                </dl>
-            </div>
-            <div v-if="pay">
-                <dl>
-                    <dt>Betalingsmodtager</dt>
-                    <dd>
-                        <div v-if="pay.recipient_type === 'INTERNAL'">Intern</div>
-                        <div v-if="pay.recipient_type === 'COMPANY'">Firma</div>
-                        <div v-if="pay.recipient_type === 'PERSON'">Person</div>
-                    </dd>
-                    <dt>
-                        <div v-if="pay.recipient_type === 'INTERNAL'">Reference</div>
-                        <div v-if="pay.recipient_type === 'COMPANY'">CVR-nr</div>
-                        <div v-if="pay.recipient_type === 'PERSON'">CPR-nr</div>
-                    </dt>
-                    <dd>{{ pay.recipient_id }}</dd>
-                    <dt>Navn</dt>
-                    <dd>{{ pay.recipient_name }}</dd>
-                </dl>
-            </div>
-            <div v-if="pay">
-                <dl>
-                    <dt>Betalingsmåde</dt>
-                    <dd>
-                        <div v-if="pay.payment_method === 'INVOICE'">Faktura</div>
-                        <div v-if="pay.payment_method === 'INTERNAL'">Intern afregning</div>
-                        <div v-if="pay.payment_method === 'CASH'">Udbetaling</div>
-                        <div v-if="pay.payment_method === 'SD'">SD-løn</div>
-                    </dd>
-                    <template v-if="pay.payment_method_details === 1">
-                        <dt>Skattekort</dt>
-                        <dd>Hovedkort</dd>
-                    </template>
-                    <template v-if="pay.payment_method_details === 2">
-                        <dt>Skattekort</dt>
-                        <dd>Bikort</dd>
-                    </template>
-                    <template v-if="pay.fictive">
-                        <dt>Betaling</dt>
-                        <dd>Fiktiv</dd>
-                    </template>
-                </dl>
-            </div>
-
-        </div>
         
-        <h2 style="padding: 2rem 0 0;">
-            Betalingsnøgle {{ pay.payment_id }}
-        </h2>
-        <payment-schedule :p-id="pay.payment_id" v-if="!show_edit" />
+        <payment-schedule :p-id="payment_plan.payment_id" :edit_mode="edit_mode"/>
         
     </section>
 
 </template>
 
 <script>
+import ActDisplayMixin from '../mixins/ActivityDisplayMixin.js'
+import ActivityEdit from './ActivityEdit.vue'
+import ActivitySummary from './ActivitySummary.vue'
+import axios from '../http/Http.js'
+import PaymentSchedule from '../payments/PaymentList.vue'
+import { activityId2name, sectionId2name } from '../filters/Labels.js'
+import notify from '../notifications/Notify.js'
+import PermissionLogic from '../mixins/PermissionLogic.js'
 
-    import axios from '../http/Http.js'
-    import ActivityEdit from './ActivityEdit.vue'
-    import PaymentSchedule from '../payments/PaymentList.vue'
-    import { json2jsDate } from '../filters/Date.js'
-    import { cost2da } from '../filters/Numbers.js'
-    import { activityId2name, sectionId2name, displayStatus, userId2name, approvalId2name } from '../filters/Labels.js'
-    import store from '../../store.js'
-    import notify from '../notifications/Notify.js'
-    import UserRights from '../mixins/UserRights.js'
+export default {
 
-    export default {
-
-        mixins: [UserRights],
-
-        components: {
-            ActivityEdit,
-            PaymentSchedule
+    mixins: [
+        ActDisplayMixin,
+        PermissionLogic
+    ],
+    components: {
+        PaymentSchedule,
+        ActivityEdit,
+        ActivitySummary
+    },
+    data: function() {
+        return {
+            edit_mode: false,
+            showModal: false
+        }
+    },
+    computed: {
+        cas: function() {
+            return this.$store.getters.getCase
         },
-        data: function() {
-            return {
-                payments: null,
-                show_edit: false,
-                edit_mode: 'edit',
-                showModal: false
-            }
-        },
-        beforeRouteEnter: function(to, from, next) {
-            store.commit('clearActivity')
-            store.dispatch('fetchActivity', to.params.actId)
-            .then(() => next())
-        },
-        beforeRouteUpdate: function(to, from, next) {
-            store.dispatch('fetchActivity', to.params.actId)
-            .then(() => next())
-        },
-        computed: {
-            act: function() {
-                return this.$store.getters.getActivity
-            },
-            pay: function() {
-                return this.$store.getters.getPaymentSchedule
-            },
-            appr: function() {
-                return this.$store.getters.getAppropriation
-            },
-            cas: function() {
-                return this.$store.getters.getCase
-            },
-            can_adjust: function() {
-                // Adjust only if parent activity was granted ans has no other modifying activities
-                if (this.appr && this.act.status === 'GRANTED') {
-                    let modifier = this.appr.activities.filter(ac => {
-                        return ac.modifies === this.act.id
-                    })
-                    if (modifier.length < 1) {
-                        return true
-                    } else {
-                        return false
-                    }
+        can_adjust: function() {
+            // Adjust only if parent activity was granted and has no other modifying activities
+            if (this.appropriation && this.act.status === 'GRANTED') {
+                let modifier = this.appropriation.activities.filter(ac => {
+                    return ac.modifies === this.act.id
+                })
+                if (modifier.length < 1) {
+                    return true
                 } else {
                     return false
                 }
-            }
-        },
-        watch: {
-            cas: function() {
-                if (this.cas) {
-                    this.$store.commit('setBreadcrumb', [
-                        {
-                            link: '/',
-                            title: 'Sager'
-                        },
-                        {
-                            link: `/case/${ this.cas.id }`,
-                            title: `Hovedsag ${ this.cas.sbsys_id }, ${ this.cas.name }`
-                        },
-                        {
-                            link: `/appropriation/${ this.appr.id }`,
-                            title: `Bevillingsskrivelse ${ this.appr.sbsys_id }`
-                        },
-                        {
-                            link: false,
-                            title: `Udgift til ${ activityId2name(this.act.details) }`
-                        }
-                    ])
-                }
-            }
-        },
-        methods: {
-            reload: function() {
-                this.showModal = false
-                this.show_edit =  false
-                this.$store.dispatch('fetchActivity', this.$route.params.actId)
-            },
-            displayDate: function(dt) {
-                return json2jsDate(dt)
-            },
-            displayDigits: function(num) {
-                return cost2da(num)
-            },
-            activityId2name: function(id) {
-                return activityId2name(id)
-            },
-            displaySection: function(id) {
-                return sectionId2name(id)
-            },
-            statusLabel: function(status) {
-                return displayStatus(status)
-            },
-            displayUserName: function(user_id) {
-                return userId2name(user_id)
-            },
-            displayApprLevel: function(appr_lvl_id) {
-                return approvalId2name(appr_lvl_id)
-            },
-            createExpected: function() {                
-                this.edit_mode = 'clone'
-                this.show_edit =  true
-            },
-            preDeleteCheck: function() {
-                this.showModal = true
-            },
-            deleteActivity: function() {
-                axios.delete(`/activities/${ this.$route.params.actId }/`)
-                .then(res => {
-                    this.$router.push(`/appropriation/${ this.appr.id }`)
-                    notify('Ydelse slettet', 'success')
-                })
-                .catch(err => this.$store.dispatch('parseErrorOutput', err))
+            } else {
+                return false
             }
         }
+    },
+    watch: {
+        cas: function() {
+            if (this.cas && this.act.details) {
+                this.$store.commit('setBreadcrumb', [
+                    {
+                        link: '/',
+                        title: 'Sager'
+                    },
+                    {
+                        link: `/case/${ this.cas.id }`,
+                        title: `Hovedsag ${ this.cas.sbsys_id }, ${ this.cas.name }`
+                    },
+                    {
+                        link: `/appropriation/${ this.appropriation.id }`,
+                        title: `Bevillingsskrivelse ${ this.appropriation.sbsys_id }`
+                    },
+                    {
+                        link: false,
+                        title: `Udgift til ${ activityId2name(this.act.details) }`
+                    }
+                ])
+            }
+        }
+    },
+    methods: {
+        reload: function() {
+            this.edit_mode = false
+            this.showModal = false
+            this.$store.dispatch('fetchActivity', this.$route.params.actId)
+        },
+        actId2name: function(id) {
+            return activityId2name(id)
+        },
+        displaySection: function(id) {
+            return sectionId2name(id)
+        },
+        preDeleteCheck: function() {
+            this.showModal = true
+        },
+        deleteActivity: function() {
+            axios.delete(`/activities/${ this.$route.params.actId }/`)
+            .then(res => {
+                this.$router.push(`/appropriation/${ this.appropriation.id }`)
+                notify('Ydelse slettet', 'success')
+            })
+            .catch(err => this.$store.dispatch('parseErrorOutput', err))
+        }
+    },
+    created: function(){
+        this.reload()
     }
+}
     
 </script>
 
@@ -353,7 +211,7 @@
     }
 
     .activity .act-delete-btn,
-    .modal-delete-btn {
+    .activity .modal-delete-btn {
         margin: 0;
         border-color: var(--danger);
         color: var(--danger);
@@ -375,17 +233,30 @@
         border-color: var(--danger);
     }
 
-    .activity-info {
-        display: grid; 
-        grid-template-columns: auto auto auto auto;
-        grid-gap: 3rem;
-        justify-content: start;
+    .act-edit-header {
         background-color: var(--grey1);
-        padding: 1.5rem 2rem 2rem;
+        padding: 1rem 2rem;
+        display: grid;
+        grid-template-columns: repeat( auto-fill, minmax(20rem, 1fr) );
+        gap: 2rem;
+        margin-bottom: .25rem;
+    }
+
+    .act-edit-header > dl {
+        margin: 0;
+        border-right: 1px solid var(--grey0);
+    }
+
+    .act-edit-header > dl > dt {
+        padding-top: 0;
     }
 
     .activity .payment_schedule {
         margin: 0 0 1rem;
+    }
+
+    .activity-EXPECTED {
+        background-color: hsl(40, 90%, 80%);
     }
 
 </style>

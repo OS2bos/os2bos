@@ -19,20 +19,21 @@
 # │ │ │ │ │
 # * * * * * command to execute
 
-# Prism exports
-# Run export Monday to Friday which will generate exports for Tuesday to Saturday.
-5 0 * * 1-5 python manage.py export_to_prism
+# Prism exports for a normal week:
+# Monday (exports Tuesday payments)
+# Tuesday (exports Wednesday payments)
+# Wednesday (exports Thursday payments)
+# Thursday (exports Friday, Saturday, Sunday, Monday)
+5 0 * * 1-4 python manage.py export_to_prism
 
-# Run Sunday export on Friday
-10 0 * * 5 python manage.py export_to_prism --date $(date +%Y%m%d --date="+2 day")
+10 0 * * * python manage.py mark_fictive_payments_paid
+15 0 * * * python manage.py generate_payments_report
+20 0 * * * python manage.py send_expired_emails
+25 0 * * * python manage.py renew_payments
+30 0 * * * python manage.py recalculate_on_changed_rate
 
-# Run Monday export on Friday
-15 0 * * 5 python manage.py export_to_prism --date $(date +%Y%m%d --date="+3 day")
-
-20 0 * * * python manage.py mark_fictive_payments_paid
-25 0 * * * python manage.py generate_payments_report
-30 0 * * * python manage.py send_expired_emails
-35 0 * * * python manage.py renew_payments
+# Generate payment date exclusions for next year yearly.
+@yearly python manage.py generate_payment_date_exclusions $(date +%Y --date="+1 year")
 
 * * * * * sh -c "python manage.py send_mail >> /log/cron_mail.log 2>&1"
 */20 * * * * sh -c "python manage.py retry_deferred >> /log/cron_mail_deferred.log 2>&1"

@@ -87,6 +87,9 @@ SECURE_PROXY_SSL_HEADER = (
     else ("HTTP_X_FORWARDED_PROTO", "https")
 )
 
+INITIALIZE_DATABASE = settings.getboolean(
+    "INITIALIZE_DATABASE", fallback=False
+)
 
 # Application definition
 
@@ -107,6 +110,7 @@ INSTALLED_APPS = [
     "core.apps.CoreConfig",
     "django_saml2_auth",
     "mailer",
+    "watchman",
 ]
 
 MIDDLEWARE = [
@@ -118,6 +122,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # For setting current user when creating an object.
+    "django_currentuser.middleware.ThreadLocalUserMiddleware",
     # For tracking which user made the changes for a model.
     "simple_history.middleware.HistoryRequestMiddleware",
 ]
@@ -319,6 +325,37 @@ LOGGING = {
                 fallback=os.path.join(LOG_DIR, "send_expired_emails.log"),
             ),
         },
+        "recalculate_on_changed_rate": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "formatter": "verbose",
+            "filename": settings.get(
+                "RECALCULATE_ON_CHANGED_RATE_LOG_FILE",
+                fallback=os.path.join(
+                    LOG_DIR, "recalculate_on_changed_rate.log"
+                ),
+            ),
+        },
+        "generate_payment_date_exclusions": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "formatter": "verbose",
+            "filename": settings.get(
+                "GENERATE_PAYMENT_DATE_EXCLUSION_LOG_FILE",
+                fallback=os.path.join(
+                    LOG_DIR, "generate_payment_date_exclusions.log"
+                ),
+            ),
+        },
+        "serviceplatformen": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "formatter": "verbose",
+            "filename": settings.get(
+                "SERVICEPLATFORMEN_LOG_FILE",
+                fallback=os.path.join(LOG_DIR, "serviceplatformen.log"),
+            ),
+        },
     },
     "formatters": {
         "verbose": {
@@ -353,6 +390,21 @@ LOGGING = {
         },
         "bevillingsplatform.send_expired_emails": {
             "handlers": ["send_expired_emails"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        "bevillingsplatform.recalculate_on_changed_rate": {
+            "handlers": ["recalculate_on_changed_rate"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        "bevillingsplatform.generate_payment_date_exclusions": {
+            "handlers": ["generate_payment_date_exclusions"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        "bevillingsplatform.serviceplatformen": {
+            "handlers": ["serviceplatformen"],
             "level": "INFO",
             "propagate": True,
         },
@@ -458,3 +510,13 @@ SAML2_AUTH = {
 }
 
 SILENCED_SYSTEM_CHECKS = ["rest_framework.W001"]
+
+ALLOW_EDIT_OF_PAST_PAYMENTS = settings.getboolean(
+    "ALLOW_EDIT_OF_PAST_PAYMENTS", fallback=False
+)
+
+WATCHMAN_CHECKS = (
+    "watchman.checks.caches",
+    "watchman.checks.databases",
+    # disable storage check since fileupload is not used.
+)

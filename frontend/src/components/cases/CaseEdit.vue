@@ -80,7 +80,7 @@
                         </template>
                     </fieldset>
 
-                    <template v-if="effort_available">
+                    <template v-if="effort_available && effort_available.length > 0">
                         <fieldset>
                             <legend style="margin-bottom: .75rem;">Andet:</legend>
                             <template v-for="effort in effort_available">
@@ -216,11 +216,13 @@
         },
         methods: {
             fetchEfforts: function() {
-                axios.get(`/efforts/?allowed_for_target_groups=${ this.cas.target_group }`)
-                .then(res => {
-                    this.effort_available = res.data    
-                })
-                .catch(err => console.log(err))
+                if (this.cas.target_group) {
+                    axios.get(`/efforts/?allowed_for_target_groups=${ this.cas.target_group }`)
+                    .then(res => {
+                        this.effort_available = res.data    
+                    })
+                    .catch(err => console.log(err))
+                }
             },
             changeMuni: function(ev, type) {
                 this.cas[type] = ev
@@ -366,6 +368,10 @@
         background-color: transparent;
         color: var(--primary);
         border-color: transparent;
+    }
+
+    .case-edit .listpicker {
+        width: auto;
     }
 
 </style>

@@ -8,23 +8,25 @@
 
 <template>
 
-
-    <div class="case-search">
-        <div class="case-search-filters">
-            <h2 class="case-search-filters--title">Filtrér sager</h2>
+    <section class="case-search">
+        <header class="case-search-header">
+            <h1>Sager</h1>
+            <button v-if="user_can_edit === true" class="create" @click="$router.push('/case-create/')">+ Tilknyt hovedsag</button>
+        </header>
+        <div class="search-filter">
             <form @submit.prevent>
-                <ul class="filter-fields">
-                    <li>
+                <fieldset class="filter-fields">
+                    <div class="filter-field">
                         <label for="field-sbsysid">SBSYS ID</label>
                         <input type="search" @input="update" id="field-sbsysid" v-model="$route.query.sbsys_id">
-                    </li>
+                    </div>
 
-                    <li>
+                    <div class="filter-field">
                         <label for="field-cpr">CPR-nr</label>
                         <input type="search" @input="changeCpr" id="field-cpr" v-model="$route.query.cpr_number">
-                    </li>
+                    </div>
 
-                    <li>
+                    <div class="filter-field">
                         <label for="field-team">Team</label>
                         <list-picker 
                             v-if="teams"
@@ -33,9 +35,9 @@
                             :list="teams"
                             @selection="changeTeam"
                             display-key="name" />
-                    </li>
+                    </div>
 
-                    <li>
+                    <div class="filter-field">
                         <label for="field-case-worker">Sagsbehandler</label>
                         <list-picker 
                             v-if="users"
@@ -44,46 +46,41 @@
                             :list="users"
                             @selection="changeWorker"
                             display-key="fullname" />
-                    </li>
-                </ul>
+                    </div>
+                </fieldset>
 
-                <ul class="filter-fields">
-                    <li>
+                <fieldset class="filter-fields radio-filters">
+                    <div class="filter-field">
                         <input type="radio" v-model="$route.query.expired" id="field-expired-1" @change="update" :value="null">
                         <label for="field-expired-1">Aktive og lukkede sager</label>
-                    </li>
-                    <li>
+                    </div>
+                    <div class="filter-field">
                         <input type="radio" v-model="$route.query.expired" id="field-expired-2" @change="update" :value="false">
                         <label for="field-expired-2">Kun aktive sager</label>
-                    </li>
-                    <li>
+                    </div>
+                    <div class="filter-field">
                         <input type="radio" v-model="$route.query.expired" id="field-expired-3" @change="update" :value="true">
                         <label for="field-expired-3">Kun lukkede sager</label>
-                    </li>
-                </ul>
+                    </div>
+                </fieldset>
             </form>
         </div>
         
         <div class="case-search-list">
-
             <data-grid v-if="cases"
                        ref="data-grid"
                        :data-list="cases"
                        :columns="columns"
                        @selection="updateSelectedCases"
-                       :selectable="permissionCheck">
+                       :selectable="user_can_edit">
 
-                <div slot="datagrid-header">
-                    <h1 style="padding: 0;">Sager</h1>
-                    <button v-if="permissionCheck === true" class="create" @click="$router.push('/case-create/')">+ Tilknyt hovedsag</button>
-                </div>
                 <p slot="datagrid-footer" v-if="cases.length < 1">
                     Kan ikke finde nogen resultater, der matcher de valgte kriterier
                 </p>
 
             </data-grid>
 
-            <button v-if="cases.length > 0 && permissionCheck"
+            <button v-if="cases.length > 0 && user_can_edit"
                     :disabled="selected_cases.length < 1" 
                     class="case-search-move-btn"
                     @click="show_modal = true">
@@ -91,10 +88,8 @@
                 Flyt sager
             </button>            
 
-            <dialog-box v-if="show_modal">
-                <div slot="header">
-                    <h2>Flyt sager til en medarbejder</h2>
-                </div>
+            <dialog-box v-if="show_modal" @closedialog="closeMoveDiag">
+                <h2 slot="header" style="padding: 0;">Flyt sager til en medarbejder</h2>
                 <div slot="body">
                     <div class="row" style="justify-content: space-between;">
                         <div class="move-cases-list">
@@ -116,13 +111,13 @@
                     </div>
                 </div>
                 <div slot="footer">
-                    <button @click="moveCases()">Flyt</button>
-                    <button @click="closeMoveDiag()" class="modal-cancel-btn">Annuller</button>
+                    <button type="submit" @click="moveCases">Flyt</button>
+                    <button type="button" @click="closeMoveDiag">Annuller</button>
                 </div>
             </dialog-box>
 
         </div>
-    </div>
+    </section>
 
 </template>
 
@@ -135,7 +130,7 @@
     import DialogBox from '../dialog/Dialog.vue'
     import notify from '../notifications/Notify.js'
     import CaseFilters from '../mixins/CaseFilters.js'
-    import UserRights from '../mixins/UserRights.js'
+    import PermissionLogic from '../mixins/PermissionLogic.js'
     import { targetGroupId2name, districtId2name, displayEffort, userId2name, teamId2name } from '../filters/Labels.js'
 
     export default {
@@ -147,7 +142,7 @@
         },
         mixins: [
             CaseFilters,
-            UserRights
+            PermissionLogic
         ],
         data: function() {
             return {
@@ -166,12 +161,15 @@
                         key: 'sbsys_id',
                         title: 'SBSYS ID',
                         display_func: this.displayID,
-                        class: 'datagrid-action'
+                        class: 'datagrid-action nowrap'
                     },
                     {
                         key: 'cpr_number',
-                        title: 'CPR/Navn',
-                        display_func: this.displayCPRName
+                        title: 'CPR'
+                    },
+                    {
+                        key: 'name',
+                        title: 'Navn'
                     },
                     {
                         key: 'target_group',
@@ -185,7 +183,7 @@
                         display_func: this.displayEffortName
                     },
                     {
-                        key: 'num_appropriations',
+                        key: 'num_ongoing_appropriations',
                         title: 'Bevillinger',
                         display_func: this.displayAppr,
                         class: 'nowrap'
@@ -222,13 +220,10 @@
                 let to = `#/case/${ d.id }/`
                 return `<a href="${ to }"><i class="material-icons">folder_shared</i> ${ d.sbsys_id }</a>`
             },
-            displayCPRName: function(id) {
-                return `${ id.cpr_number }<br>${ id.name }`
-            },
             displayTargetGroupDistrict: function(id) {
                 let str = `${ targetGroupId2name(id.target_group) }`
                 if (id.target_group === 1) { 
-                    str += `<dt>Skoledistrikt</dt><dd>${ districtId2name(id.district) }</dd></dl>`
+                    str += `<dl><dt>Skoledistrikt</dt><dd>${ districtId2name(id.district) }</dd></dl>`
                 }
                 return str
             },
@@ -250,7 +245,7 @@
                 }
             },
             displayAppr: function(id) {
-                return `<dl class="appropriation-status"><dt>Foreløbige</dt><dd>${ id.num_draft_or_expected_appropriations }</dd><dt>I alt</dt><dd>${ id.num_appropriations }</dd></dl>`
+                return `<dl class="appropriation-status"><dt>Foreløbige</dt><dd>${ id.num_ongoing_draft_or_expected_appropriations }</dd><dt>Aktive i alt</dt><dd>${ id.num_ongoing_appropriations }</dd></dl>`
             },
             diagChangeWorker: function(worker_id) {
                 this.diag_field_case_worker = worker_id
@@ -288,9 +283,8 @@
                 this.show_modal = false
                 this.update()
             }
-            
         },
-        mounted: function() {
+        created: function() {
             this.update()
         }
     }
@@ -303,50 +297,26 @@
         padding: 0 2rem 2rem;
     }
 
+    .case-search-header {
+        display: flex;
+        align-items: center;
+    }
+
+    .case-search .radio-filters {
+        margin-top: 1rem;
+    }
+
     .case-search-list {
-        margin-top: 2rem;
+        margin-top: 1rem;
         order: 2;
         flex-grow: 1;
     }
 
     .case-search .create {
-        float: left;
-        margin: -2rem 0 0 5rem;
+        margin: 0 1rem;
     }
 
     .case-search-list .more .material-icons {
-        margin: 0;
-    }
-
-    .case-search-filters {
-        background-color: var(--grey1);
-        padding: 0 1.5rem 1rem;
-        margin-bottom: 3rem;
-    }
-
-    .case-search-filters--title {
-        font-size: 1.125rem;
-        padding: 1.5rem 0 .5rem;
-    }
-
-    .case-search-filters > form {
-        padding: 0;
-    }
-
-    .case-search-filters .filter-fields {
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: flex-start;
-    }
-
-    .case-search-filters .filter-fields li {
-        list-style: none;
-        padding: .5rem 1rem .5rem 0;
-    }
-
-    .case-search-filters .filter-fields label {
         margin: 0;
     }
 
@@ -372,10 +342,6 @@
 
     .case-search .appropriation-status dt {
         padding-top: 0;
-    }
-
-    .case-search .appropriation-status dd {
-
     }
 
 </style>

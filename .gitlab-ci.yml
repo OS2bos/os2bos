@@ -42,6 +42,7 @@ variables:
   IMAGE_LATEST: ${IMAGE}:latest
 
 
+
 # Lint stage
 #############
 
@@ -104,27 +105,27 @@ Build app image:
   stage: build
   needs: []
   dependencies: []
+  image:
+    name: gcr.io/kaniko-project/executor:debug-v0.16.0
+    entrypoint: [""]
   tags:
     - docker
-    - privileged
-  before_script:
-    # Login to GitLab registry
-    - echo ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
-    - docker pull ${IMAGE_DEV} || true
   script:
-    - docker build -f docker/Dockerfile --pull --tag ${IMAGE_SHA} --cache-from ${IMAGE_DEV} .
-    - docker push ${IMAGE_SHA}
+    # Login to GitLab registry
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor
+      --cache
+      --context=$CI_PROJECT_DIR
+      --dockerfile=$CI_PROJECT_DIR/docker/Dockerfile
+      --destination=${IMAGE_SHA}
 
 
 # Test stage
 ############
-
-
-Unittest:
+.test-default: &test-default
   stage: test
   needs: ["Build app image"]
-  image:
-    name: ${IMAGE_SHA}
+  image: ${IMAGE_SHA}
   tags:
     - docker
   services:
@@ -136,6 +137,9 @@ Unittest:
     POSTGRES_PASSWORD: bev
     BEV_USER_CONFIG_PATH: $CI_PROJECT_DIR/dev-environment/dev-settings.ini
     COVERAGE_FILE: $CI_PROJECT_DIR/.coverage
+
+Unittest:
+  <<: *test-default
   script:
     - cd /code/backend &&
       pytest
@@ -147,7 +151,6 @@ Unittest:
       --cov-report term
       --cov-fail-under=100
       -p no:cacheprovider
-
   coverage: '/TOTAL.*\s+(\d+%)$/'
   artifacts:
     when: always
@@ -156,40 +159,51 @@ Unittest:
     reports:
       junit: $CI_PROJECT_DIR/junit.xml
 
-
-.integration-test:
-  stage: test
-  needs: ["Build app image"]
-  # TODO when you implement integration tests in ci, remember to add it to the
-  # `needs` array for ".release-default".
-  tags:
-    - docker
+FrontendTest:
+  <<: *test-default
+  variables:
+    FF_NETWORK_PER_BUILD: 1
+    POSTGRES_USER: bev
+    POSTGRES_PASSWORD: bev
+    BEV_USER_CONFIG_PATH: $CI_PROJECT_DIR/dev-environment/frontend-tests-settings.ini
+    SIMPLESAMLPHP_BASEURLPATH: http://idp:8080/simplesaml
+    SIMPLESAMLPHP_SP_ENTITY_ID: http://bev:5000
+    SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE: http://bev:5000/api/saml2_auth/acs/
+  image: magentalabs/frontend-test:v0.2 #includes npm, chrome, firefox and ffmpeg
+  services:
+    - name: postgres:11
+      alias: db
+    - name: ${IMAGE_SHA}
+      alias: bev
+    - name: magentalabs/os2bos-idp-test:2.0.0
+      alias: idp
   before_script:
-    # Login to GitLab registry
-    - echo ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
-    - docker pull ${IMAGE_SHA}
+    - cd frontend-tests
+    - npm install
   script:
-    - # TODO run tests
-
+    - ./node_modules/.bin/testcafe chrome:headless tests/*.js --baseurl http://bev:5000/ --screenshot $CI_PROJECT_DIR/artifacts --video $CI_PROJECT_DIR/artifacts
+  artifacts:
+    when: always
+    paths:
+      - $CI_PROJECT_DIR/artifacts
+  allow_failure: true
 
 # Release stage
 ###############
 
 .release-default: &release-default
   stage: release
-  needs: ["Unittest"]
-  image: docker:19.03.1
+  needs: ['Unittest']
+  #needs: ["Unittest", "FrontendTest"] require also frontendTest to pass
+  image: alpine
   variables:
     GIT_STRATEGY: none # We do not need the source code
   dependencies: []
   tags:
     - docker
-    - privileged
   before_script:
-    # Login to GitLab registry
-    - echo ${CI_REGISTRY_PASSWORD} | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
-    - docker pull ${IMAGE_SHA}
-
+    # install skopeo
+    - apk add skopeo
 
 Release dev:
   <<: *release-default
@@ -197,8 +211,11 @@ Release dev:
     refs:
       - develop
   script:
-    - docker tag ${IMAGE_SHA} ${IMAGE_DEV}
-    - docker push ${IMAGE_DEV}
+    - skopeo copy
+      --src-creds=${CI_REGISTRY_USER}:${CI_BUILD_TOKEN}
+      --dest-creds=${CI_REGISTRY_USER}:${CI_BUILD_TOKEN}
+      "docker://${IMAGE_SHA}"
+      "docker://${IMAGE_DEV}"
 
 
 Release rc:
@@ -208,11 +225,11 @@ Release rc:
       # Matches all of SemVer 2.0.0
       - $CI_COMMIT_TAG =~ /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
   script:
-    # Login to Docker Hub registry
-    - echo ${RELEASE_REGISTRY_PASSWORD} | docker login -u ${RELEASE_REGISTRY_USER} --password-stdin ${RELEASE_REGISTRY}
-    - echo Tagging with ${IMAGE_TAG}
-    - docker tag ${IMAGE_SHA} ${IMAGE_TAG}
-    - docker push ${IMAGE_TAG}
+    - skopeo copy
+      --src-creds=${CI_REGISTRY_USER}:${CI_BUILD_TOKEN}
+      --dest-creds=${RELEASE_REGISTRY_USER}:${RELEASE_REGISTRY_PASSWORD}
+      "docker://${IMAGE_SHA}"
+      "docker://${IMAGE_TAG}"
 
 Release master:
   <<: *release-default
@@ -221,14 +238,16 @@ Release master:
       # Matches <version core> from SemVer 2.0.0 BNF grammar. Ex. 2.3.4, but not 2.3.4-rc
       - $CI_COMMIT_TAG =~ /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/
   script:
-    # Login to Docker Hub registry
-    - echo ${RELEASE_REGISTRY_PASSWORD} | docker login -u ${RELEASE_REGISTRY_USER} --password-stdin ${RELEASE_REGISTRY}
-    - echo Tagging with ${IMAGE_TAG}
-    - docker tag ${IMAGE_SHA} ${IMAGE_TAG}
-    - echo Tagging with ${IMAGE_LATEST}
-    - docker tag ${IMAGE_SHA} ${IMAGE_LATEST}
-    - docker push ${IMAGE_TAG}
-    - docker push ${IMAGE_LATEST}
+    - skopeo copy
+      --src-creds=${CI_REGISTRY_USER}:${CI_BUILD_TOKEN}
+      --dest-creds=${RELEASE_REGISTRY_USER}:${RELEASE_REGISTRY_PASSWORD}
+      "docker://${IMAGE_SHA}"
+      "docker://${IMAGE_TAG}"
+    - skopeo copy
+      --src-creds=${CI_REGISTRY_USER}:${CI_BUILD_TOKEN}
+      --dest-creds=${RELEASE_REGISTRY_USER}:${RELEASE_REGISTRY_PASSWORD}
+      "docker://${IMAGE_SHA}"
+      "docker://${IMAGE_LATEST}"
 
 
 # Deploy stage
@@ -243,7 +262,8 @@ Release master:
     - deploy
 
 
-Deploy dev:
+Deploy test:
+  # Automatic deployment of branch develop to cburtest.magenta.dk
   <<: *deploy-default
   needs: ["Release dev"]
   only:
@@ -258,8 +278,30 @@ Deploy dev:
     - echo Attempting to call deployment
     - pepper --client runner --fail-any state.orchestrate ${DEPLOYMENT_NAMESPACE}
   environment:
-    name: develop
+    name: test
     url: https://cburtest.magenta.dk
+
+Deploy dev:
+  # Manuel deployment job to cburdev.magenta.dk
+  <<: *deploy-default
+  needs: ["Unittest"]
+  except:
+    refs:
+      - master
+      - develop
+  when: manual
+  variables:
+    DEPLOYMENT_NAMESPACE: cbur.magenta.dev
+    SALTAPI_URL: https://ctrldev1.magenta-aps.dk/api/
+    SALTAPI_EAUTH: file
+    GIT_STRATEGY: none
+    PILLAR_OVERRIDE: "{\"OS2BOS_APPLICATION_DOCKER_IMAGE\":\"${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}\"}"
+  script:
+    - echo deploying ${PILLAR_OVERRIDE}
+    - pepper --client runner --fail-any state.orchestrate ${DEPLOYMENT_NAMESPACE} pillar=$(echo $PILLAR_OVERRIDE)
+  environment:
+    name: dev
+    url: https://cburdev.magenta.dk
 
 .deploy-rc:
   <<: *deploy-default

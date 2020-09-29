@@ -6,13 +6,15 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 """Views and viewsets exposed by the REST interface."""
-
+import logging
 
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.utils.translation import gettext_lazy as _
+from django.conf import settings
 
 from rest_framework import viewsets
+from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
@@ -22,6 +24,8 @@ from core.models import (
     Case,
     Appropriation,
     Activity,
+    Rate,
+    Price,
     PaymentSchedule,
     Payment,
     Municipality,
@@ -31,12 +35,12 @@ from core.models import (
     Section,
     SectionInfo,
     ActivityDetails,
-    Account,
     ServiceProvider,
     PaymentMethodDetails,
     ApprovalLevel,
     EffortStep,
     TargetGroup,
+    InternalPaymentRecipient,
     Effort,
     STATUS_DELETED,
     STATUS_DRAFT,
@@ -48,6 +52,8 @@ from core.serializers import (
     ListAppropriationSerializer,
     AppropriationSerializer,
     ActivitySerializer,
+    RateSerializer,
+    PriceSerializer,
     PaymentScheduleSerializer,
     PaymentSerializer,
     RelatedPersonSerializer,
@@ -57,7 +63,6 @@ from core.serializers import (
     SectionSerializer,
     SectionInfoSerializer,
     ActivityDetailsSerializer,
-    AccountSerializer,
     UserSerializer,
     HistoricalCaseSerializer,
     ServiceProviderSerializer,
@@ -65,6 +70,7 @@ from core.serializers import (
     ApprovalLevelSerializer,
     EffortStepSerializer,
     TargetGroupSerializer,
+    InternalPaymentRecipientSerializer,
     EffortSerializer,
 )
 from core.filters import (
@@ -75,11 +81,25 @@ from core.filters import (
 )
 from core.utils import get_person_info
 
-from core.mixins import AuditMixin, ClassificationViewSetMixin
+from core.mixins import (
+    AuditMixin,
+    ClassificationViewSetMixin,
+    AuditModelViewSetMixin,
+)
 
 from core.authentication import CsrfExemptSessionAuthentication
 
-from core.permissions import IsUserAllowed
+from core.permissions import (
+    IsUserAllowed,
+    NewPaymentPermission,
+    DeletePaymentPermission,
+    EditPaymentPermission,
+)
+
+
+serviceplatformen_logger = logging.getLogger(
+    "bevillingsplatform.serviceplatformen"
+)
 
 
 # Working models, read/write
@@ -102,7 +122,7 @@ class ReadOnlyViewset(viewsets.ReadOnlyModelViewSet):
     permission_classes = (IsUserAllowed,)
 
 
-class CaseViewSet(AuditViewSet):
+class CaseViewSet(AuditModelViewSetMixin, AuditViewSet):
     """Viewset exposing Case in the REST API.
 
     Note the custom actions ``history`` and ``change_case_worker``.
@@ -116,7 +136,11 @@ class CaseViewSet(AuditViewSet):
         """Create new case - customized to set team from user."""
         current_user = self.request.user
         team = current_user.team
-        serializer.save(case_worker=current_user, team=team)
+        serializer.save(
+            case_worker=current_user,
+            user_created=current_user.username,
+            team=team,
+        )
 
     @action(detail=True, methods=["get"])
     def history(self, request, pk=None):
@@ -161,7 +185,7 @@ class CaseViewSet(AuditViewSet):
         return Response(CaseSerializer(cases, many=True).data)
 
 
-class AppropriationViewSet(AuditViewSet):
+class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
     """Expose appropriations in REST API.
 
     Note the custom action ``grant`` for approving an appropriation and
@@ -212,7 +236,7 @@ class AppropriationViewSet(AuditViewSet):
         return response
 
 
-class ActivityViewSet(AuditViewSet):
+class ActivityViewSet(AuditModelViewSetMixin, AuditViewSet):
     """Expose activities in REST API."""
 
     serializer_class = ActivitySerializer
@@ -257,6 +281,13 @@ class PaymentMethodDetailsViewSet(AuditViewSet):
     serializer_class = PaymentMethodDetailsSerializer
 
 
+class PriceViewSet(AuditViewSet):
+    """Expose Price objects in REST API."""
+
+    queryset = Price.objects.all()
+    serializer_class = PriceSerializer
+
+
 class PaymentScheduleViewSet(AuditViewSet):
     """Expose payment schedules in REST API."""
 
@@ -278,12 +309,17 @@ class PaymentViewSet(AuditViewSet):
     serializer_class = PaymentSerializer
     queryset = Payment.objects.all()
     pagination_class = PageNumberPagination
+    permission_classes = (
+        EditPaymentPermission,
+        DeletePaymentPermission,
+        NewPaymentPermission,
+    )
 
     filterset_class = PaymentFilter
     filterset_fields = "__all__"
 
 
-class RelatedPersonViewSet(AuditViewSet):
+class RelatedPersonViewSet(AuditModelViewSetMixin, AuditViewSet):
     """Expose related persons - typically family relations - in REST API."""
 
     queryset = RelatedPerson.objects.all()
@@ -300,6 +336,9 @@ class RelatedPersonViewSet(AuditViewSet):
         GET params: cpr
         """
         cpr = request.query_params.get("cpr")
+        serviceplatformen_logger.info(
+            f"fetch_from_serviceplatformen: {cpr} - {request.user}"
+        )
         if not cpr:
             return Response(
                 {"errors": _("Intet CPR nummer angivet")},
@@ -353,6 +392,13 @@ class TeamViewSet(ReadOnlyViewset):
     serializer_class = TeamSerializer
 
 
+class RateViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
+    """Expose law sections in REST API."""
+
+    queryset = Rate.objects.all()
+    serializer_class = RateSerializer
+
+
 class SectionViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     """Expose law sections in REST API."""
 
@@ -374,14 +420,6 @@ class ActivityDetailsViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
 
     queryset = ActivityDetails.objects.all()
     serializer_class = ActivityDetailsSerializer
-    filterset_fields = "__all__"
-
-
-class AccountViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
-    """Expose accounts in REST API."""
-
-    queryset = Account.objects.all()
-    serializer_class = AccountSerializer
     filterset_fields = "__all__"
 
 
@@ -423,9 +461,27 @@ class TargetGroupViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     serializer_class = TargetGroupSerializer
 
 
+class InternalPaymentRecipientViewSet(ReadOnlyViewset):
+    """Expose internal payment recipients in REST API."""
+
+    queryset = InternalPaymentRecipient.objects.all()
+    serializer_class = InternalPaymentRecipientSerializer
+
+
 class EffortViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     """Expose efforts in REST API."""
 
     queryset = Effort.objects.all()
     serializer_class = EffortSerializer
     filterset_fields = "__all__"
+
+
+class IsEditingPastPaymentsAllowed(APIView):
+    """Expose the ALLOW_EDIT_OF_PAST_PAYMENTS setting in the API."""
+
+    authentication_classes = (CsrfExemptSessionAuthentication,)
+
+    def get(self, request, format=None):
+        """Return the Django setting allowing changes to the past."""
+        is_enabled = settings.ALLOW_EDIT_OF_PAST_PAYMENTS
+        return Response(is_enabled)

@@ -5,141 +5,83 @@
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
 
-
 <template>
 
     <section class="activities">
         <header class="activities-header" style="margin-bottom: 0;">
             <div class="create-content">
-                <h2 style="padding: 0;">Bevilgede ydelser</h2>
-                <button v-if="permissionCheck === true" class="activities-create-btn" title="Ny aktivitet" @click="$router.push(`/appropriation/${ apprId }/activity-create/`)" style="margin: 0 1rem;">
+                <h2 style="padding: 0;">
+                    <i class="material-icons">style</i>
+                    Bevilgede ydelser
+                </h2>
+                <button v-if="user_can_edit === true" class="btn activities-create-btn" title="Ny aktivitet" @click="createActivity">
                     + Tilføj ydelse
                 </button>
             </div>
         </header>
 
-        <fieldset style="text-align: right; padding: 0 1.5rem; margin: 0;">
-            <label for="act-cost-toggle" style="margin: 0 .5rem 0 0; display: inline-block; font-weight: bold;">Vis udgifter</label>
-            <select id="act-cost-toggle" class="selected-btn" v-model="selectedValue" style="margin: 0; display: inline-block;">
-                <option value="1">i år</option>
-                <option value="2">pr. år</option>
-                <option value="3">samlede</option>
-            </select>
+        <fieldset class="act-list-actions" v-if="!no_acts">
+            <div style="margin-left: 1.25rem;">
+                <input 
+                    v-if="user_can_edit === true && this.user.profile !== 'edit'" 
+                    type="checkbox" 
+                    id="check-all"
+                    @change="setAllChecked">
+                <label 
+                    class="disabled" 
+                    for="check-all">
+                    Vælg alle
+                </label>
+            </div>
+            <div>
+                <label for="act-cost-toggle" style="margin: 0 .5rem 0 0; display: inline-block;">Vis udgifter</label>
+                <select id="act-cost-toggle" class="selected-btn" v-model="selectedValue" style="margin: 0; display: inline-block;">
+                    <option value="1">i år</option>
+                    <option value="2">pr. år</option>
+                    <option value="3">samlede</option>
+                </select>
+            </div>
         </fieldset>
         
-        <table v-if="!no_acts" style="margin-top: 0;">
-            <thead>
-                <tr>
-                    <th style="width: 3.5rem; padding: .5rem 0 0 1.25rem;">
-                        <input v-if="permissionCheck === true && this.user.profile !== 'edit'" type="checkbox" id="check-all" @change="setAllChecked" v-model="check_all_approvable">
-                        <label class="disabled" for="check-all" title="Vælg alle"></label>
-                    </th>
-                    <th style="width: 6rem;">Status</th>
-                    <th>Ydelse</th>
-                    <th>Udbetales til</th>
-                    <th>Start</th>
-                    <th>Slut</th>
-                    <th>Senest ændret</th>
-                    <th class="right">
-                        <span v-if="selectedValue === '1'">Udgift i år</span>
-                        <span v-if="selectedValue === '2'">Udgift pr. år</span>
-                        <span v-if="selectedValue === '3'">Samlet udgift</span>
-                    </th>
-                    <th class="right">
-                        <span v-if="selectedValue === '1'">Forventet udgift i år</span>
-                        <span v-if="selectedValue === '2'">Forventet udgift pr. år</span>
-                        <span v-if="selectedValue === '3'">Forventet samlet udgift</span>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th class="table-heading"></th>
-                    <th colspan="7" class="table-heading">Hovedydelse</th>
-                </tr>
-                <tr v-if="count_old_main_acts > 0">
-                    <td colspan="9" class="act-list-collapse-td">
-                        <button class="act-list-collapse-button" @click="show_old_main_acts = !show_old_main_acts">
-                            <span v-if="!show_old_main_acts">
-                                <span class="material-icons">expand_more</span>
-                                Vis {{ count_old_main_acts }} udgåede hovedydelser
-                                <span class="material-icons">expand_more</span>
-                            </span>
-                            <span v-else>
-                                <span class="material-icons">expand_less</span>
-                                Skjul {{ count_old_main_acts }} udgåede hovedydelser
-                                <span class="material-icons">expand_less</span>
-                            </span>
-                        </button>
-                    </td>
-                </tr>
-                <template v-for="chunk in main_acts">
-                    <act-list-item 
-                        v-for="a in chunk"
-                        :ref="a.group ? a.group : a.id"
-                        :act="a"
-                        :key="a.id"
-                        :checked="a.checked"
-                        :selectedValue="selectedValue"
-                        @toggle="toggleHandler"
-                        @check="checkOneInList(a, ...arguments)" />
-                </template>
-                <tr v-if="suppl_acts.length > 0">
-                    <th class="table-heading"></th>
-                    <th colspan="7" class="table-heading">Følgeydelser</th>
-                </tr>
-                <tr v-if="count_old_suppl_acts > 0">
-                    <td colspan="9" class="act-list-collapse-td">
-                        <button class="act-list-collapse-button" @click="show_old_suppl_acts = !show_old_suppl_acts">
-                            <span v-if="!show_old_suppl_acts">
-                                <span class="material-icons">expand_more</span>
-                                Vis {{ count_old_suppl_acts }} udgåede følgeydelser
-                                <span class="material-icons">expand_more</span>
-                            </span>
-                            <span v-else>
-                                <span class="material-icons">expand_less</span>
-                                Skjul {{ count_old_suppl_acts }} udgåede følgeydelser
-                                <span class="material-icons">expand_less</span>
-                            </span>
-                        </button>
-                    </td>
-                </tr>
-                <template v-for="chunk in suppl_acts">
-                    <act-list-item 
-                        v-for="a in chunk"
-                        :ref="a.group ? a.group : a.id"
-                        :act="a" 
-                        :key="a.id"
-                        :checked="a.checked"
-                        :selectedValue="selectedValue"
-                        @toggle="toggleHandler"
-                        @check="checkOneInList(a, ...arguments)" />
-                </template>
-                <tr class="lastrow">
-                    <td colspan="6" style="padding-left: 0;">
-                        <button v-if="permissionCheck === true && this.user.profile !== 'edit'" @click="initPreApprove()" :disabled="approvable_acts.length < 1">✔ Godkend valgte</button>
-                    </td>
-                    <td class="right"><strong>I alt</strong></td>
-                    <td class="nowrap right">
-                        <strong v-if="selectedValue <= '1'">{{ displayDigits(appropriation.total_granted_this_year) }} kr.</strong>
-                        <strong v-if="selectedValue === '2'">{{ displayDigits(appropriation.total_granted_full_year) }} kr.</strong>
-                        <strong v-if="selectedValue === '3'">{{ displayDigits(appropriation.total_cost_granted) }} kr.</strong>
-                    </td>
-                    <td class="nowrap expected right">
-                        <span v-if="appropriation.total_expected_this_year !== appropriation.total_granted_this_year && selectedValue <= '1'">
-                            {{ displayDigits(appropriation.total_expected_this_year) }} kr.
-                        </span>
-                        <span v-if="appropriation.total_expected_this_year !== appropriation.total_granted_this_year && selectedValue === '2'">
-                            {{ displayDigits(appropriation.total_expected_full_year) }} kr.
-                        </span>
-                        <span v-if="appropriation.total_expected_this_year !== appropriation.total_granted_this_year && selectedValue === '3'">
-                            {{  displayDigits(appropriation.total_cost_expected) }} kr.
-                        </span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <p v-if="no_acts">Der er endnu ingen ydelser</p>
+        <div v-if="!no_acts" class="act-list-grid">
+
+            <act-list :activities="main_activities" title="Hovedydelser" />
+        
+            <act-list :activities="suppl_activities" title="Følgeydelser" />
+
+            <div class="act-list-row act-list-footer">
+                <div style="grid-column: 1/8;">
+                    <button 
+                        v-if="user_can_edit === true && this.user.profile !== 'edit'" 
+                        @click="initPreApprove"
+                        :disabled="approvable_acts.length < 1">
+                            ✔ Godkend valgte
+                    </button>
+                </div>
+                <div class="right" style="grid-column: 8/9;">
+                    <strong>I alt</strong>
+                </div>
+                <div class="nowrap right" style="grid-column: 9/10;">
+                    <strong v-if="selectedValue <= '1'">{{ displayDigits(appropriation.total_granted_this_year) }} kr.</strong>
+                    <strong v-if="selectedValue === '2'">{{ displayDigits(appropriation.total_granted_full_year) }} kr.</strong>
+                    <strong v-if="selectedValue === '3'">{{ displayDigits(appropriation.total_cost_granted) }} kr.</strong>
+                </div>
+                <div class="nowrap expected right" style="grid-column: 10/11;">
+                    <span v-if="appropriation.total_expected_this_year !== appropriation.total_granted_this_year && selectedValue <= '1'">
+                        {{ displayDigits(appropriation.total_expected_this_year) }} kr.
+                    </span>
+                    <span v-if="appropriation.total_expected_this_year !== appropriation.total_granted_this_year && selectedValue === '2'">
+                        {{ displayDigits(appropriation.total_expected_full_year) }} kr.
+                    </span>
+                    <span v-if="appropriation.total_expected_this_year !== appropriation.total_granted_this_year && selectedValue === '3'">
+                        {{  displayDigits(appropriation.total_cost_expected) }} kr.
+                    </span>
+                </div>
+            </div>
+        
+        </div>
+
+        <p v-else>Der er endnu ingen ydelser</p>
 
         <approval-diag 
             v-if="diag_open" 
@@ -158,35 +100,26 @@
     import { cost2da } from '../filters/Numbers.js'
     import { displayStatus } from '../filters/Labels.js'
     import { json2jsEpoch } from '../filters/Date.js'
-    import ActListItem from './ActivityListItem.vue'
     import ApprovalDiag from './Approval.vue'
-    import UserRights from '../mixins/UserRights.js'
+    import PermissionLogic from '../mixins/PermissionLogic.js'
+    import ActList from './activitylist/ActList.vue'
 
     export default {
 
-        mixins: [UserRights],
-
+        mixins: [
+            PermissionLogic
+        ],
         components: {
-            ActListItem,
-            ApprovalDiag
+            ApprovalDiag,
+            ActList
         },
         props: [
             'apprId'
         ],
         data: function() {
             return {
-                chunks: [],
-                main_acts: [],
-                suppl_acts: [],
-                check_all_approvable: false,
-                approvable_acts: [],
                 diag_open: false,
-                diag_approval_warning: null,
-                selectedValue: '1',
-                show_old_main_acts: false,
-                show_old_suppl_acts: false,
-                count_old_main_acts: 0,
-                count_old_suppl_acts: 0
+                diag_approval_warning: null
             }
         },
         computed: {
@@ -196,34 +129,50 @@
             acts: function() {
                 return this.$store.getters.getActivities
             },
+            main_activities: function() {
+                if (this.acts) {
+                    return this.acts.filter(function(act) {
+                        return act.activity_type === 'MAIN_ACTIVITY'
+                    })
+                }
+            },
+            suppl_activities: function() {
+                if (this.acts) {
+                    let unsorted_acts = this.acts.filter(function(act) {
+                        return act.activity_type === 'SUPPL_ACTIVITY'
+                    })
+                    return this.sortSupplementaryActs(unsorted_acts)
+                }
+            },
             no_acts: function() {
                 if (this.acts.length < 1) {
                     return true
                 } else {
                     return false
                 }
+            },
+            approvable_acts: function() {
+                return this.$store.getters.getCheckedItems
+            },
+            selectedValue: {
+                get: function() {
+                    return this.$store.getters.getSelectedCostCalc
+                },
+                set: function(new_val) {
+                    this.$store.commit('setSelectedCostCalc', new_val)
+                    this.update()
+                }
             }
         },
         watch: {
             apprId: function() {
-                this.update()
-            },
-            acts: function() {
-                this.splitActList(this.acts)
-            },
-            show_old_main_acts: function() {
-                this.splitActList(this.acts)
-            },
-            show_old_suppl_acts: function() {
-                this.splitActList(this.acts)
-            },
-            selectedValue: function() {
                 this.update()
             }
         },
         methods: {
             update: function() {
                 this.$store.dispatch('fetchActivities', this.apprId)
+                this.$store.commit('setUnCheckAll')
             },
             closeDialog: function() {
                 this.diag_open = false
@@ -231,139 +180,16 @@
                 checkboxes.forEach(checkbox => {
                     checkbox.checked = false
                 })
-                this.approvable_acts = []
+                this.$store.commit('setCheckedItems', [])
             },
             displayDigits: function(num) {
                 return cost2da(num)
             },
-            addModifierAct(chunk, id, act_list) {
-                let modifiers = act_list.filter(function(a) {
-                    return a.modifies === id
-                })
-                if (modifiers.length > 0) {
-                    for (let m in modifiers) {
-                        chunk.push(modifiers[m])
-                        this.addModifierAct(chunk, modifiers[m].id, act_list)
-                    }
-                } else {
-                    return chunk
-                }
-            },
-            getBestDate(arr, criteria) {
-                let best_date = null
-                if (criteria === 'start') {
-                    best_date = arr[0].start_date
-                } else {
-                    best_date = arr[arr.length - 1].end_date
-                }
-                return best_date
-            },
-            getBestModified(arr) {
-                return arr[arr.length - 1].modified
-            },
-            checkExpected(arr) {
-                return arr.find(function(a) {
-                    return a.status === 'EXPECTED'
-                }) ? 'EXPECTED' : arr[0].status
-            },
-            calcCost(arr) {
-                let costs = {
-                    approved: 0,
-                    expected: 0
-                }
-                for (let a of arr) {
-                    if (a.total_granted_this_year) {
-                        costs.approved = costs.approved + a.total_granted_this_year
-                    }
-                    if (a.total_expected_this_year) {
-                        costs.expected = costs.expected + a.total_expected_this_year
-                    }
-                }
-                return costs
-            },
-            splitActList: function(act_list) {
-                this.chunks = []
-                this.main_acts = []
-                this.suppl_acts = []
-                this.count_old_main_acts = 0
-                this.count_old_suppl_acts = 0
-
-                // Group activities together by 'modifies'
-                for (let act of act_list) {
-                    if (act.is_old) {
-                        if (act.activity_type === 'MAIN_ACTIVITY') {
-                            this.count_old_main_acts++
-                        } else {
-                            this.count_old_suppl_acts++
-                        }
-                    }
-                    act.checked = false
-                    if (act.modifies === null) {
-                        let chunk = [act]
-                        this.addModifierAct(chunk, act.id, act_list)
-                        this.chunks.push(chunk)
-                    }
-                }
-                
-                // Add meta activity to chunks of modified activities
-                for (let c in this.chunks) {
-                    let chunk = this.chunks[c]
-                    const clength = chunk.length,
-                          last_chunk = chunk[clength -1]
-
-                    if (clength < 2) {
-                        // Do nothing
-                    } else {
-                        for (let act of chunk) {
-                            act.group = `group${ c }`
-                        }
-                        let costs = this.calcCost(chunk),
-                            meta_act = {
-                                id: `group${ c }`,
-                                is_meta: true,
-                                status: this.checkExpected(chunk),
-                                start_date: this.getBestDate(chunk,'start'),
-                                end_date: this.getBestDate(chunk,'end'),
-                                modified: this.getBestModified(chunk),
-                                activity_type: last_chunk.activity_type,
-                                approved: costs.approved,
-                                expected: costs.expected,
-                                details: last_chunk.details,
-                                payment_plan: last_chunk.payment_plan,
-                                note: last_chunk.note
-                            }
-                        chunk.unshift(meta_act)
-                    }
-                }
-
-                // Populate main activities lists
-                this.main_acts = this.chunks.filter(c => {
-                    if (c[0].activity_type === 'MAIN_ACTIVITY') {
-                        if (this.show_old_main_acts) {
-                            return c
-                        } else if (!this.show_old_main_acts && !c[0].is_old) {
-                            return c
-                        }   
-                    }
-                })
-
-                // Populate supplementary activities lists
-                let unsorted_suppl_acts = this.chunks.filter(c => {
-                    if (c[0].activity_type === 'SUPPL_ACTIVITY') {
-                        if (this.show_old_suppl_acts) {
-                            return c
-                        } else if (!this.show_old_suppl_acts && !c[0].is_old) {
-                            return c
-                        }
-                    }
-                })
-                this.suppl_acts = this.sortSupplementaryActs(unsorted_suppl_acts)
-            },
             sortSupplementaryActs: function(acts) {
                 // Sort supplementary list by start date
                 return acts.sort(function(a,b) {
-                    const a_start_date = new Date(a[0].start_date).getTime(),
-                        b_start_date = new Date(b[0].start_date).getTime()
+                    const a_start_date = new Date(a.start_date).getTime(),
+                        b_start_date = new Date(b.start_date).getTime()
                     if (a_start_date > b_start_date) {
                         return 1
                     } else if (b_start_date > a_start_date) {
@@ -373,43 +199,18 @@
                     }
                 })
             },
-            toggleHandler: function(toggl_id) {     
-                for (let comp of this.$refs[toggl_id]) {
-                    if (comp.act.is_meta) {
-                        comp.toggled = !comp.toggled
-                    } else {
-                        comp.visible = !comp.visible
-                    }       
-                }
-            },
             checkAllInList: function(check_val, list) {
-                for (let arr of list) {
-                    for (let a of arr) {
-                        a.checked = check_val
-                        if (a.checked && a.status !== 'GRANTED' && !a.is_meta) {
-                            this.approvable_acts.push(a)
-                        }
-                    }
-                }
-            },
-            checkOneInList: function(act, check_val) {
-                const pre_checked_act = this.approvable_acts.findIndex(function(a) {
-                    return a.id === act.id
-                })
-                if (check_val) {
-                    if (pre_checked_act < 0) {
-                        this.approvable_acts.push(act)
-                    }
-                } else {
-                    if (pre_checked_act >= 0) {
-                        this.approvable_acts.splice(pre_checked_act, 1)
+                for (let a in list) {
+                    list[a].checked = check_val
+                    if (list[a].checked && list[a].status !== 'GRANTED') {
+                        this.$store.commit('setCheckedItem', list[a])
                     }
                 }
             },
             setAllChecked: function(event) {
-                this.approvable_acts = []
-                this.checkAllInList(event.target.checked, this.main_acts)
-                this.checkAllInList(event.target.checked, this.suppl_acts)
+                this.$store.commit('setCheckedItems', [])
+                this.checkAllInList(event.target.checked, this.main_activities)
+                this.checkAllInList(event.target.checked, this.suppl_activities)
             },
             initPreApprove: function() {
 
@@ -420,15 +221,21 @@
                     return act.status === 'EXPECTED' && act.activity_type === 'MAIN_ACTIVITY'
                 })
                 if (approvable_main_act) {
-                    const approvable_modifies = this.main_acts[0].find(activity => {
+                    const approvable_modifies = this.main_activities.find(activity => {
                         return activity.id === approvable_main_act.modifies
                     })
                     if (approvable_modifies && json2jsEpoch(approvable_main_act.end_date) < json2jsEpoch(approvable_modifies.end_date)) {
                         this.diag_approval_warning = 'Hvis du godkender, at hovedydelsen får kortere løbetid, kan det også ændre løbetiden for følgeydelserne.'
                     }
                 }
-                
                 this.diag_open = true
+            },
+            createActivity: function() {
+                if (this.main_activities.length > 0) {
+                    this.$router.push('/activity/create?type=supplementary')
+                } else {
+                    this.$router.push('/activity/create?type=main')
+                }
             }
         },
         beforeCreate: function() {
@@ -447,75 +254,58 @@
         margin: 1rem;
     }
 
-    .activities-header {
-        width: 100%;
-        margin: 2rem 0;
-        display: flex;
-        flex-flow: row nowrap;
-        justify-content: flex-start;
+    .act-list-row {
+        display: grid;
+        grid-template-columns: 3.5rem 6rem 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        margin-bottom: .125rem;
         align-items: center;
     }
 
-    .create-content {
-        width: 50%;
-        display: flex;
-        flex-flow: row nowrap;
-        justify-content: flex-start;
-        align-items: center;
+    .act-list-row {
+        background-color: var(--grey1);
     }
 
-    .buttons-content {
-        width: 50%;
-        display: flex;
-        flex-flow: row nowrap;
-        justify-content: flex-end;
-        align-items: center;
-    }
-
-    .activities-create-btn {
-        margin: 0 0 1rem;
-    }
-
-    .activities-checkbox-btn {
-        margin: 0;
-    }
-
-    .selected-btn {
-        margin: 0 .5rem;
-        border-color: var(--primary);
-    }
-
-    .activities .act-label {
-        opacity: .66;
-        font-size: .85rem;
-        margin: 0 1rem;
-    }
-
-    .activities input[type="checkbox"] + label {
-        margin: 0;
-    }
-
-    .activities tr.lastrow td {
+    .act-list-row.act-list-footer {
         background-color: var(--grey0);
-        padding-top: 1.5rem;
     }
 
-    .activities .table-heading {
-        padding: .75rem .75rem .5rem;
+    .act-list-row > div {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding: .5rem .5rem;
     }
 
-    .act-list-collapse-td {
-        padding: 0 !important;
-        text-align: center;
-        background-color: transparent;
+    .act-list-actions {
+        padding: 0; 
+        margin: 1rem 0 0;
     }
 
-    .act-list-collapse-button {
-        padding: 0;
-        display: block;
-        margin: 0 auto;
-        width: 100%;
-        border: solid 1px var(--grey1);
+    .act-list-actions > div {
+        float: right;
+        max-width: 50%;
+    }
+
+    .act-list-actions > div:first-child {
+        float: left;
+    }
+
+    .act-list-footer {
+        margin-top: 1.5rem;
+    }
+
+    .act-list-footer > div:first-child {
+        padding-left: 0;
+    }
+
+    .activities .create-content {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+    }
+
+    .activities .activities-create-btn {
+        margin: 0 1rem;
     }
 
 </style>

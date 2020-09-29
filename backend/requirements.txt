@@ -1,26 +1,25 @@
-Django==2.2.9
-portion==2.0.2
-psycopg2-binary==2.8.5
+Django==2.2.16
+portion==2.1.3
+psycopg2-binary==2.8.6
 gunicorn==20.0.4
-djangorestframework==3.11.0
-django-extensions==2.2.9
-edc_utils
-# ^ This is a requirement for "django-audit-fields"
-# |
-django-audit-fields
-django-simple-history==2.10.0
-django-filter==2.2.0
+djangorestframework==3.12.1
+django-extensions==3.0.9
+django-simple-history==2.11.0
+django-filter==2.4.0
 # ^ This is a requirement for "djangorestframework-filters"
 # |
-djangorestframework-filters==1.0.0.dev0
+djangorestframework-filters==1.0.0.dev2
 git+git://github.com/magenta-aps/service_person_stamdata_udvidet@0.2.0
 djangorestframework_simplejwt==4.4.0
-whitenoise==5.1.0
-ipython==7.15.0
+whitenoise==5.2.0
+ipython==7.18.1
 WeasyPrint==51
 python-dateutil==2.8.1
-django-constance[database]==2.5.0
-drf-writable-nested==0.6.0
+django-constance[database]==2.7.0
+drf-writable-nested==0.6.1
 git+https://github.com/magenta-aps/django-saml2-auth#egg=django-saml2-auth
-pysaml2==5.0.0
+pysaml2==6.1.0
 django-mailer==2.0.1
+holidays==0.10.3
+django-watchman==1.2.0
+django-currentuser==0.5.1

@@ -73,11 +73,29 @@ function strMonth(month_index) {
     return months[month_index]
 }
 
+function isCurrent(start_date, end_date) {
+    const today = epoch2DateStr(new Date())
+    if (start_date && start_date <= today) {
+        if (end_date) {
+            if (end_date > today) {
+                return true
+            } else {
+                return false
+            }
+        } else {
+            return true
+        }
+    } else {
+        return false
+    }
+}
+
 export {
     json2js,
     json2jsDate,
     json2jsEpoch,
     epoch2DateStr,
     inEighteenYears,
-    tenYearsAgo
+    tenYearsAgo,
+    isCurrent
 }

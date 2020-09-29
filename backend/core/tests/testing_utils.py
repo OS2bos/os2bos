@@ -12,6 +12,8 @@ from datetime import date
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
+from django_currentuser.middleware import _set_current_user
+
 from core.models import (
     Case,
     Municipality,
@@ -26,11 +28,15 @@ from core.models import (
     ServiceProvider,
     Section,
     SectionInfo,
-    Account,
     RelatedPerson,
     SD,
     EffortStep,
     TargetGroup,
+    VariableRate,
+    Rate,
+    RatePerDate,
+    PaymentDateExclusion,
+    AccountAlias,
 )
 
 
@@ -57,6 +63,7 @@ class BasicTestMixin:
         cls.case_worker, _ = User.objects.get_or_create(
             username="Orla Frøsnapper"
         )
+        _set_current_user(cls.case_worker)
         cls.team, _ = Team.objects.get_or_create(
             name="FCK", leader=cls.case_worker
         )
@@ -132,6 +139,7 @@ def create_payment_schedule(
     recipient_id="0205891234",
     recipient_name="Jens Testersen",
     payment_day_of_month=1,
+    payment_cost_type=PaymentSchedule.FIXED_PRICE,
     fictive=False,
     **kwargs,
 ):
@@ -146,6 +154,7 @@ def create_payment_schedule(
         recipient_name=recipient_name,
         payment_day_of_month=payment_day_of_month,
         fictive=fictive,
+        payment_cost_type=payment_cost_type,
         **kwargs,
     )
     return payment_schedule
@@ -233,23 +242,6 @@ def create_section(paragraph="ABL-105-2", allowed_for_steps=None, **kwargs):
     return section
 
 
-def create_account(
-    main_activity,
-    supplementary_activity,
-    section,
-    main_account_number="645511002",
-    activity_number="030004",
-):
-    account = Account.objects.create(
-        main_activity=main_activity,
-        supplementary_activity=supplementary_activity,
-        section=section,
-        main_account_number=main_account_number,
-        activity_number=activity_number,
-    )
-    return account
-
-
 def create_service_provider(cvr_number, name):
     service_provider = ServiceProvider.objects.create(
         cvr_number=cvr_number, name=name
@@ -296,7 +288,7 @@ def create_target_group(
     name="Familieafdelingen", required_fields_for_case=None
 ):
     if required_fields_for_case is None:
-        required_fields_for_case = ["district"]
+        required_fields_for_case = "district"
     target_group, _ = TargetGroup.objects.get_or_create(
         name=name, required_fields_for_case=required_fields_for_case
     )
@@ -304,6 +296,46 @@ def create_target_group(
 
 
 def create_effort_step(name="Trin 1: Tidlig indsats i almenområdet", number=1):
-    effort_step, _ = EffortStep.objects.get_or_create(name=name, number=number)
+    effort_step, _ = EffortStep.objects.get_or_create(
+        number=number, defaults={"name": name}
+    )
 
     return effort_step
+
+
+def create_variable_rate():
+    variable_rate, _ = VariableRate.objects.get_or_create()
+    return variable_rate
+
+
+def create_rate(name="Test rate", description="test description"):
+    rate, _ = Rate.objects.get_or_create(name=name, description=description)
+    return rate
+
+
+def create_rate_per_date(main_rate, rate=100, start_date=None, end_date=None):
+    rate_per_date, _ = RatePerDate.objects.get_or_create(
+        main_rate=main_rate,
+        rate=rate,
+        start_date=start_date,
+        end_date=end_date,
+    )
+    return rate_per_date
+
+
+def create_payment_date_exclusion(date=date.today()):
+    payment_date_exclusion, _ = PaymentDateExclusion.objects.get_or_create(
+        date=date
+    )
+
+    return payment_date_exclusion
+
+
+def create_account_alias(section_info, activity_details, alias="BOS0000001"):
+    account_alias, _ = AccountAlias.objects.get_or_create(
+        section_info=section_info,
+        activity_details=activity_details,
+        alias=alias,
+    )
+
+    return account_alias

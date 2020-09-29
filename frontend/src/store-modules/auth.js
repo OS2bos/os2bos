@@ -63,6 +63,7 @@ const actions = {
                     return u.id === parseInt(authdata.uid)
                 })
                 commit('setUser', user)
+                dispatch('fetchPaymentEditablePastFlag')
             })
             .catch(err => {
                 console.log(err)

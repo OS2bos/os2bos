@@ -1,0 +1,152 @@
+[
+    {
+        "model": "core.variablerate",
+        "pk": 1,
+        "fields": {}
+    },
+    {
+        "model": "core.variablerate",
+        "pk": 2,
+        "fields": {}
+    },
+    {
+        "model": "core.variablerate",
+        "pk": 3,
+        "fields": {}
+    },
+    {
+        "model": "core.variablerate",
+        "pk": 4,
+        "fields": {}
+    },
+    {
+        "model": "core.variablerate",
+        "pk": 5,
+        "fields": {}
+    },
+    {
+        "model": "core.variablerate",
+        "pk": 6,
+        "fields": {}
+    },
+    {
+        "model": "core.variablerate",
+        "pk": 7,
+        "fields": {}
+    },
+    {
+        "model": "core.variablerate",
+        "pk": 8,
+        "fields": {}
+    },
+    {
+        "model": "core.variablerate",
+        "pk": 9,
+        "fields": {}
+    },
+    {
+        "model": "core.variablerate",
+        "pk": 10,
+        "fields": {}
+    },
+    {
+        "model": "core.variablerate",
+        "pk": 11,
+        "fields": {}
+    },
+    {
+        "model": "core.variablerate",
+        "pk": 12,
+        "fields": {}
+    },
+    {
+        "model": "core.variablerate",
+        "pk": 13,
+        "fields": {}
+    },
+    {
+        "model": "core.variablerate",
+        "pk": 14,
+        "fields": {}
+    },
+    {
+        "model": "core.variablerate",
+        "pk": 15,
+        "fields": {}
+    },
+    {
+        "model": "core.variablerate",
+        "pk": 16,
+        "fields": {}
+    },
+    {
+        "model": "core.variablerate",
+        "pk": 17,
+        "fields": {}
+    },
+    {
+        "model": "core.variablerate",
+        "pk": 18,
+        "fields": {}
+    },
+    {
+        "model": "core.variablerate",
+        "pk": 19,
+        "fields": {}
+    },
+    {
+        "model": "core.variablerate",
+        "pk": 20,
+        "fields": {}
+    },
+    {
+        "model": "core.variablerate",
+        "pk": 21,
+        "fields": {}
+    },
+    {
+        "model": "core.variablerate",
+        "pk": 22,
+        "fields": {}
+    },
+    {
+        "model": "core.variablerate",
+        "pk": 23,
+        "fields": {}
+    },
+    {
+        "model": "core.variablerate",
+        "pk": 24,
+        "fields": {}
+    },
+    {
+        "model": "core.variablerate",
+        "pk": 25,
+        "fields": {}
+    },
+    {
+        "model": "core.variablerate",
+        "pk": 26,
+        "fields": {}
+    },
+    {
+        "model": "core.variablerate",
+        "pk": 27,
+        "fields": {}
+    },
+    {
+        "model": "core.variablerate",
+        "pk": 28,
+        "fields": {}
+    },
+    {
+        "model": "core.variablerate",
+        "pk": 29,
+        "fields": {}
+    },
+    {
+        "model": "core.variablerate",
+        "pk": 30,
+        "fields": {}
+    }
+]

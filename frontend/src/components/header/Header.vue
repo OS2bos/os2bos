@@ -8,7 +8,7 @@
 
 <template>
 
-    <header>
+    <header class="globalheader-wrapper">
         <div class="globalheader">
             <router-link to="/" class="header-link" title="Bevilling og Styring">
                 <img class="global-logo" src="/logo.png" alt="">
@@ -56,13 +56,19 @@
 
 <style>
 
+    .globalheader-wrapper {
+        margin: 0 0 1rem;
+    }
+
     .globalheader {
         display: flex;
         flex-flow: row nowrap;
         justify-content: space-between;
         align-items: center;
-        padding: 2rem;
+        padding: 1rem 2rem .75rem;
         background-color: var(--grey0);
+        box-shadow: 0 .25rem 1rem hsla(var(--color1), 83%, 62%, .125);
+        margin: 0;
     }
 
     .header-link {
@@ -94,10 +100,22 @@
         margin: 0 2rem;
     }
 
-    .globalheader .globalnav > a {
+    .globalheader .globalnav > a,
+    .globalheader .globalnav > a:link,
+    .globalheader .globalnav > a:visited {
         display: inline-block;
         padding: .5rem;
         margin: 0 0 0 1rem;
+        border: solid 1px transparent;
+    }
+
+    .globalheader .globalnav > a:hover,
+    .globalheader .globalnav > a:active {
+        border-bottom-color: var(--primary);
+    }
+
+    .globalheader .globalnav > a:focus {
+        border-color: var(--warning);
     }
 
 </style>

@@ -2,10 +2,8 @@
 
 import _socket
 from django.db import migrations, models
-import django_audit_fields.fields.hostname_modification_field
-import django_audit_fields.fields.userfield
-import django_audit_fields.models.audit_model_mixin
-import django_revision.revision_field
+import django.utils.timezone
+import django.utils.timezone
 
 
 class Migration(migrations.Migration):
@@ -18,7 +16,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='relatedperson',
             name='created',
-            field=models.DateTimeField(blank=True, default=django_audit_fields.models.audit_model_mixin.utcnow),
+            field=models.DateTimeField(blank=True, default=django.utils.timezone.now),
         ),
         migrations.AddField(
             model_name='relatedperson',
@@ -43,26 +41,26 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='relatedperson',
             name='hostname_modified',
-            field=django_audit_fields.fields.hostname_modification_field.HostnameModificationField(blank=True, help_text='System field. (modified on every save)', max_length=50),
+            field=models.CharField(blank=True, help_text='System field. (modified on every save)', max_length=50),
         ),
         migrations.AddField(
             model_name='relatedperson',
             name='modified',
-            field=models.DateTimeField(blank=True, default=django_audit_fields.models.audit_model_mixin.utcnow),
+            field=models.DateTimeField(blank=True, default=django.utils.timezone.now),
         ),
         migrations.AddField(
             model_name='relatedperson',
             name='revision',
-            field=django_revision.revision_field.RevisionField(blank=True, editable=False, help_text='System field. Git repository tag:branch:commit.', max_length=75, null=True, verbose_name='Revision'),
+            field=models.CharField(blank=True, editable=False, help_text='System field. Git repository tag:branch:commit.', max_length=75, null=True, verbose_name='Revision'),
         ),
         migrations.AddField(
             model_name='relatedperson',
             name='user_created',
-            field=django_audit_fields.fields.userfield.UserField(blank=True, help_text='Updated by admin.save_model', max_length=50, verbose_name='user created'),
+            field=models.CharField(blank=True, help_text='Updated by admin.save_model', max_length=50, verbose_name='user created'),
         ),
         migrations.AddField(
             model_name='relatedperson',
             name='user_modified',
-            field=django_audit_fields.fields.userfield.UserField(blank=True, help_text='Updated by admin.save_model', max_length=50, verbose_name='user modified'),
+            field=models.CharField(blank=True, help_text='Updated by admin.save_model', max_length=50, verbose_name='user modified'),
         ),
     ]

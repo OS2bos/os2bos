@@ -25,12 +25,13 @@ def initialize():
     initialize_sections()
     initialize_activity_details()
     initialize_section_infos()
-    initialize_accounts()
     initialize_service_providers()
     initialize_users()
     initialize_teams()
     initialize_approval_levels()
     initialize_payment_method_details()
+    initialize_rates()
+    initialize_account_aliases()
 
 
 def initialize_municipalities():
@@ -81,15 +82,6 @@ def initialize_section_infos():
     call_command("loaddata", "sectioninfos.json", app_label="core")
 
 
-def initialize_accounts():
-    """Initialize all the relevant accounts.
-
-    Data should be the output of "manage.py dumpdata core.account".
-
-    """
-    call_command("loaddata", "accounts.json", app_label="core")
-
-
 def initialize_service_providers():
     """Initialize all the relevant service providers.
 
@@ -127,3 +119,15 @@ def initialize_teams():
             user = User.objects.get(username=name)
             user.team = team
             user.save()
+
+
+def initialize_rates():
+    """Initialize the variable rates, rates and rates per date for Ballerup."""
+    call_command("loaddata", "variablerates.json", app_label="core")
+    call_command("loaddata", "rates.json", app_label="core")
+    call_command("loaddata", "ratesperdate.json", app_label="core")
+
+
+def initialize_account_aliases():
+    """Initialize the account aliases."""
+    call_command("loaddata", "accountaliases.json", app_label="core")

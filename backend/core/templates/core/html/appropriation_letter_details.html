@@ -1,0 +1,194 @@
+<section{% if a.activity_type == "SUPPL_ACTIVITY" %} class="section-supplementary"{% endif %}>
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                <th class="align-right">
+                    <span class="flex-icon">Godkendelsesdato</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong class="approval-stamp" style="vertical-align: middle;">Godkendt</strong> ved {{ a.approval_level.name }}</td>
+                <td class="align-right" style="vertical-align: middle;">
+                    <span class="flex-icon">
+                        <span>{{ a.appropriation_date }}</span>
+                        {% if a.is_new %}
+                            <span class="icon muted">Opdateret</span>
+                        {% endif %}
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    {% if a.approval_note %}
+    <dl>
+        <dt>Bemærkning til godkendelse</dt>
+        <dd><em>{{ a.approval_note }}</em></dd>
+    </dl>
+    {% endif %}
+
+    <h3>
+        {% if a.is_new %}
+            <em class="update-stamp" style="vertical-align: middle;">Opdateret</em> {{ a.details.name }}
+        {% else %}
+            {{ a.details.name }}
+        {% endif %}
+        {% if a.activity_type == "MAIN_ACTIVITY" %}
+            <span class="muted">Hovedydelse</span>
+        {% else %}
+            <span class="muted">Følgeydelse</span>
+        {% endif %}
+    </h3>
+
+    {% if a.note %}
+        <dl>
+            <dt>Supplerende information</dt>
+            <dd><em>{{ a.note }}</em></dd>
+        </dl>
+    {% endif %}
+
+    <table style="width: auto">
+        <thead>
+            <tr>
+                {% if a.payment_plan.payment_type != "ONE_TIME_PAYMENT" %}
+                    <th>Startdato</th>
+                    <th>Slutdato</th>
+                {% else %}
+                    <td>Betalingsdato</td>
+                {% endif %}
+                {% if a.payment_plan.fictive %}
+                    <th>Betaling</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                {% if a.payment_plan.payment_type != "ONE_TIME_PAYMENT" %}
+                    <td>{{ a.start_date }}</td>
+                    <td>{{ a.end_date|default_if_none:"-" }}</td>
+                {% else %}
+                    <td>{{ a.payment_plan.payment_date }}</td>
+                {% endif %}
+                {% if a.payment_plan.fictive %}
+                    <td><strong>Fiktiv</strong></td>
+                {% endif %}
+            </tr>
+        </tbody>
+    </table>
+    <table>
+        <thead>
+            <tr>
+                {% if a.payment_plan.payment_type != "INDIVIDUAL_PAYMENT" %}
+                    <th>Afregningsenhed</th>
+                {% endif %}     
+                {% if a.payment_plan.payment_units %}
+                    <th>Antal</th>
+                {% endif %}     
+                {% if a.payment_plan.payment_type != "INDIVIDUAL_PAYMENT" %}            
+                    <th class="align-right">
+                        Beløb
+                    </th>
+                {% endif %}     
+                <th>Betalingsfrekvens</th>
+                <th class="align-right">Omkostninger, indeværende år</th>
+                <th class="align-right">Omkostninger, totalt</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                {% if a.payment_plan.payment_type != "INDIVIDUAL_PAYMENT" %}
+                    <td>
+                        {{ a.payment_plan.get_payment_cost_type_display|capfirst }}
+                        {% if a.payment_plan.payment_cost_type == "GLOBAL_RATE" %}
+                            <br>
+                            {{ a.payment_plan.payment_rate.name }}<br>
+                            {{ a.payment_plan.rate_or_price_amount }} kr <sup>*</sup>
+                        {% endif %}
+                        {% if a.payment_plan.payment_cost_type == "PER_UNIT" %}
+                            <br>
+                            {{ a.payment_plan.rate_or_price_amount }} kr <sup>*</sup>
+                        {% endif %}
+                    </td>
+                {% endif %}
+                {% if a.payment_plan.payment_units %}
+                    <td>{{ a.payment_plan.payment_units }}</td>
+                {% endif %}
+                {% if a.payment_plan.payment_type != "INDIVIDUAL_PAYMENT" %}
+                    <td class="align-right">
+                        {{ a.payment_plan.per_payment_amount }} kr {% if a.payment_plan.payment_cost_type != "FIXED"  %}<sup>*</sup>{% endif %}
+                    </td>
+                {% endif %}
+                <td>
+                    {% if a.payment_plan.payment_frequency == "MONTHLY" %}
+                        Månedlig den {{a.payment_plan.payment_day_of_month}}.
+                    {% elif a.payment_plan.payment_frequency == "BIWEEKLY" %}
+                        Hver 14. dag
+                    {% elif a.payment_plan.payment_frequency == "WEEKLY" %}
+                        Ugentlig
+                    {% elif a.payment_plan.payment_frequency == "DAILY" %}
+                        Daglig
+                    {% elif a.payment_plan.payment_type == "ONE_TIME_PAYMENT" %}
+                        Engangsudgift
+                    {% elif a.payment_plan.payment_type == "INDIVIDUAL_PAYMENT" %}
+                        Individuel betalingsplan
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td class="align-right">{{ a.total_granted_this_year }} kr</td>
+                <td class="align-right"><strong>{{ a.total_cost }} kr</strong></td>
+            </tr>
+        </tbody>
+    </table>
+    {% if a.payment_plan.payment_cost_type != "FIXED" and a.payment_plan.payment_type != "INDIVIDUAL_PAYMENT" %}
+        <p><sup>*</sup> Beløb kan afvige fra det angivne</p>
+    {% endif %}
+    <dl>
+        <dt>
+            Betales via
+            {% if a.payment_plan.payment_method == "INVOICE" %}
+                faktura
+            {% elif a.payment_plan.payment_method == "SD" %}
+                SD-løn
+            {% elif a.payment_plan.payment_method == "INTERNAL" %}
+                intern afregning
+            {% elif a.payment_plan.payment_method == "CASH" %}
+                kontant udbetaling
+            {% else %}
+                -
+            {% endif %}
+            til
+        </dt>
+        <dd>
+            {% if a.payment_plan.recipient_type == "COMPANY" %}
+                Firma
+            {% elif a.payment_plan.recipient_type == "PERSON" %}
+                Person
+            {% elif a.payment_plan.recipient_type == "INTERNAL" %}
+                Intern modtager
+            {% else %}
+                -
+            {% endif %}
+            <br>
+            {{ a.payment_plan.recipient_name }}
+            {% if a.payment_plan.recipient_id %}
+                <br>
+                {% if a.payment_plan.recipient_type == "PERSON" %}
+                    <span>CPR-nr. </span>
+                {% elif a.payment_plan.recipient_type == "COMPANY" %}
+                    <span>CVR-n.r </span>
+                {% else %}
+                    <span>Reference </span>
+                {% endif %}
+                {{ a.payment_plan.recipient_id }}
+            {% endif %}
+        </dd>
+        {% if a.payment_plan.payment_method_details %}
+            <dt>Skatteoplysninger</dt>
+            <dd>{{ a.payment_plan.payment_method_details }}</dd>
+        {% endif %}
+    </dl>
+</section>

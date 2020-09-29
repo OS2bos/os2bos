@@ -12,7 +12,6 @@ import logging
 import requests
 import datetime
 import itertools
-from datetime import date
 
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
@@ -27,16 +26,22 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.utils.html import strip_tags
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Q, BooleanField
+from django.db.models.expressions import Case, When
 
 from constance import config
 
 from weasyprint import HTML
 from weasyprint.fonts import FontConfiguration
 
+from holidays import Denmark as danish_holidays
+
 from service_person_stamdata_udvidet import get_citizen
 
 from core import models
+from core.data.extra_payment_date_exclusion_tuples import (
+    extra_payment_date_exclusion_tuples,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -137,28 +142,32 @@ def send_activity_email(subject, template, activity):
 
 def send_activity_created_email(activity):
     """Send an email because an activity was created."""
-    subject = _("Aktivitet oprettet")
+    cpr_number = activity.appropriation.case.cpr_number
+    subject = _("Aktivitet oprettet - %s") % cpr_number
     template = "emails/activity_created.html"
     send_activity_email(subject, template, activity)
 
 
 def send_activity_updated_email(activity):
     """Send an email because an activity was updated."""
-    subject = _("Aktivitet opdateret")
+    cpr_number = activity.appropriation.case.cpr_number
+    subject = _("Aktivitet opdateret - %s") % cpr_number
     template = "emails/activity_updated.html"
     send_activity_email(subject, template, activity)
 
 
 def send_activity_expired_email(activity):
     """Send an email because an activity has expired."""
-    subject = _("Aktivitet udgået")
+    cpr_number = activity.appropriation.case.cpr_number
+    subject = _("Aktivitet udgået - %s") % cpr_number
     template = "emails/activity_expired.html"
     send_activity_email(subject, template, activity)
 
 
 def send_activity_deleted_email(activity):
     """Send an email because an activity has been deleted."""
-    subject = _("Aktivitet slettet")
+    cpr_number = activity.appropriation.case.cpr_number
+    subject = _("Aktivitet slettet - %s") % cpr_number
     template = "emails/activity_deleted.html"
     send_activity_email(subject, template, activity)
 
@@ -179,30 +188,57 @@ def send_appropriation(appropriation, included_activities=None):
         )
 
     today = datetime.date.today()
-    approved_main_activities = (
+
+    # Fetch all currently granted main activities.
+    approved_main_activities_ids = (
         appropriation.activities.filter(
             activity_type=models.MAIN_ACTIVITY, status=models.STATUS_GRANTED
         )
         .exclude(end_date__lt=today)
-        .union(
-            included_activities_qs.filter(activity_type=models.MAIN_ACTIVITY)
+        .values_list("id", flat=True)
+    )
+    # Fetch all main activities from the explicitly included queryset.
+    included_main_activities_ids = included_activities_qs.filter(
+        activity_type=models.MAIN_ACTIVITY
+    ).values_list("id", flat=True)
+
+    # Annotate is_new so we can highlight them in the template.
+    main_activities = models.Activity.objects.filter(
+        Q(id__in=approved_main_activities_ids)
+        | Q(id__in=included_main_activities_ids)
+    ).annotate(
+        is_new=Case(
+            When(id__in=included_main_activities_ids, then=True),
+            default=False,
+            output_field=BooleanField(),
         )
     )
 
-    approved_suppl_activities = (
-        appropriation.activities.filter(
-            activity_type=models.SUPPL_ACTIVITY, status=models.STATUS_GRANTED
-        )
-        .exclude(end_date__lt=today)
-        .union(
-            included_activities_qs.filter(activity_type=models.SUPPL_ACTIVITY)
+    # Fetch all currently granted supplementary activities.
+    approved_suppl_activities_ids = appropriation.activities.filter(
+        activity_type=models.SUPPL_ACTIVITY, status=models.STATUS_GRANTED
+    ).exclude(end_date__lt=today)
+
+    # Fetch all supplementary activities from the explicitly included queryset.
+    included_suppl_activities_ids = included_activities_qs.filter(
+        activity_type=models.SUPPL_ACTIVITY
+    )
+    # Annotate is_new so we can highlight them in the template.
+    suppl_activities = models.Activity.objects.filter(
+        Q(id__in=approved_suppl_activities_ids)
+        | Q(id__in=included_suppl_activities_ids)
+    ).annotate(
+        is_new=Case(
+            When(id__in=included_suppl_activities_ids, then=True),
+            default=False,
+            output_field=BooleanField(),
         )
     )
 
     render_context = {
         "appropriation": appropriation,
-        "main_activities": approved_main_activities,
-        "supplementary_activities": approved_suppl_activities,
+        "main_activities": main_activities,
+        "supplementary_activities": suppl_activities,
     }
 
     # Get SBSYS template and KLE number from main activity.
@@ -299,7 +335,7 @@ def saml_create_user(user_data):  # noqa: D401
 
 
 def format_prism_financial_record(
-    payment, line_no, record_no, new_account_string=False
+    payment, line_no, record_no, use_account_alias=False
 ):
     """Format a single financial record for PRISM, on a single line.
 
@@ -316,6 +352,13 @@ def format_prism_financial_record(
     org_type = "01"
     post_type = "NOR"
     line_format = "FLYD"
+
+    # TODO: use_account_alias will be the only option going forward -
+    # we're accomodating both in a test period only.
+    if use_account_alias:
+        account_alias = payment.account_alias
+    else:
+        account_alias = payment.account_string
 
     # Line number is given as 5 chars with leading zeroes, org unit as 4 chars
     # with leading zeroes, as per the specification.
@@ -355,18 +398,13 @@ def format_prism_financial_record(
 
     153 - posting text.
     """
-    # TODO: remove this branch when account_string_new is ready.
-    if new_account_string:
-        account_string = payment.account_string_new
-    else:
-        account_string = payment.account_string
 
     case_cpr = payment.payment_schedule.activity.appropriation.case.cpr_number
     fields = {
         "103": f"{config.PRISM_MACHINE_NO:05d}",
         "104": f"{record_no:07d}",
         "110": f"{payment.date.strftime('%Y%m%d')}",
-        "111": f"{account_string}",
+        "111": f"{account_alias}",
         "112": f"{int(payment.amount*100):012d} ",
         "113": "D",
         "114": f"{payment.date.year}",
@@ -465,7 +503,7 @@ def due_payments_for_prism(date):
     )
 
 
-def generate_records_for_prism(due_payments, new_account_string=False):
+def generate_records_for_prism(due_payments, use_account_alias=False):
     """Generate the list of records for writing to PRISM file."""
     prism_records = (
         (
@@ -473,7 +511,7 @@ def generate_records_for_prism(due_payments, new_account_string=False):
                 p,
                 line_no=2 * i - 1,
                 record_no=i,
-                new_account_string=new_account_string,
+                use_account_alias=use_account_alias,
             ),
             format_prism_payment_record(p, line_no=2 * i, record_no=i),
         )
@@ -485,12 +523,12 @@ def generate_records_for_prism(due_payments, new_account_string=False):
     return prism_records
 
 
-def write_prism_file(date, payments, tomorrow, new_account_string=False):
+def write_prism_file(date, payments, tomorrow, use_account_alias=False):
     """Write the actual PRISM file."""
-    if new_account_string:
-        filename_str = "_new"
+    if use_account_alias:
+        filename_suffix = "_new"
     else:
-        filename_str = ""
+        filename_suffix = ""
     # The output directory is not configurable - this is mapped through Docker.
     output_dir = settings.PRISM_OUTPUT_DIR
 
@@ -498,7 +536,7 @@ def write_prism_file(date, payments, tomorrow, new_account_string=False):
     # tomorrow's file.
     filename = (
         f"{output_dir}/{date.strftime('%Y%m%d')}_{tomorrow.microsecond}"
-        + filename_str
+        + filename_suffix
     )
     with open(filename, "w") as f:
         # Generate and write preamble.
@@ -523,9 +561,7 @@ def write_prism_file(date, payments, tomorrow, new_account_string=False):
         )
         f.write(f"{preamble_string}\n")
         # Generate and write the records.
-        prism_records = generate_records_for_prism(
-            payments, new_account_string
-        )
+        prism_records = generate_records_for_prism(payments, use_account_alias)
         f.write("\n".join(prism_records))
 
         # Generate and write the final line.
@@ -537,20 +573,66 @@ def write_prism_file(date, payments, tomorrow, new_account_string=False):
 
 @transaction.atomic
 def export_prism_payments_for_date(date=None):
-    """Process payments and output a file for PRISME."""
+    """Process payments and output a file for PRISME.
+
+    Default date for exporting payments is tomorrow.
+
+    We check the day after tomorrow for one or several payment date exclusions
+    and include payments for those found.
+    """
     # Date = tomorrow if not given. We need "tomorrow" to set payment date.
     tomorrow = datetime.datetime.now() + relativedelta(days=1)
     if not date:
         date = tomorrow
 
-    payments = due_payments_for_prism(date)
+    # Retrieve payments for the default date.
+    payment_ids = list(
+        due_payments_for_prism(date).values_list("id", flat=True)
+    )
+
+    # We include payments until we reach two consecutive days
+    # with no exclusions.
+    payment_date_exclusions_found = False
+    consecutive_days = 1
+    days_delta = 1
+    while consecutive_days < 2:
+        while models.PaymentDateExclusion.objects.filter(
+            date=date + relativedelta(days=days_delta)
+        ).exists():
+            payment_date_exclusions_found = True
+            payment_ids.extend(
+                list(
+                    due_payments_for_prism(
+                        date + relativedelta(days=days_delta)
+                    ).values_list("id", flat=True)
+                )
+            )
+            days_delta += 1
+            consecutive_days = 0
+
+        # Also include payments for the first day after
+        # one or more PaymentDateExclusion dates.
+        if payment_date_exclusions_found:
+            payment_ids.extend(
+                list(
+                    due_payments_for_prism(
+                        date + relativedelta(days=days_delta)
+                    ).values_list("id", flat=True)
+                )
+            )
+        consecutive_days += 1
+        days_delta += 1
+        payment_date_exclusions_found = False
+
+    payments = models.Payment.objects.filter(id__in=payment_ids)
     if not payments.exists():
         # No payments
         return
 
     filename = write_prism_file(date, payments, tomorrow)
-    # TODO: the "new_account_string" prism file should be the future default.
-    write_prism_file(date, payments, tomorrow, new_account_string=True)
+    # TODO: the "account_alias" prism file should be the future
+    # default.
+    write_prism_file(date, payments, tomorrow, use_account_alias=True)
 
     # Register all payments as paid.
     for p in payments:
@@ -565,9 +647,9 @@ def export_prism_payments_for_date(date=None):
 def generate_granted_payments_report_list():
     """Generate a payments report of only granted payments."""
     current_year = timezone.now().year
-    end_of_current_year = date.max.replace(year=current_year)
+    end_of_current_year = datetime.date.max.replace(year=current_year)
     two_years_ago = current_year - 2
-    beginning_of_two_years_ago = date.min.replace(year=two_years_ago)
+    beginning_of_two_years_ago = datetime.date.min.replace(year=two_years_ago)
 
     granted_activities = models.Activity.objects.filter(
         status=models.STATUS_GRANTED
@@ -592,9 +674,9 @@ def generate_granted_payments_report_list():
 def generate_expected_payments_report_list():
     """Generate a payments report of granted AND expected payments."""
     current_year = timezone.now().year
-    end_of_current_year = date.max.replace(year=current_year)
+    end_of_current_year = datetime.date.max.replace(year=current_year)
     two_years_ago = current_year - 2
-    beginning_of_two_years_ago = date.min.replace(year=two_years_ago)
+    beginning_of_two_years_ago = datetime.date.min.replace(year=two_years_ago)
 
     expected_activities = models.Activity.objects.filter(
         Q(status=models.STATUS_GRANTED) | Q(status=models.STATUS_EXPECTED)
@@ -645,6 +727,32 @@ def generate_payments_report_list(payments):
             if appropriation.main_activity
             else None
         )
+        # Get the historical effort_step and scaling_step.
+        if payment.paid_date:
+            paid_datetime = timezone.make_aware(
+                datetime.datetime.combine(
+                    payment.paid_date, datetime.time.max
+                ),
+                timezone=timezone.utc,
+            )
+            historical_case = case.history.as_of(paid_datetime)
+            effort_step = historical_case.effort_step
+            scaling_step = historical_case.scaling_step
+        else:
+            effort_step = case.effort_step
+            scaling_step = case.scaling_step
+
+        price_per_unit = (
+            payment_schedule.price_per_unit.get_rate_amount(payment.date)
+            if payment_schedule.payment_cost_type
+            == payment_schedule.PER_UNIT_PRICE
+            else (
+                payment_schedule.payment_rate.get_rate_amount(payment.date)
+                if payment_schedule.payment_cost_type
+                == payment_schedule.GLOBAL_RATE_PRICE
+                else ""
+            )
+        )
 
         payment_dict = {
             # payment specific.
@@ -653,9 +761,8 @@ def generate_payments_report_list(payments):
             "paid_amount": payment.paid_amount,
             "date": payment.date,
             "paid_date": payment.paid_date,
-            # TODO: remove this field when account_string_new is ready.
             "account_string": payment.account_string,
-            "account_string_new": payment.account_string_new,
+            "account_alias": payment.account_alias,
             # payment_schedule specific.
             "payment_schedule__payment_id": payment_schedule.payment_id,
             "payment_schedule__"
@@ -666,6 +773,9 @@ def generate_payments_report_list(payments):
             "recipient_id": payment_schedule.recipient_id,
             "recipient_name": payment_schedule.recipient_name,
             "payment_method": payment_schedule.payment_method,
+            "payment_cost_type": payment_schedule.payment_cost_type,
+            "price_per_unit": price_per_unit,
+            "units": payment_schedule.payment_units,
             # activity specific.
             "activity__details__activity_id": activity.details.activity_id,
             "activity__details__name": activity.details.name,
@@ -685,8 +795,9 @@ def generate_payments_report_list(payments):
             "case_worker": str(case.case_worker),
             "team": str(case.team) if case.team else None,
             "leader": str(case.team.leader) if case.team else None,
-            "effort_step": str(case.effort_step),
-            "scaling_step": str(case.scaling_step),
+            "efforts": ",".join([e.name for e in case.efforts.all()]),
+            "effort_step": str(effort_step),
+            "scaling_step": str(scaling_step),
             "paying_municipality": str(case.paying_municipality),
         }
         payments_report_list.append(payment_dict)
@@ -727,3 +838,46 @@ def create_rrule(
     else:
         raise ValueError(_("ukendt betalingsfrekvens"))
     return rrule_frequency
+
+
+def generate_payment_date_exclusion_dates(years=None):
+    """
+    Generate "default" dates for payment date exclusions for a number of years.
+
+    The default are danish holidays and weekends.
+    """
+    if not years:
+        current_year = datetime.date.today().year
+        years = [current_year, current_year + 1]
+
+    danish_holiday_dates = list(danish_holidays(years=years))
+
+    start_date = datetime.date(min(years), 1, 1)
+    end_date = datetime.date(max(years), 12, 31)
+
+    weekend_dates = [
+        dt.date()
+        for dt in (
+            rrule.rrule(
+                dtstart=start_date,
+                until=end_date,
+                freq=rrule.WEEKLY,
+                byweekday=(rrule.SA, rrule.SU),
+            )
+        )
+    ]
+
+    extra_payment_date_exclusions = []
+    payment_date_exclusion_tuples = extra_payment_date_exclusion_tuples
+    for year in years:
+        for day, month in payment_date_exclusion_tuples:
+            extra_payment_date_exclusions.append(
+                datetime.date(day=day, month=month, year=year)
+            )
+
+    exclusion_dates = []
+    exclusion_dates.extend(danish_holiday_dates)
+    exclusion_dates.extend(weekend_dates)
+    exclusion_dates.extend(extra_payment_date_exclusions)
+
+    return sorted(list(set(exclusion_dates)))

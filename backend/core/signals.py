@@ -6,11 +6,13 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """Signals for acting on events occuring on model objects."""
 
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import pre_save, post_save, post_delete
 from django.dispatch import receiver
 from core.models import (
     Activity,
     PaymentSchedule,
+    Price,
+    Rate,
     Payment,
     STATUS_EXPECTED,
     STATUS_DRAFT,
@@ -23,13 +25,11 @@ from core.utils import (
 
 
 @receiver(
-    post_save,
+    pre_save,
     sender=Payment,
     dispatch_uid="set_saved_account_string_on_payment_save",
 )
-def set_saved_account_string_on_payment_save(
-    sender, instance, created, **kwargs
-):
+def set_saved_account_string_on_payment_save(sender, instance, **kwargs):
     """Set the saved_account_string on Payment save."""
     if (
         instance.paid
@@ -37,7 +37,6 @@ def set_saved_account_string_on_payment_save(
         and instance.account_string
     ):
         instance.saved_account_string = instance.account_string
-        instance.save()
 
 
 @receiver(
@@ -51,6 +50,24 @@ def set_payment_id_on_paymentschedule_save(
     """Set the payment_id as the PaymentSchedule ID on creation."""
     if created:
         instance.payment_id = instance.id
+        instance.save()
+
+
+@receiver(
+    post_save,
+    sender=Payment,
+    dispatch_uid="set_saved_account_alias_on_payment_save",
+)
+def set_saved_account_alias_on_payment_save(
+    sender, instance, created, **kwargs
+):
+    """Set the saved_account_alias on Payment save."""
+    if (
+        instance.paid
+        and not instance.saved_account_alias
+        and instance.account_alias
+    ):
+        instance.saved_account_alias = instance.account_alias
         instance.save()
 
 
@@ -95,6 +112,24 @@ def send_activity_payment_email_on_delete(sender, instance, **kwargs):
     send_activity_deleted_email(instance)
 
 
+@receiver(post_save, sender=Rate, dispatch_uid="on_save_rate")
+def set_needs_recalculation_on_save_rate(sender, instance, created, **kwargs):
+    """Set "needs update" flag when changing a rate."""
+    if not created:
+        Rate.objects.filter(pk=instance.pk).update(needs_recalculation=True)
+        instance.refresh_from_db()
+
+
+@receiver(post_save, sender=Price, dispatch_uid="on_save_price")
+def save_payment_schedule_on_save_price(sender, instance, created, **kwargs):
+    """Save payment schedule too when saving price."""
+    if instance.payment_schedule:
+        generate_payments_on_post_save(
+            PaymentSchedule, instance.payment_schedule, created, **kwargs
+        )
+        instance.payment_schedule.save()
+
+
 @receiver(
     post_save,
     sender=PaymentSchedule,
@@ -102,25 +137,62 @@ def send_activity_payment_email_on_delete(sender, instance, **kwargs):
 )
 def generate_payments_on_post_save(sender, instance, created, **kwargs):
     """Generate payments for activity before saving."""
-    if not hasattr(instance, "activity") or not instance.activity:
-        return
-    activity = instance.activity
+    if instance.is_ready_to_generate_payments():
 
-    vat_factor = activity.vat_factor
+        activity = instance.activity
 
-    if created and not instance.payments.exists():
-        instance.generate_payments(
-            activity.start_date, activity.end_date, vat_factor
-        )
-    elif instance.payments.exists():
-        # If status is either STATUS_DRAFT or STATUS_EXPECTED we delete
-        # and regenerate payments.
-        if activity.status in [STATUS_DRAFT, STATUS_EXPECTED]:
-            instance.payments.all().delete()
-            instance.generate_payments(
-                activity.start_date, activity.end_date, vat_factor
-            )
+        vat_factor = activity.vat_factor
+
+        if instance.payment_type != PaymentSchedule.INDIVIDUAL_PAYMENT:
+            # "Normal" schedules where payments can be generated.
+            if created and not instance.payments.exists():
+                instance.generate_payments(
+                    activity.start_date, activity.end_date, vat_factor
+                )
+            elif instance.payments.exists():
+                # If status is either STATUS_DRAFT or STATUS_EXPECTED we delete
+                # and regenerate payments.
+                if activity.status in [STATUS_DRAFT, STATUS_EXPECTED]:
+                    instance.payments.all().delete()
+                    instance.generate_payments(
+                        activity.start_date, activity.end_date, vat_factor
+                    )
+                else:
+                    instance.synchronize_payments(
+                        activity.start_date, activity.end_date, vat_factor
+                    )
+                    instance.recalculate_prices()
         else:
-            instance.synchronize_payments(
-                activity.start_date, activity.end_date, vat_factor
-            )
+            # instance.payment_type == PaymentSchedule.INDIVIDUAL_PAYMENT
+            if activity.status == STATUS_EXPECTED and activity.modifies:
+                # Individual schedules - if this is an expectation and has no
+                # payments, copy all payments from the activity it modifies
+                # whose payment dates come after the expectation's start date
+                # and before its end date.
+                #
+                # When the expectation is granted, these payments (i.e., all
+                # payments after the expectation's start date) are deleted on
+                # the original activity. This is done in the activity's
+                # `grant()` function.
+
+                if not instance.payments.exists():
+                    old_payments = (
+                        activity.modifies.payment_plan.payments.all()
+                    )
+                    for payment in old_payments:
+                        if payment.date >= activity.start_date and (
+                            activity.end_date is None
+                            or payment.date <= activity.end_date
+                        ):
+                            payment.pk = None
+                            payment.payment_schedule = instance
+                            payment.save()
+            # If this is a draft or expectation, copy recipient info to
+            # payments.
+            if activity.status in [STATUS_DRAFT, STATUS_EXPECTED]:
+                instance.payments.update(
+                    recipient_type=instance.recipient_type,
+                    recipient_id=instance.recipient_id,
+                    recipient_name=instance.recipient_name,
+                    payment_method=instance.payment_method,
+                )

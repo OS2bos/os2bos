@@ -17,13 +17,14 @@ from core.models import (
     STATUS_EXPECTED,
     PaymentSchedule,
     ActivityDetails,
-    Account,
     ServiceProvider,
     Section,
+    AccountAlias,
 )
 from core.tests.testing_utils import (
     BasicTestMixin,
     create_payment_schedule,
+    create_rate,
     create_payment,
     create_case,
     create_appropriation,
@@ -225,6 +226,7 @@ class TestEnsureDbConnection(TestCase):
 
 
 class TestInitializeDatabase(TestCase):
+    @override_settings(INITIALIZE_DATABASE=True)
     @mock.patch("core.management.commands.initialize_database.initialize")
     def test_initialize_database(self, initialize_mock):
         # the initialize function is tested
@@ -232,6 +234,14 @@ class TestInitializeDatabase(TestCase):
         # so we can simply test it is called.
         call_command("initialize_database")
         self.assertTrue(initialize_mock.called)
+
+    @mock.patch("bevillingsplatform.initialize.initialize")
+    @override_settings(INITIALIZE_DATABASE=False)
+    def test_initialize_database_without_settings(self, initialize_mock):
+        # when the setting is false the management command is executed
+        # but initialize() should never be called
+        call_command("initialize_database")
+        self.assertFalse(initialize_mock.called)
 
 
 class TestSendExpiredEmails(TestCase, BasicTestMixin):
@@ -262,12 +272,16 @@ class TestSendExpiredEmails(TestCase, BasicTestMixin):
         )
         # Only created email should be sent initially.
         self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(mail.outbox[0].subject, "Aktivitet oprettet")
+        self.assertEqual(
+            mail.outbox[0].subject, "Aktivitet oprettet - 0205891234"
+        )
 
         call_command("send_expired_emails")
         # Then expired email.
         self.assertEqual(len(mail.outbox), 2)
-        self.assertEqual(mail.outbox[1].subject, "Aktivitet udgået")
+        self.assertEqual(
+            mail.outbox[1].subject, "Aktivitet udgået - 0205891234"
+        )
 
     def test_send_expired_emails_doesnt_trigger_email(self):
         today = timezone.now().date()
@@ -469,6 +483,39 @@ class TestGeneratePaymentsReports(TestCase, BasicTestMixin):
         )
 
 
+class TestGeneratePaymentDateExclusions(TestCase):
+    @mock.patch("core.utils.extra_payment_date_exclusion_tuples", [])
+    @mock.patch(
+        "core.management.commands.generate_payment_date_exclusions.logger"
+    )
+    def test_generate_payment_date_exclusions_success(self, logger_mock):
+        call_command("generate_payment_date_exclusions", 2020, 2021)
+
+        logger_mock.info.assert_called_with(
+            "Success: 223 Payment Exclusion"
+            " Dates were generated for [2020, 2021]"
+        )
+
+    @mock.patch(
+        "core.management.commands.generate_payment_date_exclusions.logger"
+    )
+    @mock.patch(
+        "core.management.commands.generate_payment_date_exclusions."
+        "PaymentDateExclusion.objects.get_or_create"
+    )
+    def test_generate_payment_date_exclusions_exception_raised(
+        self, get_or_create_mock, logger_mock
+    ):
+
+        get_or_create_mock.side_effect = Exception("create error")
+
+        call_command("generate_payment_date_exclusions")
+
+        logger_mock.exception.assert_called_with(
+            "An exception occurred during payment exclusion date generation"
+        )
+
+
 class TestImportActivityDetails(TestCase):
     def test_import_activity_details(self):
         self.assertEqual(ActivityDetails.objects.count(), 0)
@@ -543,81 +590,6 @@ class TestImportActivityDetails(TestCase):
         self.assertEqual(ActivityDetails.objects.count(), 0)
 
 
-class TestImportAccounts(TestCase):
-    def test_import_accounts(self):
-        # The import_accounts script requires activity details and sections
-        # to have been populated first.
-        call_command("import_sections")
-        call_command("import_activity_details")
-
-        self.assertEqual(Account.objects.count(), 0)
-
-        call_command("import_accounts")
-
-        self.assertEqual(Account.objects.count(), 870)
-
-    def test_import_accounts_with_path(self):
-        call_command("import_sections")
-        call_command("import_activity_details")
-
-        self.assertEqual(Account.objects.count(), 0)
-
-        csv_data = (
-            # Headers.
-            "Aktivitet,Aktivitetnavn,Tollerance,MaxAfvigelse,"
-            "Hovedaktivitet på,Følgeudgift på ,Kle nr.,SBSYS id,"
-            "Hovedaktivitet,Hovedaktivitetsnavn,Kont1,Konto2,Konto3,"
-            "Kontering,PGF betegnelse,Helle,Kolonne1,Leif\n"
-            # 1st entry.
-            "015031,Soc.pæd. opholdssteder,10%,5000,SEL-52-3.7,,27.27.42,"
-            "882,, ,528201003,,15031,528201003-15031,"
-            "SEL-52-3.7 Anbringelse udenfor hjemmet,,,\n"
-        )
-        open_mock = mock.mock_open(read_data=csv_data)
-        with mock.patch(
-            "core.management.commands.import_accounts.open", open_mock
-        ):
-            call_command("import_accounts", "--path=/tmp/test")
-
-        open_mock.assert_called_with("/tmp/test")
-        self.assertEqual(Account.objects.count(), 1)
-
-    def test_import_accounts_no_activity_id(self):
-        call_command("import_sections")
-        call_command("import_activity_details")
-
-        self.assertEqual(Account.objects.count(), 0)
-
-        csv_data = (
-            # Headers.
-            "Aktivitet,Aktivitetnavn,Tollerance,MaxAfvigelse,"
-            "Hovedaktivitet på,Følgeudgift på ,Kle nr.,SBSYS id,"
-            "Hovedaktivitet,Hovedaktivitetsnavn,Kont1,Konto2,Konto3,"
-            "Kontering,PGF betegnelse,Helle,Kolonne1,Leif\n"
-            # Entry with no activity id.
-            ",Soc.pæd. opholdssteder,10%,5000,SEL-52-3.7,,27.27.42,"
-            "882,, ,528201003,,15031,528201003-15031,"
-            "SEL-52-3.7 Anbringelse udenfor hjemmet,,,\n"
-        )
-        open_mock = mock.mock_open(read_data=csv_data)
-        with mock.patch(
-            "core.management.commands.import_accounts.open", open_mock
-        ):
-            call_command("import_accounts")
-
-        self.assertEqual(Account.objects.count(), 0)
-
-    def test_import_accounts_no_activity_details(self):
-        call_command("import_sections")
-        # Don't import activity details to hit DoesNotExist cases.
-
-        self.assertEqual(Account.objects.count(), 0)
-
-        call_command("import_accounts")
-
-        self.assertEqual(Account.objects.count(), 0)
-
-
 class TestImportServiceProviders(TestCase):
     def test_import_service_providers(self):
         self.assertEqual(ServiceProvider.objects.count(), 0)
@@ -674,3 +646,97 @@ class TestImportSections(TestCase):
 
         open_mock.assert_called_with("/tmp/test")
         self.assertEqual(Section.objects.count(), 1)
+
+
+class TestImportAccountAliases(TestCase):
+    def test_import_account_aliases(self):
+        # We need to import sections and activity details initially.
+        call_command("import_sections")
+        call_command("import_activity_details")
+
+        self.assertEqual(AccountAlias.objects.count(), 0)
+
+        call_command("import_account_aliases")
+
+        self.assertEqual(AccountAlias.objects.count(), 306)
+
+    def test_import_account_aliases_with_path(self):
+        # We need to import sections and activity details initially.
+        call_command("import_sections")
+        call_command("import_activity_details")
+
+        self.assertEqual(AccountAlias.objects.count(), 0)
+
+        # CSV data with headers and a single account alias entry.
+        csv_data = (
+            "Finanskontoalias,Type,Angivelse af finanskontoalias,Ændret af,"
+            "Brugergruppe/bruger\n"
+            "BOS0000002,Delt,01005-528211002-015027-529CPR---,jun,"
+        )
+        open_mock = mock.mock_open(read_data=csv_data)
+
+        with mock.patch(
+            "core.management.commands.import_account_aliases.open", open_mock
+        ):
+            call_command("import_account_aliases", "--path=/tmp/test")
+
+        open_mock.assert_called_with("/tmp/test")
+        self.assertEqual(AccountAlias.objects.count(), 1)
+
+
+class TestRecalculateOnChangedRate(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_recalculate_on_changed(self):
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+
+        rate = create_rate()
+        rate.set_rate_amount(10)
+        # Should generate payments to 2020-12-01.
+        start_date = date(year=2020, month=1, day=1)
+        end_date = start_date + timedelta(days=91)
+        with freeze_time("2020-01-01"):
+            activity = create_activity(
+                case=case,
+                appropriation=appropriation,
+                activity_type=MAIN_ACTIVITY,
+                status=STATUS_GRANTED,
+                start_date=start_date,
+                end_date=end_date,
+            )
+            payment_schedule = create_payment_schedule(
+                payment_frequency=PaymentSchedule.MONTHLY,
+                payment_type=PaymentSchedule.RUNNING_PAYMENT,
+                payment_units=1,
+                payment_amount=None,
+                activity=activity,
+                payment_cost_type=PaymentSchedule.GLOBAL_RATE_PRICE,
+                payment_rate=rate,
+            )
+            self.assertEqual(payment_schedule.payments.count(), 4)
+            payment = payment_schedule.payments.all()[0]
+            self.assertEqual(payment.amount, 10)
+            rate.set_rate_amount(15)
+
+            call_command("recalculate_on_changed_rate")
+
+            payment.refresh_from_db()
+            self.assertEqual(payment.amount, 15)
+
+    @mock.patch("core.management.commands.recalculate_on_changed_rate.logger")
+    @mock.patch("core.models.PaymentSchedule.objects.filter")
+    def test_recalculate_on_changed_rate_error(
+        self, recalculate_mock, logger_mock
+    ):
+        recalculate_mock.side_effect = OSError("test")
+
+        call_command("recalculate_on_changed_rate")
+
+        logger_mock.exception.assert_called_with(
+            "An exception occurred while recalculating payments"
+        )

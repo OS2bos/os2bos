@@ -23,6 +23,8 @@
 @import './code.css';
 @import './hr.css';
 
+@import './class-styles/index.css';
+
 .material-icons {
     font-family: 'Material Icons';
     font-weight: normal;

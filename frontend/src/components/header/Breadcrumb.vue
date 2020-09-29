@@ -51,7 +51,7 @@
 <style>
 
     .breadcrumb {
-        padding: 1rem 2rem;
+        padding: .5rem 2rem;
         background-color: var(--grey1);
     }
 

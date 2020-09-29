@@ -125,6 +125,27 @@ function activityId2name(id) {
 }
 
 /**
+ * Convert activity id to human readable name
+ * @param {number} id activity ID
+ * @returns {string} activity description
+ */
+function activityId2description(id) {
+    const act_list = store.getters.getActivityDetails
+    if (act_list) {
+        let act = act_list.find(function(element) {
+            return element.id === id;
+        })
+        if (act.description) {
+            return act.description
+        } else if (!act.description) {
+            return '-'
+        }
+    } else {
+        return 'Ikke tilgængelig'
+    }
+}
+
+/**
  * Convert section id to human readable name
  * @param {number} id section ID
  * @returns {string} section name
@@ -259,16 +280,133 @@ function displayEffort(id) {
     }
 }
 
+function displayActivityType(type) {
+    if (type === 'MAIN_ACTIVITY') {
+        return 'Hovedydelse'
+    } else {
+        return 'Følgeydelse'
+    }
+}
+
+function displayPayType(type) {
+    switch(type) {
+        case 'RUNNING_PAYMENT':
+            return 'Løbende ydelse'
+        case 'ONE_TIME_PAYMENT':
+            return 'Enkeltudgift'
+        case 'INDIVIDUAL_PAYMENT':
+            return 'Individuel betalingsplan'
+        default:
+            return '-'
+    }
+}
+
+function displayPayFreq(freq) {
+    switch(freq) {
+        case 'MONTHLY':
+            return 'Månedligt' 
+        case 'BIWEEKLY':
+            return 'Hver 14. dag' 
+        case 'WEEKLY':
+            return 'Ugentligt' 
+        case 'DAILY':
+            return 'Dagligt' 
+        default:
+            return '-'
+    }
+}
+
+function displayCostType(type) {
+    switch(type) {
+        case 'GLOBAL_RATE':
+            return 'Takst' 
+        case 'PER_UNIT':
+            return 'Enhedspris' 
+        case 'FIXED':
+            return 'Beløb'
+        default:
+            return '-'
+    }
+}
+
+function displayPayReceiverType(type) {
+    switch(type) {
+        case 'INTERNAL':
+            return 'Intern' 
+        case 'COMPANY':
+            return 'Firma' 
+        case 'PERSON':
+            return 'Person'
+        default:
+            return '-'
+    }
+}
+
+function displayPayMethod(method) {
+    switch(method) {
+        case 'INVOICE':
+            return 'Faktura' 
+        case 'SD':
+            return 'SD-løn' 
+        case 'CASH':
+            return 'Udbetaling'
+        case 'INTERNAL':
+            return 'Intern afregning' 
+        default:
+            return '-'
+    }
+}
+
+function rateId2details(id) {
+    const rates = store.getters.getRates
+    if (rates && id) {
+        let rate = rates.find(function(element) {
+            return element.id === parseInt(id);
+        })
+        return rate
+    } else {
+        return '-'
+    }
+}
+
+/**
+ * Convert rate id to human readable name
+ * @param {number} id activity ID
+ * @returns {string} activity description
+ */
+function rateId2description(id) {
+    const rates = store.getters.getRates
+    if (rates && id) {
+        let rate = rates.find(function(element) {
+            return element.id === parseInt(id);
+        })
+        if (rate.description) {
+            return rate.description
+        }
+    } else {
+        return '-'
+    }
+}
+
 export {
     municipalityId2name,
     targetGroupId2name,
     districtId2name,
     effortId2name,
     activityId2name,
+    activityId2description,
     sectionId2name,
     userId2name,
     displayStatus,
     displayEffort,
     approvalId2name,
-    teamId2name
+    teamId2name,
+    displayActivityType,
+    displayPayType,
+    displayPayFreq,
+    displayCostType,
+    displayPayReceiverType,
+    displayPayMethod,
+    rateId2details,
+    rateId2description
 }
