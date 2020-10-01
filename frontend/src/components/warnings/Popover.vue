@@ -37,7 +37,7 @@
         position: absolute;
         background-color: var(--warning);
         color: hsl(var(--color3), 100%, 20%);
-        padding: 1rem;
+        padding: .5rem 1rem;
         line-height: 1.25;
         bottom: .5rem;
         left: 0;

@@ -60,22 +60,24 @@ const testdata = {
         }
     }
 
-fixture.only('Check payment editing rules')
+fixture('Check payment editing rules')
     .page(baseurl)
 
 /*
-    Rules to test:
+    Rules to test: (See https://redmine.magenta-aps.dk/issues/38276)
     Betaling 
         Kan oprettes manuelt af alle brugere
             *hvis* den tilhører en ydelse med individuel betaling
             *indtil* relateret ydelse er bevilget
 
     Betaling -> Planlagt beløb
-        Kan ændres af alle brugere 
+        Kan ændres af alle brugere
+            *hvis* den tilhører en ydelse med individuel betaling
             *indtil* relateret ydelse er bevilget
 
     Betaling -> Planlagt betalingsdato
         Kan ændres af alle brugere
+            *hvis* den tilhører en ydelse med individuel betaling
             *indtil* relateret ydelse er bevilget
 */
 
@@ -103,7 +105,7 @@ test('Create data and check that normal user can create new payments', async t =
         .typeText('#field-planned-amount', '140', {replace: true})
         .typeText('#field-planned-date', createDate(5), {replace: true})
         .click(Selector('input').withAttribute('value', 'Opdatér'))
-        .expect(Selector('.msg').withText('Betaling registreret').exists).ok()
+        .expect(Selector('.msg').withText('Betaling opdateret').exists).ok()
         // Check that this user can't create new payments on an activity that hasn't individual payment plan
         .click(Selector('a').withText(testdata.appr1.name))
         .click(Selector('a').withText(testdata.act2.details__name))
@@ -133,7 +135,7 @@ test('Check that improved user can create new payments', async t => {
         .typeText('#field-planned-amount', '140', {replace: true})
         .typeText('#field-planned-date', createDate(5), {replace: true})
         .click(Selector('input').withAttribute('value', 'Opdatér'))
-        .expect(Selector('.msg').withText('Betaling registreret').exists).ok()
+        .expect(Selector('.msg').withText('Betaling opdateret').exists).ok()
         
         // Check that this user can't create new payments on an activity that hasn't individual payment plan
         .click(Selector('a').withText(testdata.appr1.name))
@@ -143,6 +145,7 @@ test('Check that improved user can create new payments', async t => {
         // Check that this user cannot edit payments
         .click(Selector('button').withText('Betaling').nth(0))
         .expect(Selector('dt').withText('Beløb, planlagt').exists).ok()
+        .click('.modal-cancel-btn')
 
         // Check that this user can't create new payments on any activity when activities have been granted
         .click(Selector('a').withText(testdata.appr1.name))
@@ -234,8 +237,8 @@ test('Check that normal user can register payment under certain circumstances', 
         .typeText(Selector('td input.field-amount').nth(0), '200', {replace: true})
         .typeText(Selector('td input[type="date"]').nth(0), createDate(6), {replace: true})
         .click(Selector('button').withText('Gem'))
-        .expect(Selector('td input.field-amount').exists).notOk()
-        .expect(Selector('td input[type="date"]').exists).notOk()
+        .expect(Selector('span.amount-paid').exists).ok()
+        .expect(Selector('span.date-paid').exists).ok()
 })
 
 test('Check that improved user can register payment at all times', async t => {
@@ -268,7 +271,16 @@ test('Check that improved user can register payment at all times', async t => {
         .typeText(Selector('td input.field-amount').nth(0), '200', {replace: true})
         .typeText(Selector('td input[type="date"]').nth(0), createDate(6), {replace: true})
         .click(Selector('button').withText('Gem'))
-        .expect(Selector('td input.field-amount').exists).ok()
-        .expect(Selector('td input[type="date"]').exists).ok()
+        .expect(Selector('span.amount-paid').exists).notOk()
+        .expect(Selector('span.date-paid').exists).notOk()
 
+        // Check that we get a warning if trying to set paid date in the near future
+        .click(Selector('a').withText(testdata.appr1.name))
+        .click(Selector('a').withText(testdata.act2.details__name))
+        .typeText(Selector('td input[type="date"]').nth(0), createDate(1), {replace: true})
+        .expect(Selector('.popover').exists).ok()
+        .click(Selector('a').withText(testdata.appr1.name))
+        .click(Selector('a').withText(testdata.act3.details__name))
+        .typeText(Selector('td input[type="date"]').nth(0), createDate(1), {replace: true})
+        .expect(Selector('.popover').exists).ok()
 })
