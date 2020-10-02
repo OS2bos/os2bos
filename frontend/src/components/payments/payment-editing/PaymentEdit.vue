@@ -244,7 +244,7 @@
                     .then(res => {
                         this.$store.dispatch('fetchPayment', this.p.id)
                         this.closeDiag()
-                        notify('Betaling registreret', 'success')
+                        notify('Betaling opdateret', 'success')
                     })
                     .catch(err => this.$store.dispatch('parseErrorOutput', err))
             },

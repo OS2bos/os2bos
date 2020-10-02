@@ -7,7 +7,7 @@
 
 <template>
     <input v-if="visible" class="field-amount" type="number" v-model="amount">
-    <span v-else>
+    <span v-else class="amount-paid">
         {{ displayDigits(amount) }} kr.
     </span>
 </template>
