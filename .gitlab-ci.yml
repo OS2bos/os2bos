@@ -24,10 +24,6 @@ stages:
   - release
   - deploy
 
-include:
-  - project: 'labs/master-ci'
-    ref: master
-    file: '/project/docker.yml'
 
 variables:
   # Project variables
