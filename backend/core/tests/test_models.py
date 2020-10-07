@@ -1276,7 +1276,9 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         expected_activity = create_activity(
             case,
             appropriation,
-            payment_plan=create_payment_schedule(),
+            payment_plan=create_payment_schedule(
+                payment_type=PaymentSchedule.INDIVIDUAL_PAYMENT
+            ),
             start_date=date.today() + timedelta(days=1),
             end_date=date.today() + timedelta(days=30),
             status=STATUS_EXPECTED,

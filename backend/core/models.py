@@ -1798,7 +1798,9 @@ class Activity(AuditModelMixin, models.Model):
         # Don't approve an activity without any payments.
         if (
             hasattr(self, "payment_plan")
-            and self.payment_plan.payments.count() == 0
+            and not self.payment_plan.payments.exists()
+            and self.payment_plan.payment_type
+            == PaymentSchedule.INDIVIDUAL_PAYMENT
             and self.status != STATUS_GRANTED
         ):
             raise RuntimeError(
