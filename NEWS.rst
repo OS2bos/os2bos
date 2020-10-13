@@ -1,3 +1,17 @@
+Version 3.2.1, 2020-10-13
+-------------------------
+
+New in this version:
+
+Bug fixes
+^^^^^^^^^
+
+- Allow granting activities with no payments.
+- Fix generating payments for activities that started with no payments.
+- Disallow editing payments for a payment plan that is not individual.
+- Update various dependencies.
+
+
 Version 3.2.0, 2020-09-30
 -------------------------
 
