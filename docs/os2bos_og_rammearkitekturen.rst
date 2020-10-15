@@ -24,7 +24,7 @@ Konklusion og anbefalinger
 
 Der er i store træk sammenfald mellem datamodellen i OS2bos og den
 fælleskommunale rammearkitekturs "treenighed" Ydelse, Bevilling og
-Effektuering og i det omfang, der ikke er, vil det for det meste ikke
+Effektuering. I det omfang, der ikke er, vil det for det meste ikke
 være vanskeligt at konvertere mellem de to repræsentationer.
 
 Den største afvigelse fra dette mønster er begrebet "hovedydelse" i
@@ -209,7 +209,7 @@ Ved sammenligning af byggeblokkens Bevilling med klassen
 * I rammearkitekturen er en bevilling ikke forbundet med en paragraf i
   serviceloven, som tilfældet er i OS2bos. I rammearkitekturen ligger
   dette på sagsniveau i form af *Sagshjemmel*, som nævnt under
-  gennemgangen af Sag. I OS2bos er lovparagraffen svarer lovparagraffen
+  gennemgangen af Sag. I OS2bos svarer lovparagraffen
   netop også til en oplysning ikke på hovedsagen, men på
   foranstaltningssagen i SBSYS.
 * I modsætning til i rammearkitekturen har en bevilling i CBUR ikke
