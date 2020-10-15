@@ -1,6 +1,59 @@
 OS2bos og rammearkitekturen
 ===========================
 
+Målgruppe
+---------
+Denne tekst indeholder en kort analyse af forholdet mellem systemet
+OS2bos og den fælleskommunale rammearkitektur. Den er skrevet i oktober
+2020 på baggrund af OS2bos version 3.2.1.
+
+Det forudsættes, at læseren kender OS2bos-systemet og i det mindste har
+et vist overblik over dets
+`datamodel <https://raw.githubusercontent.com/OS2bos/os2bos/master/backend/docs/graphics/OS2BOS_datamodel.png>`_; 
+endvidere forudsættes et (ikke nødvendigvis dybtgående) kendskab til den
+fælleskommunale rammearkitektur.
+
+Anbefalingerne herunder skal ikke forstås som en facitliste, ligesom
+gennemgangen ikke er udtømmende - læseren er velkommen til at drage sine
+egne konklusioner og komme med supplerende forslag til, hvad der kan
+ændres.
+
+
+Konklusion og anbefalinger
+--------------------------
+
+Der er i store træk sammenfald mellem datamodellen i OS2bos og den
+fælleskommunale rammearkitekturs "treenighed" Ydelse, Bevilling og
+Effektuering og i det omfang, der ikke er, vil det for det meste ikke
+være vanskeligt at konvertere mellem de to repræsentationer.
+
+Den største afvigelse fra dette mønster er begrebet "hovedydelse" i
+OS2bos, som ikke eksisterer i rammearkitekturens byggeblokke. Hvis man
+skulle importere data til OS2bos via et format baseret på disse, ville
+man være nødt til på anden vis at regne ud, hvilken ydelse var
+hovedydelse for hver bevilling; den anden vej ville der ikke være noget
+problem.
+
+Bortset fra denne modelleringsmæssige inkompatibilitet ville følgende
+tiltag bringe OS2bos tættere på rammearkitekturens begreber og modeller:
+
+* Klassen ``Activity`` kan omdøbes til ``GrantedService`` for at svare
+  til rammearkitekturens BevilgetYdelse.
+* Klassen ``ActivityDetails`` kan omdøbes til ``Service`` for at svare
+  til rammearkitekturens Ydelse.
+* Reglerne for kontering parametriseres, sådan at de kan afhænge af Ydelse
+  eller måske organisationsenhed e.l., og håndteres f.eks. ved hjælp af
+  Python-idiomet for et Strategi-pattern.
+* Det overvejes, om noget lignende er nødvendigt mht. reglerne for for 
+  beregning og bevilling.
+* Det overvejes, om den nuværende implementation af beregningsreglen
+  er bitemporal nok i forhold til rammearkitekturens intentioner.
+
+Man kunne også overveje at ændre navnene på klasserne
+``PaymentSchedule`` og ``Payment``, så de bedre svarer til noget fra
+byggeblokken Effektuering, men OS2bos er så fokuseret på økonomi, at
+de nuværende navne umiddelbart giver bedre mening.
+
 Indledning
 ----------
 
@@ -93,11 +146,13 @@ OS2bos: Klasser og byggeblokke
 
 
 Sag
----
++++
 
-En `Sag <https://rammearkitektur.kl.dk/media/23306/sag-informationsmodel.png?width=700&height=453.0674846625767>`_
-i OS2bos - et objekt af klassen ``Case`` - repræsenterer en sag i
-et eksternt journaliseringssystem, i Ballerups tilfælde SBSYS.
+En `Sag
+<https://rammearkitektur.kl.dk/indhold-i-rammearkitekturen/optaget-i-rammearkitekturen/optagede-byggeblokke/sag/>`_
+i rammearkitekturen - hvilket svarer til et objekt af klassen ``Case``
+OS2bos - repræsenterer en sag i et eksternt journaliseringssystem, i
+Ballerups tilfælde SBSYS.
 
 Byggeblokkens klassestruktur ses her:
 
@@ -132,23 +187,162 @@ Desuden kan en sag indeholde et vilkårligt antal bevillinger, som
 behandles i næste afsnit·
 
 Bevilling
----------
++++++++++
 
 Byggeblokken `Bevilling
 <https://rammearkitektur.kl.dk/indhold-i-rammearkitekturen/optaget-i-rammearkitekturen/optagede-byggeblokke/bevilling/>`_
-svarer til klassen ``Appropriation`` i OS2bos.
+består af to klasser ved navn Bevilling og BevilgetYdelse, der svarer til
+klasserne ``Appropriation`` og ``Activity`` i OS2bos.
 
 De forskellige klasser i byggeblokken Bevilling ses herunder:
 
 .. image:: https://rammearkitektur.kl.dk/media/22889/bevilling-informationsmodel.png?width=700
 
-Ved sammenligning med klassen ``Appropriation`` i OS2bos findes, at
+Ved sammenligning af byggeblokkens Bevilling med klassen
+``Appropriation`` i OS2bos findes, at
 
 * der ikke er nogen eksplicit *Bevillingsmodtager* på ``Appropriation``.
   Implicit er det altid sagsparten, som ydelsen "kommer til gode", så
   denne værdi er indirekte fastlagt gennem ``Case``-objektet.
 * *Bevillingsgiver* er implicit altid den relevante afdeling i CBUR, men
   det fremgår også, hvem der har godkendt ydelser på en sag og hvornår.
+* I rammearkitekturen er en bevilling ikke forbundet med en paragraf i
+  serviceloven, som tilfældet er i OS2bos. I rammearkitekturen ligger
+  dette på sagsniveau i form af *Sagshjemmel*, som nævnt under
+  gennemgangen af Sag. I OS2bos er lovparagraffen svarer lovparagraffen
+  netop også til en oplysning ikke på hovedsagen, men på
+  foranstaltningssagen i SBSYS.
 * I modsætning til i rammearkitekturen har en bevilling i CBUR ikke
   nogen eksplicit start- og slutdato. Dette fastlægges i stedet gennem
   hovedydelsens start- og slutdato.
+
+Ideen om en *hovedydelse* er en klar forskel mellem datamodellen i
+OS2bos og rammearkitekturens byggeblok. For så vidt som hovedydelsen kan
+pålægge begrænsninger, der gælder for samtlige ydelser i en bevilling,
+kunne disse begerænsninger egentlig også have været udtrykt som en
+egenskab ved bevillingen - for eksempel start- og slutdato, som vi lige
+har set.
+
+Ved sammenligning af byggeblokkens BevilgetYdelse med klassen
+``Activity`` i OS2bos findes, at 
+
+* rammearkitekturen ikke fastlægger, om selve godkendelsen af en
+  bevilling skal ske på bevillings- eller ydelsesniveau - i OS2bos
+  foregår det på ydelsesniveau, således at hver ydelse i en bevilling
+  har tilknyttet en godkendende bruger (en Aktør i rammearkitekturens
+  sprog). 
+* Derudover indeholder hver ``Activity`` eksplicit en reference til en
+  konkret leverandør, hvilket ikke er modelleret i rammearkitekturen.
+* OS2bos giver heller ikke mulighed for at specificere, at en ydelse er
+  tilbagebetalingspligtig - enten er det ikke relevant for nogen af
+  vores use cases, eller også håndteres det andetsteds.
+
+Modelleringen i OS2bos adskiller sig lidt fra rammearkitekturen ved at
+lægge "snittet" mellem bevilling- og ydelses-området mellem
+``Appropriation`` og ``Activity``, hvorimod rammearkitekturen lægger det
+mellem BevilgetYdelse og Ydelse.
+
+
+Ydelse
+++++++
+
+Byggeblokken `Ydelse <https://rammearkitektur.kl.dk/indhold-i-rammearkitekturen/optaget-i-rammearkitekturen/optagede-byggeblokke/ydelse/>`_
+svarer til klassen (klassifikationen) ``ActivityDetails`` i OS2bos.
+
+Sidstnævnte indeholder alle oplysninger, som er nødvendige for at kunne
+registrere, prisberegne og kontere (fakturere) en ydelse.
+
+De forskellige klasser i byggeblokken Ydelse ses herunder:
+
+.. image:: https://rammearkitektur.kl.dk/media/23357/informationsmodel-ydelse.png?width=700
+
+Det skal bemærkes, at eftersom OS2bos er et *økonomi*-styringssystem,
+behandles alle ydelser reelt som økonomiske ydelser - mange af dem kunne
+måske bedst beskrives som fysiske ydelser eller ressourceydelser, men i
+OS2bos interesserer vi os kun for det økonomiske aspekt, og alle ydelser
+behandles på samme måde.
+
+Derudover adskiller modellen i OS2bos sig fra rammearkitekturen på
+følgende punkter:
+
+* *Bevillingsregel* er ikke modelleret som et objekt, men fremgår i stedet af
+  relationen ``SectionInfo`` mellem ``ActivityDetails`` og
+  klassifikationen ``Section``, der indeholder servicelovens
+  paragraffer - hver ydelse er knyttet til 0 eller flere paragraffer,
+  efter hvilke den kan være hoved- eller følgeydelse.
+* *Konteringsregel* er heller ikke modelleret som et objekt, men fremgår
+  (med den nye metode) af relationen ``AccountAlias`` mellem
+  ``ActivityDetails`` og ``SectionInfo``.
+* *Beregningsregel* er heller ikke modelleret som et objekt, men er
+  implementeret i form af prisoplysningerne på ``PaymentSchedule``, der
+  ca. svarer til rammearkitekturens EffektueringsPlan.
+* Det anbefales, at oplysningerne, der anvendes af Beregningsreglen er
+  bitemporale, så de altid kan genberegnes. Det er de i dag, for så vidt
+  som de er Takster og Priser, dvs. hvis en pris er beregnet pr. enhed.
+* I OS2bos hænger relationen mellem Lovgrundlag og klassificering
+  sammen, idet KLE-numre er knyttet til relationen mellem Lovgrundlaget
+  og Ydelsen (``Section`` og ``ActivityDetails``).
+* Da OS2bos ikke primært beskæftiger sig med ydelser, der udbetales til
+  ydelsesmodtageren (sagsparten) i form af penge, er mange af
+  rammearkitekturens felter vedrørende Økonomisk Ydelse ikke relevante -
+  og dem, der *er* relevante, gemmes på betalingsplanen.
+
+En mulig observation er her, at hvis OS2bos fremadrettet skal håndtere
+bevillinger på andre områder end det sociale og af andre typer ydelser,
+ville det ganske givet være en god idé at have en parametrisering af
+reglerne for kontering, bevilling og beregning og knytte dem enten til
+den enkelte Ydelse eller måske til en mere overordnet (og fremtidig)
+opdeling i systemet - svarende til det klassiske design pattern
+Strategi.
+
+
+Effektuering
+++++++++++++
+
+Byggeblokken `Effektuering
+<https://rammearkitektur.kl.dk/indhold-i-rammearkitekturen/optaget-i-rammearkitekturen/optagede-byggeblokke/effektuering/>`_
+repræsenteres af klasserne ``PaymentSchedule`` og ``Payment`` i
+OS2bos.
+
+De forskellige klasser i byggeblokken Effektueringsplan ses herunder:
+
+.. image:: https://rammearkitektur.kl.dk/media/22893/effektuering-informationsmodel.png?width=626.944971537002&height=700
+
+En ikke uvæsentlig detalje er her, at en effektuering af en af de
+ydelser, som behandles i OS2bos, kan være noget mere omstændeligt, end
+hvad systemet behøver at forholde sig til. Hvis et ungt menneske for
+eksempel får bevilget en kontaktperson, består effektueringen i at finde
+en kontaktperson, i at få arrangeret, at denne kontakter familien, i
+kontaktpersonens fysiske møder med den unge ... og selvfølgelig også i
+betalingen for denne ydelse. For OS2bos består effektueringen kun i
+beregningen af, hvad der skal betales hvornår.
+
+Klasserne ``PaymentSchedule`` og ``Payment`` svarer dermed bedst til
+klasserne Økonomisk Effektueringsplan og Økonomisk Ydelseseffektuering i
+rammearkitekturen.
+
+"Samleklassen" Økonomisk Effektuering, der indeholder effektueringen af
+de enkelte ydelser, repræsenterer den faktiske udbetaling af de
+forfaldne betalinger og håndteres ikke i OS2bos. Dog kan eksporten af
+betalinger til PRISME siges at udgøre den Økonomiske Effektuering af
+disse betalinger, men den er ikke medtaget i OS2bos' datamodel som
+selvstændigt objekt.
+
+Den primære forskel imellem disse er, at klassen ``Payment`` i OS2bos
+ikke har en periode, kun en udbetalingsdato, der kan siges at svare til
+dispositionsdato i diagrammet herover. Herudover svarer
+OS2bos' ``PaymentSchedule``-klasse nøje til, hvad der er beskrevet i
+rammearkitekturen, hvor vi læser:
+
+    Ofte er økonomiske ydelser kendetegnet ved gentagen udbetaling af et
+    beløb - eksempelvis en gang månedligt, startende på en bestemt dag.
+
+    Effektueringsplanen (for økonomisk ydelse) indeholder således informationer som:
+
+    - startdato
+    - frekvens (måned, uge etc.)
+    - udbetalingsdag ("sidste bankdag", "sidste torsdag i måneden" etc)
+    - beløb (et "alt andet lige"-beløb, som ændres, hvis forholdene ændres)
+
+
+
