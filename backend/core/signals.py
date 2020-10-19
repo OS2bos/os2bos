@@ -145,7 +145,9 @@ def generate_payments_on_post_save(sender, instance, created, **kwargs):
 
         if instance.payment_type != PaymentSchedule.INDIVIDUAL_PAYMENT:
             # "Normal" schedules where payments can be generated.
-            if created and not instance.payments.exists():
+            if (
+                created or activity.status in [STATUS_DRAFT, STATUS_EXPECTED]
+            ) and not instance.payments.exists():
                 instance.generate_payments(
                     activity.start_date, activity.end_date, vat_factor
                 )

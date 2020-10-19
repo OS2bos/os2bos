@@ -11,7 +11,7 @@
         <popover :condition="display_warning">{{ display_warning }}</popover>
         <input :ref="`dateInput${ rowid }`" v-if="visible" type="date" v-model="date">
     </div>
-    <span v-else>
+    <span v-else class="date-paid">
         {{ displayPayDate(date) }}
     </span>
 </template>
