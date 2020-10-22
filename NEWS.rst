@@ -1,3 +1,15 @@
+Version 3.2.2, 2020-10-22
+-------------------------
+
+New in this version:
+
+Bug fixes
+^^^^^^^^^
+
+- When generating payments report, catch exception if payment date is
+  before case was created.
+
+
 Version 3.2.1, 2020-10-13
 -------------------------
 

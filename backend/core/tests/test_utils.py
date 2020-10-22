@@ -781,6 +781,8 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
             activity=activity,
         )
         payments = payment_schedule.payments.all()
+        payments[0].paid_amount = Decimal(666)
+        payments[0].paid_date = now - timedelta(days=10)
         report_list = generate_payments_report_list(payments)
         self.assertEqual(len(report_list), 6)
         first_elem = report_list[0]
