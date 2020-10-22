@@ -89,6 +89,7 @@ RUN pip3 install -r backend/requirements-test.txt
 
 
 # Copy and install backend code.
+COPY dev-environment/ci-settings.ini dev-environment/ci-settings.ini
 COPY README.rst .
 COPY LICENSE .
 COPY docker ./docker
