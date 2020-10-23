@@ -1054,16 +1054,39 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
             payment_amount=Decimal(666),
             activity=granted_activity,
         )
+        self.assertEqual(case.effort_step.number, 1)
+        self.assertEqual(case.scaling_step, 1)
+
+        # Create a second case history entry.
+        effort_step = create_effort_step(name="Trin 2", number=2)
+        case.effort_step = effort_step
+        case.scaling_step = 2
+        case.save()
 
         # Pay payments in the past.
-        past_date = date(2020,1,1)
+        past_date = date(2020, 1, 1)
         payment_schedule.payments.update(paid=True)
         payment_schedule.payments.update(paid_date=past_date)
 
-        # exception is not raised:
+        # Exception is not raised:
         # core.models.Case.DoesNotExist: Case had not yet been created.
-        report = generate_payments_report_list(
-            payment_schedule.payments.all()
+        report = generate_payments_report_list(payment_schedule.payments.all())
+
+        # Payments should use the earliest historical version of the Case.
+        self.assertTrue(
+            all(
+                [
+                    payment_dict["effort_step"]
+                    == "Trin 1: Tidlig indsats i almenområdet"
+                    for payment_dict in report
+                ]
+            )
         )
-        # Report contains the 6 entries
-        self.assertEqual(len(report), 6)
+        self.assertTrue(
+            all(
+                [
+                    payment_dict["scaling_step"] == "1"
+                    for payment_dict in report
+                ]
+            )
+        )
