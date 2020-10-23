@@ -737,8 +737,8 @@ def generate_payments_report_list(payments):
             )
             try:
                 historical_case = case.history.as_of(paid_datetime)
-            except case.DoesNotExist:  # pragma: no cover
-                historical_case = case.history.first()
+            except case.DoesNotExist:
+                historical_case = case.history.earliest()
             effort_step = historical_case.effort_step
             scaling_step = historical_case.scaling_step
         else:
