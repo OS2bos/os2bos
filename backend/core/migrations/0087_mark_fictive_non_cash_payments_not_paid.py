@@ -1,7 +1,7 @@
 from django.db import migrations, models
 from django.db.models import Q
 
-def mark_fictive_non_cash_payments_not_paid(apps, schema_editor):
+def mark_fictive_internal_and_invoice_payments_not_paid(apps, schema_editor):
     Payment = apps.get_model("core", "Payment")
 
     payments = Payment.objects.filter(
@@ -24,4 +24,4 @@ class Migration(migrations.Migration):
         ('core', '0086_auto_20200918_1106'),
     ]
 
-    operations = [migrations.RunPython(mark_fictive_non_cash_payments_not_paid)]
+    operations = [migrations.RunPython(mark_fictive_internal_and_invoice_payments_not_paid)]
