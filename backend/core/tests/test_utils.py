@@ -1026,3 +1026,44 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
                     ]
                 )
             )
+
+    def test_generate_payments_report_list_historical_case_missing(self):
+        now = timezone.now().date()
+        start_date = now
+        end_date = now + timedelta(days=5)
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        section = create_section()
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        granted_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        payment_schedule = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=granted_activity,
+        )
+
+        # Pay payments in the past.
+        past_date = date(2020,1,1)
+        payment_schedule.payments.update(paid=True)
+        payment_schedule.payments.update(paid_date=past_date)
+
+        # exception is not raised:
+        # core.models.Case.DoesNotExist: Case had not yet been created.
+        report = generate_payments_report_list(
+            payment_schedule.payments.all()
+        )
+        # Report contains the 6 entries
+        self.assertEqual(len(report), 6)
