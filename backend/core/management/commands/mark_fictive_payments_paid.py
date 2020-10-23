@@ -45,9 +45,10 @@ class Command(BaseCommand):
             date = datetime.now().date()
 
         try:
-            fictive_payments = Payment.objects.filter(
+            fictive_cash_payments = Payment.objects.filter(
                 date=date,
                 payment_schedule__fictive=True,
+                payment_method=models.CASH,
                 paid=False,
                 payment_schedule__activity__status=STATUS_GRANTED,
             )
@@ -57,7 +58,7 @@ class Command(BaseCommand):
                 paid=False,
                 payment_schedule__activity__status=STATUS_GRANTED,
             )
-            payments = list(fictive_payments) + list(sd_payments)
+            payments = list(fictive_cash_payments) + list(sd_payments)
             payment_ids = [payment.id for payment in payments]
             for payment in payments:
                 print(payment)
@@ -71,5 +72,5 @@ class Command(BaseCommand):
             )
         except Exception:
             logger.exception(
-                "An exception occurred during marking payments fictive."
+                "An exception occurred during marking fictive payments paid."
             )
