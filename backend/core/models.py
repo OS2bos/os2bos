@@ -2103,7 +2103,7 @@ class Activity(AuditModelMixin, models.Model):
     def is_valid_activity_start_date(self):
         """Determine if a date is valid for a activity start_date."""
         # A start_date is valid for cash activities if at least two
-        # consecutive days without payment date exclusions exist between
+        # days without payment date exclusions exist between
         # today and the start_date.
         if (
             self.payment_plan.payment_method == CASH
@@ -2132,9 +2132,7 @@ class Activity(AuditModelMixin, models.Model):
 
             consecutive_days = 0
             for day_date in tomorrow_to_start_date_in_days:
-                if exclusions.filter(date=day_date).exists():
-                    consecutive_days = 0
-                else:
+                if not exclusions.filter(date=day_date).exists():
                     consecutive_days += 1
 
                 if consecutive_days == 2:
