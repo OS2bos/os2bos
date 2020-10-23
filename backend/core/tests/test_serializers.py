@@ -1037,7 +1037,6 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         is_valid = serializer.is_valid()
         self.assertTrue(is_valid)
 
-
     def test_individual_payment_disallow_payment_frequency(self):
         activity_details = ActivityDetails.objects.create(
             max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
