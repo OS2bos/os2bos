@@ -2130,12 +2130,12 @@ class Activity(AuditModelMixin, models.Model):
                 )
             ]
 
-            consecutive_days = 0
+            days_without_exclusions = 0
             for day_date in tomorrow_to_start_date_in_days:
                 if not exclusions.filter(date=day_date).exists():
-                    consecutive_days += 1
+                    days_without_exclusions += 1
 
-                if consecutive_days == 2:
+                if days_without_exclusions == 2:
                     return True
 
             return False
