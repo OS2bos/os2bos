@@ -121,21 +121,21 @@ Build app image:
 .test-default: &test-default
   stage: test
   needs: ["Build app image"]
+  dependencies: []
+
+Unittest:
+  <<: *test-default
+  variables:
+    POSTGRES_USER: bev
+    POSTGRES_PASSWORD: bev
+    BEV_USER_CONFIG_PATH: $CI_PROJECT_DIR/dev-environment/dev-settings.ini
+    COVERAGE_FILE: $CI_PROJECT_DIR/.coverage
   image: ${IMAGE_SHA}
   tags:
     - docker
   services:
     - name: postgres:11
       alias: db
-  dependencies: []
-  variables:
-    POSTGRES_USER: bev
-    POSTGRES_PASSWORD: bev
-    BEV_USER_CONFIG_PATH: $CI_PROJECT_DIR/dev-environment/dev-settings.ini
-    COVERAGE_FILE: $CI_PROJECT_DIR/.coverage
-
-Unittest:
-  <<: *test-default
   script:
     - cd /code/backend &&
       pytest
