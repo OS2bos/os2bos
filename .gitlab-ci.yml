@@ -191,8 +191,7 @@ FrontendTest:
 
 .release-default: &release-default
   stage: release
-  needs: ['Unittest']
-  #needs: ["Unittest", "FrontendTest"] require also frontendTest to pass
+  needs: ["Unittest", "FrontendTest"]
   image: alpine
   variables:
     GIT_STRATEGY: none # We do not need the source code
@@ -282,7 +281,7 @@ Deploy test:
 Deploy dev:
   # Manuel deployment job to cburdev.magenta.dk
   <<: *deploy-default
-  needs: ["Unittest"]
+  needs: ["Unittest", "FrontendTest"]
   except:
     refs:
       - master
