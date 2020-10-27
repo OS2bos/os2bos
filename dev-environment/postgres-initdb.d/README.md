@@ -1,1 +1,0 @@
-../../docker/postgres-initdb.d/README.md

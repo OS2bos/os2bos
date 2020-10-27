@@ -126,15 +126,16 @@ Build app image:
 Unittest:
   <<: *test-default
   variables:
-    POSTGRES_USER: bev
-    POSTGRES_PASSWORD: bev
+    DATABASE_NAME: bev
+    DATABASE_USER: bev
+    DATABASE_PASSWORD: bev
     BEV_USER_CONFIG_PATH: $CI_PROJECT_DIR/dev-environment/dev-settings.ini
     COVERAGE_FILE: $CI_PROJECT_DIR/.coverage
   image: ${IMAGE_SHA}
   tags:
     - docker
   services:
-    - name: postgres:11
+    - name: magentaaps/postgres-os2bos:1-10.14-test
       alias: db
   script:
     - cd /code/backend &&
@@ -159,8 +160,9 @@ FrontendTest:
   <<: *test-default
   variables:
     FF_NETWORK_PER_BUILD: 1
-    POSTGRES_USER: bev
-    POSTGRES_PASSWORD: bev
+    DATABASE_NAME: bev
+    DATABASE_USER: bev
+    DATABASE_PASSWORD: bev
     BEV_USER_CONFIG_PATH: /code/dev-environment/ci-settings.ini
     SIMPLESAMLPHP_BASEURLPATH: http://idp:8080/simplesaml
     SIMPLESAMLPHP_SP_ENTITY_ID: http://bev:5000
@@ -170,7 +172,7 @@ FrontendTest:
     - docker
     - high-mem
   services:
-    - name: postgres:11
+    - name: magentaaps/postgres-os2bos:1-10.14-test
       alias: db
     - name: ${IMAGE_SHA}
       alias: bev
