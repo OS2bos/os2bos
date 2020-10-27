@@ -121,21 +121,21 @@ Build app image:
 .test-default: &test-default
   stage: test
   needs: ["Build app image"]
+  dependencies: []
+
+Unittest:
+  <<: *test-default
+  variables:
+    POSTGRES_USER: bev
+    POSTGRES_PASSWORD: bev
+    BEV_USER_CONFIG_PATH: $CI_PROJECT_DIR/dev-environment/dev-settings.ini
+    COVERAGE_FILE: $CI_PROJECT_DIR/.coverage
   image: ${IMAGE_SHA}
   tags:
     - docker
   services:
     - name: postgres:11
       alias: db
-  dependencies: []
-  variables:
-    POSTGRES_USER: bev
-    POSTGRES_PASSWORD: bev
-    BEV_USER_CONFIG_PATH: $CI_PROJECT_DIR/dev-environment/dev-settings.ini
-    COVERAGE_FILE: $CI_PROJECT_DIR/.coverage
-
-Unittest:
-  <<: *test-default
   script:
     - cd /code/backend &&
       pytest
@@ -166,6 +166,9 @@ FrontendTest:
     SIMPLESAMLPHP_SP_ENTITY_ID: http://bev:5000
     SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE: http://bev:5000/api/saml2_auth/acs/
   image: magentalabs/frontend-test:v0.2 #includes npm, chrome, firefox and ffmpeg
+  tags:
+    - docker
+    - high-mem
   services:
     - name: postgres:11
       alias: db
@@ -188,8 +191,7 @@ FrontendTest:
 
 .release-default: &release-default
   stage: release
-  needs: ['Unittest']
-  #needs: ["Unittest", "FrontendTest"] require also frontendTest to pass
+  needs: ["Unittest", "FrontendTest"]
   image: alpine
   variables:
     GIT_STRATEGY: none # We do not need the source code
@@ -279,7 +281,7 @@ Deploy test:
 Deploy dev:
   # Manuel deployment job to cburdev.magenta.dk
   <<: *deploy-default
-  needs: ["Unittest"]
+  needs: ["Unittest", "FrontendTest"]
   except:
     refs:
       - master
