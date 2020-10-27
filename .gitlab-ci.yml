@@ -161,7 +161,7 @@ FrontendTest:
     FF_NETWORK_PER_BUILD: 1
     POSTGRES_USER: bev
     POSTGRES_PASSWORD: bev
-    BEV_USER_CONFIG_PATH: $CI_PROJECT_DIR/dev-environment/frontend-tests-settings.ini
+    BEV_USER_CONFIG_PATH: /code/dev-environment/ci-settings.ini
     SIMPLESAMLPHP_BASEURLPATH: http://idp:8080/simplesaml
     SIMPLESAMLPHP_SP_ENTITY_ID: http://bev:5000
     SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE: http://bev:5000/api/saml2_auth/acs/
@@ -182,7 +182,6 @@ FrontendTest:
     when: always
     paths:
       - $CI_PROJECT_DIR/artifacts
-  allow_failure: true
 
 # Release stage
 ###############
