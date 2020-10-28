@@ -302,14 +302,27 @@ Deploy dev:
     name: dev
     url: https://cburdev.magenta.dk
 
-.deploy-rc:
+
+Deploy tag to staging:
   <<: *deploy-default
   needs: ["Release rc"]
+  when: manual
   only:
-    - /release/.*/
+    variables:
+      # Matches all of SemVer 2.0.0
+      - $CI_COMMIT_TAG =~ /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
+  variables:
+    DEPLOYMENT_NAMESPACE: cbur.ballerup.staging
+    SALTAPI_URL: https://ctrl1.magenta-aps.dk/api/
+    SALTAPI_EAUTH: file
+    GIT_STRATEGY: none
+    PILLAR_OVERRIDE: "{\"OS2BOS_APPLICATION_DOCKER_IMAGE\":\"${IMAGE_TAG}\"}"
   script:
-    - echo Deploying ${IMAGE_RC} to moratest.magneta.dk
-    # TODO: push ${IMAGE_RC} to moratest.magneta.dk
+    - echo Deploying ${IMAGE_TAG} to https://test-bevilling.balk.dk
+    - pepper --client runner --fail-any state.orchestrate ${DEPLOYMENT_NAMESPACE} pillar=$(echo $PILLAR_OVERRIDE)
+  environment:
+    name: ballerup-staging
+    url: https://test-bevilling.balk.dk
 
 
 .deploy-master:
