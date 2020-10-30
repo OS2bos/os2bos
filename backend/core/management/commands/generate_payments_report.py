@@ -16,7 +16,7 @@ from core.utils import (
     generate_expected_payments_report_list,
     generate_granted_payments_report_list,
 )
-
+from core.decorators import log_to_prometheus
 
 logger = logging.getLogger("bevillingsplatform.generate_payments_report")
 
@@ -24,6 +24,7 @@ logger = logging.getLogger("bevillingsplatform.generate_payments_report")
 class Command(BaseCommand):
     help = "Generate granted and expected payments reports as CSV"
 
+    @log_to_prometheus("generate_payments_report")
     def handle(self, *args, **options):
         granted_payments_list = generate_granted_payments_report_list()
         expected_payments_list = generate_expected_payments_report_list()

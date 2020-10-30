@@ -13,6 +13,7 @@ from django.utils import timezone
 
 from core.models import Activity, STATUS_GRANTED
 from core.utils import send_activity_expired_email
+from core.decorators import log_to_prometheus
 
 logger = logging.getLogger("bevillingsplatform.send_expired_emails")
 
@@ -34,6 +35,7 @@ class Command(BaseCommand):
             ),
         )
 
+    @log_to_prometheus("send_expired_emails")
     def handle(self, *args, **options):
         logger.info("sending expired emails")
         last_days = options["last_days"]

@@ -9,11 +9,13 @@
 from django.core.management.base import BaseCommand
 
 from core.models import PaymentSchedule
+from core.decorators import log_to_prometheus
 
 
 class Command(BaseCommand):
     help = "Renews payments for an unbounded Activity"
 
+    @log_to_prometheus("renew_payments")
     def handle(self, *args, **options):
         # Find recurring unbounded payment schedules
         # which has an associated Activity.
