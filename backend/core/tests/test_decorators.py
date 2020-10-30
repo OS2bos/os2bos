@@ -28,7 +28,6 @@ class TestLogToPrometheus(TestCase):
         last_success_value = registry.get_sample_value(
             "os2bos_send_expired_emails_last_success"
         )
-        breakpoint()
         self.assertTrue(last_success_value > 0)
 
     @override_settings(LOG_TO_PROMETHEUS=False)
