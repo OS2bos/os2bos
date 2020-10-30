@@ -17,11 +17,19 @@ class TestLogToPrometheus(TestCase):
         pushadd_call = pushadd_mock.call_args_list[0]
         self.assertEqual(pushadd_call[1]["job"], "send_expired_emails")
 
-        # Assert registry gets an appropriate value.
-        registry_value = pushadd_call[1]["registry"].get_sample_value(
+        registry = pushadd_call[1]["registry"]
+        # Assert registry for duration gets an appropriate value.
+        duration_value = registry.get_sample_value(
             "os2bos_send_expired_emails_duration_seconds"
         )
-        self.assertTrue(registry_value > 0)
+        self.assertTrue(duration_value > 0)
+
+        # Assert registry for last success gets a value.
+        last_success_value = registry.get_sample_value(
+            "os2bos_send_expired_emails_last_success"
+        )
+        breakpoint()
+        self.assertTrue(last_success_value > 0)
 
     @override_settings(LOG_TO_PROMETHEUS=False)
     @mock.patch("core.decorators.pushadd_to_gateway")
@@ -44,8 +52,15 @@ class TestLogToPrometheus(TestCase):
         pushadd_call = pushadd_mock.call_args_list[0]
         self.assertEqual(pushadd_call[1]["job"], "raises_exception")
 
-        # Assert registry gets no value.
-        registry_value = pushadd_call[1]["registry"].get_sample_value(
-            "os2bos_send_expired_emails_duration_seconds"
+        # Assert registry for duration gets no value.
+        registry = pushadd_call[1]["registry"]
+        duration_value = registry.get_sample_value(
+            "os2bos_raises_exception_emails_duration_seconds"
         )
-        self.assertIsNone(registry_value)
+        self.assertIsNone(duration_value)
+
+        # Assert registry for last success gets no value.
+        last_success_value = registry.get_sample_value(
+            "os2bos_raises_exception_last_success"
+        )
+        self.assertIsNone(last_success_value)
