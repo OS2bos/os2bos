@@ -311,9 +311,7 @@ LOGGING = {
             "formatter": "verbose",
             "filename": settings.get(
                 "FICTIVE_PAYMENTS_LOG_FILE",
-                fallback=os.path.join(
-                    LOG_DIR, "mark_payments_paid.log"
-                ),
+                fallback=os.path.join(LOG_DIR, "mark_payments_paid.log"),
             ),
         },
         "send_expired_emails": {
