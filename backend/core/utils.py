@@ -353,13 +353,6 @@ def format_prism_financial_record(
     post_type = "NOR"
     line_format = "FLYD"
 
-    # TODO: use_account_alias will be the only option going forward -
-    # we're accomodating both in a test period only.
-    if use_account_alias:
-        account_alias = payment.account_alias
-    else:
-        account_alias = payment.account_string
-
     # Line number is given as 5 chars with leading zeroes, org unit as 4 chars
     # with leading zeroes, as per the specification.
     header = (
@@ -404,7 +397,7 @@ def format_prism_financial_record(
         "103": f"{config.PRISM_MACHINE_NO:05d}",
         "104": f"{record_no:07d}",
         "110": f"{payment.date.strftime('%Y%m%d')}",
-        "111": f"{account_alias}",
+        "111": f"{payment.account_alias}",
         "112": f"{int(payment.amount*100):012d} ",
         "113": "D",
         "114": f"{payment.date.year}",
@@ -503,7 +496,7 @@ def due_payments_for_prism(date):
     )
 
 
-def generate_records_for_prism(due_payments, use_account_alias=False):
+def generate_records_for_prism(due_payments):
     """Generate the list of records for writing to PRISM file."""
     prism_records = (
         (
@@ -511,7 +504,6 @@ def generate_records_for_prism(due_payments, use_account_alias=False):
                 p,
                 line_no=2 * i - 1,
                 record_no=i,
-                use_account_alias=use_account_alias,
             ),
             format_prism_payment_record(p, line_no=2 * i, record_no=i),
         )
@@ -523,12 +515,9 @@ def generate_records_for_prism(due_payments, use_account_alias=False):
     return prism_records
 
 
-def write_prism_file(date, payments, tomorrow, use_account_alias=False):
+def write_prism_file(date, payments, tomorrow):
     """Write the actual PRISM file."""
-    if use_account_alias:
-        filename_suffix = "_new"
-    else:
-        filename_suffix = ""
+
     # The output directory is not configurable - this is mapped through Docker.
     output_dir = settings.PRISM_OUTPUT_DIR
 
@@ -536,7 +525,6 @@ def write_prism_file(date, payments, tomorrow, use_account_alias=False):
     # tomorrow's file.
     filename = (
         f"{output_dir}/{date.strftime('%Y%m%d')}_{tomorrow.microsecond}"
-        + filename_suffix
     )
     with open(filename, "w") as f:
         # Generate and write preamble.
@@ -561,7 +549,7 @@ def write_prism_file(date, payments, tomorrow, use_account_alias=False):
         )
         f.write(f"{preamble_string}\n")
         # Generate and write the records.
-        prism_records = generate_records_for_prism(payments, use_account_alias)
+        prism_records = generate_records_for_prism(payments)
         f.write("\n".join(prism_records))
 
         # Generate and write the final line.
@@ -630,9 +618,6 @@ def export_prism_payments_for_date(date=None):
         return
 
     filename = write_prism_file(date, payments, tomorrow)
-    # TODO: the "account_alias" prism file should be the future
-    # default.
-    write_prism_file(date, payments, tomorrow, use_account_alias=True)
 
     # Register all payments as paid.
     for p in payments:
