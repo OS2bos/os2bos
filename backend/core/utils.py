@@ -334,9 +334,7 @@ def saml_create_user(user_data):  # noqa: D401
 # TODO: At some point, factor out customer specific third party integrations.
 
 
-def format_prism_financial_record(
-    payment, line_no, record_no, use_account_alias=False
-):
+def format_prism_financial_record(payment, line_no, record_no):
     """Format a single financial record for PRISM, on a single line.
 
     This follows documentation provided by Ballerup Kommune based on
