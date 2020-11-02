@@ -517,7 +517,6 @@ def generate_records_for_prism(due_payments):
 
 def write_prism_file(date, payments, tomorrow):
     """Write the actual PRISM file."""
-
     # The output directory is not configurable - this is mapped through Docker.
     output_dir = settings.PRISM_OUTPUT_DIR
 
