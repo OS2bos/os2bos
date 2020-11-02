@@ -305,15 +305,13 @@ LOGGING = {
                 fallback=os.path.join(LOG_DIR, "generate_payments_report.log"),
             ),
         },
-        "mark_fictive_payments_paid": {
+        "mark_payments_paid": {
             "level": "INFO",
             "class": "logging.FileHandler",
             "formatter": "verbose",
             "filename": settings.get(
                 "FICTIVE_PAYMENTS_LOG_FILE",
-                fallback=os.path.join(
-                    LOG_DIR, "mark_fictive_payments_paid.log"
-                ),
+                fallback=os.path.join(LOG_DIR, "mark_payments_paid.log"),
             ),
         },
         "send_expired_emails": {
@@ -383,8 +381,8 @@ LOGGING = {
             "level": "INFO",
             "propagate": True,
         },
-        "bevillingsplatform.mark_fictive_payments_paid": {
-            "handlers": ["mark_fictive_payments_paid"],
+        "bevillingsplatform.mark_payments_paid": {
+            "handlers": ["mark_payments_paid"],
             "level": "INFO",
             "propagate": True,
         },
