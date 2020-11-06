@@ -182,12 +182,13 @@ to connect them. It starts six services:
 - `bev`: the django backend
 - `db`: a OS2BOS specific `postgres database server`_
 - `bev-cron`: `supercronic`_, a job runner running our cronjobs
-- `idp`: a local version of the IdP
+- `idp`: a local version of the IdP running our version of `SimpleSAMLphp`_
 - `postfix`: a `postfix email server`_
 
 .. _postfix email server: https://hub.docker.com/r/catatnight/postfix
 .. _postgres database server: https://git.magenta.dk/bevillingsplatform/postgres-os2bos
 .. _supercronic: https://github.com/aptible/supercronic
+.. _SimpleSAMLphp: https://simplesamlphp.org/
 
 Normally the backend image also serves the frontend code, but to ease frontend
 development, we include a frontend service that run `vue-cli-service serve
