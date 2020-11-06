@@ -181,10 +181,13 @@ to connect them. It starts four services:
 - `frontend`: the vue frontend reachable at  http://localhost:8080
 - `bev`: the django backend
 - `db`: a OS2BOS specific `postgres database server`_
+- `bev-cron`: `supercronic`_, a job runner running our cronjobs
+- `idp`: a local version of the IdP
 - `postfix`: a `postfix email server`_
 
 .. _postfix email server: https://hub.docker.com/r/catatnight/postfix
 .. _postgres database server: https://git.magenta.dk/bevillingsplatform/postgres-os2bos
+.. _supercronic: https://github.com/aptible/supercronic
 
 Normally the backend image also serves the frontend code, but to ease frontend
 development, we include a frontend service that run `vue-cli-service serve
