@@ -119,7 +119,7 @@ We log the following:
 
 * Export to Prism log - Log related to the PRISM exports management command. The log is written to ``/log/export_to_prism.log``.
 
-* Mark Fictive Payments Paid log - Log related to the marking fictive payments paid management command. The log is written to ``mark_fictive_payments_paid.log``.
+* Mark Payments Paid log - Log related to the marking payments paid management command. The log is written to ``mark_payments_paid.log``.
 
 * Generate Payments Report log - Log related to generating the payment reports. The log is written to ``/log/generate_payments_report.log``.
 
