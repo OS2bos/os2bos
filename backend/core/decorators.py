@@ -12,7 +12,7 @@ from prometheus_client import Gauge, CollectorRegistry, pushadd_to_gateway
 
 def log_to_prometheus(job_name):
     """
-    Log cron job metrics to prometheus.
+    Log function metrics to prometheus.
 
     for example @log_to_prometheus('send_expired_emails')
     """
