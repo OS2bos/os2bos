@@ -1,3 +1,7 @@
+======
+OS2BOS
+======
+
 |pipeline status|
 |coverage report|
 
@@ -173,7 +177,7 @@ Docker-compose
 --------------
 
 You can use ``docker-compose`` to start up bevillingsplatform and related
-service such as postgres and postfix.
+services such as postgres and postfix.
 
 A ``docker-compose.yml`` for development is included. It includes the settings
 to connect them. It starts six services:
