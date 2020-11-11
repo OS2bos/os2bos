@@ -180,7 +180,7 @@ You can use ``docker-compose`` to start up bevillingsplatform and related
 services such as postgres and postfix.
 
 A ``docker-compose.yml`` for development is included. It includes the settings
-to connect them. It starts six services:
+to connect them. It starts the following services:
 
 - `frontend`: the vue frontend reachable at  http://localhost:8080
 - `bev`: the django backend
