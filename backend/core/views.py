@@ -393,7 +393,7 @@ class TeamViewSet(ReadOnlyViewset):
 
 
 class RateViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
-    """Expose law sections in REST API."""
+    """Expose rates in REST API."""
 
     queryset = Rate.objects.all()
     serializer_class = RateSerializer
