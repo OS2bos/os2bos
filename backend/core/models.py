@@ -414,7 +414,7 @@ class RatePerDate(models.Model):
 
 
 class Price(VariableRate):
-    """A price on an individual payment plan."""
+    """An individual price on a payment plan."""
 
     class Meta:
         verbose_name = _("pris")
@@ -440,7 +440,9 @@ class Rate(VariableRate, Classification):
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     description = models.TextField(verbose_name=_("beskrivelse"), blank=True)
     needs_recalculation = models.BooleanField(
-        verbose_name=_("skal genberegnes"), default=False
+        verbose_name=_("skal genberegnes"),
+        default=False,
+        help_text=_("dette felt sættes automatisk når en takst ændres"),
     )
 
     def __str__(self):
@@ -543,6 +545,9 @@ class PaymentSchedule(models.Model):
         validators=[MinValueValidator(1), MaxValueValidator(31)],
         blank=True,
         null=True,
+        help_text=_(
+            "dette felt er obligatorisk for og angår kun månedlige betalinger"
+        ),
     )
 
     payment_type = models.CharField(
@@ -1534,9 +1539,11 @@ class ActivityDetails(Classification):
     activity_id = models.CharField(
         max_length=128, verbose_name=_("aktivitets ID"), unique=True
     )
+    # TODO: remove this if unused.
     max_tolerance_in_percent = models.PositiveSmallIntegerField(
         verbose_name=_("max tolerance i procent")
     )
+    # TODO: remove this if unused.
     max_tolerance_in_dkk = models.PositiveIntegerField(
         verbose_name=_("max tolerance i DKK")
     )
@@ -1758,6 +1765,7 @@ class Activity(AuditModelMixin, models.Model):
         blank=True,
         related_name="modified_by",
         on_delete=models.CASCADE,
+        verbose_name=_("justeres af aktivitet"),
     )
     # The appropriation that owns this activity.
     appropriation = models.ForeignKey(
@@ -1766,7 +1774,7 @@ class Activity(AuditModelMixin, models.Model):
         on_delete=models.CASCADE,
         verbose_name=_("bevilling"),
     )
-
+    # TODO: remove this if unused.
     service_provider = models.ForeignKey(
         ServiceProvider,
         null=True,
