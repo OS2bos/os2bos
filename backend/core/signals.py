@@ -79,7 +79,7 @@ def set_saved_account_alias_on_payment_save(
 def send_activity_created_email_on_paymentschedule_create(
     sender, instance, created, **kwargs
 ):
-    """Set the payment_id as the PaymentSchedule ID on creation."""
+    """Send activity created email when PaymentSchedule is saved."""
     if (
         created
         and instance.activity
