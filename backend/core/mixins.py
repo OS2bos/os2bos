@@ -67,7 +67,7 @@ class AuditModelViewSetMixin:
 
 
 class ClassificationViewSetMixin:
-    """Superclass for Classifications only exposing the active."""
+    """Superclass for Classification Viewsets only exposing the active."""
 
     def get_queryset(self):
         """Only expose active objects if user is not workflow or admin."""
