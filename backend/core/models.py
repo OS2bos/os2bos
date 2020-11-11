@@ -106,7 +106,7 @@ class SchoolDistrict(Classification):
 
 
 class EffortStep(Classification):
-    """Evaluation step for grading the effort deemed necessary in a case."""
+    """Evaluation step for grading the effort deemed necessary in a Case."""
 
     class Meta:
         verbose_name = _("indsatstrappetrin")
@@ -121,7 +121,7 @@ class EffortStep(Classification):
 
 
 class TargetGroup(Classification):
-    """Target group for a case."""
+    """Target group for a Case."""
 
     class Meta:
         verbose_name = _("målgruppe")
@@ -158,7 +158,7 @@ class InternalPaymentRecipient(models.Model):
 
 
 class Effort(Classification):
-    """Effort for a case."""
+    """Effort for a Case."""
 
     class Meta:
         verbose_name = _("indsats")
@@ -1010,7 +1010,7 @@ class Payment(models.Model):
 
 
 class Case(AuditModelMixin, models.Model):
-    """A case, covering one child - corresponding to a Hovedsag in SBSYS."""
+    """A Case, covering one child - corresponding to a Hovedsag in SBSYS."""
 
     class Meta:
         verbose_name = _("sag")
@@ -1518,7 +1518,7 @@ class ServiceProvider(Classification):
 
 
 class ActivityDetails(Classification):
-    """Class containing all types of activities offered by this municipality.
+    """Class containing all types of activities offered.
 
     Each type is associated with the legal sections for which it is allowed
     as well as the allowed main activitydetails and service providers.
