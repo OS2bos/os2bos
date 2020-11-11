@@ -1353,12 +1353,6 @@ class Appropriation(AuditModelMixin, models.Model):
             if si_filter.exists():
                 return si_filter.first()
 
-    @property
-    def payment_plan(self):
-        """Aggregate payment plans in this appropriation. TBD."""
-        # TODO: Implement this in a later phase, maybe. Else delete.
-        pass  # pragma: no cover
-
     @transaction.atomic
     def grant(self, activities, approval_level, approval_note, approval_user):
         """Grant all the given Activities."""
@@ -1524,10 +1518,10 @@ class ServiceProvider(Classification):
 
 
 class ActivityDetails(Classification):
-    """Class containing all services offered by this municipality.
+    """Class containing all types of activities offered by this municipality.
 
-    Each service is associated with the legal articles for which it is
-    allowed as well as a price range.
+    Each type is associated with the legal sections for which it is allowed
+    as well as the allowed main activitydetails and service providers.
     """
 
     class Meta:
@@ -1684,9 +1678,10 @@ class AccountAlias(models.Model):
 
 
 class Activity(AuditModelMixin, models.Model):
-    """An activity is a specific service provided within an appropriation."""
+    """An activity is a specific service provided within an appropriation.
 
-    # The details object contains the name, tolerance, etc. of the service.
+    The details object contains the name, tolerance, etc. of the service.
+    """
 
     class Meta:
         verbose_name = _("aktivitet")
@@ -2047,11 +2042,7 @@ class Activity(AuditModelMixin, models.Model):
 
     @property
     def triggers_payment_email(self):
-        """Decide if this activity triggers an email when saved.
-
-        If this activity is not granted, doesn't have a payment plan or
-        is a one time payment we don't send an email.
-        """
+        """Decide if this activity triggers an email when saved."""
         if not self.status == STATUS_GRANTED:
             return False
 
