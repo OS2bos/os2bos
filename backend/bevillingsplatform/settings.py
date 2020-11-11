@@ -511,6 +511,20 @@ SAML2_AUTH = {
 
 SILENCED_SYSTEM_CHECKS = ["rest_framework.W001"]
 
+# Settings for manage.py graph_models from django-extensions.
+GRAPH_MODELS = {
+    "exclude_models": [
+        "AbstractUser",
+        "AuditModelMixin",
+        "SectionEffortStepProxy",
+        "ActivityDetailsSectionProxy",
+        "HistoricalRatePerDateProxy",
+        "HistoricalRatePerDate",
+        "HistoricalPayment",
+        "HistoricalCase",
+    ]
+}
+
 ALLOW_EDIT_OF_PAST_PAYMENTS = settings.getboolean(
     "ALLOW_EDIT_OF_PAST_PAYMENTS", fallback=False
 )
