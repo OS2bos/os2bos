@@ -1757,8 +1757,8 @@ class Activity(AuditModelMixin, models.Model):
         max_length=128, verbose_name=_("type"), choices=type_choices
     )
 
-    # An expected change modifies another activity and will eventually
-    # be merged with it.
+    # An expected change modifies another activity and can eventually
+    # take its place.
     modifies = models.ForeignKey(
         "self",
         null=True,
