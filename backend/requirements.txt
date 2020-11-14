@@ -10,7 +10,7 @@ django-filter==2.4.0
 # |
 djangorestframework-filters==1.0.0.dev2
 git+git://github.com/magenta-aps/service_person_stamdata_udvidet@0.2.0
-djangorestframework_simplejwt==4.5.0
+djangorestframework_simplejwt==4.6.0
 whitenoise==5.2.0
 ipython==7.19.0
 WeasyPrint==52.1
