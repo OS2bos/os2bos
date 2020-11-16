@@ -507,8 +507,7 @@ SAML2_AUTH = {
     "CERT_FILE": settings.get("CERT_FILE", fallback=""),
     "KEY_FILE": settings.get("KEY_FILE", fallback=""),
     "AUTHN_REQUESTS_SIGNED": settings.getboolean(
-        "AUTHN_REQUESTS_SIGNED",
-        fallback=False
+        "AUTHN_REQUESTS_SIGNED", fallback=False
     ),
 }
 
