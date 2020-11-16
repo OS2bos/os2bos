@@ -627,7 +627,6 @@ def export_prism_payments_for_date(date=None):
 def generate_granted_payments_report_list():
     """Generate a payments report of only granted payments."""
     current_year = timezone.now().year
-    end_of_current_year = datetime.date.max.replace(year=current_year)
     two_years_ago = current_year - 2
     beginning_of_two_years_ago = datetime.date.min.replace(year=two_years_ago)
 
@@ -640,7 +639,6 @@ def generate_granted_payments_report_list():
     payments = (
         models.Payment.objects.filter(id__in=payment_ids)
         .paid_date_or_date_gte(beginning_of_two_years_ago)
-        .paid_date_or_date_lte(end_of_current_year)
         .select_related(
             "payment_schedule__activity__appropriation__case",
             "payment_schedule__activity__appropriation__section",
@@ -654,7 +652,6 @@ def generate_granted_payments_report_list():
 def generate_expected_payments_report_list():
     """Generate a payments report of granted AND expected payments."""
     current_year = timezone.now().year
-    end_of_current_year = datetime.date.max.replace(year=current_year)
     two_years_ago = current_year - 2
     beginning_of_two_years_ago = datetime.date.min.replace(year=two_years_ago)
 
@@ -669,7 +666,6 @@ def generate_expected_payments_report_list():
     payments = (
         models.Payment.objects.filter(id__in=payment_ids)
         .paid_date_or_date_gte(beginning_of_two_years_ago)
-        .paid_date_or_date_lte(end_of_current_year)
         .select_related(
             "payment_schedule__activity__appropriation__case",
             "payment_schedule__activity__appropriation__section",
