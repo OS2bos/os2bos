@@ -26,6 +26,7 @@ export default {
     },
     methods: {
         update: function(worker_id) {
+            console.log('updating')
             if (this.$route.query.case_worker != worker_id || this.$route.query.case_worker === null) {
                 this.$store.dispatch('fetchCases', this.$route.query)
             } else if (this.user.id) {

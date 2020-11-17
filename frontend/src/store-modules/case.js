@@ -7,6 +7,7 @@
 
 
 import axios from '../components/http/Http.js'
+import Vue from 'vue'
 
 /**
  * Vuex store methods for cases
@@ -14,7 +15,8 @@ import axios from '../components/http/Http.js'
  */
 const state = {
     cases: null,
-    main_case: null
+    main_case: null,
+    search_filters: {}
 }
 
 const getters = {
@@ -37,6 +39,16 @@ const getters = {
      */
     getCase (state) {
         return state.main_case ? state.main_case : false
+    },
+    /**
+     * Get stored filter settings for case search.
+     * @name getCaseSearchFilters
+     * @returns {object} An object with key/values pairs for case search query
+     * @example this.$store.getters.getCaseSearchFilters()
+     * @memberof state_case
+     */
+    getCaseSearchFilters (state) {
+        return state.search_filters
     }
 }
 
@@ -49,6 +61,9 @@ const mutations = {
     },
     clearCase (state) {
         state.main_case = null
+    },
+    setCaseSearchFilter (state, filter_obj) {
+        Vue.set(state.search_filters, filter_obj.key, filter_obj.val)
     }
 }
 
