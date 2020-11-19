@@ -147,6 +147,9 @@ export default {
         }
     },
     watch: {
+        $route: function(to, from) {
+            console.log('route change', to.query)
+        },
         user: function(new_user, old_user) {
             // We need to wait for a user to appear before we can initialise the component
             if (new_user !== old_user) {
@@ -183,9 +186,11 @@ export default {
             }
         },
         update: function() {
-            // Start out by setting a default case worker 
+            // Start out by setting a default case worker unless a case worker has already been set
             // and getting a list of cases with only initial filters set.
-            this.$store.commit('setCaseSearchFilter', {key: 'case_worker', val: this.user.id})
+            if (!this.case_worker) {
+                this.$store.commit('setCaseSearchFilter', {key: 'case_worker', val: this.user.id})
+            }
             this.$store.dispatch('fetchCases')
         }
     },
@@ -194,6 +199,20 @@ export default {
         // Set debounce on methods that are likely to be fired too often
         // (ie. while a user is typing into an input field)
         this.commitValue = debounce(this.commitValue, 400)
+
+        // On first load, check URL params and set store filters accordingly
+        if (this.$route.query.sbsys_id) {
+            this.$store.commit('setCaseSearchFilter', {key: 'sbsys_id', val: this.$route.query.sbsys_id})
+        }
+        if (this.$route.query.expired) {
+            this.$store.commit('setCaseSearchFilter', {key: 'expired', val: this.$route.query.expired})
+        }
+        if (this.$route.query.team) {
+            this.$store.commit('setCaseSearchFilter', {key: 'team', val: this.$route.query.team})
+        }
+        if (this.$route.query.case_worker) {
+            this.$store.commit('setCaseSearchFilter', {key: 'case_worker', val: this.$route.query.case_worker})
+        }
     }
 }
 </script>

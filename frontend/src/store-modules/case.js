@@ -9,6 +9,26 @@
 import axios from '../components/http/Http.js'
 import Vue from 'vue'
 
+const makeQueryString = function(state, show_sensitive_data) {
+    let q = ''
+    if (state.filters.sbsys_id) {
+        q = q + `sbsys_id=${ state.filters.sbsys_id }&`
+    }
+    if (show_sensitive_data && state.filters.cpr_number) {
+        q = q + `cpr_number=${ state.filters.cpr_number }&`
+    }
+    if (state.filters.expired) {
+        q = q + `expired=${ state.filters.expired }&`
+    }
+    if (state.filters.team) {
+        q = q + `team=${ state.filters.team }&`
+    }
+    if (state.filters.case_worker) {
+        q = q + `case_worker=${ state.filters.case_worker }`
+    }
+    return q
+}
+
 /**
  * Vuex store methods for cases
  * @name state_case
@@ -73,6 +93,7 @@ const mutations = {
     },
     /**
      * Set value of a property in state.filters
+     * Also updates URL to expose query string
      * @name setCaseSearchFilter
      * @param {object} obj An object with key/value pairs corresponding to the property change. `key` is always a String
      * @example this.$store.commit('setCaseSearchFilter', { key: 'case_worker', val: 4 })
@@ -80,6 +101,7 @@ const mutations = {
      */
     setCaseSearchFilter (state, obj) {
         Vue.set(state.filters, obj.key, obj.val)
+        location.hash = `/cases?${ makeQueryString(state, false) }`
     },
     /**
      * Reset state.filters to initial values
@@ -115,21 +137,7 @@ const actions = {
                 }
             }
         } else {
-            if (state.filters.sbsys_id) {
-                q = q + `sbsys_id=${ state.filters.sbsys_id }&`
-            }
-            if (state.filters.cpr_number) {
-                q = q + `cpr_number=${ state.filters.cpr_number }&`
-            }
-            if (state.filters.expired) {
-                q = q + `expired=${ state.filters.expired }&`
-            }
-            if (state.filters.team) {
-                q = q + `team=${ state.filters.team }&`
-            }
-            if (state.filters.case_worker) {
-                q = q + `case_worker=${ state.filters.case_worker }&`
-            }
+            q = makeQueryString(state, true)
         }
 
         axios.get(`/cases/?${ q }`)
