@@ -70,6 +70,8 @@
 <script>
 import ListPicker from '../forms/ListPicker.vue'
 
+// Debounce helper method lets a function await execution until it is no longer called again.
+// Useful for waiting for a user to stop typing in an input field.
 const debounce = function(func, wait) {
 	let timeout
 	return function() {
@@ -106,9 +108,13 @@ export default {
         // Search filters:
         sbsys_id: {
             get: function() {
+                // Get search filter saved in store. Displays in input field via `v-model`
                 return this.$store.getters.getCaseSearchFilter('sbsys_id')
             },
             set: function(new_val) {
+                // When user changes value in input field, commit the new value
+                // The `commitValue` helper method has a debounce feature, in order to avoid request spamming.
+                // This method is handy for values that the user types into text fields.
                 this.commitValue('sbsys_id', new_val)
             }
         },
@@ -125,43 +131,68 @@ export default {
                 return this.$store.getters.getCaseSearchFilter('expired')
             }, 
             set: function(new_val) {
+                // When user changes value in radio button, commit the new value
+                // We don't use the `commitValue` helper method here.
                 this.$store.commit('setCaseSearchFilter', {key: 'expired', val: new_val})
                 this.$store.dispatch('fetchCases')
             }
         },
         team: function() {
+            // `team` only has a getter. values are updated via changeTeam method in listpicker component
             return this.$store.getters.getCaseSearchFilter('team')
         },
         case_worker: function() {
+            // `case_worker` only has a getter. values are updated via changeCaseWorker method in listpicker component
             return this.$store.getters.getCaseSearchFilter('case_worker')
         }
     },
+    watch: {
+        user: function(new_user, old_user) {
+            // We need to wait for a user to appear before we can initialise the component
+            if (new_user !== old_user) {
+                this.update()
+            }
+        }
+    },  
     methods: {
         resetValues: function() {
-            // TODO: Reset values
+            // Use the store action to reset values
             this.$store.dispatch('resetCaseSearchFilters')
         },
         commitValue: function(key, val) {
+            // Handy helper method that both updates the value in store, 
+            // dispatches a request to get an updated list of cases,
+            // and is debounced to avoid API request spam.
             this.$store.commit('setCaseSearchFilter', {key: key, val: val})
             this.$store.dispatch('fetchCases')
         },
         changeCaseWorker: function(selection) {
+            // Checks if anything has actually been changed and updates store values
+            // + fetches an updated list of cases
             if (this.case_worker !== selection && this.case_worker || selection) {
                 this.$store.commit('setCaseSearchFilter', {key: 'case_worker', val: selection})
                 this.$store.dispatch('fetchCases')
             }
         },
         changeTeam: function(selection) {
+            // Checks if anything has actually been changed and updates store values
+            // + fetches an updated list of cases
             if (this.team !== selection && this.team || selection) {
                 this.$store.commit('setCaseSearchFilter', {key: 'team', val: selection})
                 this.$store.dispatch('fetchCases')
             }
+        },
+        update: function() {
+            // Start out by setting a default case worker 
+            // and getting a list of cases with only initial filters set.
+            this.$store.commit('setCaseSearchFilter', {key: 'case_worker', val: this.user.id})
+            this.$store.dispatch('fetchCases')
         }
     },
     created: function() {
-        this.$store.dispatch('fetchCases')
 
-        // Set debounce on methods that are likely to be fired often (ie. while a user types input)
+        // Set debounce on methods that are likely to be fired too often
+        // (ie. while a user is typing into an input field)
         this.commitValue = debounce(this.commitValue, 400)
     }
 }

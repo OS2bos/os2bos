@@ -135,9 +135,6 @@ export default {
         cases: function() {
             return this.$store.getters.getCases
         },
-        search_filters: function() {
-            return this.$store.getters.getCaseSearchFilters
-        },
         users: function() {
             return this.$store.getters.getUsers
         }
@@ -193,6 +190,7 @@ export default {
             .then(res => {
                 notify(`${ pks.length } sager blev flyttet`, 'success')
                 this.postDiagCleanUp()
+                this.$store.dispatch('fetchCases')
             })
             .catch(err => {
                 notify('Noget gik galt under flytning af sager', 'error')

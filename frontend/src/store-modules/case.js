@@ -47,6 +47,14 @@ const getters = {
     getCase (state) {
         return state.main_case ? state.main_case : false
     },
+    /**
+     * Get case search filter value from store.
+     * @name getCaseSearchFilter
+     * @param {string} filter_key A string corresponding to a property key in state.filters
+     * @returns {any} Whatever is stored in state.filters[filter_key]
+     * @example this.$store.getters.getCaseSearchFilter('case_worker')
+     * @memberof state_case
+     */
     getCaseSearchFilter: (state) => (filter_key) => {
         return state.filters[filter_key]
     }
@@ -63,9 +71,22 @@ const mutations = {
     clearCase (state) {
         state.main_case = null
     },
+    /**
+     * Set value of a property in state.filters
+     * @name setCaseSearchFilter
+     * @param {object} obj An object with key/value pairs corresponding to the property change. `key` is always a String
+     * @example this.$store.commit('setCaseSearchFilter', { key: 'case_worker', val: 4 })
+     * @memberof state_case
+     */
     setCaseSearchFilter (state, obj) {
         Vue.set(state.filters, obj.key, obj.val)
     },
+    /**
+     * Reset state.filters to initial values
+     * @name clearCaseSearchFilters
+     * @example this.$store.commit('clearCaseSearchFilters')
+     * @memberof state_case
+     */
     clearCaseSearchFilters (state) {
         state.filters = {
             sbsys_id: null,
@@ -81,9 +102,8 @@ const actions = {
     /**
      * Get a list of cases from API. Use getCases to read the list.
      * @name fetchCases
-     * @param {object} queryObj an object containing keys and values for a query string
-     * @returns {void} Use store.getter.getCases to read the list.
-     * @example this.$store.dispatch('fetchCases', { queryKey: 'queryValue'})
+     * @param {object} queryObj OPTIONAL An object containing keys and values for a query string. 
+     * @example this.$store.dispatch('fetchCases') or this.$store.dispatch('fetchCases', { queryKey: 'queryValue'})
      * @memberof state_case
      */
     fetchCases: function({commit, state}, queryObj) {
@@ -133,6 +153,12 @@ const actions = {
         })
         .catch(err => console.log(err))
     },
+    /**
+     * Clears the case search filters and fetches a new list of cases
+     * @name resetCaseSearchFilters
+     * @example this.$store.dispatch('resetCaseSearchFilters')
+     * @memberof state_case
+     */
     resetCaseSearchFilters: function({commit, dispatch}) {
         commit('clearCaseSearchFilters')
         dispatch('fetchCases')
