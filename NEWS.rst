@@ -7,6 +7,7 @@ Bug fixes
 ^^^^^^^^^
 
 * Correctly initialize SAML in settings.py
+* Update SAML dependencies to allow POST SingleSignOnService binding
 
 Version 3.2.2, 2020-10-22
 -------------------------
