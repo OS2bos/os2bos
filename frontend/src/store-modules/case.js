@@ -9,20 +9,6 @@
 import axios from '../components/http/Http.js'
 import Vue from 'vue'
 
-const debounce = function(func, wait) {
-	let timeout
-	return function() {
-        let context = this, 
-            args = arguments
-		const later = function() {
-			timeout = null
-			func.apply(context, args)
-		}
-		clearTimeout(timeout)
-		timeout = setTimeout(later, wait)
-	}
-}
-
 /**
  * Vuex store methods for cases
  * @name state_case
@@ -79,6 +65,15 @@ const mutations = {
     },
     setCaseSearchFilter (state, obj) {
         Vue.set(state.filters, obj.key, obj.val)
+    },
+    clearCaseSearchFilters (state) {
+        state.filters = {
+            sbsys_id: null,
+            cpr_number: null,
+            case_worker: null,
+            team: null,
+            expired: null
+        }
     }
 }
 
@@ -137,6 +132,10 @@ const actions = {
             commit('setCase', res.data)
         })
         .catch(err => console.log(err))
+    },
+    resetCaseSearchFilters: function({commit, dispatch}) {
+        commit('clearCaseSearchFilters')
+        dispatch('fetchCases')
     }
 }
 

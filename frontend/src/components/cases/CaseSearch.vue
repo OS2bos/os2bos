@@ -12,12 +12,12 @@
 
                 <div class="filter-field">
                     <label for="field-sbsysid">SBSYS ID</label>
-                    <input type="search" id="field-sbsysid" v-model="sbsys_id" @input="changeSbsysId">
+                    <input type="search" id="field-sbsysid" v-model="sbsys_id">
                 </div>
                 
                 <div class="filter-field">
                     <label for="field-cpr">CPR-nr</label>
-                    <input type="search" id="field-cpr" v-model="cpr_number" @input="changeCprNumber">
+                    <input type="search" id="field-cpr" v-model="cpr_number">
                 </div>
 
                 <div class="filter-field">
@@ -70,11 +70,20 @@
 <script>
 import ListPicker from '../forms/ListPicker.vue'
 
-/*
+const debounce = function(func, wait) {
+	let timeout
+	return function() {
+        let context = this, 
+            args = arguments
+		const later = function() {
+			timeout = null
+			func.apply(context, args)
+		}
+		clearTimeout(timeout)
+		timeout = setTimeout(later, wait)
+	}
+}
 
-    When url changes, update models
-    when model changes (by user input), update url
-*/
 export default {
     components: {
         ListPicker
@@ -100,15 +109,25 @@ export default {
                 return this.$store.getters.getCaseSearchFilter('sbsys_id')
             },
             set: function(new_val) {
-                this.$store.commit('setCaseSearchFilter', {key: 'sbsys_id', val: new_val})
-                this.$store.dispatch('fetchCases')
+                this.commitValue('sbsys_id', new_val)
             }
         },
-        cpr_number: function() {
-            return this.$store.getters.getCaseSearchFilter('cpr_number')
+        cpr_number: {
+            get: function() {
+                return this.$store.getters.getCaseSearchFilter('cpr_number')
+            }, 
+            set: function(new_val) {
+                this.commitValue('cpr_number', new_val)
+            }
         },
-        expired: function() {
-            return this.$store.getters.getCaseSearchFilter('expired')
+        expired: {
+            get: function() {
+                return this.$store.getters.getCaseSearchFilter('expired')
+            }, 
+            set: function(new_val) {
+                this.$store.commit('setCaseSearchFilter', {key: 'expired', val: new_val})
+                this.$store.dispatch('fetchCases')
+            }
         },
         team: function() {
             return this.$store.getters.getCaseSearchFilter('team')
@@ -117,23 +136,14 @@ export default {
             return this.$store.getters.getCaseSearchFilter('case_worker')
         }
     },
-    watch: {
-        $route: function(to, from) {
-            
-        }
-    },
     methods: {
         resetValues: function() {
             // TODO: Reset values
+            this.$store.dispatch('resetCaseSearchFilters')
         },
-        changeCprNumber: function(ev) {
-            console.log('fire cpr number change')
-            this.$store.commit('setCaseSearchFilter', {key: 'cpr_number', val: ev.target.value})
+        commitValue: function(key, val) {
+            this.$store.commit('setCaseSearchFilter', {key: key, val: val})
             this.$store.dispatch('fetchCases')
-        },
-        changeSbsysId: function(ev) {
-            //this.$store.commit('setCaseSearchFilter', {key: 'sbsys_id', val: ev.target.value})
-            //this.$store.dispatch('fetchCases')
         },
         changeCaseWorker: function(selection) {
             if (this.case_worker !== selection && this.case_worker || selection) {
@@ -150,6 +160,9 @@ export default {
     },
     created: function() {
         this.$store.dispatch('fetchCases')
+
+        // Set debounce on methods that are likely to be fired often (ie. while a user types input)
+        this.commitValue = debounce(this.commitValue, 400)
     }
 }
 </script>
