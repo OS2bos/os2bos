@@ -12,12 +12,12 @@
 
                 <div class="filter-field">
                     <label for="field-sbsysid">SBSYS ID</label>
-                    <input type="search" id="field-sbsysid" v-model="sbsys_id">
+                    <input type="search" id="field-sbsysid" v-model="sbsys_id" @input="changeSbsysId">
                 </div>
                 
                 <div class="filter-field">
                     <label for="field-cpr">CPR-nr</label>
-                    <input type="search" id="field-cpr" v-model="cpr_number">
+                    <input type="search" id="field-cpr" v-model="cpr_number" @input="changeCprNumber">
                 </div>
 
                 <div class="filter-field">
@@ -70,19 +70,6 @@
 <script>
 import ListPicker from '../forms/ListPicker.vue'
 
-// Debounce function allows for functions to wait for user to stop making inputs
-const debounce = function(fn, delay) {
-    let timeoutID = null
-    return function () {
-        clearTimeout(timeoutID)
-        const args = arguments
-        const that = this
-        timeoutID = setTimeout(function () {
-            fn.apply(that, args)
-        }, delay)
-    }
-}
-
 /*
 
     When url changes, update models
@@ -94,12 +81,7 @@ export default {
     },
     data: function() {
         return {
-            sbsys_id: null,
-            cpr_number: null,
-            expired: null,
-            team: null,
-            case_worker: null,
-            query: {}
+            
         }
     },
     computed: {
@@ -109,79 +91,65 @@ export default {
         users: function() {
             return this.$store.getters.getUsers
         },
-        search_filters: function() {
-            return this.$store.getters.getCaseSearchFilters
-        },
         user: function() {
             return this.$store.getters.getUser
+        },
+        // Search filters:
+        sbsys_id: {
+            get: function() {
+                return this.$store.getters.getCaseSearchFilter('sbsys_id')
+            },
+            set: function(new_val) {
+                this.$store.commit('setCaseSearchFilter', {key: 'sbsys_id', val: new_val})
+                this.$store.dispatch('fetchCases')
+            }
+        },
+        cpr_number: function() {
+            return this.$store.getters.getCaseSearchFilter('cpr_number')
+        },
+        expired: function() {
+            return this.$store.getters.getCaseSearchFilter('expired')
+        },
+        team: function() {
+            return this.$store.getters.getCaseSearchFilter('team')
+        },
+        case_worker: function() {
+            return this.$store.getters.getCaseSearchFilter('case_worker')
         }
     },
     watch: {
         $route: function(to, from) {
-            if (to !== from) {
-                this.getValuesFromUrl()
-            }
-        },
-        sbsys_id: debounce(function(new_val) {
-            this.postValuesToUrl('sbsys_id', new_val)
-        }, 400),
-        cpr_number: debounce(function(new_val) {
-            let newer_val = null
-            if (new_val) {
-                newer_val = new_val.replace('-', '')
-            }
-            this.postValuesToUrl('cpr_number', newer_val)
-        }, 400),
-        expired: function(new_val) {
-            this.postValuesToUrl('expired', new_val)
-        },
-        team: function(new_val) {
-            this.postValuesToUrl('team', new_val)
-        },
-        case_worker: function(new_val) {
-            this.postValuesToUrl('case_worker', new_val)
+            
         }
     },
     methods: {
-        postValuesToUrl: function(key, val) {
-            if (val !== this.$route.query[key]) {
-                this.$store.commit('setCaseSearchFilter', { key, val })
-                this.query[key] = val
-                this.$router.push({ path: '/cases', query: this.query })
-            }
-        },
-        getValuesFromUrl: function() {   
-            this.checkUrlOrState('sbsys_id')
-            this.checkUrlOrState('cpr_number')
-            this.checkUrlOrState('expired')
-            this.checkUrlOrState('team')
-            this.checkUrlOrState('case_worker')
-        },
-        checkUrlOrState: function(key) {
-            if (this.$route.query[key]) {
-                this[key] = this.$route.query[key]
-            } else if (this.search_filters[key]) {
-                this[key] = this.search_filters[key]
-            } else {
-                this.case_worker = this.user.id
-            }
-        },
         resetValues: function() {
-            this.sbsys_id = null
-            this.cpr_number = null
-            this.expired = null
-            this.team = null
-            this.case_worker = this.user.id
+            // TODO: Reset values
+        },
+        changeCprNumber: function(ev) {
+            console.log('fire cpr number change')
+            this.$store.commit('setCaseSearchFilter', {key: 'cpr_number', val: ev.target.value})
+            this.$store.dispatch('fetchCases')
+        },
+        changeSbsysId: function(ev) {
+            //this.$store.commit('setCaseSearchFilter', {key: 'sbsys_id', val: ev.target.value})
+            //this.$store.dispatch('fetchCases')
         },
         changeCaseWorker: function(selection) {
-            this.case_worker = selection
+            if (this.case_worker !== selection && this.case_worker || selection) {
+                this.$store.commit('setCaseSearchFilter', {key: 'case_worker', val: selection})
+                this.$store.dispatch('fetchCases')
+            }
         },
         changeTeam: function(selection) {
-            this.team = selection
+            if (this.team !== selection && this.team || selection) {
+                this.$store.commit('setCaseSearchFilter', {key: 'team', val: selection})
+                this.$store.dispatch('fetchCases')
+            }
         }
     },
     created: function() {
-        this.getValuesFromUrl()
+        this.$store.dispatch('fetchCases')
     }
 }
 </script>
@@ -196,5 +164,4 @@ export default {
     flex-grow: 1;
     text-align: right;
 }
-
 </style>

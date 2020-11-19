@@ -9,6 +9,20 @@
 import axios from '../components/http/Http.js'
 import Vue from 'vue'
 
+const debounce = function(func, wait) {
+	let timeout
+	return function() {
+        let context = this, 
+            args = arguments
+		const later = function() {
+			timeout = null
+			func.apply(context, args)
+		}
+		clearTimeout(timeout)
+		timeout = setTimeout(later, wait)
+	}
+}
+
 /**
  * Vuex store methods for cases
  * @name state_case
@@ -16,7 +30,14 @@ import Vue from 'vue'
 const state = {
     cases: null,
     main_case: null,
-    search_filters: {}
+    // Search filters:
+    filters: {
+        sbsys_id: null,
+        cpr_number: null,
+        case_worker: null,
+        team: null,
+        expired: null
+    }
 }
 
 const getters = {
@@ -40,16 +61,10 @@ const getters = {
     getCase (state) {
         return state.main_case ? state.main_case : false
     },
-    /**
-     * Get stored filter settings for case search.
-     * @name getCaseSearchFilters
-     * @returns {object} An object with key/values pairs for case search query
-     * @example this.$store.getters.getCaseSearchFilters()
-     * @memberof state_case
-     */
-    getCaseSearchFilters (state) {
-        return state.search_filters
+    getCaseSearchFilter: (state) => (filter_key) => {
+        return state.filters[filter_key]
     }
+
 }
 
 const mutations = {
@@ -62,8 +77,8 @@ const mutations = {
     clearCase (state) {
         state.main_case = null
     },
-    setCaseSearchFilter (state, filter_obj) {
-        Vue.set(state.search_filters, filter_obj.key, filter_obj.val)
+    setCaseSearchFilter (state, obj) {
+        Vue.set(state.filters, obj.key, obj.val)
     }
 }
 
@@ -76,15 +91,32 @@ const actions = {
      * @example this.$store.dispatch('fetchCases', { queryKey: 'queryValue'})
      * @memberof state_case
      */
-    fetchCases: function({commit}, queryObj) {
+    fetchCases: function({commit, state}, queryObj) {
         let q = ''
-        if (queryObj) {
+        if (queryObj) { // TODO: Check if we still need this
             for (let param in queryObj) {
                 if (queryObj[param] !== null) {
                     q = q + `${ param }=${ queryObj[param] }&`
                 }
             }
+        } else {
+            if (state.filters.sbsys_id) {
+                q = q + `sbsys_id=${ state.filters.sbsys_id }&`
+            }
+            if (state.filters.cpr_number) {
+                q = q + `cpr_number=${ state.filters.cpr_number }&`
+            }
+            if (state.filters.expired) {
+                q = q + `expired=${ state.filters.expired }&`
+            }
+            if (state.filters.team) {
+                q = q + `team=${ state.filters.team }&`
+            }
+            if (state.filters.case_worker) {
+                q = q + `case_worker=${ state.filters.case_worker }&`
+            }
         }
+
         axios.get(`/cases/?${ q }`)
         .then(res => {
             commit('setCases', res.data)

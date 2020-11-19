@@ -135,15 +135,11 @@ export default {
         cases: function() {
             return this.$store.getters.getCases
         },
+        search_filters: function() {
+            return this.$store.getters.getCaseSearchFilters
+        },
         users: function() {
             return this.$store.getters.getUsers
-        }
-    },
-    watch: {
-        $route: function(to, from) {
-            if (to !== from) {
-                this.update()
-            }
         }
     },
     methods: {
@@ -212,23 +208,10 @@ export default {
             })
             document.getElementById('datagrid-select-all').checked = false
             this.show_modal = false
-            this.update()
         },
         updateSelectedCases: function(selections) {
             this.selected_cases = selections
-        },
-        update: function(worker_id) {
-            if (this.$route.query.case_worker != worker_id || this.$route.query.case_worker === null) {
-                this.$store.dispatch('fetchCases', this.$route.query)
-            } else if (this.user.id) {
-                this.$route.query.case_worker = this.user.id
-                this.$route.query.expired = false
-                this.$store.dispatch('fetchCases', this.$route.query)
-            }
         }
-    },
-    created: function() {
-        this.update()
     }
 }
 </script>
