@@ -90,11 +90,6 @@ export default {
     components: {
         ListPicker
     },
-    data: function() {
-        return {
-            
-        }
-    },
     computed: {
         teams: function() {
             return this.$store.getters.getTeams
