@@ -502,9 +502,11 @@ SAML2_AUTH = {
     },
     "USE_JWT": True,
     "FRONTEND_URL": settings.get("SAML_PUBLIC_HOST") + "#/",
-    "CERT_FILE": "",
-    "KEY_FILE": "",
-    "AUTHN_REQUESTS_SIGNED": False,
+    "CERT_FILE": settings.get("CERT_FILE", fallback=""),
+    "KEY_FILE": settings.get("KEY_FILE", fallback=""),
+    "AUTHN_REQUESTS_SIGNED": settings.getboolean(
+        "AUTHN_REQUESTS_SIGNED", fallback=False
+    ),
 }
 
 SILENCED_SYSTEM_CHECKS = ["rest_framework.W001"]
