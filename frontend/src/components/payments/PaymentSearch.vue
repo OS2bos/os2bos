@@ -40,6 +40,14 @@
                     </div>
 
                     <div class="filter-field">
+                        <label for="field-pay-method">Tidsinterval</label>
+                        <time-interval
+                            v-model="interval"
+                            domId="field-time-interval"
+                            @selection="changeTimeInterval" />{{interval}}
+                    </div>
+
+                    <div class="filter-field">
                         <label for="field-from">Fra dato</label>
                         <input id="field-from" type="date" @input="update" v-model="$route.query.paid_date_or_date__gte">
                     </div>
@@ -107,6 +115,7 @@
     import PaymentModal from './PaymentModal.vue'
     import CaseFilters from '../mixins/CaseFilters.js'
     import ListPicker from '../forms/ListPicker.vue'
+    import TimeInterval from '../search/TimeInterval.vue'
     import PermissionLogic from '../mixins/PermissionLogic.js'
     import { activityId2name, displayPayMethod } from '../filters/Labels.js'
     import DataGrid from '../datagrid/DataGrid.vue'
@@ -121,6 +130,7 @@
             DataGrid,
             PaymentModal,
             ListPicker,
+            TimeInterval,
             SaveButton,
             AmountInput,
             DateInput,
@@ -132,6 +142,7 @@
         ],
         data: function() {
             return {
+                interval: null,
                 input_timeout: null,
                 paymentlock: true,
                 p: {
@@ -284,6 +295,16 @@
                     this.$route.query.payment_method = this.payment_methods[method].sys_name
                 } else {
                     this.$route.query.payment_method = ''
+                }
+                this.update()
+            },
+            changeTimeInterval: function(interval) {
+                if (interval !== null) {
+                    this.$route.query.paid_date_or_date__gte = this.paid_date_or_date__gte[interval]
+                    this.$route.query.paid_date_or_date__lte = this.paid_date_or_date__lte[interval]
+                } else {
+                    this.$route.query.paid_date_or_date__gte = ''
+                    this.$route.query.paid_date_or_date__lte = ''
                 }
                 this.update()
             },
