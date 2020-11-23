@@ -99,7 +99,7 @@ router.beforeEach((to, from, next) => {
         next()
     } else {
         // Try to login
-        window.location = '/api/accounts/login/'
+        window.location = '/api/accounts/login/?next=' + to.path
     }
 })
 
