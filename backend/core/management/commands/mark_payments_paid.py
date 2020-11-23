@@ -12,25 +12,25 @@ from datetime import datetime
 
 from django.db import transaction
 from django.core.management.base import BaseCommand
-from core.models import Payment, STATUS_GRANTED, SD
+from core.models import Payment, STATUS_GRANTED, SD, CASH, PaymentSchedule
 
-logger = logging.getLogger("bevillingsplatform.mark_fictive_payments_paid")
+logger = logging.getLogger("bevillingsplatform.mark_payments_paid")
 
 
 class Command(BaseCommand):
-    help = "Marks fictive payments paid on the given date."
+    help = "Marks payments paid on the given date."
 
     def add_arguments(self, parser):
         parser.add_argument(
             "-d",
             "--date",
-            help=("Mark payments fictive for date"),
+            help=("Mark payments for date"),
             default=None,
         )
 
     @transaction.atomic
     def handle(self, *args, **options):
-        """Mark fictive payments paid for the given date."""
+        """Mark payments paid for the given date."""
         date = options["date"]
         if date is not None:
             try:
@@ -45,19 +45,22 @@ class Command(BaseCommand):
             date = datetime.now().date()
 
         try:
-            fictive_payments = Payment.objects.filter(
+            # Filter cash payments except for PERSON payments as
+            # those are handled by the PRISM export management command.
+            non_person_cash_payments = Payment.objects.filter(
                 date=date,
-                payment_schedule__fictive=True,
+                payment_method=CASH,
                 paid=False,
                 payment_schedule__activity__status=STATUS_GRANTED,
-            )
+            ).exclude(recipient_type=PaymentSchedule.PERSON)
+
             sd_payments = Payment.objects.filter(
                 date=date,
                 payment_schedule__payment_method=SD,
                 paid=False,
                 payment_schedule__activity__status=STATUS_GRANTED,
             )
-            payments = list(fictive_payments) + list(sd_payments)
+            payments = list(non_person_cash_payments) + list(sd_payments)
             payment_ids = [payment.id for payment in payments]
             for payment in payments:
                 print(payment)
@@ -71,5 +74,5 @@ class Command(BaseCommand):
             )
         except Exception:
             logger.exception(
-                "An exception occurred during marking payments fictive."
+                "An exception occurred during marking payments paid."
             )

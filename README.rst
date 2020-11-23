@@ -180,11 +180,11 @@ to connect them. It starts four services:
 
 - `frontend`: the vue frontend reachable at  http://localhost:8080
 - `bev`: the django backend
-- `db`: a `postgres database server`_
+- `db`: a OS2BOS specific `postgres database server`_
 - `postfix`: a `postfix email server`_
 
 .. _postfix email server: https://hub.docker.com/r/catatnight/postfix
-.. _postgres database server: https://hub.docker.com/_/postgres
+.. _postgres database server: https://git.magenta.dk/bevillingsplatform/postgres-os2bos
 
 Normally the backend image also serves the frontend code, but to ease frontend
 development, we include a frontend service that run `vue-cli-service serve
@@ -196,11 +196,11 @@ requests to the backend. The exact list of proxied endpoints can be seen in
 automatically restarts the server on changes to the backend files. This enables
 you to edit the backend files and the server will be reloaded automatically.
 
-To pull the images and start the three service run:
+To pull the images and start the services run:
 
 .. code-block:: bash
 
-   docker-compose up -d --build frontend
+   docker-compose up -d --build
 
 
 The ``-d`` flag move the services to the background. You can inspect the output of
@@ -212,16 +212,6 @@ To stop the service again run `docker-compose stop`. This will stop the
 services, but the data will persist. To completely remove the containers and
 data run ``docker-compose down -v``.
 
-
-Postgres initialisation
-^^^^^^^^^^^^^^^^^^^^^^^
-
-The ``docker-compose.yml`` file contains a service named ``bev-cp``. Its purpose
-is to copy the files needed to initialize the database and database user to a
-volume. This volume can then be mounted to the postgres image to automatically
-initialize the database. This functionality is not needed by default because the
-needed files are mounted directly from the host. It is included as an example
-when you want to use an environment closer to production.
 
 Tests and shell access
 ======================

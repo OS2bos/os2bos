@@ -186,7 +186,8 @@
                     },
                     {
                         key: 'case__cpr_number',
-                        title: 'Hovedsag CPR-nr'
+                        title: 'Hovedsag CPR-nr',
+                        display_func: this.displayCprName
                     },
                     {
                         key: 'account_string',
@@ -271,6 +272,9 @@
                     str += `<br>${ payment.recipient_id}`
                 }
                 return str
+            },
+            displayCprName: function(id) {
+                return `${ id.case__name }<br>${ id.case__cpr_number }`
             },
             loadResults: function() {
                 this.$store.dispatch('fetchMorePayments')
