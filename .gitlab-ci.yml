@@ -121,21 +121,22 @@ Build app image:
 .test-default: &test-default
   stage: test
   needs: ["Build app image"]
+  dependencies: []
+
+Unittest:
+  <<: *test-default
+  variables:
+    DATABASE_NAME: bev
+    DATABASE_USER: bev
+    DATABASE_PASSWORD: bev
+    BEV_USER_CONFIG_PATH: $CI_PROJECT_DIR/dev-environment/dev-settings.ini
+    COVERAGE_FILE: $CI_PROJECT_DIR/.coverage
   image: ${IMAGE_SHA}
   tags:
     - docker
   services:
-    - name: postgres:11
+    - name: magentaaps/postgres-os2bos:1-10.14-test
       alias: db
-  dependencies: []
-  variables:
-    POSTGRES_USER: bev
-    POSTGRES_PASSWORD: bev
-    BEV_USER_CONFIG_PATH: $CI_PROJECT_DIR/dev-environment/dev-settings.ini
-    COVERAGE_FILE: $CI_PROJECT_DIR/.coverage
-
-Unittest:
-  <<: *test-default
   script:
     - cd /code/backend &&
       pytest
@@ -159,15 +160,19 @@ FrontendTest:
   <<: *test-default
   variables:
     FF_NETWORK_PER_BUILD: 1
-    POSTGRES_USER: bev
-    POSTGRES_PASSWORD: bev
-    BEV_USER_CONFIG_PATH: $CI_PROJECT_DIR/dev-environment/frontend-tests-settings.ini
+    DATABASE_NAME: bev
+    DATABASE_USER: bev
+    DATABASE_PASSWORD: bev
+    BEV_USER_CONFIG_PATH: /code/dev-environment/ci-settings.ini
     SIMPLESAMLPHP_BASEURLPATH: http://idp:8080/simplesaml
     SIMPLESAMLPHP_SP_ENTITY_ID: http://bev:5000
     SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE: http://bev:5000/api/saml2_auth/acs/
   image: magentalabs/frontend-test:v0.2 #includes npm, chrome, firefox and ffmpeg
+  tags:
+    - docker
+    - high-mem
   services:
-    - name: postgres:11
+    - name: magentaaps/postgres-os2bos:1-10.14-test
       alias: db
     - name: ${IMAGE_SHA}
       alias: bev
@@ -182,15 +187,13 @@ FrontendTest:
     when: always
     paths:
       - $CI_PROJECT_DIR/artifacts
-  allow_failure: true
 
 # Release stage
 ###############
 
 .release-default: &release-default
   stage: release
-  needs: ['Unittest']
-  #needs: ["Unittest", "FrontendTest"] require also frontendTest to pass
+  needs: ["Unittest", "FrontendTest"]
   image: alpine
   variables:
     GIT_STRATEGY: none # We do not need the source code
@@ -280,7 +283,7 @@ Deploy test:
 Deploy dev:
   # Manuel deployment job to cburdev.magenta.dk
   <<: *deploy-default
-  needs: ["Unittest"]
+  needs: ["Unittest", "FrontendTest"]
   except:
     refs:
       - master
@@ -299,14 +302,27 @@ Deploy dev:
     name: dev
     url: https://cburdev.magenta.dk
 
-.deploy-rc:
+
+Deploy tag to staging:
   <<: *deploy-default
   needs: ["Release rc"]
+  when: manual
   only:
-    - /release/.*/
+    variables:
+      # Matches all of SemVer 2.0.0
+      - $CI_COMMIT_TAG =~ /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
+  variables:
+    DEPLOYMENT_NAMESPACE: cbur.ballerup.staging
+    SALTAPI_URL: https://ctrl1.magenta-aps.dk/api/
+    SALTAPI_EAUTH: file
+    GIT_STRATEGY: none
+    PILLAR_OVERRIDE: "{\"OS2BOS_APPLICATION_DOCKER_IMAGE\":\"${IMAGE}:${CI_COMMIT_TAG}\"}"
   script:
-    - echo Deploying ${IMAGE_RC} to moratest.magneta.dk
-    # TODO: push ${IMAGE_RC} to moratest.magneta.dk
+    - echo Deploying ${IMAGE_TAG} to https://test-bevilling.balk.dk
+    - pepper --client runner --fail-any state.orchestrate ${DEPLOYMENT_NAMESPACE} pillar=$(echo $PILLAR_OVERRIDE)
+  environment:
+    name: ballerup-staging
+    url: https://test-bevilling.balk.dk
 
 
 .deploy-master:

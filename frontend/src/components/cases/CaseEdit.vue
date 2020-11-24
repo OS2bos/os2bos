@@ -23,7 +23,7 @@
                     <fieldset>
                         <label class="required" for="field-sbsys-id">SBSYS Hovedsag:</label>
                         <input id="field-sbsys-id" type="text" v-model="cas.sbsys_id" required>
-                        <p class="danger" v-if="sbsysCheck">Sagsnummeret indeholder ikke et gyldigt KLE-nummer.</p>
+                        <p class="danger" v-if="sbsysCheck">Sagsnummeret indeholder ikke KLE-nummer 27.24.00.</p>
                         <error err-key="sbsys_id" />
                     </fieldset>
                     

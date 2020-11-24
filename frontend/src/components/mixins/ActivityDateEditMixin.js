@@ -17,27 +17,31 @@ export default {
         },
         startDateSet: function() {
             if (this.act.activity_type !== 'MAIN_ACTIVITY' && this.mode !== 'clone') {
-                return epoch2DateStr(this.appropriation.granted_from_date)
+                // Ved ny følgeydelse (ikke forventning), returner startdato for hovedydelse
+                return epoch2DateStr(this.getMainActStartDate())
             }
             if (this.mode === 'clone' && this.act.activity_type !== 'MAIN_ACTIVITY') {
-                this.act.start_date = null
-                return epoch2DateStr(this.appropriation.granted_from_date)
+                // Ved forvenintning til følgeydelse, slet kopieret startdato og returner startdato for hovedydelse
+                this.$store.commit('setActivityProperty', {prop: 'start_date', val: null})
+                return epoch2DateStr(this.getMainActStartDate())
             }
             if (this.mode === 'clone' && this.act.activity_type === 'MAIN_ACTIVITY') {
-                this.act.start_date = null
+                // Ved forventning til hovedydelse, slet kopieret startdato
+                this.$store.commit('setActivityProperty', {prop: 'start_date', val: null})
             }
+            // Ellers sæt begrænsning for startdato 10 år tilbage
             return tenYearsAgo()
         },
         endDateSet: function() {
             if (this.act.activity_type !== 'MAIN_ACTIVITY' && this.mode !== 'clone') {
-                return epoch2DateStr(this.appropriation.granted_to_date)
+                return epoch2DateStr(this.getMainActEndDate())
             }
             if (this.mode === 'clone' && this.act.activity_type !== 'MAIN_ACTIVITY') {
-                this.act.end_date = null
-                return epoch2DateStr(this.appropriation.granted_to_date)
+                this.$store.commit('setActivityProperty', {prop: 'end_date', val: null})
+                return epoch2DateStr(this.getMainActEndDate())
             }
             if (this.mode === 'clone' && this.act.activity_type === 'MAIN_ACTIVITY') {
-                this.act.end_date = null
+                this.$store.commit('setActivityProperty', {prop: 'end_date', val: null})
             }
             return inEighteenYears()
         }
@@ -45,6 +49,28 @@ export default {
     methods: {
         displayDate: function(dt) {
             return json2jsDate(dt)
+        },
+        getMainActStartDate: function() {
+            let start_date
+            if (this.appropriation.granted_from_date) {
+                start_date = this.appropriation.granted_from_date
+            } else if (this.appropriation.main_activity && this.appropriation.main_activity.start_date) {
+                start_date = this.appropriation.main_activity.start_date
+            } else {
+                start_date = null
+            }
+            return start_date
+        },
+        getMainActEndDate: function() {
+            let end_date
+            if (this.appropriation.granted_to_date) {
+                end_date = this.appropriation.granted_to_date
+            } else if (this.appropriation.main_activity && this.appropriation.main_activity.end_date) {
+                end_date = this.appropriation.main_activity.end_date
+            } else {
+                end_date = null
+            }
+            return end_date
         }
     }
 }

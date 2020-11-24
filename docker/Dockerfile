@@ -85,10 +85,11 @@ RUN set -ex \
 # Install requirements
 COPY backend/requirements.txt /code/backend/requirements.txt
 COPY backend/requirements-test.txt /code/backend/requirements-test.txt
-RUN pip3 install -r backend/requirements-test.txt
+RUN pip3 install --no-cache-dir -r backend/requirements-test.txt
 
 
 # Copy and install backend code.
+COPY dev-environment/ci-settings.ini dev-environment/ci-settings.ini
 COPY README.rst .
 COPY LICENSE .
 COPY docker ./docker

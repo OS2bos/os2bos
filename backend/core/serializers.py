@@ -158,6 +158,9 @@ class PaymentSerializer(serializers.ModelSerializer):
     case__cpr_number = serializers.ReadOnlyField(
         source="payment_schedule.activity.appropriation.case.cpr_number"
     )
+    case__name = serializers.ReadOnlyField(
+        source="payment_schedule.activity.appropriation.case.name"
+    )
     activity__id = serializers.ReadOnlyField(
         source="payment_schedule.activity.id"
     )
@@ -575,7 +578,7 @@ class ActivitySerializer(WritableNestedModelSerializer):
             raise serializers.ValidationError(
                 _(
                     "Startdato skal være i fremtiden og "
-                    "der skal være mindst to udbetalingsdage i række"
+                    "der skal være mindst to udbetalingsdage"
                     " fra nu og til startdatoen"
                 )
             )
