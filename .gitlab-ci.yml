@@ -176,7 +176,7 @@ FrontendTest:
       alias: db
     - name: ${IMAGE_SHA}
       alias: bev
-    - name: magentalabs/os2bos-idp-test:2.0.0
+    - name: magentalabs/os2bos-idp-test:2.0.1
       alias: idp
   before_script:
     - cd frontend-tests
