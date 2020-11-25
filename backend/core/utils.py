@@ -12,6 +12,7 @@ import logging
 import requests
 import datetime
 import itertools
+import re
 
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
@@ -868,3 +869,9 @@ def generate_payment_date_exclusion_dates(years=None):
     exclusion_dates.extend(extra_payment_date_exclusions)
 
     return sorted(list(set(exclusion_dates)))
+
+
+def validate_cvr(cvr):
+    """Validate a cvr number string."""
+    match = re.match(r"^[0-9]{8}$", cvr.strip())
+    return bool(match)
