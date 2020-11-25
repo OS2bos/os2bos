@@ -268,16 +268,6 @@
             }
         },
         methods: {
-            // range: function() {
-            //     let range = this.intervals.find(function(element) {
-            //         console.log(element, 'element')
-            //         return element.id
-            //     })
-            //     for(let inter in this.intervals) {
-            //         console.log(this.intervals[0].id, 'interval')
-            //         return this.intervals
-            //     }
-            // },
             displayId: function(payment) {
                 let str = `<a href="/#/activity/${ payment.activity__id }">#${ payment.id } - ${ activityId2name(payment.activity__details__id) }</a>`
                 if (payment.payment_schedule__fictive) {
