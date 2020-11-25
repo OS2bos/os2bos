@@ -90,6 +90,59 @@ function isCurrent(start_date, end_date) {
     }
 }
 
+function getWeekDay(WeekDay) {
+    const currentWeekMonday = new Date().getDate() - new Date().getDay() + 1
+    return epoch2DateStr(new Date().setDate(currentWeekMonday - WeekDay))
+}
+
+function firstDayMonth() {
+    const date = new Date()
+    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1)
+    return epoch2DateStr(firstDay)
+}
+
+function lastDayMonth() {
+    const date = new Date()
+    const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+    return epoch2DateStr(lastDay)
+}
+
+function firstOfPreviousMonth() {
+    const date = new Date()
+    const firstDay = new Date(date.getFullYear(), date.getMonth() - 1, 1)
+    return epoch2DateStr(firstDay)
+}
+
+function lastOfPreviousMonth() {
+    const date = new Date()
+    const lastDay = new Date(date.getFullYear(), date.getMonth(), 0)
+    return epoch2DateStr(lastDay)
+}
+
+function firstOfNextMonth() {
+    const date = new Date()
+    const firstDay = new Date(date.getFullYear(), date.getMonth() + 1, 1)
+    return epoch2DateStr(firstDay)
+}
+
+function lastOfNextMonth() {
+    const date = new Date()
+    const lastDay = new Date(date.getFullYear(), date.getMonth() + 2, 0)
+    return epoch2DateStr(lastDay)
+}
+
+function firstOfCurrentYear() {
+    const date = new Date()
+    const firstDay = new Date(date.getFullYear(), 0, 1)
+    return epoch2DateStr(firstDay)
+}
+
+function lastOfCurrentYear() {
+    const date = new Date()
+    const lastDay = new Date(date.getFullYear() + 1, 0, - 1)
+    return epoch2DateStr(lastDay)
+}
+
 export {
     json2js,
     json2jsDate,
@@ -97,5 +150,14 @@ export {
     epoch2DateStr,
     inEighteenYears,
     tenYearsAgo,
-    isCurrent
+    isCurrent,
+    getWeekDay,
+    firstDayMonth,
+    lastDayMonth,
+    firstOfPreviousMonth,
+    lastOfPreviousMonth,
+    firstOfNextMonth,
+    lastOfNextMonth,
+    firstOfCurrentYear,
+    lastOfCurrentYear
 }

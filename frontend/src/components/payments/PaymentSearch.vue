@@ -41,21 +41,23 @@
 
                     <div class="filter-field">
                         <label for="field-pay-method">Tidsinterval</label>
-                        <time-interval
-                            v-model="interval"
+                        <list-picker
                             domId="field-time-interval"
-                            @selection="changeTimeInterval" />{{interval}}
+                            :list="intervals"
+                            @selection="changeTimeInterval" />
                     </div>
 
-                    <div class="filter-field">
-                        <label for="field-from">Fra dato</label>
-                        <input id="field-from" type="date" @input="update" v-model="$route.query.paid_date_or_date__gte">
-                    </div>
+                    <template v-if="range_dates === true">
+                        <div class="filter-field">
+                            <label for="field-from">Fra dato</label>
+                            <input id="field-from" type="date" @input="update" v-model="$route.query.paid_date_or_date__gte">
+                        </div>
 
-                    <div class="filter-field">
-                        <label for="field-to">Til dato</label>
-                        <input id="field-to" type="date" @input="update" v-model="$route.query.paid_date_or_date__lte">
-                    </div>
+                        <div class="filter-field">
+                            <label for="field-to">Til dato</label>
+                            <input id="field-to" type="date" @input="update" v-model="$route.query.paid_date_or_date__lte">
+                        </div>
+                    </template>
                 </fieldset>
 
                 <fieldset class="filter-fields radio-filters">
@@ -115,7 +117,6 @@
     import PaymentModal from './PaymentModal.vue'
     import CaseFilters from '../mixins/CaseFilters.js'
     import ListPicker from '../forms/ListPicker.vue'
-    import TimeInterval from '../search/TimeInterval.vue'
     import PermissionLogic from '../mixins/PermissionLogic.js'
     import { activityId2name, displayPayMethod } from '../filters/Labels.js'
     import DataGrid from '../datagrid/DataGrid.vue'
@@ -123,6 +124,7 @@
     import AmountInput from './datagrid-components/AmountInput.vue'
     import DateInput from './datagrid-components/DateInput.vue'
     import NoteInput from './datagrid-components/NoteInput.vue'
+    import TimeIntervalFilters from '../mixins/TimeIntervalFilters.js'
 
     export default {
         
@@ -130,7 +132,6 @@
             DataGrid,
             PaymentModal,
             ListPicker,
-            TimeInterval,
             SaveButton,
             AmountInput,
             DateInput,
@@ -138,11 +139,12 @@
         },
         mixins: [
             CaseFilters, 
-            PermissionLogic
+            PermissionLogic,
+            TimeIntervalFilters
         ],
         data: function() {
             return {
-                interval: null,
+                range_dates: false,
                 input_timeout: null,
                 paymentlock: true,
                 p: {
@@ -266,6 +268,16 @@
             }
         },
         methods: {
+            // range: function() {
+            //     let range = this.intervals.find(function(element) {
+            //         console.log(element, 'element')
+            //         return element.id
+            //     })
+            //     for(let inter in this.intervals) {
+            //         console.log(this.intervals[0].id, 'interval')
+            //         return this.intervals
+            //     }
+            // },
             displayId: function(payment) {
                 let str = `<a href="/#/activity/${ payment.activity__id }">#${ payment.id } - ${ activityId2name(payment.activity__details__id) }</a>`
                 if (payment.payment_schedule__fictive) {
@@ -298,18 +310,8 @@
                 }
                 this.update()
             },
-            changeTimeInterval: function(interval) {
-                if (interval !== null) {
-                    this.$route.query.paid_date_or_date__gte = this.paid_date_or_date__gte[interval]
-                    this.$route.query.paid_date_or_date__lte = this.paid_date_or_date__lte[interval]
-                } else {
-                    this.$route.query.paid_date_or_date__gte = ''
-                    this.$route.query.paid_date_or_date__lte = ''
-                }
-                this.update()
-            },
             update: function() {
-                this.$store.dispatch('fetchPayments', this.$route.query)                
+                this.$store.dispatch('fetchPayments', this.$route.query)              
             },
             displayPlannedPayDate: function(payment) {
                 return json2jsDate(payment.date)
