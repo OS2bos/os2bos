@@ -33,12 +33,12 @@ from core.tests.testing_utils import (
 )
 
 
-class TestMarkFictivePaymentsPaid(TestCase, BasicTestMixin):
+class TestMarkPaymentsPaid(TestCase, BasicTestMixin):
     @classmethod
     def setUpTestData(cls):
         cls.basic_setup()
 
-    def test_mark_fictive_payments_paid(self):
+    def test_mark_payments_paid(self):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
@@ -56,7 +56,7 @@ class TestMarkFictivePaymentsPaid(TestCase, BasicTestMixin):
         payment = create_payment(payment_schedule, date=today)
 
         call_command(
-            "mark_fictive_payments_paid", "--date=" + today.strftime("%Y%m%d")
+            "mark_payments_paid", "--date=" + today.strftime("%Y%m%d")
         )
 
         payment.refresh_from_db()
@@ -64,7 +64,7 @@ class TestMarkFictivePaymentsPaid(TestCase, BasicTestMixin):
         self.assertEqual(payment.paid_date, today)
         self.assertEqual(payment.paid_amount, payment.amount)
 
-    def test_mark_fictive_payments_paid_no_arg(self):
+    def test_mark_payments_paid_no_arg(self):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
@@ -82,15 +82,15 @@ class TestMarkFictivePaymentsPaid(TestCase, BasicTestMixin):
         today = timezone.now().date()
         payment = create_payment(payment_schedule, date=today)
 
-        call_command("mark_fictive_payments_paid")
+        call_command("mark_payments_paid")
 
         payment.refresh_from_db()
         self.assertTrue(payment.paid)
         self.assertEqual(payment.paid_date, today)
         self.assertEqual(payment.paid_amount, payment.amount)
 
-    @mock.patch("core.management.commands.mark_fictive_payments_paid.logger")
-    def test_mark_fictive_payments_paid_wrong_date(self, logger_mock):
+    @mock.patch("core.management.commands.mark_payments_paid.logger")
+    def test_mark_payments_paid_wrong_date(self, logger_mock):
         payment_schedule = create_payment_schedule(fictive=True)
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
@@ -107,7 +107,7 @@ class TestMarkFictivePaymentsPaid(TestCase, BasicTestMixin):
         payment = create_payment(payment_schedule, date=today)
 
         with self.assertRaises(SystemExit):
-            call_command("mark_fictive_payments_paid", "--date=wrong_date")
+            call_command("mark_payments_paid", "--date=wrong_date")
 
         payment.refresh_from_db()
         self.assertFalse(payment.paid)
@@ -116,9 +116,9 @@ class TestMarkFictivePaymentsPaid(TestCase, BasicTestMixin):
 
         self.assertTrue(logger_mock.error.called)
 
-    @mock.patch("core.management.commands.mark_fictive_payments_paid.logger")
-    @mock.patch("core.management.commands.mark_fictive_payments_paid.Payment")
-    def test_mark_fictive_payments_paid_exception_raised(
+    @mock.patch("core.management.commands.mark_payments_paid.logger")
+    @mock.patch("core.management.commands.mark_payments_paid.Payment")
+    def test_mark_payments_paid_exception_raised(
         self, payment_mock, logger_mock
     ):
         payment_schedule = create_payment_schedule(fictive=True)
@@ -139,7 +139,7 @@ class TestMarkFictivePaymentsPaid(TestCase, BasicTestMixin):
         payment_mock.objects.filter.side_effect = IntegrityError
 
         call_command(
-            "mark_fictive_payments_paid", "--date=" + today.strftime("%Y%m%d")
+            "mark_payments_paid", "--date=" + today.strftime("%Y%m%d")
         )
 
         payment.refresh_from_db()
