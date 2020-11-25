@@ -1,3 +1,19 @@
+Version 3.2.4, 2020-11-24
+-------------------------
+
+New in this version:
+
+Bug fixes
+^^^^^^^^^
+
+- Remove upper time limit for generated payment reports.
+- Fix calculation of earliest start date when creating an activity.
+- Remove redundant PRISM file generation so only one is generated.
+- Don't automatically mark fictive invoice payments as paid.
+- Add a warning on the supplementary activities when shortening a main activity.
+- Update various dependencies.
+
+
 Version 3.2.3, 2020-11-16
 -------------------------
 
