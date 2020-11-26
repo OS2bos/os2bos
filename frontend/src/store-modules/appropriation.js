@@ -9,6 +9,29 @@
 import axios from '../components/http/Http.js'
 import { json2jsEpoch } from '../components/filters/Date.js'
 
+const makeQueryString = function(state, show_sensitive_data) {
+    let q = ''
+    if (state.filters.case__sbsys_id) {
+        q = q + `case__sbsys_id=${ state.filters.case__sbsys_id }&`
+    }
+    if (show_sensitive_data && state.filters.case__cpr_number) {
+        q = q + `case__cpr_number=${ state.filters.case__cpr_number }&`
+    }
+    if (state.filters.case__team) {
+        q = q + `case__team=${ state.filters.case__team }&`
+    }
+    if (state.filters.case__case_worker) {
+        q = q + `case__case_worker=${ state.filters.case__case_worker }`
+    }
+    if (state.filters.section) {
+        q = q + `section=${ state.filters.section }`
+    }
+    if (state.filters.main_activity__details__id) {
+        q = q + `main_activity__details__id=${ state.filters.main_activity__details__id }`
+    }
+    return q
+}
+
 /**
  * Vuex store methods for cases
  * @name state_appropriation
@@ -16,7 +39,16 @@ import { json2jsEpoch } from '../components/filters/Date.js'
 const state = {
     appropriations: null,
     appropriation: null,
-    appr_main_activities: false // Contains a list of main_activities and collects their start and end dates
+    appr_main_activities: false, // Contains a list of main_activities and collects their start and end dates
+    // Search filters:
+    filters: {
+        case__sbsys_id: null,
+        case__cpr_number: null,
+        case__team: null,
+        case__case_worker: null,
+        section: null,
+        main_activity__details__id: null
+    }
 }
 
 const getters = {
