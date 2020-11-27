@@ -335,9 +335,10 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
                 _("ugyldig betalingsmetode for betalingsmodtager")
             )
 
-        if (
-            data["recipient_type"] == PaymentSchedule.COMPANY and not
-            validate_cvr(data["recipient_id"])
+        if data[
+            "recipient_type"
+        ] == PaymentSchedule.COMPANY and not validate_cvr(
+            data["recipient_id"]
         ):
             raise serializers.ValidationError(
                 _("Ugyldigt CVR nummer for firma")
