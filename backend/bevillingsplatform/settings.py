@@ -501,7 +501,7 @@ SAML2_AUTH = {
         "BEFORE_LOGIN": "core.utils.saml_before_login",
     },
     "USE_JWT": True,
-    "FRONTEND_URL": settings.get("SAML_PUBLIC_HOST") + "#/",
+    "FRONTEND_URL": settings.get("SAML_PUBLIC_HOST") + "#",
     "CERT_FILE": settings.get("CERT_FILE", fallback=""),
     "KEY_FILE": settings.get("KEY_FILE", fallback=""),
     "AUTHN_REQUESTS_SIGNED": settings.getboolean(
