@@ -761,8 +761,8 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
-        father = create_related_person(case, "far test", "far", "1111111111")
-        mother = create_related_person(case, "mor test", "mor", "2222222222")
+        create_related_person(case, "far test", "far", "1111111111")
+        create_related_person(case, "mor test", "mor", "2222222222")
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
