@@ -272,9 +272,14 @@ def create_section_info(
     return section_info
 
 
-def create_related_person(main_case, name="Jens Jensen", relation_type="far"):
+def create_related_person(
+    main_case, name="Jens Jensen", relation_type="far", cpr_number="0000000000"
+):
     related_person = RelatedPerson.objects.create(
-        main_case=main_case, name=name, relation_type=relation_type
+        main_case=main_case,
+        name=name,
+        relation_type=relation_type,
+        cpr_number=cpr_number,
     )
     return related_person
 

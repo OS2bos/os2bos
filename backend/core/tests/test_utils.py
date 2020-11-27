@@ -55,6 +55,7 @@ from core.tests.testing_utils import (
     create_activity_details,
     create_payment_date_exclusion,
     create_effort_step,
+    create_related_person,
 )
 
 
@@ -760,6 +761,8 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         case = create_case(
             self.case_worker, self.team, self.municipality, self.district
         )
+        father = create_related_person(case, "far test", "far", "1111111111")
+        mother = create_related_person(case, "mor test", "mor", "2222222222")
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -806,15 +809,20 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
                 "name": "Jens Jensen",
                 "effort_step": "Trin 1: Tidlig indsats i almenområdet",
                 "paying_municipality": "København",
+                "acting_municipality": "København",
+                "residence_municipality": "København",
                 "section": "ABL-105-2",
                 "scaling_step": "1",
                 "case_worker": "Orla Frøsnapper",
                 "leader": "Orla Frøsnapper",
                 "team": "FCK",
                 "target_group": case.target_group,
+                "activity_type": "MAIN_ACTIVITY",
                 "main_activity_id": (
                     appropriation.main_activity.details.activity_id
                 ),
+                "father_cpr": "1111111111",
+                "mother_cpr": "2222222222",
             }.items()
             <= first_elem.items()
         )
