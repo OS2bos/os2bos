@@ -43,6 +43,7 @@ from core.utils import (
     generate_granted_payments_report_list,
     generate_expected_payments_report_list,
     generate_payment_date_exclusion_dates,
+    validate_cvr,
 )
 from core.tests.testing_utils import (
     BasicTestMixin,
@@ -1098,3 +1099,17 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
                 ]
             )
         )
+
+
+class ValidateCVRTestCase(TestCase):
+    def test_validate_cvr_success(self):
+        self.assertTrue(validate_cvr("26570514"))
+
+    def test_validate_cvr_with_spaces_success(self):
+        self.assertTrue(validate_cvr(" 29244049 "))
+
+    def test_validate_cvr_failure_7_digits(self):
+        self.assertFalse(validate_cvr("2924404"))
+
+    def test_validate_cvr_failure_9_digits(self):
+        self.assertFalse(validate_cvr("292440494"))

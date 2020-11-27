@@ -19,6 +19,7 @@ from rest_framework import serializers
 from core.models import (
     ActivityDetails,
     CASH,
+    INVOICE,
     INTERNAL,
     MAIN_ACTIVITY,
     STATUS_EXPECTED,
@@ -1654,6 +1655,26 @@ class PaymentScheduleSerializerTestCase(TestCase, BasicTestMixin):
         serializer = PaymentScheduleSerializer(data=data)
         is_valid = serializer.is_valid()
         self.assertFalse(is_valid)
+
+    def test_validate_error_company_recipient_id_not_cvr(self):
+        # Create an invalid cvr as recipient_id for recipient_type COMPANY.
+        data = {
+            "payment_type": PaymentSchedule.RUNNING_PAYMENT,
+            "payment_amount": Decimal("500.0"),
+            "payment_units": 0,
+            "recipient_type": PaymentSchedule.COMPANY,
+            "recipient_id": "123456789",
+            "recipient_name": "Jens Test",
+            "payment_method": INVOICE,
+        }
+        serializer = PaymentScheduleSerializer(data=data)
+        is_valid = serializer.is_valid()
+
+        self.assertFalse(is_valid)
+        self.assertEqual(
+            serializer.errors["non_field_errors"][0],
+            "Ugyldigt CVR nummer for firma",
+        )
 
 
 class PaymentSerializerTestCase(TestCase, BasicTestMixin):

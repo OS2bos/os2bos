@@ -872,6 +872,11 @@ def generate_payment_date_exclusion_dates(years=None):
 
 
 def validate_cvr(cvr):
-    """Validate a cvr number string."""
+    """
+    Validate a cvr number string.
+
+    Note: this is merely a 8-digit number input validation
+    and not a 'real' CVR validation
+    """
     match = re.match(r"^[0-9]{8}$", cvr.strip())
     return bool(match)
