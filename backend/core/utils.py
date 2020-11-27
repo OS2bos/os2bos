@@ -733,6 +733,9 @@ def generate_payments_report_list(payments):
             )
         )
 
+        mother = case.related_persons.filter(relation_type="mor").first()
+        father = case.related_persons.filter(relation_type="far").first()
+
         payment_dict = {
             # payment specific.
             "id": payment.pk,
@@ -761,6 +764,7 @@ def generate_payments_report_list(payments):
             "activity_start_date": activity.start_date,
             "activity_end_date": activity.end_date,
             "activity_status": activity.status,
+            "activity_type": activity.activity_type,
             # appropriation specific.
             "section": appropriation.section.paragraph,
             "section_text": appropriation.section.text,
@@ -778,6 +782,10 @@ def generate_payments_report_list(payments):
             "effort_step": str(effort_step),
             "scaling_step": str(scaling_step),
             "paying_municipality": str(case.paying_municipality),
+            "acting_municipality": str(case.acting_municipality),
+            "residence_municipality": str(case.residence_municipality),
+            "mother_cpr": mother.cpr_number if mother else None,
+            "father_cpr": father.cpr_number if father else None,
         }
         payments_report_list.append(payment_dict)
 
