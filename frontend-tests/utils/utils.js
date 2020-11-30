@@ -27,7 +27,7 @@ function createDate(offset) {
         local_offset = Math.floor(Math.random()*180)
     }
     today.setDate(today.getDate() + parseInt(local_offset))
-    return `${ leadZero(today.getFullYear()) }-${ leadZero(today.getMonth() + 1) }-${ leadZero(today.getDate()) }`
+    return `${ today.getFullYear() }-${ leadZero(today.getMonth() + 1) }-${ leadZero(today.getDate()) }`
 }
 
 async function useSelectBox(t, select_id, select_option) {
