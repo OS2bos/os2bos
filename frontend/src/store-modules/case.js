@@ -78,7 +78,6 @@ const getters = {
     getCaseSearchFilter: (state) => (filter_key) => {
         return state.filters[filter_key]
     }
-
 }
 
 const mutations = {

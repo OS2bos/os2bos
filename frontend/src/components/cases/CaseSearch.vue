@@ -142,9 +142,6 @@ export default {
         }
     },
     watch: {
-        $route: function(to, from) {
-            console.log('route change', to.query)
-        },
         user: function(new_user, old_user) {
             // We need to wait for a user to appear before we can initialise the component
             if (new_user !== old_user) {

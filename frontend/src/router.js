@@ -71,9 +71,9 @@ const router = new Router({
             component: () => import(/* webpackChunkName: "activity" */ './components/activities/Activity.vue')
         },
         {
-            path: '/appropriation-search/',
-            name: 'appropriation-search',
-            component: () => import(/* webpackChunkName: "appropriationsearch" */ './components/appropriations/AppropriationSearch.vue')
+            path: '/appropriations/',
+            name: 'appropriations',
+            component: () => import(/* webpackChunkName: "appropriations" */ './components/appropriations/Appropriations.vue')
         },
         {
             path: '/payments/',
