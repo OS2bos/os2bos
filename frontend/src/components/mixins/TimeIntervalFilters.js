@@ -23,38 +23,39 @@
     return {
         intervals: [
             {
-                id: 1,
+                id: 'this-week',
                 name: 'Denne uge',
             },
             {
-                id: 2,
+                id: 'last-week',
                 name: 'Sidste uge',
             },
             {
-                id: 3,
+                id: 'next-week',
                 name: 'Næste uge',
             },
             {
-                id: 4,
+                id: 'this-month',
                 name: 'Denne måned',
             },
             {
-                id: 5,
+                id: 'last-month',
                 name: 'Sidste måned',
             },
             {
-                id: 6,
+                id: 'next-week',
                 name: 'Næste måned',
             },
             {
-                id: 7,
+                id: 'this-year',
                 name: 'Dette år',
             },
             {
-                id: 8,
+                id: 'date-range',
                 name: 'Til og fra dato',
             }
         ]
+
     }
   },
   methods: {
