@@ -43,7 +43,7 @@
                 name: 'Sidste måned',
             },
             {
-                id: 'next-week',
+                id: 'next-month',
                 name: 'Næste måned',
             },
             {
@@ -63,42 +63,42 @@
         this.range_dates = false
 
         // Current week //
-        if (interval === 1) {
+        if (interval === 'this-week') {
             this.$route.query.paid_date_or_date__gte = getWeekDay(0)
             this.$route.query.paid_date_or_date__lte = getWeekDay(-6)
         }
         // Previous week //
-        else if (interval === 2) {
+        else if (interval === 'last-week') {
             this.$route.query.paid_date_or_date__gte = getWeekDay(7)
             this.$route.query.paid_date_or_date__lte = getWeekDay(1)
         }
         // Next week //
-        else if (interval === 3) {
+        else if (interval === 'next-week') {
             this.$route.query.paid_date_or_date__gte = getWeekDay(-7)
             this.$route.query.paid_date_or_date__lte = getWeekDay(-13)
         }
         // Current month //
-        else if (interval === 4) {
+        else if (interval === 'this-month') {
             this.$route.query.paid_date_or_date__gte = firstDayMonth()
             this.$route.query.paid_date_or_date__lte = lastDayMonth()
         }
         // Previous month //
-        else if (interval === 5) {
+        else if (interval === 'last-month') {
             this.$route.query.paid_date_or_date__gte = firstOfPreviousMonth()
             this.$route.query.paid_date_or_date__lte = lastOfPreviousMonth()
         }
         // Next month //
-        else if (interval === 6) {
+        else if (interval === 'next-month') {
             this.$route.query.paid_date_or_date__gte = firstOfNextMonth()
             this.$route.query.paid_date_or_date__lte = lastOfNextMonth()
         }
         // Current year //
-        else if (interval === 7) {
+        else if (interval === 'this-year') {
             this.$route.query.paid_date_or_date__gte = firstOfCurrentYear()
             this.$route.query.paid_date_or_date__lte = lastOfCurrentYear()
         }
         // Range of dates //
-        else if (interval === 8) {
+        else if (interval === 'date-range') {
             this.$route.query.paid_date_or_date__gte = ''
             this.$route.query.paid_date_or_date__lte = ''
             this.range_dates = true
