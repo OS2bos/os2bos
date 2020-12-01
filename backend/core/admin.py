@@ -262,7 +262,7 @@ class PriceAdmin(VariableRateAdmin):
 
 @admin.register(Payment)
 class PaymentAdmin(SimpleHistoryAdmin):
-    """Dislay read only fields on payment."""
+    """ModelAdmin for Payment."""
 
     readonly_fields = ("payment_id", "account_string", "account_alias")
     search_fields = ("payment_schedule__payment_id",)
@@ -634,6 +634,6 @@ class SectionInfoAdmin(ClassificationAdmin):
 
 @admin.register(AccountAlias)
 class AccountAliasAdmin(ClassificationAdmin):
-    """ModelAdmin for SectionInfo."""
+    """ModelAdmin for AccountAlias."""
 
     list_display = ("section_info", "activity_details", "alias")

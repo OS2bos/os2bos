@@ -331,7 +331,7 @@ def saml_create_user(user_data):  # noqa: D401
     user.save()
 
 
-# Economy integration releated stuff - for the time being, only PRISM.
+# Economy integration related stuff - for the time being, only PRISM.
 # TODO: At some point, factor out customer specific third party integrations.
 
 
@@ -499,11 +499,7 @@ def generate_records_for_prism(due_payments):
     """Generate the list of records for writing to PRISM file."""
     prism_records = (
         (
-            format_prism_financial_record(
-                p,
-                line_no=2 * i - 1,
-                record_no=i,
-            ),
+            format_prism_financial_record(p, line_no=2 * i - 1, record_no=i),
             format_prism_payment_record(p, line_no=2 * i, record_no=i),
         )
         for i, p in enumerate(due_payments, 1)

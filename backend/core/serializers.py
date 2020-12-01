@@ -214,7 +214,7 @@ class PaymentSerializer(serializers.ModelSerializer):
                 )
 
         # If this payment's activity has been granted, it may
-        # not* be changed.
+        # *not* be changed.
         if (
             (self.instance and self.instance.pk)
             and self.instance.payment_schedule.activity.status
