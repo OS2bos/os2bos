@@ -254,6 +254,7 @@
             if (this.$route.query.main_activity__details__id) {
                 this.$store.commit('setAppropriationSearchFilter', {key: 'main_activity__details__id', val: this.$route.query.main_activity__details__id})
             }
+            this.$store.dispatch('fetchAppropriations')
         }
     }
     

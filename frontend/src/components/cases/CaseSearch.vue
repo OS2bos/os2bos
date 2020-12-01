@@ -205,6 +205,7 @@ export default {
         if (this.$route.query.case_worker) {
             this.$store.commit('setCaseSearchFilter', {key: 'case_worker', val: this.$route.query.case_worker})
         }
+        this.$store.dispatch('fetchCases')
     }
 }
 </script>
