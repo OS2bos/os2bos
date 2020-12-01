@@ -40,14 +40,24 @@
                     </div>
 
                     <div class="filter-field">
-                        <label for="field-from">Fra dato</label>
-                        <input id="field-from" type="date" @input="update" v-model="$route.query.paid_date_or_date__gte">
+                        <label for="field-pay-method">Tidsinterval</label>
+                        <list-picker
+                            domId="field-time-interval"
+                            :list="intervals"
+                            @selection="changeTimeInterval" />
                     </div>
 
-                    <div class="filter-field">
-                        <label for="field-to">Til dato</label>
-                        <input id="field-to" type="date" @input="update" v-model="$route.query.paid_date_or_date__lte">
-                    </div>
+                    <template v-if="range_dates === true">
+                        <div class="filter-field">
+                            <label for="field-from">Fra dato</label>
+                            <input id="field-from" type="date" @input="update" v-model="$route.query.paid_date_or_date__gte">
+                        </div>
+
+                        <div class="filter-field">
+                            <label for="field-to">Til dato</label>
+                            <input id="field-to" type="date" @input="update" v-model="$route.query.paid_date_or_date__lte">
+                        </div>
+                    </template>
                 </fieldset>
 
                 <fieldset class="filter-fields radio-filters">
@@ -114,6 +124,7 @@
     import AmountInput from './datagrid-components/AmountInput.vue'
     import DateInput from './datagrid-components/DateInput.vue'
     import NoteInput from './datagrid-components/NoteInput.vue'
+    import TimeIntervalFilters from '../mixins/TimeIntervalFilters.js'
 
     export default {
         
@@ -128,10 +139,12 @@
         },
         mixins: [
             CaseFilters, 
-            PermissionLogic
+            PermissionLogic,
+            TimeIntervalFilters
         ],
         data: function() {
             return {
+                range_dates: false,
                 input_timeout: null,
                 paymentlock: true,
                 p: {
@@ -288,7 +301,7 @@
                 this.update()
             },
             update: function() {
-                this.$store.dispatch('fetchPayments', this.$route.query)                
+                this.$store.dispatch('fetchPayments', this.$route.query)              
             },
             displayPlannedPayDate: function(payment) {
                 return json2jsDate(payment.date)
