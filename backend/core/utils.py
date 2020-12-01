@@ -774,8 +774,12 @@ def generate_payments_report_list(payments):
             "name": case.name,
             "target_group": case.target_group,
             "case_worker": str(case.case_worker),
-            "team": str(case.team) if case.team else None,
-            "leader": str(case.team.leader) if case.team else None,
+            "team": str(case.case_worker.team)
+            if case.case_worker.team
+            else None,
+            "leader": str(case.case_worker.team.leader)
+            if case.case_worker.team
+            else None,
             "efforts": ",".join([e.name for e in case.efforts.all()]),
             "effort_step": str(effort_step),
             "scaling_step": str(scaling_step),

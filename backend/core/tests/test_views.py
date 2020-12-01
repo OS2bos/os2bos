@@ -138,9 +138,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         cls.basic_setup()
 
     def test_history_action_no_history(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         reverse_url = reverse("case-history", kwargs={"pk": case.pk})
 
         self.client.login(username=self.username, password=self.password)
@@ -149,9 +147,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.json()[0]["scaling_step"], 1)
 
     def test_history_action_changed_scaling_steps(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         # Change to different scaling steps.
         case.scaling_step = 5
         case.save()
@@ -170,9 +166,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         )
 
     def test_history_action_changed_effort_steps(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         # Change to different effort steps.
         case.effort_step = EffortStep.objects.get(number=3)
         case.save()
@@ -194,9 +188,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         """
 
     def test_history_action_changed_case_worker(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         # Change to different effort steps.
         orla = case.case_worker
         leif = User.objects.create(username="Leif")
@@ -219,9 +211,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         )
 
     def test_patch_is_saved(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
 
         self.client.login(username=self.username, password=self.password)
 
@@ -241,9 +231,9 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
     def test_simple_post(self):
         url = reverse("case-list")
         json = create_case_as_json(
-            self.case_worker, self.team, self.municipality, self.district
+            self.case_worker, self.municipality, self.district
         )
-        # team should be set on the user and also saved on the case.
+        # team should be set on the user
         self.user.team = self.team
         self.user.save()
 
@@ -251,13 +241,12 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         response = self.client.post(url, json)
 
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(response.json()["team"], self.team.id)
 
     def test_different_profiles(self):
         url = reverse("case-list")
         # Readonly user
         json = create_case_as_json(
-            self.case_worker, self.team, self.municipality, self.district
+            self.case_worker, self.municipality, self.district
         )
         self.user.team = self.team
         self.user.profile = "readonly"
@@ -267,7 +256,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.status_code, 403)
         # User can edit
         json = create_case_as_json(
-            self.case_worker, self.team, self.municipality, self.district
+            self.case_worker, self.municipality, self.district
         )
         self.user.profile = "edit"
         self.user.save()
@@ -276,7 +265,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.status_code, 201)
         # No profile
         json = create_case_as_json(
-            self.case_worker, self.team, self.municipality, self.district
+            self.case_worker, self.municipality, self.district
         )
         self.user.profile = ""
         self.user.save()
@@ -288,7 +277,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         url = reverse("case-list")
         # Anonymous user
         json = create_case_as_json(
-            self.case_worker, self.team, self.municipality, self.district
+            self.case_worker, self.municipality, self.district
         )
         self.user = None
         response = self.client.post(url, json)
@@ -303,9 +292,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
             payment_frequency=PaymentSchedule.DAILY,
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
         )
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         # create a main activity with an expired end_date.
         create_activity(
@@ -336,9 +323,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
             payment_frequency=PaymentSchedule.DAILY,
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
         )
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         # create a main activity with an expired end_date.
         create_activity(
@@ -364,9 +349,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         url = reverse("case-list")
         self.client.login(username=self.username, password=self.password)
 
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         create_appropriation(case=case)
 
         data = {"expired": False}
@@ -382,9 +365,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
     def test_get_non_expired_filter_no_appropriations(self):
         url = reverse("case-list")
         self.client.login(username=self.username, password=self.password)
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         data = {"expired": False}
         response = self.client.get(url, data)
 
@@ -399,9 +380,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         url = reverse("case-change-case-worker")
         self.client.login(username=self.username, password=self.password)
 
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         new_case_worker = create_user(username="Jens Tester")
         data = {"case_pks": [case.pk], "case_worker_pk": new_case_worker.pk}
         response = self.client.patch(
@@ -432,9 +411,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
     def test_change_case_worker_missing_case_worker_pk(self):
         url = reverse("case-change-case-worker")
         self.client.login(username=self.username, password=self.password)
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         data = {"case_pks": [case.pk]}
         response = self.client.patch(
             url, data=data, content_type="application/json"
@@ -449,9 +426,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
     def test_change_case_worker_non_existant_case_worker(self):
         url = reverse("case-change-case-worker")
         self.client.login(username=self.username, password=self.password)
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         data = {"case_pks": [case.pk], "case_worker_pk": 999}
         response = self.client.patch(
             url, data=data, content_type="application/json"
@@ -470,9 +445,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         cls.basic_setup()
 
     def test_grant_new(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -499,9 +472,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.status_code, 200)
 
     def test_grant_no_activities(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(sbsys_id="XXX-YYY", case=case)
         create_activity(
             case,
@@ -521,9 +492,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.status_code, 400)
 
     def test_grant_wrong_activity(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation1 = create_appropriation(sbsys_id="XXX-YYY", case=case)
         appropriation2 = create_appropriation(sbsys_id="YYY-XXX", case=case)
         activity = create_activity(
@@ -547,9 +516,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.status_code, 400)
 
     def test_grant_main_activity_not_allowed(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -599,9 +566,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         )
 
     def test_grant_suppl_activity_not_allowed(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -651,9 +616,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         )
 
     def test_grant_no_granted_main_activity_not_allowed(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -704,9 +667,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
 
     @mock.patch("core.models.send_appropriation")
     def test_grant_one_time_in_past_included(self, send_appropriation_mock):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -755,9 +716,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         )
 
     def test_grant_granted(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -826,9 +785,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
 
     @freeze_time("2020-01-01")
     def test_grant_granted_in_future_deletes_old(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -885,9 +842,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(modifying_activity.payment_plan.payments.count(), 91)
 
     def test_no_approval_level(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(sbsys_id="XXX-YYY", case=case)
         activity = create_activity(
             case,
@@ -925,9 +880,7 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
         cls.basic_setup()
 
     def test_get_payment_date_or_date__gte_filter(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         now = timezone.now()
         activity = create_activity(
@@ -957,9 +910,7 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
         )
 
     def test_get_payment_date_or_date__lte_filter(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
 
         now = timezone.now()
@@ -989,9 +940,7 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
         )
 
     def test_post(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         now = timezone.now()
         activity = create_activity(
@@ -1017,9 +966,7 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.status_code, 400)
 
     def test_delete(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         now = timezone.now()
         activity = create_activity(
@@ -1043,9 +990,7 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.status_code, 403)
 
     def test_put(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         now = timezone.now()
         activity = create_activity(
@@ -1082,9 +1027,7 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
 
     def test_get(self):
         now = timezone.now().date()
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         activity = create_activity(
             case=case,
@@ -1109,9 +1052,7 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
 
     def test_delete(self):
         now = timezone.now().date()
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         activity1 = create_activity(
             case=case,
@@ -1238,7 +1179,7 @@ class TestAuditModelViewSetMixin(AuthenticatedTestCase, BasicTestMixin):
     def test_case_perform_create(self):
         url = reverse("case-list")
         json = create_case_as_json(
-            self.case_worker, self.team, self.municipality, self.district
+            self.case_worker, self.municipality, self.district
         )
         self.user.team = self.team
         self.user.save()
@@ -1252,7 +1193,7 @@ class TestAuditModelViewSetMixin(AuthenticatedTestCase, BasicTestMixin):
     def test_case_perform_update(self):
         url = reverse("case-list")
         json = create_case_as_json(
-            self.case_worker, self.team, self.municipality, self.district
+            self.case_worker, self.municipality, self.district
         )
         self.user.team = self.team
         self.user.save()
@@ -1271,9 +1212,7 @@ class TestAuditModelViewSetMixin(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.json()["user_modified"], self.username)
 
     def test_related_person_perform_create(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
 
         url = reverse("relatedperson-list")
         self.client.login(username=self.username, password=self.password)
@@ -1287,9 +1226,7 @@ class TestAuditModelViewSetMixin(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.json()["user_modified"], "")
 
     def test_related_person_perform_update(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
 
         url = reverse("relatedperson-list")
         self.client.login(username=self.username, password=self.password)

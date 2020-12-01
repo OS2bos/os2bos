@@ -133,13 +133,11 @@ class CaseViewSet(AuditModelViewSetMixin, AuditViewSet):
     filterset_class = CaseFilter
 
     def perform_create(self, serializer):
-        """Create new case - customized to set team from user."""
+        """Create new case - customized to set user."""
         current_user = self.request.user
-        team = current_user.team
         serializer.save(
             case_worker=current_user,
             user_created=current_user.username,
-            team=team,
         )
 
     @action(detail=True, methods=["get"])
