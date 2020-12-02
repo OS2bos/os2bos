@@ -9,6 +9,16 @@ import { epoch2DateStr, tenYearsAgo, inEighteenYears, json2jsDate } from '../fil
 
 export default {
     computed: {
+        acts: function() {
+            return this.$store.getters.getActivities
+        },
+        main_activities: function() {
+            if (this.acts) {
+                return this.acts.filter(function(act) {
+                    return act.activity_type === 'MAIN_ACTIVITY'
+                })
+            }
+        },
         act: function() {
             return this.$store.getters.getActivity
         },
@@ -51,26 +61,37 @@ export default {
             return json2jsDate(dt)
         },
         getMainActStartDate: function() {
-            let start_date
-            if (this.appropriation.granted_from_date) {
-                start_date = this.appropriation.granted_from_date
-            } else if (this.appropriation.main_activity && this.appropriation.main_activity.start_date) {
-                start_date = this.appropriation.main_activity.start_date
-            } else {
-                start_date = null
-            }
-            return start_date
+            let acts = this.sortMainActs()
+            return this.getBestDate(acts,'start')
         },
         getMainActEndDate: function() {
-            let end_date
-            if (this.appropriation.granted_to_date) {
-                end_date = this.appropriation.granted_to_date
-            } else if (this.appropriation.main_activity && this.appropriation.main_activity.end_date) {
-                end_date = this.appropriation.main_activity.end_date
-            } else {
-                end_date = null
+            let acts = this.sortMainActs()
+            return this.getBestDate(acts,'end')
+        },
+        getBestDate(arr, criteria) {
+            if (arr.length) {
+                let best_date = null
+                if (criteria === 'start') {
+                    best_date = arr[0].start_date
+                } else {
+                    best_date = arr[arr.length - 1].end_date
+                }
+                return best_date
             }
-            return end_date
+        },
+        sortMainActs() {
+            // Sort mainActs list by start date
+            return this.main_activities.sort(function(a,b) {
+                const a_start_date = new Date(a.start_date).getTime(),
+                    b_start_date = new Date(b.start_date).getTime()
+                if (a_start_date > b_start_date) {
+                    return 1
+                } else if (b_start_date > a_start_date) {
+                    return -1
+                } else {
+                    return 0
+                }
+            })
         }
     }
 }

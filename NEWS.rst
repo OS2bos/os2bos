@@ -1,3 +1,13 @@
+Version 3.2.5, 2020-12-02
+-------------------------
+
+Hotfix release
+
+Bug fixes
+^^^^^^^^^
+
+* Use correct date limits for supplementary activity creation.
+
 Version 3.2.4, 2020-11-24
 -------------------------
 
