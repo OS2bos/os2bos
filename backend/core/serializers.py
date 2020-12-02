@@ -44,7 +44,7 @@ from core.models import (
     STATUS_EXPECTED,
     STATUS_GRANTED,
 )
-from core.utils import create_rrule
+from core.utils import create_rrule, validate_cvr
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -214,7 +214,7 @@ class PaymentSerializer(serializers.ModelSerializer):
                 )
 
         # If this payment's activity has been granted, it may
-        # not* be changed.
+        # *not* be changed.
         if (
             (self.instance and self.instance.pk)
             and self.instance.payment_schedule.activity.status
@@ -333,6 +333,15 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
         ):
             raise serializers.ValidationError(
                 _("ugyldig betalingsmetode for betalingsmodtager")
+            )
+
+        if data[
+            "recipient_type"
+        ] == PaymentSchedule.COMPANY and not validate_cvr(
+            data["recipient_id"]
+        ):
+            raise serializers.ValidationError(
+                _("Ugyldigt CVR nummer for firma")
             )
 
         # Validate one_time and individual payment.

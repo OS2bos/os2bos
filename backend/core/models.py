@@ -106,7 +106,7 @@ class SchoolDistrict(Classification):
 
 
 class EffortStep(Classification):
-    """Evaluation step for grading the effort deemed necessary in a case."""
+    """Evaluation step for grading the effort deemed necessary in a Case."""
 
     class Meta:
         verbose_name = _("indsatstrappetrin")
@@ -121,7 +121,7 @@ class EffortStep(Classification):
 
 
 class TargetGroup(Classification):
-    """Target group for a case."""
+    """Target group for a Case."""
 
     class Meta:
         verbose_name = _("målgruppe")
@@ -158,7 +158,7 @@ class InternalPaymentRecipient(models.Model):
 
 
 class Effort(Classification):
-    """Effort for a case."""
+    """Effort for a Case."""
 
     class Meta:
         verbose_name = _("indsats")
@@ -414,7 +414,7 @@ class RatePerDate(models.Model):
 
 
 class Price(VariableRate):
-    """A price on an individual payment plan."""
+    """An individual price on a payment plan."""
 
     class Meta:
         verbose_name = _("pris")
@@ -440,7 +440,9 @@ class Rate(VariableRate, Classification):
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     description = models.TextField(verbose_name=_("beskrivelse"), blank=True)
     needs_recalculation = models.BooleanField(
-        verbose_name=_("skal genberegnes"), default=False
+        verbose_name=_("skal genberegnes"),
+        default=False,
+        help_text=_("dette felt sættes automatisk når en takst ændres"),
     )
 
     def __str__(self):
@@ -543,6 +545,9 @@ class PaymentSchedule(models.Model):
         validators=[MinValueValidator(1), MaxValueValidator(31)],
         blank=True,
         null=True,
+        help_text=_(
+            "dette felt er obligatorisk for og angår kun månedlige betalinger"
+        ),
     )
 
     payment_type = models.CharField(
@@ -1010,7 +1015,7 @@ class Payment(models.Model):
 
 
 class Case(AuditModelMixin, models.Model):
-    """A case, covering one child - corresponding to a Hovedsag in SBSYS."""
+    """A Case, covering one child - corresponding to a Hovedsag in SBSYS."""
 
     class Meta:
         verbose_name = _("sag")
@@ -1353,12 +1358,6 @@ class Appropriation(AuditModelMixin, models.Model):
             if si_filter.exists():
                 return si_filter.first()
 
-    @property
-    def payment_plan(self):
-        """Aggregate payment plans in this appropriation. TBD."""
-        # TODO: Implement this in a later phase, maybe. Else delete.
-        pass  # pragma: no cover
-
     @transaction.atomic
     def grant(self, activities, approval_level, approval_note, approval_user):
         """Grant all the given Activities."""
@@ -1524,10 +1523,10 @@ class ServiceProvider(Classification):
 
 
 class ActivityDetails(Classification):
-    """Class containing all services offered by this municipality.
+    """Class containing all types of activities offered.
 
-    Each service is associated with the legal articles for which it is
-    allowed as well as a price range.
+    Each type is associated with the legal sections for which it is allowed
+    as well as the allowed main activitydetails and service providers.
     """
 
     class Meta:
@@ -1540,9 +1539,11 @@ class ActivityDetails(Classification):
     activity_id = models.CharField(
         max_length=128, verbose_name=_("aktivitets ID"), unique=True
     )
+    # TODO: remove this if unused.
     max_tolerance_in_percent = models.PositiveSmallIntegerField(
         verbose_name=_("max tolerance i procent")
     )
+    # TODO: remove this if unused.
     max_tolerance_in_dkk = models.PositiveIntegerField(
         verbose_name=_("max tolerance i DKK")
     )
@@ -1684,9 +1685,10 @@ class AccountAlias(models.Model):
 
 
 class Activity(AuditModelMixin, models.Model):
-    """An activity is a specific service provided within an appropriation."""
+    """An activity is a specific service provided within an appropriation.
 
-    # The details object contains the name, tolerance, etc. of the service.
+    The details object contains the name, tolerance, etc. of the service.
+    """
 
     class Meta:
         verbose_name = _("aktivitet")
@@ -1755,14 +1757,15 @@ class Activity(AuditModelMixin, models.Model):
         max_length=128, verbose_name=_("type"), choices=type_choices
     )
 
-    # An expected change modifies another activity and will eventually
-    # be merged with it.
+    # An expected change modifies another activity and can eventually
+    # take its place.
     modifies = models.ForeignKey(
         "self",
         null=True,
         blank=True,
         related_name="modified_by",
         on_delete=models.CASCADE,
+        verbose_name=_("justeres af aktivitet"),
     )
     # The appropriation that owns this activity.
     appropriation = models.ForeignKey(
@@ -1771,7 +1774,7 @@ class Activity(AuditModelMixin, models.Model):
         on_delete=models.CASCADE,
         verbose_name=_("bevilling"),
     )
-
+    # TODO: remove this if unused.
     service_provider = models.ForeignKey(
         ServiceProvider,
         null=True,
@@ -2047,11 +2050,7 @@ class Activity(AuditModelMixin, models.Model):
 
     @property
     def triggers_payment_email(self):
-        """Decide if this activity triggers an email when saved.
-
-        If this activity is not granted, doesn't have a payment plan or
-        is a one time payment we don't send an email.
-        """
+        """Decide if this activity triggers an email when saved."""
         if not self.status == STATUS_GRANTED:
             return False
 

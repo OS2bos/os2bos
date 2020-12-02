@@ -12,6 +12,7 @@ import logging
 import requests
 import datetime
 import itertools
+import re
 
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
@@ -330,7 +331,7 @@ def saml_create_user(user_data):  # noqa: D401
     user.save()
 
 
-# Economy integration releated stuff - for the time being, only PRISM.
+# Economy integration related stuff - for the time being, only PRISM.
 # TODO: At some point, factor out customer specific third party integrations.
 
 
@@ -498,11 +499,7 @@ def generate_records_for_prism(due_payments):
     """Generate the list of records for writing to PRISM file."""
     prism_records = (
         (
-            format_prism_financial_record(
-                p,
-                line_no=2 * i - 1,
-                record_no=i,
-            ),
+            format_prism_financial_record(p, line_no=2 * i - 1, record_no=i),
             format_prism_payment_record(p, line_no=2 * i, record_no=i),
         )
         for i, p in enumerate(due_payments, 1)
@@ -733,6 +730,9 @@ def generate_payments_report_list(payments):
             )
         )
 
+        mother = case.related_persons.filter(relation_type="mor").first()
+        father = case.related_persons.filter(relation_type="far").first()
+
         payment_dict = {
             # payment specific.
             "id": payment.pk,
@@ -761,6 +761,7 @@ def generate_payments_report_list(payments):
             "activity_start_date": activity.start_date,
             "activity_end_date": activity.end_date,
             "activity_status": activity.status,
+            "activity_type": activity.activity_type,
             # appropriation specific.
             "section": appropriation.section.paragraph,
             "section_text": appropriation.section.text,
@@ -778,6 +779,10 @@ def generate_payments_report_list(payments):
             "effort_step": str(effort_step),
             "scaling_step": str(scaling_step),
             "paying_municipality": str(case.paying_municipality),
+            "acting_municipality": str(case.acting_municipality),
+            "residence_municipality": str(case.residence_municipality),
+            "mother_cpr": mother.cpr_number if mother else None,
+            "father_cpr": father.cpr_number if father else None,
         }
         payments_report_list.append(payment_dict)
 
@@ -860,3 +865,14 @@ def generate_payment_date_exclusion_dates(years=None):
     exclusion_dates.extend(extra_payment_date_exclusions)
 
     return sorted(list(set(exclusion_dates)))
+
+
+def validate_cvr(cvr):
+    """
+    Validate a cvr number string.
+
+    Note: this is merely a 8-digit number input validation
+    and not a 'real' CVR validation
+    """
+    match = re.match(r"^[0-9]{8}$", cvr.strip())
+    return bool(match)

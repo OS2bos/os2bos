@@ -1,3 +1,7 @@
+======
+OS2BOS
+======
+
 |pipeline status|
 |coverage report|
 
@@ -119,7 +123,7 @@ We log the following:
 
 * Export to Prism log - Log related to the PRISM exports management command. The log is written to ``/log/export_to_prism.log``.
 
-* Mark Fictive Payments Paid log - Log related to the marking fictive payments paid management command. The log is written to ``mark_fictive_payments_paid.log``.
+* Mark Payments Paid log - Log related to the marking payments paid management command. The log is written to ``mark_payments_paid.log``.
 
 * Generate Payments Report log - Log related to generating the payment reports. The log is written to ``/log/generate_payments_report.log``.
 
@@ -173,18 +177,22 @@ Docker-compose
 --------------
 
 You can use ``docker-compose`` to start up bevillingsplatform and related
-service such as postgres and postfix.
+services such as postgres and postfix.
 
 A ``docker-compose.yml`` for development is included. It includes the settings
-to connect them. It starts four services:
+to connect them. It starts the following services:
 
 - `frontend`: the vue frontend reachable at  http://localhost:8080
 - `bev`: the django backend
 - `db`: a OS2BOS specific `postgres database server`_
+- `bev-cron`: `supercronic`_, a job runner running our cronjobs
+- `idp`: a local version of the IdP running our version of `SimpleSAMLphp`_
 - `postfix`: a `postfix email server`_
 
 .. _postfix email server: https://hub.docker.com/r/catatnight/postfix
 .. _postgres database server: https://git.magenta.dk/bevillingsplatform/postgres-os2bos
+.. _supercronic: https://github.com/aptible/supercronic
+.. _SimpleSAMLphp: https://simplesamlphp.org/
 
 Normally the backend image also serves the frontend code, but to ease frontend
 development, we include a frontend service that run `vue-cli-service serve

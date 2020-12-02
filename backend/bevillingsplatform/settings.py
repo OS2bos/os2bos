@@ -501,7 +501,7 @@ SAML2_AUTH = {
         "BEFORE_LOGIN": "core.utils.saml_before_login",
     },
     "USE_JWT": True,
-    "FRONTEND_URL": settings.get("SAML_PUBLIC_HOST") + "#/",
+    "FRONTEND_URL": settings.get("SAML_PUBLIC_HOST") + "#",
     "CERT_FILE": settings.get("CERT_FILE", fallback=""),
     "KEY_FILE": settings.get("KEY_FILE", fallback=""),
     "AUTHN_REQUESTS_SIGNED": settings.getboolean(
@@ -510,6 +510,20 @@ SAML2_AUTH = {
 }
 
 SILENCED_SYSTEM_CHECKS = ["rest_framework.W001"]
+
+# Settings for manage.py graph_models from django-extensions.
+GRAPH_MODELS = {
+    "exclude_models": [
+        "AbstractUser",
+        "AuditModelMixin",
+        "SectionEffortStepProxy",
+        "ActivityDetailsSectionProxy",
+        "HistoricalRatePerDateProxy",
+        "HistoricalRatePerDate",
+        "HistoricalPayment",
+        "HistoricalCase",
+    ]
+}
 
 ALLOW_EDIT_OF_PAST_PAYMENTS = settings.getboolean(
     "ALLOW_EDIT_OF_PAST_PAYMENTS", fallback=False
