@@ -1849,6 +1849,83 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         self.assertIn("Start dato: 1. december 2019", email_message.body)
         self.assertIn("Slut dato: 1. januar 2020", email_message.body)
 
+    def test_updated_sd_activity_payment_email(self):
+        start_date = date(year=2019, month=12, day=1)
+        end_date = date(year=2020, month=1, day=1)
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            status=STATUS_DRAFT,
+        )
+        create_payment_schedule(activity=activity, payment_method=SD)
+
+        activity.status = STATUS_GRANTED
+        activity.save()
+
+        self.assertEqual(len(mail.outbox), 1)
+        email_message = mail.outbox[0]
+        self.assertIn("Aktivitet opdateret", email_message.subject)
+        self.assertIn("Barnets CPR nummer: 0205891234", email_message.body)
+        self.assertIn("Beløb: 500,0", email_message.body)
+        self.assertIn("Start dato: 1. december 2019", email_message.body)
+        self.assertIn("Slut dato: 1. januar 2020", email_message.body)
+
+    def test_updated_one_time_payment_activity_no_payment_email(self):
+        start_date = date(year=2019, month=12, day=1)
+        end_date = date(year=2020, month=1, day=1)
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            status=STATUS_DRAFT,
+        )
+        create_payment_schedule(
+            activity=activity,
+            payment_method=CASH,
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+        )
+
+        activity.status = STATUS_GRANTED
+        activity.save()
+
+        self.assertEqual(len(mail.outbox), 0)
+
+    def test_updated_activity_with_internal_recipient_no_payment_email(self):
+        start_date = date(year=2019, month=12, day=1)
+        end_date = date(year=2020, month=1, day=1)
+        case = create_case(
+            self.case_worker, self.team, self.municipality, self.district
+        )
+        appropriation = create_appropriation(case=case)
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            status=STATUS_DRAFT,
+        )
+        create_payment_schedule(
+            activity=activity,
+            payment_method=INTERNAL,
+            recipient_type=PaymentSchedule.INTERNAL,
+        )
+
+        activity.status = STATUS_GRANTED
+        activity.save()
+
+        self.assertEqual(len(mail.outbox), 0)
+
     def test_deleted_payment_email(self):
         start_date = date(year=2019, month=12, day=1)
         end_date = date(year=2020, month=1, day=1)
