@@ -534,3 +534,7 @@ WATCHMAN_CHECKS = (
     "watchman.checks.databases",
     # disable storage check since fileupload is not used.
 )
+
+# Prometheus logging.
+LOG_TO_PROMETHEUS = settings.getboolean("LOG_TO_PROMETHEUS", fallback=False)
+PROMETHEUS_HOST = settings.get("PROMETHEUS_HOST", fallback="localhost:9091")

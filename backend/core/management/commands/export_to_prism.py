@@ -15,7 +15,7 @@ from datetime import datetime
 from django.core.management.base import BaseCommand
 
 from core.utils import export_prism_payments_for_date
-
+from core.decorators import log_to_prometheus
 
 logger = logging.getLogger("bevillingsplatform.export_to_prism")
 
@@ -28,6 +28,7 @@ class Command(BaseCommand):
             "-d", "--date", default=None, help=("Export payments for date")
         )
 
+    @log_to_prometheus("export_to_prism")
     def handle(self, *args, **options):
         """Call export function and that's it!"""
         date = options["date"]

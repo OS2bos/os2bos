@@ -11,7 +11,7 @@ import logging
 from django.core.management.base import BaseCommand
 
 from core.models import Rate, PaymentSchedule, Activity
-
+from core.decorators import log_to_prometheus
 
 logger = logging.getLogger("bevillingsplatform.recalculate_on_changed_rate")
 
@@ -19,6 +19,7 @@ logger = logging.getLogger("bevillingsplatform.recalculate_on_changed_rate")
 class Command(BaseCommand):
     help = "Recalculate payments schedules if they use a rate that has changed"
 
+    @log_to_prometheus("recalculate_on_changed_rate")
     def handle(self, *args, **options):
         """Find rates and corresponding schedules, recalculate."""
         try:
