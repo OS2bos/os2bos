@@ -26,7 +26,7 @@ class Command(BaseCommand):
             "-d", "--date", help=("Mark payments for date"), default=None
         )
 
-    @log_to_prometheus("mark_fictive_payments_paid")
+    @log_to_prometheus("mark_payments_paid")
     @transaction.atomic
     def handle(self, *args, **options):
         """Mark payments paid for the given date."""
