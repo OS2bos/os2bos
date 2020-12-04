@@ -6,152 +6,111 @@
    - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
 
 <template>
-    
-    <section class="payment-search">
-        
-        <header>
-            <h1>Betalinger</h1>
-        </header>
+    <div class="search-filter payment-search-filters">
+        <form @submit.prevent>
+            <fieldset class="filter-fields">
+                <div class="filter-field">
+                    <label for="field-pay-key">Betalingsnøgle</label>
+                    <input id="field-pay-key" type="search" v-model="payment_schedule__payment_id">
+                </div>
 
-        <div class="search-filter">
-            <form>
-                <fieldset class="filter-fields">
+                <div class="filter-field">
+                    <label for="field-cpr">Hovedsag CPR nr.</label>
+                    <input id="field-cpr" type="search" v-model="case__cpr_number">
+                </div>
+
+                <div class="filter-field">
+                    <label for="field-payee">Betalingsmodtager</label>
+                    <input id="field-payee" type="search" v-model="recipient_id">
+                </div>
+
+                <div class="filter-field">
+                    <label for="field-pay-method">Betalingsmåde</label>
+                    <list-picker
+                        v-if="payment_methods"
+                        domId="field-pay-method"
+                        :selected-id="payment_method"
+                        :list="payment_methods"
+                        @selection="changePaymentMethod" />
+                </div>
+
+                <div class="filter-field">
+                    <label for="field-pay-method">Tidsinterval</label>
+                    <list-picker
+                        v-if="intervals"
+                        domId="field-time-interval"
+                        :selected-id="interval"
+                        :list="intervals"
+                        @selection="changeTimeInterval" />
+                </div>
+
+                <template v-if="range_dates === true">
                     <div class="filter-field">
-                        <label for="field-pay-key">Betalingsnøgle</label>
-                        <input id="field-pay-key" type="search" @input="update" v-model="$route.query.payment_schedule__payment_id">
+                        <label for="field-from">Fra dato</label>
+                        <input id="field-from" type="date" @input="update" v-model="paid_date_or_date__gte">
                     </div>
 
                     <div class="filter-field">
-                        <label for="field-cpr">Hovedsag CPR nr.</label>
-                        <input id="field-cpr" type="search" @input="changeCpr" v-model="$route.query.case__cpr_number">
+                        <label for="field-to">Til dato</label>
+                        <input id="field-to" type="date" @input="update" v-model="paid_date_or_date__lte">
                     </div>
+                </template>
+            </fieldset>
 
-                    <div class="filter-field">
-                        <label for="field-payee">Betalingsmodtager</label>
-                        <input id="field-payee" type="search" @input="update" v-model="$route.query.recipient_id">
-                    </div>
+            <fieldset class="filter-fields radio-filters">
+                <div class="filter-field">
+                    <input type="radio" id="field-paid-1" checked name="field-paid" :value="null" v-model="paid">
+                    <label for="field-paid-1">Betalte og ubetalte</label>
+                </div>
+                <div class="filter-field">
+                    <input type="radio" id="field-paid-2" name="field-paid" :value="true" v-model="paid">
+                    <label for="field-paid-2">Kun betalte</label>
+                </div>
+                <div class="filter-field">
+                    <input type="radio" id="field-paid-3" name="field-paid" :value="false" v-model="paid">
+                    <label for="field-paid-3">Kun ubetalte</label>
+                </div>
+            </fieldset>
 
-                    <div class="filter-field">
-                        <label for="field-pay-method">Betalingsmåde</label>
-                        <list-picker 
-                            domId="field-pay-method"
-                            :list="payment_methods"
-                            @selection="changePaymentMethod" />
-                    </div>
-
-                    <div class="filter-field">
-                        <label for="field-pay-method">Tidsinterval</label>
-                        <list-picker
-                            domId="field-time-interval"
-                            :list="intervals"
-                            @selection="changeTimeInterval" />
-                    </div>
-
-                    <template v-if="range_dates === true">
-                        <div class="filter-field">
-                            <label for="field-from">Fra dato</label>
-                            <input id="field-from" type="date" @input="update" v-model="$route.query.paid_date_or_date__gte">
-                        </div>
-
-                        <div class="filter-field">
-                            <label for="field-to">Til dato</label>
-                            <input id="field-to" type="date" @input="update" v-model="$route.query.paid_date_or_date__lte">
-                        </div>
-                    </template>
-                </fieldset>
-
-                <fieldset class="filter-fields radio-filters">
-                    <div class="filter-field">
-                        <input type="radio" id="field-paid-1" checked name="field-paid" :value="null" v-model="$route.query.paid" @change="update">
-                        <label for="field-paid-1">Betalte og ubetalte</label>
-                    </div>
-                    <div class="filter-field">
-                        <input type="radio" id="field-paid-2" name="field-paid" :value="true" v-model="$route.query.paid" @change="update">
-                        <label for="field-paid-2">Kun betalte</label>
-                    </div>
-                    <div class="filter-field">
-                        <input type="radio" id="field-paid-3" name="field-paid" :value="false" v-model="$route.query.paid" @change="update">
-                        <label for="field-paid-3">Kun ubetalte</label>
-                    </div>
-                </fieldset>
-            </form>
-        </div>
-
-        <div class="payment-search-list">
-            <template v-if="payments">
-                
-                <data-grid v-if="payments.length > 0"
-                    ref="data-grid"
-                    :data-list="payments"
-                    :columns="columns"
-                    @update="update">
-
-                    <p slot="datagrid-header">
-                        Viser {{ payments.length }} af {{ payments_meta.count }} betalinger
-                    </p>
-
-                    <p slot="datagrid-footer" v-if="payments.length < 1">
-                        Kan ikke finde nogen betalinger, der matcher de valgte kriterier
-                    </p>
-
-                </data-grid>
-
-                <button v-if="payments.length > 1" :disabled="disableBtn" class="more" @click="loadResults()">Vis flere</button>
-            </template>
-            <p v-else>
-                Der er ingen betalinger, der matcher de valgte kriterier
-            </p>
-        </div>
-
-    </section>
-
+            <fieldset class="filter-fields filter-actions">
+                <button class="filter-reset" type="reset" @click="resetValues">Nulstil</button>
+            </fieldset>
+        </form>
+    </div>
 </template>
 
 <script>
 
-    import axios from '../http/Http.js'
-    import Error from '../forms/Error.vue'
-    import notify from '../notifications/Notify.js'
-    import { json2jsDate } from '../filters/Date.js'
-    import { cost2da } from '../filters/Numbers.js'
-    import PaymentModal from './PaymentModal.vue'
-    import CaseFilters from '../mixins/CaseFilters.js'
     import ListPicker from '../forms/ListPicker.vue'
-    import PermissionLogic from '../mixins/PermissionLogic.js'
-    import { activityId2name, displayPayMethod } from '../filters/Labels.js'
-    import DataGrid from '../datagrid/DataGrid.vue'
-    import SaveButton from './datagrid-components/SaveButton.vue'
-    import AmountInput from './datagrid-components/AmountInput.vue'
-    import DateInput from './datagrid-components/DateInput.vue'
-    import NoteInput from './datagrid-components/NoteInput.vue'
     import TimeIntervalFilters from '../mixins/TimeIntervalFilters.js'
+
+    // Debounce helper method lets a function await execution until it is no longer called again.
+    // Useful for waiting for a user to stop typing in an input field.
+    const debounce = function(func, wait) {
+        let timeout
+        return function() {
+            let context = this, 
+                args = arguments
+            const later = function() {
+                timeout = null
+                func.apply(context, args)
+            }
+            clearTimeout(timeout)
+            timeout = setTimeout(later, wait)
+        }
+    }
 
     export default {
         
         components: {
-            DataGrid,
-            PaymentModal,
-            ListPicker,
-            SaveButton,
-            AmountInput,
-            DateInput,
-            NoteInput
+            ListPicker
         },
         mixins: [
-            CaseFilters, 
-            PermissionLogic,
             TimeIntervalFilters
         ],
         data: function() {
             return {
                 range_dates: false,
-                input_timeout: null,
-                paymentlock: true,
-                p: {
-                    amount: null,
-                    date: null,
-                    note: null
-                },
                 payment_methods: [
                     {
                         id: 0,
@@ -173,161 +132,121 @@
                         name: 'SD-løn',
                         sys_name: 'SD'
                     }
-                ],
-                columns: [
-                    {
-                        key: 'paid',
-                        title: 'Betalt',
-                        display_func: this.displayPaidIcon,
-                        class: 'center'
-                    },
-                    {
-                        key: 'id',
-                        title: 'Betaling',
-                        display_func: this.displayId,
-                        class: 'datagrid-action nowrap'
-                    },
-                    {
-                        key: 'payment_schedule__payment_id',
-                        title: 'Betalingsnøgle',
-                        class: 'center'
-                    },
-                    {
-                        key: 'recipient_name',
-                        title: 'Betalingsmodtager',
-                        display_func: this.displayReceiver
-                    },
-                    {
-                        key: 'case__cpr_number',
-                        title: 'Hovedsag CPR-nr',
-                        display_func: this.displayCprName
-                    },
-                    {
-                        key: 'account_string',
-                        title: 'Kontostreng',
-                        display_func: this.displayAccounts,
-                        class: 'nowrap'
-                    },
-                    {
-                        key: 'amount',
-                        title: 'Planlagt beløb',
-                        display_func: this.displayPlannedAmount,
-                        class: 'right'
-                    },
-                    {
-                        key: 'date',
-                        title: 'Planlagt betalingsdato',
-                        display_func: this.displayPlannedPayDate
-                    },
-                    {
-                        key: 'paid_amount',
-                        title: 'Betalt beløb',
-                        display_component: AmountInput,
-                        class: 'nowrap'
-                    },
-                    {
-                        key: 'paid_date',
-                        title: 'Betalt dato',
-                        display_component: DateInput,
-                        class: 'nowrap'
-                    },
-                    {
-                        key: 'note',
-                        title: 'Reference',
-                        display_component: NoteInput
-                    },
-                    {
-                        display_component: SaveButton,
-                        class: 'center'
-                    }
                 ]
             }
         },
         computed: {
-            payments_meta: function() {
-                return this.$store.getters.getPaymentsMeta
-            },
             payments: function() {
                 return this.$store.getters.getPayments
             },
-            query: function() {
-                return this.$route.query
-            },
-            disableBtn: function () {
-                if (this.payments_meta.next === null) {
-                    return true
+            // Search filters:
+            payment_schedule__payment_id: {
+                get: function() {
+                    // Get search filter saved in store. Displays in input field via `v-model`
+                    return this.$store.getters.getPaymentSearchFilter('payment_schedule__payment_id')
+                },
+                set: function(new_val) {
+                    // When user changes value in input field, commit the new value
+                    // The `commitValue` helper method has a debounce feature, in order to avoid request spamming.
+                    // This method is handy for values that the user types into text fields.
+                    this.commitValue('payment_schedule__payment_id', new_val)
                 }
             },
-            payment: function() {
-                return this.$store.getters.getPayment
-            }
-        },
-        watch: {
-            query: function() {
-                this.update()
+            case__cpr_number: {
+                get: function() {
+                    return this.$store.getters.getPaymentSearchFilter('case__cpr_number')
+                }, 
+                set: function(new_val) {
+                    this.commitValue('case__cpr_number', new_val)
+                }
+            },
+            recipient_id: {
+                get: function() {
+                    return this.$store.getters.getPaymentSearchFilter('recipient_id')
+                }, 
+                set: function(new_val) {
+                    this.commitValue('recipient_id', new_val)
+                }
+            },
+            payment_method: function() {
+                // `payment_method` only has a getter. values are updated via changePaymentMethod method in listpicker component
+                return this.$store.getters.getPaymentSearchFilter('payment_method')
+            },
+            interval: function() {
+                // `interval` only has a getter. values are updated via changeTimeInterval method in listpicker component
+                return this.$store.getters.getPaymentSearchFilter('interval')
+            },
+            paid: {
+                get: function() {
+                    return this.$store.getters.getPaymentSearchFilter('paid')
+                }, 
+                set: function(new_val) {
+                    // When user changes value in radio button, commit the new value
+                    // We don't use the `commitValue` helper method here.
+                    this.$store.commit('setPaymentSearchFilter', {key: 'paid', val: new_val})
+                    this.$store.dispatch('fetchPayments')
+                }
+            },
+            update: function() {
+                this.$store.dispatch('fetchPayments')
             }
         },
         methods: {
-            displayId: function(payment) {
-                let str = `<a href="/#/activity/${ payment.activity__id }">#${ payment.id } - ${ activityId2name(payment.activity__details__id) }</a>`
-                if (payment.payment_schedule__fictive) {
-                    str += `<span class="fictive">(Fiktiv)</span>`
-                }
-                return str
+            resetValues: function() {
+                // Use the store action to reset values
+                this.$store.dispatch('resetPaymentSearchFilters')
             },
-            displayReceiver: function(payment) {
-                let str = `<span class="label-header">${ displayPayMethod(payment.payment_method) }</span><br> ${ payment.recipient_name}`
-                if (payment.recipient_type === 'COMPANY') {
-                    str += `<br><span class="label-header">cvr</span> ${ payment.recipient_id}`
-                } else if (payment.recipient_type === 'PERSON') {
-                    str += `<br><span class="label-header">cpr</span> ${ payment.recipient_id}`
-                } else {
-                    str += `<br>${ payment.recipient_id}`
-                }
-                return str
-            },
-            displayCprName: function(id) {
-                return `${ id.case__name }<br>${ id.case__cpr_number }`
-            },
-            loadResults: function() {
-                this.$store.dispatch('fetchMorePayments')
+            commitValue: function(key, val) {
+                // Handy helper method that both updates the value in store, 
+                // dispatches a request to get an updated list of cases,
+                // and is debounced to avoid API request spam.
+                this.$store.commit('setPaymentSearchFilter', {key: key, val: val})
+                this.$store.dispatch('fetchPayments')
             },
             changePaymentMethod: function(method) {
-                if (method !== null) {
-                    this.$route.query.payment_method = this.payment_methods[method].sys_name
-                } else {
-                    this.$route.query.payment_method = ''
-                }
-                this.update()
-            },
-            update: function() {
-                this.$store.dispatch('fetchPayments', this.$route.query)              
-            },
-            displayPlannedPayDate: function(payment) {
-                return json2jsDate(payment.date)
-            },
-            displayPlannedAmount: function(payment) {
-                return `${ cost2da(payment.amount) } kr`
-            },
-            displayAccounts: function(payment) {
-                let str = `${ payment.account_string }`
-                if (payment.account_alias){
-                    str += `<dl><dt>Kontoalias</dt><dd>${ payment.account_alias }</dd></dl>`
-                } else {
-                    str
-                }
-                return str
-            },
-            displayPaidIcon: function(payment) {
-                if (payment.paid) {
-                    return '<i class="material-icons">check</i>'
-                } else {
-                    return '-'
+                // Checks if anything has actually been changed and updates store values
+                // + fetches an updated list of payments
+                if (this.payment_method !== method && this.payment_method || method) {
+                    console.log(this.payment_methods[method].sys_name)
+                    this.$store.commit('setPaymentSearchFilter', {key: 'payment_method', val: this.payment_methods[method].sys_name})
+                    this.$store.dispatch('fetchPayments')
                 }
             },
-            navToLink: function(path) {
-                this.$router.push(path)
+            // changeTimeInterval: function(selection) {
+            //     // Checks if anything has actually been changed and updates store values
+            //     // + fetches an updated list of payments
+            //     if (this.interval !== selection && this.interval || selection) {
+            //         this.$store.commit('setPaymentSearchFilter', {key: 'payment_method', val: this.interval[selection].name})
+            //         this.$store.dispatch('fetchPayments')
+            //     }
+            // },
+            // update: function() {
+            //     this.$store.dispatch('fetchPayments')
+            // }
+        },
+        created: function() {
+
+            // Set debounce on methods that are likely to be fired too often
+            // (ie. while a user is typing into an input field)
+            this.commitValue = debounce(this.commitValue, 400)
+
+            // On first load, check URL params and set store filters accordingly
+            if (this.$route.query.payment_schedule__payment_id) {
+                this.$store.commit('setPaymentSearchFilter', {key: 'payment_schedule__payment_id', val: this.$route.query.payment_schedule__payment_id})
             }
+            if (this.$route.query.recipient_id) {
+                this.$store.commit('setPaymentSearchFilter', {key: 'recipient_id', val: this.$route.query.recipient_id})
+            }
+            if (this.$route.query.payment_method) {
+                this.$store.commit('setPaymentSearchFilter', {key: 'payment_method', val: this.$route.query.payment_method})
+            }
+            if (this.$route.query.interval) {
+                this.$store.commit('setPaymentSearchFilter', {key: 'interval', val: this.$route.query.interval})
+            }
+            if (this.$route.query.paid) {
+                this.$store.commit('setPaymentSearchFilter', {key: 'paid', val: this.$route.query.paid})
+            }
+            this.$store.dispatch('fetchPayments')
         }
     }
 
@@ -335,60 +254,19 @@
 
 <style>
 
-    .payment-search {
-        padding: 0 2rem 2rem;
-    }
-
-    .payment-search .radio-filters {
+    .payment-search-filters .radio-filters {
         margin-top: 1rem;
     }
 
-    .payment-search-list {
-        margin-top: 2rem;
+    .payment-search-filters .filter-actions {
         flex-grow: 1;
-    }
-
-    .payment-search .datagrid-container {
-        width: 100%;
-        overflow: auto;
+        text-align: right;
     }
 
     .payment-search-filters {
         order: 1;
         background-color: var(--grey1);
         padding: 0 1.5rem 1rem;
-    }
-
-    .payment-search .datagrid {
-        table-layout: inherit;
-    }
-
-    .payment-search .datagrid .datagrid-action {
-        padding-left: .75rem;
-    }
-
-    .payment-search .field-amount {
-        width: 7rem;
-    }
-
-    .payment-search .field-note {
-        width: 7rem;
-    }
-
-    .payment-search-list .more .material-icons {
-        margin: 0;
-    }
-
-    .payment-search-list td {
-        overflow: visible;
-    }
-
-    .payment-search .more {
-        width: 100%;
-    }
-
-    .payment-search .fictive {
-        padding: 0rem 1.5rem;
     }
 
 </style>
