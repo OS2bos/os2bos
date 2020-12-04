@@ -17,7 +17,7 @@
         
         <case-search />
 
-        <case-list />
+        <case-search-list />
 
     </section>
 
@@ -26,12 +26,12 @@
 <script>
 import PermissionLogic from '../mixins/PermissionLogic.js'
 import CaseSearch from './CaseSearch.vue'
-import CaseList from './CaseList.vue'
+import CaseSearchList from './CaseSearchList.vue'
 
 export default {
     components: {
         CaseSearch,
-        CaseList
+        CaseSearchList
     },
     mixins: [
         PermissionLogic
