@@ -100,7 +100,12 @@ router.beforeEach((to, from, next) => {
     } else {
         // Try to login
         // Add next parameter for SSO redirect
-        window.location = '/api/accounts/login/?next=' + encodeURIComponent('/#' + to.path)
+        var str = [];
+        for(var p in to.query){
+            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(to.query[p]));
+        }
+        window.location = '/api/accounts/login/?next=' + encodeURIComponent('/#' + to.path) + "?" + str.join("&")
+
     }
 })
 
