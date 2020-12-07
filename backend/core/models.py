@@ -2057,10 +2057,13 @@ class Activity(AuditModelMixin, models.Model):
         if not hasattr(self, "payment_plan") or not self.payment_plan:
             return False
 
-        if self.payment_plan.payment_type == PaymentSchedule.ONE_TIME_PAYMENT:
-            return False
+        if self.payment_plan.payment_method == SD:
+            return True
 
         if self.payment_plan.recipient_type == PaymentSchedule.INTERNAL:
+            return False
+
+        if self.payment_plan.payment_type == PaymentSchedule.ONE_TIME_PAYMENT:
             return False
 
         return True
