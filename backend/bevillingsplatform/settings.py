@@ -359,7 +359,10 @@ LOGGING = {
             "level": "INFO",
             "class": "logging.FileHandler",
             "formatter": "verbose",
-            "filename": os.path.join(LOG_DIR, "cron_mail.log")
+            "filename": settings.get(
+                "MAILER_LOG_FILE",
+                fallback=os.path.join(LOG_DIR, "cron_mail.log"),
+            ),
         },
     },
     "formatters": {
