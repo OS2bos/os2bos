@@ -354,6 +354,16 @@ LOGGING = {
                 fallback=os.path.join(LOG_DIR, "serviceplatformen.log"),
             ),
         },
+        # handler for the django-mailer package.
+        "mailer": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "formatter": "verbose",
+            "filename": settings.get(
+                "MAILER_LOG_FILE",
+                fallback=os.path.join(LOG_DIR, "cron_mail.log"),
+            ),
+        },
     },
     "formatters": {
         "verbose": {
@@ -403,6 +413,12 @@ LOGGING = {
         },
         "bevillingsplatform.serviceplatformen": {
             "handlers": ["serviceplatformen"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        # logger for the django-mailer package.
+        "mailer": {
+            "handlers": ["mailer"],
             "level": "INFO",
             "propagate": True,
         },
