@@ -421,7 +421,7 @@ LOGGING = {
             "handlers": ["mailer"],
             "level": "INFO",
             "propagate": True,
-        }
+        },
     },
 }
 
