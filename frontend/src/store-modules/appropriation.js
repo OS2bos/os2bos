@@ -97,9 +97,9 @@ const mutations = {
      * @example this.$store.commit('setAppropriationSearchFilter', { key: 'case__case_worker', val: 4 })
      * @memberof state_appropriation
      */
-    setAppropriationSearchFilter (state, obj) {
-        Vue.set(state.filters, obj.key, obj.val)
-        location.hash = `/appropriations?${ makeQueryString(state, false) }`
+    setAppropriationSearchFilter(state, obj) {
+        Vue.set(state, 'filters', Object.assign({}, state.filters, obj))
+        location.hash = `/appropriations?${ makeQueryString(state, false)}`
     },
     /**
      * Reset state.filters to initial values
@@ -123,29 +123,22 @@ const actions = {
     /**
      * Get a list of cases from API. Use getCases to read the list.
      * @name fetchAppropriations
-     * @param {object} queryObj an object containing keys and values for a query string
+     * @param {object} state an object containing keys and values for a query string
      * @returns {void} Use store.getter.getAppropriations to read the list.
      * @example this.$store.dispatch('fetchAppropriations', { queryKey: 'queryValue'})
      * @memberof state_appropriation
      */
-    fetchAppropriations: function({commit}, queryObj) {
+    fetchAppropriations: function({commit, state}) {
         let q = ''
-        if (queryObj) {
-            for (let param in queryObj) {
-                if (queryObj[param] !== null) {
-                    q = q + `${ param }=${ queryObj[param] }&`
-                }
-            }
-        }  else {
-            q = makeQueryString(state, true)
-        }
+        q = makeQueryString(state, true)
+
         axios.get(`/appropriations/?${ q }`)
         .then(res => {
             commit('setAppropriations', res.data)
         })
         .catch(err => console.log(err))
     },
-    fetchAppropriation: function({commit,dispatch}, appr_id) {
+    fetchAppropriation: function({commit, dispatch}, appr_id) {
         axios.get(`/appropriations/${ appr_id }/`)
         .then(res => {
             dispatch('fetchMainActivities', res.data.activities)

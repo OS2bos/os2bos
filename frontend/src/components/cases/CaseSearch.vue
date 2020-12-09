@@ -128,7 +128,7 @@ export default {
             set: function(new_val) {
                 // When user changes value in radio button, commit the new value
                 // We don't use the `commitValue` helper method here.
-                this.$store.commit('setCaseSearchFilter', {key: 'expired', val: new_val})
+                this.$store.commit('setCaseSearchFilter', {'expired': new_val})
                 this.$store.dispatch('fetchCases')
             }
         },
@@ -138,17 +138,9 @@ export default {
         },
         case_worker: function() {
             // `case_worker` only has a getter. values are updated via changeCaseWorker method in listpicker component
-            return this.$store.getters.getCaseSearchFilter('case_worker')
+            return this.$store.getters.getCaseSearchFilter('case_worker', this.user.id)
         }
     },
-    watch: {
-        user: function(new_user, old_user) {
-            // We need to wait for a user to appear before we can initialise the component
-            if (new_user !== old_user) {
-                this.update()
-            }
-        }
-    },  
     methods: {
         resetValues: function() {
             // Use the store action to reset values
@@ -158,14 +150,14 @@ export default {
             // Handy helper method that both updates the value in store, 
             // dispatches a request to get an updated list of cases,
             // and is debounced to avoid API request spam.
-            this.$store.commit('setCaseSearchFilter', {key: key, val: val})
+            this.$store.commit('setCaseSearchFilter', {[key]: val})
             this.$store.dispatch('fetchCases')
         },
         changeCaseWorker: function(selection) {
             // Checks if anything has actually been changed and updates store values
             // + fetches an updated list of cases
             if (this.case_worker !== selection && this.case_worker || selection) {
-                this.$store.commit('setCaseSearchFilter', {key: 'case_worker', val: selection})
+                this.$store.commit('setCaseSearchFilter', {'case_worker': selection})
                 this.$store.dispatch('fetchCases')
             }
         },
@@ -173,17 +165,9 @@ export default {
             // Checks if anything has actually been changed and updates store values
             // + fetches an updated list of cases
             if (this.team !== selection && this.team || selection) {
-                this.$store.commit('setCaseSearchFilter', {key: 'team', val: selection})
+                this.$store.commit('setCaseSearchFilter', {'team': selection})
                 this.$store.dispatch('fetchCases')
             }
-        },
-        update: function() {
-            // Start out by setting a default case worker unless a case worker has already been set
-            // and getting a list of cases with only initial filters set.
-            if (!this.case_worker) {
-                this.$store.commit('setCaseSearchFilter', {key: 'case_worker', val: this.user.id})
-            }
-            this.$store.dispatch('fetchCases')
         }
     },
     created: function() {
@@ -193,18 +177,17 @@ export default {
         this.commitValue = debounce(this.commitValue, 400)
 
         // On first load, check URL params and set store filters accordingly
-        if (this.$route.query.sbsys_id) {
-            this.$store.commit('setCaseSearchFilter', {key: 'sbsys_id', val: this.$route.query.sbsys_id})
+        const qry = this.$route.query
+        if (qry.sbsys_id || qry.hasOwnProperty('expired') && qry.expired !== null || qry.team || qry.case_worker) {
+            this.$store.commit('setCaseSearchFilter', qry)
         }
-        if (this.$route.query.expired) {
-            this.$store.commit('setCaseSearchFilter', {key: 'expired', val: this.$route.query.expired})
+
+        // Start out by setting a default case worker unless a case worker has already been set
+        // and getting a list of cases with only initial filters set.
+        if (!this.case_worker) {
+            this.$store.commit('setCaseSearchFilter', {'case_worker': this.user.id})
         }
-        if (this.$route.query.team) {
-            this.$store.commit('setCaseSearchFilter', {key: 'team', val: this.$route.query.team})
-        }
-        if (this.$route.query.case_worker) {
-            this.$store.commit('setCaseSearchFilter', {key: 'case_worker', val: this.$route.query.case_worker})
-        }
+
         this.$store.dispatch('fetchCases')
     }
 }

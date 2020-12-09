@@ -26,7 +26,13 @@ const makeQueryString = function(state, show_sensitive_data) {
     if (state.filters.interval) {
         q = q + `interval=${ state.filters.interval }&`
     }
-    if (state.filters.paid) {
+    if (state.filters.paid_date_or_date__gte) {
+        q = q + `paid_date_or_date__gte=${ state.filters.paid_date_or_date__gte }&`
+    }
+    if (state.filters.paid_date_or_date__lte) {
+        q = q + `paid_date_or_date__lte=${ state.filters.paid_date_or_date__lte }&`
+    }
+    if (state.filters.paid !== null) {
         q = q + `paid=${ state.filters.paid }`
     }
     return q
@@ -47,6 +53,8 @@ const state = {
         recipient_id: null,
         payment_method: null,
         interval: null,
+        paid_date_or_date__gte: null,
+        paid_date_or_date__lte: null,
         paid: null
     }
 }
@@ -152,9 +160,9 @@ const mutations = {
      * @example this.$store.commit('setPaymentSearchFilter', { key: 'payment_method', val: INVOICE })
      * @memberof state_payment
      */
-    setPaymentSearchFilter (state, obj) {
-        Vue.set(state.filters, obj.key, obj.val)
-        location.hash = `/payments?${ makeQueryString(state, false) }`
+    setPaymentSearchFilter(state, obj) {
+        Vue.set(state, 'filters', Object.assign({}, state.filters, obj))
+        location.hash = `/payments?${ makeQueryString(state, false)}`
     },
     /**
      * Reset state.filters to initial values
@@ -169,23 +177,17 @@ const mutations = {
             recipient_id: null,
             payment_method: null,
             interval: null,
+            paid_date_or_date__gte: null,
+            paid_date_or_date__lte: null,
             paid: null
         }
     }
 }
 
 const actions = {
-    fetchPayments: function({commit}, queryObj) {
+    fetchPayments: function({commit, state}) {
         let q = ''
-        if (queryObj) {
-            for (let param in queryObj) {
-                if (queryObj[param] !== null) {
-                    q = q + `${ param }=${ queryObj[param] }&`
-                }
-            }
-        } else {
-            q = makeQueryString(state, true)
-        }
+        q = makeQueryString(state, true)
 
         axios.get(`/payments/?${ q }&activity__status=GRANTED`)
         .then(res => {

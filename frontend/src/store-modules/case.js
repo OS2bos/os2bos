@@ -17,7 +17,7 @@ const makeQueryString = function(state, show_sensitive_data) {
     if (show_sensitive_data && state.filters.cpr_number) {
         q = q + `cpr_number=${ state.filters.cpr_number }&`
     }
-    if (state.filters.expired) {
+    if (state.filters.expired !== null) {
         q = q + `expired=${ state.filters.expired }&`
     }
     if (state.filters.team) {
@@ -98,9 +98,9 @@ const mutations = {
      * @example this.$store.commit('setCaseSearchFilter', { key: 'case_worker', val: 4 })
      * @memberof state_case
      */
-    setCaseSearchFilter (state, obj) {
-        Vue.set(state.filters, obj.key, obj.val)
-        location.hash = `/cases?${ makeQueryString(state, false) }`
+    setCaseSearchFilter(state, obj) {
+        Vue.set(state, 'filters', Object.assign({}, state.filters, obj))
+        location.hash = `/cases?${ makeQueryString(state, false)}`
     },
     /**
      * Reset state.filters to initial values
@@ -123,21 +123,13 @@ const actions = {
     /**
      * Get a list of cases from API. Use getCases to read the list.
      * @name fetchCases
-     * @param {object} queryObj OPTIONAL An object containing keys and values for a query string. 
+     * @param {object} state OPTIONAL An object containing keys and values for a query string. 
      * @example this.$store.dispatch('fetchCases') or this.$store.dispatch('fetchCases', { queryKey: 'queryValue'})
      * @memberof state_case
      */
-    fetchCases: function({commit, state}, queryObj) {
+    fetchCases: function({commit, state}) {
         let q = ''
-        if (queryObj) { // TODO: Check if we still need this
-            for (let param in queryObj) {
-                if (queryObj[param] !== null) {
-                    q = q + `${ param }=${ queryObj[param] }&`
-                }
-            }
-        } else {
-            q = makeQueryString(state, true)
-        }
+        q = makeQueryString(state, true)
 
         axios.get(`/cases/?${ q }`)
         .then(res => {

@@ -113,22 +113,22 @@
                 range_dates: false,
                 payment_methods: [
                     {
-                        id: 0,
+                        id: 1,
                         name: 'Faktura',
                         sys_name: 'INVOICE'
                     },
                     {
-                        id: 1,
+                        id: 2,
                         name: 'Intern afregning',
                         sys_name: 'INTERNAL'
                     },
                     {
-                        id: 2,
+                        id: 3,
                         name: 'Udbetaling',
                         sys_name: 'CASH'
                     },
                     {
-                        id: 3,
+                        id: 4,
                         name: 'SD-løn',
                         sys_name: 'SD'
                     }
@@ -170,11 +170,35 @@
             },
             payment_method: function() {
                 // `payment_method` only has a getter. values are updated via changePaymentMethod method in listpicker component
-                return this.$store.getters.getPaymentSearchFilter('payment_method')
+                const filter = this.$store.getters.getPaymentSearchFilter('payment_method')
+                if (filter) {
+                    const method = this.payment_methods.find(method => method.sys_name === filter)
+                    if (method) {
+                        return method.id
+                    }
+                }
+                return null
             },
             interval: function() {
                 // `interval` only has a getter. values are updated via changeTimeInterval method in listpicker component
                 return this.$store.getters.getPaymentSearchFilter('interval')
+            },
+            paid_date_or_date__gte: {
+                get: function() {
+                    return this.$store.getters.getPaymentSearchFilter('paid_date_or_date__gte')
+                }, 
+                set: function(new_val) {
+                    this.commitValue('paid_date_or_date__gte', new_val)
+                }
+            },
+            paid_date_or_date__lte: {
+                // `interval` only has a getter. values are updated via changeTimeInterval method in listpicker component
+                get: function() {
+                    return this.$store.getters.getPaymentSearchFilter('paid_date_or_date__lte')
+                }, 
+                set: function(new_val) {
+                    this.commitValue('paid_date_or_date__lte', new_val)
+                }
             },
             paid: {
                 get: function() {
@@ -183,7 +207,7 @@
                 set: function(new_val) {
                     // When user changes value in radio button, commit the new value
                     // We don't use the `commitValue` helper method here.
-                    this.$store.commit('setPaymentSearchFilter', {key: 'paid', val: new_val})
+                    this.$store.commit('setPaymentSearchFilter', {'paid': new_val})
                     this.$store.dispatch('fetchPayments')
                 }
             },
@@ -200,29 +224,22 @@
                 // Handy helper method that both updates the value in store, 
                 // dispatches a request to get an updated list of cases,
                 // and is debounced to avoid API request spam.
-                this.$store.commit('setPaymentSearchFilter', {key: key, val: val})
+                this.$store.commit('setPaymentSearchFilter', {[key]: val})
                 this.$store.dispatch('fetchPayments')
             },
-            changePaymentMethod: function(method) {
+            changePaymentMethod: function(methodId) {
                 // Checks if anything has actually been changed and updates store values
                 // + fetches an updated list of payments
-                if (this.payment_method !== method && this.payment_method || method) {
-                    console.log(this.payment_methods[method].sys_name)
-                    this.$store.commit('setPaymentSearchFilter', {key: 'payment_method', val: this.payment_methods[method].sys_name})
+                if (this.payment_method !== methodId && this.payment_method || methodId) {
+                    if (methodId) {
+                        const method = this.payment_methods.find(method => method.id === methodId).sys_name
+                        this.$store.commit('setPaymentSearchFilter', {'payment_method': method})
+                    } else {
+                        this.$store.commit('setPaymentSearchFilter', {'payment_method': ''})
+                    }
                     this.$store.dispatch('fetchPayments')
                 }
-            },
-            // changeTimeInterval: function(selection) {
-            //     // Checks if anything has actually been changed and updates store values
-            //     // + fetches an updated list of payments
-            //     if (this.interval !== selection && this.interval || selection) {
-            //         this.$store.commit('setPaymentSearchFilter', {key: 'payment_method', val: this.interval[selection].name})
-            //         this.$store.dispatch('fetchPayments')
-            //     }
-            // },
-            // update: function() {
-            //     this.$store.dispatch('fetchPayments')
-            // }
+            }
         },
         created: function() {
 
@@ -231,21 +248,16 @@
             this.commitValue = debounce(this.commitValue, 400)
 
             // On first load, check URL params and set store filters accordingly
-            if (this.$route.query.payment_schedule__payment_id) {
-                this.$store.commit('setPaymentSearchFilter', {key: 'payment_schedule__payment_id', val: this.$route.query.payment_schedule__payment_id})
+            const qry = this.$route.query
+            if (qry.payment_schedule__payment_id || qry.recipient_id || qry.payment_method || qry.interval || qry.paid_date_or_date__gte || qry.paid_date_or_date__lte || qry.hasOwnProperty('paid') && qry.paid !== null) {
+                this.$store.commit('setPaymentSearchFilter', qry)
             }
-            if (this.$route.query.recipient_id) {
-                this.$store.commit('setPaymentSearchFilter', {key: 'recipient_id', val: this.$route.query.recipient_id})
+
+            // Show 'range_dates' if interval is 'date-range'
+            if (this.interval === 'date-range') {
+                this.range_dates = true
             }
-            if (this.$route.query.payment_method) {
-                this.$store.commit('setPaymentSearchFilter', {key: 'payment_method', val: this.$route.query.payment_method})
-            }
-            if (this.$route.query.interval) {
-                this.$store.commit('setPaymentSearchFilter', {key: 'interval', val: this.$route.query.interval})
-            }
-            if (this.$route.query.paid) {
-                this.$store.commit('setPaymentSearchFilter', {key: 'paid', val: this.$route.query.paid})
-            }
+
             this.$store.dispatch('fetchPayments')
         }
     }

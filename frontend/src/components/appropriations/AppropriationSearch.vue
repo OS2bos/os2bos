@@ -171,14 +171,6 @@
                 return this.$store.getters.getAppropriationSearchFilter('main_activity__details__id')
             }
         },
-        watch: {
-            user: function(new_user, old_user) {
-                // We need to wait for a user to appear before we can initialise the component
-                if (new_user !== old_user) {
-                    this.update()
-                }
-            }
-        },  
         methods: {
             resetValues: function() {
                 // Use the store action to reset values
@@ -188,14 +180,14 @@
                 // Handy helper method that both updates the value in store, 
                 // dispatches a request to get an updated list of appropriations,
                 // and is debounced to avoid API request spam.
-                this.$store.commit('setAppropriationSearchFilter', {key: key, val: val})
+                this.$store.commit('setAppropriationSearchFilter', {[key]: val})
                 this.$store.dispatch('fetchAppropriations')
             },
             changeTeam: function(selection) {
                 // Checks if anything has actually been changed and updates store values
                 // + fetches an updated list of appropriations
                 if (this.case__team !== selection && this.case__team || selection) {
-                    this.$store.commit('setAppropriationSearchFilter', {key: 'case__team', val: selection})
+                    this.$store.commit('setAppropriationSearchFilter', {'case__team': selection})
                     this.$store.dispatch('fetchAppropriations')
                 }
             },
@@ -203,7 +195,7 @@
                 // Checks if anything has actually been changed and updates store values
                 // + fetches an updated list of appropriations
                 if (this.case__case_worker !== selection && this.case__case_worker || selection) {
-                    this.$store.commit('setAppropriationSearchFilter', {key: 'case__case_worker', val: selection})
+                    this.$store.commit('setAppropriationSearchFilter', {'case__case_worker': selection})
                     this.$store.dispatch('fetchAppropriations')
                 }
             },
@@ -211,7 +203,7 @@
                 // Checks if anything has actually been changed and updates store values
                 // + fetches an updated list of appropriations
                 if (this.section !== selection && this.section || selection) {
-                    this.$store.commit('setAppropriationSearchFilter', {key: 'section', val: selection})
+                    this.$store.commit('setAppropriationSearchFilter', {'section': selection})
                     this.$store.dispatch('fetchAppropriations')
                 }
             },
@@ -219,17 +211,9 @@
                 // Checks if anything has actually been changed and updates store values
                 // + fetches an updated list of appropriations
                 if (this.main_activity__details__id !== selection && this.main_activity__details__id || selection) {
-                    this.$store.commit('setAppropriationSearchFilter', {key: 'main_activity__details__id', val: selection})
+                    this.$store.commit('setAppropriationSearchFilter', {'main_activity__details__id': selection})
                     this.$store.dispatch('fetchAppropriations')
                 }
-            },
-            update: function() {
-                // Start out by setting a default case worker unless a case worker has already been set
-                // and getting a list of appropriations with only initial filters set.
-                if (!this.case__case_worker) {
-                    this.$store.commit('setAppropriationSearchFilter', {key: 'case__case_worker', val: this.user.id})
-                }
-                this.$store.dispatch('fetchAppropriations')
             }
         },
         created: function() {
@@ -239,21 +223,17 @@
             this.commitValue = debounce(this.commitValue, 400)
 
             // On first load, check URL params and set store filters accordingly
-            if (this.$route.query.case__sbsys_id) {
-                this.$store.commit('setAppropriationSearchFilter', {key: 'case__sbsys_id', val: this.$route.query.case__sbsys_id})
+            const qry = this.$route.query
+            if (qry.case__sbsys_id || qry.case__team || qry.case__case_worker || qry.section || qry.main_activity__details__id) {
+                this.$store.commit('setAppropriationSearchFilter', qry)
             }
-            if (this.$route.query.case__team) {
-                this.$store.commit('setAppropriationSearchFilter', {key: 'case__team', val: this.$route.query.case__team})
+
+            // Start out by setting a default case worker unless a case worker has already been set
+            // and getting a list of appropriations with only initial filters set.
+            if (!this.case__case_worker) {
+                this.$store.commit('setAppropriationSearchFilter', {'case__case_worker': this.user.id})
             }
-            if (this.$route.query.case__case_worker) {
-                this.$store.commit('setAppropriationSearchFilter', {key: 'case__case_worker', val: this.$route.query.case__case_worker})
-            }
-            if (this.$route.query.section) {
-                this.$store.commit('setAppropriationSearchFilter', {key: 'section', val: this.$route.query.section})
-            }
-            if (this.$route.query.main_activity__details__id) {
-                this.$store.commit('setAppropriationSearchFilter', {key: 'main_activity__details__id', val: this.$route.query.main_activity__details__id})
-            }
+
             this.$store.dispatch('fetchAppropriations')
         }
     }
