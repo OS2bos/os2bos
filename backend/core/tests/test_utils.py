@@ -803,6 +803,7 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
                 "recipient_id": "0205891234",
                 "recipient_name": "Jens Testersen",
                 "payment_method": "CASH",
+                "fictive": "False",
                 "activity__details__name": "Test aktivitet",
                 "activity__details__activity_id": "000000",
                 "sbsys_id": "XXX-YYY",

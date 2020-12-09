@@ -755,6 +755,7 @@ def generate_payments_report_list(payments):
             "payment_cost_type": payment_schedule.payment_cost_type,
             "price_per_unit": price_per_unit,
             "units": payment_schedule.payment_units,
+            "fictive": payment_schedule.fictive,
             # activity specific.
             "activity__details__activity_id": activity.details.activity_id,
             "activity__details__name": activity.details.name,
