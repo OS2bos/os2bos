@@ -26,7 +26,7 @@
                     <list-picker 
                         v-if="teams"
                         :dom-id="'field-team'" 
-                        :selected-id="case__team"
+                        :selected-id="case__case_worker__team"
                         :list="teams"
                         @selection="changeTeam"
                         display-key="name"
@@ -141,9 +141,9 @@
                     this.commitValue('case__cpr_number', new_val)
                 }
             },
-            case__team: function() {
-                // `case__team` only has a getter. values are updated via changeTeam method in listpicker component
-                return this.$store.getters.getAppropriationSearchFilter('case__team')
+            case__case_worker__team: function() {
+                // `case__case_worker__team` only has a getter. values are updated via changeTeam method in listpicker component
+                return this.$store.getters.getAppropriationSearchFilter('case__case_worker__team')
             },
             case__case_worker: function() {
                 // `case__case_worker` only has a getter. values are updated via changeWorker method in listpicker component
@@ -173,8 +173,8 @@
             changeTeam: function(selection) {
                 // Checks if anything has actually been changed and updates store values
                 // + fetches an updated list of appropriations
-                if (this.case__team !== selection && this.case__team || selection) {
-                    this.$store.commit('setAppropriationSearchFilter', {'case__team': selection})
+                if (this.case__case_worker__team !== selection && this.case__case_worker__team || selection) {
+                    this.$store.commit('setAppropriationSearchFilter', {'case__case_worker__team': selection})
                     this.$store.dispatch('fetchAppropriations')
                 }
             },
@@ -211,7 +211,7 @@
 
             // On first load, check URL params and set store filters accordingly
             const qry = this.$route.query
-            if (qry.case__sbsys_id || qry.case__team || qry.case__case_worker || qry.section || qry.main_activity__details__id) {
+            if (qry.case__sbsys_id || qry.case__case_worker__team || qry.case__case_worker || qry.section || qry.main_activity__details__id) {
                 this.$store.commit('setAppropriationSearchFilter', qry)
             }
 

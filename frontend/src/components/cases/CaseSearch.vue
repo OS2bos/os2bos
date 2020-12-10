@@ -25,7 +25,7 @@
                     <list-picker 
                         v-if="teams"
                         :dom-id="'field-team'" 
-                        :selected-id="team"
+                        :selected-id="case_worker__team"
                         :list="teams"
                         @selection="changeTeam"
                         display-key="name" />
@@ -120,9 +120,9 @@ export default {
                 this.$store.dispatch('fetchCases')
             }
         },
-        team: function() {
-            // `team` only has a getter. values are updated via changeTeam method in listpicker component
-            return this.$store.getters.getCaseSearchFilter('team')
+        case_worker__team: function() {
+            // `case_worker__team` only has a getter. values are updated via changeTeam method in listpicker component
+            return this.$store.getters.getCaseSearchFilter('case_worker__team')
         },
         case_worker: function() {
             // `case_worker` only has a getter. values are updated via changeCaseWorker method in listpicker component
@@ -152,8 +152,8 @@ export default {
         changeTeam: function(selection) {
             // Checks if anything has actually been changed and updates store values
             // + fetches an updated list of cases
-            if (this.team !== selection && this.team || selection) {
-                this.$store.commit('setCaseSearchFilter', {'team': selection})
+            if (this.case_worker__team !== selection && this.case_worker__team || selection) {
+                this.$store.commit('setCaseSearchFilter', {'case_worker__team': selection})
                 this.$store.dispatch('fetchCases')
             }
         }
@@ -166,7 +166,7 @@ export default {
 
         // On first load, check URL params and set store filters accordingly
         const qry = this.$route.query
-        if (qry.sbsys_id || qry.hasOwnProperty('expired') && qry.expired !== null || qry.team || qry.case_worker) {
+        if (qry.sbsys_id || qry.hasOwnProperty('expired') && qry.expired !== null || qry.case_worker__team || qry.case_worker) {
             this.$store.commit('setCaseSearchFilter', qry)
         }
 
