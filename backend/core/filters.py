@@ -31,6 +31,7 @@ from core.models import (
 
 class UserForCaseFilter(filters.FilterSet):
     """Filter cases on case worker team."""
+
     class Meta:
         model = User
         fields = {"team": ["exact"]}
