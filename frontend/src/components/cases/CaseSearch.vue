@@ -69,27 +69,15 @@
 
 <script>
 import ListPicker from '../forms/ListPicker.vue'
-
-// Debounce helper method lets a function await execution until it is no longer called again.
-// Useful for waiting for a user to stop typing in an input field.
-const debounce = function(func, wait) {
-	let timeout
-	return function() {
-        let context = this, 
-            args = arguments
-		const later = function() {
-			timeout = null
-			func.apply(context, args)
-		}
-		clearTimeout(timeout)
-		timeout = setTimeout(later, wait)
-	}
-}
+import Timeout from '../mixins/Timeout.js'
 
 export default {
     components: {
         ListPicker
     },
+    mixins: [
+        Timeout
+    ],
     computed: {
         teams: function() {
             return this.$store.getters.getTeams
