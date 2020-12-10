@@ -28,7 +28,7 @@
 
         props: {
             domId: String,
-            selectedId: Number,
+            selectedId: [Number, String],
             list: [Array, Boolean],
             default: {
                 type: Number,
