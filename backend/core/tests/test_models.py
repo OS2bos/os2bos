@@ -1753,7 +1753,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         start_date = date(year=2019, month=12, day=1)
         end_date = date(year=2020, month=1, day=1)
         case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
+            self.case_worker, self.municipality, self.district
         )
         appropriation = create_appropriation(case=case)
         activity = create_activity(
@@ -1780,7 +1780,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         start_date = date(year=2019, month=12, day=1)
         end_date = date(year=2020, month=1, day=1)
         case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
+            self.case_worker, self.municipality, self.district
         )
         appropriation = create_appropriation(case=case)
         activity = create_activity(
@@ -1805,7 +1805,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         start_date = date(year=2019, month=12, day=1)
         end_date = date(year=2020, month=1, day=1)
         case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
+            self.case_worker, self.municipality, self.district
         )
         appropriation = create_appropriation(case=case)
         activity = create_activity(
