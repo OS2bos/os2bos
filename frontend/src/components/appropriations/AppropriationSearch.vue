@@ -207,7 +207,7 @@
 
             // Set debounce on methods that are likely to be fired too often
             // (ie. while a user is typing into an input field)
-            this.commitValue = debounce(this.commitValue, 400)
+            this.commitValue = this.debounce(this.commitValue, 400)
 
             // On first load, check URL params and set store filters accordingly
             const qry = this.$route.query
