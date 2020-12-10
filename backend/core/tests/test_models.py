@@ -1752,9 +1752,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
     def test_updated_sd_activity_payment_email(self):
         start_date = date(year=2019, month=12, day=1)
         end_date = date(year=2020, month=1, day=1)
-        case = create_case(
-            self.case_worker, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         activity = create_activity(
             case,
@@ -1779,9 +1777,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
     def test_updated_one_time_payment_activity_no_payment_email(self):
         start_date = date(year=2019, month=12, day=1)
         end_date = date(year=2020, month=1, day=1)
-        case = create_case(
-            self.case_worker, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         activity = create_activity(
             case,
@@ -1804,9 +1800,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
     def test_updated_activity_with_internal_recipient_no_payment_email(self):
         start_date = date(year=2019, month=12, day=1)
         end_date = date(year=2020, month=1, day=1)
-        case = create_case(
-            self.case_worker, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         activity = create_activity(
             case,
