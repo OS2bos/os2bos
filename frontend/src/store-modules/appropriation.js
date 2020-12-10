@@ -93,8 +93,8 @@ const mutations = {
      * Set value of a property in state.filters
      * Also updates URL to expose query string
      * @name setAppropriationSearchFilter
-     * @param {object} obj An object with key/value pairs corresponding to the property change. `key` is always a String
-     * @example this.$store.commit('setAppropriationSearchFilter', { key: 'case__case_worker', val: 4 })
+     * @param {object} obj An object with value pairs corresponding to the property change.
+     * @example this.$store.commit('setAppropriationSearchFilter', { 'case__case_worker': 4 })
      * @memberof state_appropriation
      */
     setAppropriationSearchFilter(state, obj) {

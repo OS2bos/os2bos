@@ -94,8 +94,8 @@ const mutations = {
      * Set value of a property in state.filters
      * Also updates URL to expose query string
      * @name setCaseSearchFilter
-     * @param {object} obj An object with key/value pairs corresponding to the property change. `key` is always a String
-     * @example this.$store.commit('setCaseSearchFilter', { key: 'case_worker', val: 4 })
+     * @param {object} obj An object with value pairs corresponding to the property change.
+     * @example this.$store.commit('setCaseSearchFilter', { 'case_worker': 4 })
      * @memberof state_case
      */
     setCaseSearchFilter(state, obj) {

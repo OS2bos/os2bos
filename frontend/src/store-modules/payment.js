@@ -156,8 +156,8 @@ const mutations = {
      * Set value of a property in state.filters
      * Also updates URL to expose query string
      * @name setPaymentSearchFilter
-     * @param {object} obj An object with key/value pairs corresponding to the property change. `key` is always a String
-     * @example this.$store.commit('setPaymentSearchFilter', { key: 'payment_method', val: INVOICE })
+     * @param {object} obj An object with value pairs corresponding to the property change.
+     * @example this.$store.commit('setPaymentSearchFilter', {'payment_method': INVOICE})
      * @memberof state_payment
      */
     setPaymentSearchFilter(state, obj) {
