@@ -35,7 +35,7 @@
                     <label for="field-case-worker">Sagsbehandler</label>
                     <list-picker 
                         v-if="users"
-                        :dom-id="'field-case-worker'" 
+                        :dom-id="'field-case-worker'"
                         :selected-id="case_worker"
                         :list="users"
                         @selection="changeCaseWorker"
@@ -129,6 +129,13 @@ export default {
             return this.$store.getters.getCaseSearchFilter('case_worker', this.user.id)
         }
     },
+    watch: {
+        user: function(new_user, old_user) {
+            if (new_user !== old_user) {
+                this.updateUser()
+            }
+        }
+    },
     methods: {
         resetValues: function() {
             // Use the store action to reset values
@@ -156,6 +163,14 @@ export default {
                 this.$store.commit('setCaseSearchFilter', {'case_worker__team': selection})
                 this.$store.dispatch('fetchCases')
             }
+        },
+        updateUser: function() {
+            // Start out by setting a default case worker unless a case worker has already been set
+            // and getting a list of cases with only initial filters set.
+            if (!this.case_worker) { 
+                this.$store.commit('setCaseSearchFilter', {'case_worker': this.user.id})
+                this.$store.dispatch('fetchCases')
+            } 
         }
     },
     created: function() {
@@ -170,11 +185,8 @@ export default {
             this.$store.commit('setCaseSearchFilter', qry)
         }
 
-        // Start out by setting a default case worker unless a case worker has already been set
-        // and getting a list of cases with only initial filters set.
-        if (!this.case_worker) {
-            this.$store.commit('setCaseSearchFilter', {'case_worker': this.user.id})
-        }
+        // Start out by setting a case worker
+        this.updateUser()
 
         this.$store.dispatch('fetchCases')
     }
