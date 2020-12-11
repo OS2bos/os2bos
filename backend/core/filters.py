@@ -24,8 +24,17 @@ from core.models import (
     Section,
     Appropriation,
     ActivityDetails,
+    User,
     MAIN_ACTIVITY,
 )
+
+
+class UserForCaseFilter(filters.FilterSet):
+    """Filter cases on case worker team."""
+
+    class Meta:
+        model = User
+        fields = {"team": ["exact"]}
 
 
 class CaseFilter(filters.FilterSet):
@@ -33,6 +42,12 @@ class CaseFilter(filters.FilterSet):
 
     expired = filters.BooleanFilter(
         method="filter_expired", label=gettext("Udgået")
+    )
+    case_worker = filters.RelatedFilter(
+        UserForCaseFilter,
+        field_name="case_worker",
+        label=gettext("Sagsbehandler"),
+        queryset=User.objects.all(),
     )
 
     class Meta:
@@ -62,9 +77,9 @@ class CaseForAppropriationFilter(filters.FilterSet):
         model = Case
         fields = {
             "cpr_number": ["exact"],
-            "team": ["exact"],
             "case_worker": ["exact"],
             "sbsys_id": ["exact"],
+            "case_worker__team": ["exact"],
         }
 
 

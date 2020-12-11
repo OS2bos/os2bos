@@ -61,12 +61,14 @@ class BasicTestMixin:
     @classmethod
     def basic_setup(cls):
         cls.case_worker, _ = User.objects.get_or_create(
-            username="Orla Frøsnapper"
+            username="Orla Frøsnapper",
         )
         _set_current_user(cls.case_worker)
         cls.team, _ = Team.objects.get_or_create(
             name="FCK", leader=cls.case_worker
         )
+        cls.case_worker.team = cls.team
+        cls.case_worker.save()
         cls.municipality, _ = Municipality.objects.get_or_create(
             name="København"
         )
@@ -77,7 +79,6 @@ class BasicTestMixin:
 
 def create_case(
     case_worker,
-    team,
     municipality,
     district,
     sbsys_id="13212",
@@ -94,7 +95,6 @@ def create_case(
         cpr_number=cpr_number,
         name="Jens Jensen",
         case_worker=case_worker,
-        team=team,
         scaling_step=scaling_step,
         effort_step=effort_step,
         acting_municipality=municipality,
@@ -106,9 +106,7 @@ def create_case(
     return case
 
 
-def create_case_as_json(
-    case_worker, team, municipality, district, sbsys_id="13212"
-):
+def create_case_as_json(case_worker, municipality, district, sbsys_id="13212"):
     json = {
         "sbsys_id": "xxx-yyyx",
         "cpr_number": "1112130014",
@@ -117,7 +115,6 @@ def create_case_as_json(
         "refugee_integration": True,
         "cross_department_measure": True,
         "case_worker": case_worker.id,
-        "team": team.id,
         "scaling_step": 1,
         "effort_step": 1,
         "district": district.id,

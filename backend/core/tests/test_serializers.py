@@ -54,9 +54,7 @@ class AppropriationSerializerTestCase(TestCase, BasicTestMixin):
         cls.basic_setup()
 
     def test_get_activities_excludes_deleted(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
 
         activity = create_activity(case=case, appropriation=appropriation)
@@ -83,9 +81,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         activity_details = ActivityDetails.objects.create(
             max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
         )
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         # start_date > end_date
         data = {
@@ -107,9 +103,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         activity_details = ActivityDetails.objects.create(
             max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
         )
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         data = {
             "activity_type": MAIN_ACTIVITY,
@@ -143,9 +137,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         activity_details = ActivityDetails.objects.create(
             max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
         )
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         payment_schedule = create_payment_schedule(
             payment_amount=Decimal("500.0"),
@@ -169,9 +161,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         activity_details = ActivityDetails.objects.create(
             max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
         )
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         payment_schedule = create_payment_schedule(
             payment_amount=Decimal("500.0"),
@@ -195,9 +185,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         activity_details = ActivityDetails.objects.create(
             max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
         )
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         payment_schedule = create_payment_schedule(
             payment_amount=Decimal("500.0"),
@@ -218,9 +206,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         self.assertTrue(is_valid)
 
     def test_validate_expected_success(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         now = timezone.now().date()
         start_date = now - timedelta(days=6)
@@ -271,9 +257,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         self.assertEqual(serializer.errors, {})
 
     def test_validate_no_start_date(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         now = timezone.now().date()
         start_date = now - timedelta(days=6)
@@ -319,9 +303,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         serializer.is_valid()
 
     def test_validate_expected_invalid_date(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         now = timezone.now().date()
         start_date = now - timedelta(days=6)
@@ -371,9 +353,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         serializer.is_valid()
 
     def test_validate_expected_no_modifies_end_date(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         now = timezone.now().date()
         start_date = now + timedelta(1)
@@ -423,9 +403,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         self.assertTrue(is_valid)
 
     def test_validate_expected_no_next_payment(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         start_date = date.today() - timedelta(days=3)
         end_date = date.today() + timedelta(days=2)
@@ -475,9 +453,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         serializer.is_valid()
 
     def test_validate_expected_true_ongoing_with_next_payment(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         start_date = date.today() + timedelta(days=2)
         end_date = date.today() + timedelta(days=4)
@@ -535,9 +511,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             payment_frequency="",
             payment_date=date.today(),
         )
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         start_date = date.today()
         end_date = date.today()
@@ -568,9 +542,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             payment_date=date.today(),
             payment_frequency="",
         )
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         start_date = date.today()
         end_date = date.today() + timedelta(days=1)
@@ -604,9 +576,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             payment_schedule
         ).data
 
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         start_date = date.today()
         end_date = date.today() + timedelta(days=1)
@@ -639,9 +609,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             payment_frequency=PaymentSchedule.MONTHLY,
             payment_day_of_month=31,
         )
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         start_date = date(2020, 1, 1)
         end_date = date(2020, 1, 1)
@@ -679,9 +647,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
             payment_frequency=PaymentSchedule.MONTHLY,
             payment_day_of_month=31,
         )
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         start_date = date(2020, 1, 1)
         end_date = date(2020, 2, 1)
@@ -709,9 +675,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
     def test_validate_monthly_payment_with_for_expected_adjustment(self):
         # Create an "invalid" expected adjustment monthly activity with start
         # and end date on the 23rd and a payment_day_of_month on the 1st.
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
 
         details, unused = ActivityDetails.objects.get_or_create(
@@ -765,9 +729,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
     def test_validate_cash_payment_with_exclusions_disallowed(self):
         # Create an activity with a start_date within two days
         # of a future payment exclusion date.
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
 
         details, unused = ActivityDetails.objects.get_or_create(
@@ -813,9 +775,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
     @freeze_time("2020-01-09")
     def test_validate_cash_payment_in_the_past_disallowed(self):
         # Create an activity with a start_date in the past
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
 
         details, unused = ActivityDetails.objects.get_or_create(
@@ -862,9 +822,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
     def test_validate_cash_payment_with_exclusions_allowed(self):
         # Create an activity with a start_date not within two days
         # of a future payment exclusion date.
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
 
         details, unused = ActivityDetails.objects.get_or_create(
@@ -903,9 +861,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
     @freeze_time("2020-01-08")
     def test_validate_cash_payment_tomorrow_disallowed(self):
         # Create an activity with a start_date of tomorrow
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
 
         details, unused = ActivityDetails.objects.get_or_create(
@@ -950,9 +906,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
     @freeze_time("2020-01-08")
     def test_validate_cash_payment_one_time_tomorrow_disallowed(self):
         # Create an activity with a start_date of tomorrow
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
 
         details, unused = ActivityDetails.objects.get_or_create(
@@ -1000,9 +954,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
     def test_validate_cash_payment_with_two_non_exclusion_days_allowed(self):
         # Today is a Thursday, an activity with a start_date
         # of Monday is allowed.
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
 
         details, unused = ActivityDetails.objects.get_or_create(
@@ -1042,9 +994,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         activity_details = ActivityDetails.objects.create(
             max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
         )
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         data = {
             "activity_type": MAIN_ACTIVITY,
@@ -1074,9 +1024,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         activity_details = ActivityDetails.objects.create(
             max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
         )
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         data = {
             "activity_type": MAIN_ACTIVITY,
@@ -1105,9 +1053,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         activity_details = ActivityDetails.objects.create(
             max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
         )
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         data = {
             "activity_type": MAIN_ACTIVITY,
@@ -1136,9 +1082,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         activity_details = ActivityDetails.objects.create(
             max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
         )
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         data = {
             "activity_type": MAIN_ACTIVITY,
@@ -1167,9 +1111,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         activity_details = ActivityDetails.objects.create(
             max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
         )
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         data = {
             "activity_type": MAIN_ACTIVITY,
@@ -1198,9 +1140,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         activity_details = ActivityDetails.objects.create(
             max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
         )
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
 
         activity = create_activity(
@@ -1231,9 +1171,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         activity_details = ActivityDetails.objects.create(
             max_tolerance_in_percent=10, max_tolerance_in_dkk=1000
         )
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         data = {
             "activity_type": MAIN_ACTIVITY,
@@ -1261,9 +1199,7 @@ class CaseSerializerTestCase(TestCase, BasicTestMixin):
 
     def test_validate_error_no_district_for_family_dept(self):
         # Create initial valid case
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         target_group = create_target_group(
             name="Familieafdelingen", required_fields_for_case="district"
         )
@@ -1282,9 +1218,7 @@ class CaseSerializerTestCase(TestCase, BasicTestMixin):
 
     def test_validate_success_no_district_for_handicap_dept(self):
         # Create initial valid case
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         target_group = create_target_group(
             name="Handicapafdelingen", required_fields_for_case=""
         )
@@ -1299,9 +1233,7 @@ class CaseSerializerTestCase(TestCase, BasicTestMixin):
 
     def test_validate_error_family_dept_partial(self):
         # Create initial valid case
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         data = CaseSerializer(case).data
         # no target_group for partial update
         data.pop("target_group")
@@ -1313,9 +1245,7 @@ class CaseSerializerTestCase(TestCase, BasicTestMixin):
         self.assertTrue(is_valid)
 
     def test_validate_success_effort_step_partial(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         target_group = case.target_group
         target_group.required_fields_for_case = "effort_step"
         target_group.save()
@@ -1329,9 +1259,7 @@ class CaseSerializerTestCase(TestCase, BasicTestMixin):
         self.assertTrue(is_valid)
 
     def test_validate_error_effort_step_partial(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         case.effort_step = None
         case.save()
 
@@ -1683,9 +1611,7 @@ class PaymentSerializerTestCase(TestCase, BasicTestMixin):
         cls.basic_setup()
 
     def test_validate_paid_success(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
 
         activity = create_activity(
@@ -1778,9 +1704,7 @@ class PaymentSerializerTestCase(TestCase, BasicTestMixin):
         )
 
     def test_validate_error_paid_not_allowed_activity_status_not_granted(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
 
         activity = create_activity(
@@ -1810,9 +1734,7 @@ class PaymentSerializerTestCase(TestCase, BasicTestMixin):
         )
 
     def test_create_individual_payment(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         start_date = date.today() - timedelta(days=1)
         end_date = date.today() + timedelta(days=1)
@@ -1857,9 +1779,7 @@ class PaymentSerializerTestCase(TestCase, BasicTestMixin):
         self.assertFalse(nodate_serializer.is_valid())
 
     def test_create_individual_payment_modifies(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         start_date = date.today() + timedelta(days=1)
         end_date = date.today() + timedelta(days=10)
@@ -1914,9 +1834,7 @@ class PaymentSerializerTestCase(TestCase, BasicTestMixin):
         )
 
     def test_edit_granted_payment_not_allowed(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         start_date = date.today() + timedelta(days=1)
         end_date = date.today() + timedelta(days=10)

@@ -18,8 +18,8 @@ const makeQueryString = function(state, show_sensitive_data) {
     if (show_sensitive_data && state.filters.case__cpr_number) {
         q = q + `case__cpr_number=${ state.filters.case__cpr_number }&`
     }
-    if (state.filters.case__team) {
-        q = q + `case__team=${ state.filters.case__team }&`
+    if (state.filters.case__case_worker__team) {
+        q = q + `case__case_worker__team=${ state.filters.case__case_worker__team }&`
     }
     if (state.filters.case__case_worker) {
         q = q + `case__case_worker=${ state.filters.case__case_worker }&`
@@ -45,7 +45,7 @@ const state = {
     filters: {
         case__sbsys_id: null,
         case__cpr_number: null,
-        case__team: null,
+        case__case_worker__team: null,
         case__case_worker: null,
         section: null,
         main_activity__details__id: null
@@ -111,7 +111,7 @@ const mutations = {
         state.filters = {
             case__sbsys_id: null,
             case__cpr_number: null,
-            case__team: null,
+            case__case_worker__team: null,
             case__case_worker: null,
             section: null,
             main_activity__details__id: null

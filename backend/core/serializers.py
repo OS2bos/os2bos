@@ -75,6 +75,9 @@ class CaseSerializer(serializers.ModelSerializer):
     num_ongoing_draft_or_expected_appropriations = (
         serializers.SerializerMethodField()
     )
+    team = serializers.ReadOnlyField(
+        source="case_worker.team.id", default=None
+    )
 
     class Meta:
         model = Case

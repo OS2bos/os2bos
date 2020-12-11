@@ -20,8 +20,8 @@ const makeQueryString = function(state, show_sensitive_data) {
     if (state.filters.expired !== null) {
         q = q + `expired=${ state.filters.expired }&`
     }
-    if (state.filters.team) {
-        q = q + `team=${ state.filters.team }&`
+    if (state.filters.case_worker__team) {
+        q = q + `case_worker__team=${ state.filters.case_worker__team }&`
     }
     if (state.filters.case_worker) {
         q = q + `case_worker=${ state.filters.case_worker }`
@@ -41,7 +41,7 @@ const state = {
         sbsys_id: null,
         cpr_number: null,
         case_worker: null,
-        team: null,
+        case_worker__team: null,
         expired: null
     }
 }
@@ -113,7 +113,7 @@ const mutations = {
             sbsys_id: null,
             cpr_number: null,
             case_worker: null,
-            team: null,
+            case_worker__team: null,
             expired: null
         }
     }

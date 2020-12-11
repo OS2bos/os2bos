@@ -52,9 +52,7 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
         self.assertNotIn(payment, Payment.objects.in_this_year())
 
     def test_in_this_year_true_paid_date(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         activity = create_activity(
             case=case,
@@ -76,9 +74,7 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
         self.assertIn(payment, Payment.objects.in_this_year())
 
     def test_paid_date_or_date_gte(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         activity = create_activity(
             case=case,
@@ -146,9 +142,7 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
         )
 
     def test_paid_date_or_date_lte(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         activity = create_activity(
             case=case,
@@ -216,9 +210,7 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
         )
 
     def test_in_this_year_false_paid_date(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         activity = create_activity(
             case=case,
@@ -262,9 +254,7 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
         self.assertEqual(Payment.objects.amount_sum(), Decimal("1150"))
 
     def test_amount_sum_paid_amount_overrides(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         # Default 10 days of 500DKK.
         activity = create_activity(
@@ -285,9 +275,7 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
         self.assertEqual(Payment.objects.amount_sum(), Decimal("5500"))
 
     def test_strict_amount_sum_paid_amount_does_not_override(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         # Default 10 days of 500DKK.
         activity = create_activity(
@@ -336,9 +324,7 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
         )
 
     def test_group_by_monthly_amounts_paid(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         # 4 payments of 500DKK.
         activity = create_activity(
@@ -378,9 +364,7 @@ class CaseQuerySetTestCase(TestCase, BasicTestMixin):
 
     def test_expired_one_expired_one_ongoing(self):
         now_date = timezone.now().date()
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
 
         # create an expired main activity
@@ -453,9 +437,7 @@ class CaseQuerySetTestCase(TestCase, BasicTestMixin):
 
     def test_expired_all_expired(self):
         now_date = timezone.now().date()
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
 
         # create an expired main activity
@@ -535,9 +517,7 @@ class ActivityQuerySetTestCase(TestCase, BasicTestMixin):
 
     def test_expired(self):
         today = timezone.now().date()
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
 
         expired_activity = create_activity(
@@ -563,9 +543,7 @@ class ActivityQuerySetTestCase(TestCase, BasicTestMixin):
 
     def test_ongoing(self):
         today = timezone.now().date()
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
 
         # create an expired main activity
@@ -592,9 +570,7 @@ class ActivityQuerySetTestCase(TestCase, BasicTestMixin):
 
     def test_ongoing_no_end_date(self):
         today = timezone.now().date()
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
 
         ongoing_activity = create_activity(
@@ -616,9 +592,7 @@ class AppropriationQuerySetTestCase(TestCase, BasicTestMixin):
 
     def test_ongoing(self):
         today = timezone.now().date()
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
 
         self.assertIn(appropriation, Appropriation.objects.ongoing())
@@ -647,9 +621,7 @@ class AppropriationQuerySetTestCase(TestCase, BasicTestMixin):
 
     def test_expired(self):
         today = timezone.now().date()
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
 
         self.assertNotIn(appropriation, Appropriation.objects.expired())

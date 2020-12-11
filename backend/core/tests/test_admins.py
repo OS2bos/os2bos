@@ -277,9 +277,7 @@ class TestActivityAdmin(AuthenticatedTestCase, BasicTestMixin):
 
     def test_account_number(self):
         section = create_section()
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(section=section, case=case)
         activity = create_activity(case=case, appropriation=appropriation)
 
@@ -291,9 +289,7 @@ class TestActivityAdmin(AuthenticatedTestCase, BasicTestMixin):
 
     def test_account_alias(self):
         section = create_section()
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(section=section, case=case)
         activity = create_activity(case=case, appropriation=appropriation)
 

@@ -176,9 +176,7 @@ class SendAppropriationTestCase(TestCase, BasicTestMixin):
     def test_send_appropriation(
         self, get_template_mock, html_mock, message_mock
     ):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -227,9 +225,7 @@ class SendAppropriationTestCase(TestCase, BasicTestMixin):
     def test_send_appropriation_no_included(
         self, get_template_mock, html_mock, message_mock
     ):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -347,7 +343,6 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         case_cpr_number = "1234567890"
         case = create_case(
             self.case_worker,
-            self.team,
             self.municipality,
             self.district,
             cpr_number=case_cpr_number,
@@ -410,9 +405,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         start_date = now - timedelta(days=1)
         end_date = now + timedelta(days=1)
         # Create an activity etc which is required.
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -468,9 +461,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         start_date = now
         end_date = now + timedelta(days=14)
         # Create an activity etc which is required.
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -520,9 +511,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         start_date = now
         end_date = now + timedelta(days=14)
         # Create an activity etc which is required.
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -577,9 +566,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         start_date = now
         end_date = now + timedelta(days=14)
         # Create an activity etc which is required.
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -649,9 +636,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         start_date = now
         end_date = now + timedelta(days=14)
         # Create an activity etc which is required.
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -759,9 +744,7 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         start_date = now
         end_date = now + timedelta(days=5)
 
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         create_related_person(case, "far test", "far", "1111111111")
         create_related_person(case, "mor test", "mor", "2222222222")
         section = create_section()
@@ -865,9 +848,7 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         start_date = now
         end_date = now + timedelta(days=5)
 
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -921,9 +902,7 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         start_date = now
         end_date = now + timedelta(days=5)
 
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -980,7 +959,7 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
             start_date = now
             end_date = now + timedelta(days=5)
             case = create_case(
-                self.case_worker, self.team, self.municipality, self.district
+                self.case_worker, self.municipality, self.district
             )
             section = create_section()
             appropriation = create_appropriation(
@@ -1041,9 +1020,7 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         now = timezone.now().date()
         start_date = now
         end_date = now + timedelta(days=5)
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section

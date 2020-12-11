@@ -1034,13 +1034,6 @@ class Case(AuditModelMixin, models.Model):
         related_name="cases",
         on_delete=models.PROTECT,
     )
-    team = models.ForeignKey(
-        Team,
-        verbose_name=_("team"),
-        related_name="cases",
-        on_delete=models.PROTECT,
-        blank=True,
-    )
     district = models.ForeignKey(
         SchoolDistrict,
         related_name="cases",
