@@ -158,6 +158,13 @@
                 return this.$store.getters.getAppropriationSearchFilter('main_activity__details__id')
             }
         },
+        watch: {
+            user: function(new_val, old_user) {
+                if (new_val !== old_user) {
+                    this.updateUser()
+                }
+            }
+        },
         methods: {
             resetValues: function() {
                 // Use the store action to reset values
@@ -201,6 +208,14 @@
                     this.$store.commit('setAppropriationSearchFilter', {'main_activity__details__id': selection})
                     this.$store.dispatch('fetchAppropriations')
                 }
+            },
+            updateUser: function() {
+                // Start out by setting a default case worker unless a case worker has already been set
+                // and getting a list of appropriations with only initial filters set.
+                if (!this.case__case_worker) {
+                    this.$store.commit('setAppropriationSearchFilter', {'case__case_worker': this.user.id})
+                    this.$store.dispatch('fetchAppropriations')
+                }
             }
         },
         created: function() {
@@ -215,11 +230,8 @@
                 this.$store.commit('setAppropriationSearchFilter', qry)
             }
 
-            // Start out by setting a default case worker unless a case worker has already been set
-            // and getting a list of appropriations with only initial filters set.
-            if (!this.case__case_worker) {
-                this.$store.commit('setAppropriationSearchFilter', {'case__case_worker': this.user.id})
-            }
+            // Start out by setting a case worker
+            this.updateUser()
 
             this.$store.dispatch('fetchAppropriations')
         }
