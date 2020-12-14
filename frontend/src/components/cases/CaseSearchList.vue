@@ -176,7 +176,11 @@
                 return str
             },
             displayUserTeam: function(id) {
-                return `${ userId2name(id.case_worker) }<dl><dt>Team</dt><dd>${ teamId2name(id.team).name }</dd></dl>`
+                let str = `${ userId2name(id.case_worker) }`
+                if (id.team) {
+                    str += `<dl><dt>Team</dt><dd>${ teamId2name(id.team).name }</dd></dl>`
+                }
+                return str
             },
             moveCases: function() {
                 let pks = []
