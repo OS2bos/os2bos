@@ -52,10 +52,6 @@ from core.proxies import (
     HistoricalRatePerDateProxy,
 )
 
-for klass in (PaymentMethodDetails, Team):
-    admin.site.register(klass, admin.ModelAdmin)
-
-
 User = get_user_model()
 
 
@@ -413,8 +409,20 @@ class PaymentScheduleAdmin(admin.ModelAdmin):
     account_alias.short_description = _("kontoalias")
 
 
+@admin.register(PaymentMethodDetails)
+class PaymentMethodDetails(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Team)
+class TeamAdmin(ClassificationAdmin):
+    """ModelAdmin for Team"""
+
+    pass
+
+
 @admin.register(User)
-class CustomUserAdmin(BaseUserAdmin):
+class CustomUserAdmin(ClassificationAdmin, BaseUserAdmin):
     """Add team to user admin interface."""
 
     fieldsets = (
