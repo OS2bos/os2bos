@@ -418,7 +418,7 @@ class PaymentMethodDetails(admin.ModelAdmin):
 
 @admin.register(Team)
 class TeamAdmin(ClassificationAdmin):
-    """ModelAdmin for Team"""
+    """ModelAdmin for Team."""
 
     pass
 
