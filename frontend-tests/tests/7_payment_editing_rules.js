@@ -232,6 +232,13 @@ test('Check that normal user can register payment under certain circumstances', 
 
         .click(Selector('a').withText(testdata.appr1.name))
         .click(Selector('a').withText(testdata.act4.details__name))
+        // Select act4 start_date year for list of payments.
+        .click(Selector('#field-year-picker'))
+        .click(Selector('#field-year-picker')
+            .find('option')
+            .withText(testdata.act4.start_date.substring(0,4))
+        )
+
         .expect(Selector('td input.field-amount').exists).ok()
         .expect(Selector('td input[type="date"]').exists).ok()
         .typeText(Selector('td input.field-amount').nth(0), '200', {replace: true})
@@ -266,6 +273,14 @@ test('Check that improved user can register payment at all times', async t => {
 
         .click(Selector('a').withText(testdata.appr1.name))
         .click(Selector('a').withText(testdata.act4.details__name))
+
+        // Select act4 start_date year for list of payments.
+        .click(Selector('#field-year-picker'))
+        .click(Selector('#field-year-picker')
+            .find('option')
+            .withText(testdata.act4.start_date.substring(0,4))
+        )
+
         .expect(Selector('td input.field-amount').exists).ok()
         .expect(Selector('td input[type="date"]').exists).ok()
         .typeText(Selector('td input.field-amount').nth(0), '200', {replace: true})
