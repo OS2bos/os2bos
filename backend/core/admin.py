@@ -411,6 +411,8 @@ class PaymentScheduleAdmin(admin.ModelAdmin):
 
 @admin.register(PaymentMethodDetails)
 class PaymentMethodDetails(admin.ModelAdmin):
+    """ModelAdmin for PaymentMethodDetails."""
+
     pass
 
 
