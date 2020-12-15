@@ -37,7 +37,7 @@ class PaymentQuerySet(models.QuerySet):
     """
 
     # Case for using paid_date if available, else date.
-    date_case = Case(
+    paid_date_or_date_case = Case(
         When(paid_date__isnull=False, then="paid_date"),
         When(date__isnull=False, then="date"),
         default="date",
@@ -50,16 +50,20 @@ class PaymentQuerySet(models.QuerySet):
         output_field=DecimalField(),
     )
 
+    def annotate_paid_date_or_date(self):
+        """Annotate all payments with paid date or payment date."""
+        return self.annotate(paid_date_or_date=self.paid_date_or_date_case)
+
     def paid_date_or_date_gte(self, date):
         """Return all payments with paid date or payment date >= date."""
-        return self.annotate(relevant_date=self.date_case).filter(
-            relevant_date__gte=date
+        return self.annotate_paid_date_or_date().filter(
+            paid_date_or_date__gte=date
         )
 
     def paid_date_or_date_lte(self, date):
         """Return all payments with paid date or payment date <= date."""
-        return self.annotate(relevant_date=self.date_case).filter(
-            relevant_date__lte=date
+        return self.annotate_paid_date_or_date().filter(
+            paid_date_or_date__lte=date
         )
 
     def strict_amount_sum(self):
@@ -101,10 +105,15 @@ class PaymentQuerySet(models.QuerySet):
         return (
             self.annotate(
                 date_month=Concat(
-                    Cast(ExtractYear(self.date_case), CharField()),
+                    Cast(
+                        ExtractYear(self.paid_date_or_date_case), CharField()
+                    ),
                     Value("-", CharField()),
                     LPad(
-                        Cast(ExtractMonth(self.date_case), CharField()),
+                        Cast(
+                            ExtractMonth(self.paid_date_or_date_case),
+                            CharField(),
+                        ),
                         2,
                         fill_text=Value("0"),
                     ),
