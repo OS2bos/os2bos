@@ -424,7 +424,7 @@ class TeamAdmin(ClassificationAdmin):
 
 
 @admin.register(User)
-class CustomUserAdmin(ClassificationAdmin, BaseUserAdmin):
+class CustomUserAdmin(BaseUserAdmin):
     """Add team to user admin interface."""
 
     fieldsets = (
