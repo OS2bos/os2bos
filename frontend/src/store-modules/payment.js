@@ -26,6 +26,15 @@ const makeQueryString = function(state, show_sensitive_data) {
     if (state.filters.interval) {
         q = q + `interval=${ state.filters.interval }&`
     }
+    if (state.filters.paid_date_or_date_week) {
+        q = q + `paid_date_or_date_week=${ state.filters.paid_date_or_date_week }&`
+    }
+    if (state.filters.paid_date_or_date_month) {
+        q = q + `paid_date_or_date_month=${ state.filters.paid_date_or_date_month }&`
+    }
+    if (state.filters.paid_date_or_date_year) {
+        q = q + `paid_date_or_date_year=${ state.filters.paid_date_or_date_year }&`
+    }
     if (state.filters.paid_date_or_date__gte) {
         q = q + `paid_date_or_date__gte=${ state.filters.paid_date_or_date__gte }&`
     }
@@ -53,6 +62,9 @@ const state = {
         recipient_id: null,
         payment_method: null,
         interval: null,
+        paid_date_or_date_week: null,
+        paid_date_or_date_month: null,
+        paid_date_or_date_year: null,
         paid_date_or_date__gte: null,
         paid_date_or_date__lte: null,
         paid: null

@@ -5,29 +5,17 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
- import { 
-     getWeekDay, 
-     firstDayMonth, 
-     lastDayMonth, 
-     firstOfPreviousMonth, 
-     lastOfPreviousMonth, 
-     firstOfNextMonth, 
-     lastOfNextMonth,
-     firstOfCurrentYear,
-     lastOfCurrentYear
-    } from '../filters/Date.js'
-
  export default {
 
   data: function() {
     return {
         intervals: [
             {
-                id: 'this-week',
+                id: 'current-week',
                 name: 'Denne uge',
             },
             {
-                id: 'last-week',
+                id: 'previous-week',
                 name: 'Sidste uge',
             },
             {
@@ -35,11 +23,11 @@
                 name: 'Næste uge',
             },
             {
-                id: 'this-month',
+                id: 'current-month',
                 name: 'Denne måned',
             },
             {
-                id: 'last-month',
+                id: 'previous-month',
                 name: 'Sidste måned',
             },
             {
@@ -47,8 +35,16 @@
                 name: 'Næste måned',
             },
             {
-                id: 'this-year',
+                id: 'current-year',
                 name: 'Dette år',
+            },
+            {
+                id: 'previous-year',
+                name: 'Sidste år',
+            },
+            {
+                id: 'next-year',
+                name: 'Næste år',
             },
             {
                 id: 'date-range',
@@ -63,39 +59,58 @@
         this.range_dates = false
 
         // Current week //
-        if (interval === 'this-week') {
-            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date__gte': getWeekDay(0)})
-            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date__lte': getWeekDay(-6)})
+        if (interval === 'current-week') {
+            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date_week': 'current'})
+            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date_month': ''})
+            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date_year': ''})
         }
         // Previous week //
-        else if (interval === 'last-week') {
-            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date__gte': getWeekDay(7)})
-            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date__lte': getWeekDay(1)})
+        else if (interval === 'previous-week') {
+            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date_week': 'previous'})
+            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date_month': ''})
+            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date_year': ''})
         }
         // Next week //
         else if (interval === 'next-week') {
-            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date__gte': getWeekDay(-7)})
-            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date__lte': getWeekDay(-13)})
+            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date_week': 'next'})
+            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date_month': ''})
+            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date_year': ''})
         }
         // Current month //
-        else if (interval === 'this-month') {
-            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date__gte': firstDayMonth()})
-            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date__lte': lastDayMonth()})
+        else if (interval === 'current-month') {
+            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date_month': 'current'})
+            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date_week': ''})
+            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date_year': ''})
         }
         // Previous month //
-        else if (interval === 'last-month') {
-            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date__gte': firstOfPreviousMonth()})
-            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date__lte': lastOfPreviousMonth()})
+        else if (interval === 'previous-month') {
+            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date_month': 'previous'})
+            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date_week': ''})
+            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date_year': ''})
         }
         // Next month //
         else if (interval === 'next-month') {
-            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date__gte': firstOfNextMonth()})
-            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date__lte': lastOfNextMonth()})
+            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date_month': 'next'})
+            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date_week': ''})
+            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date_year': ''})
         }
         // Current year //
-        else if (interval === 'this-year') {
-            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date__gte': firstOfCurrentYear()})
-            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date__lte': lastOfCurrentYear()})
+        else if (interval === 'current-year') {
+            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date_year': 'current'})
+            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date_month': ''})
+            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date_week': ''})
+        }
+        // Previous year //
+        else if (interval === 'previous-year') {
+            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date_year': 'previous'})
+            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date_month': ''})
+            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date_week': ''})
+        }
+        // Next year //
+        else if (interval === 'next-year') {
+            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date_year': 'next'})
+            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date_month': ''})
+            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date_week': ''})
         }
         // Range of dates //
         else if (interval === 'date-range') {
@@ -104,8 +119,7 @@
             this.range_dates = true
         }
         else {
-            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date__gte': ''})
-            this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date__lte': ''})
+            this.$store.commit('setPaymentSearchFilter', {})
         }
         if (this.interval !== interval && this.interval || interval) {
             this.$store.commit('setPaymentSearchFilter', {'interval': interval})

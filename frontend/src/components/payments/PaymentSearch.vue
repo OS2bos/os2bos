@@ -168,22 +168,25 @@
                 // `interval` only has a getter. values are updated via changeTimeInterval method in listpicker component
                 return this.$store.getters.getPaymentSearchFilter('interval')
             },
-            paid_date_or_date__gte: {
-                get: function() {
-                    return this.$store.getters.getPaymentSearchFilter('paid_date_or_date__gte')
-                }, 
-                set: function(new_val) {
-                    this.commitValue('paid_date_or_date__gte', new_val)
-                }
+            paid_date_or_date_week: function() {
+                // `paid_date_or_date_week` only has a getter. values are updated via changeTimeInterval method in listpicker component
+                return this.$store.getters.getPaymentSearchFilter('paid_date_or_date_week')
             },
-            paid_date_or_date__lte: {
-                // `interval` only has a getter. values are updated via changeTimeInterval method in listpicker component
-                get: function() {
-                    return this.$store.getters.getPaymentSearchFilter('paid_date_or_date__lte')
-                }, 
-                set: function(new_val) {
-                    this.commitValue('paid_date_or_date__lte', new_val)
-                }
+            paid_date_or_date_month: function() {
+                // `paid_date_or_date_month` only has a getter. values are updated via changeTimeInterval method in listpicker component
+                return this.$store.getters.getPaymentSearchFilter('paid_date_or_date_month')
+            },
+            paid_date_or_date_year: function() {
+                // `paid_date_or_date_year` only has a getter. values are updated via changeTimeInterval method in listpicker component
+                return this.$store.getters.getPaymentSearchFilter('paid_date_or_date_year')
+            },
+            paid_date_or_date__gte: function() {
+                // `paid_date_or_date__gte` only has a getter. values are updated via changeTimeInterval method in listpicker component
+                return this.$store.getters.getPaymentSearchFilter('paid_date_or_date__gte')
+            },
+            paid_date_or_date__lte: function() {
+                // `paid_date_or_date__lte` only has a getter. values are updated via changeTimeInterval method in listpicker component
+                return this.$store.getters.getPaymentSearchFilter('paid_date_or_date__lte')
             },
             paid: {
                 get: function() {
@@ -236,7 +239,7 @@
 
             // On first load, check URL params and set store filters accordingly
             const qry = this.$route.query
-            if (qry.payment_schedule__payment_id || qry.recipient_id || qry.payment_method || qry.interval || qry.paid_date_or_date__gte || qry.paid_date_or_date__lte || qry.hasOwnProperty('paid') && qry.paid !== null) {
+            if (qry.payment_schedule__payment_id || qry.recipient_id || qry.payment_method || qry.interval || qry.paid_date_or_date_week || qry.paid_date_or_date_month || qry.paid_date_or_date_year || qry.paid_date_or_date__gte || qry.paid_date_or_date__lte || qry.hasOwnProperty('paid') && qry.paid !== null) {
                 this.$store.commit('setPaymentSearchFilter', qry)
             }
 
