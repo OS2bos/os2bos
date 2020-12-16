@@ -201,7 +201,7 @@ const actions = {
         let q = ''
         q = makeQueryString(state, true)
 
-        axios.get(`/payments/?${ q }&activity__status=GRANTED`)
+        axios.get(`/payments/?${ q }activity__status=GRANTED`)
         .then(res => {
             commit('setPaymentsMeta', res.data)
             commit('setPayments', res.data.results)
