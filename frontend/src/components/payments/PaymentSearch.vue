@@ -180,13 +180,21 @@
                 // `paid_date_or_date_year` only has a getter. values are updated via changeTimeInterval method in listpicker component
                 return this.$store.getters.getPaymentSearchFilter('paid_date_or_date_year')
             },
-            paid_date_or_date__gte: function() {
-                // `paid_date_or_date__gte` only has a getter. values are updated via changeTimeInterval method in listpicker component
-                return this.$store.getters.getPaymentSearchFilter('paid_date_or_date__gte')
+            paid_date_or_date__gte: {
+                get: function() {
+                    return this.$store.getters.getPaymentSearchFilter('paid_date_or_date__gte')
+                }, 
+                set: function(new_val) {
+                    this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date__gte': new_val})
+                }
             },
-            paid_date_or_date__lte: function() {
-                // `paid_date_or_date__lte` only has a getter. values are updated via changeTimeInterval method in listpicker component
-                return this.$store.getters.getPaymentSearchFilter('paid_date_or_date__lte')
+            paid_date_or_date__lte: {
+                get: function() {
+                    return this.$store.getters.getPaymentSearchFilter('paid_date_or_date__lte')
+                }, 
+                set: function(new_val) {
+                    this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date__lte': new_val})
+                }
             },
             paid: {
                 get: function() {
