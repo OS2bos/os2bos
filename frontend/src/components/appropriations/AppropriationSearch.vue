@@ -168,7 +168,8 @@
         methods: {
             resetValues: function() {
                 // Use the store action to reset values
-                this.$store.dispatch('resetAppropriationSearchFilters')
+                this.$store.dispatch('resetAppropriationSearchFilters', this.user.id)
+                this.$store.commit('setAppropriationSearchFilter', {})
             },
             commitValue: function(key, val) {
                 // Handy helper method that both updates the value in store, 
@@ -228,12 +229,12 @@
             const qry = this.$route.query
             if (qry.case__sbsys_id || qry.case__case_worker__team || qry.case__case_worker || qry.section || qry.main_activity__details__id) {
                 this.$store.commit('setAppropriationSearchFilter', qry)
+                this.$store.dispatch('fetchAppropriations')
             }
 
             // Start out by setting a case worker
             this.updateUser()
 
-            this.$store.dispatch('fetchAppropriations')
         }
     }
     

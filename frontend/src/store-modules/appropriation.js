@@ -107,12 +107,12 @@ const mutations = {
      * @example this.$store.commit('clearAppropriationSearchFilters')
      * @memberof state_appropriation
      */
-    clearAppropriationSearchFilters (state) {
+    clearAppropriationSearchFilters (state, userId) {
         state.filters = {
             case__sbsys_id: null,
             case__cpr_number: null,
             case__case_worker__team: null,
-            case__case_worker: null,
+            case__case_worker: userId,
             section: null,
             main_activity__details__id: null
         }
@@ -180,8 +180,8 @@ const actions = {
      * @example this.$store.dispatch('resetAppropriationSearchFilters')
      * @memberof state_appropriation
      */
-    resetAppropriationSearchFilters: function({commit, dispatch}) {
-        commit('clearAppropriationSearchFilters')
+    resetAppropriationSearchFilters: function({commit, dispatch}, userId) {
+        commit('clearAppropriationSearchFilters', userId)
         dispatch('fetchAppropriations')
     }
 }
