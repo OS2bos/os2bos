@@ -67,11 +67,13 @@
     import PermissionLogic from '../mixins/PermissionLogic.js'
     import { json2js } from '../filters/Date.js'
     import { targetGroupId2name, districtId2name, displayEffort, userId2name, teamId2name } from '../filters/Labels.js'
+    import ListPicker from '../forms/ListPicker.vue'
 
     export default {
         components: {
             DataGrid,
-            DialogBox
+            DialogBox,
+            ListPicker
         },
         mixins: [
             PermissionLogic

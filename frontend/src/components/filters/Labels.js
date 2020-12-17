@@ -179,7 +179,11 @@ function userId2name(id) {
         let user = user_list.find(function(u) {
             return u.id === parseInt(id);
         })
-        return user.fullname
+        if (user) {
+            return user.fullname
+        } else if (!user) {
+            return '-'
+        }
     } else {
         return 'Ikke tilgængelig'
     }
@@ -219,9 +223,16 @@ function teamId2name(id) {
         let team = team_list.find(function(element) {
             return element.id === parseInt(id);
         })
-        return {
-            name: team.name,
-            leader: team.leader
+        if (team) {
+            return {
+                name: team.name,
+                leader: team.leader
+            }
+        } else if (!team){
+            return {
+                name: '-',
+                leader: '-'
+            }
         }
     } else {
         return 'Ikke tilgængelig'

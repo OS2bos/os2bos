@@ -108,11 +108,11 @@ const mutations = {
      * @example this.$store.commit('clearCaseSearchFilters')
      * @memberof state_case
      */
-    clearCaseSearchFilters (state) {
+    clearCaseSearchFilters (state, userId) {
         state.filters = {
             sbsys_id: null,
             cpr_number: null,
-            case_worker: null,
+            case_worker: userId,
             case_worker__team: null,
             expired: null
         }
@@ -158,8 +158,8 @@ const actions = {
      * @example this.$store.dispatch('resetCaseSearchFilters')
      * @memberof state_case
      */
-    resetCaseSearchFilters: function({commit, dispatch}) {
-        commit('clearCaseSearchFilters')
+    resetCaseSearchFilters: function({commit, dispatch}, userId) {
+        commit('clearCaseSearchFilters', userId)
         dispatch('fetchCases')
     }
 }

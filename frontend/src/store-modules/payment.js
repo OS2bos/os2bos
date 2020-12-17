@@ -170,13 +170,13 @@ const mutations = {
      * @example this.$store.commit('clearPaymentSearchFilters')
      * @memberof state_payment
      */
-    clearPaymentSearchFilters (state) {
+    clearPaymentSearchFilters (state, IntervalId) {
         state.filters = {
             payment_schedule__payment_id: null,
             case__cpr_number: null,
             recipient_id: null,
             payment_method: null,
-            interval: null,
+            interval: IntervalId,
             paid_date_or_date__gte: null,
             paid_date_or_date__lte: null,
             paid: null
@@ -252,8 +252,8 @@ const actions = {
      * @example this.$store.dispatch('resetPaymentSearchFilters')
      * @memberof state_payment
      */
-    resetPaymentSearchFilters: function({commit, dispatch}) {
-        commit('clearPaymentSearchFilters')
+    resetPaymentSearchFilters: function({commit, dispatch}, IntervalId) {
+        commit('clearPaymentSearchFilters', IntervalId)
         dispatch('fetchPayments')
     }
 }

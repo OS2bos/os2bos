@@ -126,7 +126,7 @@ export default {
         },
         case_worker: function() {
             // `case_worker` only has a getter. values are updated via changeCaseWorker method in listpicker component
-            return this.$store.getters.getCaseSearchFilter('case_worker', this.user.id)
+            return this.$store.getters.getCaseSearchFilter('case_worker')
         }
     },
     watch: {
@@ -139,7 +139,9 @@ export default {
     methods: {
         resetValues: function() {
             // Use the store action to reset values
-            this.$store.dispatch('resetCaseSearchFilters')
+            this.$store.dispatch('resetCaseSearchFilters', this.user.id)
+            this.$store.commit('setCaseSearchFilter', {})
+            location.reload()
         },
         commitValue: function(key, val) {
             // Handy helper method that both updates the value in store, 
