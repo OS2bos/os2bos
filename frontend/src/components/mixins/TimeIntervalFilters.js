@@ -119,7 +119,6 @@
         } else if (!this.interval) {
             this.$store.commit('setPaymentSearchFilter', {'interval': 'date-range'})
             this.range_dates = true
-            this.$store.dispatch('fetchPayments')
         }
     }
   }

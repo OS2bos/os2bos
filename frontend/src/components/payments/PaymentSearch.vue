@@ -249,6 +249,7 @@
             const qry = this.$route.query
             if (qry.payment_schedule__payment_id || qry.recipient_id || qry.payment_method || qry.interval || qry.paid_date_or_date_week || qry.paid_date_or_date_month || qry.paid_date_or_date_year || qry.paid_date_or_date__gte || qry.paid_date_or_date__lte || qry.hasOwnProperty('paid') && qry.paid !== null) {
                 this.$store.commit('setPaymentSearchFilter', qry)
+                this.$store.dispatch('fetchPayments')
             }
 
             // Show 'range_dates' if interval is 'date-range'
@@ -256,7 +257,6 @@
                 this.range_dates = true
             }
 
-            this.$store.dispatch('fetchPayments')
         }
     }
 
