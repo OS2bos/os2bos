@@ -170,6 +170,7 @@
                 // Use the store action to reset values
                 this.$store.dispatch('resetAppropriationSearchFilters', this.user.id)
                 this.$store.commit('setAppropriationSearchFilter', {})
+                location.reload()
             },
             commitValue: function(key, val) {
                 // Handy helper method that both updates the value in store, 

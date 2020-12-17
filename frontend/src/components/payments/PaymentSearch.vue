@@ -203,7 +203,9 @@
         methods: {
             resetValues: function() {
                 // Use the store action to reset values
-                this.$store.dispatch('resetPaymentSearchFilters')
+                this.$store.dispatch('resetPaymentSearchFilters', 'date-range')
+                this.$store.commit('setPaymentSearchFilter', {})
+                location.reload()
             },
             commitValue: function(key, val) {
                 // Handy helper method that both updates the value in store, 
