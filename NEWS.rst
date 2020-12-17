@@ -1,3 +1,31 @@
+Version 3.3.0, 2020-12-17
+-------------------------
+
+New in this version:
+
+Features
+^^^^^^^^
+
+- Add redirect after SSO login.
+- Save filters across page transitions.
+- Save filters in URL to make them bookmarkable.
+- Change "reset" functionality of overview pages.
+- Remove unneeded Team on Case and instead display and filter on Team of the case worker.
+- Validate CVR number for recipient_id on PaymentSchedule when recipient is "Firma".
+- Add generic time intervals for payments (previous, current, next - week, month, year).
+- Added fields to payments report.
+- Changed the flow of emails when manipulating activities.
+- Add child name to CPR number of Payments overview.
+- Add Users and Teams to workflow users Admin page.
+- Update third party dependencies.
+
+Bug fixes
+^^^^^^^^^
+
+- Fix a bug where updating a payment caused a PATCH twice.
+- Various fixes to frontend tests.
+
+
 Version 3.2.5, 2020-12-02
 -------------------------
 
