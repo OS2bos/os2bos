@@ -264,9 +264,8 @@ const actions = {
      * @example this.$store.dispatch('resetPaymentSearchFilters')
      * @memberof state_payment
      */
-    resetPaymentSearchFilters: function({commit, dispatch}, IntervalId) {
+    resetPaymentSearchFilters: function({commit}, IntervalId) {
         commit('clearPaymentSearchFilters', IntervalId)
-        dispatch('fetchPayments')
     }
 }
 
