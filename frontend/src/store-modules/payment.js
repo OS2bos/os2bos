@@ -42,7 +42,7 @@ const makeQueryString = function(state, show_sensitive_data) {
         q = q + `paid_date_or_date__lte=${ state.filters.paid_date_or_date__lte }&`
     }
     if (state.filters.paid !== null) {
-        q = q + `paid=${ state.filters.paid }`
+        q = q + `paid=${ state.filters.paid }&`
     }
     return q
 }
