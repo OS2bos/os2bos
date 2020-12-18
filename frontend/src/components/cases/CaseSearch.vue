@@ -172,7 +172,7 @@ export default {
             if (!this.case_worker) { 
                 this.$store.commit('setCaseSearchFilter', {'case_worker': this.user.id})
             } 
-            this.$store.dispatch('fetchCases')
+            this.$store.dispatch('fetchCases', this.$route.query)
         }
     },
     created: function() {

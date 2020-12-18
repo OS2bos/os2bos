@@ -216,7 +216,7 @@
                 // and getting a list of appropriations with only initial filters set.
                 if (!this.case__case_worker) {
                     this.$store.commit('setAppropriationSearchFilter', {'case__case_worker': this.user.id})
-                    this.$store.dispatch('fetchAppropriations')
+                    this.$store.dispatch('fetchAppropriations', this.$route.query)
                 }
             }
         },
