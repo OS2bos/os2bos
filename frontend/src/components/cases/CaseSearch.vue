@@ -171,8 +171,8 @@ export default {
             // and getting a list of cases with only initial filters set.
             if (!this.case_worker) { 
                 this.$store.commit('setCaseSearchFilter', {'case_worker': this.user.id})
+                this.$store.dispatch('fetchCases', this.$route.query)
             } 
-            this.$store.dispatch('fetchCases', this.$route.query)
         }
     },
     created: function() {
