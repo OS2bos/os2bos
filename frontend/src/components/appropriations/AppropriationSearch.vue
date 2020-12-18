@@ -214,7 +214,7 @@
             updateUser: function() {
                 // Start out by setting a default case worker unless a case worker has already been set
                 // and getting a list of appropriations with only initial filters set.
-                if (!this.case__case_worker) {
+                if (!this.case__case_worker && this.user.id) {
                     this.$store.commit('setAppropriationSearchFilter', {'case__case_worker': this.user.id})
                     this.$store.dispatch('fetchAppropriations', this.$route.query)
                 }
