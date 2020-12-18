@@ -83,6 +83,12 @@ class CaseSerializer(serializers.ModelSerializer):
         model = Case
         fields = "__all__"
 
+    @staticmethod
+    def setup_eager_loading(queryset):
+        """Set up eager loading for improved performance."""
+        queryset = queryset.select_related("case_worker__team")
+        return queryset
+
     def get_num_ongoing_appropriations(self, case):
         """Get number of related ongoing appropriations."""
         return case.appropriations.ongoing().count()
