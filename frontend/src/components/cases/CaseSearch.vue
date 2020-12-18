@@ -169,7 +169,7 @@ export default {
         updateUser: function() {
             // Start out by setting a default case worker unless a case worker has already been set
             // and getting a list of cases with only initial filters set.
-            if (!this.case_worker) { 
+            if (!this.case_worker && this.user.id) { 
                 this.$store.commit('setCaseSearchFilter', {'case_worker': this.user.id})
                 this.$store.dispatch('fetchCases', this.$route.query)
             } 
