@@ -167,10 +167,8 @@
         },
         methods: {
             resetValues: function() {
-                // Use the store action to reset values
-                this.$store.dispatch('resetAppropriationSearchFilters', this.user.id)
-                this.$store.commit('setAppropriationSearchFilter', {})
-                location.reload()
+                // Navigate to page with no url params to reset
+                location = '/appropriations'
             },
             commitValue: function(key, val) {
                 // Handy helper method that both updates the value in store, 
