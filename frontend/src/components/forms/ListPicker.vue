@@ -31,7 +31,7 @@
             selectedId: [Number, String],
             list: [Array, Boolean],
             default: {
-                type: Number,
+                type: [Number, String],
                 default: null
             },
             displayKey: {
