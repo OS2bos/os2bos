@@ -138,6 +138,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             activity.appropriation.total_granted_this_year, Decimal("10000")
         )
 
+    @freeze_time("2020-01-01")
     def test_total_granted_full_year(self):
         now = timezone.now().date()
         start_date = date(year=now.year, month=1, day=1)
@@ -175,6 +176,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
             activity=new_granted_activity,
         )
+        # 2 Activites with daily payments of 500 for a year (366 days) in 2020.
         self.assertEqual(
             activity.appropriation.total_granted_full_year,
             Decimal("366000.00"),

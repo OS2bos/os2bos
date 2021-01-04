@@ -716,6 +716,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             one_time_activity, send_appropriation_mock.call_args[0][1]
         )
 
+    @freeze_time("2020-01-01")
     def test_grant_granted(self):
         case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
