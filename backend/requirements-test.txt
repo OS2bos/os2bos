@@ -12,7 +12,7 @@ parameterized==0.7.5
 freezegun==1.0.0
 Sphinx==3.3.1
 sphinxcontrib-websupport==1.2.4
-sphinx_rtd_theme==0.5.0
+sphinx_rtd_theme==0.5.1
 sphinxcontrib_django==0.5.1
 
 uritemplate==3.0.1
