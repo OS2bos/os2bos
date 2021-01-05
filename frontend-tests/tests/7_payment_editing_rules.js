@@ -60,7 +60,7 @@ const testdata = {
         }
     }
 
-fixture('Check payment editing rules')
+fixture.only('Check payment editing rules')
     .page(baseurl)
 
 /*
@@ -116,12 +116,12 @@ test('Check that improved user can create new payments', async t => {
 
     await login(t, 'regelmotor', 'regelmotor')
 
-    await useSelectBox(t, '#field-case-worker', 'familieraadgiver)')
+    await useSelectBox(t, '#field-case-worker', 'familieraadgiver')
 
     await t
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector('a').withText(testdata.act1.details__name))
+        .click(Selector('a').withText(testdata.act1.details__name.substr(0,7)))
         
         // Check that this user can create new payments on an activity that has individual payment plan
         .click('.payment-create-btn')
@@ -167,7 +167,7 @@ test('Check that normal user cannot create new payments after grant', async t =>
     await t
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector('a').withText(testdata.act1.details__name))
+        .click(Selector('a').withText(testdata.act1.details__name.substr(0,7)))
         .expect(Selector('.payment-create-btn').exists).notOk()
         
         // Check that this user cannot edit payments anymore
@@ -216,7 +216,7 @@ test('Check that normal user can register payment under certain circumstances', 
     await t
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector('a').withText(testdata.act1.details__name))
+        .click(Selector('a').withText(testdata.act1.details__name.substr(0,7)))
         .expect(Selector('td input.field-amount').exists).ok()
         .expect(Selector('td input[type="date"]').exists).ok()
 
@@ -252,12 +252,12 @@ test('Check that improved user can register payment at all times', async t => {
 
     await login(t, 'regelmotor', 'regelmotor')
 
-    await useSelectBox(t, '#field-case-worker', 'familieraadgiver)')
+    await useSelectBox(t, '#field-case-worker', 'familieraadgiver')
 
     await t
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector('a').withText(testdata.act1.details__name))
+        .click(Selector('a').withText(testdata.act1.details__name.substr(0,7)))
         .expect(Selector('td input.field-amount').exists).ok()
         .expect(Selector('td input[type="date"]').exists).ok()
 
