@@ -213,8 +213,8 @@
         },
         methods: {
             resetValues: function() {
-                // Navigate to page with no url params to reset
-                location = '/payments'
+                // Reset store values for payment search filters
+                this.$store.dispatch('resetPaymentSearchFilters')
             },
             commitValue: function(key, val) {
                 // Handy helper method that both updates the value in store, 

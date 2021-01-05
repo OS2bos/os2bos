@@ -33,15 +33,16 @@
                     />
                 </div>
             
-                <div class="filter-field">
+                <div class="filter-field" v-if="users">
                     <label for="field-case-worker">Sagsbehandler</label>
                     <list-picker 
-                        v-if="users"
                         :dom-id="'field-case-worker'" 
                         :selected-id="case__case_worker"
+                        :default-value="user.id"
                         :list="users"
                         @selection="changeWorker"
                         display-key="fullname"
+                        key="fieldCaseWorker"
                     />
                 </div>
 
@@ -75,7 +76,7 @@
             </fieldset>
             
             <fieldset class="filter-fields filter-actions">
-                <button class="filter-reset" type="reset" @click="resetValues">Nulstil</button>
+                <button class="filter-reset" type="button" @click="resetValues">Nulstil filtre</button>
             </fieldset>
         </form>
     </div>
@@ -110,8 +111,12 @@
                 return this.$store.getters.getSections
             },
             appr_main_acts: function() {
-                let actList = this.$store.getters.getActivityDetails.filter(act => act.main_activity_for.length > 0)
-                return actList
+                let act_details = this.$store.getters.getActivityDetails
+                if (act_details) {
+                    return act_details.filter(act => act.main_activity_for.length > 0)
+                } else {
+                    return []
+                }
             },
             user: function() {
                 let user = this.$store.getters.getUser
@@ -167,8 +172,8 @@
         },
         methods: {
             resetValues: function() {
-                // Navigate to page with no url params to reset
-                location = '/appropriations'
+                // Reset values in vuex state
+                this.$store.dispatch('resetAppropriationSearchFilters', this.user.id)
             },
             commitValue: function(key, val) {
                 // Handy helper method that both updates the value in store, 

@@ -264,8 +264,9 @@ const actions = {
      * @example this.$store.dispatch('resetPaymentSearchFilters')
      * @memberof state_payment
      */
-    resetPaymentSearchFilters: function({commit}, IntervalId) {
-        commit('clearPaymentSearchFilters', IntervalId)
+    resetPaymentSearchFilters: function({commit, state}) {
+        commit('clearPaymentSearchFilters', 'date-range')
+        location.hash = `/payments?${ makeQueryString(state, false)}`
     }
 }
 

@@ -61,7 +61,7 @@
             </fieldset>
 
             <fieldset class="filter-fields filter-actions">
-                <button class="filter-reset" type="reset" @click="resetValues">Nulstil</button>
+                <button class="filter-reset" type="button" @click="resetValues">Nulstil filtre</button>
             </fieldset>
         </form>
     </div>
@@ -138,8 +138,8 @@ export default {
     },
     methods: {
         resetValues: function() {
-            // Navigate to page with no url params to reset
-            location = '/cases'
+            // Reset values in vuex state
+            this.$store.dispatch('resetCaseSearchFilters', this.user.id)
         },
         commitValue: function(key, val) {
             // Handy helper method that both updates the value in store, 
