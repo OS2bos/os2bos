@@ -43,7 +43,7 @@
                             :selected-id="cas.paying_municipality" 
                             @selection="changeMuni($event, 'paying_municipality')" 
                             :list="municipalities" 
-                            :default="42" />
+                            :default-value="42" />
                     
                         <label class="required" for="selectActingMunicipality">Handlekommune:</label>
                         <list-picker 
@@ -51,7 +51,7 @@
                             :selected-id="cas.acting_municipality" 
                             @selection="changeMuni($event, 'acting_municipality')" 
                             :list="municipalities" 
-                            :default="42" />
+                            :default-value="42" />
                     
                         <label class="required" for="selectResidenceMunicipality">Bopælsskommune:</label>
                         <list-picker 
@@ -59,7 +59,7 @@
                             :selected-id="cas.residence_municipality" 
                             @selection="changeMuni($event, 'residence_municipality')" 
                             :list="municipalities" 
-                            :default="42" />
+                            :default-value="42" />
                     </fieldset>
                 </div>
 

@@ -112,7 +112,7 @@ const mutations = {
             case__sbsys_id: null,
             case__cpr_number: null,
             case__case_worker__team: null,
-            case__case_worker: userId,
+            case__case_worker: userId.toString(),
             section: null,
             main_activity__details__id: null
         }
@@ -183,6 +183,7 @@ const actions = {
     resetAppropriationSearchFilters: function({commit, dispatch}, userId) {
         commit('clearAppropriationSearchFilters', userId)
         dispatch('fetchAppropriations')
+        location.hash = `/appropriations?${ makeQueryString(state, false)}`
     }
 }
 
