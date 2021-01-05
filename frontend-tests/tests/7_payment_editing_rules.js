@@ -60,7 +60,7 @@ const testdata = {
         }
     }
 
-fixture.only('Check payment editing rules')
+fixture('Check payment editing rules')
     .page(baseurl)
 
 /*
@@ -94,7 +94,7 @@ test('Create data and check that normal user can create new payments', async t =
 
     await t
         // Check that this user can create new payments on an activity that has individual payment plan
-        .click(Selector('a').withText(testdata.act1.details__name))
+        .click(Selector('a').withText(testdata.act1.details__name.substr(0,6)))
         .click('.payment-create-btn')
         .typeText('#field-payment-planned-amount', '145,95')
         .typeText('#field-payment-planned-date', createDate(4))
@@ -121,7 +121,7 @@ test('Check that improved user can create new payments', async t => {
     await t
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector('a').withText(testdata.act1.details__name.substr(0,7)))
+        .click(Selector('a').withText(testdata.act1.details__name.substr(0,6)))
         
         // Check that this user can create new payments on an activity that has individual payment plan
         .click('.payment-create-btn')
@@ -139,7 +139,7 @@ test('Check that improved user can create new payments', async t => {
         
         // Check that this user can't create new payments on an activity that hasn't individual payment plan
         .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector('a').withText(testdata.act2.details__name))
+        .click(Selector('a').withText(testdata.act2.details__name.substr(0,6)))
         .expect(Selector('.payment-create-btn').exists).notOk()
 
         // Check that this user cannot edit payments
@@ -167,7 +167,7 @@ test('Check that normal user cannot create new payments after grant', async t =>
     await t
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector('a').withText(testdata.act1.details__name.substr(0,7)))
+        .click(Selector('a').withText(testdata.act1.details__name.substr(0,6)))
         .expect(Selector('.payment-create-btn').exists).notOk()
         
         // Check that this user cannot edit payments anymore
@@ -216,7 +216,7 @@ test('Check that normal user can register payment under certain circumstances', 
     await t
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector('a').withText(testdata.act1.details__name.substr(0,7)))
+        .click(Selector('a').withText(testdata.act1.details__name.substr(0,6)))
         .expect(Selector('td input.field-amount').exists).ok()
         .expect(Selector('td input[type="date"]').exists).ok()
 
@@ -257,7 +257,7 @@ test('Check that improved user can register payment at all times', async t => {
     await t
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector('a').withText(testdata.act1.details__name.substr(0,7)))
+        .click(Selector('a').withText(testdata.act1.details__name.substr(0,6)))
         .expect(Selector('td input.field-amount').exists).ok()
         .expect(Selector('td input[type="date"]').exists).ok()
 
