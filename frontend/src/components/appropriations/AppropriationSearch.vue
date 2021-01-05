@@ -38,7 +38,6 @@
                     <list-picker 
                         :dom-id="'field-case-worker'" 
                         :selected-id="case__case_worker"
-                        :default-value="user.id"
                         :list="users"
                         @selection="changeWorker"
                         display-key="fullname"
