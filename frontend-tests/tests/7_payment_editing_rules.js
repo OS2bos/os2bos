@@ -50,7 +50,7 @@ const testdata = {
             details__name: 'Kørsel i egen bil',
             payment_type: 'RUNNING_PAYMENT',
             start_date: createDate(18),
-            payment_frequency: 'WEEKLY',
+            payment_frequency: 'BIWEEKLY',
             payment_cost_type: 'PER_UNIT',
             price_amount: '100',
             price_start_date: createDate(1),
