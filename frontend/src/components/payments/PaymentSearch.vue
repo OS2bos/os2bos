@@ -73,7 +73,7 @@
             </fieldset>
 
             <fieldset class="filter-fields filter-actions">
-                <button class="filter-reset" type="reset" @click="resetValues">Nulstil</button>
+                <button class="filter-reset" type="button" @click="resetValues">Nulstil filtre</button>
             </fieldset>
         </form>
     </div>
@@ -213,10 +213,8 @@
         },
         methods: {
             resetValues: function() {
-                // Use the store action to reset values
+                // Reset store values for payment search filters
                 this.$store.dispatch('resetPaymentSearchFilters', 'date-range')
-                this.$store.commit('setPaymentSearchFilter', {})
-                location.reload()
             },
             commitValue: function(key, val) {
                 // Handy helper method that both updates the value in store, 
