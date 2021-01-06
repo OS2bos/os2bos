@@ -7,32 +7,32 @@
 
 <template>
 
-  <div class="payment-search-list">
-    <template v-if="payments">
-        
-      <data-grid v-if="payments.length > 0"
-          ref="data-grid"
-          :data-list="payments"
-          :columns="columns"
-          @selection="selected_payments">
+    <div class="payment-search-list">
+        <template v-if="payments && payments.length > 0">
+            
+            <data-grid
+                ref="data-grid"
+                :data-list="payments"
+                :columns="columns"
+                @selection="selected_payments">
 
-          <p slot="datagrid-header">
-              Viser {{ payments.length }} af {{ payments_meta.count }} betalinger
-          </p>
+                <p slot="datagrid-header">
+                    Viser {{ payments.length }} af {{ payments_meta.count }} betalinger
+                </p>
 
-          <p slot="datagrid-footer" v-if="payments.length < 1">
-              Kan ikke finde nogen betalinger, der matcher de valgte kriterier
-          </p>
+                <p slot="datagrid-footer" v-if="payments.length < 1">
+                    Kan ikke finde nogen betalinger, der matcher de valgte kriterier
+                </p>
 
-      </data-grid>
+            </data-grid>
 
-      <button v-if="payments.length > 1" :disabled="disableBtn" class="more" @click="loadResults()">Vis flere</button>
-    </template>
+            <button v-if="payments.length > 1" :disabled="disableBtn" class="more" @click="loadResults()">Vis flere</button>
+        </template>
 
-    <p v-else>
-        Der er ingen betalinger, der matcher de valgte kriterier
-    </p>
-  </div>
+        <p v-else>
+            Der er ingen betalinger, der matcher de valgte kriterier
+        </p>
+    </div>
 
 </template>
 
