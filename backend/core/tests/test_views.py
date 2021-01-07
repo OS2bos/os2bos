@@ -40,6 +40,7 @@ from core.tests.testing_utils import (
     create_activity,
     create_payment_schedule,
     create_user,
+    create_activity_details,
 )
 
 User = get_user_model()
@@ -860,6 +861,136 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         )
         self.assertEqual(response.status_code, 400)
 
+    @freeze_time("2020-01-01")
+    def test_filter_main_activity__details__id(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section()
+        approval_level, _ = ApprovalLevel.objects.get_or_create(
+            name="egenkompetence"
+        )
+        # Create an appropriation that should have
+        # main_activity_details_id = details.id
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+
+        details = create_activity_details(
+            name="test aktivitetsdetalje",
+            activity_id="111112"
+        )
+        expected_details = create_activity_details(
+            name="test forventet aktivitetsdetalje",
+            activity_id="111115"
+        )
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=date(year=2020, month=1, day=1),
+            end_date=date(year=2020, month=1, day=10),
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+            details=details,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=activity,
+        )
+        section.main_activities.add(
+            activity.details,
+            expected_details,
+        )
+
+        modifying_activity = create_activity(
+            case,
+            appropriation,
+            start_date=date(year=2020, month=1, day=7),
+            end_date=date(year=2020, month=1, day=20),
+            status=STATUS_EXPECTED,
+            activity_type=MAIN_ACTIVITY,
+            modifies=activity,
+            details=expected_details
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=modifying_activity,
+        )
+
+        self.client.login(username=self.username, password=self.password)
+        url = reverse("appropriation-grant", kwargs={"pk": appropriation.pk})
+        json = {
+            "approval_level": approval_level.id,
+            "approval_note": "HEJ!",
+            "activities": [modifying_activity.pk],
+        }
+        response = self.client.patch(
+            url, json, content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+
+        # Create an appropriation that should have
+        # main_activity_details_id = expected_details.id
+        appropriation = create_appropriation(
+            sbsys_id="YYY-XXX", case=case, section=section
+        )
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=date(year=2020, month=1, day=1),
+            end_date=date(year=2020, month=1, day=10),
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+            details=expected_details,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=activity,
+        )
+
+        modifying_activity = create_activity(
+            case,
+            appropriation,
+            start_date=date(year=2020, month=1, day=7),
+            end_date=date(year=2020, month=1, day=20),
+            status=STATUS_EXPECTED,
+            activity_type=MAIN_ACTIVITY,
+            modifies=activity,
+            details=details
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=modifying_activity,
+        )
+        url = reverse("appropriation-grant", kwargs={"pk": appropriation.pk})
+        json = {
+            "approval_level": approval_level.id,
+            "approval_note": "HEJ!",
+            "activities": [modifying_activity.pk],
+        }
+        response = self.client.patch(
+            url, json, content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+
+
+        url = reverse("appropriation-list")
+        json = {"main_activity__details__id": details.id}
+        response = self.client.get(url, json, content_type="application/json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()), 1)
+        self.assertEqual(response.json()[0]["main_activity__details__id"], details.id)
+
+        url = reverse("appropriation-list")
+        json = {"main_activity__details__id": expected_details.id}
+        response = self.client.get(url, json, content_type="application/json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()), 1)
+        self.assertEqual(response.json()[0]["main_activity__details__id"], expected_details.id)
 
 class TestPaymentScheduleViewSet(AuthenticatedTestCase):
     def test_get(self):

@@ -90,32 +90,18 @@ class CaseForAppropriationFilter(filters.FilterSet):
         }
 
 
-class ActivityDetailsForAppropriationFilter(filters.FilterSet):
-    """Filter activity details on ID."""
-
-    class Meta:
-        model = ActivityDetails
-        fields = {"id": ["exact"]}
-
-
 class AppropriationFilter(filters.FilterSet):
     """Filter appropriation."""
+
+    main_activity__details__id = filters.NumberFilter(
+        label=gettext("Aktivitetsdetalje for hovedaktivitet")
+    )
 
     case = filters.RelatedFilter(
         CaseForAppropriationFilter,
         field_name="case",
         label=Case._meta.verbose_name.title(),
         queryset=Case.objects.all(),
-    )
-
-    main_activity__details = filters.RelatedFilter(
-        ActivityDetailsForAppropriationFilter,
-        field_name="activities__details",
-        label=gettext("Aktivitetsdetalje for hovedaktivitet"),
-        queryset=ActivityDetails.objects.filter(
-            activity__activity_type=MAIN_ACTIVITY,
-            activity__modifies__isnull=True,
-        ),
     )
 
     class Meta:
