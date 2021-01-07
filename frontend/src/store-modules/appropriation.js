@@ -131,12 +131,15 @@ const actions = {
     fetchAppropriations: function({commit, state}) {
         let q = ''
         q = makeQueryString(state, true)
-
-        axios.get(`/appropriations/?${ q }`)
-        .then(res => {
-            commit('setAppropriations', res.data)
-        })
-        .catch(err => console.log(err))
+        if (q.length > 0) {
+            axios.get(`/appropriations/?${ q }`)
+            .then(res => {
+                commit('setAppropriations', res.data)
+            })
+            .catch(err => console.log(err))
+        } else {
+            commit('setAppropriations', [])
+        }
     },
     fetchAppropriation: function({commit, dispatch}, appr_id) {
         axios.get(`/appropriations/${ appr_id }/`)
