@@ -624,9 +624,6 @@ class BaseAppropriationSerializer(serializers.ModelSerializer):
     case__cpr_number = serializers.ReadOnlyField(source="case.cpr_number")
     case__name = serializers.ReadOnlyField(source="case.name")
     case__sbsys_id = serializers.ReadOnlyField(source="case.sbsys_id")
-    main_activity__details__id = serializers.ReadOnlyField(
-        source="main_activity.details.id", default=None
-    )
 
     num_ongoing_draft_or_expected_activities = (
         serializers.SerializerMethodField()
@@ -667,7 +664,7 @@ class BaseAppropriationSerializer(serializers.ModelSerializer):
 class ListAppropriationSerializer(BaseAppropriationSerializer):
     """Serializer for the Appropriation model for a list."""
 
-    pass
+    main_activity__details__id = serializers.ReadOnlyField()
 
 
 class AppropriationSerializer(BaseAppropriationSerializer):

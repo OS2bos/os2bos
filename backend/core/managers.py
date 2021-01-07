@@ -18,6 +18,8 @@ from django.db.models import (
     Q,
     F,
     Count,
+    OuterRef,
+    Subquery,
 )
 from django.db.models.functions import (
     Coalesce,
@@ -174,6 +176,20 @@ class AppropriationQuerySet(models.QuerySet):
             .exclude(expired_main_activities_count=0, main_activities_count=0)
             .filter(expired_main_activities_count=F("main_activities_count"))
         ).distinct()
+
+    def annotate_main_activity_details_id(self):
+        """ Annotate the main_activity__details__id as a subquery."""
+        from core.models import Activity, MAIN_ACTIVITY
+
+        main_activity = Activity.objects.filter(
+            appropriation=OuterRef("id")
+        ).filter(activity_type=MAIN_ACTIVITY, modifies__isnull=True)
+
+        return self.annotate(
+            main_activity__details__id=Subquery(
+                main_activity.values("details__id")[:1]
+            )
+        )
 
 
 class CaseQuerySet(models.QuerySet):
