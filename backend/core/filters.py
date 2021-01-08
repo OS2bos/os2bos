@@ -30,9 +30,7 @@ from core.models import (
     Payment,
     Section,
     Appropriation,
-    ActivityDetails,
     User,
-    MAIN_ACTIVITY,
 )
 
 
