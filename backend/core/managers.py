@@ -178,7 +178,7 @@ class AppropriationQuerySet(models.QuerySet):
         ).distinct()
 
     def annotate_main_activity_details_id(self):
-        """ Annotate the main_activity__details__id as a subquery."""
+        """Annotate the main_activity__details__id as a subquery."""
         from core.models import Activity, MAIN_ACTIVITY
 
         main_activity = Activity.objects.filter(
