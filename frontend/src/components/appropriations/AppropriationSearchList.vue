@@ -86,6 +86,10 @@
                     display_func: this.displayActs,
                     class: 'nowrap'
                 },
+                /* 
+                 * We are trying out not calculating displayGranted and displayExpected
+                 * Therefore we do not display those values
+                 * 
                 {
                     key: 'total_granted_full_year',
                     title: 'Udgift pr år',
@@ -98,6 +102,7 @@
                     display_func: this.displayExpected,
                     class: 'expected right nowrap'
                 }
+                */
             ]
         }
     },  
@@ -137,6 +142,10 @@
         displayMainAct: function(appr) {
             return `${ activityId2name(appr.main_activity__details__id) }`
         },
+        /*
+         * AS ABOVE: We are trying out not calculating displayGranted and displayExpected
+         * Therefore we do not display those values
+         * 
         displayGranted: function(appr) {
             return `${ cost2da(appr.total_granted_full_year) } kr.`
         },
@@ -145,6 +154,7 @@
                 return `${ cost2da(appr.total_expected_full_year) } kr.`
             }
         },
+        */
         displayActs: function(id) {
             return `<dl class="num-acts"><dt>Foreløbige</dt><dd>${ id.num_ongoing_draft_or_expected_activities }</dd><dt>Aktive i alt</dt><dd>${ id.num_ongoing_activities }</dd></dl>`
         }

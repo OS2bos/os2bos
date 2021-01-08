@@ -618,12 +618,6 @@ class BaseAppropriationSerializer(serializers.ModelSerializer):
     """Base Serializer for the Appropriation model."""
 
     status = serializers.ReadOnlyField()
-    total_granted_this_year = serializers.ReadOnlyField()
-    total_granted_full_year = serializers.ReadOnlyField()
-    total_expected_this_year = serializers.ReadOnlyField()
-    total_expected_full_year = serializers.ReadOnlyField()
-    total_cost_expected = serializers.ReadOnlyField()
-    total_cost_granted = serializers.ReadOnlyField()
 
     granted_from_date = serializers.ReadOnlyField()
     granted_to_date = serializers.ReadOnlyField()
@@ -681,6 +675,12 @@ class AppropriationSerializer(BaseAppropriationSerializer):
 
     main_activity = ActivitySerializer(read_only=True)
     activities = serializers.SerializerMethodField()
+    total_granted_this_year = serializers.ReadOnlyField()
+    total_granted_full_year = serializers.ReadOnlyField()
+    total_expected_this_year = serializers.ReadOnlyField()
+    total_expected_full_year = serializers.ReadOnlyField()
+    total_cost_expected = serializers.ReadOnlyField()
+    total_cost_granted = serializers.ReadOnlyField()
 
     def get_activities(self, appropriation):
         """Get activities on appropriation."""
