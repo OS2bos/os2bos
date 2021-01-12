@@ -219,6 +219,8 @@
                 if (!this.case__case_worker && this.user.id) {
                     this.$store.commit('setAppropriationSearchFilter', {'case__case_worker': this.user.id})
                     this.$store.dispatch('fetchAppropriations', this.$route.query)
+                } else {
+                    this.$store.dispatch('fetchCases', this.$route.query)
                 }
             }
         },
@@ -232,7 +234,6 @@
             const qry = this.$route.query
             if (qry.case__sbsys_id || qry.case__case_worker__team || qry.case__case_worker || qry.section || qry.main_activity__details__id) {
                 this.$store.commit('setAppropriationSearchFilter', qry)
-                this.$store.dispatch('fetchAppropriations')
             }
 
             // Start out by setting a case worker

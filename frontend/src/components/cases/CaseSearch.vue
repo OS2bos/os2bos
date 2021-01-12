@@ -170,7 +170,9 @@ export default {
             if (!this.case_worker && this.user.id) { 
                 this.$store.commit('setCaseSearchFilter', {'case_worker': this.user.id})
                 this.$store.dispatch('fetchCases', this.$route.query)
-            } 
+            } else {
+                this.$store.dispatch('fetchCases', this.$route.query)
+            }
         }
     },
     created: function() {
@@ -183,7 +185,6 @@ export default {
         const qry = this.$route.query
         if (qry.sbsys_id || qry.hasOwnProperty('expired') && qry.expired !== null || qry.case_worker__team || qry.case_worker) {
             this.$store.commit('setCaseSearchFilter', qry)
-            this.$store.dispatch('fetchCases')
         }
 
         // Start out by setting a case worker
