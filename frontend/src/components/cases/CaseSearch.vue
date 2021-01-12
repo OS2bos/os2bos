@@ -170,8 +170,6 @@ export default {
             if (!this.case_worker && this.user.id) { 
                 this.$store.commit('setCaseSearchFilter', {'case_worker': this.user.id})
                 this.$store.dispatch('fetchCases', this.$route.query)
-            } else {
-                this.$store.dispatch('fetchCases', this.$route.query)
             }
         }
     },
