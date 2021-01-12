@@ -219,8 +219,6 @@
                 if (!this.case__case_worker && this.user.id) {
                     this.$store.commit('setAppropriationSearchFilter', {'case__case_worker': this.user.id})
                     this.$store.dispatch('fetchAppropriations', this.$route.query)
-                } else {
-                    this.$store.dispatch('fetchCases', this.$route.query)
                 }
             }
         },
