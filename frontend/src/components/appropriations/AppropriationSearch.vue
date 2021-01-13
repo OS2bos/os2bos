@@ -162,13 +162,6 @@
                 return this.$store.getters.getAppropriationSearchFilter('main_activity__details__id')
             }
         },
-        watch: {
-            user: function(new_val, old_user) {
-                if (new_val !== old_user) {
-                    this.updateUser()
-                }
-            }
-        },
         methods: {
             resetValues: function() {
                 // Reset values in vuex state
@@ -219,6 +212,8 @@
                 if (!this.case__case_worker && this.user.id) {
                     this.$store.commit('setAppropriationSearchFilter', {'case__case_worker': this.user.id})
                     this.$store.dispatch('fetchAppropriations', this.$route.query)
+                } else {
+                    this.$store.dispatch('fetchAppropriations')
                 }
             }
         },
