@@ -129,13 +129,6 @@ export default {
             return this.$store.getters.getCaseSearchFilter('case_worker')
         }
     },
-    watch: {
-        user: function(new_user, old_user) {
-            if (new_user !== old_user) {
-                this.updateUser()
-            }
-        }
-    },
     methods: {
         resetValues: function() {
             // Reset values in vuex state
@@ -170,6 +163,8 @@ export default {
             if (!this.case_worker && this.user.id) { 
                 this.$store.commit('setCaseSearchFilter', {'case_worker': this.user.id})
                 this.$store.dispatch('fetchCases', this.$route.query)
+            } else {
+                this.$store.dispatch('fetchCases')
             }
         }
     },
@@ -184,10 +179,9 @@ export default {
         if (qry.sbsys_id || qry.hasOwnProperty('expired') && qry.expired !== null || qry.case_worker__team || qry.case_worker) {
             this.$store.commit('setCaseSearchFilter', qry)
         }
-
+        
         // Start out by setting a case worker
         this.updateUser()
-
     }
 }
 </script>

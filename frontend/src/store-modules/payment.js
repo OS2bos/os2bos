@@ -251,13 +251,6 @@ const actions = {
         })
         .catch(err => console.log(err))
     },
-    fetchPaymentEditablePastFlag: function({commit}) {
-        axios.get('/editing_past_payments_allowed/')
-        .then(res => {
-            commit('setPaymentEditablePastFlag', res.data)
-        })
-        .catch(err => console.log(err))
-    },
     /**
      * Clears the payment search filters and fetches a new list of payments
      * @name resetPaymentSearchFilters
