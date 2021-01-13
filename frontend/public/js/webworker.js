@@ -15,8 +15,7 @@ let data = {
     sections: null,
     service_providers: null,
     activity_details: null,
-    municipalities: null,
-    editablepastflag: null
+    municipalities: null
 }
 
 function startFetching() {
@@ -24,11 +23,10 @@ function startFetching() {
     fetchSections()
     fetchActivityDetails()
     fetchMunicipalities()
-    fetchPaymentEditablePastFlag()
 }
 
 function endFetching() {
-    if (data.sections && data.service_providers && data.activity_details && data.municipalities && data.editablepastflag) {
+    if (data.sections && data.service_providers && data.activity_details && data.municipalities) {
         postMessage(data)
     }
 }
@@ -65,15 +63,6 @@ function fetchMunicipalities() {
         .then(response => response.json())
         .then(res => {
             data.municipalities = res
-            endFetching()
-        })
-}
-
-function fetchPaymentEditablePastFlag() {
-    fetch('/api/editing_past_payments_allowed/')
-        .then(response => response.json())
-        .then(res => {
-            data.editablepastflag = res
             endFetching()
         })
 }
