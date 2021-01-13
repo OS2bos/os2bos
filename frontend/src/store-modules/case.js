@@ -131,12 +131,15 @@ const actions = {
     fetchCases: function({commit, state}) {
         let q = ''
         q = makeQueryString(state, true)
-
-        axios.get(`/cases/?${ q }`)
-        .then(res => {
-            commit('setCases', res.data)
-        })
-        .catch(err => console.log(err))
+        if (q.length > 0) {
+            axios.get(`/cases/?${ q }`)
+            .then(res => {
+                commit('setCases', res.data)
+            })
+            .catch(err => console.log(err))
+        } else {
+            commit('setCases', [])
+        }
     },
     /**
      * Get a single case from API. Use getCase to read the list.

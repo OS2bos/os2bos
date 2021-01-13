@@ -16,7 +16,6 @@ function fetchData() {
             store.commit('setServiceProviders', ev.data.service_providers)
             store.commit('setActDetails', ev.data.activity_details)
             store.commit('setMunis', ev.data.municipalities)
-            store.commit('setPaymentEditablePastFlag', ev.data.editablepastflag)
         })
         myWorker.addEventListener('error', function(ev) {
             console.log(ev.message)

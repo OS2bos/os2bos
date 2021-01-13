@@ -127,6 +127,14 @@ export default {
         case_worker: function() {
             // `case_worker` only has a getter. values are updated via changeCaseWorker method in listpicker component
             return this.$store.getters.getCaseSearchFilter('case_worker')
+        },
+        hasUrlParams: function() {
+            const qry = this.$route.query
+            if (qry.sbsys_id || qry.hasOwnProperty('expired') && qry.expired !== null || qry.case_worker__team || qry.case_worker) {
+                return true
+            } else {
+                return false
+            }
         }
     },
     methods: {
@@ -158,9 +166,11 @@ export default {
             }
         },
         updateUser: function() {
-            // Start out by setting a default case worker unless a case worker has already been set
+            console.log('updateuser, query', this.$route.query)
+
+            // Start out by setting a default case worker if no url params are present
             // and getting a list of cases with only initial filters set.
-            if (!this.case_worker && this.user.id) { 
+            if (!this.hasUrlParams && this.user.id) { 
                 this.$store.commit('setCaseSearchFilter', {'case_worker': this.user.id})
                 this.$store.dispatch('fetchCases', this.$route.query)
             } else {
@@ -175,9 +185,8 @@ export default {
         this.commitValue = this.debounce(this.commitValue, 400)
 
         // On first load, check URL params and set store filters accordingly
-        const qry = this.$route.query
-        if (qry.sbsys_id || qry.hasOwnProperty('expired') && qry.expired !== null || qry.case_worker__team || qry.case_worker) {
-            this.$store.commit('setCaseSearchFilter', qry)
+        if (this.hasUrlParams) {
+            this.$store.commit('setCaseSearchFilter', this.$route.query)
         }
         
         // Start out by setting a case worker

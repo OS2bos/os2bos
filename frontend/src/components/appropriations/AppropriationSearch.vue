@@ -160,6 +160,14 @@
             main_activity__details__id: function() {
                 // `main_activity__details__id` only has a getter. values are updated via changeMainAct method in listpicker component
                 return this.$store.getters.getAppropriationSearchFilter('main_activity__details__id')
+            },
+            hasUrlParams: function() {
+                const qry = this.$route.query
+                if (qry.case__sbsys_id || qry.case__case_worker__team || qry.case__case_worker || qry.section || qry.main_activity__details__id) {
+                    return true
+                } else {
+                    return false
+                }
             }
         },
         methods: {
@@ -207,9 +215,9 @@
                 }
             },
             updateUser: function() {
-                // Start out by setting a default case worker unless a case worker has already been set
+                // Start out by setting a default case worker if no url params are present
                 // and getting a list of appropriations with only initial filters set.
-                if (!this.case__case_worker && this.user.id) {
+                if (!this.hasUrlParams && this.user.id) {
                     this.$store.commit('setAppropriationSearchFilter', {'case__case_worker': this.user.id})
                     this.$store.dispatch('fetchAppropriations', this.$route.query)
                 } else {
@@ -224,14 +232,12 @@
             this.commitValue = this.debounce(this.commitValue, 400)
 
             // On first load, check URL params and set store filters accordingly
-            const qry = this.$route.query
-            if (qry.case__sbsys_id || qry.case__case_worker__team || qry.case__case_worker || qry.section || qry.main_activity__details__id) {
-                this.$store.commit('setAppropriationSearchFilter', qry)
+            if (this.hasUrlParams) {
+                this.$store.commit('setAppropriationSearchFilter', this.$route.query)
             }
 
             // Start out by setting a case worker
             this.updateUser()
-
         }
     }
     
