@@ -30,8 +30,7 @@ const getLocation = ClientFunction(() => document.location.href),
             }
         }
 
-fixture('Check search filter defaults')
-    .page(baseurl)
+fixture.only('Check search filter defaults')
 
 /*
     Rules to test: 
@@ -43,7 +42,8 @@ fixture('Check search filter defaults')
     
 */
 
-test('Create data for one user', async t => {
+test.page(baseurl)
+('Create data for one user', async t => {
 
     await login(t, 'admin', 'admin') 
 
@@ -52,7 +52,8 @@ test('Create data for one user', async t => {
         
 })
 
-test('Create data for another user', async t => {
+test.page(baseurl)
+('Create data for another user', async t => {
 
     await login(t, 'familieraadgiver', 'sagsbehandler') 
 
@@ -65,13 +66,13 @@ test('Create data for another user', async t => {
 // default case worker filter should default to current user
 // When setting case worker filter, 
 // both URL param, results, and filter setting should update
-test('Test default filtering, filter change, and reset on cases list', async t => {
+test.page(`${ baseurl }/#/cases`)
+('Test default filtering, filter change, and reset on cases list', async t => {
 
     await login(t, 'admin', 'admin')
 
     // Set current user as default case worker when no params present
     await t
-        .navigateTo(`${ baseurl }/#/cases`)
         .expect(getLocation()).contains('case_worker=2')
         .expect(Selector('select#field-case-worker option').withText('IT Guy (admin)').selected).ok()
         .expect(Selector('a').withText(testdata.case1.name).exists).ok()
@@ -117,13 +118,13 @@ test('Test default filtering, filter change, and reset on cases list', async t =
 // default case worker filter should default to current user
 // When setting case worker filter, 
 // both URL param, results, and filter setting should update
-test('Test default filtering, filter change, and reset on appropriation list', async t => {
+test.page(`${ baseurl }/#/appropriations`)
+('Test default filtering, filter change, and reset on appropriation list', async t => {
 
     await login(t, 'admin', 'admin') 
 
     // Set current user as default case worker when no params present
     await t
-        .navigateTo(`${ baseurl }/#/appropriations`)
         .expect(getLocation()).contains('case__case_worker=2')
         .expect(Selector('select#field-case-worker option').withText('IT Guy (admin)').selected).ok()
         .expect(Selector('a').withText(testdata.appr1.name).exists).ok()
@@ -166,12 +167,12 @@ test('Test default filtering, filter change, and reset on appropriation list', a
 
 // When loading cases page with query params, 
 // filters should be applied based on params
-test('When navigating cases with URL params, set filters and lists accordingly', async t => {
+test.page(`${ baseurl }/#/cases?case_worker__team=3&case_worker=3`)
+('When navigating cases with URL params, set filters and lists accordingly', async t => {
 
     await login(t, 'admin', 'admin') 
 
     await t
-        .navigateTo(`${ baseurl }/#/cases?case_worker__team=3&case_worker=3`)
         .expect(getLocation()).contains('case_worker=3')
         .expect(Selector('select#field-case-worker option').withText('Familie Raadgiver (familieraadgiver)').selected).ok()
         .expect(Selector('a').withText(testdata.case2.name).exists).ok()
@@ -180,12 +181,12 @@ test('When navigating cases with URL params, set filters and lists accordingly',
 
 // When loading appropriation page with query params,
 // filters should be applied based on params
-test('When navigating appropriations with URL params, set filters and lists accordingly', async t => {
+test.page(`${ baseurl }/#/appropriations?case__case_worker__team=3&case__case_worker=3`)
+('When navigating appropriations with URL params, set filters and lists accordingly', async t => {
 
     await login(t, 'admin', 'admin') 
 
     await t
-        .navigateTo(`${ baseurl }/#/appropriations?case__case_worker__team=3&case__case_worker=3`)
         .expect(getLocation()).contains('case__case_worker=3')
         .expect(Selector('select#field-case-worker option').withText('Familie Raadgiver (familieraadgiver)').selected).ok()
         .expect(Selector('a').withText(testdata.appr2.name).exists).ok()
@@ -194,12 +195,12 @@ test('When navigating appropriations with URL params, set filters and lists acco
 
 // When loading cases page with query params and no case worker, 
 // filters should be applied based on params only
-test('Do not set default case worker when navigating cases with URL params', async t => {
+test.page(`${ baseurl }/#/cases?case_worker__team=2`)
+('Do not set default case worker when navigating cases with URL params', async t => {
 
     await login(t, 'admin', 'admin') 
 
     await t
-        .navigateTo(`${ baseurl }/#/cases?case_worker__team=2`)
         .expect(getLocation()).contains('case_worker__team=2')
         .expect(getLocation()).notContains('case_worker=2')
         .expect(Selector('select#field-case-worker option').withText('---').selected).ok()
@@ -208,12 +209,12 @@ test('Do not set default case worker when navigating cases with URL params', asy
 
 // When loading appropriations page with query params and no case worker, 
 // filters should be applied based on params only
-test('Do not set default case worker when navigating appropriations with URL params', async t => {
+test.page(`${ baseurl }/#/appropriations?case__case_worker__team=2`)
+('Do not set default case worker when navigating appropriations with URL params', async t => {
 
     await login(t, 'admin', 'admin') 
 
     await t
-        .navigateTo(`${ baseurl }/#/appropriations?case__case_worker__team=2`)
         .expect(getLocation()).contains('case__case_worker__team=2')
         .expect(getLocation()).notContains('case__case_worker=2')
         .expect(Selector('select#field-case-worker option').withText('---').selected).ok()
