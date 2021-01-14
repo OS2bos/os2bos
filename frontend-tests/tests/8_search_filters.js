@@ -30,7 +30,7 @@ const getLocation = ClientFunction(() => document.location.href),
             }
         }
 
-fixture.only('Check search filter defaults')
+fixture('Check search filter defaults')
 
 /*
     Rules to test: 
