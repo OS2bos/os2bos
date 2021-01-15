@@ -761,18 +761,24 @@ class PaymentSchedule(models.Model):
 
         rrule_frequency = self.create_rrule(start, until=end)
 
-        dates = list(rrule_frequency)
+        dates = rrule_frequency
 
-        for date_obj in dates:
-            Payment.objects.create(
-                date=date_obj,
-                recipient_type=self.recipient_type,
-                recipient_id=self.recipient_id,
-                recipient_name=self.recipient_name,
-                payment_method=self.payment_method,
-                amount=self.calculate_per_payment_amount(vat_factor, date_obj),
-                payment_schedule=self,
-            )
+        Payment.objects.bulk_create(
+            [
+                Payment(
+                    date=date_obj,
+                    recipient_type=self.recipient_type,
+                    recipient_id=self.recipient_id,
+                    recipient_name=self.recipient_name,
+                    payment_method=self.payment_method,
+                    amount=self.calculate_per_payment_amount(
+                        vat_factor, date_obj
+                    ),
+                    payment_schedule=self,
+                )
+                for date_obj in dates
+            ]
+        )
 
     def synchronize_payments(self, start, end, vat_factor=Decimal("100")):
         """Synchronize an existing number of payments for a new end_date."""
