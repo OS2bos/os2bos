@@ -101,15 +101,11 @@ class CaseSerializer(serializers.ModelSerializer):
 
     def get_num_ongoing_draft_or_expected_appropriations(self, case):
         """Get number of related expected or draft ongoing appropriations."""
-        return len(
-            [
-                appr
-                for appr in case.appropriations.ongoing()
-                if (
-                    appr.status == STATUS_EXPECTED
-                    or appr.status == STATUS_DRAFT
-                )
-            ]
+        return (
+            case.appropriations.ongoing()
+            .annotate_status()
+            .filter(Q(status=STATUS_EXPECTED) | Q(status=STATUS_DRAFT))
+            .count()
         )
 
     def validate(self, data):
@@ -714,7 +710,9 @@ class BaseAppropriationSerializer(serializers.ModelSerializer):
     @staticmethod
     def setup_eager_loading(queryset):
         """Set up eager loading for improved performance."""
-        queryset = queryset.prefetch_related("case", "activities")
+        queryset = queryset.prefetch_related(
+            "case", "activities"
+        ).annotate_status()
         return queryset
 
     def get_num_ongoing_draft_or_expected_activities(self, appropriation):

@@ -1230,15 +1230,15 @@ class Appropriation(AuditModelMixin, models.Model):
 
     objects = AppropriationQuerySet.as_manager()
 
-    @property
-    def status(self):
-        """Calculate appropriation status from status of activities."""
-        if self.activities.filter(status=STATUS_EXPECTED).exists():
-            return STATUS_EXPECTED
-        if self.activities.filter(status=STATUS_GRANTED).exists():
-            return STATUS_GRANTED
+    # @property
+    # def status(self):
+    #     """Calculate appropriation status from status of activities."""
+    #     if self.activities.filter(status=STATUS_EXPECTED).exists():
+    #         return STATUS_EXPECTED
+    #     if self.activities.filter(status=STATUS_GRANTED).exists():
+    #         return STATUS_GRANTED
 
-        return STATUS_DRAFT
+    #     return STATUS_DRAFT
 
     @property
     def granted_from_date(self):
