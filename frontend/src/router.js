@@ -71,14 +71,14 @@ const router = new Router({
             component: () => import(/* webpackChunkName: "activity" */ './components/activities/Activity.vue')
         },
         {
-            path: '/appropriation-search/',
-            name: 'appropriation-search',
-            component: () => import(/* webpackChunkName: "appropriationsearch" */ './components/appropriations/AppropriationSearch.vue')
+            path: '/appropriations/',
+            name: 'appropriations',
+            component: () => import(/* webpackChunkName: "appropriations" */ './components/appropriations/Appropriations.vue')
         },
         {
             path: '/payments/',
             name: 'payments',
-            component: () => import(/* webpackChunkName: "payments" */ './components/payments/PaymentSearch.vue')
+            component: () => import(/* webpackChunkName: "payments" */ './components/payments/Payments.vue')
         },
         {
             // 404 page. This route must declared last
@@ -99,7 +99,12 @@ router.beforeEach((to, from, next) => {
         next()
     } else {
         // Try to login
-        window.location = '/api/accounts/login/'
+        // Add next parameter for SSO redirect
+        var str = [];
+        for(var p in to.query){
+            str.push(p + "=" + to.query[p]);
+        }
+        window.location = '/api/accounts/login/?next=' + encodeURIComponent('/#' + to.path + "?" + str.join("&"))
     }
 })
 

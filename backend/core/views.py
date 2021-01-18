@@ -132,14 +132,18 @@ class CaseViewSet(AuditModelViewSetMixin, AuditViewSet):
     serializer_class = CaseSerializer
     filterset_class = CaseFilter
 
+    def get_queryset(self):
+        """Avoid Django's default lazy loading to improve performance."""
+        queryset = Case.objects.all()
+        queryset = self.get_serializer_class().setup_eager_loading(queryset)
+        return queryset
+
     def perform_create(self, serializer):
-        """Create new case - customized to set team from user."""
+        """Create new case - customized to set user."""
         current_user = self.request.user
-        team = current_user.team
         serializer.save(
             case_worker=current_user,
             user_created=current_user.username,
-            team=team,
         )
 
     @action(detail=True, methods=["get"])
@@ -209,6 +213,10 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
         """Avoid Django's default lazy loading to improve performance."""
         queryset = Appropriation.objects.all()
         queryset = self.get_serializer_class().setup_eager_loading(queryset)
+
+        # We need to be able to show and filter on the
+        # main activity details id.
+        queryset = queryset.annotate_main_activity_details_id()
         return queryset
 
     @action(detail=True, methods=["patch"])
@@ -393,7 +401,7 @@ class TeamViewSet(ReadOnlyViewset):
 
 
 class RateViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
-    """Expose law sections in REST API."""
+    """Expose rates in REST API."""
 
     queryset = Rate.objects.all()
     serializer_class = RateSerializer

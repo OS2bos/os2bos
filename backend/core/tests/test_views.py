@@ -14,6 +14,7 @@ from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 
+from parameterized import parameterized
 from freezegun import freeze_time
 
 from core.models import (
@@ -39,6 +40,7 @@ from core.tests.testing_utils import (
     create_activity,
     create_payment_schedule,
     create_user,
+    create_activity_details,
 )
 
 User = get_user_model()
@@ -138,9 +140,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         cls.basic_setup()
 
     def test_history_action_no_history(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         reverse_url = reverse("case-history", kwargs={"pk": case.pk})
 
         self.client.login(username=self.username, password=self.password)
@@ -149,9 +149,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.json()[0]["scaling_step"], 1)
 
     def test_history_action_changed_scaling_steps(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         # Change to different scaling steps.
         case.scaling_step = 5
         case.save()
@@ -170,9 +168,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         )
 
     def test_history_action_changed_effort_steps(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         # Change to different effort steps.
         case.effort_step = EffortStep.objects.get(number=3)
         case.save()
@@ -194,9 +190,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         """
 
     def test_history_action_changed_case_worker(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         # Change to different effort steps.
         orla = case.case_worker
         leif = User.objects.create(username="Leif")
@@ -219,9 +213,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         )
 
     def test_patch_is_saved(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
 
         self.client.login(username=self.username, password=self.password)
 
@@ -241,9 +233,9 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
     def test_simple_post(self):
         url = reverse("case-list")
         json = create_case_as_json(
-            self.case_worker, self.team, self.municipality, self.district
+            self.case_worker, self.municipality, self.district
         )
-        # team should be set on the user and also saved on the case.
+        # team should be set on the user
         self.user.team = self.team
         self.user.save()
 
@@ -251,13 +243,12 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         response = self.client.post(url, json)
 
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(response.json()["team"], self.team.id)
 
     def test_different_profiles(self):
         url = reverse("case-list")
         # Readonly user
         json = create_case_as_json(
-            self.case_worker, self.team, self.municipality, self.district
+            self.case_worker, self.municipality, self.district
         )
         self.user.team = self.team
         self.user.profile = "readonly"
@@ -267,7 +258,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.status_code, 403)
         # User can edit
         json = create_case_as_json(
-            self.case_worker, self.team, self.municipality, self.district
+            self.case_worker, self.municipality, self.district
         )
         self.user.profile = "edit"
         self.user.save()
@@ -276,7 +267,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.status_code, 201)
         # No profile
         json = create_case_as_json(
-            self.case_worker, self.team, self.municipality, self.district
+            self.case_worker, self.municipality, self.district
         )
         self.user.profile = ""
         self.user.save()
@@ -288,7 +279,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         url = reverse("case-list")
         # Anonymous user
         json = create_case_as_json(
-            self.case_worker, self.team, self.municipality, self.district
+            self.case_worker, self.municipality, self.district
         )
         self.user = None
         response = self.client.post(url, json)
@@ -303,9 +294,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
             payment_frequency=PaymentSchedule.DAILY,
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
         )
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         # create a main activity with an expired end_date.
         create_activity(
@@ -336,9 +325,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
             payment_frequency=PaymentSchedule.DAILY,
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
         )
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         # create a main activity with an expired end_date.
         create_activity(
@@ -364,9 +351,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         url = reverse("case-list")
         self.client.login(username=self.username, password=self.password)
 
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         create_appropriation(case=case)
 
         data = {"expired": False}
@@ -382,9 +367,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
     def test_get_non_expired_filter_no_appropriations(self):
         url = reverse("case-list")
         self.client.login(username=self.username, password=self.password)
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         data = {"expired": False}
         response = self.client.get(url, data)
 
@@ -399,9 +382,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
         url = reverse("case-change-case-worker")
         self.client.login(username=self.username, password=self.password)
 
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         new_case_worker = create_user(username="Jens Tester")
         data = {"case_pks": [case.pk], "case_worker_pk": new_case_worker.pk}
         response = self.client.patch(
@@ -432,9 +413,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
     def test_change_case_worker_missing_case_worker_pk(self):
         url = reverse("case-change-case-worker")
         self.client.login(username=self.username, password=self.password)
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         data = {"case_pks": [case.pk]}
         response = self.client.patch(
             url, data=data, content_type="application/json"
@@ -449,9 +428,7 @@ class TestCaseViewSet(AuthenticatedTestCase, BasicTestMixin):
     def test_change_case_worker_non_existant_case_worker(self):
         url = reverse("case-change-case-worker")
         self.client.login(username=self.username, password=self.password)
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         data = {"case_pks": [case.pk], "case_worker_pk": 999}
         response = self.client.patch(
             url, data=data, content_type="application/json"
@@ -470,9 +447,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         cls.basic_setup()
 
     def test_grant_new(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -499,9 +474,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.status_code, 200)
 
     def test_grant_no_activities(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(sbsys_id="XXX-YYY", case=case)
         create_activity(
             case,
@@ -521,9 +494,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.status_code, 400)
 
     def test_grant_wrong_activity(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation1 = create_appropriation(sbsys_id="XXX-YYY", case=case)
         appropriation2 = create_appropriation(sbsys_id="YYY-XXX", case=case)
         activity = create_activity(
@@ -547,9 +518,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.status_code, 400)
 
     def test_grant_main_activity_not_allowed(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -599,9 +568,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         )
 
     def test_grant_suppl_activity_not_allowed(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -651,9 +618,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         )
 
     def test_grant_no_granted_main_activity_not_allowed(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -704,9 +669,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
 
     @mock.patch("core.models.send_appropriation")
     def test_grant_one_time_in_past_included(self, send_appropriation_mock):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -754,10 +717,9 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             one_time_activity, send_appropriation_mock.call_args[0][1]
         )
 
+    @freeze_time("2020-01-01")
     def test_grant_granted(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -826,9 +788,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
 
     @freeze_time("2020-01-01")
     def test_grant_granted_in_future_deletes_old(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -885,9 +845,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(modifying_activity.payment_plan.payments.count(), 91)
 
     def test_no_approval_level(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(sbsys_id="XXX-YYY", case=case)
         activity = create_activity(
             case,
@@ -902,6 +860,139 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             url, json, content_type="application/json"
         )
         self.assertEqual(response.status_code, 400)
+
+    @freeze_time("2020-01-01")
+    def test_filter_main_activity__details__id(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section()
+        approval_level, _ = ApprovalLevel.objects.get_or_create(
+            name="egenkompetence"
+        )
+        # Create an appropriation that should have
+        # main_activity_details_id = details.id
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+
+        details = create_activity_details(
+            name="test aktivitetsdetalje", activity_id="111112"
+        )
+        expected_details = create_activity_details(
+            name="test forventet aktivitetsdetalje", activity_id="111115"
+        )
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=date(year=2020, month=1, day=1),
+            end_date=date(year=2020, month=1, day=10),
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+            details=details,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=activity,
+        )
+        section.main_activities.add(
+            activity.details,
+            expected_details,
+        )
+
+        modifying_activity = create_activity(
+            case,
+            appropriation,
+            start_date=date(year=2020, month=1, day=7),
+            end_date=date(year=2020, month=1, day=20),
+            status=STATUS_EXPECTED,
+            activity_type=MAIN_ACTIVITY,
+            modifies=activity,
+            details=expected_details,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=modifying_activity,
+        )
+
+        self.client.login(username=self.username, password=self.password)
+        url = reverse("appropriation-grant", kwargs={"pk": appropriation.pk})
+        json = {
+            "approval_level": approval_level.id,
+            "approval_note": "HEJ!",
+            "activities": [modifying_activity.pk],
+        }
+        response = self.client.patch(
+            url, json, content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+
+        # Create an appropriation that should have
+        # main_activity_details_id = expected_details.id
+        appropriation = create_appropriation(
+            sbsys_id="YYY-XXX", case=case, section=section
+        )
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=date(year=2020, month=1, day=1),
+            end_date=date(year=2020, month=1, day=10),
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+            details=expected_details,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=activity,
+        )
+
+        modifying_activity = create_activity(
+            case,
+            appropriation,
+            start_date=date(year=2020, month=1, day=7),
+            end_date=date(year=2020, month=1, day=20),
+            status=STATUS_EXPECTED,
+            activity_type=MAIN_ACTIVITY,
+            modifies=activity,
+            details=details,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=modifying_activity,
+        )
+        url = reverse("appropriation-grant", kwargs={"pk": appropriation.pk})
+        json = {
+            "approval_level": approval_level.id,
+            "approval_note": "HEJ!",
+            "activities": [modifying_activity.pk],
+        }
+        response = self.client.patch(
+            url, json, content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+
+        url = reverse("appropriation-list")
+        json = {"main_activity__details__id": details.id}
+        response = self.client.get(url, json, content_type="application/json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()), 1)
+        self.assertEqual(
+            response.json()[0]["main_activity__details__id"], details.id
+        )
+
+        url = reverse("appropriation-list")
+        json = {"main_activity__details__id": expected_details.id}
+        response = self.client.get(url, json, content_type="application/json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()), 1)
+        self.assertEqual(
+            response.json()[0]["main_activity__details__id"],
+            expected_details.id,
+        )
 
 
 class TestPaymentScheduleViewSet(AuthenticatedTestCase):
@@ -925,9 +1016,7 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
         cls.basic_setup()
 
     def test_get_payment_date_or_date__gte_filter(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         now = timezone.now()
         activity = create_activity(
@@ -957,9 +1046,7 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
         )
 
     def test_get_payment_date_or_date__lte_filter(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
 
         now = timezone.now()
@@ -988,10 +1075,181 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
             ),
         )
 
-    def test_post(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
+    @parameterized.expand(
+        [
+            (
+                "previous",
+                [
+                    "2019-12-23",
+                    "2019-12-24",
+                    "2019-12-25",
+                    "2019-12-26",
+                    "2019-12-27",
+                    "2019-12-28",
+                    "2019-12-29",
+                ],
+            ),
+            (
+                "current",
+                [
+                    "2019-12-30",
+                    "2019-12-31",
+                    "2020-01-01",
+                    "2020-01-02",
+                    "2020-01-03",
+                    "2020-01-04",
+                    "2020-01-05",
+                ],
+            ),
+            (
+                "next",
+                [
+                    "2020-01-06",
+                    "2020-01-07",
+                    "2020-01-08",
+                    "2020-01-09",
+                    "2020-01-10",
+                    "2020-01-11",
+                    "2020-01-12",
+                ],
+            ),
+        ]
+    )
+    @freeze_time("2020-01-01")
+    def test_filter_paid_date_or_date_week(self, argument, dates):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case)
+
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=date(year=2019, month=12, day=1),
+            end_date=date(year=2020, month=2, day=1),
         )
+        create_payment_schedule(
+            activity=activity, payment_frequency=PaymentSchedule.DAILY
+        )
+
+        url = reverse("payment-list")
+        self.client.login(username=self.username, password=self.password)
+
+        response = self.client.get(
+            url, data={"paid_date_or_date_week": argument}
+        )
+        payments = response.json()["results"]
+
+        self.assertEqual(response.status_code, 200)
+        self.assertCountEqual(dates, [payment["date"] for payment in payments])
+
+    @parameterized.expand(
+        [
+            (
+                "previous",
+                ["2020-01-01"],
+            ),
+            (
+                "current",
+                ["2020-02-01"],
+            ),
+            (
+                "next",
+                ["2020-03-01"],
+            ),
+        ]
+    )
+    @freeze_time("2020-02-01")
+    def test_filter_paid_date_or_date_month(self, argument, dates):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case)
+
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=date(year=2020, month=1, day=1),
+            end_date=date(year=2020, month=4, day=1),
+        )
+        create_payment_schedule(
+            activity=activity, payment_frequency=PaymentSchedule.MONTHLY
+        )
+
+        url = reverse("payment-list")
+        self.client.login(username=self.username, password=self.password)
+
+        response = self.client.get(
+            url, data={"paid_date_or_date_month": argument}
+        )
+        payments = response.json()["results"]
+
+        self.assertEqual(response.status_code, 200)
+        self.assertCountEqual(dates, [payment["date"] for payment in payments])
+
+    @parameterized.expand(
+        [
+            (
+                "previous",
+                [
+                    "2019-10-01",
+                    "2019-11-01",
+                    "2019-12-01",
+                ],
+            ),
+            (
+                "current",
+                [
+                    "2020-01-01",
+                    "2020-02-01",
+                    "2020-03-01",
+                    "2020-04-01",
+                    "2020-05-01",
+                    "2020-06-01",
+                    "2020-07-01",
+                    "2020-08-01",
+                    "2020-09-01",
+                    "2020-10-01",
+                    "2020-11-01",
+                    "2020-12-01",
+                ],
+            ),
+            (
+                "next",
+                ["2021-01-01", "2021-02-01"],
+            ),
+        ]
+    )
+    @freeze_time("2020-01-01")
+    def test_filter_paid_date_or_date_year(self, argument, dates):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case)
+
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=date(year=2019, month=10, day=1),
+            end_date=date(year=2021, month=2, day=1),
+        )
+        create_payment_schedule(
+            activity=activity, payment_frequency=PaymentSchedule.MONTHLY
+        )
+
+        url = reverse("payment-list")
+        self.client.login(username=self.username, password=self.password)
+
+        response = self.client.get(
+            url, data={"paid_date_or_date_year": argument}
+        )
+        payments = response.json()["results"]
+
+        self.assertEqual(response.status_code, 200)
+        self.assertCountEqual(dates, [payment["date"] for payment in payments])
+
+    def test_post(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         now = timezone.now()
         activity = create_activity(
@@ -1017,9 +1275,7 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.status_code, 400)
 
     def test_delete(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         now = timezone.now()
         activity = create_activity(
@@ -1043,9 +1299,7 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.status_code, 403)
 
     def test_put(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         now = timezone.now()
         activity = create_activity(
@@ -1082,9 +1336,7 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
 
     def test_get(self):
         now = timezone.now().date()
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         activity = create_activity(
             case=case,
@@ -1109,9 +1361,7 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
 
     def test_delete(self):
         now = timezone.now().date()
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         activity1 = create_activity(
             case=case,
@@ -1238,7 +1488,7 @@ class TestAuditModelViewSetMixin(AuthenticatedTestCase, BasicTestMixin):
     def test_case_perform_create(self):
         url = reverse("case-list")
         json = create_case_as_json(
-            self.case_worker, self.team, self.municipality, self.district
+            self.case_worker, self.municipality, self.district
         )
         self.user.team = self.team
         self.user.save()
@@ -1252,7 +1502,7 @@ class TestAuditModelViewSetMixin(AuthenticatedTestCase, BasicTestMixin):
     def test_case_perform_update(self):
         url = reverse("case-list")
         json = create_case_as_json(
-            self.case_worker, self.team, self.municipality, self.district
+            self.case_worker, self.municipality, self.district
         )
         self.user.team = self.team
         self.user.save()
@@ -1271,9 +1521,7 @@ class TestAuditModelViewSetMixin(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.json()["user_modified"], self.username)
 
     def test_related_person_perform_create(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
 
         url = reverse("relatedperson-list")
         self.client.login(username=self.username, password=self.password)
@@ -1287,9 +1535,7 @@ class TestAuditModelViewSetMixin(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.json()["user_modified"], "")
 
     def test_related_person_perform_update(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
 
         url = reverse("relatedperson-list")
         self.client.login(username=self.username, password=self.password)

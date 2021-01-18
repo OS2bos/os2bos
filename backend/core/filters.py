@@ -11,6 +11,13 @@ Filters allow us to do basic search for objects on allowed field without
 adding the complexity of an entire search engine nor of custom queries.
 """
 
+from django.utils import timezone
+from datetime import date
+from dateutil.relativedelta import (
+    relativedelta,
+    MO,
+    SU,
+)
 
 from django.utils.translation import gettext
 
@@ -23,9 +30,16 @@ from core.models import (
     Payment,
     Section,
     Appropriation,
-    ActivityDetails,
-    MAIN_ACTIVITY,
+    User,
 )
+
+
+class UserForCaseFilter(filters.FilterSet):
+    """Filter cases on case worker team."""
+
+    class Meta:
+        model = User
+        fields = {"team": ["exact"]}
 
 
 class CaseFilter(filters.FilterSet):
@@ -33,6 +47,12 @@ class CaseFilter(filters.FilterSet):
 
     expired = filters.BooleanFilter(
         method="filter_expired", label=gettext("Udgået")
+    )
+    case_worker = filters.RelatedFilter(
+        UserForCaseFilter,
+        field_name="case_worker",
+        label=gettext("Sagsbehandler"),
+        queryset=User.objects.all(),
     )
 
     class Meta:
@@ -62,38 +82,24 @@ class CaseForAppropriationFilter(filters.FilterSet):
         model = Case
         fields = {
             "cpr_number": ["exact"],
-            "team": ["exact"],
             "case_worker": ["exact"],
             "sbsys_id": ["exact"],
+            "case_worker__team": ["exact"],
         }
-
-
-class ActivityDetailsForAppropriationFilter(filters.FilterSet):
-    """Filter activity details on ID."""
-
-    class Meta:
-        model = ActivityDetails
-        fields = {"id": ["exact"]}
 
 
 class AppropriationFilter(filters.FilterSet):
     """Filter appropriation."""
+
+    main_activity__details__id = filters.NumberFilter(
+        label=gettext("Aktivitetsdetalje for hovedaktivitet")
+    )
 
     case = filters.RelatedFilter(
         CaseForAppropriationFilter,
         field_name="case",
         label=Case._meta.verbose_name.title(),
         queryset=Case.objects.all(),
-    )
-
-    main_activity__details = filters.RelatedFilter(
-        ActivityDetailsForAppropriationFilter,
-        field_name="activities__details",
-        label=gettext("Aktivitetsdetalje for hovedaktivitet"),
-        queryset=ActivityDetails.objects.filter(
-            activity__activity_type=MAIN_ACTIVITY,
-            activity__modifies__isnull=True,
-        ),
     )
 
     class Meta:
@@ -169,6 +175,30 @@ class PaymentFilter(filters.FilterSet):
         label=gettext("Betalingsdato eller Dato mindre eller lig med"),
     )
 
+    generic_time_choices = (
+        ("previous", "Forrige"),
+        ("current", "Nuværende"),
+        ("next", "Næste"),
+    )
+
+    paid_date_or_date_week = filters.ChoiceFilter(
+        method="filter_paid_date_or_date_week",
+        label=gettext("Betalingsdato eller Dato for uge"),
+        choices=generic_time_choices,
+    )
+
+    paid_date_or_date_month = filters.ChoiceFilter(
+        method="filter_paid_date_or_date_month",
+        label=gettext("Betalingsdato eller Dato for måned"),
+        choices=generic_time_choices,
+    )
+
+    paid_date_or_date_year = filters.ChoiceFilter(
+        method="filter_paid_date_or_date_year",
+        label=gettext("Betalingsdato eller Dato for år"),
+        choices=generic_time_choices,
+    )
+
     def filter_paid_date_or_date_gte(self, queryset, name, value):
         """Filter on value <= "best known payment date"."""
         return queryset.paid_date_or_date_gte(value)
@@ -176,6 +206,55 @@ class PaymentFilter(filters.FilterSet):
     def filter_paid_date_or_date_lte(self, queryset, name, value):
         """Filter on value >= "best known payment date"."""
         return queryset.paid_date_or_date_lte(value)
+
+    def filter_paid_date_or_date_week(self, queryset, name, value):
+        """Filter best known payment date on previous, current, next week."""
+        now = timezone.now().date()
+        if value == "previous":
+            reference_date = now - relativedelta(weeks=1)
+        elif value == "current":
+            reference_date = now
+        elif value == "next":  # pragma: no branch
+            reference_date = now + relativedelta(weeks=1)
+
+        min_date = reference_date - relativedelta(weekday=MO(-1))
+        max_date = reference_date + relativedelta(weekday=SU(1))
+        return queryset.paid_date_or_date_lte(max_date).paid_date_or_date_gte(
+            min_date
+        )
+
+    def filter_paid_date_or_date_month(self, queryset, name, value):
+        """Filter best known payment date on previous, current, next month."""
+        now = timezone.now().date()
+        if value == "previous":
+            reference_date = now - relativedelta(months=1)
+        elif value == "current":
+            reference_date = now
+        elif value == "next":  # pragma: no branch
+            reference_date = now + relativedelta(months=1)
+
+        min_date = reference_date + relativedelta(day=1)
+        # day=31 will always return the last day of the month.
+        max_date = reference_date + relativedelta(day=31)
+        return queryset.paid_date_or_date_lte(max_date).paid_date_or_date_gte(
+            min_date
+        )
+
+    def filter_paid_date_or_date_year(self, queryset, name, value):
+        """Filter best known payment date on previous, current, next year."""
+        now = timezone.now().date()
+        if value == "previous":
+            year = (now - relativedelta(years=1)).year
+        elif value == "current":
+            year = now.year
+        elif value == "next":  # pragma: no branch
+            year = (now + relativedelta(years=1)).year
+
+        min_date = date(day=1, month=1, year=year)
+        max_date = date(day=31, month=12, year=year)
+        return queryset.paid_date_or_date_lte(max_date).paid_date_or_date_gte(
+            min_date
+        )
 
     class Meta:
         model = Payment

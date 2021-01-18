@@ -21,28 +21,19 @@
 </template>
 
 <script>
-    
-    export default {
-
-        data: function() {
-            return {
-
-            }
+export default {
+    computed: {
+        auth: function() {
+            return this.$store.getters.getAuth
         },
-        computed: {
-            auth: function() {
-                return this.$store.getters.getAuth
-            },
-            user: function() {
-                return this.$store.getters.getUser
-            },
-            team: function() {
-                return this.$store.getters.getTeam
-            }
+        user: function() {
+            return this.$store.getters.getUser
+        },
+        team: function() {
+            return this.$store.getters.getTeam
         }
-
     }
-
+}
 </script>
 
 <style>
@@ -52,5 +43,4 @@
         flex-flow: row nowrap;
         align-items: center;
     }
-
 </style>

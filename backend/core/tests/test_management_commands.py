@@ -39,9 +39,7 @@ class TestMarkPaymentsPaid(TestCase, BasicTestMixin):
         cls.basic_setup()
 
     def test_mark_payments_paid(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         activity = create_activity(
             case=case,
@@ -65,9 +63,7 @@ class TestMarkPaymentsPaid(TestCase, BasicTestMixin):
         self.assertEqual(payment.paid_amount, payment.amount)
 
     def test_mark_payments_paid_no_arg(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         activity = create_activity(
             case=case,
@@ -92,9 +88,7 @@ class TestMarkPaymentsPaid(TestCase, BasicTestMixin):
     @mock.patch("core.management.commands.mark_payments_paid.logger")
     def test_mark_payments_paid_wrong_date(self, logger_mock):
         payment_schedule = create_payment_schedule(fictive=True)
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         create_activity(
             case=case,
@@ -122,9 +116,7 @@ class TestMarkPaymentsPaid(TestCase, BasicTestMixin):
         self, payment_mock, logger_mock
     ):
         payment_schedule = create_payment_schedule(fictive=True)
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         create_activity(
             case=case,
@@ -156,9 +148,7 @@ class TestRenewPayments(TestCase, BasicTestMixin):
         cls.basic_setup()
 
     def test_renew_payments_renewed(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
 
         # Should generate payments to 2019-12-01.
@@ -252,9 +242,7 @@ class TestSendExpiredEmails(TestCase, BasicTestMixin):
     def test_send_expired_emails_success(self):
         today = timezone.now().date()
 
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
 
         activity = create_activity(
@@ -286,9 +274,7 @@ class TestSendExpiredEmails(TestCase, BasicTestMixin):
     def test_send_expired_emails_doesnt_trigger_email(self):
         today = timezone.now().date()
 
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
 
         create_activity(
@@ -419,9 +405,7 @@ class TestGeneratePaymentsReports(TestCase, BasicTestMixin):
     def test_generate_payments_report_success(self, logger_mock):
         section = create_section()
 
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case, section=section)
 
         activity = create_activity(
@@ -690,9 +674,7 @@ class TestRecalculateOnChangedRate(TestCase, BasicTestMixin):
         cls.basic_setup()
 
     def test_recalculate_on_changed(self):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
 
         rate = create_rate()

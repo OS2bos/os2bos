@@ -72,7 +72,7 @@
 
                         </fieldset>
                         <fieldset style="margin-bottom: .75rem;">
-                            <input type="submit" @click="pay" :disabled="disabled" value="Betal">
+                            <input type="submit" :disabled="disabled" value="Betal">
                         </fieldset>
                     </form>
 

@@ -13,6 +13,7 @@ from datetime import datetime
 from django.db import transaction
 from django.core.management.base import BaseCommand
 from core.models import Payment, STATUS_GRANTED, SD, CASH, PaymentSchedule
+from core.decorators import log_to_prometheus
 
 logger = logging.getLogger("bevillingsplatform.mark_payments_paid")
 
@@ -22,12 +23,10 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            "-d",
-            "--date",
-            help=("Mark payments for date"),
-            default=None,
+            "-d", "--date", help=("Mark payments for date"), default=None
         )
 
+    @log_to_prometheus("mark_payments_paid")
     @transaction.atomic
     def handle(self, *args, **options):
         """Mark payments paid for the given date."""

@@ -57,13 +57,7 @@ paths:
       - name: case_worker
         required: false
         in: query
-        description: case_worker
-        schema:
-          type: string
-      - name: team
-        required: false
-        in: query
-        description: team
+        description: Sagsbehandler
         schema:
           type: string
       - name: district
@@ -240,13 +234,7 @@ paths:
       - name: case_worker
         required: false
         in: query
-        description: case_worker
-        schema:
-          type: string
-      - name: team
-        required: false
-        in: query
-        description: team
+        description: Sagsbehandler
         schema:
           type: string
       - name: district
@@ -393,13 +381,7 @@ paths:
       - name: case_worker
         required: false
         in: query
-        description: case_worker
-        schema:
-          type: string
-      - name: team
-        required: false
-        in: query
-        description: team
+        description: Sagsbehandler
         schema:
           type: string
       - name: district
@@ -557,13 +539,7 @@ paths:
       - name: case_worker
         required: false
         in: query
-        description: case_worker
-        schema:
-          type: string
-      - name: team
-        required: false
-        in: query
-        description: team
+        description: Sagsbehandler
         schema:
           type: string
       - name: district
@@ -721,13 +697,7 @@ paths:
       - name: case_worker
         required: false
         in: query
-        description: case_worker
-        schema:
-          type: string
-      - name: team
-        required: false
-        in: query
-        description: team
+        description: Sagsbehandler
         schema:
           type: string
       - name: district
@@ -2090,7 +2060,7 @@ paths:
   /api/rates/:
     get:
       operationId: listRates
-      description: Expose law sections in REST API.
+      description: Expose rates in REST API.
       parameters: []
       responses:
         '200':
@@ -2106,7 +2076,7 @@ paths:
   /api/rates/{id}/:
     get:
       operationId: retrieveRate
-      description: Expose law sections in REST API.
+      description: Expose rates in REST API.
       parameters:
       - name: id
         in: path
@@ -2542,6 +2512,36 @@ paths:
         description: Betalingsdato eller Dato mindre eller lig med
         schema:
           type: string
+      - name: paid_date_or_date_week
+        required: false
+        in: query
+        description: Betalingsdato eller Dato for uge
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
+      - name: paid_date_or_date_month
+        required: false
+        in: query
+        description: "Betalingsdato eller Dato for m\xE5ned"
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
+      - name: paid_date_or_date_year
+        required: false
+        in: query
+        description: "Betalingsdato eller Dato for \xE5r"
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
       responses:
         '200':
           content:
@@ -2745,6 +2745,36 @@ paths:
         description: Betalingsdato eller Dato mindre eller lig med
         schema:
           type: string
+      - name: paid_date_or_date_week
+        required: false
+        in: query
+        description: Betalingsdato eller Dato for uge
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
+      - name: paid_date_or_date_month
+        required: false
+        in: query
+        description: "Betalingsdato eller Dato for m\xE5ned"
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
+      - name: paid_date_or_date_year
+        required: false
+        in: query
+        description: "Betalingsdato eller Dato for \xE5r"
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
       responses:
         '200':
           content:
@@ -2902,6 +2932,36 @@ paths:
         description: Betalingsdato eller Dato mindre eller lig med
         schema:
           type: string
+      - name: paid_date_or_date_week
+        required: false
+        in: query
+        description: Betalingsdato eller Dato for uge
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
+      - name: paid_date_or_date_month
+        required: false
+        in: query
+        description: "Betalingsdato eller Dato for m\xE5ned"
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
+      - name: paid_date_or_date_year
+        required: false
+        in: query
+        description: "Betalingsdato eller Dato for \xE5r"
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
       requestBody:
         content:
           application/json:
@@ -3070,6 +3130,36 @@ paths:
         description: Betalingsdato eller Dato mindre eller lig med
         schema:
           type: string
+      - name: paid_date_or_date_week
+        required: false
+        in: query
+        description: Betalingsdato eller Dato for uge
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
+      - name: paid_date_or_date_month
+        required: false
+        in: query
+        description: "Betalingsdato eller Dato for m\xE5ned"
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
+      - name: paid_date_or_date_year
+        required: false
+        in: query
+        description: "Betalingsdato eller Dato for \xE5r"
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
       requestBody:
         content:
           application/json:
@@ -3238,6 +3328,36 @@ paths:
         description: Betalingsdato eller Dato mindre eller lig med
         schema:
           type: string
+      - name: paid_date_or_date_week
+        required: false
+        in: query
+        description: Betalingsdato eller Dato for uge
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
+      - name: paid_date_or_date_month
+        required: false
+        in: query
+        description: "Betalingsdato eller Dato for m\xE5ned"
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
+      - name: paid_date_or_date_year
+        required: false
+        in: query
+        description: "Betalingsdato eller Dato for \xE5r"
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
       responses:
         '204':
           description: ''
@@ -4783,6 +4903,9 @@ components:
         num_ongoing_draft_or_expected_appropriations:
           type: string
           readOnly: true
+        team:
+          type: string
+          readOnly: true
         created:
           type: string
           format: date-time
@@ -4827,8 +4950,6 @@ components:
         note:
           type: string
         case_worker:
-          type: integer
-        team:
           type: integer
         district:
           type: integer
@@ -5036,6 +5157,9 @@ components:
                       case__cpr_number:
                         type: string
                         readOnly: true
+                      case__name:
+                        type: string
+                        readOnly: true
                       activity__id:
                         type: string
                         readOnly: true
@@ -5199,6 +5323,8 @@ components:
                   maximum: 31
                   minimum: 1
                   nullable: true
+                  description: "dette felt er obligatorisk for og ang\xE5r kun m\xE5\
+                    nedlige betalinger"
                 payment_type:
                   enum:
                   - ONE_TIME_PAYMENT
@@ -5390,6 +5516,9 @@ components:
                   case__cpr_number:
                     type: string
                     readOnly: true
+                  case__name:
+                    type: string
+                    readOnly: true
                   activity__id:
                     type: string
                     readOnly: true
@@ -5553,6 +5682,8 @@ components:
               maximum: 31
               minimum: 1
               nullable: true
+              description: "dette felt er obligatorisk for og ang\xE5r kun m\xE5nedlige\
+                \ betalinger"
             payment_type:
               enum:
               - ONE_TIME_PAYMENT
@@ -5687,6 +5818,9 @@ components:
                 type: string
                 readOnly: true
               case__cpr_number:
+                type: string
+                readOnly: true
+              case__name:
                 type: string
                 readOnly: true
               activity__id:
@@ -5852,6 +5986,8 @@ components:
           maximum: 31
           minimum: 1
           nullable: true
+          description: "dette felt er obligatorisk for og ang\xE5r kun m\xE5nedlige\
+            \ betalinger"
         payment_type:
           enum:
           - ONE_TIME_PAYMENT
@@ -5939,6 +6075,7 @@ components:
           type: string
         needs_recalculation:
           type: boolean
+          description: "dette felt s\xE6ttes automatisk n\xE5r en takst \xE6ndres"
       required:
       - name
     Price:
@@ -6025,6 +6162,9 @@ components:
           type: string
           readOnly: true
         case__cpr_number:
+          type: string
+          readOnly: true
+        case__name:
           type: string
           readOnly: true
         activity__id:

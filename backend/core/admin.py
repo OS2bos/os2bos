@@ -52,10 +52,6 @@ from core.proxies import (
     HistoricalRatePerDateProxy,
 )
 
-for klass in (PaymentMethodDetails, Team):
-    admin.site.register(klass, admin.ModelAdmin)
-
-
 User = get_user_model()
 
 
@@ -262,7 +258,7 @@ class PriceAdmin(VariableRateAdmin):
 
 @admin.register(Payment)
 class PaymentAdmin(SimpleHistoryAdmin):
-    """Dislay read only fields on payment."""
+    """ModelAdmin for Payment."""
 
     readonly_fields = ("payment_id", "account_string", "account_alias")
     search_fields = ("payment_schedule__payment_id",)
@@ -413,6 +409,20 @@ class PaymentScheduleAdmin(admin.ModelAdmin):
     account_alias.short_description = _("kontoalias")
 
 
+@admin.register(PaymentMethodDetails)
+class PaymentMethodDetails(admin.ModelAdmin):
+    """ModelAdmin for PaymentMethodDetails."""
+
+    pass
+
+
+@admin.register(Team)
+class TeamAdmin(ClassificationAdmin):
+    """ModelAdmin for Team."""
+
+    pass
+
+
 @admin.register(User)
 class CustomUserAdmin(BaseUserAdmin):
     """Add team to user admin interface."""
@@ -420,6 +430,31 @@ class CustomUserAdmin(BaseUserAdmin):
     fieldsets = (
         ("Organisation", {"fields": ("team",)}),
     ) + BaseUserAdmin.fieldsets
+
+    def has_view_permission(self, request, obj=None):
+        """Override has_view_permission for ModelAdmin."""
+        user = request.user
+        return user.is_authenticated and user.is_workflow_engine_or_admin()
+
+    def has_add_permission(self, request):
+        """Override has_add_permission for ModelAdmin."""
+        user = request.user
+        return user.is_authenticated and user.is_workflow_engine_or_admin()
+
+    def has_change_permission(self, request, obj=None):
+        """Override has_change_permission for ModelAdmin."""
+        user = request.user
+        return user.is_authenticated and user.is_workflow_engine_or_admin()
+
+    def has_delete_permission(self, request, obj=None):
+        """Override has_delete_permission for ModelAdmin."""
+        user = request.user
+        return user.is_authenticated and user.is_workflow_engine_or_admin()
+
+    def has_module_permission(self, request):
+        """Override has_model_permission for ModelAdmin."""
+        user = request.user
+        return user.is_authenticated and user.is_workflow_engine_or_admin()
 
 
 class SectionInfoInline(ClassificationInline):
@@ -634,6 +669,6 @@ class SectionInfoAdmin(ClassificationAdmin):
 
 @admin.register(AccountAlias)
 class AccountAliasAdmin(ClassificationAdmin):
-    """ModelAdmin for SectionInfo."""
+    """ModelAdmin for AccountAlias."""
 
     list_display = ("section_info", "activity_details", "alias")

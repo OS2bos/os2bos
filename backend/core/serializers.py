@@ -44,7 +44,7 @@ from core.models import (
     STATUS_EXPECTED,
     STATUS_GRANTED,
 )
-from core.utils import create_rrule
+from core.utils import create_rrule, validate_cvr
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -75,10 +75,19 @@ class CaseSerializer(serializers.ModelSerializer):
     num_ongoing_draft_or_expected_appropriations = (
         serializers.SerializerMethodField()
     )
+    team = serializers.ReadOnlyField(
+        source="case_worker.team.id", default=None
+    )
 
     class Meta:
         model = Case
         fields = "__all__"
+
+    @staticmethod
+    def setup_eager_loading(queryset):
+        """Set up eager loading for improved performance."""
+        queryset = queryset.select_related("case_worker__team")
+        return queryset
 
     def get_num_ongoing_appropriations(self, case):
         """Get number of related ongoing appropriations."""
@@ -214,7 +223,7 @@ class PaymentSerializer(serializers.ModelSerializer):
                 )
 
         # If this payment's activity has been granted, it may
-        # not* be changed.
+        # *not* be changed.
         if (
             (self.instance and self.instance.pk)
             and self.instance.payment_schedule.activity.status
@@ -333,6 +342,15 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
         ):
             raise serializers.ValidationError(
                 _("ugyldig betalingsmetode for betalingsmodtager")
+            )
+
+        if data[
+            "recipient_type"
+        ] == PaymentSchedule.COMPANY and not validate_cvr(
+            data["recipient_id"]
+        ):
+            raise serializers.ValidationError(
+                _("Ugyldigt CVR nummer for firma")
             )
 
         # Validate one_time and individual payment.
@@ -600,21 +618,12 @@ class BaseAppropriationSerializer(serializers.ModelSerializer):
     """Base Serializer for the Appropriation model."""
 
     status = serializers.ReadOnlyField()
-    total_granted_this_year = serializers.ReadOnlyField()
-    total_granted_full_year = serializers.ReadOnlyField()
-    total_expected_this_year = serializers.ReadOnlyField()
-    total_expected_full_year = serializers.ReadOnlyField()
-    total_cost_expected = serializers.ReadOnlyField()
-    total_cost_granted = serializers.ReadOnlyField()
 
     granted_from_date = serializers.ReadOnlyField()
     granted_to_date = serializers.ReadOnlyField()
     case__cpr_number = serializers.ReadOnlyField(source="case.cpr_number")
     case__name = serializers.ReadOnlyField(source="case.name")
     case__sbsys_id = serializers.ReadOnlyField(source="case.sbsys_id")
-    main_activity__details__id = serializers.ReadOnlyField(
-        source="main_activity.details.id", default=None
-    )
 
     num_ongoing_draft_or_expected_activities = (
         serializers.SerializerMethodField()
@@ -655,7 +664,7 @@ class BaseAppropriationSerializer(serializers.ModelSerializer):
 class ListAppropriationSerializer(BaseAppropriationSerializer):
     """Serializer for the Appropriation model for a list."""
 
-    pass
+    main_activity__details__id = serializers.ReadOnlyField()
 
 
 class AppropriationSerializer(BaseAppropriationSerializer):
@@ -663,6 +672,12 @@ class AppropriationSerializer(BaseAppropriationSerializer):
 
     main_activity = ActivitySerializer(read_only=True)
     activities = serializers.SerializerMethodField()
+    total_granted_this_year = serializers.ReadOnlyField()
+    total_granted_full_year = serializers.ReadOnlyField()
+    total_expected_this_year = serializers.ReadOnlyField()
+    total_expected_full_year = serializers.ReadOnlyField()
+    total_cost_expected = serializers.ReadOnlyField()
+    total_cost_granted = serializers.ReadOnlyField()
 
     def get_activities(self, appropriation):
         """Get activities on appropriation."""

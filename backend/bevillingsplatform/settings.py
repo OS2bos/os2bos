@@ -354,6 +354,16 @@ LOGGING = {
                 fallback=os.path.join(LOG_DIR, "serviceplatformen.log"),
             ),
         },
+        # handler for the django-mailer package.
+        "mailer": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "formatter": "verbose",
+            "filename": settings.get(
+                "MAILER_LOG_FILE",
+                fallback=os.path.join(LOG_DIR, "cron_mail.log"),
+            ),
+        },
     },
     "formatters": {
         "verbose": {
@@ -403,6 +413,12 @@ LOGGING = {
         },
         "bevillingsplatform.serviceplatformen": {
             "handlers": ["serviceplatformen"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        # logger for the django-mailer package.
+        "mailer": {
+            "handlers": ["mailer"],
             "level": "INFO",
             "propagate": True,
         },
@@ -501,7 +517,7 @@ SAML2_AUTH = {
         "BEFORE_LOGIN": "core.utils.saml_before_login",
     },
     "USE_JWT": True,
-    "FRONTEND_URL": settings.get("SAML_PUBLIC_HOST") + "#/",
+    "FRONTEND_URL": settings.get("SAML_PUBLIC_HOST") + "#",
     "CERT_FILE": settings.get("CERT_FILE", fallback=""),
     "KEY_FILE": settings.get("KEY_FILE", fallback=""),
     "AUTHN_REQUESTS_SIGNED": settings.getboolean(
@@ -510,6 +526,20 @@ SAML2_AUTH = {
 }
 
 SILENCED_SYSTEM_CHECKS = ["rest_framework.W001"]
+
+# Settings for manage.py graph_models from django-extensions.
+GRAPH_MODELS = {
+    "exclude_models": [
+        "AbstractUser",
+        "AuditModelMixin",
+        "SectionEffortStepProxy",
+        "ActivityDetailsSectionProxy",
+        "HistoricalRatePerDateProxy",
+        "HistoricalRatePerDate",
+        "HistoricalPayment",
+        "HistoricalCase",
+    ]
+}
 
 ALLOW_EDIT_OF_PAST_PAYMENTS = settings.getboolean(
     "ALLOW_EDIT_OF_PAST_PAYMENTS", fallback=False
@@ -520,3 +550,7 @@ WATCHMAN_CHECKS = (
     "watchman.checks.databases",
     # disable storage check since fileupload is not used.
 )
+
+# Prometheus logging.
+LOG_TO_PROMETHEUS = settings.getboolean("LOG_TO_PROMETHEUS", fallback=False)
+PROMETHEUS_HOST = settings.get("PROMETHEUS_HOST", fallback="localhost:9091")

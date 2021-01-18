@@ -43,6 +43,7 @@ from core.utils import (
     generate_granted_payments_report_list,
     generate_expected_payments_report_list,
     generate_payment_date_exclusion_dates,
+    validate_cvr,
 )
 from core.tests.testing_utils import (
     BasicTestMixin,
@@ -55,6 +56,7 @@ from core.tests.testing_utils import (
     create_activity_details,
     create_payment_date_exclusion,
     create_effort_step,
+    create_related_person,
 )
 
 
@@ -174,9 +176,7 @@ class SendAppropriationTestCase(TestCase, BasicTestMixin):
     def test_send_appropriation(
         self, get_template_mock, html_mock, message_mock
     ):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -225,9 +225,7 @@ class SendAppropriationTestCase(TestCase, BasicTestMixin):
     def test_send_appropriation_no_included(
         self, get_template_mock, html_mock, message_mock
     ):
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -345,7 +343,6 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         case_cpr_number = "1234567890"
         case = create_case(
             self.case_worker,
-            self.team,
             self.municipality,
             self.district,
             cpr_number=case_cpr_number,
@@ -408,9 +405,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         start_date = now - timedelta(days=1)
         end_date = now + timedelta(days=1)
         # Create an activity etc which is required.
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -466,9 +461,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         start_date = now
         end_date = now + timedelta(days=14)
         # Create an activity etc which is required.
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -518,9 +511,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         start_date = now
         end_date = now + timedelta(days=14)
         # Create an activity etc which is required.
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -575,9 +566,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         start_date = now
         end_date = now + timedelta(days=14)
         # Create an activity etc which is required.
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -647,9 +636,7 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         start_date = now
         end_date = now + timedelta(days=14)
         # Create an activity etc which is required.
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -757,9 +744,9 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         start_date = now
         end_date = now + timedelta(days=5)
 
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
+        create_related_person(case, "far test", "far", "1111111111")
+        create_related_person(case, "mor test", "mor", "2222222222")
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -799,6 +786,7 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
                 "recipient_id": "0205891234",
                 "recipient_name": "Jens Testersen",
                 "payment_method": "CASH",
+                "fictive": False,
                 "activity__details__name": "Test aktivitet",
                 "activity__details__activity_id": "000000",
                 "sbsys_id": "XXX-YYY",
@@ -806,15 +794,20 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
                 "name": "Jens Jensen",
                 "effort_step": "Trin 1: Tidlig indsats i almenområdet",
                 "paying_municipality": "København",
+                "acting_municipality": "København",
+                "residence_municipality": "København",
                 "section": "ABL-105-2",
                 "scaling_step": "1",
                 "case_worker": "Orla Frøsnapper",
                 "leader": "Orla Frøsnapper",
                 "team": "FCK",
                 "target_group": case.target_group,
+                "activity_type": "MAIN_ACTIVITY",
                 "main_activity_id": (
                     appropriation.main_activity.details.activity_id
                 ),
+                "father_cpr": "1111111111",
+                "mother_cpr": "2222222222",
             }.items()
             <= first_elem.items()
         )
@@ -855,9 +848,7 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         start_date = now
         end_date = now + timedelta(days=5)
 
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -911,9 +902,7 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         start_date = now
         end_date = now + timedelta(days=5)
 
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -970,7 +959,7 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
             start_date = now
             end_date = now + timedelta(days=5)
             case = create_case(
-                self.case_worker, self.team, self.municipality, self.district
+                self.case_worker, self.municipality, self.district
             )
             section = create_section()
             appropriation = create_appropriation(
@@ -1031,9 +1020,7 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         now = timezone.now().date()
         start_date = now
         end_date = now + timedelta(days=5)
-        case = create_case(
-            self.case_worker, self.team, self.municipality, self.district
-        )
+        case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
@@ -1090,3 +1077,17 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
                 ]
             )
         )
+
+
+class ValidateCVRTestCase(TestCase):
+    def test_validate_cvr_success(self):
+        self.assertTrue(validate_cvr("26570514"))
+
+    def test_validate_cvr_with_spaces_success(self):
+        self.assertTrue(validate_cvr(" 29244049 "))
+
+    def test_validate_cvr_failure_7_digits(self):
+        self.assertFalse(validate_cvr("2924404"))
+
+    def test_validate_cvr_failure_9_digits(self):
+        self.assertFalse(validate_cvr("292440494"))

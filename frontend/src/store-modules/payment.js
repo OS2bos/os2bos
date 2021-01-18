@@ -9,6 +9,44 @@
 import axios from '../components/http/Http.js'
 import Vue from 'vue'
 
+const makeQueryString = function(state, show_sensitive_data) {
+    let q = ''
+    if (state.filters.payment_schedule__payment_id) {
+        q = q + `payment_schedule__payment_id=${ state.filters.payment_schedule__payment_id }&`
+    }
+    if (show_sensitive_data && state.filters.case__cpr_number) {
+        q = q + `case__cpr_number=${ state.filters.case__cpr_number }&`
+    }
+    if (show_sensitive_data && state.filters.recipient_id) {
+        q = q + `recipient_id=${ state.filters.recipient_id }&`
+    }
+    if (state.filters.payment_method) {
+        q = q + `payment_method=${ state.filters.payment_method }&`
+    }
+    if (state.filters.interval) {
+        q = q + `interval=${ state.filters.interval }&`
+    }
+    if (state.filters.paid_date_or_date_week) {
+        q = q + `paid_date_or_date_week=${ state.filters.paid_date_or_date_week }&`
+    }
+    if (state.filters.paid_date_or_date_month) {
+        q = q + `paid_date_or_date_month=${ state.filters.paid_date_or_date_month }&`
+    }
+    if (state.filters.paid_date_or_date_year) {
+        q = q + `paid_date_or_date_year=${ state.filters.paid_date_or_date_year }&`
+    }
+    if (state.filters.paid_date_or_date__gte) {
+        q = q + `paid_date_or_date__gte=${ state.filters.paid_date_or_date__gte }&`
+    }
+    if (state.filters.paid_date_or_date__lte) {
+        q = q + `paid_date_or_date__lte=${ state.filters.paid_date_or_date__lte }&`
+    }
+    if (state.filters.paid !== null) {
+        q = q + `paid=${ state.filters.paid }&`
+    }
+    return q
+}
+
 const state = {
     payment_plan: null,
     payments_meta: null,
@@ -16,7 +54,21 @@ const state = {
     payment: null,
     internal_payment_recipients: null,
     rates: null,
-    payments_are_editable_in_the_past: true // to be updated by fetchPaymentEditablePastFlag but will generally be true
+    payments_are_editable_in_the_past: true, // to be updated by fetchPaymentEditablePastFlag but will generally be true
+    // Search filters:
+    filters: {
+        payment_schedule__payment_id: null,
+        case__cpr_number: null,
+        recipient_id: null,
+        payment_method: null,
+        interval: null,
+        paid_date_or_date_week: null,
+        paid_date_or_date_month: null,
+        paid_date_or_date_year: null,
+        paid_date_or_date__gte: null,
+        paid_date_or_date__lte: null,
+        paid: null
+    }
 }
 
 const getters = {
@@ -47,6 +99,17 @@ const getters = {
     },
     getPaymentEditablePastFlag (state) {
         return state.payments_are_editable_in_the_past
+    },
+    /**
+     * Get payment search filter value from store.
+     * @name getPaymentSearchFilter
+     * @param {string} filter_key A string corresponding to a property key in state.filters
+     * @returns {any} Whatever is stored in state.filters[filter_key]
+     * @example this.$store.getters.getPaymentSearchFilter('payment_method')
+     * @memberof state_payment
+     */
+    getPaymentSearchFilter: (state) => (filter_key) => {
+        return state.filters[filter_key]
     }
 }
 
@@ -100,20 +163,45 @@ const mutations = {
     },
     setPaymentEditablePastFlag (state, bool) {
         state.payments_are_editable_in_the_past = bool
+    },
+    /**
+     * Set value of a property in state.filters
+     * Also updates URL to expose query string
+     * @name setPaymentSearchFilter
+     * @param {object} obj An object with value pairs corresponding to the property change.
+     * @example this.$store.commit('setPaymentSearchFilter', {'payment_method': INVOICE})
+     * @memberof state_payment
+     */
+    setPaymentSearchFilter(state, obj) {
+        Vue.set(state, 'filters', Object.assign({}, state.filters, obj))
+        location.hash = `/payments?${ makeQueryString(state, false)}`
+    },
+    /**
+     * Reset state.filters to initial values
+     * @name clearPaymentSearchFilters
+     * @example this.$store.commit('clearPaymentSearchFilters')
+     * @memberof state_payment
+     */
+    clearPaymentSearchFilters (state, IntervalId) {
+        state.filters = {
+            payment_schedule__payment_id: null,
+            case__cpr_number: null,
+            recipient_id: null,
+            payment_method: null,
+            interval: IntervalId,
+            paid_date_or_date__gte: null,
+            paid_date_or_date__lte: null,
+            paid: null
+        }
     }
 }
 
 const actions = {
-    fetchPayments: function({commit}, queryObj) {
+    fetchPayments: function({commit, state}) {
         let q = ''
-        if (queryObj) {
-            for (let param in queryObj) {
-                if (queryObj[param] !== null) {
-                    q = q + `${ param }=${ queryObj[param] }&`
-                }
-            }
-        }
-        axios.get(`/payments/?${ q }&activity__status=GRANTED`)
+        q = makeQueryString(state, true)
+
+        axios.get(`/payments/?${ q }activity__status=GRANTED`)
         .then(res => {
             commit('setPaymentsMeta', res.data)
             commit('setPayments', res.data.results)
@@ -169,6 +257,16 @@ const actions = {
             commit('setPaymentEditablePastFlag', res.data)
         })
         .catch(err => console.log(err))
+    },
+    /**
+     * Clears the payment search filters and fetches a new list of payments
+     * @name resetPaymentSearchFilters
+     * @example this.$store.dispatch('resetPaymentSearchFilters')
+     * @memberof state_payment
+     */
+    resetPaymentSearchFilters: function({commit, IntervalId}) {
+        commit('clearPaymentSearchFilters', IntervalId)
+        location.hash = `/payments?${ makeQueryString(state, false)}`
     }
 }
 

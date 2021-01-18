@@ -18,6 +18,8 @@ from django.db.models import (
     Q,
     F,
     Count,
+    OuterRef,
+    Subquery,
 )
 from django.db.models.functions import (
     Coalesce,
@@ -37,7 +39,7 @@ class PaymentQuerySet(models.QuerySet):
     """
 
     # Case for using paid_date if available, else date.
-    date_case = Case(
+    paid_date_or_date_case = Case(
         When(paid_date__isnull=False, then="paid_date"),
         When(date__isnull=False, then="date"),
         default="date",
@@ -50,16 +52,20 @@ class PaymentQuerySet(models.QuerySet):
         output_field=DecimalField(),
     )
 
+    def annotate_paid_date_or_date(self):
+        """Annotate all payments with paid date or payment date."""
+        return self.annotate(paid_date_or_date=self.paid_date_or_date_case)
+
     def paid_date_or_date_gte(self, date):
         """Return all payments with paid date or payment date >= date."""
-        return self.annotate(relevant_date=self.date_case).filter(
-            relevant_date__gte=date
+        return self.annotate_paid_date_or_date().filter(
+            paid_date_or_date__gte=date
         )
 
     def paid_date_or_date_lte(self, date):
         """Return all payments with paid date or payment date <= date."""
-        return self.annotate(relevant_date=self.date_case).filter(
-            relevant_date__lte=date
+        return self.annotate_paid_date_or_date().filter(
+            paid_date_or_date__lte=date
         )
 
     def strict_amount_sum(self):
@@ -101,10 +107,15 @@ class PaymentQuerySet(models.QuerySet):
         return (
             self.annotate(
                 date_month=Concat(
-                    Cast(ExtractYear(self.date_case), CharField()),
+                    Cast(
+                        ExtractYear(self.paid_date_or_date_case), CharField()
+                    ),
                     Value("-", CharField()),
                     LPad(
-                        Cast(ExtractMonth(self.date_case), CharField()),
+                        Cast(
+                            ExtractMonth(self.paid_date_or_date_case),
+                            CharField(),
+                        ),
                         2,
                         fill_text=Value("0"),
                     ),
@@ -165,6 +176,20 @@ class AppropriationQuerySet(models.QuerySet):
             .exclude(expired_main_activities_count=0, main_activities_count=0)
             .filter(expired_main_activities_count=F("main_activities_count"))
         ).distinct()
+
+    def annotate_main_activity_details_id(self):
+        """Annotate the main_activity__details__id as a subquery."""
+        from core.models import Activity, MAIN_ACTIVITY
+
+        main_activity = Activity.objects.filter(
+            appropriation=OuterRef("id")
+        ).filter(activity_type=MAIN_ACTIVITY, modifies__isnull=True)
+
+        return self.annotate(
+            main_activity__details__id=Subquery(
+                main_activity.values("details__id")[:1]
+            )
+        )
 
 
 class CaseQuerySet(models.QuerySet):
