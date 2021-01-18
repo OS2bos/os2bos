@@ -88,7 +88,6 @@
         created: function() {
             this.setSelected()
         }
-
     }
 
 </script>

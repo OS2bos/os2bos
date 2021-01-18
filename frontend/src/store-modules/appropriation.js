@@ -112,7 +112,7 @@ const mutations = {
             case__sbsys_id: null,
             case__cpr_number: null,
             case__case_worker__team: null,
-            case__case_worker: userId,
+            case__case_worker: userId.toString(),
             section: null,
             main_activity__details__id: null
         }
@@ -131,12 +131,15 @@ const actions = {
     fetchAppropriations: function({commit, state}) {
         let q = ''
         q = makeQueryString(state, true)
-
-        axios.get(`/appropriations/?${ q }`)
-        .then(res => {
-            commit('setAppropriations', res.data)
-        })
-        .catch(err => console.log(err))
+        if (q.length > 0) {
+            axios.get(`/appropriations/?${ q }`)
+            .then(res => {
+                commit('setAppropriations', res.data)
+            })
+            .catch(err => console.log(err))
+        } else {
+            commit('setAppropriations', [])
+        }
     },
     fetchAppropriation: function({commit, dispatch}, appr_id) {
         axios.get(`/appropriations/${ appr_id }/`)
@@ -183,6 +186,7 @@ const actions = {
     resetAppropriationSearchFilters: function({commit, dispatch}, userId) {
         commit('clearAppropriationSearchFilters', userId)
         dispatch('fetchAppropriations')
+        location.hash = `/appropriations?${ makeQueryString(state, false)}`
     }
 }
 

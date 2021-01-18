@@ -52,22 +52,18 @@ const actions = {
             })
             commit('setUsers', users)
 
-            // Set up user auth data
+            // Set up auth data
             commit('setAccessToken', authdata.token)
             commit('setUID', authdata.uid)
 
+            // Set up user
+            let user = rootState.user.users.find(function(u) {
+                return u.id === parseInt(authdata.uid)
+            })
+            commit('setUser', user)
+
             // Fetch remaining info
             dispatch('fetchLists')
-            .then(() => {
-                let user = rootState.user.users.find(function(u) {
-                    return u.id === parseInt(authdata.uid)
-                })
-                commit('setUser', user)
-                dispatch('fetchPaymentEditablePastFlag')
-            })
-            .catch(err => {
-                console.log(err)
-            })
 
         })
         .catch(err => {

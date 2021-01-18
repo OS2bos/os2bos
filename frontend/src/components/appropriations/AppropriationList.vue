@@ -23,6 +23,8 @@
                 <button v-if="user_can_edit === true" class="appropriation-create-btn" @click="$router.push(`/case/${ caseId }/appropriation-create/`)">+ Opret bevillingsskrivelse</button>
             </div>
 
+            <!-- NOT DISPLAYING COST INFORMATION BECAUSE THEY HAVE BEEN MOVED IN BACKEND
+
             <tr slot="datagrid-table-footer" class="summary">
                 <td colspan="7"></td>
                 <td class="right">Samlet</td>
@@ -33,6 +35,7 @@
                     </span>
                 </td>
             </tr>
+            -->
 
             <p slot="datagrid-footer" v-if="apprs.length < 1">
                 Der er endnu ingen bevillingsskrivelser
@@ -116,6 +119,10 @@
                         display_func: this.displayModifiedDate,
                         class: 'nowrap'
                     },
+                    /*
+                     * We are trying out not calculating displayGranted and displayExpected
+                     * Therefore we do not display those values
+                     * 
                     {
                         key: 'total_granted_full_year',
                         title: 'Udgift pr år',
@@ -128,10 +135,15 @@
                         display_func: this.displayExpected,
                         class: 'expected right nowrap'
                     }
+                    */
                 ]
             }
         },
         computed: {
+            /*
+             * We are trying out not calculating total_granted
+             * Therefore we do not display that value
+             * 
             total_granted: function() {
                 function getTotal(total, a) {
                     return total + a.total_granted_full_year
@@ -142,6 +154,7 @@
                     return false
                 }
             },
+            */
             has_expected: function() {
                 if (this.total_expected > 0 && this.total_expected !== this.total_granted) {
                     return true
@@ -189,6 +202,10 @@
                     return `-`
                 }
             },
+            /*
+             * AS ABOVE: We are trying out not calculating displayGranted and displayExpected
+             * Therefore we do not display those values
+             * 
             displayGranted: function(appr) {
                 return `${ cost2da(appr.total_granted_full_year) } kr.`
             },
@@ -197,6 +214,7 @@
                     return `${ cost2da(appr.total_expected_full_year) } kr.`
                 }
             },
+            */
             displaySection: function(appr) {
                 return `§ ${ sectionId2name(appr.section) }`
             },

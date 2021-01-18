@@ -33,15 +33,15 @@
                     />
                 </div>
             
-                <div class="filter-field">
+                <div class="filter-field" v-if="users">
                     <label for="field-case-worker">Sagsbehandler</label>
                     <list-picker 
-                        v-if="users"
                         :dom-id="'field-case-worker'" 
                         :selected-id="case__case_worker"
                         :list="users"
                         @selection="changeWorker"
                         display-key="fullname"
+                        key="fieldCaseWorker"
                     />
                 </div>
 
@@ -75,7 +75,7 @@
             </fieldset>
             
             <fieldset class="filter-fields filter-actions">
-                <button class="filter-reset" type="reset" @click="resetValues">Nulstil</button>
+                <button class="filter-reset" type="button" @click="resetValues">Nulstil filtre</button>
             </fieldset>
         </form>
     </div>
@@ -110,8 +110,12 @@
                 return this.$store.getters.getSections
             },
             appr_main_acts: function() {
-                let actList = this.$store.getters.getActivityDetails.filter(act => act.main_activity_for.length > 0)
-                return actList
+                let act_details = this.$store.getters.getActivityDetails
+                if (act_details) {
+                    return act_details.filter(act => act.main_activity_for.length > 0)
+                } else {
+                    return []
+                }
             },
             user: function() {
                 let user = this.$store.getters.getUser
@@ -156,21 +160,20 @@
             main_activity__details__id: function() {
                 // `main_activity__details__id` only has a getter. values are updated via changeMainAct method in listpicker component
                 return this.$store.getters.getAppropriationSearchFilter('main_activity__details__id')
-            }
-        },
-        watch: {
-            user: function(new_val, old_user) {
-                if (new_val !== old_user) {
-                    this.updateUser()
+            },
+            hasUrlParams: function() {
+                const qry = this.$route.query
+                if (qry.case__sbsys_id || qry.case__case_worker__team || qry.case__case_worker || qry.section || qry.main_activity__details__id) {
+                    return true
+                } else {
+                    return false
                 }
             }
         },
         methods: {
             resetValues: function() {
-                // Use the store action to reset values
+                // Reset values in vuex state
                 this.$store.dispatch('resetAppropriationSearchFilters', this.user.id)
-                this.$store.commit('setAppropriationSearchFilter', {})
-                location.reload()
             },
             commitValue: function(key, val) {
                 // Handy helper method that both updates the value in store, 
@@ -212,10 +215,12 @@
                 }
             },
             updateUser: function() {
-                // Start out by setting a default case worker unless a case worker has already been set
+                // Start out by setting a default case worker if no url params are present
                 // and getting a list of appropriations with only initial filters set.
-                if (!this.case__case_worker) {
+                if (!this.hasUrlParams && this.user.id) {
                     this.$store.commit('setAppropriationSearchFilter', {'case__case_worker': this.user.id})
+                    this.$store.dispatch('fetchAppropriations', this.$route.query)
+                } else {
                     this.$store.dispatch('fetchAppropriations')
                 }
             }
@@ -227,15 +232,12 @@
             this.commitValue = this.debounce(this.commitValue, 400)
 
             // On first load, check URL params and set store filters accordingly
-            const qry = this.$route.query
-            if (qry.case__sbsys_id || qry.case__case_worker__team || qry.case__case_worker || qry.section || qry.main_activity__details__id) {
-                this.$store.commit('setAppropriationSearchFilter', qry)
-                this.$store.dispatch('fetchAppropriations')
+            if (this.hasUrlParams) {
+                this.$store.commit('setAppropriationSearchFilter', this.$route.query)
             }
 
             // Start out by setting a case worker
             this.updateUser()
-
         }
     }
     

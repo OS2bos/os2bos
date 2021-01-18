@@ -132,6 +132,12 @@ class CaseViewSet(AuditModelViewSetMixin, AuditViewSet):
     serializer_class = CaseSerializer
     filterset_class = CaseFilter
 
+    def get_queryset(self):
+        """Avoid Django's default lazy loading to improve performance."""
+        queryset = Case.objects.all()
+        queryset = self.get_serializer_class().setup_eager_loading(queryset)
+        return queryset
+
     def perform_create(self, serializer):
         """Create new case - customized to set user."""
         current_user = self.request.user
@@ -207,6 +213,10 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
         """Avoid Django's default lazy loading to improve performance."""
         queryset = Appropriation.objects.all()
         queryset = self.get_serializer_class().setup_eager_loading(queryset)
+
+        # We need to be able to show and filter on the
+        # main activity details id.
+        queryset = queryset.annotate_main_activity_details_id()
         return queryset
 
     @action(detail=True, methods=["patch"])

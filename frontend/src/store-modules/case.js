@@ -109,13 +109,14 @@ const mutations = {
      * @memberof state_case
      */
     clearCaseSearchFilters (state, userId) {
-        state.filters = {
+        let new_values = {
             sbsys_id: null,
             cpr_number: null,
             case_worker: userId,
             case_worker__team: null,
             expired: null
         }
+        Vue.set(state, 'filters', Object.assign({}, new_values))
     }
 }
 
@@ -130,12 +131,15 @@ const actions = {
     fetchCases: function({commit, state}) {
         let q = ''
         q = makeQueryString(state, true)
-
-        axios.get(`/cases/?${ q }`)
-        .then(res => {
-            commit('setCases', res.data)
-        })
-        .catch(err => console.log(err))
+        if (q.length > 0) {
+            axios.get(`/cases/?${ q }`)
+            .then(res => {
+                commit('setCases', res.data)
+            })
+            .catch(err => console.log(err))
+        } else {
+            commit('setCases', [])
+        }
     },
     /**
      * Get a single case from API. Use getCase to read the list.
@@ -161,6 +165,7 @@ const actions = {
     resetCaseSearchFilters: function({commit, dispatch}, userId) {
         commit('clearCaseSearchFilters', userId)
         dispatch('fetchCases')
+        location.hash = `/cases?${ makeQueryString(state, false)}`
     }
 }
 

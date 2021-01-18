@@ -61,7 +61,7 @@
             </fieldset>
 
             <fieldset class="filter-fields filter-actions">
-                <button class="filter-reset" type="reset" @click="resetValues">Nulstil</button>
+                <button class="filter-reset" type="button" @click="resetValues">Nulstil filtre</button>
             </fieldset>
         </form>
     </div>
@@ -127,21 +127,20 @@ export default {
         case_worker: function() {
             // `case_worker` only has a getter. values are updated via changeCaseWorker method in listpicker component
             return this.$store.getters.getCaseSearchFilter('case_worker')
-        }
-    },
-    watch: {
-        user: function(new_user, old_user) {
-            if (new_user !== old_user) {
-                this.updateUser()
+        },
+        hasUrlParams: function() {
+            const qry = this.$route.query
+            if (qry.sbsys_id || qry.hasOwnProperty('expired') && qry.expired !== null || qry.case_worker__team || qry.case_worker) {
+                return true
+            } else {
+                return false
             }
         }
     },
     methods: {
         resetValues: function() {
-            // Use the store action to reset values
+            // Reset values in vuex state
             this.$store.dispatch('resetCaseSearchFilters', this.user.id)
-            this.$store.commit('setCaseSearchFilter', {})
-            location.reload()
         },
         commitValue: function(key, val) {
             // Handy helper method that both updates the value in store, 
@@ -167,12 +166,16 @@ export default {
             }
         },
         updateUser: function() {
-            // Start out by setting a default case worker unless a case worker has already been set
+            console.log('updateuser, query', this.$route.query)
+
+            // Start out by setting a default case worker if no url params are present
             // and getting a list of cases with only initial filters set.
-            if (!this.case_worker) { 
+            if (!this.hasUrlParams && this.user.id) { 
                 this.$store.commit('setCaseSearchFilter', {'case_worker': this.user.id})
-            } 
-            this.$store.dispatch('fetchCases')
+                this.$store.dispatch('fetchCases', this.$route.query)
+            } else {
+                this.$store.dispatch('fetchCases')
+            }
         }
     },
     created: function() {
@@ -182,15 +185,12 @@ export default {
         this.commitValue = this.debounce(this.commitValue, 400)
 
         // On first load, check URL params and set store filters accordingly
-        const qry = this.$route.query
-        if (qry.sbsys_id || qry.hasOwnProperty('expired') && qry.expired !== null || qry.case_worker__team || qry.case_worker) {
-            this.$store.commit('setCaseSearchFilter', qry)
-            this.$store.dispatch('fetchCases')
+        if (this.hasUrlParams) {
+            this.$store.commit('setCaseSearchFilter', this.$route.query)
         }
-
+        
         // Start out by setting a case worker
         this.updateUser()
-
     }
 }
 </script>
