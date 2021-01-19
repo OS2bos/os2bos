@@ -638,7 +638,7 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         )
 
     def test_validate_monthly_payment_invalid_parameters_multiple_months(self):
-        # Create an "invalid" monthly activity with start 15th and 
+        # Create an "invalid" monthly activity with start 15th and
         # end date 12th next month but a payment_day_of_month of 14th.
         payment_schedule = create_payment_schedule(
             payment_amount=Decimal("500.0"),
