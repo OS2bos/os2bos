@@ -5,7 +5,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """Data serializers used by the REST API."""
-from dateutil.relativedelta import *
+from dateutil.relativedelta import relativedelta
 
 from django.db.models import Q
 from django.contrib.auth import get_user_model
@@ -50,7 +50,7 @@ from core.models import (
     STATUS_EXPECTED,
     STATUS_GRANTED,
 )
-from core.utils import create_rrule, validate_cvr
+from core.utils import validate_cvr
 
 
 class UserSerializer(serializers.ModelSerializer):
