@@ -24,7 +24,7 @@
 # Tuesday (exports Wednesday payments)
 # Wednesday (exports Thursday payments)
 # Thursday (exports Friday, Saturday, Sunday, Monday)
-5 0 * * 1-4 python manage.py export_to_prism
+5 0 * * 1-5 python manage.py export_to_prism
 
 10 0 * * * python manage.py mark_payments_paid
 15 0 * * * python manage.py generate_payments_report
