@@ -1,3 +1,13 @@
+Version 3.3.1, 2021-01-25
+-------------------------
+
+Hotfix release
+
+Bug fixes
+^^^^^^^^^
+
+* Run PRISM export also on Fridays
+
 Version 3.3.0, 2020-12-17
 -------------------------
 
