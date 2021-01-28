@@ -620,32 +620,6 @@ def export_prism_payments_for_date(date=None):
     # Return filename for info and verification.
     return filename
 
-
-def generate_granted_payments_report_list():
-    """Generate a payments report of only granted payments."""
-    current_year = timezone.now().year
-    two_years_ago = current_year - 2
-    beginning_of_two_years_ago = datetime.date.min.replace(year=two_years_ago)
-
-    granted_activities = models.Activity.objects.filter(
-        status=models.STATUS_GRANTED
-    )
-    payment_ids = granted_activities.values_list(
-        "payment_plan__payments__pk", flat=True
-    )
-    payments = (
-        models.Payment.objects.filter(id__in=payment_ids)
-        .paid_date_or_date_gte(beginning_of_two_years_ago)
-        .select_related(
-            "payment_schedule__activity__appropriation__case",
-            "payment_schedule__activity__appropriation__section",
-            "payment_schedule__activity__details",
-        )
-    )
-    payments_report_list = generate_payments_report_list(payments)
-    return payments_report_list
-
-
 def generate_expected_payments_report_list():
     """Generate a payments report of granted AND expected payments."""
     current_year = timezone.now().year

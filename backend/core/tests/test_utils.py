@@ -40,7 +40,6 @@ from core.utils import (
     due_payments_for_prism,
     export_prism_payments_for_date,
     generate_payments_report_list,
-    generate_granted_payments_report_list,
     generate_expected_payments_report_list,
     generate_payment_date_exclusion_dates,
     validate_cvr,
@@ -841,60 +840,6 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         report_list = generate_payments_report_list(payments)
 
         self.assertEqual(len(report_list), 0)
-
-    def test_generate_payments_report_list_granted_payments(self):
-        now = timezone.now().date()
-        # Create a granted activity.
-        start_date = now
-        end_date = now + timedelta(days=5)
-
-        case = create_case(self.case_worker, self.municipality, self.district)
-        section = create_section()
-        appropriation = create_appropriation(
-            sbsys_id="XXX-YYY", case=case, section=section
-        )
-        granted_activity = create_activity(
-            case,
-            appropriation,
-            start_date=start_date,
-            end_date=end_date,
-            activity_type=MAIN_ACTIVITY,
-            status=STATUS_GRANTED,
-        )
-        create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-            recipient_type=PaymentSchedule.PERSON,
-            payment_method=CASH,
-            payment_amount=Decimal(666),
-            activity=granted_activity,
-        )
-        # Create an expected activity.
-        start_date = now + timedelta(days=4)
-        end_date = now + timedelta(days=8)
-
-        expected_activity = create_activity(
-            case,
-            appropriation,
-            start_date=start_date,
-            end_date=end_date,
-            activity_type=MAIN_ACTIVITY,
-            status=STATUS_EXPECTED,
-            modifies=granted_activity,
-        )
-
-        create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-            recipient_type=PaymentSchedule.PERSON,
-            payment_method=CASH,
-            payment_amount=Decimal(666),
-            activity=expected_activity,
-        )
-
-        report_list = generate_granted_payments_report_list()
-
-        self.assertEqual(len(report_list), 6)
 
     def test_generate_payments_report_list_expected_payments(self):
         now = timezone.now().date()

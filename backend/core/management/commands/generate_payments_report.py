@@ -14,7 +14,6 @@ from django.core.management.base import BaseCommand
 
 from core.utils import (
     generate_expected_payments_report_list,
-    generate_granted_payments_report_list,
 )
 from core.decorators import log_to_prometheus
 
@@ -26,28 +25,11 @@ class Command(BaseCommand):
 
     @log_to_prometheus("generate_payments_report")
     def handle(self, *args, **options):
-        granted_payments_list = generate_granted_payments_report_list()
         expected_payments_list = generate_expected_payments_report_list()
 
         report_dir = settings.PAYMENTS_REPORT_DIR
 
         try:
-            with open(
-                os.path.join(report_dir, "granted_payments.csv"), "w"
-            ) as csvfile:
-                if granted_payments_list:
-                    logger.info(
-                        f"Created granted payments report "
-                        f"for {len(granted_payments_list)} payments"
-                    )
-                    writer = csv.DictWriter(
-                        csvfile, fieldnames=granted_payments_list[0].keys()
-                    )
-
-                    writer.writeheader()
-                    for payment_dict in granted_payments_list:
-                        writer.writerow(payment_dict)
-
             with open(
                 os.path.join(report_dir, "expected_payments.csv"), "w"
             ) as csvfile:
@@ -65,5 +47,5 @@ class Command(BaseCommand):
                         writer.writerow(payment_dict)
         except Exception:
             logger.exception(
-                "An error occurred during generation of payments reports"
+                "An error occurred during generation of the payments report"
             )
