@@ -620,6 +620,7 @@ def export_prism_payments_for_date(date=None):
     # Return filename for info and verification.
     return filename
 
+
 def generate_expected_payments_report_list():
     """Generate a payments report of granted AND expected payments."""
     current_year = timezone.now().year
