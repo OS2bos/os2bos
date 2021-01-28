@@ -38,6 +38,7 @@ from core.models import (
     PaymentDateExclusion,
     AccountAlias,
     AccountAliasMapping,
+    ActivityCategory,
 )
 
 
@@ -354,3 +355,13 @@ def create_account_alias_mapping(
     )
 
     return account_alias_mapping
+
+
+def create_activity_category(
+    category_id="123456", name="test aktivitetskategori"
+):
+    activity_category, _ = ActivityCategory.objects.get_or_create(
+        category_id=category_id, name=name
+    )
+
+    return activity_category

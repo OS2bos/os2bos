@@ -39,6 +39,7 @@ from core.models import (
     TargetGroup,
     InternalPaymentRecipient,
     Effort,
+    ActivityCategory,
     STATUS_DELETED,
     STATUS_DRAFT,
     STATUS_EXPECTED,
@@ -805,4 +806,12 @@ class EffortSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Effort
+        fields = "__all__"
+
+
+class ActivityCategorySerializer(serializers.ModelSerializer):
+    """Serializer for the ActivityCategory model."""
+
+    class Meta:
+        model = ActivityCategory
         fields = "__all__"

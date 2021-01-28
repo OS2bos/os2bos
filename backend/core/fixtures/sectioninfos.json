@@ -5,6 +5,7 @@
         "fields": {
             "activity_details": 1729,
             "section": 1327,
+            "activity_category": null,
             "kle_number": "27.27.09",
             "sbsys_template_id": "1296",
             "main_activity_main_account_number": "528211003",
@@ -17,6 +18,7 @@
         "fields": {
             "activity_details": 1758,
             "section": 1368,
+            "activity_category": null,
             "kle_number": "27.24.00",
             "sbsys_template_id": "891",
             "main_activity_main_account_number": "582211010",
@@ -29,6 +31,7 @@
         "fields": {
             "activity_details": 1730,
             "section": 1322,
+            "activity_category": null,
             "kle_number": "27.24.03",
             "sbsys_template_id": "1562",
             "main_activity_main_account_number": "528211003",
@@ -41,6 +44,7 @@
         "fields": {
             "activity_details": 1730,
             "section": 1320,
+            "activity_category": null,
             "kle_number": "27.24.03",
             "sbsys_template_id": "1562",
             "main_activity_main_account_number": "528211003",
@@ -53,6 +57,7 @@
         "fields": {
             "activity_details": 1763,
             "section": 1325,
+            "activity_category": null,
             "kle_number": "27.27.03",
             "sbsys_template_id": "899",
             "main_activity_main_account_number": "PPR betaler ",
@@ -65,6 +70,7 @@
         "fields": {
             "activity_details": 1732,
             "section": 1328,
+            "activity_category": null,
             "kle_number": "27.27.12",
             "sbsys_template_id": "886",
             "main_activity_main_account_number": "528211004",
@@ -77,6 +83,7 @@
         "fields": {
             "activity_details": 1749,
             "section": 1274,
+            "activity_category": null,
             "kle_number": "27.12.06",
             "sbsys_template_id": "996",
             "main_activity_main_account_number": "528211017",
@@ -89,6 +96,7 @@
         "fields": {
             "activity_details": 1733,
             "section": 1318,
+            "activity_category": null,
             "kle_number": "27.06.08",
             "sbsys_template_id": "912",
             "main_activity_main_account_number": "528211006",
@@ -101,6 +109,7 @@
         "fields": {
             "activity_details": 1733,
             "section": 1329,
+            "activity_category": null,
             "kle_number": "27.27.15",
             "sbsys_template_id": "1566",
             "main_activity_main_account_number": "528211005",
@@ -113,6 +122,7 @@
         "fields": {
             "activity_details": 1733,
             "section": 1331,
+            "activity_category": null,
             "kle_number": "27.27.33",
             "sbsys_template_id": "878",
             "main_activity_main_account_number": "528221005",
@@ -125,6 +135,7 @@
         "fields": {
             "activity_details": 1733,
             "section": 1367,
+            "activity_category": null,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1586",
             "main_activity_main_account_number": "528221005",
@@ -137,6 +148,7 @@
         "fields": {
             "activity_details": 1733,
             "section": 1352,
+            "activity_category": null,
             "kle_number": "27.24.27",
             "sbsys_template_id": "1573",
             "main_activity_main_account_number": "528221005",
@@ -149,6 +161,7 @@
         "fields": {
             "activity_details": 1733,
             "section": 1365,
+            "activity_category": null,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1579",
             "main_activity_main_account_number": "528221005",
@@ -161,6 +174,7 @@
         "fields": {
             "activity_details": 1764,
             "section": 1381,
+            "activity_category": null,
             "kle_number": "27.36.16",
             "sbsys_template_id": "918",
             "main_activity_main_account_number": "snak med Camilla",
@@ -173,6 +187,7 @@
         "fields": {
             "activity_details": 1735,
             "section": 1318,
+            "activity_category": null,
             "kle_number": "27.06.08",
             "sbsys_template_id": "912",
             "main_activity_main_account_number": "528211005",
@@ -185,6 +200,7 @@
         "fields": {
             "activity_details": 1737,
             "section": 1318,
+            "activity_category": null,
             "kle_number": "27.06.08",
             "sbsys_template_id": "912",
             "main_activity_main_account_number": "528211005",
@@ -197,6 +213,7 @@
         "fields": {
             "activity_details": 1737,
             "section": 1329,
+            "activity_category": null,
             "kle_number": "27.27.15",
             "sbsys_template_id": "1564",
             "main_activity_main_account_number": "528211005",
@@ -209,6 +226,7 @@
         "fields": {
             "activity_details": 1737,
             "section": 1331,
+            "activity_category": null,
             "kle_number": "27.27.27",
             "sbsys_template_id": "1569",
             "main_activity_main_account_number": "",
@@ -221,6 +239,7 @@
         "fields": {
             "activity_details": 1737,
             "section": 1367,
+            "activity_category": null,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1583",
             "main_activity_main_account_number": "",
@@ -233,6 +252,7 @@
         "fields": {
             "activity_details": 1737,
             "section": 1352,
+            "activity_category": null,
             "kle_number": "27.24.27",
             "sbsys_template_id": "1570",
             "main_activity_main_account_number": "528231002",
@@ -245,6 +265,7 @@
         "fields": {
             "activity_details": 1737,
             "section": 1365,
+            "activity_category": null,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1576",
             "main_activity_main_account_number": "528231002",
@@ -257,6 +278,7 @@
         "fields": {
             "activity_details": 1726,
             "section": 1326,
+            "activity_category": null,
             "kle_number": "27.27.06",
             "sbsys_template_id": "900",
             "main_activity_main_account_number": "528211002",
@@ -269,6 +291,7 @@
         "fields": {
             "activity_details": 1727,
             "section": 1327,
+            "activity_category": null,
             "kle_number": "27.27.09",
             "sbsys_template_id": "894",
             "main_activity_main_account_number": "528211003",
@@ -281,6 +304,7 @@
         "fields": {
             "activity_details": 1724,
             "section": 1334,
+            "activity_category": null,
             "kle_number": "27.24.09",
             "sbsys_template_id": "1591",
             "main_activity_main_account_number": "582211011",
@@ -293,6 +317,7 @@
         "fields": {
             "activity_details": 1724,
             "section": 1335,
+            "activity_category": null,
             "kle_number": "27.24.09",
             "sbsys_template_id": "1593",
             "main_activity_main_account_number": "582211011",
@@ -305,6 +330,7 @@
         "fields": {
             "activity_details": 1724,
             "section": 1331,
+            "activity_category": null,
             "kle_number": "27.27.39",
             "sbsys_template_id": "881",
             "main_activity_main_account_number": "528201004",
@@ -317,6 +343,7 @@
         "fields": {
             "activity_details": 1724,
             "section": 1367,
+            "activity_category": null,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1599",
             "main_activity_main_account_number": "528201004",
@@ -329,6 +356,7 @@
         "fields": {
             "activity_details": 1724,
             "section": 1352,
+            "activity_category": null,
             "kle_number": "27.24.27",
             "sbsys_template_id": "1572",
             "main_activity_main_account_number": "528201004",
@@ -341,6 +369,7 @@
         "fields": {
             "activity_details": 1724,
             "section": 1365,
+            "activity_category": null,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1600",
             "main_activity_main_account_number": "528201004",
@@ -353,6 +382,7 @@
         "fields": {
             "activity_details": 1728,
             "section": 1322,
+            "activity_category": null,
             "kle_number": "27.24.03",
             "sbsys_template_id": "1561",
             "main_activity_main_account_number": "528211003",
@@ -365,6 +395,7 @@
         "fields": {
             "activity_details": 1728,
             "section": 1320,
+            "activity_category": null,
             "kle_number": "27.24.03",
             "sbsys_template_id": "1561",
             "main_activity_main_account_number": "528211003",
@@ -377,6 +408,7 @@
         "fields": {
             "activity_details": 1738,
             "section": 1366,
+            "activity_category": null,
             "kle_number": "27.24.00",
             "sbsys_template_id": "889",
             "main_activity_main_account_number": "528211007",
@@ -389,6 +421,7 @@
         "fields": {
             "activity_details": 1738,
             "section": 1330,
+            "activity_category": null,
             "kle_number": "27.27.24",
             "sbsys_template_id": "895",
             "main_activity_main_account_number": "528211007",
@@ -401,6 +434,7 @@
         "fields": {
             "activity_details": 1738,
             "section": 1370,
+            "activity_category": null,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1589",
             "main_activity_main_account_number": "528211007",
@@ -413,6 +447,7 @@
         "fields": {
             "activity_details": 1739,
             "section": 1330,
+            "activity_category": null,
             "kle_number": "27.27.21",
             "sbsys_template_id": "893",
             "main_activity_main_account_number": "528211007",
@@ -425,6 +460,7 @@
         "fields": {
             "activity_details": 1740,
             "section": 1339,
+            "activity_category": null,
             "kle_number": "27.24.18",
             "sbsys_template_id": "1642",
             "main_activity_main_account_number": "528211007",
@@ -437,6 +473,7 @@
         "fields": {
             "activity_details": 1741,
             "section": 1363,
+            "activity_category": null,
             "kle_number": "27.24.00",
             "sbsys_template_id": "887",
             "main_activity_main_account_number": "528211007",
@@ -449,6 +486,7 @@
         "fields": {
             "activity_details": 1743,
             "section": 1321,
+            "activity_category": null,
             "kle_number": "27.24.03",
             "sbsys_template_id": "1560",
             "main_activity_main_account_number": "528211014",
@@ -461,6 +499,7 @@
         "fields": {
             "activity_details": 1745,
             "section": 1273,
+            "activity_category": null,
             "kle_number": "27.12.06",
             "sbsys_template_id": "997",
             "main_activity_main_account_number": "528211017",
@@ -473,6 +512,7 @@
         "fields": {
             "activity_details": 1746,
             "section": 1281,
+            "activity_category": null,
             "kle_number": "27.12.06",
             "sbsys_template_id": "998",
             "main_activity_main_account_number": "528211017",
@@ -485,6 +525,7 @@
         "fields": {
             "activity_details": 1748,
             "section": 1279,
+            "activity_category": null,
             "kle_number": "27.12.06",
             "sbsys_template_id": "997",
             "main_activity_main_account_number": "528211017",
@@ -497,6 +538,7 @@
         "fields": {
             "activity_details": 1752,
             "section": 1264,
+            "activity_category": null,
             "kle_number": "27.57.12",
             "sbsys_template_id": "922",
             "main_activity_main_account_number": "538421002",
@@ -509,6 +551,7 @@
         "fields": {
             "activity_details": 1731,
             "section": 1373,
+            "activity_category": null,
             "kle_number": "27.24.00",
             "sbsys_template_id": "892",
             "main_activity_main_account_number": "528221004",
@@ -521,6 +564,7 @@
         "fields": {
             "activity_details": 1731,
             "section": 1318,
+            "activity_category": null,
             "kle_number": "27.06.08",
             "sbsys_template_id": "912",
             "main_activity_main_account_number": "528211006",
@@ -533,6 +577,7 @@
         "fields": {
             "activity_details": 1731,
             "section": 1329,
+            "activity_category": null,
             "kle_number": "27.27.15",
             "sbsys_template_id": "1567",
             "main_activity_main_account_number": "528211005",
@@ -545,6 +590,7 @@
         "fields": {
             "activity_details": 1731,
             "section": 1331,
+            "activity_category": null,
             "kle_number": "27.27.30",
             "sbsys_template_id": "879",
             "main_activity_main_account_number": "528221002",
@@ -557,6 +603,7 @@
         "fields": {
             "activity_details": 1731,
             "section": 1328,
+            "activity_category": null,
             "kle_number": "27.27.12",
             "sbsys_template_id": "1563",
             "main_activity_main_account_number": "528211004",
@@ -569,6 +616,7 @@
         "fields": {
             "activity_details": 1731,
             "section": 1367,
+            "activity_category": null,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1587",
             "main_activity_main_account_number": "528221002",
@@ -581,6 +629,7 @@
         "fields": {
             "activity_details": 1731,
             "section": 1352,
+            "activity_category": null,
             "kle_number": "27.24.27",
             "sbsys_template_id": "1574",
             "main_activity_main_account_number": "528221002",
@@ -593,6 +642,7 @@
         "fields": {
             "activity_details": 1731,
             "section": 1365,
+            "activity_category": null,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1580",
             "main_activity_main_account_number": "528221002",
@@ -605,6 +655,7 @@
         "fields": {
             "activity_details": 1744,
             "section": 1286,
+            "activity_category": null,
             "kle_number": "27.12.08",
             "sbsys_template_id": "1556",
             "main_activity_main_account_number": "528211016",
@@ -617,6 +668,7 @@
         "fields": {
             "activity_details": 1744,
             "section": 1264,
+            "activity_category": null,
             "kle_number": "27.57.12",
             "sbsys_template_id": "1552",
             "main_activity_main_account_number": "538421002",
@@ -629,6 +681,7 @@
         "fields": {
             "activity_details": 1753,
             "section": 1315,
+            "activity_category": null,
             "kle_number": "32.18.04",
             "sbsys_template_id": "914",
             "main_activity_main_account_number": "557721009",
@@ -641,6 +694,7 @@
         "fields": {
             "activity_details": 1754,
             "section": 1316,
+            "activity_category": null,
             "kle_number": "32.18.12",
             "sbsys_template_id": "916",
             "main_activity_main_account_number": "557721015",
@@ -653,6 +707,7 @@
         "fields": {
             "activity_details": 1755,
             "section": 1308,
+            "activity_category": null,
             "kle_number": "27.18.02",
             "sbsys_template_id": "920",
             "main_activity_main_account_number": "557721016",
@@ -665,6 +720,7 @@
         "fields": {
             "activity_details": 1756,
             "section": 1332,
+            "activity_category": null,
             "kle_number": "27.27.51",
             "sbsys_template_id": "896",
             "main_activity_main_account_number": "582211009",
@@ -677,6 +733,7 @@
         "fields": {
             "activity_details": 1757,
             "section": 1333,
+            "activity_category": null,
             "kle_number": "27.27.54",
             "sbsys_template_id": "884",
             "main_activity_main_account_number": "582211010",
@@ -689,6 +746,7 @@
         "fields": {
             "activity_details": 1760,
             "section": 1335,
+            "activity_category": null,
             "kle_number": "27.24.09",
             "sbsys_template_id": "1592",
             "main_activity_main_account_number": "582211011",
@@ -701,6 +759,7 @@
         "fields": {
             "activity_details": 1747,
             "section": 1283,
+            "activity_category": null,
             "kle_number": "27.12.06",
             "sbsys_template_id": "999",
             "main_activity_main_account_number": "528211017",
@@ -713,6 +772,7 @@
         "fields": {
             "activity_details": 1759,
             "section": 1336,
+            "activity_category": null,
             "kle_number": "27.24.09",
             "sbsys_template_id": "1594",
             "main_activity_main_account_number": "582211011",
@@ -725,6 +785,7 @@
         "fields": {
             "activity_details": 1759,
             "section": 1337,
+            "activity_category": null,
             "kle_number": "27.24.15",
             "sbsys_template_id": "903",
             "main_activity_main_account_number": "582211013",
@@ -737,6 +798,7 @@
         "fields": {
             "activity_details": 1759,
             "section": 1334,
+            "activity_category": null,
             "kle_number": "27.24.09",
             "sbsys_template_id": "1590",
             "main_activity_main_account_number": "582211011",
@@ -749,6 +811,7 @@
         "fields": {
             "activity_details": 1723,
             "section": 1367,
+            "activity_category": null,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1588",
             "main_activity_main_account_number": "528201003",
@@ -761,6 +824,7 @@
         "fields": {
             "activity_details": 1723,
             "section": 1365,
+            "activity_category": null,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1581",
             "main_activity_main_account_number": "528201003",
@@ -773,6 +837,7 @@
         "fields": {
             "activity_details": 1723,
             "section": 1331,
+            "activity_category": null,
             "kle_number": "27.27.42",
             "sbsys_template_id": "882",
             "main_activity_main_account_number": "528201003",
@@ -785,6 +850,7 @@
         "fields": {
             "activity_details": 1723,
             "section": 1352,
+            "activity_category": null,
             "kle_number": "27.24.27",
             "sbsys_template_id": "1575",
             "main_activity_main_account_number": "",
@@ -797,6 +863,7 @@
         "fields": {
             "activity_details": 1736,
             "section": 1318,
+            "activity_category": null,
             "kle_number": "27.06.08",
             "sbsys_template_id": "912",
             "main_activity_main_account_number": "528211005",
@@ -809,6 +876,7 @@
         "fields": {
             "activity_details": 1736,
             "section": 1329,
+            "activity_category": null,
             "kle_number": "27.27.15",
             "sbsys_template_id": "1595",
             "main_activity_main_account_number": "528211005",
@@ -821,6 +889,7 @@
         "fields": {
             "activity_details": 1736,
             "section": 1331,
+            "activity_category": null,
             "kle_number": "27.27.45",
             "sbsys_template_id": "1568",
             "main_activity_main_account_number": "",
@@ -833,6 +902,7 @@
         "fields": {
             "activity_details": 1736,
             "section": 1367,
+            "activity_category": null,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1582",
             "main_activity_main_account_number": "",
@@ -845,6 +915,7 @@
         "fields": {
             "activity_details": 1736,
             "section": 1365,
+            "activity_category": null,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1601",
             "main_activity_main_account_number": "",
@@ -857,6 +928,7 @@
         "fields": {
             "activity_details": 1751,
             "section": 1331,
+            "activity_category": null,
             "kle_number": "27.27.27",
             "sbsys_template_id": "1569",
             "main_activity_main_account_number": "528241999",
@@ -869,6 +941,7 @@
         "fields": {
             "activity_details": 1751,
             "section": 1352,
+            "activity_category": null,
             "kle_number": "27.27.48",
             "sbsys_template_id": "870",
             "main_activity_main_account_number": "",
@@ -881,6 +954,7 @@
         "fields": {
             "activity_details": 1750,
             "section": 1319,
+            "activity_category": null,
             "kle_number": "27.21.08",
             "sbsys_template_id": "911",
             "main_activity_main_account_number": "528211019",
@@ -893,6 +967,7 @@
         "fields": {
             "activity_details": 1804,
             "section": 1319,
+            "activity_category": null,
             "kle_number": "27.21.08",
             "sbsys_template_id": "911",
             "main_activity_main_account_number": "",
@@ -905,6 +980,7 @@
         "fields": {
             "activity_details": 1798,
             "section": 1317,
+            "activity_category": null,
             "kle_number": "30.18.12",
             "sbsys_template_id": "974",
             "main_activity_main_account_number": "",
@@ -917,6 +993,7 @@
         "fields": {
             "activity_details": 1799,
             "section": 1314,
+            "activity_category": null,
             "kle_number": "27.18.24",
             "sbsys_template_id": "921",
             "main_activity_main_account_number": "",
@@ -929,6 +1006,7 @@
         "fields": {
             "activity_details": 1725,
             "section": 1367,
+            "activity_category": null,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1584",
             "main_activity_main_account_number": "",
@@ -941,6 +1019,7 @@
         "fields": {
             "activity_details": 1725,
             "section": 1365,
+            "activity_category": null,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1577",
             "main_activity_main_account_number": "528201005",
@@ -953,6 +1032,7 @@
         "fields": {
             "activity_details": 1725,
             "section": 1331,
+            "activity_category": null,
             "kle_number": "27.27.45",
             "sbsys_template_id": "880",
             "main_activity_main_account_number": "528201005",
@@ -965,6 +1045,7 @@
         "fields": {
             "activity_details": 1734,
             "section": 1318,
+            "activity_category": null,
             "kle_number": "27.06.08",
             "sbsys_template_id": "912",
             "main_activity_main_account_number": "528211006",
@@ -977,6 +1058,7 @@
         "fields": {
             "activity_details": 1734,
             "section": 1329,
+            "activity_category": null,
             "kle_number": "27.27.15",
             "sbsys_template_id": "1565",
             "main_activity_main_account_number": "528211005",
@@ -989,6 +1071,7 @@
         "fields": {
             "activity_details": 1734,
             "section": 1331,
+            "activity_category": null,
             "kle_number": "27.27.32",
             "sbsys_template_id": "877",
             "main_activity_main_account_number": "528221004",
@@ -1001,6 +1084,7 @@
         "fields": {
             "activity_details": 1734,
             "section": 1367,
+            "activity_category": null,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1585",
             "main_activity_main_account_number": "",
@@ -1013,6 +1097,7 @@
         "fields": {
             "activity_details": 1734,
             "section": 1352,
+            "activity_category": null,
             "kle_number": "27.24.27",
             "sbsys_template_id": "1571",
             "main_activity_main_account_number": "528221004",
@@ -1025,6 +1110,7 @@
         "fields": {
             "activity_details": 1734,
             "section": 1365,
+            "activity_category": null,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1578",
             "main_activity_main_account_number": "528221004",

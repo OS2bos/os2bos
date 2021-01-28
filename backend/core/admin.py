@@ -46,6 +46,7 @@ from core.models import (
     AccountAlias,
     AccountAliasMapping,
     InternalPaymentRecipient,
+    ActivityCategory,
 )
 from core.proxies import (
     SectionEffortStepProxy,
@@ -701,3 +702,10 @@ class AccountAliasMappingAdmin(ClassificationAdmin):
     """ModelAdmin for AccountAlias."""
 
     list_display = ("main_account_number", "activity_number", "alias")
+
+
+@admin.register(ActivityCategory)
+class ActivityCategoryAdmin(ClassificationAdmin):
+    """ModelAdmin for ActivityCategory."""
+
+    list_display = ("category_id", "name", "section_infos")

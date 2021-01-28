@@ -1600,6 +1600,20 @@ class ActivityDetails(Classification):
         return f"{self.activity_id} - {self.name}"
 
 
+class ActivityCategory(Classification):
+    """ActivityCategory associated with a SectionInfo (main_activity)."""
+
+    class Meta:
+        verbose_name = _("aktivitetskategori")
+        verbose_name_plural = _("aktivitetskategorier")
+
+    category_id = models.CharField(max_length=6, verbose_name=_("kategori ID"))
+    name = models.CharField(max_length=128, verbose_name=_("navn"))
+
+    def __str__(self):
+        return f"{self.category_id} - {self.name}"
+
+
 class SectionInfo(models.Model):
     """For a main activity, KLE no. and SBSYS ID for the relevant sections."""
 
@@ -1620,6 +1634,14 @@ class SectionInfo(models.Model):
     )
     section = models.ForeignKey(
         Section, on_delete=models.CASCADE, verbose_name=_("paragraf")
+    )
+    activity_category = models.ForeignKey(
+        ActivityCategory,
+        on_delete=models.SET_NULL,
+        verbose_name=_("aktivitetskategori"),
+        null=True,
+        blank=True,
+        related_name="section_infos",
     )
 
     kle_number = models.CharField(

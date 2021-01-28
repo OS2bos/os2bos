@@ -40,6 +40,7 @@ from core.tests.testing_utils import (
     create_payment_date_exclusion,
     create_account_alias,
     create_account_alias_mapping,
+    create_activity_category,
 )
 from core.models import (
     Municipality,
@@ -3924,4 +3925,13 @@ class AccountAliasMappingTestCase(TestCase):
             str(account_alias),
             f"{account_alias.main_account_number} - "
             f"{account_alias.activity_number}",
+        )
+
+
+class ActivityCategoryTestCase(TestCase):
+    def test_str(self):
+        activity_category = create_activity_category()
+
+        self.assertEqual(
+            str(activity_category), "123456 - test aktivitetskategori"
         )
