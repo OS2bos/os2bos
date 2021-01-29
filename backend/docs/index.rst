@@ -77,6 +77,9 @@ OS2BOS can export daily payment files for import into the `PRISME` economy syste
 
 Generating database documentation
 ---------------------------------
+
+The database documentation can be found in an online version here: `os2bosdocs`_.
+
 We generate database documentation using the tool `SchemaSpy`_.
 The following commands are run from inside the container as root: ``docker-compose exec -u 0 bev bash``
 
@@ -115,6 +118,7 @@ The documentation is now found in the ``er_html`` folder.
 
 
 .. _SchemaSpy: http://schemaspy.org/
+.. _os2bosdocs: https://magenta-aps.github.io/os2bos-docs/
 
 Django debugging
 ----------------
