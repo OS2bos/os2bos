@@ -726,8 +726,16 @@ class AccountAliasMappingAdmin(ClassificationAdmin):
     list_display = ("main_account_number", "activity_number", "alias")
 
 
+class SectionInfoActivityCategoryInline(ClassificationInline):
+    """SectionInfoInline for ActivityDetailsAdmin."""
+
+    model = SectionInfo
+    extra = 0
+
+
 @admin.register(ActivityCategory)
 class ActivityCategoryAdmin(ClassificationAdmin):
     """ModelAdmin for ActivityCategory."""
 
-    list_display = ("category_id", "name", "section_infos")
+    list_display = ("category_id", "name")
+    inlines = [SectionInfoActivityCategoryInline]
