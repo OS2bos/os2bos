@@ -440,7 +440,6 @@ class TestGeneratePaymentsReports(TestCase, BasicTestMixin):
 
         logger_mock.info.assert_has_calls(
             [
-                mock.call("Created granted payments report for 2 payments"),
                 mock.call(
                     "Created expected payments report for 4 expected payments"
                 ),
@@ -463,7 +462,7 @@ class TestGeneratePaymentsReports(TestCase, BasicTestMixin):
         call_command("generate_payments_report")
 
         logger_mock.exception.assert_called_with(
-            "An error occurred during generation of payments reports"
+            "An error occurred during generation of the payments report"
         )
 
 
