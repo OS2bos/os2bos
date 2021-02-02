@@ -836,6 +836,39 @@ class PaymentSchedule(models.Model):
         return f"{department}-{account_number}-{kind}"
 
     @property
+    def account_string_new(self):
+        """Calculate account string from activity.
+
+        TODO: eventually replace account_string with this.
+        """
+        if (
+            self.recipient_type == PaymentSchedule.PERSON
+            and self.payment_method == CASH
+        ):
+            department = config.ACCOUNT_NUMBER_DEPARTMENT
+            kind = config.ACCOUNT_NUMBER_KIND
+        else:
+            # Set department and kind to 'XXX'
+            # to signify they are not used.
+            department = "XXX"
+            kind = "XXX"
+
+        # Account string is "unknown" when there is no
+        # activity or account.
+        # The explicit inclusion of "unknown" is a demand due to the
+        # PRISME integration.
+        if (
+            not hasattr(self, "activity")
+            or not self.activity
+            or not self.activity.account_number
+        ):
+            account_number = config.ACCOUNT_NUMBER_UNKNOWN
+        else:
+            account_number = self.activity.account_number_new
+
+        return f"{department}-{account_number}-{kind}"
+
+    @property
     def account_alias(self):
         """Calculate account alias from activity."""
         if (
@@ -1015,6 +1048,18 @@ class Payment(models.Model):
             return self.saved_account_alias
 
         return self.payment_schedule.account_alias
+
+    @property
+    def account_string_new(self):
+        """
+        Return saved account string if any, else calculate from schedule.
+
+        TODO: eventually replace account_string with this.
+        """
+        if self.saved_account_string:
+            return self.saved_account_string
+
+        return self.payment_schedule.account_string_new
 
     @property
     def account_alias_new(self):
@@ -1986,6 +2031,48 @@ class Activity(AuditModelMixin, models.Model):
                 section_info.get_supplementary_activity_main_account_number()
             )
         return f"{main_account_number}-{self.details.activity_id}"
+
+    @property
+    def account_number_new(self):
+        """
+        Calculate the account_number_new to use with this activity.
+
+        TODO: eventually replace account_number with this.
+        """
+        if self.activity_type == MAIN_ACTIVITY:
+            try:
+                section_info = SectionInfo.objects.get(
+                    activity_details=self.details,
+                    section=self.appropriation.section,
+                )
+            except SectionInfo.DoesNotExist:
+                return None
+            main_account_number = (
+                section_info.get_main_activity_main_account_number()
+            )
+            activity_category = section_info.activity_category
+            if not activity_category:
+                return None
+            category_id = activity_category.category_id
+        else:
+            main_activity = self.appropriation.main_activity
+            if not main_activity:
+                return None
+            try:
+                section_info = SectionInfo.objects.get(
+                    activity_details=main_activity.details,
+                    section=self.appropriation.section,
+                )
+            except SectionInfo.DoesNotExist:
+                return None
+            main_account_number = (
+                section_info.get_supplementary_activity_main_account_number()
+            )
+            activity_category = section_info.activity_category
+            if not activity_category:
+                return None
+            category_id = activity_category.category_id
+        return f"{main_account_number}-{category_id}"
 
     @property
     def account_alias(self):
