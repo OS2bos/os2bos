@@ -20,7 +20,7 @@ drf-writable-nested==0.6.2
 git+https://github.com/magenta-aps/django-saml2-auth@2.2.6#egg=django-saml2-auth
 pysaml2==6.5.1
 django-mailer==2.1
-holidays==0.10.4
+holidays==0.10.5.2
 django-watchman==1.2.0
 django-currentuser==0.5.2
 prometheus-client==0.9.0
