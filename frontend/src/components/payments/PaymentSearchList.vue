@@ -115,7 +115,7 @@
                         key: 'paid_date',
                         title: 'Betalt dato',
                         display_component: DateInput,
-                        class: 'nowrap'
+                        class: 'nowrap overflow'
                     },
                     {
                         key: 'note',
@@ -242,6 +242,10 @@
 
     .payment-search-list .fictive {
         padding: 0rem 1.5rem;
+    }
+
+    .payment-search-list .overflow {
+        overflow: visible;
     }
 
 </style>
