@@ -138,6 +138,14 @@ const mutations = {
     setPayments (state, payments) {
         state.payments = payments
     },
+    setPaymentInPayments (state, new_payment) {
+        for (let p in state.payments) {
+            if (state.payments[p].id === new_payment.id) {
+                Vue.set(state.payments, p, new_payment) 
+                break
+            }
+        }
+    },
     setPaymentsMeta (state, payments_meta) {
         state.payments_meta = payments_meta
     },

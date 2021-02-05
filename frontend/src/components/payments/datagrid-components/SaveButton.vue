@@ -15,7 +15,6 @@
 import axios from '../../http/Http.js'
 import PermissionLogic from '../../mixins/PermissionLogic.js'
 import notify from '../../notifications/Notify.js'
-import { epoch2DateStr } from '../../filters/Date.js'
 
 export default {
     mixins: [ 
@@ -43,8 +42,8 @@ export default {
         }
     },
     methods: {
-        update: function() {
-            this.$emit('update')
+        update: function(new_data) {
+            this.$emit('update', new_data)
         },
         submitHandler: function() {
             let data = {
@@ -56,12 +55,12 @@ export default {
             if (this.user.profile === 'workflow_engine' && this.compdata.paid) {
                 // TODO: Clear up what this is actually for
                 axios.get(`/editing_past_payments_allowed/`)
-                .then(res => {
+                .then(() => {
                     this.patchPayments(data)
                 })
                 .catch(err => this.$store.dispatch('parseErrorOutput', err))
             } else {
-                this.patchPayments(data)        
+                this.patchPayments(data)
             }
         },
         patchPayments: function(data) {
@@ -69,7 +68,7 @@ export default {
             .then(res => {
                 this.buttonTxt = 'Gemt'
                 notify('Betaling registreret', 'success')
-                this.update()
+                this.update(res)
             })
             .catch(err => this.$store.dispatch('parseErrorOutput', err))
         }  

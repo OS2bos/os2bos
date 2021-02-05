@@ -14,7 +14,8 @@
                 ref="data-grid"
                 :data-list="payments"
                 :columns="columns"
-                @selection="selected_payments">
+                @selection="selected_payments"
+                @update="updatePayment">
 
                 <p slot="datagrid-header">
                     Viser {{ payments.length }} af {{ payments_meta.count }} betalinger
@@ -26,7 +27,7 @@
 
             </data-grid>
 
-            <button v-if="payments.length > 1" :disabled="disableBtn" class="more" @click="loadResults()">Vis flere</button>
+            <button v-if="payments.length > 1" :disabled="disableBtn" class="more" @click="loadResults">Vis flere</button>
         </template>
 
         <p v-else>
@@ -37,7 +38,7 @@
 </template>
 
 <script>
-
+    import axios from '../http/Http.js'
     import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
     import { activityId2name, displayPayMethod } from '../filters/Labels.js'
@@ -114,7 +115,7 @@
                         key: 'paid_date',
                         title: 'Betalt dato',
                         display_component: DateInput,
-                        class: 'nowrap'
+                        class: 'nowrap overflow'
                     },
                     {
                         key: 'note',
@@ -193,6 +194,10 @@
             },
             updateSelectedPayments: function(selections) {
                 this.selected_payments = selections
+            },
+            updatePayment: function(new_data) {
+                // TDOD make this better
+                this.$store.commit('setPaymentInPayments', new_data.data)
             }
         }
     }
@@ -237,6 +242,10 @@
 
     .payment-search-list .fictive {
         padding: 0rem 1.5rem;
+    }
+
+    .payment-search-list .overflow {
+        overflow: visible;
     }
 
 </style>
