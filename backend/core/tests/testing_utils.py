@@ -37,6 +37,7 @@ from core.models import (
     RatePerDate,
     PaymentDateExclusion,
     AccountAlias,
+    AccountAliasMapping,
 )
 
 
@@ -341,3 +342,15 @@ def create_account_alias(section_info, activity_details, alias="BOS0000001"):
     )
 
     return account_alias
+
+
+def create_account_alias_mapping(
+    main_account_number, activity_number, alias="BOS0000001"
+):
+    account_alias_mapping, _ = AccountAliasMapping.objects.get_or_create(
+        main_account_number=main_account_number,
+        activity_number=activity_number,
+        alias=alias,
+    )
+
+    return account_alias_mapping

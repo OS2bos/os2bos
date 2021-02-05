@@ -44,6 +44,7 @@ from core.models import (
     Price,
     PaymentDateExclusion,
     AccountAlias,
+    AccountAliasMapping,
     InternalPaymentRecipient,
 )
 from core.proxies import (
@@ -672,3 +673,10 @@ class AccountAliasAdmin(ClassificationAdmin):
     """ModelAdmin for AccountAlias."""
 
     list_display = ("section_info", "activity_details", "alias")
+
+
+@admin.register(AccountAliasMapping)
+class AccountAliasMappingAdmin(ClassificationAdmin):
+    """ModelAdmin for AccountAlias."""
+
+    list_display = ("main_account_number", "activity_number", "alias")

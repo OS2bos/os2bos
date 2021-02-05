@@ -39,6 +39,7 @@ from core.tests.testing_utils import (
     create_rate_per_date,
     create_payment_date_exclusion,
     create_account_alias,
+    create_account_alias_mapping,
 )
 from core.models import (
     Municipality,
@@ -3746,4 +3747,16 @@ class AccountAliasTestCase(TestCase, BasicTestMixin):
 
         self.assertEqual(
             str(account_alias), f"{section_info} - {activity_details}"
+        )
+
+
+class AccountAliasTestCase(TestCase):
+    def test_str(self):
+        account_alias = create_account_alias_mapping(
+            "528211007", "015177", "BOS12345678"
+        )
+
+        self.assertEqual(
+            str(account_alias),
+            f"{account_alias.main_account_number} - {account_alias.activity_number}",
         )

@@ -1678,7 +1678,7 @@ class AccountAlias(models.Model):
 
 
 class AccountAliasMapping(models.Model):
-    """New version of the AccountAlias model
+    """New version of the AccountAlias model.
 
     Works as a lookup between the main_account and activity dimension
     strings and an alias.
@@ -1686,11 +1686,11 @@ class AccountAliasMapping(models.Model):
 
     class Meta:
         verbose_name = _("nyt kontoalias")
-        verbose_name_plural = _("nyt kontoalias")
+        verbose_name_plural = _("nye kontoalias")
         constraints = [
             models.UniqueConstraint(
-                fields=["main_account", "activity"],
-                name="unique_main_account_activity",
+                fields=["main_account_number", "activity_number"],
+                name="unique_main_account_number_activity_number",
             )
         ]
 
