@@ -1677,6 +1677,45 @@ class AccountAlias(models.Model):
         return f"{self.section_info} - {self.activity_details}"
 
 
+class AccountAliasMapping(models.Model):
+    """New version of the AccountAlias model
+
+    Works as a lookup between the main_account and activity dimension
+    strings and an alias.
+    """
+
+    class Meta:
+        verbose_name = _("nyt kontoalias")
+        verbose_name_plural = _("nyt kontoalias")
+        constraints = [
+            models.UniqueConstraint(
+                fields=["main_account", "activity"],
+                name="unique_main_account_activity",
+            )
+        ]
+
+    main_account_number = models.CharField(
+        max_length=128,
+        verbose_name=_("hovedkontonummer"),
+        blank=True,
+        help_text=_("dimensionen 'Hovedkonto' i kontostrengen"),
+    )
+
+    activity_number = models.CharField(
+        max_length=128,
+        verbose_name=_("aktivitetsnummer"),
+        blank=True,
+        help_text=_("dimensionen 'Aktivitet' i kontostrengen"),
+    )
+
+    alias = models.CharField(
+        max_length=128, verbose_name=_("kontoalias"), blank=True
+    )
+
+    def __str__(self):
+        return f"{self.main_account_number} - {self.activity_number}"
+
+
 class Activity(AuditModelMixin, models.Model):
     """An activity is a specific service provided within an appropriation.
 
