@@ -71,7 +71,6 @@
 
     import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
-    import { activityId2name, displayPayMethod } from '../filters/Labels.js'
     import PaymentCreateModal from './payment-editing/PaymentCreate.vue'
     import PermissionLogic from '../mixins/PermissionLogic.js'
     import DataGrid from '../datagrid/DataGrid.vue'
