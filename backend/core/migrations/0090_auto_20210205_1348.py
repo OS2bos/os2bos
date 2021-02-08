@@ -14,9 +14,9 @@ class Migration(migrations.Migration):
             name='AccountAliasMapping',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('main_account_number', models.CharField(blank=True, help_text="dimensionen 'Hovedkonto' i kontostrengen", max_length=128, verbose_name='hovedkontonummer')),
-                ('activity_number', models.CharField(blank=True, help_text="dimensionen 'Aktivitet' i kontostrengen", max_length=128, verbose_name='aktivitetsnummer')),
-                ('alias', models.CharField(blank=True, max_length=128, verbose_name='kontoalias')),
+                ('main_account_number', models.CharField(help_text="dimensionen 'Hovedkonto' i kontostrengen", max_length=128, verbose_name='hovedkontonummer')),
+                ('activity_number', models.CharField(help_text="dimensionen 'Aktivitet' i kontostrengen", max_length=128, verbose_name='aktivitetsnummer')),
+                ('alias', models.CharField(max_length=128, verbose_name='kontoalias')),
             ],
             options={
                 'verbose_name': 'nyt kontoalias',

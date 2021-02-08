@@ -1721,20 +1721,16 @@ class AccountAliasMapping(models.Model):
     main_account_number = models.CharField(
         max_length=128,
         verbose_name=_("hovedkontonummer"),
-        blank=True,
         help_text=_("dimensionen 'Hovedkonto' i kontostrengen"),
     )
 
     activity_number = models.CharField(
         max_length=128,
         verbose_name=_("aktivitetsnummer"),
-        blank=True,
         help_text=_("dimensionen 'Aktivitet' i kontostrengen"),
     )
 
-    alias = models.CharField(
-        max_length=128, verbose_name=_("kontoalias"), blank=True
-    )
+    alias = models.CharField(max_length=128, verbose_name=_("kontoalias"))
 
     def __str__(self):
         return f"{self.main_account_number} - {self.activity_number}"
