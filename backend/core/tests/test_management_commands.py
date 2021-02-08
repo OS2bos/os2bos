@@ -20,6 +20,7 @@ from core.models import (
     ServiceProvider,
     Section,
     AccountAlias,
+    AccountAliasMapping,
 )
 from core.tests.testing_utils import (
     BasicTestMixin,
@@ -665,6 +666,30 @@ class TestImportAccountAliases(TestCase):
 
         open_mock.assert_called_with("/tmp/test")
         self.assertEqual(AccountAlias.objects.count(), 1)
+
+
+class TestImportAccountAliasMappings(TestCase):
+    def test_import_account_alias_mappings(self):
+        self.assertEqual(AccountAliasMapping.objects.count(), 0)
+
+        call_command("import_account_alias_mappings")
+
+        self.assertEqual(AccountAliasMapping.objects.count(), 204)
+
+    def test_import_account_aliases_with_path(self):
+        self.assertEqual(AccountAliasMapping.objects.count(), 0)
+
+        parse_mock = mock.Mock()
+        with mock.patch(
+            "core.management.commands.import_account_alias_mappings"
+            ".parse_account_alias_mapping_data_from_xlsx",
+            parse_mock,
+        ):
+            parse_mock.return_value = [("645511002", "015027", "BOS0000001")]
+            call_command("import_account_alias_mappings", "--path=/tmp/test")
+
+        self.assertTrue(parse_mock.called_with("/tmp/test"))
+        self.assertEqual(AccountAliasMapping.objects.count(), 1)
 
 
 class TestRecalculateOnChangedRate(TestCase, BasicTestMixin):
