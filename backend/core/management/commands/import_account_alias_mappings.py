@@ -7,6 +7,7 @@
 
 
 import os
+from collections import Counter
 
 from django.db import transaction
 from django.db.models import Q
@@ -46,18 +47,17 @@ class Command(BaseCommand):
                 "account_alias_mappings.xlsx",
             )
         account_alias_data = parse_account_alias_mapping_data_from_xlsx(path)
-        for (main_account_number, activity_number, alias) in account_alias_data:
-            try:
-                AccountAliasMapping.objects.update_or_create(
-                    main_account_number=main_account_number,
-                    activity_number=activity_number,
-                    defaults={"alias": alias},
-                )
-            except IntegrityError:
-                # Throw out duplicates from file.
-                print(
-                    f"main_account_number: {main_account_number} - "
-                    f"activity_number: {activity_number} - "
-                    f"alias: {alias}"
-                )
+        # As we are using update_or_create below, we should print
+        # the duplicate (main_account_number, activity_number) values
+        counter = Counter(((x[0],x[1]) for x in account_alias_data))
+        print(
+            f"account alias mapping duplicates found: "
+            f"{Counter(el for el in counter.elements() if counter[el] > 1)}"
+        )
 
+        for (main_account_number, activity_number, alias) in account_alias_data:
+            AccountAliasMapping.objects.update_or_create(
+                main_account_number=main_account_number,
+                activity_number=activity_number,
+                defaults={"alias": alias},
+            )
