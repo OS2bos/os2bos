@@ -3750,7 +3750,7 @@ class AccountAliasTestCase(TestCase, BasicTestMixin):
         )
 
 
-class AccountAliasTestCase(TestCase):
+class AccountAliasMappingTestCase(TestCase):
     def test_str(self):
         account_alias = create_account_alias_mapping(
             "528211007", "015177", "BOS12345678"
@@ -3758,5 +3758,6 @@ class AccountAliasTestCase(TestCase):
 
         self.assertEqual(
             str(account_alias),
-            f"{account_alias.main_account_number} - {account_alias.activity_number}",
+            f"{account_alias.main_account_number} -"
+            f"{account_alias.activity_number}",
         )
