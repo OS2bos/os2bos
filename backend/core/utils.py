@@ -39,6 +39,8 @@ from holidays import Denmark as danish_holidays
 
 from service_person_stamdata_udvidet import get_citizen
 
+from openpyxl import load_workbook
+
 from core import models
 from core.data.extra_payment_date_exclusion_tuples import (
     extra_payment_date_exclusion_tuples,
@@ -856,3 +858,36 @@ def validate_cvr(cvr):
     """
     match = re.match(r"^[0-9]{8}$", cvr.strip())
     return bool(match)
+
+
+def parse_account_alias_mapping_data_from_xlsx(path):
+    """
+    Parse account alias mapping data from an .xlsx file.
+
+    Returns a list of (main_account_number, activity_number, alias) tuples
+    for example:
+    [
+        (645511002, 015035, BOS0000109),
+        (528211011, 015038, BOS0000112)
+    ]
+    """
+    wb = load_workbook(path)
+    ws = wb.active
+
+    account_alias_mapping_data = []
+
+    for row in ws.values:
+        alias = row[0]
+        account_string = row[1]
+        if not alias.startswith("BOS"):
+            continue
+
+        split_account_string = account_string.split("-")
+        main_account_number = split_account_string[1]
+        activity_number = split_account_string[2]
+
+        account_alias_mapping_data.append(
+            (main_account_number, activity_number, alias)
+        )
+
+    return account_alias_mapping_data
