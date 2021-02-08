@@ -32,6 +32,7 @@ def initialize():
     initialize_payment_method_details()
     initialize_rates()
     initialize_account_aliases()
+    initialize_account_alias_mappings()
 
 
 def initialize_municipalities():
@@ -131,3 +132,8 @@ def initialize_rates():
 def initialize_account_aliases():
     """Initialize the account aliases."""
     call_command("loaddata", "accountaliases.json", app_label="core")
+
+
+def initialize_account_alias_mappings():
+    """Initialize the account alias mappings."""
+    call_command("loaddata", "accountaliasmappings.json", app_label="core")

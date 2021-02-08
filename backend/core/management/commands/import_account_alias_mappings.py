@@ -7,7 +7,6 @@
 
 
 import os
-from collections import Counter
 
 from django.db import transaction
 from django.core.management.base import BaseCommand
@@ -45,13 +44,6 @@ class Command(BaseCommand):
                 "account_alias_mappings.xlsx",
             )
         account_alias_data = parse_account_alias_mapping_data_from_xlsx(path)
-        # As we are using update_or_create below we are not made aware
-        # of duplicates so we can print the
-        # (main_account_number, activity_number) values
-        c = Counter(((x[0], x[1]) for x in account_alias_data))
-        duplicate_c = Counter(el for el in c.elements() if c[el] > 1)
-        if duplicate_c.items():
-            print(f"account alias mapping duplicates found: " f"{duplicate_c}")
 
         for (
             main_account_number,

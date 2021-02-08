@@ -847,6 +847,18 @@ class PaymentSchedule(models.Model):
         else:
             return self.activity.account_alias
 
+    @property
+    def account_alias_new(self):
+        """Calculate new account alias from activity."""
+        if (
+            not hasattr(self, "activity")
+            or not self.activity
+            or not self.activity.account_alias_new
+        ):
+            return ""
+        else:
+            return self.activity.account_alias_new
+
     def __str__(self):
         recipient_type_str = self.get_recipient_type_display()
         payment_frequency_str = self.get_payment_frequency_display()
@@ -1003,6 +1015,18 @@ class Payment(models.Model):
             return self.saved_account_alias
 
         return self.payment_schedule.account_alias
+
+    @property
+    def account_alias_new(self):
+        """
+        Return saved account alias if any, else calculate from schedule.
+
+        TODO: eventually replace account_alias with this.
+        """
+        if self.saved_account_alias:
+            return self.saved_account_alias
+
+        return self.payment_schedule.account_alias_new
 
     def __str__(self):
         recipient_type_str = self.get_recipient_type_display()
@@ -1976,6 +2000,45 @@ class Activity(AuditModelMixin, models.Model):
             return None
 
         return account_alias.alias
+
+    @property
+    def account_alias_new(self):
+        """Calculate the new account_alias to use with this activity."""
+        if self.activity_type == MAIN_ACTIVITY:
+            try:
+                section_info = SectionInfo.objects.get(
+                    activity_details=self.details,
+                    section=self.appropriation.section,
+                )
+            except SectionInfo.DoesNotExist:
+                return None
+            main_account_number = (
+                section_info.get_main_activity_main_account_number()
+            )
+        else:
+            main_activity = self.appropriation.main_activity
+            if not main_activity:
+                return None
+            try:
+                section_info = SectionInfo.objects.get(
+                    activity_details=main_activity.details,
+                    section=self.appropriation.section,
+                )
+            except SectionInfo.DoesNotExist:
+                return None
+            main_account_number = (
+                section_info.get_supplementary_activity_main_account_number()
+            )
+
+        try:
+            account_alias_mapping = AccountAliasMapping.objects.get(
+                main_account_number=main_account_number,
+                activity_number=self.details.activity_id,
+            )
+        except AccountAliasMapping.DoesNotExist:
+            return None
+
+        return account_alias_mapping.alias
 
     @property
     def monthly_payment_plan(self):
