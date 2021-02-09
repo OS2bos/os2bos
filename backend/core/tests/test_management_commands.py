@@ -668,6 +668,7 @@ class TestImportAccountAliases(TestCase):
         open_mock.assert_called_with("/tmp/test")
         self.assertEqual(AccountAlias.objects.count(), 1)
 
+
 class TestImportAccountAliasMappings(TestCase):
     def test_import_account_alias_mappings(self):
         self.assertEqual(AccountAliasMapping.objects.count(), 0)
