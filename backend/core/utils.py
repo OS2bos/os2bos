@@ -40,8 +40,6 @@ from holidays import Denmark as danish_holidays
 
 from service_person_stamdata_udvidet import get_citizen
 
-from openpyxl import load_workbook
-
 from core import models
 from core.data.extra_payment_date_exclusion_tuples import (
     extra_payment_date_exclusion_tuples,
