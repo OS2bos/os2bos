@@ -13,6 +13,7 @@ import requests
 import datetime
 import itertools
 import re
+import csv
 
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
@@ -883,9 +884,9 @@ def validate_cvr(cvr):
     return bool(match)
 
 
-def parse_account_alias_mapping_data_from_xlsx(path):
+def parse_account_alias_mapping_data_from_csv(path):
     """
-    Parse account alias mapping data from an .xlsx file.
+    Parse account alias mapping data from a .csv file.
 
     Returns a list of (main_account_number, activity_number, alias) tuples
     for example:
@@ -894,12 +895,13 @@ def parse_account_alias_mapping_data_from_xlsx(path):
         (528211011, 015038, BOS0000112)
     ]
     """
-    wb = load_workbook(path)
-    ws = wb.active
+    with open(path) as csvfile:
+        reader = csv.reader(csvfile)
+        rows = [row for row in reader]
 
     account_alias_mapping_data = []
 
-    for row in ws.values:
+    for row in rows:
         alias = row[0]
         account_string = row[1]
         if not alias or not alias.startswith("BOS"):

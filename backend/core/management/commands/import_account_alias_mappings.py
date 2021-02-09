@@ -12,7 +12,7 @@ from django.db import transaction
 from django.core.management.base import BaseCommand
 
 from core.models import AccountAliasMapping
-from core.utils import parse_account_alias_mapping_data_from_xlsx
+from core.utils import parse_account_alias_mapping_data_from_csv
 
 
 class Command(BaseCommand):
@@ -20,7 +20,7 @@ class Command(BaseCommand):
     This script imports Account Alias Mappings.
 
     Currently this requires the account alias mapping sheet be saved
-    as "account_alias_mappings.xlsx".
+    as "account_alias_mappings.csv".
     """
 
     def add_arguments(self, parser):
@@ -28,7 +28,7 @@ class Command(BaseCommand):
             "-p",
             "--path",
             type=str,
-            help="set the path to read the account_alias_mappings.xlsx file",
+            help="set the path to read the account_alias_mappings.csv file",
         )
 
     @transaction.atomic
@@ -41,9 +41,9 @@ class Command(BaseCommand):
                 "..",
                 "..",
                 "data",
-                "account_alias_mappings.xlsx",
+                "account_alias_mappings.csv",
             )
-        account_alias_data = parse_account_alias_mapping_data_from_xlsx(path)
+        account_alias_data = parse_account_alias_mapping_data_from_csv(path)
 
         for (
             main_account_number,
