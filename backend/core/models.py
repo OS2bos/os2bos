@@ -847,6 +847,18 @@ class PaymentSchedule(models.Model):
         else:
             return self.activity.account_alias
 
+    @property
+    def account_alias_new(self):
+        """Calculate new account alias from activity."""
+        if (
+            not hasattr(self, "activity")
+            or not self.activity
+            or not self.activity.account_alias_new
+        ):
+            return ""
+        else:
+            return self.activity.account_alias_new
+
     def __str__(self):
         recipient_type_str = self.get_recipient_type_display()
         payment_frequency_str = self.get_payment_frequency_display()
@@ -1003,6 +1015,18 @@ class Payment(models.Model):
             return self.saved_account_alias
 
         return self.payment_schedule.account_alias
+
+    @property
+    def account_alias_new(self):
+        """
+        Return saved account alias if any, else calculate from schedule.
+
+        TODO: eventually replace account_alias with this.
+        """
+        if self.saved_account_alias:
+            return self.saved_account_alias
+
+        return self.payment_schedule.account_alias_new
 
     def __str__(self):
         recipient_type_str = self.get_recipient_type_display()
@@ -1677,6 +1701,41 @@ class AccountAlias(models.Model):
         return f"{self.section_info} - {self.activity_details}"
 
 
+class AccountAliasMapping(models.Model):
+    """New version of the AccountAlias model.
+
+    Works as a lookup between the main_account and activity dimension
+    strings and an alias.
+    """
+
+    class Meta:
+        verbose_name = _("nyt kontoalias")
+        verbose_name_plural = _("nye kontoalias")
+        constraints = [
+            models.UniqueConstraint(
+                fields=["main_account_number", "activity_number"],
+                name="unique_main_account_number_activity_number",
+            )
+        ]
+
+    main_account_number = models.CharField(
+        max_length=128,
+        verbose_name=_("hovedkontonummer"),
+        help_text=_("dimensionen 'Hovedkonto' i kontostrengen"),
+    )
+
+    activity_number = models.CharField(
+        max_length=128,
+        verbose_name=_("aktivitetsnummer"),
+        help_text=_("dimensionen 'Aktivitet' i kontostrengen"),
+    )
+
+    alias = models.CharField(max_length=128, verbose_name=_("kontoalias"))
+
+    def __str__(self):
+        return f"{self.main_account_number} - {self.activity_number}"
+
+
 class Activity(AuditModelMixin, models.Model):
     """An activity is a specific service provided within an appropriation.
 
@@ -1937,6 +1996,45 @@ class Activity(AuditModelMixin, models.Model):
             return None
 
         return account_alias.alias
+
+    @property
+    def account_alias_new(self):
+        """Calculate the new account_alias to use with this activity."""
+        if self.activity_type == MAIN_ACTIVITY:
+            try:
+                section_info = SectionInfo.objects.get(
+                    activity_details=self.details,
+                    section=self.appropriation.section,
+                )
+            except SectionInfo.DoesNotExist:
+                return None
+            main_account_number = (
+                section_info.get_main_activity_main_account_number()
+            )
+        else:
+            main_activity = self.appropriation.main_activity
+            if not main_activity:
+                return None
+            try:
+                section_info = SectionInfo.objects.get(
+                    activity_details=main_activity.details,
+                    section=self.appropriation.section,
+                )
+            except SectionInfo.DoesNotExist:
+                return None
+            main_account_number = (
+                section_info.get_supplementary_activity_main_account_number()
+            )
+
+        try:
+            account_alias_mapping = AccountAliasMapping.objects.get(
+                main_account_number=main_account_number,
+                activity_number=self.details.activity_id,
+            )
+        except AccountAliasMapping.DoesNotExist:
+            return None
+
+        return account_alias_mapping.alias
 
     @property
     def monthly_payment_plan(self):
