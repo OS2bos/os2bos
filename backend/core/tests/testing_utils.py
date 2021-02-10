@@ -252,6 +252,7 @@ def create_service_provider(cvr_number, name):
 def create_section_info(
     details,
     section,
+    activity_category=None,
     kle_number="27.18.02",
     sbsys_template_id="900",
     main_activity_main_account_number="1234",
@@ -260,6 +261,7 @@ def create_section_info(
     params = {
         "activity_details": details,
         "section": section,
+        "activity_category": activity_category,
         "kle_number": kle_number,
         "sbsys_template_id": sbsys_template_id,
         "main_activity_main_account_number": main_activity_main_account_number,
