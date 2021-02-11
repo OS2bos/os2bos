@@ -21,7 +21,7 @@ logger = logging.getLogger("bevillingsplatform.generate_payments_report")
 
 
 class Command(BaseCommand):
-    help = "Generate granted and expected payments reports as CSV"
+    help = "Generate expected payments reports as CSV"
 
     @log_to_prometheus("generate_payments_report")
     def handle(self, *args, **options):
@@ -32,6 +32,26 @@ class Command(BaseCommand):
         try:
             with open(
                 os.path.join(report_dir, "expected_payments.csv"), "w"
+            ) as csvfile:
+                if expected_payments_list:
+                    logger.info(
+                        f"Created expected payments report "
+                        f"for {len(expected_payments_list)} expected payments"
+                    )
+                    writer = csv.DictWriter(
+                        csvfile, fieldnames=expected_payments_list[0].keys()
+                    )
+
+                    writer.writeheader()
+                    for payment_dict in expected_payments_list:
+                        writer.writerow(payment_dict)
+
+            # TODO: the "_new" report should be the future default.
+            expected_payments_list = generate_expected_payments_report_list(
+                new_account_alias=True
+            )
+            with open(
+                os.path.join(report_dir, "expected_payments_new.csv"), "w"
             ) as csvfile:
                 if expected_payments_list:
                     logger.info(

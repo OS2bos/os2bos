@@ -644,7 +644,7 @@ def export_prism_payments_for_date(date=None):
     return filename
 
 
-def generate_expected_payments_report_list():
+def generate_expected_payments_report_list(new_account_alias=False):
     """Generate a payments report of granted AND expected payments."""
     current_year = timezone.now().year
     two_years_ago = current_year - 2
@@ -667,11 +667,13 @@ def generate_expected_payments_report_list():
             "payment_schedule__activity__details",
         )
     )
-    payments_report_list = generate_payments_report_list(payments)
+    payments_report_list = generate_payments_report_list(
+        payments, new_account_alias
+    )
     return payments_report_list
 
 
-def generate_payments_report_list(payments):
+def generate_payments_report_list(payments, new_account_alias=False):
     """Generate a payments report list of payment dicts from payments."""
     payments_report_list = []
     for payment in payments:
@@ -731,6 +733,14 @@ def generate_payments_report_list(payments):
         mother = case.related_persons.filter(relation_type="mor").first()
         father = case.related_persons.filter(relation_type="far").first()
 
+        # TODO: the "_new" report should be the future default.
+        if new_account_alias:
+            account_string = payment.account_string_new
+            account_alias = payment.account_alias_new
+        else:
+            account_string = payment.account_string
+            account_alias = payment.account_alias
+
         payment_dict = {
             # payment specific.
             "id": payment.pk,
@@ -738,8 +748,8 @@ def generate_payments_report_list(payments):
             "paid_amount": payment.paid_amount,
             "date": payment.date,
             "paid_date": payment.paid_date,
-            "account_string": payment.account_string,
-            "account_alias": payment.account_alias,
+            "account_string": account_string,
+            "account_alias": account_alias,
             # payment_schedule specific.
             "payment_schedule__payment_id": payment_schedule.payment_id,
             "payment_schedule__"
@@ -787,6 +797,17 @@ def generate_payments_report_list(payments):
             "mother_cpr": mother.cpr_number if mother else None,
             "father_cpr": father.cpr_number if father else None,
         }
+
+        # TODO: Also add the activity_category to the new file.
+        category = activity.activity_category
+        category_name = activity.activity_category.name if category else None
+        category_id = (
+            activity.activity_category.category_id if category else None
+        )
+        if new_account_alias:
+            payment_dict["activity_category__category_id"] = category_id
+            payment_dict["activity_category__name"] = category_name
+
         payments_report_list.append(payment_dict)
 
     return payments_report_list
