@@ -24,6 +24,7 @@ def initialize():
     initialize_target_groups()
     initialize_sections()
     initialize_activity_details()
+    initialize_activity_categories()
     initialize_section_infos()
     initialize_service_providers()
     initialize_users()
@@ -81,6 +82,14 @@ def initialize_section_infos():
 
     """
     call_command("loaddata", "sectioninfos.json", app_label="core")
+
+
+def initialize_activity_categories():
+    """Initialize all the relevant activity categories.
+
+    Data should be the output of "manage.py dumpdata core.activitycategory
+    """
+    call_command("loaddata", "activity_categories.json", app_label="core")
 
 
 def initialize_service_providers():

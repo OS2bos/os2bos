@@ -836,6 +836,39 @@ class PaymentSchedule(models.Model):
         return f"{department}-{account_number}-{kind}"
 
     @property
+    def account_string_new(self):
+        """Calculate account string from activity.
+
+        TODO: eventually replace account_string with this.
+        """
+        if (
+            self.recipient_type == PaymentSchedule.PERSON
+            and self.payment_method == CASH
+        ):
+            department = config.ACCOUNT_NUMBER_DEPARTMENT
+            kind = config.ACCOUNT_NUMBER_KIND
+        else:
+            # Set department and kind to 'XXX'
+            # to signify they are not used.
+            department = "XXX"
+            kind = "XXX"
+
+        # Account string is "unknown" when there is no
+        # activity or account.
+        # The explicit inclusion of "unknown" is a demand due to the
+        # PRISME integration.
+        if (
+            not hasattr(self, "activity")
+            or not self.activity
+            or not self.activity.account_number
+        ):
+            account_number = config.ACCOUNT_NUMBER_UNKNOWN
+        else:
+            account_number = self.activity.account_number_new
+
+        return f"{department}-{account_number}-{kind}"
+
+    @property
     def account_alias(self):
         """Calculate account alias from activity."""
         if (
@@ -1015,6 +1048,18 @@ class Payment(models.Model):
             return self.saved_account_alias
 
         return self.payment_schedule.account_alias
+
+    @property
+    def account_string_new(self):
+        """
+        Return saved account string if any, else calculate from schedule.
+
+        TODO: eventually replace account_string with this.
+        """
+        if self.saved_account_string:
+            return self.saved_account_string
+
+        return self.payment_schedule.account_string_new
 
     @property
     def account_alias_new(self):
@@ -1600,6 +1645,20 @@ class ActivityDetails(Classification):
         return f"{self.activity_id} - {self.name}"
 
 
+class ActivityCategory(Classification):
+    """ActivityCategory associated with a SectionInfo (main_activity)."""
+
+    class Meta:
+        verbose_name = _("aktivitetskategori")
+        verbose_name_plural = _("aktivitetskategorier")
+
+    category_id = models.CharField(max_length=6, verbose_name=_("kategori ID"))
+    name = models.CharField(max_length=128, verbose_name=_("navn"))
+
+    def __str__(self):
+        return f"{self.category_id} - {self.name}"
+
+
 class SectionInfo(models.Model):
     """For a main activity, KLE no. and SBSYS ID for the relevant sections."""
 
@@ -1620,6 +1679,14 @@ class SectionInfo(models.Model):
     )
     section = models.ForeignKey(
         Section, on_delete=models.CASCADE, verbose_name=_("paragraf")
+    )
+    activity_category = models.ForeignKey(
+        ActivityCategory,
+        on_delete=models.SET_NULL,
+        verbose_name=_("aktivitetskategori"),
+        null=True,
+        blank=True,
+        related_name="section_infos",
     )
 
     kle_number = models.CharField(
@@ -1964,6 +2031,48 @@ class Activity(AuditModelMixin, models.Model):
                 section_info.get_supplementary_activity_main_account_number()
             )
         return f"{main_account_number}-{self.details.activity_id}"
+
+    @property
+    def account_number_new(self):
+        """
+        Calculate the account_number_new to use with this activity.
+
+        TODO: eventually replace account_number with this.
+        """
+        if self.activity_type == MAIN_ACTIVITY:
+            try:
+                section_info = SectionInfo.objects.get(
+                    activity_details=self.details,
+                    section=self.appropriation.section,
+                )
+            except SectionInfo.DoesNotExist:
+                return None
+            main_account_number = (
+                section_info.get_main_activity_main_account_number()
+            )
+            activity_category = section_info.activity_category
+            if not activity_category:
+                return None
+            category_id = activity_category.category_id
+        else:
+            main_activity = self.appropriation.main_activity
+            if not main_activity:
+                return None
+            try:
+                section_info = SectionInfo.objects.get(
+                    activity_details=main_activity.details,
+                    section=self.appropriation.section,
+                )
+            except SectionInfo.DoesNotExist:
+                return None
+            main_account_number = (
+                section_info.get_supplementary_activity_main_account_number()
+            )
+            activity_category = section_info.activity_category
+            if not activity_category:
+                return None
+            category_id = activity_category.category_id
+        return f"{main_account_number}-{category_id}"
 
     @property
     def account_alias(self):

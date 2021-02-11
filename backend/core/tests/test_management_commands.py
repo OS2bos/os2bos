@@ -21,6 +21,7 @@ from core.models import (
     Section,
     AccountAlias,
     AccountAliasMapping,
+    ActivityCategory,
 )
 from core.tests.testing_utils import (
     BasicTestMixin,
@@ -690,6 +691,44 @@ class TestImportAccountAliasMappings(TestCase):
 
         self.assertTrue(parse_mock.called_with("/tmp/test"))
         self.assertEqual(AccountAliasMapping.objects.count(), 1)
+
+
+class TestImportActivityCategories(TestCase):
+    def test_import_activity_categories(self):
+        # We need to import sections and activity details initially.
+        call_command("import_sections")
+        call_command("import_activity_details")
+
+        self.assertEqual(ActivityCategory.objects.count(), 0)
+
+        call_command("import_activity_categories")
+
+        self.assertEqual(ActivityCategory.objects.count(), 25)
+
+    def test_import_activity_categories_with_path(self):
+        # We need to import sections and activity details initially.
+        call_command("import_sections")
+        call_command("import_activity_details")
+
+        self.assertEqual(ActivityCategory.objects.count(), 0)
+
+        # CSV data with headers and a single activity category entry.
+        csv_data = (
+            "Betaling §,BOS §,Hovedaktivitet BOS,Aktivitet Prisme(2021)"
+            " aka. 'Aktivitetsgruppe i BOS'\n"
+            "SEL-109,SEL-109,015020 - Kvindekrisecentre,"
+            "015203 Kvindekrisecentre,"
+        )
+        open_mock = mock.mock_open(read_data=csv_data)
+
+        with mock.patch(
+            "core.management.commands.import_activity_categories.open",
+            open_mock,
+        ):
+            call_command("import_activity_categories", "--path=/tmp/test")
+
+        open_mock.assert_called_with("/tmp/test")
+        self.assertEqual(ActivityCategory.objects.count(), 1)
 
 
 class TestRecalculateOnChangedRate(TestCase, BasicTestMixin):

@@ -46,6 +46,7 @@ from core.models import (
     AccountAlias,
     AccountAliasMapping,
     InternalPaymentRecipient,
+    ActivityCategory,
 )
 from core.proxies import (
     SectionEffortStepProxy,
@@ -127,11 +128,20 @@ class AppropriationAdmin(admin.ModelAdmin):
 class ActivityAdmin(admin.ModelAdmin):
     """ModelAdmin for Activity."""
 
-    readonly_fields = ("account_number", "account_alias", "account_alias_new")
+    readonly_fields = (
+        "account_number",
+        "account_number_new",
+        "account_alias",
+        "account_alias_new",
+    )
 
     def account_number(self, obj):
         """Get account number."""
         return obj.account_number
+
+    def account_number_new(self, obj):
+        """Get new account number."""
+        return obj.account_number_new
 
     def account_alias(self, obj):
         """Get account alias."""
@@ -142,6 +152,7 @@ class ActivityAdmin(admin.ModelAdmin):
         return obj.account_alias_new
 
     account_number.short_description = _("kontonummer")
+    account_number_new.short_description = _("nyt kontonummer")
     account_alias.short_description = _("kontoalias")
     account_alias_new.short_description = _("nyt kontoalias")
 
@@ -270,6 +281,7 @@ class PaymentAdmin(SimpleHistoryAdmin):
         "payment_id",
         "account_string",
         "account_alias",
+        "account_string_new",
         "account_alias_new",
     )
     search_fields = ("payment_schedule__payment_id",)
@@ -317,9 +329,14 @@ class PaymentAdmin(SimpleHistoryAdmin):
         """Get new account alias."""
         return obj.account_alias_new
 
+    def account_string_new(self, obj):
+        """Get account string new."""
+        return obj.account_string_new
+
     payment_id.short_description = _("betalings-ID")
     account_string.short_description = _("kontostreng")
     account_alias.short_description = _("kontoalias")
+    account_string_new.short_description = _("ny kontostreng")
     account_alias_new.short_description = _("nyt kontoalias")
     payment_schedule_str.short_description = _("betalingsplan")
 
@@ -390,6 +407,7 @@ class PaymentScheduleAdmin(admin.ModelAdmin):
         "payment_id",
         "account_string",
         "account_alias",
+        "account_string_new",
         "account_alias_new",
         "price_per_unit",
     )
@@ -422,12 +440,17 @@ class PaymentScheduleAdmin(admin.ModelAdmin):
         """Get account alias."""
         return obj.account_alias
 
+    def account_string_new(self, obj):
+        """Get account string."""
+        return obj.account_string_new
+
     def account_alias_new(self, obj):
         """Get new account alias."""
         return obj.account_alias_new
 
     account_string.short_description = _("kontostreng")
     account_alias.short_description = _("kontoalias")
+    account_string_new.short_description = _("ny kontostreng")
     account_alias_new.short_description = _("nyt kontoalias")
 
 
@@ -701,3 +724,18 @@ class AccountAliasMappingAdmin(ClassificationAdmin):
     """ModelAdmin for AccountAlias."""
 
     list_display = ("main_account_number", "activity_number", "alias")
+
+
+class SectionInfoActivityCategoryInline(ClassificationInline):
+    """SectionInfoInline for ActivityDetailsAdmin."""
+
+    model = SectionInfo
+    extra = 0
+
+
+@admin.register(ActivityCategory)
+class ActivityCategoryAdmin(ClassificationAdmin):
+    """ModelAdmin for ActivityCategory."""
+
+    list_display = ("category_id", "name")
+    inlines = [SectionInfoActivityCategoryInline]
