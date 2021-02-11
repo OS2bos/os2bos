@@ -1,3 +1,16 @@
+Version 3.4.0, 2021-02-11
+-------------------------
+
+New in this version:
+
+Features
+^^^^^^^^
+
+- Add parallel account_string using the new activity category models.
+- Add parallel account_alias using the new account alias mapping models.
+- Update third party dependencies.
+
+
 Version 3.3.1, 2021-01-25
 -------------------------
 
