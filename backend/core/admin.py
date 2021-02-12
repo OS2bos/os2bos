@@ -727,6 +727,8 @@ class AccountAliasAdmin(ClassificationAdmin):
 
 
 class AccountAliasMappingCSVFileUploadForm(forms.Form):
+    """CSV Upload form for AccountAliasMappingAdmin."""
+
     csv_file = forms.FileField(required=False, label=_("vælg venligst en fil"))
 
 
@@ -739,7 +741,7 @@ class AccountAliasMappingAdmin(ClassificationAdmin):
     list_display = ("main_account_number", "activity_number", "alias")
 
     def get_urls(self):
-        """override get_urls adding upload_url path."""
+        """Override get_urls adding upload_url path."""
         urls = super().get_urls()
         my_urls = [path(r"^upload_csv/$", self.upload_csv, name="upload_csv")]
         return my_urls + urls
@@ -747,7 +749,7 @@ class AccountAliasMappingAdmin(ClassificationAdmin):
     urls = property(get_urls)
 
     def changelist_view(self, *args, **kwargs):
-        """override changelist_view adding form to context."""
+        """Override changelist_view adding form to context."""
         view = super().changelist_view(*args, **kwargs)
         view.context_data[
             "submit_csv_form"
@@ -755,7 +757,7 @@ class AccountAliasMappingAdmin(ClassificationAdmin):
         return view
 
     def upload_csv(self, request):
-        """handle the uploaded CSV file."""
+        """Handle the uploaded CSV file."""
         if not request.method == "POST":
             return redirect("..")
 
@@ -794,7 +796,9 @@ class AccountAliasMappingAdmin(ClassificationAdmin):
         io_string = io.StringIO(decoded_file)
         with transaction.atomic():
             AccountAliasMapping.objects.all().delete()
-            parse_account_alias_mapping_data_from_csv(io_string)
+            account_alias_data = parse_account_alias_mapping_data_from_csv(
+                io_string
+            )
             for (
                 main_account_number,
                 activity_number,
