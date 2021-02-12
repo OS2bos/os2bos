@@ -59,7 +59,7 @@ from core.proxies import (
     HistoricalRatePerDateProxy,
 )
 
-from core.utils import parse_account_alias_mapping_data_from_csv
+from core.utils import parse_account_alias_mapping_data_from_csv_string
 
 User = get_user_model()
 
@@ -743,7 +743,7 @@ class AccountAliasMappingAdmin(ClassificationAdmin):
     def get_urls(self):
         """Override get_urls adding upload_url path."""
         urls = super().get_urls()
-        my_urls = [path(r"^upload_csv/$", self.upload_csv, name="upload_csv")]
+        my_urls = [path("upload_csv/", self.upload_csv, name="upload_csv")]
         return my_urls + urls
 
     urls = property(get_urls)
@@ -770,6 +770,8 @@ class AccountAliasMappingAdmin(ClassificationAdmin):
                 _("Der var en fejl i formen: {}".format(form.errors)),
                 level=messages.ERROR,
             )
+            return redirect("..")
+
         if not request.FILES["csv_file"].name.endswith("csv"):
             self.message_user(
                 request,
@@ -780,6 +782,7 @@ class AccountAliasMappingAdmin(ClassificationAdmin):
                 ),
                 level=messages.ERROR,
             )
+            return redirect("..")
 
         try:
             decoded_file = request.FILES["csv_file"].read().decode("utf-8")
@@ -788,28 +791,41 @@ class AccountAliasMappingAdmin(ClassificationAdmin):
                 request,
                 _(
                     "Fejl ved afkodning af filen: {}".format(e),
-                    level=messages.ERROR,
                 ),
+                level=messages.ERROR,
             )
             return redirect("..")
 
+        # We can delete the existing AccountAliasMapping
+        # objects and create new ones.
         io_string = io.StringIO(decoded_file)
         with transaction.atomic():
             AccountAliasMapping.objects.all().delete()
-            account_alias_data = parse_account_alias_mapping_data_from_csv(
-                io_string
+            account_alias_data = (
+                parse_account_alias_mapping_data_from_csv_string(io_string)
             )
-            for (
-                main_account_number,
-                activity_number,
-                alias,
-            ) in account_alias_data:
-                AccountAliasMapping.objects.update_or_create(
+            account_alias_objs = (
+                AccountAliasMapping(
                     main_account_number=main_account_number,
                     activity_number=activity_number,
-                    defaults={"alias": alias},
+                    alias=alias,
                 )
-
+                for (
+                    main_account_number,
+                    activity_number,
+                    alias,
+                ) in account_alias_data
+            )
+            objects = AccountAliasMapping.objects.bulk_create(
+                account_alias_objs
+            )
+        self.message_user(
+            request,
+            _(
+                "{} kontoalias objekter blev oprettet.".format(len(objects)),
+            ),
+            level=messages.INFO,
+        )
         return redirect("..")
 
 

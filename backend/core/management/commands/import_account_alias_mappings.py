@@ -12,7 +12,7 @@ from django.db import transaction
 from django.core.management.base import BaseCommand
 
 from core.models import AccountAliasMapping
-from core.utils import parse_account_alias_mapping_data_from_csv
+from core.utils import parse_account_alias_mapping_data_from_csv_path
 
 
 class Command(BaseCommand):
@@ -43,7 +43,7 @@ class Command(BaseCommand):
                 "data",
                 "account_alias_mappings.csv",
             )
-        account_alias_data = parse_account_alias_mapping_data_from_csv(path)
+        account_alias_data = parse_account_alias_mapping_data_from_csv_path(path)
 
         for (
             main_account_number,
