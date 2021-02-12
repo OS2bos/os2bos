@@ -43,7 +43,9 @@ class Command(BaseCommand):
                 "data",
                 "account_alias_mappings.csv",
             )
-        account_alias_data = parse_account_alias_mapping_data_from_csv_path(path)
+        account_alias_data = parse_account_alias_mapping_data_from_csv_path(
+            path
+        )
 
         for (
             main_account_number,
