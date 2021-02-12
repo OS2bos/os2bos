@@ -938,7 +938,7 @@ def parse_account_alias_mapping_data_from_csv_string(string):
 
 
 def parse_account_alias_mapping_data_from_csv_path(path):
-    """Helper for parsing account alias mappings from a path instead."""
+    """Helper-function for parsing account alias mappings from a path."""
     with open(path) as csvfile:
         account_alias_data = parse_account_alias_mapping_data_from_csv_string(
             csvfile
