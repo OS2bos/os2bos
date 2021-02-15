@@ -649,6 +649,7 @@ class AccountAliasMappingTestCase(AuthenticatedTestCase, BasicTestMixin):
 
         self.client.login(username=self.username, password=self.password)
         response = self.client.get(url)
+
         self.assertEqual(response.status_code, 200)
 
     def test_upload_csv_get(self):
@@ -666,6 +667,8 @@ class AccountAliasMappingTestCase(AuthenticatedTestCase, BasicTestMixin):
 
         # get should not create any objects.
         response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 302)
         self.assertEqual(AccountAliasMapping.objects.count(), 0)
 
     def test_upload_csv_no_file(self):
@@ -683,6 +686,8 @@ class AccountAliasMappingTestCase(AuthenticatedTestCase, BasicTestMixin):
 
         # post with no csv_file should not create any objects.
         response = self.client.post(url)
+
+        self.assertEqual(response.status_code, 302)
         self.assertEqual(AccountAliasMapping.objects.count(), 0)
 
     def test_upload_csv_wrong_filetype(self):
@@ -767,7 +772,8 @@ class AccountAliasMappingTestCase(AuthenticatedTestCase, BasicTestMixin):
         self.client.login(username=self.username, password=self.password)
         self.assertEqual(AccountAliasMapping.objects.count(), 0)
 
-        # post with correct csv but incorrect formatting should not create objects.
+        # post with correct csv but incorrect formatting
+        # should not create objects.
         incorrect_file = SimpleUploadedFile(
             "account_aliases.csv",
             b"BOS0000001",
