@@ -729,7 +729,7 @@ class AccountAliasAdmin(ClassificationAdmin):
 class AccountAliasMappingCSVFileUploadForm(forms.Form):
     """CSV Upload form for AccountAliasMappingAdmin."""
 
-    csv_file = forms.FileField(required=False, label=_("vælg venligst en fil"))
+    csv_file = forms.FileField(required=True, label=_("vælg venligst en fil"))
 
 
 @admin.register(AccountAliasMapping)
@@ -800,11 +800,10 @@ class AccountAliasMappingAdmin(ClassificationAdmin):
         # objects and create new ones.
         io_string = io.StringIO(decoded_file)
         with transaction.atomic():
-            AccountAliasMapping.objects.all().delete()
             account_alias_data = (
                 parse_account_alias_mapping_data_from_csv_string(io_string)
             )
-            account_alias_objs = (
+            account_alias_objs = [
                 AccountAliasMapping(
                     main_account_number=main_account_number,
                     activity_number=activity_number,
@@ -815,17 +814,27 @@ class AccountAliasMappingAdmin(ClassificationAdmin):
                     activity_number,
                     alias,
                 ) in account_alias_data
-            )
-            objects = AccountAliasMapping.objects.bulk_create(
-                account_alias_objs
-            )
-        self.message_user(
-            request,
-            _(
-                "{} kontoalias objekter blev oprettet.".format(len(objects)),
-            ),
-            level=messages.INFO,
-        )
+            ]
+            if account_alias_objs:
+                AccountAliasMapping.objects.all().delete()
+                objects = AccountAliasMapping.objects.bulk_create(
+                    account_alias_objs
+                )
+                self.message_user(
+                    request,
+                    _(
+                        "{} kontoalias objekter blev oprettet.".format(
+                            len(objects)
+                        ),
+                    ),
+                    level=messages.INFO,
+                )
+            else:
+                self.message_user(
+                    request,
+                    _("Ingen kontoalias objekter blev oprettet."),
+                    level=messages.ERROR,
+                )
         return redirect("..")
 
 

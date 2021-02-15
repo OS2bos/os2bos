@@ -915,12 +915,12 @@ def parse_account_alias_mapping_data_from_csv_string(string):
     """
     reader = csv.reader(string)
     rows = [row for row in reader]
-    if not rows:
-        return []
 
     account_alias_mapping_data = []
 
     for row in rows:
+        if not len(row) > 1:
+            continue
         alias = row[0]
         account_string = row[1]
         if not alias or not alias.startswith("BOS"):
