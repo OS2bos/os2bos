@@ -2,7 +2,6 @@
 {% load i18n admin_urls admin_static admin_list %}
 
 {% block content %}
-    {{ block.super }}
     <h1>{% trans "Tilføj Kontoalias fra CSV fil" %}</h1>
     <form id="upload-csv-form" action="{% url 'admin:upload_csv' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
@@ -14,4 +13,6 @@
             <input type="reset" value="Reset">
         </p>
     </form>
+
+    {{ block.super }}
 {% endblock %}
