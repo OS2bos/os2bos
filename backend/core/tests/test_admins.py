@@ -4,6 +4,7 @@ from django.test import TestCase
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 from core.models import (
     Payment,
@@ -16,6 +17,7 @@ from core.models import (
     RatePerDate,
     HistoricalRatePerDate,
     PaymentDateExclusion,
+    AccountAliasMapping,
 )
 from core.admin import (
     PaymentAdmin,
@@ -631,6 +633,198 @@ class PaymentDateExclusionAdminTestCase(TestCase):
             payment_date_exclusion_admin.weekday(payment_date_exclusion),
             "onsdag",
         )
+
+
+class AccountAliasMappingTestCase(AuthenticatedTestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_changelist(self):
+        url = reverse("admin:core_accountaliasmapping_changelist")
+        self.user.is_staff = True
+        self.user.is_superuser = True
+        self.user.profile = User.ADMIN
+        self.user.save()
+
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_upload_csv_get(self):
+        url = (
+            reverse("admin:core_accountaliasmapping_changelist")
+            + "upload_csv/"
+        )
+        self.user.is_staff = True
+        self.user.is_superuser = True
+        self.user.profile = User.ADMIN
+        self.user.save()
+
+        self.client.login(username=self.username, password=self.password)
+        self.assertEqual(AccountAliasMapping.objects.count(), 0)
+
+        # get should not create any objects.
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(AccountAliasMapping.objects.count(), 0)
+
+    def test_upload_csv_no_file(self):
+        url = (
+            reverse("admin:core_accountaliasmapping_changelist")
+            + "upload_csv/"
+        )
+        self.user.is_staff = True
+        self.user.is_superuser = True
+        self.user.profile = User.ADMIN
+        self.user.save()
+
+        self.client.login(username=self.username, password=self.password)
+        self.assertEqual(AccountAliasMapping.objects.count(), 0)
+
+        # post with no csv_file should not create any objects.
+        response = self.client.post(url)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(AccountAliasMapping.objects.count(), 0)
+
+    def test_upload_csv_wrong_filetype(self):
+        url = (
+            reverse("admin:core_accountaliasmapping_changelist")
+            + "upload_csv/"
+        )
+        self.user.is_staff = True
+        self.user.is_superuser = True
+        self.user.profile = User.ADMIN
+        self.user.save()
+
+        self.client.login(username=self.username, password=self.password)
+        self.assertEqual(AccountAliasMapping.objects.count(), 0)
+        # post with wrong filetype should not create any objects.
+        wrong_file = SimpleUploadedFile(
+            "wrong.zip", b"test", content_type="application/zip"
+        )
+        response = self.client.post(url, {"csv_file": wrong_file})
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(AccountAliasMapping.objects.count(), 0)
+
+    def test_upload_csv_empty_file(self):
+        url = (
+            reverse("admin:core_accountaliasmapping_changelist")
+            + "upload_csv/"
+        )
+        self.user.is_staff = True
+        self.user.is_superuser = True
+        self.user.profile = User.ADMIN
+        self.user.save()
+
+        self.client.login(username=self.username, password=self.password)
+        self.assertEqual(AccountAliasMapping.objects.count(), 0)
+
+        # post with empty file should not create objects.
+        empty_file = SimpleUploadedFile(
+            "account_aliases.csv",
+            b"",
+            content_type="text/csv",
+        )
+        response = self.client.post(url, {"csv_file": empty_file})
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(AccountAliasMapping.objects.count(), 0)
+
+    def test_upload_csv_incorrectly_decoded_file(self):
+        url = (
+            reverse("admin:core_accountaliasmapping_changelist")
+            + "upload_csv/"
+        )
+        self.user.is_staff = True
+        self.user.is_superuser = True
+        self.user.profile = User.ADMIN
+        self.user.save()
+
+        self.client.login(username=self.username, password=self.password)
+        self.assertEqual(AccountAliasMapping.objects.count(), 0)
+
+        # post with incorrectly decoded file should not create objects.
+        decode_error_file = SimpleUploadedFile(
+            "account_aliases.csv",
+            "test".encode("utf-16"),
+            content_type="text/csv",
+        )
+        response = self.client.post(url, {"csv_file": decode_error_file})
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(AccountAliasMapping.objects.count(), 0)
+
+    def test_upload_csv_incorrect_formatting(self):
+        url = (
+            reverse("admin:core_accountaliasmapping_changelist")
+            + "upload_csv/"
+        )
+        self.user.is_staff = True
+        self.user.is_superuser = True
+        self.user.profile = User.ADMIN
+        self.user.save()
+
+        self.client.login(username=self.username, password=self.password)
+        self.assertEqual(AccountAliasMapping.objects.count(), 0)
+
+        # post with correct csv but incorrect formatting
+        # should not create objects.
+        incorrect_file = SimpleUploadedFile(
+            "account_aliases.csv",
+            b"BOS0000001",
+            content_type="text/csv",
+        )
+        response = self.client.post(url, {"csv_file": incorrect_file})
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(AccountAliasMapping.objects.count(), 0)
+
+    def test_upload_csv_empty_file_contents(self):
+        url = (
+            reverse("admin:core_accountaliasmapping_changelist")
+            + "upload_csv/"
+        )
+        self.user.is_staff = True
+        self.user.is_superuser = True
+        self.user.profile = User.ADMIN
+        self.user.save()
+
+        # post with correct csv should create objects.
+        incorrect_file = SimpleUploadedFile(
+            "account_aliases.csv",
+            b" ",
+            content_type="text/csv",
+        )
+        response = self.client.post(url, {"csv_file": incorrect_file})
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(AccountAliasMapping.objects.count(), 0)
+
+    def test_upload_csv_success(self):
+        url = (
+            reverse("admin:core_accountaliasmapping_changelist")
+            + "upload_csv/"
+        )
+        self.user.is_staff = True
+        self.user.is_superuser = True
+        self.user.profile = User.ADMIN
+        self.user.save()
+
+        # post with correct csv should create objects.
+        correct_file = SimpleUploadedFile(
+            "account_aliases.csv",
+            b"BOS0000001,01005-645511002-015027-529CPR---",
+            content_type="text/csv",
+        )
+        response = self.client.post(url, {"csv_file": correct_file})
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(AccountAliasMapping.objects.count(), 1)
 
 
 class TestClassificationAdmin(TestCase):

@@ -902,9 +902,9 @@ def validate_cvr(cvr):
     return bool(match)
 
 
-def parse_account_alias_mapping_data_from_csv(path):
+def parse_account_alias_mapping_data_from_csv_string(string):
     """
-    Parse account alias mapping data from a .csv file.
+    Parse account alias mapping data from a .csv StringIO.
 
     Returns a list of (main_account_number, activity_number, alias) tuples
     for example:
@@ -913,13 +913,14 @@ def parse_account_alias_mapping_data_from_csv(path):
         (528211011, 015038, BOS0000112)
     ]
     """
-    with open(path) as csvfile:
-        reader = csv.reader(csvfile)
-        rows = [row for row in reader]
+    reader = csv.reader(string)
+    rows = [row for row in reader]
 
     account_alias_mapping_data = []
 
     for row in rows:
+        if not len(row) > 1:
+            continue
         alias = row[0]
         account_string = row[1]
         if not alias or not alias.startswith("BOS"):
@@ -934,3 +935,12 @@ def parse_account_alias_mapping_data_from_csv(path):
         )
 
     return account_alias_mapping_data
+
+
+def parse_account_alias_mapping_data_from_csv_path(path):
+    """Helper-function for parsing account alias mappings from a path."""
+    with open(path) as csvfile:
+        account_alias_data = parse_account_alias_mapping_data_from_csv_string(
+            csvfile
+        )
+    return account_alias_data
