@@ -20,7 +20,7 @@ def log_to_prometheus(job_name):
     def decorator_log_to_prometheus(job_func):
         def wrapper_log_to_prometheus(*args, **kwargs):
             result = None
-            if not settings.LOG_TO_PROMETHEUS:
+            if not settings.PUSHGATEWAY_HOST:
                 result = job_func(*args, **kwargs)
             else:
                 registry = CollectorRegistry()
