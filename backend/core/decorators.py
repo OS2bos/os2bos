@@ -45,7 +45,7 @@ def log_to_prometheus(job_name):
                     last_success.set_to_current_time()
                 finally:
                     pushadd_to_gateway(
-                        settings.PROMETHEUS_HOST,
+                        settings.PUSHGATEWAY_HOST,
                         job=f"{job_name}",
                         registry=registry,
                     )
