@@ -360,7 +360,7 @@ class TestExportToPrism(TestCase):
         call_command("export_to_prism")
 
         logger_mock.error.assert_called_with(
-            "Export of records to PRISME failed!"
+            "Export of records to PRISME failed! /test/path"
         )
 
     @mock.patch("core.management.commands.export_to_prism.logger")
