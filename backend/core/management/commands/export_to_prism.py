@@ -10,7 +10,7 @@ import os
 import sys
 import logging
 
-from datetime import datetime
+import datetime
 
 from django.core.management.base import BaseCommand
 
@@ -34,7 +34,7 @@ class Command(BaseCommand):
         date = options["date"]
         if date is not None:
             try:
-                date = datetime.strptime(date, "%Y%m%d")
+                date = datetime.datetime.strptime(date, "%Y%m%d")
             except ValueError:
                 print("Please enter date as 'YYYYMMDD'.")
                 logger.error(
@@ -42,16 +42,20 @@ class Command(BaseCommand):
                 )
                 sys.exit(1)
         try:
-            prism_file = export_prism_payments_for_date(date)
-            # This is just a sanity check, if we arrive here everything will
-            # have worked out or an exception would have been thrown.
-            if prism_file is None:
+            prism_files = export_prism_payments_for_date(date)
+
+            # This is just a sanity check, if we arrive here everything
+            # will have worked out or an exception would have been
+            # thrown.
+            if not prism_files:
                 logger.info("No records found for export to PRISME.")
-            elif os.path.isfile(prism_file):
+            elif all(os.path.isfile(file) for file in prism_files):
                 logger.info(
-                    f"Success: PRISME records were exported to {prism_file}"
+                    f"Success: PRISME records were exported to {prism_files}"
                 )
             else:
-                logger.error("Export of records to PRISME failed!")
+                logger.error(
+                    f"Export of records to PRISME failed! {prism_files}"
+                )
         except Exception:
             logger.exception("An exception occurred during export to PRISME")
