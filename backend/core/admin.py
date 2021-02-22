@@ -716,7 +716,12 @@ class PaymentDateExclusionAdmin(ClassificationAdmin):
 class SectionInfoAdmin(ClassificationAdmin):
     """ModelAdmin for SectionInfo."""
 
-    list_display = ("activity_details", "section", "kle_number")
+    list_display = (
+        "activity_details",
+        "section",
+        "kle_number",
+        "activity_category",
+    )
 
 
 @admin.register(AccountAlias)
