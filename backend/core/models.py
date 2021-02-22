@@ -1685,7 +1685,6 @@ class SectionInfo(models.Model):
         on_delete=models.SET_NULL,
         verbose_name=_("aktivitetskategori"),
         null=True,
-        blank=True,
         related_name="section_infos",
     )
 
