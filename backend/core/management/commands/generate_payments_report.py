@@ -4,15 +4,10 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
-import os
-import csv
 import logging
 
-from django.conf import settings
 from django.core.management.base import BaseCommand
 
-from core import models
 from core.utils import (
     generate_payments_report,
 )
@@ -31,7 +26,7 @@ class Command(BaseCommand):
             if payment_reports:
                 logger.info(f"Created payments reports: {payment_reports}")
             else:
-                logger.info(f"No payment reports generated")
+                logger.info("No payment reports generated")
         except Exception:
             logger.exception(
                 "An error occurred during generation of the payments report"
