@@ -14,7 +14,7 @@ from django.core.management.base import BaseCommand
 
 from core import models
 from core.utils import (
-    generate_payments_report_list_versions,
+    generate_payments_report,
 )
 from core.decorators import log_to_prometheus
 
@@ -26,36 +26,13 @@ class Command(BaseCommand):
 
     @log_to_prometheus("generate_payments_report")
     def handle(self, *args, **options):
-        payments = models.Payment.objects.expected_payments_for_report_list()
-        for (
-            version,
-            payments_func,
-        ) in generate_payments_report_list_versions.items():
-            expected_payments_list = payments_func(payments)
-            report_dir = settings.PAYMENTS_REPORT_DIR
-            try:
-                with open(
-                    os.path.join(
-                        report_dir, f"expected_payments_{version}.csv"
-                    ),
-                    "w",
-                ) as csvfile:
-                    if expected_payments_list:
-                        logger.info(
-                            f"Created expected payments report "
-                            f"for {len(expected_payments_list)}"
-                            " expected payments"
-                        )
-                        writer = csv.DictWriter(
-                            csvfile,
-                            fieldnames=expected_payments_list[0].keys(),
-                        )
-
-                        writer.writeheader()
-                        for payment_dict in expected_payments_list:
-                            writer.writerow(payment_dict)
-            except Exception:
-                logger.exception(
-                    "An error occurred during generation"
-                    " of the payments report"
-                )
+        try:
+            payment_reports = generate_payments_report()
+            if payment_reports:
+                logger.info(f"Created payments reports: {payment_reports}")
+            else:
+                logger.info(f"No payment reports generated")
+        except Exception:
+            logger.exception(
+                "An error occurred during generation of the payments report"
+            )
