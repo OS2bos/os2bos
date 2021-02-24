@@ -995,6 +995,7 @@ def parse_account_alias_mapping_data_from_csv_path(path):
 
 
 def generate_payments_report():
+    """Generate a payments report as CSV."""
     payments = models.Payment.objects.expected_payments_for_report_list()
     payment_reports = []
 
