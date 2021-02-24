@@ -443,7 +443,8 @@ class TestGeneratePaymentsReports(TestCase, BasicTestMixin):
         logger_mock.info.assert_has_calls(
             [
                 mock.call(
-                    "Created payments reports: ['/tmp/expected_payments_1.csv']"
+                    "Created payments reports: "
+                    "['/tmp/expected_payments_1.csv']"
                 ),
             ]
         )
