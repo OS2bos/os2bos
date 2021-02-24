@@ -10,7 +10,7 @@ import os
 import sys
 import logging
 
-import datetime
+from datetime import datetime
 
 from django.core.management.base import BaseCommand
 
@@ -34,7 +34,7 @@ class Command(BaseCommand):
         date = options["date"]
         if date is not None:
             try:
-                date = datetime.datetime.strptime(date, "%Y%m%d")
+                date = datetime.strptime(date, "%Y%m%d")
             except ValueError:
                 print("Please enter date as 'YYYYMMDD'.")
                 logger.error(
