@@ -994,6 +994,38 @@ def parse_account_alias_mapping_data_from_csv_path(path):
     return account_alias_data
 
 
+def generate_payments_report():
+    payments = models.Payment.objects.expected_payments_for_report_list()
+    payment_reports = []
+
+    for (
+        version,
+        payments_func,
+    ) in generate_payments_report_list_versions.items():
+        expected_payments_list = payments_func(payments)
+        report_dir = settings.PAYMENTS_REPORT_DIR
+
+        if not expected_payments_list:
+            continue
+
+        with open(
+            os.path.join(report_dir, f"expected_payments_{version}.csv"),
+            "w",
+        ) as csvfile:
+            writer = csv.DictWriter(
+                csvfile,
+                fieldnames=expected_payments_list[0].keys(),
+            )
+
+            writer.writeheader()
+            for payment_dict in expected_payments_list:
+                writer.writerow(payment_dict)
+
+            payment_reports.append(csvfile.name)
+
+    return payment_reports
+
+
 # Defined versions of output utilities.
 generate_payments_report_list_versions = {
     "1": generate_payments_report_list_v1
