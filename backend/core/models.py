@@ -2157,7 +2157,10 @@ class Activity(AuditModelMixin, models.Model):
         if not hasattr(self, "payment_plan") or not self.payment_plan:
             return Payment.objects.none()
 
-        if self.status == STATUS_GRANTED and self.modified_by.exists():
+        if (
+            self.status == STATUS_GRANTED
+            and self.modified_by.exclude(status=STATUS_DELETED).exists()
+        ):
             # one time payments are always overruled entirely.
             if (
                 self.payment_plan.payment_type
@@ -2279,15 +2282,12 @@ class Activity(AuditModelMixin, models.Model):
     def get_all_modified_by_activities(self):
         """Retrieve all modified_by objects recursively."""
         r = []
-        if self.modified_by.exists():
+        modified_by = self.modified_by.exclude(status=STATUS_DELETED)
+        if modified_by.exists():
             r.append(
-                self.modified_by.prefetch_related(
-                    "payment_plan__payments"
-                ).first()
+                modified_by.prefetch_related("payment_plan__payments").first()
             )
-            return (
-                r + self.modified_by.first().get_all_modified_by_activities()
-            )
+            return r + modified_by.first().get_all_modified_by_activities()
         return r
 
     def save(self, *args, **kwargs):
