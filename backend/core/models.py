@@ -1513,8 +1513,12 @@ class Appropriation(AuditModelMixin, models.Model):
                     if a.status == STATUS_GRANTED:
                         # If we're not already granting a modification
                         # of this activity, we need to re-grant it.
+                        modified_by = a.modified_by.exclude(
+                            status=STATUS_DELETED
+                        )
                         if not (
-                            a.modified_by and a.modified_by in activities
+                            modified_by
+                            and any(obj in activities for obj in modified_by)
                         ):  # pragma: no cover
                             to_be_granted.append(a)
         else:
