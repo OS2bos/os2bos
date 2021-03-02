@@ -7,9 +7,9 @@ from core.decorators import log_to_prometheus
 
 
 class TestLogToPrometheus(TestCase):
-    @override_settings(LOG_TO_PROMETHEUS=True)
+    @override_settings(PUSHGATEWAY_HOST="pushgateway:9091")
     @mock.patch("core.decorators.pushadd_to_gateway")
-    def test_log_to_prometheus_send_expired_emails_success(self, pushadd_mock):
+    def test_pushgateway_host_send_expired_emails_success(self, pushadd_mock):
         call_command("send_expired_emails")
 
         # Assert prometheus is logged to
@@ -30,16 +30,16 @@ class TestLogToPrometheus(TestCase):
         )
         self.assertTrue(last_success_value > 0)
 
-    @override_settings(LOG_TO_PROMETHEUS=False)
+    @override_settings(PUSHGATEWAY_HOST="")
     @mock.patch("core.decorators.pushadd_to_gateway")
-    def test_log_to_prometheus_setting_not_set(self, pushadd_mock):
+    def test_pushgateway_host_setting_not_set(self, pushadd_mock):
         call_command("send_expired_emails")
         # Assert prometheus is not logged to.
         self.assertFalse(pushadd_mock.called)
 
-    @override_settings(LOG_TO_PROMETHEUS=True)
+    @override_settings(PUSHGATEWAY_HOST="pushgateway:9091")
     @mock.patch("core.decorators.pushadd_to_gateway")
-    def test_log_to_prometheus_raised_exception(self, pushadd_mock):
+    def test_pushgateway_host_raised_exception(self, pushadd_mock):
         @log_to_prometheus("raises_exception")
         def raises_exception(self):
             raise Exception
