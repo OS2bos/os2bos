@@ -14,7 +14,6 @@ from django.core.management.base import BaseCommand
 
 from core.utils import (
     generate_expected_payments_report_list,
-    generate_granted_payments_report_list,
 )
 from core.decorators import log_to_prometheus
 
@@ -22,32 +21,15 @@ logger = logging.getLogger("bevillingsplatform.generate_payments_report")
 
 
 class Command(BaseCommand):
-    help = "Generate granted and expected payments reports as CSV"
+    help = "Generate expected payments reports as CSV"
 
     @log_to_prometheus("generate_payments_report")
     def handle(self, *args, **options):
-        granted_payments_list = generate_granted_payments_report_list()
         expected_payments_list = generate_expected_payments_report_list()
 
         report_dir = settings.PAYMENTS_REPORT_DIR
 
         try:
-            with open(
-                os.path.join(report_dir, "granted_payments.csv"), "w"
-            ) as csvfile:
-                if granted_payments_list:
-                    logger.info(
-                        f"Created granted payments report "
-                        f"for {len(granted_payments_list)} payments"
-                    )
-                    writer = csv.DictWriter(
-                        csvfile, fieldnames=granted_payments_list[0].keys()
-                    )
-
-                    writer.writeheader()
-                    for payment_dict in granted_payments_list:
-                        writer.writerow(payment_dict)
-
             with open(
                 os.path.join(report_dir, "expected_payments.csv"), "w"
             ) as csvfile:
@@ -63,7 +45,27 @@ class Command(BaseCommand):
                     writer.writeheader()
                     for payment_dict in expected_payments_list:
                         writer.writerow(payment_dict)
+
+            # TODO: the "_1" report should be the future default.
+            expected_payments_list = generate_expected_payments_report_list(
+                new_account_alias=True
+            )
+            with open(
+                os.path.join(report_dir, "expected_payments_1.csv"), "w"
+            ) as csvfile:
+                if expected_payments_list:
+                    logger.info(
+                        f"Created expected payments report "
+                        f"for {len(expected_payments_list)} expected payments"
+                    )
+                    writer = csv.DictWriter(
+                        csvfile, fieldnames=expected_payments_list[0].keys()
+                    )
+
+                    writer.writeheader()
+                    for payment_dict in expected_payments_list:
+                        writer.writerow(payment_dict)
         except Exception:
             logger.exception(
-                "An error occurred during generation of payments reports"
+                "An error occurred during generation of the payments report"
             )

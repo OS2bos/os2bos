@@ -111,8 +111,8 @@
             'component'
         ],
         methods: {
-            emitUpdate: function() {
-                this.$emit('update')
+            emitUpdate: function(new_data) {
+                this.$emit('update', new_data)
             }
         }
     })
@@ -205,8 +205,8 @@
                 }
                 this.$emit('selection', this.selection)
             },
-            emitUpdate: function() {
-                this.$emit('update')
+            emitUpdate: function(new_data) {
+                this.$emit('update', new_data)
             }
         },
         mounted: function() {

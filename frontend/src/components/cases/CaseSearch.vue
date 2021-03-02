@@ -166,8 +166,6 @@ export default {
             }
         },
         updateUser: function() {
-            console.log('updateuser, query', this.$route.query)
-
             // Start out by setting a default case worker if no url params are present
             // and getting a list of cases with only initial filters set.
             if (!this.hasUrlParams && this.user.id) { 

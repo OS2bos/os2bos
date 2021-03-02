@@ -13,6 +13,7 @@ import requests
 import datetime
 import itertools
 import re
+import csv
 
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
@@ -335,7 +336,9 @@ def saml_create_user(user_data):  # noqa: D401
 # TODO: At some point, factor out customer specific third party integrations.
 
 
-def format_prism_financial_record(payment, line_no, record_no):
+def format_prism_financial_record(
+    payment, line_no, record_no, new_account_alias=False
+):
     """Format a single financial record for PRISM, on a single line.
 
     This follows documentation provided by Ballerup Kommune based on
@@ -391,12 +394,18 @@ def format_prism_financial_record(payment, line_no, record_no):
     153 - posting text.
     """
 
+    # TODO: remove this branch when account_alias_new is ready.
+    if new_account_alias:
+        account_alias = payment.account_alias_new
+    else:
+        account_alias = payment.account_alias
+
     case_cpr = payment.payment_schedule.activity.appropriation.case.cpr_number
     fields = {
         "103": f"{config.PRISM_MACHINE_NO:05d}",
         "104": f"{record_no:07d}",
         "110": f"{payment.date.strftime('%Y%m%d')}",
-        "111": f"{payment.account_alias}",
+        "111": f"{account_alias}",
         "112": f"{int(payment.amount*100):012d} ",
         "113": "D",
         "114": f"{payment.date.year}",
@@ -495,11 +504,16 @@ def due_payments_for_prism(date):
     )
 
 
-def generate_records_for_prism(due_payments):
+def generate_records_for_prism(due_payments, new_account_alias=False):
     """Generate the list of records for writing to PRISM file."""
     prism_records = (
         (
-            format_prism_financial_record(p, line_no=2 * i - 1, record_no=i),
+            format_prism_financial_record(
+                p,
+                line_no=2 * i - 1,
+                record_no=i,
+                new_account_alias=new_account_alias,
+            ),
             format_prism_payment_record(p, line_no=2 * i, record_no=i),
         )
         for i, p in enumerate(due_payments, 1)
@@ -510,14 +524,21 @@ def generate_records_for_prism(due_payments):
     return prism_records
 
 
-def write_prism_file(date, payments, tomorrow):
+def write_prism_file(date, payments, tomorrow, new_account_alias=False):
     """Write the actual PRISM file."""
     # The output directory is not configurable - this is mapped through Docker.
     output_dir = settings.PRISM_OUTPUT_DIR
 
+    if new_account_alias:
+        filename_str = "_1"
+    else:
+        filename_str = ""
     # The microseconds are included to avoid accidentally overwriting
     # tomorrow's file.
-    filename = f"{output_dir}/{date.strftime('%Y%m%d')}_{tomorrow.microsecond}"
+    filename = (
+        f"{output_dir}/{date.strftime('%Y%m%d')}_{tomorrow.microsecond}"
+        + filename_str
+    )
     with open(filename, "w") as f:
         # Generate and write preamble.
 
@@ -541,7 +562,7 @@ def write_prism_file(date, payments, tomorrow):
         )
         f.write(f"{preamble_string}\n")
         # Generate and write the records.
-        prism_records = generate_records_for_prism(payments)
+        prism_records = generate_records_for_prism(payments, new_account_alias)
         f.write("\n".join(prism_records))
 
         # Generate and write the final line.
@@ -610,6 +631,8 @@ def export_prism_payments_for_date(date=None):
         return
 
     filename = write_prism_file(date, payments, tomorrow)
+    # TODO: the "new_account_alias" prism file should be the future default.
+    write_prism_file(date, payments, tomorrow, new_account_alias=True)
 
     # Register all payments as paid.
     for p in payments:
@@ -621,32 +644,7 @@ def export_prism_payments_for_date(date=None):
     return filename
 
 
-def generate_granted_payments_report_list():
-    """Generate a payments report of only granted payments."""
-    current_year = timezone.now().year
-    two_years_ago = current_year - 2
-    beginning_of_two_years_ago = datetime.date.min.replace(year=two_years_ago)
-
-    granted_activities = models.Activity.objects.filter(
-        status=models.STATUS_GRANTED
-    )
-    payment_ids = granted_activities.values_list(
-        "payment_plan__payments__pk", flat=True
-    )
-    payments = (
-        models.Payment.objects.filter(id__in=payment_ids)
-        .paid_date_or_date_gte(beginning_of_two_years_ago)
-        .select_related(
-            "payment_schedule__activity__appropriation__case",
-            "payment_schedule__activity__appropriation__section",
-            "payment_schedule__activity__details",
-        )
-    )
-    payments_report_list = generate_payments_report_list(payments)
-    return payments_report_list
-
-
-def generate_expected_payments_report_list():
+def generate_expected_payments_report_list(new_account_alias=False):
     """Generate a payments report of granted AND expected payments."""
     current_year = timezone.now().year
     two_years_ago = current_year - 2
@@ -669,11 +667,13 @@ def generate_expected_payments_report_list():
             "payment_schedule__activity__details",
         )
     )
-    payments_report_list = generate_payments_report_list(payments)
+    payments_report_list = generate_payments_report_list(
+        payments, new_account_alias
+    )
     return payments_report_list
 
 
-def generate_payments_report_list(payments):
+def generate_payments_report_list(payments, new_account_alias=False):
     """Generate a payments report list of payment dicts from payments."""
     payments_report_list = []
     for payment in payments:
@@ -733,6 +733,14 @@ def generate_payments_report_list(payments):
         mother = case.related_persons.filter(relation_type="mor").first()
         father = case.related_persons.filter(relation_type="far").first()
 
+        # TODO: the "_new" report should be the future default.
+        if new_account_alias:
+            account_string = payment.account_string_new
+            account_alias = payment.account_alias_new
+        else:
+            account_string = payment.account_string
+            account_alias = payment.account_alias
+
         payment_dict = {
             # payment specific.
             "id": payment.pk,
@@ -740,8 +748,8 @@ def generate_payments_report_list(payments):
             "paid_amount": payment.paid_amount,
             "date": payment.date,
             "paid_date": payment.paid_date,
-            "account_string": payment.account_string,
-            "account_alias": payment.account_alias,
+            "account_string": account_string,
+            "account_alias": account_alias,
             # payment_schedule specific.
             "payment_schedule__payment_id": payment_schedule.payment_id,
             "payment_schedule__"
@@ -789,6 +797,17 @@ def generate_payments_report_list(payments):
             "mother_cpr": mother.cpr_number if mother else None,
             "father_cpr": father.cpr_number if father else None,
         }
+
+        # TODO: Also add the activity_category to the new file.
+        category = activity.activity_category
+        category_name = activity.activity_category.name if category else None
+        category_id = (
+            activity.activity_category.category_id if category else None
+        )
+        if new_account_alias:
+            payment_dict["activity_category__category_id"] = category_id
+            payment_dict["activity_category__name"] = category_name
+
         payments_report_list.append(payment_dict)
 
     return payments_report_list
@@ -881,3 +900,47 @@ def validate_cvr(cvr):
     """
     match = re.match(r"^[0-9]{8}$", cvr.strip())
     return bool(match)
+
+
+def parse_account_alias_mapping_data_from_csv_string(string):
+    """
+    Parse account alias mapping data from a .csv StringIO.
+
+    Returns a list of (main_account_number, activity_number, alias) tuples
+    for example:
+    [
+        (645511002, 015035, BOS0000109),
+        (528211011, 015038, BOS0000112)
+    ]
+    """
+    reader = csv.reader(string)
+    rows = [row for row in reader]
+
+    account_alias_mapping_data = []
+
+    for row in rows:
+        if not len(row) > 1:
+            continue
+        alias = row[0]
+        account_string = row[1]
+        if not alias or not alias.startswith("BOS"):
+            continue
+
+        split_account_string = account_string.split("-")
+        main_account_number = split_account_string[1]
+        activity_number = split_account_string[2]
+
+        account_alias_mapping_data.append(
+            (main_account_number, activity_number, alias)
+        )
+
+    return account_alias_mapping_data
+
+
+def parse_account_alias_mapping_data_from_csv_path(path):
+    """Helper-function for parsing account alias mappings from a path."""
+    with open(path) as csvfile:
+        account_alias_data = parse_account_alias_mapping_data_from_csv_string(
+            csvfile
+        )
+    return account_alias_data

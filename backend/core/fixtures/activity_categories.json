@@ -1,0 +1,227 @@
+[
+    {
+        "model": "core.activitycategory",
+        "pk": 1,
+        "fields": {
+            "active": true,
+            "category_id": "015203",
+            "name": "Kvindekrisecentre"
+        }
+    },
+    {
+        "model": "core.activitycategory",
+        "pk": 2,
+        "fields": {
+            "active": true,
+            "category_id": "015200",
+            "name": "Forebyggendeindsats - Konsulentbistand og r\u00e5dgivning"
+        }
+    },
+    {
+        "model": "core.activitycategory",
+        "pk": 3,
+        "fields": {
+            "active": true,
+            "category_id": "015201",
+            "name": "Forebyggendeindsats - St\u00f8tte til fritidstilbud"
+        }
+    },
+    {
+        "model": "core.activitycategory",
+        "pk": 4,
+        "fields": {
+            "active": true,
+            "category_id": "015196",
+            "name": "Anden hj\u00e6lp"
+        }
+    },
+    {
+        "model": "core.activitycategory",
+        "pk": 5,
+        "fields": {
+            "active": true,
+            "category_id": "015204",
+            "name": "Merudgifter - b\u00f8rn med nedsat fuktion"
+        }
+    },
+    {
+        "model": "core.activitycategory",
+        "pk": 6,
+        "fields": {
+            "active": true,
+            "category_id": "015208",
+            "name": "Tabt arbejdsfortjeneste"
+        }
+    },
+    {
+        "model": "core.activitycategory",
+        "pk": 7,
+        "fields": {
+            "active": true,
+            "category_id": "015197",
+            "name": "B\u00f8rnehus Hovedstaden"
+        }
+    },
+    {
+        "model": "core.activitycategory",
+        "pk": 8,
+        "fields": {
+            "active": true,
+            "category_id": "015209",
+            "name": "Familiebehandling"
+        }
+    },
+    {
+        "model": "core.activitycategory",
+        "pk": 9,
+        "fields": {
+            "active": true,
+            "category_id": "015198",
+            "name": "Dagbehandling"
+        }
+    },
+    {
+        "model": "core.activitycategory",
+        "pk": 10,
+        "fields": {
+            "active": true,
+            "category_id": "015210",
+            "name": "D\u00f8gnophold for hele familien"
+        }
+    },
+    {
+        "model": "core.activitycategory",
+        "pk": 11,
+        "fields": {
+            "active": true,
+            "category_id": "015187",
+            "name": "Aflastning p\u00e5 institution"
+        }
+    },
+    {
+        "model": "core.activitycategory",
+        "pk": 12,
+        "fields": {
+            "active": true,
+            "category_id": "015188",
+            "name": "Aflastnings i familie"
+        }
+    },
+    {
+        "model": "core.activitycategory",
+        "pk": 13,
+        "fields": {
+            "active": true,
+            "category_id": "015186",
+            "name": "Aflastning i netv\u00e6rket"
+        }
+    },
+    {
+        "model": "core.activitycategory",
+        "pk": 14,
+        "fields": {
+            "active": true,
+            "category_id": "015202",
+            "name": "Kontaktpersonordning"
+        }
+    },
+    {
+        "model": "core.activitycategory",
+        "pk": 15,
+        "fields": {
+            "active": true,
+            "category_id": "015206",
+            "name": "St\u00f8tte til for\u00e6ldremyndighedsindehaver"
+        }
+    },
+    {
+        "model": "core.activitycategory",
+        "pk": 16,
+        "fields": {
+            "active": true,
+            "category_id": "015189",
+            "name": "Anbringelse - Eget V\u00e6relse"
+        }
+    },
+    {
+        "model": "core.activitycategory",
+        "pk": 17,
+        "fields": {
+            "active": true,
+            "category_id": "015190",
+            "name": "Anbringelse - Familiepleje"
+        }
+    },
+    {
+        "model": "core.activitycategory",
+        "pk": 18,
+        "fields": {
+            "active": true,
+            "category_id": "015192",
+            "name": "Anbringelse - Kommunal plejefamilie"
+        }
+    },
+    {
+        "model": "core.activitycategory",
+        "pk": 19,
+        "fields": {
+            "active": true,
+            "category_id": "015194",
+            "name": "Anbringelse - Netv\u00e6rksplejefamilie"
+        }
+    },
+    {
+        "model": "core.activitycategory",
+        "pk": 20,
+        "fields": {
+            "active": true,
+            "category_id": "015195",
+            "name": "Anbringelse - Opholdssted"
+        }
+    },
+    {
+        "model": "core.activitycategory",
+        "pk": 21,
+        "fields": {
+            "active": true,
+            "category_id": "015191",
+            "name": "Anbringelse - Institution"
+        }
+    },
+    {
+        "model": "core.activitycategory",
+        "pk": 22,
+        "fields": {
+            "active": true,
+            "category_id": "015205",
+            "name": "Sikrede instititioner, inkl. obj. finansiering"
+        }
+    },
+    {
+        "model": "core.activitycategory",
+        "pk": 23,
+        "fields": {
+            "active": true,
+            "category_id": "015193",
+            "name": "Anbringelse - Kost- og efterskole"
+        }
+    },
+    {
+        "model": "core.activitycategory",
+        "pk": 24,
+        "fields": {
+            "active": true,
+            "category_id": "HK/kom",
+            "name": "bination ikke anvendt i BALK"
+        }
+    },
+    {
+        "model": "core.activitycategory",
+        "pk": 25,
+        "fields": {
+            "active": true,
+            "category_id": "015185",
+            "name": "Aflastning i hjemmet"
+        }
+    }
+]

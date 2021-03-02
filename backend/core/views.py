@@ -42,6 +42,7 @@ from core.models import (
     TargetGroup,
     InternalPaymentRecipient,
     Effort,
+    ActivityCategory,
     STATUS_DELETED,
     STATUS_DRAFT,
     STATUS_GRANTED,
@@ -72,6 +73,7 @@ from core.serializers import (
     TargetGroupSerializer,
     InternalPaymentRecipientSerializer,
     EffortSerializer,
+    ActivityCategorySerializer,
 )
 from core.filters import (
     CaseFilter,
@@ -482,6 +484,13 @@ class EffortViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     queryset = Effort.objects.all()
     serializer_class = EffortSerializer
     filterset_fields = "__all__"
+
+
+class ActivityCategoryViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
+    """Expose activity categories in REST API."""
+
+    queryset = ActivityCategory.objects.all()
+    serializer_class = ActivityCategorySerializer
 
 
 class IsEditingPastPaymentsAllowed(APIView):

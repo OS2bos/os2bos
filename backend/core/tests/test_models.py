@@ -39,6 +39,8 @@ from core.tests.testing_utils import (
     create_rate_per_date,
     create_payment_date_exclusion,
     create_account_alias,
+    create_account_alias_mapping,
+    create_activity_category,
 )
 from core.models import (
     Municipality,
@@ -2166,6 +2168,38 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             f"{activity.details.activity_id}",
         )
 
+    def test_account_number_new_main_activity(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+
+        activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=activity,
+        )
+        activity_category = create_activity_category("224466")
+        section_info = create_section_info(
+            details=activity.details,
+            section=section,
+            activity_category=activity_category,
+            main_activity_main_account_number="12345",
+        )
+        # account_number should come from ACCOUNT_NUMBER_DEPARTMENT,
+        # the section_info of the activity, the activity category
+        # and ACCOUNT_NUMBER_KIND.
+        self.assertEqual(
+            activity.account_number_new,
+            f"{section_info.main_activity_main_account_number}-"
+            f"{activity_category.category_id}",
+        )
+
     def test_account_number_main_activity_no_section_info(self):
         case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
@@ -2184,6 +2218,53 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         # No section info is found.
         self.assertIsNone(activity.account_number)
+
+    def test_account_number_new_main_activity_no_section_info(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+
+        activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=activity,
+        )
+        # No section info is found.
+        self.assertIsNone(activity.account_number_new)
+
+    def test_account_number_new_main_activity_no_activity_category(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+
+        activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=activity,
+        )
+        create_section_info(
+            details=activity.details,
+            section=section,
+            activity_category=None,
+            main_activity_main_account_number="12345",
+        )
+        # No activity category is found.
+        self.assertEqual(
+            activity.account_number_new,
+            None,
+        )
 
     def test_account_number_supplementary_activity(self):
         case = create_case(self.case_worker, self.municipality, self.district)
@@ -2225,6 +2306,48 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             f"{suppl_activity.details.activity_id}",
         )
 
+    def test_account_number_new_supplementary_activity(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+
+        main_activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=main_activity,
+        )
+        activity_category = create_activity_category("446688")
+        section_info = create_section_info(
+            details=main_activity.details,
+            section=section,
+            activity_category=activity_category,
+            main_activity_main_account_number="12345",
+        )
+        suppl_activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=SUPPL_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=suppl_activity,
+        )
+        # account_number should come from ACCOUNT_NUMBER_DEPARTMENT,
+        # the section_info of the activity, and ACCOUNT_NUMBER_KIND.
+        self.assertEqual(
+            suppl_activity.account_number_new,
+            f"{section_info.supplementary_activity_main_account_number}-"
+            f"{activity_category.category_id}",
+        )
+
     def test_account_number_supplementary_activity_no_section_info(self):
         case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
@@ -2255,6 +2378,36 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         # No section info is found.
         self.assertIsNone(suppl_activity.account_number)
 
+    def test_account_number_new_supplementary_activity_no_section_info(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+
+        main_activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=main_activity,
+        )
+        suppl_activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=SUPPL_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=suppl_activity,
+        )
+        # No section info is found.
+        self.assertIsNone(suppl_activity.account_number_new)
+
     def test_account_number_supplementary_activity_no_main_activity(self):
         case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
@@ -2273,6 +2426,63 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         # No main activity is found.
         self.assertIsNone(suppl_activity.account_number)
+
+    def test_account_number_new_supplementary_activity_no_main_activity(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+
+        suppl_activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=SUPPL_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=suppl_activity,
+        )
+        # No main activity is found.
+        self.assertIsNone(suppl_activity.account_number_new)
+
+    def test_account_number_new_supplementary_activity_no_activity_category(
+        self,
+    ):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+
+        main_activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=main_activity,
+        )
+        create_section_info(
+            details=main_activity.details,
+            section=section,
+            activity_category=None,
+            main_activity_main_account_number="12345",
+        )
+        suppl_activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=SUPPL_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=suppl_activity,
+        )
+        # no activity category is found.
+        self.assertEqual(suppl_activity.account_number_new, None)
 
     def test_account_alias_main_activity(self):
         case = create_case(self.case_worker, self.municipality, self.district)
@@ -2299,6 +2509,33 @@ class ActivityTestCase(TestCase, BasicTestMixin):
 
         self.assertEqual(activity.account_alias, account_alias.alias)
 
+    def test_account_alias_new_main_activity(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+
+        activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=activity,
+        )
+        create_section_info(
+            details=activity.details,
+            section=section,
+            main_activity_main_account_number="12345",
+        )
+        account_alias = create_account_alias_mapping(
+            "12345", activity.details.activity_id
+        )
+
+        self.assertEqual(activity.account_alias_new, account_alias.alias)
+
     def test_account_alias_main_activity_no_section_info(self):
         case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
@@ -2317,6 +2554,25 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         # No section info is found.
         self.assertIsNone(activity.account_alias)
+
+    def test_account_alias_new_main_activity_no_section_info(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+
+        activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=activity,
+        )
+        # No section info is found.
+        self.assertIsNone(activity.account_alias_new)
 
     def test_account_alias_supplementary_activity(self):
         case = create_case(self.case_worker, self.municipality, self.district)
@@ -2356,6 +2612,45 @@ class ActivityTestCase(TestCase, BasicTestMixin):
 
         self.assertEqual(suppl_activity.account_alias, account_alias.alias)
 
+    def test_account_alias_new_supplementary_activity(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+
+        main_activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=main_activity,
+        )
+        create_section_info(
+            details=main_activity.details,
+            section=section,
+            main_activity_main_account_number="12345",
+            supplementary_activity_main_account_number="5678",
+        )
+        suppl_activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=SUPPL_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=suppl_activity,
+        )
+        account_alias = create_account_alias_mapping(
+            "5678", main_activity.details.activity_id
+        )
+
+        self.assertEqual(suppl_activity.account_alias_new, account_alias.alias)
+
     def test_account_alias_supplementary_activity_no_section_info(self):
         case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
@@ -2383,8 +2678,41 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             recipient_type=PaymentSchedule.PERSON,
             activity=suppl_activity,
         )
+
+        create_account_alias_mapping("5678", main_activity.details.activity_id)
+
         # No section info is found.
-        self.assertIsNone(suppl_activity.account_alias)
+        self.assertIsNone(suppl_activity.account_alias_new)
+
+    def test_account_alias_new_supplementary_activity_no_section_info(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+
+        main_activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=main_activity,
+        )
+        suppl_activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=SUPPL_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=suppl_activity,
+        )
+        # No section info is found.
+        self.assertIsNone(suppl_activity.account_alias_new)
 
     def test_account_alias_supplementary_activity_no_main_activity(self):
         case = create_case(self.case_worker, self.municipality, self.district)
@@ -2404,6 +2732,126 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         # No main activity is found.
         self.assertIsNone(suppl_activity.account_alias)
+
+    def test_activity_category_new_main_activity(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+
+        activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=activity,
+        )
+        activity_category = create_activity_category("224466")
+        create_section_info(
+            details=activity.details,
+            section=section,
+            activity_category=activity_category,
+            main_activity_main_account_number="12345",
+        )
+
+        self.assertEqual(activity.activity_category, activity_category)
+
+    def test_activity_category_no_main_activity(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+
+        suppl_activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=SUPPL_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=suppl_activity,
+        )
+        # No main activity is found.
+        self.assertIsNone(suppl_activity.activity_category)
+
+    def test_activity_category_supplementary_activity(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+
+        main_activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=main_activity,
+        )
+        activity_category = create_activity_category("446688")
+        create_section_info(
+            details=main_activity.details,
+            section=section,
+            activity_category=activity_category,
+            main_activity_main_account_number="12345",
+        )
+        suppl_activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=SUPPL_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=suppl_activity,
+        )
+
+        self.assertEqual(suppl_activity.activity_category, activity_category)
+
+    def test_activity_category_supplementary_activity_no_activity_category(
+        self,
+    ):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+
+        main_activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=main_activity,
+        )
+        create_section_info(
+            details=main_activity.details,
+            section=section,
+            activity_category=None,
+            main_activity_main_account_number="12345",
+        )
+        suppl_activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=SUPPL_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=suppl_activity,
+        )
+        # no activity category is found.
+        self.assertEqual(suppl_activity.activity_category, None)
 
     def test_individual_payment_activity_no_payments(self):
         case = create_case(self.case_worker, self.municipality, self.district)
@@ -2491,9 +2939,11 @@ class PaymentTestCase(TestCase, BasicTestMixin):
             recipient_type=PaymentSchedule.PERSON,
             activity=activity,
         )
+        activity_category = create_activity_category(category_id="246810")
         section_info = create_section_info(
             details=activity.details,
             section=section,
+            activity_category=activity_category,
             main_activity_main_account_number="12345",
         )
 
@@ -2507,10 +2957,10 @@ class PaymentTestCase(TestCase, BasicTestMixin):
         # Account should come from ACCOUNT_NUMBER_DEPARTMENT,
         # the section_info of the activity, and ACCOUNT_NUMBER_KIND.
         self.assertEqual(
-            payment.account_string,
+            payment.account_string_new,
             f"{config.ACCOUNT_NUMBER_DEPARTMENT}-"
             f"{section_info.main_activity_main_account_number}-"
-            f"{activity.details.activity_id}-"
+            f"{activity_category.category_id}-"
             f"{config.ACCOUNT_NUMBER_KIND}",
         )
 
@@ -2540,6 +2990,33 @@ class PaymentTestCase(TestCase, BasicTestMixin):
         )
         # Account should come from the saved account.
         self.assertEqual(payment.account_string, "123-1234-123")
+
+    def test_payment_account_new_already_saved(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+
+        activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+        )
+        payment_schedule = create_payment_schedule(activity=activity)
+
+        create_section_info(
+            details=activity.details,
+            section=section,
+            main_activity_main_account_number="12345",
+        )
+        payment = create_payment(
+            payment_schedule=payment_schedule,
+            date=date(year=2019, month=1, day=11),
+            amount=Decimal("500.0"),
+            saved_account_string="123-1234-123",
+        )
+        # Account should come from the saved account.
+        self.assertEqual(payment.account_string_new, "123-1234-123")
 
     def test_payment_account_with_unset_department_and_kind(self):
         case = create_case(self.case_worker, self.municipality, self.district)
@@ -2657,6 +3134,52 @@ class PaymentTestCase(TestCase, BasicTestMixin):
 
         # Payment account_string should use the saved_account_string
         self.assertEqual(payment.account_alias, "BOS0000001")
+
+    def test_payment_save_account_alias_new_saved(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+
+        activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+        )
+
+        section_info = create_section_info(
+            details=activity.details,
+            section=section,
+            main_activity_main_account_number="12345",
+        )
+        create_account_alias(section_info, activity.details)
+
+        create_account_alias_mapping(
+            "12345", activity.details.activity_id, alias="BOS0000002"
+        )
+        payment_schedule = create_payment_schedule(activity=activity)
+
+        payment = create_payment(
+            payment_schedule=payment_schedule,
+            date=date(year=2019, month=1, day=11),
+            amount=Decimal("500.0"),
+        )
+
+        # account alias should come from account_alias_new while not paid.
+        self.assertEqual(payment.account_alias_new, "BOS0000002")
+        self.assertEqual(payment.saved_account_alias, "")
+
+        # Set payment paid which should save the
+        # saved_account_string from account_alias.
+        payment.paid = True
+        payment.paid_date = date(year=2019, month=2, day=1)
+        payment.paid_amount = Decimal("500.0")
+        payment.save()
+        payment.refresh_from_db()
+        self.assertEqual(payment.saved_account_alias, "BOS0000001")
+
+        # Payment account_string should use the saved_account_string
+        self.assertEqual(payment.account_alias_new, "BOS0000001")
 
     def test_save_not_all_paid_fields_set(self):
         payment_schedule = create_payment_schedule()
@@ -3746,4 +4269,26 @@ class AccountAliasTestCase(TestCase, BasicTestMixin):
 
         self.assertEqual(
             str(account_alias), f"{section_info} - {activity_details}"
+        )
+
+
+class AccountAliasMappingTestCase(TestCase):
+    def test_str(self):
+        account_alias = create_account_alias_mapping(
+            "528211007", "015177", "BOS12345678"
+        )
+
+        self.assertEqual(
+            str(account_alias),
+            f"{account_alias.main_account_number} - "
+            f"{account_alias.activity_number}",
+        )
+
+
+class ActivityCategoryTestCase(TestCase):
+    def test_str(self):
+        activity_category = create_activity_category()
+
+        self.assertEqual(
+            str(activity_category), "123456 - test aktivitetskategori"
         )
