@@ -46,12 +46,12 @@ class Command(BaseCommand):
                     for payment_dict in expected_payments_list:
                         writer.writerow(payment_dict)
 
-            # TODO: the "_new" report should be the future default.
+            # TODO: the "_1" report should be the future default.
             expected_payments_list = generate_expected_payments_report_list(
                 new_account_alias=True
             )
             with open(
-                os.path.join(report_dir, "expected_payments_new.csv"), "w"
+                os.path.join(report_dir, "expected_payments_1.csv"), "w"
             ) as csvfile:
                 if expected_payments_list:
                     logger.info(

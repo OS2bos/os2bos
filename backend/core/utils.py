@@ -530,7 +530,7 @@ def write_prism_file(date, payments, tomorrow, new_account_alias=False):
     output_dir = settings.PRISM_OUTPUT_DIR
 
     if new_account_alias:
-        filename_str = "_new"
+        filename_str = "_1"
     else:
         filename_str = ""
     # The microseconds are included to avoid accidentally overwriting
