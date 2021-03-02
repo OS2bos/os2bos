@@ -683,7 +683,7 @@ class TestImportAccountAliasMappings(TestCase):
         parse_mock = mock.Mock()
         with mock.patch(
             "core.management.commands.import_account_alias_mappings"
-            ".parse_account_alias_mapping_data_from_csv",
+            ".parse_account_alias_mapping_data_from_csv_path",
             parse_mock,
         ):
             parse_mock.return_value = [("645511002", "015027", "BOS0000001")]

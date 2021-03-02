@@ -7,15 +7,20 @@
 """Customize django-admin interface."""
 
 import datetime
+import io
 
 from django.contrib import admin
+from django.contrib.messages import constants as messages
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from django.utils.html import escape, mark_safe, format_html_join
 from django.urls import reverse
 from django.db.models import F
+from django.db import transaction
 from django import forms
+from django.urls import path
+from django.shortcuts import redirect
 
 from simple_history.admin import SimpleHistoryAdmin
 
@@ -53,6 +58,8 @@ from core.proxies import (
     ActivityDetailsSectionProxy,
     HistoricalRatePerDateProxy,
 )
+
+from core.utils import parse_account_alias_mapping_data_from_csv_string
 
 User = get_user_model()
 
@@ -709,7 +716,12 @@ class PaymentDateExclusionAdmin(ClassificationAdmin):
 class SectionInfoAdmin(ClassificationAdmin):
     """ModelAdmin for SectionInfo."""
 
-    list_display = ("activity_details", "section", "kle_number")
+    list_display = (
+        "activity_details",
+        "section",
+        "kle_number",
+        "activity_category",
+    )
 
 
 @admin.register(AccountAlias)
@@ -719,11 +731,116 @@ class AccountAliasAdmin(ClassificationAdmin):
     list_display = ("section_info", "activity_details", "alias")
 
 
+class AccountAliasMappingCSVFileUploadForm(forms.Form):
+    """CSV Upload form for AccountAliasMappingAdmin."""
+
+    csv_file = forms.FileField(required=True, label=_("vælg venligst en fil"))
+
+
 @admin.register(AccountAliasMapping)
 class AccountAliasMappingAdmin(ClassificationAdmin):
     """ModelAdmin for AccountAlias."""
 
+    change_list_template = "core/admin/accountaliasmapping/change_list.html"
+
     list_display = ("main_account_number", "activity_number", "alias")
+
+    def get_urls(self):
+        """Override get_urls adding upload_url path."""
+        urls = super().get_urls()
+        my_urls = [path("upload_csv/", self.upload_csv, name="upload_csv")]
+        return my_urls + urls
+
+    urls = property(get_urls)
+
+    def changelist_view(self, *args, **kwargs):
+        """Override changelist_view adding form to context."""
+        view = super().changelist_view(*args, **kwargs)
+        view.context_data[
+            "submit_csv_form"
+        ] = AccountAliasMappingCSVFileUploadForm
+        return view
+
+    def upload_csv(self, request):
+        """Handle the uploaded CSV file."""
+        if not request.method == "POST":
+            return redirect("..")
+
+        form = AccountAliasMappingCSVFileUploadForm(
+            request.POST, request.FILES
+        )
+        if not form.is_valid():
+            self.message_user(
+                request,
+                _("Der var en fejl i formen: {}".format(form.errors)),
+                level=messages.ERROR,
+            )
+            return redirect("..")
+
+        if not request.FILES["csv_file"].name.endswith("csv"):
+            self.message_user(
+                request,
+                _(
+                    "Ukorrekt filtype: {}".format(
+                        request.FILES["csv_file"].name.split(".")[1]
+                    )
+                ),
+                level=messages.ERROR,
+            )
+            return redirect("..")
+
+        try:
+            decoded_file = request.FILES["csv_file"].read().decode("utf-8")
+        except UnicodeDecodeError as e:
+            self.message_user(
+                request,
+                _(
+                    "Fejl ved afkodning af filen: {}".format(e),
+                ),
+                level=messages.ERROR,
+            )
+            return redirect("..")
+
+        # We can delete the existing AccountAliasMapping
+        # objects and create new ones.
+        io_string = io.StringIO(decoded_file)
+        with transaction.atomic():
+            account_alias_data = (
+                parse_account_alias_mapping_data_from_csv_string(io_string)
+            )
+            account_alias_objs = [
+                AccountAliasMapping(
+                    main_account_number=main_account_number,
+                    activity_number=activity_number,
+                    alias=alias,
+                )
+                for (
+                    main_account_number,
+                    activity_number,
+                    alias,
+                ) in account_alias_data
+            ]
+            if account_alias_objs:
+                AccountAliasMapping.objects.all().delete()
+                objects = AccountAliasMapping.objects.bulk_create(
+                    account_alias_objs
+                )
+                self.message_user(
+                    request,
+                    _(
+                        "{} kontoalias objekter blev oprettet.".format(
+                            len(objects)
+                        ),
+                    ),
+                    level=messages.INFO,
+                )
+            else:
+                self.message_user(
+                    request,
+                    _("Ingen kontoalias objekter blev oprettet."),
+                    level=messages.ERROR,
+                )
+        return redirect("..")
 
 
 class SectionInfoActivityCategoryInline(ClassificationInline):

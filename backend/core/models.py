@@ -1689,7 +1689,6 @@ class SectionInfo(models.Model):
         on_delete=models.SET_NULL,
         verbose_name=_("aktivitetskategori"),
         null=True,
-        blank=True,
         related_name="section_infos",
     )
 
@@ -2035,6 +2034,35 @@ class Activity(AuditModelMixin, models.Model):
                 section_info.get_supplementary_activity_main_account_number()
             )
         return f"{main_account_number}-{self.details.activity_id}"
+
+    @property
+    def activity_category(self):
+        """Get the activity category of this activity."""
+        if self.activity_type == MAIN_ACTIVITY:
+            try:
+                section_info = SectionInfo.objects.get(
+                    activity_details=self.details,
+                    section=self.appropriation.section,
+                )
+            except SectionInfo.DoesNotExist:
+                return None
+        else:
+            main_activity = self.appropriation.main_activity
+            if not main_activity:
+                return None
+            try:
+                section_info = SectionInfo.objects.get(
+                    activity_details=main_activity.details,
+                    section=self.appropriation.section,
+                )
+            except SectionInfo.DoesNotExist:
+                return None
+
+        activity_category = section_info.activity_category
+        if not activity_category:
+            return None
+
+        return activity_category
 
     @property
     def account_number_new(self):
