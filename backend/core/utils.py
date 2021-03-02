@@ -524,89 +524,53 @@ def generate_records_for_prism(due_payments, new_account_alias=False):
     return prism_records
 
 
-@transaction.atomic
-def write_prism_file_v1(date, payments, tomorrow, new_account_alias=False):
-    """Write the actual PRISM file."""
-    # The output directory is not configurable - this is mapped through Docker.
-    output_dir = settings.PRISM_OUTPUT_DIR
+def due_payments_for_prism_with_exclusions(date):
+    """Process payments with exclusions for PRISME.
 
-    # The microseconds are included to avoid accidentally overwriting
-    # tomorrow's file.
-    filename = f"{output_dir}/{date.strftime('%Y%m%d')}_{tomorrow.microsecond}"
-    with open(filename, "w") as f:
-        # Generate and write preamble.
+    We check the day after tomorrow for one or several payment date exclusions
+    and include payments for those found.
+    """
+    # Retrieve payments for the date.
+    payment_ids = list(
+        due_payments_for_prism(date).values_list("id", flat=True)
+    )
 
-        """
-        The fields given below never change and might as well be hard coded in
-        the output:
-        """
+    # We include payments until we reach two consecutive days
+    # with no exclusions.
+    payment_date_exclusions_found = False
+    consecutive_days = 1
+    days_delta = 1
+    while consecutive_days < 2:
+        while models.PaymentDateExclusion.objects.filter(
+            date=date + relativedelta(days=days_delta)
+        ).exists():
+            payment_date_exclusions_found = True
+            payment_ids.extend(
+                list(
+                    due_payments_for_prism(
+                        date + relativedelta(days=days_delta)
+                    ).values_list("id", flat=True)
+                )
+            )
+            days_delta += 1
+            consecutive_days = 0
 
-        hdisp = " "  # Blank, must be there.
-        media_type = "6"  # Don't ask.
-        evolbr = "      "  # 6 blanks - once again, don't ask.
-        mixed = "1"
-        trans_code = "Z300"  # Identifies transaction start.
+        # Also include payments for the first day after
+        # one or more PaymentDateExclusion dates.
+        if payment_date_exclusions_found:
+            payment_ids.extend(
+                list(
+                    due_payments_for_prism(
+                        date + relativedelta(days=days_delta)
+                    ).values_list("id", flat=True)
+                )
+            )
+        consecutive_days += 1
+        days_delta += 1
+        payment_date_exclusions_found = False
 
-        user_number = f"{config.PRISM_ORG_UNIT:04d}"  # Org unit.
-        day_of_year = tomorrow.timetuple().tm_yday  # Day of year.
-
-        preamble_string = (
-            f"{trans_code}{hdisp}{user_number}{media_type}{evolbr}"
-            + f"{day_of_year}{mixed}"
-        )
-        f.write(f"{preamble_string}\n")
-        # Generate and write the records.
-        prism_records = generate_records_for_prism(payments, new_account_alias)
-        f.write("\n".join(prism_records))
-
-        # Generate and write the final line.
-        cslutd = "SLUTD"  # Don't ask.
-        fantrec = f"{len(prism_records):05d}"
-        f.write(f"\n{cslutd}{fantrec}\n")
-    return filename
-
-
-@transaction.atomic
-def export_prism_payments_for_date(date=None):
-    """Fetch due payments for prism and run the export functions."""
-    # Date = tomorrow if not given.
-    # We need "tomorrow" to set payment date.
-    tomorrow = datetime.datetime.now() + relativedelta(days=1)
-    if not date:
-        date = tomorrow
-
-    payments = due_payments_for_prism_with_exclusions(date)
-    if not payments.exists():
-        # No payments
-        return
-
-    prism_files = []
-    for (
-        version,
-        export_func,
-    ) in write_prism_file_versions.items():
-        # The microseconds are included to avoid accidentally
-        # overwriting tomorrow's file.
-        filename = (
-            f"{date.strftime('%Y%m%d')}_" f"{tomorrow.microsecond}_{version}"
-        )
-
-        # TODO: remove this line in next release.
-        # filename = write_prism_file(date, payments, tomorrow)
-        # TODO: the "new_account_alias" prism file should be the future default.
-        # filepath = export_func(filename, date, payments, tomorrow)
-        new_filepath = export_func(
-            filename, date, payments, tomorrow, new_account_alias=True
-        )
-        prism_files.extend([filepath, new_filepath])
-
-    for p in payments:
-        p.paid = True
-        p.paid_amount = p.amount
-        p.paid_date = tomorrow
-        p.save()
-
-    return prism_files
+    payments = models.Payment.objects.filter(id__in=payment_ids)
+    return payments
 
 
 def create_rrule(
@@ -696,41 +660,6 @@ def validate_cvr(cvr):
     """
     match = re.match(r"^[0-9]{8}$", cvr.strip())
     return bool(match)
-
-
-def parse_account_alias_mapping_data_from_csv_string(string):
-    """
-    Parse account alias mapping data from a .csv StringIO.
-
-    Returns a list of (main_account_number, activity_number, alias) tuples
-    for example:
-    [
-        (645511002, 015035, BOS0000109),
-        (528211011, 015038, BOS0000112)
-    ]
-    """
-    reader = csv.reader(string)
-    rows = [row for row in reader]
-
-    account_alias_mapping_data = []
-
-    for row in rows:
-        if not len(row) > 1:
-            continue
-        alias = row[0]
-        account_string = row[1]
-        if not alias or not alias.startswith("BOS"):
-            continue
-
-        split_account_string = account_string.split("-")
-        main_account_number = split_account_string[1]
-        activity_number = split_account_string[2]
-
-        account_alias_mapping_data.append(
-            (main_account_number, activity_number, alias)
-        )
-
-    return account_alias_mapping_data
 
 
 def generate_payments_report_list_v1(payments, new_account_alias=False):
@@ -865,6 +794,11 @@ def generate_payments_report_list_v1(payments, new_account_alias=False):
     return payments_report_list
 
 
+def generate_payments_report_list_v2(payments):
+    """Generate payments report list v2 (v1 with new_account_alias changes)."""
+    return generate_payments_report_list_v1(payments, new_account_alias=True)
+
+
 @transaction.atomic
 def write_prism_file_v1(
     filename, date, payments, tomorrow, new_account_alias=False
@@ -874,7 +808,7 @@ def write_prism_file_v1(
     output_dir = settings.PRISM_OUTPUT_DIR
 
     if new_account_alias:
-        filename = filename = "_new"
+        filename = filename + "_1"
 
     filepath = os.path.join(output_dir, filename)
     with open(filepath, "w") as f:
@@ -935,7 +869,9 @@ def export_prism_payments_for_date(date=None):
             f"{date.strftime('%Y%m%d')}_" f"{tomorrow.microsecond}_{version}"
         )
 
-        filepath = export_func(filename, date, payments, tomorrow)
+        # TODO: remove this line in next release.
+        # TODO: the "new_account_alias" prism file should be the future default.
+        # filepath = export_func(filename, date, payments, tomorrow)
         new_filepath = export_func(
             filename, date, payments, tomorrow, new_account_alias=True
         )
@@ -1029,7 +965,8 @@ def generate_payments_report():
 
 # Defined versions of output utilities.
 generate_payments_report_list_versions = {
-    "1": generate_payments_report_list_v1
+    "1": generate_payments_report_list_v1,
+    "2": generate_payments_report_list_v2,
 }
 
 write_prism_file_versions = {"1": write_prism_file_v1}
