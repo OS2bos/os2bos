@@ -1230,15 +1230,15 @@ class Appropriation(AuditModelMixin, models.Model):
 
     objects = AppropriationQuerySet.as_manager()
 
-    # @property
-    # def status(self):
-    #     """Calculate appropriation status from status of activities."""
-    #     if self.activities.filter(status=STATUS_EXPECTED).exists():
-    #         return STATUS_EXPECTED
-    #     if self.activities.filter(status=STATUS_GRANTED).exists():
-    #         return STATUS_GRANTED
+    @property
+    def status(self):
+        """Calculate appropriation status from status of activities."""
+        if self.activities.filter(status=STATUS_EXPECTED).exists():
+            return STATUS_EXPECTED
+        if self.activities.filter(status=STATUS_GRANTED).exists():
+            return STATUS_GRANTED
 
-    #     return STATUS_DRAFT
+        return STATUS_DRAFT
 
     @property
     def granted_from_date(self):
@@ -2239,14 +2239,26 @@ class Activity(AuditModelMixin, models.Model):
 
     def get_all_modified_by_activities(self):
         """Retrieve all modified_by objects recursively."""
-        r = []
-        modified_by = self.modified_by.exclude(status=STATUS_DELETED)
-        if modified_by.exists():
-            r.append(
-                modified_by.prefetch_related("payment_plan__payments").first()
+        return Activity.objects.raw(
+            """
+            WITH RECURSIVE T AS (
+            SELECT core_activity.id, core_activity.status FROM core_activity WHERE id=%(id)s
+            UNION
+            SELECT core_activity.id, core_activity.status FROM core_activity JOIN T
+            ON (core_activity.modifies_id = T.id)
             )
-            return r + modified_by.first().get_all_modified_by_activities()
-        return r
+            SELECT id FROM T WHERE id!=%(id)s and status!=%(status_deleted)s;
+        """,
+            {"id": self.id, "status_deleted": STATUS_DELETED},
+        )
+        # r = []
+        # modified_by = self.modified_by.exclude(status=STATUS_DELETED)
+        # if modified_by.exists():
+        #     r.append(
+        #         modified_by.prefetch_related("payment_plan__payments").first()
+        #     )
+        #     return r + modified_by.first().get_all_modified_by_activities()
+        # return r
 
     def save(self, *args, **kwargs):
         """

@@ -245,23 +245,6 @@ class AppropriationQuerySet(models.QuerySet):
             )
         )
 
-    def annotate_status(self):
-        """Annotate Appropriation status."""
-        from core.models import STATUS_GRANTED, STATUS_EXPECTED, STATUS_DRAFT
-
-        status_case = Case(
-            When(
-                activities__status=STATUS_EXPECTED, then=Value(STATUS_EXPECTED)
-            ),
-            When(
-                activities__status=STATUS_GRANTED, then=Value(STATUS_GRANTED)
-            ),
-            default=Value(STATUS_DRAFT),
-            output_field=CharField(),
-        )
-
-        return self.annotate(status=status_case)
-
 
 class CaseQuerySet(models.QuerySet):
     """Distinguish between expired and ongoing cases."""
