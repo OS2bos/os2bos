@@ -2242,9 +2242,11 @@ class Activity(AuditModelMixin, models.Model):
         return Activity.objects.raw(
             """
             WITH RECURSIVE T AS (
-            SELECT core_activity.id, core_activity.status FROM core_activity WHERE id=%(id)s
+            SELECT core_activity.id, core_activity.status FROM core_activity
+            WHERE id=%(id)s
             UNION
-            SELECT core_activity.id, core_activity.status FROM core_activity JOIN T
+            SELECT core_activity.id, core_activity.status FROM core_activity
+            JOIN T
             ON (core_activity.modifies_id = T.id)
             )
             SELECT id FROM T WHERE id!=%(id)s and status!=%(status_deleted)s;
