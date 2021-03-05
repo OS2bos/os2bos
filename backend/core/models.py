@@ -2253,14 +2253,6 @@ class Activity(AuditModelMixin, models.Model):
         """,
             {"id": self.id, "status_deleted": STATUS_DELETED},
         )
-        # r = []
-        # modified_by = self.modified_by.exclude(status=STATUS_DELETED)
-        # if modified_by.exists():
-        #     r.append(
-        #         modified_by.prefetch_related("payment_plan__payments").first()
-        #     )
-        #     return r + modified_by.first().get_all_modified_by_activities()
-        # return r
 
     def save(self, *args, **kwargs):
         """
