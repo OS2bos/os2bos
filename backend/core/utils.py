@@ -531,10 +531,7 @@ def write_prism_file(date, payments, tomorrow, new_account_alias=False):
 
     # The microseconds are included to avoid accidentally overwriting
     # tomorrow's file.
-    filename = (
-        f"{output_dir}/{date.strftime('%Y%m%d')}_{tomorrow.microsecond}"
-        + filename_str
-    )
+    filename = f"{output_dir}/{date.strftime('%Y%m%d')}_{tomorrow.microsecond}"
     with open(filename, "w") as f:
         # Generate and write preamble.
 
