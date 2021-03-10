@@ -2719,10 +2719,8 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             activity=suppl_activity,
         )
 
-        create_account_alias_mapping("5678", main_activity.details.activity_id)
-
         # No section info is found.
-        self.assertIsNone(suppl_activity.account_alias_new)
+        self.assertIsNone(suppl_activity.account_alias)
 
     def test_account_alias_new_supplementary_activity_no_section_info(self):
         case = create_case(self.case_worker, self.municipality, self.district)
@@ -2751,6 +2749,9 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             recipient_type=PaymentSchedule.PERSON,
             activity=suppl_activity,
         )
+
+        create_account_alias_mapping("5678", main_activity.details.activity_id)
+
         # No section info is found.
         self.assertIsNone(suppl_activity.account_alias_new)
 
