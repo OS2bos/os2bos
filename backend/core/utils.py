@@ -630,9 +630,12 @@ def export_prism_payments_for_date(date=None):
         # No payments
         return
 
-    filename = write_prism_file(date, payments, tomorrow)
+    # TODO: remove this line in next release.
+    # filename = write_prism_file(date, payments, tomorrow)
     # TODO: the "new_account_alias" prism file should be the future default.
-    write_prism_file(date, payments, tomorrow, new_account_alias=True)
+    filename = write_prism_file(
+        date, payments, tomorrow, new_account_alias=True
+    )
 
     # Register all payments as paid.
     for p in payments:
@@ -733,14 +736,6 @@ def generate_payments_report_list(payments, new_account_alias=False):
         mother = case.related_persons.filter(relation_type="mor").first()
         father = case.related_persons.filter(relation_type="far").first()
 
-        # TODO: the "_new" report should be the future default.
-        if new_account_alias:
-            account_string = payment.account_string_new
-            account_alias = payment.account_alias_new
-        else:
-            account_string = payment.account_string
-            account_alias = payment.account_alias
-
         payment_dict = {
             # payment specific.
             "id": payment.pk,
@@ -748,8 +743,8 @@ def generate_payments_report_list(payments, new_account_alias=False):
             "paid_amount": payment.paid_amount,
             "date": payment.date,
             "paid_date": payment.paid_date,
-            "account_string": account_string,
-            "account_alias": account_alias,
+            "account_string": payment.account_string_new,
+            "account_alias": payment.account_alias_new,
             # payment_schedule specific.
             "payment_schedule__payment_id": payment_schedule.payment_id,
             "payment_schedule__"
