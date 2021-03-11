@@ -39,8 +39,7 @@ from core.utils import (
     generate_records_for_prism,
     due_payments_for_prism,
     export_prism_payments_for_date,
-    generate_payments_report_list,
-    generate_expected_payments_report_list,
+    generate_payments_report_list_v0,
     generate_payment_date_exclusion_dates,
     validate_cvr,
 )
@@ -769,7 +768,7 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         payments = payment_schedule.payments.all()
         payments[0].paid_amount = Decimal(666)
         payments[0].paid_date = now - timedelta(days=10)
-        report_list = generate_payments_report_list(payments)
+        report_list = generate_payments_report_list_v0(payments)
         self.assertEqual(len(report_list), 6)
         first_elem = report_list[0]
         # Assert that the following dict is a subset of the first element.
@@ -830,14 +829,14 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         payment_schedule.generate_payments(start_date, end_date)
         payments = payment_schedule.payments.all()
 
-        report_list = generate_payments_report_list(payments)
+        report_list = generate_payments_report_list_v0(payments)
 
         self.assertEqual(len(report_list), 0)
 
     def test_generate_payments_report_list_none(self):
         payments = Payment.objects.none()
 
-        report_list = generate_payments_report_list(payments)
+        report_list = generate_payments_report_list_v0(payments)
 
         self.assertEqual(len(report_list), 0)
 
@@ -889,8 +888,8 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
             payment_amount=Decimal(800),
             activity=expected_activity,
         )
-
-        report_list = generate_expected_payments_report_list()
+        payments = Payment.objects.expected_payments_for_report_list()
+        report_list = generate_payments_report_list_v0(payments)
 
         self.assertEqual(len(report_list), 9)
         self.assertEqual(
@@ -939,7 +938,7 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
             case.scaling_step = 2
             case.save()
 
-            report = generate_payments_report_list(
+            report = generate_payments_report_list_v0(
                 payment_schedule.payments.all()
             )
 
@@ -1002,7 +1001,9 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
 
         # Exception is not raised:
         # core.models.Case.DoesNotExist: Case had not yet been created.
-        report = generate_payments_report_list(payment_schedule.payments.all())
+        report = generate_payments_report_list_v0(
+            payment_schedule.payments.all()
+        )
 
         # Payments should use the earliest historical version of the Case.
         self.assertTrue(

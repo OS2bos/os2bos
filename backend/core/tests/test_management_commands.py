@@ -360,7 +360,7 @@ class TestExportToPrism(TestCase):
         call_command("export_to_prism")
 
         logger_mock.error.assert_called_with(
-            "Export of records to PRISME failed!"
+            "Export of records to PRISME failed! /test/path"
         )
 
     @mock.patch("core.management.commands.export_to_prism.logger")
@@ -443,7 +443,9 @@ class TestGeneratePaymentsReports(TestCase, BasicTestMixin):
         logger_mock.info.assert_has_calls(
             [
                 mock.call(
-                    "Created expected payments report for 4 expected payments"
+                    "Created payments reports: "
+                    "['/tmp/expected_payments_0.csv', "
+                    "'/tmp/expected_payments_1.csv']"
                 ),
             ]
         )
@@ -454,12 +456,48 @@ class TestGeneratePaymentsReports(TestCase, BasicTestMixin):
 
         call_command("generate_payments_report")
 
-        logger_mock.info.assert_not_called()
+        logger_mock.info.assert_has_calls(
+            [
+                mock.call("No payment reports generated"),
+            ]
+        )
         logger_mock.exception.assert_not_called()
 
     @override_settings(PAYMENTS_REPORT_DIR="/invalid_dir/")
     @mock.patch("core.management.commands.generate_payments_report.logger")
     def test_generate_payments_report_exception_raised(self, logger_mock):
+        section = create_section()
+
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case, section=section)
+
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=date(year=2020, month=1, day=1),
+            end_date=date(year=2020, month=2, day=1),
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=activity,
+        )
+
+        another_activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=SUPPL_ACTIVITY,
+            status=STATUS_EXPECTED,
+            start_date=date(year=2020, month=1, day=1),
+            end_date=date(year=2020, month=2, day=1),
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=another_activity,
+        )
 
         call_command("generate_payments_report")
 
