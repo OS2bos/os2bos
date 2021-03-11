@@ -870,12 +870,12 @@ def export_prism_payments_for_date(date=None):
         )
 
         # TODO: remove this line in next release.
-        # TODO: the "new_account_alias" prism file should be the future default.
         # filepath = export_func(filename, date, payments, tomorrow)
+        # TODO: "new_account_alias" prism file should be the future default.
         new_filepath = export_func(
             filename, date, payments, tomorrow, new_account_alias=True
         )
-        prism_files.extend([filepath, new_filepath])
+        prism_files.extend([new_filepath])
 
     for p in payments:
         p.paid = True
