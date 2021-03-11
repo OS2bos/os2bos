@@ -807,9 +807,6 @@ def write_prism_file_v1(
     # The output directory is not configurable - this is mapped through Docker.
     output_dir = settings.PRISM_OUTPUT_DIR
 
-    if new_account_alias:
-        filename = filename + "_1"
-
     filepath = os.path.join(output_dir, filename)
     with open(filepath, "w") as f:
         # Generate and write preamble.
