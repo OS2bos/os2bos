@@ -552,5 +552,4 @@ WATCHMAN_CHECKS = (
 )
 
 # Prometheus logging.
-LOG_TO_PROMETHEUS = settings.getboolean("LOG_TO_PROMETHEUS", fallback=False)
-PROMETHEUS_HOST = settings.get("PROMETHEUS_HOST", fallback="localhost:9091")
+PUSHGATEWAY_HOST = settings.get("PUSHGATEWAY_HOST", fallback="")

@@ -34,9 +34,9 @@ def set_saved_account_string_on_payment_save(sender, instance, **kwargs):
     if (
         instance.paid
         and not instance.saved_account_string
-        and instance.account_string
+        and instance.account_string_new
     ):
-        instance.saved_account_string = instance.account_string
+        instance.saved_account_string = instance.account_string_new
 
 
 @receiver(
@@ -65,9 +65,9 @@ def set_saved_account_alias_on_payment_save(
     if (
         instance.paid
         and not instance.saved_account_alias
-        and instance.account_alias
+        and instance.account_alias_new
     ):
-        instance.saved_account_alias = instance.account_alias
+        instance.saved_account_alias = instance.account_alias_new
         instance.save()
 
 

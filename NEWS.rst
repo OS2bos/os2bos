@@ -1,3 +1,17 @@
+Version 3.4.1, 2021-03-11
+-------------------------
+
+New in this version:
+
+Features
+^^^^^^^^
+
+- Persist the new account_string and account_alias when paying payments.
+- Fix the calculation of payment sums by excluding deleted activities.
+- Consolidate prometheus logging to a single setting.
+- Update third party dependencies.
+
+
 Version 3.4.0, 2021-02-11
 -------------------------
 
