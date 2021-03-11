@@ -662,7 +662,7 @@ def validate_cvr(cvr):
     return bool(match)
 
 
-def generate_payments_report_list_v1(payments, new_account_alias=False):
+def generate_payments_report_list_v0(payments, new_account_alias=False):
     """Generate a payments report list of payment dicts from payments."""
     payments_report_list = []
     for payment in payments:
@@ -794,13 +794,13 @@ def generate_payments_report_list_v1(payments, new_account_alias=False):
     return payments_report_list
 
 
-def generate_payments_report_list_v2(payments):
+def generate_payments_report_list_v1(payments):
     """Generate payments report list v2 (v1 with new_account_alias changes)."""
     return generate_payments_report_list_v1(payments, new_account_alias=True)
 
 
 @transaction.atomic
-def write_prism_file_v1(
+def write_prism_file_v0(
     filename, date, payments, tomorrow, new_account_alias=False
 ):
     """Write the actual PRISM file."""
@@ -962,8 +962,8 @@ def generate_payments_report():
 
 # Defined versions of output utilities.
 generate_payments_report_list_versions = {
+    "0": generate_payments_report_list_v0,
     "1": generate_payments_report_list_v1,
-    "2": generate_payments_report_list_v2,
 }
 
-write_prism_file_versions = {"1": write_prism_file_v1}
+write_prism_file_versions = {"0": write_prism_file_v0}
