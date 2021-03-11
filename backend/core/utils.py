@@ -795,8 +795,8 @@ def generate_payments_report_list_v0(payments, new_account_alias=False):
 
 
 def generate_payments_report_list_v1(payments):
-    """Generate payments report list v2 (v1 with new_account_alias changes)."""
-    return generate_payments_report_list_v1(payments, new_account_alias=True)
+    """Generate payments report list v1 (v0 with new_account_alias changes)."""
+    return generate_payments_report_list_v0(payments, new_account_alias=True)
 
 
 @transaction.atomic
