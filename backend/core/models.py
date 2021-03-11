@@ -1993,6 +1993,10 @@ class Activity(AuditModelMixin, models.Model):
             raise forms.ValidationError(
                 _("den forventede justering har ingen ydelse at justere")
             )
+        if not self.modifies.details == self.details:
+            raise forms.ValidationError(
+                _("den forventede justering har ikke ens aktivitetsdetalje")
+            )
 
         # Check that this modification is in the future.
         if self.start_date and self.start_date < today:

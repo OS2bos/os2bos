@@ -907,7 +907,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             status=STATUS_EXPECTED,
             activity_type=MAIN_ACTIVITY,
             modifies=activity,
-            details=expected_details,
+            details=details,
         )
         create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
@@ -925,6 +925,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         response = self.client.patch(
             url, json, content_type="application/json"
         )
+
         self.assertEqual(response.status_code, 200)
 
         # Create an appropriation that should have
@@ -955,7 +956,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             status=STATUS_EXPECTED,
             activity_type=MAIN_ACTIVITY,
             modifies=activity,
-            details=details,
+            details=expected_details,
         )
         create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
