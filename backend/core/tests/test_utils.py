@@ -26,7 +26,6 @@ from core.models import (
     CASH,
     User,
     Team,
-    ActivityDetails,
     Payment,
 )
 from core.utils import (
@@ -349,11 +348,9 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
         )
-        main_activity_details = ActivityDetails.objects.create(
+        main_activity_details = create_activity_details(
             name="Betaling til andre kommuner/region for specialtandpleje",
             activity_id="010001",
-            max_tolerance_in_dkk=5000,
-            max_tolerance_in_percent=10,
         )
         create_section_info(
             details=main_activity_details,
@@ -408,11 +405,9 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
         )
-        main_activity_details = ActivityDetails.objects.create(
+        main_activity_details = create_activity_details(
             name="Betaling til andre kommuner/region for specialtandpleje",
             activity_id="010001",
-            max_tolerance_in_dkk=5000,
-            max_tolerance_in_percent=10,
         )
         create_section_info(
             main_activity_details,
