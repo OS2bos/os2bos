@@ -860,7 +860,7 @@ paths:
         description: note
         schema:
           type: string
-      - name: main_activity__details
+      - name: main_activity__details__id
         required: false
         in: query
         description: Aktivitetsdetalje for hovedaktivitet
@@ -970,7 +970,7 @@ paths:
         description: note
         schema:
           type: string
-      - name: main_activity__details
+      - name: main_activity__details__id
         required: false
         in: query
         description: Aktivitetsdetalje for hovedaktivitet
@@ -1048,7 +1048,7 @@ paths:
         description: note
         schema:
           type: string
-      - name: main_activity__details
+      - name: main_activity__details__id
         required: false
         in: query
         description: Aktivitetsdetalje for hovedaktivitet
@@ -1137,7 +1137,7 @@ paths:
         description: note
         schema:
           type: string
-      - name: main_activity__details
+      - name: main_activity__details__id
         required: false
         in: query
         description: Aktivitetsdetalje for hovedaktivitet
@@ -1226,7 +1226,7 @@ paths:
         description: note
         schema:
           type: string
-      - name: main_activity__details
+      - name: main_activity__details__id
         required: false
         in: query
         description: Aktivitetsdetalje for hovedaktivitet
@@ -4099,6 +4099,12 @@ paths:
         description: section
         schema:
           type: string
+      - name: activity_category
+        required: false
+        in: query
+        description: activity_category
+        schema:
+          type: string
       - name: kle_number
         required: false
         in: query
@@ -4155,6 +4161,12 @@ paths:
         required: false
         in: query
         description: section
+        schema:
+          type: string
+      - name: activity_category
+        required: false
+        in: query
+        description: activity_category
         schema:
           type: string
       - name: kle_number
@@ -4987,24 +4999,6 @@ components:
         status:
           type: string
           readOnly: true
-        total_granted_this_year:
-          type: string
-          readOnly: true
-        total_granted_full_year:
-          type: string
-          readOnly: true
-        total_expected_this_year:
-          type: string
-          readOnly: true
-        total_expected_full_year:
-          type: string
-          readOnly: true
-        total_cost_expected:
-          type: string
-          readOnly: true
-        total_cost_granted:
-          type: string
-          readOnly: true
         granted_from_date:
           type: string
           readOnly: true
@@ -5020,13 +5014,13 @@ components:
         case__sbsys_id:
           type: string
           readOnly: true
-        main_activity__details__id:
-          type: string
-          readOnly: true
         num_ongoing_draft_or_expected_activities:
           type: string
           readOnly: true
         num_ongoing_activities:
+          type: string
+          readOnly: true
+        main_activity__details__id:
           type: string
           readOnly: true
         created:
@@ -5065,24 +5059,6 @@ components:
         status:
           type: string
           readOnly: true
-        total_granted_this_year:
-          type: string
-          readOnly: true
-        total_granted_full_year:
-          type: string
-          readOnly: true
-        total_expected_this_year:
-          type: string
-          readOnly: true
-        total_expected_full_year:
-          type: string
-          readOnly: true
-        total_cost_expected:
-          type: string
-          readOnly: true
-        total_cost_granted:
-          type: string
-          readOnly: true
         granted_from_date:
           type: string
           readOnly: true
@@ -5096,9 +5072,6 @@ components:
           type: string
           readOnly: true
         case__sbsys_id:
-          type: string
-          readOnly: true
-        main_activity__details__id:
           type: string
           readOnly: true
         num_ongoing_draft_or_expected_activities:
@@ -5437,6 +5410,24 @@ components:
           - appropriation
           readOnly: true
         activities:
+          type: string
+          readOnly: true
+        total_granted_this_year:
+          type: string
+          readOnly: true
+        total_granted_full_year:
+          type: string
+          readOnly: true
+        total_expected_this_year:
+          type: string
+          readOnly: true
+        total_expected_full_year:
+          type: string
+          readOnly: true
+        total_cost_expected:
+          type: string
+          readOnly: true
+        total_cost_granted:
           type: string
           readOnly: true
         created:
@@ -6368,6 +6359,9 @@ components:
           type: integer
         section:
           type: integer
+        activity_category:
+          type: integer
+          nullable: true
       required:
       - activity_details
       - section
