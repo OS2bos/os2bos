@@ -1995,7 +1995,7 @@ class Activity(AuditModelMixin, models.Model):
             )
         if not self.modifies.details == self.details:
             raise forms.ValidationError(
-                _("den forventede justering har ikke ens aktivitetsdetalje")
+                _("den forventede justering har ikke samme aktivitetsdetalje")
             )
 
         # Check that this modification is in the future.
