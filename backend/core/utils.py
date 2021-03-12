@@ -524,62 +524,13 @@ def generate_records_for_prism(due_payments, new_account_alias=False):
     return prism_records
 
 
-def write_prism_file(date, payments, tomorrow, new_account_alias=False):
-    """Write the actual PRISM file."""
-    # The output directory is not configurable - this is mapped through Docker.
-    output_dir = settings.PRISM_OUTPUT_DIR
-
-    # The microseconds are included to avoid accidentally overwriting
-    # tomorrow's file.
-    filename = f"{output_dir}/{date.strftime('%Y%m%d')}_{tomorrow.microsecond}"
-    with open(filename, "w") as f:
-        # Generate and write preamble.
-
-        """
-        The fields given below never change and might as well be hard coded in
-        the output:
-        """
-
-        hdisp = " "  # Blank, must be there.
-        media_type = "6"  # Don't ask.
-        evolbr = "      "  # 6 blanks - once again, don't ask.
-        mixed = "1"
-        trans_code = "Z300"  # Identifies transaction start.
-
-        user_number = f"{config.PRISM_ORG_UNIT:04d}"  # Org unit.
-        day_of_year = tomorrow.timetuple().tm_yday  # Day of year.
-
-        preamble_string = (
-            f"{trans_code}{hdisp}{user_number}{media_type}{evolbr}"
-            + f"{day_of_year}{mixed}"
-        )
-        f.write(f"{preamble_string}\n")
-        # Generate and write the records.
-        prism_records = generate_records_for_prism(payments, new_account_alias)
-        f.write("\n".join(prism_records))
-
-        # Generate and write the final line.
-        cslutd = "SLUTD"  # Don't ask.
-        fantrec = f"{len(prism_records):05d}"
-        f.write(f"\n{cslutd}{fantrec}\n")
-    return filename
-
-
-@transaction.atomic
-def export_prism_payments_for_date(date=None):
-    """Process payments and output a file for PRISME.
-
-    Default date for exporting payments is tomorrow.
+def due_payments_for_prism_with_exclusions(date):
+    """Process payments with exclusions for PRISME.
 
     We check the day after tomorrow for one or several payment date exclusions
     and include payments for those found.
     """
-    # Date = tomorrow if not given. We need "tomorrow" to set payment date.
-    tomorrow = datetime.datetime.now() + relativedelta(days=1)
-    if not date:
-        date = tomorrow
-
-    # Retrieve payments for the default date.
+    # Retrieve payments for the date.
     payment_ids = list(
         due_payments_for_prism(date).values_list("id", flat=True)
     )
@@ -619,57 +570,99 @@ def export_prism_payments_for_date(date=None):
         payment_date_exclusions_found = False
 
     payments = models.Payment.objects.filter(id__in=payment_ids)
-    if not payments.exists():
-        # No payments
-        return
-
-    # TODO: remove this line in next release.
-    # filename = write_prism_file(date, payments, tomorrow)
-    # TODO: the "new_account_alias" prism file should be the future default.
-    filename = write_prism_file(
-        date, payments, tomorrow, new_account_alias=True
-    )
-
-    # Register all payments as paid.
-    for p in payments:
-        p.paid = True
-        p.paid_amount = p.amount
-        p.paid_date = tomorrow
-        p.save()
-    # Return filename for info and verification.
-    return filename
+    return payments
 
 
-def generate_expected_payments_report_list(new_account_alias=False):
-    """Generate a payments report of granted AND expected payments."""
-    current_year = timezone.now().year
-    two_years_ago = current_year - 2
-    beginning_of_two_years_ago = datetime.date.min.replace(year=two_years_ago)
+def create_rrule(
+    payment_type, payment_frequency, payment_day_of_month, start, **kwargs
+):
+    """Create a dateutil.rrule to generate dates for a payment schedule.
 
-    expected_activities = models.Activity.objects.filter(
-        Q(status=models.STATUS_GRANTED) | Q(status=models.STATUS_EXPECTED)
-    )
-    payment_ids = [
-        payment.id
-        for activity in expected_activities
-        for payment in activity.applicable_payments
-    ]
-    payments = (
-        models.Payment.objects.filter(id__in=payment_ids)
-        .paid_date_or_date_gte(beginning_of_two_years_ago)
-        .select_related(
-            "payment_schedule__activity__appropriation__case",
-            "payment_schedule__activity__appropriation__section",
-            "payment_schedule__activity__details",
+    The rule should be based on payment_type/payment_frequency and start.
+    Takes either "until" or "count" as kwargs.
+    """
+    # One time payments are a special case with a count of 1 always.
+    if payment_type == models.PaymentSchedule.ONE_TIME_PAYMENT:
+        rrule_frequency = rrule.rrule(rrule.DAILY, dtstart=start, count=1)
+    elif payment_frequency == models.PaymentSchedule.DAILY:
+        rrule_frequency = rrule.rrule(rrule.DAILY, dtstart=start, **kwargs)
+    elif payment_frequency == models.PaymentSchedule.WEEKLY:
+        rrule_frequency = rrule.rrule(rrule.WEEKLY, dtstart=start, **kwargs)
+    elif payment_frequency == models.PaymentSchedule.BIWEEKLY:
+        rrule_frequency = rrule.rrule(
+            rrule.WEEKLY, dtstart=start, interval=2, **kwargs
         )
-    )
-    payments_report_list = generate_payments_report_list(
-        payments, new_account_alias
-    )
-    return payments_report_list
+    elif payment_frequency == models.PaymentSchedule.MONTHLY:
+        monthly_date = payment_day_of_month
+        if monthly_date > 28:
+            monthly_date = [d for d in range(28, monthly_date + 1)]
+        rrule_frequency = rrule.rrule(
+            rrule.MONTHLY,
+            dtstart=start,
+            bymonthday=monthly_date,
+            bysetpos=-1,
+            **kwargs,
+        )
+    else:
+        raise ValueError(_("ukendt betalingsfrekvens"))
+    return rrule_frequency
 
 
-def generate_payments_report_list(payments, new_account_alias=False):
+def generate_payment_date_exclusion_dates(years=None):
+    """
+    Generate "default" dates for payment date exclusions for a number of years.
+
+    The default are danish holidays and weekends.
+    """
+    if not years:
+        current_year = datetime.date.today().year
+        years = [current_year, current_year + 1]
+
+    danish_holiday_dates = list(danish_holidays(years=years))
+
+    start_date = datetime.date(min(years), 1, 1)
+    end_date = datetime.date(max(years), 12, 31)
+
+    weekend_dates = [
+        dt.date()
+        for dt in (
+            rrule.rrule(
+                dtstart=start_date,
+                until=end_date,
+                freq=rrule.WEEKLY,
+                byweekday=(rrule.SA, rrule.SU),
+            )
+        )
+    ]
+
+    extra_payment_date_exclusions = []
+    payment_date_exclusion_tuples = extra_payment_date_exclusion_tuples
+    for year in years:
+        for day, month in payment_date_exclusion_tuples:
+            extra_payment_date_exclusions.append(
+                datetime.date(day=day, month=month, year=year)
+            )
+
+    exclusion_dates = []
+    exclusion_dates.extend(danish_holiday_dates)
+    exclusion_dates.extend(weekend_dates)
+    exclusion_dates.extend(extra_payment_date_exclusions)
+
+    return sorted(list(set(exclusion_dates)))
+
+
+def validate_cvr(cvr):
+    """
+    Validate a cvr number string.
+
+    Note: this is merely a 8-digit number input validation
+    and not a 'real' CVR validation
+    """
+    match = re.match(r"^[0-9]{8}$", cvr.strip())
+    return bool(match)
+
+
+def generate_payments_report_list_v0(payments, new_account_alias=False):
     """Generate a payments report list of payment dicts from payments."""
     payments_report_list = []
     for payment in payments:
@@ -801,93 +794,93 @@ def generate_payments_report_list(payments, new_account_alias=False):
     return payments_report_list
 
 
-def create_rrule(
-    payment_type, payment_frequency, payment_day_of_month, start, **kwargs
+def generate_payments_report_list_v1(payments):
+    """Generate payments report list v1 (v0 with new_account_alias changes)."""
+    return generate_payments_report_list_v0(payments, new_account_alias=True)
+
+
+@transaction.atomic
+def write_prism_file_v0(
+    filename, date, payments, tomorrow, new_account_alias=False
 ):
-    """Create a dateutil.rrule to generate dates for a payment schedule.
+    """Write the actual PRISM file."""
+    # The output directory is not configurable - this is mapped through Docker.
+    output_dir = settings.PRISM_OUTPUT_DIR
 
-    The rule should be based on payment_type/payment_frequency and start.
-    Takes either "until" or "count" as kwargs.
-    """
-    # One time payments are a special case with a count of 1 always.
-    if payment_type == models.PaymentSchedule.ONE_TIME_PAYMENT:
-        rrule_frequency = rrule.rrule(rrule.DAILY, dtstart=start, count=1)
-    elif payment_frequency == models.PaymentSchedule.DAILY:
-        rrule_frequency = rrule.rrule(rrule.DAILY, dtstart=start, **kwargs)
-    elif payment_frequency == models.PaymentSchedule.WEEKLY:
-        rrule_frequency = rrule.rrule(rrule.WEEKLY, dtstart=start, **kwargs)
-    elif payment_frequency == models.PaymentSchedule.BIWEEKLY:
-        rrule_frequency = rrule.rrule(
-            rrule.WEEKLY, dtstart=start, interval=2, **kwargs
+    filepath = os.path.join(output_dir, filename)
+    with open(filepath, "w") as f:
+        # Generate and write preamble.
+
+        """
+        The fields given below never change and might as well be hard coded in
+        the output:
+        """
+
+        hdisp = " "  # Blank, must be there.
+        media_type = "6"  # Don't ask.
+        evolbr = "      "  # 6 blanks - once again, don't ask.
+        mixed = "1"
+        trans_code = "Z300"  # Identifies transaction start.
+
+        user_number = f"{config.PRISM_ORG_UNIT:04d}"  # Org unit.
+        day_of_year = tomorrow.timetuple().tm_yday  # Day of year.
+
+        preamble_string = (
+            f"{trans_code}{hdisp}{user_number}{media_type}{evolbr}"
+            + f"{day_of_year}{mixed}"
         )
-    elif payment_frequency == models.PaymentSchedule.MONTHLY:
-        monthly_date = payment_day_of_month
-        if monthly_date > 28:
-            monthly_date = [d for d in range(28, monthly_date + 1)]
-        rrule_frequency = rrule.rrule(
-            rrule.MONTHLY,
-            dtstart=start,
-            bymonthday=monthly_date,
-            bysetpos=-1,
-            **kwargs,
+        f.write(f"{preamble_string}\n")
+        # Generate and write the records.
+        prism_records = generate_records_for_prism(payments, new_account_alias)
+        f.write("\n".join(prism_records))
+
+        # Generate and write the final line.
+        cslutd = "SLUTD"  # Don't ask.
+        fantrec = f"{len(prism_records):05d}"
+        f.write(f"\n{cslutd}{fantrec}\n")
+    return filepath
+
+
+@transaction.atomic
+def export_prism_payments_for_date(date=None):
+    """Fetch due payments for prism and run the export functions."""
+    # Date = tomorrow if not given.
+    # We need "tomorrow" to set payment date.
+    tomorrow = datetime.datetime.now() + relativedelta(days=1)
+    if not date:
+        date = tomorrow
+
+    payments = due_payments_for_prism_with_exclusions(date)
+    if not payments.exists():
+        # No payments
+        return
+
+    prism_files = []
+    for (
+        version,
+        export_func,
+    ) in write_prism_file_versions.items():
+        # The microseconds are included to avoid accidentally
+        # overwriting tomorrow's file.
+        filename = (
+            f"{date.strftime('%Y%m%d')}_" f"{tomorrow.microsecond}_{version}"
         )
-    else:
-        raise ValueError(_("ukendt betalingsfrekvens"))
-    return rrule_frequency
 
-
-def generate_payment_date_exclusion_dates(years=None):
-    """
-    Generate "default" dates for payment date exclusions for a number of years.
-
-    The default are danish holidays and weekends.
-    """
-    if not years:
-        current_year = datetime.date.today().year
-        years = [current_year, current_year + 1]
-
-    danish_holiday_dates = list(danish_holidays(years=years))
-
-    start_date = datetime.date(min(years), 1, 1)
-    end_date = datetime.date(max(years), 12, 31)
-
-    weekend_dates = [
-        dt.date()
-        for dt in (
-            rrule.rrule(
-                dtstart=start_date,
-                until=end_date,
-                freq=rrule.WEEKLY,
-                byweekday=(rrule.SA, rrule.SU),
-            )
+        # TODO: remove this line in next release.
+        # filepath = export_func(filename, date, payments, tomorrow)
+        # TODO: "new_account_alias" prism file should be the future default.
+        new_filepath = export_func(
+            filename, date, payments, tomorrow, new_account_alias=True
         )
-    ]
+        prism_files.extend([new_filepath])
 
-    extra_payment_date_exclusions = []
-    payment_date_exclusion_tuples = extra_payment_date_exclusion_tuples
-    for year in years:
-        for day, month in payment_date_exclusion_tuples:
-            extra_payment_date_exclusions.append(
-                datetime.date(day=day, month=month, year=year)
-            )
+    for p in payments:
+        p.paid = True
+        p.paid_amount = p.amount
+        p.paid_date = tomorrow
+        p.save()
 
-    exclusion_dates = []
-    exclusion_dates.extend(danish_holiday_dates)
-    exclusion_dates.extend(weekend_dates)
-    exclusion_dates.extend(extra_payment_date_exclusions)
-
-    return sorted(list(set(exclusion_dates)))
-
-
-def validate_cvr(cvr):
-    """
-    Validate a cvr number string.
-
-    Note: this is merely a 8-digit number input validation
-    and not a 'real' CVR validation
-    """
-    match = re.match(r"^[0-9]{8}$", cvr.strip())
-    return bool(match)
+    return prism_files
 
 
 def parse_account_alias_mapping_data_from_csv_string(string):
@@ -932,3 +925,45 @@ def parse_account_alias_mapping_data_from_csv_path(path):
             csvfile
         )
     return account_alias_data
+
+
+def generate_payments_report():
+    """Generate a payments report as CSV."""
+    payments = models.Payment.objects.expected_payments_for_report_list()
+    payment_reports = []
+
+    for (
+        version,
+        payments_func,
+    ) in generate_payments_report_list_versions.items():
+        expected_payments_list = payments_func(payments)
+        report_dir = settings.PAYMENTS_REPORT_DIR
+
+        if not expected_payments_list:
+            continue
+
+        with open(
+            os.path.join(report_dir, f"expected_payments_{version}.csv"),
+            "w",
+        ) as csvfile:
+            writer = csv.DictWriter(
+                csvfile,
+                fieldnames=expected_payments_list[0].keys(),
+            )
+
+            writer.writeheader()
+            for payment_dict in expected_payments_list:
+                writer.writerow(payment_dict)
+
+            payment_reports.append(csvfile.name)
+
+    return payment_reports
+
+
+# Defined versions of output utilities.
+generate_payments_report_list_versions = {
+    "0": generate_payments_report_list_v0,
+    "1": generate_payments_report_list_v1,
+}
+
+write_prism_file_versions = {"0": write_prism_file_v0}

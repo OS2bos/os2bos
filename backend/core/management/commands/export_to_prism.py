@@ -42,16 +42,20 @@ class Command(BaseCommand):
                 )
                 sys.exit(1)
         try:
-            prism_file = export_prism_payments_for_date(date)
-            # This is just a sanity check, if we arrive here everything will
-            # have worked out or an exception would have been thrown.
-            if prism_file is None:
+            prism_files = export_prism_payments_for_date(date)
+
+            # This is just a sanity check, if we arrive here everything
+            # will have worked out or an exception would have been
+            # thrown.
+            if not prism_files:
                 logger.info("No records found for export to PRISME.")
-            elif os.path.isfile(prism_file):
+            elif all(os.path.isfile(file) for file in prism_files):
                 logger.info(
-                    f"Success: PRISME records were exported to {prism_file}"
+                    f"Success: PRISME records were exported to {prism_files}"
                 )
             else:
-                logger.error("Export of records to PRISME failed!")
+                logger.error(
+                    f"Export of records to PRISME failed! {prism_files}"
+                )
         except Exception:
             logger.exception("An exception occurred during export to PRISME")

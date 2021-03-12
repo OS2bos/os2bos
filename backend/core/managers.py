@@ -5,6 +5,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """Custom query set managers."""
+import datetime
 
 from django.utils import timezone
 from django.db import models
@@ -124,6 +125,34 @@ class PaymentQuerySet(models.QuerySet):
             .values("date_month")
             .order_by("date_month")
             .annotate(amount=Sum(self.amount_case))
+        )
+
+    def expected_payments_for_report_list(self):
+        """Filter payments for a report of granted AND expected payments."""
+        from core.models import STATUS_GRANTED, STATUS_EXPECTED, Activity
+
+        current_year = timezone.now().year
+        two_years_ago = current_year - 2
+        beginning_of_two_years_ago = datetime.date.min.replace(
+            year=two_years_ago
+        )
+
+        expected_activities = Activity.objects.filter(
+            Q(status=STATUS_GRANTED) | Q(status=STATUS_EXPECTED)
+        )
+        payment_ids = [
+            payment.id
+            for activity in expected_activities
+            for payment in activity.applicable_payments
+        ]
+        return (
+            self.filter(id__in=payment_ids)
+            .paid_date_or_date_gte(beginning_of_two_years_ago)
+            .select_related(
+                "payment_schedule__activity__appropriation__case",
+                "payment_schedule__activity__appropriation__section",
+                "payment_schedule__activity__details",
+            )
         )
 
 

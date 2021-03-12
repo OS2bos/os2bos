@@ -2152,6 +2152,10 @@ class Activity(AuditModelMixin, models.Model):
             main_account_number = (
                 section_info.get_main_activity_main_account_number()
             )
+            activity_category = section_info.activity_category
+            if not activity_category:
+                return None
+            category_id = activity_category.category_id
         else:
             main_activity = self.appropriation.main_activity
             if not main_activity:
@@ -2166,11 +2170,14 @@ class Activity(AuditModelMixin, models.Model):
             main_account_number = (
                 section_info.get_supplementary_activity_main_account_number()
             )
-
+            activity_category = section_info.activity_category
+            if not activity_category:
+                return None
+            category_id = activity_category.category_id
         try:
             account_alias_mapping = AccountAliasMapping.objects.get(
                 main_account_number=main_account_number,
-                activity_number=self.details.activity_id,
+                activity_number=category_id,
             )
         except AccountAliasMapping.DoesNotExist:
             return None
