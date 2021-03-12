@@ -1,3 +1,13 @@
+Version 3.4.2, 2021-03-12
+-------------------------
+
+Hotfix release
+
+Bug fixes
+^^^^^^^^^
+
+* Correctly use activity-component of account_alias_new.
+
 Version 3.4.1, 2021-03-11
 -------------------------
 
