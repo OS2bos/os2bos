@@ -22,4 +22,10 @@
 
     </DigitalForsendelse>
 
+    <FormularData>
+
+        <sbsysCaseFileNumber>{{sbsys_case_file_number}}</sbsysCaseFileNumber>
+
+    </FormularData>
+
 </os2formsFormular>
