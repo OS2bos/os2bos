@@ -803,6 +803,7 @@ def generate_payments_report_list_v1(payments):
     """Generate payments report list v1 (v0 with new_account_alias changes)."""
     return generate_payments_report_list_v0(payments, new_account_alias=True)
 
+
 def generate_payments_report_list_v2(payments):
     """Generate payments report list v2 (v1 with note added)."""
     payments_report_list = generate_payments_report_list_v1(payments)
@@ -811,6 +812,7 @@ def generate_payments_report_list_v2(payments):
     for entry in payments_report_list:
         entry["note"] = notes.get(id=entry["id"])["note"]
     return payments_report_list
+
 
 @transaction.atomic
 def write_prism_file_v0(
