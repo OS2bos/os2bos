@@ -41,11 +41,11 @@ from core.tests.testing_utils import (
     create_account_alias,
     create_account_alias_mapping,
     create_activity_category,
+    create_effort_step,
 )
 from core.models import (
     Municipality,
     SchoolDistrict,
-    ActivityDetails,
     Activity,
     ApprovalLevel,
     Team,
@@ -53,7 +53,6 @@ from core.models import (
     Price,
     PaymentMethodDetails,
     ServiceProvider,
-    EffortStep,
     InternalPaymentRecipient,
     Effort,
     CASH,
@@ -1119,11 +1118,9 @@ class SectionTestCase(TestCase):
 
 class ActivityDetailsTestCase(TestCase):
     def test_activitydetails_str(self):
-        details = ActivityDetails.objects.create(
+        details = create_activity_details(
             name="Betaling til andre kommuner/region for specialtandpleje",
             activity_id="010001",
-            max_tolerance_in_dkk=5000,
-            max_tolerance_in_percent=10,
         )
 
         self.assertEqual(
@@ -1926,11 +1923,9 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(case=case, section=section)
-        main_activity_details = ActivityDetails.objects.create(
+        main_activity_details = create_activity_details(
             name="Betaling til andre kommuner/region for specialtandpleje",
             activity_id="010001",
-            max_tolerance_in_dkk=5000,
-            max_tolerance_in_percent=10,
         )
 
         start_date = date.today()
@@ -1974,11 +1969,9 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(case=case, section=section)
-        main_activity_details = ActivityDetails.objects.create(
+        main_activity_details = create_activity_details(
             name="Betaling til andre kommuner/region for specialtandpleje",
             activity_id="010001",
-            max_tolerance_in_dkk=5000,
-            max_tolerance_in_percent=10,
         )
 
         start_date = date.today()
@@ -2001,15 +1994,63 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         with self.assertRaises(forms.ValidationError):
             expected_activity.validate_expected()
 
+    def test_validate_expected_false_modifies_different_details(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+        details = create_activity_details(
+            name="Betaling til andre kommuner/region for specialtandpleje",
+            activity_id="010001",
+        )
+        different_details = create_activity_details(
+            name="Advokatbistand", activity_id="015101"
+        )
+
+        start_date = date.today()
+        end_date = date.today() + timedelta(days=7)
+        main_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+            details=details,
+        )
+        create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_frequency=PaymentSchedule.DAILY,
+            activity=main_activity,
+        )
+
+        start_date = start_date + timedelta(days=1)
+        end_date = date.today() + timedelta(days=14)
+        expected_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            status=STATUS_EXPECTED,
+            activity_type=MAIN_ACTIVITY,
+            modifies=main_activity,
+            details=different_details,
+        )
+        create_payment_schedule(
+            payment_amount=Decimal("700.0"),
+            payment_frequency=PaymentSchedule.DAILY,
+            activity=expected_activity,
+        )
+
+        with self.assertRaises(forms.ValidationError):
+            expected_activity.validate_expected()
+
     def test_validate_expected_false_same_start_date(self):
         case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(case=case, section=section)
-        main_activity_details = ActivityDetails.objects.create(
+        main_activity_details = create_activity_details(
             name="Betaling til andre kommuner/region for specialtandpleje",
             activity_id="010001",
-            max_tolerance_in_dkk=5000,
-            max_tolerance_in_percent=10,
         )
 
         start_date = date.today()
@@ -2053,11 +2094,9 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(case=case, section=section)
-        main_activity_details = ActivityDetails.objects.create(
+        main_activity_details = create_activity_details(
             name="Betaling til andre kommuner/region for specialtandpleje",
             activity_id="010001",
-            max_tolerance_in_dkk=5000,
-            max_tolerance_in_percent=10,
         )
 
         start_date = date.today() + timedelta(days=2)
@@ -2102,11 +2141,9 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(case=case, section=section)
-        main_activity_details = ActivityDetails.objects.create(
+        main_activity_details = create_activity_details(
             name="Betaling til andre kommuner/region for specialtandpleje",
             activity_id="010001",
-            max_tolerance_in_dkk=5000,
-            max_tolerance_in_percent=10,
         )
 
         start_date = date.today()
@@ -2155,11 +2192,9 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
         appropriation = create_appropriation(case=case, section=section)
-        main_activity_details = ActivityDetails.objects.create(
+        main_activity_details = create_activity_details(
             name="Betaling til andre kommuner/region for specialtandpleje",
             activity_id="010001",
-            max_tolerance_in_dkk=5000,
-            max_tolerance_in_percent=10,
         )
 
         activity = create_activity(
@@ -4204,7 +4239,7 @@ class EffortStepTestCase(TestCase, BasicTestMixin):
         cls.basic_setup()
 
     def test_str(self):
-        effort_step = EffortStep.objects.create(name="Name", number=127)
+        effort_step = create_effort_step(name="Name", number=127)
 
         self.assertEqual(str(effort_step), "Name")
 
