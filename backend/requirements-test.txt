@@ -10,7 +10,7 @@ flake8==3.9.0
 pydocstyle==6.0.0
 parameterized==0.8.1
 freezegun==1.1.0
-Sphinx==3.5.2
+Sphinx==3.5.3
 sphinxcontrib-websupport==1.2.4
 sphinx_rtd_theme==0.5.1
 sphinxcontrib_django==0.5.1
