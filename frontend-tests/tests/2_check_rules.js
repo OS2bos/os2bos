@@ -47,11 +47,21 @@ const today = new Date(),
         act3: {
             start_date: createDate(5),
             payment_amount: '15'
+        },
+        act4: {
+            details__name: 'Tolk',
+            start_date: createDate(10),
+            status: 'EXPECTED',
+            payment_type: 'RUNNING_PAYMENT',
+            payment_frequency: 'WEEKLY',
+            payment_cost_type: 'FIXED',
+            payment_amount: '12',
+            recipient_type: 'COMPANY'
         }
 
     }
 
-fixture('Check payments start date')
+fixture('Check rules')
     .page(baseurl)
     .beforeEach(async t => { 
         await login(t) 
@@ -98,4 +108,25 @@ test('Check that an activity may only have one modifier', async t => {
         .click(Selector('.act-list-meta-row'))
         .click(Selector('.act-list-sub-row a'))
         .expect(Selector('button').withText('Lav forventet justering').exists).notOk()
+})
+
+/*
+    Rules to test: (See https://redmine.magenta-aps.dk/issues/41985)
+    Activity type can not be edited when creating an EXPECTED activity that modifies an existing activity
+*/
+test('Check editing of activity type', async t => {
+
+    await t
+        .click(Selector('a').withText(testdata.case1.name))
+        .click(Selector('a').withText(testdata.appr1.name))
+
+    await createActivity(t, testdata.act4)
+
+    await approveActivities(t)
+
+    // When adding an EXPECTED activity based on a GRANTED activity, we should not be able to edit activity type
+    await t
+        .click(Selector('a').withText(testdata.act4.details__name))
+        .click('.act-edit-btn')
+        .expect(Selector('#fieldSelectAct').exists).notOk()
 })
