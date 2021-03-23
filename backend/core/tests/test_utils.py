@@ -274,7 +274,7 @@ class SendAppropriationTestCase(TestCase, BasicTestMixin):
         section = create_section()
 
         appropriation = create_appropriation(
-            sbsys_id="XXX-YYY", case=case, section=section
+            sbsys_id="27.69.20-Ø36-23-19", case=case, section=section
         )
 
         now = timezone.now().date()
