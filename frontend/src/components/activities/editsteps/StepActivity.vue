@@ -10,7 +10,7 @@
         <h2>Ydelse</h2>
         <status :editable="true" />
         <fictional :editable="true" />
-        <activity :editable="true" />
+        <activity :editable="activity_editable" />
         <note :editable="true" />
     </div>
 </template>
@@ -28,6 +28,11 @@ export default {
         Activity,
         Note,
         Fictional
+    },
+    data: function() {
+        return {
+            activity_editable: this.$route.query.mode === 'expected' ? false : true
+        }
     }
 
 }
