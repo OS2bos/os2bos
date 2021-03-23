@@ -1,3 +1,17 @@
+Version 3.4.3, 2021-03-23
+-------------------------
+
+New in this version:
+
+Features
+^^^^^^^^
+
+- Restrict editing activity type for expected activities modifying another.
+- Update OS2Forms.xml with new KLE, OS2FormsID and SbsysCaseFileNumber. 
+- Add Payment note to payments report.
+- Update thirdparty dependencies.
+
+
 Version 3.4.2, 2021-03-12
 -------------------------
 
