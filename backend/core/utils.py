@@ -244,8 +244,8 @@ def send_appropriation(appropriation, included_activities=None):
     }
 
     # Get SBSYS template from main activity
-    # and KLE number, SBSYS case file number from case.
-    sbsys_id = appropriation.case.sbsys_id
+    # and KLE number, SBSYS case file number from appropriation.
+    sbsys_id = appropriation.sbsys_id
     section_info = appropriation.section_info
     render_context["kle_number"] = sbsys_id.split("-")[0]
     render_context["sbsys_template_id"] = section_info.sbsys_template_id
