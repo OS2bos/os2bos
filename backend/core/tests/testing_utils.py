@@ -83,7 +83,7 @@ def create_case(
     case_worker,
     municipality,
     district,
-    sbsys_id="27.69.20-Ø36-23-19",
+    sbsys_id="27.24.00-G01-99-21",
     scaling_step=1,
     effort_step=1,
     target_group="Familieafdelingen",
