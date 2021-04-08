@@ -905,8 +905,8 @@ def parse_account_alias_mapping_data_from_csv_string(string):
     Returns a list of (main_account_number, activity_number, alias) tuples
     for example:
     [
-        (645511002, 015035, BOS0000109),
-        (528211011, 015038, BOS0000112)
+    (645511002, 015035, BOS0000109),
+    (528211011, 015038, BOS0000112)
     ]
     """
     reader = csv.reader(string)
