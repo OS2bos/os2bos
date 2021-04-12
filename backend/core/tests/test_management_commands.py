@@ -507,6 +507,113 @@ class TestGeneratePaymentsReports(TestCase, BasicTestMixin):
         )
 
 
+class TestGenerateCasesReports(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    @override_settings(PAYMENTS_REPORT_DIR="/tmp/")
+    @mock.patch("core.management.commands.generate_cases_report.logger")
+    def test_generate_cases_report_success(self, logger_mock):
+        section = create_section()
+
+        case = create_case(self.case_worker, self.municipality, self.district)
+        # We need granted and/or expected activities also.
+        appropriation = create_appropriation(case=case, section=section)
+
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=date(year=2020, month=1, day=1),
+            end_date=date(year=2020, month=2, day=1),
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=activity,
+        )
+
+        another_activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=SUPPL_ACTIVITY,
+            status=STATUS_EXPECTED,
+            start_date=date(year=2020, month=1, day=1),
+            end_date=date(year=2020, month=2, day=1),
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=another_activity,
+        )
+        call_command("generate_cases_report")
+
+        logger_mock.info.assert_has_calls(
+            [
+                mock.call(
+                    "Created cases reports: " "['/tmp/expected_cases_0.csv']"
+                ),
+            ]
+        )
+
+    @override_settings(PAYMENTS_REPORT_DIR="/tmp/")
+    @mock.patch("core.management.commands.generate_cases_report.logger")
+    def test_generate_cases_report_no_payments(self, logger_mock):
+
+        call_command("generate_cases_report")
+
+        logger_mock.info.assert_has_calls(
+            [
+                mock.call("No cases reports generated"),
+            ]
+        )
+        logger_mock.exception.assert_not_called()
+
+    @override_settings(PAYMENTS_REPORT_DIR="/invalid_dir/")
+    @mock.patch("core.management.commands.generate_cases_report.logger")
+    def test_generate_cases_report_exception_raised(self, logger_mock):
+        section = create_section()
+
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case, section=section)
+        # We need granted and/or expected activities also.
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=date(year=2020, month=1, day=1),
+            end_date=date(year=2020, month=2, day=1),
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=activity,
+        )
+
+        another_activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=SUPPL_ACTIVITY,
+            status=STATUS_EXPECTED,
+            start_date=date(year=2020, month=1, day=1),
+            end_date=date(year=2020, month=2, day=1),
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=another_activity,
+        )
+
+        call_command("generate_cases_report")
+
+        logger_mock.exception.assert_called_with(
+            "An error occurred during generation of the cases report"
+        )
+
+
 class TestGeneratePaymentDateExclusions(TestCase):
     @mock.patch("core.utils.extra_payment_date_exclusion_tuples", [])
     @mock.patch(

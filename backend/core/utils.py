@@ -856,6 +856,42 @@ def write_prism_file_v0(
     return filepath
 
 
+def generate_cases_report_list_v0(cases):
+    cases_report_list = []
+    for case in cases:
+        mother = case.related_persons.filter(relation_type="mor").first()
+        father = case.related_persons.filter(relation_type="far").first()
+        for history_case in case.history.all():
+            history_case_dict = {
+                "id": str(history_case.id),
+                "history_id": str(history_case.history_id),
+                "history_date": str(history_case.history_date.isoformat()),
+                "cpr_number": case.cpr_number,
+                "case_sbsys_id": case.sbsys_id,
+                "name": case.name,
+                "target_group": case.target_group,
+                "case_worker": str(history_case.case_worker),
+                "team": str(case.case_worker.team)
+                if case.case_worker.team
+                else None,
+                "leader": str(case.case_worker.team.leader)
+                if case.case_worker.team
+                else None,
+                "efforts": ",".join([e.name for e in case.efforts.all()]),
+                "effort_step": str(history_case.effort_step),
+                "scaling_step": str(history_case.scaling_step)
+                if history_case.scaling_step
+                else "",
+                "paying_municipality": str(case.paying_municipality),
+                "acting_municipality": str(case.acting_municipality),
+                "residence_municipality": str(case.residence_municipality),
+                "mother_cpr": mother.cpr_number if mother else None,
+                "father_cpr": father.cpr_number if father else None,
+            }
+            cases_report_list.append(history_case_dict)
+    return cases_report_list
+
+
 @transaction.atomic
 def export_prism_payments_for_date(date=None):
     """Fetch due payments for prism and run the export functions."""
@@ -975,11 +1011,43 @@ def generate_payments_report():
     return payment_reports
 
 
+def generate_cases_report():
+    cases = models.Case.objects.expected_cases_for_report_list()
+    cases_reports = []
+    for (
+        version,
+        cases_func,
+    ) in generate_cases_report_list_versions.items():
+        expected_cases_list = cases_func(cases)
+        report_dir = settings.PAYMENTS_REPORT_DIR
+
+        if not expected_cases_list:
+            continue
+        with open(
+            os.path.join(report_dir, f"expected_cases_{version}.csv"),
+            "w",
+        ) as csvfile:
+            writer = csv.DictWriter(
+                csvfile,
+                fieldnames=expected_cases_list[0].keys(),
+            )
+
+            writer.writeheader()
+            for case_dict in expected_cases_list:
+                writer.writerow(case_dict)
+
+            cases_reports.append(csvfile.name)
+
+    return cases_reports
+
+
 # Defined versions of output utilities.
 generate_payments_report_list_versions = {
     "0": generate_payments_report_list_v0,
     "1": generate_payments_report_list_v1,
     "2": generate_payments_report_list_v2,
 }
+
+generate_cases_report_list_versions = {"0": generate_cases_report_list_v0}
 
 write_prism_file_versions = {"0": write_prism_file_v0}
