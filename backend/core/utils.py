@@ -857,6 +857,7 @@ def write_prism_file_v0(
 
 
 def generate_cases_report_list_v0(cases):
+    """Generate a cases report list of cases dicts from cases."""
     cases_report_list = []
     for case in cases:
         mother = case.related_persons.filter(relation_type="mor").first()
@@ -1012,6 +1013,7 @@ def generate_payments_report():
 
 
 def generate_cases_report():
+    """Generate a cases report as CSV."""
     cases = models.Case.objects.expected_cases_for_report_list()
     cases_reports = []
     for (
