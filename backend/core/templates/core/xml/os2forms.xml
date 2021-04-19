@@ -2,7 +2,7 @@
 
 <os2formsFormular>
 
-    <OS2FormsId>99999</OS2FormsId>
+    <OS2FormsId>BOS</OS2FormsId>
 
     <SBSYSJournalisering>
 
@@ -21,5 +21,11 @@
         <MaaSendesTilDFF>nej</MaaSendesTilDFF>
 
     </DigitalForsendelse>
+
+    <FormularData>
+
+        <sbsysCaseFileNumber>{{sbsys_case_file_number}}</sbsysCaseFileNumber>
+
+    </FormularData>
 
 </os2formsFormular>

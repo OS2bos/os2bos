@@ -1144,7 +1144,10 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
         appropriation = create_appropriation(case=case)
 
         activity = create_activity(
-            case=case, appropriation=appropriation, status=STATUS_GRANTED
+            case=case,
+            appropriation=appropriation,
+            details=activity_details,
+            status=STATUS_GRANTED,
         )
         create_payment_schedule(activity=activity)
 

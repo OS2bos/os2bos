@@ -26,8 +26,8 @@ from core.models import (
     CASH,
     User,
     Team,
-    ActivityDetails,
     Payment,
+    SectionInfo,
 )
 from core.utils import (
     get_cpr_data,
@@ -264,6 +264,54 @@ class SendAppropriationTestCase(TestCase, BasicTestMixin):
             [], render_call_args["context"]["supplementary_activities"]
         )
 
+    @mock.patch("core.utils.HTML")
+    @mock.patch("core.utils.EmailMessage")
+    @mock.patch("core.utils.get_template")
+    def test_send_appropriation_variables_included(
+        self, get_template_mock, html_mock, message_mock
+    ):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section()
+
+        appropriation = create_appropriation(
+            sbsys_id="27.69.20-Ø36-23-19", case=case, section=section
+        )
+
+        now = timezone.now().date()
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=now - timedelta(days=5),
+            end_date=now + timedelta(days=5),
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        section.main_activities.add(activity.details)
+
+        section_info = SectionInfo.objects.get(
+            activity_details=activity.details, section=section
+        )
+        section_info.sbsys_template_id = "900"
+        section_info.save()
+
+        create_payment_schedule(
+            activity=activity,
+        )
+        send_appropriation(
+            appropriation, Activity.objects.filter(pk=activity.pk)
+        )
+        # Retrieve the mocked template.render call.
+        render_call_args = get_template_mock.return_value.render.call_args[1]
+        # Assert the correct variables was given.
+        self.assertEqual(render_call_args["context"]["kle_number"], "27.69.20")
+        self.assertEqual(
+            render_call_args["context"]["sbsys_case_file_number"],
+            "27.69.20-Ø36-23-19",
+        )
+        self.assertEqual(
+            render_call_args["context"]["sbsys_template_id"], "900"
+        )
+
 
 class SamlLoginTestcase(TestCase, BasicTestMixin):
     def test_saml_before_login(self):
@@ -349,11 +397,9 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
         )
-        main_activity_details = ActivityDetails.objects.create(
+        main_activity_details = create_activity_details(
             name="Betaling til andre kommuner/region for specialtandpleje",
             activity_id="010001",
-            max_tolerance_in_dkk=5000,
-            max_tolerance_in_percent=10,
         )
         create_section_info(
             details=main_activity_details,
@@ -408,11 +454,9 @@ class SendToPrismTestCase(TestCase, BasicTestMixin):
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
         )
-        main_activity_details = ActivityDetails.objects.create(
+        main_activity_details = create_activity_details(
             name="Betaling til andre kommuner/region for specialtandpleje",
             activity_id="010001",
-            max_tolerance_in_dkk=5000,
-            max_tolerance_in_percent=10,
         )
         create_section_info(
             main_activity_details,
