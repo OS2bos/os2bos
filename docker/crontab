@@ -31,6 +31,7 @@
 20 0 * * * python manage.py send_expired_emails
 25 0 * * * python manage.py renew_payments
 30 0 * * * python manage.py recalculate_on_changed_rate
+35 0 * * * python manage.py generate_cases_report
 
 # Generate payment date exclusions for next year yearly.
 @yearly python manage.py generate_payment_date_exclusions $(date +%Y --date="+1 year")

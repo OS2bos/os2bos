@@ -305,6 +305,15 @@ LOGGING = {
                 fallback=os.path.join(LOG_DIR, "generate_payments_report.log"),
             ),
         },
+        "generate_cases_report": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "formatter": "verbose",
+            "filename": settings.get(
+                "CASES_REPORT_LOG_FILE",
+                fallback=os.path.join(LOG_DIR, "generate_cases_report.log"),
+            ),
+        },
         "mark_payments_paid": {
             "level": "INFO",
             "class": "logging.FileHandler",
@@ -388,6 +397,11 @@ LOGGING = {
         },
         "bevillingsplatform.generate_payments_report": {
             "handlers": ["generate_payments_report"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        "bevillingsplatform.generate_cases_report": {
+            "handlers": ["generate_cases_report"],
             "level": "INFO",
             "propagate": True,
         },

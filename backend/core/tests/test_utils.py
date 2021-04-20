@@ -28,6 +28,7 @@ from core.models import (
     Team,
     Payment,
     SectionInfo,
+    Case,
 )
 from core.utils import (
     get_cpr_data,
@@ -40,6 +41,7 @@ from core.utils import (
     due_payments_for_prism,
     export_prism_payments_for_date,
     generate_payments_report_list_v0,
+    generate_cases_report_list_v0,
     generate_payment_date_exclusion_dates,
     validate_cvr,
 )
@@ -816,43 +818,41 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         self.assertEqual(len(report_list), 6)
         first_elem = report_list[0]
         # Assert that the following dict is a subset of the first element.
-        self.assertTrue(
-            {
-                "amount": Decimal("666.00"),
-                "paid_amount": None,
-                "paid_date": None,
-                "account_string": "12345-UKENDT-123",
-                "payment_schedule__payment_amount": Decimal("666"),
-                "payment_schedule__payment_frequency": "DAILY",
-                "recipient_type": "PERSON",
-                "recipient_id": "0205891234",
-                "recipient_name": "Jens Testersen",
-                "payment_method": "CASH",
-                "fictive": False,
-                "activity__details__name": "Test aktivitet",
-                "activity__details__activity_id": "000000",
-                "sbsys_id": "XXX-YYY",
-                "cpr_number": "0205891234",
-                "name": "Jens Jensen",
-                "effort_step": "Trin 1: Tidlig indsats i almenområdet",
-                "paying_municipality": "København",
-                "acting_municipality": "København",
-                "residence_municipality": "København",
-                "section": "ABL-105-2",
-                "scaling_step": "1",
-                "case_worker": "Orla Frøsnapper",
-                "leader": "Orla Frøsnapper",
-                "team": "FCK",
-                "target_group": case.target_group,
-                "activity_type": "MAIN_ACTIVITY",
-                "main_activity_id": (
-                    appropriation.main_activity.details.activity_id
-                ),
-                "father_cpr": "1111111111",
-                "mother_cpr": "2222222222",
-            }.items()
-            <= first_elem.items()
-        )
+        expected_data = {
+            "amount": Decimal("666.00"),
+            "paid_amount": None,
+            "paid_date": None,
+            "account_string": "12345-UKENDT-123",
+            "payment_schedule__payment_amount": Decimal("666"),
+            "payment_schedule__payment_frequency": "DAILY",
+            "recipient_type": "PERSON",
+            "recipient_id": "0205891234",
+            "recipient_name": "Jens Testersen",
+            "payment_method": "CASH",
+            "fictive": False,
+            "activity__details__name": "Test aktivitet",
+            "activity__details__activity_id": "000000",
+            "sbsys_id": "XXX-YYY",
+            "cpr_number": "0205891234",
+            "name": "Jens Jensen",
+            "effort_step": "Trin 1: Tidlig indsats i almenområdet",
+            "paying_municipality": "København",
+            "acting_municipality": "København",
+            "residence_municipality": "København",
+            "section": "ABL-105-2",
+            "scaling_step": "1",
+            "case_worker": "Orla Frøsnapper",
+            "leader": "Orla Frøsnapper",
+            "team": "FCK",
+            "target_group": case.target_group,
+            "activity_type": "MAIN_ACTIVITY",
+            "main_activity_id": (
+                appropriation.main_activity.details.activity_id
+            ),
+            "father_cpr": "1111111111",
+            "mother_cpr": "2222222222",
+        }
+        self.assertTrue(expected_data.items() <= first_elem.items())
         self.assertIsNotNone(first_elem["id"])
         self.assertIsNotNone(first_elem["activity_start_date"])
         self.assertIsNotNone(first_elem["activity_end_date"])
@@ -1081,3 +1081,40 @@ class ValidateCVRTestCase(TestCase):
 
     def test_validate_cvr_failure_9_digits(self):
         self.assertFalse(validate_cvr("292440494"))
+
+
+class GenerateCasesReportTestCase(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_generate_cases_report_list(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        create_related_person(case, "far test", "far", "1111111111")
+        create_related_person(case, "mor test", "mor", "2222222222")
+
+        report_list = generate_cases_report_list_v0(Case.objects.all())
+        self.assertEqual(len(report_list), 1)
+        first_elem = report_list[0]
+        # Assert that the following dict is a subset of the first element.
+        expected_data = {
+            "id": "1",
+            "history_id": "1",
+            "cpr_number": "0205891234",
+            "case_sbsys_id": "27.24.00-G01-99-21",
+            "name": "Jens Jensen",
+            "target_group": case.target_group,
+            "case_worker": "Orla Frøsnapper",
+            "team": "FCK",
+            "leader": "Orla Frøsnapper",
+            "efforts": "",
+            "effort_step": "Trin 1: Tidlig indsats i almenområdet",
+            "scaling_step": "1",
+            "paying_municipality": "København",
+            "acting_municipality": "København",
+            "residence_municipality": "København",
+            "father_cpr": "1111111111",
+            "mother_cpr": "2222222222",
+        }
+        self.assertTrue(set(expected_data) <= set(first_elem))
+        self.assertIsNotNone(first_elem["history_date"])

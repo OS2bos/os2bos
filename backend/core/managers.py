@@ -258,3 +258,14 @@ class CaseQuerySet(models.QuerySet):
             .exclude(expired_main_activities_count=0, main_activities_count=0)
             .filter(expired_main_activities_count=F("main_activities_count"))
         ).distinct()
+
+    def expected_cases_for_report_list(self):
+        """Filter cases for a report of granted AND expected cases."""
+        from core.models import STATUS_GRANTED, STATUS_EXPECTED
+
+        cases = self.filter(
+            Q(appropriations__activities__status=STATUS_GRANTED)
+            | Q(appropriations__activities__status=STATUS_EXPECTED)
+        ).distinct()
+
+        return cases
