@@ -47,12 +47,12 @@
                 <template v-if="range_dates === true">
                     <div class="filter-field">
                         <label for="field-from">Fra dato</label>
-                        <input id="field-from" type="date" @input="update" v-model="paid_date_or_date__gte">
+                        <input id="field-from" type="date" v-model="paid_date_or_date__gte">
                     </div>
 
                     <div class="filter-field">
                         <label for="field-to">Til dato</label>
-                        <input id="field-to" type="date" @input="update" v-model="paid_date_or_date__lte">
+                        <input id="field-to" type="date" v-model="paid_date_or_date__lte">
                     </div>
                 </template>
             </fieldset>
@@ -186,6 +186,7 @@
                 }, 
                 set: function(new_val) {
                     this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date__gte': new_val})
+                    this.$store.dispatch('fetchPayments')
                 }
             },
             paid_date_or_date__lte: {
@@ -194,6 +195,7 @@
                 }, 
                 set: function(new_val) {
                     this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date__lte': new_val})
+                    this.$store.dispatch('fetchPayments')
                 }
             },
             paid: {
@@ -206,9 +208,6 @@
                     this.$store.commit('setPaymentSearchFilter', {'paid': new_val})
                     this.$store.dispatch('fetchPayments')
                 }
-            },
-            update: function() {
-                this.$store.dispatch('fetchPayments')
             }
         },
         methods: {
