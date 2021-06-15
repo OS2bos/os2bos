@@ -34,6 +34,7 @@ module.exports = {
     devServer: {
         proxy: proxySettings,
         disableHostCheck: true,
+        progress: false // Don't display a log line for every percentage done of every build
     },
     configureWebpack: config => {
         if (process.env.NODE_ENV === 'production') {
@@ -51,13 +52,8 @@ module.exports = {
         // Tap into htmlwebpackplugin and add package.json version no. as a meta tag til index.html
         config.plugin('html')
             .tap(args => {
-                args[0].meta = {'bvp-version': `${ Package.version }`}
+                args[0].meta = {'bvp-version': Package.version}
                 return args
             })
-    },
-    
-    devServer: {
-        // Don't display a log line for every percentage done of every build, please
-        progress: false
     }
 }
