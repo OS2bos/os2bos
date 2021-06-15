@@ -27,6 +27,10 @@ const getLocation = ClientFunction(() => document.location.href),
             appr2: {
                 name: `${ randNum() }.${ randNum() }.${ randNum() }-${ randNum() }-bevilling`,
                 section: 'SEL-76-2 Efterværn / kontaktperson 18-22 årige'
+            },
+            appr3: {
+                name: `${ randNum() }.${ randNum() }.${ randNum() }-${ randNum() }-bevilling`,
+                section: 'SEL-76-2 Efterværn / kontaktperson 18-22 årige'
             }
         }
 
@@ -60,6 +64,8 @@ test.page(baseurl)
 
     await createCase(t, testdata.case2)
     await createAppropriation(t, testdata.appr2)
+    await t.click(Selector('a').withText(testdata.case2.name))
+    await createAppropriation(t, testdata.appr3)
         
 })
 
@@ -232,5 +238,6 @@ test.page(`${ baseurl }/#/appropriations`)
     await t
         .expect(Selector('.datagrid tr').count).gt(2)
         .typeText('#field-sbsysid', testdata.appr2.name, {replace: true})
+        .expect(Selector('.datagrid td a').withText(testdata.appr2.name).exists).ok()
         .expect(Selector('.datagrid tr').count).eql(2)
 })
