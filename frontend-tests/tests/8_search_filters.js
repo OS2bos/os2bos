@@ -30,7 +30,7 @@ const getLocation = ClientFunction(() => document.location.href),
             }
         }
 
-fixture.only('Check search filter defaults')
+fixture('Check search filter defaults')
 
 /*
     Rules to test: 
@@ -230,7 +230,6 @@ test.page(`${ baseurl }/#/appropriations`)
     await login(t, 'familieraadgiver', 'sagsbehandler')
 
     await t
-    .debug()
         .expect(Selector('.datagrid tr').count).gt(2)
         .typeText('#field-sbsysid', testdata.appr2.name, {replace: true})
         .expect(Selector('.datagrid tr').count).eql(2)
