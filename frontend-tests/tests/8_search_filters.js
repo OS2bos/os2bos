@@ -30,7 +30,7 @@ const getLocation = ClientFunction(() => document.location.href),
             }
         }
 
-fixture('Check search filter defaults')
+fixture.only('Check search filter defaults')
 
 /*
     Rules to test: 
@@ -39,6 +39,7 @@ fixture('Check search filter defaults')
     https://redmine.magenta-aps.dk/issues/39356
     https://redmine.magenta-aps.dk/issues/40312
     https://redmine.magenta-aps.dk/issues/40341
+    https://redmine.magenta-aps.dk/issues/43490
     
 */
 
@@ -219,4 +220,18 @@ test.page(`${ baseurl }/#/appropriations?case__case_worker__team=2`)
         .expect(getLocation()).notContains('case__case_worker=2')
         .expect(Selector('select#field-case-worker option').withText('---').selected).ok()
         .expect(Selector('p').withText('Kan ikke finde nogen resultater, der matcher de valgte kriterier').exists).ok()
+})
+
+// https://redmine.magenta-aps.dk/issues/43490
+// Appropriation search filter "Foranstaltningssag" should search for an appropriation's SBSYS_ID
+test.page(`${ baseurl }/#/appropriations`)
+('Test appropriation search filter', async t => {
+
+    await login(t, 'familieraadgiver', 'sagsbehandler')
+
+    await t
+    .debug()
+        .expect(Selector('.datagrid tr').count).gt(2)
+        .typeText('#field-sbsysid', testdata.appr2.name, {replace: true})
+        .expect(Selector('.datagrid tr').count).eql(2)
 })
