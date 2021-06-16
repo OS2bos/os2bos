@@ -32,7 +32,11 @@ from core.managers import (
     ActivityQuerySet,
     AppropriationQuerySet,
 )
-from core.utils import send_appropriation, create_rrule
+from core.utils import (
+    send_appropriation,
+    create_rrule,
+    get_company_info_from_cvr,
+)
 
 # Payment methods and choice list.
 CASH = "CASH"
@@ -1513,6 +1517,22 @@ class ServiceProvider(Classification):
     name = models.CharField(
         max_length=128, blank=False, verbose_name=_("navn")
     )
+    branch_code = models.CharField(
+        max_length=128, blank=True, verbose_name=_("branchekode")
+    )
+    street = models.CharField(
+        max_length=128, blank=True, verbose_name=_("vejnavn")
+    )
+    street_number = models.CharField(
+        max_length=128, blank=True, verbose_name=_("vejnummer")
+    )
+    zip_code = models.CharField(
+        max_length=128, blank=True, verbose_name=_("postnummer")
+    )
+    status = models.CharField(
+        max_length=128, blank=True, verbose_name=_("status")
+    )
+
     vat_factor = models.DecimalField(
         default=100.0,
         max_digits=5,
@@ -1520,6 +1540,25 @@ class ServiceProvider(Classification):
         validators=[MinValueValidator(Decimal("0.01"))],
         verbose_name=_("momsfaktor"),
     )
+
+    @staticmethod
+    def virk_to_service_provider(data):
+        """Convert data from virk to our ServiceProvider model."""
+        converter_dict = {
+            "cvr_no": "cvr_number",
+            "navn": "name",
+            "branchekode": "branch_code",
+            "vejnavn": "street",
+            "husnr": "street_number",
+            "postnr": "zip_code",
+            "status": "status",
+        }
+        converted_data = {
+            converter_dict[k]: str(v)
+            for (k, v) in data.items()
+            if k in converter_dict
+        }
+        return converted_data
 
     def __str__(self):
         return f"{self.cvr_number} - {self.name}"
@@ -1793,7 +1832,6 @@ class Activity(AuditModelMixin, models.Model):
         on_delete=models.CASCADE,
         verbose_name=_("bevilling"),
     )
-    # TODO: remove this if unused.
     service_provider = models.ForeignKey(
         ServiceProvider,
         null=True,
@@ -1828,6 +1866,26 @@ class Activity(AuditModelMixin, models.Model):
             raise RuntimeError(
                 _("Du kan ikke godkende en ydelse uden nogen betalinger")
             )
+        # If an activity has no service provider we can't approve it
+        # If it has one we update it.
+        if (
+            hasattr(self, "payment_plan")
+            and self.payment_plan.recipient_type == PaymentSchedule.COMPANY
+        ):
+            if not self.service_provider:
+                raise RuntimeError(
+                    _(
+                        "Du kan ikke godkende en ydelse"
+                        " uden en tilknyttet leverandør"
+                    )
+                )
+            else:
+                company_info = get_company_info_from_cvr(
+                    self.service_provider.cvr_number
+                )
+                data = ServiceProvider.virk_to_service_provider(company_info)
+                self.service_provider.update(**data)
+
         if self.status == STATUS_GRANTED:
             # Re-granting - nothing more to do.
             pass

@@ -511,6 +511,14 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
         return data
 
 
+class ServiceProviderSerializer(serializers.ModelSerializer):
+    """Serializer for the ServiceProvider model."""
+
+    class Meta:
+        model = ServiceProvider
+        fields = "__all__"
+
+
 class ActivitySerializer(WritableNestedModelSerializer):
     """Serializer for the Activity model."""
 
@@ -522,6 +530,8 @@ class ActivitySerializer(WritableNestedModelSerializer):
     total_expected_this_year = serializers.ReadOnlyField()
 
     payment_plan = PaymentScheduleSerializer(partial=True, required=False)
+    service_provider = ServiceProviderSerializer(partial=True, required=False)
+
     details__name = serializers.ReadOnlyField(source="details.name")
 
     @staticmethod
@@ -767,14 +777,6 @@ class ActivityDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ActivityDetails
-        fields = "__all__"
-
-
-class ServiceProviderSerializer(serializers.ModelSerializer):
-    """Serializer for the ServiceProvider model."""
-
-    class Meta:
-        model = ServiceProvider
         fields = "__all__"
 
 

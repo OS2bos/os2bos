@@ -40,6 +40,11 @@ from holidays import Denmark as danish_holidays
 
 from service_person_stamdata_udvidet import get_citizen
 
+from virk_dk import (
+    get_org_info_from_cvr,
+    get_org_info_from_cvr_p_number_or_name,
+)
+
 from core import models
 from core.data.extra_payment_date_exclusion_tuples import (
     extra_payment_date_exclusion_tuples,
@@ -128,6 +133,40 @@ def get_cpr_data_mock(cpr):
         "kommunekode": "370",
     }
     return result
+
+
+def get_company_info_from_search_term(search_term):
+    """Get CVR Data from Virk from a generic search term."""
+    data = {
+        "search_term": search_term,
+        "virk_usr": settings.VIRK_USER,
+        "virk_pwd": settings.VIRK_PASS,
+        "virk_url": settings.VIRK_URL,
+    }
+
+    try:
+        result = get_org_info_from_cvr_p_number_or_name(data)
+        return result
+    except requests.exceptions.HTTPError:
+        logger.exception("get_cvr_data requests error")
+        return None
+
+
+def get_company_info_from_cvr(cvr):
+    """Get CVR Data from Virk from a CVR number."""
+    data = {
+        "cvr": cvr,
+        "virk_usr": settings.VIRK_USER,
+        "virk_pwd": settings.VIRK_PASS,
+        "virk_url": settings.VIRK_URL,
+    }
+
+    try:
+        result = get_org_info_from_cvr(data)
+        return result
+    except requests.exceptions.HTTPError:
+        logger.exception("get_cvr_data requests error")
+        return None
 
 
 def send_activity_email(subject, template, activity):

@@ -24,3 +24,4 @@ holidays==0.11.1
 django-watchman==1.2.0
 django-currentuser==0.5.2
 prometheus-client==0.10.1
+git+git://github.com/syre/virk.dk@add_support_for_org_info_and_p_numbers#egg=virk_dk

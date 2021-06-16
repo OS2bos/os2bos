@@ -82,7 +82,10 @@ from core.filters import (
     PaymentFilter,
     AllowedForStepsFilter,
 )
-from core.utils import get_person_info
+from core.utils import (
+    get_person_info,
+    get_company_info_from_search_term,
+)
 
 from core.mixins import (
     AuditMixin,
@@ -456,6 +459,33 @@ class ServiceProviderViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     queryset = ServiceProvider.objects.all()
     serializer_class = ServiceProviderSerializer
     filterset_fields = "__all__"
+
+    @action(detail=False, methods=["get"])
+    def fetch_serviceproviders_from_virk(self, request):
+        """Fetch serviceproviders using a generic search term from Virk.
+
+        Returns the data as serialized ServiceProvider data.
+
+        GET params: search_term
+        """
+        search_term = request.query_params.get("search_term")
+        if not search_term:
+            return Response(
+                {"errors": [_("Der kræves en search_term parameter")]},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        company_info = get_company_info_from_search_term(search_term)
+
+        if not company_info:
+            return Response(
+                {"errors": [_("Fejl i søgning eller forbindelse til Virk")]},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        service_providers = [
+            ServiceProvider.virk_to_service_provider(data)
+            for data in company_info
+        ]
+        return Response(service_providers, status.HTTP_200_OK)
 
 
 class ApprovalLevelViewSet(ClassificationViewSetMixin, ReadOnlyViewset):

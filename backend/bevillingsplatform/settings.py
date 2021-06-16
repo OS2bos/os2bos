@@ -238,6 +238,14 @@ SERVICEPLATFORM_CERTIFICATE_PATH = settings.get(
     "SERVICEPLATFORM_CERTIFICATE_PATH"
 )
 
+# Virk information
+
+VIRK_USER = settings.get("VIRK_USER")
+VIRK_PASS = settings.get("VIRK_PASS")
+VIRK_URL = settings.get(
+    "VIRK_URL", "http://distribution.virk.dk/cvr-permanent/virksomhed/_search"
+)
+
 REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": (
         "rest_framework_filters.backends.RestFrameworkFilterBackend",
