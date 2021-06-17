@@ -1,6 +1,6 @@
 {
   "name": "frontend-tests",
-  "version": "1.0.0",
+  "version": "4.0.5",
   "description": "A suite of tests for the bevillingsplatform frontend. Tests are isolated from the frontend src. This way they can be run independently of the development server and corresponding docker container.",
   "scripts": {
     "test": "./node_modules/.bin/testcafe chrome tests/*.js --assertion-timeout 15000 --selector-timeout 15000 --baseurl http://localhost:8080",
