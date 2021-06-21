@@ -14,12 +14,11 @@
                                 <dd>{{ s.name }}</dd>
                                 <dt>Adresse</dt>
                                 <dd>{{ s.address }}</dd>
+                                <dt>Branche</dt>
+                                <dd>{{ s.business_sector }}</dd>
+                                <dt>Virksomhedsstatus</dt>
+                                <dd>{{ s.status }}</dd>
                             </dl>
-                        </button>
-                    </li>
-                    <li>
-                        <button class="cvr-select-btn" @click="select_item({name: 'Ukendt leverandør', id: 0})" type="button">
-                            Ukendt leverandør
                         </button>
                     </li>
                 </ul>
@@ -36,10 +35,14 @@
                 <dd>{{ selected.name }}</dd>
                 <dt>Adresse</dt>
                 <dd>{{ selected.address }}</dd>
+                <dt>Branche</dt>
+                <dd>{{ selected.business_sector }}</dd>
+                <dt>Virksomhedsstatus</dt>
+                <dd>{{ selected.status }}</dd>
             </dl>
         </div>
-        <p v-if="selected && selected.id === 0">
-            Ukendt leverandør valgt
+        <p v-else>
+            Leverandør ukendt
         </p>
     </div>
 </template>
@@ -55,12 +58,17 @@ export default {
                 {
                     id: 83987673,
                     name: 'Fiktivt firma',
-                    address: 'Fiktivvej 1234, 1000 Fiktivby'
+                    address: 'Fiktivvej 1234, 1000 Fiktivby',
+                    business_sector: 'Konsulentbistand',
+                    status: 'Aktiv'
+                    
                 },
                 {
                     id: 87665222,
                     name: 'Et andet firma',
-                    address: 'Something Something 1234, 2000 Xåby'
+                    address: 'Something Something 1234, 2000 Xåby',
+                    business_sector: 'Jordbrug',
+                    status: 'Aktiv'
                 }
             ]
         }
