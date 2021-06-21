@@ -83,9 +83,12 @@
                     </template>
 
                     <template v-if="payment_plan.recipient_type === 'COMPANY'" >
+                        <cvr-select />
+                        <!--
                         <payment-service-provider v-if="is_editable" />
                         <payment-receiver-name :editable="is_editable" />
                         <payment-receiver-id :editable="is_editable"  />
+                        -->
                     </template>
 
                     <template v-if="payment_plan.recipient_type === 'PERSON'" >
@@ -129,6 +132,7 @@ import PaymentInternalReceiver from '../payments/edittypes/PaymentInternalReceiv
 import PaymentUnits from '../payments/edittypes/PaymentUnits.vue'
 import { sanitizeActivity } from './ActivitySave.js'
 import PermissionLogic from '../mixins/PermissionLogic.js'
+import CvrSelect from '../payments/edittypes/CVR_select.vue'
 
 
 export default {
@@ -141,7 +145,8 @@ export default {
         PaymentServiceProvider,
         CprLookUp,
         PaymentInternalReceiver,
-        PaymentUnits
+        PaymentUnits,
+        CvrSelect
     },
     computed: {
         is_editable: function() {

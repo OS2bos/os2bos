@@ -19,9 +19,12 @@
             </template>
 
             <template v-if="payment_plan.recipient_type === 'COMPANY'">
+                <cvr-select />
+                <!--
                 <payment-service-provider />
                 <payment-receiver-id :editable="true" />
                 <payment-receiver-name :editable="true" />
+                -->
             </template>
 
             <template v-if="payment_plan.recipient_type === 'PERSON'">
@@ -47,6 +50,7 @@ import PaymentReceiverName from '../../payments/edittypes/PaymentReceiverName.vu
 import PaymentMethod from '../../payments/edittypes/PaymentMethod.vue'
 import PaymentMethodDetails from '../../payments/edittypes/PaymentMethodDetails.vue'
 import PaymentInternalReceiver from '../../payments/edittypes/PaymentInternalReceiverName.vue'
+import CvrSelect from '../../payments/edittypes/CVR_select.vue'
 
 export default {
     components: {
@@ -57,7 +61,8 @@ export default {
         PaymentMethod,
         PaymentMethodDetails,
         CprLookUp,
-        PaymentInternalReceiver
+        PaymentInternalReceiver,
+        CvrSelect
     },
     computed: {
         payment_plan: function() {
