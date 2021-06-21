@@ -2,7 +2,7 @@
     <div class="cvr-search">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <fieldset>
-                <label for="cvr-search-input">Søg med CVR/P-nr.</label>
+                <label for="cvr-search-input">Find CVR/P-nr.</label>
                 <input type="search" v-model="search_input" @input="search" id="cvr-search-input">
                 <ul class="cvr-search-result" v-if="search_results.length > 0">
                     <li v-for="s in search_results" :key="s.id">
