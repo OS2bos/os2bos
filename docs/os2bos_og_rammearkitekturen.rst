@@ -271,7 +271,7 @@ følgende punkter:
   paragraffer - hver ydelse er knyttet til 0 eller flere paragraffer,
   efter hvilke den kan være hoved- eller følgeydelse.
 * *Konteringsregel* er heller ikke modelleret som et objekt, men fremgår
-  (med den nye metode) af relationen ``AccountAlias`` mellem
+  (med den nye metode) af relationen ``AccountAliasMapping`` mellem
   ``ActivityDetails`` og ``SectionInfo``.
 * *Beregningsregel* er heller ikke modelleret som et objekt, men er
   implementeret i form af prisoplysningerne på ``PaymentSchedule``, der
