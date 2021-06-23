@@ -836,39 +836,6 @@ class PaymentSchedule(models.Model):
         return f"{department}-{account_number}-{kind}"
 
     @property
-    def account_string_new(self):
-        """Calculate account string from activity.
-
-        TODO: eventually replace account_string with this.
-        """
-        if (
-            self.recipient_type == PaymentSchedule.PERSON
-            and self.payment_method == CASH
-        ):
-            department = config.ACCOUNT_NUMBER_DEPARTMENT
-            kind = config.ACCOUNT_NUMBER_KIND
-        else:
-            # Set department and kind to 'XXX'
-            # to signify they are not used.
-            department = "XXX"
-            kind = "XXX"
-
-        # Account string is "unknown" when there is no
-        # activity or account.
-        # The explicit inclusion of "unknown" is a demand due to the
-        # PRISME integration.
-        if (
-            not hasattr(self, "activity")
-            or not self.activity
-            or not self.activity.account_number
-        ):
-            account_number = config.ACCOUNT_NUMBER_UNKNOWN
-        else:
-            account_number = self.activity.account_number_new
-
-        return f"{department}-{account_number}-{kind}"
-
-    @property
     def account_alias(self):
         """Calculate account alias from activity."""
         if (
@@ -879,18 +846,6 @@ class PaymentSchedule(models.Model):
             return ""
         else:
             return self.activity.account_alias
-
-    @property
-    def account_alias_new(self):
-        """Calculate new account alias from activity."""
-        if (
-            not hasattr(self, "activity")
-            or not self.activity
-            or not self.activity.account_alias_new
-        ):
-            return ""
-        else:
-            return self.activity.account_alias_new
 
     def __str__(self):
         recipient_type_str = self.get_recipient_type_display()
@@ -1048,30 +1003,6 @@ class Payment(models.Model):
             return self.saved_account_alias
 
         return self.payment_schedule.account_alias
-
-    @property
-    def account_string_new(self):
-        """
-        Return saved account string if any, else calculate from schedule.
-
-        TODO: eventually replace account_string with this.
-        """
-        if self.saved_account_string:
-            return self.saved_account_string
-
-        return self.payment_schedule.account_string_new
-
-    @property
-    def account_alias_new(self):
-        """
-        Return saved account alias if any, else calculate from schedule.
-
-        TODO: eventually replace account_alias with this.
-        """
-        if self.saved_account_alias:
-            return self.saved_account_alias
-
-        return self.payment_schedule.account_alias_new
 
     def __str__(self):
         recipient_type_str = self.get_recipient_type_display()
@@ -1731,46 +1662,6 @@ class SectionInfo(models.Model):
         return f"{self.activity_details} - {self.section}"
 
 
-class AccountAlias(models.Model):
-    """Model that serves as a mapping from an account string to account alias.
-
-    Map account string from PaymentSchedule to an
-    "account alias" used by Ballerup.
-    """
-
-    class Meta:
-        verbose_name = _("kontoalias")
-        verbose_name_plural = _("kontoalias")
-        constraints = [
-            models.UniqueConstraint(
-                fields=["activity_details", "section_info"],
-                name="unique_section_info_activity_details",
-            )
-        ]
-
-    # main activity section_info.
-    section_info = models.ForeignKey(
-        SectionInfo,
-        verbose_name=_("paragraf-info"),
-        related_name="account_aliases",
-        on_delete=models.CASCADE,
-    )
-
-    activity_details = models.ForeignKey(
-        ActivityDetails,
-        verbose_name=_("aktivitetsdetalje"),
-        related_name="account_aliases",
-        on_delete=models.CASCADE,
-    )
-
-    alias = models.CharField(
-        max_length=128, verbose_name=_("kontoalias"), blank=True
-    )
-
-    def __str__(self):
-        return f"{self.section_info} - {self.activity_details}"
-
-
 class AccountAliasMapping(models.Model):
     """New version of the AccountAlias model.
 
@@ -1779,8 +1670,8 @@ class AccountAliasMapping(models.Model):
     """
 
     class Meta:
-        verbose_name = _("nyt kontoalias")
-        verbose_name_plural = _("nye kontoalias")
+        verbose_name = _("kontoalias")
+        verbose_name_plural = _("kontoalias")
         constraints = [
             models.UniqueConstraint(
                 fields=["main_account_number", "activity_number"],
@@ -2010,36 +1901,6 @@ class Activity(AuditModelMixin, models.Model):
         return True
 
     @property
-    def account_number(self):
-        """Calculate the account_number to use with this activity."""
-        if self.activity_type == MAIN_ACTIVITY:
-            try:
-                section_info = SectionInfo.objects.get(
-                    activity_details=self.details,
-                    section=self.appropriation.section,
-                )
-            except SectionInfo.DoesNotExist:
-                return None
-            main_account_number = (
-                section_info.get_main_activity_main_account_number()
-            )
-        else:
-            main_activity = self.appropriation.main_activity
-            if not main_activity:
-                return None
-            try:
-                section_info = SectionInfo.objects.get(
-                    activity_details=main_activity.details,
-                    section=self.appropriation.section,
-                )
-            except SectionInfo.DoesNotExist:
-                return None
-            main_account_number = (
-                section_info.get_supplementary_activity_main_account_number()
-            )
-        return f"{main_account_number}-{self.details.activity_id}"
-
-    @property
     def activity_category(self):
         """Get the activity category of this activity."""
         if self.activity_type == MAIN_ACTIVITY:
@@ -2069,12 +1930,8 @@ class Activity(AuditModelMixin, models.Model):
         return activity_category
 
     @property
-    def account_number_new(self):
-        """
-        Calculate the account_number_new to use with this activity.
-
-        TODO: eventually replace account_number with this.
-        """
+    def account_number(self):
+        """Calculate the account_number_new to use with this activity."""
         if self.activity_type == MAIN_ACTIVITY:
             try:
                 section_info = SectionInfo.objects.get(
@@ -2112,38 +1969,6 @@ class Activity(AuditModelMixin, models.Model):
 
     @property
     def account_alias(self):
-        """Calculate the account_alias to use with this activity."""
-        if self.activity_type == MAIN_ACTIVITY:
-            try:
-                section_info = SectionInfo.objects.get(
-                    activity_details=self.details,
-                    section=self.appropriation.section,
-                )
-            except SectionInfo.DoesNotExist:
-                return None
-        else:
-            main_activity = self.appropriation.main_activity
-            if not main_activity:
-                return None
-            try:
-                section_info = SectionInfo.objects.get(
-                    activity_details=main_activity.details,
-                    section=self.appropriation.section,
-                )
-            except SectionInfo.DoesNotExist:
-                return None
-
-        try:
-            account_alias = AccountAlias.objects.get(
-                section_info=section_info, activity_details=self.details
-            )
-        except AccountAlias.DoesNotExist:
-            return None
-
-        return account_alias.alias
-
-    @property
-    def account_alias_new(self):
         """Calculate the new account_alias to use with this activity."""
         if self.activity_type == MAIN_ACTIVITY:
             try:

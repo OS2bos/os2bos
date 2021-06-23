@@ -160,8 +160,8 @@ class PaymentSerializer(serializers.ModelSerializer):
     validate function.
     """
 
-    account_string = serializers.ReadOnlyField(source="account_string_new")
-    account_alias = serializers.ReadOnlyField(source="account_alias_new")
+    account_string = serializers.ReadOnlyField()
+    account_alias = serializers.ReadOnlyField()
     payment_schedule__payment_id = serializers.ReadOnlyField(
         source="payment_schedule.payment_id", default=None
     )

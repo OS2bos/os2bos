@@ -87,21 +87,8 @@ class TestPaymentAdmin(AuthenticatedTestCase, BasicTestMixin):
         site = AdminSite()
         payment_admin = PaymentAdmin(Payment, site)
         self.assertEqual(
-            payment_admin.account_string(payment), payment.account_string
-        )
-
-    def test_account_string_new(self):
-        payment_schedule = create_payment_schedule()
-
-        payment = create_payment(
-            payment_schedule=payment_schedule,
-            date=date(year=2019, month=1, day=1),
-        )
-        site = AdminSite()
-        payment_admin = PaymentAdmin(Payment, site)
-        self.assertEqual(
-            payment_admin.account_string_new(payment),
-            payment.account_string_new,
+            payment_admin.account_string(payment),
+            payment.account_string,
         )
 
     def test_account_alias(self):
@@ -115,19 +102,6 @@ class TestPaymentAdmin(AuthenticatedTestCase, BasicTestMixin):
         payment_admin = PaymentAdmin(Payment, site)
         self.assertEqual(
             payment_admin.account_alias(payment), payment.account_alias
-        )
-
-    def test_account_alias_new(self):
-        payment_schedule = create_payment_schedule()
-
-        payment = create_payment(
-            payment_schedule=payment_schedule,
-            date=date(year=2019, month=1, day=1),
-        )
-        site = AdminSite()
-        payment_admin = PaymentAdmin(Payment, site)
-        self.assertEqual(
-            payment_admin.account_alias_new(payment), payment.account_alias_new
         )
 
     def test_payment_schedule_str(self):
@@ -184,16 +158,6 @@ class TestPaymentScheduleAdmin(AuthenticatedTestCase, BasicTestMixin):
             payment_schedule.account_string,
         )
 
-    def test_account_string_new(self):
-        payment_schedule = create_payment_schedule()
-
-        site = AdminSite()
-        payment_schedule_admin = PaymentScheduleAdmin(PaymentSchedule, site)
-        self.assertEqual(
-            payment_schedule_admin.account_string_new(payment_schedule),
-            payment_schedule.account_string_new,
-        )
-
     def test_account_alias(self):
         payment_schedule = create_payment_schedule()
 
@@ -202,16 +166,6 @@ class TestPaymentScheduleAdmin(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(
             payment_schedule_admin.account_alias(payment_schedule),
             payment_schedule.account_alias,
-        )
-
-    def test_account_alias_new(self):
-        payment_schedule = create_payment_schedule()
-
-        site = AdminSite()
-        payment_schedule_admin = PaymentScheduleAdmin(PaymentSchedule, site)
-        self.assertEqual(
-            payment_schedule_admin.account_alias_new(payment_schedule),
-            payment_schedule.account_alias_new,
         )
 
     def test_admin_changelist_not_admin_user_disallowed(self):
@@ -324,18 +278,6 @@ class TestActivityAdmin(AuthenticatedTestCase, BasicTestMixin):
 
         self.assertEqual(response.status_code, 200)
 
-    def test_account_number(self):
-        section = create_section()
-        case = create_case(self.case_worker, self.municipality, self.district)
-        appropriation = create_appropriation(section=section, case=case)
-        activity = create_activity(case=case, appropriation=appropriation)
-
-        site = AdminSite()
-        activity_admin = ActivityAdmin(Activity, site)
-        self.assertEqual(
-            activity_admin.account_number(activity), activity.account_number
-        )
-
     def test_account_alias(self):
         section = create_section()
         case = create_case(self.case_worker, self.municipality, self.district)
@@ -345,10 +287,11 @@ class TestActivityAdmin(AuthenticatedTestCase, BasicTestMixin):
         site = AdminSite()
         activity_admin = ActivityAdmin(Activity, site)
         self.assertEqual(
-            activity_admin.account_alias(activity), activity.account_alias
+            activity_admin.account_alias(activity),
+            activity.account_alias,
         )
 
-    def test_account_alias_new(self):
+    def test_account_number(self):
         section = create_section()
         case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(section=section, case=case)
@@ -357,21 +300,8 @@ class TestActivityAdmin(AuthenticatedTestCase, BasicTestMixin):
         site = AdminSite()
         activity_admin = ActivityAdmin(Activity, site)
         self.assertEqual(
-            activity_admin.account_alias_new(activity),
-            activity.account_alias_new,
-        )
-
-    def test_account_number_new(self):
-        section = create_section()
-        case = create_case(self.case_worker, self.municipality, self.district)
-        appropriation = create_appropriation(section=section, case=case)
-        activity = create_activity(case=case, appropriation=appropriation)
-
-        site = AdminSite()
-        activity_admin = ActivityAdmin(Activity, site)
-        self.assertEqual(
-            activity_admin.account_number_new(activity),
-            activity.account_number_new,
+            activity_admin.account_number(activity),
+            activity.account_number,
         )
 
 
