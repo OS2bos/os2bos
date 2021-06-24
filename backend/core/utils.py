@@ -805,6 +805,34 @@ def generate_payments_report_list_v2(payments):
     return payments_report_list
 
 
+def generate_payments_report_list_v3(payments):
+    """Generate payments report list v3 (v2 with approval data added)."""
+    payments_report_list = generate_payments_report_list_v2(payments)
+
+    approval_values_list = payments.values_list(
+        "id",
+        "payment_schedule__activity__approval_level__name",
+        "payment_schedule__activity__approval_user__username",
+        "payment_schedule__activity__appropriation_date",
+    )
+
+    approval_data = {
+        pk: (approval_level, approval_user, appropriation_date)
+        for (
+            pk,
+            approval_level,
+            approval_user,
+            appropriation_date,
+        ) in approval_values_list
+    }
+
+    for entry in payments_report_list:
+        entry["approval_level"] = approval_data[entry["id"]][0]
+        entry["approval_user"] = approval_data[entry["id"]][1]
+        entry["appropriation_date"] = approval_data[entry["id"]][2]
+    return payments_report_list
+
+
 @transaction.atomic
 def write_prism_file_v0(filename, date, payments, tomorrow):
     """Write the actual PRISM file."""
@@ -1032,6 +1060,7 @@ generate_payments_report_list_versions = {
     "0": generate_payments_report_list_v0,
     "1": generate_payments_report_list_v1,
     "2": generate_payments_report_list_v2,
+    "3": generate_payments_report_list_v3,
 }
 
 generate_cases_report_list_versions = {"0": generate_cases_report_list_v0}
