@@ -993,13 +993,14 @@ def parse_account_alias_mapping_data_from_csv_path(path):
 
 def generate_payments_report():
     """Generate a payments report as CSV."""
-    payments = models.Payment.objects.expected_payments_for_report_list()
     payment_reports = []
 
+    # generate expected payment reports.
+    payments = models.Payment.objects.expected_payments_for_report_list()
     for (
         version,
         payments_func,
-    ) in generate_payments_report_list_versions.items():
+    ) in generate_expected_payments_report_list_versions.items():
         expected_payments_list = payments_func(payments)
         report_dir = settings.PAYMENTS_REPORT_DIR
 
@@ -1017,6 +1018,33 @@ def generate_payments_report():
 
             writer.writeheader()
             for payment_dict in expected_payments_list:
+                writer.writerow(payment_dict)
+
+            payment_reports.append(csvfile.name)
+
+    # generate granted payment reports.
+    payments = models.Payment.objects.granted_payments_for_report_list()
+    for (
+        version,
+        payments_func,
+    ) in generate_granted_payments_report_list_versions.items():
+        granted_payments_list = payments_func(payments)
+        report_dir = settings.PAYMENTS_REPORT_DIR
+
+        if not granted_payments_list:
+            continue
+
+        with open(
+            os.path.join(report_dir, f"granted_payments_{version}.csv"),
+            "w",
+        ) as csvfile:
+            writer = csv.DictWriter(
+                csvfile,
+                fieldnames=granted_payments_list[0].keys(),
+            )
+
+            writer.writeheader()
+            for payment_dict in granted_payments_list:
                 writer.writerow(payment_dict)
 
             payment_reports.append(csvfile.name)
@@ -1056,11 +1084,15 @@ def generate_cases_report():
 
 
 # Defined versions of output utilities.
-generate_payments_report_list_versions = {
+generate_expected_payments_report_list_versions = {
     "0": generate_payments_report_list_v0,
     "1": generate_payments_report_list_v1,
     "2": generate_payments_report_list_v2,
     "3": generate_payments_report_list_v3,
+}
+
+generate_granted_payments_report_list_versions = {
+    "2": generate_payments_report_list_v2,
 }
 
 generate_cases_report_list_versions = {"0": generate_cases_report_list_v0}

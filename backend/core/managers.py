@@ -155,6 +155,32 @@ class PaymentQuerySet(models.QuerySet):
             )
         )
 
+    def granted_payments_for_report_list(self):
+        """Filter payments for a report of only granted payments."""
+        from core.models import STATUS_GRANTED, Activity
+
+        current_year = timezone.now().year
+        two_years_ago = current_year - 2
+        beginning_of_two_years_ago = datetime.date.min.replace(year=two_years_ago)
+
+        granted_activities = models.Activity.objects.filter(
+            status=models.STATUS_GRANTED
+        )
+        payment_ids = granted_activities.values_list(
+            "payment_plan__payments__pk", flat=True
+        )
+
+        return (
+            self.filter(id__in=payment_ids)
+            .paid_date_or_date_gte(beginning_of_two_years_ago)
+            .select_related(
+                "payment_schedule__activity__appropriation__case",
+                "payment_schedule__activity__appropriation__section",
+                "payment_schedule__activity__details",
+            )
+        )
+
+
 
 class ActivityQuerySet(models.QuerySet):
     """QuerySet and Manager for the Activity model."""
