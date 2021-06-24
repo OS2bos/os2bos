@@ -1092,7 +1092,7 @@ generate_expected_payments_report_list_versions = {
 }
 
 generate_granted_payments_report_list_versions = {
-    "2": generate_payments_report_list_v2,
+    "3": generate_payments_report_list_v3,
 }
 
 generate_cases_report_list_versions = {"0": generate_cases_report_list_v0}
