@@ -163,8 +163,8 @@ class PaymentQuerySet(models.QuerySet):
         two_years_ago = current_year - 2
         beginning_of_two_years_ago = datetime.date.min.replace(year=two_years_ago)
 
-        granted_activities = models.Activity.objects.filter(
-            status=models.STATUS_GRANTED
+        granted_activities = Activity.objects.filter(
+            status=STATUS_GRANTED
         )
         payment_ids = granted_activities.values_list(
             "payment_plan__payments__pk", flat=True
