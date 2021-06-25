@@ -446,7 +446,8 @@ class TestGeneratePaymentsReports(TestCase, BasicTestMixin):
                     "['/tmp/expected_payments_0.csv', "
                     "'/tmp/expected_payments_1.csv', "
                     "'/tmp/expected_payments_2.csv', "
-                    "'/tmp/expected_payments_3.csv']"
+                    "'/tmp/expected_payments_3.csv', "
+                    "'/tmp/granted_payments_3.csv']"
                 ),
             ]
         )
