@@ -168,17 +168,17 @@
                 // `interval` only has a getter. values are updated via changeTimeInterval method in listpicker component
                 return this.$store.getters.getPaymentSearchFilter('interval')
             },
-            paid_date_or_date_week: function() {
-                // `paid_date_or_date_week` only has a getter. values are updated via changeTimeInterval method in listpicker component
-                return this.$store.getters.getPaymentSearchFilter('paid_date_or_date_week')
+            date_week: function() {
+                // `date_week` only has a getter. values are updated via changeTimeInterval method in listpicker component
+                return this.$store.getters.getPaymentSearchFilter('date_week')
             },
-            paid_date_or_date_month: function() {
-                // `paid_date_or_date_month` only has a getter. values are updated via changeTimeInterval method in listpicker component
-                return this.$store.getters.getPaymentSearchFilter('paid_date_or_date_month')
+            date_month: function() {
+                // `date_month` only has a getter. values are updated via changeTimeInterval method in listpicker component
+                return this.$store.getters.getPaymentSearchFilter('date_month')
             },
-            paid_date_or_date_year: function() {
-                // `paid_date_or_date_year` only has a getter. values are updated via changeTimeInterval method in listpicker component
-                return this.$store.getters.getPaymentSearchFilter('paid_date_or_date_year')
+            date_year: function() {
+                // `date_year` only has a getter. values are updated via changeTimeInterval method in listpicker component
+                return this.$store.getters.getPaymentSearchFilter('date_year')
             },
             date__gte: {
                 get: function() {
@@ -244,7 +244,7 @@
 
             // On first load, check URL params and set store filters accordingly
             const qry = this.$route.query
-            if (qry.payment_schedule__payment_id || qry.recipient_id || qry.payment_method || qry.interval || qry.paid_date_or_date_week || qry.paid_date_or_date_month || qry.paid_date_or_date_year || qry.date__gte || qry.date__lte || qry.hasOwnProperty('paid') && qry.paid !== null) {
+            if (qry.payment_schedule__payment_id || qry.recipient_id || qry.payment_method || qry.interval || qry.date_week || qry.date_month || qry.date_year || qry.date__gte || qry.date__lte || qry.hasOwnProperty('paid') && qry.paid !== null) {
                 this.$store.commit('setPaymentSearchFilter', qry)
                 this.$store.dispatch('fetchPayments')
             }
