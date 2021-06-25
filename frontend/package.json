@@ -1,6 +1,6 @@
 {
     "name": "bvp-ui",
-    "version": "4.0.2",
+    "version": "4.0.4",
     "private": true,
     "description": "A frontend for bevillingsplatform project",
     "scripts": {

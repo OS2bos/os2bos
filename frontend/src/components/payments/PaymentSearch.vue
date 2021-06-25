@@ -47,12 +47,12 @@
                 <template v-if="range_dates === true">
                     <div class="filter-field">
                         <label for="field-from">Fra dato</label>
-                        <input id="field-from" type="date" v-model="paid_date_or_date__gte">
+                        <input id="field-from" type="date" v-model="date__gte">
                     </div>
 
                     <div class="filter-field">
                         <label for="field-to">Til dato</label>
-                        <input id="field-to" type="date" v-model="paid_date_or_date__lte">
+                        <input id="field-to" type="date" v-model="date__lte">
                     </div>
                 </template>
             </fieldset>
@@ -180,21 +180,21 @@
                 // `paid_date_or_date_year` only has a getter. values are updated via changeTimeInterval method in listpicker component
                 return this.$store.getters.getPaymentSearchFilter('paid_date_or_date_year')
             },
-            paid_date_or_date__gte: {
+            date__gte: {
                 get: function() {
-                    return this.$store.getters.getPaymentSearchFilter('paid_date_or_date__gte')
+                    return this.$store.getters.getPaymentSearchFilter('date__gte')
                 }, 
                 set: function(new_val) {
-                    this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date__gte': new_val})
+                    this.$store.commit('setPaymentSearchFilter', {'date__gte': new_val})
                     this.$store.dispatch('fetchPayments')
                 }
             },
-            paid_date_or_date__lte: {
+            date__lte: {
                 get: function() {
-                    return this.$store.getters.getPaymentSearchFilter('paid_date_or_date__lte')
+                    return this.$store.getters.getPaymentSearchFilter('date__lte')
                 }, 
                 set: function(new_val) {
-                    this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date__lte': new_val})
+                    this.$store.commit('setPaymentSearchFilter', {'date__lte': new_val})
                     this.$store.dispatch('fetchPayments')
                 }
             },
@@ -244,7 +244,7 @@
 
             // On first load, check URL params and set store filters accordingly
             const qry = this.$route.query
-            if (qry.payment_schedule__payment_id || qry.recipient_id || qry.payment_method || qry.interval || qry.paid_date_or_date_week || qry.paid_date_or_date_month || qry.paid_date_or_date_year || qry.paid_date_or_date__gte || qry.paid_date_or_date__lte || qry.hasOwnProperty('paid') && qry.paid !== null) {
+            if (qry.payment_schedule__payment_id || qry.recipient_id || qry.payment_method || qry.interval || qry.paid_date_or_date_week || qry.paid_date_or_date_month || qry.paid_date_or_date_year || qry.date__gte || qry.date__lte || qry.hasOwnProperty('paid') && qry.paid !== null) {
                 this.$store.commit('setPaymentSearchFilter', qry)
                 this.$store.dispatch('fetchPayments')
             }
