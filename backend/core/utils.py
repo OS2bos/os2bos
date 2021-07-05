@@ -146,6 +146,9 @@ def get_company_info_from_search_term(search_term):
 
     try:
         result = get_org_info_from_cvr_p_number_or_name(data)
+        if not isinstance(result, list):
+            logger.error(f"{result}")
+            return None
         return result
     except requests.exceptions.HTTPError:
         logger.exception("get_cvr_data requests error")
@@ -163,6 +166,9 @@ def get_company_info_from_cvr(cvr_number):
 
     try:
         result = get_org_info_from_cvr(data)
+        if not isinstance(result, list):
+            logger.error(f"{result}")
+            return None
         return result
     except requests.exceptions.HTTPError:
         logger.exception("get_cvr_data requests error")
