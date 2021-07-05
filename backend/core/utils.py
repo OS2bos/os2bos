@@ -51,6 +51,10 @@ from core.data.extra_payment_date_exclusion_tuples import (
 )
 
 
+serviceplatformen_logger = logging.getLogger(
+    "bevillingsplatform.serviceplatformen"
+)
+virk_logger = logging.getLogger("bevillingsplatform.virk")
 logger = logging.getLogger(__name__)
 
 
@@ -74,7 +78,7 @@ def get_person_info(cpr):
 def get_cpr_data(cpr):
     """Get CPR data from Serviceplatformen."""
     if not os.path.isfile(settings.SERVICEPLATFORM_CERTIFICATE_PATH):
-        logger.info(
+        serviceplatformen_logger.info(
             "serviceplatform certificate path: %s is not a file",
             settings.SERVICEPLATFORM_CERTIFICATE_PATH,
         )
@@ -88,7 +92,7 @@ def get_cpr_data(cpr):
         )
         return result
     except requests.exceptions.HTTPError:
-        logger.exception("get_cpr_data requests error")
+        serviceplatformen_logger.exception("get_cpr_data requests error")
         return None
 
 
@@ -147,11 +151,11 @@ def get_company_info_from_search_term(search_term):
     try:
         result = get_org_info_from_cvr_p_number_or_name(data)
         if not isinstance(result, list):
-            logger.error(f"{result}")
+            virk_logger.error(f"{result}")
             return None
         return result
     except requests.exceptions.HTTPError:
-        logger.exception("get_cvr_data requests error")
+        virk_logger.exception("get_cvr_data requests error")
         return None
 
 
@@ -167,11 +171,11 @@ def get_company_info_from_cvr(cvr_number):
     try:
         result = get_org_info_from_cvr(data)
         if not isinstance(result, list):
-            logger.error(f"{result}")
+            virk_logger.error(f"{result}")
             return None
         return result
     except requests.exceptions.HTTPError:
-        logger.exception("get_cvr_data requests error")
+        virk_logger.exception("get_cvr_data requests error")
         return None
 
 
