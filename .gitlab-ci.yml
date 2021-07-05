@@ -70,7 +70,7 @@ Lint shell scripts:
     - apk update
     - apk add git
   script:
-    - git ls-files --exclude='*.sh' --ignored | xargs shellcheck
+    - git ls-files -c --exclude='*.sh' --ignored | xargs shellcheck
 
 Lint Dockerfiles:
   <<: *lint-default
@@ -79,7 +79,7 @@ Lint Dockerfiles:
     - apt-get -y update
     - apt-get -y install --no-install-recommends git
   script:
-    - git ls-files --exclude='Dockerfile*' --ignored | xargs --max-lines=1 hadolint
+    - git ls-files -c --exclude='Dockerfile*' --ignored | xargs --max-lines=1 hadolint
 
 
 # Build stage
