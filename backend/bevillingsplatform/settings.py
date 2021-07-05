@@ -362,6 +362,17 @@ LOGGING = {
                 ),
             ),
         },
+        "update_activity_service_providers": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "formatter": "verbose",
+            "filename": settings.get(
+                "UPDATE_ACTIVITY_SERVICE_PROVIDERS_LOG_FILE",
+                fallback=os.path.join(
+                    LOG_DIR, "update_activity_service_providers.log"
+                ),
+            ),
+        },
         "serviceplatformen": {
             "level": "INFO",
             "class": "logging.FileHandler",
@@ -430,6 +441,11 @@ LOGGING = {
         },
         "bevillingsplatform.generate_payment_date_exclusions": {
             "handlers": ["generate_payment_date_exclusions"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        "bevillingsplatform.update_activity_service_providers": {
+            "handlers": ["update_activity_service_providers"],
             "level": "INFO",
             "propagate": True,
         },

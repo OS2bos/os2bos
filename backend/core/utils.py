@@ -152,10 +152,10 @@ def get_company_info_from_search_term(search_term):
         return None
 
 
-def get_company_info_from_cvr(cvr):
+def get_company_info_from_cvr(cvr_number):
     """Get CVR Data from Virk from a CVR number."""
     data = {
-        "cvr": cvr,
+        "cvr_number": cvr_number,
         "virk_usr": settings.VIRK_USER,
         "virk_pwd": settings.VIRK_PASS,
         "virk_url": settings.VIRK_URL,

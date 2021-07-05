@@ -1512,7 +1512,7 @@ class ServiceProvider(Classification):
         ordering = ("name",)
 
     cvr_number = models.CharField(
-        max_length=8, blank=True, verbose_name=_("cvr-nummer")
+        max_length=8, blank=True, unique=True, verbose_name=_("cvr-nummer")
     )
     name = models.CharField(
         max_length=128, blank=False, verbose_name=_("navn")
