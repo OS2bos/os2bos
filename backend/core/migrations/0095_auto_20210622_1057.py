@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0093_auto_20210622_1511'),
+        ('core', '0094_delete_existing_service_providers'),
     ]
 
     operations = [
