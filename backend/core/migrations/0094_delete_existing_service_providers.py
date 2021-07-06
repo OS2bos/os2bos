@@ -3,7 +3,7 @@ from django.db.models import Q
 
 def delete_existing_service_providers(apps, schema_editor):
     ServiceProvider = apps.get_model("core", "ServiceProvider")
-    ServiceProvider.objects.delete()
+    ServiceProvider.objects.all().delete()
 
 
 class Migration(migrations.Migration):
