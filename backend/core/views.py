@@ -540,9 +540,12 @@ class FrontendSettingsView(APIView):
 
     def get(self, request, format=None):
         """Expose the relevant settings."""
-
         settings_dict = {
-            "ALLOW_EDIT_OF_PAST_PAYMENTS": settings.ALLOW_EDIT_OF_PAST_PAYMENTS,
-            "ALLOW_SERVICE_PROVIDERS_FROM_VIRK": settings.ALLOW_SERVICE_PROVIDERS_FROM_VIRK,
+            "ALLOW_EDIT_OF_PAST_PAYMENTS": (
+                settings.ALLOW_EDIT_OF_PAST_PAYMENTS
+            ),
+            "ALLOW_SERVICE_PROVIDERS_FROM_VIRK": (
+                settings.ALLOW_SERVICE_PROVIDERS_FROM_VIRK
+            ),
         }
         return Response(settings_dict)
