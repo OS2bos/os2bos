@@ -139,8 +139,27 @@ def get_cpr_data_mock(cpr):
     return result
 
 
+def get_company_info_mock():
+    result = [
+        {
+            "cvr_no": "25052943",
+            "navn": "MAGENTA ApS",
+            "vejnavn": "Pilestræde",
+            "husnr": "43",
+            "postnr": "1112",
+            "branchekode": "620200",
+            "status": "NORMAL",
+        }
+    ]
+    return result
+
+
 def get_company_info_from_search_term(search_term):
     """Get CVR Data from Virk from a generic search term."""
+    # Return a mocked company info if we are not allowed to use Virk.
+    if not settings.USE_VIRK:
+        return get_company_info_mock()
+
     data = {
         "search_term": search_term,
         "virk_usr": settings.VIRK_USER,
@@ -161,6 +180,10 @@ def get_company_info_from_search_term(search_term):
 
 def get_company_info_from_cvr(cvr_number):
     """Get CVR Data from Virk from a CVR number."""
+    # Return a mocked company info if we are not allowed to use Virk.
+    if not settings.USE_VIRK:
+        return get_company_info_mock()
+
     data = {
         "cvr_number": cvr_number,
         "virk_usr": settings.VIRK_USER,

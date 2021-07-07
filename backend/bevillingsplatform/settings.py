@@ -238,8 +238,12 @@ SERVICEPLATFORM_CERTIFICATE_PATH = settings.get(
     "SERVICEPLATFORM_CERTIFICATE_PATH"
 )
 
-# Virk information
+# Virk settings
 
+# Whether we use Virk or a mocked version
+USE_VIRK = settings.getboolean("USE_VIRK", fallback=False)
+
+# virk_dk parameters
 VIRK_USER = settings.get("VIRK_USER")
 VIRK_PASS = settings.get("VIRK_PASS")
 VIRK_URL = settings.get(
