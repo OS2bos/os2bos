@@ -533,12 +533,16 @@ class ActivityCategoryViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     serializer_class = ActivityCategorySerializer
 
 
-class IsEditingPastPaymentsAllowed(APIView):
-    """Expose the ALLOW_EDIT_OF_PAST_PAYMENTS setting in the API."""
+class FrontendSettingsView(APIView):
+    """Expose a relevant selection of settings to the frontend."""
 
     authentication_classes = (CsrfExemptSessionAuthentication,)
 
     def get(self, request, format=None):
-        """Return the Django setting allowing changes to the past."""
-        is_enabled = settings.ALLOW_EDIT_OF_PAST_PAYMENTS
-        return Response(is_enabled)
+        """Expose the relevant settings."""
+
+        settings_dict = {
+            "ALLOW_EDIT_OF_PAST_PAYMENTS": settings.ALLOW_EDIT_OF_PAST_PAYMENTS,
+            "ALLOW_SERVICE_PROVIDERS_FROM_VIRK": settings.ALLOW_SERVICE_PROVIDERS_FROM_VIRK,
+        }
+        return Response(settings_dict)

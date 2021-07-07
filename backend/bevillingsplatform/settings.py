@@ -596,7 +596,13 @@ GRAPH_MODELS = {
 ALLOW_EDIT_OF_PAST_PAYMENTS = settings.getboolean(
     "ALLOW_EDIT_OF_PAST_PAYMENTS", fallback=False
 )
+# Determine whether we allow fetching service providers from Virk
+# or only use internal service providers.
+ALLOW_SERVICE_PROVIDERS_FROM_VIRK = settings.getboolean(
+    "ALLOW_SERVICE_PROVIDERS_FROM_VIRK", fallback=False
+)
 
+# Watchman settings.
 WATCHMAN_CHECKS = (
     "watchman.checks.caches",
     "watchman.checks.databases",

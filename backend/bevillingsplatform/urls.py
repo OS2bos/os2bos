@@ -119,9 +119,9 @@ urlpatterns = [
         name="swagger-ui",
     ),
     path(
-        "api/editing_past_payments_allowed/",
-        views.IsEditingPastPaymentsAllowed.as_view(),
-        name="editing_past_payments_allowed",
+        "api/frontend-settings/",
+        views.FrontendSettingsView.as_view(),
+        name="frontend-settings",
     ),
     path("api/healthcheck/", status),
 ]
