@@ -32,6 +32,7 @@ from core.models import (
     SectionInfo,
     ActivityDetails,
     HistoricalCase,
+    HistoricalPayment,
     ServiceProvider,
     ApprovalLevel,
     Team,
@@ -251,6 +252,22 @@ class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
         exclude = ("saved_account_string", "saved_account_alias")
+
+
+class HistoricalPaymentSerializer(serializers.ModelSerializer):
+    """Serializer for the historic/temporal dimension of a Payment."""
+
+    class Meta:
+        model = HistoricalPayment
+        # include history_date (date saved),
+        # history_user (user responsible for saving),
+        fields = (
+            "paid",
+            "paid_date",
+            "paid_amount",
+            "history_date",
+            "history_user",
+        )
 
 
 class RatePerDateSerializer(serializers.ModelSerializer):

@@ -922,10 +922,16 @@ class Payment(models.Model):
         related_name="payments",
         verbose_name=_("betalingsplan"),
     )
+
     # The history excludes most fields - it's only a history of the paid
     # amounts, i.e. of that which can be edited manually by users when
-    # changing records for past payments.
+    # changing records for past payments and note.
+
+    # We generate a lot of payments that are later deleted, and thus when a
+    # payment is deleted we should delete its history with
+    # 'cascade_delete_history'.
     history = HistoricalRecords(
+        cascade_delete_history=True,
         excluded_fields=[
             "date",
             "recipient_type",
@@ -936,7 +942,7 @@ class Payment(models.Model):
             "note",
             "saved_account_string",
             "payment_schedule",
-        ]
+        ],
     )
 
     def save(self, *args, **kwargs):

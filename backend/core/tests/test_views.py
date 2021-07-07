@@ -7,6 +7,7 @@
 
 from unittest import mock
 from datetime import date, timedelta
+from decimal import Decimal
 
 from django.urls import reverse
 from django.contrib.auth import get_user_model
@@ -1505,6 +1506,68 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
             detail_url, payment, content_type="application/json"
         )
         self.assertEqual(response.status_code, 200)
+
+    def test_history_action_no_history(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case)
+        now = timezone.now()
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=date(year=now.year, month=1, day=1),
+            end_date=date(year=now.year, month=1, day=1),
+        )
+        payment_schedule = create_payment_schedule(activity=activity)
+        payment = payment_schedule.payments.first()
+
+        reverse_url = reverse("payment-history", kwargs={"pk": payment.pk})
+
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(reverse_url)
+
+        self.assertEqual(len(response.json()), 1)
+        self.assertEqual(response.json()[0]["paid_date"], None)
+        self.assertEqual(response.json()[0]["paid"], False)
+        self.assertEqual(response.json()[0]["paid_amount"], None)
+
+    def test_history_action_changed_paid_fields(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case)
+        now = timezone.now()
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=date(year=now.year, month=1, day=1),
+            end_date=date(year=now.year, month=1, day=1),
+        )
+        payment_schedule = create_payment_schedule(activity=activity)
+        payment = payment_schedule.payments.first()
+
+        # Pay the payment, generating a history object.
+        payment.paid = True
+        payment.paid_date = now
+        payment.paid_amount = Decimal(100.0)
+        payment.save()
+
+        reverse_url = reverse("payment-history", kwargs={"pk": payment.pk})
+
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(reverse_url)
+
+        self.assertEqual(len(response.json()), 2)
+
+        self.assertEqual(response.json()[0]["paid_date"], str(now.date()))
+        self.assertEqual(response.json()[0]["paid"], True)
+        self.assertEqual(response.json()[0]["paid_amount"], "100.00")
+        self.assertIsNotNone(response.json()[0]["history_date"])
+
+        self.assertEqual(response.json()[1]["paid_date"], None)
+        self.assertEqual(response.json()[1]["paid"], False)
+        self.assertEqual(response.json()[1]["paid_amount"], None)
 
 
 class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):

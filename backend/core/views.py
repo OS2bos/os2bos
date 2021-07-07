@@ -66,6 +66,7 @@ from core.serializers import (
     ActivityDetailsSerializer,
     UserSerializer,
     HistoricalCaseSerializer,
+    HistoricalPaymentSerializer,
     ServiceProviderSerializer,
     PaymentMethodDetailsSerializer,
     ApprovalLevelSerializer,
@@ -327,6 +328,15 @@ class PaymentViewSet(AuditViewSet):
 
     filterset_class = PaymentFilter
     filterset_fields = "__all__"
+
+    @action(detail=True, methods=["get"])
+    def history(self, request, pk=None):
+        """Fetch history of Payment."""
+        payment = self.get_object()
+        serializer = HistoricalPaymentSerializer(
+            payment.history.all(), many=True
+        )
+        return Response(serializer.data)
 
 
 class RelatedPersonViewSet(AuditModelViewSetMixin, AuditViewSet):
