@@ -946,21 +946,6 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 3470,
-        "fields": {
-            "active": true,
-            "cvr_number": "19700046",
-            "name": "S\u00f8egaard",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
         "pk": 3471,
         "fields": {
             "active": true,
@@ -1486,21 +1471,6 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 3506,
-        "fields": {
-            "active": true,
-            "cvr_number": "24206475",
-            "name": "Stranden 222",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
         "pk": 3507,
         "fields": {
             "active": true,
@@ -1596,21 +1566,6 @@
             "active": true,
             "cvr_number": "25354656",
             "name": "Fonden Godhavn",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3514,
-        "fields": {
-            "active": true,
-            "cvr_number": "25354656",
-            "name": "Godhavn",
             "branch_code": "",
             "street": "",
             "street_number": "",
@@ -1737,21 +1692,6 @@
             "zip_code": "",
             "status": "",
             "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3523,
-        "fields": {
-            "active": true,
-            "cvr_number": "25672836",
-            "name": "Birketoften",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "95.40"
         }
     },
     {
@@ -1896,21 +1836,6 @@
             "active": true,
             "cvr_number": "25896564",
             "name": "Opholdsst. Birkemoseg\u00e5rd",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3534,
-        "fields": {
-            "active": true,
-            "cvr_number": "25896564",
-            "name": "Fonden/Den Selvej Inst Birkemoseg\u00e5rd",
             "branch_code": "",
             "street": "",
             "street_number": "",
@@ -2491,21 +2416,6 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 3573,
-        "fields": {
-            "active": true,
-            "cvr_number": "27352448",
-            "name": "Opholdsstedet Arken",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
         "pk": 3574,
         "fields": {
             "active": true,
@@ -2976,21 +2886,6 @@
             "active": true,
             "cvr_number": "29188505",
             "name": "Botilbuddet Florenshus",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3606,
-        "fields": {
-            "active": true,
-            "cvr_number": "29188599",
-            "name": "Bof\u00e6llesskabet Violen",
             "branch_code": "",
             "street": "",
             "street_number": "",
@@ -4201,21 +4096,6 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 3687,
-        "fields": {
-            "active": true,
-            "cvr_number": "33423748",
-            "name": "Fonden \u00d8rting ",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
         "pk": 3688,
         "fields": {
             "active": true,
@@ -5356,21 +5236,6 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 3764,
-        "fields": {
-            "active": true,
-            "cvr_number": "46231112",
-            "name": "Egmont H\u00f8jskolen",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
         "pk": 3765,
         "fields": {
             "active": true,
@@ -5421,21 +5286,6 @@
             "active": true,
             "cvr_number": "49148011",
             "name": "Bornholms Krist Friskole Davidskolen",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3769,
-        "fields": {
-            "active": true,
-            "cvr_number": "49801513",
-            "name": "F\u00e5revejleefterskole",
             "branch_code": "",
             "street": "",
             "street_number": "",
@@ -5686,21 +5536,6 @@
     },
     {
         "model": "core.serviceprovider",
-        "pk": 3786,
-        "fields": {
-            "active": true,
-            "cvr_number": "59477218",
-            "name": "HINDHOLM EFTERSKOLE",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
         "pk": 3787,
         "fields": {
             "active": true,
@@ -5751,21 +5586,6 @@
             "active": true,
             "cvr_number": "59607316",
             "name": "Birkebo",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3791,
-        "fields": {
-            "active": true,
-            "cvr_number": "62924810",
-            "name": "Dantaxi 4x48",
             "branch_code": "",
             "street": "",
             "street_number": "",
@@ -5871,21 +5691,6 @@
             "active": true,
             "cvr_number": "64942212",
             "name": "B\u00f8rne- og familiehus Arild",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3799,
-        "fields": {
-            "active": true,
-            "cvr_number": "64942212",
-            "name": "Ertodeto",
             "branch_code": "",
             "street": "",
             "street_number": "",
@@ -6006,21 +5811,6 @@
             "active": true,
             "cvr_number": "66408310",
             "name": "Stenhus Kostskole",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3808,
-        "fields": {
-            "active": true,
-            "cvr_number": "67794710",
-            "name": "Ubby Fri- og Idr\u00e6tsefterskole",
             "branch_code": "",
             "street": "",
             "street_number": "",
@@ -6516,336 +6306,6 @@
             "active": true,
             "cvr_number": "97124390",
             "name": "Familieh\u00f8jskolen Sk\u00e6rg\u00e5rden",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3842,
-        "fields": {
-            "active": true,
-            "cvr_number": "",
-            "name": "Bof\u00e6llesskabet Alstrup all\u00e9",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3843,
-        "fields": {
-            "active": true,
-            "cvr_number": "",
-            "name": "M\u00f8llebakken",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3844,
-        "fields": {
-            "active": true,
-            "cvr_number": "",
-            "name": "Forsorgshjemmet Solvang",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3845,
-        "fields": {
-            "active": true,
-            "cvr_number": "",
-            "name": "Skovv\u00e6nget",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3846,
-        "fields": {
-            "active": true,
-            "cvr_number": "",
-            "name": "\"Fiktiv\" Strandager",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3847,
-        "fields": {
-            "active": true,
-            "cvr_number": "",
-            "name": "Munkeg\u00e5rd",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3848,
-        "fields": {
-            "active": true,
-            "cvr_number": "",
-            "name": "Basen",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3849,
-        "fields": {
-            "active": true,
-            "cvr_number": "",
-            "name": "Farmen/behandl.",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3850,
-        "fields": {
-            "active": true,
-            "cvr_number": "",
-            "name": "Fjordskolen/socialdel",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3851,
-        "fields": {
-            "active": true,
-            "cvr_number": "",
-            "name": "Fortuna ApS",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3852,
-        "fields": {
-            "active": true,
-            "cvr_number": "",
-            "name": "Henrik Skovsen/kontaktper.",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3853,
-        "fields": {
-            "active": true,
-            "cvr_number": "",
-            "name": "JSR-socialkonsulenter",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3854,
-        "fields": {
-            "active": true,
-            "cvr_number": "",
-            "name": "KAB husleje,Egebjergvang 169",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3855,
-        "fields": {
-            "active": true,
-            "cvr_number": "",
-            "name": "MK Consult",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "95.40"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3856,
-        "fields": {
-            "active": true,
-            "cvr_number": "",
-            "name": "Pausen",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "95.40"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3857,
-        "fields": {
-            "active": true,
-            "cvr_number": "",
-            "name": "Pia Offenberg/st\u00f8tte",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3858,
-        "fields": {
-            "active": true,
-            "cvr_number": "",
-            "name": "Pilely G\u00e5rd",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3859,
-        "fields": {
-            "active": true,
-            "cvr_number": "",
-            "name": "Skolen Gimle-Behandling p\u00e5 intern skole",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3860,
-        "fields": {
-            "active": true,
-            "cvr_number": "",
-            "name": "Socialkonsulenterne, Fam.behandl.",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3861,
-        "fields": {
-            "active": true,
-            "cvr_number": "",
-            "name": "Steiner B\u00f8rnehave",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3862,
-        "fields": {
-            "active": true,
-            "cvr_number": "",
-            "name": "Taxa 4x35",
-            "branch_code": "",
-            "street": "",
-            "street_number": "",
-            "zip_code": "",
-            "status": "",
-            "vat_factor": "100.00"
-        }
-    },
-    {
-        "model": "core.serviceprovider",
-        "pk": 3863,
-        "fields": {
-            "active": true,
-            "cvr_number": "",
-            "name": "Villa Magnoila",
             "branch_code": "",
             "street": "",
             "street_number": "",
