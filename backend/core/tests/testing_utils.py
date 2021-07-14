@@ -240,9 +240,9 @@ def create_section(paragraph="ABL-105-2", allowed_for_steps=None, **kwargs):
     return section
 
 
-def create_service_provider(cvr_number, name):
+def create_service_provider(cvr_number, name, **kwargs):
     service_provider = ServiceProvider.objects.create(
-        cvr_number=cvr_number, name=name
+        cvr_number=cvr_number, name=name, **kwargs
     )
 
     return service_provider

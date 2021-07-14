@@ -140,6 +140,7 @@ def get_cpr_data_mock(cpr):
 
 
 def get_company_info_mock():
+    """Use test data in place of the CVR Virk functions for develop/test."""
     result = [
         {
             "cvr_no": "25052943",

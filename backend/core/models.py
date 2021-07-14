@@ -1882,9 +1882,11 @@ class Activity(AuditModelMixin, models.Model):
             else:
                 company_info = get_company_info_from_cvr(
                     self.service_provider.cvr_number
-                )
+                )[0]
                 data = ServiceProvider.virk_to_service_provider(company_info)
-                self.service_provider.update(**data)
+                ServiceProvider.objects.filter(
+                    pk=self.service_provider.pk
+                ).update(**data)
 
         if self.status == STATUS_GRANTED:
             # Re-granting - nothing more to do.

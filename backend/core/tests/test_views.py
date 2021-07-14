@@ -15,6 +15,7 @@ from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 from django.db.models import F
+from django.test import override_settings
 
 from parameterized import parameterized
 from freezegun import freeze_time
@@ -1665,6 +1666,56 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.status_code, 200)
 
 
+class TestServiceProviderViewSet(AuthenticatedTestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_fetch_serviceproviders_from_virk_action_correct_search_term(self):
+        url = reverse("serviceprovider-fetch-serviceproviders-from-virk")
+
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(url, data={"search_term": "MAGENTA"})
+
+        test_service_providers = [
+            {
+                "cvr_number": "25052943",
+                "name": "MAGENTA ApS",
+                "street": "Pilestræde",
+                "street_number": "43",
+                "zip_code": "1112",
+                "branch_code": "620200",
+                "status": "NORMAL",
+            }
+        ]
+        self.assertEqual(response.json(), test_service_providers)
+
+    def test_fetch_serviceproviders_from_virk_action_no_search_term(self):
+        url = reverse("serviceprovider-fetch-serviceproviders-from-virk")
+        self.client.login(username=self.username, password=self.password)
+
+        response = self.client.get(url)
+
+        self.assertEqual(
+            response.json(),
+            {"errors": ["Der kræves en search_term parameter"]},
+        )
+
+    @mock.patch(
+        "core.views.get_company_info_from_search_term", lambda search_term: []
+    )
+    def test_fetch_serviceproviders_from_virk_action_no_company_info(self):
+        url = reverse("serviceprovider-fetch-serviceproviders-from-virk")
+        self.client.login(username=self.username, password=self.password)
+
+        response = self.client.get(url, data={"search_term": "MAGENTA"})
+
+        self.assertEqual(
+            response.json(),
+            {"errors": ["Fejl i søgning eller forbindelse til Virk"]},
+        )
+
+
 class TestSectionViewSet(AuthenticatedTestCase, BasicTestMixin):
     @classmethod
     def setUpTestData(cls):
@@ -1799,14 +1850,25 @@ class TestAuditModelViewSetMixin(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.json()["user_modified"], self.username)
 
 
-class TestIsEditingPastPaymentsAllowed(AuthenticatedTestCase, BasicTestMixin):
+class TestFrontendSettingsView(AuthenticatedTestCase, BasicTestMixin):
     @classmethod
     def setUpTestData(cls):
         cls.basic_setup()
 
-    def test_is_past_editing_enabled(self):
+    @override_settings(ALLOW_EDIT_OF_PAST_PAYMENTS=True)
+    @override_settings(ALLOW_SERVICE_PROVIDERS_FROM_VIRK=True)
+    def test_frontend_settings(self):
         self.client.login(username=self.username, password=self.password)
-        url = reverse("editing_past_payments_allowed")
+        url = reverse("frontend-settings")
         response = self.client.get(url)
+
+        expected_response = {
+            "ALLOW_EDIT_OF_PAST_PAYMENTS": True,
+            "ALLOW_SERVICE_PROVIDERS_FROM_VIRK": True,
+        }
+
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), settings.ALLOW_EDIT_OF_PAST_PAYMENTS)
+        self.assertEqual(
+            response.json(),
+            expected_response,
+        )
