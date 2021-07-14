@@ -13,7 +13,6 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
-from django.conf import settings
 from django.db.models import F
 from django.test import override_settings
 
