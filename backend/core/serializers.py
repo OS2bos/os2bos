@@ -511,7 +511,7 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
         return data
 
 
-class ServiceProviderSerializer(serializers.ModelSerializer):
+class ServiceProviderSerializer(WritableNestedModelSerializer):
     """Serializer for the ServiceProvider model."""
 
     class Meta:
