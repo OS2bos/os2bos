@@ -45,6 +45,21 @@ export default {
     methods: {
         save: function() {
             this.$store.dispatch('saveEditedPayment', this.compdata.id)
+        },
+        update: function(new_data) {
+            this.$emit('update', new_data)
+        },
+        submitHandler: function() {
+            let data = {
+                    paid_amount: this.compdata.paid_amount,
+                    paid_date: this.compdata.paid_date,
+                    note: this.compdata.note ? this.compdata.note : '',
+                    paid: true
+            }
+            this.patchPayments(data)
+        },
+        patchPayments: function(data) {
+            axios.patch(`/payments/${ this.rowid }/`, data)
             .then(res => {
                 this.buttonTxt = 'Gemt'
                 this.$emit('update', res)

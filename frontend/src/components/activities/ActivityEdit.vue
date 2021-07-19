@@ -83,12 +83,14 @@
                     </template>
 
                     <template v-if="payment_plan.recipient_type === 'COMPANY'" >
-                        <cvr-select />
-                        <!--
-                        <payment-service-provider v-if="is_editable" />
-                        <payment-receiver-name :editable="is_editable" />
-                        <payment-receiver-id :editable="is_editable"  />
-                        -->
+                        <template v-if="config.ALLOW_SERVICE_PROVIDERS_FROM_VIRK">
+                            <cvr-select v-if="is_editable" />
+                        </template>
+                        <template v-else>
+                            <payment-service-provider v-if="is_editable" />
+                            <payment-receiver-name :editable="is_editable" />
+                            <payment-receiver-id :editable="is_editable" />
+                        </template>
                     </template>
 
                     <template v-if="payment_plan.recipient_type === 'PERSON'" >
@@ -155,6 +157,9 @@ export default {
             } else {
                 return false
             }
+        },
+        config: function() {
+            return this.$store.getters.getConfig
         }
     },
     methods: {
