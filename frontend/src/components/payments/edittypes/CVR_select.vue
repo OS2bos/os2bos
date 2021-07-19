@@ -17,7 +17,7 @@
                     </li>
                 </ul>
             </fieldset>
-            <p>
+            <p style="margin: 0;">
                 <a href="https://datacvr.virk.dk/data/?language=da" target="_blank">Søg på Virk.dk</a>
             </p>
         </div>
@@ -60,6 +60,7 @@ export default {
     },
     watch: {
         service_provider: function(new_sp, old_sp) {
+            console.log('this is a good time to set the service provider')
             if (new_sp !== old_sp) {
                 this.$store.commit('setPaymentPlanProperty', { 
                     prop: 'recipient_name',
@@ -72,6 +73,10 @@ export default {
                 this.$store.commit('setPaymentPlanProperty', { 
                     prop: 'payment_method',
                     val: 'INVOICE'
+                })
+                this.$store.commit('setActivityProperty', {
+                    prop: 'service_provider',
+                    val: new_sp
                 })
             }
         }
@@ -117,9 +122,10 @@ export default {
         padding: 0;
         background-color: white;
         position: absolute;
-        top: 4rem;
+        top: 3.75rem;
         left: 0;
         z-index: 10;
+        min-width: 11rem;
     }
 
     .cvr-search-result li p {
@@ -133,6 +139,8 @@ export default {
         display: block;
         padding: .5rem 1rem;
         text-align: left;
+        border-top: solid 1px var(--grey2);
+        border-radius: 0;
     }
 
     .cvr-search-result dt {
