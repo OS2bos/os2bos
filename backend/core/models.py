@@ -1534,7 +1534,7 @@ class ServiceProvider(Classification):
     )
 
     vat_factor = models.DecimalField(
-        default=100.0,
+        default=Decimal("100.0"),
         max_digits=5,
         decimal_places=2,
         validators=[MinValueValidator(Decimal("0.01"))],

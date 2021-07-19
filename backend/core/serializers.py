@@ -511,7 +511,7 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
         return data
 
 
-class ServiceProviderSerializer(WritableNestedModelSerializer):
+class ServiceProviderSerializer(serializers.ModelSerializer):
     """Serializer for the ServiceProvider model."""
 
     class Meta:
@@ -617,6 +617,11 @@ class ActivitySerializer(WritableNestedModelSerializer):
         data_copy["payment_plan"] = PaymentSchedule(
             **data_copy.pop("payment_plan")
         )
+        if "service_provider" in data_copy and data_copy["service_provider"]:
+            data_copy["service_provider"] = ServiceProvider(
+                **data_copy.pop("service_provider")
+            )
+
         instance = Activity(**data_copy)
 
         is_valid_start_date = instance.is_valid_activity_start_date()
