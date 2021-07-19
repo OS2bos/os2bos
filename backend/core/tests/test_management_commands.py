@@ -943,7 +943,7 @@ class TestUpdateActivityServiceProviders(TestCase, BasicTestMixin):
     @mock.patch(
         "core.management.commands."
         "update_activity_service_providers.get_company_info_from_cvr",
-        lambda data: []
+        lambda data: [],
     )
     def test_activity_service_providers_no_company_info(self, logger_mock):
         section = create_section()
