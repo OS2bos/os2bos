@@ -453,7 +453,7 @@ class UserViewSet(ReadOnlyViewset):
     serializer_class = UserSerializer
 
 
-class ServiceProviderViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
+class ServiceProviderViewSet(ClassificationViewSetMixin, viewsets.ModelViewSet):
     """Expose service providers in REST API."""
 
     queryset = ServiceProvider.objects.all()
