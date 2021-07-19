@@ -1,6 +1,6 @@
 <template>
     <div class="cvr-search">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div v-if="editable" style="display: flex; justify-content: space-between; align-items: center;">
             <fieldset>
                 <label for="cvr-search-input">Find CVR/P-nr.</label>
                 <input type="search" v-model="search_input" @input="search" id="cvr-search-input">
@@ -51,6 +51,10 @@ export default {
     mixins: [
         Timeout
     ],
+    props: [
+        'editable',
+        'dataServiceProvider'
+    ],
     data: function() {
         return {
             search_results: [],
@@ -59,33 +63,16 @@ export default {
         }
     },
     watch: {
-        service_provider: function(new_sp, old_sp) {
-            console.log('this is a good time to set the service provider')
-            if (new_sp !== old_sp) {
-                this.$store.commit('setPaymentPlanProperty', { 
-                    prop: 'recipient_name',
-                    val: new_sp.name
-                })
-                this.$store.commit('setPaymentPlanProperty', { 
-                    prop: 'recipient_id',
-                    val: new_sp.cvr_number
-                })
-                this.$store.commit('setPaymentPlanProperty', { 
-                    prop: 'payment_method',
-                    val: 'INVOICE'
-                })
-                this.$store.commit('setActivityProperty', {
-                    prop: 'service_provider',
-                    val: new_sp
-                })
+        dataServiceProvider: function(new_sp, old_sp) {
+            if (new_sp && new_sp !== old_sp) {
+                this.service_provider = this.new_sp
             }
-        }
+        },
     },
     methods: {
         fetchData: function(query) {
             axios.get(`service_providers/fetch_serviceproviders_from_virk/?search_term=${ query }`)
             .then(res => {
-                console.log(res.data)
                 this.search_results = res.data
             })
         },
@@ -100,6 +87,22 @@ export default {
             this.search_input = ''
             this.search_results = []
             this.service_provider = item
+            this.$store.commit('setPaymentPlanProperty', {
+                prop: 'recipient_name',
+                val: item.name
+            })
+            this.$store.commit('setPaymentPlanProperty', {
+                prop: 'recipient_id',
+                val: item.cvr_number
+            })
+            this.$store.commit('setPaymentPlanProperty', {
+                prop: 'payment_method',
+                val: 'INVOICE'
+            })
+            this.$store.commit('setActivityProperty', {
+                prop: 'service_provider',
+                val: item
+            })
         }
     },
     created: function() {

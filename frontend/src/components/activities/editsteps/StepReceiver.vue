@@ -19,12 +19,14 @@
             </template>
 
             <template v-if="payment_plan.recipient_type === 'COMPANY'">
-                <cvr-select />
-                <!--
-                <payment-service-provider />
-                <payment-receiver-id :editable="true" />
-                <payment-receiver-name :editable="true" />
-                -->
+                <template v-if="config.ALLOW_SERVICE_PROVIDERS_FROM_VIRK">
+                    <cvr-select :editable="true" />
+                </template>
+                <template v-else>
+                    <payment-service-provider />
+                    <payment-receiver-id :editable="true" />
+                    <payment-receiver-name :editable="true" />
+                </template>
             </template>
 
             <template v-if="payment_plan.recipient_type === 'PERSON'">
@@ -68,6 +70,9 @@ export default {
         payment_plan: function() {
             return this.$store.getters.getPaymentPlan
         },
+        config: function() {
+            return this.$store.getters.getConfig
+        },
         recipient_id: {
             get: function() {
                 return this.$store.getters.getPaymentPlanProperty('recipient_id')
@@ -90,7 +95,6 @@ export default {
                 })
             }
         }
-
     }
 }
 </script>

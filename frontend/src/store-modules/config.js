@@ -31,7 +31,7 @@ const actions = {
 
         axios.get('/frontend-settings/')
         .then(conf => {
-            commit('setConfig', conf)
+            commit('setConfig', conf.data)
         })
         .catch(err => {
             notify('Konfiguration kunne ikke indlæses', 'error')

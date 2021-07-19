@@ -84,7 +84,7 @@
 
                     <template v-if="payment_plan.recipient_type === 'COMPANY'" >
                         <template v-if="config.ALLOW_SERVICE_PROVIDERS_FROM_VIRK">
-                            <cvr-select v-if="is_editable" />
+                            <cvr-select :editable="is_editable" :data-service-provider="payment_plan.service_provider" />
                         </template>
                         <template v-else>
                             <payment-service-provider v-if="is_editable" />
