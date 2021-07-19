@@ -15,6 +15,7 @@ from core.models import (
     SUPPL_ACTIVITY,
     STATUS_GRANTED,
     STATUS_EXPECTED,
+    INVOICE,
     PaymentSchedule,
     ActivityDetails,
     ServiceProvider,
@@ -895,4 +896,86 @@ class TestRecalculateOnChangedRate(TestCase, BasicTestMixin):
 
         logger_mock.exception.assert_called_with(
             "An exception occurred while recalculating payments"
+        )
+
+
+class TestUpdateActivityServiceProviders(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_activity_service_providers_updated(self):
+        section = create_section()
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case, section=section)
+        today = timezone.now().date()
+
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=today,
+            end_date=today + timedelta(days=7),
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.COMPANY,
+            payment_method=INVOICE,
+            recipient_id="25052943",
+            activity=activity,
+        )
+
+        self.assertIsNone(activity.service_provider)
+
+        call_command("update_activity_service_providers")
+
+        activity.refresh_from_db()
+
+        service_provider = ServiceProvider.objects.get(cvr_number="25052943")
+
+        self.assertEqual(activity.service_provider, service_provider)
+
+    @mock.patch(
+        "core.management.commands.update_activity_service_providers.logger"
+    )
+    @mock.patch(
+        "core.management.commands."
+        "update_activity_service_providers.get_company_info_from_cvr",
+        lambda data: []
+    )
+    def test_activity_service_providers_no_company_info(self, logger_mock):
+        section = create_section()
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case, section=section)
+        today = timezone.now().date()
+
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=today,
+            end_date=today + timedelta(days=7),
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.COMPANY,
+            payment_method=INVOICE,
+            recipient_id="25052943",
+            activity=activity,
+        )
+
+        self.assertIsNone(activity.service_provider)
+
+        call_command("update_activity_service_providers")
+
+        activity.refresh_from_db()
+
+        self.assertIsNone(activity.service_provider)
+
+        logger_mock.info.assert_called_with(
+            "Could not retrieve company info for CVR number: 25052943"
         )
