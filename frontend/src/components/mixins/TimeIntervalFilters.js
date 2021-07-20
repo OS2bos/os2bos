@@ -170,7 +170,7 @@
         }
         if (this.interval !== interval && this.interval || interval) {
             this.$store.commit('setPaymentSearchFilter', {'interval': interval})
-            this.$store.dispatch('fetchPayments')
+            this.$store.dispatch('fetchSearchPayments')
         } else if (!this.interval) {
             this.$store.commit('setPaymentSearchFilter', {'interval': 'date-range'})
             this.range_dates = true

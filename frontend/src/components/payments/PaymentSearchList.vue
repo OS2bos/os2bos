@@ -38,7 +38,6 @@
 </template>
 
 <script>
-    import axios from '../http/Http.js'
     import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
     import { activityId2name, displayPayMethod } from '../filters/Labels.js'
@@ -131,13 +130,10 @@
         },
         computed: {
             payments_meta: function() {
-                return this.$store.getters.getPaymentsMeta
+                return this.$store.getters.getSearchPaymentsMeta
             },
             payments: function() {
-                return this.$store.getters.getPayments
-            },
-            query: function() {
-                return this.$route.query
+                return this.$store.getters.getSearchPayments
             },
             disableBtn: function () {
                 if (this.payments_meta.next === null) {
@@ -168,7 +164,7 @@
                 return `${ id.case__name }<br>${ id.case__cpr_number }`
             },
             loadResults: function() {
-                this.$store.dispatch('fetchMorePayments')
+                this.$store.dispatch('fetchMoreSearchPayments')
             },
             displayPlannedPayDate: function(payment) {
                 return json2jsDate(payment.date)
@@ -192,11 +188,8 @@
                     return '-'
                 }
             },
-            updateSelectedPayments: function(selections) {
-                this.selected_payments = selections
-            },
             updatePayment: function(new_data) {
-                // TDOD make this better
+                // TODO make this better
                 this.$store.commit('setPaymentInPayments', new_data.data)
             }
         }
