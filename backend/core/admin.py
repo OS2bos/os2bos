@@ -585,17 +585,22 @@ class ActivityInline(admin.TabularInline):
     show_change_link = True
 
     def has_add_permission(self, request, obj=None):
+        """Override has_add_permission for InlineModelAdmin."""
         return False
 
     def has_change_permission(self, request, obj=None):
+        """Override has_change_permission for InlineModelAdmin."""
         return False
 
     def has_delete_permission(self, request, obj=None):
+        """Override has_delete_permission for InlineModelAdmin."""
         return False
+
 
 @admin.register(ServiceProvider)
 class ServiceProviderAdmin(ClassificationAdmin):
     """Add search fields."""
+
     inlines = [ActivityInline]
 
     search_fields = ("name", "cvr_number")
