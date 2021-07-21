@@ -6,15 +6,13 @@
    - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
 
 <template>
-    <button v-if="visible" type="button" @click="submitHandler()" :disabled="disabled">
-        {{buttonTxt}}
+    <button v-if="visible" type="button" @click="save" :disabled="disabled">
+        {{ buttonTxt }}
     </button>
 </template>
 
 <script>
-import axios from '../../http/Http.js'
 import PermissionLogic from '../../mixins/PermissionLogic.js'
-import notify from '../../notifications/Notify.js'
 
 export default {
     mixins: [ 
@@ -30,8 +28,11 @@ export default {
         }
     },
     computed: {
+        editpayment: function() {
+            return this.$store.getters.getEditedPayment(this.compdata.id)
+        },
         disabled: function() {
-            if (this.compdata.paid_amount && this.compdata.paid_date) {
+            if (this.editpayment && this.editpayment.paid_amount && this.editpayment.paid_date) {
                 return false
             } else {
                 return true
@@ -42,36 +43,13 @@ export default {
         }
     },
     methods: {
-        update: function(new_data) {
-            this.$emit('update', new_data)
-        },
-        submitHandler: function() {
-            let data = {
-                    paid_amount: this.compdata.paid_amount,
-                    paid_date: this.compdata.paid_date,
-                    note: this.compdata.note ? this.compdata.note : '',
-                    paid: true
-            }
-            if (this.user.profile === 'workflow_engine' && this.compdata.paid) {
-                // TODO: Clear up what this is actually for
-                axios.get(`/editing_past_payments_allowed/`)
-                .then(() => {
-                    this.patchPayments(data)
-                })
-                .catch(err => this.$store.dispatch('parseErrorOutput', err))
-            } else {
-                this.patchPayments(data)
-            }
-        },
-        patchPayments: function(data) {
-            axios.patch(`/payments/${ this.rowid }/`, data)
+        save: function() {
+            this.$store.dispatch('saveEditedPayment', this.compdata.id)
             .then(res => {
                 this.buttonTxt = 'Gemt'
-                notify('Betaling registreret', 'success')
-                this.update(res)
+                this.$emit('update', res)
             })
-            .catch(err => this.$store.dispatch('parseErrorOutput', err))
-        }  
+        }
     }
 }
 </script>

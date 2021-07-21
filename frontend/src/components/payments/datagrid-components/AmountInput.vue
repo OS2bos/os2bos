@@ -35,10 +35,11 @@ export default {
                 }
             }, 
             set: function(new_val) {
-                this.$store.commit('setPaymentEditRowData', {
-                    idx: this.rowid,
-                    prop: 'paid_amount',
-                    val: new_val
+                this.$store.commit('setEditedPayment', {
+                    key: this.compdata.id,
+                    prop: {
+                        paid_amount: new_val
+                    }
                 })
             }   
         },

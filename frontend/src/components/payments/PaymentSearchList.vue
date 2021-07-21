@@ -189,8 +189,7 @@
                 }
             },
             updatePayment: function(new_data) {
-                // TODO make this better
-                this.$store.commit('setPaymentInPayments', new_data.data)
+                this.$store.commit('setPaymentInPayments', new_data)
             }
         }
     }

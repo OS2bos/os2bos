@@ -9,10 +9,10 @@
     
     <div v-if="visible">
         <popover :condition="display_warning">{{ display_warning }}</popover>
-        <input :ref="`dateInput${ rowid }`" v-if="visible" type="date" v-model="date">
+        <input type="date" v-model="paydate" @focus="focusHandler" @blur="blurHandler">
     </div>
     <span v-else class="date-paid">
-        {{ displayPayDate(date) }}
+        {{ display_pay_date }}
     </span>
 </template>
 
@@ -35,42 +35,42 @@ export default {
     },
     data: function() {
         return {
+            paydate: this.compdata.paid_date,
             display_warning: null
         }
     },
     computed: {
-        date: {
-            get: function() {
-                return this.compdata.paid_date
-            },
-            set: function(new_val) {
-                this.$store.commit('setPaymentEditRowData', {
-                    idx: this.rowid,
-                    prop: 'paid_date',
-                    val: new_val
-                })
-            }
-        },
         visible: function() {
             return this.is_payable(this.compdata)
+        },
+        display_pay_date: function() {
+            return json2jsDate(this.paydate)
+        }
+    },
+    watch: {
+        compdata: function(new_val, old_val) {
+            if (new_val !== old_val) {
+                this.paydate = new_val.paid_date
+            }
+        },
+        paydate: function(new_val) {
+            this.$store.commit('setEditedPayment', {
+                key: this.compdata.id,
+                prop: {
+                    paid_date: new_val
+                }
+            })
         }
     },
     methods: {
-        displayPayDate: function(payment) {
-            return json2jsDate(payment)
-        },
         focusHandler: function() {
-            this.display_warning = this.warn_edit_payment(this.compdata)
+            this.display_warning = this.warn_edit_payment({
+                payment_method: this.compdata.payment_method,
+                date: this.compdata.date
+            })
         },
         blurHandler: function() {
             this.display_warning = null
-        }
-    },
-    mounted: function() {
-        let input_id = `dateInput${ this.rowid }`
-        if (this.$refs[input_id]) {
-            this.$refs[input_id].addEventListener('focus', this.focusHandler)
-            this.$refs[input_id].addEventListener('blur', this.blurHandler)
         }
     }
 }

@@ -6,7 +6,10 @@
    - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
 
 <template>
-    <div v-if="is_visible" class="act-list-row" :class="{'act-list-sub-row': isGroup}">
+    <div v-if="is_visible" 
+        class="act-list-row" 
+        :class="{'act-list-sub-row': isGroup}"
+        :data-row-id="activity.id">
         <div style="padding: .5rem 0 0 1.25rem;">
             <template v-if="activity.status !== 'GRANTED'">
                 <input 
