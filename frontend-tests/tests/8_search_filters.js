@@ -66,11 +66,6 @@ test.page(baseurl)
 
     await createCase(t, testdata.case1)
     await createAppropriation(t, testdata.appr1)
-    await createActivity(t, testdata.act1)
-
-    const row = Selector('.data-row-id').nth(0)
-    //activity_id = await row.attributes['data-row-id']
-    console.log(await row.attributes, activity_id)
 })
 
 test.page(baseurl)
