@@ -110,6 +110,8 @@
                         <dd>Fiktiv</dd>
                     </template>
                 </dl>
+
+                <payment-details :payment="p" />
                 
             </div>
 
@@ -167,6 +169,7 @@
     import { activityId2name } from '../../filters/Labels.js'
     import ModalDialog from '../../dialog/Dialog.vue'
     import Popover from '../../warnings/Popover.vue'
+    import PaymentDetails from '../PaymentDetails.vue'
 
     export default {
         mixins: [
@@ -175,7 +178,8 @@
         components: {
             Error,
             ModalDialog,
-            Popover
+            Popover,
+            PaymentDetails
         },
         props: [
             'payment'
@@ -286,7 +290,7 @@
 <style>
 
     .payment-edit .modal-container {
-        width: 40rem;
+        max-width: 90vw;
     }
 
     .payment-edit-header {
@@ -302,7 +306,7 @@
     .payment-edit-body {
         margin-top: 1rem;
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
         gap: 2rem;
     }
 
