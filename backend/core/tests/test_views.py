@@ -24,6 +24,7 @@ from core.models import (
     PaymentSchedule,
     Payment,
     EffortStep,
+    ServiceProvider,
     MAIN_ACTIVITY,
     SUPPL_ACTIVITY,
     STATUS_GRANTED,
@@ -43,6 +44,7 @@ from core.tests.testing_utils import (
     create_payment_schedule,
     create_user,
     create_activity_details,
+    create_service_provider,
 )
 
 User = get_user_model()
@@ -1663,6 +1665,246 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
         # Check it's still there.
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
+
+    def test_post_with_existing_service_provider(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case)
+        details = create_activity_details(
+            name="test aktivitetsdetalje", activity_id="111112"
+        )
+        service_provider = create_service_provider(
+            cvr_number="25052943", name="MAGENTA ApS"
+        )
+        url = reverse("activity-list")
+        self.client.login(username=self.username, password=self.password)
+
+        # Create an activity with a service provider that already exists
+        # which should update it and assign it to the activity.
+        data = {
+            "status": "DRAFT",
+            "appropriation": str(appropriation.pk),
+            "activity_type": "SUPPL_ACTIVITY",
+            "details": str(details.pk),
+            "service_provider": {
+                "cvr_number": "25052943",
+                "name": "MAGENTA ApS #2",
+                "street": "Pilestræde",
+                "street_number": "43",
+                "zip_code": "1112",
+                "branch_code": "620200",
+                "status": "NORMAL",
+            },
+            "payment_plan": {
+                "payment_type": "ONE_TIME_PAYMENT",
+                "payment_cost_type": "FIXED",
+                "payment_amount": "200",
+                "payment_date": "2021-07-20",
+                "recipient_type": "COMPANY",
+                "recipient_id": "25052943",
+                "recipient_name": "MAGENTA ApS",
+                "payment_method": "INVOICE",
+                "payment_rate": None,
+                "price_per_unit": None,
+                "payment_units": None,
+                "payment_day_of_month": None,
+            },
+        }
+        response = self.client.post(
+            url, data=data, content_type="application/json"
+        )
+
+        service_provider.refresh_from_db()
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(
+            response.json()["service_provider"]["id"], service_provider.id
+        )
+        self.assertEqual(service_provider.name, "MAGENTA ApS #2")
+
+    def test_post_with_new_service_provider(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case)
+        details = create_activity_details(
+            name="test aktivitetsdetalje", activity_id="111112"
+        )
+        url = reverse("activity-list")
+        self.client.login(username=self.username, password=self.password)
+
+        # Assert we start with no service providers.
+        self.assertEqual(ServiceProvider.objects.count(), 0)
+        # Create an activity with a service provider
+        # that does not already exist.
+        data = {
+            "status": "DRAFT",
+            "appropriation": str(appropriation.pk),
+            "activity_type": "SUPPL_ACTIVITY",
+            "details": str(details.pk),
+            "service_provider": {
+                "cvr_number": "25052943",
+                "name": "MAGENTA ApS",
+                "street": "Pilestræde",
+                "street_number": "43",
+                "zip_code": "1112",
+                "branch_code": "620200",
+                "status": "NORMAL",
+            },
+            "payment_plan": {
+                "payment_type": "ONE_TIME_PAYMENT",
+                "payment_cost_type": "FIXED",
+                "payment_amount": "200",
+                "payment_date": "2021-07-20",
+                "recipient_type": "COMPANY",
+                "recipient_id": "25052943",
+                "recipient_name": "MAGENTA ApS",
+                "payment_method": "INVOICE",
+                "payment_rate": None,
+                "price_per_unit": None,
+                "payment_units": None,
+                "payment_day_of_month": None,
+            },
+        }
+        response = self.client.post(
+            url, data=data, content_type="application/json"
+        )
+
+        service_provider = ServiceProvider.objects.first()
+        self.assertEqual(ServiceProvider.objects.count(), 1)
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(
+            response.json()["service_provider"]["id"], service_provider.id
+        )
+
+    def test_put_with_existing_service_provider(self):
+        now = timezone.now().date()
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case)
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=now - timedelta(days=6),
+            end_date=now + timedelta(days=6),
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_DRAFT,
+        )
+        payment_plan = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=activity,
+        )
+        service_provider = create_service_provider(
+            cvr_number="25052943", name="MAGENTA ApS"
+        )
+        url = reverse("activity-detail", kwargs={"pk": activity.pk})
+        self.client.login(username=self.username, password=self.password)
+
+        # Create an activity with a service provider that already exists
+        # which should update it and assign it to the activity.
+        data = {
+            "id": activity.id,
+            "status": "DRAFT",
+            "appropriation": str(appropriation.pk),
+            "activity_type": "MAIN_ACTIVITY",
+            "details": str(activity.details.pk),
+            "service_provider": {
+                "cvr_number": "25052943",
+                "name": "MAGENTA ApS #2",
+                "street": "Pilestræde",
+                "street_number": "43",
+                "zip_code": "1112",
+                "branch_code": "620200",
+                "status": "NORMAL",
+            },
+            "payment_plan": {
+                "id": payment_plan.pk,
+                "payment_type": "ONE_TIME_PAYMENT",
+                "payment_cost_type": "FIXED",
+                "payment_amount": "200",
+                "payment_date": "2021-07-20",
+                "recipient_type": "COMPANY",
+                "recipient_id": "25052943",
+                "recipient_name": "MAGENTA ApS",
+                "payment_method": "INVOICE",
+                "payment_rate": None,
+                "price_per_unit": None,
+                "payment_units": None,
+                "payment_day_of_month": None,
+            },
+        }
+        response = self.client.put(
+            url, data=data, content_type="application/json"
+        )
+
+        service_provider.refresh_from_db()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.json()["service_provider"]["id"], service_provider.id
+        )
+        self.assertEqual(service_provider.name, "MAGENTA ApS #2")
+
+    def test_put_with_new_service_provider(self):
+        now = timezone.now().date()
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case)
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=now - timedelta(days=6),
+            end_date=now + timedelta(days=6),
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_DRAFT,
+        )
+        payment_plan = create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=activity,
+        )
+        url = reverse("activity-detail", kwargs={"pk": activity.pk})
+        self.client.login(username=self.username, password=self.password)
+
+        # Assert we start with no service providers.
+        self.assertEqual(ServiceProvider.objects.count(), 0)
+        # Create an activity with a service provider
+        # that does not already exist.
+        data = {
+            "id": activity.id,
+            "status": "DRAFT",
+            "appropriation": str(appropriation.pk),
+            "activity_type": "MAIN_ACTIVITY",
+            "details": str(activity.details.pk),
+            "service_provider": {
+                "cvr_number": "25052943",
+                "name": "MAGENTA ApS",
+                "street": "Pilestræde",
+                "street_number": "43",
+                "zip_code": "1112",
+                "branch_code": "620200",
+                "status": "NORMAL",
+            },
+            "payment_plan": {
+                "id": payment_plan.pk,
+                "payment_type": "ONE_TIME_PAYMENT",
+                "payment_cost_type": "FIXED",
+                "payment_amount": "200",
+                "payment_date": "2021-07-20",
+                "recipient_type": "COMPANY",
+                "recipient_id": "25052943",
+                "recipient_name": "MAGENTA ApS",
+                "payment_method": "INVOICE",
+                "payment_rate": None,
+                "price_per_unit": None,
+                "payment_units": None,
+                "payment_day_of_month": None,
+            },
+        }
+        response = self.client.put(
+            url, data=data, content_type="application/json"
+        )
+
+        service_provider = ServiceProvider.objects.first()
+        self.assertEqual(ServiceProvider.objects.count(), 1)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.json()["service_provider"]["id"], service_provider.id
+        )
 
 
 class TestServiceProviderViewSet(AuthenticatedTestCase, BasicTestMixin):

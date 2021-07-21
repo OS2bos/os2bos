@@ -603,7 +603,7 @@ ALLOW_EDIT_OF_PAST_PAYMENTS = settings.getboolean(
 # Determine whether we allow fetching service providers from Virk
 # or only use internal service providers.
 ALLOW_SERVICE_PROVIDERS_FROM_VIRK = settings.getboolean(
-    "ALLOW_SERVICE_PROVIDERS_FROM_VIRK", fallback=False
+    "ALLOW_SERVICE_PROVIDERS_FROM_VIRK", fallback=True
 )
 
 # Watchman settings.

@@ -16,7 +16,7 @@ ipython==7.22.0
 WeasyPrint==52.4
 python-dateutil==2.8.1
 django-constance[database]==2.8.0
-drf-writable-nested==0.6.2
+drf-writable-nested==0.6.3
 git+https://github.com/magenta-aps/django-saml2-auth@2.2.6#egg=django-saml2-auth
 pysaml2==6.4.1
 django-mailer==2.1
