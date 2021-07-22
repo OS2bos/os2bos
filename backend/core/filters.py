@@ -199,6 +199,24 @@ class PaymentFilter(filters.FilterSet):
         choices=generic_time_choices,
     )
 
+    date_week = filters.ChoiceFilter(
+        method="filter_date_week",
+        label=gettext("Betalingsdato eller Dato for uge"),
+        choices=generic_time_choices,
+    )
+
+    date_month = filters.ChoiceFilter(
+        method="filter_date_month",
+        label=gettext("Betalingsdato eller Dato for måned"),
+        choices=generic_time_choices,
+    )
+
+    date_year = filters.ChoiceFilter(
+        method="filter_date_year",
+        label=gettext("Betalingsdato eller Dato for år"),
+        choices=generic_time_choices,
+    )
+
     def filter_paid_date_or_date_gte(self, queryset, name, value):
         """Filter on value <= "best known payment date"."""
         return queryset.paid_date_or_date_gte(value)
@@ -255,6 +273,49 @@ class PaymentFilter(filters.FilterSet):
         return queryset.paid_date_or_date_lte(max_date).paid_date_or_date_gte(
             min_date
         )
+
+    def filter_date_week(self, queryset, name, value):
+        """Filter date on previous, current, next week."""
+        now = timezone.now().date()
+        if value == "previous":
+            reference_date = now - relativedelta(weeks=1)
+        elif value == "current":
+            reference_date = now
+        elif value == "next":  # pragma: no branch
+            reference_date = now + relativedelta(weeks=1)
+
+        min_date = reference_date - relativedelta(weekday=MO(-1))
+        max_date = reference_date + relativedelta(weekday=SU(1))
+        return queryset.filter(date__lte=max_date, date__gte=min_date)
+
+    def filter_date_month(self, queryset, name, value):
+        """Filter date on previous, current, next month."""
+        now = timezone.now().date()
+        if value == "previous":
+            reference_date = now - relativedelta(months=1)
+        elif value == "current":
+            reference_date = now
+        elif value == "next":  # pragma: no branch
+            reference_date = now + relativedelta(months=1)
+
+        min_date = reference_date + relativedelta(day=1)
+        # day=31 will always return the last day of the month.
+        max_date = reference_date + relativedelta(day=31)
+        return queryset.filter(date__lte=max_date, date__gte=min_date)
+
+    def filter_date_year(self, queryset, name, value):
+        """Filter date on previous, current, next year."""
+        now = timezone.now().date()
+        if value == "previous":
+            year = (now - relativedelta(years=1)).year
+        elif value == "current":
+            year = now.year
+        elif value == "next":  # pragma: no branch
+            year = (now + relativedelta(years=1)).year
+
+        min_date = date(day=1, month=1, year=year)
+        max_date = date(day=31, month=12, year=year)
+        return queryset.filter(date__lte=max_date, date__gte=min_date)
 
     class Meta:
         model = Payment

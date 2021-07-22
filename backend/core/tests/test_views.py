@@ -13,6 +13,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
+from django.db.models import F
 
 from parameterized import parameterized
 from freezegun import freeze_time
@@ -1129,9 +1130,10 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
             start_date=date(year=2019, month=12, day=1),
             end_date=date(year=2020, month=2, day=1),
         )
-        create_payment_schedule(
+        payment_schedule = create_payment_schedule(
             activity=activity, payment_frequency=PaymentSchedule.DAILY
         )
+        payment_schedule.payments.update(paid_date=F("date"))
 
         url = reverse("payment-list")
         self.client.login(username=self.username, password=self.password)
@@ -1139,6 +1141,74 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
         response = self.client.get(
             url, data={"paid_date_or_date_week": argument}
         )
+        payments = response.json()["results"]
+
+        self.assertEqual(response.status_code, 200)
+        self.assertCountEqual(
+            dates, [payment["paid_date"] for payment in payments]
+        )
+
+    @parameterized.expand(
+        [
+            (
+                "previous",
+                [
+                    "2019-12-23",
+                    "2019-12-24",
+                    "2019-12-25",
+                    "2019-12-26",
+                    "2019-12-27",
+                    "2019-12-28",
+                    "2019-12-29",
+                ],
+            ),
+            (
+                "current",
+                [
+                    "2019-12-30",
+                    "2019-12-31",
+                    "2020-01-01",
+                    "2020-01-02",
+                    "2020-01-03",
+                    "2020-01-04",
+                    "2020-01-05",
+                ],
+            ),
+            (
+                "next",
+                [
+                    "2020-01-06",
+                    "2020-01-07",
+                    "2020-01-08",
+                    "2020-01-09",
+                    "2020-01-10",
+                    "2020-01-11",
+                    "2020-01-12",
+                ],
+            ),
+        ]
+    )
+    @freeze_time("2020-01-01")
+    def test_filter_date_week(self, argument, dates):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case)
+
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=date(year=2019, month=12, day=1),
+            end_date=date(year=2020, month=2, day=1),
+        )
+        create_payment_schedule(
+            activity=activity, payment_frequency=PaymentSchedule.DAILY
+        )
+
+        url = reverse("payment-list")
+        self.client.login(username=self.username, password=self.password)
+
+        response = self.client.get(url, data={"date_week": argument})
         payments = response.json()["results"]
 
         self.assertEqual(response.status_code, 200)
@@ -1192,6 +1262,51 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
         [
             (
                 "previous",
+                ["2020-01-01"],
+            ),
+            (
+                "current",
+                ["2020-02-01"],
+            ),
+            (
+                "next",
+                ["2020-03-01"],
+            ),
+        ]
+    )
+    @freeze_time("2020-02-01")
+    def test_filter_date_month(self, argument, dates):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case)
+
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=date(year=2020, month=1, day=1),
+            end_date=date(year=2020, month=4, day=1),
+        )
+        payment_schedule = create_payment_schedule(
+            activity=activity, payment_frequency=PaymentSchedule.MONTHLY
+        )
+        payment_schedule.payments.update(paid_date=F("date"))
+
+        url = reverse("payment-list")
+        self.client.login(username=self.username, password=self.password)
+
+        response = self.client.get(url, data={"date_month": argument})
+        payments = response.json()["results"]
+
+        self.assertEqual(response.status_code, 200)
+        self.assertCountEqual(
+            dates, [payment["paid_date"] for payment in payments]
+        )
+
+    @parameterized.expand(
+        [
+            (
+                "previous",
                 [
                     "2019-10-01",
                     "2019-11-01",
@@ -1234,9 +1349,10 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
             start_date=date(year=2019, month=10, day=1),
             end_date=date(year=2021, month=2, day=1),
         )
-        create_payment_schedule(
+        payment_schedule = create_payment_schedule(
             activity=activity, payment_frequency=PaymentSchedule.MONTHLY
         )
+        payment_schedule.payments.update(paid_date=F("date"))
 
         url = reverse("payment-list")
         self.client.login(username=self.username, password=self.password)
@@ -1244,6 +1360,67 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
         response = self.client.get(
             url, data={"paid_date_or_date_year": argument}
         )
+        payments = response.json()["results"]
+
+        self.assertEqual(response.status_code, 200)
+        self.assertCountEqual(
+            dates, [payment["paid_date"] for payment in payments]
+        )
+
+    @parameterized.expand(
+        [
+            (
+                "previous",
+                [
+                    "2019-10-01",
+                    "2019-11-01",
+                    "2019-12-01",
+                ],
+            ),
+            (
+                "current",
+                [
+                    "2020-01-01",
+                    "2020-02-01",
+                    "2020-03-01",
+                    "2020-04-01",
+                    "2020-05-01",
+                    "2020-06-01",
+                    "2020-07-01",
+                    "2020-08-01",
+                    "2020-09-01",
+                    "2020-10-01",
+                    "2020-11-01",
+                    "2020-12-01",
+                ],
+            ),
+            (
+                "next",
+                ["2021-01-01", "2021-02-01"],
+            ),
+        ]
+    )
+    @freeze_time("2020-01-01")
+    def test_filter_date_year(self, argument, dates):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case)
+
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=date(year=2019, month=10, day=1),
+            end_date=date(year=2021, month=2, day=1),
+        )
+        create_payment_schedule(
+            activity=activity, payment_frequency=PaymentSchedule.MONTHLY
+        )
+
+        url = reverse("payment-list")
+        self.client.login(username=self.username, password=self.password)
+
+        response = self.client.get(url, data={"date_year": argument})
         payments = response.json()["results"]
 
         self.assertEqual(response.status_code, 200)

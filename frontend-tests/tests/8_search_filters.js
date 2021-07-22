@@ -3,8 +3,11 @@
 import { Selector, ClientFunction } from 'testcafe'
 import { login } from '../utils/logins.js'
 import baseurl from '../utils/url.js'
-import { randNum, useSelectBox } from '../utils/utils.js'
-import { createCase, createAppropriation } from '../utils/crud.js'
+import { randNum, useSelectBox, makeDateStr } from '../utils/utils.js'
+import { createCase, createAppropriation, createActivity } from '../utils/crud.js'
+
+const today = new Date(),
+      str1mth = makeDateStr(today, 1)
 
 const getLocation = ClientFunction(() => document.location.href),
       testdata = {
@@ -31,7 +34,17 @@ const getLocation = ClientFunction(() => document.location.href),
             appr3: {
                 name: `${ randNum() }.${ randNum() }.${ randNum() }-${ randNum() }-bevilling`,
                 section: 'SEL-76-2 Efterværn / kontaktperson 18-22 årige'
+            },
+            act1: {
+                note: 'Note for testing payment search filters',
+                payment_type: 'ONE_TIME_PAYMENT',
+                payment_date: str1mth,
+                payment_cost_type: 'FIXED',
+                payment_amount: '0.75',
+                recipient_type: 'COMPANY',
+                recipient_name: 'Base Camp'
             }
+            
         }
 
 fixture('Check search filter defaults')
@@ -44,7 +57,6 @@ fixture('Check search filter defaults')
     https://redmine.magenta-aps.dk/issues/40312
     https://redmine.magenta-aps.dk/issues/40341
     https://redmine.magenta-aps.dk/issues/43490
-    
 */
 
 test.page(baseurl)
@@ -54,7 +66,6 @@ test.page(baseurl)
 
     await createCase(t, testdata.case1)
     await createAppropriation(t, testdata.appr1)
-        
 })
 
 test.page(baseurl)

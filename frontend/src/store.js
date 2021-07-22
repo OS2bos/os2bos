@@ -14,6 +14,8 @@ import nav from './store-modules/nav.js'
 import lists from './store-modules/lists.js'
 import activity from './store-modules/activity.js'
 import payment from './store-modules/payment.js'
+import paymentsearch from './store-modules/paymentsearch.js'
+import paymentedit from './store-modules/paymentedit.js'
 import appropriation from './store-modules/appropriation.js'
 import cases from './store-modules/case.js'
 import error from './store-modules/error.js'
@@ -29,6 +31,8 @@ export default new Vuex.Store({
         lists,
         activity,
         payment,
+        paymentsearch,
+        paymentedit,
         appropriation,
         cases,
         error,

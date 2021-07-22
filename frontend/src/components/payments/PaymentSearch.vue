@@ -47,12 +47,12 @@
                 <template v-if="range_dates === true">
                     <div class="filter-field">
                         <label for="field-from">Fra dato</label>
-                        <input id="field-from" type="date" v-model="paid_date_or_date__gte">
+                        <input id="field-from" type="date" v-model="date__gte">
                     </div>
 
                     <div class="filter-field">
                         <label for="field-to">Til dato</label>
-                        <input id="field-to" type="date" v-model="paid_date_or_date__lte">
+                        <input id="field-to" type="date" v-model="date__lte">
                     </div>
                 </template>
             </fieldset>
@@ -122,7 +122,7 @@
         },
         computed: {
             payments: function() {
-                return this.$store.getters.getPayments
+                return this.$store.getters.getSearchPayments
             },
             // Search filters:
             payment_schedule__payment_id: {
@@ -168,34 +168,34 @@
                 // `interval` only has a getter. values are updated via changeTimeInterval method in listpicker component
                 return this.$store.getters.getPaymentSearchFilter('interval')
             },
-            paid_date_or_date_week: function() {
-                // `paid_date_or_date_week` only has a getter. values are updated via changeTimeInterval method in listpicker component
-                return this.$store.getters.getPaymentSearchFilter('paid_date_or_date_week')
+            date_week: function() {
+                // `date_week` only has a getter. values are updated via changeTimeInterval method in listpicker component
+                return this.$store.getters.getPaymentSearchFilter('date_week')
             },
-            paid_date_or_date_month: function() {
-                // `paid_date_or_date_month` only has a getter. values are updated via changeTimeInterval method in listpicker component
-                return this.$store.getters.getPaymentSearchFilter('paid_date_or_date_month')
+            date_month: function() {
+                // `date_month` only has a getter. values are updated via changeTimeInterval method in listpicker component
+                return this.$store.getters.getPaymentSearchFilter('date_month')
             },
-            paid_date_or_date_year: function() {
-                // `paid_date_or_date_year` only has a getter. values are updated via changeTimeInterval method in listpicker component
-                return this.$store.getters.getPaymentSearchFilter('paid_date_or_date_year')
+            date_year: function() {
+                // `date_year` only has a getter. values are updated via changeTimeInterval method in listpicker component
+                return this.$store.getters.getPaymentSearchFilter('date_year')
             },
-            paid_date_or_date__gte: {
+            date__gte: {
                 get: function() {
-                    return this.$store.getters.getPaymentSearchFilter('paid_date_or_date__gte')
+                    return this.$store.getters.getPaymentSearchFilter('date__gte')
                 }, 
                 set: function(new_val) {
-                    this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date__gte': new_val})
-                    this.$store.dispatch('fetchPayments')
+                    this.$store.commit('setPaymentSearchFilter', {'date__gte': new_val})
+                    this.$store.dispatch('fetchSearchPayments')
                 }
             },
-            paid_date_or_date__lte: {
+            date__lte: {
                 get: function() {
-                    return this.$store.getters.getPaymentSearchFilter('paid_date_or_date__lte')
+                    return this.$store.getters.getPaymentSearchFilter('date__lte')
                 }, 
                 set: function(new_val) {
-                    this.$store.commit('setPaymentSearchFilter', {'paid_date_or_date__lte': new_val})
-                    this.$store.dispatch('fetchPayments')
+                    this.$store.commit('setPaymentSearchFilter', {'date__lte': new_val})
+                    this.$store.dispatch('fetchSearchPayments')
                 }
             },
             paid: {
@@ -206,21 +206,30 @@
                     // When user changes value in radio button, commit the new value
                     // We don't use the `commitValue` helper method here.
                     this.$store.commit('setPaymentSearchFilter', {'paid': new_val})
-                    this.$store.dispatch('fetchPayments')
+                    this.$store.dispatch('fetchSearchPayments')
                 }
             }
         },
         methods: {
+            queryCheck: function(qry) {
+                // Note for below:
+                // Why not just `if (!qry)`? Because there might be other unrelated query string items that may break setPaymentSearchFilter.
+                if (qry.payment_schedule__payment_id || qry.recipient_id || qry.payment_method || qry.interval || qry.date_week || qry.date_month || qry.date_year || qry.date__gte || qry.date__lte || qry.hasOwnProperty('paid') && qry.paid !== null) {
+                    this.$store.commit('setPaymentSearchFilter', qry)
+                    this.$store.dispatch('fetchSearchPayments')
+                }
+            },
             resetValues: function() {
                 // Reset store values for payment search filters
                 this.$store.dispatch('resetPaymentSearchFilters', 'date-range')
+                this.$store.commit('setSearchPayments', null)
             },
             commitValue: function(key, val) {
                 // Handy helper method that both updates the value in store, 
                 // dispatches a request to get an updated list of cases,
                 // and is debounced to avoid API request spam.
                 this.$store.commit('setPaymentSearchFilter', {[key]: val})
-                this.$store.dispatch('fetchPayments')
+                this.$store.dispatch('fetchSearchPayments')
             },
             changePaymentMethod: function(methodId) {
                 // Checks if anything has actually been changed and updates store values
@@ -232,7 +241,7 @@
                     } else {
                         this.$store.commit('setPaymentSearchFilter', {'payment_method': ''})
                     }
-                    this.$store.dispatch('fetchPayments')
+                    this.$store.dispatch('fetchSearchPayments')
                 }
             }
         },
@@ -243,11 +252,7 @@
             this.commitValue = this.debounce(this.commitValue, 400)
 
             // On first load, check URL params and set store filters accordingly
-            const qry = this.$route.query
-            if (qry.payment_schedule__payment_id || qry.recipient_id || qry.payment_method || qry.interval || qry.paid_date_or_date_week || qry.paid_date_or_date_month || qry.paid_date_or_date_year || qry.paid_date_or_date__gte || qry.paid_date_or_date__lte || qry.hasOwnProperty('paid') && qry.paid !== null) {
-                this.$store.commit('setPaymentSearchFilter', qry)
-                this.$store.dispatch('fetchPayments')
-            }
+            this.queryCheck(this.$route.query)
 
             // Show 'range_dates' if interval is 'date-range'
             if (this.interval === 'date-range') {

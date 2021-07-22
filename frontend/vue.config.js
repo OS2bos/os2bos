@@ -42,10 +42,10 @@ module.exports = {
                 hints: 'warning'
             }
             // Only log errors and warnings, please
-            config.stats = 'errors-warnings'
+            config.stats = 'minimal'
         } else {
             // Only log errors and warnings, please
-            config.stats = 'errors-warnings'
+            config.stats = 'minimal'
         }
     },
     chainWebpack: config => {
