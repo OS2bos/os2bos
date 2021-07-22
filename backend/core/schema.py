@@ -64,6 +64,7 @@ class MonthlyPaymentPlanDictionary(graphene.ObjectType):
 
 
 class ActivityNode(OptimizedDjangoObjectType):
+    id = graphene.ID(source="pk", required=True)
     total_cost = graphene.Float()
     total_cost_this_year = graphene.Float()
     total_cost_full_year = graphene.Float()
