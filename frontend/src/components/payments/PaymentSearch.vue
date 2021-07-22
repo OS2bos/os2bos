@@ -213,7 +213,7 @@
         methods: {
             queryCheck: function(qry) {
                 // Note for below:
-                // Why not just `if (!qry)`? Becuase there might be other unrelated query string items that may break setPaymentSearchFilter.
+                // Why not just `if (!qry)`? Because there might be other unrelated query string items that may break setPaymentSearchFilter.
                 if (qry.payment_schedule__payment_id || qry.recipient_id || qry.payment_method || qry.interval || qry.date_week || qry.date_month || qry.date_year || qry.date__gte || qry.date__lte || qry.hasOwnProperty('paid') && qry.paid !== null) {
                     this.$store.commit('setPaymentSearchFilter', qry)
                     this.$store.dispatch('fetchSearchPayments')
