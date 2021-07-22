@@ -1,32 +1,33 @@
 <template>
-    <div class="payment-details-wrapper">
-        <h3>Betalingshistorik</h3>
-        <ol class="payment-details-list">
-            <li v-for="ph in payment_history" :key="ph.paid_date">
-                <h4>{{ displayTime(ph.history_date) }}</h4>
-                <dl>
-                    <dt>Betalt</dt>
-                    <dd>{{ displayBoolean(ph.paid) }}</dd>
-                    <template v-if="ph.paid">
-                        <dt>Beløb</dt>
-                        <dd>{{ ph.paid_amount }}</dd>
-                        <dt>Betalingsdato</dt>
-                        <dd>{{ ph.paid_date }}</dd>
-                    </template>
-                    <dt>Ændret (tid/bruger)</dt>
-                    <dd>
-                        {{ displayTime(ph.history_date) }}<br>
-                        {{ displayUserName(ph.history_user) }}
-                    </dd>
-                </dl>
-            </li>
-        </ol>
-    </div>
+    
+    <table class="payment-details-list">
+        <thead>
+            <tr>
+                <th>Ændret/oprettet</th>
+                <th style="text-align: center; width: 4.5rem;">Betalt</th>
+                <th style="text-align: right;">Beløb</th>
+                <th style="width: 8rem;">Betalingsdato</th>
+                <th>Bruger</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="ph in payment_history" :key="ph.paid_date">
+                <td>{{ displayTime(ph.history_date) }}</td>
+                <td style="text-align: center; width: 4.5rem;">{{ displayBoolean(ph.paid) }}</td>
+                <td style="text-align: right;">{{ displayCost(ph.paid_amount) }}</td>
+                <td style="width: 8rem;">{{ displayDate(ph.paid_date) }}</td>
+                <td>{{ displayUserName(ph.history_user) }}</td>
+            </tr>
+        </tbody>
+    </table>
+
 </template>
 
 <script>
 import axios from '../http/Http.js'
 import { userId2name } from '../filters/Labels.js'
+import { json2jsDate } from '../filters/Date.js'
+import { cost2da } from '../filters/Numbers.js'
 
 export default {
     props: [
@@ -51,7 +52,6 @@ export default {
         fetchPaymentHistory: function(payment_id) {
             axios.get(`/payments/${ payment_id }/history/`)
             .then(res => {
-                console.log(res)
                 this.payment_history = res.data
             })
             .catch(err => {
@@ -66,6 +66,12 @@ export default {
         },
         displayTime: function(time) {
             return new Date(time).toLocaleString()
+        },
+        displayDate: function(date) {
+            return json2jsDate(date)
+        },
+        displayCost: function(cost) {
+            return cost2da(cost)
         }
     },
     created: function() {

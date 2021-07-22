@@ -6,6 +6,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 import { epoch2DateStr } from '../filters/Date.js'
+import axios from '../http/Http.js'
 
 export default {
     computed: {
@@ -17,6 +18,9 @@ export default {
         },
         payments: function() {
             return this.$store.getters.getPayments
+        },
+        payment_schedule: function() {
+            return this.$store.getters.getPaymentPlan
         },
         user_can_edit: function() {
             // Returns true if user of a given profile type has editing permissions
@@ -36,28 +40,28 @@ export default {
             }
         },
         can_create_payment: function() {
-            if (this.$store.state.payment.payment_plan.payment_type === 'INDIVIDUAL_PAYMENT' && this.current_act.status !== 'GRANTED' && this.user.profile !== 'readonly') {
+            if (this.payment_schedule && this.payment_schedule.payment_type === 'INDIVIDUAL_PAYMENT' && this.current_act.status !== 'GRANTED' && this.user.profile !== 'readonly') {
                 return true
             } else {
                 return false
             }
         },
         can_edit_payment: function() {
-            if (this.$store.state.payment.payment_plan.payment_type === 'INDIVIDUAL_PAYMENT' && this.current_act.status !== 'GRANTED' && this.user.profile !== 'readonly') {
-                return true
-            } else {
-                return false
-            }
-        },
-        can_delete_payment: function() {
-            if (this.$store.state.payment.payment_plan.payment_type === 'INDIVIDUAL_PAYMENT' && this.current_act.status !== 'GRANTED' && this.user.profile !== 'readonly') {
+            if (this.payment_schedule && this.payment_schedule.payment_type === 'INDIVIDUAL_PAYMENT' && this.current_act.status !== 'GRANTED' && this.user.profile !== 'readonly') {
                 return true
             } else {
                 return false
             }
         },
         can_edit_price: function() {
-            if (this.$store.state.payment.payment_plan.payment_type === 'RUNNING_PAYMENT' && this.user.profile !== 'readonly') {
+            if (this.payment_schedule && this.payment_schedule.payment_type === 'RUNNING_PAYMENT' && this.user.profile !== 'readonly') {
+                return true
+            } else {
+                return false
+            }
+        },
+        can_delete_payment: function() {
+            if (this.payment_schedule && this.payment_schedule.payment_type === 'INDIVIDUAL_PAYMENT' && this.current_act.status !== 'GRANTED' && this.user.profile !== 'readonly') {
                 return true
             } else {
                 return false

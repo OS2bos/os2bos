@@ -8,7 +8,7 @@
 <template>
     <input v-if="visible" class="field-note" type="text" v-model="note">
     <span v-else>
-        {{ note }}
+        {{ displayNote(note) }}
     </span>
 </template>
 
@@ -40,6 +40,11 @@ export default {
         },
         visible: function() {
             return this.is_payable(this.compdata)
+        }
+    },
+    methods: {
+        displayNote: function(note) {
+            return note ? note : '-'
         }
     }
 }

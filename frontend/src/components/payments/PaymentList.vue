@@ -40,11 +40,10 @@
                 Viser {{payments_by_year.length}} betalinger for {{ current_year }}
             </p>
 
-            <p slot="datagrid-footer" v-if="payments_by_year.length < 1">
-                Der er ingen betalinger for det valgte år
-            </p>
-
-        </data-grid>        
+        </data-grid>
+        <p v-else>
+            Der er ingen betalinger for det valgte år
+        </p>
         
         <table v-if="payments_by_year.length > 0" class="payments-sum">
             <thead>
@@ -106,16 +105,16 @@
                 pay_create_diag_open: false,
                 columns: [
                     {
-                        key: 'paid',
-                        title: 'Betalt',
-                        display_func: this.displayPaidIcon,
-                        class: 'center'
-                    },
-                    {
                         key: 'id',
                         title: 'Betaling',
                         display_component: EditButton,
                         class: 'datagrid-action nowrap'
+                    },
+                    {
+                        key: 'paid',
+                        title: 'Betalt',
+                        display_func: this.displayPaidIcon,
+                        class: 'center'
                     },
                     {
                         key: 'payment_schedule__payment_id',
