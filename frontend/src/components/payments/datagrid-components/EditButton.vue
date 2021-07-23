@@ -8,8 +8,9 @@
 <template>
 
     <div>
-        <button type="button" @click="openEditDiag" class="datagrid-action-btn" style="min-width: 9rem;">
-            Betaling #{{ compdata.id }}
+        <button type="button" @click="openEditDiag" class="datagrid-action-expandable" style="min-width: 9rem;">
+            <i class="material-icons">launch</i>
+            # {{ compdata.id }}
         </button>
         <payment-edit-diag v-if="edit_diag_open" :payment="compdata" @closedialog="closeEditDiag" />
     </div>
@@ -41,3 +42,36 @@ export default {
     }
 }
 </script>
+
+<style>
+
+.datagrid-action-expandable {
+    border: none; 
+    background-color: transparent;
+    box-shadow: none;
+    color: var(--grey10);
+    width: 100%;
+    height: 100%;
+    padding: .5rem 1rem;
+    margin: -.5rem 0;
+    text-align: left;
+    display: inline-block;   
+    position: relative;
+    left: 0;
+}
+
+.datagrid-action-expandable:hover,
+.datagrid-action-expandable:focus {
+    background-color: transparent;
+    left: .5rem;
+    transition: left .3s;
+    color: var(--grey10);
+    box-shadow: none;
+}
+
+.datagrid-action-expandable .material-icons {
+    margin-right: .5rem;
+    color: var(--primary);
+}
+
+</style>

@@ -51,6 +51,8 @@
         flex-flow: row nowrap;
         align-items: center;
         justify-content: space-between;
+        border-bottom: solid 1px #ddd;
+        padding-bottom: .5rem;
     }
 
     .dialog .modal-container {
@@ -59,10 +61,12 @@
 
     .dialog .modal-footer {
         text-align: right;
+        border-top: solid 1px #ddd;
     }
 
     .dialog .modal-footer button {
         margin-left: .5rem;
+        margin-top: 1rem;
     }
 
     .dialog .modal-close {

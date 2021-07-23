@@ -46,6 +46,7 @@
     import AmountInput from './datagrid-components/AmountInput.vue'
     import DateInput from './datagrid-components/DateInput.vue'
     import NoteInput from './datagrid-components/NoteInput.vue'
+    import EditButton from './datagrid-components/EditButton.vue'
 
     export default {
         
@@ -54,12 +55,19 @@
             SaveButton,
             AmountInput,
             DateInput,
-            NoteInput
+            NoteInput,
+            EditButton
         },
         data: function() {
             return {
                 selected_payments: [],
                 columns: [
+                    {
+                        key: 'id',
+                        title: 'Betaling',
+                        display_component: EditButton,
+                        class: 'datagrid-action nowrap'
+                    },
                     {
                         key: 'paid',
                         title: 'Betalt',
@@ -67,8 +75,8 @@
                         class: 'center'
                     },
                     {
-                        key: 'id',
-                        title: 'Betaling',
+                        key: 'activity_id',
+                        title: 'Aktivitet',
                         display_func: this.displayId,
                         class: 'datagrid-action nowrap'
                     },
@@ -143,7 +151,7 @@
         },
         methods: {
             displayId: function(payment) {
-                let str = `<a href="/#/activity/${ payment.activity__id }">#${ payment.id } - ${ activityId2name(payment.activity__details__id) }</a>`
+                let str = `<a href="/#/activity/${ payment.activity__id }">${ activityId2name(payment.activity__details__id) }</a>`
                 if (payment.payment_schedule__fictive) {
                     str += `<span class="fictive">(Fiktiv)</span>`
                 }

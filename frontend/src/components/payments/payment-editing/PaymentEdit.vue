@@ -96,21 +96,31 @@
 
                 </div>
                 
-                <dl class="info">
-                    <dt>Ydelse</dt>
-                    <dd v-if="p.activity__id">{{ activityId2name(p.activity__details__id) }}</dd>
-                    <dt>Betalingsnøgle</dt>
-                    <dd>{{ p.payment_schedule__payment_id }}</dd>
-                    <dt>Kontostreng</dt>
-                    <dd>{{ p.account_string ? p.account_string : 'ukendt' }}</dd>
-                    <dt>Kontoalias</dt>
-                    <dd>{{ p.account_alias ? p.account_alias : 'ukendt' }}</dd>
-                    <template v-if="p.payment_schedule__fictive">
-                        <dt>Betaling</dt>
-                        <dd>Fiktiv</dd>
-                    </template>
-                </dl>
-                
+                <div class="info">
+                    <dl>
+                        <dt>Ydelse</dt>
+                        <dd v-if="p.activity__id">{{ activityId2name(p.activity__details__id) }}</dd>
+                        <dt>Betalingsnøgle</dt>
+                        <dd>{{ p.payment_schedule__payment_id }}</dd>
+                    
+                        <dt>Kontostreng</dt>
+                        <dd>{{ p.account_string ? p.account_string : 'ukendt' }}</dd>
+                    
+                        <dt>Kontoalias</dt>
+                        <dd>{{ p.account_alias ? p.account_alias : 'ukendt' }}</dd>
+                    
+                        <template v-if="p.payment_schedule__fictive">
+                            <dt>Betaling</dt>
+                            <dd>Fiktiv</dd>
+                        </template>
+                    </dl>
+
+                    <hr style="margin: 1rem 0;">
+
+                    <payment-details :payment="p" />
+
+                </div>
+
             </div>
 
             <!-- Delete payment modal -->
@@ -162,11 +172,12 @@
     import Error from '../../forms/Error.vue'
     import PermissionLogic from '../../mixins/PermissionLogic.js'
     import notify from '../../notifications/Notify.js'
-    import { json2jsDate, epoch2DateStr } from '../../filters/Date.js'
+    import { json2jsDate } from '../../filters/Date.js'
     import { cost2da } from '../../filters/Numbers.js'
     import { activityId2name } from '../../filters/Labels.js'
     import ModalDialog from '../../dialog/Dialog.vue'
     import Popover from '../../warnings/Popover.vue'
+    import PaymentDetails from '../PaymentDetails.vue'
 
     export default {
         mixins: [
@@ -175,7 +186,8 @@
         components: {
             Error,
             ModalDialog,
-            Popover
+            Popover,
+            PaymentDetails
         },
         props: [
             'payment'
@@ -286,7 +298,8 @@
 <style>
 
     .payment-edit .modal-container {
-        width: 40rem;
+        width: auto;
+        max-width: 90vw;
     }
 
     .payment-edit-header {
@@ -302,8 +315,18 @@
     .payment-edit-body {
         margin-top: 1rem;
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr 2fr;
         gap: 2rem;
+    }
+
+    .payment-edit .info > dl {
+        display: flex;
+        flex-flow: column wrap;
+        height: 4rem;
+    }
+
+    .payment-edit .info > dl * {
+        margin-right: 1rem;
     }
 
 </style>

@@ -51,7 +51,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="d in filteredData" :key="d.id" :class="`datagrid-r-${ d.id}`">
+                <tr v-for="d in filteredData" :key="d.id" :class="`datagrid-r datagrid-r-${ d.id}`">
                     <td v-if="selectable" style="width: 4.5rem;">
                         <input type="checkbox"
                             :id="`datagrid-select-${ d.id }`"
