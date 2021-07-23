@@ -6,7 +6,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 import { epoch2DateStr } from '../filters/Date.js'
-import axios from '../http/Http.js'
 
 export default {
     computed: {
