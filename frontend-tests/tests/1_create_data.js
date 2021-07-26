@@ -51,7 +51,6 @@ const testdata = {
         payment_cost_type: 'FIXED',
         payment_amount: '3095.50',
         recipient_type: 'COMPANY',
-        recipient_name: 'Base Camp',
         details__name: 'Kvindekrisecentre'
     },
     act2: {
@@ -62,9 +61,8 @@ const testdata = {
         payment_frequency: 'MONTHLY',
         pay_day_of_month: '1',
         payment_cost_type: 'FIXED',
-        payment_amount: '595.95',
         recipient_type: 'COMPANY',
-        recipient_name: 'CEKTOS',
+        payment_amount: '595.95'
     },
     act3: {
         details__name: 'Tolk',
@@ -104,9 +102,7 @@ const testdata = {
         note: 'Denne ydelse vil blive slettet',
         payment_cost_type: 'FIXED',
         payment_amount: '999.95',
-        recipient_type: 'COMPANY',
-        recipient_id: '89372342',
-        recipient_name: 'Hjortholm Kostskole'
+        recipient_type: 'COMPANY'
     }
 }
 

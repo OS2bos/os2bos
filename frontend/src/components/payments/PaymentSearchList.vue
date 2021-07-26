@@ -21,18 +21,15 @@
                     Viser {{ payments.length }} af {{ payments_meta.count }} betalinger
                 </p>
 
-                <p slot="datagrid-footer" v-if="payments.length < 1">
-                    Kan ikke finde nogen betalinger, der matcher de valgte kriterier
-                </p>
-
             </data-grid>
 
-            <button v-if="payments.length > 1" :disabled="disableBtn" class="more" @click="loadResults">Vis flere</button>
+            <button v-if="payments_meta.next" class="more" @click="loadResults">Vis flere</button>
         </template>
 
         <p v-else>
-            Der er ingen betalinger, der matcher de valgte kriterier
+            Der er ingen betalinger, som matcher de valgte kriterier
         </p>
+
     </div>
 
 </template>
@@ -142,11 +139,6 @@
             },
             payments: function() {
                 return this.$store.getters.getSearchPayments
-            },
-            disableBtn: function () {
-                if (this.payments_meta.next === null) {
-                    return true
-                }
             }
         },
         methods: {
@@ -197,7 +189,13 @@
                 }
             },
             updatePayment: function(new_data) {
-                this.$store.commit('setPaymentInPayments', new_data)
+                const idx = this.payments.findIndex(p => {
+                    return p.id === new_data.id
+                })
+                this.payments[idx].paid = new_data.paid
+                this.payments[idx].paid_amount = new_data.paid_amount
+                this.payments[idx].paid_date = new_data.paid_date
+                this.payments[idx].note = new_data.note
             }
         }
     }

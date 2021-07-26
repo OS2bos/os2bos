@@ -116,15 +116,14 @@ async function activityFormInput(t, act_data) {
     }
     
     switch(act_data.recipient_type) {
-        // TODO:  
         case 'COMPANY':
             await t.click(Selector('label').withAttribute('for', 'pay-receiver-type-company'))
             if (act_data.recipient_id) {
-                await t.typeText('#pay-receiver-id', act_data.recipient_id, {replace: true})
-                await t.typeText('#pay-receiver-name', act_data.recipient_name, {replace: true})
+                await t.typeText('#cvr-search-input', act_data.recipient_id)
             } else {
-                await useSelectBox(t, '#field-select-company', act_data.recipient_name)
+                await t.typeText('#cvr-search-input', 'Magenta')
             }
+            await t.click(Selector('.cvr-search-result .cvr-select-btn').nth(0))
             break
         case 'PERSON':
             await t
