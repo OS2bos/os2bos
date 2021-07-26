@@ -31,10 +31,14 @@ class ApprovalLevel(OptimizedDjangoObjectType):
         fields = "__all__"
 
 
-class Appropriation(OptimizedDjangoObjectType):
+class AppropriationNode(DjangoObjectType):
+    pk = graphene.Int(source="pk")
+
     class Meta:
         model = AppropriationModel
+        interfaces = (Node,)
         fields = "__all__"
+        filter_fields = "__all__"
 
 
 class Payment(OptimizedDjangoObjectType):
@@ -63,8 +67,9 @@ class MonthlyPaymentPlanDictionary(graphene.ObjectType):
     amount = graphene.String()
 
 
-class ActivityNode(OptimizedDjangoObjectType):
-    id = graphene.ID(source="pk", required=True)
+class ActivityNode(DjangoObjectType):
+    pk = graphene.Int(source="pk")
+
     total_cost = graphene.Float()
     total_cost_this_year = graphene.Float()
     total_cost_full_year = graphene.Float()
@@ -76,14 +81,15 @@ class ActivityNode(OptimizedDjangoObjectType):
         model = ActivityModel
         interfaces = (Node,)
         fields = "__all__"
-        filter_fields = {
-            "status": ["exact"],
-        }
+        filter_fields = "__all__"
 
 
 class Query(graphene.ObjectType):
     activity = Node.Field(ActivityNode)
     activities = DjangoFilterConnectionField(ActivityNode)
+
+    appropriation = Node.Field(AppropriationNode)
+    appropriations = DjangoFilterConnectionField(AppropriationNode)
 
 
 schema = graphene.Schema(query=Query)

@@ -36,8 +36,6 @@ from watchman.views import status
 
 import django_saml2_auth
 
-from graphene_django.views import GraphQLView
-
 from rest_framework import routers
 from rest_framework.schemas import get_schema_view
 from rest_framework_simplejwt.views import (
@@ -105,7 +103,11 @@ urlpatterns = [
         "api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"
     ),
     path("api/", include(router.urls)),
-    path("api/graphql/", GraphQLView.as_view(graphiql=True)),
+    path(
+        "api/graphql/",
+        views.DRFAuthenticatedGraphQLView.as_view(graphiql=True),
+        name="graphql-api",
+    ),
     path(
         "api/openapi/",
         get_schema_view(

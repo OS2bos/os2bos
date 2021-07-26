@@ -19,6 +19,16 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import (
+    authentication_classes,
+    permission_classes,
+    api_view,
+)
+from rest_framework.request import Request
+
+from graphene_django.views import GraphQLView
 
 from core.models import (
     Case,
@@ -105,7 +115,6 @@ serviceplatformen_logger = logging.getLogger(
     "bevillingsplatform.serviceplatformen"
 )
 
-
 # Working models, read/write
 
 
@@ -124,6 +133,21 @@ class ReadOnlyViewset(viewsets.ReadOnlyModelViewSet):
     """Superclass for use model classes that are read only through REST."""
 
     permission_classes = (IsUserAllowed,)
+
+
+class DRFAuthenticatedGraphQLView(GraphQLView):
+    def parse_body(self, request):
+        if isinstance(request, Request):
+            return request.data
+        return super(DRFAuthenticatedGraphQLView, self).parse_body(request)
+
+    @classmethod
+    def as_view(cls, *args, **kwargs):
+        view = super(DRFAuthenticatedGraphQLView, cls).as_view(*args, **kwargs)
+        view = permission_classes((IsUserAllowed,))(view)
+        view = authentication_classes((CsrfExemptSessionAuthentication,))(view)
+        view = api_view(["GET", "POST"])(view)
+        return view
 
 
 class CaseViewSet(AuditModelViewSetMixin, AuditViewSet):
