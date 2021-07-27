@@ -54,7 +54,9 @@ class Payment(OptimizedDjangoObjectType):
 class PaymentSchedule(OptimizedDjangoObjectType):
     class Meta:
         model = PaymentScheduleModel
+        interfaces = (Node,)
         fields = "__all__"
+        filter_fields = "__all__"
 
 
 class ActivityDetails(OptimizedDjangoObjectType):
@@ -91,6 +93,9 @@ class Query(graphene.ObjectType):
 
     appropriation = Node.Field(Appropriation)
     appropriations = DjangoFilterConnectionField(Appropriation)
+
+    payment_schedule = Node.Field(PaymentSchedule)
+    payment_schedules = DjangoFilterConnectionField(PaymentSchedule)
 
 
 schema = graphene.Schema(query=Query)
