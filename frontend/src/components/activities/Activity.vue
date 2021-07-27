@@ -7,12 +7,12 @@
 
 <template>
 
-    <section v-if="act && act.id" class="activity">
+    <section v-if="act" class="activity">
         <header class="activity-header">
             <h1>
                 <i class="material-icons">style</i>
-                Udgift til <span v-html="actId2name(act.details)"></span>
-                <span v-if="act.payment_plan.fictive" class="dim">(Fiktiv)</span>
+                Udgift til <span v-html="act.details.name"></span>
+                <span v-if="act.paymentPlan.fictive" class="dim">(Fiktiv)</span>
             </h1>
             <template v-if="user_can_edit === true && !edit_mode">
                 <router-link v-if="can_adjust" class="btn act-edit-btn" style="margin-left: 1rem;" :to="`/activity/create?mode=expected`">+ Lav forventet justering</router-link>
@@ -44,7 +44,7 @@
 
         <activity-edit v-if="edit_mode" @save="reload" @cancel="reload" :class="`activity-${ act.status }`" />
         
-        <activity-summary v-else :class="`activity-${ act.status }`" />
+        <activity-summary v-else :class="`activity-${ act.status }`" :payment-schedule="act.paymentPlan" />
 
         <!-- Delete activity modal -->
         <div v-if="showModal">
@@ -81,7 +81,7 @@
             </form>
         </div>
         
-        <payment-schedule :p-id="payment_plan.payment_id" :edit_mode="edit_mode"/>
+        <payment-schedule :payment-id="act.paymentPlan.id" :edit_mode="edit_mode"/>
         
     </section>
 
@@ -122,7 +122,7 @@ export default {
             // Adjust only if parent activity was granted and has no other modifying activities
             if (this.appropriation && this.act.status === 'GRANTED') {
                 let modifier = this.appropriation.activities.filter(ac => {
-                    return ac.modifies === this.act.id
+                    return ac.modifies === this.act.pk
                 })
                 if (modifier.length < 1) {
                     return true
@@ -152,7 +152,7 @@ export default {
                     },
                     {
                         link: false,
-                        title: `Udgift til ${ activityId2name(this.act.details) }`
+                        title: `Udgift til ${ this.act.details.name }`
                     }
                 ])
             }
@@ -162,7 +162,8 @@ export default {
         reload: function() {
             this.edit_mode = false
             this.showModal = false
-            this.$store.dispatch('fetchActivity', this.$route.params.actId)
+            //this.$store.dispatch('fetchActivity', this.$route.params.actId)
+            this.fetchData(this.$route.params.actId)
         },
         actId2name: function(id) {
             return activityId2name(id)
@@ -180,6 +181,32 @@ export default {
                 notify('Ydelse slettet', 'success')
             })
             .catch(err => this.$store.dispatch('parseErrorOutput', err))
+        },
+        fetchData: function(activity_id) {
+            const base64id = btoa(`Activity:${activity_id}`)
+            console.log(base64id)
+            let data = {
+                query: `{
+                    activity(id: "${base64id}") {
+                        id,
+                        pk,
+                        details {
+                            name
+                        },
+                        paymentPlan {
+                            id,
+                            fictive,
+                            paymentType,
+                            paymentCostType
+                        }
+                    }
+                }`
+            }
+            axios.post('/graphql/', data)
+            .then(res => {
+                console.log('got act', res.data.data.activity)
+                this.$store.commit('setActivity', res.data.data.activity)
+            })
         }
     },
     created: function(){

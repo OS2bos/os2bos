@@ -12,7 +12,7 @@
         <div class="row" style="justify-items: space-between; flex-flow: row nowrap;">
             <header class="row payment-schedule-header">
                 <h2 class="payment-schedule-title">
-                    Betalinger <span style="opacity: .66;">betalingsnøgle {{ pId }}</span>
+                    Betalinger <span style="opacity: .66;">betalingsnøgle {{ paymentId }}</span>
                 </h2>
                 <button class="btn payment-create-btn" title="Ny betaling" @click="payCreateDiagOpen" v-if="can_create_payment && !edit_mode">
                     + Tilføj betaling
@@ -94,7 +94,7 @@
             PermissionLogic
         ],
         props: [
-            'pId',
+            'paymentId',
             'edit_mode'
         ],
         data: function() {
@@ -204,13 +204,13 @@
             }
         },
         watch: {
-            pId: function() {
+            paymentId: function() {
                 this.update()
             }
         },
         methods: {
             update: function() {
-                this.$store.dispatch('fetchPaymentPlan', this.pId)
+                this.$store.dispatch('fetchPaymentPlan', this.paymentId)
             },
             updatePayment: function(payload) {
                 if (payload.operation === 'save') {

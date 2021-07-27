@@ -212,6 +212,24 @@
                 })
                 .catch(err => this.$store.dispatch('parseErrorOutput', err))
             },
+            // Example for GrapQL application
+            fetchData: function(appropriation_id) {
+                const base64id = btoa(`Appropriation:${appropriation_id}`)
+                let data = {
+                    query: `{
+                        appropriation(id: "${base64id}") {
+                            id,
+                            pk,
+                            sbsysId,
+                            note
+                        }
+                    }`
+                }
+                axios.post('/graphql/', data)
+                .then(res => {
+                    this.appropriation = res.data.data.appropriation
+                })
+            }
         }
     }
     
