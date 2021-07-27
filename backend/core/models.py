@@ -1517,8 +1517,11 @@ class ServiceProvider(Classification):
     name = models.CharField(
         max_length=128, blank=False, verbose_name=_("navn")
     )
-    branch_code = models.CharField(
+    business_code = models.CharField(
         max_length=128, blank=True, verbose_name=_("branchekode")
+    )
+    business_code_text = models.CharField(
+        max_length=128, blank=True, verbose_name=_("branchetekst")
     )
     street = models.CharField(
         max_length=128, blank=True, verbose_name=_("vejnavn")
@@ -1528,6 +1531,9 @@ class ServiceProvider(Classification):
     )
     zip_code = models.CharField(
         max_length=128, blank=True, verbose_name=_("postnummer")
+    )
+    post_district = models.CharField(
+        max_length=128, blank=True, verbose_name=_("postdistrikt")
     )
     status = models.CharField(
         max_length=128, blank=True, verbose_name=_("status")
@@ -1547,10 +1553,12 @@ class ServiceProvider(Classification):
         converter_dict = {
             "cvr_no": "cvr_number",
             "navn": "name",
-            "branchekode": "branch_code",
+            "branchekode": "business_code",
+            "branchetekst": "business_code_text",
             "vejnavn": "street",
             "husnr": "street_number",
             "postnr": "zip_code",
+            "postdistrikt": "post_district",
             "status": "status",
         }
         converted_data = {

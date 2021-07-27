@@ -6,10 +6,12 @@
             "active": true,
             "cvr_number": "10104181",
             "name": "Magles\u00f8hus",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "95.40"
         }
@@ -21,10 +23,12 @@
             "active": true,
             "cvr_number": "10117115",
             "name": "Stilleb\u00e6kken",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -36,10 +40,12 @@
             "active": true,
             "cvr_number": "10174155",
             "name": "St\u00f8vring Omsorgshjem",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -51,10 +57,12 @@
             "active": true,
             "cvr_number": "10197171",
             "name": "L\u00d8VDAL NATURCENTER",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -66,10 +74,12 @@
             "active": true,
             "cvr_number": "10199107",
             "name": "Sm\u00e5skolen S\u00f8folkene",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -81,10 +91,12 @@
             "active": true,
             "cvr_number": "10261899",
             "name": "Husene p\u00e5 Frydensdalsvej",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -96,10 +108,12 @@
             "active": true,
             "cvr_number": "10303044",
             "name": "Sontex A/S",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -111,10 +125,12 @@
             "active": true,
             "cvr_number": "10508630",
             "name": "KRAGEREDEG\u00c5RD",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -126,10 +142,12 @@
             "active": true,
             "cvr_number": "10861284",
             "name": "V\u00e6dderbo",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "95.40"
         }
@@ -141,10 +159,12 @@
             "active": true,
             "cvr_number": "11106005",
             "name": "Fredericia Krisecenter",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -156,10 +176,12 @@
             "active": true,
             "cvr_number": "11565603",
             "name": "Egfond / Egholdt",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "95.40"
         }
@@ -171,10 +193,12 @@
             "active": true,
             "cvr_number": "11598757",
             "name": "Hotel Grantoften",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -186,10 +210,12 @@
             "active": true,
             "cvr_number": "11715311",
             "name": "Krisecentre",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -201,10 +227,12 @@
             "active": true,
             "cvr_number": "11846459",
             "name": "M\u00f8lleg\u00e5rdens Private Botilbud",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "95.40"
         }
@@ -216,10 +244,12 @@
             "active": true,
             "cvr_number": "11931316",
             "name": "Thorsh\u00f8jg\u00e5rd",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -231,10 +261,12 @@
             "active": true,
             "cvr_number": "11986943",
             "name": "Esrom  Kost-og Friskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -246,10 +278,12 @@
             "active": true,
             "cvr_number": "12186479",
             "name": "Bog\u00f8 Kostskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -261,10 +295,12 @@
             "active": true,
             "cvr_number": "12489404",
             "name": "Hiller\u00f8d Kvindecenter",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -276,10 +312,12 @@
             "active": true,
             "cvr_number": "12518757",
             "name": "MR - Handicap og psykiatri",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -291,10 +329,12 @@
             "active": true,
             "cvr_number": "12518765",
             "name": "Skolen p\u00e5 Kastelsvej",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -306,10 +346,12 @@
             "active": true,
             "cvr_number": "12572999",
             "name": "Stiftelsen SOLHAVEN",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -321,10 +363,12 @@
             "active": true,
             "cvr_number": "12874502",
             "name": "Billehave Efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -336,10 +380,12 @@
             "active": true,
             "cvr_number": "12932502",
             "name": "Park Street Nordicom/Zleep Room",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -351,10 +397,12 @@
             "active": true,
             "cvr_number": "13081042",
             "name": "Familiecentret Lille N\u00f8rremark",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -366,10 +414,12 @@
             "active": true,
             "cvr_number": "13182000",
             "name": "Oure Kosrgymnasium",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -381,10 +431,12 @@
             "active": true,
             "cvr_number": "13909644",
             "name": "Vejlefjord - fjordbo II",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -396,10 +448,12 @@
             "active": true,
             "cvr_number": "14221379",
             "name": "Ulstrup Efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -411,10 +465,12 @@
             "active": true,
             "cvr_number": "14527702",
             "name": "Kollegiet Axeltorv",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -426,10 +482,12 @@
             "active": true,
             "cvr_number": "14618600",
             "name": "Sofie Rifbjerg Efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -441,10 +499,12 @@
             "active": true,
             "cvr_number": "14628088",
             "name": "Institut for Integration",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -456,10 +516,12 @@
             "active": true,
             "cvr_number": "14983392",
             "name": "Efterskolen Flyvesandet",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -471,10 +533,12 @@
             "active": true,
             "cvr_number": "15111283",
             "name": "SAHVA A/S",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -486,10 +550,12 @@
             "active": true,
             "cvr_number": "15307595",
             "name": "Den Gamle Brugs",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -501,10 +567,12 @@
             "active": true,
             "cvr_number": "15531584",
             "name": "Frydensberg Efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -516,10 +584,12 @@
             "active": true,
             "cvr_number": "15588977",
             "name": "LUNDEKOLLEKTIVET FOND",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -531,10 +601,12 @@
             "active": true,
             "cvr_number": "15658339",
             "name": "Den selvejende inst. Egedal",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -546,10 +618,12 @@
             "active": true,
             "cvr_number": "15686375",
             "name": "OPHOLDSSTEDET 4700",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -561,10 +635,12 @@
             "active": true,
             "cvr_number": "15722673",
             "name": "Dueslaget",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -576,10 +652,12 @@
             "active": true,
             "cvr_number": "15746513",
             "name": "Kofoeds Skole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -591,10 +669,12 @@
             "active": true,
             "cvr_number": "15837128",
             "name": "Glostrup Observations-og behandlingshjem",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -606,10 +686,12 @@
             "active": true,
             "cvr_number": "16057118",
             "name": "Efterskole Lindenborg",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -621,10 +703,12 @@
             "active": true,
             "cvr_number": "16088951",
             "name": "Engg\u00e5rdens Hestepension",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -636,10 +720,12 @@
             "active": true,
             "cvr_number": "16289404",
             "name": "Regnbuehuset",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -651,10 +737,12 @@
             "active": true,
             "cvr_number": "16343943",
             "name": "Grennessminde",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -666,10 +754,12 @@
             "active": true,
             "cvr_number": "17195549",
             "name": "Center for Autisme",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -681,10 +771,12 @@
             "active": true,
             "cvr_number": "17383213",
             "name": "T\u00d8LL\u00d8SE B\u00d8RNE- & UNGDOMSPENSION",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -696,10 +788,12 @@
             "active": true,
             "cvr_number": "17510606",
             "name": "Kvadderkj\u00e6r",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -711,10 +805,12 @@
             "active": true,
             "cvr_number": "17573896",
             "name": "ADVOKATFIRMAET VON DER MAASE V/JENS CHR. VON DER MAASE",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -726,10 +822,12 @@
             "active": true,
             "cvr_number": "17743171",
             "name": "SKOVBOGAARD",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -741,10 +839,12 @@
             "active": true,
             "cvr_number": "18391007",
             "name": "H\u00e5rslev Efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -756,10 +856,12 @@
             "active": true,
             "cvr_number": "18451778",
             "name": "Solvang",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -771,10 +873,12 @@
             "active": true,
             "cvr_number": "18461501",
             "name": "H\u00d8JDERYGGENS PSYKOLOGKONTOR V/OLE STJERNHOLM",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -786,10 +890,12 @@
             "active": true,
             "cvr_number": "18643294",
             "name": "Teaterbygningen Fanefjord",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -801,10 +907,12 @@
             "active": true,
             "cvr_number": "18675439",
             "name": "Butterfly",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -816,10 +924,12 @@
             "active": true,
             "cvr_number": "18675447",
             "name": "SIVK\u00c6R",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -831,10 +941,12 @@
             "active": true,
             "cvr_number": "18706571",
             "name": "Psykolog Susanne Kofoed",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -846,10 +958,12 @@
             "active": true,
             "cvr_number": "19049574",
             "name": "Skovbo Efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -861,10 +975,12 @@
             "active": true,
             "cvr_number": "19178749",
             "name": "Drosthuset Glostrup",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -876,10 +992,12 @@
             "active": true,
             "cvr_number": "19186407",
             "name": "Tv\u00e6rs ApS",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -891,10 +1009,12 @@
             "active": true,
             "cvr_number": "19210170",
             "name": "Fr\u00f8slevlejrens Efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -906,10 +1026,12 @@
             "active": true,
             "cvr_number": "19275086",
             "name": "Opholdsstedet Clemens Gaarden",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -921,10 +1043,12 @@
             "active": true,
             "cvr_number": "19369609",
             "name": "Overf\u00f8rsterg\u00e5rden",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -936,10 +1060,12 @@
             "active": true,
             "cvr_number": "19406679",
             "name": "Krums\u00f8 Fri- og Kostskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -951,10 +1077,12 @@
             "active": true,
             "cvr_number": "19700046",
             "name": "Opholdsstedet S\u00f8egaard",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -966,10 +1094,12 @@
             "active": true,
             "cvr_number": "19796787",
             "name": "TEGLG\u00c5RDSLUND UNGDOMSBOLIGER",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -981,10 +1111,12 @@
             "active": true,
             "cvr_number": "19819493",
             "name": "Krummeb\u00e6kgaard",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -996,10 +1128,12 @@
             "active": true,
             "cvr_number": "20030380",
             "name": "Tagk\u00e6rg\u00e5rd",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1011,10 +1145,12 @@
             "active": true,
             "cvr_number": "20129638",
             "name": "T\u00f8ll\u00f8se slot efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1026,10 +1162,12 @@
             "active": true,
             "cvr_number": "20240636",
             "name": "Lavuks Aftentilbud",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1041,10 +1179,12 @@
             "active": true,
             "cvr_number": "20243872",
             "name": "Skolen ved Sorte hest",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "95.40"
         }
@@ -1056,10 +1196,12 @@
             "active": true,
             "cvr_number": "20377003",
             "name": "RYTTERG\u00c5RDEN",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1071,10 +1213,12 @@
             "active": true,
             "cvr_number": "20415290",
             "name": "Psykologerne i Aller\u00f8d/Ruben Elgaard",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1086,10 +1230,12 @@
             "active": true,
             "cvr_number": "20462183",
             "name": "LINDERSVOLD",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1101,10 +1247,12 @@
             "active": true,
             "cvr_number": "20638230",
             "name": "Sk\u00e5rup Efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1116,10 +1264,12 @@
             "active": true,
             "cvr_number": "20770279",
             "name": "Opholdsstedet Unika",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1131,10 +1281,12 @@
             "active": true,
             "cvr_number": "20803746",
             "name": "Projektskolen Grennessminde",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1146,10 +1298,12 @@
             "active": true,
             "cvr_number": "20867043",
             "name": "DEN PSYKOLOGISKE R\u00c5DGIVNING V/ BENTE FRIIS HOLM",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1161,10 +1315,12 @@
             "active": true,
             "cvr_number": "20868074",
             "name": "Lindh\u00f8jg\u00e5rd",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1176,10 +1332,12 @@
             "active": true,
             "cvr_number": "20894938",
             "name": "SAKSO",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1191,10 +1349,12 @@
             "active": true,
             "cvr_number": "20956372",
             "name": "B\u00f8rnehuset Siv",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1206,10 +1366,12 @@
             "active": true,
             "cvr_number": "20991275",
             "name": "Ister\u00f8d Efter- og H\u00f8jskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1221,10 +1383,12 @@
             "active": true,
             "cvr_number": "21002542",
             "name": "Opholdsstedet TINGGAARDEN",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1236,10 +1400,12 @@
             "active": true,
             "cvr_number": "21102792",
             "name": "DET SOCIALP\u00c6DAGOGISKE OPHOLDSSTED KERNEHUSET ApS",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1251,10 +1417,12 @@
             "active": true,
             "cvr_number": "21157104",
             "name": "Den selvejende inst. Gr\u00f8nsund",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1266,10 +1434,12 @@
             "active": true,
             "cvr_number": "21169900",
             "name": "Gedebjerg",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1281,10 +1451,12 @@
             "active": true,
             "cvr_number": "21416428",
             "name": "VBT",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1296,10 +1468,12 @@
             "active": true,
             "cvr_number": "21440639",
             "name": "Andsh\u00f8jgaard",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1311,10 +1485,12 @@
             "active": true,
             "cvr_number": "21560707",
             "name": "KH KNUD HJULMAND PSYKOLOGISK KONSULTATION",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1326,10 +1502,12 @@
             "active": true,
             "cvr_number": "21697435",
             "name": "Sandbakken",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1341,10 +1519,12 @@
             "active": true,
             "cvr_number": "21703281",
             "name": "Opholdsstedet R\u00f8nneb\u00e6k",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1356,10 +1536,12 @@
             "active": true,
             "cvr_number": "21868809",
             "name": "Anders B. Larsen",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1371,10 +1553,12 @@
             "active": true,
             "cvr_number": "21911348",
             "name": "Aved\u00f8re Tolk-R\u00e5dgivning v/Ayhan Demir",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1386,10 +1570,12 @@
             "active": true,
             "cvr_number": "22010689",
             "name": "Opholdsstedet Tiagrehus",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1401,10 +1587,12 @@
             "active": true,
             "cvr_number": "22021478",
             "name": "Bostedet Fruerlund",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1416,10 +1604,12 @@
             "active": true,
             "cvr_number": "22028634",
             "name": "Opholdsstedet Peterslyst ridecenter",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1431,10 +1621,12 @@
             "active": true,
             "cvr_number": "23790718",
             "name": "HAVREG\u00c5RDEN  Lille Kost- og Dagskole ",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "95.40"
         }
@@ -1446,10 +1638,12 @@
             "active": true,
             "cvr_number": "24197646",
             "name": "Svendebjerggaard",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1461,10 +1655,12 @@
             "active": true,
             "cvr_number": "24206475",
             "name": "BOAS",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1476,10 +1672,12 @@
             "active": true,
             "cvr_number": "24975592",
             "name": "Frejlev Gl. Brugs",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1491,10 +1689,12 @@
             "active": true,
             "cvr_number": "25106741",
             "name": "Familieinstitutionen Skovv\u00e6nge",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1506,10 +1706,12 @@
             "active": true,
             "cvr_number": "25155599",
             "name": "Haug\u00e5rdhus",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1521,10 +1723,12 @@
             "active": true,
             "cvr_number": "25168232",
             "name": "Vitus",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1536,10 +1740,12 @@
             "active": true,
             "cvr_number": "25169395",
             "name": "S\u00f8ren Kierkegaard Kollegiet v. Center for",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1551,10 +1757,12 @@
             "active": true,
             "cvr_number": "25266390",
             "name": "Projekt Start/ JMB BO v/Mogens Bergg",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1566,10 +1774,12 @@
             "active": true,
             "cvr_number": "25354656",
             "name": "Fonden Godhavn",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1581,10 +1791,12 @@
             "active": true,
             "cvr_number": "25365194",
             "name": "Skovriderg\u00e5rden \"Hildesvig\"",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1596,10 +1808,12 @@
             "active": true,
             "cvr_number": "25477154",
             "name": "DUOS",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1611,10 +1825,12 @@
             "active": true,
             "cvr_number": "25499395",
             "name": "Paideia",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1626,10 +1842,12 @@
             "active": true,
             "cvr_number": "25513630",
             "name": "Schreiber Satellitten",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1641,10 +1859,12 @@
             "active": true,
             "cvr_number": "25528603",
             "name": "M\u00d8LLEN",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1656,10 +1876,12 @@
             "active": true,
             "cvr_number": "25529839",
             "name": "M\u00e5l\u00f8vg\u00e5rd",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1671,10 +1893,12 @@
             "active": true,
             "cvr_number": "25542991",
             "name": "Kammergave",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1686,10 +1910,12 @@
             "active": true,
             "cvr_number": "25599772",
             "name": "Fonden Bof\u00e6llesskabet \u00d8rb\u00e6kskilde",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1701,10 +1927,12 @@
             "active": true,
             "cvr_number": "25672836",
             "name": "Sozial Service",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1716,10 +1944,12 @@
             "active": true,
             "cvr_number": "25685970",
             "name": "Fonden Asgaard",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1731,10 +1961,12 @@
             "active": true,
             "cvr_number": "25722329",
             "name": "Mandecentret",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1746,10 +1978,12 @@
             "active": true,
             "cvr_number": "25726960",
             "name": "P\u00e5 Rette Kurs",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1761,10 +1995,12 @@
             "active": true,
             "cvr_number": "25731832",
             "name": "VESTERMARKEN",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1776,10 +2012,12 @@
             "active": true,
             "cvr_number": "25797809",
             "name": "DSI Andromeda",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "95.40"
         }
@@ -1791,10 +2029,12 @@
             "active": true,
             "cvr_number": "25812018",
             "name": "Socialprojektet \"M\u00d8LLEHUSET\"",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1806,10 +2046,12 @@
             "active": true,
             "cvr_number": "25812042",
             "name": "Frederikssud Krisecenter",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1821,10 +2063,12 @@
             "active": true,
             "cvr_number": "25824237",
             "name": "Hjemb\u00e6k Efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "95.40"
         }
@@ -1836,10 +2080,12 @@
             "active": true,
             "cvr_number": "25896564",
             "name": "Opholdsst. Birkemoseg\u00e5rd",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1851,10 +2097,12 @@
             "active": true,
             "cvr_number": "25916786",
             "name": "Base Camp",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1866,10 +2114,12 @@
             "active": true,
             "cvr_number": "25937295",
             "name": "Lystruphave Efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1881,10 +2131,12 @@
             "active": true,
             "cvr_number": "26004659",
             "name": "Projekt Plan B",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1896,10 +2148,12 @@
             "active": true,
             "cvr_number": "26026059",
             "name": "Florenhus",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1911,10 +2165,12 @@
             "active": true,
             "cvr_number": "26045592",
             "name": "Den selvej. inst. Dysseg\u00e5rden",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1926,10 +2182,12 @@
             "active": true,
             "cvr_number": "26046769",
             "name": "Samtalev\u00e6rkstedet v/ Jesper Mathiasen",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1941,10 +2199,12 @@
             "active": true,
             "cvr_number": "26201446",
             "name": "Svennebjerggaard",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "95.40"
         }
@@ -1956,10 +2216,12 @@
             "active": true,
             "cvr_number": "26201705",
             "name": "S\u00f8b\u00e6kskolen",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1971,10 +2233,12 @@
             "active": true,
             "cvr_number": "26309638",
             "name": "Magleby Fri- og Efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -1986,10 +2250,12 @@
             "active": true,
             "cvr_number": "26490286",
             "name": "Opholdsstedet Strandager",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2001,10 +2267,12 @@
             "active": true,
             "cvr_number": "26566398",
             "name": "Lundby Efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2016,10 +2284,12 @@
             "active": true,
             "cvr_number": "26646294",
             "name": "Fonden Kanonen",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2031,10 +2301,12 @@
             "active": true,
             "cvr_number": "26653932",
             "name": "Springbr\u00e6ttet",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2046,10 +2318,12 @@
             "active": true,
             "cvr_number": "26689465",
             "name": "SVANEN",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2061,10 +2335,12 @@
             "active": true,
             "cvr_number": "26717086",
             "name": "Efterskolen \u00d8sterg\u00e5rds Udskolingskoncept",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2076,10 +2352,12 @@
             "active": true,
             "cvr_number": "26723817",
             "name": "Ungdomsh\u00f8jskolen ved Ribe",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2091,10 +2369,12 @@
             "active": true,
             "cvr_number": "26874823",
             "name": "Den selvejende institution Marita",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2106,10 +2386,12 @@
             "active": true,
             "cvr_number": "26877741",
             "name": "Ungdomsh\u00f8jskolen PTG",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2121,10 +2403,12 @@
             "active": true,
             "cvr_number": "26909724",
             "name": "Fonden Koloni",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2136,10 +2420,12 @@
             "active": true,
             "cvr_number": "26946891",
             "name": "Ringsted Krisecenter",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2151,10 +2437,12 @@
             "active": true,
             "cvr_number": "26953545",
             "name": "Botilbud Feddet",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2166,10 +2454,12 @@
             "active": true,
             "cvr_number": "26955084",
             "name": "Fonden Vestermarken",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2181,10 +2471,12 @@
             "active": true,
             "cvr_number": "26964660",
             "name": "Back2Care",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2196,10 +2488,12 @@
             "active": true,
             "cvr_number": "26980267",
             "name": "Bof\u00e6llesskabet Ingersmind",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2211,10 +2505,12 @@
             "active": true,
             "cvr_number": "26989264",
             "name": "Center for Kognitiv Adf\u00e6rdsterapi",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2226,10 +2522,12 @@
             "active": true,
             "cvr_number": "27057853",
             "name": "V\u00e6dderbo",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2241,10 +2539,12 @@
             "active": true,
             "cvr_number": "27074987",
             "name": "Team One",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2256,10 +2556,12 @@
             "active": true,
             "cvr_number": "27079172",
             "name": "Det Lille Opholdssted Egholt",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2271,10 +2573,12 @@
             "active": true,
             "cvr_number": "27099602",
             "name": "Den Selvejende Institution Alfa - Fredensborg",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "95.40"
         }
@@ -2286,10 +2590,12 @@
             "active": true,
             "cvr_number": "27117279",
             "name": "Familiecenter Dyreby",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2301,10 +2607,12 @@
             "active": true,
             "cvr_number": "27133290",
             "name": "Kongensgaard Efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2316,10 +2624,12 @@
             "active": true,
             "cvr_number": "27134165",
             "name": "Dagbehandlingsskolen Fyrt\u00e5rnet",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2331,10 +2641,12 @@
             "active": true,
             "cvr_number": "27165869",
             "name": "Jabes",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2346,10 +2658,12 @@
             "active": true,
             "cvr_number": "27190677",
             "name": "Stahlschmidt",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2361,10 +2675,12 @@
             "active": true,
             "cvr_number": "27227988",
             "name": "Opholdsstedet Skytteg\u00e5rden",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2376,10 +2692,12 @@
             "active": true,
             "cvr_number": "27239501",
             "name": "Hammer & Co.",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2391,10 +2709,12 @@
             "active": true,
             "cvr_number": "27263860",
             "name": "OASEN",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2406,10 +2726,12 @@
             "active": true,
             "cvr_number": "27351034",
             "name": "Specialisterne",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2421,10 +2743,12 @@
             "active": true,
             "cvr_number": "27352448",
             "name": "Fonden/Den selvst\u00e6ndige Institution Opholdsstedet Arken",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2436,10 +2760,12 @@
             "active": true,
             "cvr_number": "27379966",
             "name": "Opholdsstedet Jungsg\u00e5rden",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2451,10 +2777,12 @@
             "active": true,
             "cvr_number": "27419798",
             "name": "Vand og By Ungdom",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2466,10 +2794,12 @@
             "active": true,
             "cvr_number": "27438148",
             "name": "DEN SPECIALP\u00c6DAGOGISKE DAGBEHANDLINGSINSTITUTION SPUTNIK ApS",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "95.40"
         }
@@ -2481,10 +2811,12 @@
             "active": true,
             "cvr_number": "27448909",
             "name": "Det Gamle Apotek I/S",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2496,10 +2828,12 @@
             "active": true,
             "cvr_number": "27479332",
             "name": "S\u00c6TERG\u00c5RDEN",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2511,10 +2845,12 @@
             "active": true,
             "cvr_number": "27591507",
             "name": "Casablanca Bo & Erhverv",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2526,10 +2862,12 @@
             "active": true,
             "cvr_number": "27670040",
             "name": "K\u00f8benhavns idr\u00e6t efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2541,10 +2879,12 @@
             "active": true,
             "cvr_number": "27735428",
             "name": "Ballerup L\u00e5sesmedie",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2556,10 +2896,12 @@
             "active": true,
             "cvr_number": "27747590",
             "name": "Kickan L. Andersen",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2571,10 +2913,12 @@
             "active": true,
             "cvr_number": "27776760",
             "name": "S\u00f8nderbjergg\u00e5rd",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2586,10 +2930,12 @@
             "active": true,
             "cvr_number": "27819559",
             "name": "Bente Aaskov",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2601,10 +2947,12 @@
             "active": true,
             "cvr_number": "27829317",
             "name": "Opholdssted Bogense",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2616,10 +2964,12 @@
             "active": true,
             "cvr_number": "27882013",
             "name": "UDVALGET FOR HUSMODERFERIE",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2631,10 +2981,12 @@
             "active": true,
             "cvr_number": "27888348",
             "name": "F\u00c6STER Terapi, P\u00e6dagogik og Supervision",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2646,10 +2998,12 @@
             "active": true,
             "cvr_number": "28097778",
             "name": "Sundbog\u00e5rd",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2661,10 +3015,12 @@
             "active": true,
             "cvr_number": "28181922",
             "name": "Skr\u00e6nten",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2676,10 +3032,12 @@
             "active": true,
             "cvr_number": "28186177",
             "name": "Skjoldborghus",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2691,10 +3049,12 @@
             "active": true,
             "cvr_number": "28258933",
             "name": "S/I Petersdal",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2706,10 +3066,12 @@
             "active": true,
             "cvr_number": "28306474",
             "name": "Zleep Hotel Ballerup",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2721,10 +3083,12 @@
             "active": true,
             "cvr_number": "28400365",
             "name": "L\u00f8vehjerte I/S",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2736,10 +3100,12 @@
             "active": true,
             "cvr_number": "28470185",
             "name": "Fonden Carpe Diem Huset",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "95.40"
         }
@@ -2751,10 +3117,12 @@
             "active": true,
             "cvr_number": "28598084",
             "name": "IDR\u00c6TSEFTERSKOLE  ULB\u00d8LLE",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2766,10 +3134,12 @@
             "active": true,
             "cvr_number": "28618360",
             "name": "Move 1/ v. Pia Lund-Nielsen",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2781,10 +3151,12 @@
             "active": true,
             "cvr_number": "28910843",
             "name": "Hoptrup Efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2796,10 +3168,12 @@
             "active": true,
             "cvr_number": "28935072",
             "name": "Karise efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2811,10 +3185,12 @@
             "active": true,
             "cvr_number": "28968191",
             "name": "Den selvejende inst. S\u00f8stjerneskolen",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2826,10 +3202,12 @@
             "active": true,
             "cvr_number": "29089035",
             "name": "Psykolog Anne Blom Corlin",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2841,10 +3219,12 @@
             "active": true,
             "cvr_number": "29178954",
             "name": "Fonden Boskov",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2856,10 +3236,12 @@
             "active": true,
             "cvr_number": "29188459",
             "name": "Bof\u00e6llesskab Odsherred",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2871,10 +3253,12 @@
             "active": true,
             "cvr_number": "29188475",
             "name": "Fakse Kommune",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2886,10 +3270,12 @@
             "active": true,
             "cvr_number": "29188505",
             "name": "Botilbuddet Florenshus",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2901,10 +3287,12 @@
             "active": true,
             "cvr_number": "29188599",
             "name": "Marie Grubbe Skolen",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2916,10 +3304,12 @@
             "active": true,
             "cvr_number": "29189625",
             "name": "N\u00e6stved kommune",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2931,10 +3321,12 @@
             "active": true,
             "cvr_number": "29189676",
             "name": "Bo og Naboskab Pr\u00e6st\u00f8",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2946,10 +3338,12 @@
             "active": true,
             "cvr_number": "29190623",
             "name": "N\u00f8debogr\u00e5d",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2961,10 +3355,12 @@
             "active": true,
             "cvr_number": "29190909",
             "name": "Center for h\u00f8retab",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2976,10 +3372,12 @@
             "active": true,
             "cvr_number": "29236038",
             "name": "FONDEN BAKKEG\u00c5RDEN",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -2991,10 +3389,12 @@
             "active": true,
             "cvr_number": "29236054",
             "name": "Fonden Spor 3 - Satelitten",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3006,10 +3406,12 @@
             "active": true,
             "cvr_number": "29268991",
             "name": "Opholdsstedet Clemens",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3021,10 +3423,12 @@
             "active": true,
             "cvr_number": "29285993",
             "name": "Holmegaards Heldagsskole v/Jan Knudsen",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3036,10 +3440,12 @@
             "active": true,
             "cvr_number": "29422710",
             "name": "FULTON - STIFTELSEN",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3051,10 +3457,12 @@
             "active": true,
             "cvr_number": "29662398",
             "name": "MonaK",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3066,10 +3474,12 @@
             "active": true,
             "cvr_number": "29714711",
             "name": "Psykolog Mette Sofie Hyltoft Degn",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3081,10 +3491,12 @@
             "active": true,
             "cvr_number": "29814600",
             "name": "Dagbehandlingsskolen Kompasset",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3096,10 +3508,12 @@
             "active": true,
             "cvr_number": "29866961",
             "name": "Psykolog Majken Olesen v/Majken Olesen",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3111,10 +3525,12 @@
             "active": true,
             "cvr_number": "29896569",
             "name": "Movia",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3126,10 +3542,12 @@
             "active": true,
             "cvr_number": "29908958",
             "name": "Bramsn\u00e6svig",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3141,10 +3559,12 @@
             "active": true,
             "cvr_number": "29982538",
             "name": "RED Safehouse",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3156,10 +3576,12 @@
             "active": true,
             "cvr_number": "30015878",
             "name": "H\u00f8jer Design Efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3171,10 +3593,12 @@
             "active": true,
             "cvr_number": "30016998",
             "name": "Behandlingsstedet Holbrogaard",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3186,10 +3610,12 @@
             "active": true,
             "cvr_number": "30032683",
             "name": "Jyderup Private Heldagsskole v/Kasper Martensen",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3201,10 +3627,12 @@
             "active": true,
             "cvr_number": "30047249",
             "name": "Psykoanalytisk/terapeutisk/praksis v/Elisabeth Bruhn-Thomsen",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3216,10 +3644,12 @@
             "active": true,
             "cvr_number": "30047923",
             "name": "Kvindehjemmet Jagtvej",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3231,10 +3661,12 @@
             "active": true,
             "cvr_number": "30067940",
             "name": "FAMILIEST\u00d8TTEN ApS",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "95.40"
         }
@@ -3246,10 +3678,12 @@
             "active": true,
             "cvr_number": "30112806",
             "name": "Opholdsstedet Lillevangsg\u00e5rd",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3261,10 +3695,12 @@
             "active": true,
             "cvr_number": "30127056",
             "name": "Oph.sted: PROJEKTORGANISATIONEN",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3276,10 +3712,12 @@
             "active": true,
             "cvr_number": "30145631",
             "name": "Aktiv Weekend",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3291,10 +3729,12 @@
             "active": true,
             "cvr_number": "30177029",
             "name": "PSYKOLOGSELSKABET TOFTEMOSEGAARD ApS",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3306,10 +3746,12 @@
             "active": true,
             "cvr_number": "30339983",
             "name": "Aktiv kollegiet",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3321,10 +3763,12 @@
             "active": true,
             "cvr_number": "30426606",
             "name": "AH-Praksis v/Annette Bjerum Hagenbo",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3336,10 +3780,12 @@
             "active": true,
             "cvr_number": "30467167",
             "name": "Psykologberedskabet v/Trine Lindemark",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3351,10 +3797,12 @@
             "active": true,
             "cvr_number": "30499107",
             "name": "CEKTOS",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3366,10 +3814,12 @@
             "active": true,
             "cvr_number": "30552202",
             "name": "Fonden VITA",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3381,10 +3831,12 @@
             "active": true,
             "cvr_number": "30552385",
             "name": "Skovg\u00e5rden - Skole- og behandlingshj",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3396,10 +3848,12 @@
             "active": true,
             "cvr_number": "30623770",
             "name": "OPHOLDSSTEDET SKARBYVEJ",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3411,10 +3865,12 @@
             "active": true,
             "cvr_number": "30656598",
             "name": "Fonden Forcen",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3426,10 +3882,12 @@
             "active": true,
             "cvr_number": "30677153",
             "name": "Fonden Solstriben",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3441,10 +3899,12 @@
             "active": true,
             "cvr_number": "30714547",
             "name": "Polaris",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "95.40"
         }
@@ -3456,10 +3916,12 @@
             "active": true,
             "cvr_number": "30768965",
             "name": "Fonden Opholdsstedet Mississippi",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3471,10 +3933,12 @@
             "active": true,
             "cvr_number": "30789466",
             "name": "Den selvejende institution Stedet",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3486,10 +3950,12 @@
             "active": true,
             "cvr_number": "30815769",
             "name": "Fonden Familieplejen Storstr\u00f8m",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3501,10 +3967,12 @@
             "active": true,
             "cvr_number": "30918576",
             "name": "Fonden Ungdomsuddannelsen U-3",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3516,10 +3984,12 @@
             "active": true,
             "cvr_number": "31194997",
             "name": "Ud i livet",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3531,10 +4001,12 @@
             "active": true,
             "cvr_number": "31198143",
             "name": "Trish Nymark Psykoterapeut",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3546,10 +4018,12 @@
             "active": true,
             "cvr_number": "31249031",
             "name": "DropUd",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3561,10 +4035,12 @@
             "active": true,
             "cvr_number": "31382599",
             "name": "FONDEN OPERATION SELVSVING",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3576,10 +4052,12 @@
             "active": true,
             "cvr_number": "31507413",
             "name": "Den Selvej. Inst. Skovly",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3591,10 +4069,12 @@
             "active": true,
             "cvr_number": "31526094",
             "name": "KH Stork\u00f8benhavn",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3606,10 +4086,12 @@
             "active": true,
             "cvr_number": "31579384",
             "name": "Ahmet Demir-Socialkonsulent, Fam.behandling",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3621,10 +4103,12 @@
             "active": true,
             "cvr_number": "31718090",
             "name": "Boligf\u00e6llesskabet Egebo I/S",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3636,10 +4120,12 @@
             "active": true,
             "cvr_number": "31720982",
             "name": "Specialkonsulent Lars Thomsen",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3651,10 +4137,12 @@
             "active": true,
             "cvr_number": "31735815",
             "name": "Familien Frederiksens Isheste",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3666,10 +4154,12 @@
             "active": true,
             "cvr_number": "31813107",
             "name": "Oph.st. UNDER URET",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3681,10 +4171,12 @@
             "active": true,
             "cvr_number": "31940109",
             "name": "St\u00f8ttecompagniet",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3696,10 +4188,12 @@
             "active": true,
             "cvr_number": "31951437",
             "name": "Opholdsstedet H\u00f8jbrogaard",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3711,10 +4205,12 @@
             "active": true,
             "cvr_number": "32041396",
             "name": "MTFC-Hovedstaden",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3726,10 +4222,12 @@
             "active": true,
             "cvr_number": "32107907",
             "name": "Bostedet Caroline Marie",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "95.40"
         }
@@ -3741,10 +4239,12 @@
             "active": true,
             "cvr_number": "32225659",
             "name": "Opholdsstedet Pondus",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3756,10 +4256,12 @@
             "active": true,
             "cvr_number": "32250327",
             "name": "de2konsulenter v Nete Lindskrog",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3771,10 +4273,12 @@
             "active": true,
             "cvr_number": "32279082",
             "name": "Villa Vivamus",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3786,10 +4290,12 @@
             "active": true,
             "cvr_number": "32422578",
             "name": "Fonden Bakkeg\u00e5rden",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3801,10 +4307,12 @@
             "active": true,
             "cvr_number": "32521169",
             "name": "Aloma konsulenterne",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3816,10 +4324,12 @@
             "active": true,
             "cvr_number": "32584292",
             "name": "Heldagsskolen Lindersvold",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3831,10 +4341,12 @@
             "active": true,
             "cvr_number": "32722814",
             "name": "Bl\u00e5 kors hjemmet",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3846,10 +4358,12 @@
             "active": true,
             "cvr_number": "32750605",
             "name": "Pars Tolkeservice",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3861,10 +4375,12 @@
             "active": true,
             "cvr_number": "32830951",
             "name": "IDR\u00c6TSAKADEMIETS BOST\u00d8TTE OG JOBTR\u00c6NING ApS/",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "95.40"
         }
@@ -3876,10 +4392,12 @@
             "active": true,
             "cvr_number": "32863558",
             "name": "Fonden Tagk\u00e6rgaard",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3891,10 +4409,12 @@
             "active": true,
             "cvr_number": "32865283",
             "name": "Halla Tolkeservice v/Halla Al-bacha",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3906,10 +4426,12 @@
             "active": true,
             "cvr_number": "33022611",
             "name": "Den Selvejende institution Levuk",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3921,10 +4443,12 @@
             "active": true,
             "cvr_number": "33038844",
             "name": "SOKON Socialkonsulenter/samv\u00e6r",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3936,10 +4460,12 @@
             "active": true,
             "cvr_number": "33044984",
             "name": "Opholdsstedet Kurreholm",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3951,10 +4477,12 @@
             "active": true,
             "cvr_number": "33046103",
             "name": "Nymand A/S-k\u00f8rsel",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3966,10 +4494,12 @@
             "active": true,
             "cvr_number": "33081723",
             "name": "Opholdsstedet Kaoskonsulenterne",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3981,10 +4511,12 @@
             "active": true,
             "cvr_number": "33188722",
             "name": "Opholdsstedet Vadsbyh\u00f8j",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -3996,10 +4528,12 @@
             "active": true,
             "cvr_number": "33211872",
             "name": "Opholdsstedet Parkg\u00e5rden",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4011,10 +4545,12 @@
             "active": true,
             "cvr_number": "33216688",
             "name": "Etebjerggaard opholdssted",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4026,10 +4562,12 @@
             "active": true,
             "cvr_number": "33247745",
             "name": "Botilbuddet K\u00e6derupvej  APS",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4041,10 +4579,12 @@
             "active": true,
             "cvr_number": "33329261",
             "name": "Januscentret",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4056,10 +4596,12 @@
             "active": true,
             "cvr_number": "33361378",
             "name": "Dankbar Aps",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4071,10 +4613,12 @@
             "active": true,
             "cvr_number": "33374194",
             "name": "Advokaterne Algade 43",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4086,10 +4630,12 @@
             "active": true,
             "cvr_number": "33423748",
             "name": "Opholdsstedet \u00d8rting",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4101,10 +4647,12 @@
             "active": true,
             "cvr_number": "33443323",
             "name": "K-Byrial Jensen-psykolog v/Karen Byrial Jensen",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4116,10 +4664,12 @@
             "active": true,
             "cvr_number": "33583311",
             "name": "PsykologCompagniet",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4131,10 +4681,12 @@
             "active": true,
             "cvr_number": "33664907",
             "name": "Privat praktiserende psykolog Pia Karoline Sparrebro",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4146,10 +4698,12 @@
             "active": true,
             "cvr_number": "33668163",
             "name": "Psykolog Lene Kiel Jespersen",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4161,10 +4715,12 @@
             "active": true,
             "cvr_number": "33673507",
             "name": "Sor\u00f8 apotek",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4176,10 +4732,12 @@
             "active": true,
             "cvr_number": "33721897",
             "name": "Behandlingscenter Himmerland",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4191,10 +4749,12 @@
             "active": true,
             "cvr_number": "33734727",
             "name": "Psykolog Elisabeth Christensen",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4206,10 +4766,12 @@
             "active": true,
             "cvr_number": "33743114",
             "name": "Psykoterapeutisk praksis v/Rikke Leerh\u00f8j Rahm",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4221,10 +4783,12 @@
             "active": true,
             "cvr_number": "33880782",
             "name": "ST\u00d8TTEBUREAUET ApS",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4236,10 +4800,12 @@
             "active": true,
             "cvr_number": "33903685",
             "name": "Psykolog Martin Skriver",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4251,10 +4817,12 @@
             "active": true,
             "cvr_number": "33926804",
             "name": "Fonden Kalles hus",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4266,10 +4834,12 @@
             "active": true,
             "cvr_number": "33998465",
             "name": "Dalmskov v/Thomas Dalmskov",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4281,10 +4851,12 @@
             "active": true,
             "cvr_number": "34002169",
             "name": "Psykolog Margit Novland",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4296,10 +4868,12 @@
             "active": true,
             "cvr_number": "34112185",
             "name": "Vejen-videre v/Kristine Kim Nielsen",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4311,10 +4885,12 @@
             "active": true,
             "cvr_number": "34174156",
             "name": "Mette Skj\u00e6rb\u00e6k PRC/selvforst\u00e5eskursus",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4326,10 +4902,12 @@
             "active": true,
             "cvr_number": "34276250",
             "name": "Psykologisk Konsultation v/ Birgit Bonde",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4341,10 +4919,12 @@
             "active": true,
             "cvr_number": "34363501",
             "name": "Den selvej. inst. Kildeh\u00f8jen",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4356,10 +4936,12 @@
             "active": true,
             "cvr_number": "34456194",
             "name": "Pitstop-nu aps",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4371,10 +4953,12 @@
             "active": true,
             "cvr_number": "34509824",
             "name": "Familie-og Psykoterapeut Tina Stenkl\u00f8v",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4386,10 +4970,12 @@
             "active": true,
             "cvr_number": "34600767",
             "name": "Opholdsstedet Lykkegard",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4401,10 +4987,12 @@
             "active": true,
             "cvr_number": "34668094",
             "name": "True north efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4416,10 +5004,12 @@
             "active": true,
             "cvr_number": "35023747",
             "name": "Sanne Lundberg Psykoterapeut",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4431,10 +5021,12 @@
             "active": true,
             "cvr_number": "35047719",
             "name": "Nordfyns Efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4446,10 +5038,12 @@
             "active": true,
             "cvr_number": "35062025",
             "name": "Opholdsstedet Piberhus Fond",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4461,10 +5055,12 @@
             "active": true,
             "cvr_number": "35209115",
             "name": "Odense Kvindekrisecentre",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4476,10 +5072,12 @@
             "active": true,
             "cvr_number": "35237038",
             "name": "Concura",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "95.40"
         }
@@ -4491,10 +5089,12 @@
             "active": true,
             "cvr_number": "35248940",
             "name": "Kilden",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4506,10 +5106,12 @@
             "active": true,
             "cvr_number": "35300821",
             "name": "Terapi-Huset",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4521,10 +5123,12 @@
             "active": true,
             "cvr_number": "35504915",
             "name": "Psykolog Kris Simonsen",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4536,10 +5140,12 @@
             "active": true,
             "cvr_number": "35551026",
             "name": "Fredslund Consulting",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4551,10 +5157,12 @@
             "active": true,
             "cvr_number": "35558500",
             "name": "Ny Krums\u00f8 Skole & Socialp\u00e6d. Opholds",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4566,10 +5174,12 @@
             "active": true,
             "cvr_number": "35735887",
             "name": "Fonden Holb\u00e6k Krisecenter Medusa",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4581,10 +5191,12 @@
             "active": true,
             "cvr_number": "35861696",
             "name": "Molis Aps.",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4596,10 +5208,12 @@
             "active": true,
             "cvr_number": "35954716",
             "name": "Salling Group (Dansk Supermarked)",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4611,10 +5225,12 @@
             "active": true,
             "cvr_number": "36028521",
             "name": "Familie & Evidens Center",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4626,10 +5242,12 @@
             "active": true,
             "cvr_number": "36067977",
             "name": "Leute Aps",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "80.00"
         }
@@ -4641,10 +5259,12 @@
             "active": true,
             "cvr_number": "36109920",
             "name": "Opholdssted Soranahus",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4656,10 +5276,12 @@
             "active": true,
             "cvr_number": "36176618",
             "name": "Kalleruphus",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4671,10 +5293,12 @@
             "active": true,
             "cvr_number": "36264462",
             "name": "Ditte Lindqvist",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4686,10 +5310,12 @@
             "active": true,
             "cvr_number": "36290498",
             "name": "Wiicare",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4701,10 +5327,12 @@
             "active": true,
             "cvr_number": "36317361",
             "name": "Havrehuset",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4716,10 +5344,12 @@
             "active": true,
             "cvr_number": "36586044",
             "name": "Den selvejende institution Svaneke Friskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4731,10 +5361,12 @@
             "active": true,
             "cvr_number": "36630639",
             "name": "Psykolog Anja Brems",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4746,10 +5378,12 @@
             "active": true,
             "cvr_number": "36981180",
             "name": "Samv\u00e6r i Centrum",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4761,10 +5395,12 @@
             "active": true,
             "cvr_number": "37188722",
             "name": "Opholdsstedet Vadsbyh\u00f8j",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4776,10 +5412,12 @@
             "active": true,
             "cvr_number": "37273449",
             "name": "Skotteruphus",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4791,10 +5429,12 @@
             "active": true,
             "cvr_number": "37348953",
             "name": "Stenb\u00e6k, Bang & Willumsen, Privatpraktiserende p\u00e6dagoger ApS",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4806,10 +5446,12 @@
             "active": true,
             "cvr_number": "37471992",
             "name": "Socialkrea",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4821,10 +5463,12 @@
             "active": true,
             "cvr_number": "37494496",
             "name": "Socialkonsulent Nanna Olesen",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "95.40"
         }
@@ -4836,10 +5480,12 @@
             "active": true,
             "cvr_number": "37614238",
             "name": "FK care APS Bostedet Spiren",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4851,10 +5497,12 @@
             "active": true,
             "cvr_number": "37844071",
             "name": "M\u00f8lleg\u00e5rdens botilbud",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4866,10 +5514,12 @@
             "active": true,
             "cvr_number": "37862703",
             "name": "Lise S. Westermann PRC/samtaler",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4881,10 +5531,12 @@
             "active": true,
             "cvr_number": "37914312",
             "name": "M\u00f8ltrup Optagelseshjem",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4896,10 +5548,12 @@
             "active": true,
             "cvr_number": "38347497",
             "name": "U:Point",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4911,10 +5565,12 @@
             "active": true,
             "cvr_number": "38454293",
             "name": "Fyrt\u00e5rnet Stenl\u00f8se/behandl.",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4926,10 +5582,12 @@
             "active": true,
             "cvr_number": "38462385",
             "name": "Psykolog Sophie Risom",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4941,10 +5599,12 @@
             "active": true,
             "cvr_number": "38522809",
             "name": "Job & Uddannelse Erhvervsskolen",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4956,10 +5616,12 @@
             "active": true,
             "cvr_number": "38723170",
             "name": "Dvj consulting and social development/st\u00f8tte",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4971,10 +5633,12 @@
             "active": true,
             "cvr_number": "38729616",
             "name": "Bog\u00f8 Kollegiet",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -4986,10 +5650,12 @@
             "active": true,
             "cvr_number": "39220253",
             "name": "Line Ibsen/Selvforst\u00e5else",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5001,10 +5667,12 @@
             "active": true,
             "cvr_number": "39306069",
             "name": "Udvejen.dk",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5016,10 +5684,12 @@
             "active": true,
             "cvr_number": "39392186",
             "name": "Kollerupcare",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5031,10 +5701,12 @@
             "active": true,
             "cvr_number": "39405296",
             "name": "Caico Crafts",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "80.00"
         }
@@ -5046,10 +5718,12 @@
             "active": true,
             "cvr_number": "39481812",
             "name": "Ubbely Krisecenter",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "95.40"
         }
@@ -5061,10 +5735,12 @@
             "active": true,
             "cvr_number": "39551519",
             "name": "Skolen i Skibby",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5076,10 +5752,12 @@
             "active": true,
             "cvr_number": "39625970",
             "name": "Broen",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5091,10 +5769,12 @@
             "active": true,
             "cvr_number": "39684918",
             "name": "B\u00f8rnecentret Fjordh\u00f8j",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5106,10 +5786,12 @@
             "active": true,
             "cvr_number": "40233156",
             "name": "BACKSPIN & SELVV\u00c6RD ApS",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5121,10 +5803,12 @@
             "active": true,
             "cvr_number": "40371117",
             "name": "Vordingborgskolen",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5136,10 +5820,12 @@
             "active": true,
             "cvr_number": "41332328",
             "name": "F\u00c6LLESSKABET FANEFJORD FOND",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5151,10 +5837,12 @@
             "active": true,
             "cvr_number": "43286617",
             "name": "Ellesletteg\u00e5rd",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5166,10 +5854,12 @@
             "active": true,
             "cvr_number": "43431597",
             "name": "L\u00e6nke-Pensionatet",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5181,10 +5871,12 @@
             "active": true,
             "cvr_number": "44388618",
             "name": "VEJLEFJORDSKOLEN",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5196,10 +5888,12 @@
             "active": true,
             "cvr_number": "44683016",
             "name": "N\u00e6sgaard efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5211,10 +5905,12 @@
             "active": true,
             "cvr_number": "44773070",
             "name": "Rosenhaven Plejecenter",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5226,10 +5922,12 @@
             "active": true,
             "cvr_number": "45005917",
             "name": "Langelands efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5241,10 +5939,12 @@
             "active": true,
             "cvr_number": "46231112",
             "name": "Egmont H\u00f8jskolen",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5256,10 +5956,12 @@
             "active": true,
             "cvr_number": "48390950",
             "name": "ESROM KOST- OG FRISKOLE",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5271,10 +5973,12 @@
             "active": true,
             "cvr_number": "49015011",
             "name": "Efterskolen Solbakken",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5286,10 +5990,12 @@
             "active": true,
             "cvr_number": "49148011",
             "name": "Bornholms Krist Friskole Davidskolen",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5301,10 +6007,12 @@
             "active": true,
             "cvr_number": "49801513",
             "name": "F\u00c5REVEJLE FRI- OG EFTERSKOLE",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5316,10 +6024,12 @@
             "active": true,
             "cvr_number": "50823848",
             "name": "Skolehaven",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5331,10 +6041,12 @@
             "active": true,
             "cvr_number": "52675510",
             "name": "Sams\u00f8 efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5346,10 +6058,12 @@
             "active": true,
             "cvr_number": "53383211",
             "name": "Familieinst./Familiehuset Engelsborg",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5361,10 +6075,12 @@
             "active": true,
             "cvr_number": "54801610",
             "name": "Lomborg Gymnastik- og Idr\u00e6tsefterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5376,10 +6092,12 @@
             "active": true,
             "cvr_number": "55134510",
             "name": "Instituttet for blinde og svagtseend",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5391,10 +6109,12 @@
             "active": true,
             "cvr_number": "55373707",
             "name": "Fonden oph.st.: RISBYG\u00c5RD",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5406,10 +6126,12 @@
             "active": true,
             "cvr_number": "55453004",
             "name": "Hjortholm",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5421,10 +6143,12 @@
             "active": true,
             "cvr_number": "55627312",
             "name": "Askovhus",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5436,10 +6160,12 @@
             "active": true,
             "cvr_number": "55775214",
             "name": "DAB",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5451,10 +6177,12 @@
             "active": true,
             "cvr_number": "55894009",
             "name": "Bog\u00f8 Kostskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5466,10 +6194,12 @@
             "active": true,
             "cvr_number": "57646233",
             "name": "Holdstedgaard",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5481,10 +6211,12 @@
             "active": true,
             "cvr_number": "58626716",
             "name": "glamsbjerg fri og efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5496,10 +6228,12 @@
             "active": true,
             "cvr_number": "58842117",
             "name": "Midtfyns efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5511,10 +6245,12 @@
             "active": true,
             "cvr_number": "58937517",
             "name": "Ringe Fri- og Efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5526,10 +6262,12 @@
             "active": true,
             "cvr_number": "59276417",
             "name": "Opholdsstedet Arken",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5541,10 +6279,12 @@
             "active": true,
             "cvr_number": "59477218",
             "name": "Holmstrup Efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5556,10 +6296,12 @@
             "active": true,
             "cvr_number": "59541919",
             "name": "Osted Fri- og Efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5571,10 +6313,12 @@
             "active": true,
             "cvr_number": "59575511",
             "name": "T\u00f8mmerup efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5586,10 +6330,12 @@
             "active": true,
             "cvr_number": "59607316",
             "name": "Birkebo",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5601,10 +6347,12 @@
             "active": true,
             "cvr_number": "62924810",
             "name": "Dantaxi 4x48",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "95.40"
         }
@@ -5616,10 +6364,12 @@
             "active": true,
             "cvr_number": "62988711",
             "name": "Tommerup Efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5631,10 +6381,12 @@
             "active": true,
             "cvr_number": "63447412",
             "name": "Blykobbe Efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5646,10 +6398,12 @@
             "active": true,
             "cvr_number": "63640719",
             "name": "Omr\u00e5deinstitutionen Dildhaven",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5661,10 +6415,12 @@
             "active": true,
             "cvr_number": "64502018",
             "name": "Bof\u00e6llesskab Jernbane Alle",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5676,10 +6432,12 @@
             "active": true,
             "cvr_number": "64593528",
             "name": "Thorsh\u00f8jg\u00e5rd",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5691,10 +6449,12 @@
             "active": true,
             "cvr_number": "64942212",
             "name": "B\u00f8rne- og familiehus Arild",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5706,10 +6466,12 @@
             "active": true,
             "cvr_number": "65321089",
             "name": "Louisenlund",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5721,10 +6483,12 @@
             "active": true,
             "cvr_number": "65344718",
             "name": "Holte-Hus Efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5736,10 +6500,12 @@
             "active": true,
             "cvr_number": "65462117",
             "name": "Klank Efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5751,10 +6517,12 @@
             "active": true,
             "cvr_number": "65589447",
             "name": "\u00d8se efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5766,10 +6534,12 @@
             "active": true,
             "cvr_number": "65655012",
             "name": "EFTERSKOLEN \u00d8STERG\u00c5RD",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5781,10 +6551,12 @@
             "active": true,
             "cvr_number": "65782413",
             "name": "Roholte Efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5796,10 +6568,12 @@
             "active": true,
             "cvr_number": "66252817",
             "name": "AKUcenter H\u00f8jagergaard",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5811,10 +6585,12 @@
             "active": true,
             "cvr_number": "66408310",
             "name": "Stenhus Kostskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5826,10 +6602,12 @@
             "active": true,
             "cvr_number": "67794710",
             "name": "Friskolen & Idr\u00e6tsefterskolen Ubby",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5841,10 +6619,12 @@
             "active": true,
             "cvr_number": "68513928",
             "name": "Hjortholm Kostskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5856,10 +6636,12 @@
             "active": true,
             "cvr_number": "69661513",
             "name": "Faxehus efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5871,10 +6653,12 @@
             "active": true,
             "cvr_number": "69783414",
             "name": "NIELSSTRUP",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5886,10 +6670,12 @@
             "active": true,
             "cvr_number": "70087316",
             "name": "Odsherreds Efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5901,10 +6687,12 @@
             "active": true,
             "cvr_number": "70295415",
             "name": "Sor\u00f8 Husholdningsskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5916,10 +6704,12 @@
             "active": true,
             "cvr_number": "74577016",
             "name": "DSI Kollegiet Nord-lys",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5931,10 +6721,12 @@
             "active": true,
             "cvr_number": "75521755",
             "name": "Overmarksg\u00e5rden",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5946,10 +6738,12 @@
             "active": true,
             "cvr_number": "75711115",
             "name": "TAXA SYD AMBA",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5961,10 +6755,12 @@
             "active": true,
             "cvr_number": "75736215",
             "name": "AKTIV WEEKEND",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5976,10 +6772,12 @@
             "active": true,
             "cvr_number": "76409110",
             "name": "Kalleruphus  psyk. bo- og behand ",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -5991,10 +6789,12 @@
             "active": true,
             "cvr_number": "76767416",
             "name": "I/S Kilden",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -6006,10 +6806,12 @@
             "active": true,
             "cvr_number": "77252010",
             "name": "FABU-FONDEN",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "95.00"
         }
@@ -6021,10 +6823,12 @@
             "active": true,
             "cvr_number": "78297212",
             "name": "Skolen p\u00e5 Slotsv\u00e6nget",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -6036,10 +6840,12 @@
             "active": true,
             "cvr_number": "78627719",
             "name": "SKOVLY",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -6051,10 +6857,12 @@
             "active": true,
             "cvr_number": "78637528",
             "name": "NORDTOFTE",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -6066,10 +6874,12 @@
             "active": true,
             "cvr_number": "78887915",
             "name": "Startskuddet",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -6081,10 +6891,12 @@
             "active": true,
             "cvr_number": "79005312",
             "name": "Fonden Krisecentret R\u00f8ntofte",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -6096,10 +6908,12 @@
             "active": true,
             "cvr_number": "80429959",
             "name": "Skr\u00f8dstrup efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -6111,10 +6925,12 @@
             "active": true,
             "cvr_number": "81368813",
             "name": "Nordsj\u00e6llands Efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -6126,10 +6942,12 @@
             "active": true,
             "cvr_number": "81473315",
             "name": "Grennessminde Birker\u00f8d",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -6141,10 +6959,12 @@
             "active": true,
             "cvr_number": "81956928",
             "name": "Nysted efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -6156,10 +6976,12 @@
             "active": true,
             "cvr_number": "83280115",
             "name": "Korinth Efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -6171,10 +6993,12 @@
             "active": true,
             "cvr_number": "84414913",
             "name": "Landsforeningen Autisme",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -6186,10 +7010,12 @@
             "active": true,
             "cvr_number": "84493813",
             "name": "Efterskolen Waldemarsbo",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -6201,10 +7027,12 @@
             "active": true,
             "cvr_number": "85188119",
             "name": "ADVODAN Lolland-Falster",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -6216,10 +7044,12 @@
             "active": true,
             "cvr_number": "85630113",
             "name": "H\u00f8rhuset",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -6231,10 +7061,12 @@
             "active": true,
             "cvr_number": "85709119",
             "name": "Ringe Kost- og Realskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -6246,10 +7078,12 @@
             "active": true,
             "cvr_number": "86944510",
             "name": "Bindern\u00e6s efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -6261,10 +7095,12 @@
             "active": true,
             "cvr_number": "89185513",
             "name": "Halstedhus Efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "95.40"
         }
@@ -6276,10 +7112,12 @@
             "active": true,
             "cvr_number": "89257514",
             "name": "Pederstrup efterskole",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -6291,10 +7129,12 @@
             "active": true,
             "cvr_number": "93019350",
             "name": "STUTTERI SVANEMOSEN V/ARNE NIELSEN",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }
@@ -6306,10 +7146,12 @@
             "active": true,
             "cvr_number": "97124390",
             "name": "Familieh\u00f8jskolen Sk\u00e6rg\u00e5rden",
-            "branch_code": "",
+            "business_code": "",
+            "business_code_text": "",
             "street": "",
             "street_number": "",
             "zip_code": "",
+            "post_district": "",
             "status": "",
             "vat_factor": "100.00"
         }

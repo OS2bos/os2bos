@@ -12,8 +12,13 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='serviceprovider',
-            name='branch_code',
+            name='business_code',
             field=models.CharField(blank=True, max_length=128, verbose_name='branchekode'),
+        ),
+        migrations.AddField(
+            model_name='serviceprovider',
+            name='business_code_text',
+            field=models.CharField(blank=True, max_length=128, verbose_name='branchetekst'),
         ),
         migrations.AddField(
             model_name='serviceprovider',
@@ -29,6 +34,11 @@ class Migration(migrations.Migration):
             model_name='serviceprovider',
             name='street_number',
             field=models.CharField(blank=True, max_length=128, verbose_name='vejnummer'),
+        ),
+        migrations.AddField(
+            model_name='serviceprovider',
+            name='post_district',
+            field=models.CharField(blank=True, max_length=128, verbose_name='postdistrikt'),
         ),
         migrations.AddField(
             model_name='serviceprovider',
