@@ -1925,7 +1925,11 @@ class TestServiceProviderViewSet(AuthenticatedTestCase, BasicTestMixin):
                 "street": "Pilestræde",
                 "street_number": "43",
                 "zip_code": "1112",
-                "branch_code": "620200",
+                "post_district": "København K",
+                "business_code": "620200",
+                "business_code_text": (
+                    "Konsulentbistand vedrørende informationsteknologi"
+                ),
                 "status": "NORMAL",
             }
         ]

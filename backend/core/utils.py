@@ -148,7 +148,11 @@ def get_company_info_mock():
             "vejnavn": "Pilestræde",
             "husnr": "43",
             "postnr": "1112",
+            "postdistrikt": "København K",
             "branchekode": "620200",
+            "branchetekst": (
+                "Konsulentbistand vedrørende informationsteknologi"
+            ),
             "status": "NORMAL",
         }
     ]

@@ -1092,7 +1092,9 @@ class ServiceProviderTestCase(TestCase):
             "vejnavn": "Pilestræde",
             "husnr": "43",
             "postnr": "1112",
+            "postdistrikt": "København K",
             "branchekode": "620200",
+            "branchetekst": "Konsulentbistand vedrørende informationsteknologi",
             "status": "NORMAL",
         }
 
@@ -1109,7 +1111,12 @@ class ServiceProviderTestCase(TestCase):
         self.assertEqual(service_provider.street, "Pilestræde")
         self.assertEqual(service_provider.street_number, "43")
         self.assertEqual(service_provider.zip_code, "1112")
-        self.assertEqual(service_provider.branch_code, "620200")
+        self.assertEqual(service_provider.post_district, "København K")
+        self.assertEqual(service_provider.business_code, "620200")
+        self.assertEqual(
+            service_provider.business_code_text,
+            "Konsulentbistand vedrørende informationsteknologi"
+        )
         self.assertEqual(service_provider.status, "NORMAL")
 
 
