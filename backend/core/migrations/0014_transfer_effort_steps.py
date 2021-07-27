@@ -31,7 +31,7 @@ def move_effort_steps(apps, schema_editor):
         case.save()
 
     for historical_case in HistoricalCase.objects.all():
-        historical_case.effort_step_new = EffortStep.objects.get(number=case.effort_step)
+        historical_case.effort_step_new = EffortStep.objects.get(number=historical_case.effort_step)
         historical_case.save()
 
 class Migration(migrations.Migration):
