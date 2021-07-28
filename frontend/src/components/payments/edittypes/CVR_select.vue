@@ -7,11 +7,14 @@
                 <ul class="cvr-search-result" v-if="search_results.length > 0">
                     <li v-for="s in search_results" :key="s.cvr_number">
                         <button class="cvr-select-btn" @click="select_item(s)" type="button">
+                            <p class="title"><strong>{{ s.name }}</strong></p>
                             <dl>
+                                <dt>Adresse</dt>
+                                <dd>{{ s.zip_code }} {{ s.post_district }}</dd>
                                 <dt>CVR/P-nr</dt>
                                 <dd>{{ s.cvr_number }}</dd>
-                                <dt>Navn</dt>
-                                <dd>{{ s.name }}</dd>
+                                <dt>Branche</dt>
+                                <dd>{{ s.business_code_text }}</dd>
                             </dl>
                         </button>
                     </li>
@@ -23,18 +26,19 @@
         </div>
         <div v-if="service_provider">
             <dl>
-                
-                <dt>Navn</dt>
+                <dt>Firmanavn</dt>
                 <dd><strong>{{ service_provider.name }}</strong></dd>
+                <dt>Branchekode</dt>
+                <dd>{{ service_provider.business_code_text }}</dd>
                 <dt>CVR/P-nr</dt>
                 <dd>{{ service_provider.cvr_number }}</dd>
                 <dt>Adresse</dt>
                 <dd>
                     {{ service_provider.street }} {{ service_provider.street_number }}<br> 
-                    {{ service_provider.zip_code }}
+                    {{ service_provider.zip_code }} {{ service_provider.post_district }}
                 </dd>
                 <dt>Virksomhedsstatus</dt>
-                <dd>{{ service_provider.status }}</dd>
+                <dd style="text-transform: lowercase;">{{ service_provider.status }}</dd>
             </dl>
         </div>
         <p v-else>
@@ -53,7 +57,7 @@ export default {
     ],
     props: [
         'editable',
-        'dataServiceProvider'
+        'dataRecipientId'
     ],
     data: function() {
         return {
@@ -63,13 +67,19 @@ export default {
         }
     },
     watch: {
-        dataServiceProvider: function(new_sp, old_sp) {
-            if (new_sp && new_sp !== old_sp) {
-                this.service_provider = this.new_sp
-            }
-        },
+        dataRecipientId: function(new_id) {
+            this.preFetchData(new_id)
+        }
     },
     methods: {
+        preFetchData: function(recipient_id) {
+            axios.get(`service_providers/fetch_serviceproviders_from_virk/?search_term=${ recipient_id }`)
+            .then(res => {
+                this.service_provider = res.data.find(sp => {
+                    return sp.cvr_number === recipient_id
+                })
+            })
+        },
         fetchData: function(query) {
             axios.get(`service_providers/fetch_serviceproviders_from_virk/?search_term=${ query }`)
             .then(res => {
@@ -109,6 +119,8 @@ export default {
         // Set debounce on methods that are likely to be fired too often
         // (ie. while a user is typing into an input field)
         this.search = this.debounce(this.search, 400)
+        
+        this.preFetchData(this.dataRecipientId)
     }
 }
 </script>
@@ -140,10 +152,20 @@ export default {
         height: auto;
         width: 100%;
         display: block;
-        padding: .5rem 1rem;
+        padding: .75rem 1.5rem;
         text-align: left;
         border-top: solid 1px var(--grey2);
         border-radius: 0;
+        color: var(--grey8);
+    }
+
+    .cvr-select-btn .title {
+        color: var(--primary);
+    }
+
+    .cvr-select-btn:hover .title,
+    .cvr-select-btn:focus .title {
+        color: var(--grey0);
     }
 
     .cvr-search-result dt {

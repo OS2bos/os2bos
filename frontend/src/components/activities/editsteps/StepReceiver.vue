@@ -20,7 +20,7 @@
 
             <template v-if="payment_plan.recipient_type === 'COMPANY'">
                 <template v-if="config.ALLOW_SERVICE_PROVIDERS_FROM_VIRK">
-                    <cvr-select :editable="true" />
+                    <cvr-select :editable="true" :data-recipient-id="payment_plan.recipient_id" />
                 </template>
                 <template v-else>
                     <payment-service-provider />
