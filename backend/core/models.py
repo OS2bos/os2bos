@@ -150,7 +150,7 @@ class TargetGroup(Classification):
         return f"{self.name}"
 
 
-class InternalPaymentRecipient(models.Model):
+class InternalPaymentRecipient(Classification):
     """Recipient model for INTERNAL payment activities."""
 
     class Meta:
@@ -186,7 +186,7 @@ class Effort(Classification):
         return f"{self.name}"
 
 
-class PaymentMethodDetails(models.Model):
+class PaymentMethodDetails(Classification):
     """Contains extra information about a payment method."""
 
     class Meta:
@@ -275,7 +275,7 @@ class User(AbstractUser):
         return False
 
 
-class Team(models.Model):
+class Team(Classification):
     """Represents a team in the administration."""
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
@@ -1618,7 +1618,7 @@ class ActivityCategory(Classification):
         return f"{self.category_id} - {self.name}"
 
 
-class SectionInfo(models.Model):
+class SectionInfo(Classification):
     """For a main activity, KLE no. and SBSYS ID for the relevant sections."""
 
     class Meta:

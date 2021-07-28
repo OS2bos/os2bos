@@ -3,6 +3,7 @@
         "model": "core.sectioninfo",
         "pk": 299,
         "fields": {
+            "active": true,
             "activity_details": 1729,
             "section": 1327,
             "activity_category": 9,
@@ -16,6 +17,7 @@
         "model": "core.sectioninfo",
         "pk": 300,
         "fields": {
+            "active": true,
             "activity_details": 1758,
             "section": 1368,
             "activity_category": 4,
@@ -29,6 +31,7 @@
         "model": "core.sectioninfo",
         "pk": 301,
         "fields": {
+            "active": true,
             "activity_details": 1730,
             "section": 1322,
             "activity_category": 4,
@@ -42,6 +45,7 @@
         "model": "core.sectioninfo",
         "pk": 302,
         "fields": {
+            "active": true,
             "activity_details": 1730,
             "section": 1320,
             "activity_category": 4,
@@ -55,6 +59,7 @@
         "model": "core.sectioninfo",
         "pk": 303,
         "fields": {
+            "active": true,
             "activity_details": 1763,
             "section": 1325,
             "activity_category": 3,
@@ -68,6 +73,7 @@
         "model": "core.sectioninfo",
         "pk": 304,
         "fields": {
+            "active": true,
             "activity_details": 1732,
             "section": 1328,
             "activity_category": 10,
@@ -81,6 +87,7 @@
         "model": "core.sectioninfo",
         "pk": 305,
         "fields": {
+            "active": true,
             "activity_details": 1749,
             "section": 1274,
             "activity_category": 2,
@@ -94,6 +101,7 @@
         "model": "core.sectioninfo",
         "pk": 306,
         "fields": {
+            "active": true,
             "activity_details": 1733,
             "section": 1318,
             "activity_category": 13,
@@ -107,6 +115,7 @@
         "model": "core.sectioninfo",
         "pk": 307,
         "fields": {
+            "active": true,
             "activity_details": 1733,
             "section": 1329,
             "activity_category": 13,
@@ -120,6 +129,7 @@
         "model": "core.sectioninfo",
         "pk": 308,
         "fields": {
+            "active": true,
             "activity_details": 1733,
             "section": 1331,
             "activity_category": 19,
@@ -133,6 +143,7 @@
         "model": "core.sectioninfo",
         "pk": 309,
         "fields": {
+            "active": true,
             "activity_details": 1733,
             "section": 1367,
             "activity_category": 19,
@@ -146,6 +157,7 @@
         "model": "core.sectioninfo",
         "pk": 310,
         "fields": {
+            "active": true,
             "activity_details": 1733,
             "section": 1352,
             "activity_category": 19,
@@ -159,6 +171,7 @@
         "model": "core.sectioninfo",
         "pk": 311,
         "fields": {
+            "active": true,
             "activity_details": 1733,
             "section": 1365,
             "activity_category": 19,
@@ -172,6 +185,7 @@
         "model": "core.sectioninfo",
         "pk": 312,
         "fields": {
+            "active": true,
             "activity_details": 1764,
             "section": 1381,
             "activity_category": 4,
@@ -185,6 +199,7 @@
         "model": "core.sectioninfo",
         "pk": 313,
         "fields": {
+            "active": true,
             "activity_details": 1735,
             "section": 1318,
             "activity_category": 25,
@@ -198,6 +213,7 @@
         "model": "core.sectioninfo",
         "pk": 314,
         "fields": {
+            "active": true,
             "activity_details": 1737,
             "section": 1318,
             "activity_category": 11,
@@ -211,6 +227,7 @@
         "model": "core.sectioninfo",
         "pk": 315,
         "fields": {
+            "active": true,
             "activity_details": 1737,
             "section": 1329,
             "activity_category": 11,
@@ -224,6 +241,7 @@
         "model": "core.sectioninfo",
         "pk": 316,
         "fields": {
+            "active": true,
             "activity_details": 1737,
             "section": 1331,
             "activity_category": 21,
@@ -237,6 +255,7 @@
         "model": "core.sectioninfo",
         "pk": 317,
         "fields": {
+            "active": true,
             "activity_details": 1737,
             "section": 1367,
             "activity_category": 21,
@@ -250,6 +269,7 @@
         "model": "core.sectioninfo",
         "pk": 318,
         "fields": {
+            "active": true,
             "activity_details": 1737,
             "section": 1352,
             "activity_category": 21,
@@ -263,6 +283,7 @@
         "model": "core.sectioninfo",
         "pk": 319,
         "fields": {
+            "active": true,
             "activity_details": 1737,
             "section": 1365,
             "activity_category": 21,
@@ -276,6 +297,7 @@
         "model": "core.sectioninfo",
         "pk": 320,
         "fields": {
+            "active": true,
             "activity_details": 1726,
             "section": 1326,
             "activity_category": 8,
@@ -289,6 +311,7 @@
         "model": "core.sectioninfo",
         "pk": 321,
         "fields": {
+            "active": true,
             "activity_details": 1727,
             "section": 1327,
             "activity_category": 8,
@@ -302,6 +325,7 @@
         "model": "core.sectioninfo",
         "pk": 322,
         "fields": {
+            "active": true,
             "activity_details": 1724,
             "section": 1334,
             "activity_category": 15,
@@ -315,6 +339,7 @@
         "model": "core.sectioninfo",
         "pk": 323,
         "fields": {
+            "active": true,
             "activity_details": 1724,
             "section": 1335,
             "activity_category": 15,
@@ -328,6 +353,7 @@
         "model": "core.sectioninfo",
         "pk": 324,
         "fields": {
+            "active": true,
             "activity_details": 1724,
             "section": 1331,
             "activity_category": 23,
@@ -341,6 +367,7 @@
         "model": "core.sectioninfo",
         "pk": 325,
         "fields": {
+            "active": true,
             "activity_details": 1724,
             "section": 1367,
             "activity_category": 23,
@@ -354,6 +381,7 @@
         "model": "core.sectioninfo",
         "pk": 326,
         "fields": {
+            "active": true,
             "activity_details": 1724,
             "section": 1352,
             "activity_category": 23,
@@ -367,6 +395,7 @@
         "model": "core.sectioninfo",
         "pk": 327,
         "fields": {
+            "active": true,
             "activity_details": 1724,
             "section": 1365,
             "activity_category": 23,
@@ -380,6 +409,7 @@
         "model": "core.sectioninfo",
         "pk": 328,
         "fields": {
+            "active": true,
             "activity_details": 1728,
             "section": 1322,
             "activity_category": 4,
@@ -393,6 +423,7 @@
         "model": "core.sectioninfo",
         "pk": 329,
         "fields": {
+            "active": true,
             "activity_details": 1728,
             "section": 1320,
             "activity_category": 4,
@@ -406,6 +437,7 @@
         "model": "core.sectioninfo",
         "pk": 330,
         "fields": {
+            "active": true,
             "activity_details": 1738,
             "section": 1366,
             "activity_category": 14,
@@ -419,6 +451,7 @@
         "model": "core.sectioninfo",
         "pk": 331,
         "fields": {
+            "active": true,
             "activity_details": 1738,
             "section": 1330,
             "activity_category": 14,
@@ -432,6 +465,7 @@
         "model": "core.sectioninfo",
         "pk": 332,
         "fields": {
+            "active": true,
             "activity_details": 1738,
             "section": 1370,
             "activity_category": 14,
@@ -445,6 +479,7 @@
         "model": "core.sectioninfo",
         "pk": 333,
         "fields": {
+            "active": true,
             "activity_details": 1739,
             "section": 1330,
             "activity_category": 14,
@@ -458,6 +493,7 @@
         "model": "core.sectioninfo",
         "pk": 334,
         "fields": {
+            "active": true,
             "activity_details": 1740,
             "section": 1339,
             "activity_category": 14,
@@ -471,6 +507,7 @@
         "model": "core.sectioninfo",
         "pk": 335,
         "fields": {
+            "active": true,
             "activity_details": 1741,
             "section": 1363,
             "activity_category": 14,
@@ -484,6 +521,7 @@
         "model": "core.sectioninfo",
         "pk": 336,
         "fields": {
+            "active": true,
             "activity_details": 1743,
             "section": 1321,
             "activity_category": 7,
@@ -497,6 +535,7 @@
         "model": "core.sectioninfo",
         "pk": 337,
         "fields": {
+            "active": true,
             "activity_details": 1745,
             "section": 1273,
             "activity_category": 2,
@@ -510,6 +549,7 @@
         "model": "core.sectioninfo",
         "pk": 338,
         "fields": {
+            "active": true,
             "activity_details": 1746,
             "section": 1281,
             "activity_category": 2,
@@ -523,6 +563,7 @@
         "model": "core.sectioninfo",
         "pk": 339,
         "fields": {
+            "active": true,
             "activity_details": 1748,
             "section": 1279,
             "activity_category": 2,
@@ -536,6 +577,7 @@
         "model": "core.sectioninfo",
         "pk": 340,
         "fields": {
+            "active": true,
             "activity_details": 1752,
             "section": 1264,
             "activity_category": 1,
@@ -549,6 +591,7 @@
         "model": "core.sectioninfo",
         "pk": 341,
         "fields": {
+            "active": true,
             "activity_details": 1731,
             "section": 1373,
             "activity_category": 17,
@@ -562,6 +605,7 @@
         "model": "core.sectioninfo",
         "pk": 342,
         "fields": {
+            "active": true,
             "activity_details": 1731,
             "section": 1318,
             "activity_category": 12,
@@ -575,6 +619,7 @@
         "model": "core.sectioninfo",
         "pk": 343,
         "fields": {
+            "active": true,
             "activity_details": 1731,
             "section": 1329,
             "activity_category": 12,
@@ -588,6 +633,7 @@
         "model": "core.sectioninfo",
         "pk": 344,
         "fields": {
+            "active": true,
             "activity_details": 1731,
             "section": 1331,
             "activity_category": 17,
@@ -601,6 +647,7 @@
         "model": "core.sectioninfo",
         "pk": 345,
         "fields": {
+            "active": true,
             "activity_details": 1731,
             "section": 1328,
             "activity_category": 10,
@@ -614,6 +661,7 @@
         "model": "core.sectioninfo",
         "pk": 346,
         "fields": {
+            "active": true,
             "activity_details": 1731,
             "section": 1367,
             "activity_category": 17,
@@ -627,6 +675,7 @@
         "model": "core.sectioninfo",
         "pk": 347,
         "fields": {
+            "active": true,
             "activity_details": 1731,
             "section": 1352,
             "activity_category": 17,
@@ -640,6 +689,7 @@
         "model": "core.sectioninfo",
         "pk": 348,
         "fields": {
+            "active": true,
             "activity_details": 1731,
             "section": 1365,
             "activity_category": 17,
@@ -653,6 +703,7 @@
         "model": "core.sectioninfo",
         "pk": 349,
         "fields": {
+            "active": true,
             "activity_details": 1744,
             "section": 1286,
             "activity_category": 2,
@@ -666,6 +717,7 @@
         "model": "core.sectioninfo",
         "pk": 350,
         "fields": {
+            "active": true,
             "activity_details": 1744,
             "section": 1264,
             "activity_category": null,
@@ -679,6 +731,7 @@
         "model": "core.sectioninfo",
         "pk": 351,
         "fields": {
+            "active": true,
             "activity_details": 1753,
             "section": 1315,
             "activity_category": 5,
@@ -692,6 +745,7 @@
         "model": "core.sectioninfo",
         "pk": 352,
         "fields": {
+            "active": true,
             "activity_details": 1754,
             "section": 1316,
             "activity_category": 24,
@@ -705,6 +759,7 @@
         "model": "core.sectioninfo",
         "pk": 353,
         "fields": {
+            "active": true,
             "activity_details": 1755,
             "section": 1308,
             "activity_category": 4,
@@ -718,6 +773,7 @@
         "model": "core.sectioninfo",
         "pk": 354,
         "fields": {
+            "active": true,
             "activity_details": 1756,
             "section": 1332,
             "activity_category": 2,
@@ -731,6 +787,7 @@
         "model": "core.sectioninfo",
         "pk": 355,
         "fields": {
+            "active": true,
             "activity_details": 1757,
             "section": 1333,
             "activity_category": 4,
@@ -744,6 +801,7 @@
         "model": "core.sectioninfo",
         "pk": 356,
         "fields": {
+            "active": true,
             "activity_details": 1760,
             "section": 1335,
             "activity_category": 15,
@@ -757,6 +815,7 @@
         "model": "core.sectioninfo",
         "pk": 357,
         "fields": {
+            "active": true,
             "activity_details": 1747,
             "section": 1283,
             "activity_category": 3,
@@ -770,6 +829,7 @@
         "model": "core.sectioninfo",
         "pk": 358,
         "fields": {
+            "active": true,
             "activity_details": 1759,
             "section": 1336,
             "activity_category": 15,
@@ -783,6 +843,7 @@
         "model": "core.sectioninfo",
         "pk": 359,
         "fields": {
+            "active": true,
             "activity_details": 1759,
             "section": 1337,
             "activity_category": null,
@@ -796,6 +857,7 @@
         "model": "core.sectioninfo",
         "pk": 360,
         "fields": {
+            "active": true,
             "activity_details": 1759,
             "section": 1334,
             "activity_category": 15,
@@ -809,6 +871,7 @@
         "model": "core.sectioninfo",
         "pk": 361,
         "fields": {
+            "active": true,
             "activity_details": 1723,
             "section": 1367,
             "activity_category": 20,
@@ -822,6 +885,7 @@
         "model": "core.sectioninfo",
         "pk": 362,
         "fields": {
+            "active": true,
             "activity_details": 1723,
             "section": 1365,
             "activity_category": 20,
@@ -835,6 +899,7 @@
         "model": "core.sectioninfo",
         "pk": 363,
         "fields": {
+            "active": true,
             "activity_details": 1723,
             "section": 1331,
             "activity_category": 20,
@@ -848,6 +913,7 @@
         "model": "core.sectioninfo",
         "pk": 364,
         "fields": {
+            "active": true,
             "activity_details": 1723,
             "section": 1352,
             "activity_category": 20,
@@ -861,6 +927,7 @@
         "model": "core.sectioninfo",
         "pk": 365,
         "fields": {
+            "active": true,
             "activity_details": 1736,
             "section": 1318,
             "activity_category": 11,
@@ -874,6 +941,7 @@
         "model": "core.sectioninfo",
         "pk": 366,
         "fields": {
+            "active": true,
             "activity_details": 1736,
             "section": 1329,
             "activity_category": 11,
@@ -887,6 +955,7 @@
         "model": "core.sectioninfo",
         "pk": 367,
         "fields": {
+            "active": true,
             "activity_details": 1736,
             "section": 1331,
             "activity_category": 21,
@@ -900,6 +969,7 @@
         "model": "core.sectioninfo",
         "pk": 368,
         "fields": {
+            "active": true,
             "activity_details": 1736,
             "section": 1367,
             "activity_category": 21,
@@ -913,6 +983,7 @@
         "model": "core.sectioninfo",
         "pk": 369,
         "fields": {
+            "active": true,
             "activity_details": 1736,
             "section": 1365,
             "activity_category": 21,
@@ -926,6 +997,7 @@
         "model": "core.sectioninfo",
         "pk": 370,
         "fields": {
+            "active": true,
             "activity_details": 1751,
             "section": 1331,
             "activity_category": 22,
@@ -939,6 +1011,7 @@
         "model": "core.sectioninfo",
         "pk": 371,
         "fields": {
+            "active": true,
             "activity_details": 1751,
             "section": 1352,
             "activity_category": 22,
@@ -952,6 +1025,7 @@
         "model": "core.sectioninfo",
         "pk": 372,
         "fields": {
+            "active": true,
             "activity_details": 1750,
             "section": 1319,
             "activity_category": 4,
@@ -965,6 +1039,7 @@
         "model": "core.sectioninfo",
         "pk": 373,
         "fields": {
+            "active": true,
             "activity_details": 1804,
             "section": 1319,
             "activity_category": 4,
@@ -978,6 +1053,7 @@
         "model": "core.sectioninfo",
         "pk": 374,
         "fields": {
+            "active": true,
             "activity_details": 1798,
             "section": 1317,
             "activity_category": 5,
@@ -991,6 +1067,7 @@
         "model": "core.sectioninfo",
         "pk": 375,
         "fields": {
+            "active": true,
             "activity_details": 1799,
             "section": 1314,
             "activity_category": 3,
@@ -1004,6 +1081,7 @@
         "model": "core.sectioninfo",
         "pk": 376,
         "fields": {
+            "active": true,
             "activity_details": 1725,
             "section": 1367,
             "activity_category": 16,
@@ -1017,6 +1095,7 @@
         "model": "core.sectioninfo",
         "pk": 377,
         "fields": {
+            "active": true,
             "activity_details": 1725,
             "section": 1365,
             "activity_category": 16,
@@ -1030,6 +1109,7 @@
         "model": "core.sectioninfo",
         "pk": 378,
         "fields": {
+            "active": true,
             "activity_details": 1725,
             "section": 1331,
             "activity_category": 16,
@@ -1043,6 +1123,7 @@
         "model": "core.sectioninfo",
         "pk": 379,
         "fields": {
+            "active": true,
             "activity_details": 1734,
             "section": 1318,
             "activity_category": 12,
@@ -1056,6 +1137,7 @@
         "model": "core.sectioninfo",
         "pk": 380,
         "fields": {
+            "active": true,
             "activity_details": 1734,
             "section": 1329,
             "activity_category": 12,
@@ -1069,6 +1151,7 @@
         "model": "core.sectioninfo",
         "pk": 381,
         "fields": {
+            "active": true,
             "activity_details": 1734,
             "section": 1331,
             "activity_category": 18,
@@ -1082,6 +1165,7 @@
         "model": "core.sectioninfo",
         "pk": 382,
         "fields": {
+            "active": true,
             "activity_details": 1734,
             "section": 1367,
             "activity_category": 18,
@@ -1095,6 +1179,7 @@
         "model": "core.sectioninfo",
         "pk": 383,
         "fields": {
+            "active": true,
             "activity_details": 1734,
             "section": 1352,
             "activity_category": 18,
@@ -1108,6 +1193,7 @@
         "model": "core.sectioninfo",
         "pk": 384,
         "fields": {
+            "active": true,
             "activity_details": 1734,
             "section": 1365,
             "activity_category": 18,

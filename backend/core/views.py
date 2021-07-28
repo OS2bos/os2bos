@@ -294,7 +294,7 @@ class ActivityViewSet(AuditModelViewSetMixin, AuditViewSet):
         return response
 
 
-class PaymentMethodDetailsViewSet(AuditViewSet):
+class PaymentMethodDetailsViewSet(ClassificationViewSetMixin, AuditViewSet):
     """Expose payment method details in REST API."""
 
     queryset = PaymentMethodDetails.objects.all()
@@ -414,7 +414,7 @@ class SchoolDistrictViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     filterset_fields = "__all__"
 
 
-class TeamViewSet(ReadOnlyViewset):
+class TeamViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     """Expose teams in REST API."""
 
     queryset = Team.objects.all()
@@ -436,7 +436,7 @@ class SectionViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     filterset_class = AllowedForStepsFilter
 
 
-class SectionInfoViewSet(ReadOnlyViewset):
+class SectionInfoViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     """Expose section infos in REST API."""
 
     queryset = SectionInfo.objects.all()
@@ -519,7 +519,9 @@ class TargetGroupViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     serializer_class = TargetGroupSerializer
 
 
-class InternalPaymentRecipientViewSet(ReadOnlyViewset):
+class InternalPaymentRecipientViewSet(
+    ClassificationViewSetMixin, ReadOnlyViewset
+):
     """Expose internal payment recipients in REST API."""
 
     queryset = InternalPaymentRecipient.objects.all()
