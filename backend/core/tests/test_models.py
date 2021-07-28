@@ -1094,7 +1094,9 @@ class ServiceProviderTestCase(TestCase):
             "postnr": "1112",
             "postdistrikt": "København K",
             "branchekode": "620200",
-            "branchetekst": "Konsulentbistand vedrørende informationsteknologi",
+            "branchetekst": (
+                "Konsulentbistand vedrørende informationsteknologi"
+            ),
             "status": "NORMAL",
         }
 
