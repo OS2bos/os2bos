@@ -1115,7 +1115,7 @@ class ServiceProviderTestCase(TestCase):
         self.assertEqual(service_provider.business_code, "620200")
         self.assertEqual(
             service_provider.business_code_text,
-            "Konsulentbistand vedrørende informationsteknologi"
+            "Konsulentbistand vedrørende informationsteknologi",
         )
         self.assertEqual(service_provider.status, "NORMAL")
 
