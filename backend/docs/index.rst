@@ -79,7 +79,7 @@ Settings relevant to Virk.dk are the ``USE_VIRK``, ``VIRK_USER``, ``VIRK_PASS`` 
 PRISME
 ^^^^^^
 
-OS2BOS can export daily payment files for import into the `PRISME` economy system. The format of the files are based on KMD's interface specification `GF200001Q`_ for creditor records (transaction type G68).
+OS2BOS can export daily payment files for import into the `PRISME`_ economy system. The format of the files are based on KMD's interface specification `GF200001Q`_ for creditor records (transaction type G68).
 
 .. _PRISME: https://www.fujitsu.com/dk/products/software/prisme/
 .. _GF200001Q: https://www.kmd.dk/loesninger-og-services/it-services/snitflader-og-data-warehouse/snitfladebeskrivelser
