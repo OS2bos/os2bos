@@ -24,7 +24,10 @@ logger = logging.getLogger(
 
 
 class Command(BaseCommand):
-    help = "Update ongoing company activities with updated service providers"
+    help = (
+        "Update ongoing company activities with a ServiceProvider"
+        "based on the recipient_id (CVR)."
+    )
 
     @transaction.atomic
     def handle(self, *args, **options):
