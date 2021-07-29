@@ -477,7 +477,9 @@ class PaymentSchedule(models.Model):
     recipient_id = models.CharField(
         max_length=128, verbose_name=_("ID"), blank=True
     )
-    recipient_name = models.CharField(max_length=128, verbose_name=_("navn"))
+    recipient_name = models.CharField(
+        max_length=128, verbose_name=_("navn"), blank=True
+    )
 
     payment_method = models.CharField(
         max_length=128,
@@ -1873,6 +1875,14 @@ class Activity(AuditModelMixin, models.Model):
         ):
             raise RuntimeError(
                 _("Du kan ikke godkende en ydelse uden nogen betalinger")
+            )
+        # Check a recipient_name exists before granting.
+        if (
+            hasattr(self, "payment_plan")
+            and not self.payment_plan.recipient_name
+        ):
+            raise RuntimeError(
+                _("Du kan ikke godkende en ydelse uden en betalingsmodtager")
             )
         # If an activity has no service provider we can't approve it
         # If it has one we update it.

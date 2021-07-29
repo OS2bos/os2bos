@@ -1326,6 +1326,36 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         self.assertEqual(service_provider.name, "MAGENTA ApS")
         self.assertEqual(service_provider.cvr_number, "25052943")
 
+    def test_grant_for_activity_with_no_recipient_name_not_allowed(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case)
+        payment_schedule = create_payment_schedule(
+            recipient_type=PaymentSchedule.COMPANY,
+            payment_method=INVOICE,
+            recipient_id="0205891234",
+            recipient_name="",
+        )
+        service_provider = create_service_provider(
+            name="Magenta test", cvr_number="25052943"
+        )
+        activity = create_activity(
+            case,
+            appropriation,
+            payment_plan=payment_schedule,
+            start_date=date.today(),
+            end_date=date.today() + timedelta(days=3),
+            status=STATUS_DRAFT,
+            service_provider=service_provider,
+        )
+        approval_level = ApprovalLevel.objects.create(name="egenkompetence")
+        user = get_user_model().objects.create(username="Anders And")
+
+        with self.assertRaises(
+            RuntimeError,
+            msg="Du kan ikke godkende en ydelse uden en betalingsmodtager",
+        ):
+            activity.grant(approval_level, "note", user)
+
     def test_regenerate_payments_on_draft_save(self):
         case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
