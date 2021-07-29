@@ -67,13 +67,22 @@ Settings relevant to Serviceplatformen can be found in the ``SERVICEPLATFORM_UUI
 .. _service_person_stamdata_udvidet: https://github.com/magenta-aps/service_person_stamdata_udvidet
 
 
+Virk.dk
+^^^^^^^
+
+We use Virk.dk to fetch information from their CVR register. Support for this is implemented through the module `virk.dk`_.
+
+Settings relevant to Virk.dk are the ``USE_VIRK``, ``VIRK_USER``, ``VIRK_PASS`` and ``VIRK_URL`` keys found in ``settings.py``.
+
+.. _virk.dk: https://github.com/magenta-aps/virk.dk
+
 PRISME
 ^^^^^^
 
 OS2BOS can export daily payment files for import into the `PRISME` economy system. The format of the files are based on KMD's interface specification `GF200001Q`_ for creditor records (transaction type G68).
 
 .. _PRISME: https://www.fujitsu.com/dk/products/software/prisme/
-.. _GF200001Q: https://www.kmd.dk/offentlig-sektor/vores-services/snitflader-og-data-warehouse/snitfladebeskrivelser
+.. _GF200001Q: https://www.kmd.dk/loesninger-og-services/it-services/snitflader-og-data-warehouse/snitfladebeskrivelser
 
 Generating database documentation
 ---------------------------------
