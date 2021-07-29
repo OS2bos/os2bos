@@ -2,19 +2,18 @@
     <div class="cvr-search">
         <div v-if="editable" style="display: flex; justify-content: space-between; align-items: center;">
             <fieldset>
-                <label for="cvr-search-input">Find CVR/P-nr.</label>
-                <input type="search" v-model="search_input" @input="search" id="cvr-search-input">
+                <label for="cvr-search-input">Find virksomhed</label>
+                <input type="search" v-model="search_input" @input="search" id="cvr-search-input" placeholder="CVR/P-nr eller navn">
                 <ul class="cvr-search-result" v-if="search_results.length > 0">
                     <li v-for="s in search_results" :key="s.cvr_number">
                         <button class="cvr-select-btn" @click="select_item(s)" type="button">
                             <p class="title"><strong>{{ s.name }}</strong></p>
+                            <p>{{ s.business_code_text }}</p>
                             <dl>
-                                <dt>Adresse</dt>
-                                <dd>{{ s.zip_code }} {{ s.post_district }}</dd>
                                 <dt>CVR/P-nr</dt>
                                 <dd>{{ s.cvr_number }}</dd>
-                                <dt>Branche</dt>
-                                <dd>{{ s.business_code_text }}</dd>
+                                <dt>Adresse</dt>
+                                <dd>{{ s.zip_code }} {{ s.post_district }}</dd>
                             </dl>
                         </button>
                     </li>
@@ -131,6 +130,10 @@ export default {
         position: relative;
     }
 
+    #cvr-search-input {
+        min-width: 11rem;
+    }
+
     .cvr-search-result {
         list-style: none;
         margin: 0;
@@ -141,10 +144,10 @@ export default {
         left: 0;
         z-index: 10;
         min-width: 11rem;
-    }
-
-    .cvr-search-result li p {
-        margin: 0;
+        max-height: 40rem;
+        overflow-y: auto;
+        overflow-x: visible;
+        box-shadow: var(--shadow-dim);
     }
 
     .cvr-select-btn {
@@ -152,11 +155,12 @@ export default {
         height: auto;
         width: 100%;
         display: block;
-        padding: .75rem 1.5rem;
+        padding: .5rem 1rem .75rem;
         text-align: left;
         border-top: solid 1px var(--grey2);
         border-radius: 0;
         color: var(--grey8);
+        margin: 0;
     }
 
     .cvr-select-btn .title {
@@ -168,8 +172,20 @@ export default {
         color: var(--grey0);
     }
 
-    .cvr-search-result dt {
-        padding-top: .25rem;
+    .cvr-select-btn p {
+        margin: 0;
+    }
+
+    .cvr-select-btn dl {
+        display: grid;
+        grid-template-columns: auto auto;
+        grid-template-rows: auto auto;
+        grid-auto-flow: column;
+    }
+
+    .cvr-select-btn dl dt {
+        margin: 0;
+        padding: .5rem 0 0;
     }
 
 </style>
