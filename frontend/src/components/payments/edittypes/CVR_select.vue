@@ -116,8 +116,6 @@ export default {
             }
         },
         select_item: function(item) {
-            console.log('old reid', this.dataRecipientId)
-            console.log('selecting item', item, this.service_provider)
             this.search_input = ''
             this.search_results = []
             this.service_provider = item
@@ -138,8 +136,6 @@ export default {
                 val: item
             })
             this.input_visible = false
-            console.log('selected item', this.service_provider)
-            console.log('new reid', this.dataRecipientId)
         }
     },
     created: function() {
