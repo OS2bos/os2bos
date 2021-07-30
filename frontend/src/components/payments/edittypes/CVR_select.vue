@@ -104,6 +104,9 @@ export default {
                 selectables.unshift(this.fake_service_provider)
                 this.search_results = selectables
             })
+            .catch(err => {
+                this.search_results = [this.fake_service_provider]
+            })
         },
         search: function() {
             if (this.search_input !== '') {
