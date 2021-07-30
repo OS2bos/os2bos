@@ -119,11 +119,14 @@ async function activityFormInput(t, act_data) {
         case 'COMPANY':
             await t.click(Selector('label').withAttribute('for', 'pay-receiver-type-company'))
             if (act_data.recipient_id) {
-                await t.typeText('#cvr-search-input', act_data.recipient_id)
+                await t
+                    .typeText('#cvr-search-input', act_data.recipient_id)
+                    .click(Selector('.cvr-search-result .cvr-select-btn').withText(act_data.recipient_id))
             } else {
-                await t.typeText('#cvr-search-input', 'Magenta')
+                await t
+                    .typeText('#cvr-search-input', 'Magenta')
+                    .click(Selector('.cvr-search-result .cvr-select-btn').nth(1))
             }
-            await t.click(Selector('.cvr-search-result .cvr-select-btn').nth(0))
             break
         case 'PERSON':
             await t
