@@ -5,11 +5,16 @@
                 <label for="cvr-search-input">Find virksomhed</label>
                 <input type="search" v-model="search_input" @input="search" id="cvr-search-input" placeholder="CVR/P-nr eller navn">
                 <ul class="cvr-search-result" v-if="search_results.length > 0">
+                    <li>
+                        <button class="cvr-select-btn" type="button" @click="select_item(false)">
+                            <p class="title"><strong>Ukendt leverandør</strong></p>
+                        </button>
+                    </li>
                     <li v-for="s in search_results" :key="s.cvr_number">
                         <button class="cvr-select-btn" @click="select_item(s)" type="button">
                             <p class="title"><strong>{{ s.name }}</strong></p>
-                            <p v-if="s.business_code_text">{{ s.business_code_text }}</p>
-                            <dl v-if="s.zip_code">
+                            <p>{{ s.business_code_text }}</p>
+                            <dl>
                                 <dt>CVR/P-nr</dt>
                                 <dd>{{ s.cvr_number }}</dd>
                                 <dt>Adresse</dt>
@@ -69,9 +74,8 @@ export default {
             search_input: null,
             service_provider: null,
             input_visible: false,
-            fake_service_provider: {
-                name: 'Ukendt leverandør',
-                cvr_number: '00000000'
+            no_service_provider: {
+                name: 'Ukendt leverandør'
             }
         }
     },
@@ -82,12 +86,9 @@ export default {
     },
     methods: {
         preFetchData: function(recipient_id) {
-            if (!recipient_id) {
+            if (!recipient_id || recipient_id === '00000000') {
                 this.input_visible = true
-                return
-            }
-            if (recipient_id === this.fake_service_provider.cvr_number) {
-                this.service_provider = this.fake_service_provider
+                this.service_provider = this.no_service_provider
                 return
             }
             axios.get(`service_providers/fetch_serviceproviders_from_virk/?search_term=${ recipient_id }`)
@@ -100,12 +101,10 @@ export default {
         fetchData: function(query) {
             axios.get(`service_providers/fetch_serviceproviders_from_virk/?search_term=${ query }`)
             .then(res => {
-                let selectables = res.data
-                selectables.unshift(this.fake_service_provider)
-                this.search_results = selectables
+                this.search_results = res.data
             })
             .catch(err => {
-                this.search_results = [this.fake_service_provider]
+                this.search_results = []
             })
         },
         search: function() {
@@ -118,14 +117,14 @@ export default {
         select_item: function(item) {
             this.search_input = ''
             this.search_results = []
-            this.service_provider = item
+            this.service_provider = item ? item : this.no_service_provider
             this.$store.commit('setPaymentPlanProperty', {
                 prop: 'recipient_name',
-                val: item.name
+                val: item.name ? item.name : ''
             })
             this.$store.commit('setPaymentPlanProperty', {
                 prop: 'recipient_id',
-                val: item.cvr_number
+                val: item.cvr_number ? item.cvr_number : ''
             })
             this.$store.commit('setPaymentPlanProperty', {
                 prop: 'payment_method',
@@ -133,7 +132,7 @@ export default {
             })
             this.$store.commit('setActivityProperty', {
                 prop: 'service_provider',
-                val: item
+                val: item ? item : null
             })
             this.input_visible = false
         }
