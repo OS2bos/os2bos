@@ -73,10 +73,7 @@ export default {
             search_results: [],
             search_input: null,
             service_provider: null,
-            input_visible: false,
-            no_service_provider: {
-                name: 'Ukendt leverandør'
-            }
+            input_visible: false
         }
     },
     watch: {
@@ -86,9 +83,8 @@ export default {
     },
     methods: {
         preFetchData: function(recipient_id) {
-            if (!recipient_id || recipient_id === '00000000') {
+            if (!recipient_id) {
                 this.input_visible = true
-                this.service_provider = this.no_service_provider
                 return
             }
             axios.get(`service_providers/fetch_serviceproviders_from_virk/?search_term=${ recipient_id }`)
@@ -117,7 +113,7 @@ export default {
         select_item: function(item) {
             this.search_input = ''
             this.search_results = []
-            this.service_provider = item ? item : this.no_service_provider
+            this.service_provider = item
             this.$store.commit('setPaymentPlanProperty', {
                 prop: 'recipient_name',
                 val: item.name ? item.name : ''

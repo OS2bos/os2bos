@@ -1,9 +1,36 @@
 import PermissionLogic from '../mixins/PermissionLogic.js'
 import store from '../../store.js'
 
+function checkDateMax(datestr) {
+    const maxpast = parseInt( new Date().getFullYear() ) - 10,
+        maxfuture = parseInt( new Date().getFullYear() ) + 18,
+        date_regex = /[0-9]{4}-[0-9]{2}-[0-9]{2}/g
+        
+    if (!datestr.match(date_regex)) {
+        notify('Er du sikker på, at du har angivet dato som åååå-mm-dd?', 'error')
+        return false
+    }
+    if (parseInt(datestr.substr(0,4)) < maxpast) {
+        notify('Dato må maks. være 10 år tilbage i tiden', 'error')
+        return false
+    } else if (parseInt(datestr.substr(0,4)) > maxfuture) {
+        notify('Dato må maks. være 18 år fremme i tiden', 'error')
+        return false
+    } else {
+        return true
+    }
+}
+
 function sanitizeActivity(activity, request_mode) {
     
     let new_act = activity
+
+    if (new_act.start_date && !checkDateMax(new_act.start_date)) {
+        return false
+    }
+    if (new_act.end_date && !checkDateMax(new_act.end_date)) {
+        return false
+    }
 
     switch(new_act.payment_plan.payment_cost_type) {
         case 'PER_UNIT':
@@ -47,6 +74,11 @@ function sanitizeActivity(activity, request_mode) {
         if (new_act.payment_plan.recipient_type === 'INTERNAL' && !new_act.payment_plan.recipient_id) {
             new_act.payment_plan.recipient_id = "Ikke udfyldt" // If no recipient ID is supplied, set recipient_id to not filled
         }
+    }
+
+    // enables us to save a service_provider that is `null`, because we might have saved one earlier and regretted it
+    if (!new_act.service_provider) {
+        new_act.service_provider = null
     }
 
     delete new_act.monthly_payment_plan // no need to supply the monthly payment plan. DB already knows it
