@@ -11,8 +11,8 @@
         <header class="activity-header">
             <h1>
                 <i class="material-icons">style</i>
-                Udgift til <span v-html="act.details.name"></span>
-                <span v-if="act.paymentPlan.fictive" class="dim">(Fiktiv)</span>
+                Udgift til <span>{{ act.details.name }}</span>
+                <span v-if="payment_plan.fictive" class="dim">(Fiktiv)</span>
             </h1>
             <template v-if="user_can_edit === true && !edit_mode">
                 <router-link v-if="can_adjust" class="btn act-edit-btn" style="margin-left: 1rem;" :to="`/activity/create?mode=expected`">+ Lav forventet justering</router-link>
@@ -44,7 +44,7 @@
 
         <activity-edit v-if="edit_mode" @save="reload" @cancel="reload" :class="`activity-${ act.status }`" />
         
-        <activity-summary v-else :class="`activity-${ act.status }`" :payment-schedule="act.paymentPlan" />
+        <activity-summary v-else :activity-data="act" :class="`activity-${ act.status }`" />
 
         <!-- Delete activity modal -->
         <div v-if="showModal">
@@ -81,7 +81,7 @@
             </form>
         </div>
         
-        <payment-schedule :payment-id="act.paymentPlan.id" :edit_mode="edit_mode"/>
+        <payment-schedule :p-id="payment_plan.payment_id" :edit_mode="edit_mode"/>
         
     </section>
 
@@ -122,7 +122,7 @@ export default {
             // Adjust only if parent activity was granted and has no other modifying activities
             if (this.appropriation && this.act.status === 'GRANTED') {
                 let modifier = this.appropriation.activities.filter(ac => {
-                    return ac.modifies === this.act.pk
+                    return ac.modifies === this.act.id
                 })
                 if (modifier.length < 1) {
                     return true
@@ -159,14 +159,96 @@ export default {
         }
     },
     methods: {
-        reload: function() {
+        reload: function(activity_id) {
             this.edit_mode = false
             this.showModal = false
+            this.fetchActivity(activity_id)
             //this.$store.dispatch('fetchActivity', this.$route.params.actId)
-            this.fetchData(this.$route.params.actId)
         },
-        actId2name: function(id) {
-            return activityId2name(id)
+        fetchActivity: function(act_id) {
+            // TODO: Load appropriation section and case data
+            this.$store.commit('setActivity', null)
+            const id = btoa(`Activity:${ act_id }`)
+            if (act_id) {
+                let data = {
+                    query: `{
+                        activity(id: "${id}") {
+                            id,
+                            pk,
+                            status,
+                            startDate,
+                            endDate,
+                            details {
+                                id,
+                                name,
+                                description
+                            },
+                            paymentPlan {
+                                paymentId,
+                                fictive,
+                                paymentType,
+                                paymentCostType,
+                                recipientId,
+                                recipientName,
+                                recipientType,
+                                paymentMethod,
+                                paymentFrequency,
+                                paymentDate,
+                                paymentDayOfMonth,
+                                paymentUnits,
+                                paymentAmount
+                            },
+                            appropriation {
+                                pk,
+                                sbsysId
+                            }
+                        }
+                    }`
+                }
+                axios.post('/graphql/', data)
+                .then(res => {
+                    console.log('activity', res.data.data.activity)
+                    const a = res.data.data.activity
+                    const new_appropriation = {
+                        id: a.appropriation.pk,
+                        sbsys_id: a.appropriation.sbsysId
+                    }
+                    const new_activity = {
+                        status: a.status,
+                        id: a.pk,
+                        start_date: a.startDate,
+                        end_date: a.endDate,
+                        details: {
+                            id: Number(a.details.id),
+                            name: a.details.name,
+                            description: a.details.description
+                        }
+                    }
+                    const new_payment_plan = {
+                        payment_id: a.paymentPlan.paymentId,
+                        fictive: a.paymentPlan.fictive,
+                        payment_type: a.paymentPlan.paymentType,
+                        payment_cost_type: a.paymentPlan.paymentCostType,
+                        recipient_id: a.paymentPlan.recipientId,
+                        recipient_name: a.paymentPlan.recipientName,
+                        recipient_type: a.paymentPlan.recipientType,
+                        payment_method: a.paymentPlan.paymentMethod,
+                        payment_frequency: a.paymentPlan.paymentFrequency,
+                        payment_date: a.paymentPlan.paymentDate,
+                        payment_day_of_month: a.paymentPlan.paymentDayOfMonth,
+                        payment_units: a.paymentPlan.paymentUnits,
+                        payment_amount: a.paymentPlan.paymentAmount
+                    }
+                    this.$store.commit('setAppropriation', new_appropriation)
+                    this.$store.commit('setActivity', new_activity)
+                    this.$store.commit('setPaymentPlan', new_payment_plan)
+
+                    this.activity = new_activity
+                    console.log('new act', new_activity)
+                }) 
+            } else {
+                this.activity = null
+            }
         },
         displaySection: function(id) {
             return sectionId2name(id)
@@ -181,36 +263,16 @@ export default {
                 notify('Ydelse slettet', 'success')
             })
             .catch(err => this.$store.dispatch('parseErrorOutput', err))
-        },
-        fetchData: function(activity_id) {
-            const base64id = btoa(`Activity:${activity_id}`)
-            console.log(base64id)
-            let data = {
-                query: `{
-                    activity(id: "${base64id}") {
-                        id,
-                        pk,
-                        details {
-                            name
-                        },
-                        paymentPlan {
-                            id,
-                            fictive,
-                            paymentType,
-                            paymentCostType
-                        }
-                    }
-                }`
-            }
-            axios.post('/graphql/', data)
-            .then(res => {
-                console.log('got act', res.data.data.activity)
-                this.$store.commit('setActivity', res.data.data.activity)
-            })
         }
     },
+    beforeRouteUpdate(to, from, next) {
+        if (to.params.actId !== from.params.actId) {
+            this.reload(to.params.actId)
+        }
+        next()
+    },
     created: function(){
-        this.reload()
+        this.reload(this.$route.params.actId)
     }
 }
     

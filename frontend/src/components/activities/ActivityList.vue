@@ -106,6 +106,7 @@
         ],
         data: function() {
             return {
+                acts: null,
                 diag_open: false,
                 diag_approval_warning: null,
                 this_year: String(new Date().getUTCFullYear()),
@@ -116,9 +117,6 @@
         computed: {
             appropriation: function() {
                 return this.$store.getters.getAppropriation
-            },
-            acts: function() {
-                return this.$store.getters.getActivities
             },
             main_activities: function() {
                 if (this.acts) {
@@ -161,8 +159,10 @@
             }
         },
         methods: {
-            update: function() {
-                this.$store.dispatch('fetchActivities', this.apprId)
+            update: function(appropriation_id) {
+                this.$store.commit('clearActivities')
+                this.fetchData(appropriation_id)
+                //this.$store.dispatch('fetchActivities', appropriation_id)
                 this.$store.commit('setUnCheckAll')
             },
             closeDialog: function() {
@@ -247,13 +247,53 @@
                 } else {
                     this.$router.push('/activity/create?type=main')
                 }
+            },
+            fetchData: function(appropriation_id) {
+                const id = btoa(`Appropriation:${appropriation_id}`)
+                let data = {
+                    query: `{
+                        appropriation(id: "${ id }") {
+                            activities {
+                                edges {
+                                    node {
+                                        pk,
+                                        status,
+                                        details {
+                                            name
+                                        },
+                                        modifies {
+                                            pk
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }`
+                }
+                axios.post('/graphql/', data)
+                .then(res => {
+                    console.log('got appr acts', res.data.data.appropriation.activities.edges)
+                    const acts = res.data.data.appropriation.activities.edges.map(a => {
+                        return {
+                            id: a.node.pk,
+                            status: a.node.status,
+                            details: {
+                                name: a.node.details.name
+                            },
+                            modifies: a.node.modifies
+                        }
+                    })
+                    console.log('got data', acts)
+                    this.acts = acts
+                })
             }
         },
-        beforeCreate: function() {
-            this.$store.commit('clearActivities')
+        beforeRouteUpdate: function(to, from, next) {
+            this.update(this.apprId)
+            next()
         },
         created: function() {
-            this.update()
+            this.update(this.apprId)
         }
     }
     

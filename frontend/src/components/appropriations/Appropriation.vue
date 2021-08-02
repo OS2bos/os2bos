@@ -97,7 +97,7 @@
             </template>
 
             <div class="sagsbev appr-grid-box">
-                <activity-list :appr-id="appr.id" />
+                <activity-list :appr-id="appr.pk" />
             </div>
 
         </div>
@@ -131,15 +131,6 @@
                 showModal: false
             }
         },
-        beforeRouteEnter: function(to, from, next) {
-            store.commit('clearAppropriation')
-            store.dispatch('fetchAppropriation', to.params.apprId)
-            .then(() => next())
-        },
-        beforeRouteUpdate: function(to, from, next) {
-            store.dispatch('fetchAppropriation', to.params.apprId)
-            .then(() => next())
-        },
         computed: {
             cas: function() {
                 return this.$store.getters.getCase
@@ -157,10 +148,12 @@
             }
         },
         methods: {
-            update: function() {
+            update: function(appropriation_id) {
                 this.show_edit =  false
                 this.showModal = false
-                this.$store.dispatch('fetchAppropriation', this.$route.params.apprId)
+                this.$store.commit('clearAppropriation')
+                this.fetchData(appropriation_id)
+                //this.$store.dispatch('fetchAppropriation', this.$route.params.apprId)
             },
             displayDate: function(date) {
                 return json2jsDate(date)
@@ -214,10 +207,11 @@
             },
             // Example for GrapQL application
             fetchData: function(appropriation_id) {
-                const base64id = btoa(`Appropriation:${appropriation_id}`)
+                // TODO: get data for appropriation case and section
+                const id = btoa(`Appropriation:${appropriation_id}`)
                 let data = {
                     query: `{
-                        appropriation(id: "${base64id}") {
+                        appropriation(id: "${ id }") {
                             id,
                             pk,
                             sbsysId,
@@ -227,9 +221,16 @@
                 }
                 axios.post('/graphql/', data)
                 .then(res => {
-                    this.appropriation = res.data.data.appropriation
+                    this.$store.commit('setAppropriation', res.data.data.appropriation)
                 })
             }
+        },
+        beforeRouteUpdate: function(to, from, next) {
+            this.update(to.params.apprId)
+            next()
+        },
+        created: function() {
+            this.update(this.$route.params.apprId)
         }
     }
     

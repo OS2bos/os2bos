@@ -16,28 +16,28 @@
         
         <div>
             <payment-type :editable="false" />
-            <template v-if="paymentSchedule.paymentType === 'ONE_TIME_PAYMENT'">
+            <template v-if="payment_plan.payment_type === 'ONE_TIME_PAYMENT'">
                 <pay-date-single :editable="false" />
                 <pay-date-single-period-display />
             </template>
         </div>
 
-        <div v-if="paymentSchedule.paymentType !== 'ONE_TIME_PAYMENT'">
+        <div v-if="payment_plan.payment_type !== 'ONE_TIME_PAYMENT'">
             <pay-date-start :editable="false" />
             <pay-date-end :editable="false" />
         </div>
     
-        <payment-frequency :editable="false" v-if="paymentSchedule.paymentType === 'INDIVIDUAL_PAYMENT'" />
+        <payment-frequency :editable="false" v-if="!is_individual_payment_type(payment_plan)" />
         
-        <div v-if="paymentSchedule.paymentType === 'INDIVIDUAL_PAYMENT'">
+        <div v-if="!is_individual_payment_type(payment_plan)">
             <cost-type :editable="false" />
-            <template v-if="paymentSchedule.paymentCostType === 'FIXED'">
+            <template v-if="payment_plan.payment_cost_type === 'FIXED'">
                 <cost-type-fixed :editable="false" />
             </template>
-            <template v-if="paymentSchedule.paymentCostType === 'GLOBAL_RATE'">
+            <template v-if="payment_plan.payment_cost_type === 'GLOBAL_RATE'">
                 <cost-type-rate :editable="false" />
             </template>
-            <template v-if="paymentSchedule.paymentCostType === 'PER_UNIT'">
+            <template v-if="payment_plan.payment_cost_type === 'PER_UNIT'">
                 <cost-type-per-unit-display :editable="false" />
                 <per-unit-history :editable="false" />
             </template>
@@ -71,7 +71,7 @@ export default {
         PermissionLogic
     ],
     props: [
-        'paymentSchedule'
+        'activityData'
     ]
 
 }

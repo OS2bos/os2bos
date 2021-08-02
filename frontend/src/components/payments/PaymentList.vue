@@ -12,7 +12,7 @@
         <div class="row" style="justify-items: space-between; flex-flow: row nowrap;">
             <header class="row payment-schedule-header">
                 <h2 class="payment-schedule-title">
-                    Betalinger <span style="opacity: .66;">betalingsnøgle {{ paymentId }}</span>
+                    Betalinger <span style="opacity: .66;">betalingsnøgle {{ pId }}</span>
                 </h2>
                 <button class="btn payment-create-btn" title="Ny betaling" @click="payCreateDiagOpen" v-if="can_create_payment && !edit_mode">
                     + Tilføj betaling
@@ -67,7 +67,7 @@
 </template>
 
 <script>
-
+    import axios from '../http/Http.js'
     import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
     import PaymentCreateModal from './payment-editing/PaymentCreate.vue'
@@ -94,11 +94,12 @@
             PermissionLogic
         ],
         props: [
-            'paymentId',
+            'pId',
             'edit_mode'
         ],
         data: function() {
             return {
+                payments: null,
                 now: new Date(),
                 years: [],
                 current_year: null,
@@ -170,13 +171,9 @@
             payment_plan: function() {
                 return this.$store.getters.getPaymentPlan
             },
-            payments: function() {
-                return this.$store.getters.getPayments
-            },
             payments_by_year: function() {
-                let state_payments = this.$store.getters.getPayments
-                if (state_payments) {
-                    let payms = state_payments.filter(p => {
+                if (this.payments) {
+                    let payms = this.payments.filter(p => {
                         return this.current_year === parseInt(p.date.substr(0,4))
                     })
                     return payms
@@ -204,13 +201,58 @@
             }
         },
         watch: {
-            paymentId: function() {
-                this.update()
+            pId: function(new_val) {
+                this.update(new_val)
             }
         },
         methods: {
-            update: function() {
-                this.$store.dispatch('fetchPaymentPlan', this.paymentId)
+            update: function(payment_schedule_id) {
+                if (payment_schedule_id) {
+                    let data = {
+                        query: `{
+                            paymentSchedules(paymentId: ${payment_schedule_id}) {
+                                edges {
+                                    node {
+                                        paymentId,
+                                        payments {
+                                            edges {
+                                                node {
+                                                    id,
+                                                    amount,
+                                                    date,
+                                                    paidAmount,
+                                                    paidDate,
+                                                    note
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }`
+                    }
+                    axios.post('/graphql/', data)
+                    .then(res => {
+                        const payment_schedule_key = res.data.data.paymentSchedules.edges[0].node.paymentId
+                        this.payments = res.data.data.paymentSchedules.edges[0].node.payments.edges.map(p => {
+                            const new_p = {
+                                id: Number(atob(p.node.id).substr(8)),
+                                amount: p.node.amount,
+                                date: p.node.date,
+                                paid: p.node.paid,
+                                paid_date: p.node.paidDate,
+                                paid_amount: p.node.paidAmount,
+                                note: p.node.note,
+                                payment_schedule__payment_id: payment_schedule_key
+                            }
+                            return new_p
+                        })
+                    }) 
+                } else {
+                    this.payments = null
+                }
+                
+                //this.$store.dispatch('fetchPaymentPlan', this.paymentId)
             },
             updatePayment: function(payload) {
                 if (payload.operation === 'save') {
@@ -271,6 +313,7 @@
         },
         created: function() {
             this.createYearList()
+            this.update(this.pId)
         }
     }
 </script>

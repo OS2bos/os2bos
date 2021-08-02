@@ -21,7 +21,7 @@
                
         <error :err-key="this.property" />
 
-        <p v-if="model" style="margin-top: .5rem;">{{ act2description(model) }}</p>
+        <p v-if="model" style="margin-top: .5rem;">{{ act2description(model.id) }}</p>
 
     </fieldset>
 
@@ -29,8 +29,8 @@
         <template v-if="model">
             <dt>Ydelse</dt>
             <dd>
-                <p class="word-break"><strong v-html="act2name(model)"></strong></p>
-                <p>{{ act2description(model) }}</p>
+                <p class="word-break"><strong>{{ model.name }}</strong></p>
+                <p>{{ act2description(model.id) }}</p>
             </dd>
         </template>
     </dl>
@@ -40,7 +40,7 @@
 
 <script>
 import axios from '../../http/Http.js'
-import mixin from '../../mixins/ActivityEditMixin.js'
+import actEditMixin from '../../mixins/ActivityEditMixin.js'
 import Error from '../../forms/Error.vue'
 import ListPicker from '../../forms/ListPicker.vue'
 import { activityId2name, activityId2description } from '../../filters/Labels.js'
@@ -51,7 +51,7 @@ export default {
         ListPicker
     },
     mixins: [
-        mixin
+        actEditMixin
     ],
     data: function() {
         return {
