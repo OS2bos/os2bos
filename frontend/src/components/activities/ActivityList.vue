@@ -160,7 +160,6 @@
         },
         methods: {
             update: function(appropriation_id) {
-                console.log('updating')
                 this.fetchData(appropriation_id)
                 this.$store.commit('setUnCheckAll')
             },
@@ -259,12 +258,19 @@
                                         status,
                                         note,
                                         activityType,
+                                        startDate,
+                                        endDate,
+                                        modified,
                                         details {
                                             name
                                         },
                                         modifies {
                                             pk
-                                        }
+                                        },
+                                        totalGrantedThisYear,
+                                        totalExpectedThisYear,
+                                        totalCostFullYear,
+                                        totalCost
                                     }
                                 }
                             }
@@ -284,8 +290,17 @@
                                 name: a.node.details.name
                             },
                             note: a.node.note,
+                            start_date: a.node.startDate,
+                            end_date: a.node.endDate,
+                            modified: a.node.modified,
                             activity_type: a.node.activityType,
-                            modifies: a.node.modifies ? a.node.modifies.pk : null
+                            modifies: a.node.modifies ? a.node.modifies.pk : null,
+                            total_granted_this_year: a.node.totalGrantedThisYear,
+                            total_expected_this_year: a.node.totalExpectedThisYear,
+                            total_cost_full_year: a.node.totalCostFullYear,
+                            total_cost: a.node.totalCost,
+                            approved: a.node.status === 'GRANTED' ? true : false,
+                            expected: a.node.status === 'EXPECTED' ? true : false,
                         }
                     })
                     this.$store.commit('setActivityList', acts)
