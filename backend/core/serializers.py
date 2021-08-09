@@ -658,7 +658,7 @@ class ActivitySerializer(WritableNestedModelSerializer):
         it with the new data and assign it to the activity instead of
         creating a new one.
         """
-        service_provider = validated_data.pop("service_provider", None)
+        service_provider = validated_data.get("service_provider", None)
 
         if service_provider and service_provider["cvr_number"]:
             existing_service_provider = ServiceProvider.objects.filter(

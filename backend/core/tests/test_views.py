@@ -898,10 +898,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             payment_type=PaymentSchedule.RUNNING_PAYMENT,
             activity=activity,
         )
-        section.main_activities.add(
-            activity.details,
-            expected_details,
-        )
+        section.main_activities.add(activity.details, expected_details)
 
         modifying_activity = create_activity(
             case,
@@ -1219,18 +1216,9 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
 
     @parameterized.expand(
         [
-            (
-                "previous",
-                ["2020-01-01"],
-            ),
-            (
-                "current",
-                ["2020-02-01"],
-            ),
-            (
-                "next",
-                ["2020-03-01"],
-            ),
+            ("previous", ["2020-01-01"]),
+            ("current", ["2020-02-01"]),
+            ("next", ["2020-03-01"]),
         ]
     )
     @freeze_time("2020-02-01")
@@ -1263,18 +1251,9 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
 
     @parameterized.expand(
         [
-            (
-                "previous",
-                ["2020-01-01"],
-            ),
-            (
-                "current",
-                ["2020-02-01"],
-            ),
-            (
-                "next",
-                ["2020-03-01"],
-            ),
+            ("previous", ["2020-01-01"]),
+            ("current", ["2020-02-01"]),
+            ("next", ["2020-03-01"]),
         ]
     )
     @freeze_time("2020-02-01")
@@ -1308,14 +1287,7 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
 
     @parameterized.expand(
         [
-            (
-                "previous",
-                [
-                    "2019-10-01",
-                    "2019-11-01",
-                    "2019-12-01",
-                ],
-            ),
+            ("previous", ["2019-10-01", "2019-11-01", "2019-12-01"]),
             (
                 "current",
                 [
@@ -1333,10 +1305,7 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
                     "2020-12-01",
                 ],
             ),
-            (
-                "next",
-                ["2021-01-01", "2021-02-01"],
-            ),
+            ("next", ["2021-01-01", "2021-02-01"]),
         ]
     )
     @freeze_time("2020-01-01")
@@ -1372,14 +1341,7 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
 
     @parameterized.expand(
         [
-            (
-                "previous",
-                [
-                    "2019-10-01",
-                    "2019-11-01",
-                    "2019-12-01",
-                ],
-            ),
+            ("previous", ["2019-10-01", "2019-11-01", "2019-12-01"]),
             (
                 "current",
                 [
@@ -1397,10 +1359,7 @@ class TestPaymentViewSet(AuthenticatedTestCase, BasicTestMixin):
                     "2020-12-01",
                 ],
             ),
-            (
-                "next",
-                ["2021-01-01", "2021-02-01"],
-            ),
+            ("next", ["2021-01-01", "2021-02-01"]),
         ]
     )
     @freeze_time("2020-01-01")
@@ -1906,6 +1865,59 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
             response.json()["service_provider"]["id"], service_provider.id
         )
 
+    def test_patch_with_null_service_provider(self):
+        now = timezone.now().date()
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case)
+        service_provider = create_service_provider()
+
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            start_date=now - timedelta(days=6),
+            end_date=now + timedelta(days=6),
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_DRAFT,
+            service_provider=service_provider,
+        )
+        payment_plan = create_payment_schedule(
+            payment_cost_type=PaymentSchedule.FIXED_PRICE,
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            activity=activity,
+        )
+        url = reverse("activity-detail", kwargs={"pk": activity.pk})
+        self.client.login(username=self.username, password=self.password)
+
+        # Modify an activity removing a service provider from it.
+        data = {
+            "id": activity.id,
+            "status": "DRAFT",
+            "appropriation": str(appropriation.pk),
+            "activity_type": "MAIN_ACTIVITY",
+            "details": str(activity.details.pk),
+            "payment_plan": {
+                "id": payment_plan.pk,
+                "payment_type": "ONE_TIME_PAYMENT",
+                "payment_cost_type": "FIXED",
+                "payment_amount": "200",
+                "payment_date": "2021-07-20",
+                "recipient_type": "COMPANY",
+                "recipient_id": "25052943",
+                "recipient_name": "MAGENTA ApS",
+                "payment_method": "INVOICE",
+                "payment_rate": None,
+                "price_per_unit": None,
+                "payment_units": None,
+                "payment_day_of_month": None,
+            },
+            "service_provider": None,
+        }
+        response = self.client.put(
+            url, data=data, content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["service_provider"], None)
+
 
 class TestServiceProviderViewSet(AuthenticatedTestCase, BasicTestMixin):
     @classmethod
@@ -2113,7 +2125,4 @@ class TestFrontendSettingsView(AuthenticatedTestCase, BasicTestMixin):
         }
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(
-            response.json(),
-            expected_response,
-        )
+        self.assertEqual(response.json(), expected_response)
