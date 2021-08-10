@@ -1,5 +1,8 @@
 .. include:: ../../../frontend/README.rst
 
+This documentation is deprecated as of frontend version 4.2.0.
+Refer to ``/frontend/docs/index.md`` in the project repo for the updated documentation.
+
 Code documentation
 ------------------
 .. js:autofunction:: municipalityId2name
