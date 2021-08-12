@@ -181,13 +181,8 @@
             }
         },
         computed: {
-            p: {
-                get: function() {
-                    return this.payment
-                },
-                set: function(new_val) {
-                    console.log('nothing')
-                }
+            p: function() {
+                return this.payment
             },
             disabled: function() {
                 if (this.payment.paid_amount && this.payment.paid_date || this.payment.amount && this.payment.date) {
