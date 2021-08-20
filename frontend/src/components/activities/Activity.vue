@@ -191,7 +191,10 @@ export default {
                                 paymentDate,
                                 paymentDayOfMonth,
                                 paymentUnits,
-                                paymentAmount
+                                paymentAmount,
+                                pricePerUnit {
+                                    pk
+                                }
                             },
                             appropriation {
                                 pk,
@@ -265,7 +268,8 @@ export default {
                         payment_date: a.paymentPlan.paymentDate,
                         payment_day_of_month: a.paymentPlan.paymentDayOfMonth,
                         payment_units: a.paymentPlan.paymentUnits,
-                        payment_amount: a.paymentPlan.paymentAmount
+                        payment_amount: a.paymentPlan.paymentAmount,
+                        price_per_unit: a.paymentPlan.pricePerUnit.pk
                     }
                     this.$store.commit('setCase', new_case)
                     this.$store.commit('setAppropriation', new_appropriation)

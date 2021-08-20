@@ -73,6 +73,7 @@ class Payment(OptimizedDjangoObjectType):
 
 
 class Rate(OptimizedDjangoObjectType):
+    pk = graphene.Int(source="pk")
 
     class Meta:
         model = RateModel
@@ -82,6 +83,7 @@ class Rate(OptimizedDjangoObjectType):
 
 
 class Price(OptimizedDjangoObjectType):
+    pk = graphene.Int(source="pk")
 
     class Meta:
         model = PriceModel
