@@ -13,7 +13,10 @@ from django import forms
 
 from rest_framework import serializers
 
-from drf_writable_nested import WritableNestedModelSerializer
+from drf_writable_nested import (
+    WritableNestedModelSerializer,
+    UniqueFieldsMixin,
+)
 
 from core.models import (
     Case,
@@ -362,10 +365,11 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
                 _("ugyldig betalingsmetode for betalingsmodtager")
             )
 
-        if data[
-            "recipient_type"
-        ] == PaymentSchedule.COMPANY and not validate_cvr(
-            data["recipient_id"]
+        if (
+            data["recipient_type"] == PaymentSchedule.COMPANY
+            and "recipient_id" in data
+            and data["recipient_id"]
+            and not validate_cvr(data["recipient_id"])
         ):
             raise serializers.ValidationError(
                 _("Ugyldigt CVR nummer for firma")
@@ -511,6 +515,16 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
         return data
 
 
+class ServiceProviderSerializer(
+    UniqueFieldsMixin, serializers.ModelSerializer
+):
+    """Serializer for the ServiceProvider model."""
+
+    class Meta:
+        model = ServiceProvider
+        fields = "__all__"
+
+
 class ActivitySerializer(WritableNestedModelSerializer):
     """Serializer for the Activity model."""
 
@@ -522,6 +536,10 @@ class ActivitySerializer(WritableNestedModelSerializer):
     total_expected_this_year = serializers.ReadOnlyField()
 
     payment_plan = PaymentScheduleSerializer(partial=True, required=False)
+    service_provider = ServiceProviderSerializer(
+        partial=True, required=False, allow_null=True
+    )
+
     details__name = serializers.ReadOnlyField(source="details.name")
 
     @staticmethod
@@ -607,6 +625,12 @@ class ActivitySerializer(WritableNestedModelSerializer):
         data_copy["payment_plan"] = PaymentSchedule(
             **data_copy.pop("payment_plan")
         )
+        # Pop the service provider and attach a serialized version.
+        if "service_provider" in data_copy and data_copy["service_provider"]:
+            data_copy["service_provider"] = ServiceProvider(
+                **data_copy.pop("service_provider")
+            )
+
         instance = Activity(**data_copy)
 
         is_valid_start_date = instance.is_valid_activity_start_date()
@@ -626,6 +650,50 @@ class ActivitySerializer(WritableNestedModelSerializer):
             except forms.ValidationError as e:
                 raise serializers.ValidationError(e.message)
         return data
+
+    def set_correct_service_provider_in_validated_data(self, validated_data):
+        """Set the correct service provider in the validated_data.
+
+        If a service provider already exists with the CVR, we update
+        it with the new data and assign it to the activity instead of
+        creating a new one.
+        """
+        service_provider = validated_data.get("service_provider", None)
+
+        if service_provider and service_provider["cvr_number"]:
+            existing_service_provider = ServiceProvider.objects.filter(
+                cvr_number=service_provider["cvr_number"]
+            ).first()
+            if existing_service_provider:
+                service_provider["id"] = existing_service_provider.id
+                # Set the service provider in initial_data to
+                # make sure we are updating it.
+                self.initial_data["service_provider"] = service_provider
+                validated_data["service_provider"] = service_provider
+            else:
+                validated_data["service_provider"] = service_provider
+
+        return validated_data
+
+    def create(self, validated_data):
+        """Override create to handle existing service provider."""
+        validated_data = self.set_correct_service_provider_in_validated_data(
+            validated_data
+        )
+
+        instance = super().create(validated_data)
+
+        return instance
+
+    def update(self, instance, validated_data):
+        """Override update to handle existing service provider."""
+        validated_data = self.set_correct_service_provider_in_validated_data(
+            validated_data
+        )
+
+        instance = super().update(instance, validated_data)
+
+        return instance
 
     class Meta:
         model = Activity
@@ -767,14 +835,6 @@ class ActivityDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ActivityDetails
-        fields = "__all__"
-
-
-class ServiceProviderSerializer(serializers.ModelSerializer):
-    """Serializer for the ServiceProvider model."""
-
-    class Meta:
-        model = ServiceProvider
         fields = "__all__"
 
 

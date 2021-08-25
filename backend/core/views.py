@@ -82,7 +82,10 @@ from core.filters import (
     PaymentFilter,
     AllowedForStepsFilter,
 )
-from core.utils import get_person_info
+from core.utils import (
+    get_person_info,
+    get_company_info_from_search_term,
+)
 
 from core.mixins import (
     AuditMixin,
@@ -450,12 +453,41 @@ class UserViewSet(ReadOnlyViewset):
     serializer_class = UserSerializer
 
 
-class ServiceProviderViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
+class ServiceProviderViewSet(
+    ClassificationViewSetMixin, viewsets.ModelViewSet
+):
     """Expose service providers in REST API."""
 
     queryset = ServiceProvider.objects.all()
     serializer_class = ServiceProviderSerializer
     filterset_fields = "__all__"
+
+    @action(detail=False, methods=["get"])
+    def fetch_serviceproviders_from_virk(self, request):
+        """Fetch serviceproviders using a generic search term from Virk.
+
+        Returns the data as serialized ServiceProvider data.
+
+        GET params: search_term
+        """
+        search_term = request.query_params.get("search_term")
+        if not search_term:
+            return Response(
+                {"errors": [_("Der kræves en search_term parameter")]},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        company_info = get_company_info_from_search_term(search_term)
+
+        if not company_info:
+            return Response(
+                {"errors": [_("Fejl i søgning eller forbindelse til Virk")]},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        service_providers = [
+            ServiceProvider.virk_to_service_provider(data)
+            for data in company_info
+        ]
+        return Response(service_providers, status.HTTP_200_OK)
 
 
 class ApprovalLevelViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
@@ -503,12 +535,19 @@ class ActivityCategoryViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     serializer_class = ActivityCategorySerializer
 
 
-class IsEditingPastPaymentsAllowed(APIView):
-    """Expose the ALLOW_EDIT_OF_PAST_PAYMENTS setting in the API."""
+class FrontendSettingsView(APIView):
+    """Expose a relevant selection of settings to the frontend."""
 
     authentication_classes = (CsrfExemptSessionAuthentication,)
 
     def get(self, request, format=None):
-        """Return the Django setting allowing changes to the past."""
-        is_enabled = settings.ALLOW_EDIT_OF_PAST_PAYMENTS
-        return Response(is_enabled)
+        """Expose the relevant settings."""
+        settings_dict = {
+            "ALLOW_EDIT_OF_PAST_PAYMENTS": (
+                settings.ALLOW_EDIT_OF_PAST_PAYMENTS
+            ),
+            "ALLOW_SERVICE_PROVIDERS_FROM_VIRK": (
+                settings.ALLOW_SERVICE_PROVIDERS_FROM_VIRK
+            ),
+        }
+        return Response(settings_dict)

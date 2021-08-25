@@ -40,12 +40,21 @@ from holidays import Denmark as danish_holidays
 
 from service_person_stamdata_udvidet import get_citizen
 
+from virk_dk import (
+    get_org_info_from_cvr,
+    get_org_info_from_cvr_p_number_or_name,
+)
+
 from core import models
 from core.data.extra_payment_date_exclusion_tuples import (
     extra_payment_date_exclusion_tuples,
 )
 
 
+serviceplatformen_logger = logging.getLogger(
+    "bevillingsplatform.serviceplatformen"
+)
+virk_logger = logging.getLogger("bevillingsplatform.virk")
 logger = logging.getLogger(__name__)
 
 
@@ -69,7 +78,7 @@ def get_person_info(cpr):
 def get_cpr_data(cpr):
     """Get CPR data from Serviceplatformen."""
     if not os.path.isfile(settings.SERVICEPLATFORM_CERTIFICATE_PATH):
-        logger.info(
+        serviceplatformen_logger.info(
             "serviceplatform certificate path: %s is not a file",
             settings.SERVICEPLATFORM_CERTIFICATE_PATH,
         )
@@ -83,7 +92,7 @@ def get_cpr_data(cpr):
         )
         return result
     except requests.exceptions.HTTPError:
-        logger.exception("get_cpr_data requests error")
+        serviceplatformen_logger.exception("get_cpr_data requests error")
         return None
 
 
@@ -128,6 +137,74 @@ def get_cpr_data_mock(cpr):
         "kommunekode": "370",
     }
     return result
+
+
+def get_company_info_mock():
+    """Use test data in place of the CVR Virk functions for develop/test."""
+    result = [
+        {
+            "cvr_no": "25052943",
+            "navn": "MAGENTA ApS",
+            "vejnavn": "Pilestræde",
+            "husnr": "43",
+            "postnr": "1112",
+            "postdistrikt": "København K",
+            "branchekode": "620200",
+            "branchetekst": (
+                "Konsulentbistand vedrørende informationsteknologi"
+            ),
+            "status": "NORMAL",
+        }
+    ]
+    return result
+
+
+def get_company_info_from_search_term(search_term):
+    """Get CVR Data from Virk from a generic search term."""
+    # Return a mocked company info if we are not allowed to use Virk.
+    if not settings.USE_VIRK:
+        return get_company_info_mock()
+
+    data = {
+        "search_term": search_term,
+        "virk_usr": settings.VIRK_USER,
+        "virk_pwd": settings.VIRK_PASS,
+        "virk_url": settings.VIRK_URL,
+    }
+
+    try:
+        result = get_org_info_from_cvr_p_number_or_name(data)
+        if not isinstance(result, list):
+            virk_logger.error(f"{result}")
+            return None
+        return result
+    except requests.exceptions.HTTPError:
+        virk_logger.exception("get_cvr_data requests error")
+        return None
+
+
+def get_company_info_from_cvr(cvr_number):
+    """Get CVR Data from Virk from a CVR number."""
+    # Return a mocked company info if we are not allowed to use Virk.
+    if not settings.USE_VIRK:
+        return get_company_info_mock()
+
+    data = {
+        "cvr_number": cvr_number,
+        "virk_usr": settings.VIRK_USER,
+        "virk_pwd": settings.VIRK_PASS,
+        "virk_url": settings.VIRK_URL,
+    }
+
+    try:
+        result = get_org_info_from_cvr(data)
+        if not isinstance(result, list):
+            virk_logger.error(f"{result}")
+            return None
+        return result
+    except requests.exceptions.HTTPError:
+        virk_logger.exception("get_cvr_data requests error")
+        return None
 
 
 def send_activity_email(subject, template, activity):

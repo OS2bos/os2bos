@@ -44,6 +44,8 @@ from core.utils import (
     generate_cases_report_list_v0,
     generate_payment_date_exclusion_dates,
     validate_cvr,
+    get_company_info_from_cvr,
+    get_company_info_from_search_term,
 )
 from core.tests.testing_utils import (
     BasicTestMixin,
@@ -163,6 +165,150 @@ class GetPersonInfoTestCase(TestCase):
 
         self.assertIn("relationer", result)
         self.assertIn("efternavn", result)
+
+
+class GetCompanyInfoTestCase(TestCase):
+    @override_settings(USE_VIRK=True)
+    @mock.patch("core.utils.get_org_info_from_cvr")
+    def test_get_company_info_from_cvr(self, virk_mock):
+        cvr = "25052943"
+        test_service_providers = [
+            {
+                "cvr_no": "25052943",
+                "navn": "MAGENTA ApS",
+                "vejnavn": "Pilestræde",
+                "husnr": "43",
+                "postnr": "1112",
+                "branchekode": "620200",
+                "status": "NORMAL",
+            }
+        ]
+        virk_mock.return_value = test_service_providers
+
+        result = get_company_info_from_cvr(cvr)
+
+        self.assertEqual(result, test_service_providers)
+
+    @override_settings(USE_VIRK=True)
+    @mock.patch("core.utils.get_org_info_from_cvr_p_number_or_name")
+    def test_get_company_info_from_search_term(self, virk_mock):
+        search_term = "25052943"
+        test_service_providers = [
+            {
+                "cvr_no": "25052943",
+                "navn": "MAGENTA ApS",
+                "vejnavn": "Pilestræde",
+                "husnr": "43",
+                "postnr": "1112",
+                "branchekode": "620200",
+                "status": "NORMAL",
+            }
+        ]
+        virk_mock.return_value = test_service_providers
+
+        result = get_company_info_from_search_term(search_term)
+
+        self.assertEqual(result, test_service_providers)
+
+    @override_settings(USE_VIRK=True)
+    @mock.patch("core.utils.get_org_info_from_cvr", lambda cvr: None)
+    def test_get_company_info_from_cvr_none(self):
+        cvr = "25052943"
+
+        result = get_company_info_from_cvr(cvr)
+
+        self.assertIsNone(result)
+
+    @override_settings(USE_VIRK=True)
+    @mock.patch(
+        "core.utils.get_org_info_from_cvr_p_number_or_name",
+        lambda search_term: None,
+    )
+    def test_get_company_info_from_search_term_none(self):
+        search_term = "25052943"
+
+        result = get_company_info_from_search_term(search_term)
+
+        self.assertIsNone(result)
+
+    @override_settings(USE_VIRK=True)
+    @mock.patch("core.utils.virk_logger")
+    @mock.patch("core.utils.get_org_info_from_cvr")
+    def test_get_company_info_from_cvr_http_error(
+        self, virk_mock, virk_logger_mock
+    ):
+        cvr = "25052943"
+        virk_mock.side_effect = requests.exceptions.HTTPError
+
+        result = get_company_info_from_cvr(cvr)
+
+        self.assertIsNone(result)
+        virk_logger_mock.exception.assert_called_with(
+            "get_cvr_data requests error"
+        )
+
+    @override_settings(USE_VIRK=True)
+    @mock.patch("core.utils.virk_logger")
+    @mock.patch(
+        "core.utils.get_org_info_from_cvr_p_number_or_name",
+    )
+    def test_get_company_info_from_search_term_http_error(
+        self, virk_mock, virk_logger_mock
+    ):
+        search_term = "25052943"
+        virk_mock.side_effect = requests.exceptions.HTTPError
+
+        result = get_company_info_from_search_term(search_term)
+        self.assertIsNone(result)
+        virk_logger_mock.exception.assert_called_with(
+            "get_cvr_data requests error"
+        )
+
+    @override_settings(USE_VIRK=False)
+    def test_get_company_info_from_search_term_no_virk(self):
+        search_term = "25052943"
+        test_service_providers = [
+            {
+                "cvr_no": "25052943",
+                "navn": "MAGENTA ApS",
+                "vejnavn": "Pilestræde",
+                "husnr": "43",
+                "postnr": "1112",
+                "postdistrikt": "København K",
+                "branchekode": "620200",
+                "branchetekst": (
+                    "Konsulentbistand vedrørende informationsteknologi"
+                ),
+                "status": "NORMAL",
+            }
+        ]
+
+        result = get_company_info_from_search_term(search_term)
+
+        self.assertEqual(result, test_service_providers)
+
+    @override_settings(USE_VIRK=False)
+    def test_get_company_info_from_cvr_no_virk(self):
+        cvr = "25052943"
+        test_service_providers = [
+            {
+                "cvr_no": "25052943",
+                "navn": "MAGENTA ApS",
+                "vejnavn": "Pilestræde",
+                "husnr": "43",
+                "postnr": "1112",
+                "postdistrikt": "København K",
+                "branchekode": "620200",
+                "branchetekst": (
+                    "Konsulentbistand vedrørende informationsteknologi"
+                ),
+                "status": "NORMAL",
+            }
+        ]
+
+        result = get_company_info_from_cvr(cvr)
+
+        self.assertEqual(result, test_service_providers)
 
 
 class SendAppropriationTestCase(TestCase, BasicTestMixin):

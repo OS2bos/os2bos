@@ -79,7 +79,6 @@ const getters = {
      * @param {string} filter_key A string corresponding to a property key in state.filters
      * @returns {any} Whatever is stored in state.filters[filter_key]
      * @example this.$store.getters.getPaymentSearchFilter('payment_method')
-     * @memberof state_payment
      */
     getPaymentSearchFilter: (state) => (filter_key) => {
         return state.filters[filter_key]

@@ -45,9 +45,8 @@ export default {
     methods: {
         save: function() {
             this.$store.dispatch('saveEditedPayment', this.compdata.id)
-            .then(res => {
-                this.buttonTxt = 'Gemt'
-                this.$emit('update', res)
+            .then((payment) => {
+                this.$emit('update', payment)
             })
         }
     }

@@ -33,6 +33,8 @@ from core.admin import (
     RatePerDateInline,
     HistoricalRatePerDateInline,
     PaymentDateExclusionAdmin,
+    ActivityInline,
+    ServiceProviderAdmin,
 )
 from core.tests.testing_utils import (
     AuthenticatedTestCase,
@@ -918,3 +920,35 @@ class TestClassificationInline(TestCase):
 
         request.user = User.objects.create(profile=User.WORKFLOW_ENGINE)
         self.assertTrue(classification_inline.has_delete_permission(request))
+
+
+class TestActivityInline(TestCase):
+    def test_has_add_permission(self):
+        site = AdminSite()
+        activity_inline = ActivityInline(ServiceProviderAdmin, site)
+        self.assertIsInstance(activity_inline, ActivityInline)
+
+        request = MockRequest()
+
+        request.user = User.objects.create(profile=User.ADMIN)
+        self.assertFalse(activity_inline.has_add_permission(request))
+
+    def test_has_change_permission_workflow_engine_user_true(self):
+        site = AdminSite()
+        activity_inline = ActivityInline(ServiceProviderAdmin, site)
+        self.assertIsInstance(activity_inline, ActivityInline)
+
+        request = MockRequest()
+
+        request.user = User.objects.create(profile=User.ADMIN)
+        self.assertFalse(activity_inline.has_change_permission(request))
+
+    def test_has_delete_permission_workflow_engine_user_true(self):
+        site = AdminSite()
+        activity_inline = ActivityInline(ServiceProviderAdmin, site)
+        self.assertIsInstance(activity_inline, ActivityInline)
+
+        request = MockRequest()
+
+        request.user = User.objects.create(profile=User.ADMIN)
+        self.assertFalse(activity_inline.has_delete_permission(request))

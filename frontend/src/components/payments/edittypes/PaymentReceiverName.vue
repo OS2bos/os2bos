@@ -17,7 +17,7 @@
 
     <dl v-else>
         <dt>Navn</dt>
-        <dd>{{ model }}</dd>
+        <dd>{{ model ? model : '-' }}</dd>
     </dl>
 
 </template>

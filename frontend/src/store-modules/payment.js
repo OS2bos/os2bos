@@ -17,6 +17,21 @@ const state = {
     internal_payment_recipients: null,
     rates: null,
     payments_are_editable_in_the_past: true, // to be updated by fetchPaymentEditablePastFlag but will generally be true
+
+    // Search filters:
+    filters: {
+        payment_schedule__payment_id: null,
+        case__cpr_number: null,
+        recipient_id: null,
+        payment_method: null,
+        interval: null,
+        paid_date_or_date_week: null,
+        paid_date_or_date_month: null,
+        paid_date_or_date_year: null,
+        paid_date_or_date__gte: null,
+        paid_date_or_date__lte: null,
+        paid: null
+    }
 }
 
 const getters = {

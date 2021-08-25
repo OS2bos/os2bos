@@ -63,6 +63,7 @@ const actions = {
             commit('setUser', user)
 
             // Fetch remaining info
+            dispatch('fetchConfig')
             dispatch('fetchLists')
 
         })

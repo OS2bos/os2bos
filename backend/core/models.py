@@ -32,7 +32,11 @@ from core.managers import (
     ActivityQuerySet,
     AppropriationQuerySet,
 )
-from core.utils import send_appropriation, create_rrule
+from core.utils import (
+    send_appropriation,
+    create_rrule,
+    get_company_info_from_cvr,
+)
 
 # Payment methods and choice list.
 CASH = "CASH"
@@ -473,7 +477,9 @@ class PaymentSchedule(models.Model):
     recipient_id = models.CharField(
         max_length=128, verbose_name=_("ID"), blank=True
     )
-    recipient_name = models.CharField(max_length=128, verbose_name=_("navn"))
+    recipient_name = models.CharField(
+        max_length=128, verbose_name=_("navn"), blank=True
+    )
 
     payment_method = models.CharField(
         max_length=128,
@@ -1508,18 +1514,61 @@ class ServiceProvider(Classification):
         ordering = ("name",)
 
     cvr_number = models.CharField(
-        max_length=8, blank=True, verbose_name=_("cvr-nummer")
+        max_length=8, blank=True, unique=True, verbose_name=_("cvr-nummer")
     )
     name = models.CharField(
         max_length=128, blank=False, verbose_name=_("navn")
     )
+    business_code = models.CharField(
+        max_length=128, blank=True, verbose_name=_("branchekode")
+    )
+    business_code_text = models.CharField(
+        max_length=128, blank=True, verbose_name=_("branchetekst")
+    )
+    street = models.CharField(
+        max_length=128, blank=True, verbose_name=_("vejnavn")
+    )
+    street_number = models.CharField(
+        max_length=128, blank=True, verbose_name=_("vejnummer")
+    )
+    zip_code = models.CharField(
+        max_length=128, blank=True, verbose_name=_("postnummer")
+    )
+    post_district = models.CharField(
+        max_length=128, blank=True, verbose_name=_("postdistrikt")
+    )
+    status = models.CharField(
+        max_length=128, blank=True, verbose_name=_("status")
+    )
+
     vat_factor = models.DecimalField(
-        default=100.0,
+        default=Decimal("100.0"),
         max_digits=5,
         decimal_places=2,
         validators=[MinValueValidator(Decimal("0.01"))],
         verbose_name=_("momsfaktor"),
     )
+
+    @staticmethod
+    def virk_to_service_provider(data):
+        """Convert data from virk to our ServiceProvider model."""
+        converter_dict = {
+            "cvr_no": "cvr_number",
+            "navn": "name",
+            "branchekode": "business_code",
+            "branchetekst": "business_code_text",
+            "vejnavn": "street",
+            "husnr": "street_number",
+            "postnr": "zip_code",
+            "postdistrikt": "post_district",
+            "status": "status",
+        }
+        converted_data = {
+            converter_dict[k]: str(v)
+            for (k, v) in data.items()
+            if k in converter_dict
+        }
+        return converted_data
 
     def __str__(self):
         return f"{self.cvr_number} - {self.name}"
@@ -1793,7 +1842,6 @@ class Activity(AuditModelMixin, models.Model):
         on_delete=models.CASCADE,
         verbose_name=_("bevilling"),
     )
-    # TODO: remove this if unused.
     service_provider = models.ForeignKey(
         ServiceProvider,
         null=True,
@@ -1828,6 +1876,36 @@ class Activity(AuditModelMixin, models.Model):
             raise RuntimeError(
                 _("Du kan ikke godkende en ydelse uden nogen betalinger")
             )
+        # Check a recipient_name exists before granting.
+        if (
+            hasattr(self, "payment_plan")
+            and not self.payment_plan.recipient_name
+        ):
+            raise RuntimeError(
+                _("Du kan ikke godkende en ydelse uden en betalingsmodtager")
+            )
+        # If an activity has no service provider we can't approve it
+        # If it has one we update it.
+        if (
+            hasattr(self, "payment_plan")
+            and self.payment_plan.recipient_type == PaymentSchedule.COMPANY
+        ):
+            if not self.service_provider:
+                raise RuntimeError(
+                    _(
+                        "Du kan ikke godkende en ydelse"
+                        " uden en tilknyttet leverandør"
+                    )
+                )
+            else:
+                company_info = get_company_info_from_cvr(
+                    self.service_provider.cvr_number
+                )[0]
+                data = ServiceProvider.virk_to_service_provider(company_info)
+                ServiceProvider.objects.filter(
+                    pk=self.service_provider.pk
+                ).update(**data)
+
         if self.status == STATUS_GRANTED:
             # Re-granting - nothing more to do.
             pass

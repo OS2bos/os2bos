@@ -19,9 +19,14 @@
             </template>
 
             <template v-if="payment_plan.recipient_type === 'COMPANY'">
-                <payment-service-provider />
-                <payment-receiver-id :editable="true" />
-                <payment-receiver-name :editable="true" />
+                <template v-if="config.ALLOW_SERVICE_PROVIDERS_FROM_VIRK">
+                    <cvr-select :editable="true" :data-recipient-id="payment_plan.recipient_id" />
+                </template>
+                <template v-else>
+                    <payment-service-provider />
+                    <payment-receiver-id :editable="true" />
+                    <payment-receiver-name :editable="true" />
+                </template>
             </template>
 
             <template v-if="payment_plan.recipient_type === 'PERSON'">
@@ -47,6 +52,7 @@ import PaymentReceiverName from '../../payments/edittypes/PaymentReceiverName.vu
 import PaymentMethod from '../../payments/edittypes/PaymentMethod.vue'
 import PaymentMethodDetails from '../../payments/edittypes/PaymentMethodDetails.vue'
 import PaymentInternalReceiver from '../../payments/edittypes/PaymentInternalReceiverName.vue'
+import CvrSelect from '../../payments/edittypes/CVR_select.vue'
 
 export default {
     components: {
@@ -57,11 +63,15 @@ export default {
         PaymentMethod,
         PaymentMethodDetails,
         CprLookUp,
-        PaymentInternalReceiver
+        PaymentInternalReceiver,
+        CvrSelect
     },
     computed: {
         payment_plan: function() {
             return this.$store.getters.getPaymentPlan
+        },
+        config: function() {
+            return this.$store.getters.getConfig
         },
         recipient_id: {
             get: function() {
@@ -85,7 +95,6 @@ export default {
                 })
             }
         }
-
     }
 }
 </script>

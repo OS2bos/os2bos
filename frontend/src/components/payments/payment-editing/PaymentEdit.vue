@@ -234,15 +234,7 @@
                     note: this.paid.note ? this.paid.note : '',
                     paid: true
                 }
-                if (this.user.profile === 'workflow_engine' && this.payment.paid) {
-                    axios.get(`/editing_past_payments_allowed/`)
-                    .then(res => {
-                        this.patchPayment(data)
-                    })
-                    .catch(err => this.$store.dispatch('parseErrorOutput', err))
-                } else {
-                    this.patchPayment(data)
-                }
+                this.patchPayment(data)
             },
             updatePlannedPayment: function() {
                 let data = {

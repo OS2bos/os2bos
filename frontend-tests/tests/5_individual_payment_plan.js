@@ -36,8 +36,7 @@ const testdata = {
         details__name: 'Kvindekrisecentre',
         payment_type: 'INDIVIDUAL_PAYMENT',
         start_date: strday1,
-        recipient_type: 'COMPANY',
-        recipient_name: 'Base Camp'
+        recipient_type: 'COMPANY'
     },
     act2: {
         details__name: 'Tolk',
@@ -47,8 +46,7 @@ const testdata = {
         payment_frequency: 'WEEKLY',
         payment_cost_type: 'FIXED',
         payment_amount: '12.95',
-        recipient_type: 'COMPANY',
-        recipient_name: 'CEKTOS',
+        recipient_type: 'COMPANY'
     },
     act3: {
         details__name: 'Tolk',

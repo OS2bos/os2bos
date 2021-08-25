@@ -140,7 +140,6 @@ const actions = {
         dispatch('fetchEfforts')
         dispatch('fetchInternalPaymentRecipients')
         dispatch('fetchRates')
-        dispatch('fetchPaymentEditablePastFlag')
         fetchData()
     }
 }

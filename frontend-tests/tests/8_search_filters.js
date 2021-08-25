@@ -41,8 +41,7 @@ const getLocation = ClientFunction(() => document.location.href),
                 payment_date: str1mth,
                 payment_cost_type: 'FIXED',
                 payment_amount: '0.75',
-                recipient_type: 'COMPANY',
-                recipient_name: 'Base Camp'
+                recipient_type: 'COMPANY'
             }
             
         }

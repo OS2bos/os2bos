@@ -1085,6 +1085,42 @@ class ServiceProviderTestCase(TestCase):
 
         self.assertEqual(str(service_provider), "12345678 - Test Leverandør")
 
+    def test_virk_to_service_provider(self):
+        virk_data = {
+            "cvr_no": "25052943",
+            "navn": "MAGENTA ApS",
+            "vejnavn": "Pilestræde",
+            "husnr": "43",
+            "postnr": "1112",
+            "postdistrikt": "København K",
+            "branchekode": "620200",
+            "branchetekst": (
+                "Konsulentbistand vedrørende informationsteknologi"
+            ),
+            "status": "NORMAL",
+        }
+
+        service_provider_data = ServiceProvider.virk_to_service_provider(
+            virk_data
+        )
+
+        service_provider = ServiceProvider.objects.create(
+            **service_provider_data
+        )
+
+        self.assertEqual(service_provider.cvr_number, "25052943")
+        self.assertEqual(service_provider.name, "MAGENTA ApS")
+        self.assertEqual(service_provider.street, "Pilestræde")
+        self.assertEqual(service_provider.street_number, "43")
+        self.assertEqual(service_provider.zip_code, "1112")
+        self.assertEqual(service_provider.post_district, "København K")
+        self.assertEqual(service_provider.business_code, "620200")
+        self.assertEqual(
+            service_provider.business_code_text,
+            "Konsulentbistand vedrørende informationsteknologi",
+        )
+        self.assertEqual(service_provider.status, "NORMAL")
+
 
 class MunicipalityTestCase(TestCase):
     def test_municipality_str(self):
@@ -1238,6 +1274,87 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         # This is not allowed as there are no payments on it.
         with self.assertRaises(RuntimeError):
             expected_activity.grant(approval_level, "note", user)
+
+    def test_grant_error_on_no_service_provider_for_company_activity(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case)
+        payment_schedule = create_payment_schedule(
+            recipient_type=PaymentSchedule.COMPANY, payment_method=INVOICE
+        )
+        activity = create_activity(
+            case,
+            appropriation,
+            payment_plan=payment_schedule,
+            start_date=date.today(),
+            end_date=date.today() + timedelta(days=3),
+            status=STATUS_DRAFT,
+        )
+        approval_level = ApprovalLevel.objects.create(name="egenkompetence")
+        user = get_user_model().objects.create(username="Anders And")
+
+        with self.assertRaises(
+            RuntimeError,
+            msg="Du kan ikke godkende en ydelse uden en tilknyttet leverandør",
+        ):
+            activity.grant(approval_level, "note", user)
+
+    def test_grant_for_company_activity_updates_service_provider(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case)
+        payment_schedule = create_payment_schedule(
+            recipient_type=PaymentSchedule.COMPANY, payment_method=INVOICE
+        )
+        service_provider = create_service_provider(
+            name="Magenta test", cvr_number="25052943"
+        )
+        activity = create_activity(
+            case,
+            appropriation,
+            payment_plan=payment_schedule,
+            start_date=date.today(),
+            end_date=date.today() + timedelta(days=3),
+            status=STATUS_DRAFT,
+            service_provider=service_provider,
+        )
+        approval_level = ApprovalLevel.objects.create(name="egenkompetence")
+        user = get_user_model().objects.create(username="Anders And")
+
+        activity.grant(approval_level, "note", user)
+
+        service_provider.refresh_from_db()
+
+        self.assertEqual(service_provider.name, "MAGENTA ApS")
+        self.assertEqual(service_provider.cvr_number, "25052943")
+
+    def test_grant_for_activity_with_no_recipient_name_not_allowed(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case)
+        payment_schedule = create_payment_schedule(
+            recipient_type=PaymentSchedule.COMPANY,
+            payment_method=INVOICE,
+            recipient_id="0205891234",
+            recipient_name="",
+        )
+        service_provider = create_service_provider(
+            name="Magenta test", cvr_number="25052943"
+        )
+        activity = create_activity(
+            case,
+            appropriation,
+            payment_plan=payment_schedule,
+            start_date=date.today(),
+            end_date=date.today() + timedelta(days=3),
+            status=STATUS_DRAFT,
+            service_provider=service_provider,
+        )
+        approval_level = ApprovalLevel.objects.create(name="egenkompetence")
+        user = get_user_model().objects.create(username="Anders And")
+
+        with self.assertRaises(
+            RuntimeError,
+            msg="Du kan ikke godkende en ydelse uden en betalingsmodtager",
+        ):
+            activity.grant(approval_level, "note", user)
 
     def test_regenerate_payments_on_draft_save(self):
         case = create_case(self.case_worker, self.municipality, self.district)
