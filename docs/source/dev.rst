@@ -11,7 +11,7 @@ BOS frontenden er skrevet i Javascript frameworket `Vue.js`_. Brugeren interager
    :caption: Indhold:
    :glob:
 
-   frontend/index.rst
+   frontend/index.md
 
 BOS backenden er skrevet i `Python`_ og benytter `Django`_ samt `Django Rest Framework`_. Data bliver persisteret i en `PostgreSQL-database`_ og udstilles og manipuleres via et REST API.
 
