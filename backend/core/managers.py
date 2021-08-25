@@ -85,13 +85,15 @@ class PaymentQuerySet(models.QuerySet):
             or 0
         )
 
-    def in_this_year(self):
-        """Filter Payments only in the current year."""
-        now = timezone.now()
+    def in_year(self, year=None):
+        """ Filter payments for a year."""
+        if not year:
+            year = timezone.now().year
 
         return self.exclude(
-            ~Q(paid_date__year=now.year), paid_date__isnull=False
-        ).exclude(~Q(date__year=now.year), paid_date__isnull=True)
+            ~Q(paid_date__year=year), paid_date__isnull=False
+        ).exclude(~Q(date__year=year), paid_date__isnull=True)
+
 
     def group_by_monthly_amounts(self):
         """
