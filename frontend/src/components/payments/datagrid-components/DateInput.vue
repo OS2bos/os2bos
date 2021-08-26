@@ -54,12 +54,9 @@ export default {
             }
         },
         paydate: function(new_val) {
-            this.$store.commit('setEditedPayment', {
-                key: this.compdata.id,
-                prop: {
-                    paid_date: new_val
-                }
-            })
+            let new_data = Object.assign({}, this.compdata)
+            new_data.paid_date = new_val
+            this.$emit('update', {operation: 'update', data: new_data})
         }
     },
     methods: {

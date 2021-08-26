@@ -34,7 +34,7 @@
             :data-list="payments_by_year"
             :columns="columns"
             class="payment_schedule_list"
-            @update="update">
+            @update="updatePayment">
 
             <p slot="datagrid-header">
                 Viser {{payments_by_year.length}} betalinger for {{ current_year }}
@@ -211,6 +211,27 @@
         methods: {
             update: function() {
                 this.$store.dispatch('fetchPaymentPlan', this.pId)
+            },
+            updatePayment: function(payload) {
+                if (payload.operation === 'save') {
+                    const updated_payment = {
+                        id: payload.data.id,
+                        paid_amount: payload.data.paid_amount,
+                        paid_date: payload.data.paid_date,
+                        note: payload.data.note ? payload.data.note : '',
+                        paid: true
+                    }
+                    this.$store.dispatch('updatePayment', updated_payment)
+                } else if (payload.operation === 'replan') {
+                    const updated_payment = {
+                        id: payload.data.id,
+                        amount: payload.data.amount,
+                        date: payload.data.date
+                    }
+                    this.$store.dispatch('updatePayment', updated_payment)
+                } else {
+                    this.$store.commit('setPayment', payload.data)
+                }
             },
             displayPaidIcon: function(payment) {
                 if (payment.paid) {

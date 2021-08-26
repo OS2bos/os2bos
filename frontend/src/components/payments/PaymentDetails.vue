@@ -11,7 +11,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="ph in payment_history" :key="ph.paid_date">
+            <tr v-for="ph in payment_history">
                 <td>{{ displayTime(ph.history_date) }}</td>
                 <td style="text-align: center; width: 4.5rem;">{{ displayBoolean(ph.paid) }}</td>
                 <td style="text-align: right;">{{ displayCost(ph.paid_amount) }}</td>
