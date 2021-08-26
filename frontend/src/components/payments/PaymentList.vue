@@ -171,6 +171,7 @@
                 return this.$store.getters.getPaymentPlan
             },
             payments: function() {
+                console.log('new payments in paymentlist.vue')
                 return this.$store.getters.getPayments
             },
             payments_by_year: function() {

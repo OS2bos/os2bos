@@ -8,6 +8,7 @@
 
 import axios from '../components/http/Http.js'
 import Vue from 'vue'
+import notify from '../components/notifications/Notify.js'
 
 const state = {
     payment_plan: null,
@@ -84,8 +85,11 @@ const mutations = {
             payment_amount: 0
         }
     },
-    setPayment (state, payment) {
-        state.payment = payment
+    setPayment (state, payment_data) {
+        const idx = state.payments.findIndex(p => p.id === payment_data.id)
+        if (idx >= 0) {
+            Vue.set(state.payments, idx, payment_data)
+        }
     },
     setPayments (state, payments) {
         state.payments = payments
@@ -127,6 +131,14 @@ const mutations = {
 }
 
 const actions = {
+    updatePayment: function({commit, dispatch}, updated_payment) {
+        return axios.patch(`/payments/${ updated_payment.id }/`, updated_payment)
+        .then(res => {
+            notify('Betaling registreret', 'success')
+            commit('setPayment', res.data)
+        })
+        .catch(err => dispatch('parseErrorOutput', err))
+    },
     fetchPayments: function({commit}) {
         axios.get(`/payments/?activity__status=GRANTED`)
         .then(res => {

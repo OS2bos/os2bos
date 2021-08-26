@@ -35,12 +35,9 @@ export default {
                 }
             }, 
             set: function(new_val) {
-                this.$store.commit('setEditedPayment', {
-                    key: this.compdata.id,
-                    prop: {
-                        paid_amount: new_val
-                    }
-                })
+                let new_data = Object.assign({}, this.compdata)
+                new_data.paid_amount = new_val
+                this.$store.commit('setPayment', new_data)
             }   
         },
         visible: function() {
