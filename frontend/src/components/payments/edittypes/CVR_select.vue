@@ -34,7 +34,7 @@
             </p>
         </div>
         <div v-if="service_provider">
-            <dl v-if="service_provider.business_code_text">
+            <dl>
                 <dt>Branchekode</dt>
                 <dd>{{ service_provider.business_code_text }}</dd>
                 <dt>CVR/P-nr</dt>
