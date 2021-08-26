@@ -133,7 +133,7 @@ const actions = {
     updateSearchPayment: function({commit, dispatch}, updated_payment) {
         return axios.patch(`/payments/${ updated_payment.id }/`, updated_payment)
         .then(res => {
-            notify('Betaling registreret', 'success')
+            notify('Betaling opdateret', 'success')
             commit('setSearchPayment', res.data)
         })
         .catch(err => dispatch('parseErrorOutput', err))

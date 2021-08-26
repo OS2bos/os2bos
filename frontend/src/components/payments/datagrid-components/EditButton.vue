@@ -12,7 +12,7 @@
             <i class="material-icons">launch</i>
             # {{ compdata.id }}
         </button>
-        <payment-edit-diag v-if="edit_diag_open" :payment="compdata" @closedialog="closeEditDiag" />
+        <payment-edit-diag v-if="edit_diag_open" :payment="compdata" @closedialog="closeEditDiag" @update="update" />
     </div>
 
 </template>
@@ -38,6 +38,9 @@ export default {
         },
         closeEditDiag: function() {
             this.edit_diag_open = false
+        },
+        update: function(payload) {
+            this.$emit('update', payload)
         }
     }
 }

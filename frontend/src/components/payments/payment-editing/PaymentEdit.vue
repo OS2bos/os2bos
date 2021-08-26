@@ -59,14 +59,14 @@
                         <fieldset>
                             <legend>Betaling</legend>
                             <label for="field-pay-amount" class="required">Betal beløb</label>
-                            <input type="number" step="0.01" v-model="paid.paid_amount" id="field-pay-amount" required>
+                            <input type="number" step="0.01" v-model="p.paid_amount" id="field-pay-amount" required>
 
                             <label for="field-pay-date" class="required">Betal dato</label>
                             <popover :condition="display_warning">{{ display_warning }}</popover>
-                            <input :ref="`dateInput${ payment.id }`" type="date" v-model="paid.paid_date" id="field-pay-date" required>
+                            <input :ref="`dateInput${ payment.id }`" type="date" v-model="p.paid_date" id="field-pay-date" required>
 
                             <label for="field-pay-note">Referencetekst</label>
-                            <input type="text" v-model="paid.note" id="field-pay-note">
+                            <input type="text" v-model="p.note" id="field-pay-note">
 
                             <error err-key="note" />
 
@@ -138,24 +138,6 @@
                     </form>
                 </div>
             </modal-dialog>
-
-            <!-- Submit payment modal -->
-            <modal-dialog v-if="pay_diag_open" @closedialog="pay_diag_open = false">
-                <h3 slot="header">
-                    Betaling
-                </h3>
-                <div slot="body">
-                    <p>
-                        Er du sikker på, at du vil sende {{ displayDigits(paid.paid_amount) }} kr. til betaling?
-                    </p>
-                </div>
-                <div slot="footer">
-                    <form @submit.prevent="pay" class="modal-form">
-                        <button type="button" class="modal-cancel-btn" @click="reload()">Annullér</button>
-                        <button class="modal-confirm-btn" type="submit">Godkend</button>
-                    </form>
-                </div>
-            </modal-dialog>
             
         </div>
 
@@ -194,20 +176,18 @@
         ],
         data: function() {
             return {
-                paid: {
-                    paid_amount: null,
-                    paid_date: null,
-                    note: null
-                },
-                pay_diag_open: false,
-                paymentlock: true,
                 delete_diag_open: false,
                 display_warning: null
             }
         },
-        computed: {  
-            p: function() {
-                return this.payment
+        computed: {
+            p: {
+                get: function() {
+                    return this.payment
+                },
+                set: function(new_val) {
+                    console.log('nothing')
+                }
             },
             disabled: function() {
                 if (this.payment.paid_amount && this.payment.paid_date || this.payment.amount && this.payment.date) {
@@ -228,29 +208,12 @@
                 return cost2da(num)
             },
             pay: function() {
-                let data = {
-                    paid_amount: this.paid.paid_amount,
-                    paid_date: this.paid.paid_date,
-                    note: this.paid.note ? this.paid.note : '',
-                    paid: true
+                if (!this.p.paid || this.user.profile === 'workflow_engine' || this.user.profile === 'admin') {
+                    this.$emit('update', {operation: 'save', data: this.p})
                 }
-                this.patchPayment(data)
             },
             updatePlannedPayment: function() {
-                let data = {
-                    amount: this.p.amount,
-                    date: this.p.date
-                }
-                this.patchPayment(data)
-            },
-            patchPayment: function(data) {
-                axios.patch(`/payments/${ this.payment.id }/`, data)
-                    .then(res => {
-                        this.$store.dispatch('fetchPayment', this.p.id)
-                        this.closeDiag()
-                        notify('Betaling opdateret', 'success')
-                    })
-                    .catch(err => this.$store.dispatch('parseErrorOutput', err))
+                this.$emit('update', {operation: 'replan', data: this.p})
             },
             closeDiag: function() {
                 this.$store.dispatch('fetchPaymentPlan', this.p.payment_schedule)
@@ -263,9 +226,9 @@
             },
             deletePayment: function() {
                 axios.delete(`/payments/${ this.p.id }/`)
-                .then(res => {
+                .then(() => {
                     this.closeDiag()
-                    notify('Betaling slettet', 'success')                    
+                    notify('Betaling slettet', 'success')
                 })
                 .catch(err => this.$store.dispatch('parseErrorOutput', err))
             },

@@ -198,6 +198,13 @@
                         paid: true
                     }
                     this.$store.dispatch('updateSearchPayment', updated_payment)
+                } else if (payload.operation === 'replan') {
+                    const updated_payment = {
+                        id: payload.data.id,
+                        amount: payload.data.amount,
+                        date: payload.data.date
+                    }
+                    this.$store.dispatch('updateSearchPayment', updated_payment)
                 } else {
                     this.$store.commit('setSearchPayment', payload.data)
                 }
