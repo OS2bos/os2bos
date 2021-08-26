@@ -53,6 +53,7 @@ from core.serializers import (
     ListAppropriationSerializer,
     AppropriationSerializer,
     ActivitySerializer,
+    ListActivitySerializer,
     RateSerializer,
     PriceSerializer,
     PaymentScheduleSerializer,
@@ -82,10 +83,7 @@ from core.filters import (
     PaymentFilter,
     AllowedForStepsFilter,
 )
-from core.utils import (
-    get_person_info,
-    get_company_info_from_search_term,
-)
+from core.utils import get_person_info, get_company_info_from_search_term
 
 from core.mixins import (
     AuditMixin,
@@ -148,8 +146,7 @@ class CaseViewSet(AuditModelViewSetMixin, AuditViewSet):
         """Create new case - customized to set user."""
         current_user = self.request.user
         serializer.save(
-            case_worker=current_user,
-            user_created=current_user.username,
+            case_worker=current_user, user_created=current_user.username
         )
 
     @action(detail=True, methods=["get"])
@@ -253,9 +250,18 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
 class ActivityViewSet(AuditModelViewSetMixin, AuditViewSet):
     """Expose activities in REST API."""
 
-    serializer_class = ActivitySerializer
-
+    serializer_action_classes = {
+        "list": ListActivitySerializer,
+        "retrieve": ActivitySerializer,
+    }
     filterset_fields = "__all__"
+
+    def get_serializer_class(self):
+        """Use a different Serializer depending on the action."""
+        try:
+            return self.serializer_action_classes[self.action]
+        except (KeyError, AttributeError):
+            return ActivitySerializer
 
     def get_queryset(self):
         """Avoid Django's default lazy loading to improve performance."""

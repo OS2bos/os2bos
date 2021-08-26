@@ -1273,31 +1273,35 @@ class Appropriation(AuditModelMixin, models.Model):
             activity = f.first()
             return activity.end_date
 
-    @property
     def total_granted_in_year(self, year=None):
-        """Retrieve total amount granted this year for this Appropriation.
+        """Retrieve total amount granted in year for this Appropriation.
 
         This includes both main and supplementary activities.
         """
+        if not year:
+            year = timezone.now().year
+
         granted_activities = self.activities.filter(status=STATUS_GRANTED)
 
         this_years_payments = Payment.objects.filter(
             payment_schedule__activity__in=granted_activities
-        ).in_this_year()
+        ).in_year(year)
 
         return this_years_payments.amount_sum()
 
-    @property
     def total_expected_in_year(self, year=None):
-        """Retrieve total amount expected this year for this Appropriation.
+        """Retrieve total amount expected in year for this Appropriation.
 
         We take into account granted payments but overrule with expected
         amounts if they modify another activity.
         """
+        if not year:
+            year = timezone.now().year
+
         activities = self.activities.filter(
             Q(status=STATUS_GRANTED) | Q(status=STATUS_EXPECTED)
         )
-        return sum(a.total_expected_this_year for a in activities)
+        return sum(a.total_expected_in_year(year) for a in activities)
 
     @property
     def main_activity(self):
@@ -2113,7 +2117,6 @@ class Activity(AuditModelMixin, models.Model):
 
         return payments
 
-    @property
     def total_cost_in_year(self, year=None):
         """Calculate total cost for a year for this activity."""
         if not year:
@@ -2121,7 +2124,6 @@ class Activity(AuditModelMixin, models.Model):
 
         return self.applicable_payments.in_year(year).amount_sum()
 
-    @property
     def total_granted_in_year(self, year=None):
         """Calculate total amount *granted* on this activity for a year."""
         if not year:
@@ -2133,9 +2135,8 @@ class Activity(AuditModelMixin, models.Model):
         else:
             return Decimal(0)
 
-    @property
-    def total_expected_this_year(self, year=None):
-        """Calculate total amount *expected* this year.
+    def total_expected_in_year(self, year=None):
+        """Calculate total amount *expected* for a year.
 
         As may be noted, this is redundant and identical to "total cost
         this year". Maybe one of these functions should be removed, the
