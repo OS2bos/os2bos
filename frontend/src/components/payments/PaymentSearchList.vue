@@ -188,14 +188,19 @@
                     return '-'
                 }
             },
-            updatePayment: function(new_data) {
-                const idx = this.payments.findIndex(p => {
-                    return p.id === new_data.id
-                })
-                this.payments[idx].paid = new_data.paid
-                this.payments[idx].paid_amount = new_data.paid_amount
-                this.payments[idx].paid_date = new_data.paid_date
-                this.payments[idx].note = new_data.note
+            updatePayment: function(payload) {
+                if (payload.operation === 'save') {
+                    const updated_payment = {
+                        id: payload.data.id,
+                        paid_amount: payload.data.paid_amount,
+                        paid_date: payload.data.paid_date,
+                        note: payload.data.note ? payload.data.note : '',
+                        paid: true
+                    }
+                    this.$store.dispatch('updateSearchPayment', updated_payment)
+                } else {
+                    this.$store.commit('setSearchPayment', payload.data)
+                }
             }
         }
     }

@@ -56,7 +56,7 @@ export default {
         paydate: function(new_val) {
             let new_data = Object.assign({}, this.compdata)
             new_data.paid_date = new_val
-            this.$store.commit('setPayment', new_data)
+            this.$emit('update', {operation: 'update', data: new_data})
         }
     },
     methods: {

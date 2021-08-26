@@ -8,6 +8,7 @@
 
 import axios from '../components/http/Http.js'
 import Vue from 'vue'
+import notify from '../components/notifications/Notify.js'
 
 const makeQueryString = function(state, show_sensitive_data) {
     let q = ''
@@ -86,6 +87,12 @@ const getters = {
 }
 
 const mutations = {
+    setSearchPayment (state, payment_data) {
+        const idx = state.search_payments.findIndex(p => p.id === payment_data.id)
+        if (idx >= 0) {
+            Vue.set(state.search_payments, idx, payment_data)
+        }
+    },
     setSearchPayments (state, payments) {
         state.search_payments = payments
     },
@@ -123,6 +130,14 @@ const mutations = {
 }
 
 const actions = {
+    updateSearchPayment: function({commit, dispatch}, updated_payment) {
+        return axios.patch(`/payments/${ updated_payment.id }/`, updated_payment)
+        .then(res => {
+            notify('Betaling registreret', 'success')
+            commit('setSearchPayment', res.data)
+        })
+        .catch(err => dispatch('parseErrorOutput', err))
+    },
     fetchSearchPayments: function({commit, state}) {
         let q = ''
         q = makeQueryString(state, true)

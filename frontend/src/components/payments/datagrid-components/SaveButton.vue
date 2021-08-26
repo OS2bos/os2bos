@@ -28,9 +28,6 @@ export default {
         }
     },
     computed: {
-        editpayment: function() {
-            return this.$store.getters.getEditedPayment(this.compdata.id)
-        },
         disabled: function() {
             if (this.compdata.paid_amount && this.compdata.paid_date) {
                 return false
@@ -44,17 +41,8 @@ export default {
     },
     methods: {
         save: function() {
-            const updated_payment = {
-                id: this.compdata.id,
-                paid_amount: this.compdata.paid_amount,
-                paid_date: this.compdata.paid_date,
-                note: this.compdata.note ? this.compdata.note : '',
-                paid: true
-            }
-            this.$store.dispatch('updatePayment', updated_payment)
-            .then(() => {
-                this.buttonTxt = 'Gemt'
-            })
+            this.$emit('update', {operation: 'save', data: this.compdata})
+            this.buttonTxt = 'Gemt'
         }
     }
 }
