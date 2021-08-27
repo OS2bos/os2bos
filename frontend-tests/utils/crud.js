@@ -125,7 +125,7 @@ async function activityFormInput(t, act_data) {
             } else {
                 await t
                     .typeText('#cvr-search-input', 'Magenta')
-                    .click(Selector('.cvr-search-result .cvr-select-btn').nth(1))
+                    .click(Selector('.cvr-search-result .cvr-select-btn').nth(0))
             }
             break
         case 'PERSON':
