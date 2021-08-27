@@ -1453,6 +1453,40 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         self.assertEqual(activity.total_cost_in_year(), Decimal("500"))
 
     @freeze_time("2019-08-01")
+    def test_total_expected_in_year(self):
+        now = timezone.now()
+        start_date = date(year=now.year, month=12, day=1)
+        end_date = date(year=now.year, month=12, day=15)
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case)
+        # 15 days, daily payments of 500.
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(activity=activity)
+
+        self.assertEqual(activity.total_cost_in_year(), Decimal("7500"))
+        start_date = date(year=now.year, month=12, day=2)
+        end_date = date(year=now.year, month=12, day=11)
+        expected_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            status=STATUS_EXPECTED,
+            activity_type=MAIN_ACTIVITY,
+            modifies=activity,
+        )
+        create_payment_schedule(activity=expected_activity)
+
+        self.assertTrue(expected_activity.validate_expected())
+        self.assertEqual(activity.total_expected_in_year(), Decimal("500"))
+
+    @freeze_time("2019-08-01")
     def test_total_cost_this_year_multiple_levels(self):
         now = timezone.now()
         start_date = date(year=now.year, month=12, day=1)
