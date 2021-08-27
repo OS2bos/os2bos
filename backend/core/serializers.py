@@ -338,10 +338,9 @@ class PriceSerializer(WritableNestedModelSerializer):
         return instance
 
 
-class PaymentScheduleSerializer(WritableNestedModelSerializer):
-    """Serializer for the PaymentSchedule model."""
+class BasePaymentScheduleSerializer(WritableNestedModelSerializer):
+    """Base Serializer for the PaymentSchedule model."""
 
-    payments = PaymentSerializer(many=True, read_only=True)
     price_per_unit = PriceSerializer(required=False, allow_null=True)
 
     class Meta:
@@ -515,6 +514,12 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
                 )
 
         return data
+
+
+class PaymentScheduleSerializer(BasePaymentScheduleSerializer):
+    """Serializer for the PaymentSchedule model."""
+
+    payments = PaymentSerializer(many=True, read_only=True)
 
 
 class ServiceProviderSerializer(
@@ -732,7 +737,7 @@ class BaseActivitySerializer(WritableNestedModelSerializer):
 class ListActivitySerializer(BaseActivitySerializer):
     """Serializer for the Activity model for a list."""
 
-    pass
+    payment_plan = BasePaymentScheduleSerializer(partial=True, required=False)
 
 
 class ActivitySerializer(BaseActivitySerializer):
