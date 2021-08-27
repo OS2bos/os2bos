@@ -8,7 +8,6 @@
 
 from decimal import Decimal
 from datetime import datetime, date, timedelta
-from dateutil import rrule
 from unittest import mock
 from freezegun import freeze_time
 
@@ -136,51 +135,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             activity=new_granted_activity,
         )
         self.assertEqual(
-            activity.appropriation.total_granted_this_year, Decimal("10000")
-        )
-
-    @freeze_time("2020-01-01")
-    def test_total_granted_full_year(self):
-        now = timezone.now().date()
-        start_date = date(year=now.year, month=1, day=1)
-        end_date = date(year=now.year, month=1, day=10)
-
-        case = create_case(self.case_worker, self.municipality, self.district)
-        appropriation = create_appropriation(case=case)
-        # Create granted activities.
-        # Daily payments of 500.00.
-        activity = create_activity(
-            case=case,
-            appropriation=appropriation,
-            start_date=start_date,
-            end_date=end_date,
-            activity_type=MAIN_ACTIVITY,
-            status=STATUS_GRANTED,
-        )
-        create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-            activity=activity,
-        )
-
-        # Daily payments of 500.00.
-        new_granted_activity = create_activity(
-            case=case,
-            appropriation=appropriation,
-            start_date=start_date,
-            end_date=end_date,
-            status=STATUS_GRANTED,
-            activity_type=SUPPL_ACTIVITY,
-        )
-        create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-            activity=new_granted_activity,
-        )
-        # 2 Activites with daily payments of 500 for a year (366 days) in 2020.
-        self.assertEqual(
-            activity.appropriation.total_granted_full_year,
-            Decimal("366000.00"),
+            activity.appropriation.total_granted_in_year(), Decimal("10000")
         )
 
     def test_appropriation_status(self):
@@ -312,7 +267,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
         )
 
         self.assertEqual(
-            appropriation.total_expected_this_year, Decimal("5300")
+            appropriation.total_expected_in_year(), Decimal("5300")
         )
 
     def test_total_expected_within_start_end_range(self):
@@ -359,66 +314,7 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             activity=expected_activity,
         )
         self.assertEqual(
-            appropriation.total_expected_this_year, Decimal("3400")
-        )
-
-    def test_total_expected_full_year(self):
-        # generate a start and end span of 10 days
-        now = timezone.now().date()
-        start_date = date(year=now.year, month=1, day=1)
-        end_date = date(year=now.year, month=1, day=10)
-        # create main activity with GRANTED.
-        case = create_case(self.case_worker, self.municipality, self.district)
-        appropriation = create_appropriation(case=case)
-        activity = create_activity(
-            case=case,
-            appropriation=appropriation,
-            start_date=start_date,
-            end_date=end_date,
-            activity_type=MAIN_ACTIVITY,
-            status=STATUS_GRANTED,
-        )
-        create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-            activity=activity,
-        )
-
-        # create a GRANTED supplementary activity.
-        supplementary_activity = create_activity(
-            case,
-            appropriation,
-            start_date=start_date,
-            end_date=end_date,
-            status=STATUS_GRANTED,
-            activity_type=SUPPL_ACTIVITY,
-        )
-        create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-            activity=supplementary_activity,
-        )
-
-        # create an EXPECTED supplementary activity overruling the GRANTED.
-        expected_activity = create_activity(
-            case,
-            appropriation,
-            start_date=start_date,
-            end_date=end_date,
-            status=STATUS_EXPECTED,
-            activity_type=SUPPL_ACTIVITY,
-            modifies=supplementary_activity,
-        )
-        create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-            payment_amount=Decimal("700"),
-            activity=expected_activity,
-        )
-        self.assertEqual(
-            activity.appropriation.total_expected_full_year,
-            activity.total_cost_full_year
-            + expected_activity.total_cost_full_year,
+            appropriation.total_expected_in_year(), Decimal("3400")
         )
 
     def test_main_activity(self):
@@ -1461,7 +1357,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             status=STATUS_GRANTED,
         )
         create_payment_schedule(activity=activity)
-        self.assertEqual(activity.total_cost_this_year, Decimal("500"))
+        self.assertEqual(activity.total_cost_in_year(), Decimal("500"))
         start_date = date(year=now.year, month=12, day=2)
         end_date = date(year=now.year, month=12, day=2)
         # create an expected activity with no payments.
@@ -1499,7 +1395,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             status=STATUS_GRANTED,
         )
         create_payment_schedule(activity=activity)
-        self.assertEqual(activity.total_cost_this_year, Decimal("7500"))
+        self.assertEqual(activity.total_cost_in_year(), Decimal("7500"))
 
         start_date = date(year=now.year, month=1, day=2)
         end_date = date(year=now.year, month=1, day=11)
@@ -1514,16 +1410,16 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         create_payment_schedule(activity=expected_activity)
         self.assertTrue(expected_activity.validate_expected())
-        self.assertEqual(activity.total_cost_this_year, Decimal("500"))
+        self.assertEqual(activity.total_cost_in_year(), Decimal("500"))
 
         # soft-deleting results in the old total_cost_this_year of 7500.
         expected_activity.status = STATUS_DELETED
         expected_activity.save()
 
-        self.assertEqual(activity.total_cost_this_year, Decimal("7500"))
+        self.assertEqual(activity.total_cost_in_year(), Decimal("7500"))
 
     @freeze_time("2019-08-01")
-    def test_total_cost_this_year(self):
+    def test_total_cost_in_year(self):
         now = timezone.now()
         start_date = date(year=now.year, month=12, day=1)
         end_date = date(year=now.year, month=12, day=15)
@@ -1539,7 +1435,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         create_payment_schedule(activity=activity)
 
-        self.assertEqual(activity.total_cost_this_year, Decimal("7500"))
+        self.assertEqual(activity.total_cost_in_year(), Decimal("7500"))
         start_date = date(year=now.year, month=12, day=2)
         end_date = date(year=now.year, month=12, day=11)
         expected_activity = create_activity(
@@ -1554,7 +1450,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         create_payment_schedule(activity=expected_activity)
 
         self.assertTrue(expected_activity.validate_expected())
-        self.assertEqual(activity.total_cost_this_year, Decimal("500"))
+        self.assertEqual(activity.total_cost_in_year(), Decimal("500"))
 
     @freeze_time("2019-08-01")
     def test_total_cost_this_year_multiple_levels(self):
@@ -1573,7 +1469,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         create_payment_schedule(activity=activity)
 
-        self.assertEqual(activity.total_cost_this_year, Decimal("7500"))
+        self.assertEqual(activity.total_cost_in_year(), Decimal("7500"))
         start_date = date(year=now.year, month=12, day=15)
         end_date = date(year=now.year, month=12, day=15)
         # create an expected activity that overrides
@@ -1591,9 +1487,9 @@ class ActivityTestCase(TestCase, BasicTestMixin):
 
         self.assertTrue(expected_activity.validate_expected())
         # The total cost of the original activity should be 500 less.
-        self.assertEqual(activity.total_cost_this_year, Decimal("7000"))
+        self.assertEqual(activity.total_cost_in_year(), Decimal("7000"))
         self.assertEqual(
-            expected_activity.total_cost_this_year, Decimal("500")
+            expected_activity.total_cost_in_year(), Decimal("500")
         )
 
         start_date = date(year=now.year, month=12, day=1)
@@ -1614,10 +1510,10 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         self.assertTrue(expected_activity_another_level.validate_expected())
         #
-        self.assertEqual(activity.total_cost_this_year, Decimal("0"))
-        self.assertEqual(expected_activity.total_cost_this_year, Decimal("0"))
+        self.assertEqual(activity.total_cost_in_year(), Decimal("0"))
+        self.assertEqual(expected_activity.total_cost_in_year(), Decimal("0"))
         self.assertEqual(
-            expected_activity_another_level.total_cost_this_year,
+            expected_activity_another_level.total_cost_in_year(),
             Decimal("9000"),
         )
 
@@ -1642,8 +1538,8 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
             activity=activity,
         )
+        self.assertEqual(activity.total_cost_in_year(), Decimal("500"))
 
-        self.assertEqual(activity.total_cost_this_year, Decimal("500"))
         start_date = date(year=now.year, month=12, day=2)
         end_date = date(year=now.year, month=12, day=2)
         # create an expected activity that overrides the previous with 600.
@@ -1663,9 +1559,9 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             activity=expected_activity,
         )
         self.assertTrue(expected_activity.validate_expected())
-        self.assertEqual(activity.total_cost_this_year, Decimal("0"))
+        self.assertEqual(activity.total_cost_in_year(), Decimal("0"))
         self.assertEqual(
-            expected_activity.total_cost_this_year, Decimal("600")
+            expected_activity.total_cost_in_year(), Decimal("600")
         )
 
         start_date = date(year=now.year, month=12, day=3)
@@ -1687,10 +1583,10 @@ class ActivityTestCase(TestCase, BasicTestMixin):
             activity=expected_activity_another_level,
         )
         self.assertTrue(expected_activity_another_level.validate_expected())
-        self.assertEqual(activity.total_cost_this_year, Decimal("0"))
-        self.assertEqual(expected_activity.total_cost_this_year, Decimal("0"))
+        self.assertEqual(activity.total_cost_in_year(), Decimal("0"))
+        self.assertEqual(expected_activity.total_cost_in_year(), Decimal("0"))
         self.assertEqual(
-            expected_activity_another_level.total_cost_this_year,
+            expected_activity_another_level.total_cost_in_year(),
             Decimal("700"),
         )
 
@@ -1711,7 +1607,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         create_payment_schedule(activity=activity)
 
-        self.assertEqual(activity.total_cost_this_year, Decimal("500"))
+        self.assertEqual(activity.total_cost_in_year(), Decimal("500"))
         start_date = date(year=now.year, month=12, day=2)
         end_date = date(year=now.year, month=12, day=2)
         # create an expected activity with no payments.
@@ -1730,8 +1626,8 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         # remove the payments
         expected_activity.payment_plan.payments.all().delete()
         self.assertTrue(expected_activity.validate_expected())
-        self.assertEqual(activity.total_cost_this_year, Decimal("500"))
-        self.assertEqual(expected_activity.total_cost_this_year, Decimal("0"))
+        self.assertEqual(activity.total_cost_in_year(), Decimal("500"))
+        self.assertEqual(expected_activity.total_cost_in_year(), Decimal("0"))
 
     def test_total_granted_this_year_zero_for_draft(self):
         now = timezone.now()
@@ -1748,7 +1644,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         create_payment_schedule(activity=activity)
 
-        self.assertEqual(activity.total_granted_this_year, Decimal(0))
+        self.assertEqual(activity.total_granted_in_year(), Decimal(0))
 
     def test_total_cost_this_year_spanning_years(self):
         now = timezone.now()
@@ -1763,63 +1659,7 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         )
         create_payment_schedule(activity=activity)
 
-        self.assertEqual(activity.total_cost_this_year, Decimal("15500"))
-
-    def test_total_cost_full_year(self):
-        now = timezone.now()
-        start_date = date(year=now.year, month=12, day=1)
-        end_date = date(year=now.year, month=12, day=15)
-        case = create_case(self.case_worker, self.municipality, self.district)
-        appropriation = create_appropriation(case=case)
-        # payments for all days in year, daily payments of 500.
-        activity = create_activity(
-            case, appropriation, start_date=start_date, end_date=end_date
-        )
-        create_payment_schedule(activity=activity)
-
-        days_in_year = len(
-            list(
-                rrule.rrule(
-                    rrule.DAILY,
-                    dtstart=date(year=now.year, month=1, day=1),
-                    until=date(year=now.year, month=12, day=31),
-                )
-            )
-        )
-        self.assertEqual(
-            activity.total_cost_full_year, Decimal("500") * days_in_year
-        )
-
-    def test_total_cost_full_year_individual_payment(self):
-        now = timezone.now()
-        start_date = date(year=now.year, month=12, day=1)
-        end_date = date(year=now.year, month=12, day=15)
-        case = create_case(self.case_worker, self.municipality, self.district)
-        appropriation = create_appropriation(case=case)
-        # There is no way to extrapolate for full year with individual
-        # payments so we just return total_cost
-        activity = create_activity(
-            case, appropriation, start_date=start_date, end_date=end_date
-        )
-        payment_schedule = create_payment_schedule(
-            activity=activity, payment_type=PaymentSchedule.INDIVIDUAL_PAYMENT
-        )
-
-        create_payment(payment_schedule, amount=Decimal("500"))
-
-        self.assertEqual(activity.total_cost_full_year, Decimal("500"))
-
-    def test_total_cost_for_year_no_payment_plan(self):
-        now = timezone.now()
-        start_date = date(year=now.year, month=12, day=1)
-        end_date = date(year=now.year, month=12, day=15)
-        case = create_case(self.case_worker, self.municipality, self.district)
-        appropriation = create_appropriation(case=case)
-
-        activity = create_activity(
-            case, appropriation, start_date=start_date, end_date=end_date
-        )
-        self.assertEqual(activity.total_cost_full_year, Decimal("0"))
+        self.assertEqual(activity.total_cost_in_year(), Decimal("15500"))
 
     def test_monthly_payment_plan(self):
         start_date = date(year=2019, month=12, day=1)

@@ -528,7 +528,7 @@ class ServiceProviderSerializer(
 
 
 class BaseActivitySerializer(WritableNestedModelSerializer):
-    """Serializer for the Activity model."""
+    """Base Serializer for the Activity model."""
 
     total_granted_this_year = serializers.SerializerMethodField()
     total_expected_this_year = serializers.SerializerMethodField()
@@ -542,31 +542,37 @@ class BaseActivitySerializer(WritableNestedModelSerializer):
     details__name = serializers.ReadOnlyField(source="details.name")
 
     def get_total_granted_this_year(self, obj):
+        """Retrieve total granted amount for this year."""
         year = timezone.now().year
 
         return obj.total_granted_in_year(year)
 
     def get_total_expected_this_year(self, obj):
+        """Retrieve total expected amount for this year."""
         year = timezone.now().year
 
         return obj.total_expected_in_year(year)
 
     def get_total_granted_previous_year(self, obj):
+        """Retrieve total granted amount for previous year."""
         year = timezone.now().year - 1
 
         return obj.total_granted_in_year(year)
 
     def get_total_expected_previous_year(self, obj):
+        """Retrieve total expected amount for previous year."""
         year = timezone.now().year - 1
 
         return obj.total_expected_in_year(year)
 
     def get_total_granted_next_year(self, obj):
+        """Retrieve total granted amount for next year."""
         year = timezone.now().year + 1
 
         return obj.total_granted_in_year(year)
 
     def get_total_expected_next_year(self, obj):
+        """Retrieve total expected amount for next year."""
         year = timezone.now().year + 1
 
         return obj.total_expected_in_year(year)
@@ -724,10 +730,14 @@ class BaseActivitySerializer(WritableNestedModelSerializer):
 
 
 class ListActivitySerializer(BaseActivitySerializer):
+    """Serializer for the Activity model for a list."""
+
     pass
 
 
 class ActivitySerializer(BaseActivitySerializer):
+    """Serializer for the Activity model."""
+
     monthly_payment_plan = serializers.ReadOnlyField()
     payment_plan = PaymentScheduleSerializer(partial=True, required=False)
     service_provider = ServiceProviderSerializer(
@@ -791,12 +801,8 @@ class ListAppropriationSerializer(BaseAppropriationSerializer):
 class AppropriationSerializer(BaseAppropriationSerializer):
     """Serializer for a single Appropriation model."""
 
-    main_activity = ListActivitySerializer(read_only=True)
-    activities = ListActivitySerializer(
-        Activity.objects.exclude(status=STATUS_DELETED),
-        many=True,
-        read_only=True,
-    )
+    main_activity = BaseActivitySerializer(read_only=True)
+    activities = serializers.SerializerMethodField()
 
     total_granted_this_year = serializers.SerializerMethodField()
     total_expected_this_year = serializers.SerializerMethodField()
@@ -807,32 +813,46 @@ class AppropriationSerializer(BaseAppropriationSerializer):
     total_granted_next_year = serializers.SerializerMethodField()
     total_expected_next_year = serializers.SerializerMethodField()
 
+    def get_activities(self, appropriation):
+        """Get activities on appropriation."""
+        activities = appropriation.activities.exclude(status=STATUS_DELETED)
+        serializer = ActivitySerializer(
+            instance=activities, many=True, read_only=True
+        )
+        return serializer.data
+
     def get_total_granted_this_year(self, obj):
+        """Retrieve total granted amount for this year."""
         year = timezone.now().year
 
         return obj.total_granted_in_year(year)
 
     def get_total_expected_this_year(self, obj):
+        """Retrieve total expected amount for this year."""
         year = timezone.now().year
 
         return obj.total_expected_in_year(year)
 
     def get_total_granted_previous_year(self, obj):
+        """Retrieve total granted amount for previous year."""
         year = timezone.now().year - 1
 
         return obj.total_granted_in_year(year)
 
     def get_total_expected_previous_year(self, obj):
+        """Retrieve total expected amount for previous year."""
         year = timezone.now().year - 1
 
         return obj.total_expected_in_year(year)
 
     def get_total_granted_next_year(self, obj):
+        """Retrieve total granted amount for next year."""
         year = timezone.now().year + 1
 
         return obj.total_granted_in_year(year)
 
     def get_total_expected_next_year(self, obj):
+        """Retrieve total expected amount for next year."""
         year = timezone.now().year + 1
 
         return obj.total_expected_in_year(year)
