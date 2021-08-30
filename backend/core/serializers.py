@@ -5,6 +5,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """Data serializers used by the REST API."""
+from dateutil.relativedelta import relativedelta
 
 from django.db.models import Q
 from django.contrib.auth import get_user_model
@@ -49,7 +50,7 @@ from core.models import (
     STATUS_EXPECTED,
     STATUS_GRANTED,
 )
-from core.utils import create_rrule, validate_cvr
+from core.utils import validate_cvr
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -594,19 +595,13 @@ class ActivitySerializer(WritableNestedModelSerializer):
         ):
             start_date = data["start_date"]
             end_date = data["end_date"]
-            payment_type = data["payment_plan"]["payment_type"]
-            payment_frequency = data["payment_plan"]["payment_frequency"]
             payment_day_of_month = data["payment_plan"]["payment_day_of_month"]
-            has_payments = list(
-                create_rrule(
-                    payment_type,
-                    payment_frequency,
-                    payment_day_of_month,
-                    start_date,
-                    until=end_date,
-                )
-            )
-            if not has_payments:
+
+            next_payment_date = start_date.replace(day=payment_day_of_month)
+            if next_payment_date < start_date:
+                next_payment_date += relativedelta(months=+1)
+
+            if not (start_date <= next_payment_date <= end_date):
                 raise serializers.ValidationError(
                     _("Betalingsparametre resulterer ikke i nogen betalinger")
                 )

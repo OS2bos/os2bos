@@ -21,6 +21,8 @@ from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 from simple_history.models import HistoricalRecords
+from simple_history.utils import bulk_create_with_history
+
 from django_currentuser.middleware import get_current_user
 
 from constance import config
@@ -761,18 +763,25 @@ class PaymentSchedule(models.Model):
 
         rrule_frequency = self.create_rrule(start, until=end)
 
-        dates = list(rrule_frequency)
+        dates = rrule_frequency
 
-        for date_obj in dates:
-            Payment.objects.create(
-                date=date_obj,
-                recipient_type=self.recipient_type,
-                recipient_id=self.recipient_id,
-                recipient_name=self.recipient_name,
-                payment_method=self.payment_method,
-                amount=self.calculate_per_payment_amount(vat_factor, date_obj),
-                payment_schedule=self,
-            )
+        bulk_create_with_history(
+            [
+                Payment(
+                    date=date_obj,
+                    recipient_type=self.recipient_type,
+                    recipient_id=self.recipient_id,
+                    recipient_name=self.recipient_name,
+                    payment_method=self.payment_method,
+                    amount=self.calculate_per_payment_amount(
+                        vat_factor, date_obj
+                    ),
+                    payment_schedule=self,
+                )
+                for date_obj in dates
+            ],
+            Payment,
+        )
 
     def synchronize_payments(self, start, end, vat_factor=Decimal("100")):
         """Synchronize an existing number of payments for a new end_date."""
@@ -2232,15 +2241,27 @@ class Activity(AuditModelMixin, models.Model):
         return vat_factor
 
     def get_all_modified_by_activities(self):
-        """Retrieve all modified_by objects recursively."""
-        r = []
-        modified_by = self.modified_by.exclude(status=STATUS_DELETED)
-        if modified_by.exists():
-            r.append(
-                modified_by.prefetch_related("payment_plan__payments").first()
+        """
+        Retrieve all modified_by objects recursively.
+
+        As the Django ORM doesn't handle recursive objects and Python is slow,
+        we can use a "WITH RECURSIVE" query in SQL to fetch the objects:
+        https://www.postgresql.org/docs/current/queries-with.html
+        """
+        return Activity.objects.raw(
+            """
+            WITH RECURSIVE T AS (
+            SELECT core_activity.id, core_activity.status FROM core_activity
+            WHERE id=%(id)s
+            UNION
+            SELECT core_activity.id, core_activity.status FROM core_activity
+            JOIN T
+            ON (core_activity.modifies_id = T.id)
             )
-            return r + modified_by.first().get_all_modified_by_activities()
-        return r
+            SELECT id FROM T WHERE id!=%(id)s and status!=%(status_deleted)s;
+        """,
+            {"id": self.id, "status_deleted": STATUS_DELETED},
+        )
 
     def save(self, *args, **kwargs):
         """
