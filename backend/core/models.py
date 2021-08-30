@@ -2241,7 +2241,13 @@ class Activity(AuditModelMixin, models.Model):
         return vat_factor
 
     def get_all_modified_by_activities(self):
-        """Retrieve all modified_by objects recursively."""
+        """
+        Retrieve all modified_by objects recursively.
+
+        As the Django ORM doesn't handle recursive objects and Python is slow,
+        we can use a "WITH RECURSIVE" query in SQL to fetch the objects:
+        https://www.postgresql.org/docs/current/queries-with.html
+        """
         return Activity.objects.raw(
             """
             WITH RECURSIVE T AS (
