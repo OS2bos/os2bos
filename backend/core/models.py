@@ -21,6 +21,8 @@ from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 from simple_history.models import HistoricalRecords
+from simple_history.utils import bulk_create_with_history
+
 from django_currentuser.middleware import get_current_user
 
 from constance import config
@@ -763,7 +765,7 @@ class PaymentSchedule(models.Model):
 
         dates = rrule_frequency
 
-        Payment.objects.bulk_create(
+        bulk_create_with_history(
             [
                 Payment(
                     date=date_obj,
@@ -777,7 +779,8 @@ class PaymentSchedule(models.Model):
                     payment_schedule=self,
                 )
                 for date_obj in dates
-            ]
+            ],
+            Payment,
         )
 
     def synchronize_payments(self, start, end, vat_factor=Decimal("100")):
