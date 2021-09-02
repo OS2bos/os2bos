@@ -1,15 +1,20 @@
 <template>
     <div class="cvr-search">
-        <div v-if="editable && input_visible" class="cvr-search-widget">
-            <fieldset>
-                <label for="cvr-search-input">Find virksomhed</label>
+        <div v-if="editable" class="cvr-search-widget">
+            <fieldset style="margin: 0;">
+                <label for="cvr-search-input">Leverandør</label>
                 <input type="search" v-model="search_input" @input="search" id="cvr-search-input" placeholder="CVR/P-nr eller navn">
+                <button type="button" class="cvr-search-input-clear" @click="select_item(false)" title="Fjern leverandør">
+                    <i class="material-icons">close</i>
+                </button>
                 <ul class="cvr-search-result" v-if="search_results.length > 0">
+                    <!--
                     <li>
                         <button class="cvr-select-btn" type="button" @click="select_item(false)">
                             <p class="title"><strong>Ukendt leverandør</strong></p>
                         </button>
                     </li>
+                    -->
                     <li v-for="s in search_results" :key="s.cvr_number">
                         <button class="cvr-select-btn" @click="select_item(s)" type="button">
                             <p class="title"><strong>{{ s.name }}</strong></p>
@@ -30,40 +35,35 @@
         </div>
         <div v-if="service_provider">
             <dl>
-                <dt>Firmanavn</dt>
+                <dt>Branchekode</dt>
+                <dd>{{ service_provider.business_code_text }}</dd>
+                <dt>CVR/P-nr</dt>
+                <dd>{{ service_provider.cvr_number }}</dd>
+                <dt>Adresse</dt>
                 <dd>
-                    <strong>{{ service_provider.name }}</strong>
-                    <button type="button" class="link-btn cvr-select-change" v-if="editable && service_provider && !input_visible" @click="input_visible = !input_visible">
-                        <span class="material-icons">edit</span>
-                        Skift
-                    </button>
+                    {{ service_provider.street }} {{ service_provider.street_number }}<br> 
+                    {{ service_provider.zip_code }} {{ service_provider.post_district }}
                 </dd>
-                <template v-if="service_provider.business_code_text">
-                    <dt>Branchekode</dt>
-                    <dd>{{ service_provider.business_code_text }}</dd>
-                    <dt>CVR/P-nr</dt>
-                    <dd>{{ service_provider.cvr_number }}</dd>
-                    <dt>Adresse</dt>
-                    <dd>
-                        {{ service_provider.street }} {{ service_provider.street_number }}<br> 
-                        {{ service_provider.zip_code }} {{ service_provider.post_district }}
-                    </dd>
-                    <dt>Virksomhedsstatus</dt>
-                    <dd style="text-transform: lowercase;">{{ service_provider.status }}</dd>
-                </template>
+                <dt>Virksomhedsstatus</dt>
+                <dd style="text-transform: lowercase;">{{ service_provider.status }}</dd>
             </dl>
         </div>
+        <warning v-else content="Ingen leverandør valgt. Denne ydelse kan kun godkendes, hvis der er valgt en leverandør."></warning>
     </div>
 </template>
 
 <script>
 import axios from '../../http/Http.js'
 import Timeout from '../../mixins/Timeout.js'
+import Warning from '../../warnings/Warning.vue'
 
 export default {
     mixins: [
         Timeout
     ],
+    components: {
+        Warning
+    },
     props: [
         'editable',
         'dataRecipientId'
@@ -72,19 +72,22 @@ export default {
         return {
             search_results: [],
             search_input: null,
-            service_provider: null,
-            input_visible: false
+            service_provider: null
         }
     },
     watch: {
         dataRecipientId: function(new_id) {
             this.preFetchData(new_id)
+        },
+        service_provider: function(new_val, old_val) {
+            if (new_val !== old_val) {
+                this.search_input = new_val.name
+            }
         }
     },
     methods: {
         preFetchData: function(recipient_id) {
             if (!recipient_id) {
-                this.input_visible = true
                 return
             }
             axios.get(`service_providers/fetch_serviceproviders_from_virk/?search_term=${ recipient_id }`)
@@ -111,7 +114,7 @@ export default {
             }
         },
         select_item: function(item) {
-            this.search_input = ''
+            this.search_input = item.name
             this.search_results = []
             this.service_provider = item
             this.$store.commit('setPaymentPlanProperty', {
@@ -130,7 +133,6 @@ export default {
                 prop: 'service_provider',
                 val: item ? item : null
             })
-            this.input_visible = false
         }
     },
     created: function() {
@@ -154,12 +156,31 @@ export default {
         display: flex; 
         justify-content: space-between; 
         align-items: center;
-        border: solid 1px var(--grey2);
-        padding: 0 1rem;
     }
 
     #cvr-search-input {
         min-width: 11rem;
+    }
+
+    .cvr-search-input-clear {
+        box-shadow: none;
+        background-color: var(--grey0);
+        border: solid 1px var(--grey3);
+        border-width: 1px 1px 1px 0;
+        color: var(--grey10);
+        display: inline-block;
+        font: inherit;
+        letter-spacing: inherit;
+        padding: 0.25rem 0.5rem;
+        transition: all .2s;
+        border-radius: 0;
+        margin: 0;
+        height: 2rem;
+        overflow: hidden;
+    }
+
+    .cvr-search-input-clear .material-icons {
+        font-size: 1.5rem;
     }
 
     .cvr-search-result {
@@ -169,7 +190,7 @@ export default {
         background-color: white;
         position: absolute;
         top: 3.75rem;
-        left: 1rem;
+        left: .5rem;
         z-index: 10;
         min-width: 11rem;
         max-height: 40rem;
@@ -231,6 +252,10 @@ export default {
         font-size: 1.5rem;
         position: relative;
         bottom: .125rem;
+    }
+
+    .cvr-search .warning {
+        margin-top: .5rem;
     }
 
 </style>
