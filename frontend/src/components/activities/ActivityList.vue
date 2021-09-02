@@ -36,9 +36,9 @@
             <div>
                 <label for="act-cost-toggle" style="margin: 0 .5rem 0 0; display: inline-block;">Vis udgifter</label>
                 <select id="act-cost-toggle" class="selected-btn" v-model="selectedValue" style="margin: 0; display: inline-block;">
-                    <option value="1">i år</option>
-                    <option value="2">pr. år</option>
-                    <option value="3">samlede</option>
+                    <option :value="previous_year">{{ previous_year }}</option>
+                    <option :value="this_year">{{ this_year }}</option>
+                    <option :value="next_year">{{ next_year }}</option>
                 </select>
             </div>
         </fieldset>
@@ -62,20 +62,10 @@
                     <strong>I alt</strong>
                 </div>
                 <div class="nowrap right" style="grid-column: 9/10;">
-                    <strong v-if="selectedValue <= '1'">{{ displayDigits(appropriation.total_granted_this_year) }} kr.</strong>
-                    <strong v-if="selectedValue === '2'">{{ displayDigits(appropriation.total_granted_full_year) }} kr.</strong>
-                    <strong v-if="selectedValue === '3'">{{ displayDigits(appropriation.total_cost_granted) }} kr.</strong>
+                    <strong>{{ displayGrantedYearly() }}</strong>
                 </div>
                 <div class="nowrap expected right" style="grid-column: 10/11;">
-                    <span v-if="appropriation.total_expected_this_year !== appropriation.total_granted_this_year && selectedValue <= '1'">
-                        {{ displayDigits(appropriation.total_expected_this_year) }} kr.
-                    </span>
-                    <span v-if="appropriation.total_expected_this_year !== appropriation.total_granted_this_year && selectedValue === '2'">
-                        {{ displayDigits(appropriation.total_expected_full_year) }} kr.
-                    </span>
-                    <span v-if="appropriation.total_expected_this_year !== appropriation.total_granted_this_year && selectedValue === '3'">
-                        {{  displayDigits(appropriation.total_cost_expected) }} kr.
-                    </span>
+                    {{ displayExpectedYearly() }}
                 </div>
             </div>
         
@@ -96,9 +86,7 @@
 
 <script>
 
-    import axios from '../http/Http.js'
     import { cost2da } from '../filters/Numbers.js'
-    import { displayStatus } from '../filters/Labels.js'
     import { json2jsEpoch } from '../filters/Date.js'
     import ApprovalDiag from './Approval.vue'
     import PermissionLogic from '../mixins/PermissionLogic.js'
@@ -119,7 +107,10 @@
         data: function() {
             return {
                 diag_open: false,
-                diag_approval_warning: null
+                diag_approval_warning: null,
+                this_year: String(new Date().getUTCFullYear()),
+                next_year: String(new Date().getUTCFullYear() + 1),
+                previous_year: String(new Date().getUTCFullYear() - 1),
             }
         },
         computed: {
@@ -184,6 +175,26 @@
             },
             displayDigits: function(num) {
                 return cost2da(num)
+            },
+            displayGrantedYearly: function() {
+                switch(this.selectedValue) {
+                    case this.previous_year:
+                        return this.displayDigits(this.appropriation.total_granted_previous_year) + ' kr.'
+                    case this.next_year:
+                        return this.displayDigits(this.appropriation.total_granted_next_year) + ' kr.'
+                    default:
+                        return this.displayDigits(this.appropriation.total_granted_this_year) + ' kr.'
+                }
+            },
+            displayExpectedYearly: function() {
+                switch(this.selectedValue) {
+                    case this.previous_year:
+                        return this.displayDigits(this.appropriation.total_expected_previous_year) + ' kr.'
+                    case this.next_year:
+                        return this.displayDigits(this.appropriation.total_expected_next_year) + ' kr.'
+                    default:
+                        return this.displayDigits(this.appropriation.total_expected_this_year) + ' kr.'
+                }
             },
             sortSupplementaryActs: function(acts) {
                 // Sort supplementary list by start date

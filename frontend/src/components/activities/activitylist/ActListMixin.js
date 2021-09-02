@@ -10,6 +10,13 @@ import { cost2da } from '../../filters/Numbers.js'
 import { json2jsDate } from '../../filters/Date.js'
 
 export default {
+    data: function() {
+        return {
+            this_year: String(new Date().getUTCFullYear()),
+            next_year: String(new Date().getUTCFullYear() + 1),
+            previous_year: String(new Date().getUTCFullYear() - 1),
+        }
+    },
     computed: {
         selectedValue: function(){
             return this.$store.getters.getSelectedCostCalc
@@ -29,39 +36,30 @@ export default {
             return activityId2name(id)
         },
         displayCost: function(act, column, is_meta) {
-            if (is_meta) {
+            
+            
                 if (column === 'granted') {
-                    if (act.approved !== 0) {
-                        return `${ this.displayDigits(act.approved) } kr`
+                    if (this.selectedValue === this.previous_year) {
+                        return `${ this.displayDigits(act.total_granted_previous_year) } kr`
                     }
-                } else {
-                    if (act.expected !== act.approved) {
-                        return `${ this.displayDigits(act.expected) } kr`
-                    }
-                }
-            } else {
-                if (column === 'granted') {
-                    if (act.status === 'GRANTED' && this.selectedValue === '1') {
+                    if (this.selectedValue === this.this_year) {
                         return `${ this.displayDigits(act.total_granted_this_year) } kr`
                     }
-                    if (act.status === 'GRANTED' && this.selectedValue === '2') {
-                        return `${ this.displayDigits(act.total_cost_full_year) } kr`
-                    }
-                    if (act.status === 'GRANTED' && this.selectedValue === '3') {
-                        return `${ this.displayDigits(act.total_cost) } kr`
+                    if (this.selectedValue === this.next_year) {
+                        return `${ this.displayDigits(act.total_granted_next_year) } kr`
                     }
                 } else {
-                    if (act.total_expected_this_year === 0 || act.total_expected_this_year !== act.total_granted_this_year && this.selectedValue === '1') {
+                    if (this.selectedValue === this.previous_year) {
+                        return `${ this.displayDigits(act.total_expected_previous_year) } kr`
+                    }
+                    if (this.selectedValue === this.this_year) {
                         return `${ this.displayDigits(act.total_expected_this_year) } kr`
                     }
-                    if (act.total_expected_this_year === 0 || act.total_expected_this_year !== act.total_granted_this_year && this.selectedValue === '2') {
-                        return `${ this.displayDigits(act.total_cost_full_year) } kr`
-                    }
-                    if (act.total_expected_this_year === 0 || act.total_expected_this_year !== act.total_granted_this_year && this.selectedValue === '3') {
-                        return `${ this.displayDigits(act.total_cost) } kr`
+                    if (this.selectedValue === this.next_year) {
+                        return `${ this.displayDigits(act.total_expected_next_year) } kr`
                     }
                 }
-            }
+            
         }
     }
 }
