@@ -784,7 +784,7 @@ class PaymentSchedule(models.Model):
         )
 
     def synchronize_payments(self, start, end, vat_factor=Decimal("100")):
-        """Synchronize an existing number of payments for a new end_date."""
+        """Synchronize the payments of an activity for a new end_date."""
         today = date.today()
 
         # If no existing payments is generated we can't do anything.
@@ -1922,9 +1922,6 @@ class Activity(AuditModelMixin, models.Model):
             # Simple case: Just set status.
             self.status = STATUS_GRANTED
         elif self.validate_expected():  # pragma: no cover
-            # "Merge" by ending current activity the day before the new
-            # start_date.
-            #
             # In case of a one_time_payment we delete the payment, copy the
             # modified information and re-generate.
             payment_type = self.modifies.payment_plan.payment_type
@@ -1946,8 +1943,14 @@ class Activity(AuditModelMixin, models.Model):
                     self.modifies = self.modifies.modifies
                     self.save()
                     old_activity.delete()
-                # self.start_date > self.modifies.start_date or is None
-                if self.modifies:
+                    # "Merge" by ending current activity the day before the new
+                    # start_date if end_date overlaps with the new start_date.
+                    #
+                if (
+                    self.modifies
+                    and self.modifies.end_date
+                    and self.modifies.end_date >= self.start_date
+                ):
                     self.modifies.end_date = self.start_date - timedelta(
                         days=1
                     )
