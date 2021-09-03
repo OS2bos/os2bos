@@ -1,3 +1,11 @@
+# Copyright (C) 2019 Magenta ApS, http://magenta.dk.
+# Contact: info@magenta.dk.
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+"""Schema models for our graphene API."""
+
 from django.contrib.auth import get_user_model
 import graphene
 from graphene import Node
@@ -21,6 +29,8 @@ UserModel = get_user_model()
 
 
 class User(OptimizedDjangoObjectType):
+    """User as a graphene type."""
+
     pk = graphene.Int(source="pk")
 
     class Meta:
@@ -29,6 +39,8 @@ class User(OptimizedDjangoObjectType):
 
 
 class ApprovalLevel(OptimizedDjangoObjectType):
+    """ApprovalLevel as a graphene type."""
+
     pk = graphene.Int(source="pk")
 
     class Meta:
@@ -37,6 +49,8 @@ class ApprovalLevel(OptimizedDjangoObjectType):
 
 
 class Case(OptimizedDjangoObjectType):
+    """Case as a graphene type."""
+
     pk = graphene.Int(source="pk")
 
     class Meta:
@@ -47,6 +61,8 @@ class Case(OptimizedDjangoObjectType):
 
 
 class Appropriation(OptimizedDjangoObjectType):
+    """Appropriation as a graphene type."""
+
     pk = graphene.Int(source="pk")
 
     class Meta:
@@ -57,6 +73,8 @@ class Appropriation(OptimizedDjangoObjectType):
 
 
 class Payment(OptimizedDjangoObjectType):
+    """Payment as a graphene type."""
+
     pk = graphene.Int(source="pk")
     account_string = graphene.String()
     account_alias = graphene.String()
@@ -69,6 +87,8 @@ class Payment(OptimizedDjangoObjectType):
 
 
 class Rate(OptimizedDjangoObjectType):
+    """Rate as a graphene type."""
+
     pk = graphene.Int(source="pk")
 
     class Meta:
@@ -79,6 +99,8 @@ class Rate(OptimizedDjangoObjectType):
 
 
 class Price(OptimizedDjangoObjectType):
+    """Price as a graphene type."""
+
     pk = graphene.Int(source="pk")
 
     class Meta:
@@ -89,6 +111,8 @@ class Price(OptimizedDjangoObjectType):
 
 
 class PaymentSchedule(OptimizedDjangoObjectType):
+    """PaymentSchedule as a graphene type."""
+
     pk = graphene.Int(source="pk")
 
     class Meta:
@@ -99,6 +123,8 @@ class PaymentSchedule(OptimizedDjangoObjectType):
 
 
 class ActivityDetails(OptimizedDjangoObjectType):
+    """ActivityDetails as a graphene type."""
+
     pk = graphene.Int(source="pk")
 
     class Meta:
@@ -107,11 +133,15 @@ class ActivityDetails(OptimizedDjangoObjectType):
 
 
 class MonthlyPaymentPlanDictionary(graphene.ObjectType):
+    """The monthly payment plan dict on Activity as a custom graphene type."""
+
     date_month = graphene.String()
     amount = graphene.String()
 
 
 class Activity(OptimizedDjangoObjectType):
+    """Activity as a graphene type."""
+
     pk = graphene.Int(source="pk")
 
     total_cost = graphene.Float()
@@ -129,6 +159,8 @@ class Activity(OptimizedDjangoObjectType):
 
 
 class Section(OptimizedDjangoObjectType):
+    """Section as a graphene type."""
+
     pk = graphene.Int(source="pk")
 
     class Meta:
@@ -139,6 +171,8 @@ class Section(OptimizedDjangoObjectType):
 
 
 class Query(graphene.ObjectType):
+    """Query define our queryable fields."""
+
     case = Node.Field(Case)
     cases = DjangoFilterConnectionField(Case)
 

@@ -134,13 +134,21 @@ class ReadOnlyViewset(viewsets.ReadOnlyModelViewSet):
 
 
 class DRFAuthenticatedGraphQLView(GraphQLView):
+    """
+    GraphQLView with our DRF authentication on top.
+
+    As found on: https://github.com/graphql-python/graphene/issues/249
+    """
+
     def parse_body(self, request):
+        """Apparently graphene needs a body attribute."""
         if isinstance(request, Request):
             return request.data
         return super(DRFAuthenticatedGraphQLView, self).parse_body(request)
 
     @classmethod
     def as_view(cls, *args, **kwargs):
+        """Add the relevant DRF-view logic to the view."""
         view = super(DRFAuthenticatedGraphQLView, cls).as_view(*args, **kwargs)
         view = permission_classes((IsUserAllowed,))(view)
         view = authentication_classes((CsrfExemptSessionAuthentication,))(view)
