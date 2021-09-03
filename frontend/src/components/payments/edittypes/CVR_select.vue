@@ -8,13 +8,6 @@
                     <i class="material-icons">close</i>
                 </button>
                 <ul class="cvr-search-result" v-if="search_results.length > 0">
-                    <!--
-                    <li>
-                        <button class="cvr-select-btn" type="button" @click="select_item(false)">
-                            <p class="title"><strong>Ukendt leverandør</strong></p>
-                        </button>
-                    </li>
-                    -->
                     <li v-for="s in search_results" :key="s.cvr_number">
                         <button class="cvr-select-btn" @click="select_item(s)" type="button">
                             <p class="title"><strong>{{ s.name }}</strong></p>
@@ -147,15 +140,11 @@ export default {
 
 <style>
 
-    .cvr-search {
-        
-    }
-
     .cvr-search-widget {
         position: relative;
         display: flex; 
         justify-content: space-between; 
-        align-items: center;
+        align-items: flex-end;
     }
 
     #cvr-search-input {
