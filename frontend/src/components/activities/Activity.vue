@@ -214,7 +214,10 @@ export default {
                                             modifies {
                                                 pk
                                             },
-                                            pk
+                                            pk,
+                                            startDate,
+                                            endDate,
+                                            activityType
                                         }
                                     }
                                 }
@@ -223,7 +226,7 @@ export default {
                     }`
                 }
                 axios.post('/graphql/', data)
-                .then(res => {
+                .then(async res => {
                     const a = res.data.data.activity
                     const new_case = {
                         id: a.appropriation.case.pk,
@@ -238,7 +241,10 @@ export default {
                         activities: [...a.appropriation.activities.edges.map(e => {
                             return {
                                 id: Number(e.node.pk),
-                                modifies: e.node.modifies ? e.node.modifies.pk : null
+                                modifies: e.node.modifies ? e.node.modifies.pk : null,
+                                start_date: e.node.startDate,
+                                end_date: e.node.endDate,
+                                activity_type: e.node.activityType
                             }
                         })]
                     }
@@ -269,8 +275,18 @@ export default {
                         payment_day_of_month: a.paymentPlan.paymentDayOfMonth,
                         payment_units: a.paymentPlan.paymentUnits,
                         payment_amount: a.paymentPlan.paymentAmount,
-                        price_per_unit: a.paymentPlan.pricePerUnit.pk
+                        price_per_unit: a.paymentPlan.pricePerUnit ? a.paymentPlan.pricePerUnit.pk : null
                     }
+                    if (new_payment_plan.price_per_unit) {
+                        await axios.get(`/prices/${ new_payment_plan.price_per_unit }/`)    
+                        .then(res => {
+                            new_payment_plan.price_per_unit = res.data
+                        })
+                        .catch(err => {
+                            console.error('Could not fetch price information', err)
+                        })
+                    }
+                    
                     this.$store.commit('setCase', new_case)
                     this.$store.commit('setAppropriation', new_appropriation)
                     this.$store.commit('setActivity', new_activity)

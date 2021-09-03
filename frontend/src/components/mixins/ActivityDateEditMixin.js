@@ -13,13 +13,9 @@ export default {
             return this.$store.getters.getActivities
         },
         main_activities: function() {
-            if (this.acts) {
-                return this.acts.filter(function(act) {
-                    return act.activity_type === 'MAIN_ACTIVITY'
-                })
-            } else {
-                return false
-            }
+            return this.appropriation.activities.filter(function(act) {
+                return act.activity_type === 'MAIN_ACTIVITY'
+            })
         },
         act: function() {
             return this.$store.getters.getActivity

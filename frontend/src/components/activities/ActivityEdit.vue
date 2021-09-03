@@ -129,7 +129,6 @@ import PaymentServiceProvider from '../payments/edittypes/PaymentServiceProvider
 import CprLookUp from '../forms/CprLookUp.vue'
 import { json2jsDate } from '../filters/Date.js'
 import { userId2name, approvalId2name } from '../filters/Labels.js'
-import notify from '../notifications/Notify.js'
 import PaymentInternalReceiver from '../payments/edittypes/PaymentInternalReceiverName.vue'
 import PaymentUnits from '../payments/edittypes/PaymentUnits.vue'
 import { sanitizeActivity } from './ActivitySave.js'
@@ -176,7 +175,7 @@ export default {
 
             let new_act = this.act
             new_act.payment_plan = this.payment_plan
-            delete new_act.payment_plan.price_per_unit // API endpoint won't accept this in PATCH request
+            //delete new_act.payment_plan.price_per_unit // API endpoint won't accept this in PATCH request
 
             const sanitized_act = sanitizeActivity(new_act, 'patch')
 
