@@ -1,12 +1,8 @@
 from django.contrib.auth import get_user_model
-from graphene_django import DjangoObjectType
 import graphene
 from graphene import Node
-from graphene.types.generic import GenericScalar
 from graphene_django_optimizer import OptimizedDjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
-
-import django_filters
 
 from core.models import (
     Activity as ActivityModel,
