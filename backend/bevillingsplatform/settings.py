@@ -109,6 +109,7 @@ INSTALLED_APPS = [
     "constance.backends.database",
     "core.apps.CoreConfig",
     "django_saml2_auth",
+    "graphene_django",
     "mailer",
     "watchman",
 ]
@@ -605,6 +606,10 @@ ALLOW_EDIT_OF_PAST_PAYMENTS = settings.getboolean(
 ALLOW_SERVICE_PROVIDERS_FROM_VIRK = settings.getboolean(
     "ALLOW_SERVICE_PROVIDERS_FROM_VIRK", fallback=True
 )
+
+GRAPHENE = {
+    "SCHEMA": "core.schema.schema",
+}
 
 # Watchman settings.
 WATCHMAN_CHECKS = (
