@@ -18,7 +18,7 @@ from core.models import (
     Case as CaseModel,
     Section as SectionModel,
     Rate as RateModel,
-    Price as PriceModel
+    Price as PriceModel,
 )
 
 UserModel = get_user_model()
@@ -34,7 +34,7 @@ class User(OptimizedDjangoObjectType):
 
 class ApprovalLevel(OptimizedDjangoObjectType):
     pk = graphene.Int(source="pk")
-    
+
     class Meta:
         model = ApprovalLevelModel
         fields = "__all__"
