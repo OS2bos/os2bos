@@ -121,7 +121,6 @@ export default {
         can_adjust: function() {
             // Adjust only if parent activity was granted and has no other modifying activities
             if (this.appropriation && this.act.status === 'GRANTED') {
-                console.log('got appro',this.appropriation)
                 let modifier = this.appropriation.activities.filter(ac => {
                     return ac.modifies === this.act.id
                 })
@@ -281,20 +280,23 @@ export default {
                         await axios.get(`/prices/${ new_payment_plan.price_per_unit }/`)    
                         .then(res => {
                             new_payment_plan.price_per_unit = res.data
+                            this.updateStoreAndCrumb(new_case, new_appropriation, new_activity, new_payment_plan)
                         })
                         .catch(err => {
                             console.error('Could not fetch price information', err)
                         })
+                    } else {
+                        this.updateStoreAndCrumb(new_case, new_appropriation, new_activity, new_payment_plan)
                     }
-                    
-                    this.$store.commit('setCase', new_case)
-                    this.$store.commit('setAppropriation', new_appropriation)
-                    this.$store.commit('setActivity', new_activity)
-                    this.$store.commit('setPaymentPlan', new_payment_plan)
-
-                    this.updateBreadCrumb(new_case, new_appropriation, new_activity)
                 }) 
             }
+        },
+        updateStoreAndCrumb: function(cas, appr, act, pay_plan) {
+            this.$store.commit('setCase', cas)
+            this.$store.commit('setAppropriation', appr)
+            this.$store.commit('setActivity', act)
+            this.$store.commit('setPaymentPlan', pay_plan)
+            this.updateBreadCrumb(cas, appr, act)
         },
         displaySection: function(id) {
             return sectionId2name(id)

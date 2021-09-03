@@ -207,6 +207,7 @@
         },
         methods: {
             update: function(payment_schedule_id) {
+                console.log(payment_schedule_id)
                 if (payment_schedule_id) {
                     let data = {
                         query: `{
@@ -249,10 +250,9 @@
                         })
                     }) 
                 } else {
+                    console.error('No payment schedule ID was available')
                     this.payments = null
                 }
-                
-                //this.$store.dispatch('fetchPaymentPlan', this.paymentId)
             },
             updatePayment: function(payload) {
                 if (payload.operation === 'save') {
