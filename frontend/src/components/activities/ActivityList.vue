@@ -19,7 +19,6 @@
                 </button>
             </div>
         </header>
-
         <fieldset class="act-list-actions" v-if="!no_acts">
             <div style="margin-left: 1.25rem;">
                 <input 
@@ -106,7 +105,6 @@
         ],
         data: function() {
             return {
-                acts: null,
                 diag_open: false,
                 diag_approval_warning: null,
                 this_year: String(new Date().getUTCFullYear()),
@@ -115,6 +113,9 @@
             }
         },
         computed: {
+            acts: function() {
+                return this.$store.getters.getActivities
+            },
             appropriation: function() {
                 return this.$store.getters.getAppropriation
             },
@@ -123,6 +124,8 @@
                     return this.acts.filter(function(act) {
                         return act.activity_type === 'MAIN_ACTIVITY'
                     })
+                } else {
+                    return []
                 }
             },
             suppl_activities: function() {
@@ -131,10 +134,12 @@
                         return act.activity_type === 'SUPPL_ACTIVITY'
                     })
                     return this.sortSupplementaryActs(unsorted_acts)
+                } else {
+                    return []
                 }
             },
             no_acts: function() {
-                if (this.acts.length < 1) {
+                if (!this.acts || this.acts.length < 1) {
                     return true
                 } else {
                     return false
@@ -153,16 +158,10 @@
                 }
             }
         },
-        watch: {
-            apprId: function() {
-                this.update()
-            }
-        },
         methods: {
             update: function(appropriation_id) {
-                this.$store.commit('clearActivities')
+                console.log('updating')
                 this.fetchData(appropriation_id)
-                //this.$store.dispatch('fetchActivities', appropriation_id)
                 this.$store.commit('setUnCheckAll')
             },
             closeDialog: function() {
@@ -258,6 +257,8 @@
                                     node {
                                         pk,
                                         status,
+                                        note,
+                                        activityType,
                                         details {
                                             name
                                         },
@@ -272,7 +273,9 @@
                 }
                 axios.post('/graphql/', data)
                 .then(res => {
-                    console.log('got appr acts', res.data.data.appropriation.activities.edges)
+                    if (!res.data.data.appropriation) {
+                        return false
+                    }
                     const acts = res.data.data.appropriation.activities.edges.map(a => {
                         return {
                             id: a.node.pk,
@@ -280,17 +283,19 @@
                             details: {
                                 name: a.node.details.name
                             },
-                            modifies: a.node.modifies
+                            note: a.node.note,
+                            activity_type: a.node.activityType,
+                            modifies: a.node.modifies ? a.node.modifies.pk : null
                         }
                     })
-                    console.log('got data', acts)
-                    this.acts = acts
+                    this.$store.commit('setActivityList', acts)
                 })
             }
         },
-        beforeRouteUpdate: function(to, from, next) {
-            this.update(this.apprId)
-            next()
+        watch: {
+            apprId: function(new_val) {
+                this.update(new_val)
+            }
         },
         created: function() {
             this.update(this.apprId)

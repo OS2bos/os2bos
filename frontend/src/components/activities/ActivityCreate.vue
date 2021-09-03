@@ -120,8 +120,6 @@ export default {
     },
     methods: {
         cleanAndExit: function(act_id) {
-            this.$store.commit('clearActivity')
-            this.$store.commit('clearPaymentPlan')
             if (act_id) {
                 this.$router.push(`/activity/${ act_id }/`)
             } else {
@@ -162,12 +160,13 @@ export default {
 
             axios.post('/activities/', sanitized_act)
             .then(res => {
-                this.cleanAndExit(res.data.id)
+                this.$store.commit('setActivity', res.data)
+                this.$router.push(`/activity/${ res.data.id }/`)
             })
             .catch(err => this.$store.dispatch('parseErrorOutput', err))            
         },
         cancelCreate: function() {
-            this.cleanAndExit(false)
+            this.$router.push(`/appropriation/${ this.appropriation.id }/`)
         }
     }
 }

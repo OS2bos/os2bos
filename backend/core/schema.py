@@ -15,21 +15,37 @@ from core.models import (
     ActivityDetails as ActivityDetailsModel,
     ApprovalLevel as ApprovalLevelModel,
     Appropriation as AppropriationModel,
+    Case as CaseModel,
+    Section as SectionModel,
 )
 
 UserModel = get_user_model()
 
 
 class User(OptimizedDjangoObjectType):
+    pk = graphene.Int(source="pk")
+
     class Meta:
         model = UserModel
         fields = "__all__"
 
 
 class ApprovalLevel(OptimizedDjangoObjectType):
+    pk = graphene.Int(source="pk")
+    
     class Meta:
         model = ApprovalLevelModel
         fields = "__all__"
+
+
+class Case(OptimizedDjangoObjectType):
+    pk = graphene.Int(source="pk")
+
+    class Meta:
+        model = CaseModel
+        interfaces = (Node,)
+        fields = "__all__"
+        filter_fields = "__all__"
 
 
 class Appropriation(OptimizedDjangoObjectType):
@@ -43,6 +59,7 @@ class Appropriation(OptimizedDjangoObjectType):
 
 
 class Payment(OptimizedDjangoObjectType):
+    pk = graphene.Int(source="pk")
     account_string = graphene.String()
     account_alias = graphene.String()
 
@@ -54,6 +71,8 @@ class Payment(OptimizedDjangoObjectType):
 
 
 class PaymentSchedule(OptimizedDjangoObjectType):
+    pk = graphene.Int(source="pk")
+
     class Meta:
         model = PaymentScheduleModel
         interfaces = (Node,)
@@ -62,6 +81,8 @@ class PaymentSchedule(OptimizedDjangoObjectType):
 
 
 class ActivityDetails(OptimizedDjangoObjectType):
+    pk = graphene.Int(source="pk")
+
     class Meta:
         model = ActivityDetailsModel
         fields = "__all__"
@@ -89,7 +110,20 @@ class Activity(OptimizedDjangoObjectType):
         filter_fields = "__all__"
 
 
+class Section(OptimizedDjangoObjectType):
+    pk = graphene.Int(source="pk")
+
+    class Meta:
+        model = SectionModel
+        interfaces = (Node,)
+        fields = "__all__"
+        filter_fields = "__all__"
+
+
 class Query(graphene.ObjectType):
+    case = Node.Field(Case)
+    cases = DjangoFilterConnectionField(Case)
+
     activity = Node.Field(Activity)
     activities = DjangoFilterConnectionField(Activity)
 
@@ -101,6 +135,9 @@ class Query(graphene.ObjectType):
 
     payment = Node.Field(Payment)
     payments = DjangoFilterConnectionField(Payment)
+
+    section = Node.Field(Section)
+    sections = DjangoFilterConnectionField(Section)
 
 
 schema = graphene.Schema(query=Query)

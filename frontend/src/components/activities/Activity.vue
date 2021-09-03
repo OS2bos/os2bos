@@ -42,7 +42,7 @@
             </dl>
         </div>
 
-        <activity-edit v-if="edit_mode" @save="reload" @cancel="reload" :class="`activity-${ act.status }`" />
+        <activity-edit v-if="edit_mode" @save="update" @cancel="update" :class="`activity-${ act.status }`" />
         
         <activity-summary v-else :activity-data="act" :class="`activity-${ act.status }`" />
 
@@ -71,7 +71,7 @@
 
                             <div class="modal-footer">
                                 <slot name="footer">
-                                    <button type="button" class="modal-cancel-btn" @click="reload">Annullér</button>
+                                    <button type="button" class="modal-cancel-btn" @click="update">Annullér</button>
                                     <button class="modal-delete-btn" type="submit">Slet</button>
                                 </slot>
                             </div>
@@ -93,7 +93,7 @@ import ActivityEdit from './ActivityEdit.vue'
 import ActivitySummary from './ActivitySummary.vue'
 import axios from '../http/Http.js'
 import PaymentSchedule from '../payments/PaymentList.vue'
-import { activityId2name, sectionId2name } from '../filters/Labels.js'
+import { sectionId2name } from '../filters/Labels.js'
 import notify from '../notifications/Notify.js'
 import PermissionLogic from '../mixins/PermissionLogic.js'
 
@@ -134,45 +134,38 @@ export default {
             }
         }
     },
-    watch: {
-        cas: function() {
-            if (this.cas && this.act.details) {
-                this.$store.commit('setBreadcrumb', [
-                    {
-                        link: '/',
-                        title: 'Sager'
-                    },
-                    {
-                        link: `/case/${ this.cas.id }`,
-                        title: `Hovedsag ${ this.cas.sbsys_id }, ${ this.cas.name }`
-                    },
-                    {
-                        link: `/appropriation/${ this.appropriation.id }`,
-                        title: `Bevillingsskrivelse ${ this.appropriation.sbsys_id }`
-                    },
-                    {
-                        link: false,
-                        title: `Udgift til ${ this.act.details.name }`
-                    }
-                ])
-            }
-        }
-    },
     methods: {
-        reload: function(activity_id) {
+        updateBreadCrumb: function() {
+            this.$store.commit('setBreadcrumb', [
+                {
+                    link: '/',
+                    title: 'Sager'
+                },
+                {
+                    link: `/case/${ this.cas.id }`,
+                    title: `Hovedsag ${ this.cas.sbsys_id }, ${ this.cas.name }`
+                },
+                {
+                    link: `/appropriation/${ this.appropriation.id }`,
+                    title: `Bevillingsskrivelse ${ this.appropriation.sbsys_id }`
+                },
+                {
+                    link: false,
+                    title: `Udgift til ${ this.act.details.name }`
+                }
+            ])
+        },
+        update: function(activity_id) {
             this.edit_mode = false
             this.showModal = false
             this.fetchActivity(activity_id)
-            //this.$store.dispatch('fetchActivity', this.$route.params.actId)
         },
         fetchActivity: function(act_id) {
-            // TODO: Load appropriation section and case data
-            this.$store.commit('setActivity', null)
-            const id = btoa(`Activity:${ act_id }`)
             if (act_id) {
+                const id = btoa(`Activity:${ act_id }`)
                 let data = {
                     query: `{
-                        activity(id: "${id}") {
+                        activity(id: "${ id }") {
                             id,
                             pk,
                             status,
@@ -200,18 +193,33 @@ export default {
                             },
                             appropriation {
                                 pk,
-                                sbsysId
+                                sbsysId,
+                                section {
+                                    pk
+                                }
+                                case {
+                                    pk,
+                                    sbsysId,
+                                    cprNumber,
+                                    name
+                                }
                             }
                         }
                     }`
                 }
                 axios.post('/graphql/', data)
                 .then(res => {
-                    console.log('activity', res.data.data.activity)
                     const a = res.data.data.activity
+                    const new_case = {
+                        id: a.appropriation.case.pk,
+                        sbsys_id: a.appropriation.case.sbsysId,
+                        name: a.appropriation.case.name,
+                        cpr_number: a.appropriation.case.cprNumber
+                    }
                     const new_appropriation = {
                         id: a.appropriation.pk,
-                        sbsys_id: a.appropriation.sbsysId
+                        sbsys_id: a.appropriation.sbsysId,
+                        section: a.appropriation.section.pk
                     }
                     const new_activity = {
                         status: a.status,
@@ -239,15 +247,13 @@ export default {
                         payment_units: a.paymentPlan.paymentUnits,
                         payment_amount: a.paymentPlan.paymentAmount
                     }
+                    this.$store.commit('setCase', new_case)
                     this.$store.commit('setAppropriation', new_appropriation)
                     this.$store.commit('setActivity', new_activity)
                     this.$store.commit('setPaymentPlan', new_payment_plan)
 
-                    this.activity = new_activity
-                    console.log('new act', new_activity)
+                    this.updateBreadCrumb()
                 }) 
-            } else {
-                this.activity = null
             }
         },
         displaySection: function(id) {
@@ -257,8 +263,8 @@ export default {
             this.showModal = true
         },
         deleteActivity: function() {
-            axios.delete(`/activities/${ this.$route.params.actId }/`)
-            .then(res => {
+            axios.delete(`/activities/${ this.act.id }/`)
+            .then(() => {
                 this.$router.push(`/appropriation/${ this.appropriation.id }`)
                 notify('Ydelse slettet', 'success')
             })
@@ -267,12 +273,12 @@ export default {
     },
     beforeRouteUpdate(to, from, next) {
         if (to.params.actId !== from.params.actId) {
-            this.reload(to.params.actId)
+            this.update(to.params.actId)
         }
         next()
     },
     created: function(){
-        this.reload(this.$route.params.actId)
+        this.update(this.$route.params.actId)
     }
 }
     

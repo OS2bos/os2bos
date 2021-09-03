@@ -20,7 +20,6 @@
             required />
                
         <error :err-key="this.property" />
-
         <p v-if="model" style="margin-top: .5rem;">{{ act2description(model.id) }}</p>
 
     </fieldset>
@@ -91,6 +90,7 @@ export default {
             }
         },
         act2name: function(id) {
+            console.log(id)
             return activityId2name(id)
         },
         act2description: function(id) {

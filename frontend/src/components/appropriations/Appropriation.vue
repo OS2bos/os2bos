@@ -22,7 +22,7 @@
 
         <!-- Delete activity modal -->
         <div v-if="showModal">
-            <form @submit.prevent="deleteAppr()" class="modal-form">
+            <form @submit.prevent="deleteAppr(appr.id)" class="modal-form">
                 <div class="modal-mask">
                     <div class="modal-wrapper">
                         <div class="modal-container">
@@ -97,7 +97,7 @@
             </template>
 
             <div class="sagsbev appr-grid-box">
-                <activity-list :appr-id="appr.pk" />
+                <activity-list :appr-id="$route.params.apprId" />
             </div>
 
         </div>
@@ -111,8 +111,7 @@
     import ActivityList from '../activities/ActivityList.vue'
     import AppropriationEdit from './AppropriationEdit.vue'
     import { json2jsDate } from '../filters/Date.js'
-    import { municipalityId2name, districtId2name, sectionId2name, displayStatus, userId2name, approvalId2name } from '../filters/Labels.js'
-    import store from '../../store.js'
+    import { municipalityId2name, districtId2name, sectionId2name, displayStatus, userId2name } from '../filters/Labels.js'
     import PermissionLogic from '../mixins/PermissionLogic.js'
     import notify from '../notifications/Notify.js'
 
@@ -139,42 +138,30 @@
                 return this.$store.getters.getAppropriation
             }
         },
-        watch: {
-            appr: function() {
-                this.updateBreadCrumb()
-            },
-            cas: function() {
-                this.updateBreadCrumb()
-            }
-        },
         methods: {
             update: function(appropriation_id) {
                 this.show_edit =  false
                 this.showModal = false
-                this.$store.commit('clearAppropriation')
-                this.fetchData(appropriation_id)
-                //this.$store.dispatch('fetchAppropriation', this.$route.params.apprId)
+                this.fetchApprData(appropriation_id)
             },
             displayDate: function(date) {
                 return json2jsDate(date)
             },
-            updateBreadCrumb: function() {
-                if (this.cas && this.appr) {
-                    this.$store.commit('setBreadcrumb', [
-                        {
-                            link: '/',
-                            title: 'Sager'
-                        },
-                        {
-                            link: `/case/${ this.appr.case }`,
-                            title: `${ this.cas.sbsys_id }, ${ this.cas.name }`
-                        },
-                        {
-                            link: false,
-                            title: `Bevillingsskrivelse ${ this.appr.sbsys_id }`
-                        }
-                    ])
-                }
+            updateBreadCrumb: function(appr_data, case_data) {
+                this.$store.commit('setBreadcrumb', [
+                    {
+                        link: '/',
+                        title: 'Sager'
+                    },
+                    {
+                        link: `/case/${ case_data.id }`,
+                        title: `${ case_data.sbsys_id }, ${ case_data.name }`
+                    },
+                    {
+                        link: false,
+                        title: `Bevillingsskrivelse ${ appr_data.sbsys_id }`
+                    }
+                ])
             },
             displayMuniName: function(id) {
                 return municipalityId2name(id)
@@ -197,31 +184,65 @@
             cancel: function() {
                 this.showModal = false
             },
-            deleteAppr: function() {
-                axios.delete(`/appropriations/${ this.appr.id }/`)
-                .then(res => {
+            deleteAppr: function(appr_id) {
+                axios.delete(`/appropriations/${ appr_id }/`)
+                .then(() => {
                     this.$router.push(`/case/${ this.cas.id }`)
                     notify('Bevillingsskrivelse slettet', 'success')
                 })
                 .catch(err => this.$store.dispatch('parseErrorOutput', err))
             },
-            // Example for GrapQL application
-            fetchData: function(appropriation_id) {
-                // TODO: get data for appropriation case and section
+            fetchApprData: function(appropriation_id) {
+                // TODO: get data for appropriation section
                 const id = btoa(`Appropriation:${appropriation_id}`)
                 let data = {
                     query: `{
                         appropriation(id: "${ id }") {
-                            id,
                             pk,
                             sbsysId,
-                            note
+                            note,
+                            case {
+                                pk,
+                                sbsysId,
+                                name,
+                                cprNumber,
+                                caseWorker {
+                                    pk
+                                }
+                            },
+                            section {
+                                pk
+                            }
                         }
                     }`
                 }
                 axios.post('/graphql/', data)
                 .then(res => {
-                    this.$store.commit('setAppropriation', res.data.data.appropriation)
+                    if (!res.data.data.appropriation) {
+                        return false
+                    }
+                    const a = res.data.data.appropriation
+                    const new_appr = {
+                        id: a.pk,
+                        case: a.case.pk,
+                        sbsys_id: a.sbsysId,
+                        note: a.note,
+                        section: a.section.pk
+                    }
+                    const new_case = {
+                        name: a.case.name,
+                        id: a.case.pk,
+                        sbsys_id: a.case.sbsysId,
+                        cpr_number: a.case.cprNumber,
+                        case_worker: a.case.caseWorker.pk
+                    }
+                    this.$store.commit('setAppropriation', new_appr)
+                    this.$store.commit('setCase', new_case)
+                    this.updateBreadCrumb(new_appr, new_case)
+                })
+                .catch(err => {
+                    console.error('Error fetching Appropriation data', err)
+                    this.$store.commit('setAppropriation', null)
                 })
             }
         },
