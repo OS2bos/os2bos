@@ -3,7 +3,7 @@
         <div v-if="editable" class="cvr-search-widget">
             <fieldset style="margin: 0;">
                 <label for="cvr-search-input">Leverandør</label>
-                <input type="search" v-model="search_input" @input="search" id="cvr-search-input" placeholder="CVR/P-nr eller navn">
+                <input type="search" autocomplete="off" v-model="search_input" @input="search" id="cvr-search-input" placeholder="CVR/P-nr eller navn">
                 <button type="button" class="cvr-search-input-clear" @click="select_item(false)" title="Fjern leverandør">
                     <i class="material-icons">close</i>
                 </button>
