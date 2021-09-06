@@ -1273,75 +1273,35 @@ class Appropriation(AuditModelMixin, models.Model):
             activity = f.first()
             return activity.end_date
 
-    @property
-    def total_granted_this_year(self):
-        """Retrieve total amount granted this year for this Appropriation.
+    def total_granted_in_year(self, year=None):
+        """Retrieve total amount granted in year for this Appropriation.
 
         This includes both main and supplementary activities.
         """
+        if not year:
+            year = timezone.now().year
+
         granted_activities = self.activities.filter(status=STATUS_GRANTED)
 
         this_years_payments = Payment.objects.filter(
             payment_schedule__activity__in=granted_activities
-        ).in_this_year()
+        ).in_year(year)
 
         return this_years_payments.amount_sum()
 
-    @property
-    def total_granted_full_year(self):
-        """Retrieve total amount granted for this year.
-
-        Extrapolate for the full year (January 1 - December 31).
-        """
-        all_activities = self.activities.filter(status=STATUS_GRANTED)
-        return sum(
-            activity.total_cost_full_year for activity in all_activities
-        )
-
-    @property
-    def total_expected_this_year(self):
-        """Retrieve total amount expected this year for this Appropriation.
+    def total_expected_in_year(self, year=None):
+        """Retrieve total amount expected in year for this Appropriation.
 
         We take into account granted payments but overrule with expected
         amounts if they modify another activity.
         """
+        if not year:
+            year = timezone.now().year
+
         activities = self.activities.filter(
             Q(status=STATUS_GRANTED) | Q(status=STATUS_EXPECTED)
         )
-        return sum(a.total_expected_this_year for a in activities)
-
-    @property
-    def total_expected_full_year(self):
-        """Retrieve total amount expected for this year.
-
-        Extrapolate for the full year (January 1 - December 31).
-        """
-        all_activities = self.activities.filter(
-            Q(status=STATUS_GRANTED, modified_by__isnull=True)
-            | Q(status=STATUS_EXPECTED)
-            | Q(status=STATUS_GRANTED, modified_by__status=STATUS_GRANTED)
-        )
-        return sum(
-            activity.total_cost_full_year for activity in all_activities
-        )
-
-    @property
-    def total_cost_expected(self):
-        """Retrieve total amount expected."""
-        activities = self.activities.filter(
-            Q(status=STATUS_GRANTED) | Q(status=STATUS_EXPECTED)
-        )
-        return sum(activity.total_cost for activity in activities)
-
-    @property
-    def total_cost_granted(self):
-        """Retrieve total amount granted."""
-        all_granted_activities = self.activities.filter(status=STATUS_GRANTED)
-        payments = Payment.objects.filter(
-            payment_schedule__activity__in=all_granted_activities
-        )
-
-        return payments.amount_sum()
+        return sum(a.total_expected_in_year(year) for a in activities)
 
     @property
     def main_activity(self):
@@ -2157,63 +2117,41 @@ class Activity(AuditModelMixin, models.Model):
 
         return payments
 
-    @property
-    def total_cost_this_year(self):
-        """Calculate total cost this year for this activity."""
-        return self.applicable_payments.in_this_year().amount_sum()
+    def total_cost_in_year(self, year=None):
+        """Calculate total cost for a year for this activity."""
+        if not year:
+            year = timezone.now().year
 
-    @property
-    def total_granted_this_year(self):
-        """Calculate total amount *granted* on this activity this year."""
+        return self.applicable_payments.in_year(year).amount_sum()
+
+    def total_granted_in_year(self, year=None):
+        """Calculate total amount *granted* on this activity for a year."""
+        if not year:
+            year = timezone.now().year
+
         if self.status == STATUS_GRANTED:
             payments = Payment.objects.filter(payment_schedule__activity=self)
-            return payments.in_this_year().amount_sum()
+            return payments.in_year(year).amount_sum()
         else:
             return Decimal(0)
 
-    @property
-    def total_expected_this_year(self):
-        """Calculate total amount *expected* this year.
+    def total_expected_in_year(self, year=None):
+        """Calculate total amount *expected* for a year.
 
         As may be noted, this is redundant and identical to "total cost
         this year". Maybe one of these functions should be removed, the
         redundancy is due to a desire for clarity as to what is returned
         in different contexts.
         """
-        return self.total_cost_this_year
+        if not year:
+            year = timezone.now().year
+
+        return self.total_cost_in_year(year)
 
     @property
     def total_cost(self):
         """Calculate the total cost of this activity at all times."""
         return self.applicable_payments.amount_sum()
-
-    @property
-    def total_cost_full_year(self):
-        """Retrieve total amount expected for this year.
-
-        Extrapolate for the full year (January 1 - December 31).
-        """
-        if not hasattr(self, "payment_plan") or not self.payment_plan:
-            return Decimal(0.0)
-        # Individual payments are a special case and should just
-        # use total_cost.
-        if (
-            self.payment_plan.payment_type
-            == PaymentSchedule.INDIVIDUAL_PAYMENT
-        ):
-            return self.total_cost
-
-        vat_factor = self.vat_factor
-        now = timezone.now().date()
-        start_date = date(now.year, month=1, day=1)
-        end_date = date(now.year, month=12, day=31)
-        payment_amounts = (
-            self.payment_plan.calculate_per_payment_amount(vat_factor, date)
-            for date in self.payment_plan.create_rrule(
-                start_date, until=end_date
-            )
-        )
-        return sum(payment_amounts)
 
     @property
     def triggers_payment_email(self):

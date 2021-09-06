@@ -9,6 +9,7 @@ from dateutil.relativedelta import relativedelta
 
 from django.db.models import Q
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django import forms
 
@@ -337,10 +338,9 @@ class PriceSerializer(WritableNestedModelSerializer):
         return instance
 
 
-class PaymentScheduleSerializer(WritableNestedModelSerializer):
-    """Serializer for the PaymentSchedule model."""
+class BasePaymentScheduleSerializer(WritableNestedModelSerializer):
+    """Base Serializer for the PaymentSchedule model."""
 
-    payments = PaymentSerializer(many=True, read_only=True)
     price_per_unit = PriceSerializer(required=False, allow_null=True)
 
     class Meta:
@@ -516,6 +516,12 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
         return data
 
 
+class PaymentScheduleSerializer(BasePaymentScheduleSerializer):
+    """Serializer for the PaymentSchedule model."""
+
+    payments = PaymentSerializer(many=True, read_only=True)
+
+
 class ServiceProviderSerializer(
     UniqueFieldsMixin, serializers.ModelSerializer
 ):
@@ -526,22 +532,55 @@ class ServiceProviderSerializer(
         fields = "__all__"
 
 
-class ActivitySerializer(WritableNestedModelSerializer):
-    """Serializer for the Activity model."""
+class BaseActivitySerializer(WritableNestedModelSerializer):
+    """Base Serializer for the Activity model."""
 
-    monthly_payment_plan = serializers.ReadOnlyField()
-    total_cost = serializers.ReadOnlyField()
-    total_cost_this_year = serializers.ReadOnlyField()
-    total_cost_full_year = serializers.ReadOnlyField()
-    total_granted_this_year = serializers.ReadOnlyField()
-    total_expected_this_year = serializers.ReadOnlyField()
+    total_granted_this_year = serializers.SerializerMethodField()
+    total_expected_this_year = serializers.SerializerMethodField()
 
-    payment_plan = PaymentScheduleSerializer(partial=True, required=False)
-    service_provider = ServiceProviderSerializer(
-        partial=True, required=False, allow_null=True
-    )
+    total_granted_previous_year = serializers.SerializerMethodField()
+    total_expected_previous_year = serializers.SerializerMethodField()
+
+    total_granted_next_year = serializers.SerializerMethodField()
+    total_expected_next_year = serializers.SerializerMethodField()
 
     details__name = serializers.ReadOnlyField(source="details.name")
+
+    def get_total_granted_this_year(self, obj):
+        """Retrieve total granted amount for this year."""
+        year = timezone.now().year
+
+        return obj.total_granted_in_year(year)
+
+    def get_total_expected_this_year(self, obj):
+        """Retrieve total expected amount for this year."""
+        year = timezone.now().year
+
+        return obj.total_expected_in_year(year)
+
+    def get_total_granted_previous_year(self, obj):
+        """Retrieve total granted amount for previous year."""
+        year = timezone.now().year - 1
+
+        return obj.total_granted_in_year(year)
+
+    def get_total_expected_previous_year(self, obj):
+        """Retrieve total expected amount for previous year."""
+        year = timezone.now().year - 1
+
+        return obj.total_expected_in_year(year)
+
+    def get_total_granted_next_year(self, obj):
+        """Retrieve total granted amount for next year."""
+        year = timezone.now().year + 1
+
+        return obj.total_granted_in_year(year)
+
+    def get_total_expected_next_year(self, obj):
+        """Retrieve total expected amount for next year."""
+        year = timezone.now().year + 1
+
+        return obj.total_expected_in_year(year)
 
     @staticmethod
     def setup_eager_loading(queryset):
@@ -695,6 +734,22 @@ class ActivitySerializer(WritableNestedModelSerializer):
         fields = "__all__"
 
 
+class ListActivitySerializer(BaseActivitySerializer):
+    """Serializer for the Activity model for a list."""
+
+    payment_plan = BasePaymentScheduleSerializer(partial=True, required=False)
+
+
+class ActivitySerializer(BaseActivitySerializer):
+    """Serializer for the Activity model."""
+
+    monthly_payment_plan = serializers.ReadOnlyField()
+    payment_plan = PaymentScheduleSerializer(partial=True, required=False)
+    service_provider = ServiceProviderSerializer(
+        partial=True, required=False, allow_null=True
+    )
+
+
 class BaseAppropriationSerializer(serializers.ModelSerializer):
     """Base Serializer for the Appropriation model."""
 
@@ -751,14 +806,17 @@ class ListAppropriationSerializer(BaseAppropriationSerializer):
 class AppropriationSerializer(BaseAppropriationSerializer):
     """Serializer for a single Appropriation model."""
 
-    main_activity = ActivitySerializer(read_only=True)
+    main_activity = BaseActivitySerializer(read_only=True)
     activities = serializers.SerializerMethodField()
-    total_granted_this_year = serializers.ReadOnlyField()
-    total_granted_full_year = serializers.ReadOnlyField()
-    total_expected_this_year = serializers.ReadOnlyField()
-    total_expected_full_year = serializers.ReadOnlyField()
-    total_cost_expected = serializers.ReadOnlyField()
-    total_cost_granted = serializers.ReadOnlyField()
+
+    total_granted_this_year = serializers.SerializerMethodField()
+    total_expected_this_year = serializers.SerializerMethodField()
+
+    total_granted_previous_year = serializers.SerializerMethodField()
+    total_expected_previous_year = serializers.SerializerMethodField()
+
+    total_granted_next_year = serializers.SerializerMethodField()
+    total_expected_next_year = serializers.SerializerMethodField()
 
     def get_activities(self, appropriation):
         """Get activities on appropriation."""
@@ -767,6 +825,42 @@ class AppropriationSerializer(BaseAppropriationSerializer):
             instance=activities, many=True, read_only=True
         )
         return serializer.data
+
+    def get_total_granted_this_year(self, obj):
+        """Retrieve total granted amount for this year."""
+        year = timezone.now().year
+
+        return obj.total_granted_in_year(year)
+
+    def get_total_expected_this_year(self, obj):
+        """Retrieve total expected amount for this year."""
+        year = timezone.now().year
+
+        return obj.total_expected_in_year(year)
+
+    def get_total_granted_previous_year(self, obj):
+        """Retrieve total granted amount for previous year."""
+        year = timezone.now().year - 1
+
+        return obj.total_granted_in_year(year)
+
+    def get_total_expected_previous_year(self, obj):
+        """Retrieve total expected amount for previous year."""
+        year = timezone.now().year - 1
+
+        return obj.total_expected_in_year(year)
+
+    def get_total_granted_next_year(self, obj):
+        """Retrieve total granted amount for next year."""
+        year = timezone.now().year + 1
+
+        return obj.total_granted_in_year(year)
+
+    def get_total_expected_next_year(self, obj):
+        """Retrieve total expected amount for next year."""
+        year = timezone.now().year + 1
+
+        return obj.total_expected_in_year(year)
 
 
 class PaymentMethodDetailsSerializer(serializers.ModelSerializer):

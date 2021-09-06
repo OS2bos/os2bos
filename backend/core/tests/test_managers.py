@@ -37,10 +37,10 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
     def setUpTestData(cls):
         cls.basic_setup()
 
-    def test_in_this_year_true(self):
+    def test_in_year_true(self):
         payment_schedule = create_payment_schedule()
         payment = create_payment(payment_schedule)
-        self.assertIn(payment, Payment.objects.in_this_year())
+        self.assertIn(payment, Payment.objects.in_year())
 
     def test_in_this_year_false(self):
         now = timezone.now()
@@ -49,7 +49,7 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
             payment_schedule, date=date(year=now.year - 1, month=1, day=1)
         )
 
-        self.assertNotIn(payment, Payment.objects.in_this_year())
+        self.assertNotIn(payment, Payment.objects.in_year())
 
     def test_in_this_year_true_paid_date(self):
         case = create_case(self.case_worker, self.municipality, self.district)
@@ -71,7 +71,7 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
             paid=True,
         )
 
-        self.assertIn(payment, Payment.objects.in_this_year())
+        self.assertIn(payment, Payment.objects.in_year())
 
     def test_paid_date_or_date_gte(self):
         case = create_case(self.case_worker, self.municipality, self.district)
@@ -229,7 +229,7 @@ class PaymentQuerySetTestCase(TestCase, BasicTestMixin):
             paid=True,
         )
 
-        self.assertNotIn(payment, Payment.objects.in_this_year())
+        self.assertNotIn(payment, Payment.objects.in_year())
 
     def test_amount_sum(self):
         now = timezone.now()

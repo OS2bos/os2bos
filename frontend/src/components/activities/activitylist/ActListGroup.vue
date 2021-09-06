@@ -57,7 +57,13 @@ export default {
                 expected: costs.expected,
                 details: last_act.details,
                 payment_plan: last_act.payment_plan,
-                note: last_act.note
+                note: last_act.note,
+                total_granted_previous_year: costs.granted_previous_year,
+                total_granted_this_year: costs.granted_this_year,
+                total_granted_next_year: costs.granted_next_year,
+                total_expected_previous_year: costs.expected_previous_year,
+                total_expected_this_year: costs.expected_this_year,
+                total_expected_next_year: costs.expected_next_year
             }
         }
     },
@@ -87,18 +93,24 @@ export default {
             }) ? 'EXPECTED' : arr[0].status
         },
         calcCost(arr) {
-            let costs = {
-                approved: 0,
-                expected: 0
-            }
-            for (let a of arr) {
-                if (a.total_granted_this_year) {
-                    costs.approved = costs.approved + a.total_granted_this_year
-                }
-                if (a.total_expected_this_year) {
-                    costs.expected = costs.expected + a.total_expected_this_year
+            function reducerFunc(costs, act) {
+                return {
+                    granted_previous_year: costs.granted_previous_year + act.total_granted_previous_year,
+                    granted_this_year: costs.granted_this_year + act.total_granted_this_year,
+                    granted_next_year: costs.granted_next_year + act.total_granted_next_year,
+                    expected_previous_year: costs.expected_previous_year + act.total_expected_previous_year,
+                    expected_this_year: costs.expected_this_year + act.total_expected_this_year,
+                    expected_next_year: costs.expected_next_year + act.total_expected_next_year
                 }
             }
+            let costs = arr.reduce(reducerFunc, {
+                granted_previous_year: 0,
+                granted_this_year: 0,
+                granted_next_year: 0,
+                expected_this_year: 0,
+                expected_next_year: 0,
+                expected_previous_year: 0
+            })
             return costs
         },
         getBestModified(arr) {
