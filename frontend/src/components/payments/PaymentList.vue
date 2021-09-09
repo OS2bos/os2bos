@@ -223,8 +223,9 @@
                                                     paidAmount,
                                                     paidDate,
                                                     note,
+                                                    isPayableManually,
                                                     paymentSchedule {
-                                                        fictive,
+                                                        paymentMethod,
                                                         activity {
                                                             status
                                                         }
@@ -251,10 +252,12 @@
                                 note: p.node.note,
                                 payment_schedule__payment_id: payment_schedule_key,
                                 activity__status: p.node.paymentSchedule.activity.status,
-                                is_payable_manually: !p.node.paymentSchedule.fictive
+                                is_payable_manually: p.node.isPayableManually,
+                                payment_method: p.node.paymentSchedule.paymentMethod
                             }
                             return new_p
                         })
+                        this.$store.commit('setPayments', this.payments)
                     }) 
                 } else {
                     console.error('No payment schedule ID was available')

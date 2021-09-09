@@ -79,7 +79,6 @@ export default {
                 } else if (payment.is_payable_manually && !payment.paid && this.user.profile !== 'readonly' && payment.payment_method !== 'SD' && payment.payment_method !== 'CASH') {
                     return true
                 } else {
-                    console.log('not payable 1', payment)
                     return false
                 }
             } else {
