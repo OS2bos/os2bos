@@ -90,8 +90,7 @@ export default {
             store.commit('setActivity', new_act)
         } else if (to.query.mode === 'expected') {
             const act = store.state.activity.activity,
-                  pay_plan = store.state.activity.activity.payment_plan
-            
+                  pay_plan = store.state.payment.payment_plan
             let new_act = {
                 status: 'EXPECTED',
                 modifies: act.id,
@@ -160,7 +159,6 @@ export default {
 
             axios.post('/activities/', sanitized_act)
             .then(res => {
-                this.$store.commit('setActivity', res.data)
                 this.$router.push(`/activity/${ res.data.id }/`)
             })
             .catch(err => this.$store.dispatch('parseErrorOutput', err))            

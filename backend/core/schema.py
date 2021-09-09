@@ -17,6 +17,8 @@ from core.models import (
     Appropriation as AppropriationModel,
     Case as CaseModel,
     Section as SectionModel,
+    Rate as RateModel,
+    Price as PriceModel
 )
 
 UserModel = get_user_model()
@@ -65,6 +67,24 @@ class Payment(OptimizedDjangoObjectType):
 
     class Meta:
         model = PaymentModel
+        interfaces = (Node,)
+        fields = "__all__"
+        filter_fields = "__all__"
+
+
+class Rate(OptimizedDjangoObjectType):
+
+    class Meta:
+        model = RateModel
+        interfaces = (Node,)
+        fields = "__all__"
+        filter_fields = "__all__"
+
+
+class Price(OptimizedDjangoObjectType):
+
+    class Meta:
+        model = PriceModel
         interfaces = (Node,)
         fields = "__all__"
         filter_fields = "__all__"
@@ -135,6 +155,12 @@ class Query(graphene.ObjectType):
 
     payment = Node.Field(Payment)
     payments = DjangoFilterConnectionField(Payment)
+
+    rate = Node.Field(Rate)
+    rates = DjangoFilterConnectionField(Rate)
+
+    price = Node.Field(Price)
+    prices = DjangoFilterConnectionField(Price)
 
     section = Node.Field(Section)
     sections = DjangoFilterConnectionField(Section)

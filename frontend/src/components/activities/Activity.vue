@@ -11,7 +11,7 @@
         <header class="activity-header">
             <h1>
                 <i class="material-icons">style</i>
-                Udgift til <span>{{ act.details.name }}</span>
+                Udgift til <span v-if="act.details_data">{{ act.details_data.name }}</span>
                 <span v-if="payment_plan.fictive" class="dim">(Fiktiv)</span>
             </h1>
             <template v-if="user_can_edit === true && !edit_mode">
@@ -121,6 +121,7 @@ export default {
         can_adjust: function() {
             // Adjust only if parent activity was granted and has no other modifying activities
             if (this.appropriation && this.act.status === 'GRANTED') {
+                console.log('got appro',this.appropriation)
                 let modifier = this.appropriation.activities.filter(ac => {
                     return ac.modifies === this.act.id
                 })
@@ -135,23 +136,23 @@ export default {
         }
     },
     methods: {
-        updateBreadCrumb: function() {
+        updateBreadCrumb: function(cas, appropriation, activity) {
             this.$store.commit('setBreadcrumb', [
                 {
                     link: '/',
                     title: 'Sager'
                 },
                 {
-                    link: `/case/${ this.cas.id }`,
-                    title: `Hovedsag ${ this.cas.sbsys_id }, ${ this.cas.name }`
+                    link: `/case/${ cas.id }`,
+                    title: `Hovedsag ${ cas.sbsys_id }, ${ cas.name }`
                 },
                 {
-                    link: `/appropriation/${ this.appropriation.id }`,
-                    title: `Bevillingsskrivelse ${ this.appropriation.sbsys_id }`
+                    link: `/appropriation/${ appropriation.id }`,
+                    title: `Bevillingsskrivelse ${ appropriation.sbsys_id }`
                 },
                 {
                     link: false,
-                    title: `Udgift til ${ this.act.details.name }`
+                    title: `Udgift til ${ activity.details_data.name }`
                 }
             ])
         },
@@ -171,6 +172,7 @@ export default {
                             status,
                             startDate,
                             endDate,
+                            activityType,
                             details {
                                 id,
                                 name,
@@ -202,6 +204,16 @@ export default {
                                     sbsysId,
                                     cprNumber,
                                     name
+                                },
+                                activities {
+                                    edges {
+                                        node {
+                                            modifies {
+                                                pk
+                                            },
+                                            pk
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -219,18 +231,26 @@ export default {
                     const new_appropriation = {
                         id: a.appropriation.pk,
                         sbsys_id: a.appropriation.sbsysId,
-                        section: a.appropriation.section.pk
+                        section: a.appropriation.section.pk,
+                        activities: [...a.appropriation.activities.edges.map(e => {
+                            return {
+                                id: Number(e.node.pk),
+                                modifies: e.node.modifies ? e.node.modifies.pk : null
+                            }
+                        })]
                     }
                     const new_activity = {
                         status: a.status,
                         id: a.pk,
                         start_date: a.startDate,
                         end_date: a.endDate,
-                        details: {
-                            id: Number(a.details.id),
+                        details: Number(a.details.id),
+                        details_data: {
                             name: a.details.name,
                             description: a.details.description
-                        }
+                        },
+                        appropriation: Number(a.appropriation.pk),
+                        activity_type: a.activityType
                     }
                     const new_payment_plan = {
                         payment_id: a.paymentPlan.paymentId,
@@ -252,7 +272,7 @@ export default {
                     this.$store.commit('setActivity', new_activity)
                     this.$store.commit('setPaymentPlan', new_payment_plan)
 
-                    this.updateBreadCrumb()
+                    this.updateBreadCrumb(new_case, new_appropriation, new_activity)
                 }) 
             }
         },

@@ -77,7 +77,8 @@
             :appr-id="apprId" 
             :acts="approvable_acts"
             :warning="diag_approval_warning"
-            @close="closeDialog()" />
+            @close="closeDialog" 
+            @updated="update(apprId)" />
 
     </section>
 
@@ -154,13 +155,13 @@
                 },
                 set: function(new_val) {
                     this.$store.commit('setSelectedCostCalc', new_val)
-                    this.update()
+                    this.update(this.apprId)
                 }
             }
         },
         methods: {
             update: function(appropriation_id) {
-                this.fetchData(appropriation_id)
+                this.fetchActListData(appropriation_id)
                 this.$store.commit('setUnCheckAll')
             },
             closeDialog: function() {
@@ -246,7 +247,7 @@
                     this.$router.push('/activity/create?type=main')
                 }
             },
-            fetchData: function(appropriation_id) {
+            fetchActListData: function(appropriation_id) {
                 const id = btoa(`Appropriation:${appropriation_id}`)
                 let data = {
                     query: `{
@@ -262,7 +263,8 @@
                                         endDate,
                                         modified,
                                         details {
-                                            name
+                                            name,
+                                            pk
                                         },
                                         modifies {
                                             pk
@@ -270,7 +272,14 @@
                                         totalGrantedThisYear,
                                         totalExpectedThisYear,
                                         totalCostFullYear,
-                                        totalCost
+                                        totalCost,
+                                        totalCostThisYear,
+                                        paymentPlan {
+                                            recipientId,
+                                            recipientName,
+                                            fictive,
+                                            paymentMethod
+                                        }
                                     }
                                 }
                             }
@@ -282,11 +291,13 @@
                     if (!res.data.data.appropriation) {
                         return false
                     }
-                    const acts = res.data.data.appropriation.activities.edges.map(a => {
+                    const edges = res.data.data.appropriation.activities.edges 
+                    const acts = edges.map(a => {
                         return {
                             id: a.node.pk,
                             status: a.node.status,
-                            details: {
+                            details: a.node.details.pk,
+                            details_data: {
                                 name: a.node.details.name
                             },
                             note: a.node.note,
@@ -301,9 +312,39 @@
                             total_cost: a.node.totalCost,
                             approved: a.node.status === 'GRANTED' ? true : false,
                             expected: a.node.status === 'EXPECTED' ? true : false,
+                            payment_plan: {
+                                fictive: a.node.paymentPlan.fictive,
+                                recipient_name: a.node.paymentPlan.recipientName,
+                                recipient_id: a.node.paymentPlan.recipientId,
+                                payment_method: a.node.paymentPlan.paymentMethod
+                            }
                         }
                     })
                     this.$store.commit('setActivityList', acts)
+                    const reducer = function(acc,val) {
+                        const new_acc = {
+                            node: {
+                                totalGrantedThisYear: Number(acc.node.totalGrantedThisYear) + Number(val.node.totalGrantedThisYear),
+                                totalExpectedThisYear: Number(acc.node.totalExpectedThisYear) + Number(val.node.totalExpectedThisYear),
+                                totalCostFullYear: Number(acc.node.totalCostFullYear) + Number(val.node.totalCostFullYear),
+                                totalCostThisYear: Number(acc.node.totalCostThisYear) + Number(val.node.totalCostThisYear),
+                                totalCost: Number(acc.node.totalCost) + Number(val.node.totalCost)
+                            }
+                        }
+                        return new_acc
+                    }
+                    if (edges.length > 0) {
+                        const new_appropriation = edges.reduce(reducer)
+                        // TODO: total_expected_full_year and total_cost_expected missing. Other mismatches in data?
+                        this.total_costs = {
+                            total_granted_this_year: new_appropriation.node.totalGrantedThisYear,
+                            total_expected_this_year: new_appropriation.node.totalExpectedThisYear,
+                            total_granted_full_year: new_appropriation.node.totalCostFullYear,
+                            total_expected_full_year: 'ukendt',
+                            total_cost_granted: new_appropriation.node.totalCost,
+                            total_cost_expected: 'ukendt'
+                        }
+                    }
                 })
             }
         },

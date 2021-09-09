@@ -20,7 +20,7 @@
             required />
                
         <error :err-key="this.property" />
-        <p v-if="model" style="margin-top: .5rem;">{{ act2description(model.id) }}</p>
+        <p v-if="model" style="margin-top: .5rem;">{{ act2description(model) }}</p>
 
     </fieldset>
 
@@ -28,8 +28,8 @@
         <template v-if="model">
             <dt>Ydelse</dt>
             <dd>
-                <p class="word-break"><strong>{{ model.name }}</strong></p>
-                <p>{{ act2description(model.id) }}</p>
+                <p class="word-break"><strong>{{ act2name(model) }}</strong></p>
+                <p>{{ act2description(model) }}</p>
             </dd>
         </template>
     </dl>
@@ -90,7 +90,6 @@ export default {
             }
         },
         act2name: function(id) {
-            console.log(id)
             return activityId2name(id)
         },
         act2description: function(id) {

@@ -213,6 +213,16 @@
                             section {
                                 pk
                             }
+                            activities {
+                                edges {
+                                    node {
+                                        pk,
+                                        modifies {
+                                            pk
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }`
                 }
@@ -227,7 +237,14 @@
                         case: a.case.pk,
                         sbsys_id: a.sbsysId,
                         note: a.note,
-                        section: a.section.pk
+                        section: a.section.pk,
+                        activities: [...a.activities.edges.map(e => {
+                            return {
+                                id: Number(e.node.pk),
+                                modifies: e.node.modifies ? e.node.modifies.pk : null
+                            }
+                        })],
+                        num_ongoing_activities: a.activities.edges.length
                     }
                     const new_case = {
                         name: a.case.name,

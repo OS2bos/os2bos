@@ -13,7 +13,6 @@ export default {
             return this.$store.getters.getActivities
         },
         main_activities: function() {
-            console.log('there are acts', this.acts)
             if (this.acts) {
                 return this.acts.filter(function(act) {
                     return act.activity_type === 'MAIN_ACTIVITY'

@@ -27,8 +27,8 @@
         <div>
             <div class="mini-label" v-html="statusLabel(activity.status)"></div>
         </div>
-        <div :title="activity.details.name" class="data-grid-action nowrap">
-            <router-link :to="`/activity/${ activity.id }/`">{{ activity.details.name }}</router-link>
+        <div :title="activity.details_data.name" class="data-grid-action nowrap">
+            <router-link :to="`/activity/${ activity.id }/`">{{ activity.details_data.name }}</router-link>
             <br>
             <span class="dim" v-if="activity.payment_plan && activity.payment_plan.fictive">(Fiktiv)</span>
         </div>
