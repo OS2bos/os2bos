@@ -91,6 +91,7 @@
     import ApprovalDiag from './Approval.vue'
     import PermissionLogic from '../mixins/PermissionLogic.js'
     import ActList from './activitylist/ActList.vue'
+    import axios from '../http/Http.js'
 
     export default {
 
