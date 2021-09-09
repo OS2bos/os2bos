@@ -225,7 +225,7 @@ export default {
                     }`
                 }
                 axios.post('/graphql/', data)
-                .then(async res => {
+                .then(res => {
                     const a = res.data.data.activity
                     const new_case = {
                         id: a.appropriation.case.pk,
@@ -277,7 +277,7 @@ export default {
                         price_per_unit: a.paymentPlan.pricePerUnit ? a.paymentPlan.pricePerUnit.pk : null
                     }
                     if (new_payment_plan.price_per_unit) {
-                        await axios.get(`/prices/${ new_payment_plan.price_per_unit }/`)    
+                        axios.get(`/prices/${ new_payment_plan.price_per_unit }/`)
                         .then(res => {
                             new_payment_plan.price_per_unit = res.data
                             this.updateStoreAndCrumb(new_case, new_appropriation, new_activity, new_payment_plan)
@@ -288,7 +288,7 @@ export default {
                     } else {
                         this.updateStoreAndCrumb(new_case, new_appropriation, new_activity, new_payment_plan)
                     }
-                }) 
+                })
             }
         },
         updateStoreAndCrumb: function(cas, appr, act, pay_plan) {

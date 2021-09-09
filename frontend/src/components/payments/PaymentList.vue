@@ -207,7 +207,6 @@
         },
         methods: {
             update: function(payment_schedule_id) {
-                console.log(payment_schedule_id)
                 if (payment_schedule_id) {
                     let data = {
                         query: `{
