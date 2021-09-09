@@ -225,6 +225,7 @@
                                                     note,
                                                     isPayableManually,
                                                     paymentSchedule {
+                                                        pk,
                                                         paymentMethod,
                                                         activity {
                                                             status
@@ -250,6 +251,7 @@
                                 paid_date: p.node.paidDate,
                                 paid_amount: p.node.paidAmount,
                                 note: p.node.note,
+                                payment_schedule__pk: p.node.paymentSchedule.pk,
                                 payment_schedule__payment_id: payment_schedule_key,
                                 activity__status: p.node.paymentSchedule.activity.status,
                                 is_payable_manually: p.node.isPayableManually,

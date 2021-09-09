@@ -60,7 +60,7 @@ const testdata = {
         }
     }
 
-fixture.only('Check payment editing rules')
+fixture('Check payment editing rules')
     .page(baseurl)
 
 /*
@@ -219,7 +219,6 @@ test('Check that normal user can register payment under certain circumstances', 
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
         .click(Selector('a').withText(testdata.act1.details__name.substr(0,6)))
-        .debug()
         .expect(Selector('td input.field-amount').exists).ok()
         .expect(Selector('td input[type="date"]').exists).ok()
 

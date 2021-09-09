@@ -211,7 +211,7 @@
                 this.$emit('update', {operation: 'replan', data: this.p})
             },
             closeDiag: function() {
-                this.$store.dispatch('fetchPaymentPlan', this.p.payment_schedule)
+                this.$store.dispatch('fetchPaymentPlan', this.p.payment_schedule__pk)
                 this.$store.commit('clearErrors')
                 this.$emit('closedialog')
             },
