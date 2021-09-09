@@ -222,7 +222,13 @@
                                                     date,
                                                     paidAmount,
                                                     paidDate,
-                                                    note
+                                                    note,
+                                                    paymentSchedule {
+                                                        fictive,
+                                                        activity {
+                                                            status
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
@@ -243,7 +249,9 @@
                                 paid_date: p.node.paidDate,
                                 paid_amount: p.node.paidAmount,
                                 note: p.node.note,
-                                payment_schedule__payment_id: payment_schedule_key
+                                payment_schedule__payment_id: payment_schedule_key,
+                                activity__status: p.node.paymentSchedule.activity.status,
+                                is_payable_manually: !p.node.paymentSchedule.fictive
                             }
                             return new_p
                         })

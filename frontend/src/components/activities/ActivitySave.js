@@ -1,5 +1,4 @@
 import PermissionLogic from '../mixins/PermissionLogic.js'
-import store from '../../store.js'
 
 function checkDateMax(datestr) {
     const maxpast = parseInt( new Date().getFullYear() ) - 10,
@@ -81,9 +80,11 @@ function sanitizeActivity(activity, request_mode) {
         new_act.service_provider = null
     }
 
-    if (request_mode === 'patch') {
-        // price_per_unit must be in the form of `{amount: ...}` when patching
-        const new_ppu = {amount: new_act.payment_plan.price_per_unit.current_amount}
+    // price_per_unit must be in the form of `{amount: ...}` when patching
+    if (request_mode === 'patch' && new_act.payment_plan.price_per_unit) {
+        const new_ppu = {
+            amount: new_act.payment_plan.price_per_unit.current_amount
+        }
         new_act.payment_plan.price_per_unit = new_ppu
     }
 
