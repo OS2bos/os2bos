@@ -78,6 +78,7 @@ class Payment(OptimizedDjangoObjectType):
     pk = graphene.Int(source="pk")
     account_string = graphene.String()
     account_alias = graphene.String()
+    is_payable_manually = graphene.Boolean()
 
     class Meta:
         model = PaymentModel
@@ -114,6 +115,7 @@ class PaymentSchedule(OptimizedDjangoObjectType):
     """PaymentSchedule as a graphene type."""
 
     pk = graphene.Int(source="pk")
+    can_be_paid = graphene.Boolean()
 
     class Meta:
         model = PaymentScheduleModel
