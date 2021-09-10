@@ -117,6 +117,7 @@ const actions = {
                         description
                     },
                     paymentPlan {
+                        pk,
                         paymentId,
                         fictive,
                         paymentType,
@@ -204,6 +205,7 @@ const actions = {
                 activity_type: a.activityType
             }
             const new_payment_plan = {
+                id: a.paymentPlan.pk,
                 payment_id: a.paymentPlan.paymentId,
                 fictive: a.paymentPlan.fictive,
                 payment_type: a.paymentPlan.paymentType,
@@ -251,7 +253,7 @@ const actions = {
         commit('setCase', payload.cas)
         commit('setAppropriation', payload.appr)
         commit('setActivity', payload.act)
-        commit('setActDetail', payload.act.details)
+        commit('setActDetail', payload.act.details_data)
         commit('setPaymentPlan', payload.pp)
     },
     fetchActivityDetails: function({commit}) {

@@ -115,7 +115,7 @@ export default {
                 start_date: this.new_start_date
             }
             axios.patch(`/prices/${ this.prices.id }/`, data)
-            .then(res => {
+            .then(() => {
                 this.modal_open = false
                 this.resetValues()
                 this.$store.dispatch('fetchActivity', this.$route.params.actId)

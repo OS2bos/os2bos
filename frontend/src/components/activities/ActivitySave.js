@@ -75,18 +75,8 @@ function sanitizeActivity(activity, request_mode) {
         }
     }
 
-    // enables us to save a service_provider that is `null`, because we might have saved one earlier and regretted it
-    if (!new_act.service_provider) {
-        new_act.service_provider = null
-    }
-
-    // price_per_unit must supply an object with `amount` info when patching. 
-    // Regardless if that amount was changed or not.
     if (request_mode === 'patch' && new_act.payment_plan.price_per_unit) {
-        const new_ppu = {
-            amount: new_act.payment_plan.price_per_unit.current_amount
-        }
-        new_act.payment_plan.price_per_unit = new_ppu
+        delete new_act.payment_plan.price_per_unit // We did not change price_per_unit and don't need to send it
     }
 
     delete new_act.monthly_payment_plan // no need to supply the monthly payment plan. DB already knows it

@@ -134,6 +134,11 @@ export default {
             }
         }
     },
+    watch: {
+        act: function(new_val, old_val) {
+            this.updateBreadCrumb(this.cas, this.appropriation, this.act)
+        }
+    },
     methods: {
         updateBreadCrumb: function(cas, appropriation, activity) {
             this.$store.commit('setBreadcrumb', [
@@ -151,23 +156,14 @@ export default {
                 },
                 {
                     link: false,
-                    title: `Udgift til ${ activity.details.name }`
+                    title: `Udgift til ${ activity.details_data.name }`
                 }
             ])
         },
         update: function(activity_id) {
-            console.log('updating', activity_id)
             this.edit_mode = false
             this.showModal = false
-            this.fetchActivity(activity_id)
-        },
-        fetchActivity: function(act_id) {
-            if (act_id) {
-                this.$store.dispatch('fetchActivity', act_id)
-                .then(() => {
-                    this.updateBreadCrumb(this.cas, this.appropriation, this.act)
-                })
-            }
+            this.$store.dispatch('fetchActivity', activity_id)
         },
         displaySection: function(id) {
             return sectionId2name(id)
