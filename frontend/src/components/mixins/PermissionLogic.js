@@ -75,17 +75,13 @@ export default {
         is_payable: function(payment) {
             if (payment.activity__status === 'GRANTED') {
                 if (this.user.profile === 'workflow_engine' || this.user.profile === 'admin') {
-                    console.log('payable 1', payment)
                     return true
                 } else if (payment.is_payable_manually && !payment.paid && this.user.profile !== 'readonly' && payment.payment_method !== 'SD' && payment.payment_method !== 'CASH') {
-                    console.log('payable 2', payment)
                     return true
                 } else {
-                    console.log('not payable 1', payment)
                     return false
                 }
             } else {
-                console.log('not payable 2', payment)
                 return false
             }
         },

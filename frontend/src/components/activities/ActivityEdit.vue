@@ -183,7 +183,7 @@ export default {
             }
 
             axios.patch(`/activities/${ this.$route.params.actId }/`, sanitized_act)
-            .then(res => {
+            .then(() => {
                 this.$emit('save')
             })
             .catch(err => this.$store.dispatch('parseErrorOutput', err))

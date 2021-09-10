@@ -54,7 +54,7 @@ const testdata = {
     }
 }
 
-fixture('Test editing rates and prices') // declare the fixture
+fixture.only('Test editing rates and prices') // declare the fixture
     .page(baseurl)  // specify the start page
     .beforeEach(async t => { 
         await login(t)
@@ -83,6 +83,7 @@ test('Create activity with per unit pricing', async t => {
         .click(Selector('.act-list-row a').withText(act_link_text))
         .click(Selector('.act-edit-btn'))
         .typeText('#pay-units', '30.5', {replace: true}) // Edit units
+        .debug()
         .click('input[type="submit"]')
         .expect(Selector('h1').withText('Udgift til').exists).ok() // Expect to save with no trouble
         .click(Selector('.act-edit-btn'))

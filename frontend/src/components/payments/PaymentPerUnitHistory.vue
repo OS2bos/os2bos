@@ -104,6 +104,7 @@ export default {
             return this.$store.getters.getActivity
         },
         prices: function() {
+            console.log('new prices availbable', this.$store.getters.getPaymentPlanProperty('price_per_unit'))
             return this.$store.getters.getPaymentPlanProperty('price_per_unit')
         }
     },

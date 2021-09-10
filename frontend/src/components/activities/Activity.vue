@@ -42,7 +42,7 @@
             </dl>
         </div>
 
-        <activity-edit v-if="edit_mode" @save="update" @cancel="update" :class="`activity-${ act.status }`" />
+        <activity-edit v-if="edit_mode" @save="update(act.id)" @cancel="update(act.id)" :class="`activity-${ act.status }`" />
         
         <activity-summary v-else :activity-data="act" :class="`activity-${ act.status }`" />
 
@@ -156,6 +156,7 @@ export default {
             ])
         },
         update: function(activity_id) {
+            console.log('updating', activity_id)
             this.edit_mode = false
             this.showModal = false
             this.fetchActivity(activity_id)
@@ -192,6 +193,9 @@ export default {
                                 paymentUnits,
                                 paymentAmount,
                                 pricePerUnit {
+                                    pk
+                                },
+                                paymentRate {
                                     pk
                                 }
                             },
@@ -272,14 +276,19 @@ export default {
                         payment_frequency: a.paymentPlan.paymentFrequency,
                         payment_date: a.paymentPlan.paymentDate,
                         payment_day_of_month: a.paymentPlan.paymentDayOfMonth,
-                        payment_units: a.paymentPlan.paymentUnits,
                         payment_amount: a.paymentPlan.paymentAmount,
-                        price_per_unit: a.paymentPlan.pricePerUnit ? a.paymentPlan.pricePerUnit.pk : null
+                        payment_units: a.paymentPlan.paymentUnits,
+                        price_per_unit: a.paymentPlan.pricePerUnit ? a.paymentPlan.pricePerUnit.pk : null,
+                        payment_rate: a.paymentPlan.paymentRate ? a.paymentPlan.paymentRate.pk : null
                     }
                     if (new_payment_plan.price_per_unit) {
                         axios.get(`/prices/${ new_payment_plan.price_per_unit }/`)
                         .then(res => {
-                            new_payment_plan.price_per_unit = res.data
+                            new_payment_plan.price_per_unit = {
+                                current_amount: res.data.current_amount,
+                                id: res.data.id,
+                                rates_per_date: res.data.rates_per_date
+                            }
                             this.updateStoreAndCrumb(new_case, new_appropriation, new_activity, new_payment_plan)
                         })
                         .catch(err => {
@@ -295,6 +304,7 @@ export default {
             this.$store.commit('setCase', cas)
             this.$store.commit('setAppropriation', appr)
             this.$store.commit('setActivity', act)
+            console.log('storing new payment plan', pay_plan)
             this.$store.commit('setPaymentPlan', pay_plan)
             this.updateBreadCrumb(cas, appr, act)
         },

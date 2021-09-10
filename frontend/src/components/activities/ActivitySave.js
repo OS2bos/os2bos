@@ -80,7 +80,8 @@ function sanitizeActivity(activity, request_mode) {
         new_act.service_provider = null
     }
 
-    // price_per_unit must be in the form of `{amount: ...}` when patching
+    // price_per_unit must supply an object with `amount` info when patching. 
+    // Regardless if that amount was changed or not.
     if (request_mode === 'patch' && new_act.payment_plan.price_per_unit) {
         const new_ppu = {
             amount: new_act.payment_plan.price_per_unit.current_amount
