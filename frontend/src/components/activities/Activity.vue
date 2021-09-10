@@ -151,7 +151,7 @@ export default {
                 },
                 {
                     link: false,
-                    title: `Udgift til ${ activity.details_data.name }`
+                    title: `Udgift til ${ activity.details.name }`
                 }
             ])
         },
@@ -163,150 +163,11 @@ export default {
         },
         fetchActivity: function(act_id) {
             if (act_id) {
-                const id = btoa(`Activity:${ act_id }`)
-                let data = {
-                    query: `{
-                        activity(id: "${ id }") {
-                            id,
-                            pk,
-                            status,
-                            startDate,
-                            endDate,
-                            activityType,
-                            details {
-                                id,
-                                name,
-                                description
-                            },
-                            paymentPlan {
-                                paymentId,
-                                fictive,
-                                paymentType,
-                                paymentCostType,
-                                recipientId,
-                                recipientName,
-                                recipientType,
-                                paymentMethod,
-                                paymentFrequency,
-                                paymentDate,
-                                paymentDayOfMonth,
-                                paymentUnits,
-                                paymentAmount,
-                                pricePerUnit {
-                                    pk
-                                },
-                                paymentRate {
-                                    pk
-                                }
-                            },
-                            appropriation {
-                                pk,
-                                sbsysId,
-                                section {
-                                    pk
-                                }
-                                case {
-                                    pk,
-                                    sbsysId,
-                                    cprNumber,
-                                    name
-                                },
-                                activities {
-                                    edges {
-                                        node {
-                                            modifies {
-                                                pk
-                                            },
-                                            pk,
-                                            startDate,
-                                            endDate,
-                                            activityType
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }`
-                }
-                axios.post('/graphql/', data)
-                .then(res => {
-                    const a = res.data.data.activity
-                    const new_case = {
-                        id: a.appropriation.case.pk,
-                        sbsys_id: a.appropriation.case.sbsysId,
-                        name: a.appropriation.case.name,
-                        cpr_number: a.appropriation.case.cprNumber
-                    }
-                    const new_appropriation = {
-                        id: a.appropriation.pk,
-                        sbsys_id: a.appropriation.sbsysId,
-                        section: a.appropriation.section.pk,
-                        activities: [...a.appropriation.activities.edges.map(e => {
-                            return {
-                                id: Number(e.node.pk),
-                                modifies: e.node.modifies ? e.node.modifies.pk : null,
-                                start_date: e.node.startDate,
-                                end_date: e.node.endDate,
-                                activity_type: e.node.activityType
-                            }
-                        })]
-                    }
-                    const new_activity = {
-                        status: a.status,
-                        id: a.pk,
-                        start_date: a.startDate,
-                        end_date: a.endDate,
-                        details: Number(a.details.id),
-                        details_data: {
-                            name: a.details.name,
-                            description: a.details.description
-                        },
-                        appropriation: Number(a.appropriation.pk),
-                        activity_type: a.activityType
-                    }
-                    const new_payment_plan = {
-                        payment_id: a.paymentPlan.paymentId,
-                        fictive: a.paymentPlan.fictive,
-                        payment_type: a.paymentPlan.paymentType,
-                        payment_cost_type: a.paymentPlan.paymentCostType,
-                        recipient_id: a.paymentPlan.recipientId,
-                        recipient_name: a.paymentPlan.recipientName,
-                        recipient_type: a.paymentPlan.recipientType,
-                        payment_method: a.paymentPlan.paymentMethod,
-                        payment_frequency: a.paymentPlan.paymentFrequency,
-                        payment_date: a.paymentPlan.paymentDate,
-                        payment_day_of_month: a.paymentPlan.paymentDayOfMonth,
-                        payment_amount: a.paymentPlan.paymentAmount,
-                        payment_units: a.paymentPlan.paymentUnits,
-                        price_per_unit: a.paymentPlan.pricePerUnit ? a.paymentPlan.pricePerUnit.pk : null,
-                        payment_rate: a.paymentPlan.paymentRate ? a.paymentPlan.paymentRate.pk : null
-                    }
-                    if (new_payment_plan.price_per_unit) {
-                        axios.get(`/prices/${ new_payment_plan.price_per_unit }/`)
-                        .then(res => {
-                            new_payment_plan.price_per_unit = {
-                                current_amount: res.data.current_amount,
-                                id: res.data.id,
-                                rates_per_date: res.data.rates_per_date
-                            }
-                            this.updateStoreAndCrumb(new_case, new_appropriation, new_activity, new_payment_plan)
-                        })
-                        .catch(err => {
-                            console.error('Could not fetch price information', err)
-                        })
-                    } else {
-                        this.updateStoreAndCrumb(new_case, new_appropriation, new_activity, new_payment_plan)
-                    }
+                this.$store.dispatch('fetchActivity', act_id)
+                .then(() => {
+                    this.updateBreadCrumb(this.cas, this.appropriation, this.act)
                 })
             }
-        },
-        updateStoreAndCrumb: function(cas, appr, act, pay_plan) {
-            this.$store.commit('setCase', cas)
-            this.$store.commit('setAppropriation', appr)
-            this.$store.commit('setActivity', act)
-            console.log('storing new payment plan', pay_plan)
-            this.$store.commit('setPaymentPlan', pay_plan)
-            this.updateBreadCrumb(cas, appr, act)
         },
         displaySection: function(id) {
             return sectionId2name(id)
