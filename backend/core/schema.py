@@ -23,6 +23,7 @@ from core.models import (
     Section as SectionModel,
     Rate as RateModel,
     Price as PriceModel,
+    RatePerDate as RatePerDateModel,
 )
 
 UserModel = get_user_model()
@@ -103,9 +104,22 @@ class Price(OptimizedDjangoObjectType):
     """Price as a graphene type."""
 
     pk = graphene.Int(source="pk")
+    current_amount = graphene.Decimal(source="rate_amount")
 
     class Meta:
         model = PriceModel
+        interfaces = (Node,)
+        fields = "__all__"
+        filter_fields = "__all__"
+
+
+class RatePerDate(OptimizedDjangoObjectType):
+    """RatePerDate as a graphene type."""
+
+    pk = graphene.Int(source="pk")
+
+    class Meta:
+        model = RatePerDateModel
         interfaces = (Node,)
         fields = "__all__"
         filter_fields = "__all__"
@@ -198,6 +212,9 @@ class Query(graphene.ObjectType):
 
     section = Node.Field(Section)
     sections = DjangoFilterConnectionField(Section)
+
+    rate_per_date = Node.Field(RatePerDate)
+    rate_per_dates = DjangoFilterConnectionField(RatePerDate)
 
 
 schema = graphene.Schema(query=Query)
