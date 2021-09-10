@@ -90,14 +90,14 @@ const actions = {
                 checkActivityAge(res.data)
                 commit('setActivityList', res.data)
             })
-            .catch(err => console.log(err))
+            .catch(err => console.error(err))
         } else {
             return axios.get(`/activities/`)
             .then(res => {
                 checkActivityAge(res.data)
                 commit('setActivityList', res.data)
             })
-            .catch(err => console.log(err))
+            .catch(err => console.error(err))
         }
     },
     fetchActivity: function({dispatch}, act_id) {
@@ -261,14 +261,14 @@ const actions = {
         .then(res => {
             commit('setActDetails', res.data)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     },
     fetchActivityDetail: function({commit}, act_detail_id) {
         axios.get(`/activity_details/${ act_detail_id }/`)
         .then(res => {
             commit('setActDetail', res.data)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     }
 }
 
