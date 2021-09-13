@@ -19,12 +19,14 @@
                 </button>
             </header>
 
+            <!-- 
             <fieldset class="payment-schedule-selector">
                 <label for="field-year-picker">Vis betalinger fra år</label>
                 <select id="field-year-picker" v-model="current_year">
                     <option v-for="y in years" :value="y" :key="y.id">{{ y }}</option>
                 </select>
             </fieldset>
+            -->
         </div>
 
         <payment-create-modal v-if="pay_create_diag_open" @closedialog="pay_create_diag_open = false" @paymentsaved="update" :plan="payment_plan" />
@@ -37,12 +39,20 @@
             @update="updatePayment">
 
             <p slot="datagrid-header">
-                Viser {{payments_by_year.length}} betalinger for {{ current_year }}
+                Viser {{payments_by_year.length}} betalinger
             </p>
+
+            <button 
+                slot="datagrid-footer"
+                v-if="payments_meta.hasNextPage && payments_by_year.length > 0" 
+                class="more" 
+                @click="loadMore">
+                Vis flere
+            </button>
 
         </data-grid>
         <p v-else>
-            Der er ingen betalinger for det valgte år
+            Der er ingen betalinger at vise
         </p>
         
         <table v-if="payments_by_year.length > 0" class="payments-sum">
@@ -98,8 +108,7 @@
             'edit_mode'
         ],
         data: function() {
-            return {
-                payments: null,
+            return {                
                 now: new Date(),
                 years: [],
                 current_year: null,
@@ -168,6 +177,12 @@
             }
         },
         computed: {
+            payments: function() {
+                return this.$store.getters.getPayments
+            },
+            payments_meta: function() {
+                return this.$store.getters.getPaymentsMeta
+            },
             payment_plan: function() {
                 return this.$store.getters.getPaymentPlan
             },
@@ -206,64 +221,9 @@
             }
         },
         methods: {
-            update: function(payment_schedule_id) {
-                if (payment_schedule_id) {
-                    let data = {
-                        query: `{
-                            paymentSchedules(paymentId: ${payment_schedule_id}) {
-                                edges {
-                                    node {
-                                        paymentId,
-                                        payments {
-                                            edges {
-                                                node {
-                                                    id,
-                                                    amount,
-                                                    date,
-                                                    paidAmount,
-                                                    paidDate,
-                                                    note,
-                                                    isPayableManually,
-                                                    paymentSchedule {
-                                                        pk,
-                                                        paymentMethod,
-                                                        activity {
-                                                            status
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }`
-                    }
-                    axios.post('/graphql/', data)
-                    .then(res => {
-                        const payment_schedule_key = res.data.data.paymentSchedules.edges[0].node.paymentId
-                        this.payments = res.data.data.paymentSchedules.edges[0].node.payments.edges.map(p => {
-                            const new_p = {
-                                id: Number(atob(p.node.id).substr(8)),
-                                amount: p.node.amount,
-                                date: p.node.date,
-                                paid: p.node.paid,
-                                paid_date: p.node.paidDate,
-                                paid_amount: p.node.paidAmount,
-                                note: p.node.note,
-                                payment_schedule__pk: p.node.paymentSchedule.pk,
-                                payment_schedule__payment_id: payment_schedule_key,
-                                activity__status: p.node.paymentSchedule.activity.status,
-                                is_payable_manually: p.node.isPayableManually,
-                                payment_method: p.node.paymentSchedule.paymentMethod
-                            }
-                            return new_p
-                        })
-                        this.$store.commit('setPayments', this.payments)
-                    }) 
-                } else {
-                    console.error('No payment schedule ID was available')
-                    this.payments = null
+            update: function(payment_schedule_pk) {
+                if (payment_schedule_pk) {
+                    this.$store.dispatch('fetchPayments', payment_schedule_pk)
                 }
             },
             updatePayment: function(payload) {
@@ -321,6 +281,9 @@
             },
             displayPlannedAmount: function(payment) {
                 return `${ cost2da(payment.amount) } kr`
+            },
+            loadMore: function() {
+                this.$store.dispatch('fetchPayments', this.pId)
             }
         },
         created: function() {
@@ -426,6 +389,10 @@
 
     .payment_schedule_list td {
         overflow: visible;
+    }
+
+    .payment_schedule .more {
+        width: 100%;
     }
 
 </style>

@@ -81,7 +81,7 @@
             </form>
         </div>
         
-        <payment-schedule :p-id="payment_plan.payment_id" :edit_mode="edit_mode"/>
+        <payment-schedule v-if="act.status === 'GRANTED'" :p-id="payment_plan.payment_id" :edit_mode="edit_mode" />
         
     </section>
 
@@ -136,7 +136,8 @@ export default {
     },
     watch: {
         act: function(new_val, old_val) {
-            this.updateBreadCrumb(this.cas, this.appropriation, this.act)
+            console.log(new_val)
+            this.updateBreadCrumb(this.cas, this.appropriation, new_val)
         }
     },
     methods: {
