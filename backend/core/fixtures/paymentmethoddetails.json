@@ -3,14 +3,16 @@
         "model": "core.paymentmethoddetails",
         "pk": 1,
         "fields": {
-            "tax_card": "MAIN_CARD"
+            "tax_card": "MAIN_CARD",
+            "active": true
         }
     },
     {
         "model": "core.paymentmethoddetails",
         "pk": 2,
         "fields": {
-            "tax_card": "SECONDARY_CARD"
+            "tax_card": "SECONDARY_CARD",
+            "active": true
         }
     }
 ]
