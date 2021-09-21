@@ -13,11 +13,7 @@ adding the complexity of an entire search engine nor of custom queries.
 
 from django.utils import timezone
 from datetime import date
-from dateutil.relativedelta import (
-    relativedelta,
-    MO,
-    SU,
-)
+from dateutil.relativedelta import relativedelta, MO, SU
 
 from django.utils.translation import gettext
 
@@ -213,7 +209,7 @@ class PaymentFilter(filters.FilterSet):
 
     date_year = filters.ChoiceFilter(
         method="filter_date_year",
-        label=gettext("Betalingsdato eller Dato for år"),
+        label=gettext("Beta_lingsdato eller Dato for år"),
         choices=generic_time_choices,
     )
 

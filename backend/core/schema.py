@@ -26,7 +26,9 @@ from core.models import (
     Rate as RateModel,
     Price as PriceModel,
     RatePerDate as RatePerDateModel,
+    Municipality as MunicipalityModel,
 )
+from core.filters import PaymentFilter
 
 UserModel = get_user_model()
 
@@ -41,9 +43,11 @@ class ExtendedConnection(Connection):
     edge_count = graphene.Int()
 
     def resolve_total_count(root, info, **kwargs):
+        """Get the total count."""
         return root.length
 
     def resolve_edge_count(root, info, **kwargs):
+        """Get the count of the returned edges."""
         return len(root.edges)
 
 
@@ -106,7 +110,7 @@ class Payment(OptimizedDjangoObjectType):
         interfaces = (Node,)
         connection_class = ExtendedConnection
         fields = "__all__"
-        filter_fields = "__all__"
+        filterset_class = PaymentFilter
 
 
 class Rate(OptimizedDjangoObjectType):
@@ -258,6 +262,19 @@ class Section(OptimizedDjangoObjectType):
         filter_fields = "__all__"
 
 
+class Municipality(OptimizedDjangoObjectType):
+    """Municipality as a graphene type."""
+
+    pk = graphene.Int(source="pk")
+
+    class Meta:
+        model = MunicipalityModel
+        interfaces = (Node,)
+        connection_class = ExtendedConnection
+        fields = "__all__"
+        filter_fields = "__all__"
+
+
 class Query(graphene.ObjectType):
     """Query define our queryable fields."""
 
@@ -287,6 +304,9 @@ class Query(graphene.ObjectType):
 
     rate_per_date = Node.Field(RatePerDate)
     rate_per_dates = DjangoFilterConnectionField(RatePerDate)
+
+    municipality = Node.Field(Municipality)
+    municipalities = DjangoFilterConnectionField(Municipality)
 
 
 schema = graphene.Schema(query=Query)
