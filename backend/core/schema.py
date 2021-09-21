@@ -7,8 +7,10 @@
 """Schema models for our graphene API."""
 
 from django.contrib.auth import get_user_model
+from django.utils import timezone
+
 import graphene
-from graphene import Node
+from graphene import Node, Connection
 from graphene_django_optimizer import OptimizedDjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
 
@@ -27,6 +29,20 @@ from core.models import (
 )
 
 UserModel = get_user_model()
+
+
+class ExtendedConnection(Connection):
+    class Meta:
+        abstract = True
+
+    total_count = graphene.Int()
+    edge_count = graphene.Int()
+
+    def resolve_total_count(root, info, **kwargs):
+        return root.length
+
+    def resolve_edge_count(root, info, **kwargs):
+        return len(root.edges)
 
 
 class User(OptimizedDjangoObjectType):
@@ -57,6 +73,7 @@ class Case(OptimizedDjangoObjectType):
     class Meta:
         model = CaseModel
         interfaces = (Node,)
+        connection_class = ExtendedConnection
         fields = "__all__"
         filter_fields = "__all__"
 
@@ -69,6 +86,7 @@ class Appropriation(OptimizedDjangoObjectType):
     class Meta:
         model = AppropriationModel
         interfaces = (Node,)
+        connection_class = ExtendedConnection
         fields = "__all__"
         filter_fields = "__all__"
 
@@ -84,6 +102,7 @@ class Payment(OptimizedDjangoObjectType):
     class Meta:
         model = PaymentModel
         interfaces = (Node,)
+        connection_class = ExtendedConnection
         fields = "__all__"
         filter_fields = "__all__"
 
@@ -96,6 +115,7 @@ class Rate(OptimizedDjangoObjectType):
     class Meta:
         model = RateModel
         interfaces = (Node,)
+        connection_class = ExtendedConnection
         fields = "__all__"
         filter_fields = "__all__"
 
@@ -109,6 +129,7 @@ class Price(OptimizedDjangoObjectType):
     class Meta:
         model = PriceModel
         interfaces = (Node,)
+        connection_class = ExtendedConnection
         fields = "__all__"
         filter_fields = "__all__"
 
@@ -121,6 +142,7 @@ class RatePerDate(OptimizedDjangoObjectType):
     class Meta:
         model = RatePerDateModel
         interfaces = (Node,)
+        connection_class = ExtendedConnection
         fields = "__all__"
         filter_fields = "__all__"
 
@@ -134,6 +156,7 @@ class PaymentSchedule(OptimizedDjangoObjectType):
     class Meta:
         model = PaymentScheduleModel
         interfaces = (Node,)
+        connection_class = ExtendedConnection
         fields = "__all__"
         filter_fields = "__all__"
 
@@ -167,9 +190,55 @@ class Activity(OptimizedDjangoObjectType):
     total_expected_this_year = graphene.Float()
     monthly_payment_plan = graphene.List(MonthlyPaymentPlanDictionary)
 
+    total_granted_this_year = graphene.Float()
+    total_expected_this_year = graphene.Float()
+
+    total_granted_previous_year = graphene.Float()
+    total_expected_previous_year = graphene.Float()
+
+    total_granted_next_year = graphene.Float()
+    total_expected_next_year = graphene.Float()
+
+    def resolve_total_granted_this_year(self, info):
+        """Retrieve total granted amount for this year."""
+        year = timezone.now().year
+
+        return self.total_granted_in_year(year)
+
+    def resolve_total_expected_this_year(self, info):
+        """Retrieve total expected amount for this year."""
+        year = timezone.now().year
+
+        return self.total_expected_in_year(year)
+
+    def resolve_total_granted_previous_year(self, info):
+        """Retrieve total granted amount for previous year."""
+        year = timezone.now().year - 1
+
+        return self.total_granted_in_year(year)
+
+    def resolve_total_expected_previous_year(self, info):
+        """Retrieve total expected amount for previous year."""
+        year = timezone.now().year - 1
+
+        return self.total_expected_in_year(year)
+
+    def resolve_total_granted_next_year(self, info):
+        """Retrieve total granted amount for next year."""
+        year = timezone.now().year + 1
+
+        return self.total_granted_in_year(year)
+
+    def resolve_total_expected_next_year(self, info):
+        """Retrieve total expected amount for next year."""
+        year = timezone.now().year + 1
+
+        return self.total_expected_in_year(year)
+
     class Meta:
         model = ActivityModel
         interfaces = (Node,)
+        connection_class = ExtendedConnection
         fields = "__all__"
         filter_fields = "__all__"
 
@@ -182,6 +251,7 @@ class Section(OptimizedDjangoObjectType):
     class Meta:
         model = SectionModel
         interfaces = (Node,)
+        connection_class = ExtendedConnection
         fields = "__all__"
         filter_fields = "__all__"
 
