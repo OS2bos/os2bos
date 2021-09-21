@@ -112,6 +112,7 @@
                 this_year: String(new Date().getUTCFullYear()),
                 next_year: String(new Date().getUTCFullYear() + 1),
                 previous_year: String(new Date().getUTCFullYear() - 1),
+                total_costs: null
             }
         },
         computed: {
@@ -177,23 +178,31 @@
                 return cost2da(num)
             },
             displayGrantedYearly: function() {
-                switch(this.selectedValue) {
-                    case this.previous_year:
-                        return this.displayDigits(this.appropriation.total_granted_previous_year) + ' kr.'
-                    case this.next_year:
-                        return this.displayDigits(this.appropriation.total_granted_next_year) + ' kr.'
-                    default:
-                        return this.displayDigits(this.appropriation.total_granted_this_year) + ' kr.'
+                if (this.total_costs) {                
+                    switch(this.selectedValue) {
+                        case this.previous_year:
+                            return this.displayDigits(this.total_costs.total_granted_previous_year) + ' kr.'
+                        case this.next_year:
+                            return this.displayDigits(this.total_costs.total_granted_next_year) + ' kr.'
+                        default:
+                            return this.displayDigits(this.total_costs.total_granted_this_year) + ' kr.'
+                    }
+                } else {
+                    return false
                 }
             },
             displayExpectedYearly: function() {
-                switch(this.selectedValue) {
-                    case this.previous_year:
-                        return this.displayDigits(this.appropriation.total_expected_previous_year) + ' kr.'
-                    case this.next_year:
-                        return this.displayDigits(this.appropriation.total_expected_next_year) + ' kr.'
-                    default:
-                        return this.displayDigits(this.appropriation.total_expected_this_year) + ' kr.'
+                if (this.total_costs) {   
+                    switch(this.selectedValue) {
+                        case this.previous_year:
+                            return this.displayDigits(this.total_costs.total_expected_previous_year) + ' kr.'
+                        case this.next_year:
+                            return this.displayDigits(this.total_costs.total_expected_next_year) + ' kr.'
+                        default:
+                            return this.displayDigits(this.total_costs.total_expected_this_year) + ' kr.'
+                    }
+                } else {
+                    return false
                 }
             },
             sortSupplementaryActs: function(acts) {
@@ -272,9 +281,10 @@
                                         },
                                         totalGrantedThisYear,
                                         totalExpectedThisYear,
-                                        totalCostFullYear,
-                                        totalCost,
-                                        totalCostThisYear,
+                                        totalGrantedNextYear,
+                                        totalExpectedNextYear,
+                                        totalGrantedPreviousYear,
+                                        totalExpectedPreviousYear,
                                         paymentPlan {
                                             recipientId,
                                             recipientName,
@@ -309,8 +319,10 @@
                             modifies: a.node.modifies ? a.node.modifies.pk : null,
                             total_granted_this_year: a.node.totalGrantedThisYear,
                             total_expected_this_year: a.node.totalExpectedThisYear,
-                            total_cost_full_year: a.node.totalCostFullYear,
-                            total_cost: a.node.totalCost,
+                            total_granted_next_year: a.node.totalGrantedNextYear,
+                            total_expected_next_year: a.node.totalExpectedNextYear,
+                            total_granted_previous_year: a.node.totalGrantedPreviousYear,
+                            total_expected_previous_year: a.node.totalExpectedPreviousYear,
                             approved: a.node.status === 'GRANTED' ? true : false,
                             expected: a.node.status === 'EXPECTED' ? true : false,
                             payment_plan: {
@@ -327,9 +339,10 @@
                             node: {
                                 totalGrantedThisYear: Number(acc.node.totalGrantedThisYear) + Number(val.node.totalGrantedThisYear),
                                 totalExpectedThisYear: Number(acc.node.totalExpectedThisYear) + Number(val.node.totalExpectedThisYear),
-                                totalCostFullYear: Number(acc.node.totalCostFullYear) + Number(val.node.totalCostFullYear),
-                                totalCostThisYear: Number(acc.node.totalCostThisYear) + Number(val.node.totalCostThisYear),
-                                totalCost: Number(acc.node.totalCost) + Number(val.node.totalCost)
+                                totalGrantedNextYear: Number(acc.node.totalGrantedNextYear) + Number(val.node.totalGrantedNextYear),
+                                totalExpectedNextYear: Number(acc.node.totalExpectedNextYear) + Number(val.node.totalExpectedNextYear),
+                                totalGrantedPreviousYear: Number(acc.node.totalGrantedPreviousYear) + Number(val.node.totalGrantedPreviousYear),
+                                totalExpectedPreviousYear: Number(acc.node.totalExpectedPreviousYear) + Number(val.node.totalExpectedPreviousYear)
                             }
                         }
                         return new_acc
@@ -340,10 +353,10 @@
                         this.total_costs = {
                             total_granted_this_year: new_appropriation.node.totalGrantedThisYear,
                             total_expected_this_year: new_appropriation.node.totalExpectedThisYear,
-                            total_granted_full_year: new_appropriation.node.totalCostFullYear,
-                            total_expected_full_year: 'ukendt',
-                            total_cost_granted: new_appropriation.node.totalCost,
-                            total_cost_expected: 'ukendt'
+                            total_granted_next_year: new_appropriation.node.totalGrantedNextYear,
+                            total_expected_next_year: new_appropriation.node.totalExpectedNextYear,
+                            total_granted_previous_year: new_appropriation.node.totalGrantedPreviousYear,
+                            total_expected_previous_year: new_appropriation.node.totalExpectedPreviousYear
                         }
                     }
                 })

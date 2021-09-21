@@ -124,6 +124,7 @@ const actions = {
         const qry = {
             query: `{
                 payments(${qry_args}) {
+                    totalCount,
                     pageInfo {
                         hasNextPage,
                         hasPreviousPage,
@@ -157,7 +158,6 @@ const actions = {
         }
         axios.post('/graphql/', qry)
         .then(res => {
-            console.log('got payments', res.data)
             const payments = res.data.data.payments.edges.map(p => {
                 return {
                     id: p.node.pk,
@@ -177,7 +177,9 @@ const actions = {
                 }
             })
             commit('setPayments', payments)
-            commit('setPaymentsMeta', res.data.data.payments.pageInfo)
+            let payments_meta = res.data.data.payments.pageInfo
+            payments_meta.count = res.data.data.payments.totalCount
+            commit('setPaymentsMeta', payments_meta)
         }) 
         .catch(err => console.error(err))
     },

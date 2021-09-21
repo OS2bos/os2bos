@@ -111,6 +111,12 @@ const actions = {
                     startDate,
                     endDate,
                     activityType,
+                    totalGrantedThisYear,
+                    totalExpectedThisYear,
+                    totalGrantedPreviousYear,
+                    totalExpectedPreviousYear,
+                    totalGrantedNextYear,
+                    totalExpectedNextYear,
                     details {
                         id,
                         name,
@@ -202,7 +208,13 @@ const actions = {
                     description: a.details.description
                 },
                 appropriation: Number(a.appropriation.pk),
-                activity_type: a.activityType
+                activity_type: a.activityType,
+                total_granted_this_year: a.totalGrantedThisYear,
+                total_expected_this_year: a.totalExpectedThisYear,
+                total_granted_previous_year: a.totalGrantedPreviousYear,
+                total_expected_previous_year: a.totalExpectedPreviousYear,
+                total_granted_next_year: a.totalGrantedNextYear,
+                total_expected_next_year: a.totalExpectedNextYear
             }
             const new_payment_plan = {
                 id: a.paymentPlan.pk,

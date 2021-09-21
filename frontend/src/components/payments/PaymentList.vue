@@ -7,7 +7,7 @@
 
 <template>
 
-    <section class="payment_schedule" v-if="payments_by_year">
+    <section class="payment_schedule" v-if="payments">
 
         <div class="row" style="justify-items: space-between; flex-flow: row nowrap;">
             <header class="row payment-schedule-header">
@@ -19,32 +19,30 @@
                 </button>
             </header>
 
-            <!-- 
             <fieldset class="payment-schedule-selector">
                 <label for="field-year-picker">Vis betalinger fra år</label>
                 <select id="field-year-picker" v-model="current_year">
                     <option v-for="y in years" :value="y" :key="y.id">{{ y }}</option>
                 </select>
             </fieldset>
-            -->
         </div>
 
-        <payment-create-modal v-if="pay_create_diag_open" @closedialog="pay_create_diag_open = false" @paymentsaved="update" :plan="payment_plan" />
+        <payment-create-modal v-if="pay_create_diag_open" @closedialog="pay_create_diag_open = false" @paymentsaved="update" :plan="payment_schedule" />
         
-        <data-grid v-if="payments_by_year.length > 0"
+        <data-grid v-if="payments.length > 0"
             ref="data-grid"
-            :data-list="payments_by_year"
+            :data-list="payments"
             :columns="columns"
             class="payment_schedule_list"
             @update="updatePayment">
 
             <p slot="datagrid-header">
-                Viser {{payments_by_year.length}} betalinger
+                Viser {{payments.length}} betalinger af {{ payments_meta.count }}
             </p>
 
             <button 
                 slot="datagrid-footer"
-                v-if="payments_meta.hasNextPage && payments_by_year.length > 0" 
+                v-if="payments_meta.hasNextPage && payments.length > 0" 
                 class="more" 
                 @click="loadMore">
                 Vis flere
@@ -55,7 +53,7 @@
             Der er ingen betalinger at vise
         </p>
         
-        <table v-if="payments_by_year.length > 0" class="payments-sum">
+        <table v-if="payments.length > 0" class="payments-sum">
             <thead>
                 <tr>
                     <th></th>
@@ -77,7 +75,6 @@
 </template>
 
 <script>
-    import axios from '../http/Http.js'
     import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
     import PaymentCreateModal from './payment-editing/PaymentCreate.vue'
@@ -111,7 +108,7 @@
             return {                
                 now: new Date(),
                 years: [],
-                current_year: null,
+                current_year: new Date().getUTCFullYear(),
                 pay_create_diag_open: false,
                 columns: [
                     {
@@ -183,38 +180,35 @@
             payments_meta: function() {
                 return this.$store.getters.getPaymentsMeta
             },
-            payment_plan: function() {
+            payment_schedule: function() {
                 return this.$store.getters.getPaymentPlan
             },
-            payments_by_year: function() {
-                console.log('payments', this.payments)
-                if (this.payments) {
-                    let payms = this.payments.filter(p => {
-                        return this.current_year === Number(p.date.substr(0,4))
-                    })
-                    console.log('payms', payms)
-                    return payms
-                } else {
-                    return false
-                }
+            activity: function() {
+                return this.$store.getters.getActivity
             },
             sum_expected: function() {
-                if (this.payments_by_year) {
-                    return this.payments_by_year.reduce(function(total, payment) {
-                        return total += parseFloat(payment.amount)
-                    }, 0)
+                if (this.current_year === this.years[0]) {
+                    return this.activity.total_expected_previous_year  
                 }
+                if (this.current_year === this.years[1]) {
+                    return this.activity.total_expected_this_year  
+                }
+                if (this.current_year === this.years[2]) {
+                    return this.activity.total_expected_next_year  
+                }
+                return 0
             },
             sum_paid: function() {
-                if (this.payments_by_year) {
-                    return this.payments_by_year.reduce(function(total, payment) {
-                        if (payment.paid_amount !== null) {
-                            return total += parseFloat(payment.paid_amount)
-                        } else {
-                            return total
-                        }
-                    }, 0)
+                if (this.current_year === this.years[0]) {
+                    return this.activity.total_granted_previous_year  
                 }
+                if (this.current_year === this.years[1]) {
+                    return this.activity.total_granted_this_year  
+                }
+                if (this.current_year === this.years[2]) {
+                    return this.activity.total_granted_next_year  
+                }
+                return 0
             }
         },
         watch: {
@@ -263,10 +257,10 @@
                 return cost2da(num)
             },
             createYearList: function() {
-                this.years.push(this.now.getFullYear() - 1)
-                this.years.push(this.now.getFullYear())
-                this.years.push(this.now.getFullYear() + 1)
-                this.current_year = this.now.getFullYear()
+                this.years.push(this.now.getUTCFullYear() - 1)
+                this.years.push(this.now.getUTCFullYear())
+                this.years.push(this.now.getUTCFullYear() + 1)
+                this.current_year = this.now.getUTCFullYear()
             },
             payCreateDiagOpen: function() {
                 this.pay_create_diag_open = true
