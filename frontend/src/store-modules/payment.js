@@ -74,13 +74,10 @@ const mutations = {
         }
     },
     setPayments (state, payments) {
-        if (!state.payments) {
-            state.payments = payments
-        } else {
-            for (let p in payments) {
-                state.payments.push(payments[p])
-            }
-        }
+        state.payments = payments
+    },
+    addPayments (state, payments) {
+        state.payments = state.payments.concat(payments)
     },
     setPaymentInPayments (state, new_payment) {
         for (let p in state.payments) {
@@ -113,10 +110,20 @@ const actions = {
         })
         .catch(err => dispatch('parseErrorOutput', err))
     },
-    fetchPayments: function({commit, state}, payment_schedule_pk) {
-        let qry_args = `paymentSchedule:"${ btoa(`PaymentSchedule:${ payment_schedule_pk }`) }" first:20 `
-        if (state.payments_meta) {
-            qry_args += state.payments_meta.hasNextPage ? 'after:"' + state.payments_meta.endCursor + '"' : ''
+    fetchPayments: function({commit}, payload) {
+        /* 
+            `payload` assumes {
+                payment_schedule_pk
+                year
+                endCursor
+            }
+        */
+        let qry_args = `paymentSchedule:${ payload.payment_schedule_pk } first:30`
+        if (payload.endCursor) {
+            qry_args += ` after:"${ payload.endCursor }"`
+        }
+        if (payload.year) {
+            qry_args += ` date_Gte:"${ payload.year }-01-01" date_Lte:"${ payload.year }-12-31"`
         }
         // TODO: Filter payments by year (planned payment date)
         // Add total item count to graphql
@@ -176,7 +183,11 @@ const actions = {
                     account_alias: p.node.accountAlias
                 }
             })
-            commit('setPayments', payments)
+            if (payload.endCursor) {
+                commit('addPayments', payments)
+            } else {
+                commit('setPayments', payments)
+            }
             let payments_meta = res.data.data.payments.pageInfo
             payments_meta.count = res.data.data.payments.totalCount
             commit('setPaymentsMeta', payments_meta)
@@ -188,7 +199,7 @@ const actions = {
         .then(res => {
             commit('setPayment', res.data)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     },
     fetchPaymentPlan: function({commit}, payment_plan_id) {
         axios.get(`/payment_schedules/${ payment_plan_id }/`)
@@ -196,28 +207,28 @@ const actions = {
             commit('setPaymentPlan', res.data)
             commit('setPayments', res.data.payments)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     },
     fetchInternalPaymentRecipients: function({commit}) {
         axios.get(`/internal_payment_recipients/`)
         .then(res => {
             commit('setInternalPaymentRecipients', res.data)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     },
     fetchRates: function({commit}) {
         axios.get(`/rates/`)
         .then(res => {
             commit('setRates', res.data)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     },
     fetchPaymentEditablePastFlag: function({commit}) {
         axios.get('/editing_past_payments_allowed/')
         .then(res => {
             commit('setPaymentEditablePastFlag', res.data)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     }
 }
 
