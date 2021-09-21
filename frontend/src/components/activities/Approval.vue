@@ -23,7 +23,7 @@
                             <th>Ydelse</th>
                             <th>Periode</th>
                             <th class="right">Udgift i år</th>
-                            <th class="right">Udgift, årligt</th>
+                            <th class="right">Udgift næste år</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -34,8 +34,8 @@
                             <td><span v-html="displayStatus(act.status)"></span> </td>
                             <td v-html="activityId2name(act.details)"></td>
                             <td>{{ displayDate(act.start_date) }} - {{ displayDate(act.end_date) }}</td>
-                            <td class="right">{{ displayDigits(act.total_cost_this_year) }} kr</td>
-                            <td class="right">{{ displayDigits(act.total_cost_full_year) }} kr</td>
+                            <td class="right">{{ displayDigits(act.total_expected_this_year) }} kr</td>
+                            <td class="right">{{ displayDigits(act.total_expected_next_year) }} kr</td>
                         </tr>
                         <tr v-if="suppl_act_list.length > 0">
                             <th colspan="5">Følgeydelser</th>
@@ -44,8 +44,8 @@
                             <td><span v-html="displayStatus(act.status)"></span> </td>
                             <td v-html="activityId2name(act.details)"></td>
                             <td>{{ displayDate(act.start_date) }} - {{ displayDate(act.end_date) }}</td>
-                            <td class="right">{{ displayDigits(act.total_cost_this_year) }} kr</td>
-                            <td class="right">{{ displayDigits(act.total_cost_full_year) }} kr</td>
+                            <td class="right">{{ displayDigits(act.total_expected_this_year) }} kr</td>
+                            <td class="right">{{ displayDigits(act.total_expected_next_year) }} kr</td>
                         </tr>
                     </tbody>
                 </table>
