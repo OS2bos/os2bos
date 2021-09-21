@@ -32,6 +32,8 @@ UserModel = get_user_model()
 
 
 class ExtendedConnection(Connection):
+    """Extended connection with added methods."""
+
     class Meta:
         abstract = True
 
