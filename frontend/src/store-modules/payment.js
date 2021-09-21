@@ -79,6 +79,9 @@ const mutations = {
     addPayments (state, payments) {
         state.payments = state.payments.concat(payments)
     },
+    clearPayments (state) {
+        state.payments = null
+    },
     setPaymentInPayments (state, new_payment) {
         for (let p in state.payments) {
             if (state.payments[p].id === new_payment.id) {
@@ -114,8 +117,8 @@ const actions = {
         /* 
             `payload` assumes {
                 payment_schedule_pk
-                year
-                endCursor
+                year (optional)
+                endCursor (optional)
             }
         */
         let qry_args = `paymentSchedule:${ payload.payment_schedule_pk } first:30`
@@ -125,9 +128,6 @@ const actions = {
         if (payload.year) {
             qry_args += ` date_Gte:"${ payload.year }-01-01" date_Lte:"${ payload.year }-12-31"`
         }
-        // TODO: Filter payments by year (planned payment date)
-        // Add total item count to graphql
-        // Add total yearly costs to graphql
         const qry = {
             query: `{
                 payments(${qry_args}) {
@@ -149,16 +149,16 @@ const actions = {
                             note,
                             isPayableManually,
                             accountString,
-                            accountAlias,
-                            paymentSchedule {
-                                pk,
-                                paymentId,
-                                paymentMethod,
-                                activity {
-                                    status
-                                }
-                            }
+                            accountAlias
                         }
+                    }
+                }
+                paymentSchedule(id:"${ btoa('PaymentSchedule:' + payload.payment_schedule_pk) }") {
+                    pk,
+                    paymentId,
+                    paymentMethod,
+                    activity {
+                        status
                     }
                 }
             }`
@@ -174,11 +174,11 @@ const actions = {
                     paid_date: p.node.paidDate,
                     paid_amount: p.node.paidAmount,
                     note: p.node.note,
-                    payment_schedule__pk: p.node.paymentSchedule.pk,
-                    payment_schedule__payment_id: p.node.paymentSchedule.paymentId,
-                    activity__status: p.node.paymentSchedule.activity.status,
+                    payment_schedule__pk: res.data.data.paymentSchedule.pk,
+                    payment_schedule__payment_id: res.data.data.paymentSchedule.paymentId,
+                    activity__status: res.data.data.paymentSchedule.activity.status,
                     is_payable_manually: p.node.isPayableManually,
-                    payment_method: p.node.paymentSchedule.paymentMethod,
+                    payment_method: res.data.data.paymentSchedule.paymentMethod,
                     account_string: p.node.accountString,
                     account_alias: p.node.accountAlias
                 }

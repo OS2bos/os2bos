@@ -213,8 +213,11 @@
             }
         },
         watch: {
-            pId: function(new_val) {
-                this.fetchPayments(new_val)
+            pId: function(new_val, old_val) {
+                if (new_val !== old_val) {
+                    this.$store.commit('clearPayments')
+                    this.fetchPayments(new_val)
+                }
             }
         },
         methods: {
