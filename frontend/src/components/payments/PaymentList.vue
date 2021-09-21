@@ -187,10 +187,12 @@
                 return this.$store.getters.getPaymentPlan
             },
             payments_by_year: function() {
+                console.log('payments', this.payments)
                 if (this.payments) {
                     let payms = this.payments.filter(p => {
-                        return this.current_year === parseInt(p.date.substr(0,4))
+                        return this.current_year === Number(p.date.substr(0,4))
                     })
+                    console.log('payms', payms)
                     return payms
                 } else {
                     return false
