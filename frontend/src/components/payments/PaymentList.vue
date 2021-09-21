@@ -28,7 +28,7 @@
             </fieldset>
         </div>
 
-        <payment-create-modal v-if="pay_create_diag_open" @closedialog="pay_create_diag_open = false" @paymentsaved="updatePayment" :plan="payment_schedule" />
+        <payment-create-modal v-if="pay_create_diag_open" @closedialog="pay_create_diag_open = false" @paymentsaved="fetchPayments(pId)" :plan="payment_schedule" />
 
         <data-grid v-if="payments.length > 0"
             ref="data-grid"
@@ -215,7 +215,6 @@
         watch: {
             pId: function(new_val, old_val) {
                 if (new_val !== old_val) {
-                    this.$store.commit('clearPayments')
                     this.fetchPayments(new_val)
                 }
             }
@@ -288,6 +287,12 @@
             displayPlannedAmount: function(payment) {
                 return `${ cost2da(payment.amount) } kr`
             }
+        },
+        beforeRouteUpdate(to, from, next) {
+            if (to.params.actId !== from.params.actId) {
+                this.$store.commit('clearPayments')
+            }
+            next()
         },
         created: function() {
             this.createYearList()

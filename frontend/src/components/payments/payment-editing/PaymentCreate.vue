@@ -75,8 +75,8 @@ export default {
             }
 
             axios.post(`/payments/`, p)
-            .then(() => {
-                this.$emit('paymentsaved', p.payment_schedule)
+            .then(res => {
+                this.$emit('paymentsaved', res)
                 this.closeDiag()
             })
             .catch(err => this.$store.dispatch('parseErrorOutput', err))
