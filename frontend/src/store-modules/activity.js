@@ -214,7 +214,8 @@ const actions = {
                 total_granted_previous_year: a.totalGrantedPreviousYear,
                 total_expected_previous_year: a.totalExpectedPreviousYear,
                 total_granted_next_year: a.totalGrantedNextYear,
-                total_expected_next_year: a.totalExpectedNextYear
+                total_expected_next_year: a.totalExpectedNextYear,
+                payment_schedule_pk: a.paymentPlan.pk
             }
             const new_payment_plan = {
                 id: a.paymentPlan.pk,

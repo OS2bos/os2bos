@@ -12,7 +12,7 @@
         <div class="row" style="justify-items: space-between; flex-flow: row nowrap;">
             <header class="row payment-schedule-header">
                 <h2 class="payment-schedule-title">
-                    Betalinger <span style="opacity: .66;">betalingsnøgle {{ pId }}</span>
+                    Betalinger <span style="opacity: .66;">betalingsID {{ payment_schedule.id }}</span>
                 </h2>
                 <button class="btn payment-create-btn" title="Ny betaling" @click="payCreateDiagOpen" v-if="can_create_payment && !edit_mode">
                     + Tilføj betaling
@@ -21,14 +21,14 @@
 
             <fieldset class="payment-schedule-selector">
                 <label for="field-year-picker">Vis betalinger fra år</label>
-                <select id="field-year-picker" v-model="current_year" @change="fetchPayments(pId, current_year)">
+                <select id="field-year-picker" v-model="current_year" @change="fetchPayments(payment_schedule.id, current_year)">
                     <option :value="null">Alle år</option>
                     <option v-for="y in years" :value="y" :key="y.id">{{ y }}</option>
                 </select>
             </fieldset>
         </div>
 
-        <payment-create-modal v-if="pay_create_diag_open" @closedialog="pay_create_diag_open = false" @paymentsaved="fetchPayments(pId)" :plan="payment_schedule" />
+        <payment-create-modal v-if="pay_create_diag_open" @closedialog="pay_create_diag_open = false" @paymentsaved="fetchPayments(payment_schedule.id)" :plan="payment_schedule" />
 
         <data-grid v-if="payments.length > 0"
             ref="data-grid"
@@ -45,7 +45,7 @@
                 slot="datagrid-footer"
                 v-if="payments_meta.hasNextPage && payments.length > 0" 
                 class="more" 
-                @click="fetchMorePayments(pId)">
+                @click="fetchMorePayments(payment_schedule.id)">
                 Vis flere
             </button>
 
@@ -102,7 +102,6 @@
             PermissionLogic
         ],
         props: [
-            'pId',
             'edit_mode'
         ],
         data: function() {
@@ -213,9 +212,10 @@
             }
         },
         watch: {
-            pId: function(new_val, old_val) {
-                if (new_val !== old_val) {
-                    this.fetchPayments(new_val)
+            payment_schedule: function(new_ps, old_ps) {
+                if (new_ps.id !== old_ps.id) {
+                    console.log('fetching payments because watch', new_ps.id)
+                    this.fetchPayments(new_ps.id)
                 }
             }
         },
@@ -288,17 +288,11 @@
                 return `${ cost2da(payment.amount) } kr`
             }
         },
-        beforeRouteUpdate(to, from, next) {
-            if (to.params.actId !== from.params.actId) {
-                //this.$store.commit('clearPayments')
-            }
-            next()
-        },
         created: function() {
             this.createYearList()
-            if (this.pId) {
-                this.fetchPayments(this.pId)
-            }
+            
+            console.log('fetching payments because create', this.payment_schedule.id)
+            this.fetchPayments(this.payment_schedule.id)
         }
     }
 </script>

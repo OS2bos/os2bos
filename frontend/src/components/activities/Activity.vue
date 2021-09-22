@@ -81,14 +81,13 @@
             </form>
         </div>
         
-        <payment-schedule :p-id="payment_plan.payment_id" :edit_mode="edit_mode" />
+        <payment-schedule :edit_mode="edit_mode" />
         
     </section>
 
 </template>
 
 <script>
-import ActDisplayMixin from '../mixins/ActivityDisplayMixin.js'
 import ActivityEdit from './ActivityEdit.vue'
 import ActivitySummary from './ActivitySummary.vue'
 import axios from '../http/Http.js'
@@ -100,7 +99,6 @@ import PermissionLogic from '../mixins/PermissionLogic.js'
 export default {
 
     mixins: [
-        ActDisplayMixin,
         PermissionLogic
     ],
     components: {
@@ -115,6 +113,15 @@ export default {
         }
     },
     computed: {
+        act: function() {
+            return this.$store.getters.getActivity
+        },
+        payment_plan: function() {
+            return this.$store.getters.getPaymentPlan
+        },
+        appropriation: function() {
+            return this.$store.getters.getAppropriation
+        },
         cas: function() {
             return this.$store.getters.getCase
         },
