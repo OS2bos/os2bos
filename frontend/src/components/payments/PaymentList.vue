@@ -14,7 +14,7 @@
                 <h2 class="payment-schedule-title">
                     Betalinger <span style="opacity: .66;">betalingsID {{ payment_schedule.id }}</span>
                 </h2>
-                <button class="btn payment-create-btn" title="Ny betaling" @click="payCreateDiagOpen" v-if="can_create_payment && !edit-mode">
+                <button class="btn payment-create-btn" title="Ny betaling" @click="payCreateDiagOpen" v-if="can_create_payment && !editMode">
                     + Tilføj betaling
                 </button>
             </header>
@@ -102,7 +102,7 @@
             PermissionLogic
         ],
         props: [
-            'edit-mode'
+            'editMode'
         ],
         data: function() {
             return {                
