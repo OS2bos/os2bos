@@ -4,6 +4,7 @@ import { Selector } from 'testcafe'
 import { login } from '../utils/logins.js'
 import { createCase } from '../utils/crud.js'
 import baseurl from '../utils/url.js'
+import checkConsole from '../utils/console.js'
 
 let rand = Math.floor(Math.random() * 1000 ),
     rand2 = Math.floor(Math.random() * 1000 )
@@ -26,6 +27,7 @@ const target_group_name = `testmålgruppe-${ rand }`,
 
 fixture('Check appropriation paragraph choices') // declare the fixture
     .page(baseurl)  // specify the start page
+    .afterEach(() => checkConsole())
 
 test('Add new target group in Django admin', async t => {
 

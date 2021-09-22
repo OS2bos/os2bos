@@ -5,6 +5,7 @@ import { login } from '../utils/logins.js'
 import { createActivity, createAppropriation, createCase, createPayment, approveActivities } from '../utils/crud.js'
 import baseurl from '../utils/url.js'
 import { makeDateStr, leadZero } from '../utils/utils.js'
+import checkConsole from '../utils/console.js'
 
 function nextdays(date, offset) {
     let new_date = new Date(date.setDate(date.getDate() + offset + 1))
@@ -73,6 +74,7 @@ fixture('Activities with individual payment plan') // declare the fixture
     .beforeEach(async t => { 
         await login(t)
     })
+    .afterEach(() => checkConsole())
 
 test('Create case, appropriation, and activities', async t => {
 

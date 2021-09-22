@@ -6,6 +6,7 @@ import { createActivity, editActivity, createAppropriation, createCase } from '.
 import { axe } from '../utils/axe.js'
 import baseurl from '../utils/url.js'
 import { makeDateStr } from '../utils/utils.js'
+import checkConsole from '../utils/console.js'
 
 let today = new Date(),
     rand = Math.floor(Math.random() * 1000 ),
@@ -111,6 +112,7 @@ fixture('Login and create some data') // declare the fixture
     .beforeEach(async t => { 
         await login(t)
     })
+    .afterEach(() => checkConsole())
 
 test('Create case and appropriation', async t => {
     

@@ -5,6 +5,7 @@ import { login } from '../utils/logins.js'
 import baseurl from '../utils/url.js'
 import { randNum, useSelectBox, makeDateStr } from '../utils/utils.js'
 import { createCase, createAppropriation, createActivity } from '../utils/crud.js'
+import checkConsole from '../utils/console.js'
 
 const today = new Date(),
       str1mth = makeDateStr(today, 1)
@@ -47,6 +48,7 @@ const getLocation = ClientFunction(() => document.location.href),
         }
 
 fixture('Check search filter defaults')
+    .afterEach(() => checkConsole())
 
 /*
     Rules to test: 

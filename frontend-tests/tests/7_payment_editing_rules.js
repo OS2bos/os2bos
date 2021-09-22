@@ -5,6 +5,7 @@ import { login } from '../utils/logins.js'
 import baseurl from '../utils/url.js'
 import { randNum, createDate, useSelectBox } from '../utils/utils.js'
 import { createCase, createAppropriation, createActivity, approveActivities } from '../utils/crud.js'
+import checkConsole from '../utils/console.js'
 
 const testdata = {
     case1: {
@@ -62,6 +63,7 @@ const testdata = {
 
 fixture('Check payment editing rules')
     .page(baseurl)
+    .afterEach(() => checkConsole())
 
 /*
     Rules to test: (See https://redmine.magenta-aps.dk/issues/38276)

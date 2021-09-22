@@ -181,9 +181,7 @@ export default {
         }
     },
     beforeRouteUpdate(to, from, next) {
-        if (to.params.actId !== from.params.actId) {
-            this.update(to.params.actId)
-        }
+        this.update(to.params.actId)
         next()
     },
     created: function(){

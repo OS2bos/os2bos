@@ -7,7 +7,7 @@
 
 <template>
 
-    <section class="payment_schedule" v-if="payments">
+    <section class="payment_schedule">
 
         <div class="row" style="justify-items: space-between; flex-flow: row nowrap;">
             <header class="row payment-schedule-header">
@@ -290,13 +290,15 @@
         },
         beforeRouteUpdate(to, from, next) {
             if (to.params.actId !== from.params.actId) {
-                this.$store.commit('clearPayments')
+                //this.$store.commit('clearPayments')
             }
             next()
         },
         created: function() {
             this.createYearList()
-            this.fetchPayments(this.pId)
+            if (this.pId) {
+                this.fetchPayments(this.pId)
+            }
         }
     }
 </script>
