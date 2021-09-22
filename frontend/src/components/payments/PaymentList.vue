@@ -290,9 +290,10 @@
         },
         created: function() {
             this.createYearList()
-            
-            console.log('fetching payments because create', this.payment_schedule.id)
-            this.fetchPayments(this.payment_schedule.id)
+            if (this.payment_schedule.id) {
+                console.log('fetching payments because create', this.payment_schedule.id)
+                this.fetchPayments(this.payment_schedule.id)
+            }
         }
     }
 </script>
