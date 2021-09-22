@@ -7,58 +7,58 @@ import { randNum, createDate, useSelectBox } from '../utils/utils.js'
 import { createCase, createAppropriation, createActivity, approveActivities } from '../utils/crud.js'
 
 const testdata = {
-        case1: {
-            name: `${ randNum() }.${ randNum() }.${ randNum() }-sag`,
-            effort_step: '5',
-            scaling_step: '7',
-            target_group: 'Handicapafdelingen'
-        },
-        appr1: {
-            name: `${ randNum() }.${ randNum() }.${ randNum() }-${ randNum() }-bevilling`,
-            section: 'SEL-52-3.5 Aflastningsordning'
-        },
-        act1: {
-            details__name: 'Netværksplejefamilier',
-            payment_type: 'INDIVIDUAL_PAYMENT',
-            start_date: createDate(2),
-            end_date: createDate(32),
-            recipient_type: 'COMPANY'
-        },
-        act2: {
-            details__name: 'Aktiviteter',
-            payment_type: 'RUNNING_PAYMENT',
-            start_date: createDate(6),
-            end_date: createDate(12),
-            payment_frequency: 'DAILY',
-            payment_cost_type: 'FIXED',
-            payment_amount: '120,95',
-            recipient_type: 'PERSON',
-            recipient_id: '1111112222',
-            payment_method: 'SD'
-        },
-        act3: {
-            details__name: 'Kost og logi',
-            payment_type: 'ONE_TIME_PAYMENT',
-            payment_date: createDate(10),
-            payment_cost_type: 'GLOBAL_RATE',
-            payment_units: '5.20',
-            recipient_type: 'PERSON',
-            recipient_id: '2222221111',
-            payment_method: 'CASH'
-        },
-        act4: {
-            details__name: 'Kørsel i egen bil',
-            payment_type: 'RUNNING_PAYMENT',
-            start_date: createDate(18),
-            payment_frequency: 'BIWEEKLY',
-            payment_cost_type: 'PER_UNIT',
-            price_amount: '100',
-            price_start_date: createDate(1),
-            payment_units: '3',
-            recipient_type: 'INTERNAL',
-            recipient_id: '123'
-        }
+    case1: {
+        name: `${ randNum() }.${ randNum() }.${ randNum() }-sag`,
+        effort_step: '5',
+        scaling_step: '7',
+        target_group: 'Handicapafdelingen'
+    },
+    appr1: {
+        name: `${ randNum() }.${ randNum() }.${ randNum() }-${ randNum() }-bevilling`,
+        section: 'SEL-52-3.5 Aflastningsordning'
+    },
+    act1: {
+        details__name: 'Netværksplejefamilier',
+        payment_type: 'INDIVIDUAL_PAYMENT',
+        start_date: createDate(2),
+        end_date: createDate(32),
+        recipient_type: 'COMPANY'
+    },
+    act2: {
+        details__name: 'Aktiviteter',
+        payment_type: 'RUNNING_PAYMENT',
+        start_date: createDate(6),
+        end_date: createDate(12),
+        payment_frequency: 'DAILY',
+        payment_cost_type: 'FIXED',
+        payment_amount: '120,95',
+        recipient_type: 'PERSON',
+        recipient_id: '1111112222',
+        payment_method: 'SD'
+    },
+    act3: {
+        details__name: 'Kost og logi',
+        payment_type: 'ONE_TIME_PAYMENT',
+        payment_date: createDate(10),
+        payment_cost_type: 'GLOBAL_RATE',
+        payment_units: '5.20',
+        recipient_type: 'PERSON',
+        recipient_id: '2222221111',
+        payment_method: 'CASH'
+    },
+    act4: {
+        details__name: 'Kørsel i egen bil',
+        payment_type: 'RUNNING_PAYMENT',
+        start_date: createDate(18),
+        payment_frequency: 'BIWEEKLY',
+        payment_cost_type: 'PER_UNIT',
+        price_amount: '100',
+        price_start_date: createDate(1),
+        payment_units: '3',
+        recipient_type: 'INTERNAL',
+        recipient_id: '123'
     }
+}
 
 fixture('Check payment editing rules')
     .page(baseurl)

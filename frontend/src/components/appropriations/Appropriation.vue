@@ -80,11 +80,11 @@
                         <dt>Sagsbehandler</dt>
                         <dd>{{ displayUserName(cas.case_worker) }}</dd>
                         <dt>Betalingskommune</dt>
-                        <dd v-html="displayMuniName(cas.paying_municipality)"></dd>
+                        <dd>{{ cas.paying_municipality }}</dd>
                         <dt>Handlekommune</dt>
-                        <dd v-html="displayMuniName(cas.acting_municipality)"></dd>
+                        <dd>{{ cas.acting_municipality }}</dd>
                         <dt>Bopælskommune</dt>
-                        <dd v-html="displayMuniName(cas.residence_municipality)"></dd>
+                        <dd>{{ cas.residence_municipality }}</dd>
                     </dl>
                 </div>
                 
@@ -208,6 +208,15 @@
                                 cprNumber,
                                 caseWorker {
                                     pk
+                                },
+                                payingMunicipality {
+                                    name
+                                },
+                                actingMunicipality {
+                                    name
+                                },
+                                residenceMunicipality {
+                                    name
                                 }
                             },
                             section {
@@ -251,7 +260,10 @@
                         id: a.case.pk,
                         sbsys_id: a.case.sbsysId,
                         cpr_number: a.case.cprNumber,
-                        case_worker: a.case.caseWorker.pk
+                        case_worker: a.case.caseWorker.pk,
+                        residence_municipality: a.case.residenceMunicipality.name,
+                        paying_municipality: a.case.payingMunicipality.name,
+                        acting_municipality: a.case.actingMunicipality.name
                     }
                     this.$store.commit('setAppropriation', new_appr)
                     this.$store.commit('setCase', new_case)
