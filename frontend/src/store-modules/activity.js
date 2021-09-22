@@ -132,6 +132,9 @@ const actions = {
                         recipientName,
                         recipientType,
                         paymentMethod,
+                        paymentMethodDetails {
+                            taxCard
+                        },
                         paymentFrequency,
                         paymentDate,
                         paymentDayOfMonth,
@@ -227,6 +230,7 @@ const actions = {
                 recipient_name: a.paymentPlan.recipientName,
                 recipient_type: a.paymentPlan.recipientType,
                 payment_method: a.paymentPlan.paymentMethod,
+                payment_method_details: a.paymentPlan.paymentMethodDetails ? a.paymentPlan.paymentMethodDetails.taxCard : null,
                 payment_frequency: a.paymentPlan.paymentFrequency,
                 payment_date: a.paymentPlan.paymentDate,
                 payment_day_of_month: a.paymentPlan.paymentDayOfMonth,

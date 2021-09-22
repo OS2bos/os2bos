@@ -18,6 +18,7 @@ from core.models import (
     Activity as ActivityModel,
     PaymentSchedule as PaymentScheduleModel,
     Payment as PaymentModel,
+    PaymentMethodDetails as PaymentMethodDetailsModel,
     ActivityDetails as ActivityDetailsModel,
     ApprovalLevel as ApprovalLevelModel,
     Appropriation as AppropriationModel,
@@ -111,6 +112,18 @@ class Payment(OptimizedDjangoObjectType):
         connection_class = ExtendedConnection
         fields = "__all__"
         filterset_class = PaymentFilter
+
+
+class PaymentMethodDetails(OptimizedDjangoObjectType):
+    """PaymentMethodDetails as a graphene type."""
+
+    pk = graphene.Int(source="pk")
+
+    class Meta:
+        model = PaymentMethodDetailsModel
+        interfaces = (Node,)
+        connection_class = ExtendedConnection
+        fields = "__all__"
 
 
 class Rate(OptimizedDjangoObjectType):
