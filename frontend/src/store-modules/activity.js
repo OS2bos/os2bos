@@ -260,6 +260,7 @@ const actions = {
                     pp: new_payment_plan
                 })
             }
+            return res.data.data.activity
         })
     },
     updateStore: function({commit}, payload) {

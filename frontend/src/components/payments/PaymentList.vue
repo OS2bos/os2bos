@@ -14,7 +14,7 @@
                 <h2 class="payment-schedule-title">
                     Betalinger <span style="opacity: .66;">betalingsID {{ payment_schedule.id }}</span>
                 </h2>
-                <button class="btn payment-create-btn" title="Ny betaling" @click="payCreateDiagOpen" v-if="can_create_payment && !edit_mode">
+                <button class="btn payment-create-btn" title="Ny betaling" @click="payCreateDiagOpen" v-if="can_create_payment && !edit-mode">
                     + Tilføj betaling
                 </button>
             </header>
@@ -102,7 +102,7 @@
             PermissionLogic
         ],
         props: [
-            'edit_mode'
+            'edit-mode'
         ],
         data: function() {
             return {                
@@ -211,14 +211,6 @@
                 return 0
             }
         },
-        watch: {
-            payment_schedule: function(new_ps, old_ps) {
-                if (new_ps.id !== old_ps.id) {
-                    console.log('fetching payments because watch', new_ps.id)
-                    this.fetchPayments(new_ps.id)
-                }
-            }
-        },
         methods: {
             fetchPayments: function(payment_schedule_pk, year) {
                 this.$store.dispatch('fetchPayments', {
@@ -290,10 +282,6 @@
         },
         created: function() {
             this.createYearList()
-            if (this.payment_schedule.id) {
-                console.log('fetching payments because create', this.payment_schedule.id)
-                this.fetchPayments(this.payment_schedule.id)
-            }
         }
     }
 </script>

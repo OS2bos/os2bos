@@ -80,8 +80,8 @@
                 </div>
             </form>
         </div>
-        
-        <payment-schedule :edit_mode="edit_mode" />
+
+        <payment-schedule :edit-mode="edit_mode" />
         
     </section>
 
@@ -171,6 +171,11 @@ export default {
             this.edit_mode = false
             this.showModal = false
             this.$store.dispatch('fetchActivity', activity_id)
+            .then(activity => {
+                this.$store.dispatch('fetchPayments', {
+                    payment_schedule_pk: activity.paymentPlan.pk
+                })
+            })
         },
         displaySection: function(id) {
             return sectionId2name(id)
