@@ -18,7 +18,7 @@
                 <span v-if="p.payment_schedule__fictive" class="dim">(Fiktiv)</span>
                 <span v-if="p.paid_amount" class="dim">(Betalt)</span>
             </span>
-            <button v-if="can_delete_payment" class="payment-delete-btn modal-delete-btn" @click="delete_diag_open = true">Slet</button>
+            <button v-if="can_delete_payment" class="payment-delete-btn modal-delete-btn" @click="delete_diag_open = true" style="margin-top: 0 !important;">Slet</button>
         </h2>
 
         <div slot="body">
@@ -221,6 +221,9 @@
             deletePayment: function() {
                 axios.delete(`/payments/${ this.p.id }/`)
                 .then(() => {
+                    this.$store.dispatch('fetchPayments', {
+                        payment_schedule_pk: this.p.payment_schedule__pk
+                    })
                     this.closeDiag()
                     notify('Betaling slettet', 'success')
                 })
@@ -257,7 +260,7 @@
     }
 
     .payment-edit .modal-delete-btn {
-        margin: 0 0 0 .75rem !important;
+        margin: 1rem 0 0 .75rem !important;
         float: none;
     }
 
