@@ -77,6 +77,7 @@ export default {
     },
     methods: {
         preFetchData: function(recipient_id) {
+            console.log('prefetching data', recipient_id)
             if (!recipient_id) {
                 return
             }
@@ -84,6 +85,10 @@ export default {
             .then(res => {
                 this.service_provider = res.data.find(sp => {
                     return sp.cvr_number === recipient_id
+                })
+                this.$store.commit('setActivityProperty', {
+                    prop: 'service_provider',
+                    val: this.service_provider
                 })
             })
         },
