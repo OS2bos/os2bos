@@ -153,7 +153,7 @@
             serviceProviderRule: function() {
                 const acts_with_no_service_provider = this.act_list.filter(act => {
                     console.log(act)
-                    if (!act.service_provider) {
+                    if (!act.service_provider && act.payment_plan.payment_method === 'INVOICE') {
                         return act
                     } else {
                         return false
@@ -233,6 +233,10 @@
         box-shadow: 0 -.25rem 1rem hsla(var(--color1), 83%, 62%, .125);
         padding: 2rem;
         margin: 0 -2rem -2rem;
+    }
+
+    .approval .warning ul {
+        margin: 0 0 .5rem;
     }
 
 </style>
