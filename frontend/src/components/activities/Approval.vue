@@ -14,6 +14,7 @@
             <div slot="body">
                 <warning :content="warning" />
                 <warning :content="payDateRule" />
+                <warning :content="serviceProviderRule" />
 
                 <table>
                     <thead>
@@ -148,6 +149,25 @@
                     }
                 })
                 return rule
+            },
+            serviceProviderRule: function() {
+                const acts_with_no_service_provider = this.act_list.filter(act => {
+                    console.log(act)
+                    if (!act.service_provider) {
+                        return act
+                    } else {
+                        return false
+                    }
+                })
+                if (acts_with_no_service_provider.length > 0) {
+                    let warn_str = '<p>Følgende udgifter mangler oplysninger om leverandør:</p><ul>'
+                    for (let act of acts_with_no_service_provider) {
+                        warn_str += `<li><a target="_blank" href="/#/activity/${act.id}/">${ act.details__name }</a></li>`
+                    }
+                    return warn_str += '</ul>'
+                } else {
+                    return false
+                }
             }
         },
         methods: {
