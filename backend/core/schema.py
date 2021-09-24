@@ -188,7 +188,10 @@ class ActivityDetails(OptimizedDjangoObjectType):
 
     class Meta:
         model = ActivityDetailsModel
+        interfaces = (Node,)
+        connection_class = ExtendedConnection
         fields = "__all__"
+        filter_fields = "__all__"
 
 
 class MonthlyPaymentPlanDictionary(graphene.ObjectType):
@@ -310,6 +313,9 @@ class Query(graphene.ObjectType):
 
     activity = Node.Field(Activity)
     activities = DjangoFilterConnectionField(Activity)
+
+    activity_detail = Node.Field(ActivityDetails)
+    activity_details = DjangoFilterConnectionField(ActivityDetails)
 
     appropriation = Node.Field(Appropriation)
     appropriations = DjangoFilterConnectionField(Appropriation)
