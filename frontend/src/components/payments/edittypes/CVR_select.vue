@@ -4,9 +4,6 @@
             <fieldset style="margin: 0;">
                 <label for="cvr-search-input">Leverandør</label>
                 <input type="search" autocomplete="off" v-model="search_input" @input="search" id="cvr-search-input" placeholder="CVR/P-nr eller navn">
-                <button type="button" class="cvr-search-input-clear" @click="select_item(false)" title="Fjern leverandør">
-                    <i class="material-icons">close</i>
-                </button>
                 <ul class="cvr-search-result" v-if="search_results.length > 0">
                     <li v-for="s in search_results" :key="s.cvr_number">
                         <button class="cvr-select-btn" @click="select_item(s)" type="button">
@@ -88,6 +85,10 @@ export default {
                 this.service_provider = res.data.find(sp => {
                     return sp.cvr_number === recipient_id
                 })
+                this.$store.commit('setActivityProperty', {
+                    prop: 'service_provider',
+                    val: this.service_provider
+                })
             })
         },
         fetchData: function(query) {
@@ -104,6 +105,7 @@ export default {
                 this.fetchData(this.search_input)
             } else {
                 this.search_results = []
+                this.select_item(false)
             }
         },
         select_item: function(item) {
@@ -149,27 +151,6 @@ export default {
 
     #cvr-search-input {
         min-width: 11rem;
-    }
-
-    .cvr-search-input-clear {
-        box-shadow: none;
-        background-color: var(--grey0);
-        border: solid 1px var(--grey3);
-        border-width: 1px 1px 1px 0;
-        color: var(--grey10);
-        display: inline-block;
-        font: inherit;
-        letter-spacing: inherit;
-        padding: 0.25rem 0.5rem;
-        transition: all .2s;
-        border-radius: 0;
-        margin: 0;
-        height: 2rem;
-        overflow: hidden;
-    }
-
-    .cvr-search-input-clear .material-icons {
-        font-size: 1.5rem;
     }
 
     .cvr-search-result {
