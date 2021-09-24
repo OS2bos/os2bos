@@ -28,6 +28,7 @@ from core.models import (
     Price as PriceModel,
     RatePerDate as RatePerDateModel,
     Municipality as MunicipalityModel,
+    ServiceProvider as ServiceProviderModel
 )
 from core.filters import PaymentFilter
 
@@ -282,6 +283,19 @@ class Municipality(OptimizedDjangoObjectType):
 
     class Meta:
         model = MunicipalityModel
+        interfaces = (Node,)
+        connection_class = ExtendedConnection
+        fields = "__all__"
+        filter_fields = "__all__"
+
+
+class ServiceProvider(OptimizedDjangoObjectType):
+    """ServiceProvider as a graphene type."""
+
+    pk = graphene.Int(source="pk")
+
+    class Meta:
+        model = ServiceProviderModel
         interfaces = (Node,)
         connection_class = ExtendedConnection
         fields = "__all__"

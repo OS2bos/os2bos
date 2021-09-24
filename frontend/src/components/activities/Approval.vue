@@ -158,6 +158,7 @@
                         return false
                     }
                 })
+                console.log('those acts', acts_with_no_service_provider)
                 if (acts_with_no_service_provider.length > 0) {
                     let warn_str = '<p>Følgende udgifter mangler oplysninger om leverandør:</p><ul>'
                     for (let act of acts_with_no_service_provider) {

@@ -290,6 +290,9 @@
                                             recipientName,
                                             fictive,
                                             paymentMethod
+                                        },
+                                        serviceProvider {
+                                            pk
                                         }
                                     }
                                 }
@@ -325,6 +328,7 @@
                             total_expected_previous_year: a.node.totalExpectedPreviousYear,
                             approved: a.node.status === 'GRANTED' ? true : false,
                             expected: a.node.status === 'EXPECTED' ? true : false,
+                            service_provider: a.node.serviceProvider ? a.node.serviceProvider.pk : null,
                             payment_plan: {
                                 fictive: a.node.paymentPlan.fictive,
                                 recipient_name: a.node.paymentPlan.recipientName,
