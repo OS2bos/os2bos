@@ -338,6 +338,9 @@ class Query(graphene.ObjectType):
     rate_per_date = Node.Field(RatePerDate)
     rate_per_dates = DjangoFilterConnectionField(RatePerDate)
 
+    service_provider = Node.Field(ServiceProvider)
+    service_providers = DjangoFilterConnectionField(ServiceProvider)
+
     municipality = Node.Field(Municipality)
     municipalities = DjangoFilterConnectionField(Municipality)
 
