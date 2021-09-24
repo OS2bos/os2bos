@@ -162,7 +162,7 @@
                 if (acts_with_no_service_provider.length > 0) {
                     let warn_str = '<p>Følgende udgifter mangler oplysninger om leverandør:</p><ul>'
                     for (let act of acts_with_no_service_provider) {
-                        warn_str += `<li><a target="_blank" href="/#/activity/${act.id}/">${ act.details__name }</a></li>`
+                        warn_str += `<li><a target="_blank" href="/#/activity/${act.id}/">${ act.details_data.name }</a></li>`
                     }
                     return warn_str += '</ul>'
                 } else {
