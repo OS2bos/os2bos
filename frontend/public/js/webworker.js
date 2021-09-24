@@ -22,7 +22,56 @@ function startFetching() {
     fetchServiceProviders()
     fetchSections()
     fetchActivityDetails()
-    fetchMunicipalities()
+    //fetchMunicipalities()
+    const qry = {
+        query: `{
+            municipalities {
+                edges {
+                    node {
+                        pk,
+                        name,
+                        active
+                    }
+                }
+            },
+            sections {
+                edges {
+                    node {
+                        pk,
+                        active,
+                        text,
+                        paragraph,
+                        lawTextName,
+                        appropriations {
+                            edges {
+                                node {
+                                    pk
+                                }
+                            }
+                        },
+                        mainActivities {
+                            pk
+                        },
+                        supplementaryActivities {
+                            pk
+                        }
+                    }
+                }
+            }
+        }`
+    }
+    fetch('/api/graphql/', {
+        method: 'POST',
+        body: JSON.stringify(qry),
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(resp => {
+        data.municipalities = resp.data.municipalities
+        
+    })
 }
 
 function endFetching() {
@@ -44,6 +93,7 @@ function fetchSections() {
     fetch('/api/sections/')
         .then(response => response.json())
         .then(res => {
+            console.log('legacy sections', res)
             data.sections = res
             endFetching()
         })
@@ -53,6 +103,7 @@ function fetchActivityDetails() {
     fetch('/api/activity_details/')
         .then(response => response.json())
         .then(res => {
+            console.log('legacy act details', res)
             data.activity_details = res
             endFetching()
         })
