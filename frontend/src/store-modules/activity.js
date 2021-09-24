@@ -118,7 +118,7 @@ const actions = {
                     totalGrantedNextYear,
                     totalExpectedNextYear,
                     details {
-                        id,
+                        pk,
                         name,
                         description
                     },
@@ -206,7 +206,7 @@ const actions = {
                 id: a.pk,
                 start_date: a.startDate,
                 end_date: a.endDate,
-                details: Number(a.details.id),
+                details: a.details.pk,
                 details_data: {
                     name: a.details.name,
                     description: a.details.description
