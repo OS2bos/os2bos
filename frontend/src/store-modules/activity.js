@@ -133,6 +133,7 @@ const actions = {
                         recipientType,
                         paymentMethod,
                         paymentMethodDetails {
+                            pk,
                             taxCard
                         },
                         paymentFrequency,
@@ -230,7 +231,7 @@ const actions = {
                 recipient_name: a.paymentPlan.recipientName,
                 recipient_type: a.paymentPlan.recipientType,
                 payment_method: a.paymentPlan.paymentMethod,
-                payment_method_details: a.paymentPlan.paymentMethodDetails ? a.paymentPlan.paymentMethodDetails.taxCard : null,
+                payment_method_details: a.paymentPlan.paymentMethodDetails ? a.paymentPlan.paymentMethodDetails.pk : null,
                 payment_frequency: a.paymentPlan.paymentFrequency,
                 payment_date: a.paymentPlan.paymentDate,
                 payment_day_of_month: a.paymentPlan.paymentDayOfMonth,
