@@ -118,7 +118,7 @@
                 .then(res => {
                     this.fam = res.data
                 })
-                .catch(err => console.log(err))
+                .catch(err => console.error(err))
             },
             displayName: function(id) {
                 if (this.user_can_edit === true && id.from_serviceplatformen === false) {

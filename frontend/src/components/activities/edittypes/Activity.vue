@@ -110,7 +110,7 @@ export default {
                 .then(res => {
                     this.act_details = res.data
                 })
-                .catch(err => console.log(err))
+                .catch(err => console.error(err))
             }
         }
     },

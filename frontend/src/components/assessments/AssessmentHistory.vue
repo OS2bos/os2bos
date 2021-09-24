@@ -81,7 +81,7 @@
                 .then(res => {
                     this.his = res.data
                 })
-                .catch(err => console.log(err))
+                .catch(err => console.error(err))
             },
             displayDate: function(dt) {
                 return json2js(dt)
