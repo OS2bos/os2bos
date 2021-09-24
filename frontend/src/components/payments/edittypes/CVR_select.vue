@@ -77,7 +77,6 @@ export default {
     },
     methods: {
         preFetchData: function(recipient_id) {
-            console.log('prefetching data', recipient_id)
             if (!recipient_id) {
                 return
             }

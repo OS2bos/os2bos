@@ -152,7 +152,6 @@
             },
             serviceProviderRule: function() {
                 const acts_with_no_service_provider = this.act_list.filter(act => {
-                    console.log(act)
                     if (!act.service_provider && act.payment_plan.payment_method === 'INVOICE') {
                         return act
                     } else {
