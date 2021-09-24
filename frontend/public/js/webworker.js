@@ -19,10 +19,7 @@ let data = {
 }
 
 function startFetching() {
-    fetchServiceProviders()
     fetchSections()
-    fetchActivityDetails()
-    //fetchMunicipalities()
     const qry = {
         query: `{
             municipalities {
@@ -34,27 +31,62 @@ function startFetching() {
                     }
                 }
             },
-            sections {
+            activityDetails {
                 edges {
-                    node {
+                     node {
                         pk,
                         active,
-                        text,
-                        paragraph,
-                        lawTextName,
-                        appropriations {
+                        activityId,
+                        description,
+                        maxToleranceInDkk,
+                        maxToleranceInPercent,
+                        name,
+                        mainActivities {
                             edges {
                                 node {
                                     pk
                                 }
                             }
                         },
-                        mainActivities {
-                            pk
+                        mainActivityFor {
+                            edges {
+                                node {
+                                    pk
+                                }
+                            }
                         },
-                        supplementaryActivities {
-                            pk
+                        supplementaryActivityFor {
+                            edges {
+                                node {
+                                    pk
+                                }
+                            }
+                        },
+                        serviceProviders {
+                            edges {
+                                node {
+                                    pk
+                                }
+                            }
                         }
+                    } 
+                }
+            },
+            serviceProviders {
+                edges {
+                    node {
+                        pk,
+                        name,
+                        active,
+                        businessCode,
+                        businessCodeText,
+                        cvrNumber,
+                        postDistrict,
+                        status,
+                        street,
+                        streetNumber,
+                        vatFactor,
+                        zipCode
                     }
                 }
             }
@@ -69,8 +101,45 @@ function startFetching() {
     })
     .then(response => response.json())
     .then(resp => {
-        data.municipalities = resp.data.municipalities
-        
+        data.municipalities = resp.data.municipalities.edges.map(muni => {
+            return {
+                id: muni.node.pk,
+                name: muni.node.name,
+                active: muni.node.active
+            }
+        })
+        data.activity_details = resp.data.activityDetails.edges.map(actd => {
+            return {
+                id: actd.node.pk,
+                name: actd.node.name,
+                active: actd.node.active,
+                activity_id: actd.node.activityId,
+                description: actd.node.description,
+                max_tolerance_in_percent: actd.node.maxToleranceInPercent,
+                max_tolerance_in_dkk: actd.node.maxToleranceInDkk,
+                main_activities: actd.node.mainActivities.edges.map(mainact => mainact.node.pk),
+                main_activity_for: actd.node.mainActivityFor.edges.map(mainactfor => mainactfor.node.pk),
+                service_providers: actd.node.serviceProviders.edges.map(sp => sp.node.pk),
+                supplementary_activity_for: actd.node.supplementaryActivityFor.edges.map(supplactfor => supplactfor.node.pk)
+            }
+        })
+        data.service_providers = resp.data.serviceProviders.edges.map(sp => {
+            return {
+                active: sp.node.active,
+                business_code: sp.node.businessCode,
+                business_code_text: sp.node.businessCodeText,
+                cvr_number: sp.node.cvrNumber,
+                id: sp.node.pk,
+                name: sp.node.name,
+                post_district: sp.node.postDistrict,
+                status: sp.node.status,
+                street: sp.node.street,
+                street_number: sp.node.streetNumber,
+                vat_factor: sp.node.vatFactor,
+                zip_code: sp.node.zipCode
+            }
+        })
+        endFetching()
     })
 }
 
@@ -80,40 +149,11 @@ function endFetching() {
     }
 }
 
-function fetchServiceProviders() {
-    fetch('/api/service_providers/')
-        .then(response => response.json())
-        .then(res => {
-            data.service_providers = res
-            endFetching()
-        })
-}
-
 function fetchSections() {
     fetch('/api/sections/')
         .then(response => response.json())
         .then(res => {
-            console.log('legacy sections', res)
             data.sections = res
-            endFetching()
-        })
-}
-
-function fetchActivityDetails() {
-    fetch('/api/activity_details/')
-        .then(response => response.json())
-        .then(res => {
-            console.log('legacy act details', res)
-            data.activity_details = res
-            endFetching()
-        })
-}
-
-function fetchMunicipalities() {
-    fetch('/api/municipalities/')
-        .then(response => response.json())
-        .then(res => {
-            data.municipalities = res
             endFetching()
         })
 }
