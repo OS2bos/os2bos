@@ -28,7 +28,7 @@ from core.models import (
     Price as PriceModel,
     RatePerDate as RatePerDateModel,
     Municipality as MunicipalityModel,
-    ServiceProvider as ServiceProviderModel
+    ServiceProvider as ServiceProviderModel,
 )
 from core.filters import PaymentFilter
 
