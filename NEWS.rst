@@ -20,6 +20,7 @@ Features
 - Add a version number in the frontend.
 - Update frontend dependencies.
 
+
 Version 3.4.3, 2021-03-23
 -------------------------
 

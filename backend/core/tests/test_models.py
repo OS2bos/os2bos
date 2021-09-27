@@ -2574,6 +2574,46 @@ class ActivityTestCase(TestCase, BasicTestMixin):
         # No activity category is found.
         self.assertIsNone(suppl_activity.account_alias)
 
+    def test_account_alias_new_supplementary_activity_no_activity_category(
+        self,
+    ):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+
+        main_activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=main_activity,
+        )
+        create_section_info(
+            details=main_activity.details,
+            section=section,
+            main_activity_main_account_number="12345",
+        )
+        suppl_activity = create_activity(
+            case,
+            appropriation,
+            status=STATUS_GRANTED,
+            activity_type=SUPPL_ACTIVITY,
+        )
+        create_payment_schedule(
+            payment_method=CASH,
+            recipient_type=PaymentSchedule.PERSON,
+            activity=suppl_activity,
+        )
+        # Create an account alias mapping but no activity category.
+        create_account_alias_mapping("5678", "12345")
+
+        # No activity category is found.
+        self.assertIsNone(suppl_activity.account_alias_new)
+
     def test_account_alias_supplementary_activity_no_main_activity(self):
         case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
@@ -2921,7 +2961,7 @@ class PaymentTestCase(TestCase, BasicTestMixin):
         self.assertEqual(payment.saved_account_alias, "")
 
         # Set payment paid which should save the
-        # saved_account_string from account_alias.
+        # saved_account_string from account_alias_new.
         payment.paid = True
         payment.paid_date = date(year=2019, month=2, day=1)
         payment.paid_amount = Decimal("500.0")
