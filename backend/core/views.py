@@ -144,7 +144,9 @@ class DRFAuthenticatedGraphQLView(GraphQLView):
         """Apparently graphene needs a body attribute."""
         if isinstance(request, Request):  # pragma: no cover
             return request.data
-        return super(DRFAuthenticatedGraphQLView, self).parse_body(request)  # pragma: no cover
+        return super(DRFAuthenticatedGraphQLView, self).parse_body(
+            request
+        )  # pragma: no cover
 
     @classmethod
     def as_view(cls, *args, **kwargs):
