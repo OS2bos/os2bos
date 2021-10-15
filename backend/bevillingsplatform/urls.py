@@ -105,7 +105,7 @@ urlpatterns = [
     path("api/", include(router.urls)),
     path(
         "api/graphql/",
-        views.DRFAuthenticatedGraphQLView.as_view(graphiql=True),
+        views.AuthenticatedGraphQLView.as_view(graphiql=True),
         name="graphql-api",
     ),
     path(

@@ -144,14 +144,14 @@ class AuthenticatedGraphQLView(GraphQLView):
         """Apparently graphene needs a body attribute."""
         if isinstance(request, Request):  # pragma: no cover
             return request.data
-        return super(DRFAuthenticatedGraphQLView, self).parse_body(
+        return super(AuthenticatedGraphQLView, self).parse_body(
             request
         )  # pragma: no cover
 
     @classmethod
     def as_view(cls, *args, **kwargs):
         """Add the relevant DRF-view logic to the view."""
-        view = super(DRFAuthenticatedGraphQLView, cls).as_view(*args, **kwargs)
+        view = super(AuthenticatedGraphQLView, cls).as_view(*args, **kwargs)
         view = permission_classes((IsUserAllowed,))(view)
         view = authentication_classes((CsrfExemptSessionAuthentication,))(view)
         view = api_view(["GET", "POST"])(view)
