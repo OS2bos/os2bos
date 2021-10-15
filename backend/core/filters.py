@@ -209,7 +209,7 @@ class PaymentFilter(filters.FilterSet):
 
     date_year = filters.ChoiceFilter(
         method="filter_date_year",
-        label=gettext("Beta_lingsdato eller Dato for år"),
+        label=gettext("Betalingsdato eller Dato for år"),
         choices=generic_time_choices,
     )
 

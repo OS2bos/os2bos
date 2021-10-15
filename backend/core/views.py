@@ -133,9 +133,9 @@ class ReadOnlyViewset(viewsets.ReadOnlyModelViewSet):
     permission_classes = (IsUserAllowed,)
 
 
-class DRFAuthenticatedGraphQLView(GraphQLView):
+class AuthenticatedGraphQLView(GraphQLView):
     """
-    GraphQLView with our DRF authentication on top.
+    GraphQLView with our Django Rest Framework authentication on top.
 
     As found on: https://github.com/graphql-python/graphene/issues/249
     """
