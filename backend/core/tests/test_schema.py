@@ -126,7 +126,7 @@ class TestActivitySchema(AuthenticatedTestCase, BasicTestMixin):
                                 totalGrantedPreviousYear,
                                 totalExpectedPreviousYear,
                                 totalGrantedNextYear,
-                                totalExpectedPreviousYear,
+                                totalExpectedNextYear,
                             }
                         }
                     }
@@ -143,6 +143,12 @@ class TestActivitySchema(AuthenticatedTestCase, BasicTestMixin):
             node["id"], b64encode(f"Activity:{activity.pk}".encode()).decode()
         )
         self.assertEqual(node["status"], activity.status)
+        self.assertEqual(node["totalGrantedThisYear"], 0.0)
+        self.assertEqual(node["totalExpectedThisYear"], 0.0)
+        self.assertEqual(node["totalGrantedPreviousYear"], 0.0)
+        self.assertEqual(node["totalExpectedPreviousYear"], 0.0)
+        self.assertEqual(node["totalGrantedNextYear"], 0.0)
+        self.assertEqual(node["totalExpectedNextYear"], 0.0)
 
 
 class TestActivityDetailsSchema(AuthenticatedTestCase):
