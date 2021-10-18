@@ -14,7 +14,6 @@
                 ref="data-grid"
                 :data-list="payments"
                 :columns="columns"
-                @selection="selected_payments"
                 @update="updatePayment">
 
                 <p slot="datagrid-header">
@@ -57,7 +56,6 @@
         },
         data: function() {
             return {
-                selected_payments: [],
                 columns: [
                     {
                         key: 'id',

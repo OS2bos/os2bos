@@ -90,8 +90,7 @@ export default {
             store.commit('setActivity', new_act)
         } else if (to.query.mode === 'expected') {
             const act = store.state.activity.activity,
-                  pay_plan = store.state.activity.activity.payment_plan
-            
+                  pay_plan = store.state.payment.payment_plan
             let new_act = {
                 status: 'EXPECTED',
                 modifies: act.id,
@@ -120,8 +119,6 @@ export default {
     },
     methods: {
         cleanAndExit: function(act_id) {
-            this.$store.commit('clearActivity')
-            this.$store.commit('clearPaymentPlan')
             if (act_id) {
                 this.$router.push(`/activity/${ act_id }/`)
             } else {
@@ -162,12 +159,12 @@ export default {
 
             axios.post('/activities/', sanitized_act)
             .then(res => {
-                this.cleanAndExit(res.data.id)
+                this.$router.push(`/activity/${ res.data.id }/`)
             })
             .catch(err => this.$store.dispatch('parseErrorOutput', err))            
         },
         cancelCreate: function() {
-            this.cleanAndExit(false)
+            this.$router.push(`/appropriation/${ this.appropriation.id }/`)
         }
     }
 }

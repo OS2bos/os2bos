@@ -14,7 +14,7 @@
         <div class="modal-mask" v-if="show_modal">
             <div class="modal-wrapper">
 
-                <payment-component @close="closeDiag()" @update="$emit('update')"/>
+                <payment-component @close="closeDiag()" @update="$emit('update')" />
                 
             </div>
         </div>    

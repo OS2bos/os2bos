@@ -131,7 +131,7 @@ function activityId2name(id) {
  */
 function activityId2description(id) {
     const act_list = store.getters.getActivityDetails
-    if (act_list) {
+    if (act_list && id) {
         let act = act_list.find(function(element) {
             return element.id === id;
         })
@@ -141,7 +141,7 @@ function activityId2description(id) {
             return '-'
         }
     } else {
-        return 'Ikke tilgængelig'
+        return 'Ingen beskrivelse'
     }
 }
 

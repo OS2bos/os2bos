@@ -85,7 +85,7 @@
                 .then(res => {
                     this.populateSectionList(res.data)
                 })
-                .catch(err => console.log(err))
+                .catch(err => console.error(err))
             },
             populateSectionList: function(sections) {
                 if (sections.length > 1) {
@@ -115,7 +115,7 @@
                         }
                     })
                     .catch(err => {
-                        console.log(err)
+                        console.error(err)
                     })
                 } else {
                     this.sbsysCheck = true

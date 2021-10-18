@@ -31,7 +31,9 @@ from django.conf.urls.static import static
 from django.conf import settings
 from django.views.static import serve
 from django.views.generic import TemplateView
+
 from watchman.views import status
+
 import django_saml2_auth
 
 from rest_framework import routers
@@ -101,6 +103,11 @@ urlpatterns = [
         "api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"
     ),
     path("api/", include(router.urls)),
+    path(
+        "api/graphql/",
+        views.AuthenticatedGraphQLView.as_view(graphiql=True),
+        name="graphql-api",
+    ),
     path(
         "api/openapi/",
         get_schema_view(

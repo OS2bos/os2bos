@@ -69,6 +69,9 @@ export default {
     mixins: [
         ActDisplayMixin,
         PermissionLogic
+    ],
+    props: [
+        'activityData'
     ]
 
 }

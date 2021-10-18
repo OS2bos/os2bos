@@ -184,7 +184,7 @@
                 .then(res => {
                     this.apprs = res.data
                 })
-                .catch(err => console.log(err))
+                .catch(err => console.error(err))
             },
             displayCreatedDate: function(appr) {
                 return json2jsDate(appr.created)

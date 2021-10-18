@@ -105,7 +105,7 @@
                     this.fam = res.data
                 })
                 .catch(err => {
-                    console.log(err)
+                    console.error(err)
                 })
             },
             saveChanges: function() {

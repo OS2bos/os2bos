@@ -109,7 +109,6 @@
     import CaseEdit from './CaseEdit.vue'
     import Appropriations from '../appropriations/AppropriationList.vue'
     import FamilyOverview from '../familyoverview/FamilyOverview.vue'
-    import axios from '../http/Http.js'
     import { municipalityId2name, targetGroupId2name, districtId2name, effortId2name, displayEffort, userId2name, teamId2name } from '../filters/Labels.js'
     import store from '../../store.js'
     import PermissionLogic from '../mixins/PermissionLogic.js'

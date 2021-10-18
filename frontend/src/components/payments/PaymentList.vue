@@ -7,45 +7,54 @@
 
 <template>
 
-    <section class="payment_schedule" v-if="payments_by_year">
+    <section class="payment_schedule">
 
         <div class="row" style="justify-items: space-between; flex-flow: row nowrap;">
             <header class="row payment-schedule-header">
                 <h2 class="payment-schedule-title">
-                    Betalinger <span style="opacity: .66;">betalingsnøgle {{ pId }}</span>
+                    Betalinger <span style="opacity: .66;">betalingsID {{ payment_schedule.id }}</span>
                 </h2>
-                <button class="btn payment-create-btn" title="Ny betaling" @click="payCreateDiagOpen" v-if="can_create_payment && !edit_mode">
+                <button class="btn payment-create-btn" title="Ny betaling" @click="payCreateDiagOpen" v-if="can_create_payment && !editMode">
                     + Tilføj betaling
                 </button>
             </header>
 
             <fieldset class="payment-schedule-selector">
                 <label for="field-year-picker">Vis betalinger fra år</label>
-                <select id="field-year-picker" v-model="current_year">
+                <select id="field-year-picker" v-model="current_year" @change="fetchPayments(payment_schedule.id, current_year)">
+                    <option :value="null">Alle år</option>
                     <option v-for="y in years" :value="y" :key="y.id">{{ y }}</option>
                 </select>
             </fieldset>
         </div>
 
-        <payment-create-modal v-if="pay_create_diag_open" @closedialog="pay_create_diag_open = false" @paymentsaved="update" :plan="payment_plan" />
-        
-        <data-grid v-if="payments_by_year.length > 0"
+        <payment-create-modal v-if="pay_create_diag_open" @closedialog="pay_create_diag_open = false" @paymentsaved="fetchPayments(payment_schedule.id)" :plan="payment_schedule" />
+
+        <data-grid v-if="payments.length > 0"
             ref="data-grid"
-            :data-list="payments_by_year"
+            :data-list="payments"
             :columns="columns"
             class="payment_schedule_list"
             @update="updatePayment">
 
             <p slot="datagrid-header">
-                Viser {{payments_by_year.length}} betalinger for {{ current_year }}
+                Viser {{payments.length}} betalinger af {{ payments_meta.count }}
             </p>
+
+            <button 
+                slot="datagrid-footer"
+                v-if="payments_meta.hasNextPage && payments.length > 0" 
+                class="more" 
+                @click="fetchMorePayments(payment_schedule.id)">
+                Vis flere
+            </button>
 
         </data-grid>
         <p v-else>
-            Der er ingen betalinger for det valgte år
+            Der er ingen betalinger at vise
         </p>
-        
-        <table v-if="payments_by_year.length > 0" class="payments-sum">
+
+        <table v-if="payments.length > 0 && current_year" class="payments-sum">
             <thead>
                 <tr>
                     <th></th>
@@ -67,7 +76,6 @@
 </template>
 
 <script>
-
     import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
     import PaymentCreateModal from './payment-editing/PaymentCreate.vue'
@@ -94,11 +102,10 @@
             PermissionLogic
         ],
         props: [
-            'pId',
-            'edit_mode'
+            'editMode'
         ],
         data: function() {
-            return {
+            return {                
                 now: new Date(),
                 years: [],
                 current_year: null,
@@ -167,50 +174,55 @@
             }
         },
         computed: {
-            payment_plan: function() {
-                return this.$store.getters.getPaymentPlan
-            },
             payments: function() {
                 return this.$store.getters.getPayments
             },
-            payments_by_year: function() {
-                let state_payments = this.$store.getters.getPayments
-                if (state_payments) {
-                    let payms = state_payments.filter(p => {
-                        return this.current_year === parseInt(p.date.substr(0,4))
-                    })
-                    return payms
-                } else {
-                    return false
-                }
+            payments_meta: function() {
+                return this.$store.getters.getPaymentsMeta
+            },
+            payment_schedule: function() {
+                return this.$store.getters.getPaymentPlan
+            },
+            activity: function() {
+                return this.$store.getters.getActivity
             },
             sum_expected: function() {
-                if (this.payments_by_year) {
-                    return this.payments_by_year.reduce(function(total, payment) {
-                        return total += parseFloat(payment.amount)
-                    }, 0)
+                if (this.current_year === this.years[0]) {
+                    return this.activity.total_expected_previous_year  
                 }
+                if (this.current_year === this.years[1]) {
+                    return this.activity.total_expected_this_year  
+                }
+                if (this.current_year === this.years[2]) {
+                    return this.activity.total_expected_next_year  
+                }
+                return 0
             },
             sum_paid: function() {
-                if (this.payments_by_year) {
-                    return this.payments_by_year.reduce(function(total, payment) {
-                        if (payment.paid_amount !== null) {
-                            return total += parseFloat(payment.paid_amount)
-                        } else {
-                            return total
-                        }
-                    }, 0)
+                if (this.current_year === this.years[0]) {
+                    return this.activity.total_granted_previous_year  
                 }
-            }
-        },
-        watch: {
-            pId: function() {
-                this.update()
+                if (this.current_year === this.years[1]) {
+                    return this.activity.total_granted_this_year  
+                }
+                if (this.current_year === this.years[2]) {
+                    return this.activity.total_granted_next_year  
+                }
+                return 0
             }
         },
         methods: {
-            update: function() {
-                this.$store.dispatch('fetchPaymentPlan', this.pId)
+            fetchPayments: function(payment_schedule_pk, year) {
+                this.$store.dispatch('fetchPayments', {
+                    payment_schedule_pk: payment_schedule_pk,
+                    year: year ? year : null
+                })
+            },
+            fetchMorePayments: function(payment_schedule_pk) {
+                this.$store.dispatch('fetchPayments', {
+                    payment_schedule_pk: payment_schedule_pk,
+                    endCursor: this.payments_meta.endCursor
+                })
             },
             updatePayment: function(payload) {
                 if (payload.operation === 'save') {
@@ -247,10 +259,9 @@
                 return cost2da(num)
             },
             createYearList: function() {
-                this.years.push(this.now.getFullYear() - 1)
-                this.years.push(this.now.getFullYear())
-                this.years.push(this.now.getFullYear() + 1)
-                this.current_year = this.now.getFullYear()
+                this.years.push(this.now.getUTCFullYear() - 1)
+                this.years.push(this.now.getUTCFullYear())
+                this.years.push(this.now.getUTCFullYear() + 1)
             },
             payCreateDiagOpen: function() {
                 this.pay_create_diag_open = true
@@ -371,6 +382,10 @@
 
     .payment_schedule_list td {
         overflow: visible;
+    }
+
+    .payment_schedule .more {
+        width: 100%;
     }
 
 </style>

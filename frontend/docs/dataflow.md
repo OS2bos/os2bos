@@ -39,9 +39,9 @@ The _main component_ uses route params to fetch data via REST API.
 
 **Using state:**
 ```
-$state.dispatch('fetchActivity', this.activity_id)
+this.$store.dispatch('fetchActivity', this.activity_id)
 ```
-and a corresponding _getter_:
+and a corresponding _getter_ to get the fetched information:
 ```
 computed: {
     activity_data: function() {
