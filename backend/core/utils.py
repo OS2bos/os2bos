@@ -1202,15 +1202,16 @@ def filter_appropriations_for_dst_payload(from_start_date=None, sections=None):
 
 def generate_dst_payload(from_start_date=None, sections=None):
     """Generate a XML payload for Danmarks Statistik."""
+
     # Bilag 2 for now.
     now = timezone.now()
     appropriations = filter_appropriations_for_dst_payload(
         from_start_date, sections
     )
     # Variables.
-    municipality_code = "151"
-    municipality_cvr = "58271713"
-    municipality_p_number = ""
+    municipality_code = settings.DST_MUNICIPALITY_CODE
+    municipality_cvr = settings.DST_MUNICIPALITY_CVR_NUMBER
+    municipality_p_number = settings.DST_MUNICIPALITY_P_NUMBER
     latest_passed_month = (now - relativedelta(months=1)).month
     test = True
     if test:
@@ -1220,11 +1221,9 @@ def generate_dst_payload(from_start_date=None, sections=None):
 
     E = ElementMaker(
         namespace="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
-        nsmap={
-            "xsi": "http://www.w3.org/2001/XMLSchema",
-            "ns": "http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/",
-            "nsA": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
-        },
+    )
+    envelope_E = ElementMaker(
+        namespace="http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/"
     )
 
     appropriations_root = E.ForanstaltningStrukturSamling()
@@ -1238,22 +1237,31 @@ def generate_dst_payload(from_start_date=None, sections=None):
             E.UdsatBarnCPRidentifikator(appropriation.case.cpr_number),
             E.FormynderCPRidentifikator(father_or_mother.cpr_number),
             E.ForanstaltningId(appropriation.sbsys_id),
-            E.ForanstaltningKode(str(appropriation.section_info)),
+            E.ForanstaltningKode(str(appropriation.section_info.dst_code)),
             E.ForanstaltningStartDato(str(appropriation.granted_from_date)),
-            E.ForanstaltningSlutDato(str(appropriation.granted_to_date)),
         )
+
+        end_date = appropriation.granted_to_date
+        if end_date:
+            appropriation_structure.append(
+                E.ForanstaltningSlutDato(str(appropriation.granted_to_date))
+            )
 
         appropriations_root.append(appropriation_structure)
 
     doc = E.UdsatteBoernOgUngeLeveranceL201U1Struktur(
         E.DeliveryMetadataNewStructure(
-            E.Envelope(
-                E.Source("CEMOS"),
-                E.SurveyID("D280600"),
-                E.FormID(form_id),  # L201 for prod, T201 for test
-                E.Period(str(latest_passed_month)),  # Latest passed month.
-                E.EntityIDType("Kommune"),
-                E.EntityID(municipality_code),  # "Kommunekode"
+            envelope_E.Envelope(
+                envelope_E.Source("CEMOS"),
+                envelope_E.SurveyID("D280600"),
+                # L201 for prod, T201 for test.
+                envelope_E.FormID(form_id),
+                # Latest passed month.
+                envelope_E.Period(str(latest_passed_month)),
+                envelope_E.Entity(
+                    envelope_E.EntityIDType("Kommune"),
+                    envelope_E.EntityID(municipality_code),
+                ),
             ),
             E.CommunicatorStructureCollection(
                 E.CommunicatorStructure(
@@ -1263,8 +1271,10 @@ def generate_dst_payload(from_start_date=None, sections=None):
                         .replace(microsecond=0)
                         .isoformat()
                     ),
-                    E.SystemName("OS2BOS"),
-                    E.SystemVersion("3.4.3"),
+                    E.SystemStructure(
+                        E.SystemName("OS2BOS"),
+                        E.SystemVersion("3.4.3"),
+                    ),
                 )
             ),
             E.ContactStructureCollection(
@@ -1288,9 +1298,8 @@ def generate_dst_payload(from_start_date=None, sections=None):
                 E.CVRnumberIdentifier(municipality_cvr),
                 E.ProductionUnitIdentifier(municipality_p_number),
             ),
-            E.Version(E.FormVersion("1")),
+            E.FormVersion("1"),
         ),
         appropriations_root,
     )
-    print(appropriations_root)
-    print(etree.tostring(doc, pretty_print=True))
+    print(etree.tostring(doc))

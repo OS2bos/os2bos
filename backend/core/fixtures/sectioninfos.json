@@ -9,6 +9,7 @@
             "activity_category": 9,
             "kle_number": "27.27.09",
             "sbsys_template_id": "1296",
+            "dst_code": "",
             "main_activity_main_account_number": "528211003",
             "supplementary_activity_main_account_number": ""
         }
@@ -23,6 +24,7 @@
             "activity_category": 4,
             "kle_number": "27.24.00",
             "sbsys_template_id": "891",
+            "dst_code": "",
             "main_activity_main_account_number": "582211010",
             "supplementary_activity_main_account_number": ""
         }
@@ -37,6 +39,7 @@
             "activity_category": 4,
             "kle_number": "27.24.03",
             "sbsys_template_id": "1562",
+            "dst_code": "",
             "main_activity_main_account_number": "528211003",
             "supplementary_activity_main_account_number": ""
         }
@@ -51,6 +54,7 @@
             "activity_category": 4,
             "kle_number": "27.24.03",
             "sbsys_template_id": "1562",
+            "dst_code": "",
             "main_activity_main_account_number": "528211003",
             "supplementary_activity_main_account_number": ""
         }
@@ -65,6 +69,7 @@
             "activity_category": 3,
             "kle_number": "27.27.03",
             "sbsys_template_id": "899",
+            "dst_code": "",
             "main_activity_main_account_number": "PPR betaler ",
             "supplementary_activity_main_account_number": ""
         }
@@ -79,6 +84,7 @@
             "activity_category": 10,
             "kle_number": "27.27.12",
             "sbsys_template_id": "886",
+            "dst_code": "",
             "main_activity_main_account_number": "528211004",
             "supplementary_activity_main_account_number": ""
         }
@@ -93,6 +99,7 @@
             "activity_category": 2,
             "kle_number": "27.12.06",
             "sbsys_template_id": "996",
+            "dst_code": "",
             "main_activity_main_account_number": "528211017",
             "supplementary_activity_main_account_number": ""
         }
@@ -107,6 +114,7 @@
             "activity_category": 13,
             "kle_number": "27.06.08",
             "sbsys_template_id": "912",
+            "dst_code": "",
             "main_activity_main_account_number": "528211006",
             "supplementary_activity_main_account_number": ""
         }
@@ -121,6 +129,7 @@
             "activity_category": 13,
             "kle_number": "27.27.15",
             "sbsys_template_id": "1566",
+            "dst_code": "",
             "main_activity_main_account_number": "528211005",
             "supplementary_activity_main_account_number": ""
         }
@@ -135,6 +144,7 @@
             "activity_category": 19,
             "kle_number": "27.27.33",
             "sbsys_template_id": "878",
+            "dst_code": "",
             "main_activity_main_account_number": "528221005",
             "supplementary_activity_main_account_number": ""
         }
@@ -149,6 +159,7 @@
             "activity_category": 19,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1586",
+            "dst_code": "",
             "main_activity_main_account_number": "528221005",
             "supplementary_activity_main_account_number": ""
         }
@@ -163,6 +174,7 @@
             "activity_category": 19,
             "kle_number": "27.24.27",
             "sbsys_template_id": "1573",
+            "dst_code": "",
             "main_activity_main_account_number": "528221005",
             "supplementary_activity_main_account_number": ""
         }
@@ -177,6 +189,7 @@
             "activity_category": 19,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1579",
+            "dst_code": "",
             "main_activity_main_account_number": "528221005",
             "supplementary_activity_main_account_number": ""
         }
@@ -191,6 +204,7 @@
             "activity_category": 4,
             "kle_number": "27.36.16",
             "sbsys_template_id": "918",
+            "dst_code": "",
             "main_activity_main_account_number": "snak med Camilla",
             "supplementary_activity_main_account_number": ""
         }
@@ -205,6 +219,7 @@
             "activity_category": 25,
             "kle_number": "27.06.08",
             "sbsys_template_id": "912",
+            "dst_code": "",
             "main_activity_main_account_number": "528211005",
             "supplementary_activity_main_account_number": ""
         }
@@ -219,6 +234,7 @@
             "activity_category": 11,
             "kle_number": "27.06.08",
             "sbsys_template_id": "912",
+            "dst_code": "",
             "main_activity_main_account_number": "528211005",
             "supplementary_activity_main_account_number": ""
         }
@@ -233,6 +249,7 @@
             "activity_category": 11,
             "kle_number": "27.27.15",
             "sbsys_template_id": "1564",
+            "dst_code": "",
             "main_activity_main_account_number": "528211005",
             "supplementary_activity_main_account_number": ""
         }
@@ -247,6 +264,7 @@
             "activity_category": 21,
             "kle_number": "27.27.27",
             "sbsys_template_id": "1569",
+            "dst_code": "",
             "main_activity_main_account_number": "",
             "supplementary_activity_main_account_number": ""
         }
@@ -261,6 +279,7 @@
             "activity_category": 21,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1583",
+            "dst_code": "",
             "main_activity_main_account_number": "",
             "supplementary_activity_main_account_number": ""
         }
@@ -275,6 +294,7 @@
             "activity_category": 21,
             "kle_number": "27.24.27",
             "sbsys_template_id": "1570",
+            "dst_code": "",
             "main_activity_main_account_number": "528231002",
             "supplementary_activity_main_account_number": ""
         }
@@ -289,6 +309,7 @@
             "activity_category": 21,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1576",
+            "dst_code": "",
             "main_activity_main_account_number": "528231002",
             "supplementary_activity_main_account_number": ""
         }
@@ -303,6 +324,7 @@
             "activity_category": 8,
             "kle_number": "27.27.06",
             "sbsys_template_id": "900",
+            "dst_code": "",
             "main_activity_main_account_number": "528211002",
             "supplementary_activity_main_account_number": ""
         }
@@ -317,6 +339,7 @@
             "activity_category": 8,
             "kle_number": "27.27.09",
             "sbsys_template_id": "894",
+            "dst_code": "",
             "main_activity_main_account_number": "528211003",
             "supplementary_activity_main_account_number": ""
         }
@@ -331,6 +354,7 @@
             "activity_category": 15,
             "kle_number": "27.24.09",
             "sbsys_template_id": "1591",
+            "dst_code": "",
             "main_activity_main_account_number": "582211011",
             "supplementary_activity_main_account_number": ""
         }
@@ -345,6 +369,7 @@
             "activity_category": 15,
             "kle_number": "27.24.09",
             "sbsys_template_id": "1593",
+            "dst_code": "",
             "main_activity_main_account_number": "582211011",
             "supplementary_activity_main_account_number": ""
         }
@@ -359,6 +384,7 @@
             "activity_category": 23,
             "kle_number": "27.27.39",
             "sbsys_template_id": "881",
+            "dst_code": "",
             "main_activity_main_account_number": "528201004",
             "supplementary_activity_main_account_number": ""
         }
@@ -373,6 +399,7 @@
             "activity_category": 23,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1599",
+            "dst_code": "",
             "main_activity_main_account_number": "528201004",
             "supplementary_activity_main_account_number": ""
         }
@@ -387,6 +414,7 @@
             "activity_category": 23,
             "kle_number": "27.24.27",
             "sbsys_template_id": "1572",
+            "dst_code": "",
             "main_activity_main_account_number": "528201004",
             "supplementary_activity_main_account_number": ""
         }
@@ -401,6 +429,7 @@
             "activity_category": 23,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1600",
+            "dst_code": "",
             "main_activity_main_account_number": "528201004",
             "supplementary_activity_main_account_number": ""
         }
@@ -415,6 +444,7 @@
             "activity_category": 4,
             "kle_number": "27.24.03",
             "sbsys_template_id": "1561",
+            "dst_code": "",
             "main_activity_main_account_number": "528211003",
             "supplementary_activity_main_account_number": ""
         }
@@ -429,6 +459,7 @@
             "activity_category": 4,
             "kle_number": "27.24.03",
             "sbsys_template_id": "1561",
+            "dst_code": "",
             "main_activity_main_account_number": "528211003",
             "supplementary_activity_main_account_number": ""
         }
@@ -443,6 +474,7 @@
             "activity_category": 14,
             "kle_number": "27.24.00",
             "sbsys_template_id": "889",
+            "dst_code": "",
             "main_activity_main_account_number": "528211007",
             "supplementary_activity_main_account_number": ""
         }
@@ -457,6 +489,7 @@
             "activity_category": 14,
             "kle_number": "27.27.24",
             "sbsys_template_id": "895",
+            "dst_code": "",
             "main_activity_main_account_number": "528211007",
             "supplementary_activity_main_account_number": ""
         }
@@ -471,6 +504,7 @@
             "activity_category": 14,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1589",
+            "dst_code": "",
             "main_activity_main_account_number": "528211007",
             "supplementary_activity_main_account_number": ""
         }
@@ -485,6 +519,7 @@
             "activity_category": 14,
             "kle_number": "27.27.21",
             "sbsys_template_id": "893",
+            "dst_code": "",
             "main_activity_main_account_number": "528211007",
             "supplementary_activity_main_account_number": ""
         }
@@ -499,6 +534,7 @@
             "activity_category": 14,
             "kle_number": "27.24.18",
             "sbsys_template_id": "1642",
+            "dst_code": "",
             "main_activity_main_account_number": "528211007",
             "supplementary_activity_main_account_number": ""
         }
@@ -513,6 +549,7 @@
             "activity_category": 14,
             "kle_number": "27.24.00",
             "sbsys_template_id": "887",
+            "dst_code": "",
             "main_activity_main_account_number": "528211007",
             "supplementary_activity_main_account_number": ""
         }
@@ -527,6 +564,7 @@
             "activity_category": 7,
             "kle_number": "27.24.03",
             "sbsys_template_id": "1560",
+            "dst_code": "",
             "main_activity_main_account_number": "528211014",
             "supplementary_activity_main_account_number": ""
         }
@@ -541,6 +579,7 @@
             "activity_category": 2,
             "kle_number": "27.12.06",
             "sbsys_template_id": "997",
+            "dst_code": "",
             "main_activity_main_account_number": "528211017",
             "supplementary_activity_main_account_number": ""
         }
@@ -555,6 +594,7 @@
             "activity_category": 2,
             "kle_number": "27.12.06",
             "sbsys_template_id": "998",
+            "dst_code": "",
             "main_activity_main_account_number": "528211017",
             "supplementary_activity_main_account_number": ""
         }
@@ -569,6 +609,7 @@
             "activity_category": 2,
             "kle_number": "27.12.06",
             "sbsys_template_id": "997",
+            "dst_code": "",
             "main_activity_main_account_number": "528211017",
             "supplementary_activity_main_account_number": ""
         }
@@ -583,6 +624,7 @@
             "activity_category": 1,
             "kle_number": "27.57.12",
             "sbsys_template_id": "922",
+            "dst_code": "",
             "main_activity_main_account_number": "538421002",
             "supplementary_activity_main_account_number": ""
         }
@@ -597,6 +639,7 @@
             "activity_category": 17,
             "kle_number": "27.24.00",
             "sbsys_template_id": "892",
+            "dst_code": "",
             "main_activity_main_account_number": "528221004",
             "supplementary_activity_main_account_number": ""
         }
@@ -611,6 +654,7 @@
             "activity_category": 12,
             "kle_number": "27.06.08",
             "sbsys_template_id": "912",
+            "dst_code": "",
             "main_activity_main_account_number": "528211006",
             "supplementary_activity_main_account_number": ""
         }
@@ -625,6 +669,7 @@
             "activity_category": 12,
             "kle_number": "27.27.15",
             "sbsys_template_id": "1567",
+            "dst_code": "",
             "main_activity_main_account_number": "528211005",
             "supplementary_activity_main_account_number": ""
         }
@@ -639,6 +684,7 @@
             "activity_category": 17,
             "kle_number": "27.27.30",
             "sbsys_template_id": "879",
+            "dst_code": "",
             "main_activity_main_account_number": "528221002",
             "supplementary_activity_main_account_number": ""
         }
@@ -653,6 +699,7 @@
             "activity_category": 10,
             "kle_number": "27.27.12",
             "sbsys_template_id": "1563",
+            "dst_code": "",
             "main_activity_main_account_number": "528211004",
             "supplementary_activity_main_account_number": ""
         }
@@ -667,6 +714,7 @@
             "activity_category": 17,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1587",
+            "dst_code": "",
             "main_activity_main_account_number": "528221002",
             "supplementary_activity_main_account_number": ""
         }
@@ -681,6 +729,7 @@
             "activity_category": 17,
             "kle_number": "27.24.27",
             "sbsys_template_id": "1574",
+            "dst_code": "",
             "main_activity_main_account_number": "528221002",
             "supplementary_activity_main_account_number": ""
         }
@@ -695,6 +744,7 @@
             "activity_category": 17,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1580",
+            "dst_code": "",
             "main_activity_main_account_number": "528221002",
             "supplementary_activity_main_account_number": ""
         }
@@ -709,6 +759,7 @@
             "activity_category": 2,
             "kle_number": "27.12.08",
             "sbsys_template_id": "1556",
+            "dst_code": "",
             "main_activity_main_account_number": "528211016",
             "supplementary_activity_main_account_number": ""
         }
@@ -723,6 +774,7 @@
             "activity_category": null,
             "kle_number": "27.57.12",
             "sbsys_template_id": "1552",
+            "dst_code": "",
             "main_activity_main_account_number": "538421002",
             "supplementary_activity_main_account_number": ""
         }
@@ -737,6 +789,7 @@
             "activity_category": 5,
             "kle_number": "32.18.04",
             "sbsys_template_id": "914",
+            "dst_code": "",
             "main_activity_main_account_number": "557721009",
             "supplementary_activity_main_account_number": ""
         }
@@ -751,6 +804,7 @@
             "activity_category": 24,
             "kle_number": "32.18.12",
             "sbsys_template_id": "916",
+            "dst_code": "",
             "main_activity_main_account_number": "557721015",
             "supplementary_activity_main_account_number": ""
         }
@@ -765,6 +819,7 @@
             "activity_category": 4,
             "kle_number": "27.18.02",
             "sbsys_template_id": "920",
+            "dst_code": "",
             "main_activity_main_account_number": "557721016",
             "supplementary_activity_main_account_number": ""
         }
@@ -779,6 +834,7 @@
             "activity_category": 2,
             "kle_number": "27.27.51",
             "sbsys_template_id": "896",
+            "dst_code": "",
             "main_activity_main_account_number": "582211009",
             "supplementary_activity_main_account_number": ""
         }
@@ -793,6 +849,7 @@
             "activity_category": 4,
             "kle_number": "27.27.54",
             "sbsys_template_id": "884",
+            "dst_code": "",
             "main_activity_main_account_number": "582211010",
             "supplementary_activity_main_account_number": ""
         }
@@ -807,6 +864,7 @@
             "activity_category": 15,
             "kle_number": "27.24.09",
             "sbsys_template_id": "1592",
+            "dst_code": "",
             "main_activity_main_account_number": "582211011",
             "supplementary_activity_main_account_number": ""
         }
@@ -821,6 +879,7 @@
             "activity_category": 3,
             "kle_number": "27.12.06",
             "sbsys_template_id": "999",
+            "dst_code": "",
             "main_activity_main_account_number": "528211017",
             "supplementary_activity_main_account_number": ""
         }
@@ -835,6 +894,7 @@
             "activity_category": 15,
             "kle_number": "27.24.09",
             "sbsys_template_id": "1594",
+            "dst_code": "",
             "main_activity_main_account_number": "582211011",
             "supplementary_activity_main_account_number": ""
         }
@@ -849,6 +909,7 @@
             "activity_category": null,
             "kle_number": "27.24.15",
             "sbsys_template_id": "903",
+            "dst_code": "",
             "main_activity_main_account_number": "582211013",
             "supplementary_activity_main_account_number": ""
         }
@@ -863,6 +924,7 @@
             "activity_category": 15,
             "kle_number": "27.24.09",
             "sbsys_template_id": "1590",
+            "dst_code": "",
             "main_activity_main_account_number": "582211011",
             "supplementary_activity_main_account_number": ""
         }
@@ -877,6 +939,7 @@
             "activity_category": 20,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1588",
+            "dst_code": "",
             "main_activity_main_account_number": "528201003",
             "supplementary_activity_main_account_number": ""
         }
@@ -891,6 +954,7 @@
             "activity_category": 20,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1581",
+            "dst_code": "",
             "main_activity_main_account_number": "528201003",
             "supplementary_activity_main_account_number": ""
         }
@@ -905,6 +969,7 @@
             "activity_category": 20,
             "kle_number": "27.27.42",
             "sbsys_template_id": "882",
+            "dst_code": "",
             "main_activity_main_account_number": "528201003",
             "supplementary_activity_main_account_number": ""
         }
@@ -919,6 +984,7 @@
             "activity_category": 20,
             "kle_number": "27.24.27",
             "sbsys_template_id": "1575",
+            "dst_code": "",
             "main_activity_main_account_number": "",
             "supplementary_activity_main_account_number": ""
         }
@@ -933,6 +999,7 @@
             "activity_category": 11,
             "kle_number": "27.06.08",
             "sbsys_template_id": "912",
+            "dst_code": "",
             "main_activity_main_account_number": "528211005",
             "supplementary_activity_main_account_number": ""
         }
@@ -947,6 +1014,7 @@
             "activity_category": 11,
             "kle_number": "27.27.15",
             "sbsys_template_id": "1595",
+            "dst_code": "",
             "main_activity_main_account_number": "528211005",
             "supplementary_activity_main_account_number": ""
         }
@@ -961,6 +1029,7 @@
             "activity_category": 21,
             "kle_number": "27.27.45",
             "sbsys_template_id": "1568",
+            "dst_code": "",
             "main_activity_main_account_number": "",
             "supplementary_activity_main_account_number": ""
         }
@@ -975,6 +1044,7 @@
             "activity_category": 21,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1582",
+            "dst_code": "",
             "main_activity_main_account_number": "",
             "supplementary_activity_main_account_number": ""
         }
@@ -989,6 +1059,7 @@
             "activity_category": 21,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1601",
+            "dst_code": "",
             "main_activity_main_account_number": "",
             "supplementary_activity_main_account_number": ""
         }
@@ -1003,6 +1074,7 @@
             "activity_category": 22,
             "kle_number": "27.27.27",
             "sbsys_template_id": "1569",
+            "dst_code": "",
             "main_activity_main_account_number": "528241999",
             "supplementary_activity_main_account_number": ""
         }
@@ -1017,6 +1089,7 @@
             "activity_category": 22,
             "kle_number": "27.27.48",
             "sbsys_template_id": "870",
+            "dst_code": "",
             "main_activity_main_account_number": "",
             "supplementary_activity_main_account_number": ""
         }
@@ -1031,6 +1104,7 @@
             "activity_category": 4,
             "kle_number": "27.21.08",
             "sbsys_template_id": "911",
+            "dst_code": "",
             "main_activity_main_account_number": "528211019",
             "supplementary_activity_main_account_number": ""
         }
@@ -1045,6 +1119,7 @@
             "activity_category": 4,
             "kle_number": "27.21.08",
             "sbsys_template_id": "911",
+            "dst_code": "",
             "main_activity_main_account_number": "",
             "supplementary_activity_main_account_number": ""
         }
@@ -1059,6 +1134,7 @@
             "activity_category": 5,
             "kle_number": "30.18.12",
             "sbsys_template_id": "974",
+            "dst_code": "",
             "main_activity_main_account_number": "",
             "supplementary_activity_main_account_number": ""
         }
@@ -1073,6 +1149,7 @@
             "activity_category": 3,
             "kle_number": "27.18.24",
             "sbsys_template_id": "921",
+            "dst_code": "",
             "main_activity_main_account_number": "",
             "supplementary_activity_main_account_number": ""
         }
@@ -1087,6 +1164,7 @@
             "activity_category": 16,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1584",
+            "dst_code": "",
             "main_activity_main_account_number": "",
             "supplementary_activity_main_account_number": ""
         }
@@ -1101,6 +1179,7 @@
             "activity_category": 16,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1577",
+            "dst_code": "",
             "main_activity_main_account_number": "528201005",
             "supplementary_activity_main_account_number": ""
         }
@@ -1115,6 +1194,7 @@
             "activity_category": 16,
             "kle_number": "27.27.45",
             "sbsys_template_id": "880",
+            "dst_code": "",
             "main_activity_main_account_number": "528201005",
             "supplementary_activity_main_account_number": ""
         }
@@ -1129,6 +1209,7 @@
             "activity_category": 12,
             "kle_number": "27.06.08",
             "sbsys_template_id": "912",
+            "dst_code": "",
             "main_activity_main_account_number": "528211006",
             "supplementary_activity_main_account_number": ""
         }
@@ -1143,6 +1224,7 @@
             "activity_category": 12,
             "kle_number": "27.27.15",
             "sbsys_template_id": "1565",
+            "dst_code": "",
             "main_activity_main_account_number": "528211005",
             "supplementary_activity_main_account_number": ""
         }
@@ -1157,6 +1239,7 @@
             "activity_category": 18,
             "kle_number": "27.27.32",
             "sbsys_template_id": "877",
+            "dst_code": "",
             "main_activity_main_account_number": "528221004",
             "supplementary_activity_main_account_number": ""
         }
@@ -1171,6 +1254,7 @@
             "activity_category": 18,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1585",
+            "dst_code": "",
             "main_activity_main_account_number": "",
             "supplementary_activity_main_account_number": ""
         }
@@ -1185,6 +1269,7 @@
             "activity_category": 18,
             "kle_number": "27.24.27",
             "sbsys_template_id": "1571",
+            "dst_code": "",
             "main_activity_main_account_number": "528221004",
             "supplementary_activity_main_account_number": ""
         }
@@ -1199,6 +1284,7 @@
             "activity_category": 18,
             "kle_number": "27.27.00",
             "sbsys_template_id": "1578",
+            "dst_code": "",
             "main_activity_main_account_number": "528221004",
             "supplementary_activity_main_account_number": ""
         }

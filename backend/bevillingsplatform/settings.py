@@ -252,6 +252,11 @@ VIRK_URL = settings.get(
     "VIRK_URL", "http://distribution.virk.dk/cvr-permanent/virksomhed/_search"
 )
 
+# DST settings
+DST_MUNICIPALITY_CODE = settings.get("DST_MUNICIPALITY_CODE", fallback="151")
+DST_MUNICIPALITY_CVR_NUMBER = settings.get("DST_MUNICIPALITY_CVR_NUMBER", fallback="58271713")
+DST_MUNICIPALITY_P_NUMBER = settings.get("DST_MUNICIPALITY_P_NUMBER", fallback="1111111111")
+
 REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": (
         "rest_framework_filters.backends.RestFrameworkFilterBackend",
