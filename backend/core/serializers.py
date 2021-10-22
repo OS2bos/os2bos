@@ -594,7 +594,7 @@ class BaseActivitySerializer(WritableNestedModelSerializer):
         return queryset
 
     def validate(self, data):
-        """Validate this activity - check end date is after start date, etc."""
+        """Validate this activity across fields."""
         # Check that start_date is before end_date
         if (
             "end_date" in data
@@ -622,6 +622,11 @@ class BaseActivitySerializer(WritableNestedModelSerializer):
         ):
             raise serializers.ValidationError(
                 _("der skal angives en betalingsdato for engangsbetaling")
+            )
+
+        if is_one_time_payment and data["activity_type"] == MAIN_ACTIVITY:
+            raise serializers.ValidationError(
+                _("Hovedydelser må ikke være engangsbetalinger")
             )
 
         # Monthly payments that are not expected adjustments should have a

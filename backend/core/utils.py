@@ -15,6 +15,9 @@ import itertools
 import re
 import csv
 
+from lxml import etree
+from lxml.builder import ElementMaker
+
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
 
@@ -1175,3 +1178,119 @@ generate_granted_payments_report_list_versions = {
 generate_cases_report_list_versions = {"0": generate_cases_report_list_v0}
 
 write_prism_file_versions = {"0": write_prism_file_v0}
+
+
+# Danmarks Statistik utilities
+def filter_appropriations_for_dst_payload(from_start_date=None, sections=None):
+    """Filter appropriations for a Danmarks Statistik payload."""
+    query_params = {}
+    if from_start_date:
+        query_params = query_params.update(
+            {"activities__created__gte": from_start_date}
+        )
+    if sections:
+        query_params.update({"section__in": sections})
+
+    appropriations = models.Appropriation.objects.filter(
+        activities__status=models.STATUS_GRANTED,
+        activities__activity_type=models.MAIN_ACTIVITY,
+        **query_params,
+    ).distinct()
+
+    return appropriations
+
+
+def generate_dst_payload(from_start_date=None, sections=None):
+    """Generate a XML payload for Danmarks Statistik."""
+    # Bilag 2 for now.
+    now = timezone.now()
+    appropriations = filter_appropriations_for_dst_payload(
+        from_start_date, sections
+    )
+    # Variables.
+    municipality_code = "151"
+    municipality_cvr = "58271713"
+    municipality_p_number = ""
+    latest_passed_month = (now - relativedelta(months=1)).month
+    test = True
+    if test:
+        form_id = "T201"
+    else:
+        form_id = "L201"
+
+    E = ElementMaker(
+        namespace="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
+        nsmap={
+            "xsi": "http://www.w3.org/2001/XMLSchema",
+            "ns": "http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/",
+            "nsA": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
+        },
+    )
+
+    appropriations_root = E.ForanstaltningStrukturSamling()
+    for appropriation in appropriations:
+        case = appropriation.case
+        father_or_mother = case.related_persons.filter(
+            Q(relation_type="mor") | Q(relation_type="far")
+        ).first()
+
+        appropriation_structure = E.ForanstaltningStruktur(
+            E.UdsatBarnCPRidentifikator(appropriation.case.cpr_number),
+            E.FormynderCPRidentifikator(father_or_mother.cpr_number),
+            E.ForanstaltningId(appropriation.sbsys_id),
+            E.ForanstaltningKode(str(appropriation.section_info)),
+            E.ForanstaltningStartDato(str(appropriation.granted_from_date)),
+            E.ForanstaltningSlutDato(str(appropriation.granted_to_date)),
+        )
+
+        appropriations_root.append(appropriation_structure)
+
+    doc = E.UdsatteBoernOgUngeLeveranceL201U1Struktur(
+        E.DeliveryMetadataNewStructure(
+            E.Envelope(
+                E.Source("CEMOS"),
+                E.SurveyID("D280600"),
+                E.FormID(form_id),  # L201 for prod, T201 for test
+                E.Period(str(latest_passed_month)),  # Latest passed month.
+                E.EntityIDType("Kommune"),
+                E.EntityID(municipality_code),  # "Kommunekode"
+            ),
+            E.CommunicatorStructureCollection(
+                E.CommunicatorStructure(
+                    E.CommunicationDescription("Oprettelse på lokal server"),
+                    E.CommunicationDateTime(
+                        timezone.make_naive(now)
+                        .replace(microsecond=0)
+                        .isoformat()
+                    ),
+                    E.SystemName("OS2BOS"),
+                    E.SystemVersion("3.4.3"),
+                )
+            ),
+            E.ContactStructureCollection(
+                E.ContactStructure(
+                    E.ContactTypeName("Faglig ansvarlig"),
+                    E.ContactIdentifier("Test"),
+                    E.ContactEmailAddress("test@test.dk"),
+                ),
+                E.ContactStructure(
+                    E.ContactTypeName("Teknisk ansvarlig"),
+                    E.ContactIdentifier("Test"),
+                    E.ContactEmailAddress("test@test.dk"),
+                ),
+                E.ContactStructure(
+                    E.ContactTypeName("Kvitteringsmodtager"),
+                    E.ContactIdentifier("Test"),
+                    E.ContactEmailAddress("test@test.dk"),
+                ),
+            ),
+            E.DBoksContactNewStructure(
+                E.CVRnumberIdentifier(municipality_cvr),
+                E.ProductionUnitIdentifier(municipality_p_number),
+            ),
+            E.Version(E.FormVersion("1")),
+        ),
+        appropriations_root,
+    )
+    print(appropriations_root)
+    print(etree.tostring(doc, pretty_print=True))
