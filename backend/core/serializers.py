@@ -544,6 +544,8 @@ class BaseActivitySerializer(WritableNestedModelSerializer):
     total_granted_next_year = serializers.SerializerMethodField()
     total_expected_next_year = serializers.SerializerMethodField()
 
+    total_cost_full_year = serializers.ReadOnlyField()
+
     details__name = serializers.ReadOnlyField(source="details.name")
 
     def get_total_granted_this_year(self, obj):

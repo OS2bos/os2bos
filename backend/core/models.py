@@ -2154,6 +2154,34 @@ class Activity(AuditModelMixin, models.Model):
         return self.applicable_payments.amount_sum()
 
     @property
+    def total_cost_full_year(self):
+        """Retrieve total amount expected for this year.
+
+        Extrapolate for the full year (January 1 - December 31).
+        """
+        if not hasattr(self, "payment_plan") or not self.payment_plan:
+            return Decimal(0.0)
+        # Individual payments are a special case and should just
+        # use total_cost.
+        if (
+            self.payment_plan.payment_type
+            == PaymentSchedule.INDIVIDUAL_PAYMENT
+        ):
+            return self.total_cost
+
+        vat_factor = self.vat_factor
+        now = timezone.now().date()
+        start_date = date(now.year, month=1, day=1)
+        end_date = date(now.year, month=12, day=31)
+        payment_amounts = (
+            self.payment_plan.calculate_per_payment_amount(vat_factor, date)
+            for date in self.payment_plan.create_rrule(
+                start_date, until=end_date
+            )
+        )
+        return sum(payment_amounts)
+
+    @property
     def triggers_payment_email(self):
         """Decide if this activity triggers an email when saved."""
         if not self.status == STATUS_GRANTED:
