@@ -58,9 +58,7 @@ def set_payment_id_on_paymentschedule_save(
     sender=Payment,
     dispatch_uid="set_saved_account_alias_on_payment_save",
 )
-def set_saved_account_alias_on_payment_save(
-    sender, instance, **kwargs
-):
+def set_saved_account_alias_on_payment_save(sender, instance, **kwargs):
     """Set the saved_account_alias on Payment save."""
     if (
         instance.paid
