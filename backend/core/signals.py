@@ -66,7 +66,6 @@ def set_saved_account_alias_on_payment_save(sender, instance, **kwargs):
         and instance.account_alias
     ):
         instance.saved_account_alias = instance.account_alias
-        instance.save()
 
 
 @receiver(

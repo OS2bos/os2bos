@@ -2962,7 +2962,7 @@ class PaymentTestCase(TestCase, BasicTestMixin):
             activity_category=activity_category,
         )
 
-        create_account_alias_mapping(
+        account_alias = create_account_alias_mapping(
             "12345", activity_category.category_id, alias="BOS0000002"
         )
         payment_schedule = create_payment_schedule(activity=activity)
@@ -2985,6 +2985,9 @@ class PaymentTestCase(TestCase, BasicTestMixin):
         payment.save()
         payment.refresh_from_db()
         self.assertEqual(payment.saved_account_alias, "BOS0000002")
+
+        account_alias.alias = "BOS0000003"
+        account_alias.save()
 
         # Payment account_string should use the saved_account_string
         self.assertEqual(payment.account_alias, "BOS0000002")
