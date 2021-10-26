@@ -24,4 +24,4 @@ holidays==0.11.1
 django-watchman==1.2.0
 django-currentuser==0.5.2
 prometheus-client==0.10.1
-git+git://github.com/magenta-aps/virk.dk@1.1.1#egg=virk_dk
+git+git://github.com/magenta-aps/virk.dk@1.2.0#egg=virk_dk
