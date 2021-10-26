@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='sectioninfo',
             name='dst_code',
-            field=models.CharField(blank=True, help_text='Værdikode til brug ved levering af data til Danmarks Statistik', max_length=128, verbose_name='DST værdikode'),
+            field=models.CharField(blank=True, help_text='Værdikode til brug ved levering af data til Danmarks Statistik.', max_length=128, verbose_name='DST værdikode'),
         ),
     ]

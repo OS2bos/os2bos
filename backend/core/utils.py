@@ -1200,20 +1200,23 @@ def filter_appropriations_for_dst_payload(from_start_date=None, sections=None):
     return appropriations
 
 
-def generate_dst_payload(from_start_date=None, sections=None):
+def generate_dst_payload(from_start_date=None, sections=None, test=True):
     """Generate a XML payload for Danmarks Statistik."""
 
     # Bilag 2 for now.
     now = timezone.now()
-    appropriations = filter_appropriations_for_dst_payload(
-        from_start_date, sections
+    appropriations = (
+        filter_appropriations_for_dst_payload(from_start_date, sections)
+        .select_related("case")
+        .prefetch_related("case__related_persons")
     )
+
     # Variables.
     municipality_code = settings.DST_MUNICIPALITY_CODE
     municipality_cvr = settings.DST_MUNICIPALITY_CVR_NUMBER
     municipality_p_number = settings.DST_MUNICIPALITY_P_NUMBER
     latest_passed_month = (now - relativedelta(months=1)).month
-    test = True
+
     if test:
         form_id = "T201"
     else:
@@ -1303,3 +1306,5 @@ def generate_dst_payload(from_start_date=None, sections=None):
         appropriations_root,
     )
     print(etree.tostring(doc))
+
+    return doc

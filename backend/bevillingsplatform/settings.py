@@ -254,8 +254,12 @@ VIRK_URL = settings.get(
 
 # DST settings
 DST_MUNICIPALITY_CODE = settings.get("DST_MUNICIPALITY_CODE", fallback="151")
-DST_MUNICIPALITY_CVR_NUMBER = settings.get("DST_MUNICIPALITY_CVR_NUMBER", fallback="58271713")
-DST_MUNICIPALITY_P_NUMBER = settings.get("DST_MUNICIPALITY_P_NUMBER", fallback="1111111111")
+DST_MUNICIPALITY_CVR_NUMBER = settings.get(
+    "DST_MUNICIPALITY_CVR_NUMBER", fallback="58271713"
+)
+DST_MUNICIPALITY_P_NUMBER = settings.get(
+    "DST_MUNICIPALITY_P_NUMBER", fallback="1111111111"
+)
 
 REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": (
@@ -552,7 +556,21 @@ CONSTANCE_CONFIG = {
     ),
 }
 CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
-
+CONSTANCE_CONFIG_FIELDSETS = {
+    "Generelle indstillinger": (
+        "SBSYS_EMAIL",
+        "TO_EMAIL_FOR_PAYMENTS",
+        "DEFAULT_FROM_EMAIL",
+        "DEFAULT_TEAM_NAME",
+    ),
+    "Økonomi & Konto indstillinger": (
+        "ACCOUNT_NUMBER_DEPARTMENT",
+        "ACCOUNT_NUMBER_KIND",
+        "ACCOUNT_NUMBER_UNKNOWN",
+        "PRISM_ORG_UNIT",
+        "PRISM_MACHINE_NO",
+    ),
+}
 
 SBSYS_APPROPRIATION_TEMPLATE = "core/html/appropriation_letter.html"
 SBSYS_XML_TEMPLATE = "core/xml/os2forms.xml"

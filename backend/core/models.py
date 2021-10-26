@@ -1658,7 +1658,7 @@ class SectionInfo(Classification):
         max_length=128,
         verbose_name=_("DST værdikode"),
         help_text=_(
-            "Værdikode til brug ved levering af data til Danmarks Statistik"
+            "Værdikode til brug ved levering af data til Danmarks Statistik."
         ),
         blank=True,
     )
