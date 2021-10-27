@@ -50,6 +50,7 @@ from core.models import (
     STATUS_DRAFT,
     STATUS_EXPECTED,
     STATUS_GRANTED,
+    MAIN_ACTIVITY,
 )
 from core.utils import validate_cvr
 
