@@ -1200,8 +1200,8 @@ def filter_appropriations_for_dst_payload(from_start_date=None, sections=None):
     return appropriations
 
 
-def generate_dst_payload_xml_root(test=True):
-    """Generate the general root element for a DST payload."""
+def generate_dst_payload_metadata_element(test=True):
+    """Generate the metadata element for a DST payload."""
     now = timezone.now()
 
     # Variables.
@@ -1279,10 +1279,9 @@ def generate_dst_payload_preventive_measures(
     from_start_date=None, sections=None, test=True
 ):
     """
-    Generate a XML payload for DST for "Preventive Measures" or
-    "Forebyggende foranstaltninger".
+    Generate a XML payload for DST for "Preventive Measures".
 
-    Specified in "Bilag 2" here:
+    "Forebyggende foranstaltninger". Specified in "Bilag 2" here:
     https://www.retsinformation.dk/eli/lta/2021/1502
     #id6e560773-349b-4779-872c-126f3fad2858
     """
@@ -1320,7 +1319,7 @@ def generate_dst_payload_preventive_measures(
         appropriations_root.append(appropriation_structure)
 
     doc = E.UdsatteBoernOgUngeLeveranceL201U1Struktur()
-    doc.append(generate_dst_payload_xml_root(test))
+    doc.append(generate_dst_payload_metadata_element(test))
     doc.append(appropriations_root)
 
     print(etree.tostring(doc))
@@ -1332,9 +1331,9 @@ def generate_dst_payload_handicap(
     from_start_date=None, sections=None, test=True
 ):
     """
-    Generate a XML payload for DST for "Handicap" or
-    "Børn og unge med nedsat psykisk eller fysisk funktionsevne"
+    Generate a XML payload for DST for "Handicap".
 
+    "Børn og unge med nedsat psykisk eller fysisk funktionsevne"
     Specified in "Bilag 8" here:
     https://www.retsinformation.dk/eli/lta/2021/1502
     #id8eb5787a-6efa-40ac-b911-0b0c817c2104
@@ -1376,7 +1375,7 @@ def generate_dst_payload_handicap(
         appropriations_root.append(appropriation_structure)
 
     doc = E.BoernMedHandicapLeveranceL231Struktur()
-    doc.append(generate_dst_payload_xml_root(test))
+    doc.append(generate_dst_payload_metadata_element(test))
     doc.append(appropriations_root)
 
     print(etree.tostring(doc))
