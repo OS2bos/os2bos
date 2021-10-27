@@ -1680,6 +1680,7 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(service_provider.name, "MAGENTA ApS #2")
 
     def test_post_with_new_service_provider(self):
+        now = timezone.now().date()
         case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         details = create_activity_details(
@@ -1741,7 +1742,7 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
             appropriation=appropriation,
             start_date=now - timedelta(days=6),
             end_date=now + timedelta(days=6),
-            activity_type=MAIN_ACTIVITY,
+            activity_type=SUPPL_ACTIVITY,
             status=STATUS_DRAFT,
         )
         payment_plan = create_payment_schedule(
@@ -1761,8 +1762,10 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
             "id": activity.id,
             "status": "DRAFT",
             "appropriation": str(appropriation.pk),
-            "activity_type": "MAIN_ACTIVITY",
+            "activity_type": "SUPPL_ACTIVITY",
             "details": str(activity.details.pk),
+            "start_date": str(now - timedelta(days=6)),
+            "end_date": str(now + timedelta(days=6)),
             "service_provider": {
                 "cvr_number": "25052943",
                 "name": "MAGENTA ApS #2",
@@ -1774,7 +1777,8 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
             },
             "payment_plan": {
                 "id": payment_plan.pk,
-                "payment_type": "ONE_TIME_PAYMENT",
+                "payment_type": "RUNNING_PAYMENT",
+                "payment_frequency":"DAILY",
                 "payment_cost_type": "FIXED",
                 "payment_amount": "200",
                 "payment_date": "2021-07-20",
@@ -1827,8 +1831,10 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
             "id": activity.id,
             "status": "DRAFT",
             "appropriation": str(appropriation.pk),
-            "activity_type": "MAIN_ACTIVITY",
+            "activity_type": "SUPPL_ACTIVITY",
             "details": str(activity.details.pk),
+            "start_date": str(now - timedelta(days=6)),
+            "end_date": str(now + timedelta(days=6)),
             "service_provider": {
                 "cvr_number": "25052943",
                 "name": "MAGENTA ApS",
@@ -1840,7 +1846,8 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
             },
             "payment_plan": {
                 "id": payment_plan.pk,
-                "payment_type": "ONE_TIME_PAYMENT",
+                "payment_type": "RUNNING_PAYMENT",
+                "payment_frequency":"DAILY",
                 "payment_cost_type": "FIXED",
                 "payment_amount": "200",
                 "payment_date": "2021-07-20",
@@ -1857,7 +1864,6 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
         response = self.client.put(
             url, data=data, content_type="application/json"
         )
-
         service_provider = ServiceProvider.objects.first()
         self.assertEqual(ServiceProvider.objects.count(), 1)
         self.assertEqual(response.status_code, 200)
@@ -1876,13 +1882,13 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
             appropriation=appropriation,
             start_date=now - timedelta(days=6),
             end_date=now + timedelta(days=6),
-            activity_type=MAIN_ACTIVITY,
+            activity_type=SUPPL_ACTIVITY,
             status=STATUS_DRAFT,
             service_provider=service_provider,
         )
         payment_plan = create_payment_schedule(
             payment_cost_type=PaymentSchedule.FIXED_PRICE,
-            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
             activity=activity,
         )
         url = reverse("activity-detail", kwargs={"pk": activity.pk})
@@ -1893,11 +1899,14 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
             "id": activity.id,
             "status": "DRAFT",
             "appropriation": str(appropriation.pk),
-            "activity_type": "MAIN_ACTIVITY",
+            "activity_type": "SUPPL_ACTIVITY",
             "details": str(activity.details.pk),
+            "start_date": str(now - timedelta(days=6)),
+            "end_date": str(now + timedelta(days=6)),
             "payment_plan": {
                 "id": payment_plan.pk,
-                "payment_type": "ONE_TIME_PAYMENT",
+                "payment_type": "RUNNING_PAYMENT",
+                "payment_frequency":"DAILY",
                 "payment_cost_type": "FIXED",
                 "payment_amount": "200",
                 "payment_date": "2021-07-20",
