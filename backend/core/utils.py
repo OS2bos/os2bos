@@ -1200,16 +1200,9 @@ def filter_appropriations_for_dst_payload(from_start_date=None, sections=None):
     return appropriations
 
 
-def generate_dst_payload(from_start_date=None, sections=None, test=True):
-    """Generate a XML payload for Danmarks Statistik."""
-
-    # Bilag 2 for now.
+def generate_dst_payload_xml_root(test=True):
+    """Generate the general root element for a DST payload."""
     now = timezone.now()
-    appropriations = (
-        filter_appropriations_for_dst_payload(from_start_date, sections)
-        .select_related("case")
-        .prefetch_related("case__related_persons")
-    )
 
     # Variables.
     municipality_code = settings.DST_MUNICIPALITY_CODE
@@ -1222,11 +1215,85 @@ def generate_dst_payload(from_start_date=None, sections=None, test=True):
     else:
         form_id = "L201"
 
+    now = timezone.now()
+
     E = ElementMaker(
         namespace="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
     )
     envelope_E = ElementMaker(
         namespace="http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/"
+    )
+
+    doc = E.DeliveryMetadataNewStructure(
+        envelope_E.Envelope(
+            envelope_E.Source("CEMOS"),
+            envelope_E.SurveyID("D280600"),
+            # L201 for prod, T201 for test.
+            envelope_E.FormID(form_id),
+            # Latest passed month.
+            envelope_E.Period(str(latest_passed_month)),
+            envelope_E.Entity(
+                envelope_E.EntityIDType("Kommune"),
+                envelope_E.EntityID(municipality_code),
+            ),
+        ),
+        E.CommunicatorStructureCollection(
+            E.CommunicatorStructure(
+                E.CommunicationDescription("Oprettelse på lokal server"),
+                E.CommunicationDateTime(
+                    timezone.make_naive(now).replace(microsecond=0).isoformat()
+                ),
+                E.SystemStructure(
+                    E.SystemName("OS2BOS"),
+                    E.SystemVersion("3.4.3"),
+                ),
+            )
+        ),
+        E.ContactStructureCollection(
+            E.ContactStructure(
+                E.ContactTypeName("Faglig ansvarlig"),
+                E.ContactIdentifier("Test"),
+                E.ContactEmailAddress("test@test.dk"),
+            ),
+            E.ContactStructure(
+                E.ContactTypeName("Teknisk ansvarlig"),
+                E.ContactIdentifier("Test"),
+                E.ContactEmailAddress("test@test.dk"),
+            ),
+            E.ContactStructure(
+                E.ContactTypeName("Kvitteringsmodtager"),
+                E.ContactIdentifier("Test"),
+                E.ContactEmailAddress("test@test.dk"),
+            ),
+        ),
+        E.DBoksContactNewStructure(
+            E.CVRnumberIdentifier(municipality_cvr),
+            E.ProductionUnitIdentifier(municipality_p_number),
+        ),
+        E.FormVersion("1"),
+    )
+    return doc
+
+
+def generate_dst_payload_preventive_measures(
+    from_start_date=None, sections=None, test=True
+):
+    """
+    Generate a XML payload for DST for "Preventive Measures" or
+    "Forebyggende foranstaltninger".
+
+    Specified in "Bilag 2" here:
+    https://www.retsinformation.dk/eli/lta/2021/1502
+    #id6e560773-349b-4779-872c-126f3fad2858
+    """
+    appropriations = (
+        filter_appropriations_for_dst_payload(from_start_date, sections)
+        .select_related("case")
+        .prefetch_related("case__related_persons")
+    )
+
+    E = ElementMaker(
+        namespace="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
     )
 
     appropriations_root = E.ForanstaltningStrukturSamling()
@@ -1240,7 +1307,7 @@ def generate_dst_payload(from_start_date=None, sections=None, test=True):
             E.UdsatBarnCPRidentifikator(appropriation.case.cpr_number),
             E.FormynderCPRidentifikator(father_or_mother.cpr_number),
             E.ForanstaltningId(appropriation.sbsys_id),
-            E.ForanstaltningKode(str(appropriation.section_info.dst_code)),
+            E.ForanstaltningKode(appropriation.section_info.dst_code),
             E.ForanstaltningStartDato(str(appropriation.granted_from_date)),
         )
 
@@ -1252,59 +1319,66 @@ def generate_dst_payload(from_start_date=None, sections=None, test=True):
 
         appropriations_root.append(appropriation_structure)
 
-    doc = E.UdsatteBoernOgUngeLeveranceL201U1Struktur(
-        E.DeliveryMetadataNewStructure(
-            envelope_E.Envelope(
-                envelope_E.Source("CEMOS"),
-                envelope_E.SurveyID("D280600"),
-                # L201 for prod, T201 for test.
-                envelope_E.FormID(form_id),
-                # Latest passed month.
-                envelope_E.Period(str(latest_passed_month)),
-                envelope_E.Entity(
-                    envelope_E.EntityIDType("Kommune"),
-                    envelope_E.EntityID(municipality_code),
-                ),
-            ),
-            E.CommunicatorStructureCollection(
-                E.CommunicatorStructure(
-                    E.CommunicationDescription("Oprettelse på lokal server"),
-                    E.CommunicationDateTime(
-                        timezone.make_naive(now)
-                        .replace(microsecond=0)
-                        .isoformat()
-                    ),
-                    E.SystemStructure(
-                        E.SystemName("OS2BOS"),
-                        E.SystemVersion("3.4.3"),
-                    ),
-                )
-            ),
-            E.ContactStructureCollection(
-                E.ContactStructure(
-                    E.ContactTypeName("Faglig ansvarlig"),
-                    E.ContactIdentifier("Test"),
-                    E.ContactEmailAddress("test@test.dk"),
-                ),
-                E.ContactStructure(
-                    E.ContactTypeName("Teknisk ansvarlig"),
-                    E.ContactIdentifier("Test"),
-                    E.ContactEmailAddress("test@test.dk"),
-                ),
-                E.ContactStructure(
-                    E.ContactTypeName("Kvitteringsmodtager"),
-                    E.ContactIdentifier("Test"),
-                    E.ContactEmailAddress("test@test.dk"),
-                ),
-            ),
-            E.DBoksContactNewStructure(
-                E.CVRnumberIdentifier(municipality_cvr),
-                E.ProductionUnitIdentifier(municipality_p_number),
-            ),
-            E.FormVersion("1"),
-        ),
-        appropriations_root,
+    doc = E.UdsatteBoernOgUngeLeveranceL201U1Struktur()
+    doc.append(generate_dst_payload_xml_root(test))
+    doc.append(appropriations_root)
+
+    print(etree.tostring(doc))
+
+    return doc
+
+
+def generate_dst_payload_handicap(
+    from_start_date=None, sections=None, test=True
+):
+    """
+    Generate a XML payload for DST for "Handicap" or
+    "Børn og unge med nedsat psykisk eller fysisk funktionsevne"
+
+    Specified in "Bilag 8" here:
+    https://www.retsinformation.dk/eli/lta/2021/1502
+    #id8eb5787a-6efa-40ac-b911-0b0c817c2104
+    """
+    appropriations = (
+        filter_appropriations_for_dst_payload(from_start_date, sections)
+        .select_related("case")
+        .prefetch_related("case__related_persons")
     )
+
+    E = ElementMaker(
+        namespace="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
+    )
+
+    report_type = {
+        "NEW": "Ny",
+        "CHANGED": "Ændring",
+        "CANCELLED": "Annullering",
+    }
+
+    appropriations_root = E.BoernMedHandicapSagStrukturSamling()
+    for appropriation in appropriations:
+        appropriation_structure = E.BoernMedHandicapSagStruktur(
+            E.INDSATSFORLOEB_ID(appropriation.sbsys_id),
+            E.INDBERETNINGSTYPE(report_type["NEW"]),
+            E.CPR(appropriation.case.cpr_number),
+            E.INDSATS_KODE(appropriation.section_info.dst_code),
+            E.INDSATS_STARTDATO(str(appropriation.granted_from_date)),
+        )
+        end_date = appropriation.granted_to_date
+        if end_date:
+            appropriation_structure.append(
+                E.INDSATS_SLUTDATO(str(appropriation.granted_to_date))
+            )
+        appropriation_structure.append(
+            E.SAGSBEHANDLER(str(appropriation.case.case_worker))
+        )
+
+        appropriations_root.append(appropriation_structure)
+
+    doc = E.BoernMedHandicapLeveranceL231Struktur()
+    doc.append(generate_dst_payload_xml_root(test))
+    doc.append(appropriations_root)
+
     print(etree.tostring(doc))
 
     return doc
