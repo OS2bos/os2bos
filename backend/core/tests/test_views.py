@@ -1680,7 +1680,6 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(service_provider.name, "MAGENTA ApS #2")
 
     def test_post_with_new_service_provider(self):
-        now = timezone.now().date()
         case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
         details = create_activity_details(
@@ -1778,7 +1777,7 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
             "payment_plan": {
                 "id": payment_plan.pk,
                 "payment_type": "RUNNING_PAYMENT",
-                "payment_frequency":"DAILY",
+                "payment_frequency": "DAILY",
                 "payment_cost_type": "FIXED",
                 "payment_amount": "200",
                 "payment_date": "2021-07-20",
@@ -1847,7 +1846,7 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
             "payment_plan": {
                 "id": payment_plan.pk,
                 "payment_type": "RUNNING_PAYMENT",
-                "payment_frequency":"DAILY",
+                "payment_frequency": "DAILY",
                 "payment_cost_type": "FIXED",
                 "payment_amount": "200",
                 "payment_date": "2021-07-20",
@@ -1906,7 +1905,7 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
             "payment_plan": {
                 "id": payment_plan.pk,
                 "payment_type": "RUNNING_PAYMENT",
-                "payment_frequency":"DAILY",
+                "payment_frequency": "DAILY",
                 "payment_cost_type": "FIXED",
                 "payment_amount": "200",
                 "payment_date": "2021-07-20",

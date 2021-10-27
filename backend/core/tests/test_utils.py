@@ -5,12 +5,13 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+import os
 from datetime import timedelta, date
 from decimal import Decimal
 from unittest import mock
 
+from lxml import etree
 from freezegun import freeze_time
-
 import requests
 
 from django.test import TestCase, override_settings
@@ -46,6 +47,8 @@ from core.utils import (
     validate_cvr,
     get_company_info_from_cvr,
     get_company_info_from_search_term,
+    generate_dst_payload_preventive_measures,
+    generate_dst_payload_handicap,
 )
 from core.tests.testing_utils import (
     BasicTestMixin,
@@ -1264,3 +1267,107 @@ class GenerateCasesReportTestCase(TestCase, BasicTestMixin):
         }
         self.assertTrue(set(expected_data) <= set(first_elem))
         self.assertIsNotNone(first_elem["history_date"])
+
+
+class DSTUtilities(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_generate_dst_payload_preventive_measures_validation(self):
+        now = timezone.now().date()
+        start_date = now
+        end_date = now + timedelta(days=5)
+        case = create_case(self.case_worker, self.municipality, self.district)
+        create_related_person(case, relation_type="far")
+        section = create_section()
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        granted_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=granted_activity,
+        )
+        section.main_activities.add(granted_activity.details)
+
+        section_info = SectionInfo.objects.get(
+            activity_details=granted_activity.details, section=section
+        )
+        section_info.dst_code = "123"
+        section_info.save()
+
+        schema_path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "data",
+            "xml_schemas",
+            "DST_UdsatteBoernOgUngeLeveranceL201U1Struktur.xsd",
+        )
+
+        with open(schema_path) as f:
+            xmlschema_doc = etree.parse(f)
+        xml_schema = etree.XMLSchema(xmlschema_doc)
+
+        doc = generate_dst_payload_preventive_measures()
+        self.assertTrue(xml_schema.validate(doc))
+
+    def test_generate_dst_payload_handicap(self):
+        now = timezone.now().date()
+        start_date = now
+        end_date = now + timedelta(days=5)
+        case = create_case(self.case_worker, self.municipality, self.district)
+        create_related_person(case, relation_type="far")
+        section = create_section()
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        granted_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=granted_activity,
+        )
+        section.main_activities.add(granted_activity.details)
+
+        section_info = SectionInfo.objects.get(
+            activity_details=granted_activity.details, section=section
+        )
+        section_info.dst_code = "123"
+        section_info.save()
+
+        schema_path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "data",
+            "xml_schemas",
+            "DST_BoernMedHandicapLeverance231Struktur.xsd",
+        )
+
+        with open(schema_path) as f:
+            xmlschema_doc = etree.parse(f)
+        xml_schema = etree.XMLSchema(xmlschema_doc)
+
+        doc = generate_dst_payload_handicap()
+        self.assertTrue(xml_schema.validate(doc))

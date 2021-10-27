@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/" targetNamespace="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/" elementFormDefault="qualified" attributeFormDefault="unqualified" xml:lang="DA">
+<xs:include schemaLocation="http://digitaliser.dk/resource/2343867/artefact/DST_DeliveryMetadataNewStructure.xsd"/>
+<xs:include schemaLocation="DST_BoernMedHandicapSagStrukturSamling.xsd"/>
+<xs:element name="BoernMedHandicapLeveranceL231Struktur" type="BoernMedHandicapLeveranceL231StrukturType"/>
+<xs:complexType name="BoernMedHandicapLeveranceL231StrukturType">
+<xs:sequence>
+<xs:element ref="DeliveryMetadataNewStructure"/>
+<xs:element ref="BoernMedHandicapSagStrukturSamling"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>
