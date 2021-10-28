@@ -1185,11 +1185,10 @@ def filter_appropriations_for_dst_payload(from_start_date=None, sections=None):
     """Filter appropriations for a Danmarks Statistik payload."""
     query_params = {}
     if from_start_date:
-        query_params = query_params.update(
-            {"activities__created__gte": from_start_date}
-        )
+        query_params["activities__created__gte"] = str(from_start_date)
+        query_params["case__history__history_date__gte"] = str(from_start_date)
     if sections:
-        query_params.update({"section__in": sections})
+        query_params["section__in"] = sections
 
     appropriations = models.Appropriation.objects.filter(
         activities__status=models.STATUS_GRANTED,
