@@ -456,6 +456,8 @@ class ActivityViewSet(AuditModelViewSetMixin, AuditViewSet):
 
             else:
                 activity.status = STATUS_DELETED
+                if hasattr(activity, "modifies"):
+                    activity.modifies = None
                 activity.save()
             # Success!
             response = Response("OK", status.HTTP_204_NO_CONTENT)
