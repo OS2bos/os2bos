@@ -1459,13 +1459,11 @@ class Appropriation(AuditModelMixin, models.Model):
                     if a.status == STATUS_GRANTED:
                         # If we're not already granting a modification
                         # of this activity, we need to re-grant it.
-                        modified_by = a.modified_by.exclude(
-                            status=STATUS_DELETED
-                        )
                         if not (
-                            modified_by
-                            and any(obj in activities for obj in modified_by)
-                        ):  # pragma: no cover
+                            hasattr(a, "modified_by")
+                            and not a.modified_by.status == STATUS_DELETED
+                            and a.modified_by in activities
+                        ):
                             to_be_granted.append(a)
         else:
             # No main activity. We're only allowed to do this if the
@@ -1830,7 +1828,7 @@ class Activity(AuditModelMixin, models.Model):
 
     # An expected change modifies another activity and can eventually
     # take its place.
-    modifies = models.ForeignKey(
+    modifies = models.OneToOneField(
         "self",
         null=True,
         blank=True,
@@ -1912,7 +1910,7 @@ class Activity(AuditModelMixin, models.Model):
         if self.status == STATUS_GRANTED:
             # Re-granting - nothing more to do.
             pass
-        elif not self.modifies:
+        elif not hasattr(self, "modifies") or not self.modifies:
             # Simple case: Just set status.
             self.status = STATUS_GRANTED
         elif self.validate_expected():  # pragma: no cover
@@ -1925,7 +1923,8 @@ class Activity(AuditModelMixin, models.Model):
                 self.modifies.end_date = self.end_date
             else:
                 while (
-                    self.modifies is not None
+                    hasattr(self, "modifies")
+                    and self.modifies
                     and self.start_date <= self.modifies.start_date
                 ):
                     old_activity = self.modifies
@@ -1940,17 +1939,21 @@ class Activity(AuditModelMixin, models.Model):
                     # "Merge" by ending current activity the day before the new
                     # start_date if end_date overlaps with the new start_date
                     # or it has no end_date.
-                if self.modifies and (
-                    not self.modifies.end_date
-                    or (
-                        self.modifies.end_date
-                        and self.modifies.end_date >= self.start_date
+                if (
+                    hasattr(self, "modifies")
+                    and self.modifies
+                    and (
+                        not self.modifies.end_date
+                        or (
+                            self.modifies.end_date
+                            and self.modifies.end_date >= self.start_date
+                        )
                     )
                 ):
                     self.modifies.end_date = self.start_date - timedelta(
                         days=1
                     )
-            if self.modifies:
+            if hasattr(self, "modifies") and self.modifies:
                 # First, handle individual payments if any.
                 if payment_type == PaymentSchedule.INDIVIDUAL_PAYMENT:
                     for p in self.modifies.payment_plan.payments.all():
@@ -1971,8 +1974,7 @@ class Activity(AuditModelMixin, models.Model):
     def validate_expected(self):
         """Validate this is a correct expected activity."""
         today = date.today()
-
-        if not self.modifies:
+        if not hasattr(self, "modifies") or not self.modifies:
             raise forms.ValidationError(
                 _("den forventede justering har ingen ydelse at justere")
             )
@@ -2119,7 +2121,8 @@ class Activity(AuditModelMixin, models.Model):
 
         if (
             self.status == STATUS_GRANTED
-            and self.modified_by.exclude(status=STATUS_DELETED).exists()
+            and hasattr(self, "modified_by")
+            and not self.modified_by.status == STATUS_DELETED
         ):
             # one time payments are always overruled entirely.
             if (
