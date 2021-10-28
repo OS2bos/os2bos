@@ -1362,7 +1362,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             "..",
             "data",
             "xml_schemas",
-            "DST_BoernMedHandicapLeverance231Struktur.xsd",
+            "DST_BoernMedHandicapLeveranceL231Struktur.xsd",
         )
 
         with open(schema_path) as f:
