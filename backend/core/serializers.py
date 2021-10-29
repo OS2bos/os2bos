@@ -186,6 +186,9 @@ class PaymentSerializer(serializers.ModelSerializer):
     activity__details__id = serializers.ReadOnlyField(
         source="payment_schedule.activity.details.id"
     )
+    activity__note = serializers.ReadOnlyField(
+        source="payment_schedule.activity.note"
+    )
     payment_schedule__fictive = serializers.ReadOnlyField(
         source="payment_schedule.fictive"
     )
