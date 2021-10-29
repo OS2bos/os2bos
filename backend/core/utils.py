@@ -1181,12 +1181,18 @@ write_prism_file_versions = {"0": write_prism_file_v0}
 
 
 # Danmarks Statistik utilities
+# def filter_cases_with_changed_acting_municipalities(from_start_date):
+#    pass
+
+
 def filter_appropriations_for_dst_payload(from_start_date=None, sections=None):
     """Filter appropriations for a Danmarks Statistik payload."""
+    # If from_start_date is given we know it is a delta load
     query_params = {}
     if from_start_date:
-        query_params["activities__created__gte"] = str(from_start_date)
-        query_params["case__history__history_date__gte"] = str(from_start_date)
+        query_params["activities__appropriation_date__gte"] = str(
+            from_start_date
+        )
     if sections:
         query_params["section__in"] = sections
 
@@ -1287,7 +1293,7 @@ def generate_dst_payload_preventive_measures(
     appropriations = (
         filter_appropriations_for_dst_payload(from_start_date, sections)
         .select_related("case")
-        .prefetch_related("case__related_persons")
+        .prefetch_related("case__related_persons", "activities")
     )
 
     E = ElementMaker(
@@ -1340,7 +1346,7 @@ def generate_dst_payload_handicap(
     appropriations = (
         filter_appropriations_for_dst_payload(from_start_date, sections)
         .select_related("case")
-        .prefetch_related("case__related_persons")
+        .prefetch_related("case__related_persons", "activities")
     )
 
     E = ElementMaker(
