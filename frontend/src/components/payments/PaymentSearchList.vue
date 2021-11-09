@@ -88,6 +88,11 @@
                         display_func: this.displayReceiver
                     },
                     {
+                        key: 'activity__note',
+                        title: 'Supplerende oplysninger (aktivitet)',
+                        display_func: this.displayActivityNote
+                    },
+                    {
                         key: 'case__cpr_number',
                         title: 'Hovedsag CPR-nr',
                         display_func: this.displayCprName
@@ -159,6 +164,13 @@
                     str += `<br>${ payment.recipient_id}`
                 }
                 return str
+            },
+            displayActivityNote: function(payment) {
+                const note = payment.activity__note
+                if (note && note.length > 150) {
+                  return `${note.substr(0, 150)} [...]`
+                }
+                return note
             },
             displayCprName: function(id) {
                 return `${ id.case__name }<br>${ id.case__cpr_number }`
