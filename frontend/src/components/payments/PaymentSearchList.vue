@@ -167,7 +167,7 @@
             },
             displayActivityNote: function(payment) {
                 const note = payment.activity__note
-                if (note.length > 150) {
+                if (note && note.length > 150) {
                   return `${note.substr(0, 150)} [...]`
                 }
                 return note
