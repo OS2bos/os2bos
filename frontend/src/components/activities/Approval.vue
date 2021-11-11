@@ -14,6 +14,7 @@
             <div slot="body">
                 <warning :content="warning" />
                 <warning :content="payDateRule" />
+                <warning :content="serviceProviderRule" />
 
                 <table>
                     <thead>
@@ -33,7 +34,7 @@
                             <td><span v-html="displayStatus(act.status)"></span> </td>
                             <td v-html="activityId2name(act.details)"></td>
                             <td>{{ displayDate(act.start_date) }} - {{ displayDate(act.end_date) }}</td>
-                            <td class="right">{{ displayDigits(act.total_cost_this_year) }} kr</td>
+                            <td class="right">{{ displayDigits(act.total_expected_this_year) }} kr</td>
                             <td class="right">{{ displayDigits(act.total_cost_full_year) }} kr</td>
                         </tr>
                         <tr v-if="suppl_act_list.length > 0">
@@ -43,7 +44,7 @@
                             <td><span v-html="displayStatus(act.status)"></span> </td>
                             <td v-html="activityId2name(act.details)"></td>
                             <td>{{ displayDate(act.start_date) }} - {{ displayDate(act.end_date) }}</td>
-                            <td class="right">{{ displayDigits(act.total_cost_this_year) }} kr</td>
+                            <td class="right">{{ displayDigits(act.total_expected_this_year) }} kr</td>
                             <td class="right">{{ displayDigits(act.total_cost_full_year) }} kr</td>
                         </tr>
                     </tbody>
@@ -148,6 +149,24 @@
                     }
                 })
                 return rule
+            },
+            serviceProviderRule: function() {
+                const acts_with_no_service_provider = this.act_list.filter(act => {
+                    if (!act.service_provider && act.payment_plan.payment_method === 'INVOICE') {
+                        return act
+                    } else {
+                        return false
+                    }
+                })
+                if (acts_with_no_service_provider.length > 0) {
+                    let warn_str = '<p>Følgende udgifter mangler oplysninger om leverandør:</p><ul>'
+                    for (let act of acts_with_no_service_provider) {
+                        warn_str += `<li><a target="_blank" href="/#/activity/${act.id}/">${ act.details__name }</a></li>`
+                    }
+                    return warn_str += '</ul>'
+                } else {
+                    return false
+                }
             }
         },
         methods: {
@@ -213,6 +232,10 @@
         box-shadow: 0 -.25rem 1rem hsla(var(--color1), 83%, 62%, .125);
         padding: 2rem;
         margin: 0 -2rem -2rem;
+    }
+
+    .approval .warning ul {
+        margin: 0 0 .5rem;
     }
 
 </style>

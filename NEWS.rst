@@ -1,3 +1,26 @@
+Version 3.5.0, 2021-09-27
+-------------------------
+
+New in this version:
+
+Features
+^^^^^^^^
+
+- Add CVR integration to the Virk CVR API.
+- Replace the old account string and account alias fields with the new.
+- Add previous, current, next year expected/granted cost-calculations for Activity and Appropriation.
+- Allow main activities to be "revived".
+- Add information modal for a individual payment.
+- Add a new version of the payments report list containing approval information.
+- Re-add the granted payments report.
+- Add cases report.
+- Convert more backend models to classifications.
+- Various backend performance optimizations.
+- Fix and simplify payment update operations in the frontend.
+- Add a version number in the frontend.
+- Update frontend dependencies.
+
+
 Version 3.4.3, 2021-03-23
 -------------------------
 

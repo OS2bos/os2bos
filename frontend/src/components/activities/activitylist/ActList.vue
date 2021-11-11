@@ -21,14 +21,16 @@
             <div>Slut</div>
             <div>Senest ændret</div>
             <div class="right">
-                <span v-if="selectedValue === '1'">Udgift i år</span>
-                <span v-if="selectedValue === '2'">Udgift pr. år</span>
-                <span v-if="selectedValue === '3'">Samlet udgift</span>
+                Udgift
+                <span v-if="selectedValue === previous_year">{{ previous_year }}</span>
+                <span v-if="selectedValue === this_year">{{ this_year }}</span>
+                <span v-if="selectedValue === next_year">{{ next_year }}</span>
             </div>
             <div class="right">
-                <span v-if="selectedValue === '1'">Forventet udgift i år</span>
-                <span v-if="selectedValue === '2'">Forventet udgift pr. år</span>
-                <span v-if="selectedValue === '3'">Forventet samlet udgift</span>
+                Forventet udgift
+                <span v-if="selectedValue === previous_year">{{ previous_year }}</span>
+                <span v-if="selectedValue === this_year">{{ this_year }}</span>
+                <span v-if="selectedValue === next_year">{{ next_year }}</span>
             </div>
         </div>
 
@@ -73,7 +75,10 @@ export default {
     ],
     data: function() {
         return {
-            display_old: false
+            display_old: false,
+            this_year: String(new Date().getUTCFullYear()),
+            next_year: String(new Date().getUTCFullYear() + 1),
+            previous_year: String(new Date().getUTCFullYear() - 1),
         }
     },
     computed: {

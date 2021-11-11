@@ -34,17 +34,16 @@
             :data-list="payments_by_year"
             :columns="columns"
             class="payment_schedule_list"
-            @update="update">
+            @update="updatePayment">
 
             <p slot="datagrid-header">
                 Viser {{payments_by_year.length}} betalinger for {{ current_year }}
             </p>
 
-            <p slot="datagrid-footer" v-if="payments_by_year.length < 1">
-                Der er ingen betalinger for det valgte år
-            </p>
-
-        </data-grid>        
+        </data-grid>
+        <p v-else>
+            Der er ingen betalinger for det valgte år
+        </p>
         
         <table v-if="payments_by_year.length > 0" class="payments-sum">
             <thead>
@@ -106,16 +105,16 @@
                 pay_create_diag_open: false,
                 columns: [
                     {
-                        key: 'paid',
-                        title: 'Betalt',
-                        display_func: this.displayPaidIcon,
-                        class: 'center'
-                    },
-                    {
                         key: 'id',
                         title: 'Betaling',
                         display_component: EditButton,
                         class: 'datagrid-action nowrap'
+                    },
+                    {
+                        key: 'paid',
+                        title: 'Betalt',
+                        display_func: this.displayPaidIcon,
+                        class: 'center'
                     },
                     {
                         key: 'payment_schedule__payment_id',
@@ -212,6 +211,27 @@
         methods: {
             update: function() {
                 this.$store.dispatch('fetchPaymentPlan', this.pId)
+            },
+            updatePayment: function(payload) {
+                if (payload.operation === 'save') {
+                    const updated_payment = {
+                        id: payload.data.id,
+                        paid_amount: payload.data.paid_amount,
+                        paid_date: payload.data.paid_date,
+                        note: payload.data.note ? payload.data.note : '',
+                        paid: true
+                    }
+                    this.$store.dispatch('updatePayment', updated_payment)
+                } else if (payload.operation === 'replan') {
+                    const updated_payment = {
+                        id: payload.data.id,
+                        amount: payload.data.amount,
+                        date: payload.data.date
+                    }
+                    this.$store.dispatch('updatePayment', updated_payment)
+                } else {
+                    this.$store.commit('setPayment', payload.data)
+                }
             },
             displayPaidIcon: function(payment) {
                 if (payment.paid) {

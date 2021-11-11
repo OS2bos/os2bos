@@ -35,11 +35,9 @@ export default {
                 }
             }, 
             set: function(new_val) {
-                this.$store.commit('setPaymentEditRowData', {
-                    idx: this.rowid,
-                    prop: 'paid_amount',
-                    val: new_val
-                })
+                let new_data = Object.assign({}, this.compdata)
+                new_data.paid_amount = new_val
+                this.$emit('update', {operation: 'update', data: new_data})
             }   
         },
         visible: function() {

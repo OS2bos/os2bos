@@ -119,27 +119,6 @@ export default {
         next()
     },
     methods: {
-        checkDateMax: function(datestr) {
-            const maxpast = parseInt( new Date().getFullYear() ) - 10,
-                maxfuture = parseInt( new Date().getFullYear() ) + 18,
-                date_regex = /[0-9]{4}-[0-9]{2}-[0-9]{2}/g
-            if (!datestr) {
-                return false
-            }    
-            if (!datestr.match(date_regex)) {
-                notify('Er du sikker på, at du har angivet dato som åååå-mm-dd?', 'error')
-                return false
-            }
-            if (parseInt(datestr.substr(0,4)) < maxpast) {
-                notify('Dato må maks. være 10 år tilbage i tiden', 'error')
-                return false
-            } else if (parseInt(datestr.substr(0,4)) > maxfuture) {
-                notify('Dato må maks. være 18 år fremme i tiden', 'error')
-                return false
-            } else {
-                return true
-            }
-        },
         cleanAndExit: function(act_id) {
             this.$store.commit('clearActivity')
             this.$store.commit('clearPaymentPlan')
@@ -150,13 +129,7 @@ export default {
             }
         },
         saveActivity: function() {
-            if (this.act.start_date && !this.checkDateMax(this.act.start_date)) {
-                return
-            }
-            if (this.act.end_date && !this.checkDateMax(this.act.end_date)) {
-                return
-            }
-
+            
             let new_act = this.act
 
             new_act.payment_plan = this.payment_plan
@@ -182,6 +155,10 @@ export default {
             }
 
             const sanitized_act = sanitizeActivity(new_act, 'post')
+
+            if (!sanitized_act) {
+                return false
+            }
 
             axios.post('/activities/', sanitized_act)
             .then(res => {

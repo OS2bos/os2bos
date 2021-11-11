@@ -36,7 +36,6 @@ from core.models import (
     Rate,
     RatePerDate,
     PaymentDateExclusion,
-    AccountAlias,
     AccountAliasMapping,
     ActivityCategory,
 )
@@ -63,7 +62,7 @@ class BasicTestMixin:
     @classmethod
     def basic_setup(cls):
         cls.case_worker, _ = User.objects.get_or_create(
-            username="Orla Frøsnapper",
+            username="Orla Frøsnapper"
         )
         _set_current_user(cls.case_worker)
         cls.team, _ = Team.objects.get_or_create(
@@ -241,9 +240,11 @@ def create_section(paragraph="ABL-105-2", allowed_for_steps=None, **kwargs):
     return section
 
 
-def create_service_provider(cvr_number, name):
+def create_service_provider(
+    cvr_number="25052943", name="MAGENTA ApS", **kwargs
+):
     service_provider = ServiceProvider.objects.create(
-        cvr_number=cvr_number, name=name
+        cvr_number=cvr_number, name=name, **kwargs
     )
 
     return service_provider
@@ -335,16 +336,6 @@ def create_payment_date_exclusion(date=date.today()):
     )
 
     return payment_date_exclusion
-
-
-def create_account_alias(section_info, activity_details, alias="BOS0000001"):
-    account_alias, _ = AccountAlias.objects.get_or_create(
-        section_info=section_info,
-        activity_details=activity_details,
-        alias=alias,
-    )
-
-    return account_alias
 
 
 def create_account_alias_mapping(

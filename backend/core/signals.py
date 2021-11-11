@@ -34,9 +34,9 @@ def set_saved_account_string_on_payment_save(sender, instance, **kwargs):
     if (
         instance.paid
         and not instance.saved_account_string
-        and instance.account_string_new
+        and instance.account_string
     ):
-        instance.saved_account_string = instance.account_string_new
+        instance.saved_account_string = instance.account_string
 
 
 @receiver(
@@ -54,21 +54,18 @@ def set_payment_id_on_paymentschedule_save(
 
 
 @receiver(
-    post_save,
+    pre_save,
     sender=Payment,
     dispatch_uid="set_saved_account_alias_on_payment_save",
 )
-def set_saved_account_alias_on_payment_save(
-    sender, instance, created, **kwargs
-):
+def set_saved_account_alias_on_payment_save(sender, instance, **kwargs):
     """Set the saved_account_alias on Payment save."""
     if (
         instance.paid
         and not instance.saved_account_alias
-        and instance.account_alias_new
+        and instance.account_alias
     ):
-        instance.saved_account_alias = instance.account_alias_new
-        instance.save()
+        instance.saved_account_alias = instance.account_alias
 
 
 @receiver(

@@ -59,14 +59,14 @@
                         <fieldset>
                             <legend>Betaling</legend>
                             <label for="field-pay-amount" class="required">Betal beløb</label>
-                            <input type="number" step="0.01" v-model="paid.paid_amount" id="field-pay-amount" required>
+                            <input type="number" step="0.01" v-model="p.paid_amount" id="field-pay-amount" required>
 
                             <label for="field-pay-date" class="required">Betal dato</label>
                             <popover :condition="display_warning">{{ display_warning }}</popover>
-                            <input :ref="`dateInput${ payment.id }`" type="date" v-model="paid.paid_date" id="field-pay-date" required>
+                            <input :ref="`dateInput${ payment.id }`" type="date" v-model="p.paid_date" id="field-pay-date" required>
 
                             <label for="field-pay-note">Referencetekst</label>
-                            <input type="text" v-model="paid.note" id="field-pay-note">
+                            <input type="text" v-model="p.note" id="field-pay-note">
 
                             <error err-key="note" />
 
@@ -96,21 +96,31 @@
 
                 </div>
                 
-                <dl class="info">
-                    <dt>Ydelse</dt>
-                    <dd v-if="p.activity__id">{{ activityId2name(p.activity__details__id) }}</dd>
-                    <dt>Betalingsnøgle</dt>
-                    <dd>{{ p.payment_schedule__payment_id }}</dd>
-                    <dt>Kontostreng</dt>
-                    <dd>{{ p.account_string ? p.account_string : 'ukendt' }}</dd>
-                    <dt>Kontoalias</dt>
-                    <dd>{{ p.account_alias ? p.account_alias : 'ukendt' }}</dd>
-                    <template v-if="p.payment_schedule__fictive">
-                        <dt>Betaling</dt>
-                        <dd>Fiktiv</dd>
-                    </template>
-                </dl>
-                
+                <div class="info">
+                    <dl>
+                        <dt>Ydelse</dt>
+                        <dd v-if="p.activity__id">{{ activityId2name(p.activity__details__id) }}</dd>
+                        <dt>Betalingsnøgle</dt>
+                        <dd>{{ p.payment_schedule__payment_id }}</dd>
+                    
+                        <dt>Kontostreng</dt>
+                        <dd>{{ p.account_string ? p.account_string : 'ukendt' }}</dd>
+                    
+                        <dt>Kontoalias</dt>
+                        <dd>{{ p.account_alias ? p.account_alias : 'ukendt' }}</dd>
+                    
+                        <template v-if="p.payment_schedule__fictive">
+                            <dt>Betaling</dt>
+                            <dd>Fiktiv</dd>
+                        </template>
+                    </dl>
+
+                    <hr style="margin: 1rem 0;">
+
+                    <payment-details :payment="p" />
+
+                </div>
+
             </div>
 
             <!-- Delete payment modal -->
@@ -125,24 +135,6 @@
                     <form @submit.prevent="deletePayment" class="modal-form">
                         <input id="payment-confirm-delete" class="modal-delete-btn" type="submit" value="Slet">
                         <button class="modal-cancel-btn" type="button" @click="delete_diag_open = false">Annullér</button>
-                    </form>
-                </div>
-            </modal-dialog>
-
-            <!-- Submit payment modal -->
-            <modal-dialog v-if="pay_diag_open" @closedialog="pay_diag_open = false">
-                <h3 slot="header">
-                    Betaling
-                </h3>
-                <div slot="body">
-                    <p>
-                        Er du sikker på, at du vil sende {{ displayDigits(paid.paid_amount) }} kr. til betaling?
-                    </p>
-                </div>
-                <div slot="footer">
-                    <form @submit.prevent="pay" class="modal-form">
-                        <button type="button" class="modal-cancel-btn" @click="reload()">Annullér</button>
-                        <button class="modal-confirm-btn" type="submit">Godkend</button>
                     </form>
                 </div>
             </modal-dialog>
@@ -162,11 +154,12 @@
     import Error from '../../forms/Error.vue'
     import PermissionLogic from '../../mixins/PermissionLogic.js'
     import notify from '../../notifications/Notify.js'
-    import { json2jsDate, epoch2DateStr } from '../../filters/Date.js'
+    import { json2jsDate } from '../../filters/Date.js'
     import { cost2da } from '../../filters/Numbers.js'
     import { activityId2name } from '../../filters/Labels.js'
     import ModalDialog from '../../dialog/Dialog.vue'
     import Popover from '../../warnings/Popover.vue'
+    import PaymentDetails from '../PaymentDetails.vue'
 
     export default {
         mixins: [
@@ -175,25 +168,19 @@
         components: {
             Error,
             ModalDialog,
-            Popover
+            Popover,
+            PaymentDetails
         },
         props: [
             'payment'
         ],
         data: function() {
             return {
-                paid: {
-                    paid_amount: null,
-                    paid_date: null,
-                    note: null
-                },
-                pay_diag_open: false,
-                paymentlock: true,
                 delete_diag_open: false,
                 display_warning: null
             }
         },
-        computed: {  
+        computed: {
             p: function() {
                 return this.payment
             },
@@ -216,37 +203,12 @@
                 return cost2da(num)
             },
             pay: function() {
-                let data = {
-                    paid_amount: this.paid.paid_amount,
-                    paid_date: this.paid.paid_date,
-                    note: this.paid.note ? this.paid.note : '',
-                    paid: true
-                }
-                if (this.user.profile === 'workflow_engine' && this.payment.paid) {
-                    axios.get(`/editing_past_payments_allowed/`)
-                    .then(res => {
-                        this.patchPayment(data)
-                    })
-                    .catch(err => this.$store.dispatch('parseErrorOutput', err))
-                } else {
-                    this.patchPayment(data)
+                if (!this.p.paid || this.user.profile === 'workflow_engine' || this.user.profile === 'admin') {
+                    this.$emit('update', {operation: 'save', data: this.p})
                 }
             },
             updatePlannedPayment: function() {
-                let data = {
-                    amount: this.p.amount,
-                    date: this.p.date
-                }
-                this.patchPayment(data)
-            },
-            patchPayment: function(data) {
-                axios.patch(`/payments/${ this.payment.id }/`, data)
-                    .then(res => {
-                        this.$store.dispatch('fetchPayment', this.p.id)
-                        this.closeDiag()
-                        notify('Betaling opdateret', 'success')
-                    })
-                    .catch(err => this.$store.dispatch('parseErrorOutput', err))
+                this.$emit('update', {operation: 'replan', data: this.p})
             },
             closeDiag: function() {
                 this.$store.dispatch('fetchPaymentPlan', this.p.payment_schedule)
@@ -259,9 +221,9 @@
             },
             deletePayment: function() {
                 axios.delete(`/payments/${ this.p.id }/`)
-                .then(res => {
+                .then(() => {
                     this.closeDiag()
-                    notify('Betaling slettet', 'success')                    
+                    notify('Betaling slettet', 'success')
                 })
                 .catch(err => this.$store.dispatch('parseErrorOutput', err))
             },
@@ -286,7 +248,8 @@
 <style>
 
     .payment-edit .modal-container {
-        width: 40rem;
+        width: auto;
+        max-width: 90vw;
     }
 
     .payment-edit-header {
@@ -302,8 +265,18 @@
     .payment-edit-body {
         margin-top: 1rem;
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr 2fr;
         gap: 2rem;
+    }
+
+    .payment-edit .info > dl {
+        display: flex;
+        flex-flow: column wrap;
+        height: 4rem;
+    }
+
+    .payment-edit .info > dl * {
+        margin-right: 1rem;
     }
 
 </style>

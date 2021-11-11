@@ -53,6 +53,7 @@ from core.serializers import (
     ListAppropriationSerializer,
     AppropriationSerializer,
     ActivitySerializer,
+    ListActivitySerializer,
     RateSerializer,
     PriceSerializer,
     PaymentScheduleSerializer,
@@ -66,6 +67,7 @@ from core.serializers import (
     ActivityDetailsSerializer,
     UserSerializer,
     HistoricalCaseSerializer,
+    HistoricalPaymentSerializer,
     ServiceProviderSerializer,
     PaymentMethodDetailsSerializer,
     ApprovalLevelSerializer,
@@ -81,7 +83,7 @@ from core.filters import (
     PaymentFilter,
     AllowedForStepsFilter,
 )
-from core.utils import get_person_info
+from core.utils import get_person_info, get_company_info_from_search_term
 
 from core.mixins import (
     AuditMixin,
@@ -144,8 +146,7 @@ class CaseViewSet(AuditModelViewSetMixin, AuditViewSet):
         """Create new case - customized to set user."""
         current_user = self.request.user
         serializer.save(
-            case_worker=current_user,
-            user_created=current_user.username,
+            case_worker=current_user, user_created=current_user.username
         )
 
     @action(detail=True, methods=["get"])
@@ -249,9 +250,18 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
 class ActivityViewSet(AuditModelViewSetMixin, AuditViewSet):
     """Expose activities in REST API."""
 
-    serializer_class = ActivitySerializer
-
+    serializer_action_classes = {
+        "list": ListActivitySerializer,
+        "retrieve": ActivitySerializer,
+    }
     filterset_fields = "__all__"
+
+    def get_serializer_class(self):
+        """Use a different Serializer depending on the action."""
+        try:
+            return self.serializer_action_classes[self.action]
+        except (KeyError, AttributeError):
+            return ActivitySerializer
 
     def get_queryset(self):
         """Avoid Django's default lazy loading to improve performance."""
@@ -284,7 +294,7 @@ class ActivityViewSet(AuditModelViewSetMixin, AuditViewSet):
         return response
 
 
-class PaymentMethodDetailsViewSet(AuditViewSet):
+class PaymentMethodDetailsViewSet(ClassificationViewSetMixin, AuditViewSet):
     """Expose payment method details in REST API."""
 
     queryset = PaymentMethodDetails.objects.all()
@@ -327,6 +337,15 @@ class PaymentViewSet(AuditViewSet):
 
     filterset_class = PaymentFilter
     filterset_fields = "__all__"
+
+    @action(detail=True, methods=["get"])
+    def history(self, request, pk=None):
+        """Fetch history of Payment."""
+        payment = self.get_object()
+        serializer = HistoricalPaymentSerializer(
+            payment.history.all(), many=True
+        )
+        return Response(serializer.data)
 
 
 class RelatedPersonViewSet(AuditModelViewSetMixin, AuditViewSet):
@@ -395,7 +414,7 @@ class SchoolDistrictViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     filterset_fields = "__all__"
 
 
-class TeamViewSet(ReadOnlyViewset):
+class TeamViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     """Expose teams in REST API."""
 
     queryset = Team.objects.all()
@@ -417,7 +436,7 @@ class SectionViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     filterset_class = AllowedForStepsFilter
 
 
-class SectionInfoViewSet(ReadOnlyViewset):
+class SectionInfoViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     """Expose section infos in REST API."""
 
     queryset = SectionInfo.objects.all()
@@ -440,12 +459,41 @@ class UserViewSet(ReadOnlyViewset):
     serializer_class = UserSerializer
 
 
-class ServiceProviderViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
+class ServiceProviderViewSet(
+    ClassificationViewSetMixin, viewsets.ModelViewSet
+):
     """Expose service providers in REST API."""
 
     queryset = ServiceProvider.objects.all()
     serializer_class = ServiceProviderSerializer
     filterset_fields = "__all__"
+
+    @action(detail=False, methods=["get"])
+    def fetch_serviceproviders_from_virk(self, request):
+        """Fetch serviceproviders using a generic search term from Virk.
+
+        Returns the data as serialized ServiceProvider data.
+
+        GET params: search_term
+        """
+        search_term = request.query_params.get("search_term")
+        if not search_term:
+            return Response(
+                {"errors": [_("Der kræves en search_term parameter")]},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        company_info = get_company_info_from_search_term(search_term)
+
+        if not company_info:
+            return Response(
+                {"errors": [_("Fejl i søgning eller forbindelse til Virk")]},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        service_providers = [
+            ServiceProvider.virk_to_service_provider(data)
+            for data in company_info
+        ]
+        return Response(service_providers, status.HTTP_200_OK)
 
 
 class ApprovalLevelViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
@@ -471,7 +519,9 @@ class TargetGroupViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     serializer_class = TargetGroupSerializer
 
 
-class InternalPaymentRecipientViewSet(ReadOnlyViewset):
+class InternalPaymentRecipientViewSet(
+    ClassificationViewSetMixin, ReadOnlyViewset
+):
     """Expose internal payment recipients in REST API."""
 
     queryset = InternalPaymentRecipient.objects.all()
@@ -493,12 +543,19 @@ class ActivityCategoryViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
     serializer_class = ActivityCategorySerializer
 
 
-class IsEditingPastPaymentsAllowed(APIView):
-    """Expose the ALLOW_EDIT_OF_PAST_PAYMENTS setting in the API."""
+class FrontendSettingsView(APIView):
+    """Expose a relevant selection of settings to the frontend."""
 
     authentication_classes = (CsrfExemptSessionAuthentication,)
 
     def get(self, request, format=None):
-        """Return the Django setting allowing changes to the past."""
-        is_enabled = settings.ALLOW_EDIT_OF_PAST_PAYMENTS
-        return Response(is_enabled)
+        """Expose the relevant settings."""
+        settings_dict = {
+            "ALLOW_EDIT_OF_PAST_PAYMENTS": (
+                settings.ALLOW_EDIT_OF_PAST_PAYMENTS
+            ),
+            "ALLOW_SERVICE_PROVIDERS_FROM_VIRK": (
+                settings.ALLOW_SERVICE_PROVIDERS_FROM_VIRK
+            ),
+        }
+        return Response(settings_dict)

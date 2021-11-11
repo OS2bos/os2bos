@@ -32,7 +32,6 @@ def initialize():
     initialize_approval_levels()
     initialize_payment_method_details()
     initialize_rates()
-    initialize_account_aliases()
     initialize_account_alias_mappings()
 
 
@@ -136,11 +135,6 @@ def initialize_rates():
     call_command("loaddata", "variablerates.json", app_label="core")
     call_command("loaddata", "rates.json", app_label="core")
     call_command("loaddata", "ratesperdate.json", app_label="core")
-
-
-def initialize_account_aliases():
-    """Initialize the account aliases."""
-    call_command("loaddata", "accountaliases.json", app_label="core")
 
 
 def initialize_account_alias_mappings():

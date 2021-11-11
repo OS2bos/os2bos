@@ -38,7 +38,6 @@ const testdata = {
         payment_cost_type: 'FIXED',
         payment_amount: '3095.50',
         recipient_type: 'COMPANY',
-        recipient_name: 'Base Camp',
         details__name: 'Kvindekrisecentre'
     }
 }

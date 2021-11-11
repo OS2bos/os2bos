@@ -70,7 +70,7 @@ Lint shell scripts:
     - apk update
     - apk add git
   script:
-    - git ls-files --exclude='*.sh' --ignored | xargs shellcheck
+    - git ls-files -c --exclude='*.sh' --ignored | xargs shellcheck
 
 Lint Dockerfiles:
   <<: *lint-default
@@ -79,7 +79,7 @@ Lint Dockerfiles:
     - apt-get -y update
     - apt-get -y install --no-install-recommends git
   script:
-    - git ls-files --exclude='Dockerfile*' --ignored | xargs --max-lines=1 hadolint
+    - git ls-files -c --exclude='Dockerfile*' --ignored | xargs --max-lines=1 hadolint
 
 
 # Build stage
@@ -197,7 +197,7 @@ FrontendTest:
 .release-default: &release-default
   stage: release
   needs: ["Unittest", "FrontendTest"]
-  image: alpine
+  image: alpine:3.13
   variables:
     GIT_STRATEGY: none # We do not need the source code
   dependencies: []
@@ -205,7 +205,7 @@ FrontendTest:
     - docker
   before_script:
     # install skopeo
-    - apk add skopeo
+    - apk add skopeo=1.2.1-r0
 
 Release dev:
   <<: *release-default

@@ -28,6 +28,7 @@ from core.models import (
     Team,
     Payment,
     SectionInfo,
+    Case,
 )
 from core.utils import (
     get_cpr_data,
@@ -40,8 +41,11 @@ from core.utils import (
     due_payments_for_prism,
     export_prism_payments_for_date,
     generate_payments_report_list_v0,
+    generate_cases_report_list_v0,
     generate_payment_date_exclusion_dates,
     validate_cvr,
+    get_company_info_from_cvr,
+    get_company_info_from_search_term,
 )
 from core.tests.testing_utils import (
     BasicTestMixin,
@@ -161,6 +165,150 @@ class GetPersonInfoTestCase(TestCase):
 
         self.assertIn("relationer", result)
         self.assertIn("efternavn", result)
+
+
+class GetCompanyInfoTestCase(TestCase):
+    @override_settings(USE_VIRK=True)
+    @mock.patch("core.utils.get_org_info_from_cvr")
+    def test_get_company_info_from_cvr(self, virk_mock):
+        cvr = "25052943"
+        test_service_providers = [
+            {
+                "cvr_no": "25052943",
+                "navn": "MAGENTA ApS",
+                "vejnavn": "Pilestræde",
+                "husnr": "43",
+                "postnr": "1112",
+                "branchekode": "620200",
+                "status": "NORMAL",
+            }
+        ]
+        virk_mock.return_value = test_service_providers
+
+        result = get_company_info_from_cvr(cvr)
+
+        self.assertEqual(result, test_service_providers)
+
+    @override_settings(USE_VIRK=True)
+    @mock.patch("core.utils.get_org_info_from_cvr_p_number_or_name")
+    def test_get_company_info_from_search_term(self, virk_mock):
+        search_term = "25052943"
+        test_service_providers = [
+            {
+                "cvr_no": "25052943",
+                "navn": "MAGENTA ApS",
+                "vejnavn": "Pilestræde",
+                "husnr": "43",
+                "postnr": "1112",
+                "branchekode": "620200",
+                "status": "NORMAL",
+            }
+        ]
+        virk_mock.return_value = test_service_providers
+
+        result = get_company_info_from_search_term(search_term)
+
+        self.assertEqual(result, test_service_providers)
+
+    @override_settings(USE_VIRK=True)
+    @mock.patch("core.utils.get_org_info_from_cvr", lambda cvr: None)
+    def test_get_company_info_from_cvr_none(self):
+        cvr = "25052943"
+
+        result = get_company_info_from_cvr(cvr)
+
+        self.assertIsNone(result)
+
+    @override_settings(USE_VIRK=True)
+    @mock.patch(
+        "core.utils.get_org_info_from_cvr_p_number_or_name",
+        lambda search_term: None,
+    )
+    def test_get_company_info_from_search_term_none(self):
+        search_term = "25052943"
+
+        result = get_company_info_from_search_term(search_term)
+
+        self.assertIsNone(result)
+
+    @override_settings(USE_VIRK=True)
+    @mock.patch("core.utils.virk_logger")
+    @mock.patch("core.utils.get_org_info_from_cvr")
+    def test_get_company_info_from_cvr_http_error(
+        self, virk_mock, virk_logger_mock
+    ):
+        cvr = "25052943"
+        virk_mock.side_effect = requests.exceptions.HTTPError
+
+        result = get_company_info_from_cvr(cvr)
+
+        self.assertIsNone(result)
+        virk_logger_mock.exception.assert_called_with(
+            "get_cvr_data requests error"
+        )
+
+    @override_settings(USE_VIRK=True)
+    @mock.patch("core.utils.virk_logger")
+    @mock.patch(
+        "core.utils.get_org_info_from_cvr_p_number_or_name",
+    )
+    def test_get_company_info_from_search_term_http_error(
+        self, virk_mock, virk_logger_mock
+    ):
+        search_term = "25052943"
+        virk_mock.side_effect = requests.exceptions.HTTPError
+
+        result = get_company_info_from_search_term(search_term)
+        self.assertIsNone(result)
+        virk_logger_mock.exception.assert_called_with(
+            "get_cvr_data requests error"
+        )
+
+    @override_settings(USE_VIRK=False)
+    def test_get_company_info_from_search_term_no_virk(self):
+        search_term = "25052943"
+        test_service_providers = [
+            {
+                "cvr_no": "25052943",
+                "navn": "MAGENTA ApS",
+                "vejnavn": "Pilestræde",
+                "husnr": "43",
+                "postnr": "1112",
+                "postdistrikt": "København K",
+                "branchekode": "620200",
+                "branchetekst": (
+                    "Konsulentbistand vedrørende informationsteknologi"
+                ),
+                "status": "NORMAL",
+            }
+        ]
+
+        result = get_company_info_from_search_term(search_term)
+
+        self.assertEqual(result, test_service_providers)
+
+    @override_settings(USE_VIRK=False)
+    def test_get_company_info_from_cvr_no_virk(self):
+        cvr = "25052943"
+        test_service_providers = [
+            {
+                "cvr_no": "25052943",
+                "navn": "MAGENTA ApS",
+                "vejnavn": "Pilestræde",
+                "husnr": "43",
+                "postnr": "1112",
+                "postdistrikt": "København K",
+                "branchekode": "620200",
+                "branchetekst": (
+                    "Konsulentbistand vedrørende informationsteknologi"
+                ),
+                "status": "NORMAL",
+            }
+        ]
+
+        result = get_company_info_from_cvr(cvr)
+
+        self.assertEqual(result, test_service_providers)
 
 
 class SendAppropriationTestCase(TestCase, BasicTestMixin):
@@ -816,43 +964,41 @@ class GeneratePaymentsReportTestCase(TestCase, BasicTestMixin):
         self.assertEqual(len(report_list), 6)
         first_elem = report_list[0]
         # Assert that the following dict is a subset of the first element.
-        self.assertTrue(
-            {
-                "amount": Decimal("666.00"),
-                "paid_amount": None,
-                "paid_date": None,
-                "account_string": "12345-UKENDT-123",
-                "payment_schedule__payment_amount": Decimal("666"),
-                "payment_schedule__payment_frequency": "DAILY",
-                "recipient_type": "PERSON",
-                "recipient_id": "0205891234",
-                "recipient_name": "Jens Testersen",
-                "payment_method": "CASH",
-                "fictive": False,
-                "activity__details__name": "Test aktivitet",
-                "activity__details__activity_id": "000000",
-                "sbsys_id": "XXX-YYY",
-                "cpr_number": "0205891234",
-                "name": "Jens Jensen",
-                "effort_step": "Trin 1: Tidlig indsats i almenområdet",
-                "paying_municipality": "København",
-                "acting_municipality": "København",
-                "residence_municipality": "København",
-                "section": "ABL-105-2",
-                "scaling_step": "1",
-                "case_worker": "Orla Frøsnapper",
-                "leader": "Orla Frøsnapper",
-                "team": "FCK",
-                "target_group": case.target_group,
-                "activity_type": "MAIN_ACTIVITY",
-                "main_activity_id": (
-                    appropriation.main_activity.details.activity_id
-                ),
-                "father_cpr": "1111111111",
-                "mother_cpr": "2222222222",
-            }.items()
-            <= first_elem.items()
-        )
+        expected_data = {
+            "amount": Decimal("666.00"),
+            "paid_amount": None,
+            "paid_date": None,
+            "account_string": "12345-UKENDT-123",
+            "payment_schedule__payment_amount": Decimal("666"),
+            "payment_schedule__payment_frequency": "DAILY",
+            "recipient_type": "PERSON",
+            "recipient_id": "0205891234",
+            "recipient_name": "Jens Testersen",
+            "payment_method": "CASH",
+            "fictive": False,
+            "activity__details__name": "Test aktivitet",
+            "activity__details__activity_id": "000000",
+            "sbsys_id": "XXX-YYY",
+            "cpr_number": "0205891234",
+            "name": "Jens Jensen",
+            "effort_step": "Trin 1: Tidlig indsats i almenområdet",
+            "paying_municipality": "København",
+            "acting_municipality": "København",
+            "residence_municipality": "København",
+            "section": "ABL-105-2",
+            "scaling_step": "1",
+            "case_worker": "Orla Frøsnapper",
+            "leader": "Orla Frøsnapper",
+            "team": "FCK",
+            "target_group": case.target_group,
+            "activity_type": "MAIN_ACTIVITY",
+            "main_activity_id": (
+                appropriation.main_activity.details.activity_id
+            ),
+            "father_cpr": "1111111111",
+            "mother_cpr": "2222222222",
+        }
+        self.assertTrue(expected_data.items() <= first_elem.items())
         self.assertIsNotNone(first_elem["id"])
         self.assertIsNotNone(first_elem["activity_start_date"])
         self.assertIsNotNone(first_elem["activity_end_date"])
@@ -1081,3 +1227,40 @@ class ValidateCVRTestCase(TestCase):
 
     def test_validate_cvr_failure_9_digits(self):
         self.assertFalse(validate_cvr("292440494"))
+
+
+class GenerateCasesReportTestCase(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_generate_cases_report_list(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        create_related_person(case, "far test", "far", "1111111111")
+        create_related_person(case, "mor test", "mor", "2222222222")
+
+        report_list = generate_cases_report_list_v0(Case.objects.all())
+        self.assertEqual(len(report_list), 1)
+        first_elem = report_list[0]
+        # Assert that the following dict is a subset of the first element.
+        expected_data = {
+            "id": "1",
+            "history_id": "1",
+            "cpr_number": "0205891234",
+            "case_sbsys_id": "27.24.00-G01-99-21",
+            "name": "Jens Jensen",
+            "target_group": case.target_group,
+            "case_worker": "Orla Frøsnapper",
+            "team": "FCK",
+            "leader": "Orla Frøsnapper",
+            "efforts": "",
+            "effort_step": "Trin 1: Tidlig indsats i almenområdet",
+            "scaling_step": "1",
+            "paying_municipality": "København",
+            "acting_municipality": "København",
+            "residence_municipality": "København",
+            "father_cpr": "1111111111",
+            "mother_cpr": "2222222222",
+        }
+        self.assertTrue(set(expected_data) <= set(first_elem))
+        self.assertIsNotNone(first_elem["history_date"])

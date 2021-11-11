@@ -21,6 +21,8 @@ from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 from simple_history.models import HistoricalRecords
+from simple_history.utils import bulk_create_with_history
+
 from django_currentuser.middleware import get_current_user
 
 from constance import config
@@ -32,7 +34,11 @@ from core.managers import (
     ActivityQuerySet,
     AppropriationQuerySet,
 )
-from core.utils import send_appropriation, create_rrule
+from core.utils import (
+    send_appropriation,
+    create_rrule,
+    get_company_info_from_cvr,
+)
 
 # Payment methods and choice list.
 CASH = "CASH"
@@ -144,7 +150,7 @@ class TargetGroup(Classification):
         return f"{self.name}"
 
 
-class InternalPaymentRecipient(models.Model):
+class InternalPaymentRecipient(Classification):
     """Recipient model for INTERNAL payment activities."""
 
     class Meta:
@@ -180,7 +186,7 @@ class Effort(Classification):
         return f"{self.name}"
 
 
-class PaymentMethodDetails(models.Model):
+class PaymentMethodDetails(Classification):
     """Contains extra information about a payment method."""
 
     class Meta:
@@ -269,7 +275,7 @@ class User(AbstractUser):
         return False
 
 
-class Team(models.Model):
+class Team(Classification):
     """Represents a team in the administration."""
 
     name = models.CharField(max_length=128, verbose_name=_("navn"))
@@ -473,7 +479,9 @@ class PaymentSchedule(models.Model):
     recipient_id = models.CharField(
         max_length=128, verbose_name=_("ID"), blank=True
     )
-    recipient_name = models.CharField(max_length=128, verbose_name=_("navn"))
+    recipient_name = models.CharField(
+        max_length=128, verbose_name=_("navn"), blank=True
+    )
 
     payment_method = models.CharField(
         max_length=128,
@@ -755,21 +763,28 @@ class PaymentSchedule(models.Model):
 
         rrule_frequency = self.create_rrule(start, until=end)
 
-        dates = list(rrule_frequency)
+        dates = rrule_frequency
 
-        for date_obj in dates:
-            Payment.objects.create(
-                date=date_obj,
-                recipient_type=self.recipient_type,
-                recipient_id=self.recipient_id,
-                recipient_name=self.recipient_name,
-                payment_method=self.payment_method,
-                amount=self.calculate_per_payment_amount(vat_factor, date_obj),
-                payment_schedule=self,
-            )
+        bulk_create_with_history(
+            [
+                Payment(
+                    date=date_obj,
+                    recipient_type=self.recipient_type,
+                    recipient_id=self.recipient_id,
+                    recipient_name=self.recipient_name,
+                    payment_method=self.payment_method,
+                    amount=self.calculate_per_payment_amount(
+                        vat_factor, date_obj
+                    ),
+                    payment_schedule=self,
+                )
+                for date_obj in dates
+            ],
+            Payment,
+        )
 
     def synchronize_payments(self, start, end, vat_factor=Decimal("100")):
-        """Synchronize an existing number of payments for a new end_date."""
+        """Synchronize the payments of an activity for a new end_date."""
         today = date.today()
 
         # If no existing payments is generated we can't do anything.
@@ -836,39 +851,6 @@ class PaymentSchedule(models.Model):
         return f"{department}-{account_number}-{kind}"
 
     @property
-    def account_string_new(self):
-        """Calculate account string from activity.
-
-        TODO: eventually replace account_string with this.
-        """
-        if (
-            self.recipient_type == PaymentSchedule.PERSON
-            and self.payment_method == CASH
-        ):
-            department = config.ACCOUNT_NUMBER_DEPARTMENT
-            kind = config.ACCOUNT_NUMBER_KIND
-        else:
-            # Set department and kind to 'XXX'
-            # to signify they are not used.
-            department = "XXX"
-            kind = "XXX"
-
-        # Account string is "unknown" when there is no
-        # activity or account.
-        # The explicit inclusion of "unknown" is a demand due to the
-        # PRISME integration.
-        if (
-            not hasattr(self, "activity")
-            or not self.activity
-            or not self.activity.account_number
-        ):
-            account_number = config.ACCOUNT_NUMBER_UNKNOWN
-        else:
-            account_number = self.activity.account_number_new
-
-        return f"{department}-{account_number}-{kind}"
-
-    @property
     def account_alias(self):
         """Calculate account alias from activity."""
         if (
@@ -879,18 +861,6 @@ class PaymentSchedule(models.Model):
             return ""
         else:
             return self.activity.account_alias
-
-    @property
-    def account_alias_new(self):
-        """Calculate new account alias from activity."""
-        if (
-            not hasattr(self, "activity")
-            or not self.activity
-            or not self.activity.account_alias_new
-        ):
-            return ""
-        else:
-            return self.activity.account_alias_new
 
     def __str__(self):
         recipient_type_str = self.get_recipient_type_display()
@@ -967,10 +937,16 @@ class Payment(models.Model):
         related_name="payments",
         verbose_name=_("betalingsplan"),
     )
+
     # The history excludes most fields - it's only a history of the paid
     # amounts, i.e. of that which can be edited manually by users when
-    # changing records for past payments.
+    # changing records for past payments and note.
+
+    # We generate a lot of payments that are later deleted, and thus when a
+    # payment is deleted we should delete its history with
+    # 'cascade_delete_history'.
     history = HistoricalRecords(
+        cascade_delete_history=True,
         excluded_fields=[
             "date",
             "recipient_type",
@@ -981,7 +957,7 @@ class Payment(models.Model):
             "note",
             "saved_account_string",
             "payment_schedule",
-        ]
+        ],
     )
 
     def save(self, *args, **kwargs):
@@ -1048,30 +1024,6 @@ class Payment(models.Model):
             return self.saved_account_alias
 
         return self.payment_schedule.account_alias
-
-    @property
-    def account_string_new(self):
-        """
-        Return saved account string if any, else calculate from schedule.
-
-        TODO: eventually replace account_string with this.
-        """
-        if self.saved_account_string:
-            return self.saved_account_string
-
-        return self.payment_schedule.account_string_new
-
-    @property
-    def account_alias_new(self):
-        """
-        Return saved account alias if any, else calculate from schedule.
-
-        TODO: eventually replace account_alias with this.
-        """
-        if self.saved_account_alias:
-            return self.saved_account_alias
-
-        return self.payment_schedule.account_alias_new
 
     def __str__(self):
         recipient_type_str = self.get_recipient_type_display()
@@ -1321,75 +1273,35 @@ class Appropriation(AuditModelMixin, models.Model):
             activity = f.first()
             return activity.end_date
 
-    @property
-    def total_granted_this_year(self):
-        """Retrieve total amount granted this year for this Appropriation.
+    def total_granted_in_year(self, year=None):
+        """Retrieve total amount granted in year for this Appropriation.
 
         This includes both main and supplementary activities.
         """
+        if not year:
+            year = timezone.now().year
+
         granted_activities = self.activities.filter(status=STATUS_GRANTED)
 
         this_years_payments = Payment.objects.filter(
             payment_schedule__activity__in=granted_activities
-        ).in_this_year()
+        ).in_year(year)
 
         return this_years_payments.amount_sum()
 
-    @property
-    def total_granted_full_year(self):
-        """Retrieve total amount granted for this year.
-
-        Extrapolate for the full year (January 1 - December 31).
-        """
-        all_activities = self.activities.filter(status=STATUS_GRANTED)
-        return sum(
-            activity.total_cost_full_year for activity in all_activities
-        )
-
-    @property
-    def total_expected_this_year(self):
-        """Retrieve total amount expected this year for this Appropriation.
+    def total_expected_in_year(self, year=None):
+        """Retrieve total amount expected in year for this Appropriation.
 
         We take into account granted payments but overrule with expected
         amounts if they modify another activity.
         """
+        if not year:
+            year = timezone.now().year
+
         activities = self.activities.filter(
             Q(status=STATUS_GRANTED) | Q(status=STATUS_EXPECTED)
         )
-        return sum(a.total_expected_this_year for a in activities)
-
-    @property
-    def total_expected_full_year(self):
-        """Retrieve total amount expected for this year.
-
-        Extrapolate for the full year (January 1 - December 31).
-        """
-        all_activities = self.activities.filter(
-            Q(status=STATUS_GRANTED, modified_by__isnull=True)
-            | Q(status=STATUS_EXPECTED)
-            | Q(status=STATUS_GRANTED, modified_by__status=STATUS_GRANTED)
-        )
-        return sum(
-            activity.total_cost_full_year for activity in all_activities
-        )
-
-    @property
-    def total_cost_expected(self):
-        """Retrieve total amount expected."""
-        activities = self.activities.filter(
-            Q(status=STATUS_GRANTED) | Q(status=STATUS_EXPECTED)
-        )
-        return sum(activity.total_cost for activity in activities)
-
-    @property
-    def total_cost_granted(self):
-        """Retrieve total amount granted."""
-        all_granted_activities = self.activities.filter(status=STATUS_GRANTED)
-        payments = Payment.objects.filter(
-            payment_schedule__activity__in=all_granted_activities
-        )
-
-        return payments.amount_sum()
+        return sum(a.total_expected_in_year(year) for a in activities)
 
     @property
     def main_activity(self):
@@ -1571,18 +1483,61 @@ class ServiceProvider(Classification):
         ordering = ("name",)
 
     cvr_number = models.CharField(
-        max_length=8, blank=True, verbose_name=_("cvr-nummer")
+        max_length=8, blank=True, unique=True, verbose_name=_("cvr-nummer")
     )
     name = models.CharField(
         max_length=128, blank=False, verbose_name=_("navn")
     )
+    business_code = models.CharField(
+        max_length=128, blank=True, verbose_name=_("branchekode")
+    )
+    business_code_text = models.CharField(
+        max_length=128, blank=True, verbose_name=_("branchetekst")
+    )
+    street = models.CharField(
+        max_length=128, blank=True, verbose_name=_("vejnavn")
+    )
+    street_number = models.CharField(
+        max_length=128, blank=True, verbose_name=_("vejnummer")
+    )
+    zip_code = models.CharField(
+        max_length=128, blank=True, verbose_name=_("postnummer")
+    )
+    post_district = models.CharField(
+        max_length=128, blank=True, verbose_name=_("postdistrikt")
+    )
+    status = models.CharField(
+        max_length=128, blank=True, verbose_name=_("status")
+    )
+
     vat_factor = models.DecimalField(
-        default=100.0,
+        default=Decimal("100.0"),
         max_digits=5,
         decimal_places=2,
         validators=[MinValueValidator(Decimal("0.01"))],
         verbose_name=_("momsfaktor"),
     )
+
+    @staticmethod
+    def virk_to_service_provider(data):
+        """Convert data from virk to our ServiceProvider model."""
+        converter_dict = {
+            "cvr_no": "cvr_number",
+            "navn": "name",
+            "branchekode": "business_code",
+            "branchetekst": "business_code_text",
+            "vejnavn": "street",
+            "husnr": "street_number",
+            "postnr": "zip_code",
+            "postdistrikt": "post_district",
+            "status": "status",
+        }
+        converted_data = {
+            converter_dict[k]: str(v)
+            for (k, v) in data.items()
+            if k in converter_dict
+        }
+        return converted_data
 
     def __str__(self):
         return f"{self.cvr_number} - {self.name}"
@@ -1663,7 +1618,7 @@ class ActivityCategory(Classification):
         return f"{self.category_id} - {self.name}"
 
 
-class SectionInfo(models.Model):
+class SectionInfo(Classification):
     """For a main activity, KLE no. and SBSYS ID for the relevant sections."""
 
     class Meta:
@@ -1731,46 +1686,6 @@ class SectionInfo(models.Model):
         return f"{self.activity_details} - {self.section}"
 
 
-class AccountAlias(models.Model):
-    """Model that serves as a mapping from an account string to account alias.
-
-    Map account string from PaymentSchedule to an
-    "account alias" used by Ballerup.
-    """
-
-    class Meta:
-        verbose_name = _("kontoalias")
-        verbose_name_plural = _("kontoalias")
-        constraints = [
-            models.UniqueConstraint(
-                fields=["activity_details", "section_info"],
-                name="unique_section_info_activity_details",
-            )
-        ]
-
-    # main activity section_info.
-    section_info = models.ForeignKey(
-        SectionInfo,
-        verbose_name=_("paragraf-info"),
-        related_name="account_aliases",
-        on_delete=models.CASCADE,
-    )
-
-    activity_details = models.ForeignKey(
-        ActivityDetails,
-        verbose_name=_("aktivitetsdetalje"),
-        related_name="account_aliases",
-        on_delete=models.CASCADE,
-    )
-
-    alias = models.CharField(
-        max_length=128, verbose_name=_("kontoalias"), blank=True
-    )
-
-    def __str__(self):
-        return f"{self.section_info} - {self.activity_details}"
-
-
 class AccountAliasMapping(models.Model):
     """New version of the AccountAlias model.
 
@@ -1779,8 +1694,8 @@ class AccountAliasMapping(models.Model):
     """
 
     class Meta:
-        verbose_name = _("nyt kontoalias")
-        verbose_name_plural = _("nye kontoalias")
+        verbose_name = _("kontoalias")
+        verbose_name_plural = _("kontoalias")
         constraints = [
             models.UniqueConstraint(
                 fields=["main_account_number", "activity_number"],
@@ -1896,7 +1811,6 @@ class Activity(AuditModelMixin, models.Model):
         on_delete=models.CASCADE,
         verbose_name=_("bevilling"),
     )
-    # TODO: remove this if unused.
     service_provider = models.ForeignKey(
         ServiceProvider,
         null=True,
@@ -1931,6 +1845,36 @@ class Activity(AuditModelMixin, models.Model):
             raise RuntimeError(
                 _("Du kan ikke godkende en ydelse uden nogen betalinger")
             )
+        # Check a recipient_name exists before granting.
+        if (
+            hasattr(self, "payment_plan")
+            and not self.payment_plan.recipient_name
+        ):
+            raise RuntimeError(
+                _("Du kan ikke godkende en ydelse uden en betalingsmodtager")
+            )
+        # If an activity has no service provider we can't approve it
+        # If it has one we update it.
+        if (
+            hasattr(self, "payment_plan")
+            and self.payment_plan.recipient_type == PaymentSchedule.COMPANY
+        ):
+            if not self.service_provider:
+                raise RuntimeError(
+                    _(
+                        "Du kan ikke godkende en ydelse"
+                        " uden en tilknyttet leverandør"
+                    )
+                )
+            else:
+                company_info = get_company_info_from_cvr(
+                    self.service_provider.cvr_number
+                )[0]
+                data = ServiceProvider.virk_to_service_provider(company_info)
+                ServiceProvider.objects.filter(
+                    pk=self.service_provider.pk
+                ).update(**data)
+
         if self.status == STATUS_GRANTED:
             # Re-granting - nothing more to do.
             pass
@@ -1938,9 +1882,6 @@ class Activity(AuditModelMixin, models.Model):
             # Simple case: Just set status.
             self.status = STATUS_GRANTED
         elif self.validate_expected():  # pragma: no cover
-            # "Merge" by ending current activity the day before the new
-            # start_date.
-            #
             # In case of a one_time_payment we delete the payment, copy the
             # modified information and re-generate.
             payment_type = self.modifies.payment_plan.payment_type
@@ -1962,8 +1903,14 @@ class Activity(AuditModelMixin, models.Model):
                     self.modifies = self.modifies.modifies
                     self.save()
                     old_activity.delete()
-                # self.start_date > self.modifies.start_date or is None
-                if self.modifies:
+                    # "Merge" by ending current activity the day before the new
+                    # start_date if end_date overlaps with the new start_date.
+                    #
+                if (
+                    self.modifies
+                    and self.modifies.end_date
+                    and self.modifies.end_date >= self.start_date
+                ):
                     self.modifies.end_date = self.start_date - timedelta(
                         days=1
                     )
@@ -2010,36 +1957,6 @@ class Activity(AuditModelMixin, models.Model):
         return True
 
     @property
-    def account_number(self):
-        """Calculate the account_number to use with this activity."""
-        if self.activity_type == MAIN_ACTIVITY:
-            try:
-                section_info = SectionInfo.objects.get(
-                    activity_details=self.details,
-                    section=self.appropriation.section,
-                )
-            except SectionInfo.DoesNotExist:
-                return None
-            main_account_number = (
-                section_info.get_main_activity_main_account_number()
-            )
-        else:
-            main_activity = self.appropriation.main_activity
-            if not main_activity:
-                return None
-            try:
-                section_info = SectionInfo.objects.get(
-                    activity_details=main_activity.details,
-                    section=self.appropriation.section,
-                )
-            except SectionInfo.DoesNotExist:
-                return None
-            main_account_number = (
-                section_info.get_supplementary_activity_main_account_number()
-            )
-        return f"{main_account_number}-{self.details.activity_id}"
-
-    @property
     def activity_category(self):
         """Get the activity category of this activity."""
         if self.activity_type == MAIN_ACTIVITY:
@@ -2069,12 +1986,8 @@ class Activity(AuditModelMixin, models.Model):
         return activity_category
 
     @property
-    def account_number_new(self):
-        """
-        Calculate the account_number_new to use with this activity.
-
-        TODO: eventually replace account_number with this.
-        """
+    def account_number(self):
+        """Calculate the account_number_new to use with this activity."""
         if self.activity_type == MAIN_ACTIVITY:
             try:
                 section_info = SectionInfo.objects.get(
@@ -2112,38 +2025,6 @@ class Activity(AuditModelMixin, models.Model):
 
     @property
     def account_alias(self):
-        """Calculate the account_alias to use with this activity."""
-        if self.activity_type == MAIN_ACTIVITY:
-            try:
-                section_info = SectionInfo.objects.get(
-                    activity_details=self.details,
-                    section=self.appropriation.section,
-                )
-            except SectionInfo.DoesNotExist:
-                return None
-        else:
-            main_activity = self.appropriation.main_activity
-            if not main_activity:
-                return None
-            try:
-                section_info = SectionInfo.objects.get(
-                    activity_details=main_activity.details,
-                    section=self.appropriation.section,
-                )
-            except SectionInfo.DoesNotExist:
-                return None
-
-        try:
-            account_alias = AccountAlias.objects.get(
-                section_info=section_info, activity_details=self.details
-            )
-        except AccountAlias.DoesNotExist:
-            return None
-
-        return account_alias.alias
-
-    @property
-    def account_alias_new(self):
         """Calculate the new account_alias to use with this activity."""
         if self.activity_type == MAIN_ACTIVITY:
             try:
@@ -2236,30 +2117,36 @@ class Activity(AuditModelMixin, models.Model):
 
         return payments
 
-    @property
-    def total_cost_this_year(self):
-        """Calculate total cost this year for this activity."""
-        return self.applicable_payments.in_this_year().amount_sum()
+    def total_cost_in_year(self, year=None):
+        """Calculate total cost for a year for this activity."""
+        if not year:
+            year = timezone.now().year
 
-    @property
-    def total_granted_this_year(self):
-        """Calculate total amount *granted* on this activity this year."""
+        return self.applicable_payments.in_year(year).amount_sum()
+
+    def total_granted_in_year(self, year=None):
+        """Calculate total amount *granted* on this activity for a year."""
+        if not year:
+            year = timezone.now().year
+
         if self.status == STATUS_GRANTED:
             payments = Payment.objects.filter(payment_schedule__activity=self)
-            return payments.in_this_year().amount_sum()
+            return payments.in_year(year).amount_sum()
         else:
             return Decimal(0)
 
-    @property
-    def total_expected_this_year(self):
-        """Calculate total amount *expected* this year.
+    def total_expected_in_year(self, year=None):
+        """Calculate total amount *expected* for a year.
 
         As may be noted, this is redundant and identical to "total cost
         this year". Maybe one of these functions should be removed, the
         redundancy is due to a desire for clarity as to what is returned
         in different contexts.
         """
-        return self.total_cost_this_year
+        if not year:
+            year = timezone.now().year
+
+        return self.total_cost_in_year(year)
 
     @property
     def total_cost(self):
@@ -2323,15 +2210,27 @@ class Activity(AuditModelMixin, models.Model):
         return vat_factor
 
     def get_all_modified_by_activities(self):
-        """Retrieve all modified_by objects recursively."""
-        r = []
-        modified_by = self.modified_by.exclude(status=STATUS_DELETED)
-        if modified_by.exists():
-            r.append(
-                modified_by.prefetch_related("payment_plan__payments").first()
+        """
+        Retrieve all modified_by objects recursively.
+
+        As the Django ORM doesn't handle recursive objects and Python is slow,
+        we can use a "WITH RECURSIVE" query in SQL to fetch the objects:
+        https://www.postgresql.org/docs/current/queries-with.html
+        """
+        return Activity.objects.raw(
+            """
+            WITH RECURSIVE T AS (
+            SELECT core_activity.id, core_activity.status FROM core_activity
+            WHERE id=%(id)s
+            UNION
+            SELECT core_activity.id, core_activity.status FROM core_activity
+            JOIN T
+            ON (core_activity.modifies_id = T.id)
             )
-            return r + modified_by.first().get_all_modified_by_activities()
-        return r
+            SELECT id FROM T WHERE id!=%(id)s and status!=%(status_deleted)s;
+        """,
+            {"id": self.id, "status_deleted": STATUS_DELETED},
+        )
 
     def save(self, *args, **kwargs):
         """

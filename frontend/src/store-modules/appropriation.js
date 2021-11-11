@@ -12,8 +12,8 @@ import { json2jsEpoch } from '../components/filters/Date.js'
 
 const makeQueryString = function(state, show_sensitive_data) {
     let q = ''
-    if (state.filters.case__sbsys_id) {
-        q = q + `case__sbsys_id=${ state.filters.case__sbsys_id }&`
+    if (state.filters.sbsys_id) {
+        q = q + `sbsys_id=${ state.filters.sbsys_id }&`
     }
     if (show_sensitive_data && state.filters.case__cpr_number) {
         q = q + `case__cpr_number=${ state.filters.case__cpr_number }&`
@@ -43,6 +43,7 @@ const state = {
     appr_main_activities: false, // Contains a list of main_activities and collects their start and end dates
     // Search filters:
     filters: {
+        sbsys_id: null,
         case__sbsys_id: null,
         case__cpr_number: null,
         case__case_worker__team: null,
@@ -109,6 +110,7 @@ const mutations = {
      */
     clearAppropriationSearchFilters (state, userId) {
         state.filters = {
+            sbsys_id: null,
             case__sbsys_id: null,
             case__cpr_number: null,
             case__case_worker__team: null,

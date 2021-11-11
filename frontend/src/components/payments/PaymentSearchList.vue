@@ -21,24 +21,20 @@
                     Viser {{ payments.length }} af {{ payments_meta.count }} betalinger
                 </p>
 
-                <p slot="datagrid-footer" v-if="payments.length < 1">
-                    Kan ikke finde nogen betalinger, der matcher de valgte kriterier
-                </p>
-
             </data-grid>
 
-            <button v-if="payments.length > 1" :disabled="disableBtn" class="more" @click="loadResults">Vis flere</button>
+            <button v-if="payments_meta.next" class="more" @click="loadResults">Vis flere</button>
         </template>
 
         <p v-else>
-            Der er ingen betalinger, der matcher de valgte kriterier
+            Der er ingen betalinger, som matcher de valgte kriterier
         </p>
+
     </div>
 
 </template>
 
 <script>
-    import axios from '../http/Http.js'
     import { json2jsDate } from '../filters/Date.js'
     import { cost2da } from '../filters/Numbers.js'
     import { activityId2name, displayPayMethod } from '../filters/Labels.js'
@@ -47,6 +43,7 @@
     import AmountInput from './datagrid-components/AmountInput.vue'
     import DateInput from './datagrid-components/DateInput.vue'
     import NoteInput from './datagrid-components/NoteInput.vue'
+    import EditButton from './datagrid-components/EditButton.vue'
 
     export default {
         
@@ -55,12 +52,19 @@
             SaveButton,
             AmountInput,
             DateInput,
-            NoteInput
+            NoteInput,
+            EditButton
         },
         data: function() {
             return {
                 selected_payments: [],
                 columns: [
+                    {
+                        key: 'id',
+                        title: 'Betaling',
+                        display_component: EditButton,
+                        class: 'datagrid-action nowrap'
+                    },
                     {
                         key: 'paid',
                         title: 'Betalt',
@@ -68,8 +72,8 @@
                         class: 'center'
                     },
                     {
-                        key: 'id',
-                        title: 'Betaling',
+                        key: 'activity_id',
+                        title: 'Aktivitet',
                         display_func: this.displayId,
                         class: 'datagrid-action nowrap'
                     },
@@ -82,6 +86,11 @@
                         key: 'recipient_name',
                         title: 'Betalingsmodtager',
                         display_func: this.displayReceiver
+                    },
+                    {
+                        key: 'activity__note',
+                        title: 'Supplerende oplysninger (aktivitet)',
+                        display_func: this.displayActivityNote
                     },
                     {
                         key: 'case__cpr_number',
@@ -131,23 +140,15 @@
         },
         computed: {
             payments_meta: function() {
-                return this.$store.getters.getPaymentsMeta
+                return this.$store.getters.getSearchPaymentsMeta
             },
             payments: function() {
-                return this.$store.getters.getPayments
-            },
-            query: function() {
-                return this.$route.query
-            },
-            disableBtn: function () {
-                if (this.payments_meta.next === null) {
-                    return true
-                }
+                return this.$store.getters.getSearchPayments
             }
         },
         methods: {
             displayId: function(payment) {
-                let str = `<a href="/#/activity/${ payment.activity__id }">#${ payment.id } - ${ activityId2name(payment.activity__details__id) }</a>`
+                let str = `<a href="/#/activity/${ payment.activity__id }">${ activityId2name(payment.activity__details__id) }</a>`
                 if (payment.payment_schedule__fictive) {
                     str += `<span class="fictive">(Fiktiv)</span>`
                 }
@@ -164,11 +165,18 @@
                 }
                 return str
             },
+            displayActivityNote: function(payment) {
+                const note = payment.activity__note
+                if (note && note.length > 150) {
+                  return `${note.substr(0, 150)} [...]`
+                }
+                return note
+            },
             displayCprName: function(id) {
                 return `${ id.case__name }<br>${ id.case__cpr_number }`
             },
             loadResults: function() {
-                this.$store.dispatch('fetchMorePayments')
+                this.$store.dispatch('fetchMoreSearchPayments')
             },
             displayPlannedPayDate: function(payment) {
                 return json2jsDate(payment.date)
@@ -192,12 +200,26 @@
                     return '-'
                 }
             },
-            updateSelectedPayments: function(selections) {
-                this.selected_payments = selections
-            },
-            updatePayment: function(new_data) {
-                // TDOD make this better
-                this.$store.commit('setPaymentInPayments', new_data.data)
+            updatePayment: function(payload) {
+                if (payload.operation === 'save') {
+                    const updated_payment = {
+                        id: payload.data.id,
+                        paid_amount: payload.data.paid_amount,
+                        paid_date: payload.data.paid_date,
+                        note: payload.data.note ? payload.data.note : '',
+                        paid: true
+                    }
+                    this.$store.dispatch('updateSearchPayment', updated_payment)
+                } else if (payload.operation === 'replan') {
+                    const updated_payment = {
+                        id: payload.data.id,
+                        amount: payload.data.amount,
+                        date: payload.data.date
+                    }
+                    this.$store.dispatch('updateSearchPayment', updated_payment)
+                } else {
+                    this.$store.commit('setSearchPayment', payload.data)
+                }
             }
         }
     }

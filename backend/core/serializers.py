@@ -5,15 +5,20 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """Data serializers used by the REST API."""
+from dateutil.relativedelta import relativedelta
 
 from django.db.models import Q
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django import forms
 
 from rest_framework import serializers
 
-from drf_writable_nested import WritableNestedModelSerializer
+from drf_writable_nested import (
+    WritableNestedModelSerializer,
+    UniqueFieldsMixin,
+)
 
 from core.models import (
     Case,
@@ -32,6 +37,7 @@ from core.models import (
     SectionInfo,
     ActivityDetails,
     HistoricalCase,
+    HistoricalPayment,
     ServiceProvider,
     ApprovalLevel,
     Team,
@@ -45,7 +51,7 @@ from core.models import (
     STATUS_EXPECTED,
     STATUS_GRANTED,
 )
-from core.utils import create_rrule, validate_cvr
+from core.utils import validate_cvr
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -160,8 +166,8 @@ class PaymentSerializer(serializers.ModelSerializer):
     validate function.
     """
 
-    account_string = serializers.ReadOnlyField(source="account_string_new")
-    account_alias = serializers.ReadOnlyField(source="account_alias_new")
+    account_string = serializers.ReadOnlyField()
+    account_alias = serializers.ReadOnlyField()
     payment_schedule__payment_id = serializers.ReadOnlyField(
         source="payment_schedule.payment_id", default=None
     )
@@ -179,6 +185,9 @@ class PaymentSerializer(serializers.ModelSerializer):
     )
     activity__details__id = serializers.ReadOnlyField(
         source="payment_schedule.activity.details.id"
+    )
+    activity__note = serializers.ReadOnlyField(
+        source="payment_schedule.activity.note"
     )
     payment_schedule__fictive = serializers.ReadOnlyField(
         source="payment_schedule.fictive"
@@ -253,6 +262,22 @@ class PaymentSerializer(serializers.ModelSerializer):
         exclude = ("saved_account_string", "saved_account_alias")
 
 
+class HistoricalPaymentSerializer(serializers.ModelSerializer):
+    """Serializer for the historic/temporal dimension of a Payment."""
+
+    class Meta:
+        model = HistoricalPayment
+        # include history_date (date saved),
+        # history_user (user responsible for saving),
+        fields = (
+            "paid",
+            "paid_date",
+            "paid_amount",
+            "history_date",
+            "history_user",
+        )
+
+
 class RatePerDateSerializer(serializers.ModelSerializer):
     """Serializer for the RatePerDate model."""
 
@@ -316,10 +341,9 @@ class PriceSerializer(WritableNestedModelSerializer):
         return instance
 
 
-class PaymentScheduleSerializer(WritableNestedModelSerializer):
-    """Serializer for the PaymentSchedule model."""
+class BasePaymentScheduleSerializer(WritableNestedModelSerializer):
+    """Base Serializer for the PaymentSchedule model."""
 
-    payments = PaymentSerializer(many=True, read_only=True)
     price_per_unit = PriceSerializer(required=False, allow_null=True)
 
     class Meta:
@@ -345,10 +369,11 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
                 _("ugyldig betalingsmetode for betalingsmodtager")
             )
 
-        if data[
-            "recipient_type"
-        ] == PaymentSchedule.COMPANY and not validate_cvr(
-            data["recipient_id"]
+        if (
+            data["recipient_type"] == PaymentSchedule.COMPANY
+            and "recipient_id" in data
+            and data["recipient_id"]
+            and not validate_cvr(data["recipient_id"])
         ):
             raise serializers.ValidationError(
                 _("Ugyldigt CVR nummer for firma")
@@ -494,18 +519,73 @@ class PaymentScheduleSerializer(WritableNestedModelSerializer):
         return data
 
 
-class ActivitySerializer(WritableNestedModelSerializer):
-    """Serializer for the Activity model."""
+class PaymentScheduleSerializer(BasePaymentScheduleSerializer):
+    """Serializer for the PaymentSchedule model."""
 
-    monthly_payment_plan = serializers.ReadOnlyField()
-    total_cost = serializers.ReadOnlyField()
-    total_cost_this_year = serializers.ReadOnlyField()
+    payments = PaymentSerializer(many=True, read_only=True)
+
+
+class ServiceProviderSerializer(
+    UniqueFieldsMixin, serializers.ModelSerializer
+):
+    """Serializer for the ServiceProvider model."""
+
+    class Meta:
+        model = ServiceProvider
+        fields = "__all__"
+
+
+class BaseActivitySerializer(WritableNestedModelSerializer):
+    """Base Serializer for the Activity model."""
+
+    total_granted_this_year = serializers.SerializerMethodField()
+    total_expected_this_year = serializers.SerializerMethodField()
+
+    total_granted_previous_year = serializers.SerializerMethodField()
+    total_expected_previous_year = serializers.SerializerMethodField()
+
+    total_granted_next_year = serializers.SerializerMethodField()
+    total_expected_next_year = serializers.SerializerMethodField()
+
     total_cost_full_year = serializers.ReadOnlyField()
-    total_granted_this_year = serializers.ReadOnlyField()
-    total_expected_this_year = serializers.ReadOnlyField()
 
-    payment_plan = PaymentScheduleSerializer(partial=True, required=False)
     details__name = serializers.ReadOnlyField(source="details.name")
+
+    def get_total_granted_this_year(self, obj):
+        """Retrieve total granted amount for this year."""
+        year = timezone.now().year
+
+        return obj.total_granted_in_year(year)
+
+    def get_total_expected_this_year(self, obj):
+        """Retrieve total expected amount for this year."""
+        year = timezone.now().year
+
+        return obj.total_expected_in_year(year)
+
+    def get_total_granted_previous_year(self, obj):
+        """Retrieve total granted amount for previous year."""
+        year = timezone.now().year - 1
+
+        return obj.total_granted_in_year(year)
+
+    def get_total_expected_previous_year(self, obj):
+        """Retrieve total expected amount for previous year."""
+        year = timezone.now().year - 1
+
+        return obj.total_expected_in_year(year)
+
+    def get_total_granted_next_year(self, obj):
+        """Retrieve total granted amount for next year."""
+        year = timezone.now().year + 1
+
+        return obj.total_granted_in_year(year)
+
+    def get_total_expected_next_year(self, obj):
+        """Retrieve total expected amount for next year."""
+        year = timezone.now().year + 1
+
+        return obj.total_expected_in_year(year)
 
     @staticmethod
     def setup_eager_loading(queryset):
@@ -559,19 +639,13 @@ class ActivitySerializer(WritableNestedModelSerializer):
         ):
             start_date = data["start_date"]
             end_date = data["end_date"]
-            payment_type = data["payment_plan"]["payment_type"]
-            payment_frequency = data["payment_plan"]["payment_frequency"]
             payment_day_of_month = data["payment_plan"]["payment_day_of_month"]
-            has_payments = list(
-                create_rrule(
-                    payment_type,
-                    payment_frequency,
-                    payment_day_of_month,
-                    start_date,
-                    until=end_date,
-                )
-            )
-            if not has_payments:
+
+            next_payment_date = start_date.replace(day=payment_day_of_month)
+            if next_payment_date < start_date:
+                next_payment_date += relativedelta(months=+1)
+
+            if not (start_date <= next_payment_date <= end_date):
                 raise serializers.ValidationError(
                     _("Betalingsparametre resulterer ikke i nogen betalinger")
                 )
@@ -590,6 +664,12 @@ class ActivitySerializer(WritableNestedModelSerializer):
         data_copy["payment_plan"] = PaymentSchedule(
             **data_copy.pop("payment_plan")
         )
+        # Pop the service provider and attach a serialized version.
+        if "service_provider" in data_copy and data_copy["service_provider"]:
+            data_copy["service_provider"] = ServiceProvider(
+                **data_copy.pop("service_provider")
+            )
+
         instance = Activity(**data_copy)
 
         is_valid_start_date = instance.is_valid_activity_start_date()
@@ -610,9 +690,69 @@ class ActivitySerializer(WritableNestedModelSerializer):
                 raise serializers.ValidationError(e.message)
         return data
 
+    def set_correct_service_provider_in_validated_data(self, validated_data):
+        """Set the correct service provider in the validated_data.
+
+        If a service provider already exists with the CVR, we update
+        it with the new data and assign it to the activity instead of
+        creating a new one.
+        """
+        service_provider = validated_data.get("service_provider", None)
+
+        if service_provider and service_provider["cvr_number"]:
+            existing_service_provider = ServiceProvider.objects.filter(
+                cvr_number=service_provider["cvr_number"]
+            ).first()
+            if existing_service_provider:
+                service_provider["id"] = existing_service_provider.id
+                # Set the service provider in initial_data to
+                # make sure we are updating it.
+                self.initial_data["service_provider"] = service_provider
+                validated_data["service_provider"] = service_provider
+            else:
+                validated_data["service_provider"] = service_provider
+
+        return validated_data
+
+    def create(self, validated_data):
+        """Override create to handle existing service provider."""
+        validated_data = self.set_correct_service_provider_in_validated_data(
+            validated_data
+        )
+
+        instance = super().create(validated_data)
+
+        return instance
+
+    def update(self, instance, validated_data):
+        """Override update to handle existing service provider."""
+        validated_data = self.set_correct_service_provider_in_validated_data(
+            validated_data
+        )
+
+        instance = super().update(instance, validated_data)
+
+        return instance
+
     class Meta:
         model = Activity
         fields = "__all__"
+
+
+class ListActivitySerializer(BaseActivitySerializer):
+    """Serializer for the Activity model for a list."""
+
+    payment_plan = BasePaymentScheduleSerializer(partial=True, required=False)
+
+
+class ActivitySerializer(BaseActivitySerializer):
+    """Serializer for the Activity model."""
+
+    monthly_payment_plan = serializers.ReadOnlyField()
+    payment_plan = PaymentScheduleSerializer(partial=True, required=False)
+    service_provider = ServiceProviderSerializer(
+        partial=True, required=False, allow_null=True
+    )
 
 
 class BaseAppropriationSerializer(serializers.ModelSerializer):
@@ -671,14 +811,17 @@ class ListAppropriationSerializer(BaseAppropriationSerializer):
 class AppropriationSerializer(BaseAppropriationSerializer):
     """Serializer for a single Appropriation model."""
 
-    main_activity = ActivitySerializer(read_only=True)
+    main_activity = BaseActivitySerializer(read_only=True)
     activities = serializers.SerializerMethodField()
-    total_granted_this_year = serializers.ReadOnlyField()
-    total_granted_full_year = serializers.ReadOnlyField()
-    total_expected_this_year = serializers.ReadOnlyField()
-    total_expected_full_year = serializers.ReadOnlyField()
-    total_cost_expected = serializers.ReadOnlyField()
-    total_cost_granted = serializers.ReadOnlyField()
+
+    total_granted_this_year = serializers.SerializerMethodField()
+    total_expected_this_year = serializers.SerializerMethodField()
+
+    total_granted_previous_year = serializers.SerializerMethodField()
+    total_expected_previous_year = serializers.SerializerMethodField()
+
+    total_granted_next_year = serializers.SerializerMethodField()
+    total_expected_next_year = serializers.SerializerMethodField()
 
     def get_activities(self, appropriation):
         """Get activities on appropriation."""
@@ -687,6 +830,42 @@ class AppropriationSerializer(BaseAppropriationSerializer):
             instance=activities, many=True, read_only=True
         )
         return serializer.data
+
+    def get_total_granted_this_year(self, obj):
+        """Retrieve total granted amount for this year."""
+        year = timezone.now().year
+
+        return obj.total_granted_in_year(year)
+
+    def get_total_expected_this_year(self, obj):
+        """Retrieve total expected amount for this year."""
+        year = timezone.now().year
+
+        return obj.total_expected_in_year(year)
+
+    def get_total_granted_previous_year(self, obj):
+        """Retrieve total granted amount for previous year."""
+        year = timezone.now().year - 1
+
+        return obj.total_granted_in_year(year)
+
+    def get_total_expected_previous_year(self, obj):
+        """Retrieve total expected amount for previous year."""
+        year = timezone.now().year - 1
+
+        return obj.total_expected_in_year(year)
+
+    def get_total_granted_next_year(self, obj):
+        """Retrieve total granted amount for next year."""
+        year = timezone.now().year + 1
+
+        return obj.total_granted_in_year(year)
+
+    def get_total_expected_next_year(self, obj):
+        """Retrieve total expected amount for next year."""
+        year = timezone.now().year + 1
+
+        return obj.total_expected_in_year(year)
 
 
 class PaymentMethodDetailsSerializer(serializers.ModelSerializer):
@@ -750,14 +929,6 @@ class ActivityDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ActivityDetails
-        fields = "__all__"
-
-
-class ServiceProviderSerializer(serializers.ModelSerializer):
-    """Serializer for the ServiceProvider model."""
-
-    class Meta:
-        model = ServiceProvider
         fields = "__all__"
 
 

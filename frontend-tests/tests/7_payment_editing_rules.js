@@ -100,13 +100,14 @@ test('Create data and check that normal user can create new payments', async t =
         .typeText('#field-payment-planned-date', createDate(4))
         .click('#submit-planned-payment-btn')
         .expect(Selector('.payment_schedule_list').exists).ok()
-        // Check that this user can edit payments
-        .click(Selector('button').withText('Betaling').nth(0))
+        // Check that this user can edit planned payments
+        .click(Selector('button').withText('#').nth(0))
         .typeText('#field-planned-amount', '140', {replace: true})
         .typeText('#field-planned-date', createDate(5), {replace: true})
         .click(Selector('input').withAttribute('value', 'Opdatér'))
         .expect(Selector('.msg').withText('Betaling opdateret').exists).ok()
         // Check that this user can't create new payments on an activity that hasn't individual payment plan
+        .click('button.modal-cancel-btn')
         .click(Selector('a').withText(testdata.appr1.name))
         .click(Selector('a').withText(testdata.act2.details__name))
         .expect(Selector('.payment-create-btn').exists).notOk()
@@ -131,19 +132,20 @@ test('Check that improved user can create new payments', async t => {
         .expect(Selector('.payment_schedule_list').exists).ok()
 
         // Check that this user can edit payments
-        .click(Selector('button').withText('Betaling').nth(0))
+        .click(Selector('button').withText('#').nth(0))
         .typeText('#field-planned-amount', '140', {replace: true})
         .typeText('#field-planned-date', createDate(5), {replace: true})
         .click(Selector('input').withAttribute('value', 'Opdatér'))
         .expect(Selector('.msg').withText('Betaling opdateret').exists).ok()
         
         // Check that this user can't create new payments on an activity that hasn't individual payment plan
+        .click('button.modal-cancel-btn')
         .click(Selector('a').withText(testdata.appr1.name))
         .click(Selector('a').withText(testdata.act2.details__name.substr(0,6)))
         .expect(Selector('.payment-create-btn').exists).notOk()
 
         // Check that this user cannot edit payments
-        .click(Selector('button').withText('Betaling').nth(0))
+        .click(Selector('button').withText('#').nth(0))
         .expect(Selector('dt').withText('Beløb, planlagt').exists).ok()
         .click('.modal-cancel-btn')
 
@@ -171,16 +173,16 @@ test('Check that normal user cannot create new payments after grant', async t =>
         .expect(Selector('.payment-create-btn').exists).notOk()
         
         // Check that this user cannot edit payments anymore
-        .click(Selector('button').withText('Betaling').nth(0))
+        .click(Selector('button').withText('#').nth(0))
         .expect(Selector('dt').withText('Beløb, planlagt').exists).ok()
-        .click(Selector('button').withText('Luk'))
+        .click('button.modal-cancel-btn')
 
         .click(Selector('a').withText(testdata.appr1.name))
         .click(Selector('a').withText(testdata.act2.details__name))
         .expect(Selector('.payment-create-btn').exists).notOk()
         
         // Check that this user cannot edit payments
-        .click(Selector('button').withText('Betaling').nth(0))
+        .click(Selector('button').withText('#').nth(0))
         .expect(Selector('dt').withText('Beløb, planlagt').exists).ok()
 })
 

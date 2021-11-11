@@ -8,7 +8,7 @@
 <template>
     <input v-if="visible" class="field-note" type="text" v-model="note">
     <span v-else>
-        {{ note }}
+        {{ displayNote(note) }}
     </span>
 </template>
 
@@ -30,15 +30,18 @@ export default {
                 return this.compdata.note
             },
             set: function(new_val) {
-                this.$store.commit('setPaymentEditRowData', {
-                    idx: this.rowid,
-                    prop: 'note', 
-                    val: new_val
-                })
+                let new_data = Object.assign({}, this.compdata)
+                new_data.note = new_val
+                this.$emit('update', {operation: 'update', data: new_data})
             }
         },
         visible: function() {
             return this.is_payable(this.compdata)
+        }
+    },
+    methods: {
+        displayNote: function(note) {
+            return note ? note : '-'
         }
     }
 }

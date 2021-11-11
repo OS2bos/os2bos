@@ -85,13 +85,14 @@ class PaymentQuerySet(models.QuerySet):
             or 0
         )
 
-    def in_this_year(self):
-        """Filter Payments only in the current year."""
-        now = timezone.now()
+    def in_year(self, year=None):
+        """Filter payments for a year."""
+        if not year:
+            year = timezone.now().year
 
         return self.exclude(
-            ~Q(paid_date__year=now.year), paid_date__isnull=False
-        ).exclude(~Q(date__year=now.year), paid_date__isnull=True)
+            ~Q(paid_date__year=year), paid_date__isnull=False
+        ).exclude(~Q(date__year=year), paid_date__isnull=True)
 
     def group_by_monthly_amounts(self):
         """
@@ -145,6 +146,31 @@ class PaymentQuerySet(models.QuerySet):
             for activity in expected_activities
             for payment in activity.applicable_payments
         ]
+        return (
+            self.filter(id__in=payment_ids)
+            .paid_date_or_date_gte(beginning_of_two_years_ago)
+            .select_related(
+                "payment_schedule__activity__appropriation__case",
+                "payment_schedule__activity__appropriation__section",
+                "payment_schedule__activity__details",
+            )
+        )
+
+    def granted_payments_for_report_list(self):
+        """Filter payments for a report of only granted payments."""
+        from core.models import STATUS_GRANTED, Activity
+
+        current_year = timezone.now().year
+        two_years_ago = current_year - 2
+        beginning_of_two_years_ago = datetime.date.min.replace(
+            year=two_years_ago
+        )
+
+        granted_activities = Activity.objects.filter(status=STATUS_GRANTED)
+        payment_ids = granted_activities.values_list(
+            "payment_plan__payments__pk", flat=True
+        )
+
         return (
             self.filter(id__in=payment_ids)
             .paid_date_or_date_gte(beginning_of_two_years_ago)
@@ -258,3 +284,14 @@ class CaseQuerySet(models.QuerySet):
             .exclude(expired_main_activities_count=0, main_activities_count=0)
             .filter(expired_main_activities_count=F("main_activities_count"))
         ).distinct()
+
+    def expected_cases_for_report_list(self):
+        """Filter cases for a report of granted AND expected cases."""
+        from core.models import STATUS_GRANTED, STATUS_EXPECTED
+
+        cases = self.filter(
+            Q(appropriations__activities__status=STATUS_GRANTED)
+            | Q(appropriations__activities__status=STATUS_EXPECTED)
+        ).distinct()
+
+        return cases

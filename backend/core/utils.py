@@ -40,12 +40,21 @@ from holidays import Denmark as danish_holidays
 
 from service_person_stamdata_udvidet import get_citizen
 
+from virk_dk import (
+    get_org_info_from_cvr,
+    get_org_info_from_cvr_p_number_or_name,
+)
+
 from core import models
 from core.data.extra_payment_date_exclusion_tuples import (
     extra_payment_date_exclusion_tuples,
 )
 
 
+serviceplatformen_logger = logging.getLogger(
+    "bevillingsplatform.serviceplatformen"
+)
+virk_logger = logging.getLogger("bevillingsplatform.virk")
 logger = logging.getLogger(__name__)
 
 
@@ -69,7 +78,7 @@ def get_person_info(cpr):
 def get_cpr_data(cpr):
     """Get CPR data from Serviceplatformen."""
     if not os.path.isfile(settings.SERVICEPLATFORM_CERTIFICATE_PATH):
-        logger.info(
+        serviceplatformen_logger.info(
             "serviceplatform certificate path: %s is not a file",
             settings.SERVICEPLATFORM_CERTIFICATE_PATH,
         )
@@ -83,7 +92,7 @@ def get_cpr_data(cpr):
         )
         return result
     except requests.exceptions.HTTPError:
-        logger.exception("get_cpr_data requests error")
+        serviceplatformen_logger.exception("get_cpr_data requests error")
         return None
 
 
@@ -128,6 +137,74 @@ def get_cpr_data_mock(cpr):
         "kommunekode": "370",
     }
     return result
+
+
+def get_company_info_mock():
+    """Use test data in place of the CVR Virk functions for develop/test."""
+    result = [
+        {
+            "cvr_no": "25052943",
+            "navn": "MAGENTA ApS",
+            "vejnavn": "Pilestræde",
+            "husnr": "43",
+            "postnr": "1112",
+            "postdistrikt": "København K",
+            "branchekode": "620200",
+            "branchetekst": (
+                "Konsulentbistand vedrørende informationsteknologi"
+            ),
+            "status": "NORMAL",
+        }
+    ]
+    return result
+
+
+def get_company_info_from_search_term(search_term):
+    """Get CVR Data from Virk from a generic search term."""
+    # Return a mocked company info if we are not allowed to use Virk.
+    if not settings.USE_VIRK:
+        return get_company_info_mock()
+
+    data = {
+        "search_term": search_term,
+        "virk_usr": settings.VIRK_USER,
+        "virk_pwd": settings.VIRK_PASS,
+        "virk_url": settings.VIRK_URL,
+    }
+
+    try:
+        result = get_org_info_from_cvr_p_number_or_name(data)
+        if not isinstance(result, list):
+            virk_logger.error(f"{result}")
+            return None
+        return result
+    except requests.exceptions.HTTPError:
+        virk_logger.exception("get_cvr_data requests error")
+        return None
+
+
+def get_company_info_from_cvr(cvr_number):
+    """Get CVR Data from Virk from a CVR number."""
+    # Return a mocked company info if we are not allowed to use Virk.
+    if not settings.USE_VIRK:
+        return get_company_info_mock()
+
+    data = {
+        "cvr_number": cvr_number,
+        "virk_usr": settings.VIRK_USER,
+        "virk_pwd": settings.VIRK_PASS,
+        "virk_url": settings.VIRK_URL,
+    }
+
+    try:
+        result = get_org_info_from_cvr(data)
+        if not isinstance(result, list):
+            virk_logger.error(f"{result}")
+            return None
+        return result
+    except requests.exceptions.HTTPError:
+        virk_logger.exception("get_cvr_data requests error")
+        return None
 
 
 def send_activity_email(subject, template, activity):
@@ -341,9 +418,7 @@ def saml_create_user(user_data):  # noqa: D401
 # TODO: At some point, factor out customer specific third party integrations.
 
 
-def format_prism_financial_record(
-    payment, line_no, record_no, new_account_alias=False
-):
+def format_prism_financial_record(payment, line_no, record_no):
     """Format a single financial record for PRISM, on a single line.
 
     This follows documentation provided by Ballerup Kommune based on
@@ -399,18 +474,12 @@ def format_prism_financial_record(
     153 - posting text.
     """
 
-    # TODO: remove this branch when account_alias_new is ready.
-    if new_account_alias:
-        account_alias = payment.account_alias_new
-    else:
-        account_alias = payment.account_alias
-
     case_cpr = payment.payment_schedule.activity.appropriation.case.cpr_number
     fields = {
         "103": f"{config.PRISM_MACHINE_NO:05d}",
         "104": f"{record_no:07d}",
         "110": f"{payment.date.strftime('%Y%m%d')}",
-        "111": f"{account_alias}",
+        "111": f"{payment.account_alias}",
         "112": f"{int(payment.amount*100):012d} ",
         "113": "D",
         "114": f"{payment.date.year}",
@@ -509,7 +578,7 @@ def due_payments_for_prism(date):
     )
 
 
-def generate_records_for_prism(due_payments, new_account_alias=False):
+def generate_records_for_prism(due_payments):
     """Generate the list of records for writing to PRISM file."""
     prism_records = (
         (
@@ -517,7 +586,6 @@ def generate_records_for_prism(due_payments, new_account_alias=False):
                 p,
                 line_no=2 * i - 1,
                 record_no=i,
-                new_account_alias=new_account_alias,
             ),
             format_prism_payment_record(p, line_no=2 * i, record_no=i),
         )
@@ -734,8 +802,8 @@ def generate_payments_report_list_v0(payments, new_account_alias=False):
             "paid_amount": payment.paid_amount,
             "date": payment.date,
             "paid_date": payment.paid_date,
-            "account_string": payment.account_string_new,
-            "account_alias": payment.account_alias_new,
+            "account_string": payment.account_string,
+            "account_alias": payment.account_alias,
             # payment_schedule specific.
             "payment_schedule__payment_id": payment_schedule.payment_id,
             "payment_schedule__"
@@ -814,10 +882,36 @@ def generate_payments_report_list_v2(payments):
     return payments_report_list
 
 
+def generate_payments_report_list_v3(payments):
+    """Generate payments report list v3 (v2 with approval data added)."""
+    payments_report_list = generate_payments_report_list_v2(payments)
+
+    approval_values_list = payments.values_list(
+        "id",
+        "payment_schedule__activity__approval_level__name",
+        "payment_schedule__activity__approval_user__username",
+        "payment_schedule__activity__appropriation_date",
+    )
+
+    approval_data = {
+        pk: (approval_level, approval_user, appropriation_date)
+        for (
+            pk,
+            approval_level,
+            approval_user,
+            appropriation_date,
+        ) in approval_values_list
+    }
+
+    for entry in payments_report_list:
+        entry["approval_level"] = approval_data[entry["id"]][0]
+        entry["approval_user"] = approval_data[entry["id"]][1]
+        entry["appropriation_date"] = approval_data[entry["id"]][2]
+    return payments_report_list
+
+
 @transaction.atomic
-def write_prism_file_v0(
-    filename, date, payments, tomorrow, new_account_alias=False
-):
+def write_prism_file_v0(filename, date, payments, tomorrow):
     """Write the actual PRISM file."""
     # The output directory is not configurable - this is mapped through Docker.
     output_dir = settings.PRISM_OUTPUT_DIR
@@ -846,7 +940,7 @@ def write_prism_file_v0(
         )
         f.write(f"{preamble_string}\n")
         # Generate and write the records.
-        prism_records = generate_records_for_prism(payments, new_account_alias)
+        prism_records = generate_records_for_prism(payments)
         f.write("\n".join(prism_records))
 
         # Generate and write the final line.
@@ -854,6 +948,43 @@ def write_prism_file_v0(
         fantrec = f"{len(prism_records):05d}"
         f.write(f"\n{cslutd}{fantrec}\n")
     return filepath
+
+
+def generate_cases_report_list_v0(cases):
+    """Generate a cases report list of cases dicts from cases."""
+    cases_report_list = []
+    for case in cases:
+        mother = case.related_persons.filter(relation_type="mor").first()
+        father = case.related_persons.filter(relation_type="far").first()
+        for history_case in case.history.all():
+            history_case_dict = {
+                "id": str(history_case.id),
+                "history_id": str(history_case.history_id),
+                "history_date": str(history_case.history_date.isoformat()),
+                "cpr_number": case.cpr_number,
+                "case_sbsys_id": case.sbsys_id,
+                "name": case.name,
+                "target_group": case.target_group,
+                "case_worker": str(history_case.case_worker),
+                "team": str(case.case_worker.team)
+                if case.case_worker.team
+                else None,
+                "leader": str(case.case_worker.team.leader)
+                if case.case_worker.team
+                else None,
+                "efforts": ",".join([e.name for e in case.efforts.all()]),
+                "effort_step": str(history_case.effort_step),
+                "scaling_step": str(history_case.scaling_step)
+                if history_case.scaling_step
+                else "",
+                "paying_municipality": str(case.paying_municipality),
+                "acting_municipality": str(case.acting_municipality),
+                "residence_municipality": str(case.residence_municipality),
+                "mother_cpr": mother.cpr_number if mother else None,
+                "father_cpr": father.cpr_number if father else None,
+            }
+            cases_report_list.append(history_case_dict)
+    return cases_report_list
 
 
 @transaction.atomic
@@ -881,13 +1012,8 @@ def export_prism_payments_for_date(date=None):
             f"{date.strftime('%Y%m%d')}_" f"{tomorrow.microsecond}_{version}"
         )
 
-        # TODO: remove this line in next release.
-        # filepath = export_func(filename, date, payments, tomorrow)
-        # TODO: "new_account_alias" prism file should be the future default.
-        new_filepath = export_func(
-            filename, date, payments, tomorrow, new_account_alias=True
-        )
-        prism_files.extend([new_filepath])
+        filepath = export_func(filename, date, payments, tomorrow)
+        prism_files.extend([filepath])
 
     for p in payments:
         p.paid = True
@@ -905,8 +1031,8 @@ def parse_account_alias_mapping_data_from_csv_string(string):
     Returns a list of (main_account_number, activity_number, alias) tuples
     for example:
     [
-        (645511002, 015035, BOS0000109),
-        (528211011, 015038, BOS0000112)
+    (645511002, 015035, BOS0000109),
+    (528211011, 015038, BOS0000112)
     ]
     """
     reader = csv.reader(string)
@@ -944,13 +1070,14 @@ def parse_account_alias_mapping_data_from_csv_path(path):
 
 def generate_payments_report():
     """Generate a payments report as CSV."""
-    payments = models.Payment.objects.expected_payments_for_report_list()
     payment_reports = []
 
+    # generate expected payment reports.
+    payments = models.Payment.objects.expected_payments_for_report_list()
     for (
         version,
         payments_func,
-    ) in generate_payments_report_list_versions.items():
+    ) in generate_expected_payments_report_list_versions.items():
         expected_payments_list = payments_func(payments)
         report_dir = settings.PAYMENTS_REPORT_DIR
 
@@ -972,14 +1099,79 @@ def generate_payments_report():
 
             payment_reports.append(csvfile.name)
 
+    # generate granted payment reports.
+    payments = models.Payment.objects.granted_payments_for_report_list()
+    for (
+        version,
+        payments_func,
+    ) in generate_granted_payments_report_list_versions.items():
+        granted_payments_list = payments_func(payments)
+        report_dir = settings.PAYMENTS_REPORT_DIR
+
+        if not granted_payments_list:
+            continue
+
+        with open(
+            os.path.join(report_dir, f"granted_payments_{version}.csv"),
+            "w",
+        ) as csvfile:
+            writer = csv.DictWriter(
+                csvfile,
+                fieldnames=granted_payments_list[0].keys(),
+            )
+
+            writer.writeheader()
+            for payment_dict in granted_payments_list:
+                writer.writerow(payment_dict)
+
+            payment_reports.append(csvfile.name)
+
     return payment_reports
 
 
+def generate_cases_report():
+    """Generate a cases report as CSV."""
+    cases = models.Case.objects.expected_cases_for_report_list()
+    cases_reports = []
+    for (
+        version,
+        cases_func,
+    ) in generate_cases_report_list_versions.items():
+        expected_cases_list = cases_func(cases)
+        report_dir = settings.PAYMENTS_REPORT_DIR
+
+        if not expected_cases_list:
+            continue
+        with open(
+            os.path.join(report_dir, f"expected_cases_{version}.csv"),
+            "w",
+        ) as csvfile:
+            writer = csv.DictWriter(
+                csvfile,
+                fieldnames=expected_cases_list[0].keys(),
+            )
+
+            writer.writeheader()
+            for case_dict in expected_cases_list:
+                writer.writerow(case_dict)
+
+            cases_reports.append(csvfile.name)
+
+    return cases_reports
+
+
 # Defined versions of output utilities.
-generate_payments_report_list_versions = {
+generate_expected_payments_report_list_versions = {
     "0": generate_payments_report_list_v0,
     "1": generate_payments_report_list_v1,
     "2": generate_payments_report_list_v2,
+    "3": generate_payments_report_list_v3,
 }
+
+generate_granted_payments_report_list_versions = {
+    "3": generate_payments_report_list_v3,
+}
+
+generate_cases_report_list_versions = {"0": generate_cases_report_list_v0}
 
 write_prism_file_versions = {"0": write_prism_file_v0}

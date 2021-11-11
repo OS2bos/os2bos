@@ -49,7 +49,6 @@
 <script>
 import ActListMixin from './ActListMixin.js'
 import PermissionLogic from '../../mixins/PermissionLogic.js'
-import ActivityListItem from './ActListItem.vue'
 
 export default {
     mixins: [

@@ -13,7 +13,7 @@ function findItem(state, item) {
  
 const state = {
     checked_items: [],
-    selected_cost_calc: '1'
+    selected_cost_calc: String(new Date().getUTCFullYear())
 }
  
 const getters = {

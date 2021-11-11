@@ -238,6 +238,18 @@ SERVICEPLATFORM_CERTIFICATE_PATH = settings.get(
     "SERVICEPLATFORM_CERTIFICATE_PATH"
 )
 
+# Virk settings
+
+# Whether we use Virk or a mocked version
+USE_VIRK = settings.getboolean("USE_VIRK", fallback=False)
+
+# virk_dk parameters
+VIRK_USER = settings.get("VIRK_USER")
+VIRK_PASS = settings.get("VIRK_PASS")
+VIRK_URL = settings.get(
+    "VIRK_URL", "http://distribution.virk.dk/cvr-permanent/virksomhed/_search"
+)
+
 REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": (
         "rest_framework_filters.backends.RestFrameworkFilterBackend",
@@ -305,6 +317,15 @@ LOGGING = {
                 fallback=os.path.join(LOG_DIR, "generate_payments_report.log"),
             ),
         },
+        "generate_cases_report": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "formatter": "verbose",
+            "filename": settings.get(
+                "CASES_REPORT_LOG_FILE",
+                fallback=os.path.join(LOG_DIR, "generate_cases_report.log"),
+            ),
+        },
         "mark_payments_paid": {
             "level": "INFO",
             "class": "logging.FileHandler",
@@ -345,6 +366,17 @@ LOGGING = {
                 ),
             ),
         },
+        "update_activity_service_providers": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "formatter": "verbose",
+            "filename": settings.get(
+                "UPDATE_ACTIVITY_SERVICE_PROVIDERS_LOG_FILE",
+                fallback=os.path.join(
+                    LOG_DIR, "update_activity_service_providers.log"
+                ),
+            ),
+        },
         "serviceplatformen": {
             "level": "INFO",
             "class": "logging.FileHandler",
@@ -352,6 +384,15 @@ LOGGING = {
             "filename": settings.get(
                 "SERVICEPLATFORMEN_LOG_FILE",
                 fallback=os.path.join(LOG_DIR, "serviceplatformen.log"),
+            ),
+        },
+        "virk": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "formatter": "verbose",
+            "filename": settings.get(
+                "VIRK_LOG_FILE",
+                fallback=os.path.join(LOG_DIR, "virk.log"),
             ),
         },
         # handler for the django-mailer package.
@@ -391,6 +432,11 @@ LOGGING = {
             "level": "INFO",
             "propagate": True,
         },
+        "bevillingsplatform.generate_cases_report": {
+            "handlers": ["generate_cases_report"],
+            "level": "INFO",
+            "propagate": True,
+        },
         "bevillingsplatform.mark_payments_paid": {
             "handlers": ["mark_payments_paid"],
             "level": "INFO",
@@ -411,8 +457,18 @@ LOGGING = {
             "level": "INFO",
             "propagate": True,
         },
+        "bevillingsplatform.update_activity_service_providers": {
+            "handlers": ["update_activity_service_providers"],
+            "level": "INFO",
+            "propagate": True,
+        },
         "bevillingsplatform.serviceplatformen": {
             "handlers": ["serviceplatformen"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        "bevillingsplatform.virk": {
+            "handlers": ["virk"],
             "level": "INFO",
             "propagate": True,
         },
@@ -544,7 +600,13 @@ GRAPH_MODELS = {
 ALLOW_EDIT_OF_PAST_PAYMENTS = settings.getboolean(
     "ALLOW_EDIT_OF_PAST_PAYMENTS", fallback=False
 )
+# Determine whether we allow fetching service providers from Virk
+# or only use internal service providers.
+ALLOW_SERVICE_PROVIDERS_FROM_VIRK = settings.getboolean(
+    "ALLOW_SERVICE_PROVIDERS_FROM_VIRK", fallback=True
+)
 
+# Watchman settings.
 WATCHMAN_CHECKS = (
     "watchman.checks.caches",
     "watchman.checks.databases",

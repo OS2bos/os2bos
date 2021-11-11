@@ -36,8 +36,7 @@ const testdata = {
         details__name: 'Kvindekrisecentre',
         payment_type: 'INDIVIDUAL_PAYMENT',
         start_date: strday1,
-        recipient_type: 'COMPANY',
-        recipient_name: 'Base Camp'
+        recipient_type: 'COMPANY'
     },
     act2: {
         details__name: 'Tolk',
@@ -47,8 +46,7 @@ const testdata = {
         payment_frequency: 'WEEKLY',
         payment_cost_type: 'FIXED',
         payment_amount: '12.95',
-        recipient_type: 'COMPANY',
-        recipient_name: 'CEKTOS',
+        recipient_type: 'COMPANY'
     },
     act3: {
         details__name: 'Tolk',
@@ -112,7 +110,7 @@ test('Edit payment', async t => {
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
         .click(Selector('a').withText(testdata.act1.details__name))
-        .click(Selector('button').withText('Betaling').nth(1))
+        .click(Selector('button').withText('#').nth(1))
         .typeText('#field-planned-amount', '99.99', {replace: true})
         .click(Selector('input').withAttribute('value', 'Opdatér'))
         .expect(Selector('td').withAttribute('title', '99.99').exists).ok()
@@ -123,7 +121,7 @@ test('Delete payment', async t => {
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
         .click(Selector('a').withText(testdata.act1.details__name))
-        .click(Selector('button').withText('Betaling').nth(1))
+        .click(Selector('button').withText('#').nth(1))
         .click(Selector('.payment-delete-btn'))
         .click(Selector('#payment-confirm-delete'))
         .expect(Selector('p').withText('Viser').innerText).contains('1')

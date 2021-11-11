@@ -12,8 +12,8 @@
             <fieldset class="filter-fields">
 
                 <div class="filter-field">
-                    <label for="field-sbsysid">SBSYS ID</label>
-                    <input type="search" id="field-sbsysid" v-model="case__sbsys_id">
+                    <label for="field-sbsysid">Foranstaltningssag</label>
+                    <input type="search" id="field-sbsysid" v-model="sbsys_id">
                 </div>
 
                 <div class="filter-field">
@@ -125,16 +125,16 @@
                 return user
             },
             // Search filters:
-            case__sbsys_id: {
+            sbsys_id: {
                 get: function() {
                     // Get search filter saved in store. Displays in input field via `v-model`
-                    return this.$store.getters.getAppropriationSearchFilter('case__sbsys_id')
+                    return this.$store.getters.getAppropriationSearchFilter('sbsys_id')
                 },
                 set: function(new_val) {
                     // When user changes value in input field, commit the new value
                     // The `commitValue` helper method has a debounce feature, in order to avoid request spamming.
                     // This method is handy for values that the user types into text fields.
-                    this.commitValue('case__sbsys_id', new_val)
+                    this.commitValue('sbsys_id', new_val)
                 }
             },
             case__cpr_number: {
@@ -163,7 +163,7 @@
             },
             hasUrlParams: function() {
                 const qry = this.$route.query
-                if (qry.case__sbsys_id || qry.case__case_worker__team || qry.case__case_worker || qry.section || qry.main_activity__details__id) {
+                if (qry.sbsys_id || qry.case__case_worker__team || qry.case__case_worker || qry.section || qry.main_activity__details__id) {
                     return true
                 } else {
                     return false

@@ -15,11 +15,11 @@ from core.models import (
     SUPPL_ACTIVITY,
     STATUS_GRANTED,
     STATUS_EXPECTED,
+    INVOICE,
     PaymentSchedule,
     ActivityDetails,
     ServiceProvider,
     Section,
-    AccountAlias,
     AccountAliasMapping,
     ActivityCategory,
 )
@@ -446,7 +446,9 @@ class TestGeneratePaymentsReports(TestCase, BasicTestMixin):
                     "Created payments reports: "
                     "['/tmp/expected_payments_0.csv', "
                     "'/tmp/expected_payments_1.csv', "
-                    "'/tmp/expected_payments_2.csv']"
+                    "'/tmp/expected_payments_2.csv', "
+                    "'/tmp/expected_payments_3.csv', "
+                    "'/tmp/granted_payments_3.csv']"
                 ),
             ]
         )
@@ -504,6 +506,113 @@ class TestGeneratePaymentsReports(TestCase, BasicTestMixin):
 
         logger_mock.exception.assert_called_with(
             "An error occurred during generation of the payments report"
+        )
+
+
+class TestGenerateCasesReports(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    @override_settings(PAYMENTS_REPORT_DIR="/tmp/")
+    @mock.patch("core.management.commands.generate_cases_report.logger")
+    def test_generate_cases_report_success(self, logger_mock):
+        section = create_section()
+
+        case = create_case(self.case_worker, self.municipality, self.district)
+        # We need granted and/or expected activities also.
+        appropriation = create_appropriation(case=case, section=section)
+
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=date(year=2020, month=1, day=1),
+            end_date=date(year=2020, month=2, day=1),
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=activity,
+        )
+
+        another_activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=SUPPL_ACTIVITY,
+            status=STATUS_EXPECTED,
+            start_date=date(year=2020, month=1, day=1),
+            end_date=date(year=2020, month=2, day=1),
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=another_activity,
+        )
+        call_command("generate_cases_report")
+
+        logger_mock.info.assert_has_calls(
+            [
+                mock.call(
+                    "Created cases reports: " "['/tmp/expected_cases_0.csv']"
+                ),
+            ]
+        )
+
+    @override_settings(PAYMENTS_REPORT_DIR="/tmp/")
+    @mock.patch("core.management.commands.generate_cases_report.logger")
+    def test_generate_cases_report_no_payments(self, logger_mock):
+
+        call_command("generate_cases_report")
+
+        logger_mock.info.assert_has_calls(
+            [
+                mock.call("No cases reports generated"),
+            ]
+        )
+        logger_mock.exception.assert_not_called()
+
+    @override_settings(PAYMENTS_REPORT_DIR="/invalid_dir/")
+    @mock.patch("core.management.commands.generate_cases_report.logger")
+    def test_generate_cases_report_exception_raised(self, logger_mock):
+        section = create_section()
+
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case, section=section)
+        # We need granted and/or expected activities also.
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=date(year=2020, month=1, day=1),
+            end_date=date(year=2020, month=2, day=1),
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=activity,
+        )
+
+        another_activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=SUPPL_ACTIVITY,
+            status=STATUS_EXPECTED,
+            start_date=date(year=2020, month=1, day=1),
+            end_date=date(year=2020, month=2, day=1),
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=another_activity,
+        )
+
+        call_command("generate_cases_report")
+
+        logger_mock.exception.assert_called_with(
+            "An error occurred during generation of the cases report"
         )
 
 
@@ -672,42 +781,6 @@ class TestImportSections(TestCase):
         self.assertEqual(Section.objects.count(), 1)
 
 
-class TestImportAccountAliases(TestCase):
-    def test_import_account_aliases(self):
-        # We need to import sections and activity details initially.
-        call_command("import_sections")
-        call_command("import_activity_details")
-
-        self.assertEqual(AccountAlias.objects.count(), 0)
-
-        call_command("import_account_aliases")
-
-        self.assertEqual(AccountAlias.objects.count(), 306)
-
-    def test_import_account_aliases_with_path(self):
-        # We need to import sections and activity details initially.
-        call_command("import_sections")
-        call_command("import_activity_details")
-
-        self.assertEqual(AccountAlias.objects.count(), 0)
-
-        # CSV data with headers and a single account alias entry.
-        csv_data = (
-            "Finanskontoalias,Type,Angivelse af finanskontoalias,Ændret af,"
-            "Brugergruppe/bruger\n"
-            "BOS0000002,Delt,01005-528211002-015027-529CPR---,jun,"
-        )
-        open_mock = mock.mock_open(read_data=csv_data)
-
-        with mock.patch(
-            "core.management.commands.import_account_aliases.open", open_mock
-        ):
-            call_command("import_account_aliases", "--path=/tmp/test")
-
-        open_mock.assert_called_with("/tmp/test")
-        self.assertEqual(AccountAlias.objects.count(), 1)
-
-
 class TestImportAccountAliasMappings(TestCase):
     def test_import_account_alias_mappings(self):
         self.assertEqual(AccountAliasMapping.objects.count(), 0)
@@ -823,4 +896,86 @@ class TestRecalculateOnChangedRate(TestCase, BasicTestMixin):
 
         logger_mock.exception.assert_called_with(
             "An exception occurred while recalculating payments"
+        )
+
+
+class TestUpdateActivityServiceProviders(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_activity_service_providers_updated(self):
+        section = create_section()
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case, section=section)
+        today = timezone.now().date()
+
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=today,
+            end_date=today + timedelta(days=7),
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.COMPANY,
+            payment_method=INVOICE,
+            recipient_id="25052943",
+            activity=activity,
+        )
+
+        self.assertIsNone(activity.service_provider)
+
+        call_command("update_activity_service_providers")
+
+        activity.refresh_from_db()
+
+        service_provider = ServiceProvider.objects.get(cvr_number="25052943")
+
+        self.assertEqual(activity.service_provider, service_provider)
+
+    @mock.patch(
+        "core.management.commands.update_activity_service_providers.logger"
+    )
+    @mock.patch(
+        "core.management.commands."
+        "update_activity_service_providers.get_company_info_from_cvr",
+        lambda data: [],
+    )
+    def test_activity_service_providers_no_company_info(self, logger_mock):
+        section = create_section()
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case, section=section)
+        today = timezone.now().date()
+
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=today,
+            end_date=today + timedelta(days=7),
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.MONTHLY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.COMPANY,
+            payment_method=INVOICE,
+            recipient_id="25052943",
+            activity=activity,
+        )
+
+        self.assertIsNone(activity.service_provider)
+
+        call_command("update_activity_service_providers")
+
+        activity.refresh_from_db()
+
+        self.assertIsNone(activity.service_provider)
+
+        logger_mock.info.assert_called_with(
+            "Could not retrieve company info for CVR number: 25052943"
         )
