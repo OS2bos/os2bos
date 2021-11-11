@@ -7,12 +7,12 @@
 
 <template>
 
-    <section v-if="act && act.id" class="activity">
+    <section v-if="act" class="activity">
         <header class="activity-header">
             <h1>
                 <i class="material-icons">style</i>
-                Udgift til <span v-html="actId2name(act.details)"></span>
-                <span v-if="act.payment_plan.fictive" class="dim">(Fiktiv)</span>
+                Udgift til <span v-if="act.details_data">{{ act.details_data.name }}</span>
+                <span v-if="payment_plan.fictive" class="dim">(Fiktiv)</span>
             </h1>
             <template v-if="user_can_edit === true && !edit_mode">
                 <router-link v-if="can_adjust" class="btn act-edit-btn" style="margin-left: 1rem;" :to="`/activity/create?mode=expected`">+ Lav forventet justering</router-link>
@@ -42,9 +42,9 @@
             </dl>
         </div>
 
-        <activity-edit v-if="edit_mode" @save="reload" @cancel="reload" :class="`activity-${ act.status }`" />
+        <activity-edit v-if="edit_mode" @save="update(act.id)" @cancel="update(act.id)" :class="`activity-${ act.status }`" />
         
-        <activity-summary v-else :class="`activity-${ act.status }`" />
+        <activity-summary v-else :activity-data="act" :class="`activity-${ act.status }`" />
 
         <!-- Delete activity modal -->
         <div v-if="showModal">
@@ -71,7 +71,7 @@
 
                             <div class="modal-footer">
                                 <slot name="footer">
-                                    <button type="button" class="modal-cancel-btn" @click="reload">Annullér</button>
+                                    <button type="button" class="modal-cancel-btn" @click="update">Annullér</button>
                                     <button class="modal-delete-btn" type="submit">Slet</button>
                                 </slot>
                             </div>
@@ -80,27 +80,25 @@
                 </div>
             </form>
         </div>
-        
-        <payment-schedule :p-id="payment_plan.payment_id" :edit_mode="edit_mode"/>
+
+        <payment-schedule :edit-mode="edit_mode" />
         
     </section>
 
 </template>
 
 <script>
-import ActDisplayMixin from '../mixins/ActivityDisplayMixin.js'
 import ActivityEdit from './ActivityEdit.vue'
 import ActivitySummary from './ActivitySummary.vue'
 import axios from '../http/Http.js'
 import PaymentSchedule from '../payments/PaymentList.vue'
-import { activityId2name, sectionId2name } from '../filters/Labels.js'
+import { sectionId2name } from '../filters/Labels.js'
 import notify from '../notifications/Notify.js'
 import PermissionLogic from '../mixins/PermissionLogic.js'
 
 export default {
 
     mixins: [
-        ActDisplayMixin,
         PermissionLogic
     ],
     components: {
@@ -115,6 +113,15 @@ export default {
         }
     },
     computed: {
+        act: function() {
+            return this.$store.getters.getActivity
+        },
+        payment_plan: function() {
+            return this.$store.getters.getPaymentPlan
+        },
+        appropriation: function() {
+            return this.$store.getters.getAppropriation
+        },
         cas: function() {
             return this.$store.getters.getCase
         },
@@ -135,37 +142,40 @@ export default {
         }
     },
     watch: {
-        cas: function() {
-            if (this.cas && this.act.details) {
-                this.$store.commit('setBreadcrumb', [
-                    {
-                        link: '/',
-                        title: 'Sager'
-                    },
-                    {
-                        link: `/case/${ this.cas.id }`,
-                        title: `Hovedsag ${ this.cas.sbsys_id }, ${ this.cas.name }`
-                    },
-                    {
-                        link: `/appropriation/${ this.appropriation.id }`,
-                        title: `Bevillingsskrivelse ${ this.appropriation.sbsys_id }`
-                    },
-                    {
-                        link: false,
-                        title: `Udgift til ${ activityId2name(this.act.details) }`
-                    }
-                ])
-            }
+        act: function(new_val, old_val) {
+            this.updateBreadCrumb(this.cas, this.appropriation, new_val)
         }
     },
     methods: {
-        reload: function() {
+        updateBreadCrumb: function(cas, appropriation, activity) {
+            this.$store.commit('setBreadcrumb', [
+                {
+                    link: '/',
+                    title: 'Sager'
+                },
+                {
+                    link: `/case/${ cas.id }`,
+                    title: `Hovedsag ${ cas.sbsys_id }, ${ cas.name }`
+                },
+                {
+                    link: `/appropriation/${ appropriation.id }`,
+                    title: `Bevillingsskrivelse ${ appropriation.sbsys_id }`
+                },
+                {
+                    link: false,
+                    title: `Udgift til ${ activity.details_data.name }`
+                }
+            ])
+        },
+        update: function(activity_id) {
             this.edit_mode = false
             this.showModal = false
-            this.$store.dispatch('fetchActivity', this.$route.params.actId)
-        },
-        actId2name: function(id) {
-            return activityId2name(id)
+            this.$store.dispatch('fetchActivity', activity_id)
+            .then(activity => {
+                this.$store.dispatch('fetchPayments', {
+                    payment_schedule_pk: activity.paymentPlan.pk
+                })
+            })
         },
         displaySection: function(id) {
             return sectionId2name(id)
@@ -174,16 +184,20 @@ export default {
             this.showModal = true
         },
         deleteActivity: function() {
-            axios.delete(`/activities/${ this.$route.params.actId }/`)
-            .then(res => {
+            axios.delete(`/activities/${ this.act.id }/`)
+            .then(() => {
                 this.$router.push(`/appropriation/${ this.appropriation.id }`)
                 notify('Ydelse slettet', 'success')
             })
             .catch(err => this.$store.dispatch('parseErrorOutput', err))
         }
     },
+    beforeRouteUpdate(to, from, next) {
+        this.update(to.params.actId)
+        next()
+    },
     created: function(){
-        this.reload()
+        this.update(this.$route.params.actId)
     }
 }
     

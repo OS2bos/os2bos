@@ -17,22 +17,7 @@ const state = {
     payment: null,
     internal_payment_recipients: null,
     rates: null,
-    payments_are_editable_in_the_past: true, // to be updated by fetchPaymentEditablePastFlag but will generally be true
-
-    // Search filters:
-    filters: {
-        payment_schedule__payment_id: null,
-        case__cpr_number: null,
-        recipient_id: null,
-        payment_method: null,
-        interval: null,
-        paid_date_or_date_week: null,
-        paid_date_or_date_month: null,
-        paid_date_or_date_year: null,
-        paid_date_or_date__gte: null,
-        paid_date_or_date__lte: null,
-        paid: null
-    }
+    payments_are_editable_in_the_past: true // to be updated by fetchPaymentEditablePastFlag but will generally be true
 }
 
 const getters = {
@@ -74,9 +59,6 @@ const mutations = {
     setPaymentPlanProperty (state, obj) {
         Vue.set(state.payment_plan, obj.prop, obj.val)
     },
-    removePaymentPlanProperty (state, prop) {
-        delete state.payment_plan[prop]
-    },
     clearPaymentPlan (state) {
         state.payment_plan = {
             payment_type: 'RUNNING_PAYMENT',
@@ -94,30 +76,22 @@ const mutations = {
     setPayments (state, payments) {
         state.payments = payments
     },
+    addPayments (state, payments) {
+        state.payments = state.payments.concat(payments)
+    },
+    clearPayments (state) {
+        state.payments = null
+    },
     setPaymentInPayments (state, new_payment) {
         for (let p in state.payments) {
             if (state.payments[p].id === new_payment.id) {
-                Vue.set(state.payments, p, new_payment) 
+                Vue.set(state.payments, p, new_payment)
                 break
             }
         }
     },
     setPaymentsMeta (state, payments_meta) {
         state.payments_meta = payments_meta
-    },
-    clearPayment (state) {
-        state.payment = {
-            payment_type: 'RUNNING_PAYMENT',
-            payment_frequency: 'MONTHLY',
-            payment_cost_type: 'FIXED', // FIXED, GLOBAL_RATE, or PER_UNIT
-            payment_amount: 0
-        }
-    },
-    setPaymentEditRowData (state, obj) {
-        let payment_idx = state.payments.findIndex(p => {
-            return p.id === obj.idx
-        })
-        Vue.set(state.payments[payment_idx], obj.prop, obj.val)
     },
     setInternalPaymentRecipients (state, internal_payment_recipients) {
         state.internal_payment_recipients = internal_payment_recipients
@@ -139,34 +113,93 @@ const actions = {
         })
         .catch(err => dispatch('parseErrorOutput', err))
     },
-    fetchPayments: function({commit}) {
-        axios.get(`/payments/?activity__status=GRANTED`)
-        .then(res => {
-            commit('setPaymentsMeta', res.data)
-            commit('setPayments', res.data.results)
-        })
-        .catch(err => console.log(err))
-    },
-    fetchMorePayments: function({commit, state}) {
-        axios.get(state.payments_meta.next)
-        .then(res => {
-            let data = res.data
-            let results = state.payments
-            for (let result of res.data.results) {
-                results.push(result)
+    fetchPayments: function({commit}, payload) {
+        /* 
+            `payload` assumes {
+                payment_schedule_pk
+                year (optional)
+                endCursor (optional)
             }
-            data.results = results
-            commit('setPaymentsMeta', data)
-            commit('setPayments', data.results)
-        })
-        .catch(err => console.log(err))
+        */
+        let qry_args = `paymentSchedule:${ payload.payment_schedule_pk } first:30`
+        if (payload.endCursor) {
+            qry_args += ` after:"${ payload.endCursor }"`
+        }
+        if (payload.year) {
+            qry_args += ` date_Gte:"${ payload.year }-01-01" date_Lte:"${ payload.year }-12-31"`
+        }
+        const qry = {
+            query: `{
+                payments(${qry_args}) {
+                    totalCount,
+                    pageInfo {
+                        hasNextPage,
+                        hasPreviousPage,
+                        startCursor,
+                        endCursor
+                    }
+                    edges {
+                        cursor,
+                        node {
+                            pk,
+                            amount,
+                            date,
+                            paidAmount,
+                            paidDate,
+                            note,
+                            isPayableManually,
+                            accountString,
+                            accountAlias
+                        }
+                    }
+                }
+                paymentSchedule(id:"${ btoa('PaymentSchedule:' + payload.payment_schedule_pk) }") {
+                    pk,
+                    paymentId,
+                    paymentMethod,
+                    activity {
+                        status
+                    }
+                }
+            }`
+        }
+        axios.post('/graphql/', qry)
+        .then(res => {
+            const payments = res.data.data.payments.edges.map(p => {
+                return {
+                    id: p.node.pk,
+                    amount: p.node.amount,
+                    date: p.node.date,
+                    paid: p.node.paid,
+                    paid_date: p.node.paidDate,
+                    paid_amount: p.node.paidAmount,
+                    note: p.node.note,
+                    payment_schedule__pk: res.data.data.paymentSchedule.pk,
+                    payment_schedule__payment_id: res.data.data.paymentSchedule.paymentId,
+                    activity__status: res.data.data.paymentSchedule.activity.status,
+                    is_payable_manually: p.node.isPayableManually,
+                    payment_method: res.data.data.paymentSchedule.paymentMethod,
+                    account_string: p.node.accountString,
+                    account_alias: p.node.accountAlias
+                }
+            })
+            if (payload.endCursor) {
+                commit('addPayments', payments)
+            } else {
+                commit('setPayments', payments)
+            }
+            let payments_meta = res.data.data.payments.pageInfo
+            payments_meta.count = res.data.data.payments.totalCount
+            commit('setPaymentsMeta', payments_meta)
+        }) 
+        .catch(err => console.error(err))
     },
     fetchPayment: function({commit}, payment_id) {
         axios.get(`/payments/${ payment_id }/`)
         .then(res => {
             commit('setPayment', res.data)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     },
     fetchPaymentPlan: function({commit}, payment_plan_id) {
         axios.get(`/payment_schedules/${ payment_plan_id }/`)
@@ -174,28 +207,28 @@ const actions = {
             commit('setPaymentPlan', res.data)
             commit('setPayments', res.data.payments)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     },
     fetchInternalPaymentRecipients: function({commit}) {
         axios.get(`/internal_payment_recipients/`)
         .then(res => {
             commit('setInternalPaymentRecipients', res.data)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     },
     fetchRates: function({commit}) {
         axios.get(`/rates/`)
         .then(res => {
             commit('setRates', res.data)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     },
     fetchPaymentEditablePastFlag: function({commit}) {
         axios.get('/editing_past_payments_allowed/')
         .then(res => {
             commit('setPaymentEditablePastFlag', res.data)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     }
 }
 

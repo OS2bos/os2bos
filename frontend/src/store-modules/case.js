@@ -136,7 +136,7 @@ const actions = {
             .then(res => {
                 commit('setCases', res.data)
             })
-            .catch(err => console.log(err))
+            .catch(err => console.error(err))
         } else {
             commit('setCases', [])
         }
@@ -154,7 +154,7 @@ const actions = {
         .then(res => {
             commit('setCase', res.data)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     },
     /**
      * Clears the case search filters and fetches a new list of cases

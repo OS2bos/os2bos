@@ -80,56 +80,56 @@ const actions = {
         .then(res => {
             commit('setMunis', res.data)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     },
     fetchTargetGroups: function({commit}) {
         return axios.get('/target_groups/')
         .then(res => {
             commit('setTarget', res.data)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     },
     fetchDistricts: function({commit}) {
         return axios.get('/school_districts/')
         .then(res => {
             commit('setDist', res.data)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     },
     fetchSections: function({commit}) {
         return axios.get('/sections/')
         .then(res => {
             commit('setSections', res.data)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     },
     fetchApprovals: function({commit}) {
         return axios.get('/approval_levels/')
         .then(res => {
             commit('setAppro', res.data)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     },
     fetchServiceProviders: function({commit}) {
         return axios.get('/service_providers/')
         .then(res => {
             commit('setServiceProviders', res.data)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     },
     fetchEffortSteps: function({commit}) {
         return axios.get('/effort_steps/')
         .then(res => {
             commit('setEffortSteps', res.data)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     },
     fetchEfforts: function({commit}) {
         return axios.get('/efforts/')
         .then(res => {
             commit('setEfforts', res.data)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     },
     fetchLists: function({dispatch}) {
         dispatch('fetchTeams')

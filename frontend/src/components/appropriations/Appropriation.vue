@@ -22,7 +22,7 @@
 
         <!-- Delete activity modal -->
         <div v-if="showModal">
-            <form @submit.prevent="deleteAppr()" class="modal-form">
+            <form @submit.prevent="deleteAppr(appr.id)" class="modal-form">
                 <div class="modal-mask">
                     <div class="modal-wrapper">
                         <div class="modal-container">
@@ -80,11 +80,11 @@
                         <dt>Sagsbehandler</dt>
                         <dd>{{ displayUserName(cas.case_worker) }}</dd>
                         <dt>Betalingskommune</dt>
-                        <dd v-html="displayMuniName(cas.paying_municipality)"></dd>
+                        <dd>{{ cas.paying_municipality }}</dd>
                         <dt>Handlekommune</dt>
-                        <dd v-html="displayMuniName(cas.acting_municipality)"></dd>
+                        <dd>{{ cas.acting_municipality }}</dd>
                         <dt>Bopælskommune</dt>
-                        <dd v-html="displayMuniName(cas.residence_municipality)"></dd>
+                        <dd>{{ cas.residence_municipality }}</dd>
                     </dl>
                 </div>
                 
@@ -97,7 +97,7 @@
             </template>
 
             <div class="sagsbev appr-grid-box">
-                <activity-list :appr-id="appr.id" />
+                <activity-list :appr-id="$route.params.apprId" />
             </div>
 
         </div>
@@ -111,8 +111,7 @@
     import ActivityList from '../activities/ActivityList.vue'
     import AppropriationEdit from './AppropriationEdit.vue'
     import { json2jsDate } from '../filters/Date.js'
-    import { municipalityId2name, districtId2name, sectionId2name, displayStatus, userId2name, approvalId2name } from '../filters/Labels.js'
-    import store from '../../store.js'
+    import { municipalityId2name, districtId2name, sectionId2name, displayStatus, userId2name } from '../filters/Labels.js'
     import PermissionLogic from '../mixins/PermissionLogic.js'
     import notify from '../notifications/Notify.js'
 
@@ -131,15 +130,6 @@
                 showModal: false
             }
         },
-        beforeRouteEnter: function(to, from, next) {
-            store.commit('clearAppropriation')
-            store.dispatch('fetchAppropriation', to.params.apprId)
-            .then(() => next())
-        },
-        beforeRouteUpdate: function(to, from, next) {
-            store.dispatch('fetchAppropriation', to.params.apprId)
-            .then(() => next())
-        },
         computed: {
             cas: function() {
                 return this.$store.getters.getCase
@@ -148,40 +138,30 @@
                 return this.$store.getters.getAppropriation
             }
         },
-        watch: {
-            appr: function() {
-                this.updateBreadCrumb()
-            },
-            cas: function() {
-                this.updateBreadCrumb()
-            }
-        },
         methods: {
-            update: function() {
+            update: function(appropriation_id) {
                 this.show_edit =  false
                 this.showModal = false
-                this.$store.dispatch('fetchAppropriation', this.$route.params.apprId)
+                this.fetchApprData(appropriation_id)
             },
             displayDate: function(date) {
                 return json2jsDate(date)
             },
-            updateBreadCrumb: function() {
-                if (this.cas && this.appr) {
-                    this.$store.commit('setBreadcrumb', [
-                        {
-                            link: '/',
-                            title: 'Sager'
-                        },
-                        {
-                            link: `/case/${ this.appr.case }`,
-                            title: `${ this.cas.sbsys_id }, ${ this.cas.name }`
-                        },
-                        {
-                            link: false,
-                            title: `Bevillingsskrivelse ${ this.appr.sbsys_id }`
-                        }
-                    ])
-                }
+            updateBreadCrumb: function(appr_data, case_data) {
+                this.$store.commit('setBreadcrumb', [
+                    {
+                        link: '/',
+                        title: 'Sager'
+                    },
+                    {
+                        link: `/case/${ case_data.id }`,
+                        title: `${ case_data.sbsys_id }, ${ case_data.name }`
+                    },
+                    {
+                        link: false,
+                        title: `Bevillingsskrivelse ${ appr_data.sbsys_id }`
+                    }
+                ])
             },
             displayMuniName: function(id) {
                 return municipalityId2name(id)
@@ -204,14 +184,103 @@
             cancel: function() {
                 this.showModal = false
             },
-            deleteAppr: function() {
-                axios.delete(`/appropriations/${ this.appr.id }/`)
-                .then(res => {
+            deleteAppr: function(appr_id) {
+                axios.delete(`/appropriations/${ appr_id }/`)
+                .then(() => {
                     this.$router.push(`/case/${ this.cas.id }`)
                     notify('Bevillingsskrivelse slettet', 'success')
                 })
                 .catch(err => this.$store.dispatch('parseErrorOutput', err))
             },
+            fetchApprData: function(appropriation_id) {
+                // TODO: get data for appropriation section
+                const id = btoa(`Appropriation:${appropriation_id}`)
+                let data = {
+                    query: `{
+                        appropriation(id: "${ id }") {
+                            pk,
+                            sbsysId,
+                            note,
+                            case {
+                                pk,
+                                sbsysId,
+                                name,
+                                cprNumber,
+                                caseWorker {
+                                    pk
+                                },
+                                payingMunicipality {
+                                    name
+                                },
+                                actingMunicipality {
+                                    name
+                                },
+                                residenceMunicipality {
+                                    name
+                                }
+                            },
+                            section {
+                                pk
+                            }
+                            activities {
+                                edges {
+                                    node {
+                                        pk,
+                                        modifies {
+                                            pk
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }`
+                }
+                axios.post('/graphql/', data)
+                .then(res => {
+                    if (!res.data.data.appropriation) {
+                        return false
+                    }
+                    const a = res.data.data.appropriation
+                    const new_appr = {
+                        id: a.pk,
+                        case: a.case.pk,
+                        sbsys_id: a.sbsysId,
+                        note: a.note,
+                        section: a.section.pk,
+                        activities: [...a.activities.edges.map(e => {
+                            return {
+                                id: Number(e.node.pk),
+                                modifies: e.node.modifies ? e.node.modifies.pk : null
+                            }
+                        })],
+                        num_ongoing_activities: a.activities.edges.length
+                    }
+                    const new_case = {
+                        name: a.case.name,
+                        id: a.case.pk,
+                        sbsys_id: a.case.sbsysId,
+                        cpr_number: a.case.cprNumber,
+                        case_worker: a.case.caseWorker.pk,
+                        residence_municipality: a.case.residenceMunicipality.name,
+                        paying_municipality: a.case.payingMunicipality.name,
+                        acting_municipality: a.case.actingMunicipality.name
+                    }
+                    this.$store.commit('setAppropriation', new_appr)
+                    this.$store.commit('setCase', new_case)
+                    this.updateBreadCrumb(new_appr, new_case)
+                })
+                .catch(err => {
+                    console.error('Error fetching Appropriation data', err)
+                    this.$store.commit('setAppropriation', null)
+                })
+            }
+        },
+        beforeRouteUpdate: function(to, from, next) {
+            this.update(to.params.apprId)
+            next()
+        },
+        created: function() {
+            this.update(this.$route.params.apprId)
         }
     }
     

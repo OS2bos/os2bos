@@ -5,6 +5,7 @@ import { login } from '../utils/logins.js'
 import baseurl from '../utils/url.js'
 import { makeDateStr } from '../utils/utils.js'
 import { createActivity, createAppropriation, createCase } from '../utils/crud.js'
+import checkConsole from '../utils/console.js'
 
 let today = new Date(),
     rand = Math.floor(Math.random() * 1000 ),
@@ -44,6 +45,7 @@ const testdata = {
 
 fixture('Adding approval levels') // declare the fixture
     .page(baseurl)  // specify the start page
+    .afterEach(() => checkConsole())
 
 test('Add new approval level in Django admin', async t => {
 

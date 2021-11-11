@@ -5,6 +5,7 @@ import { login } from '../utils/logins.js'
 import baseurl from '../utils/url.js'
 import { leadZero, randNum, createDate } from '../utils/utils.js'
 import { createCase, createAppropriation, createActivity, approveActivities, editActivity } from '../utils/crud.js'
+import checkConsole from '../utils/console.js'
 
 const today = new Date(),
     anotherday = new Date(new Date().setDate(today.getDate() + 7)),
@@ -66,6 +67,7 @@ fixture('Check rules')
     .beforeEach(async t => { 
         await login(t) 
     })
+    .afterEach(() => checkConsole())
 
 test('Start date rule check for activities with "CASH" payment', async t => {
 

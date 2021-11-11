@@ -15,9 +15,6 @@ export default {
         current_act: function() {
             return this.$store.getters.getActivity
         },
-        payments: function() {
-            return this.$store.getters.getPayments
-        },
         payment_schedule: function() {
             return this.$store.getters.getPaymentPlan
         },

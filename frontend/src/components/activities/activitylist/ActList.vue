@@ -6,7 +6,7 @@
    - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
 
 <template>
-    <div>
+    <div v-if="act_groups.length > 0">
         <h3 class="act-list-heading">
             {{ title }}
         </h3>

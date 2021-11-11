@@ -147,7 +147,7 @@ const actions = {
             commit('setSearchPaymentsMeta', res.data)
             commit('setSearchPayments', res.data.results)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     },
     fetchMoreSearchPayments: function({commit, state}) {
         axios.get(state.search_payments_meta.next)
@@ -161,7 +161,7 @@ const actions = {
             commit('setSearchPaymentsMeta', data)
             commit('setSearchPayments', data.results)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     },
     /**
      * Clears the payment search filters and fetches a new list of payments

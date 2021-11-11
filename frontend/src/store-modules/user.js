@@ -57,7 +57,7 @@ const actions = {
             commit('setUsers', users)
         })
         .catch(err => {
-            console.log(err)
+            console.error(err)
         })
     },
     fetchUser: async function({commit, dispatch}, user_id) {
@@ -81,7 +81,7 @@ const actions = {
         .then(res => {
             commit('setTeams', res.data)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     },
     fetchTeam: function({commit, dispatch}, team_id) {
         function getTeam() {
