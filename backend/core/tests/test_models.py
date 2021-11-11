@@ -8,6 +8,7 @@
 
 from decimal import Decimal
 from datetime import datetime, date, timedelta
+from dateutil import rrule
 from unittest import mock
 from freezegun import freeze_time
 
@@ -1695,6 +1696,62 @@ class ActivityTestCase(TestCase, BasicTestMixin):
 
         self.assertEqual(activity.total_cost_in_year(), Decimal("15500"))
 
+    def test_total_cost_full_year(self):
+        now = timezone.now()
+        start_date = date(year=now.year, month=12, day=1)
+        end_date = date(year=now.year, month=12, day=15)
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case)
+        # payments for all days in year, daily payments of 500.
+        activity = create_activity(
+            case, appropriation, start_date=start_date, end_date=end_date
+        )
+        create_payment_schedule(activity=activity)
+
+        days_in_year = len(
+            list(
+                rrule.rrule(
+                    rrule.DAILY,
+                    dtstart=date(year=now.year, month=1, day=1),
+                    until=date(year=now.year, month=12, day=31),
+                )
+            )
+        )
+        self.assertEqual(
+            activity.total_cost_full_year, Decimal("500") * days_in_year
+        )
+
+    def test_total_cost_full_year_individual_payment(self):
+        now = timezone.now()
+        start_date = date(year=now.year, month=12, day=1)
+        end_date = date(year=now.year, month=12, day=15)
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case)
+        # There is no way to extrapolate for full year with individual
+        # payments so we just return total_cost
+        activity = create_activity(
+            case, appropriation, start_date=start_date, end_date=end_date
+        )
+        payment_schedule = create_payment_schedule(
+            activity=activity, payment_type=PaymentSchedule.INDIVIDUAL_PAYMENT
+        )
+
+        create_payment(payment_schedule, amount=Decimal("500"))
+
+        self.assertEqual(activity.total_cost_full_year, Decimal("500"))
+
+    def test_total_cost_for_year_no_payment_plan(self):
+        now = timezone.now()
+        start_date = date(year=now.year, month=12, day=1)
+        end_date = date(year=now.year, month=12, day=15)
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case)
+
+        activity = create_activity(
+            case, appropriation, start_date=start_date, end_date=end_date
+        )
+        self.assertEqual(activity.total_cost_full_year, Decimal("0"))
+
     def test_monthly_payment_plan(self):
         start_date = date(year=2019, month=12, day=1)
         end_date = date(year=2020, month=1, day=1)
@@ -2905,7 +2962,7 @@ class PaymentTestCase(TestCase, BasicTestMixin):
             activity_category=activity_category,
         )
 
-        create_account_alias_mapping(
+        account_alias = create_account_alias_mapping(
             "12345", activity_category.category_id, alias="BOS0000002"
         )
         payment_schedule = create_payment_schedule(activity=activity)
@@ -2928,6 +2985,9 @@ class PaymentTestCase(TestCase, BasicTestMixin):
         payment.save()
         payment.refresh_from_db()
         self.assertEqual(payment.saved_account_alias, "BOS0000002")
+
+        account_alias.alias = "BOS0000003"
+        account_alias.save()
 
         # Payment account_string should use the saved_account_string
         self.assertEqual(payment.account_alias, "BOS0000002")
