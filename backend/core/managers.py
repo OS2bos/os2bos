@@ -247,6 +247,71 @@ class AppropriationQuerySet(models.QuerySet):
         )
 
 
+    def appropriations_for_dst_payload(self, from_date=None, sections=None):
+        """Filter appropriations for a Danmarks Statistik payload."""
+        from core.models import MAIN_ACTIVITY, STATUS_GRANTED, Case as CaseModel
+
+        queryset = self.filter(
+            activities__status=STATUS_GRANTED,
+            activities__activity_type=MAIN_ACTIVITY,
+        )
+
+        if sections:
+            queryset = queryset.filter(section__in=sections)
+
+        report_types = {
+            "NEW": "Ny",
+            "CHANGED": "Ændring",
+            "CANCELLED": "Annullering",
+        }
+
+        if from_date:
+            cases = CaseModel.objects.filter(appropriations__in=queryset)
+            changed_cases = cases.filter_changed_cases_for_dst_payload(from_date)
+
+            main_activities_q = Q(activities__activity_type=MAIN_ACTIVITY)
+            main_activities_appropriated_after_from_date_q = Q(
+                activities__activity_type=MAIN_ACTIVITY,
+                activities__appropriation_date__gt=from_date,
+            )
+            main_activities_appropriated_before_from_date_q = Q(
+                activities__activity_type=MAIN_ACTIVITY,
+                activities__appropriation_date__lte=from_date,
+            )
+
+            queryset = queryset.annotate(
+                main_activities_count=Count(
+                    "activities", filter=main_activities_q
+                ),
+                main_activities_appropriated_after_from_date_count=Count(
+                    "activities",
+                    filter=main_activities_appropriated_after_from_date_q,
+                ),
+                report_type=Case(
+                    When(case__in=changed_cases, then=Value(report_types["CHANGED"])),
+                    When(
+                        main_activities_count=F(
+                            "main_activities_appropriated_after_from_date_count"
+                        ),
+                        then=Value(report_types["NEW"]),
+                    ),
+                    When(
+                        main_activities_count__gt=F(
+                            "main_activities_appropriated_after_from_date_count"
+                        ),
+                        then=Value(report_types["CHANGED"]),
+                    ),
+                    default=Value(""),
+                    output_field=CharField()
+                ),
+            ).exclude(report_type="")
+        else:
+            queryset = queryset.annotate(report_type=Value(report_types["NEW"], output_field=CharField()))
+
+
+        return queryset.distinct()
+
+
 class CaseQuerySet(models.QuerySet):
     """Distinguish between expired and ongoing cases."""
 
@@ -295,3 +360,23 @@ class CaseQuerySet(models.QuerySet):
         ).distinct()
 
         return cases
+
+
+    def filter_changed_cases_for_dst_payload(self, from_date):
+        """Filter changed cases for a DST payload."""
+        changed_case_ids = []
+
+        for case in self:
+            try:
+                historical_case = case.history.as_of(from_date)
+            except case.DoesNotExist:
+                historical_case = case.history.earliest()
+
+            # If acting municipality has changed we include it as changed.
+            if (
+                hasattr(historical_case, "acting_municipality")
+                and not historical_case.acting_municipality == case.acting_municipality
+            ):
+                changed_case_ids.append(case.id)
+
+        return self.filter(id__in=changed_case_ids)

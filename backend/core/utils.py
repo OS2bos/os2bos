@@ -1180,31 +1180,6 @@ generate_cases_report_list_versions = {"0": generate_cases_report_list_v0}
 write_prism_file_versions = {"0": write_prism_file_v0}
 
 
-# Danmarks Statistik utilities
-# def filter_cases_with_changed_acting_municipalities(from_start_date):
-#    pass
-
-
-def filter_appropriations_for_dst_payload(from_start_date=None, sections=None):
-    """Filter appropriations for a Danmarks Statistik payload."""
-    # If from_start_date is given we know it is a delta load
-    query_params = {}
-    if from_start_date:
-        query_params["activities__appropriation_date__gte"] = str(
-            from_start_date
-        )
-    if sections:
-        query_params["section__in"] = sections
-
-    appropriations = models.Appropriation.objects.filter(
-        activities__status=models.STATUS_GRANTED,
-        activities__activity_type=models.MAIN_ACTIVITY,
-        **query_params,
-    ).distinct()
-
-    return appropriations
-
-
 def generate_dst_payload_metadata_element(test=True):
     """Generate the metadata element for a DST payload."""
     now = timezone.now()
@@ -1291,9 +1266,9 @@ def generate_dst_payload_preventive_measures(
     #id6e560773-349b-4779-872c-126f3fad2858
     """
     appropriations = (
-        filter_appropriations_for_dst_payload(from_start_date, sections)
-        .select_related("case")
+        models.Appropriation.objects.select_related("case")
         .prefetch_related("case__related_persons", "activities")
+        .appropriations_for_dst_payload(from_start_date, sections)
     )
 
     E = ElementMaker(
@@ -1344,26 +1319,22 @@ def generate_dst_payload_handicap(
     #id8eb5787a-6efa-40ac-b911-0b0c817c2104
     """
     appropriations = (
-        filter_appropriations_for_dst_payload(from_start_date, sections)
-        .select_related("case")
+        models.Appropriation.objects.select_related("case")
         .prefetch_related("case__related_persons", "activities")
+        .appropriations_for_dst_payload(from_start_date, sections)
     )
 
     E = ElementMaker(
         namespace="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
     )
 
-    report_type = {
-        "NEW": "Ny",
-        "CHANGED": "Ændring",
-        "CANCELLED": "Annullering",
-    }
-
     appropriations_root = E.BoernMedHandicapSagStrukturSamling()
     for appropriation in appropriations:
+        case = appropriation.case
+
         appropriation_structure = E.BoernMedHandicapSagStruktur(
             E.INDSATSFORLOEB_ID(appropriation.sbsys_id),
-            E.INDBERETNINGSTYPE(report_type["NEW"]),
+            E.INDBERETNINGSTYPE(appropriation.report_type),
             E.CPR(appropriation.case.cpr_number),
             E.INDSATS_KODE(appropriation.section_info.dst_code),
             E.INDSATS_STARTDATO(str(appropriation.granted_from_date)),
