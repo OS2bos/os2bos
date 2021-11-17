@@ -1,3 +1,15 @@
+Version 3.6.0, 2021-11-17
+-------------------------
+
+New in this version:
+
+Features
+^^^^^^^^
+
+- Add preliminary GraphQL API.
+- Disallow one-time payment frequency for main activities (in the frontend for now).
+
+
 Version 3.5.0, 2021-09-27
 -------------------------
 
