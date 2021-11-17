@@ -17,13 +17,15 @@
                 value="RUNNING_PAYMENT"
                 @change="resetValues">
             <label for="pay-type-running">Løbende ydelse</label>
-            <input 
-                type="radio" 
-                v-model="model" 
-                id="pay-type-single" 
-                value="ONE_TIME_PAYMENT"
-                @change="resetValues">
-            <label for="pay-type-single">Engangsudgift</label>
+            <template v-if="act && act.activity_type !== 'MAIN_ACTIVITY'">
+                <input
+                    type="radio"
+                    v-model="model"
+                    id="pay-type-single"
+                    value="ONE_TIME_PAYMENT"
+                    @change="resetValues">
+                <label for="pay-type-single">Engangsudgift</label>
+            </template>
             <input 
                 type="radio" 
                 v-model="model" 
