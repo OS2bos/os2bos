@@ -246,10 +246,13 @@ class AppropriationQuerySet(models.QuerySet):
             )
         )
 
-
     def appropriations_for_dst_payload(self, from_date=None, sections=None):
         """Filter appropriations for a Danmarks Statistik payload."""
-        from core.models import MAIN_ACTIVITY, STATUS_GRANTED, Case as CaseModel
+        from core.models import (
+            MAIN_ACTIVITY,
+            STATUS_GRANTED,
+            Case as CaseModel,
+        )
 
         queryset = self.filter(
             activities__status=STATUS_GRANTED,
@@ -267,7 +270,9 @@ class AppropriationQuerySet(models.QuerySet):
 
         if from_date:
             cases = CaseModel.objects.filter(appropriations__in=queryset)
-            changed_cases = cases.filter_changed_cases_for_dst_payload(from_date)
+            changed_cases = cases.filter_changed_cases_for_dst_payload(
+                from_date
+            )
 
             main_activities_q = Q(activities__activity_type=MAIN_ACTIVITY)
             main_activities_appropriated_after_from_date_q = Q(
@@ -288,7 +293,10 @@ class AppropriationQuerySet(models.QuerySet):
                     filter=main_activities_appropriated_after_from_date_q,
                 ),
                 report_type=Case(
-                    When(case__in=changed_cases, then=Value(report_types["CHANGED"])),
+                    When(
+                        case__in=changed_cases,
+                        then=Value(report_types["CHANGED"]),
+                    ),
                     When(
                         main_activities_count=F(
                             "main_activities_appropriated_after_from_date_count"
@@ -302,12 +310,15 @@ class AppropriationQuerySet(models.QuerySet):
                         then=Value(report_types["CHANGED"]),
                     ),
                     default=Value(""),
-                    output_field=CharField()
+                    output_field=CharField(),
                 ),
             ).exclude(report_type="")
         else:
-            queryset = queryset.annotate(report_type=Value(report_types["NEW"], output_field=CharField()))
-
+            queryset = queryset.annotate(
+                report_type=Value(
+                    report_types["NEW"], output_field=CharField()
+                )
+            )
 
         return queryset.distinct()
 
@@ -361,7 +372,6 @@ class CaseQuerySet(models.QuerySet):
 
         return cases
 
-
     def filter_changed_cases_for_dst_payload(self, from_date):
         """Filter changed cases for a DST payload."""
         changed_case_ids = []
@@ -375,7 +385,8 @@ class CaseQuerySet(models.QuerySet):
             # If acting municipality has changed we include it as changed.
             if (
                 hasattr(historical_case, "acting_municipality")
-                and not historical_case.acting_municipality == case.acting_municipality
+                and not historical_case.acting_municipality
+                == case.acting_municipality
             ):
                 changed_case_ids.append(case.id)
 

@@ -21,6 +21,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 import configparser
 import logging
+from collections import OrderedDict
 
 from django.utils.translation import gettext_lazy as _
 
@@ -250,15 +251,6 @@ VIRK_USER = settings.get("VIRK_USER")
 VIRK_PASS = settings.get("VIRK_PASS")
 VIRK_URL = settings.get(
     "VIRK_URL", "http://distribution.virk.dk/cvr-permanent/virksomhed/_search"
-)
-
-# DST settings
-DST_MUNICIPALITY_CODE = settings.get("DST_MUNICIPALITY_CODE", fallback="151")
-DST_MUNICIPALITY_CVR_NUMBER = settings.get(
-    "DST_MUNICIPALITY_CVR_NUMBER", fallback="58271713"
-)
-DST_MUNICIPALITY_P_NUMBER = settings.get(
-    "DST_MUNICIPALITY_P_NUMBER", fallback="1111111111"
 )
 
 REST_FRAMEWORK = {
@@ -554,23 +546,60 @@ CONSTANCE_CONFIG = {
         _("Maskin-nummer til PRISME"),
         int,
     ),
+    # DST settings
+    "DST_MUNICIPALITY_CODE": (
+        settings.get("DST_MUNICIPALITY_CODE", fallback="151"),
+        _("Kommune kode"),
+    ),
+    "DST_MUNICIPALITY_CVR_NUMBER": (
+        settings.get("DST_MUNICIPALITY_CVR_NUMBER", fallback="58271713"),
+        _("Kommune CVR"),
+    ),
+    "DST_MUNICIPALITY_P_NUMBER": (
+        settings.get("DST_MUNICIPALITY_P_NUMBER", fallback="1003259972"),
+        _("Kommune P-nummer"),
+    ),
+    "DST_PROFESSIONAL_CONTACT": (
+        settings.get("DST_PROFESSIONAL_CONTACT", fallback="ANE9@balk.dk"),
+        _("Faglig Ansvarlig kontakt (Identifier, email)"),
+    ),
+    "DST_TECHNICAL_CONTACT": (
+        settings.get("DST_TECHNICAL_CONTACT", fallback="jeb@balk.dk"),
+        _("Teknisk Ansvarlig (Identifier, email)"),
+    ),
+    "DST_RECEIPT_CONTACT": (
+        settings.get(
+            "DST_RECEIPT_CONTACT", fallback="c-bur-ressourceteam@balk.dk"
+        ),
+        _("Kvitteringsmodtager (Identifier, email)"),
+    ),
 }
 CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
-CONSTANCE_CONFIG_FIELDSETS = {
-    "Generelle indstillinger": (
-        "SBSYS_EMAIL",
-        "TO_EMAIL_FOR_PAYMENTS",
-        "DEFAULT_FROM_EMAIL",
-        "DEFAULT_TEAM_NAME",
-    ),
-    "Økonomi & Konto indstillinger": (
-        "ACCOUNT_NUMBER_DEPARTMENT",
-        "ACCOUNT_NUMBER_KIND",
-        "ACCOUNT_NUMBER_UNKNOWN",
-        "PRISM_ORG_UNIT",
-        "PRISM_MACHINE_NO",
-    ),
-}
+CONSTANCE_CONFIG_FIELDSETS = OrderedDict(
+    {
+        "Generelle indstillinger": (
+            "SBSYS_EMAIL",
+            "TO_EMAIL_FOR_PAYMENTS",
+            "DEFAULT_FROM_EMAIL",
+            "DEFAULT_TEAM_NAME",
+        ),
+        "Økonomi & Konto indstillinger": (
+            "ACCOUNT_NUMBER_DEPARTMENT",
+            "ACCOUNT_NUMBER_KIND",
+            "ACCOUNT_NUMBER_UNKNOWN",
+            "PRISM_ORG_UNIT",
+            "PRISM_MACHINE_NO",
+        ),
+        "Danmarks Statistik levering indstillinger": (
+            "DST_MUNICIPALITY_CODE",
+            "DST_MUNICIPALITY_CVR_NUMBER",
+            "DST_MUNICIPALITY_P_NUMBER",
+            "DST_PROFESSIONAL_CONTACT",
+            "DST_TECHNICAL_CONTACT",
+            "DST_RECEIPT_CONTACT",
+        ),
+    }
+)
 
 SBSYS_APPROPRIATION_TEMPLATE = "core/html/appropriation_letter.html"
 SBSYS_XML_TEMPLATE = "core/xml/os2forms.xml"

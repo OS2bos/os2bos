@@ -1185,9 +1185,9 @@ def generate_dst_payload_metadata_element(test=True):
     now = timezone.now()
 
     # Variables.
-    municipality_code = settings.DST_MUNICIPALITY_CODE
-    municipality_cvr = settings.DST_MUNICIPALITY_CVR_NUMBER
-    municipality_p_number = settings.DST_MUNICIPALITY_P_NUMBER
+    municipality_code = config.DST_MUNICIPALITY_CODE
+    municipality_cvr = config.DST_MUNICIPALITY_CVR_NUMBER
+    municipality_p_number = config.DST_MUNICIPALITY_P_NUMBER
     latest_passed_month = (now - relativedelta(months=1)).month
 
     if test:
@@ -1232,18 +1232,18 @@ def generate_dst_payload_metadata_element(test=True):
         E.ContactStructureCollection(
             E.ContactStructure(
                 E.ContactTypeName("Faglig ansvarlig"),
-                E.ContactIdentifier("Test"),
-                E.ContactEmailAddress("test@test.dk"),
+                E.ContactIdentifier(config.DST_PROFESSIONAL_CONTACT),
+                E.ContactEmailAddress(config.DST_PROFESSIONAL_CONTACT),
             ),
             E.ContactStructure(
                 E.ContactTypeName("Teknisk ansvarlig"),
-                E.ContactIdentifier("Test"),
-                E.ContactEmailAddress("test@test.dk"),
+                E.ContactIdentifier(config.DST_TECHNICAL_CONTACT),
+                E.ContactEmailAddress(config.DST_TECHNICAL_CONTACT),
             ),
             E.ContactStructure(
                 E.ContactTypeName("Kvitteringsmodtager"),
-                E.ContactIdentifier("Test"),
-                E.ContactEmailAddress("test@test.dk"),
+                E.ContactIdentifier(config.DST_RECEIPT_CONTACT),
+                E.ContactEmailAddress(config.DST_RECEIPT_CONTACT),
             ),
         ),
         E.DBoksContactNewStructure(
