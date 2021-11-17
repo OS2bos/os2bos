@@ -375,10 +375,9 @@ Deploy master:
     SALTAPI_URL: https://ctrl1.magenta-aps.dk/api/
     SALTAPI_EAUTH: file
     GIT_STRATEGY: none
-    PILLAR_OVERRIDE: "{\"OS2BOS_APPLICATION_DOCKER_IMAGE\":\"${IMAGE}:${CI_COMMIT_TAG}\"}"
   script:
     - echo Deploying ${IMAGE_TAG} to https://bevilling.balk.dk
-    - pepper --client runner --fail-any state.orchestrate ${DEPLOYMENT_NAMESPACE} pillar=$(echo $PILLAR_OVERRIDE)
+    - pepper --client runner --fail-any state.orchestrate ${DEPLOYMENT_NAMESPACE}
   environment:
     name: ballerup-production
     url: https://bevilling.balk.dk
