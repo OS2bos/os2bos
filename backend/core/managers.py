@@ -292,10 +292,20 @@ class AppropriationQuerySet(models.QuerySet):
                     "activities",
                     filter=main_activities_appropriated_after_from_date_q,
                 ),
+                main_activities_appropriated_before_from_date_q=Count(
+                    "activities",
+                    filter=main_activities_appropriated_before_from_date_q,
+                ),
                 report_type=Case(
                     When(
                         case__in=changed_cases,
                         then=Value(report_types["CHANGED"]),
+                    ),
+                    When(
+                        main_activities_count=F(
+                            "main_activities_appropriated_before_from_date_q"
+                        ),
+                        then=Value(""),
                     ),
                     When(
                         main_activities_count=F(

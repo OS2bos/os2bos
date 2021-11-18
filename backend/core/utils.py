@@ -1307,9 +1307,7 @@ def generate_dst_payload_preventive_measures(
     return doc
 
 
-def generate_dst_payload_handicap(
-    from_start_date=None, sections=None, test=True
-):
+def generate_dst_payload_handicap(from_date=None, sections=None, test=True):
     """
     Generate a XML payload for DST for "Handicap".
 
@@ -1321,7 +1319,7 @@ def generate_dst_payload_handicap(
     appropriations = (
         models.Appropriation.objects.select_related("case")
         .prefetch_related("case__related_persons", "activities")
-        .appropriations_for_dst_payload(from_start_date, sections)
+        .appropriations_for_dst_payload(from_date, sections)
     )
 
     E = ElementMaker(
@@ -1353,7 +1351,5 @@ def generate_dst_payload_handicap(
     doc = E.BoernMedHandicapLeveranceL231Struktur()
     doc.append(generate_dst_payload_metadata_element(test))
     doc.append(appropriations_root)
-
-    print(etree.tostring(doc))
 
     return doc

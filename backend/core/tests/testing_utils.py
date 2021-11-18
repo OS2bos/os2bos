@@ -39,6 +39,7 @@ from core.models import (
     PaymentDateExclusion,
     AccountAliasMapping,
     ActivityCategory,
+    ApprovalLevel,
 )
 
 
@@ -371,3 +372,9 @@ def create_municipality(name="København"):
     municipality, _ = Municipality.objects.get_or_create(name=name)
 
     return municipality
+
+
+def create_approval_level(name="niveau"):
+    approval_level, _ = ApprovalLevel.objects.get_or_create(name=name)
+
+    return approval_level
