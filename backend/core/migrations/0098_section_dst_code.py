@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='sectioninfo',
+            model_name='section',
             name='dst_code',
             field=models.CharField(blank=True, help_text='Værdikode til brug ved levering af data til Danmarks Statistik.', max_length=128, verbose_name='DST værdikode'),
         ),

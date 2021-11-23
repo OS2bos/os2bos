@@ -1197,6 +1197,15 @@ class Section(Classification):
         max_length=128, verbose_name=_("lov tekst navn")
     )
 
+    dst_code = models.CharField(
+        max_length=128,
+        verbose_name=_("DST værdikode"),
+        help_text=_(
+            "Værdikode til brug ved levering af data til Danmarks Statistik."
+        ),
+        blank=True,
+    )
+
     def __str__(self):
         return f"{self.paragraph}"
 
@@ -1651,15 +1660,6 @@ class SectionInfo(Classification):
     )
     sbsys_template_id = models.CharField(
         max_length=128, verbose_name=_("SBSYS skabelon-id"), blank=True
-    )
-
-    dst_code = models.CharField(
-        max_length=128,
-        verbose_name=_("DST værdikode"),
-        help_text=_(
-            "Værdikode til brug ved levering af data til Danmarks Statistik."
-        ),
-        blank=True,
     )
 
     main_activity_main_account_number = models.CharField(

@@ -1286,7 +1286,7 @@ def generate_dst_payload_preventive_measures(
             E.UdsatBarnCPRidentifikator(appropriation.case.cpr_number),
             E.FormynderCPRidentifikator(father_or_mother.cpr_number),
             E.ForanstaltningId(appropriation.sbsys_id),
-            E.ForanstaltningKode(appropriation.section_info.dst_code),
+            E.ForanstaltningKode(appropriation.section.dst_code),
             E.ForanstaltningStartDato(str(appropriation.granted_from_date)),
         )
 
@@ -1334,7 +1334,7 @@ def generate_dst_payload_handicap(from_date=None, sections=None, test=True):
             E.INDSATSFORLOEB_ID(appropriation.sbsys_id),
             E.INDBERETNINGSTYPE(appropriation.report_type),
             E.CPR(appropriation.case.cpr_number),
-            E.INDSATS_KODE(appropriation.section_info.dst_code),
+            E.INDSATS_KODE(appropriation.section.dst_code),
             E.INDSATS_STARTDATO(str(appropriation.granted_from_date)),
         )
         end_date = appropriation.granted_to_date
