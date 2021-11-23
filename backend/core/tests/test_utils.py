@@ -1283,7 +1283,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
         end_date = now + timedelta(days=5)
         case = create_case(self.case_worker, self.municipality, self.district)
         create_related_person(case, relation_type="far")
-        section = create_section()
+        section = create_section(dst_code="123")
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
         )
@@ -1308,8 +1308,6 @@ class DSTUtilities(TestCase, BasicTestMixin):
         section_info = SectionInfo.objects.get(
             activity_details=granted_activity.details, section=section
         )
-        section_info.dst_code = "123"
-        section_info.save()
 
         schema_path = os.path.join(
             os.path.dirname(__file__),
@@ -1334,7 +1332,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
         end_date = now + timedelta(days=5)
         case = create_case(self.case_worker, self.municipality, self.district)
         create_related_person(case, relation_type="far")
-        section = create_section()
+        section = create_section(dst_code="123")
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
         )
@@ -1398,7 +1396,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
         end_date = now + timedelta(days=5)
         case = create_case(self.case_worker, self.municipality, self.district)
         create_related_person(case, relation_type="far")
-        section = create_section()
+        section = create_section(dst_code="123")
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
         )
@@ -1424,8 +1422,6 @@ class DSTUtilities(TestCase, BasicTestMixin):
         section_info = SectionInfo.objects.get(
             activity_details=activity.details, section=section
         )
-        section_info.dst_code = "123"
-        section_info.save()
         approval_level = create_approval_level()
 
         activities = Activity.objects.filter(pk=activity.pk)
@@ -1496,7 +1492,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
         end_date = now + timedelta(days=5)
         case = create_case(self.case_worker, self.municipality, self.district)
         create_related_person(case, relation_type="far")
-        section = create_section()
+        section = create_section(dst_code="123")
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
         )
@@ -1522,8 +1518,6 @@ class DSTUtilities(TestCase, BasicTestMixin):
         section_info = SectionInfo.objects.get(
             activity_details=activity.details, section=section
         )
-        section_info.dst_code = "123"
-        section_info.save()
         approval_level = create_approval_level()
 
         activities = Activity.objects.filter(pk=activity.pk)
@@ -1594,7 +1588,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
         end_date = now + timedelta(days=5)
         case = create_case(self.case_worker, self.municipality, self.district)
         create_related_person(case, relation_type="far")
-        section = create_section()
+        section = create_section(dst_code="123")
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
         )
@@ -1620,8 +1614,6 @@ class DSTUtilities(TestCase, BasicTestMixin):
         section_info = SectionInfo.objects.get(
             activity_details=activity.details, section=section
         )
-        section_info.dst_code = "123"
-        section_info.save()
         approval_level = create_approval_level()
 
         activities = Activity.objects.filter(pk=activity.pk)
@@ -1673,7 +1665,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
         end_date = now + timedelta(days=5)
         case = create_case(self.case_worker, self.municipality, self.district)
         create_related_person(case, relation_type="far")
-        section = create_section()
+        section = create_section(dst_code="123")
         appropriation = create_appropriation(
             sbsys_id="XXX-YYY", case=case, section=section
         )
@@ -1699,8 +1691,6 @@ class DSTUtilities(TestCase, BasicTestMixin):
         section_info = SectionInfo.objects.get(
             activity_details=activity.details, section=section
         )
-        section_info.dst_code = "123"
-        section_info.save()
         approval_level = create_approval_level()
 
         activities = Activity.objects.filter(pk=activity.pk)
