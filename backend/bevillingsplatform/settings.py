@@ -81,8 +81,9 @@ ALLOWED_HOSTS = settings.get("ALLOWED_HOSTS", fallback="").split(",")
 USE_X_FORWARDED_HOST = settings.getboolean(
     "USE_X_FORWARDED_HOST", fallback=True
 )
+# maxsplit=1 enables us to use a value containing commas, like "https,https"
 SECURE_PROXY_SSL_HEADER = (
-    tuple(settings.get("SECURE_PROXY_SSL_HEADER").split(","))
+    tuple(settings.get("SECURE_PROXY_SSL_HEADER").split(",", maxsplit=1))
     if "SECURE_PROXY_SSL_HEADER" in settings
     else ("HTTP_X_FORWARDED_PROTO", "https")
 )
