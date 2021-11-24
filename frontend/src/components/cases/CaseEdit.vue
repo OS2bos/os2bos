@@ -221,7 +221,7 @@
                     .then(res => {
                         this.effort_available = res.data    
                     })
-                    .catch(err => console.log(err))
+                    .catch(err => console.error(err))
                 }
             },
             changeMuni: function(ev, type) {
@@ -312,7 +312,7 @@
                                     main_case: res.data.id
                                 }
                                 axios.post('/related_persons/', data_related)
-                                .catch(err => console.log(err))
+                                .catch(err => console.error(err))
                             }
                         }
                         this.$router.push(`/case/${ res.data.id }/`)

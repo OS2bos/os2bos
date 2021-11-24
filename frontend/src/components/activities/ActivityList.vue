@@ -19,7 +19,6 @@
                 </button>
             </div>
         </header>
-
         <fieldset class="act-list-actions" v-if="!no_acts">
             <div style="margin-left: 1.25rem;">
                 <input 
@@ -78,7 +77,8 @@
             :appr-id="apprId" 
             :acts="approvable_acts"
             :warning="diag_approval_warning"
-            @close="closeDialog()" />
+            @close="closeDialog" 
+            @updated="update(apprId)" />
 
     </section>
 
@@ -91,6 +91,7 @@
     import ApprovalDiag from './Approval.vue'
     import PermissionLogic from '../mixins/PermissionLogic.js'
     import ActList from './activitylist/ActList.vue'
+    import axios from '../http/Http.js'
 
     export default {
 
@@ -111,20 +112,23 @@
                 this_year: String(new Date().getUTCFullYear()),
                 next_year: String(new Date().getUTCFullYear() + 1),
                 previous_year: String(new Date().getUTCFullYear() - 1),
+                total_costs: null
             }
         },
         computed: {
-            appropriation: function() {
-                return this.$store.getters.getAppropriation
-            },
             acts: function() {
                 return this.$store.getters.getActivities
+            },
+            appropriation: function() {
+                return this.$store.getters.getAppropriation
             },
             main_activities: function() {
                 if (this.acts) {
                     return this.acts.filter(function(act) {
                         return act.activity_type === 'MAIN_ACTIVITY'
                     })
+                } else {
+                    return []
                 }
             },
             suppl_activities: function() {
@@ -133,10 +137,12 @@
                         return act.activity_type === 'SUPPL_ACTIVITY'
                     })
                     return this.sortSupplementaryActs(unsorted_acts)
+                } else {
+                    return []
                 }
             },
             no_acts: function() {
-                if (this.acts.length < 1) {
+                if (!this.acts || this.acts.length < 1) {
                     return true
                 } else {
                     return false
@@ -151,18 +157,13 @@
                 },
                 set: function(new_val) {
                     this.$store.commit('setSelectedCostCalc', new_val)
-                    this.update()
+                    this.update(this.apprId)
                 }
             }
         },
-        watch: {
-            apprId: function() {
-                this.update()
-            }
-        },
         methods: {
-            update: function() {
-                this.$store.dispatch('fetchActivities', this.apprId)
+            update: function(appropriation_id) {
+                this.fetchActListData(appropriation_id)
                 this.$store.commit('setUnCheckAll')
             },
             closeDialog: function() {
@@ -177,23 +178,31 @@
                 return cost2da(num)
             },
             displayGrantedYearly: function() {
-                switch(this.selectedValue) {
-                    case this.previous_year:
-                        return this.displayDigits(this.appropriation.total_granted_previous_year) + ' kr.'
-                    case this.next_year:
-                        return this.displayDigits(this.appropriation.total_granted_next_year) + ' kr.'
-                    default:
-                        return this.displayDigits(this.appropriation.total_granted_this_year) + ' kr.'
+                if (this.total_costs) {                
+                    switch(this.selectedValue) {
+                        case this.previous_year:
+                            return this.displayDigits(this.total_costs.total_granted_previous_year) + ' kr.'
+                        case this.next_year:
+                            return this.displayDigits(this.total_costs.total_granted_next_year) + ' kr.'
+                        default:
+                            return this.displayDigits(this.total_costs.total_granted_this_year) + ' kr.'
+                    }
+                } else {
+                    return false
                 }
             },
             displayExpectedYearly: function() {
-                switch(this.selectedValue) {
-                    case this.previous_year:
-                        return this.displayDigits(this.appropriation.total_expected_previous_year) + ' kr.'
-                    case this.next_year:
-                        return this.displayDigits(this.appropriation.total_expected_next_year) + ' kr.'
-                    default:
-                        return this.displayDigits(this.appropriation.total_expected_this_year) + ' kr.'
+                if (this.total_costs) {   
+                    switch(this.selectedValue) {
+                        case this.previous_year:
+                            return this.displayDigits(this.total_costs.total_expected_previous_year) + ' kr.'
+                        case this.next_year:
+                            return this.displayDigits(this.total_costs.total_expected_next_year) + ' kr.'
+                        default:
+                            return this.displayDigits(this.total_costs.total_expected_this_year) + ' kr.'
+                    }
+                } else {
+                    return false
                 }
             },
             sortSupplementaryActs: function(acts) {
@@ -247,13 +256,123 @@
                 } else {
                     this.$router.push('/activity/create?type=main')
                 }
+            },
+            fetchActListData: function(appropriation_id) {
+                const id = btoa(`Appropriation:${appropriation_id}`)
+                let data = {
+                    query: `{
+                        appropriation(id: "${ id }") {
+                            activities {
+                                edges {
+                                    node {
+                                        pk,
+                                        status,
+                                        note,
+                                        activityType,
+                                        startDate,
+                                        endDate,
+                                        modified,
+                                        details {
+                                            name,
+                                            pk
+                                        },
+                                        modifies {
+                                            pk
+                                        },
+                                        totalGrantedThisYear,
+                                        totalExpectedThisYear,
+                                        totalGrantedNextYear,
+                                        totalExpectedNextYear,
+                                        totalGrantedPreviousYear,
+                                        totalExpectedPreviousYear,
+                                        paymentPlan {
+                                            recipientId,
+                                            recipientName,
+                                            fictive,
+                                            paymentMethod
+                                        },
+                                        serviceProvider {
+                                            pk
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }`
+                }
+                axios.post('/graphql/', data)
+                .then(res => {
+                    if (!res.data.data.appropriation) {
+                        return false
+                    }
+                    const edges = res.data.data.appropriation.activities.edges 
+                    const acts = edges.map(a => {
+                        return {
+                            id: a.node.pk,
+                            status: a.node.status,
+                            details: a.node.details.pk,
+                            details_data: {
+                                name: a.node.details.name
+                            },
+                            note: a.node.note,
+                            start_date: a.node.startDate,
+                            end_date: a.node.endDate,
+                            modified: a.node.modified,
+                            activity_type: a.node.activityType,
+                            modifies: a.node.modifies ? a.node.modifies.pk : null,
+                            total_granted_this_year: a.node.totalGrantedThisYear,
+                            total_expected_this_year: a.node.totalExpectedThisYear,
+                            total_granted_next_year: a.node.totalGrantedNextYear,
+                            total_expected_next_year: a.node.totalExpectedNextYear,
+                            total_granted_previous_year: a.node.totalGrantedPreviousYear,
+                            total_expected_previous_year: a.node.totalExpectedPreviousYear,
+                            approved: a.node.status === 'GRANTED' ? true : false,
+                            expected: a.node.status === 'EXPECTED' ? true : false,
+                            service_provider: a.node.serviceProvider ? a.node.serviceProvider.pk : null,
+                            payment_plan: {
+                                fictive: a.node.paymentPlan.fictive,
+                                recipient_name: a.node.paymentPlan.recipientName,
+                                recipient_id: a.node.paymentPlan.recipientId,
+                                payment_method: a.node.paymentPlan.paymentMethod
+                            }
+                        }
+                    })
+                    this.$store.commit('setActivityList', acts)
+                    const reducer = function(acc,val) {
+                        const new_acc = {
+                            node: {
+                                totalGrantedThisYear: Number(acc.node.totalGrantedThisYear) + Number(val.node.totalGrantedThisYear),
+                                totalExpectedThisYear: Number(acc.node.totalExpectedThisYear) + Number(val.node.totalExpectedThisYear),
+                                totalGrantedNextYear: Number(acc.node.totalGrantedNextYear) + Number(val.node.totalGrantedNextYear),
+                                totalExpectedNextYear: Number(acc.node.totalExpectedNextYear) + Number(val.node.totalExpectedNextYear),
+                                totalGrantedPreviousYear: Number(acc.node.totalGrantedPreviousYear) + Number(val.node.totalGrantedPreviousYear),
+                                totalExpectedPreviousYear: Number(acc.node.totalExpectedPreviousYear) + Number(val.node.totalExpectedPreviousYear)
+                            }
+                        }
+                        return new_acc
+                    }
+                    if (edges.length > 0) {
+                        const new_appropriation = edges.reduce(reducer)
+                        // TODO: total_expected_full_year and total_cost_expected missing. Other mismatches in data?
+                        this.total_costs = {
+                            total_granted_this_year: new_appropriation.node.totalGrantedThisYear,
+                            total_expected_this_year: new_appropriation.node.totalExpectedThisYear,
+                            total_granted_next_year: new_appropriation.node.totalGrantedNextYear,
+                            total_expected_next_year: new_appropriation.node.totalExpectedNextYear,
+                            total_granted_previous_year: new_appropriation.node.totalGrantedPreviousYear,
+                            total_expected_previous_year: new_appropriation.node.totalExpectedPreviousYear
+                        }
+                    }
+                })
             }
         },
-        beforeCreate: function() {
-            this.$store.commit('clearActivities')
+        watch: {
+            apprId: function(new_val) {
+                this.update(new_val)
+            }
         },
         created: function() {
-            this.update()
+            this.update(this.apprId)
         }
     }
     

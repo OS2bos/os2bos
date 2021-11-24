@@ -18,7 +18,7 @@ function fetchData() {
             store.commit('setMunis', ev.data.municipalities)
         })
         myWorker.addEventListener('error', function(ev) {
-            console.log(ev.message)
+            console.error(ev.message)
         })
     }
 }    

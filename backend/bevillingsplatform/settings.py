@@ -81,8 +81,9 @@ ALLOWED_HOSTS = settings.get("ALLOWED_HOSTS", fallback="").split(",")
 USE_X_FORWARDED_HOST = settings.getboolean(
     "USE_X_FORWARDED_HOST", fallback=True
 )
+# maxsplit=1 enables us to use a value containing commas, like "https,https"
 SECURE_PROXY_SSL_HEADER = (
-    tuple(settings.get("SECURE_PROXY_SSL_HEADER").split(","))
+    tuple(settings.get("SECURE_PROXY_SSL_HEADER").split(",", maxsplit=1))
     if "SECURE_PROXY_SSL_HEADER" in settings
     else ("HTTP_X_FORWARDED_PROTO", "https")
 )
@@ -109,6 +110,7 @@ INSTALLED_APPS = [
     "constance.backends.database",
     "core.apps.CoreConfig",
     "django_saml2_auth",
+    "graphene_django",
     "mailer",
     "watchman",
 ]
@@ -605,6 +607,10 @@ ALLOW_EDIT_OF_PAST_PAYMENTS = settings.getboolean(
 ALLOW_SERVICE_PROVIDERS_FROM_VIRK = settings.getboolean(
     "ALLOW_SERVICE_PROVIDERS_FROM_VIRK", fallback=True
 )
+
+GRAPHENE = {
+    "SCHEMA": "core.schema.schema",
+}
 
 # Watchman settings.
 WATCHMAN_CHECKS = (

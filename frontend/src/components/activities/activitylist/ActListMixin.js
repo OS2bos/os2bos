@@ -35,31 +35,28 @@ export default {
         activityId2name: function(id) {
             return activityId2name(id)
         },
-        displayCost: function(act, column, is_meta) {
-            
-            
-                if (column === 'granted') {
-                    if (this.selectedValue === this.previous_year) {
-                        return `${ this.displayDigits(act.total_granted_previous_year) } kr`
-                    }
-                    if (this.selectedValue === this.this_year) {
-                        return `${ this.displayDigits(act.total_granted_this_year) } kr`
-                    }
-                    if (this.selectedValue === this.next_year) {
-                        return `${ this.displayDigits(act.total_granted_next_year) } kr`
-                    }
-                } else {
-                    if (this.selectedValue === this.previous_year) {
-                        return `${ this.displayDigits(act.total_expected_previous_year) } kr`
-                    }
-                    if (this.selectedValue === this.this_year) {
-                        return `${ this.displayDigits(act.total_expected_this_year) } kr`
-                    }
-                    if (this.selectedValue === this.next_year) {
-                        return `${ this.displayDigits(act.total_expected_next_year) } kr`
-                    }
+        displayCost: function(act, column) {
+            if (column === 'granted') {
+                if (this.selectedValue === this.previous_year) {
+                    return `${ this.displayDigits(act.total_granted_previous_year) } kr`
                 }
-            
+                if (this.selectedValue === this.this_year) {
+                    return `${ this.displayDigits(act.total_granted_this_year) } kr`
+                }
+                if (this.selectedValue === this.next_year) {
+                    return `${ this.displayDigits(act.total_granted_next_year) } kr`
+                }
+            } else {
+                if (this.selectedValue === this.previous_year) {
+                    return `${ this.displayDigits(act.total_expected_previous_year) } kr`
+                }
+                if (this.selectedValue === this.this_year) {
+                    return `${ this.displayDigits(act.total_expected_this_year) } kr`
+                }
+                if (this.selectedValue === this.next_year) {
+                    return `${ this.displayDigits(act.total_expected_next_year) } kr`
+                }
+            }
         }
     }
 }

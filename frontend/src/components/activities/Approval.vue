@@ -23,7 +23,7 @@
                             <th>Ydelse</th>
                             <th>Periode</th>
                             <th class="right">Udgift i år</th>
-                            <th class="right">Udgift, årligt</th>
+                            <th class="right">Udgift næste år</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -35,7 +35,7 @@
                             <td v-html="activityId2name(act.details)"></td>
                             <td>{{ displayDate(act.start_date) }} - {{ displayDate(act.end_date) }}</td>
                             <td class="right">{{ displayDigits(act.total_expected_this_year) }} kr</td>
-                            <td class="right">{{ displayDigits(act.total_cost_full_year) }} kr</td>
+                            <td class="right">{{ displayDigits(act.total_expected_next_year) }} kr</td>
                         </tr>
                         <tr v-if="suppl_act_list.length > 0">
                             <th colspan="5">Følgeydelser</th>
@@ -45,7 +45,7 @@
                             <td v-html="activityId2name(act.details)"></td>
                             <td>{{ displayDate(act.start_date) }} - {{ displayDate(act.end_date) }}</td>
                             <td class="right">{{ displayDigits(act.total_expected_this_year) }} kr</td>
-                            <td class="right">{{ displayDigits(act.total_cost_full_year) }} kr</td>
+                            <td class="right">{{ displayDigits(act.total_expected_next_year) }} kr</td>
                         </tr>
                     </tbody>
                 </table>
@@ -161,7 +161,7 @@
                 if (acts_with_no_service_provider.length > 0) {
                     let warn_str = '<p>Følgende udgifter mangler oplysninger om leverandør:</p><ul>'
                     for (let act of acts_with_no_service_provider) {
-                        warn_str += `<li><a target="_blank" href="/#/activity/${act.id}/">${ act.details__name }</a></li>`
+                        warn_str += `<li><a target="_blank" href="/#/activity/${act.id}/">${ act.details_data.name }</a></li>`
                     }
                     return warn_str += '</ul>'
                 } else {
@@ -197,15 +197,15 @@
                 }
                 axios.patch(`/appropriations/${ this.apprId }/grant/`, data)
                 .then(() => {
-                    this.$store.dispatch('fetchActivities', this.apprId)
-                    this.$store.dispatch('fetchAppropriation', this.apprId)
+                    //this.$store.dispatch('fetchActivities', this.apprId)
+                    //this.$store.dispatch('fetchAppropriation', this.apprId)
                     this.closeDiag()
                     notify('Bevillingsskrivelse er godkendt', 'success')
                     notify('Bevillingsskrivelsen vil blive journaliseret i SBSYS')
                     for (let a in this.act_list) {
-                        notify(`Der er givet besked til administrationen om din ændring af ${ this.act_list[a].details__name }`)
+                        notify(`Der er givet besked til administrationen om din ændring af ${ this.act_list[a].details_data.name }`)
                     }
-                    
+                    this.$emit('updated')
                 })
                 .catch(err => {
                     this.$store.dispatch('parseErrorOutput', err)

@@ -138,7 +138,7 @@ const actions = {
             .then(res => {
                 commit('setAppropriations', res.data)
             })
-            .catch(err => console.log(err))
+            .catch(err => console.error(err))
         } else {
             commit('setAppropriations', [])
         }
@@ -150,7 +150,7 @@ const actions = {
             dispatch('fetchCase', res.data.case)
             commit('setAppropriation', res.data)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     },
     fetchMainActivities: function({commit}, activities) {
         let super_main_act = {

@@ -13,11 +13,7 @@ adding the complexity of an entire search engine nor of custom queries.
 
 from django.utils import timezone
 from datetime import date
-from dateutil.relativedelta import (
-    relativedelta,
-    MO,
-    SU,
-)
+from dateutil.relativedelta import relativedelta, MO, SU
 
 from django.utils.translation import gettext
 

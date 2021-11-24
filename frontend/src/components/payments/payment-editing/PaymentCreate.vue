@@ -66,7 +66,7 @@ export default {
         savePayment: function() {
             
             let p = this.payment
-            p.payment_schedule = this.payment_plan.id
+            p.payment_schedule = this.payment_plan.payment_id
             p.recipient_type = this.payment_plan.recipient_type
             p.recipient_name = this.payment_plan.recipient_name
             p.payment_method = this.payment_plan.payment_method
@@ -75,8 +75,8 @@ export default {
             }
 
             axios.post(`/payments/`, p)
-            .then(() => {
-                this.$emit('paymentsaved')
+            .then(res => {
+                this.$emit('paymentsaved', res)
                 this.closeDiag()
             })
             .catch(err => this.$store.dispatch('parseErrorOutput', err))

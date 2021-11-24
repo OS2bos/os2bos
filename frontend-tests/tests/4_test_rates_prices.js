@@ -5,6 +5,7 @@ import { login } from '../utils/logins.js'
 import { makeDateStr } from '../utils/utils.js'
 import { createActivity, createCase, createAppropriation, approveActivities } from '../utils/crud.js'
 import baseurl from '../utils/url.js'
+import checkConsole from '../utils/console.js'
 
 let today = new Date(),
     rand = Math.floor(Math.random() * 500 ),
@@ -59,6 +60,7 @@ fixture('Test editing rates and prices') // declare the fixture
     .beforeEach(async t => { 
         await login(t)
     })
+    .afterEach(() => checkConsole())
 
 test('Create case, appropriation, and activity with global rate', async t => {
     await createCase(t, testdata.case1)

@@ -55,7 +55,7 @@ export default {
                 this.payment_history = res.data
             })
             .catch(err => {
-                console.log(err)
+                console.error(err)
             })
         },
         displayUserName: function(user_id) {

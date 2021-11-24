@@ -7,28 +7,24 @@
 
 <template>
 
-    <div>
+    <div v-if="editable">
 
-        <template v-if="editable">
+        <fieldset>
+            <label class="required" for="pay-cost-pr-unit">Enhedspris</label>
+            <input type="number" id="pay-cost-pr-unit" v-model="amount" required step="0.01"> kr
+        </fieldset>
 
-            <fieldset>
-                <label class="required" for="pay-cost-pr-unit">Enhedspris</label>
-                <input type="number" id="pay-cost-pr-unit" v-model="amount" required step="0.01"> kr
-            </fieldset>
-
-            <fieldset v-if="create">
-                <label for="pay-cost-exec-date" class="required">Pris gælder fra dato</label>
-                <input 
-                    type="date" 
-                    id="pay-cost-exec-date" 
-                    v-model="start_date" 
-                    :min="act.start_date"
-                    required>
-                
-                <error :err-key="property" />
-            </fieldset>
-
-        </template>
+        <fieldset v-if="create">
+            <label for="pay-cost-exec-date" class="required">Pris gælder fra dato</label>
+            <input 
+                type="date" 
+                id="pay-cost-exec-date" 
+                v-model="start_date" 
+                :min="act.start_date"
+                required>
+            
+            <error :err-key="property" />
+        </fieldset>
 
     </div>
 
@@ -37,8 +33,6 @@
 <script>
 import mixin from '../../mixins/PaymentPlanEditMixin.js'
 import Error from '../../forms/Error.vue'
-import { cost2da } from '../../filters/Numbers.js'
-import { json2jsDate, epoch2DateStr } from '../../filters/Date.js'
 
 export default {
     components: {
@@ -74,9 +68,6 @@ export default {
                     this.model.amount = new_val
                 }
             }
-        },
-        units: function(){
-            return this.$store.getters.getPaymentPlanProperty('payment_units')
         },
         start_date: {
             get: function() {

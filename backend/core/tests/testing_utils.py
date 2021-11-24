@@ -34,6 +34,7 @@ from core.models import (
     TargetGroup,
     VariableRate,
     Rate,
+    Price,
     RatePerDate,
     PaymentDateExclusion,
     AccountAliasMapping,
@@ -320,6 +321,12 @@ def create_rate(name="Test rate", description="test description"):
     return rate
 
 
+def create_price(payment_schedule):
+    price, _ = Price.objects.get_or_create(payment_schedule=payment_schedule)
+
+    return price
+
+
 def create_rate_per_date(main_rate, rate=100, start_date=None, end_date=None):
     rate_per_date, _ = RatePerDate.objects.get_or_create(
         main_rate=main_rate,
@@ -358,3 +365,9 @@ def create_activity_category(
     )
 
     return activity_category
+
+
+def create_municipality(name="København"):
+    municipality, _ = Municipality.objects.get_or_create(name=name)
+
+    return municipality

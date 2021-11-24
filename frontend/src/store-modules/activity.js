@@ -90,40 +90,204 @@ const actions = {
                 checkActivityAge(res.data)
                 commit('setActivityList', res.data)
             })
-            .catch(err => console.log(err))
+            .catch(err => console.error(err))
         } else {
             return axios.get(`/activities/`)
             .then(res => {
                 checkActivityAge(res.data)
                 commit('setActivityList', res.data)
             })
-            .catch(err => console.log(err))
+            .catch(err => console.error(err))
         }
     },
-    fetchActivity: function({commit, dispatch}, act_id) {
-        axios.get(`/activities/${ act_id }/`)
+    fetchActivity: function({dispatch}, act_id) {
+        const id = btoa(`Activity:${ act_id }`)
+        let data = {
+            query: `{
+                activity(id: "${ id }") {
+                    id,
+                    pk,
+                    status,
+                    startDate,
+                    endDate,
+                    activityType,
+                    totalGrantedThisYear,
+                    totalExpectedThisYear,
+                    totalGrantedPreviousYear,
+                    totalExpectedPreviousYear,
+                    totalGrantedNextYear,
+                    totalExpectedNextYear,
+                    details {
+                        pk,
+                        name,
+                        description
+                    },
+                    paymentPlan {
+                        pk,
+                        paymentId,
+                        fictive,
+                        paymentType,
+                        paymentCostType,
+                        recipientId,
+                        recipientName,
+                        recipientType,
+                        paymentMethod,
+                        paymentMethodDetails {
+                            pk,
+                            taxCard
+                        },
+                        paymentFrequency,
+                        paymentDate,
+                        paymentDayOfMonth,
+                        paymentUnits,
+                        paymentAmount,
+                        pricePerUnit {
+                            pk,
+                            currentAmount
+                        },
+                        paymentRate {
+                            pk
+                        }
+                    },
+                    appropriation {
+                        pk,
+                        sbsysId,
+                        section {
+                            pk
+                        }
+                        case {
+                            pk,
+                            sbsysId,
+                            cprNumber,
+                            name
+                        },
+                        activities {
+                            edges {
+                                node {
+                                    modifies {
+                                        pk
+                                    },
+                                    pk,
+                                    startDate,
+                                    endDate,
+                                    activityType
+                                }
+                            }
+                        }
+                    }
+                }
+            }`
+        }
+        return axios.post('/graphql/', data)
         .then(res => {
-            commit('setActivity', res.data)
-            commit('setActDetail', res.data.details)
-            commit('setPaymentPlan', res.data.payment_plan)
-            dispatch('fetchAppropriation', res.data.appropriation)
-            return res.data
+            const a = res.data.data.activity
+            const new_case = {
+                id: a.appropriation.case.pk,
+                sbsys_id: a.appropriation.case.sbsysId,
+                name: a.appropriation.case.name,
+                cpr_number: a.appropriation.case.cprNumber
+            }
+            const new_appropriation = {
+                id: a.appropriation.pk,
+                sbsys_id: a.appropriation.sbsysId,
+                section: a.appropriation.section.pk,
+                activities: [...a.appropriation.activities.edges.map(e => {
+                    return {
+                        id: Number(e.node.pk),
+                        modifies: e.node.modifies ? e.node.modifies.pk : null,
+                        start_date: e.node.startDate,
+                        end_date: e.node.endDate,
+                        activity_type: e.node.activityType
+                    }
+                })]
+            }
+            const new_activity = {
+                status: a.status,
+                id: a.pk,
+                start_date: a.startDate,
+                end_date: a.endDate,
+                details: a.details.pk,
+                details_data: {
+                    name: a.details.name,
+                    description: a.details.description
+                },
+                appropriation: Number(a.appropriation.pk),
+                activity_type: a.activityType,
+                total_granted_this_year: a.totalGrantedThisYear,
+                total_expected_this_year: a.totalExpectedThisYear,
+                total_granted_previous_year: a.totalGrantedPreviousYear,
+                total_expected_previous_year: a.totalExpectedPreviousYear,
+                total_granted_next_year: a.totalGrantedNextYear,
+                total_expected_next_year: a.totalExpectedNextYear,
+                payment_schedule_pk: a.paymentPlan.pk
+            }
+            const new_payment_plan = {
+                id: a.paymentPlan.pk,
+                payment_id: a.paymentPlan.paymentId,
+                fictive: a.paymentPlan.fictive,
+                payment_type: a.paymentPlan.paymentType,
+                payment_cost_type: a.paymentPlan.paymentCostType,
+                recipient_id: a.paymentPlan.recipientId,
+                recipient_name: a.paymentPlan.recipientName,
+                recipient_type: a.paymentPlan.recipientType,
+                payment_method: a.paymentPlan.paymentMethod,
+                payment_method_details: a.paymentPlan.paymentMethodDetails ? a.paymentPlan.paymentMethodDetails.pk : null,
+                payment_frequency: a.paymentPlan.paymentFrequency,
+                payment_date: a.paymentPlan.paymentDate,
+                payment_day_of_month: a.paymentPlan.paymentDayOfMonth,
+                payment_amount: a.paymentPlan.paymentAmount,
+                payment_units: a.paymentPlan.paymentUnits,
+                price_per_unit: a.paymentPlan.pricePerUnit ? {
+                    current_amount: a.paymentPlan.pricePerUnit.currentAmount,
+                    id: a.paymentPlan.pricePerUnit.pk
+                } : null,
+                payment_rate: a.paymentPlan.paymentRate ? a.paymentPlan.paymentRate.pk : null
+            }
+            if (new_payment_plan.price_per_unit) {
+                axios.get(`/prices/${ new_payment_plan.price_per_unit.id }/`)
+                .then(res => {
+                    new_payment_plan.price_per_unit.rates_per_date = res.data.rates_per_date
+                    dispatch('updateStore', {
+                        cas: new_case,
+                        appr: new_appropriation,
+                        act: new_activity,
+                        pp: new_payment_plan
+                    })
+                })
+                .catch(err => {
+                    console.error('Could not fetch price information', err)
+                })
+            } else {
+                dispatch('updateStore', {
+                    cas: new_case,
+                    appr: new_appropriation,
+                    act: new_activity,
+                    pp: new_payment_plan
+                })
+            }
+            return res.data.data.activity
         })
-        .catch(err => console.log(err))
+    },
+    updateStore: function({commit}, payload) {
+        commit('setCase', payload.cas)
+        commit('setAppropriation', payload.appr)
+        commit('setActivity', payload.act)
+        commit('setActDetail', payload.act.details_data)
+        commit('setPaymentPlan', payload.pp)
     },
     fetchActivityDetails: function({commit}) {
         return axios.get('/activity_details/')
         .then(res => {
             commit('setActDetails', res.data)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     },
     fetchActivityDetail: function({commit}, act_detail_id) {
         axios.get(`/activity_details/${ act_detail_id }/`)
         .then(res => {
             commit('setActDetail', res.data)
         })
-        .catch(err => console.log(err))
+        .catch(err => console.error(err))
     }
 }
 
