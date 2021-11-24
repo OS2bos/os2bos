@@ -10,7 +10,7 @@
     <div class="payment-plan">
         <h3 class="payment-plan-header">Udgift:</h3>
         <p>{{ summary }} {{ displayExactCost(subtotal) }} kr {{ freq_name }} </p>
-        <p v-if="total > 0">Årligt ca. <strong>{{ displayCost(total) }} kr</strong></p> 
+        <p v-if="total > 0">Årligt ca. <strong>{{ displayCost(total) }} kr</strong></p>
     </div>
 
 </template>
@@ -117,17 +117,35 @@
                 } else {
                     return '-'
                 }
-                
+
             },
             roundNum: function(num) {
-                //If cost is more than 100, round up cost to nearest hundred
-                if (num > 100) {
-                    let new_num = num / 100
-                    new_num = Math.floor(new_num)
-                    return new_num * 100
-                } else {
+                // only round recurring payments or payments that are a fraction
+                // of some value
+                const isRecurring = this.freq_factor && this.freq_factor > 1
+                const isFractional = Number(this.payment.payment_units) > 0
+                const shouldRound = isRecurring || isFractional
+
+                if (!shouldRound) {
                     return num
                 }
+
+                let dimension = 1
+                const absNum = Math.abs(num)
+                // if cost > 10000, round to nearest 100
+                if (absNum > 10000) {
+                    dimension = 100
+                }
+                // if 1000 < cost < 10000, round to nearest 50
+                else if (absNum > 1000) {
+                    dimension = 50
+                }
+                // if 100 < cost < 1000, round to nearest 10
+                else if (absNum > 100) {
+                    dimension = 10
+                }
+                // else, don't round at all
+                return Math.round(num / dimension) * dimension
             },
             getCurrentRate: function(rates) {
                 const now = epoch2DateStr(new Date())
@@ -146,7 +164,7 @@
             }
         }
     }
-    
+
 </script>
 
 <style>
