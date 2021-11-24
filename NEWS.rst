@@ -8,6 +8,8 @@ Features
 
 - Add preliminary GraphQL API.
 - Disallow one-time payment frequency for main activities (in the frontend for now).
+- Add support for comma-separated values in SECURE_PROXY_SSL_HEADER.
+- Upgrade the Virk CVR third-party library.
 
 
 Version 3.5.0, 2021-09-27
