@@ -225,6 +225,7 @@ class Activity(OptimizedDjangoObjectType):
 
     @classmethod
     def get_queryset(cls, queryset, info):
+        """Only return non-deleted activities."""
         return queryset.exclude(status=STATUS_DELETED)
 
     def resolve_total_granted_this_year(self, info):
