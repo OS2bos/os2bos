@@ -529,13 +529,14 @@ class SupplementaryActivityDetailsInline(ClassificationInline):
 class SectionAdmin(ClassificationAdmin):
     """Add search field."""
 
-    search_fields = ("paragraph", "text")
+    search_fields = ("paragraph", "text", "dst_code")
 
     list_display = (
         "paragraph",
         "text",
         "list_main_activity_for",
         "list_supplementary_activity_for",
+        "dst_code",
         "active",
     )
     filter_horizontal = ("allowed_for_target_groups", "allowed_for_steps")
