@@ -29,6 +29,7 @@ from core.models import (
     RatePerDate as RatePerDateModel,
     Municipality as MunicipalityModel,
     ServiceProvider as ServiceProviderModel,
+    STATUS_DELETED,
 )
 from core.filters import PaymentFilter
 
@@ -221,6 +222,10 @@ class Activity(OptimizedDjangoObjectType):
 
     total_granted_next_year = graphene.Float()
     total_expected_next_year = graphene.Float()
+
+    @classmethod
+    def get_queryset(cls, queryset, info):
+        return queryset.exclude(status=STATUS_DELETED)
 
     def resolve_total_granted_this_year(self, info):
         """Retrieve total granted amount for this year."""
