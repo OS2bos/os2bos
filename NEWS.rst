@@ -1,3 +1,14 @@
+Version 3.6.1, 2021-11-25
+-------------------------
+
+Hotfix release
+
+Bug fixes
+^^^^^^^^^
+
+* Correctly exclude deleted activities from graphql endpoint.
+
+
 Version 3.6.0, 2021-11-17
 -------------------------
 
