@@ -1267,7 +1267,7 @@ def generate_dst_payload_preventive_measures(
     """
     appropriations = (
         models.Appropriation.objects.select_related("case")
-        .prefetch_related("case__related_persons", "activities")
+        .prefetch_related("case__related_persons", "activities__payment_plan")
         .appropriations_for_dst_payload(from_start_date, sections)
     )
 
@@ -1276,24 +1276,37 @@ def generate_dst_payload_preventive_measures(
     )
 
     appropriations_root = E.ForanstaltningStrukturSamling()
+
     for appropriation in appropriations:
         case = appropriation.case
         father_or_mother = case.related_persons.filter(
             Q(relation_type="mor") | Q(relation_type="far")
         ).first()
+        main_activity = appropriation.main_activity
+
+        if (
+            main_activity.payment_plan.payment_type
+            == models.PaymentSchedule.ONE_TIME_PAYMENT
+            and not main_activity.start_date
+            and not main_activity.end_date
+        ):
+            start_date = main_activity.payment_schedule.payment_date
+            end_date = main_activity.payment_schedule.payment_date
+        else:
+            start_date = appropriation.granted_from_date
+            end_date = appropriation.granted_to_date
 
         appropriation_structure = E.ForanstaltningStruktur(
-            E.UdsatBarnCPRidentifikator(appropriation.case.cpr_number),
+            E.UdsatBarnCPRidentifikator(case.cpr_number),
             E.FormynderCPRidentifikator(father_or_mother.cpr_number),
             E.ForanstaltningId(appropriation.sbsys_id),
             E.ForanstaltningKode(appropriation.section.dst_code),
-            E.ForanstaltningStartDato(str(appropriation.granted_from_date)),
+            E.ForanstaltningStartDato(str(start_date)),
         )
 
-        end_date = appropriation.granted_to_date
         if end_date:
             appropriation_structure.append(
-                E.ForanstaltningSlutDato(str(appropriation.granted_to_date))
+                E.ForanstaltningSlutDato(str(end_date))
             )
 
         appropriations_root.append(appropriation_structure)
@@ -1318,7 +1331,7 @@ def generate_dst_payload_handicap(from_date=None, sections=None, test=True):
     """
     appropriations = (
         models.Appropriation.objects.select_related("case")
-        .prefetch_related("case__related_persons", "activities")
+        .prefetch_related("case__related_persons", "activities__payment_plan")
         .appropriations_for_dst_payload(from_date, sections)
     )
 
@@ -1329,22 +1342,30 @@ def generate_dst_payload_handicap(from_date=None, sections=None, test=True):
     appropriations_root = E.BoernMedHandicapSagStrukturSamling()
     for appropriation in appropriations:
         case = appropriation.case
+        main_activity = appropriation.main_activity
+
+        if (
+            main_activity.payment_plan.payment_type
+            == models.PaymentSchedule.ONE_TIME_PAYMENT
+            and not main_activity.start_date
+            and not main_activity.end_date
+        ):
+            start_date = main_activity.payment_schedule.payment_date
+            end_date = main_activity.payment_schedule.payment_date
+        else:
+            start_date = appropriation.granted_from_date
+            end_date = appropriation.granted_to_date
 
         appropriation_structure = E.BoernMedHandicapSagStruktur(
             E.INDSATSFORLOEB_ID(appropriation.sbsys_id),
             E.INDBERETNINGSTYPE(appropriation.report_type),
-            E.CPR(appropriation.case.cpr_number),
+            E.CPR(case.cpr_number),
             E.INDSATS_KODE(appropriation.section.dst_code),
-            E.INDSATS_STARTDATO(str(appropriation.granted_from_date)),
+            E.INDSATS_STARTDATO(str(start_date)),
         )
-        end_date = appropriation.granted_to_date
         if end_date:
-            appropriation_structure.append(
-                E.INDSATS_SLUTDATO(str(appropriation.granted_to_date))
-            )
-        appropriation_structure.append(
-            E.SAGSBEHANDLER(str(appropriation.case.case_worker))
-        )
+            appropriation_structure.append(E.INDSATS_SLUTDATO(str(end_date)))
+        appropriation_structure.append(E.SAGSBEHANDLER(str(case.case_worker)))
 
         appropriations_root.append(appropriation_structure)
 
