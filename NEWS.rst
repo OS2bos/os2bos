@@ -6,7 +6,8 @@ Hotfix release
 Bug fixes
 ^^^^^^^^^
 
-* Correctly end modified activities with no end date.
+* Correct end modified activities with no end date.
+* Correct setting main activities for an appropriation.
 
 
 Version 3.6.1, 2021-11-25
