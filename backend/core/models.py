@@ -1904,12 +1904,14 @@ class Activity(AuditModelMixin, models.Model):
                     self.save()
                     old_activity.delete()
                     # "Merge" by ending current activity the day before the new
-                    # start_date if end_date overlaps with the new start_date.
-                    #
-                if (
-                    self.modifies
-                    and self.modifies.end_date
-                    and self.modifies.end_date >= self.start_date
+                    # start_date if end_date overlaps with the new start_date
+                    # or it has no end_date.
+                if self.modifies and (
+                    not self.modifies.end_date
+                    or (
+                        self.modifies.end_date
+                        and self.modifies.end_date >= self.start_date
+                    )
                 ):
                     self.modifies.end_date = self.start_date - timedelta(
                         days=1

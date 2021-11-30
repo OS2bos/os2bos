@@ -1,3 +1,14 @@
+Version 3.6.2, 2021-11-30
+-------------------------
+
+Hotfix release
+
+Bug fixes
+^^^^^^^^^
+
+* Correctly end modified activities with no end date.
+
+
 Version 3.6.1, 2021-11-25
 -------------------------
 
