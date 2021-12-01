@@ -1,3 +1,15 @@
+Version 3.6.2, 2021-11-30
+-------------------------
+
+Hotfix release
+
+Bug fixes
+^^^^^^^^^
+
+* Correct end modified activities with no end date.
+* Correct setting main activities for an appropriation.
+
+
 Version 3.6.1, 2021-11-25
 -------------------------
 

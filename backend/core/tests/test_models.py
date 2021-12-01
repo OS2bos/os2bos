@@ -676,6 +676,88 @@ class AppropriationTestCase(TestCase, BasicTestMixin):
             [start_date + timedelta(days=x) for x in range(25)],
         )
 
+    def test_appropriation_grant_on_already_granted_daily_no_end_date(self):
+        approval_level = ApprovalLevel.objects.create(name="egenkompetence")
+
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section()
+        appropriation = create_appropriation(case=case, section=section)
+        now = timezone.now().date()
+        start_date = now - timedelta(days=6)
+        # create an already granted activity with no end_date.
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=start_date,
+            end_date=None,
+        )
+        create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_frequency=PaymentSchedule.DAILY,
+            activity=activity,
+        )
+        activity.details.main_activity_for.add(section)
+
+        modified_start_date = now + timedelta(days=3)
+        modified_end_date = now + timedelta(days=6)
+        # let the granted activity be modified by another expected activity.
+        modifies_activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            start_date=modified_start_date,
+            status=STATUS_EXPECTED,
+            end_date=modified_end_date,
+            modifies=activity,
+        )
+        create_payment_schedule(
+            payment_amount=Decimal("600.0"),
+            payment_frequency=PaymentSchedule.DAILY,
+            activity=modifies_activity,
+        )
+        user = get_user_model().objects.create(username="Anders And")
+        appropriation.grant(
+            Activity.objects.filter(pk=modifies_activity.pk),
+            approval_level.id,
+            "note til bevillingsgodkendelse",
+            user,
+        )
+        activity.refresh_from_db()
+        modifies_activity.refresh_from_db()
+        # the old activity with no end_date should expire the day before
+        # the start_date of the new one.
+        self.assertEqual(
+            activity.end_date, modified_start_date - timedelta(days=1)
+        )
+        # expected status should be granted with the
+        # start_date of the new activity.
+        self.assertEqual(modifies_activity.status, STATUS_GRANTED)
+        self.assertEqual(modifies_activity.start_date, modified_start_date)
+        # the payments of the old activity should expire
+        # before the new end_date.
+        activity_payments = activity.payment_plan.payments
+        self.assertTrue(
+            activity_payments.order_by("date").first().date
+            < modified_start_date
+        )
+        # the payments of the new activity should start after today.
+        modifies_payments = modifies_activity.payment_plan.payments
+
+        self.assertTrue(
+            modifies_payments.order_by("date").first().date
+            >= modified_start_date
+        )
+        # assert payments are generated correctly.
+        self.assertCountEqual(
+            [
+                x.date
+                for x in (activity_payments.all() | modifies_payments.all())
+            ],
+            [start_date + timedelta(days=x) for x in range(13)],
+        )
+
     def test_appropriation_grant_on_already_granted_weekly(self):
         approval_level = ApprovalLevel.objects.create(name="egenkompetence")
 
