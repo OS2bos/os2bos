@@ -226,6 +226,12 @@
                                 edges {
                                     node {
                                         pk,
+                                        activityType,
+                                        startDate,
+                                        endDate,
+                                        details {
+                                            pk
+                                        },
                                         modifies {
                                             pk
                                         }
@@ -250,6 +256,10 @@
                         activities: [...a.activities.edges.map(e => {
                             return {
                                 id: Number(e.node.pk),
+                                activity_type: e.node.activityType,
+                                start_date: e.node.startDate,
+                                end_date: e.node.endDate,
+                                details: Number(e.node.details.pk),
                                 modifies: e.node.modifies ? e.node.modifies.pk : null
                             }
                         })],
@@ -265,6 +275,7 @@
                         paying_municipality: a.case.payingMunicipality.name,
                         acting_municipality: a.case.actingMunicipality.name
                     }
+                    this.$store.dispatch("fetchMainActivities", new_appr.activities)
                     this.$store.commit('setAppropriation', new_appr)
                     this.$store.commit('setCase', new_case)
                     this.updateBreadCrumb(new_appr, new_case)
