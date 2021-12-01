@@ -102,6 +102,7 @@ export default {
                     actList = `main_activity_for=${ this.appropriation.section }`
                 } else {
                     actList = `supplementary_activity_for=${ this.appropriation.section }`
+                    // this.appr_main_acts, which maps to a store property, will not have been populated if user enters the path /activity/create directly in their browser. It will only populate when the user creates a new activity from within an appropriation.
                     if (this.appr_main_acts) {
                         actList += `&main_activities=${ this.appr_main_acts.activities[0].details }`
                     }
