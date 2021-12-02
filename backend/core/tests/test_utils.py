@@ -1305,7 +1305,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
         )
         section.main_activities.add(granted_activity.details)
 
-        section_info = SectionInfo.objects.get(
+        SectionInfo.objects.get(
             activity_details=granted_activity.details, section=section
         )
 
@@ -1419,7 +1419,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
         )
         section.main_activities.add(activity.details)
 
-        section_info = SectionInfo.objects.get(
+        SectionInfo.objects.get(
             activity_details=activity.details, section=section
         )
         approval_level = create_approval_level()
@@ -1515,7 +1515,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
         )
         section.main_activities.add(activity.details)
 
-        section_info = SectionInfo.objects.get(
+        SectionInfo.objects.get(
             activity_details=activity.details, section=section
         )
         approval_level = create_approval_level()
@@ -1611,7 +1611,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
         )
         section.main_activities.add(activity.details)
 
-        section_info = SectionInfo.objects.get(
+        SectionInfo.objects.get(
             activity_details=activity.details, section=section
         )
         approval_level = create_approval_level()
@@ -1688,7 +1688,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
         )
         section.main_activities.add(activity.details)
 
-        section_info = SectionInfo.objects.get(
+        SectionInfo.objects.get(
             activity_details=activity.details, section=section
         )
         approval_level = create_approval_level()

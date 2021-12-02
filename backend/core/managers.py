@@ -285,14 +285,12 @@ class AppropriationQuerySet(models.QuerySet):
             )
 
             queryset = queryset.annotate(
-                main_activities_count=Count(
-                    "activities", filter=main_activities_q
-                ),
-                main_activities_appropriated_after_from_date_count=Count(
+                main_acts_count=Count("activities", filter=main_activities_q),
+                main_acts_appropriated_after_from_date_count=Count(
                     "activities",
                     filter=main_activities_appropriated_after_from_date_q,
                 ),
-                main_activities_appropriated_before_from_date_q=Count(
+                main_acts_appropriated_before_from_date_count=Count(
                     "activities",
                     filter=main_activities_appropriated_before_from_date_q,
                 ),
@@ -303,19 +301,19 @@ class AppropriationQuerySet(models.QuerySet):
                     ),
                     When(
                         main_activities_count=F(
-                            "main_activities_appropriated_before_from_date_q"
+                            "main_acts_appropriated_before_from_date_count"
                         ),
                         then=Value(""),
                     ),
                     When(
                         main_activities_count=F(
-                            "main_activities_appropriated_after_from_date_count"
+                            "main_acts_appropriated_after_from_date_count"
                         ),
                         then=Value(report_types["NEW"]),
                     ),
                     When(
                         main_activities_count__gt=F(
-                            "main_activities_appropriated_after_from_date_count"
+                            "main_acts_appropriated_after_from_date_count"
                         ),
                         then=Value(report_types["CHANGED"]),
                     ),
