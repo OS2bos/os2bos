@@ -15,7 +15,6 @@ import itertools
 import re
 import csv
 
-from lxml import etree
 from lxml.builder import ElementMaker
 
 from dateutil import rrule
@@ -31,7 +30,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.utils.html import strip_tags
 from django.db import transaction
-from django.db.models import Q, BooleanField
+from django.db.models import Q, BooleanField, Func
 from django.db.models.expressions import Case, When
 
 from constance import config
@@ -1255,6 +1254,33 @@ def generate_dst_payload_metadata_element(test=True):
     return doc
 
 
+def generate_dst_payload_preventive_measures_element(
+    cpr_number,
+    father_or_mother_cpr_number,
+    identifier,
+    dst_code,
+    start_date,
+    end_date,
+):
+    """Generate a XML payload element for DST for "Preventitive Measures"."""
+    E = ElementMaker(
+        namespace="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
+    )
+
+    appropriation_structure = E.ForanstaltningStruktur(
+        E.UdsatBarnCPRidentifikator(cpr_number),
+        E.FormynderCPRidentifikator(father_or_mother_cpr_number),
+        E.ForanstaltningId(identifier),
+        E.ForanstaltningKode(dst_code),
+        E.ForanstaltningStartDato(str(start_date)),
+    )
+
+    if end_date:
+        appropriation_structure.append(E.ForanstaltningSlutDato(str(end_date)))
+
+    return appropriation_structure
+
+
 def generate_dst_payload_preventive_measures(
     from_start_date=None, sections=None, test=True
 ):
@@ -1277,6 +1303,45 @@ def generate_dst_payload_preventive_measures(
 
     appropriations_root = E.ForanstaltningStrukturSamling()
 
+    # CPR and section duplicate appropriations are a special case and
+    # should be consolidated into a single element in the XML payload.
+    duplicate_appropriation_objects = (
+        appropriations.get_duplicate_cpr_and_section_appropriations_for_dst()
+    )
+    for obj in duplicate_appropriation_objects:
+        appropriations = appropriations.filter(id__in=obj["ids"])
+        first_appropriation = appropriations.first()
+        case = appropriations.first().case
+        father_or_mother = case.related_persons.filter(
+            Q(relation_type="mor") | Q(relation_type="far")
+        ).first()
+        identifier = (
+            f"{case.cpr_number}-{first_appropriation.section.dst_code}"
+        )
+        start_date = min([appr.granted_from_date for appr in appropriations])
+        end_date = max([appr.granted_to_date for appr in appropriations])
+
+        appropriation_structure = (
+            generate_dst_payload_preventive_measures_element(
+                case.cpr_number,
+                father_or_mother.cpr_number,
+                identifier,
+                first_appropriation.section.dst_code,
+                start_date,
+                end_date,
+            )
+        )
+        appropriations_root.append(appropriation_structure)
+
+    # Exclude the ids from the "normal" appropriations.
+    duplicate_appropriation_objects_ids = (
+        duplicate_appropriation_objects.annotate(
+            ids=Func("ids", function="unnest")
+        ).values_list("ids", flat=True)
+    )
+    appropriations = appropriations.exclude(
+        id__in=duplicate_appropriation_objects_ids
+    )
     for appropriation in appropriations:
         case = appropriation.case
         father_or_mother = case.related_persons.filter(
@@ -1296,18 +1361,17 @@ def generate_dst_payload_preventive_measures(
             start_date = appropriation.granted_from_date
             end_date = appropriation.granted_to_date
 
-        appropriation_structure = E.ForanstaltningStruktur(
-            E.UdsatBarnCPRidentifikator(case.cpr_number),
-            E.FormynderCPRidentifikator(father_or_mother.cpr_number),
-            E.ForanstaltningId(appropriation.sbsys_id),
-            E.ForanstaltningKode(appropriation.section.dst_code),
-            E.ForanstaltningStartDato(str(start_date)),
-        )
-
-        if end_date:
-            appropriation_structure.append(
-                E.ForanstaltningSlutDato(str(end_date))
+        identifier = f"{case.cpr_number}-{appropriation.section.dst_code}"
+        appropriation_structure = (
+            generate_dst_payload_preventive_measures_element(
+                case.cpr_number,
+                father_or_mother.cpr_number,
+                identifier,
+                appropriation.section.dst_code,
+                start_date,
+                end_date,
             )
+        )
 
         appropriations_root.append(appropriation_structure)
 
@@ -1315,9 +1379,35 @@ def generate_dst_payload_preventive_measures(
     doc.append(generate_dst_payload_metadata_element(test))
     doc.append(appropriations_root)
 
-    print(etree.tostring(doc))
-
     return doc
+
+
+def generate_dst_payload_handicap_element(
+    identifier,
+    report_type,
+    cpr_number,
+    dst_code,
+    start_date,
+    end_date,
+    case_worker,
+):
+    """Generate a XML payload element for DST for "Handicap"."""
+    E = ElementMaker(
+        namespace="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
+    )
+
+    appropriation_structure = E.BoernMedHandicapSagStruktur(
+        E.INDSATSFORLOEB_ID(identifier),
+        E.INDBERETNINGSTYPE(report_type),
+        E.CPR(cpr_number),
+        E.INDSATS_KODE(dst_code),
+        E.INDSATS_STARTDATO(str(start_date)),
+    )
+    if end_date:
+        appropriation_structure.append(E.INDSATS_SLUTDATO(str(end_date)))
+    appropriation_structure.append(E.SAGSBEHANDLER(str(case_worker)))
+
+    return appropriation_structure
 
 
 def generate_dst_payload_handicap(from_date=None, sections=None, test=True):
@@ -1340,6 +1430,48 @@ def generate_dst_payload_handicap(from_date=None, sections=None, test=True):
     )
 
     appropriations_root = E.BoernMedHandicapSagStrukturSamling()
+
+    # CPR and section duplicate appropriations are a special case and
+    # should be consolidated into a single element in the XML payload.
+    duplicate_appropriation_objects = (
+        appropriations.get_duplicate_cpr_and_section_appropriations_for_dst()
+    )
+    for obj in duplicate_appropriation_objects:
+        appropriations = appropriations.filter(id__in=obj["ids"])
+        report_type = (
+            "Ændring"
+            if "Ændring" in [appr.report_type for appr in appropriations]
+            else "Ny"
+        )
+        first_appropriation = appropriations.first()
+        case = first_appropriation.case
+        case_worker = case.case_worker
+        identifier = (
+            f"{case.cpr_number}-{first_appropriation.section.dst_code}"
+        )
+        start_date = min([appr.granted_from_date for appr in appropriations])
+        end_date = max([appr.granted_to_date for appr in appropriations])
+
+        appropriation_structure = generate_dst_payload_handicap_element(
+            identifier,
+            report_type,
+            case.cpr_number,
+            first_appropriation.section.dst_code,
+            start_date,
+            end_date,
+            case_worker,
+        )
+        appropriations_root.append(appropriation_structure)
+
+    # Exclude the ids from the "normal" appropriations.
+    duplicate_appropriation_objects_ids = (
+        duplicate_appropriation_objects.annotate(
+            ids=Func("ids", function="unnest")
+        ).values_list("ids", flat=True)
+    )
+    appropriations = appropriations.exclude(
+        id__in=duplicate_appropriation_objects_ids
+    )
     for appropriation in appropriations:
         case = appropriation.case
         main_activity = appropriation.main_activity
@@ -1356,16 +1488,16 @@ def generate_dst_payload_handicap(from_date=None, sections=None, test=True):
             start_date = appropriation.granted_from_date
             end_date = appropriation.granted_to_date
 
-        appropriation_structure = E.BoernMedHandicapSagStruktur(
-            E.INDSATSFORLOEB_ID(appropriation.sbsys_id),
-            E.INDBERETNINGSTYPE(appropriation.report_type),
-            E.CPR(case.cpr_number),
-            E.INDSATS_KODE(appropriation.section.dst_code),
-            E.INDSATS_STARTDATO(str(start_date)),
+        identifier = f"{case.cpr_number}-{appropriation.section.dst_code}"
+        appropriation_structure = generate_dst_payload_handicap_element(
+            identifier,
+            appropriation.report_type,
+            case.cpr_number,
+            appropriation.section.dst_code,
+            start_date,
+            end_date,
+            case.case_worker,
         )
-        if end_date:
-            appropriation_structure.append(E.INDSATS_SLUTDATO(str(end_date)))
-        appropriation_structure.append(E.SAGSBEHANDLER(str(case.case_worker)))
 
         appropriations_root.append(appropriation_structure)
 

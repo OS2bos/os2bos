@@ -15,6 +15,7 @@ from django.db.models import (
     Sum,
     CharField,
     DecimalField,
+    Func,
     Value,
     Q,
     F,
@@ -30,6 +31,7 @@ from django.db.models.functions import (
     ExtractYear,
     LPad,
 )
+from django.contrib.postgres.aggregates import ArrayAgg
 
 
 class PaymentQuerySet(models.QuerySet):
@@ -247,7 +249,13 @@ class AppropriationQuerySet(models.QuerySet):
         )
 
     def appropriations_for_dst_payload(self, from_date=None, sections=None):
-        """Filter appropriations for a Danmarks Statistik payload."""
+        """Filter appropriations for a Danmarks Statistik payload.
+
+        We annotate a report_type based on whether an Appropriation
+        has "changed" or not which is based on:
+        - changed acting municipality .
+        - appropriation_date for activities
+        """
         from core.models import (
             MAIN_ACTIVITY,
             STATUS_GRANTED,
@@ -300,19 +308,19 @@ class AppropriationQuerySet(models.QuerySet):
                         then=Value(report_types["CHANGED"]),
                     ),
                     When(
-                        main_activities_count=F(
+                        main_acts_count=F(
                             "main_acts_appropriated_before_from_date_count"
                         ),
                         then=Value(""),
                     ),
                     When(
-                        main_activities_count=F(
+                        main_acts_count=F(
                             "main_acts_appropriated_after_from_date_count"
                         ),
                         then=Value(report_types["NEW"]),
                     ),
                     When(
-                        main_activities_count__gt=F(
+                        main_acts_count__gt=F(
                             "main_acts_appropriated_after_from_date_count"
                         ),
                         then=Value(report_types["CHANGED"]),
@@ -329,6 +337,46 @@ class AppropriationQuerySet(models.QuerySet):
             )
 
         return queryset.distinct()
+
+    def get_duplicate_cpr_and_section_appropriations_for_dst(self):
+        """
+        Get Appropriations duplicated on section and case CPR number.
+
+        The output will look like this:
+        [
+            {
+                'section': 1373,
+                'case__cpr_number': '1103011234',
+                'ids': [1413, 1412],
+                'id_count': 2
+            },
+            {
+                'section': 1381,
+                'case__cpr_number': '0205891234',
+                'ids': [1812, 2399],
+                'id_count': 2
+            }
+        ]
+        """
+        return (
+            self.values("section", "case__cpr_number")
+            .annotate(ids=ArrayAgg("id"))
+            .annotate(id_count=Func("ids", Value(1), function="array_length"))
+            .filter(id_count__gt=1)
+        )
+
+    def get_duplicate_cpr_and_section_appropriation_ids_for_dst(self):
+        """
+        Get Appropriation ids duplicated on section and case CPR number.
+
+        The output will look like this:
+        <AppropriationQuerySet [1609, 2503, 2501, 1805, 1038]>
+        """
+        return (
+            self.get_duplicate_cpr_and_section_appropriations_for_dst()
+            .annotate(ids=Func("ids", function="unnest"))
+            .values_list("ids", flat=True)
+        )
 
 
 class CaseQuerySet(models.QuerySet):
