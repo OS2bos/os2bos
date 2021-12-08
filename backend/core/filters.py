@@ -98,6 +98,16 @@ class AppropriationFilter(filters.FilterSet):
         queryset=Case.objects.all(),
     )
 
+    from_dst_start_date = filters.DateFilter(
+        method="filter_from_dst_start_date",
+        label=gettext("Fra DST start dato")
+    )
+
+
+    def filter_from_dst_start_date(self, queryset, name, value):
+        """Filter on DST start_date."""
+        return queryset.appropriations_for_dst_payload(value)
+
     class Meta:
         model = Appropriation
         fields = "__all__"
