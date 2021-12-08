@@ -441,6 +441,7 @@ class CaseQuerySet(models.QuerySet):
             # If acting municipality has changed we include it as changed.
             if (
                 hasattr(historical_case, "acting_municipality")
+                and historical_case.acting_municipality
                 and not historical_case.acting_municipality
                 == case.acting_municipality
             ):

@@ -91,6 +91,7 @@ class Appropriation(OptimizedDjangoObjectType):
     """Appropriation as a graphene type."""
 
     pk = graphene.Int(source="pk")
+    report_type = graphene.String(source="report_type")
 
     class Meta:
         model = AppropriationModel

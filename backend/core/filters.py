@@ -100,7 +100,7 @@ class AppropriationFilter(filters.FilterSet):
 
     from_dst_start_date = filters.DateFilter(
         method="filter_from_dst_start_date",
-        label=gettext("Fra DST start dato")
+        label=gettext("Fra DST start dato"),
     )
 
 
