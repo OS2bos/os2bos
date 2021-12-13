@@ -1463,7 +1463,7 @@ class Appropriation(AuditModelMixin, models.Model):
                             hasattr(a, "modified_by")
                             and not a.modified_by.status == STATUS_DELETED
                             and a.modified_by in activities
-                        ):
+                        ):  # pragma: no cover
                             to_be_granted.append(a)
         else:
             # No main activity. We're only allowed to do this if the

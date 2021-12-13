@@ -456,7 +456,7 @@ class ActivityViewSet(AuditModelViewSetMixin, AuditViewSet):
 
             else:
                 activity.status = STATUS_DELETED
-                if hasattr(activity, "modifies"):
+                if hasattr(activity, "modifies") and activity.modifies:
                     activity.modifies = None
                 activity.save()
             # Success!
