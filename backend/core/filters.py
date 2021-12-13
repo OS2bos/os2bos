@@ -109,10 +109,11 @@ class AppropriationFilter(filters.FilterSet):
     )
 
     def filter_from_dst_start_date(self, queryset, name, value):
-        """Filter on DST start_date."""
+        """Filter on DST start_date (appropriations for delta load)."""
         return queryset.appropriations_for_dst_payload(value)
 
     def filter_from_dst_start_date__isnull(self, queryset, name, value):
+        """Filter on no DST start_date (appropriations for initial load)."""
         if not value:
             return queryset
         else:
