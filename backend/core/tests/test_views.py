@@ -1885,7 +1885,7 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
             end_date=now + timedelta(days=6),
             activity_type=SUPPL_ACTIVITY,
             status=STATUS_EXPECTED,
-            modifies=modified
+            modifies=modified,
         )
         create_payment_schedule(activity=activity)
 
