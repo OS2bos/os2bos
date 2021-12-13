@@ -1438,9 +1438,9 @@ def generate_dst_payload_handicap(from_date=None, sections=None, test=True):
     )
     for obj in duplicate_appropriation_objects:
         appropriations = appropriations.filter(id__in=obj["ids"])
-        report_type = (
+        dst_report_type = (
             "Ændring"
-            if "Ændring" in [appr.report_type for appr in appropriations]
+            if "Ændring" in [appr.dst_report_type for appr in appropriations]
             else "Ny"
         )
         first_appropriation = appropriations.first()
@@ -1454,7 +1454,7 @@ def generate_dst_payload_handicap(from_date=None, sections=None, test=True):
 
         appropriation_structure = generate_dst_payload_handicap_element(
             identifier,
-            report_type,
+            dst_report_type,
             case.cpr_number,
             first_appropriation.section.dst_code,
             start_date,
@@ -1491,7 +1491,7 @@ def generate_dst_payload_handicap(from_date=None, sections=None, test=True):
         identifier = f"{case.cpr_number}-{appropriation.section.dst_code}"
         appropriation_structure = generate_dst_payload_handicap_element(
             identifier,
-            appropriation.report_type,
+            appropriation.dst_report_type,
             case.cpr_number,
             appropriation.section.dst_code,
             start_date,

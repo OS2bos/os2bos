@@ -103,10 +103,20 @@ class AppropriationFilter(filters.FilterSet):
         label=gettext("Fra DST start dato"),
     )
 
+    from_dst_start_date__isnull = filters.BooleanFilter(
+        method="filter_from_dst_start_date__isnull",
+        label=gettext("Fra DST start dato"),
+    )
 
     def filter_from_dst_start_date(self, queryset, name, value):
         """Filter on DST start_date."""
         return queryset.appropriations_for_dst_payload(value)
+
+    def filter_from_dst_start_date__isnull(self, queryset, name, value):
+        if not value:
+            return queryset
+        else:
+            return queryset.appropriations_for_dst_payload(from_date=None)
 
     class Meta:
         model = Appropriation

@@ -302,7 +302,7 @@ class AppropriationQuerySet(models.QuerySet):
                     "activities",
                     filter=main_activities_appropriated_before_from_date_q,
                 ),
-                report_type=Case(
+                dst_report_type=Case(
                     When(
                         case__in=changed_cases,
                         then=Value(report_types["CHANGED"]),
@@ -328,10 +328,10 @@ class AppropriationQuerySet(models.QuerySet):
                     default=Value(""),
                     output_field=CharField(),
                 ),
-            ).exclude(report_type="")
+            ).exclude(dst_report_type="")
         else:
             queryset = queryset.annotate(
-                report_type=Value(
+                dst_report_type=Value(
                     report_types["NEW"], output_field=CharField()
                 )
             )
