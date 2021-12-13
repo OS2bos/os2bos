@@ -1505,6 +1505,4 @@ def generate_dst_payload_handicap(from_date=None, sections=None, test=True):
     doc.append(generate_dst_payload_metadata_element(test))
     doc.append(appropriations_root)
 
-    print(etree.tostring(doc))
-
     return doc
