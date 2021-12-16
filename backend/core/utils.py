@@ -1303,10 +1303,10 @@ def generate_dst_payload_preventive_measures(
 
     appropriations_root = E.ForanstaltningStrukturSamling()
 
-    # CPR and section duplicate appropriations are a special case and
+    # 'common sbsys_id' duplicate appropriations are a special case and
     # should be consolidated into a single element in the XML payload.
     duplicate_appropriation_objects = (
-        appropriations.get_duplicate_cpr_and_section_appropriations_for_dst()
+        appropriations.get_duplicate_sbsys_id_appropriations_for_dst()
     )
     for obj in duplicate_appropriation_objects:
         appropriations = appropriations.filter(id__in=obj["ids"])
@@ -1431,10 +1431,10 @@ def generate_dst_payload_handicap(from_date=None, sections=None, test=True):
 
     appropriations_root = E.BoernMedHandicapSagStrukturSamling()
 
-    # CPR and section duplicate appropriations are a special case and
+    # 'common sbsys_id' duplicate appropriations are a special case and
     # should be consolidated into a single element in the XML payload.
     duplicate_appropriation_objects = (
-        appropriations.get_duplicate_cpr_and_section_appropriations_for_dst()
+        appropriations.get_duplicate_sbsys_id_appropriations_for_dst()
     )
     for obj in duplicate_appropriation_objects:
         appropriations = appropriations.filter(id__in=obj["ids"])

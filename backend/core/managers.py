@@ -200,6 +200,19 @@ class ActivityQuerySet(models.QuerySet):
         return self.filter(end_date__lt=today)
 
 
+class ExtractSBSYSId(Func):
+    """
+    Database Func to extract a 'common sbsys_id' from a model with an sbsys_id
+    (for example an Appropriation).
+
+    'regexp_substr' would be more ideal, but that is released as part of
+    PSQL 15 in late 2022.
+    """
+
+    function = "REGEXP_MATCHES"
+    template = "(%(function)s(%(expressions)s, '(\\d{2}\\.\\d{2}\\.\\d{2}-\\D\\d{2}-\\d+-\\d+)?.*'))[1]::varchar"
+
+
 class AppropriationQuerySet(models.QuerySet):
     """QuerySet and Manager for the Appropriation model."""
 
@@ -338,34 +351,34 @@ class AppropriationQuerySet(models.QuerySet):
 
         return queryset.distinct()
 
-    def get_duplicate_cpr_and_section_appropriations_for_dst(self):
+    def get_duplicate_sbsys_id_appropriations_for_dst(self):
         """
         Get Appropriations duplicated on section and case CPR number.
 
         The output will look like this:
         [
             {
-                'section': 1373,
-                'case__cpr_number': '1103011234',
-                'ids': [1413, 1412],
+                'sbsys_common': '27.36.08-G01-7-20',
+                'ids': [1597, 1700],
                 'id_count': 2
             },
             {
-                'section': 1381,
-                'case__cpr_number': '0205891234',
-                'ids': [1812, 2399],
-                'id_count': 2
+                'sbsys_common': '27.36.08-G01-7-15',
+                'ids': [642, 1195, 1120],
+                'id_count': 3
             }
         ]
         """
         return (
-            self.values("section", "case__cpr_number")
+            self.annotate(sbsys_common=ExtractSBSYSId("sbsys_id"))
+            .values("sbsys_common")
+            .exclude(sbsys_common=None)
             .annotate(ids=ArrayAgg("id"))
             .annotate(id_count=Func("ids", Value(1), function="array_length"))
             .filter(id_count__gt=1)
         )
 
-    def get_duplicate_cpr_and_section_appropriation_ids_for_dst(self):
+    def get_duplicate_sbsys_id_appropriation_ids_for_dst(self):
         """
         Get Appropriation ids duplicated on section and case CPR number.
 
@@ -373,7 +386,7 @@ class AppropriationQuerySet(models.QuerySet):
         <AppropriationQuerySet [1609, 2503, 2501, 1805, 1038]>
         """
         return (
-            self.get_duplicate_cpr_and_section_appropriations_for_dst()
+            self.get_duplicate_sbsys_id_appropriations_for_dst()
             .annotate(ids=Func("ids", function="unnest"))
             .values_list("ids", flat=True)
         )
