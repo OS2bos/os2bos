@@ -202,9 +202,9 @@ class ActivityQuerySet(models.QuerySet):
 
 class ExtractCommonSBSYSId(Func):
     """
-    Database Func to extract a 'common sbsys_id' from an Appropriation
-    for use in merging Appropriations for DST payload.
+    Database Func to extract a 'common sbsys_id' from an Appropriation.
 
+    For use in merging Appropriations for a DST payload.
     I guess using 'regexp_substr' would be more ideal, but that is released
     as part of PSQL 15 in late 2022.
     """
