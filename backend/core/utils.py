@@ -1315,9 +1315,7 @@ def generate_dst_payload_preventive_measures(
         father_or_mother = case.related_persons.filter(
             Q(relation_type="mor") | Q(relation_type="far")
         ).first()
-        identifier = (
-            f"{case.cpr_number}-{first_appropriation.section.dst_code}"
-        )
+        identifier = obj.sbsys_common
         start_date = min([appr.granted_from_date for appr in appropriations])
         end_date = max([appr.granted_to_date for appr in appropriations])
 
@@ -1446,9 +1444,7 @@ def generate_dst_payload_handicap(from_date=None, sections=None, test=True):
         first_appropriation = appropriations.first()
         case = first_appropriation.case
         case_worker = case.case_worker
-        identifier = (
-            f"{case.cpr_number}-{first_appropriation.section.dst_code}"
-        )
+        identifier = obj.sbsys_common
         start_date = min([appr.granted_from_date for appr in appropriations])
         end_date = max([appr.granted_to_date for appr in appropriations])
 
