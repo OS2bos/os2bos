@@ -200,17 +200,20 @@ class ActivityQuerySet(models.QuerySet):
         return self.filter(end_date__lt=today)
 
 
-class ExtractSBSYSId(Func):
+class ExtractCommonSBSYSId(Func):
     """
-    Database Func to extract a 'common sbsys_id' from a model with an sbsys_id
-    (for example an Appropriation).
+    Database Func to extract a 'common sbsys_id' from an Appropriation
+    for use in merging Appropriations for DST payload.
 
-    'regexp_substr' would be more ideal, but that is released as part of
-    PSQL 15 in late 2022.
+    I guess using 'regexp_substr' would be more ideal, but that is released
+    as part of PSQL 15 in late 2022.
     """
 
     function = "REGEXP_MATCHES"
-    template = "(%(function)s(%(expressions)s, '(\\d{2}\\.\\d{2}\\.\\d{2}-\\D\\d{2}-\\d+-\\d+)?.*'))[1]::varchar"
+    template = (
+        "(%(function)s(%(expressions)s, "
+        "'(\\d{2}\\.\\d{2}\\.\\d{2}-\\D\\d{2}-\\d+-\\d+)?.*'))[1]::varchar"
+    )
 
 
 class AppropriationQuerySet(models.QuerySet):
@@ -370,7 +373,7 @@ class AppropriationQuerySet(models.QuerySet):
         ]
         """
         return (
-            self.annotate(sbsys_common=ExtractSBSYSId("sbsys_id"))
+            self.annotate(sbsys_common=ExtractCommonSBSYSId("sbsys_id"))
             .values("sbsys_common")
             .exclude(sbsys_common=None)
             .annotate(ids=ArrayAgg("id"))
