@@ -16,6 +16,7 @@ import re
 import csv
 
 from lxml.builder import ElementMaker
+from lxml import etree
 
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
@@ -1296,7 +1297,6 @@ def generate_dst_payload_preventive_measures(
         .prefetch_related("case__related_persons", "activities__payment_plan")
         .appropriations_for_dst_payload(from_start_date, sections)
     )
-
     E = ElementMaker(
         namespace="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
     )
@@ -1309,15 +1309,19 @@ def generate_dst_payload_preventive_measures(
         appropriations.get_duplicate_sbsys_id_appropriations_for_dst()
     )
     for obj in duplicate_appropriation_objects:
-        appropriations = appropriations.filter(id__in=obj["ids"])
-        first_appropriation = appropriations.first()
-        case = appropriations.first().case
+        duplicate_appropriations = appropriations.filter(id__in=obj["ids"])
+        first_appropriation = duplicate_appropriations.first()
+        case = duplicate_appropriations.first().case
         father_or_mother = case.related_persons.filter(
             Q(relation_type="mor") | Q(relation_type="far")
         ).first()
-        identifier = obj.sbsys_common
-        start_date = min([appr.granted_from_date for appr in appropriations])
-        end_date = max([appr.granted_to_date for appr in appropriations])
+        identifier = obj["sbsys_common"]
+        start_date = min(
+            [appr.granted_from_date for appr in duplicate_appropriations]
+        )
+        end_date = max(
+            [appr.granted_to_date for appr in duplicate_appropriations]
+        )
 
         appropriation_structure = (
             generate_dst_payload_preventive_measures_element(
@@ -1359,7 +1363,7 @@ def generate_dst_payload_preventive_measures(
             start_date = appropriation.granted_from_date
             end_date = appropriation.granted_to_date
 
-        identifier = f"{case.cpr_number}-{appropriation.section.dst_code}"
+        identifier = appropriation.sbsys_id
         appropriation_structure = (
             generate_dst_payload_preventive_measures_element(
                 case.cpr_number,
@@ -1377,7 +1381,7 @@ def generate_dst_payload_preventive_measures(
     doc.append(generate_dst_payload_metadata_element(test))
     doc.append(appropriations_root)
 
-    return doc
+    return etree.tostring(doc)
 
 
 def generate_dst_payload_handicap_element(
@@ -1435,18 +1439,23 @@ def generate_dst_payload_handicap(from_date=None, sections=None, test=True):
         appropriations.get_duplicate_sbsys_id_appropriations_for_dst()
     )
     for obj in duplicate_appropriation_objects:
-        appropriations = appropriations.filter(id__in=obj["ids"])
+        duplicate_appropriations = appropriations.filter(id__in=obj["ids"])
         dst_report_type = (
             "Ændring"
-            if "Ændring" in [appr.dst_report_type for appr in appropriations]
+            if "Ændring"
+            in [appr.dst_report_type for appr in duplicate_appropriations]
             else "Ny"
         )
-        first_appropriation = appropriations.first()
+        first_appropriation = duplicate_appropriations.first()
         case = first_appropriation.case
         case_worker = case.case_worker
-        identifier = obj.sbsys_common
-        start_date = min([appr.granted_from_date for appr in appropriations])
-        end_date = max([appr.granted_to_date for appr in appropriations])
+        identifier = obj["sbsys_common"]
+        start_date = min(
+            [appr.granted_from_date for appr in duplicate_appropriations]
+        )
+        end_date = max(
+            [appr.granted_to_date for appr in duplicate_appropriations]
+        )
 
         appropriation_structure = generate_dst_payload_handicap_element(
             identifier,
@@ -1484,7 +1493,7 @@ def generate_dst_payload_handicap(from_date=None, sections=None, test=True):
             start_date = appropriation.granted_from_date
             end_date = appropriation.granted_to_date
 
-        identifier = f"{case.cpr_number}-{appropriation.section.dst_code}"
+        identifier = appropriation.sbsys_id
         appropriation_structure = generate_dst_payload_handicap_element(
             identifier,
             appropriation.dst_report_type,
@@ -1501,4 +1510,4 @@ def generate_dst_payload_handicap(from_date=None, sections=None, test=True):
     doc.append(generate_dst_payload_metadata_element(test))
     doc.append(appropriations_root)
 
-    return doc
+    return etree.tostring(doc)

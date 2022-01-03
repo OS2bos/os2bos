@@ -12,6 +12,7 @@ from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
+from django.http import HttpResponse
 
 from rest_framework import viewsets
 from rest_framework.views import APIView
@@ -91,7 +92,12 @@ from core.filters import (
     PaymentFilter,
     AllowedForStepsFilter,
 )
-from core.utils import get_person_info, get_company_info_from_search_term
+
+from core.utils import (
+    get_person_info,
+    get_company_info_from_search_term,
+    generate_dst_payload_preventive_measures,
+)
 
 from core.mixins import (
     AuditMixin,
@@ -276,6 +282,23 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
             response = Response(
                 {"errors": [str(e)]}, status.HTTP_400_BAD_REQUEST
             )
+        return response
+
+    @action(detail=False, methods=["post"])
+    def generate_dst_payload(self, request):
+        sections_pks = request.data.get("sections", [])
+        from_start_date = request.data.get("from_start_date", None)
+        test = request.data.get("test", None)
+
+        sections = Section.objects.filter(pk__in=sections_pks)
+
+        doc = generate_dst_payload_preventive_measures(
+            from_start_date, sections, test
+        )
+
+        response = HttpResponse(doc, content_type="text/xml")
+        response["Content-Disposition"] = "attachment; filename=test.xml"
+
         return response
 
 

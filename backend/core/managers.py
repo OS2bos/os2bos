@@ -200,22 +200,6 @@ class ActivityQuerySet(models.QuerySet):
         return self.filter(end_date__lt=today)
 
 
-class ExtractCommonSBSYSId(Func):
-    """
-    Database Func to extract a 'common sbsys_id' from an Appropriation.
-
-    For use in merging Appropriations for a DST payload.
-    I guess using 'regexp_substr' would be more ideal, but that is released
-    as part of PSQL 15 in late 2022.
-    """
-
-    function = "REGEXP_MATCHES"
-    template = (
-        "(%(function)s(%(expressions)s, "
-        "'(\\d{2}\\.\\d{2}\\.\\d{2}-\\D\\d{2}-\\d+-\\d+)?.*'))[1]::varchar"
-    )
-
-
 class AppropriationQuerySet(models.QuerySet):
     """QuerySet and Manager for the Appropriation model."""
 
@@ -356,10 +340,20 @@ class AppropriationQuerySet(models.QuerySet):
 
     def get_duplicate_sbsys_id_appropriations_for_dst(self):
         """
-        Get Appropriations duplicated on section and case CPR number.
+        Get Appropriations duplicated on a 'common sbsys_id'.
+
+        Examples:
+        '27.24.36-G01-7-20-Far' -> '27.24.36-G01-7-20'
+        '27.24.36-G01-7-20-Mor' -> '27.24.36-G01-7-20'
+        '27.24.36-G01-7-20' -> '27.24.36-G01-7-20'
 
         The output will look like this:
         [
+            {
+                'sbsys_common': None,
+                'ids': [1535, 1534, 1533],
+                'id_count': 3
+            }
             {
                 'sbsys_common': '27.36.08-G01-7-20',
                 'ids': [1597, 1700],
@@ -373,9 +367,15 @@ class AppropriationQuerySet(models.QuerySet):
         ]
         """
         return (
-            self.annotate(sbsys_common=ExtractCommonSBSYSId("sbsys_id"))
-            .values("sbsys_common")
+            self.annotate(
+                sbsys_common=Func(
+                    F("sbsys_id"),
+                    Value("(\\d{2}\\.\\d{2}\\.\\d{2}-\\D\\d{2}-\\d+-\\d+)?.*"),
+                    function="substring",
+                )
+            )
             .exclude(sbsys_common=None)
+            .values("sbsys_common")
             .annotate(ids=ArrayAgg("id"))
             .annotate(id_count=Func("ids", Value(1), function="array_length"))
             .filter(id_count__gt=1)
@@ -383,7 +383,7 @@ class AppropriationQuerySet(models.QuerySet):
 
     def get_duplicate_sbsys_id_appropriation_ids_for_dst(self):
         """
-        Get Appropriation ids duplicated on section and case CPR number.
+        Get Appropriation ids duplicated on 'common sbsys_id'.
 
         The output will look like this:
         <AppropriationQuerySet [1609, 2503, 2501, 1805, 1038]>
