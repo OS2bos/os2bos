@@ -311,24 +311,20 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
         return response
 
     @action(detail=False, methods=["get"])
-    def generate_dst_preventative_measures_payload(self, request):
+    def generate_dst_preventative_measures_file(self, request):
         """Generate a Preventative Measures payload for DST."""
-        sections_pks = request.query_params.getlist("sections", [])
-        from_start_date = request.query_params.get("from_start_date", None)
-        test = request.query_params.get("test", True)
+        sections_pks = request.query_params.getlist("sections", None)
+        from_date = request.query_params.get("from_date", None)
+        test = request.query_params.get("test", "true")
         test = True if test == "true" else False
 
-        if sections_pks:
-            sections = Section.objects.filter(pk__in=sections_pks)
+        if sections_pks is None:
+            sections = Section.objects.filter(default_for_dst_handicap=True)
         else:
-            sections = Section.objects.filter(
-                default_for_dst_preventative_measures=True
-            )
+            sections = Section.objects.filter(pk__in=sections_pks)
 
         doc = etree.tostring(
-            generate_dst_payload_preventive_measures(
-                from_start_date, sections, test
-            )
+            generate_dst_payload_preventive_measures(from_date, sections, test)
         )
         payload_type = "T201" if test else "L201"
         municipality_code = config.DST_MUNICIPALITY_CODE
@@ -348,20 +344,20 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
         return response
 
     @action(detail=False, methods=["get"])
-    def generate_dst_handicap_payload(self, request):
+    def generate_dst_handicap_file(self, request):
         """Generate a Handicap payload for DST."""
-        sections_pks = request.query_params.getlist("sections", [])
-        from_start_date = request.query_params.get("from_start_date", None)
+        sections_pks = request.query_params.getlist("sections", None)
+        from_date = request.query_params.get("from_date", None)
         test = request.query_params.get("test", "true")
         test = True if test == "true" else False
 
-        if sections_pks:
-            sections = Section.objects.filter(pk__in=sections_pks)
-        else:
+        if sections_pks is None:
             sections = Section.objects.filter(default_for_dst_handicap=True)
+        else:
+            sections = Section.objects.filter(pk__in=sections_pks)
 
         doc = etree.tostring(
-            generate_dst_payload_handicap(from_start_date, sections, test)
+            generate_dst_payload_handicap(from_date, sections, test)
         )
         payload_type = "T231" if test else "L231"
         municipality_code = config.DST_MUNICIPALITY_CODE

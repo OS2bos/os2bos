@@ -248,7 +248,7 @@ class AppropriationQuerySet(models.QuerySet):
             )
         )
 
-    def appropriations_for_dst_payload(self, from_date=None, sections=None):
+    def appropriations_for_dst_payload(self, from_date=None):
         """Filter appropriations for a Danmarks Statistik payload.
 
         We annotate a report_type based on whether an Appropriation
@@ -266,9 +266,6 @@ class AppropriationQuerySet(models.QuerySet):
             activities__status=STATUS_GRANTED,
             activities__activity_type=MAIN_ACTIVITY,
         )
-
-        if sections:
-            queryset = queryset.filter(section__in=sections)
 
         report_types = {
             "NEW": "Ny",
