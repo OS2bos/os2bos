@@ -28,6 +28,8 @@ from rest_framework.decorators import (
 )
 from rest_framework.request import Request
 
+from lxml import etree
+
 from graphene_django.views import GraphQLView
 
 from constance import config
@@ -323,8 +325,10 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
                 default_for_dst_preventative_measures=True
             )
 
-        doc = generate_dst_payload_preventive_measures(
-            from_start_date, sections, test
+        doc = etree.tostring(
+            generate_dst_payload_preventive_measures(
+                from_start_date, sections, test
+            )
         )
         payload_type = "T201" if test else "L201"
         municipality_code = config.DST_MUNICIPALITY_CODE
@@ -356,7 +360,9 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
         else:
             sections = Section.objects.filter(default_for_dst_handicap=True)
 
-        doc = generate_dst_payload_handicap(from_start_date, sections, test)
+        doc = etree.tostring(
+            generate_dst_payload_handicap(from_start_date, sections, test)
+        )
         payload_type = "T231" if test else "L231"
         municipality_code = config.DST_MUNICIPALITY_CODE
         now = timezone.now()

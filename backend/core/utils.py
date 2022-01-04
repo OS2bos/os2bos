@@ -16,7 +16,6 @@ import re
 import csv
 
 from lxml.builder import ElementMaker
-from lxml import etree
 
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
@@ -1381,7 +1380,7 @@ def generate_dst_payload_preventive_measures(
     doc.append(generate_dst_payload_metadata_element(test))
     doc.append(appropriations_root)
 
-    return etree.tostring(doc)
+    return doc
 
 
 def generate_dst_payload_handicap_element(
@@ -1414,7 +1413,7 @@ def generate_dst_payload_handicap_element(
 
 def generate_dst_payload_handicap(from_date=None, sections=None, test=True):
     """
-    Generate a XML payload for DST for "Handicap".
+    Generate an XML payload for DST for "Handicap".
 
     "Børn og unge med nedsat psykisk eller fysisk funktionsevne"
     Specified in "Bilag 8" here:
@@ -1510,4 +1509,4 @@ def generate_dst_payload_handicap(from_date=None, sections=None, test=True):
     doc.append(generate_dst_payload_metadata_element(test))
     doc.append(appropriations_root)
 
-    return etree.tostring(doc)
+    return doc
