@@ -537,8 +537,16 @@ class SectionAdmin(ClassificationAdmin):
         "list_main_activity_for",
         "list_supplementary_activity_for",
         "dst_code",
+        "default_for_dst_preventative_measures",
+        "default_for_dst_handicap",
         "active",
     )
+
+    list_filter = (
+        "default_for_dst_preventative_measures",
+        "default_for_dst_handicap",
+    )
+
     filter_horizontal = ("allowed_for_target_groups", "allowed_for_steps")
 
     inlines = (MainActivityDetailsInline, SupplementaryActivityDetailsInline)

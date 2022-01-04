@@ -1205,6 +1205,24 @@ class Section(Classification):
         ),
         blank=True,
     )
+    default_for_dst_preventative_measures = models.BooleanField(
+        blank=True,
+        default=True,
+        verbose_name=_("standard for DST 'Forebyggende Foranstaltninger'"),
+        help_text=_(
+            "Hvorvidt denne paragraf skal bruges som standard"
+            " til DST udtræk for 'Forebyggende Foranstaltninger'."
+        ),
+    )
+    default_for_dst_handicap = models.BooleanField(
+        blank=True,
+        default=True,
+        verbose_name=_("standard for DST 'Handicap'"),
+        help_text=_(
+            "Hvorvidt denne paragraf skal bruges som standard"
+            " til DST udtræk for 'Handicap'."
+        ),
+    )
 
     def __str__(self):
         return f"{self.paragraph}"

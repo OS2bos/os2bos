@@ -97,6 +97,7 @@ from core.utils import (
     get_person_info,
     get_company_info_from_search_term,
     generate_dst_payload_preventive_measures,
+    generate_dst_payload_handicap,
 )
 
 from core.mixins import (
@@ -231,10 +232,30 @@ class CaseViewSet(AuditModelViewSetMixin, AuditViewSet):
 
 
 class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
-    """Expose appropriations in REST API.
+    """
+    ## Expose appropriations in REST API.
 
-    Note the custom action ``grant`` for approving an appropriation and
+    ### Actions
+
+    **grant** for approving an appropriation and
     all its activities.
+
+    - approval_level
+    - approval_note
+    - activity_pks
+
+    **generate_dst_preventative_measures_payload** for generating a DST
+    preventative measures payload.
+
+    - sections
+    - from_start_date
+    - test
+
+    **generate_dst_handicap_payload** for generating a DST handicap payload.
+
+    - sections
+    - from_start_date
+    - test
     """
 
     serializer_action_classes = {
@@ -284,20 +305,49 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
             )
         return response
 
-    @action(detail=False, methods=["post"])
-    def generate_dst_payload(self, request):
-        sections_pks = request.data.get("sections", [])
-        from_start_date = request.data.get("from_start_date", None)
-        test = request.data.get("test", None)
+    @action(detail=False, methods=["get"])
+    def generate_dst_preventative_measures_payload(self, request):
+        """Generate a Preventative Measures payload for DST."""
+        sections_pks = request.query_params.getlist("sections", [])
+        from_start_date = request.query_params.get("from_start_date", None)
+        test = request.query_params.get("test", True)
+        test = True if test == "true" else False
 
-        sections = Section.objects.filter(pk__in=sections_pks)
+        if sections_pks:
+            sections = Section.objects.filter(pk__in=sections_pks)
+        else:
+            sections = Section.objects.filter(
+                default_for_dst_preventative_measures=True
+            )
 
         doc = generate_dst_payload_preventive_measures(
             from_start_date, sections, test
         )
 
         response = HttpResponse(doc, content_type="text/xml")
-        response["Content-Disposition"] = "attachment; filename=test.xml"
+        response[
+            "Content-Disposition"
+        ] = "attachment; filename=preventative_measures.xml"
+
+        return response
+
+    @action(detail=False, methods=["get"])
+    def generate_dst_handicap_payload(self, request):
+        """Generate a Handicap payload for DST."""
+        sections_pks = request.query_params.getlist("sections", [])
+        from_start_date = request.query_params.get("from_start_date", None)
+        test = request.query_params.get("test", "true")
+        test = True if test == "true" else False
+
+        if sections_pks:
+            sections = Section.objects.filter(pk__in=sections_pks)
+        else:
+            sections = Section.objects.filter(default_for_dst_handicap=True)
+
+        doc = generate_dst_payload_handicap(from_start_date, sections, test)
+
+        response = HttpResponse(doc, content_type="text/xml")
+        response["Content-Disposition"] = "attachment; filename=handicap.xml"
 
         return response
 
