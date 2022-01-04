@@ -1282,7 +1282,7 @@ def generate_dst_payload_preventive_measures_element(
 
 
 def generate_dst_payload_preventive_measures(
-    from_start_date=None, sections=None, test=True
+    from_date=None, sections=None, test=True
 ):
     """
     Generate a XML payload for DST for "Preventive Measures".
@@ -1291,11 +1291,15 @@ def generate_dst_payload_preventive_measures(
     https://www.retsinformation.dk/eli/lta/2021/1502
     #id6e560773-349b-4779-872c-126f3fad2858
     """
-    appropriations = (
-        models.Appropriation.objects.select_related("case")
-        .prefetch_related("case__related_persons", "activities__payment_plan")
-        .appropriations_for_dst_payload(from_start_date, sections)
-    )
+    appropriations = models.Appropriation.objects.select_related(
+        "case"
+    ).prefetch_related("case__related_persons", "activities__payment_plan")
+
+    if sections:
+        appropriations = appropriations.filter(section__in=sections)
+
+    appropriations = appropriations.appropriations_for_dst_payload(from_date)
+
     E = ElementMaker(
         namespace="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
     )
@@ -1420,11 +1424,14 @@ def generate_dst_payload_handicap(from_date=None, sections=None, test=True):
     https://www.retsinformation.dk/eli/lta/2021/1502
     #id8eb5787a-6efa-40ac-b911-0b0c817c2104
     """
-    appropriations = (
-        models.Appropriation.objects.select_related("case")
-        .prefetch_related("case__related_persons", "activities__payment_plan")
-        .appropriations_for_dst_payload(from_date, sections)
-    )
+    appropriations = models.Appropriation.objects.select_related(
+        "case"
+    ).prefetch_related("case__related_persons", "activities__payment_plan")
+
+    if sections:
+        appropriations = appropriations.filter(section__in=sections)
+
+    appropriations = appropriations.appropriations_for_dst_payload(from_date)
 
     E = ElementMaker(
         namespace="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",

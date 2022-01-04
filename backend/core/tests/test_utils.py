@@ -1857,7 +1857,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             structure_doc[0]
             .xpath("x:ForanstaltningId", namespaces=ns)[0]
             .text,
-            "0205891234-123",
+            "27.12.06-G01-197-19",
         )
         self.assertEqual(
             structure_doc[0]
