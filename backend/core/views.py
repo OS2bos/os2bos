@@ -13,6 +13,7 @@ from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from django.http import HttpResponse
+from django.utils import timezone
 
 from rest_framework import viewsets
 from rest_framework.views import APIView
@@ -28,6 +29,8 @@ from rest_framework.decorators import (
 from rest_framework.request import Request
 
 from graphene_django.views import GraphQLView
+
+from constance import config
 
 from core.models import (
     Case,
@@ -323,11 +326,20 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
         doc = generate_dst_payload_preventive_measures(
             from_start_date, sections, test
         )
+        payload_type = "T201" if test else "L201"
+        municipality_code = config.DST_MUNICIPALITY_CODE
+        now = timezone.now()
+        period = now.strftime("%YM%m")
+        generation_timestamp = now.strftime("%Y%m%dT%H%M%S")
+        filename = (
+            f"P_{municipality_code}_"
+            f"{payload_type}_"
+            f"P{period}_"
+            f"V01_D{generation_timestamp}.xml"
+        )
 
         response = HttpResponse(doc, content_type="text/xml")
-        response[
-            "Content-Disposition"
-        ] = "attachment; filename=preventative_measures.xml"
+        response["Content-Disposition"] = f"attachment; filename={filename}"
 
         return response
 
@@ -345,9 +357,20 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
             sections = Section.objects.filter(default_for_dst_handicap=True)
 
         doc = generate_dst_payload_handicap(from_start_date, sections, test)
+        payload_type = "T231" if test else "L231"
+        municipality_code = config.DST_MUNICIPALITY_CODE
+        now = timezone.now()
+        period = now.strftime("%YM%m")
+        generation_timestamp = now.strftime("%Y%m%dT%H%M%S")
+        filename = (
+            f"P_{municipality_code}_"
+            f"{payload_type}_"
+            f"P{period}_"
+            f"V01_D{generation_timestamp}.xml"
+        )
 
         response = HttpResponse(doc, content_type="text/xml")
-        response["Content-Disposition"] = "attachment; filename=handicap.xml"
+        response["Content-Disposition"] = f"attachment; filename={filename}"
 
         return response
 
