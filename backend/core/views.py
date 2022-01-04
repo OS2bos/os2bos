@@ -313,17 +313,15 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
     @action(detail=False, methods=["get"])
     def generate_dst_preventative_measures_file(self, request):
         """Generate a Preventative Measures payload for DST."""
-        sections_pks = request.query_params.getlist("sections", None)
         from_date = request.query_params.get("from_date", None)
         test = request.query_params.get("test", "true")
         test = True if test == "true" else False
 
-        if sections_pks is None:
-            sections = Section.objects.filter(
-                default_for_dst_preventative_measures=True
-            )
-        else:
+        if "sections" in request.query_params:
+            sections_pks = request.query_params.getlist("sections")
             sections = Section.objects.filter(pk__in=sections_pks)
+        else:
+            sections = Section.objects.filter(default_for_dst_handicap=True)
 
         doc = etree.tostring(
             generate_dst_payload_preventive_measures(from_date, sections, test)
@@ -348,15 +346,15 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
     @action(detail=False, methods=["get"])
     def generate_dst_handicap_file(self, request):
         """Generate a Handicap payload for DST."""
-        sections_pks = request.query_params.getlist("sections", None)
         from_date = request.query_params.get("from_date", None)
         test = request.query_params.get("test", "true")
         test = True if test == "true" else False
 
-        if sections_pks is None:
-            sections = Section.objects.filter(default_for_dst_handicap=True)
-        else:
+        if "sections" in request.query_params:
+            sections_pks = request.query_params.getlist("sections")
             sections = Section.objects.filter(pk__in=sections_pks)
+        else:
+            sections = Section.objects.filter(default_for_dst_handicap=True)
 
         doc = etree.tostring(
             generate_dst_payload_handicap(from_date, sections, test)
