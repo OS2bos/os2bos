@@ -319,7 +319,9 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
         test = True if test == "true" else False
 
         if sections_pks is None:
-            sections = Section.objects.filter(default_for_dst_handicap=True)
+            sections = Section.objects.filter(
+                default_for_dst_preventative_measures=True
+            )
         else:
             sections = Section.objects.filter(pk__in=sections_pks)
 
