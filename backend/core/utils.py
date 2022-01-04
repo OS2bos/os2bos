@@ -1295,7 +1295,7 @@ def generate_dst_payload_preventive_measures(
         "case"
     ).prefetch_related("case__related_persons", "activities__payment_plan")
 
-    if sections:
+    if sections is not None:
         appropriations = appropriations.filter(section__in=sections)
 
     appropriations = appropriations.appropriations_for_dst_payload(from_date)
@@ -1428,7 +1428,7 @@ def generate_dst_payload_handicap(from_date=None, sections=None, test=True):
         "case"
     ).prefetch_related("case__related_persons", "activities__payment_plan")
 
-    if sections:
+    if sections is not None:
         appropriations = appropriations.filter(section__in=sections)
 
     appropriations = appropriations.appropriations_for_dst_payload(from_date)
