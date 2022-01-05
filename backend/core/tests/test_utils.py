@@ -1280,7 +1280,6 @@ class DSTUtilities(TestCase, BasicTestMixin):
     def test_generate_dst_payload_preventative_initial_load_valid(self):
         now = timezone.now().date()
         start_date = now
-        end_date = now + timedelta(days=5)
         case = create_case(self.case_worker, self.municipality, self.district)
         create_related_person(case, relation_type="far")
         section = create_section(dst_code="123")
@@ -1291,7 +1290,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             case,
             appropriation,
             start_date=start_date,
-            end_date=end_date,
+            end_date=None,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
         )
@@ -1329,7 +1328,6 @@ class DSTUtilities(TestCase, BasicTestMixin):
     def test_generate_dst_payload_handicap_initial_load_valid(self):
         now = timezone.now().date()
         start_date = now
-        end_date = now + timedelta(days=5)
         case = create_case(self.case_worker, self.municipality, self.district)
         create_related_person(case, relation_type="far")
         section = create_section(dst_code="123")
@@ -1340,7 +1338,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             case,
             appropriation,
             start_date=start_date,
-            end_date=end_date,
+            end_date=None,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
         )
@@ -1876,4 +1874,158 @@ class DSTUtilities(TestCase, BasicTestMixin):
             .xpath("x:ForanstaltningSlutDato", namespaces=ns)[0]
             .text,
             str(third_activity.end_date),
+        )
+
+    def test_generate_dst_payload_handicap_initial_load_consolidation(
+        self,
+    ):
+        now = timezone.now().date()
+        start_date = now
+        end_date = now + timedelta(days=5)
+        case = create_case(self.case_worker, self.municipality, self.district)
+        create_related_person(
+            case, relation_type="far", cpr_number="1234567890"
+        )
+        section = create_section(dst_code="123")
+        first_appropriation = create_appropriation(
+            sbsys_id="27.12.06-G01-197-19-gl", case=case, section=section
+        )
+        first_activity = create_activity(
+            case,
+            first_appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=first_activity,
+        )
+        section.main_activities.add(first_activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=first_activity.details, section=section
+        )
+
+        second_appropriation = create_appropriation(
+            sbsys_id="27.12.06-G01-197-19", case=case, section=section
+        )
+        second_activity = create_activity(
+            case,
+            second_appropriation,
+            start_date=start_date - timedelta(days=10),
+            end_date=end_date + timedelta(days=5),
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=second_activity,
+        )
+        section.main_activities.add(second_activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=second_activity.details, section=section
+        )
+
+        third_appropriation = create_appropriation(
+            sbsys_id="27.12.06-G01-197-19-ny", case=case, section=section
+        )
+        third_activity = create_activity(
+            case,
+            third_appropriation,
+            start_date=start_date - timedelta(days=5),
+            end_date=end_date + timedelta(days=10),
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=third_activity,
+        )
+        section.main_activities.add(third_activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=third_activity.details, section=section
+        )
+
+        schema_path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "data",
+            "xml_schemas",
+            "DST_BoernMedHandicapLeveranceL231Struktur.xsd",
+        )
+
+        with open(schema_path) as f:
+            xmlschema_doc = etree.parse(f)
+        xml_schema = etree.XMLSchema(xmlschema_doc)
+
+        # Generating a dst payload with no cut-off date
+        # should result in a initial_load.
+        doc = generate_dst_payload_handicap()
+        self.assertTrue(xml_schema.validate(doc))
+
+        # All three appropriations should be consolidated to one entry.
+        ns = {"x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/"}
+        structure_doc = doc.xpath(
+            "x:BoernMedHandicapSagStrukturSamling/" "x:BoernMedHandicapSagStruktur",
+            namespaces=ns,
+        )
+        self.assertEqual(len(structure_doc), 1)
+        # Assert elements are properly consolidated.
+        self.assertEqual(
+            structure_doc[0]
+            .xpath("x:CPR", namespaces=ns)[0]
+            .text,
+            "0205891234",
+        )
+        self.assertEqual(
+            structure_doc[0]
+            .xpath("x:INDSATSFORLOEB_ID", namespaces=ns)[0]
+            .text,
+            "27.12.06-G01-197-19",
+        )
+        self.assertEqual(
+            structure_doc[0]
+            .xpath("x:INDSATS_KODE", namespaces=ns)[0]
+            .text,
+            "123",
+        )
+        self.assertEqual(
+            structure_doc[0]
+            .xpath("x:INDSATS_STARTDATO", namespaces=ns)[0]
+            .text,
+            str(second_activity.start_date),
+        )
+        self.assertEqual(
+            structure_doc[0]
+            .xpath("x:INDSATS_SLUTDATO", namespaces=ns)[0]
+            .text,
+            str(third_activity.end_date),
+        )
+        self.assertEqual(
+            structure_doc[0]
+            .xpath("x:SAGSBEHANDLER", namespaces=ns)[0]
+            .text,
+            "Orla Frøsnapper",
+        )
+        self.assertEqual(
+            structure_doc[0]
+            .xpath("x:INDBERETNINGSTYPE", namespaces=ns)[0]
+            .text,
+            "Ny",
         )
