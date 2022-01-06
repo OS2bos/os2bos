@@ -1387,6 +1387,78 @@ class DSTUtilities(TestCase, BasicTestMixin):
             "Ny",
         )
 
+    def test_generate_dst_payload_handicap_one_time_special_case(self):
+        now = timezone.now().date()
+        payment_date = now
+        case = create_case(self.case_worker, self.municipality, self.district)
+        create_related_person(case, relation_type="far")
+        section = create_section(dst_code="123")
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        granted_activity = create_activity(
+            case,
+            appropriation,
+            start_date=None,
+            end_date=None,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=granted_activity,
+            payment_date=payment_date,
+        )
+        section.main_activities.add(granted_activity.details)
+
+        section_info = SectionInfo.objects.get(
+            activity_details=granted_activity.details, section=section
+        )
+        section_info.dst_code = "123"
+        section_info.save()
+
+        schema_path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "data",
+            "xml_schemas",
+            "DST_BoernMedHandicapLeveranceL231Struktur.xsd",
+        )
+
+        with open(schema_path) as f:
+            xmlschema_doc = etree.parse(f)
+        xml_schema = etree.XMLSchema(xmlschema_doc)
+
+        doc = generate_dst_payload_handicap()
+        self.assertTrue(xml_schema.validate(doc))
+
+        # One time activities with no start/end use payment_date instead.
+        self.assertEqual(
+            doc.xpath(
+                "x:BoernMedHandicapSagStrukturSamling/"
+                "x:BoernMedHandicapSagStruktur/"
+                "x:INDSATS_STARTDATO",
+                namespaces={
+                    "x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/"
+                },
+            )[0].text,
+            str(payment_date),
+        )
+        self.assertEqual(
+            doc.xpath(
+                "x:BoernMedHandicapSagStrukturSamling/"
+                "x:BoernMedHandicapSagStruktur/"
+                "x:INDSATS_SLUTDATO",
+                namespaces={
+                    "x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/"
+                },
+            )[0].text,
+            str(payment_date),
+        )
+
     @freeze_time("2021-01-01")
     def test_generate_dst_payload_handicap_delta_load_changed(self):
         now = timezone.now().date()
@@ -1982,15 +2054,14 @@ class DSTUtilities(TestCase, BasicTestMixin):
         # All three appropriations should be consolidated to one entry.
         ns = {"x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/"}
         structure_doc = doc.xpath(
-            "x:BoernMedHandicapSagStrukturSamling/" "x:BoernMedHandicapSagStruktur",
+            "x:BoernMedHandicapSagStrukturSamling/"
+            "x:BoernMedHandicapSagStruktur",
             namespaces=ns,
         )
         self.assertEqual(len(structure_doc), 1)
         # Assert elements are properly consolidated.
         self.assertEqual(
-            structure_doc[0]
-            .xpath("x:CPR", namespaces=ns)[0]
-            .text,
+            structure_doc[0].xpath("x:CPR", namespaces=ns)[0].text,
             "0205891234",
         )
         self.assertEqual(
@@ -2000,9 +2071,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             "27.12.06-G01-197-19",
         )
         self.assertEqual(
-            structure_doc[0]
-            .xpath("x:INDSATS_KODE", namespaces=ns)[0]
-            .text,
+            structure_doc[0].xpath("x:INDSATS_KODE", namespaces=ns)[0].text,
             "123",
         )
         self.assertEqual(
@@ -2018,9 +2087,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             str(third_activity.end_date),
         )
         self.assertEqual(
-            structure_doc[0]
-            .xpath("x:SAGSBEHANDLER", namespaces=ns)[0]
-            .text,
+            structure_doc[0].xpath("x:SAGSBEHANDLER", namespaces=ns)[0].text,
             "Orla Frøsnapper",
         )
         self.assertEqual(

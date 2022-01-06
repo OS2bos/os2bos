@@ -1232,6 +1232,46 @@ class ActivitySerializerTestCase(TestCase, BasicTestMixin):
 
         self.assertTrue(serializer.is_valid())
 
+    def test_validate_one_time_cannot_be_main_activity(self):
+        start_date = date.today()
+        end_date = date.today() + timedelta(days=1)
+
+        payment_schedule = create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            payment_frequency="",
+            payment_date=start_date,
+        )
+        payment_schedule_data = PaymentScheduleSerializer(
+            payment_schedule
+        ).data
+
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case)
+        details, unused = ActivityDetails.objects.get_or_create(
+            activity_id="000000",
+            name="Test aktivitet",
+            max_tolerance_in_percent=10,
+            max_tolerance_in_dkk=1000,
+        )
+        data = {
+            "case": case.id,
+            "appropriation": appropriation.id,
+            "start_date": start_date,
+            "status": STATUS_EXPECTED,
+            "activity_type": MAIN_ACTIVITY,
+            "end_date": end_date,
+            "details": details.id,
+            "payment_plan": payment_schedule_data,
+        }
+        serializer = ActivitySerializer(data=data)
+
+        self.assertFalse(serializer.is_valid())
+        self.assertEqual(
+            serializer.errors["non_field_errors"][0],
+            "Hovedydelser må ikke være engangsbetalinger",
+        )
+
 
 class CaseSerializerTestCase(TestCase, BasicTestMixin):
     @classmethod
