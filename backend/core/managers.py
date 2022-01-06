@@ -378,19 +378,6 @@ class AppropriationQuerySet(models.QuerySet):
             .filter(id_count__gt=1)
         )
 
-    def get_duplicate_sbsys_id_appropriation_ids_for_dst(self):
-        """
-        Get Appropriation ids duplicated on 'common sbsys_id'.
-
-        The output will look like this:
-        <AppropriationQuerySet [1609, 2503, 2501, 1805, 1038]>
-        """
-        return (
-            self.get_duplicate_sbsys_id_appropriations_for_dst()
-            .annotate(ids=Func("ids", function="unnest"))
-            .values_list("ids", flat=True)
-        )
-
 
 class CaseQuerySet(models.QuerySet):
     """Distinguish between expired and ongoing cases."""

@@ -1321,9 +1321,37 @@ class DSTUtilities(TestCase, BasicTestMixin):
         xml_schema = etree.XMLSchema(xmlschema_doc)
 
         # Generating a dst payload with no cut-off date
-        # should result in a initial_load with a status of "Ny".
+        # should result in a initial_load with a status of "Ny"
+        # and the default test form id.
         doc = generate_dst_payload_preventive_measures()
         self.assertTrue(xml_schema.validate(doc))
+        self.assertEqual(
+            doc.xpath(
+                "x:DeliveryMetadataNewStructure/"
+                "e:Envelope/"
+                "e:FormID",
+                namespaces={
+                    "x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
+                    "e": "http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/"
+                },
+            )[0].text,
+            "T201",
+        )
+
+        # Non Test should have correct form id.
+        doc = generate_dst_payload_preventive_measures(test=False)
+        self.assertEqual(
+            doc.xpath(
+                "x:DeliveryMetadataNewStructure/"
+                "e:Envelope/"
+                "e:FormID",
+                namespaces={
+                    "x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
+                    "e": "http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/"
+                },
+            )[0].text,
+            "L201",
+        )
 
     def test_generate_dst_payload_preventative_one_time_special_case(self):
         now = timezone.now().date()
@@ -1443,7 +1471,8 @@ class DSTUtilities(TestCase, BasicTestMixin):
         xml_schema = etree.XMLSchema(xmlschema_doc)
 
         # Generating a dst payload with no cut-off date
-        # should result in a initial_load with a status of "Ny".
+        # should result in a initial_load with a status of "Ny"
+        # and the default test form id.
         doc = generate_dst_payload_handicap()
         self.assertTrue(xml_schema.validate(doc))
 
@@ -1458,6 +1487,36 @@ class DSTUtilities(TestCase, BasicTestMixin):
             )[0].text,
             "Ny",
         )
+        self.assertEqual(
+            doc.xpath(
+                "x:DeliveryMetadataNewStructure/"
+                "e:Envelope/"
+                "e:FormID",
+                namespaces={
+                    "x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
+                    "e": "http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/"
+                },
+            )[0].text,
+            "T201",
+        )
+
+        doc = generate_dst_payload_handicap(test=False)
+        self.assertTrue(xml_schema.validate(doc))
+
+        # Non Test should have correct form id.
+        self.assertEqual(
+            doc.xpath(
+                "x:DeliveryMetadataNewStructure/"
+                "e:Envelope/"
+                "e:FormID",
+                namespaces={
+                    "x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
+                    "e": "http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/"
+                },
+            )[0].text,
+            "L201",
+        )
+
 
     def test_generate_dst_payload_handicap_one_time_special_case(self):
         now = timezone.now().date()

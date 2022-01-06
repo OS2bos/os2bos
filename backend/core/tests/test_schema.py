@@ -1,13 +1,22 @@
 from datetime import date, timedelta
 from base64 import b64encode
 
+from decimal import Decimal
+from freezegun import freeze_time
+
 from django.urls import reverse
+from django.utils import timezone
 
 from core.models import (
+    Activity,
     PaymentSchedule,
+    SectionInfo,
     MAIN_ACTIVITY,
     SUPPL_ACTIVITY,
+    STATUS_DRAFT,
+    STATUS_EXPECTED,
     STATUS_GRANTED,
+    CASH,
 )
 from core.tests.testing_utils import (
     AuthenticatedTestCase,
@@ -24,6 +33,7 @@ from core.tests.testing_utils import (
     create_price,
     create_section,
     create_rate_per_date,
+    create_approval_level,
 )
 
 
@@ -280,6 +290,165 @@ class TestAppropriationSchema(AuthenticatedTestCase, BasicTestMixin):
             ),
             111,
         )
+
+    def test_appropriations_from_dst_startdate_isnull(self):
+        now = timezone.now().date()
+        start_date = now
+        end_date = now + timedelta(days=5)
+
+        reverse_url = reverse("graphql-api")
+        self.client.login(username=self.username, password=self.password)
+
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section(dst_code="123")
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        # Create a main activity at 2021-01-01 and grant it.
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_DRAFT,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=activity,
+        )
+        section.main_activities.add(activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=activity.details, section=section
+        )
+        approval_level = create_approval_level()
+
+        activities = Activity.objects.filter(pk=activity.pk)
+        appropriation.grant(
+            activities, approval_level.id, "note", self.case_worker
+        )
+
+        json = {
+            "query": """
+            query {
+                appropriations(fromDstStartDate_Isnull:true) {
+                    edges {
+                        node {
+                            id,
+                            sbsysId,
+                            dstReportType
+                        }
+                    }
+                }
+            }
+            """
+        }
+        response = self.client.get(reverse_url, json)
+
+        self.assertEqual(response.status_code, 200)
+        node = response.json()["data"]["appropriations"]["edges"][0]["node"]
+        self.assertEqual(
+            node["id"],
+            b64encode(f"Appropriation:{appropriation.pk}".encode()).decode(),
+        )
+        self.assertEqual(node["dstReportType"], "Ny")
+
+    @freeze_time("2021-01-01")
+    def test_appropriations_from_dst_startdate(self):
+        now = timezone.now().date()
+        start_date = now
+        end_date = now + timedelta(days=5)
+
+        reverse_url = reverse("graphql-api")
+        self.client.login(username=self.username, password=self.password)
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section(dst_code="123")
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        # Create a main activity at 2021-01-01 and grant it.
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_DRAFT,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=activity,
+        )
+        section.main_activities.add(activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=activity.details, section=section
+        )
+        approval_level = create_approval_level()
+
+        activities = Activity.objects.filter(pk=activity.pk)
+        appropriation.grant(
+            activities, approval_level.id, "note", self.case_worker
+        )
+
+        # Next we create a modification to the main activity
+        # at 2021-01-03 and grant it.
+        with freeze_time("2021-01-03"):
+            modifies_activity = create_activity(
+                case,
+                appropriation,
+                start_date=start_date + timedelta(days=2),
+                end_date=end_date,
+                activity_type=MAIN_ACTIVITY,
+                status=STATUS_EXPECTED,
+                modifies=activity,
+            )
+            create_payment_schedule(
+                payment_frequency=PaymentSchedule.DAILY,
+                payment_type=PaymentSchedule.RUNNING_PAYMENT,
+                recipient_type=PaymentSchedule.PERSON,
+                payment_method=CASH,
+                payment_amount=Decimal(777),
+                activity=modifies_activity,
+            )
+            activities = Activity.objects.filter(pk=modifies_activity.pk)
+            appropriation.grant(
+                activities, approval_level.id, "note", self.case_worker
+            )
+
+        json = {
+            "query": """
+            query {
+                appropriations(fromDstStartDate:"2021-01-02") {
+                    edges {
+                        node {
+                            id,
+                            sbsysId,
+                            dstReportType
+                        }
+                    }
+                }
+            }
+            """
+        }
+        response = self.client.get(reverse_url, json)
+
+        self.assertEqual(response.status_code, 200)
+        node = response.json()["data"]["appropriations"]["edges"][0]["node"]
+        self.assertEqual(
+            node["id"],
+            b64encode(f"Appropriation:{appropriation.pk}".encode()).decode(),
+        )
+        self.assertEqual(node["dstReportType"], "Ændring")
 
 
 class TestPaymentScheduleSchema(AuthenticatedTestCase):
