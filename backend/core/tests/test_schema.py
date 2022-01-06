@@ -291,7 +291,7 @@ class TestAppropriationSchema(AuthenticatedTestCase, BasicTestMixin):
             111,
         )
 
-    def test_appropriations_from_dst_startdate_isnull(self):
+    def test_appropriations_from_dst_startdate_initial(self):
         now = timezone.now().date()
         start_date = now
         end_date = now + timedelta(days=5)
@@ -336,7 +336,7 @@ class TestAppropriationSchema(AuthenticatedTestCase, BasicTestMixin):
         json = {
             "query": """
             query {
-                appropriations(fromDstStartDate_Isnull:true) {
+                appropriations(fromDstStartDate:"1970-01-01") {
                     edges {
                         node {
                             id,
@@ -351,6 +351,7 @@ class TestAppropriationSchema(AuthenticatedTestCase, BasicTestMixin):
         response = self.client.get(reverse_url, json)
 
         self.assertEqual(response.status_code, 200)
+
         node = response.json()["data"]["appropriations"]["edges"][0]["node"]
         self.assertEqual(
             node["id"],
