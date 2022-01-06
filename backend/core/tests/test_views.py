@@ -1032,7 +1032,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response["Content-Disposition"],
-            "attachment; filename=P_151_T201_P2022M01_V01_D20220101T000000.xml"
+            "attachment; filename=P_151_T201_P2022M01_V01_D20220101T000000.xml",
         )
 
     @freeze_time("2022-01-01")
@@ -1070,7 +1070,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response["Content-Disposition"],
-            "attachment; filename=P_151_T201_P2022M01_V01_D20220101T000000.xml"
+            "attachment; filename=P_151_T201_P2022M01_V01_D20220101T000000.xml",
         )
 
     @freeze_time("2022-01-01")
@@ -1108,7 +1108,7 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response["Content-Disposition"],
-            "attachment; filename=P_151_T231_P2022M01_V01_D20220101T000000.xml"
+            "attachment; filename=P_151_T231_P2022M01_V01_D20220101T000000.xml",
         )
 
     @freeze_time("2022-01-01")
@@ -1147,8 +1147,9 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response["Content-Disposition"],
-            "attachment; filename=P_151_T231_P2022M01_V01_D20220101T000000.xml"
+            "attachment; filename=P_151_T231_P2022M01_V01_D20220101T000000.xml",
         )
+
 
 class TestPaymentScheduleViewSet(AuthenticatedTestCase):
     def test_get(self):

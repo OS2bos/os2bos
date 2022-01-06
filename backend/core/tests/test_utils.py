@@ -1327,12 +1327,10 @@ class DSTUtilities(TestCase, BasicTestMixin):
         self.assertTrue(xml_schema.validate(doc))
         self.assertEqual(
             doc.xpath(
-                "x:DeliveryMetadataNewStructure/"
-                "e:Envelope/"
-                "e:FormID",
+                "x:DeliveryMetadataNewStructure/" "e:Envelope/" "e:FormID",
                 namespaces={
                     "x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
-                    "e": "http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/"
+                    "e": "http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/",
                 },
             )[0].text,
             "T201",
@@ -1342,12 +1340,10 @@ class DSTUtilities(TestCase, BasicTestMixin):
         doc = generate_dst_payload_preventive_measures(test=False)
         self.assertEqual(
             doc.xpath(
-                "x:DeliveryMetadataNewStructure/"
-                "e:Envelope/"
-                "e:FormID",
+                "x:DeliveryMetadataNewStructure/" "e:Envelope/" "e:FormID",
                 namespaces={
                     "x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
-                    "e": "http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/"
+                    "e": "http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/",
                 },
             )[0].text,
             "L201",
@@ -1489,12 +1485,10 @@ class DSTUtilities(TestCase, BasicTestMixin):
         )
         self.assertEqual(
             doc.xpath(
-                "x:DeliveryMetadataNewStructure/"
-                "e:Envelope/"
-                "e:FormID",
+                "x:DeliveryMetadataNewStructure/" "e:Envelope/" "e:FormID",
                 namespaces={
                     "x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
-                    "e": "http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/"
+                    "e": "http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/",
                 },
             )[0].text,
             "T201",
@@ -1506,17 +1500,14 @@ class DSTUtilities(TestCase, BasicTestMixin):
         # Non Test should have correct form id.
         self.assertEqual(
             doc.xpath(
-                "x:DeliveryMetadataNewStructure/"
-                "e:Envelope/"
-                "e:FormID",
+                "x:DeliveryMetadataNewStructure/" "e:Envelope/" "e:FormID",
                 namespaces={
                     "x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
-                    "e": "http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/"
+                    "e": "http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/",
                 },
             )[0].text,
             "L201",
         )
-
 
     def test_generate_dst_payload_handicap_one_time_special_case(self):
         now = timezone.now().date()
