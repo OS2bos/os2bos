@@ -1325,6 +1325,78 @@ class DSTUtilities(TestCase, BasicTestMixin):
         doc = generate_dst_payload_preventive_measures()
         self.assertTrue(xml_schema.validate(doc))
 
+    def test_generate_dst_payload_preventative_one_time_special_case(self):
+        now = timezone.now().date()
+        payment_date = now
+        case = create_case(self.case_worker, self.municipality, self.district)
+        create_related_person(case, relation_type="far")
+        section = create_section(dst_code="123")
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        granted_activity = create_activity(
+            case,
+            appropriation,
+            start_date=None,
+            end_date=None,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=granted_activity,
+            payment_date=payment_date,
+        )
+        section.main_activities.add(granted_activity.details)
+
+        section_info = SectionInfo.objects.get(
+            activity_details=granted_activity.details, section=section
+        )
+        section_info.dst_code = "123"
+        section_info.save()
+
+        schema_path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "data",
+            "xml_schemas",
+            "DST_UdsatteBoernOgUngeLeveranceL201U1Struktur.xsd",
+        )
+
+        with open(schema_path) as f:
+            xmlschema_doc = etree.parse(f)
+        xml_schema = etree.XMLSchema(xmlschema_doc)
+
+        doc = generate_dst_payload_preventive_measures()
+        self.assertTrue(xml_schema.validate(doc))
+
+        # One time activities with no start/end use payment_date instead.
+        self.assertEqual(
+            doc.xpath(
+                "x:ForanstaltningStrukturSamling/"
+                "x:ForanstaltningStruktur/"
+                "x:ForanstaltningStartDato",
+                namespaces={
+                    "x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/"
+                },
+            )[0].text,
+            str(payment_date),
+        )
+        self.assertEqual(
+            doc.xpath(
+                "x:ForanstaltningStrukturSamling/"
+                "x:ForanstaltningStruktur/"
+                "x:ForanstaltningSlutDato",
+                namespaces={
+                    "x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/"
+                },
+            )[0].text,
+            str(payment_date),
+        )
+
     def test_generate_dst_payload_handicap_initial_load_valid(self):
         now = timezone.now().date()
         start_date = now

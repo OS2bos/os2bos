@@ -1360,8 +1360,8 @@ def generate_dst_payload_preventive_measures(
             and not main_activity.start_date
             and not main_activity.end_date
         ):
-            start_date = main_activity.payment_schedule.payment_date
-            end_date = main_activity.payment_schedule.payment_date
+            start_date = main_activity.payment_plan.payment_date
+            end_date = main_activity.payment_plan.payment_date
         else:
             start_date = appropriation.granted_from_date
             end_date = appropriation.granted_to_date
@@ -1493,8 +1493,8 @@ def generate_dst_payload_handicap(from_date=None, sections=None, test=True):
             and not main_activity.start_date
             and not main_activity.end_date
         ):
-            start_date = main_activity.payment_schedule.payment_date
-            end_date = main_activity.payment_schedule.payment_date
+            start_date = main_activity.payment_plan.payment_date
+            end_date = main_activity.payment_plan.payment_date
         else:
             start_date = appropriation.granted_from_date
             end_date = appropriation.granted_to_date
