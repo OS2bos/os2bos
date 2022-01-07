@@ -51,6 +51,7 @@ from core.models import (
     AccountAliasMapping,
     InternalPaymentRecipient,
     ActivityCategory,
+    DSTPayload,
 )
 from core.proxies import (
     SectionEffortStepProxy,
@@ -843,3 +844,10 @@ class ActivityCategoryAdmin(ClassificationAdmin):
 
     list_display = ("category_id", "name")
     inlines = [SectionInfoActivityCategoryInline]
+
+
+@admin.register(DSTPayload)
+class DSTPayloadAdmin(ClassificationAdmin):
+    """ModelAdmin for DSTPayload."""
+
+    pass
