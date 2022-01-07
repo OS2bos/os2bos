@@ -1,3 +1,15 @@
+Version 3.6.3, 2022-01-05
+-------------------------
+
+Hotfix release
+
+Bug fixes
+^^^^^^^^^
+
+* Raise the max limit for activity and appropriation objects returned by the GraphQL API.
+* Pin mistune to an older version for now so we can build our documentation.
+* Update Django to security version 2.2.26.
+
 Version 3.6.2, 2021-11-30
 -------------------------
 
