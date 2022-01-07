@@ -40,6 +40,8 @@ from core.models import (
     AccountAliasMapping,
     ActivityCategory,
     ApprovalLevel,
+    DSTPayload,
+    PREVENTATIVE_MEASURES,
 )
 
 
@@ -378,3 +380,16 @@ def create_approval_level(name="niveau"):
     approval_level, _ = ApprovalLevel.objects.get_or_create(name=name)
 
     return approval_level
+
+
+def create_dst_payload(
+    name="test.xml",
+    content="<xml></xml>",
+    from_date=date.today(),
+    dst_type=PREVENTATIVE_MEASURES,
+):
+    dst_payload, _ = DSTPayload.objects.get_or_create(
+        name=name, content=content, from_date=from_date, dst_type=dst_type
+    )
+
+    return dst_payload

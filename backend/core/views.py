@@ -57,9 +57,12 @@ from core.models import (
     InternalPaymentRecipient,
     Effort,
     ActivityCategory,
+    DSTPayload,
     STATUS_DELETED,
     STATUS_DRAFT,
     STATUS_GRANTED,
+    PREVENTATIVE_MEASURES,
+    HANDICAP,
 )
 
 from core.serializers import (
@@ -90,6 +93,7 @@ from core.serializers import (
     InternalPaymentRecipientSerializer,
     EffortSerializer,
     ActivityCategorySerializer,
+    DSTPayloadSerializer,
 )
 from core.filters import (
     CaseFilter,
@@ -337,6 +341,14 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
             f"P{period}_"
             f"V01_D{generation_timestamp}.xml"
         )
+        # If payload is not a test we save it for later use.
+        if not test:
+            DSTPayload.objects.create(
+                name=filename,
+                content=doc,
+                from_date=from_date,
+                dst_type=PREVENTATIVE_MEASURES,
+            )
 
         response = HttpResponse(doc, content_type="text/xml")
         response["Content-Disposition"] = f"attachment; filename={filename}"
@@ -370,6 +382,14 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
             f"P{period}_"
             f"V01_D{generation_timestamp}.xml"
         )
+        # If payload is not a test we save it for later use.
+        if not test:
+            DSTPayload.objects.create(
+                name=filename,
+                content=doc,
+                from_date=from_date,
+                dst_type=HANDICAP,
+            )
 
         response = HttpResponse(doc, content_type="text/xml")
         response["Content-Disposition"] = f"attachment; filename={filename}"
@@ -671,6 +691,13 @@ class ActivityCategoryViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
 
     queryset = ActivityCategory.objects.all()
     serializer_class = ActivityCategorySerializer
+
+
+class DSTPayloadViewSet(ReadOnlyViewset):
+    """Expose DST payloads in REST API."""
+
+    queryset = DSTPayload.objects.all()
+    serializer_class = DSTPayloadSerializer
 
 
 class FrontendSettingsView(APIView):

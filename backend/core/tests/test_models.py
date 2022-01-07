@@ -41,6 +41,7 @@ from core.tests.testing_utils import (
     create_account_alias_mapping,
     create_activity_category,
     create_effort_step,
+    create_dst_payload,
 )
 from core.models import (
     Municipality,
@@ -4168,4 +4169,15 @@ class ActivityCategoryTestCase(TestCase):
 
         self.assertEqual(
             str(activity_category), "123456 - test aktivitetskategori"
+        )
+
+
+class DSTPayloadTestCase(TestCase):
+    @freeze_time("2022-01-01")
+    def test_str(self):
+        dst_payload = create_dst_payload()
+
+        self.assertEqual(
+            str(dst_payload),
+            "2022-01-01 00:00:00+00:00 - test.xml - PREVENTATIVE_MEASURES",
         )

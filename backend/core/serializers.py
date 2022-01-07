@@ -46,6 +46,7 @@ from core.models import (
     InternalPaymentRecipient,
     Effort,
     ActivityCategory,
+    DSTPayload,
     STATUS_DELETED,
     STATUS_DRAFT,
     STATUS_EXPECTED,
@@ -991,4 +992,12 @@ class ActivityCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ActivityCategory
+        fields = "__all__"
+
+
+class DSTPayloadSerializer(serializers.ModelSerializer):
+    """Serializer for the DSTPayload model."""
+
+    class Meta:
+        model = DSTPayload
         fields = "__all__"

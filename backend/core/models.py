@@ -73,6 +73,14 @@ status_choices = (
     (STATUS_GRANTED, _("bevilget")),
 )
 
+# DSTPayload types
+PREVENTATIVE_MEASURES = "PREVENTATIVE_MEASURES"
+HANDICAP = "HANDICAP"
+dst_payload_types = (
+    (PREVENTATIVE_MEASURES, _("forebyggende foranstaltninger")),
+    (HANDICAP, _("handicap")),
+)
+
 
 class Classification(models.Model):
     """Abstract base class for Classifications."""
@@ -2375,4 +2383,28 @@ class PaymentDateExclusion(models.Model):
     class Meta:
         verbose_name = _("betalingsdato undtagelse")
         verbose_name_plural = _("betalingsdato undtagelser")
+        ordering = ("-date",)
+
+
+class DSTPayload(models.Model):
+    """Model for a DST payload."""
+
+    name = models.CharField(max_length=128, verbose_name=_("navn"))
+    content = models.TextField(verbose_name=_("indhold"))
+    from_date = models.DateField(
+        null=True, verbose_name=_("fra dato (skæringsdato)")
+    )
+    date = models.DateTimeField(
+        verbose_name=_("genereringsdato"), default=timezone.now
+    )
+    dst_type = models.CharField(
+        max_length=128, choices=dst_payload_types, verbose_name=_("type")
+    )
+
+    def __str__(self):
+        return f"{self.date} - {self.name} - {self.dst_type}"
+
+    class Meta:
+        verbose_name = _("DST udtræk")
+        verbose_name_plural = _("DST udtræk")
         ordering = ("-date",)
