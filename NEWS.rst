@@ -1,3 +1,13 @@
+Version 3.6.4, 2022-01-10
+-------------------------
+
+Hotfix release
+
+Bug fixes
+^^^^^^^^^
+
+* Raise the max limit for general objects returned by the GraphQL API.
+
 Version 3.6.3, 2022-01-05
 -------------------------
 
