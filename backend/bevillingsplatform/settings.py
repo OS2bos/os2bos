@@ -610,7 +610,7 @@ ALLOW_SERVICE_PROVIDERS_FROM_VIRK = settings.getboolean(
 
 GRAPHENE = {
     "SCHEMA": "core.schema.schema",
-    "RELAY_CONNECTION_MAX_LIMIT": 300,
+    "RELAY_CONNECTION_MAX_LIMIT": 250,
 }
 
 # Watchman settings.

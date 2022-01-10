@@ -5,6 +5,9 @@ from django.urls import reverse
 
 from core.models import (
     PaymentSchedule,
+    MAIN_ACTIVITY,
+    SUPPL_ACTIVITY,
+    STATUS_GRANTED,
 )
 from core.tests.testing_utils import (
     AuthenticatedTestCase,
@@ -219,6 +222,60 @@ class TestAppropriationSchema(AuthenticatedTestCase, BasicTestMixin):
         )
         self.assertEqual(node["sbsysId"], appropriation.sbsys_id)
 
+    def test_appropriations_get_more_than_100_activities(self):
+        reverse_url = reverse("graphql-api")
+        self.client.login(username=self.username, password=self.password)
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case)
+        # Create a main activity.
+        activity = create_activity(
+            case=case,
+            appropriation=appropriation,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+            start_date=date(year=2019, month=12, day=1),
+            end_date=date(year=2020, month=2, day=1),
+        )
+        create_payment_schedule(
+            activity=activity, payment_frequency=PaymentSchedule.DAILY
+        )
+        # Create a whole bunch of supplementary activities.
+        for i in range(110):
+            activity = create_activity(
+                case=case,
+                appropriation=appropriation,
+                activity_type=SUPPL_ACTIVITY,
+                status=STATUS_GRANTED,
+                start_date=date(year=2019, month=12, day=1),
+                end_date=date(year=2020, month=2, day=1),
+            )
+            create_payment_schedule(
+                activity=activity, payment_frequency=PaymentSchedule.DAILY
+            )
+
+        appropriation_id = b64encode(f"Appropriation:{appropriation.pk}".encode()).decode()
+        # Assert we can fetch more than the 100 default objects.
+        json = {
+            "query": f"""
+            query {{
+                appropriation(id:"{appropriation_id}") {{
+                    id,
+                    activities {{
+                        edges {{
+                            node {{
+                            id
+                            }}
+                        }}
+                    }}
+                }}
+            }}
+            """
+        }
+        response = self.client.get(reverse_url, json)
+        self.assertEqual(
+            len(response.json()["data"]["appropriation"]["activities"]["edges"]),
+            111
+        )
 
 class TestPaymentScheduleSchema(AuthenticatedTestCase):
     def test_payment_schedules_get(self):
