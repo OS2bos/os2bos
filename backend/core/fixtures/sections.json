@@ -3,9 +3,13 @@
         "model": "core.section",
         "pk": 1249,
         "fields": {
+            "active": true,
             "paragraph": "SEL-10",
             "text": "R\u00e5dgivning, kommunal",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -14,9 +18,13 @@
         "model": "core.section",
         "pk": 1250,
         "fields": {
+            "active": true,
             "paragraph": "SEL-100",
             "text": "Merudgifter til voksne",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -25,9 +33,13 @@
         "model": "core.section",
         "pk": 1251,
         "fields": {
+            "active": true,
             "paragraph": "SEL-101",
             "text": "Behandling af stofmisbrugere over 18 \u00e5r",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -36,9 +48,13 @@
         "model": "core.section",
         "pk": 1252,
         "fields": {
+            "active": true,
             "paragraph": "SEL-101-3",
             "text": "Behandling af stofmisbrugere under 18 \u00e5r",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -47,9 +63,13 @@
         "model": "core.section",
         "pk": 1253,
         "fields": {
+            "active": true,
             "paragraph": "SEL-101-a",
             "text": "Behandling af anonyme stofmisbrugere",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -58,9 +78,13 @@
         "model": "core.section",
         "pk": 1254,
         "fields": {
+            "active": true,
             "paragraph": "SEL-102",
             "text": "Specialbehandling",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -69,9 +93,13 @@
         "model": "core.section",
         "pk": 1255,
         "fields": {
+            "active": true,
             "paragraph": "SEL-103",
             "text": "Beskyttet besk\u00e6ftigelse",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -80,9 +108,13 @@
         "model": "core.section",
         "pk": 1256,
         "fields": {
+            "active": true,
             "paragraph": "SEL-103-2",
             "text": "Beskyttet besk\u00e6ftigelse",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -91,9 +123,13 @@
         "model": "core.section",
         "pk": 1257,
         "fields": {
+            "active": true,
             "paragraph": "SEL-104",
             "text": "Aktivitets- og samv\u00e6rstilbud",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -102,9 +138,13 @@
         "model": "core.section",
         "pk": 1258,
         "fields": {
+            "active": true,
             "paragraph": "SEL-105",
             "text": "Afl\u00f8nning under besk\u00e6ftigelse/st\u00f8tte til",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -113,9 +153,13 @@
         "model": "core.section",
         "pk": 1259,
         "fields": {
+            "active": true,
             "paragraph": "SEL-107",
             "text": "Midlertidige botilbud",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -124,9 +168,13 @@
         "model": "core.section",
         "pk": 1260,
         "fields": {
+            "active": true,
             "paragraph": "SEL-107-1",
             "text": "Midlertidige botilbud",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -135,9 +183,13 @@
         "model": "core.section",
         "pk": 1261,
         "fields": {
+            "active": true,
             "paragraph": "SEL-107-2.1",
             "text": "Midlertidige botilbud",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -146,9 +198,13 @@
         "model": "core.section",
         "pk": 1262,
         "fields": {
+            "active": true,
             "paragraph": "SEL-107-2.2",
             "text": "Midlertidige tilbud ",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -157,9 +213,13 @@
         "model": "core.section",
         "pk": 1263,
         "fields": {
+            "active": true,
             "paragraph": "SEL-108",
             "text": "L\u00e6ngerevarende botilbud",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -168,9 +228,13 @@
         "model": "core.section",
         "pk": 1264,
         "fields": {
+            "active": true,
             "paragraph": "SEL-109",
             "text": "Botilbud, kriseramte kvinder",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -188,9 +252,13 @@
         "model": "core.section",
         "pk": 1265,
         "fields": {
+            "active": true,
             "paragraph": "SEL-109-2",
             "text": "Botilbud - Kriseramte kvinder,anonymt el",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -199,9 +267,13 @@
         "model": "core.section",
         "pk": 1266,
         "fields": {
+            "active": true,
             "paragraph": "SEL-109-7",
             "text": "Botilbud - Kriseramte kvinder, familier\u00e5",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -210,9 +282,13 @@
         "model": "core.section",
         "pk": 1267,
         "fields": {
+            "active": true,
             "paragraph": "SEL-109-8",
             "text": "Botilbud - Kriseramte kvinder, psykologb",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -221,9 +297,13 @@
         "model": "core.section",
         "pk": 1268,
         "fields": {
+            "active": true,
             "paragraph": "SEL-110",
             "text": "Midlertidige botilbud til personer med s",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -232,9 +312,13 @@
         "model": "core.section",
         "pk": 1269,
         "fields": {
+            "active": true,
             "paragraph": "SEL-112",
             "text": "\u00d8konomisk st\u00f8tte til hj\u00e6lpemidler",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -243,9 +327,13 @@
         "model": "core.section",
         "pk": 1270,
         "fields": {
+            "active": true,
             "paragraph": "SEL-11-2",
             "text": "Familier\u00e5dgivning - forebyggende",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -259,9 +347,13 @@
         "model": "core.section",
         "pk": 1271,
         "fields": {
+            "active": true,
             "paragraph": "SEL-113",
             "text": "Hj\u00e6lpemidler og forbrugsgoder",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -270,9 +362,13 @@
         "model": "core.section",
         "pk": 1272,
         "fields": {
+            "active": true,
             "paragraph": "SEL-11-3",
             "text": "Konsulentbistand mv. til b\u00f8rn, unge og familier med hensyn til b\u00f8rn og unges forhold",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -286,9 +382,13 @@
         "model": "core.section",
         "pk": 1273,
         "fields": {
+            "active": true,
             "paragraph": "SEL-11-3.1",
             "text": "Konsulentbistand, herunder familieretted",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -302,9 +402,13 @@
         "model": "core.section",
         "pk": 1274,
         "fields": {
+            "active": true,
             "paragraph": "SEL-11-3.2",
             "text": "Netv\u00e6rks-/samtalegrupper - forebyggende",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -318,9 +422,13 @@
         "model": "core.section",
         "pk": 1275,
         "fields": {
+            "active": true,
             "paragraph": "SEL-11-3.3",
             "text": "R\u00e5dgivning om familieplanl\u00e6gning - foreb",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -334,9 +442,13 @@
         "model": "core.section",
         "pk": 1276,
         "fields": {
+            "active": true,
             "paragraph": "SEL-11-3.4",
             "text": "Andre forebyggende indsatser",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -350,9 +462,13 @@
         "model": "core.section",
         "pk": 1277,
         "fields": {
+            "active": true,
             "paragraph": "SEL-114",
             "text": "St\u00f8tte til bil",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -361,9 +477,13 @@
         "model": "core.section",
         "pk": 1278,
         "fields": {
+            "active": true,
             "paragraph": "SEL-11-4",
             "text": "Udgifter til pr\u00e6vention",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -377,9 +497,13 @@
         "model": "core.section",
         "pk": 1279,
         "fields": {
+            "active": true,
             "paragraph": "SEL-11-4.1",
             "text": "\u00d8konomisk st\u00f8tte til udgifter ifm. konsu",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -393,9 +517,13 @@
         "model": "core.section",
         "pk": 1280,
         "fields": {
+            "active": true,
             "paragraph": "SEL-11-4.1. jfr. stk. 3. nr. 1",
             "text": "Konsulentbistand",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -409,9 +537,13 @@
         "model": "core.section",
         "pk": 1281,
         "fields": {
+            "active": true,
             "paragraph": "SEL-11-4.2",
             "text": "\u00d8konomisk st\u00f8tte pr\u00e6vention",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -425,9 +557,13 @@
         "model": "core.section",
         "pk": 1282,
         "fields": {
+            "active": true,
             "paragraph": "SEL-116",
             "text": "\u00d8konomisk st\u00f8tte til boligindretning",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -436,9 +572,13 @@
         "model": "core.section",
         "pk": 1283,
         "fields": {
+            "active": true,
             "paragraph": "SEL-11-6",
             "text": "\u00d8konomisk st\u00f8tte til fritidstilbud - for",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -452,9 +592,13 @@
         "model": "core.section",
         "pk": 1284,
         "fields": {
+            "active": true,
             "paragraph": "SEL-116-4",
             "text": "Boligskift",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -463,9 +607,13 @@
         "model": "core.section",
         "pk": 1285,
         "fields": {
+            "active": true,
             "paragraph": "SEL-117",
             "text": "St\u00f8tte til individuel befordring",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -474,9 +622,13 @@
         "model": "core.section",
         "pk": 1286,
         "fields": {
+            "active": true,
             "paragraph": "SEL-11-7",
             "text": "R\u00e5dgivning, unders\u00f8gelse og behandling;vedr\u00f8rer b\u00f8rn og unge",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -490,9 +642,13 @@
         "model": "core.section",
         "pk": 1287,
         "fields": {
+            "active": true,
             "paragraph": "SEL-118",
             "text": "Pasning af n\u00e6rtst\u00e5ende med handikap elle",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -501,9 +657,13 @@
         "model": "core.section",
         "pk": 1288,
         "fields": {
+            "active": true,
             "paragraph": "SEL-11-8",
             "text": "S\u00e6rlig familievejlederordning",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -517,9 +677,13 @@
         "model": "core.section",
         "pk": 1289,
         "fields": {
+            "active": true,
             "paragraph": "SEL-119",
             "text": "Pasning af d\u00f8ende i hjemmet",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -528,9 +692,13 @@
         "model": "core.section",
         "pk": 1290,
         "fields": {
+            "active": true,
             "paragraph": "SEL-12",
             "text": "R\u00e5dgivning, kommunal",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -539,9 +707,13 @@
         "model": "core.section",
         "pk": 1291,
         "fields": {
+            "active": true,
             "paragraph": "SEL-122",
             "text": "Medicin",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -550,9 +722,13 @@
         "model": "core.section",
         "pk": 1292,
         "fields": {
+            "active": true,
             "paragraph": "SEL-12-a",
             "text": "Personer over 18, gratis r\u00e5dgiv. i henho",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -561,9 +737,13 @@
         "model": "core.section",
         "pk": 1293,
         "fields": {
+            "active": true,
             "paragraph": "SEL-12-b",
             "text": "Personer over 18, gratis og m\u00e5lrettet r\u00e5",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -572,9 +752,13 @@
         "model": "core.section",
         "pk": 1294,
         "fields": {
+            "active": true,
             "paragraph": "SEL-140",
             "text": "Handleplan b\u00f8rn og unge",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -583,9 +767,13 @@
         "model": "core.section",
         "pk": 1295,
         "fields": {
+            "active": true,
             "paragraph": "SEL-141",
             "text": "Handleplan voksne",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -594,9 +782,13 @@
         "model": "core.section",
         "pk": 1296,
         "fields": {
+            "active": true,
             "paragraph": "SEL-152",
             "text": "Underretning fra anden kommune",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -605,9 +797,13 @@
         "model": "core.section",
         "pk": 1297,
         "fields": {
+            "active": true,
             "paragraph": "SEL-153",
             "text": "Underretning - offentlig myndighed",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -616,9 +812,13 @@
         "model": "core.section",
         "pk": 1298,
         "fields": {
+            "active": true,
             "paragraph": "SEL-154",
             "text": "Underretning - privat",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -627,9 +827,13 @@
         "model": "core.section",
         "pk": 1299,
         "fields": {
+            "active": true,
             "paragraph": "SEL-155-b.1",
             "text": "Kvittering for modtaget underretning",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -638,9 +842,13 @@
         "model": "core.section",
         "pk": 1300,
         "fields": {
+            "active": true,
             "paragraph": "SEL-155-b.2",
             "text": "Tilbagemelding til underretter",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -649,9 +857,13 @@
         "model": "core.section",
         "pk": 1301,
         "fields": {
+            "active": true,
             "paragraph": "SEL-159",
             "text": "Egenbetaling vedr. anb. af b\u00f8rn og unge",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -660,9 +872,13 @@
         "model": "core.section",
         "pk": 1302,
         "fields": {
+            "active": true,
             "paragraph": "SEL-160",
             "text": "Egenbetaling vedr. efterv\u00e6rn",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -671,9 +887,13 @@
         "model": "core.section",
         "pk": 1303,
         "fields": {
+            "active": true,
             "paragraph": "SEL-163-2",
             "text": "Opholdsbetaling, boformer efter \u00a7\u00a7 107-1",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -682,9 +902,13 @@
         "model": "core.section",
         "pk": 1304,
         "fields": {
+            "active": true,
             "paragraph": "SEL-168-5",
             "text": "D\u00e6kke udgifter til transport til m\u00f8de i",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -693,9 +917,13 @@
         "model": "core.section",
         "pk": 1305,
         "fields": {
+            "active": true,
             "paragraph": "SEL-192",
             "text": "Plejehjem",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -704,9 +932,13 @@
         "model": "core.section",
         "pk": 1306,
         "fields": {
+            "active": true,
             "paragraph": "SEL-32",
             "text": "S\u00e6rlige dagtilbud til b\u00f8rn og unge med betydelig og varig funktionsneds\u00e6ttelse",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -715,9 +947,13 @@
         "model": "core.section",
         "pk": 1307,
         "fields": {
+            "active": true,
             "paragraph": "SEL-32-3",
             "text": "S\u00e6rlige dagtilbud",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -726,9 +962,13 @@
         "model": "core.section",
         "pk": 1308,
         "fields": {
+            "active": true,
             "paragraph": "SEL-32-a",
             "text": "Hjemmetr\u00e6ning",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 2
             ],
@@ -745,9 +985,13 @@
         "model": "core.section",
         "pk": 1309,
         "fields": {
+            "active": true,
             "paragraph": "SEL-32-a.1",
             "text": "For\u00e6ldrenes tr\u00e6ning af barn/unge i hjemm",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -756,9 +1000,13 @@
         "model": "core.section",
         "pk": 1310,
         "fields": {
+            "active": true,
             "paragraph": "SEL-32-a.3",
             "text": "Tr\u00e6ningsmetode med inddragelse af releva",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -767,9 +1015,13 @@
         "model": "core.section",
         "pk": 1311,
         "fields": {
+            "active": true,
             "paragraph": "SEL-32-a.4",
             "text": "L\u00f8bene tilsyn med tr\u00e6ningsmetoden",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -778,9 +1030,13 @@
         "model": "core.section",
         "pk": 1312,
         "fields": {
+            "active": true,
             "paragraph": "SEL-32-a.5",
             "text": "Hj\u00e6lp til afd\u00e6k. af tabt arbejdsfortjene",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -789,9 +1045,13 @@
         "model": "core.section",
         "pk": 1313,
         "fields": {
+            "active": true,
             "paragraph": "SEL-32-a.6",
             "text": "Tr\u00e6ningsredskaber, kurser, hj\u00e6lpere m.v.",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -800,9 +1060,13 @@
         "model": "core.section",
         "pk": 1314,
         "fields": {
+            "active": true,
             "paragraph": "SEL-36",
             "text": "S\u00e6rlige klubtilbud",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 2
             ],
@@ -819,9 +1083,13 @@
         "model": "core.section",
         "pk": 1315,
         "fields": {
+            "active": true,
             "paragraph": "SEL-41",
             "text": "Merudgifter til b\u00f8rn",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 2
             ],
@@ -838,9 +1106,13 @@
         "model": "core.section",
         "pk": 1316,
         "fields": {
+            "active": true,
             "paragraph": "SEL-42",
             "text": "Tabt arbejdsfortjeneste ved fors\u00f8rgelse",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 2
             ],
@@ -853,9 +1125,13 @@
         "model": "core.section",
         "pk": 1317,
         "fields": {
+            "active": true,
             "paragraph": "SEL-43",
             "text": "S\u00e6rlig supplerende ydelse ved tabt arbejdsfortjeneste",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 2
             ],
@@ -868,9 +1144,13 @@
         "model": "core.section",
         "pk": 1318,
         "fields": {
+            "active": true,
             "paragraph": "SEL-44-jfr. \u00a784",
             "text": "Aflastning, b\u00f8rn og unge jf. SEL \u00a784.1",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 2
             ],
@@ -887,9 +1167,13 @@
         "model": "core.section",
         "pk": 1319,
         "fields": {
+            "active": true,
             "paragraph": "SEL-45",
             "text": "Ledsageordning 12-18 \u00e5r",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 2
             ],
@@ -906,9 +1190,13 @@
         "model": "core.section",
         "pk": 1320,
         "fields": {
+            "active": true,
             "paragraph": "SEL-50",
             "text": "B\u00f8rnefaglig unders\u00f8gelse - frivillig eller ude samtykke",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -926,9 +1214,13 @@
         "model": "core.section",
         "pk": 1321,
         "fields": {
+            "active": true,
             "paragraph": "SEL-50-b",
             "text": "Betaling for brug af B\u00f8rnehus i forbindelse med overgrebssager ",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -946,9 +1238,13 @@
         "model": "core.section",
         "pk": 1322,
         "fields": {
+            "active": true,
             "paragraph": "SEL-51",
             "text": "Unders\u00f8gelse uden samtykke p\u00e5 institution, sygehus mv.",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -966,9 +1262,13 @@
         "model": "core.section",
         "pk": 1323,
         "fields": {
+            "active": true,
             "paragraph": "SEL-51-2",
             "text": "Unders\u00f8gelse, B\u00f8rnehus - Tvang",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -977,9 +1277,13 @@
         "model": "core.section",
         "pk": 1324,
         "fields": {
+            "active": true,
             "paragraph": "SEL-52-2",
             "text": "Foranstaltninger efter stk. 3 sidel\u00f8bend",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -988,9 +1292,13 @@
         "model": "core.section",
         "pk": 1325,
         "fields": {
+            "active": true,
             "paragraph": "SEL-52-3.1",
             "text": "Ophold i dagtilbud, fritidshjem, ungdoms",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1004,9 +1312,13 @@
         "model": "core.section",
         "pk": 1326,
         "fields": {
+            "active": true,
             "paragraph": "SEL-52-3.2",
             "text": "Praktisk, p\u00e6dagogisk eller anden st\u00f8tte i hjemmet",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1020,9 +1332,13 @@
         "model": "core.section",
         "pk": 1327,
         "fields": {
+            "active": true,
             "paragraph": "SEL-52-3.3",
             "text": "Familiebehandling eller lignende",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1036,9 +1352,13 @@
         "model": "core.section",
         "pk": 1328,
         "fields": {
+            "active": true,
             "paragraph": "SEL-52-3.4",
             "text": "D\u00f8gnophold for hele familien",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1052,9 +1372,13 @@
         "model": "core.section",
         "pk": 1329,
         "fields": {
+            "active": true,
             "paragraph": "SEL-52-3.5",
             "text": "Aflastningsordning",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1072,9 +1396,13 @@
         "model": "core.section",
         "pk": 1330,
         "fields": {
+            "active": true,
             "paragraph": "SEL-52-3.6",
             "text": "Kontaktperson til barnet/den unge/familien",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1092,9 +1420,13 @@
         "model": "core.section",
         "pk": 1331,
         "fields": {
+            "active": true,
             "paragraph": "SEL-52-3.7",
             "text": "Anbringelse udenfor hjemmet",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1110,9 +1442,13 @@
         "model": "core.section",
         "pk": 1332,
         "fields": {
+            "active": true,
             "paragraph": "SEL-52-3.8",
             "text": "Praktiktilbud samt udbetaling af godtg\u00f8relse",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1126,9 +1462,13 @@
         "model": "core.section",
         "pk": 1333,
         "fields": {
+            "active": true,
             "paragraph": "SEL-52-3.9",
             "text": "Anden hj\u00e6lp",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1142,9 +1482,13 @@
         "model": "core.section",
         "pk": 1334,
         "fields": {
+            "active": true,
             "paragraph": "SEL-52-a.1.1",
             "text": "\u00d8konomisk st\u00f8tte i forbindelse med \u00a752 s",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1162,9 +1506,13 @@
         "model": "core.section",
         "pk": 1335,
         "fields": {
+            "active": true,
             "paragraph": "SEL-52-a.1.2",
             "text": "Udgifter til at undg\u00e5 anbringelse og fremskynde hjemgivelse",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1182,9 +1530,13 @@
         "model": "core.section",
         "pk": 1336,
         "fields": {
+            "active": true,
             "paragraph": "SEL-52-a.1.3",
             "text": "Stabil kontakt mellem for\u00e6ldre og b\u00f8rn under anbringelsen",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1202,9 +1554,13 @@
         "model": "core.section",
         "pk": 1337,
         "fields": {
+            "active": true,
             "paragraph": "SEL-54-1",
             "text": "St\u00f8tteperson til for\u00e6ldremyndighedsindeh",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1220,9 +1576,13 @@
         "model": "core.section",
         "pk": 1338,
         "fields": {
+            "active": true,
             "paragraph": "SEL-54-2",
             "text": "Anden st\u00f8tte til for\u00e6ldremyndighedsindeh",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1238,9 +1598,13 @@
         "model": "core.section",
         "pk": 1339,
         "fields": {
+            "active": true,
             "paragraph": "SEL-54-a",
             "text": "Tilknytning af koordinator",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1258,9 +1622,13 @@
         "model": "core.section",
         "pk": 1340,
         "fields": {
+            "active": true,
             "paragraph": "SEL-55-2",
             "text": "Aflastning under anbringelse",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1269,9 +1637,13 @@
         "model": "core.section",
         "pk": 1341,
         "fields": {
+            "active": true,
             "paragraph": "SEL-57-a",
             "text": "Meddelelse om for\u00e6ldrep\u00e5l\u00e6g",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1280,9 +1652,13 @@
         "model": "core.section",
         "pk": 1342,
         "fields": {
+            "active": true,
             "paragraph": "SEL-57-a.2.1",
             "text": "For\u00e6ldrep\u00e5l\u00e6g, ulovligt skolefrav\u00e6r",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1291,9 +1667,13 @@
         "model": "core.section",
         "pk": 1343,
         "fields": {
+            "active": true,
             "paragraph": "SEL-57-a.2.2",
             "text": "For\u00e6ldrep\u00e5l\u00e6g, beg\u00e5et kriminalitet",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1302,9 +1682,13 @@
         "model": "core.section",
         "pk": 1344,
         "fields": {
+            "active": true,
             "paragraph": "SEL-57-a.2.3",
             "text": "For\u00e6ldrep\u00e5l\u00e6g, adf\u00e6rdsproblemer",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1313,9 +1697,13 @@
         "model": "core.section",
         "pk": 1345,
         "fields": {
+            "active": true,
             "paragraph": "SEL-57-a.2.4",
             "text": "For\u00e6ldrep\u00e5l\u00e6g, samarbejde n\u00e6gtes",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1324,9 +1712,13 @@
         "model": "core.section",
         "pk": 1346,
         "fields": {
+            "active": true,
             "paragraph": "SEL-57-a.4",
             "text": "For\u00e6ldrep\u00e5l\u00e6g efter \u00a752.3.1 m.v.",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1335,9 +1727,13 @@
         "model": "core.section",
         "pk": 1347,
         "fields": {
+            "active": true,
             "paragraph": "SEL-57-b",
             "text": "Meddelelse om ungep\u00e5l\u00e6g",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1346,9 +1742,13 @@
         "model": "core.section",
         "pk": 1348,
         "fields": {
+            "active": true,
             "paragraph": "SEL-57-c.1",
             "text": "Netv\u00e6rkssamr\u00e5d - mistanke om alvorlig kr",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1357,9 +1757,13 @@
         "model": "core.section",
         "pk": 1349,
         "fields": {
+            "active": true,
             "paragraph": "SEL-57-c.2",
             "text": "Netv\u00e6rkssamr\u00e5d - handleplan",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1368,9 +1772,13 @@
         "model": "core.section",
         "pk": 1350,
         "fields": {
+            "active": true,
             "paragraph": "SEL-57-d.1",
             "text": "Udslusning og opf\u00f8lgende st\u00f8tte",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1379,9 +1787,13 @@
         "model": "core.section",
         "pk": 1351,
         "fields": {
+            "active": true,
             "paragraph": "SEL-57-d.2",
             "text": "Screening",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1390,9 +1802,13 @@
         "model": "core.section",
         "pk": 1352,
         "fields": {
+            "active": true,
             "paragraph": "SEL-58-jf 52-3.7",
             "text": "Anbringelse uden samtykke fra for\u00e6ldrene",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1408,9 +1824,13 @@
         "model": "core.section",
         "pk": 1353,
         "fields": {
+            "active": true,
             "paragraph": "SEL-63",
             "text": "Behandling og unders\u00f8gelse uden samtykke fra for\u00e6ldrene",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1419,9 +1839,13 @@
         "model": "core.section",
         "pk": 1354,
         "fields": {
+            "active": true,
             "paragraph": "SEL-68",
             "text": "Oph\u00f8r af foranstaltning og videref\u00f8relse af foranstaltning",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1430,9 +1854,13 @@
         "model": "core.section",
         "pk": 1355,
         "fields": {
+            "active": true,
             "paragraph": "SEL-68-2",
             "text": "Foranstaltning ud over det 18. \u00e5r",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1441,9 +1869,13 @@
         "model": "core.section",
         "pk": 1356,
         "fields": {
+            "active": true,
             "paragraph": "SEL-68-b.4",
             "text": "Netv\u00e6rksperson under anbringelse",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1452,9 +1884,13 @@
         "model": "core.section",
         "pk": 1357,
         "fields": {
+            "active": true,
             "paragraph": "SEL-71",
             "text": "Samv\u00e6r og kontakt",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1463,9 +1899,13 @@
         "model": "core.section",
         "pk": 1358,
         "fields": {
+            "active": true,
             "paragraph": "SEL-71-2",
             "text": "Regulering af samv\u00e6r og kontakt",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1474,9 +1914,13 @@
         "model": "core.section",
         "pk": 1359,
         "fields": {
+            "active": true,
             "paragraph": "SEL-71-3",
             "text": "Overv\u00e5get samv\u00e6r og afbrydelse af samv\u00e6r",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1485,9 +1929,13 @@
         "model": "core.section",
         "pk": 1360,
         "fields": {
+            "active": true,
             "paragraph": "SEL-71-8",
             "text": "For\u00e6ldres transport til barnets opholdsk",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1496,9 +1944,13 @@
         "model": "core.section",
         "pk": 1361,
         "fields": {
+            "active": true,
             "paragraph": "SEL-72",
             "text": "Advokatbistand",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1507,9 +1959,13 @@
         "model": "core.section",
         "pk": 1362,
         "fields": {
+            "active": true,
             "paragraph": "SEL-76-1",
             "text": "M\u00e5lgruppeafklaring",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1518,9 +1974,13 @@
         "model": "core.section",
         "pk": 1363,
         "fields": {
+            "active": true,
             "paragraph": "SEL-76-2",
             "text": "Efterv\u00e6rn / kontaktperson 18-22 \u00e5rige",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1534,9 +1994,13 @@
         "model": "core.section",
         "pk": 1364,
         "fields": {
+            "active": true,
             "paragraph": "SEL-76-3",
             "text": "Unge anbragt op til det 18. \u00e5r, der fortsat har behov for st\u00f8tte",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1545,9 +2009,13 @@
         "model": "core.section",
         "pk": 1365,
         "fields": {
+            "active": true,
             "paragraph": "SEL-76-3.1",
             "text": "D\u00f8gnophold 18-22 \u00e5rige",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1563,9 +2031,13 @@
         "model": "core.section",
         "pk": 1366,
         "fields": {
+            "active": true,
             "paragraph": "SEL-76-3.2",
             "text": "Fast kontaktperson 18-22 \u00e5rige",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1579,9 +2051,13 @@
         "model": "core.section",
         "pk": 1367,
         "fields": {
+            "active": true,
             "paragraph": "SEL-76-3.3",
             "text": "Udslusningsophold 18-22 \u00e5rige",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1597,9 +2073,13 @@
         "model": "core.section",
         "pk": 1368,
         "fields": {
+            "active": true,
             "paragraph": "SEL-76-3.4",
             "text": "Unge anbragt op til det 18. \u00e5r, der fortsat har behov for st\u00f8tte",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1613,9 +2093,13 @@
         "model": "core.section",
         "pk": 1369,
         "fields": {
+            "active": true,
             "paragraph": "SEL-76-4",
             "text": "Genetablering af efterv\u00e6rn 18-22 \u00e5rige",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1624,9 +2108,13 @@
         "model": "core.section",
         "pk": 1370,
         "fields": {
+            "active": true,
             "paragraph": "SEL-76-5",
             "text": "Fast kontaktperson 18-22 \u00e5rige for tidligere tvangsanbragte",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1640,9 +2128,13 @@
         "model": "core.section",
         "pk": 1371,
         "fields": {
+            "active": true,
             "paragraph": "SEL-76-6",
             "text": "Kontaktperson 18-\u00e5rige - for tidligere anbragte",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1656,9 +2148,13 @@
         "model": "core.section",
         "pk": 1372,
         "fields": {
+            "active": true,
             "paragraph": "SEL-76-8",
             "text": "Tilbagevenden til anbringelsessted",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1674,9 +2170,13 @@
         "model": "core.section",
         "pk": 1373,
         "fields": {
+            "active": true,
             "paragraph": "SEL-76-a",
             "text": "Opretholdelse af anbringelse i plejefamilie ud over det 18. \u00e5r for unge",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1692,9 +2192,13 @@
         "model": "core.section",
         "pk": 1374,
         "fields": {
+            "active": true,
             "paragraph": "SEL-78",
             "text": "Privat d\u00f8gnpleje",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1703,9 +2207,13 @@
         "model": "core.section",
         "pk": 1375,
         "fields": {
+            "active": true,
             "paragraph": "SEL-79",
             "text": "Generelle tilbud",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1714,9 +2222,13 @@
         "model": "core.section",
         "pk": 1376,
         "fields": {
+            "active": true,
             "paragraph": "SEL-80",
             "text": "Udgifter til husly",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1725,9 +2237,13 @@
         "model": "core.section",
         "pk": 1377,
         "fields": {
+            "active": true,
             "paragraph": "SEL-83",
             "text": "Personlig hj\u00e6lp og pleje til voksne ifm.",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1736,9 +2252,13 @@
         "model": "core.section",
         "pk": 1378,
         "fields": {
+            "active": true,
             "paragraph": "SEL-83-a",
             "text": "Midlertidigt rehabiliteringsforl\u00f8b til p",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1747,9 +2267,13 @@
         "model": "core.section",
         "pk": 1379,
         "fields": {
+            "active": true,
             "paragraph": "SEL-84",
             "text": "Afl\u00f8sning/aflastning",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1758,9 +2282,13 @@
         "model": "core.section",
         "pk": 1380,
         "fields": {
+            "active": true,
             "paragraph": "SEL-85",
             "text": "Hjemmevejleder og optr\u00e6ning",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1769,9 +2297,13 @@
         "model": "core.section",
         "pk": 1381,
         "fields": {
+            "active": true,
             "paragraph": "SEL-86",
             "text": "Genoptr\u00e6ning (vedligeholdelsestr\u00e6ning)",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [
                 2
             ],
@@ -1784,9 +2316,13 @@
         "model": "core.section",
         "pk": 1382,
         "fields": {
+            "active": true,
             "paragraph": "SEL-87",
             "text": "Somatiske d\u00f8gntilbud",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1795,9 +2331,13 @@
         "model": "core.section",
         "pk": 1383,
         "fields": {
+            "active": true,
             "paragraph": "SEL-94",
             "text": "Tilbud om personlig hj\u00e6lp og pleje - fri",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1806,9 +2346,13 @@
         "model": "core.section",
         "pk": 1384,
         "fields": {
+            "active": true,
             "paragraph": "SEL-95",
             "text": "Privat hjemmehj\u00e6lp efter \u00a783 og \u00a784",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1817,9 +2361,13 @@
         "model": "core.section",
         "pk": 1385,
         "fields": {
+            "active": true,
             "paragraph": "SEL-95-1",
             "text": "\u00d8ko tilb til hj\u00e6lp ifm \u00a7\u00a7 83, 84",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1828,9 +2376,13 @@
         "model": "core.section",
         "pk": 1386,
         "fields": {
+            "active": true,
             "paragraph": "SEL-95-2",
             "text": "\u00d8ko tilsk til 20 t.el. mere ifm \u00a7\u00a7 83, 8",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1839,9 +2391,13 @@
         "model": "core.section",
         "pk": 1387,
         "fields": {
+            "active": true,
             "paragraph": "SEL-95-3",
             "text": "\u00d8ko tilsk til n\u00e6rst\u00e5ende ifm \u00a7\u00a7 83, 84",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1850,9 +2406,13 @@
         "model": "core.section",
         "pk": 1388,
         "fields": {
+            "active": true,
             "paragraph": "SEL-96",
             "text": "Privat overv\u00e5gning og ledsagelse",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1861,9 +2421,13 @@
         "model": "core.section",
         "pk": 1389,
         "fields": {
+            "active": true,
             "paragraph": "SEL-96-1",
             "text": "Tilskud til bpa",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1872,9 +2436,13 @@
         "model": "core.section",
         "pk": 1390,
         "fields": {
+            "active": true,
             "paragraph": "SEL-96-3",
             "text": "Tilskud til bpa udenfor personkredsen i",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1883,9 +2451,13 @@
         "model": "core.section",
         "pk": 1391,
         "fields": {
+            "active": true,
             "paragraph": "SEL-96-b",
             "text": "Oph. Kom. udbetaler tilskud efter \u00a7\u00a7 95",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1894,9 +2466,13 @@
         "model": "core.section",
         "pk": 1392,
         "fields": {
+            "active": true,
             "paragraph": "SEL-97",
             "text": "Ledsageordning, voksne",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1905,9 +2481,13 @@
         "model": "core.section",
         "pk": 1393,
         "fields": {
+            "active": true,
             "paragraph": "SEL-98",
             "text": "Kontaktperson til d\u00f8vblinde",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1916,9 +2496,13 @@
         "model": "core.section",
         "pk": 1394,
         "fields": {
+            "active": true,
             "paragraph": "SEL-99",
             "text": "St\u00f8tte-/kontaktperson til sindslidende",
             "law_text_name": "Serviceloven",
+            "dst_code": "",
+            "default_for_dst_preventative_measures": true,
+            "default_for_dst_handicap": true,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }

@@ -5,12 +5,13 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+import os
 from datetime import timedelta, date
 from decimal import Decimal
 from unittest import mock
 
+from lxml import etree
 from freezegun import freeze_time
-
 import requests
 
 from django.test import TestCase, override_settings
@@ -23,6 +24,7 @@ from core.models import (
     PaymentSchedule,
     STATUS_GRANTED,
     STATUS_EXPECTED,
+    STATUS_DRAFT,
     CASH,
     User,
     Team,
@@ -46,6 +48,8 @@ from core.utils import (
     validate_cvr,
     get_company_info_from_cvr,
     get_company_info_from_search_term,
+    generate_dst_payload_preventive_measures,
+    generate_dst_payload_handicap,
 )
 from core.tests.testing_utils import (
     BasicTestMixin,
@@ -59,6 +63,8 @@ from core.tests.testing_utils import (
     create_payment_date_exclusion,
     create_effort_step,
     create_related_person,
+    create_approval_level,
+    create_municipality,
 )
 
 
@@ -1264,3 +1270,951 @@ class GenerateCasesReportTestCase(TestCase, BasicTestMixin):
         }
         self.assertTrue(set(expected_data) <= set(first_elem))
         self.assertIsNotNone(first_elem["history_date"])
+
+
+class DSTUtilities(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_generate_dst_payload_preventative_initial_load_valid(self):
+        now = timezone.now().date()
+        start_date = now
+        case = create_case(self.case_worker, self.municipality, self.district)
+        create_related_person(case, relation_type="far")
+        section = create_section(dst_code="123")
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        granted_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=None,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=granted_activity,
+        )
+        section.main_activities.add(granted_activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=granted_activity.details, section=section
+        )
+
+        schema_path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "data",
+            "xml_schemas",
+            "DST_UdsatteBoernOgUngeLeveranceL201U1Struktur.xsd",
+        )
+
+        with open(schema_path) as f:
+            xmlschema_doc = etree.parse(f)
+        xml_schema = etree.XMLSchema(xmlschema_doc)
+
+        # Generating a dst payload with no cut-off date
+        # should result in a initial_load with a status of "Ny"
+        # and the default test form id.
+        doc = generate_dst_payload_preventive_measures()
+        self.assertTrue(xml_schema.validate(doc))
+        self.assertEqual(
+            doc.xpath(
+                "x:DeliveryMetadataNewStructure/" "e:Envelope/" "e:FormID",
+                namespaces={
+                    "x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
+                    "e": "http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/",
+                },
+            )[0].text,
+            "T201",
+        )
+
+        # Non Test should have correct form id.
+        doc = generate_dst_payload_preventive_measures(test=False)
+        self.assertEqual(
+            doc.xpath(
+                "x:DeliveryMetadataNewStructure/" "e:Envelope/" "e:FormID",
+                namespaces={
+                    "x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
+                    "e": "http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/",
+                },
+            )[0].text,
+            "L201",
+        )
+
+    def test_generate_dst_payload_preventative_one_time_special_case(self):
+        now = timezone.now().date()
+        payment_date = now
+        case = create_case(self.case_worker, self.municipality, self.district)
+        create_related_person(case, relation_type="far")
+        section = create_section(dst_code="123")
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        granted_activity = create_activity(
+            case,
+            appropriation,
+            start_date=None,
+            end_date=None,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=granted_activity,
+            payment_date=payment_date,
+        )
+        section.main_activities.add(granted_activity.details)
+
+        section_info = SectionInfo.objects.get(
+            activity_details=granted_activity.details, section=section
+        )
+        section_info.dst_code = "123"
+        section_info.save()
+
+        schema_path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "data",
+            "xml_schemas",
+            "DST_UdsatteBoernOgUngeLeveranceL201U1Struktur.xsd",
+        )
+
+        with open(schema_path) as f:
+            xmlschema_doc = etree.parse(f)
+        xml_schema = etree.XMLSchema(xmlschema_doc)
+
+        doc = generate_dst_payload_preventive_measures()
+        self.assertTrue(xml_schema.validate(doc))
+
+        # One time activities with no start/end use payment_date instead.
+        self.assertEqual(
+            doc.xpath(
+                "x:ForanstaltningStrukturSamling/"
+                "x:ForanstaltningStruktur/"
+                "x:ForanstaltningStartDato",
+                namespaces={
+                    "x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/"
+                },
+            )[0].text,
+            str(payment_date),
+        )
+        self.assertEqual(
+            doc.xpath(
+                "x:ForanstaltningStrukturSamling/"
+                "x:ForanstaltningStruktur/"
+                "x:ForanstaltningSlutDato",
+                namespaces={
+                    "x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/"
+                },
+            )[0].text,
+            str(payment_date),
+        )
+
+    def test_generate_dst_payload_handicap_initial_load_valid(self):
+        now = timezone.now().date()
+        start_date = now
+        case = create_case(self.case_worker, self.municipality, self.district)
+        create_related_person(case, relation_type="far")
+        section = create_section(dst_code="123")
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        granted_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=None,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=granted_activity,
+        )
+        section.main_activities.add(granted_activity.details)
+
+        section_info = SectionInfo.objects.get(
+            activity_details=granted_activity.details, section=section
+        )
+        section_info.dst_code = "123"
+        section_info.save()
+
+        schema_path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "data",
+            "xml_schemas",
+            "DST_BoernMedHandicapLeveranceL231Struktur.xsd",
+        )
+
+        with open(schema_path) as f:
+            xmlschema_doc = etree.parse(f)
+        xml_schema = etree.XMLSchema(xmlschema_doc)
+
+        # Generating a dst payload with no cut-off date
+        # should result in a initial_load with a status of "Ny"
+        # and the default test form id.
+        doc = generate_dst_payload_handicap()
+        self.assertTrue(xml_schema.validate(doc))
+
+        self.assertEqual(
+            doc.xpath(
+                "x:BoernMedHandicapSagStrukturSamling/"
+                "x:BoernMedHandicapSagStruktur/"
+                "x:INDBERETNINGSTYPE",
+                namespaces={
+                    "x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/"
+                },
+            )[0].text,
+            "Ny",
+        )
+        self.assertEqual(
+            doc.xpath(
+                "x:DeliveryMetadataNewStructure/" "e:Envelope/" "e:FormID",
+                namespaces={
+                    "x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
+                    "e": "http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/",
+                },
+            )[0].text,
+            "T201",
+        )
+
+        doc = generate_dst_payload_handicap(test=False)
+        self.assertTrue(xml_schema.validate(doc))
+
+        # Non Test should have correct form id.
+        self.assertEqual(
+            doc.xpath(
+                "x:DeliveryMetadataNewStructure/" "e:Envelope/" "e:FormID",
+                namespaces={
+                    "x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
+                    "e": "http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/",
+                },
+            )[0].text,
+            "L201",
+        )
+
+    def test_generate_dst_payload_handicap_one_time_special_case(self):
+        now = timezone.now().date()
+        payment_date = now
+        case = create_case(self.case_worker, self.municipality, self.district)
+        create_related_person(case, relation_type="far")
+        section = create_section(dst_code="123")
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        granted_activity = create_activity(
+            case,
+            appropriation,
+            start_date=None,
+            end_date=None,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=granted_activity,
+            payment_date=payment_date,
+        )
+        section.main_activities.add(granted_activity.details)
+
+        section_info = SectionInfo.objects.get(
+            activity_details=granted_activity.details, section=section
+        )
+        section_info.dst_code = "123"
+        section_info.save()
+
+        schema_path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "data",
+            "xml_schemas",
+            "DST_BoernMedHandicapLeveranceL231Struktur.xsd",
+        )
+
+        with open(schema_path) as f:
+            xmlschema_doc = etree.parse(f)
+        xml_schema = etree.XMLSchema(xmlschema_doc)
+
+        doc = generate_dst_payload_handicap()
+        self.assertTrue(xml_schema.validate(doc))
+
+        # One time activities with no start/end use payment_date instead.
+        self.assertEqual(
+            doc.xpath(
+                "x:BoernMedHandicapSagStrukturSamling/"
+                "x:BoernMedHandicapSagStruktur/"
+                "x:INDSATS_STARTDATO",
+                namespaces={
+                    "x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/"
+                },
+            )[0].text,
+            str(payment_date),
+        )
+        self.assertEqual(
+            doc.xpath(
+                "x:BoernMedHandicapSagStrukturSamling/"
+                "x:BoernMedHandicapSagStruktur/"
+                "x:INDSATS_SLUTDATO",
+                namespaces={
+                    "x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/"
+                },
+            )[0].text,
+            str(payment_date),
+        )
+
+    @freeze_time("2021-01-01")
+    def test_generate_dst_payload_handicap_delta_load_changed(self):
+        now = timezone.now().date()
+        start_date = now
+        end_date = now + timedelta(days=5)
+        case = create_case(self.case_worker, self.municipality, self.district)
+        create_related_person(case, relation_type="far")
+        section = create_section(dst_code="123")
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        # Create a main activity at 2021-01-01 and grant it.
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_DRAFT,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=activity,
+        )
+        section.main_activities.add(activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=activity.details, section=section
+        )
+        approval_level = create_approval_level()
+
+        activities = Activity.objects.filter(pk=activity.pk)
+        appropriation.grant(
+            activities, approval_level.id, "note", self.case_worker
+        )
+
+        # Next we create a modification to the main activity
+        # at 2021-01-03 and grant it.
+        with freeze_time("2021-01-03"):
+            modifies_activity = create_activity(
+                case,
+                appropriation,
+                start_date=start_date + timedelta(days=2),
+                end_date=end_date,
+                activity_type=MAIN_ACTIVITY,
+                status=STATUS_EXPECTED,
+                modifies=activity,
+            )
+            create_payment_schedule(
+                payment_frequency=PaymentSchedule.DAILY,
+                payment_type=PaymentSchedule.RUNNING_PAYMENT,
+                recipient_type=PaymentSchedule.PERSON,
+                payment_method=CASH,
+                payment_amount=Decimal(777),
+                activity=modifies_activity,
+            )
+            activities = Activity.objects.filter(pk=modifies_activity.pk)
+            appropriation.grant(
+                activities, approval_level.id, "note", self.case_worker
+            )
+
+        schema_path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "data",
+            "xml_schemas",
+            "DST_BoernMedHandicapLeveranceL231Struktur.xsd",
+        )
+
+        with open(schema_path) as f:
+            xmlschema_doc = etree.parse(f)
+        xml_schema = etree.XMLSchema(xmlschema_doc)
+
+        # Generating a dst payload from a cut-off date of 2021-01-02
+        # For an appropriation containing both main activities before and after
+        # should result in a status of "Ændring".
+        doc = generate_dst_payload_handicap(from_date=date(2021, 1, 2))
+
+        self.assertTrue(xml_schema.validate(doc))
+
+        self.assertEqual(
+            doc.xpath(
+                "x:BoernMedHandicapSagStrukturSamling/"
+                "x:BoernMedHandicapSagStruktur/"
+                "x:INDBERETNINGSTYPE",
+                namespaces={
+                    "x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/"
+                },
+            )[0].text,
+            "Ændring",
+        )
+
+    @freeze_time("2021-01-02")
+    def test_generate_dst_payload_handicap_delta_load_new(self):
+        now = timezone.now().date()
+        start_date = now
+        end_date = now + timedelta(days=5)
+        case = create_case(self.case_worker, self.municipality, self.district)
+        create_related_person(case, relation_type="far")
+        section = create_section(dst_code="123")
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        # Create a main activity at 2021-01-01 and grant it.
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_DRAFT,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=activity,
+        )
+        section.main_activities.add(activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=activity.details, section=section
+        )
+        approval_level = create_approval_level()
+
+        activities = Activity.objects.filter(pk=activity.pk)
+        appropriation.grant(
+            activities, approval_level.id, "note", self.case_worker
+        )
+
+        # Next we create a modification to the main activity
+        # at 2021-01-03 and grant it.
+        with freeze_time("2021-01-03"):
+            modifies_activity = create_activity(
+                case,
+                appropriation,
+                start_date=start_date + timedelta(days=2),
+                end_date=end_date,
+                activity_type=MAIN_ACTIVITY,
+                status=STATUS_EXPECTED,
+                modifies=activity,
+            )
+            create_payment_schedule(
+                payment_frequency=PaymentSchedule.DAILY,
+                payment_type=PaymentSchedule.RUNNING_PAYMENT,
+                recipient_type=PaymentSchedule.PERSON,
+                payment_method=CASH,
+                payment_amount=Decimal(777),
+                activity=modifies_activity,
+            )
+            activities = Activity.objects.filter(pk=modifies_activity.pk)
+            appropriation.grant(
+                activities, approval_level.id, "note", self.case_worker
+            )
+
+        schema_path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "data",
+            "xml_schemas",
+            "DST_BoernMedHandicapLeveranceL231Struktur.xsd",
+        )
+
+        with open(schema_path) as f:
+            xmlschema_doc = etree.parse(f)
+        xml_schema = etree.XMLSchema(xmlschema_doc)
+
+        # Generating a dst payload from a cut-off date of 2021-01-01
+        # For an appropriation containing only main activities after
+        # should result in a status of "Ny".
+        doc = generate_dst_payload_handicap(from_date=date(2021, 1, 1))
+
+        self.assertTrue(xml_schema.validate(doc))
+
+        self.assertEqual(
+            doc.xpath(
+                "x:BoernMedHandicapSagStrukturSamling/"
+                "x:BoernMedHandicapSagStruktur/"
+                "x:INDBERETNINGSTYPE",
+                namespaces={
+                    "x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/"
+                },
+            )[0].text,
+            "Ny",
+        )
+
+    @freeze_time("2021-01-01")
+    def test_generate_dst_payload_handicap_delta_load_changed_case(self):
+        now = timezone.now().date()
+        start_date = now
+        end_date = now + timedelta(days=5)
+        case = create_case(self.case_worker, self.municipality, self.district)
+        create_related_person(case, relation_type="far")
+        section = create_section(dst_code="123")
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        # Create a main activity at 2021-01-01 and grant it.
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_DRAFT,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=activity,
+        )
+        section.main_activities.add(activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=activity.details, section=section
+        )
+        approval_level = create_approval_level()
+
+        activities = Activity.objects.filter(pk=activity.pk)
+        appropriation.grant(
+            activities, approval_level.id, "note", self.case_worker
+        )
+
+        # case gets a new acting municipality in the future.
+        with freeze_time("2021-02-01"):
+            new_municipality = create_municipality("Ballerup")
+            case.acting_municipality = new_municipality
+            case.save()
+
+        schema_path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "data",
+            "xml_schemas",
+            "DST_BoernMedHandicapLeveranceL231Struktur.xsd",
+        )
+
+        with open(schema_path) as f:
+            xmlschema_doc = etree.parse(f)
+        xml_schema = etree.XMLSchema(xmlschema_doc)
+
+        # Generating a dst payload from a cut-off date of 2021-02-01
+        # with a case with a changed acting municipality should result
+        # in a status of "Ændret".
+        doc = generate_dst_payload_handicap(from_date=date(2021, 2, 1))
+
+        self.assertTrue(xml_schema.validate(doc))
+
+        self.assertEqual(
+            doc.xpath(
+                "x:BoernMedHandicapSagStrukturSamling/"
+                "x:BoernMedHandicapSagStruktur/"
+                "x:INDBERETNINGSTYPE",
+                namespaces={
+                    "x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/"
+                },
+            )[0].text,
+            "Ændring",
+        )
+
+    @freeze_time("2021-01-01")
+    def test_generate_dst_payload_handicap_delta_load_no_load(self):
+        now = timezone.now().date()
+        start_date = now
+        end_date = now + timedelta(days=5)
+        case = create_case(self.case_worker, self.municipality, self.district)
+        create_related_person(case, relation_type="far")
+        section = create_section(dst_code="123")
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        # Create a main activity at 2021-01-01 and grant it.
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_DRAFT,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=activity,
+        )
+        section.main_activities.add(activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=activity.details, section=section
+        )
+        approval_level = create_approval_level()
+
+        activities = Activity.objects.filter(pk=activity.pk)
+        appropriation.grant(
+            activities, approval_level.id, "note", self.case_worker
+        )
+
+        schema_path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "data",
+            "xml_schemas",
+            "DST_BoernMedHandicapLeveranceL231Struktur.xsd",
+        )
+
+        with open(schema_path) as f:
+            xmlschema_doc = etree.parse(f)
+        xml_schema = etree.XMLSchema(xmlschema_doc)
+
+        # Generating a dst payload from a cut-off date of 2021-02-01
+        # with an unchanged activity from 2021-01-01 should result in no
+        # load.
+        doc = generate_dst_payload_handicap(from_date=date(2021, 2, 1))
+        # The doc is not valid due to child elements (approprations) missing.
+        self.assertFalse(xml_schema.validate(doc))
+
+        self.assertEqual(
+            len(
+                doc.xpath(
+                    "x:BoernMedHandicapSagStrukturSamling/"
+                    "x:BoernMedHandicapSagStruktur",
+                    namespaces={
+                        "x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/"
+                    },
+                )
+            ),
+            0,
+        )
+
+    def test_generate_dst_payload_preventative_initial_load_consolidation(
+        self,
+    ):
+        now = timezone.now().date()
+        start_date = now
+        end_date = now + timedelta(days=5)
+        case = create_case(self.case_worker, self.municipality, self.district)
+        create_related_person(
+            case, relation_type="far", cpr_number="1234567890"
+        )
+        section = create_section(dst_code="123")
+        first_appropriation = create_appropriation(
+            sbsys_id="27.12.06-G01-197-19-gl", case=case, section=section
+        )
+        first_activity = create_activity(
+            case,
+            first_appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=first_activity,
+        )
+        section.main_activities.add(first_activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=first_activity.details, section=section
+        )
+
+        second_appropriation = create_appropriation(
+            sbsys_id="27.12.06-G01-197-19", case=case, section=section
+        )
+        second_activity = create_activity(
+            case,
+            second_appropriation,
+            start_date=start_date - timedelta(days=10),
+            end_date=end_date + timedelta(days=5),
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=second_activity,
+        )
+        section.main_activities.add(second_activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=second_activity.details, section=section
+        )
+
+        third_appropriation = create_appropriation(
+            sbsys_id="27.12.06-G01-197-19-ny", case=case, section=section
+        )
+        third_activity = create_activity(
+            case,
+            third_appropriation,
+            start_date=start_date - timedelta(days=5),
+            end_date=end_date + timedelta(days=10),
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=third_activity,
+        )
+        section.main_activities.add(third_activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=third_activity.details, section=section
+        )
+
+        schema_path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "data",
+            "xml_schemas",
+            "DST_UdsatteBoernOgUngeLeveranceL201U1Struktur.xsd",
+        )
+
+        with open(schema_path) as f:
+            xmlschema_doc = etree.parse(f)
+        xml_schema = etree.XMLSchema(xmlschema_doc)
+
+        # Generating a dst payload with no cut-off date
+        # should result in a initial_load.
+        doc = generate_dst_payload_preventive_measures()
+        self.assertTrue(xml_schema.validate(doc))
+
+        # All three appropriations should be consolidated to one entry.
+        ns = {"x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/"}
+        structure_doc = doc.xpath(
+            "x:ForanstaltningStrukturSamling/" "x:ForanstaltningStruktur",
+            namespaces=ns,
+        )
+        self.assertEqual(len(structure_doc), 1)
+        # Assert elements are properly consolidated.
+        self.assertEqual(
+            structure_doc[0]
+            .xpath("x:UdsatBarnCPRidentifikator", namespaces=ns)[0]
+            .text,
+            "0205891234",
+        )
+        self.assertEqual(
+            structure_doc[0]
+            .xpath("x:FormynderCPRidentifikator", namespaces=ns)[0]
+            .text,
+            "1234567890",
+        )
+        self.assertEqual(
+            structure_doc[0]
+            .xpath("x:ForanstaltningId", namespaces=ns)[0]
+            .text,
+            "27.12.06-G01-197-19",
+        )
+        self.assertEqual(
+            structure_doc[0]
+            .xpath("x:ForanstaltningKode", namespaces=ns)[0]
+            .text,
+            "123",
+        )
+        self.assertEqual(
+            structure_doc[0]
+            .xpath("x:ForanstaltningStartDato", namespaces=ns)[0]
+            .text,
+            str(second_activity.start_date),
+        )
+        self.assertEqual(
+            structure_doc[0]
+            .xpath("x:ForanstaltningSlutDato", namespaces=ns)[0]
+            .text,
+            str(third_activity.end_date),
+        )
+
+    def test_generate_dst_payload_handicap_initial_load_consolidation(
+        self,
+    ):
+        now = timezone.now().date()
+        start_date = now
+        end_date = now + timedelta(days=5)
+        case = create_case(self.case_worker, self.municipality, self.district)
+        create_related_person(
+            case, relation_type="far", cpr_number="1234567890"
+        )
+        section = create_section(dst_code="123")
+        first_appropriation = create_appropriation(
+            sbsys_id="27.12.06-G01-197-19-gl", case=case, section=section
+        )
+        first_activity = create_activity(
+            case,
+            first_appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=first_activity,
+        )
+        section.main_activities.add(first_activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=first_activity.details, section=section
+        )
+
+        second_appropriation = create_appropriation(
+            sbsys_id="27.12.06-G01-197-19", case=case, section=section
+        )
+        second_activity = create_activity(
+            case,
+            second_appropriation,
+            start_date=start_date - timedelta(days=10),
+            end_date=end_date + timedelta(days=5),
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=second_activity,
+        )
+        section.main_activities.add(second_activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=second_activity.details, section=section
+        )
+
+        third_appropriation = create_appropriation(
+            sbsys_id="27.12.06-G01-197-19-ny", case=case, section=section
+        )
+        third_activity = create_activity(
+            case,
+            third_appropriation,
+            start_date=start_date - timedelta(days=5),
+            end_date=end_date + timedelta(days=10),
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=third_activity,
+        )
+        section.main_activities.add(third_activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=third_activity.details, section=section
+        )
+
+        schema_path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "data",
+            "xml_schemas",
+            "DST_BoernMedHandicapLeveranceL231Struktur.xsd",
+        )
+
+        with open(schema_path) as f:
+            xmlschema_doc = etree.parse(f)
+        xml_schema = etree.XMLSchema(xmlschema_doc)
+
+        # Generating a dst payload with no cut-off date
+        # should result in a initial_load.
+        doc = generate_dst_payload_handicap()
+        self.assertTrue(xml_schema.validate(doc))
+
+        # All three appropriations should be consolidated to one entry.
+        ns = {"x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/"}
+        structure_doc = doc.xpath(
+            "x:BoernMedHandicapSagStrukturSamling/"
+            "x:BoernMedHandicapSagStruktur",
+            namespaces=ns,
+        )
+        self.assertEqual(len(structure_doc), 1)
+        # Assert elements are properly consolidated.
+        self.assertEqual(
+            structure_doc[0].xpath("x:CPR", namespaces=ns)[0].text,
+            "0205891234",
+        )
+        self.assertEqual(
+            structure_doc[0]
+            .xpath("x:INDSATSFORLOEB_ID", namespaces=ns)[0]
+            .text,
+            "27.12.06-G01-197-19",
+        )
+        self.assertEqual(
+            structure_doc[0].xpath("x:INDSATS_KODE", namespaces=ns)[0].text,
+            "123",
+        )
+        self.assertEqual(
+            structure_doc[0]
+            .xpath("x:INDSATS_STARTDATO", namespaces=ns)[0]
+            .text,
+            str(second_activity.start_date),
+        )
+        self.assertEqual(
+            structure_doc[0]
+            .xpath("x:INDSATS_SLUTDATO", namespaces=ns)[0]
+            .text,
+            str(third_activity.end_date),
+        )
+        self.assertEqual(
+            structure_doc[0].xpath("x:SAGSBEHANDLER", namespaces=ns)[0].text,
+            "Orla Frøsnapper",
+        )
+        self.assertEqual(
+            structure_doc[0]
+            .xpath("x:INDBERETNINGSTYPE", namespaces=ns)[0]
+            .text,
+            "Ny",
+        )

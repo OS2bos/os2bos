@@ -46,10 +46,12 @@ from core.models import (
     InternalPaymentRecipient,
     Effort,
     ActivityCategory,
+    DSTPayload,
     STATUS_DELETED,
     STATUS_DRAFT,
     STATUS_EXPECTED,
     STATUS_GRANTED,
+    MAIN_ACTIVITY,
 )
 from core.utils import validate_cvr
 
@@ -594,7 +596,7 @@ class BaseActivitySerializer(WritableNestedModelSerializer):
         return queryset
 
     def validate(self, data):
-        """Validate this activity - check end date is after start date, etc."""
+        """Validate this activity across fields."""
         # Check that start_date is before end_date
         if (
             "end_date" in data
@@ -622,6 +624,11 @@ class BaseActivitySerializer(WritableNestedModelSerializer):
         ):
             raise serializers.ValidationError(
                 _("der skal angives en betalingsdato for engangsbetaling")
+            )
+
+        if is_one_time_payment and data["activity_type"] == MAIN_ACTIVITY:
+            raise serializers.ValidationError(
+                _("Hovedydelser må ikke være engangsbetalinger")
             )
 
         # Monthly payments that are not expected adjustments should have a
@@ -985,4 +992,12 @@ class ActivityCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ActivityCategory
+        fields = "__all__"
+
+
+class DSTPayloadSerializer(serializers.ModelSerializer):
+    """Serializer for the DSTPayload model."""
+
+    class Meta:
+        model = DSTPayload
         fields = "__all__"

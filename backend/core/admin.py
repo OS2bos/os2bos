@@ -51,6 +51,7 @@ from core.models import (
     AccountAliasMapping,
     InternalPaymentRecipient,
     ActivityCategory,
+    DSTPayload,
 )
 from core.proxies import (
     SectionEffortStepProxy,
@@ -529,15 +530,24 @@ class SupplementaryActivityDetailsInline(ClassificationInline):
 class SectionAdmin(ClassificationAdmin):
     """Add search field."""
 
-    search_fields = ("paragraph", "text")
+    search_fields = ("paragraph", "text", "dst_code")
 
     list_display = (
         "paragraph",
         "text",
         "list_main_activity_for",
         "list_supplementary_activity_for",
+        "dst_code",
+        "default_for_dst_preventative_measures",
+        "default_for_dst_handicap",
         "active",
     )
+
+    list_filter = (
+        "default_for_dst_preventative_measures",
+        "default_for_dst_handicap",
+    )
+
     filter_horizontal = ("allowed_for_target_groups", "allowed_for_steps")
 
     inlines = (MainActivityDetailsInline, SupplementaryActivityDetailsInline)
@@ -834,3 +844,10 @@ class ActivityCategoryAdmin(ClassificationAdmin):
 
     list_display = ("category_id", "name")
     inlines = [SectionInfoActivityCategoryInline]
+
+
+@admin.register(DSTPayload)
+class DSTPayloadAdmin(ClassificationAdmin):
+    """ModelAdmin for DSTPayload."""
+
+    pass

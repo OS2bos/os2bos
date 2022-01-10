@@ -15,6 +15,8 @@ import itertools
 import re
 import csv
 
+from lxml.builder import ElementMaker
+
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
 
@@ -28,7 +30,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.utils.html import strip_tags
 from django.db import transaction
-from django.db.models import Q, BooleanField
+from django.db.models import Q, BooleanField, Func
 from django.db.models.expressions import Case, When
 
 from constance import config
@@ -1175,3 +1177,343 @@ generate_granted_payments_report_list_versions = {
 generate_cases_report_list_versions = {"0": generate_cases_report_list_v0}
 
 write_prism_file_versions = {"0": write_prism_file_v0}
+
+
+def generate_dst_payload_metadata_element(test=True):
+    """Generate the metadata element for a DST payload."""
+    now = timezone.now()
+
+    # Variables.
+    municipality_code = config.DST_MUNICIPALITY_CODE
+    municipality_cvr = config.DST_MUNICIPALITY_CVR_NUMBER
+    municipality_p_number = config.DST_MUNICIPALITY_P_NUMBER
+    latest_passed_month = (now - relativedelta(months=1)).month
+
+    if test:
+        form_id = "T201"
+    else:
+        form_id = "L201"
+
+    now = timezone.now()
+
+    E = ElementMaker(
+        namespace="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
+    )
+    envelope_E = ElementMaker(
+        namespace="http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/"
+    )
+
+    doc = E.DeliveryMetadataNewStructure(
+        envelope_E.Envelope(
+            envelope_E.Source("CEMOS"),
+            envelope_E.SurveyID("D280600"),
+            # L201 for prod, T201 for test.
+            envelope_E.FormID(form_id),
+            # Latest passed month.
+            envelope_E.Period(str(latest_passed_month)),
+            envelope_E.Entity(
+                envelope_E.EntityIDType("Kommune"),
+                envelope_E.EntityID(municipality_code),
+            ),
+        ),
+        E.CommunicatorStructureCollection(
+            E.CommunicatorStructure(
+                E.CommunicationDescription("Oprettelse på lokal server"),
+                E.CommunicationDateTime(
+                    timezone.make_naive(now).replace(microsecond=0).isoformat()
+                ),
+                E.SystemStructure(
+                    E.SystemName("OS2BOS"),
+                    E.SystemVersion("3.4.3"),
+                ),
+            )
+        ),
+        E.ContactStructureCollection(
+            E.ContactStructure(
+                E.ContactTypeName("Faglig ansvarlig"),
+                E.ContactIdentifier(config.DST_PROFESSIONAL_CONTACT),
+                E.ContactEmailAddress(config.DST_PROFESSIONAL_CONTACT),
+            ),
+            E.ContactStructure(
+                E.ContactTypeName("Teknisk ansvarlig"),
+                E.ContactIdentifier(config.DST_TECHNICAL_CONTACT),
+                E.ContactEmailAddress(config.DST_TECHNICAL_CONTACT),
+            ),
+            E.ContactStructure(
+                E.ContactTypeName("Kvitteringsmodtager"),
+                E.ContactIdentifier(config.DST_RECEIPT_CONTACT),
+                E.ContactEmailAddress(config.DST_RECEIPT_CONTACT),
+            ),
+        ),
+        E.DBoksContactNewStructure(
+            E.CVRnumberIdentifier(municipality_cvr),
+            E.ProductionUnitIdentifier(municipality_p_number),
+        ),
+        E.FormVersion("1"),
+    )
+    return doc
+
+
+def generate_dst_payload_preventive_measures_element(
+    cpr_number,
+    father_or_mother_cpr_number,
+    identifier,
+    dst_code,
+    start_date,
+    end_date,
+):
+    """Generate a XML payload element for DST for "Preventitive Measures"."""
+    E = ElementMaker(
+        namespace="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
+    )
+
+    appropriation_structure = E.ForanstaltningStruktur(
+        E.UdsatBarnCPRidentifikator(cpr_number),
+        E.FormynderCPRidentifikator(father_or_mother_cpr_number),
+        E.ForanstaltningId(identifier),
+        E.ForanstaltningKode(dst_code),
+        E.ForanstaltningStartDato(str(start_date)),
+    )
+
+    if end_date:
+        appropriation_structure.append(E.ForanstaltningSlutDato(str(end_date)))
+
+    return appropriation_structure
+
+
+def generate_dst_payload_preventive_measures(
+    from_date=None, sections=None, test=True
+):
+    """
+    Generate a XML payload for DST for "Preventive Measures".
+
+    "Forebyggende foranstaltninger". Specified in "Bilag 2" here:
+    https://www.retsinformation.dk/eli/lta/2021/1502
+    #id6e560773-349b-4779-872c-126f3fad2858
+    """
+    appropriations = models.Appropriation.objects.select_related(
+        "case"
+    ).prefetch_related("case__related_persons", "activities__payment_plan")
+
+    if sections is not None:
+        appropriations = appropriations.filter(section__in=sections)
+
+    appropriations = appropriations.appropriations_for_dst_payload(from_date)
+
+    E = ElementMaker(
+        namespace="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
+    )
+
+    appropriations_root = E.ForanstaltningStrukturSamling()
+
+    # 'common sbsys_id' duplicate appropriations are a special case and
+    # should be consolidated into a single element in the XML payload.
+    duplicate_appropriation_objects = (
+        appropriations.get_duplicate_sbsys_id_appropriations_for_dst()
+    )
+    for obj in duplicate_appropriation_objects:
+        duplicate_appropriations = appropriations.filter(id__in=obj["ids"])
+        first_appropriation = duplicate_appropriations.first()
+        case = duplicate_appropriations.first().case
+        father_or_mother = case.related_persons.filter(
+            Q(relation_type="mor") | Q(relation_type="far")
+        ).first()
+        identifier = obj["sbsys_common"]
+        start_date = min(
+            [appr.granted_from_date for appr in duplicate_appropriations]
+        )
+        end_date = max(
+            [appr.granted_to_date for appr in duplicate_appropriations]
+        )
+
+        appropriation_structure = (
+            generate_dst_payload_preventive_measures_element(
+                case.cpr_number,
+                father_or_mother.cpr_number,
+                identifier,
+                first_appropriation.section.dst_code,
+                start_date,
+                end_date,
+            )
+        )
+        appropriations_root.append(appropriation_structure)
+
+    # Exclude the ids from the "normal" appropriations.
+    duplicate_appropriation_objects_ids = (
+        duplicate_appropriation_objects.annotate(
+            ids=Func("ids", function="unnest")
+        ).values_list("ids", flat=True)
+    )
+    appropriations = appropriations.exclude(
+        id__in=duplicate_appropriation_objects_ids
+    )
+    for appropriation in appropriations:
+        case = appropriation.case
+        father_or_mother = case.related_persons.filter(
+            Q(relation_type="mor") | Q(relation_type="far")
+        ).first()
+        main_activity = appropriation.main_activity
+
+        if (
+            main_activity.payment_plan.payment_type
+            == models.PaymentSchedule.ONE_TIME_PAYMENT
+            and not main_activity.start_date
+            and not main_activity.end_date
+        ):
+            start_date = main_activity.payment_plan.payment_date
+            end_date = main_activity.payment_plan.payment_date
+        else:
+            start_date = appropriation.granted_from_date
+            end_date = appropriation.granted_to_date
+
+        identifier = appropriation.sbsys_id
+        appropriation_structure = (
+            generate_dst_payload_preventive_measures_element(
+                case.cpr_number,
+                father_or_mother.cpr_number,
+                identifier,
+                appropriation.section.dst_code,
+                start_date,
+                end_date,
+            )
+        )
+
+        appropriations_root.append(appropriation_structure)
+
+    doc = E.UdsatteBoernOgUngeLeveranceL201U1Struktur()
+    doc.append(generate_dst_payload_metadata_element(test))
+    doc.append(appropriations_root)
+
+    return doc
+
+
+def generate_dst_payload_handicap_element(
+    identifier,
+    report_type,
+    cpr_number,
+    dst_code,
+    start_date,
+    end_date,
+    case_worker,
+):
+    """Generate a XML payload element for DST for "Handicap"."""
+    E = ElementMaker(
+        namespace="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
+    )
+
+    appropriation_structure = E.BoernMedHandicapSagStruktur(
+        E.INDSATSFORLOEB_ID(identifier),
+        E.INDBERETNINGSTYPE(report_type),
+        E.CPR(cpr_number),
+        E.INDSATS_KODE(dst_code),
+        E.INDSATS_STARTDATO(str(start_date)),
+    )
+    if end_date:
+        appropriation_structure.append(E.INDSATS_SLUTDATO(str(end_date)))
+    appropriation_structure.append(E.SAGSBEHANDLER(str(case_worker)))
+
+    return appropriation_structure
+
+
+def generate_dst_payload_handicap(from_date=None, sections=None, test=True):
+    """
+    Generate an XML payload for DST for "Handicap".
+
+    "Børn og unge med nedsat psykisk eller fysisk funktionsevne"
+    Specified in "Bilag 8" here:
+    https://www.retsinformation.dk/eli/lta/2021/1502
+    #id8eb5787a-6efa-40ac-b911-0b0c817c2104
+    """
+    appropriations = models.Appropriation.objects.select_related(
+        "case"
+    ).prefetch_related("case__related_persons", "activities__payment_plan")
+
+    if sections is not None:
+        appropriations = appropriations.filter(section__in=sections)
+
+    appropriations = appropriations.appropriations_for_dst_payload(from_date)
+
+    E = ElementMaker(
+        namespace="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
+    )
+
+    appropriations_root = E.BoernMedHandicapSagStrukturSamling()
+
+    # 'common sbsys_id' duplicate appropriations are a special case and
+    # should be consolidated into a single element in the XML payload.
+    duplicate_appropriation_objects = (
+        appropriations.get_duplicate_sbsys_id_appropriations_for_dst()
+    )
+    for obj in duplicate_appropriation_objects:
+        duplicate_appropriations = appropriations.filter(id__in=obj["ids"])
+        dst_report_type = (
+            "Ændring"
+            if "Ændring"
+            in [appr.dst_report_type for appr in duplicate_appropriations]
+            else "Ny"
+        )
+        first_appropriation = duplicate_appropriations.first()
+        case = first_appropriation.case
+        case_worker = case.case_worker
+        identifier = obj["sbsys_common"]
+        start_date = min(
+            [appr.granted_from_date for appr in duplicate_appropriations]
+        )
+        end_date = max(
+            [appr.granted_to_date for appr in duplicate_appropriations]
+        )
+
+        appropriation_structure = generate_dst_payload_handicap_element(
+            identifier,
+            dst_report_type,
+            case.cpr_number,
+            first_appropriation.section.dst_code,
+            start_date,
+            end_date,
+            case_worker,
+        )
+        appropriations_root.append(appropriation_structure)
+
+    # Exclude the ids from the "normal" appropriations.
+    duplicate_appropriation_objects_ids = (
+        duplicate_appropriation_objects.annotate(
+            ids=Func("ids", function="unnest")
+        ).values_list("ids", flat=True)
+    )
+    appropriations = appropriations.exclude(
+        id__in=duplicate_appropriation_objects_ids
+    )
+    for appropriation in appropriations:
+        case = appropriation.case
+        main_activity = appropriation.main_activity
+
+        if (
+            main_activity.payment_plan.payment_type
+            == models.PaymentSchedule.ONE_TIME_PAYMENT
+            and not main_activity.start_date
+            and not main_activity.end_date
+        ):
+            start_date = main_activity.payment_plan.payment_date
+            end_date = main_activity.payment_plan.payment_date
+        else:
+            start_date = appropriation.granted_from_date
+            end_date = appropriation.granted_to_date
+
+        identifier = appropriation.sbsys_id
+        appropriation_structure = generate_dst_payload_handicap_element(
+            identifier,
+            appropriation.dst_report_type,
+            case.cpr_number,
+            appropriation.section.dst_code,
+            start_date,
+            end_date,
+            case.case_worker,
+        )
+
+        appropriations_root.append(appropriation_structure)
+
+    doc = E.BoernMedHandicapLeveranceL231Struktur()
+    doc.append(generate_dst_payload_metadata_element(test))
+    doc.append(appropriations_root)
+
+    return doc

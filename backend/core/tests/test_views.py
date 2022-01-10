@@ -25,6 +25,7 @@ from core.models import (
     Payment,
     EffortStep,
     ServiceProvider,
+    DSTPayload,
     MAIN_ACTIVITY,
     SUPPL_ACTIVITY,
     STATUS_GRANTED,
@@ -45,6 +46,7 @@ from core.tests.testing_utils import (
     create_user,
     create_activity_details,
     create_service_provider,
+    create_related_person,
 )
 
 User = get_user_model()
@@ -996,6 +998,244 @@ class TestAppropriationViewSet(AuthenticatedTestCase, BasicTestMixin):
             expected_details.id,
         )
 
+    @freeze_time("2022-01-01")
+    def test_generate_dst_preventative_measures_file_success(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        create_related_person(main_case=case)
+        section = create_section()
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+
+        details = create_activity_details(
+            name="test aktivitetsdetalje", activity_id="111112"
+        )
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=date(year=2020, month=1, day=1),
+            end_date=date(year=2020, month=1, day=10),
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+            details=details,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=activity,
+        )
+
+        self.client.login(username=self.username, password=self.password)
+        url = reverse("appropriation-generate-dst-preventative-measures-file")
+
+        response = self.client.get(url, content_type="application/json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response["Content-Disposition"],
+            "attachment;"
+            " filename=P_151_T201_P2022M01_V01_D20220101T000000.xml",
+        )
+
+    @freeze_time("2022-01-01")
+    def test_generate_dst_preventative_measures_file_success_non_test(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        create_related_person(main_case=case)
+        section = create_section()
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+
+        details = create_activity_details(
+            name="test aktivitetsdetalje", activity_id="111112"
+        )
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=date(year=2020, month=1, day=1),
+            end_date=date(year=2020, month=1, day=10),
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+            details=details,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=activity,
+        )
+
+        self.client.login(username=self.username, password=self.password)
+        url = reverse("appropriation-generate-dst-preventative-measures-file")
+        json = {"test": False}
+        response = self.client.get(url, json, content_type="application/json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response["Content-Disposition"],
+            "attachment;"
+            " filename=P_151_L201_P2022M01_V01_D20220101T000000.xml",
+        )
+        self.assertEqual(DSTPayload.objects.count(), 1)
+
+    @freeze_time("2022-01-01")
+    def test_generate_dst_preventative_measures_file_specific_section(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        create_related_person(main_case=case)
+        section = create_section()
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+
+        details = create_activity_details(
+            name="test aktivitetsdetalje", activity_id="111112"
+        )
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=date(year=2020, month=1, day=1),
+            end_date=date(year=2020, month=1, day=10),
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+            details=details,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=activity,
+        )
+
+        self.client.login(username=self.username, password=self.password)
+        url = reverse("appropriation-generate-dst-preventative-measures-file")
+        json = {"sections": section.id}
+        response = self.client.get(url, json, content_type="application/json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response["Content-Disposition"],
+            "attachment;"
+            " filename=P_151_T201_P2022M01_V01_D20220101T000000.xml",
+        )
+
+    @freeze_time("2022-01-01")
+    def test_generate_dst_handicap_file_success(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        create_related_person(main_case=case)
+        section = create_section()
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+
+        details = create_activity_details(
+            name="test aktivitetsdetalje", activity_id="111112"
+        )
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=date(year=2020, month=1, day=1),
+            end_date=date(year=2020, month=1, day=10),
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+            details=details,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=activity,
+        )
+
+        self.client.login(username=self.username, password=self.password)
+        url = reverse("appropriation-generate-dst-handicap-file")
+
+        response = self.client.get(url, content_type="application/json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response["Content-Disposition"],
+            "attachment;"
+            " filename=P_151_T231_P2022M01_V01_D20220101T000000.xml",
+        )
+
+    @freeze_time("2022-01-01")
+    def test_generate_dst_handicap_file_non_test(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        create_related_person(main_case=case)
+        section = create_section()
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+
+        details = create_activity_details(
+            name="test aktivitetsdetalje", activity_id="111112"
+        )
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=date(year=2020, month=1, day=1),
+            end_date=date(year=2020, month=1, day=10),
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+            details=details,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=activity,
+        )
+
+        self.client.login(username=self.username, password=self.password)
+        url = reverse("appropriation-generate-dst-handicap-file")
+        json = {"test": False}
+
+        response = self.client.get(url, json, content_type="application/json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response["Content-Disposition"],
+            "attachment;"
+            " filename=P_151_L231_P2022M01_V01_D20220101T000000.xml",
+        )
+        self.assertEqual(DSTPayload.objects.count(), 1)
+
+    @freeze_time("2022-01-01")
+    def test_generate_dst_handicap_file_specific_section(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        create_related_person(main_case=case)
+        section = create_section()
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+
+        details = create_activity_details(
+            name="test aktivitetsdetalje", activity_id="111112"
+        )
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=date(year=2020, month=1, day=1),
+            end_date=date(year=2020, month=1, day=10),
+            status=STATUS_GRANTED,
+            activity_type=MAIN_ACTIVITY,
+            details=details,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            activity=activity,
+        )
+
+        self.client.login(username=self.username, password=self.password)
+        url = reverse("appropriation-generate-dst-handicap-file")
+
+        json = {"sections": section.id}
+        response = self.client.get(url, json, content_type="application/json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response["Content-Disposition"],
+            "attachment;"
+            " filename=P_151_T231_P2022M01_V01_D20220101T000000.xml",
+        )
+
 
 class TestPaymentScheduleViewSet(AuthenticatedTestCase):
     def test_get(self):
@@ -1741,7 +1981,7 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
             appropriation=appropriation,
             start_date=now - timedelta(days=6),
             end_date=now + timedelta(days=6),
-            activity_type=MAIN_ACTIVITY,
+            activity_type=SUPPL_ACTIVITY,
             status=STATUS_DRAFT,
         )
         payment_plan = create_payment_schedule(
@@ -1761,8 +2001,10 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
             "id": activity.id,
             "status": "DRAFT",
             "appropriation": str(appropriation.pk),
-            "activity_type": "MAIN_ACTIVITY",
+            "activity_type": "SUPPL_ACTIVITY",
             "details": str(activity.details.pk),
+            "start_date": str(now - timedelta(days=6)),
+            "end_date": str(now + timedelta(days=6)),
             "service_provider": {
                 "cvr_number": "25052943",
                 "name": "MAGENTA ApS #2",
@@ -1774,7 +2016,8 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
             },
             "payment_plan": {
                 "id": payment_plan.pk,
-                "payment_type": "ONE_TIME_PAYMENT",
+                "payment_type": "RUNNING_PAYMENT",
+                "payment_frequency": "DAILY",
                 "payment_cost_type": "FIXED",
                 "payment_amount": "200",
                 "payment_date": "2021-07-20",
@@ -1827,8 +2070,10 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
             "id": activity.id,
             "status": "DRAFT",
             "appropriation": str(appropriation.pk),
-            "activity_type": "MAIN_ACTIVITY",
+            "activity_type": "SUPPL_ACTIVITY",
             "details": str(activity.details.pk),
+            "start_date": str(now - timedelta(days=6)),
+            "end_date": str(now + timedelta(days=6)),
             "service_provider": {
                 "cvr_number": "25052943",
                 "name": "MAGENTA ApS",
@@ -1840,7 +2085,8 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
             },
             "payment_plan": {
                 "id": payment_plan.pk,
-                "payment_type": "ONE_TIME_PAYMENT",
+                "payment_type": "RUNNING_PAYMENT",
+                "payment_frequency": "DAILY",
                 "payment_cost_type": "FIXED",
                 "payment_amount": "200",
                 "payment_date": "2021-07-20",
@@ -1857,7 +2103,6 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
         response = self.client.put(
             url, data=data, content_type="application/json"
         )
-
         service_provider = ServiceProvider.objects.first()
         self.assertEqual(ServiceProvider.objects.count(), 1)
         self.assertEqual(response.status_code, 200)
@@ -1876,13 +2121,13 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
             appropriation=appropriation,
             start_date=now - timedelta(days=6),
             end_date=now + timedelta(days=6),
-            activity_type=MAIN_ACTIVITY,
+            activity_type=SUPPL_ACTIVITY,
             status=STATUS_DRAFT,
             service_provider=service_provider,
         )
         payment_plan = create_payment_schedule(
             payment_cost_type=PaymentSchedule.FIXED_PRICE,
-            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
             activity=activity,
         )
         url = reverse("activity-detail", kwargs={"pk": activity.pk})
@@ -1893,11 +2138,14 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
             "id": activity.id,
             "status": "DRAFT",
             "appropriation": str(appropriation.pk),
-            "activity_type": "MAIN_ACTIVITY",
+            "activity_type": "SUPPL_ACTIVITY",
             "details": str(activity.details.pk),
+            "start_date": str(now - timedelta(days=6)),
+            "end_date": str(now + timedelta(days=6)),
             "payment_plan": {
                 "id": payment_plan.pk,
-                "payment_type": "ONE_TIME_PAYMENT",
+                "payment_type": "RUNNING_PAYMENT",
+                "payment_frequency": "DAILY",
                 "payment_cost_type": "FIXED",
                 "payment_amount": "200",
                 "payment_date": "2021-07-20",
