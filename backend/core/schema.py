@@ -318,13 +318,13 @@ class Query(graphene.ObjectType):
     cases = DjangoFilterConnectionField(Case)
 
     activity = Node.Field(Activity)
-    activities = DjangoFilterConnectionField(Activity, max_limit=None)
+    activities = DjangoFilterConnectionField(Activity)
 
     activity_detail = Node.Field(ActivityDetails)
     activity_details = DjangoFilterConnectionField(ActivityDetails)
 
     appropriation = Node.Field(Appropriation)
-    appropriations = DjangoFilterConnectionField(Appropriation, max_limit=None)
+    appropriations = DjangoFilterConnectionField(Appropriation)
 
     payment_schedule = Node.Field(PaymentSchedule)
     payment_schedules = DjangoFilterConnectionField(PaymentSchedule)
