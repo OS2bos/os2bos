@@ -325,7 +325,7 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
             sections_pks = request.query_params.getlist("sections")
             sections = Section.objects.filter(pk__in=sections_pks)
         else:
-            sections = Section.objects.filter(default_for_dst_handicap=True)
+            sections = Section.objects.filter(dst_preventative_measures=True)
 
         doc = etree.tostring(
             generate_dst_payload_preventive_measures(from_date, sections, test)
@@ -366,7 +366,7 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
             sections_pks = request.query_params.getlist("sections")
             sections = Section.objects.filter(pk__in=sections_pks)
         else:
-            sections = Section.objects.filter(default_for_dst_handicap=True)
+            sections = Section.objects.filter(dst_handicap=True)
 
         doc = etree.tostring(
             generate_dst_payload_handicap(from_date, sections, test)

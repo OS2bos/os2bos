@@ -1213,21 +1213,21 @@ class Section(Classification):
         ),
         blank=True,
     )
-    default_for_dst_preventative_measures = models.BooleanField(
+    dst_preventative_measures = models.BooleanField(
         blank=True,
         default=True,
-        verbose_name=_("standard for DST 'Forebyggende Foranstaltninger'"),
+        verbose_name=_("DST 'Forebyggende Foranstaltninger'"),
         help_text=_(
-            "Hvorvidt denne paragraf skal bruges som standard"
+            "Hvorvidt denne paragraf skal bruges"
             " til DST udtræk for 'Forebyggende Foranstaltninger'."
         ),
     )
-    default_for_dst_handicap = models.BooleanField(
+    dst_handicap = models.BooleanField(
         blank=True,
         default=True,
-        verbose_name=_("standard for DST 'Handicap'"),
+        verbose_name=_("DST 'Handicap'"),
         help_text=_(
-            "Hvorvidt denne paragraf skal bruges som standard"
+            "Hvorvidt denne paragraf skal bruges"
             " til DST udtræk for 'Handicap'."
         ),
     )
