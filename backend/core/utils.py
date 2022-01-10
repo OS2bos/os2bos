@@ -1322,9 +1322,11 @@ def generate_dst_payload_preventive_measures(
         start_date = min(
             [appr.granted_from_date for appr in duplicate_appropriations]
         )
-        end_date = max(
-            [appr.granted_to_date for appr in duplicate_appropriations]
-        )
+        granted_to_dates = [appr.granted_to_date for appr in duplicate_appropriations]
+        if None in granted_to_dates:
+            end_date = None
+        else:
+            end_date = max(granted_to_dates)
 
         appropriation_structure = (
             generate_dst_payload_preventive_measures_element(
@@ -1459,9 +1461,12 @@ def generate_dst_payload_handicap(from_date=None, sections=None, test=True):
         start_date = min(
             [appr.granted_from_date for appr in duplicate_appropriations]
         )
-        end_date = max(
-            [appr.granted_to_date for appr in duplicate_appropriations]
-        )
+
+        granted_to_dates = [appr.granted_to_date for appr in duplicate_appropriations]
+        if None in granted_to_dates:
+            end_date = None
+        else:
+            end_date = max(granted_to_dates)
 
         appropriation_structure = generate_dst_payload_handicap_element(
             identifier,

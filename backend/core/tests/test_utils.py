@@ -2070,6 +2070,26 @@ class DSTUtilities(TestCase, BasicTestMixin):
             str(third_activity.end_date),
         )
 
+        # No end_date for one activity should result in no end_date element.
+        third_activity.end_date = None
+        third_activity.save()
+        doc = generate_dst_payload_preventive_measures()
+        self.assertTrue(xml_schema.validate(doc))
+
+        structure_doc = doc.xpath(
+            "x:ForanstaltningStrukturSamling/" "x:ForanstaltningStruktur",
+            namespaces=ns,
+        )
+
+        self.assertEqual(
+            len(
+                structure_doc[0].xpath(
+                    "x:ForanstaltningSlutDato", namespaces=ns
+                )
+            ),
+            0,
+        )
+
     def test_generate_dst_payload_handicap_initial_load_consolidation(
         self,
     ):
@@ -2217,4 +2237,19 @@ class DSTUtilities(TestCase, BasicTestMixin):
             .xpath("x:INDBERETNINGSTYPE", namespaces=ns)[0]
             .text,
             "Ny",
+        )
+
+        # No end_date for one activity should result in no end_date element.
+        third_activity.end_date = None
+        third_activity.save()
+        doc = generate_dst_payload_handicap()
+        self.assertTrue(xml_schema.validate(doc))
+
+        structure_doc = doc.xpath(
+            "x:BoernMedHandicapSagStrukturSamling/"
+            "x:BoernMedHandicapSagStruktur",
+            namespaces=ns,
+        )
+        self.assertEqual(
+            len(structure_doc[0].xpath("x:INDSATS_SLUTDATO", namespaces=ns)), 0
         )
