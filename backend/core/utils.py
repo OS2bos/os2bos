@@ -1322,7 +1322,9 @@ def generate_dst_payload_preventive_measures(
         start_date = min(
             [appr.granted_from_date for appr in duplicate_appropriations]
         )
-        granted_to_dates = [appr.granted_to_date for appr in duplicate_appropriations]
+        granted_to_dates = [
+            appr.granted_to_date for appr in duplicate_appropriations
+        ]
         if None in granted_to_dates:
             end_date = None
         else:
@@ -1462,7 +1464,9 @@ def generate_dst_payload_handicap(from_date=None, sections=None, test=True):
             [appr.granted_from_date for appr in duplicate_appropriations]
         )
 
-        granted_to_dates = [appr.granted_to_date for appr in duplicate_appropriations]
+        granted_to_dates = [
+            appr.granted_to_date for appr in duplicate_appropriations
+        ]
         if None in granted_to_dates:
             end_date = None
         else:
