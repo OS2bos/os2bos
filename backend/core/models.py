@@ -1118,7 +1118,7 @@ class Case(AuditModelMixin, models.Model):
     note = models.TextField(verbose_name=_("note"), blank=True)
 
     # We only need to store historical records of effort_step, scaling_step,
-    # case_worker, assessment_comment, team, acting_municipality
+    # case_worker, assessment_comment, team, acting_municipality -
     # thus we can exclude everything else.
     history = HistoricalRecords(
         excluded_fields=[
