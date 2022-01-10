@@ -345,7 +345,7 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
         if not test:
             DSTPayload.objects.create(
                 name=filename,
-                content=doc,
+                content=doc.decode("utf-8"),
                 from_date=from_date,
                 dst_type=PREVENTATIVE_MEASURES,
             )
@@ -386,7 +386,7 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
         if not test:
             DSTPayload.objects.create(
                 name=filename,
-                content=doc,
+                content=doc.decode("utf-8"),
                 from_date=from_date,
                 dst_type=HANDICAP,
             )
