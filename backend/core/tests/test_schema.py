@@ -253,7 +253,9 @@ class TestAppropriationSchema(AuthenticatedTestCase, BasicTestMixin):
                 activity=activity, payment_frequency=PaymentSchedule.DAILY
             )
 
-        appropriation_id = b64encode(f"Appropriation:{appropriation.pk}".encode()).decode()
+        appropriation_id = b64encode(
+            f"Appropriation:{appropriation.pk}".encode()
+        ).decode()
         # Assert we can fetch more than the 100 default objects.
         json = {
             "query": f"""
@@ -273,9 +275,12 @@ class TestAppropriationSchema(AuthenticatedTestCase, BasicTestMixin):
         }
         response = self.client.get(reverse_url, json)
         self.assertEqual(
-            len(response.json()["data"]["appropriation"]["activities"]["edges"]),
-            111
+            len(
+                response.json()["data"]["appropriation"]["activities"]["edges"]
+            ),
+            111,
         )
+
 
 class TestPaymentScheduleSchema(AuthenticatedTestCase):
     def test_payment_schedules_get(self):
