@@ -105,7 +105,6 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_extensions",
     "django_filters",
-    "rest_framework_filters",
     "simple_history",
     "constance",
     "constance.backends.database",
@@ -255,7 +254,7 @@ VIRK_URL = settings.get(
 
 REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": (
-        "rest_framework_filters.backends.RestFrameworkFilterBackend",
+        "django_filters.rest_framework.DjangoFilterBackend",
     ),
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",

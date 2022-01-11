@@ -17,25 +17,14 @@ from dateutil.relativedelta import relativedelta, MO, SU
 
 from django.utils.translation import gettext
 
-import rest_framework_filters as filters
+import django_filters as filters
 
 from core.models import (
     Case,
-    PaymentSchedule,
-    Activity,
     Payment,
     Section,
     Appropriation,
-    User,
 )
-
-
-class UserForCaseFilter(filters.FilterSet):
-    """Filter cases on case worker team."""
-
-    class Meta:
-        model = User
-        fields = {"team": ["exact"]}
 
 
 class CaseFilter(filters.FilterSet):
@@ -44,11 +33,9 @@ class CaseFilter(filters.FilterSet):
     expired = filters.BooleanFilter(
         method="filter_expired", label=gettext("Udgået")
     )
-    case_worker = filters.RelatedFilter(
-        UserForCaseFilter,
-        field_name="case_worker",
-        label=gettext("Sagsbehandler"),
-        queryset=User.objects.all(),
+
+    case_worker__team = filters.NumberFilter(
+        label=gettext("Team for Sagsbehandler")
     )
 
     class Meta:
@@ -63,27 +50,6 @@ class CaseFilter(filters.FilterSet):
             return queryset.ongoing()
 
 
-class CaseForPaymentFilter(filters.FilterSet):
-    """Filter cases on CPR number."""
-
-    class Meta:
-        model = Case
-        fields = {"cpr_number": ["exact"]}
-
-
-class CaseForAppropriationFilter(filters.FilterSet):
-    """Filter cases on CPR number, team and case_worker."""
-
-    class Meta:
-        model = Case
-        fields = {
-            "cpr_number": ["exact"],
-            "case_worker": ["exact"],
-            "sbsys_id": ["exact"],
-            "case_worker__team": ["exact"],
-        }
-
-
 class AppropriationFilter(filters.FilterSet):
     """Filter appropriation."""
 
@@ -91,11 +57,16 @@ class AppropriationFilter(filters.FilterSet):
         label=gettext("Aktivitetsdetalje for hovedaktivitet")
     )
 
-    case = filters.RelatedFilter(
-        CaseForAppropriationFilter,
-        field_name="case",
-        label=Case._meta.verbose_name.title(),
-        queryset=Case.objects.all(),
+    case__cpr_number = filters.CharFilter(label=gettext("CPR nummer for Sag"))
+
+    case__case_worker = filters.NumberFilter(
+        label=gettext("Sagsbehandler for Sag")
+    )
+
+    case__sbsys_id = filters.CharFilter(label=gettext("SBSYS ID for Sag"))
+
+    case__case_worker__team = filters.NumberFilter(
+        label=gettext("Team for Sagsbehandler for Sag")
     )
 
     from_dst_start_date = filters.DateFilter(
@@ -115,41 +86,23 @@ class AppropriationFilter(filters.FilterSet):
         fields = "__all__"
 
 
-class PaymentScheduleFilter(filters.FilterSet):
-    """Filter payment plans on ID."""
-
-    class Meta:
-        model = PaymentSchedule
-        fields = {"payment_id": ["exact"]}
-
-
-class ActivityFilter(filters.FilterSet):
-    """Filter activities on status."""
-
-    class Meta:
-        model = Activity
-        fields = {"status": ["exact"]}
-
-
 class PaymentFilter(filters.FilterSet):
     """Filter payments on payment plan, activity, case, dates, etc."""
 
-    payment_schedule = filters.RelatedFilter(
-        PaymentScheduleFilter,
-        field_name="payment_schedule",
-        queryset=PaymentSchedule.objects.all(),
+    payment_schedule__payment_id = filters.NumberFilter(
+        label=gettext("Betalings-id for Betalingsplan")
     )
-    case = filters.RelatedFilter(
-        CaseForPaymentFilter,
-        field_name="payment_schedule__activity__appropriation__case",
-        label=Case._meta.verbose_name.title(),
-        queryset=Case.objects.all(),
+
+    case__cpr_number = filters.CharFilter(
+        label=gettext("CPR-nummer for Sag"),
+        field_name=(
+            "payment_schedule__activity__appropriation__case__cpr_number"
+        ),
     )
-    activity = filters.RelatedFilter(
-        ActivityFilter,
-        field_name="payment_schedule__activity",
-        label=Activity._meta.verbose_name.title(),
-        queryset=Activity.objects.all(),
+
+    activity__status = filters.CharFilter(
+        label=gettext("Status for aktivitet"),
+        field_name="payment_schedule__activity__status",
     )
 
     paid_date__gte = filters.DateFilter(
