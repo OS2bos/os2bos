@@ -398,6 +398,15 @@ LOGGING = {
                 fallback=os.path.join(LOG_DIR, "virk.log"),
             ),
         },
+        "dst": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "formatter": "verbose",
+            "filename": settings.get(
+                "DST_LOG_FILE",
+                fallback=os.path.join(LOG_DIR, "dst.log"),
+            ),
+        },
         # handler for the django-mailer package.
         "mailer": {
             "level": "INFO",
@@ -472,6 +481,11 @@ LOGGING = {
         },
         "bevillingsplatform.virk": {
             "handlers": ["virk"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        "bevillingsplatform.dst": {
+            "handlers": ["dst"],
             "level": "INFO",
             "propagate": True,
         },

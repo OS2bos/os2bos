@@ -1421,6 +1421,99 @@ class DSTUtilities(TestCase, BasicTestMixin):
             str(payment_date),
         )
 
+    def test_generate_dst_payload_preventative_no_valid_related_person(self):
+        now = timezone.now().date()
+        start_date = now
+        # Create a valid appropriation with a valid related person.
+        case = create_case(self.case_worker, self.municipality, self.district)
+        create_related_person(case, relation_type="far")
+        section = create_section(dst_code="123")
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        granted_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=None,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=granted_activity,
+        )
+        section.main_activities.add(granted_activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=granted_activity.details, section=section
+        )
+
+        # Create a valid appropriation with an invalid related person.
+        case = create_case(
+            self.case_worker,
+            self.municipality,
+            self.district,
+            sbsys_id="27.24.00-G01-99-22",
+        )
+        create_related_person(case, relation_type="ikkegyldig")
+        appropriation = create_appropriation(
+            sbsys_id="YYY-XXX", case=case, section=section
+        )
+        granted_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=None,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=granted_activity,
+        )
+        section.main_activities.add(granted_activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=granted_activity.details, section=section
+        )
+
+        schema_path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "data",
+            "xml_schemas",
+            "DST_UdsatteBoernOgUngeLeveranceL201U1Struktur.xsd",
+        )
+
+        with open(schema_path) as f:
+            xmlschema_doc = etree.parse(f)
+        xml_schema = etree.XMLSchema(xmlschema_doc)
+
+        # XML should be valid with just one entry.
+        doc = generate_dst_payload_preventive_measures()
+        self.assertTrue(xml_schema.validate(doc))
+        self.assertEqual(
+            len(
+                doc.xpath(
+                    "x:ForanstaltningStrukturSamling/"
+                    "x:ForanstaltningStruktur",
+                    namespaces={
+                        "x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/"
+                    },
+                )
+            ),
+            1,
+        )
+
     def test_generate_dst_payload_handicap_initial_load_valid(self):
         now = timezone.now().date()
         start_date = now
