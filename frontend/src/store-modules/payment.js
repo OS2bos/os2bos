@@ -121,7 +121,8 @@ const actions = {
                 endCursor (optional)
             }
         */
-        let qry_args = `paymentSchedule:${ payload.payment_schedule_pk } first:30`
+        const payment_schedule_id = btoa('PaymentSchedule:' + payload.payment_schedule_pk)
+        let qry_args = `paymentSchedule:"${ payment_schedule_id }" first:30`
         if (payload.endCursor) {
             qry_args += ` after:"${ payload.endCursor }"`
         }
@@ -153,7 +154,7 @@ const actions = {
                         }
                     }
                 }
-                paymentSchedule(id:"${ btoa('PaymentSchedule:' + payload.payment_schedule_pk) }") {
+                paymentSchedule(id:"${ payment_schedule_id }") {
                     pk,
                     paymentId,
                     paymentMethod,
