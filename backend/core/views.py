@@ -607,6 +607,7 @@ class UserViewSet(ReadOnlyViewset):
 
     queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
+    filterset_fields = "__all__"
 
 
 class ServiceProviderViewSet(

@@ -61,7 +61,10 @@ class User(OptimizedDjangoObjectType):
 
     class Meta:
         model = UserModel
+        interfaces = (Node,)
+        connection_class = ExtendedConnection
         fields = "__all__"
+        filter_fields = "__all__"
 
 
 class ApprovalLevel(OptimizedDjangoObjectType):
@@ -350,6 +353,9 @@ class Query(graphene.ObjectType):
 
     municipality = Node.Field(Municipality)
     municipalities = DjangoFilterConnectionField(Municipality)
+
+    user = Node.Field(User)
+    users = DjangoFilterConnectionField(User)
 
 
 schema = graphene.Schema(query=Query)
