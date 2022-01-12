@@ -75,7 +75,11 @@ class PaymentQuerySet(models.QuerySet):
     def strict_amount_sum(self):
         """Sum over Payments amount."""
         return (
-            self.aggregate(amount_sum=Coalesce(Sum("amount"), 0))["amount_sum"]
+            self.aggregate(
+                amount_sum=Coalesce(
+                    Sum("amount"), 0, output_field=DecimalField()
+                )
+            )["amount_sum"]
             or 0
         )
 
