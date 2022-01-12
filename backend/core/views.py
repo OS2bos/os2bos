@@ -330,13 +330,14 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
         doc = etree.tostring(
             generate_dst_payload_preventive_measures(from_date, sections, test)
         )
+        prefix = "T" if test else "P"
         payload_type = "T201" if test else "L201"
         municipality_code = config.DST_MUNICIPALITY_CODE
         now = timezone.now()
         period = now.strftime("%YM%m")
         generation_timestamp = now.strftime("%Y%m%dT%H%M%S")
         filename = (
-            f"P_{municipality_code}_"
+            f"{prefix}_{municipality_code}_"
             f"{payload_type}_"
             f"P{period}_"
             f"V01_D{generation_timestamp}.xml"
@@ -371,13 +372,14 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
         doc = etree.tostring(
             generate_dst_payload_handicap(from_date, sections, test)
         )
+        prefix = "T" if test else "P"
         payload_type = "T231" if test else "L231"
         municipality_code = config.DST_MUNICIPALITY_CODE
         now = timezone.now()
         period = now.strftime("%YM%m")
         generation_timestamp = now.strftime("%Y%m%dT%H%M%S")
         filename = (
-            f"P_{municipality_code}_"
+            f"{prefix}_{municipality_code}_"
             f"{payload_type}_"
             f"P{period}_"
             f"V01_D{generation_timestamp}.xml"
