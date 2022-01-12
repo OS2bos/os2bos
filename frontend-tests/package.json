@@ -10,10 +10,10 @@
   "author": "",
   "license": "MPL-2.0",
   "devDependencies": {
-    "axe-core": "^3.5.3",
+    "axe-core": "^3.0.0",
     "axe-testcafe": "^3.0.0",
-    "resemblejs": "^3.2.4",
-    "testcafe": "^1.8.5"
+    "resemblejs": "^4.0.0",
+    "testcafe": "^1.16.0"
   },
   "repository": "https://git.magenta.dk/bevillingsplatform/bevillingsplatform.git"
 }
