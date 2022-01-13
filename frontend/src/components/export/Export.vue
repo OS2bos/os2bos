@@ -8,69 +8,74 @@
 
 <template>
 
-    <section class="export-list">
+    <article class="dst-export">
 
         <header class="case-search-header">
-            <h1>Dataudtræk</h1>
+            <h1>Dataudtræk til DST</h1>
         </header>
+
+        <div class="dst-export-content">
         
-        <form @submit.prevent>
-            <fieldset class="filter-fields">
-                <div class="filter-field">
-                    <label for="preview-mode">Visning</label>
-                    <!-- TODO: This list-picker should v-model some piece of
-                               data that represents which cutoff date we want
-                               to use in our API call -->
-                    <list-picker 
-                        :dom-id="'preview-mode'"
-                        :list="previewModes"
-                        @selection="filterByCutoff"
-                        :selected-id="now"
-                        display-key="label"
-                        :disable-null-option="true"
-                    />
-                </div>
-                <div class="filter-field">
-                    <label for="field-section">Bevillinger efter §</label>
-                    <list-picker
-                        class="resize"
-                        :dom-id="'field-section'"
-                        :list="sectionlist"
-                        @selection="filterBySection"
-                        display-key="paragraph"
-                        display-key2="text"
-                    />
-                </div>
-            </fieldset>
-        </form>
+            <section class="dst-export-items">
+                <form @submit.prevent>
+                    <fieldset class="filter-fields">
+                        <div class="filter-field">
+                            <label for="preview-mode">Visning</label>
+                            <select id="preview-mode" class="listpicker" @change="filterByCutoff">
+                                <option value="newer">Ændringer efter seneste indrapportering</option>
+                                <option value="all">Alle ændringer</option>
+                                <option disabled value="older">Ændringer før seneste indrapportering</option>
+                            </select>
+                        </div>
+                        <div class="filter-field">
+                            <label for="field-section">Bevillinger efter §</label>
+                            <list-picker
+                                class="resize"
+                                :dom-id="'field-section'"
+                                :list="sectionlist"
+                                @selection="filterBySection"
+                                display-key="paragraph"
+                                display-key2="text"
+                            />
+                        </div>
+                    </fieldset>
+                </form>
+                    
+                <!-- TODO: 47446 Activities that are comprised of several "partial"
+                        activities (e.g. adjustments etc) should be rendered as
+                        accordions in the data-grid below, as is the case elsewhere
+                        in the system -->
+                        
+                <!-- TODO: 47442 If it's decided that this view should support the display
+                        of nodes that have changed since the specified date *as well
+                        as* nodes that HAVEN'T changed since that date, we need some
+                        styling to visually distinguish the two in the data-grid
+                        below -->
+                <data-grid
+                    ref="data-grid"
+                    :data-list="appropriationlist"
+                    :columns="columns"
+                    :selectable="false">
+
+                    <p slot="datagrid-header">
+                        <span v-html="currentSectionDisplay"></span>
+                        <br>
+                        <span v-html="numberOfCPRsDisplay"></span>
+                    </p>
+
+                </data-grid>
+            </section>
+
+            <section class="dst-export-xml">
+                <export-payload-list />
+                <export-actions />
+            </section>
+
+        </div>
             
-        <!-- TODO: 47446 Activities that are comprised of several "partial"
-                   activities (e.g. adjustments etc) should be rendered as
-                   accordions in the data-grid below, as is the case elsewhere
-                   in the system -->
-                   
-        <!-- TODO: 47442 If it's decided that this view should support the display
-                   of nodes that have changed since the specified date *as well
-                   as* nodes that HAVEN'T changed since that date, we need some
-                   styling to visually distinguish the two in the data-grid
-                   below -->
-        <data-grid
-            ref="data-grid"
-            :data-list="appropriationlist"
-            :columns="columns"
-            :selectable="false">
-
-            <p slot="datagrid-header">
-                <span v-html="currentSectionDisplay"></span>
-                <br>
-                <span v-html="numberOfCPRsDisplay"></span>
-            </p>
-
-        </data-grid>
-        
         <!-- TODO: 47444/47445 Insert components/buttons to trigger simulated and real export
                    right about here -->
-    </section>
+    </article>
 
 </template>
 
@@ -78,16 +83,19 @@
     import ListPicker from '../forms/ListPicker.vue'
     import DataGrid from '../datagrid/DataGrid.vue'
     import axios from '../http/Http.js'
+    import ExportPayloadList from './ExportPayloadList.vue'
+    import ExportActions from './ExportActions.vue'
 
     export default {
         components: {
             ListPicker,
-            DataGrid
+            DataGrid,
+            ExportPayloadList,
+            ExportActions
         },
         data: function () {
             return {
                 now: Date.now(),
-                cutoffDate: null,
                 sectionlist: [],
                 appropriationlist: [],
                 currentSection: null,
@@ -128,11 +136,13 @@
                         key: 'main_activity_enddate',
                         title: 'Slutdato'
                     }
-                ],
-                previewModes: []
+                ]
             }
         },
         computed: {
+            latest_dst_export_date: function() {
+                return this.$store.getters.getLatestDSTexportDate
+            },
             currentSectionDisplay: function() {
                 const section = this.sectionlist.filter(s => {
                     return this.currentSection === s.id
@@ -154,8 +164,8 @@
             }
         },
         methods: {
-            filterByCutoff: function() {
-                console.log('filter stuff by cutoff date')
+            filterByCutoff: function(event) {
+                console.log('filter stuff by cutoff date', event.target.value)
             },
             filterBySection: function(section_id) {
                 if (section_id) {
@@ -280,7 +290,6 @@
                         return a.node.endDate <= b.node.endDate
                     }
                 })
-                console.log(sorted_by_start, sorted_by_end)
                 return {
                     pk: sorted_by_start[0].node.pk,
                     name: sorted_by_start[0].node.details.name,
@@ -329,34 +338,32 @@
             .then(res => {
                 this.sectionlist = res
             })
-            
-            Promise.resolve() // TODO: 47436/47437 Replace with real endpoint to retrieve/determine export dates
-            .then(() => {
-                this.previewModes = [
-                    {
-                        id: 0,
-                        label: 'Alle ændringer i systemets levetid' 
-                    },
-                    {
-                        id: this.now,
-                        label: 'Ændringer siden seneste skæringsdato'
-                    }
-                ]
-            })
         }
     }
     
 </script>
 
 <style>
-    .export-list {
+    .dst-export {
         padding: 0 2rem 2rem;
+        max-width: 100%;
     }
-    .export-list .filter-fields {
+    .dst-export .filter-fields {
         display: flex;
         flex-flow: row nowrap;
     }
-    .export-list .filter-field {
+    .dst-export .filter-field {
         margin-right: 1rem;
     }
+    .dst-export-content {
+        display: flex;
+        flex-flow: row;
+    }
+    .dst-export-items {
+        flex-grow: 1;
+        border-right: 1px solid var(--grey1);
+        padding-right: 2rem;
+        margin-right: 2rem;
+    }
+    
 </style>
