@@ -72,6 +72,7 @@ router.register(
     r"internal_payment_recipients", views.InternalPaymentRecipientViewSet
 )
 router.register(r"efforts", views.EffortViewSet)
+router.register(r"dst_payloads", views.DSTPayloadViewSet)
 
 urlpatterns = [
     # These are the SAML2 related URLs. You can change

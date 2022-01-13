@@ -253,14 +253,14 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
     - approval_note
     - activity_pks
 
-    **generate_dst_preventative_measures_payload** for generating a DST
+    **generate_dst_preventative_measures_file** for generating a DST
     preventative measures payload.
 
     - sections
     - from_start_date
     - test
 
-    **generate_dst_handicap_payload** for generating a DST handicap payload.
+    **generate_dst_handicap_file** for generating a DST handicap payload.
 
     - sections
     - from_start_date
