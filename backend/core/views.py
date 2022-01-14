@@ -257,13 +257,13 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
     preventative measures payload.
 
     - sections
-    - from_start_date
+    - from_date
     - test
 
     **generate_dst_handicap_file** for generating a DST handicap payload.
 
     - sections
-    - from_start_date
+    - from_date
     - test
     """
 
