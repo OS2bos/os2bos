@@ -8,6 +8,17 @@
 
 import axios from '../components/http/Http.js'
 
+function getLatestExport(exports) {
+    exports.sort(function(a,b) {
+        if (a.from_date < b.from_date && a.from_date !== null) {
+            return true
+        } else {
+            return false
+        }
+    })
+    return exports[0]
+}
+
 const state = {
     dst_export_objs: [],
     latest_dst_export_date: null
@@ -35,12 +46,10 @@ const actions = {
     fetchDSTexportedObjects: function({commit}) {
         axios.get('/dst_payloads/')
         .then(res => {
-            if (res.data.length < 1) {
-                // Do nothing
-            } else {
+            if (res.data.length > 0) {
                 commit('setDSTexportObjects', res.data)
+                commit('setLatestDSTexportDate', getLatestExport(res.data).from_date)
             }
-            
         })
         .catch(err => console.error(err))
     }

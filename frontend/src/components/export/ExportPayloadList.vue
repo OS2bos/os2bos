@@ -17,9 +17,7 @@
                         <span>{{ displayTargetLabel(obj.dst_type) }}</span>
                         <span>{{ displayDate(obj.date) }}</span>
                     </a>
-                    <br>
                     {{ displayCutoffDate(obj.from_date) }}
-                    <br>
                 </li>
             </ul>
         </template>
@@ -52,7 +50,11 @@ export default {
             return json2js(date)
         },
         displayCutoffDate: function(date) {
-            return json2jsDate(date)
+            if (date && date !== '1970-01-01') {
+                return `Poster ændret siden ${json2jsDate(date)}`
+            } else {
+                return 'Alle poster'
+            }
         },
         displayTargetLabel: function(str) {
             if (str === 'HANDICAP') {
