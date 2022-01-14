@@ -93,6 +93,10 @@ INITIALIZE_DATABASE = settings.getboolean(
     "INITIALIZE_DATABASE", fallback=False
 )
 
+version_file_path = os.path.join(BASE_DIR, "..", "..", "VERSION")
+with open(version_file_path) as v_file:
+    VERSION = v_file.read()
+
 # Application definition
 
 INSTALLED_APPS = [

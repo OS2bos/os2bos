@@ -1225,7 +1225,7 @@ def generate_dst_payload_metadata_element(test=True):
                 ),
                 E.SystemStructure(
                     E.SystemName("OS2BOS"),
-                    E.SystemVersion("3.4.3"),
+                    E.SystemVersion(settings.VERSION),
                 ),
             )
         ),

@@ -92,6 +92,7 @@ RUN pip3 install --no-cache-dir -r backend/requirements-test.txt
 COPY dev-environment/ci-settings.ini dev-environment/ci-settings.ini
 COPY README.rst .
 COPY LICENSE .
+COPY VERSION .
 COPY docker ./docker
 COPY tox.ini .
 COPY backend ./backend
