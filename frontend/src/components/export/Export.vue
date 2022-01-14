@@ -21,10 +21,10 @@
                     <fieldset class="filter-fields">
                         <div class="filter-field">
                             <label for="preview-mode">Visning</label>
-                            <select id="preview-mode" class="listpicker" @change="filterByCutoff">
-                                <option value="newer">Ændringer efter seneste indrapportering</option>
+                            <select id="preview-mode" class="listpicker" @change="filterByCutoff" v-model="currentPreviewMode">
                                 <option value="all">Alle ændringer</option>
-                                <option disabled value="older">Ændringer før seneste indrapportering</option>
+                                <option value="newer">Ændringer siden seneste eksport {{ displayDate(latest_dst_export_date) }}</option>
+                                <option disabled value="older">Ændringer før seneste eksport</option>
                             </select>
                         </div>
                         <div class="filter-field">
@@ -41,7 +41,7 @@
                     </fieldset>
                 </form>
                     
-                <!-- TODO: 47446 Activities that are comprised of several "partial"
+                <!-- TODO (Maybe): 47446 Activities that are comprised of several "partial"
                         activities (e.g. adjustments etc) should be rendered as
                         accordions in the data-grid below, as is the case elsewhere
                         in the system -->
@@ -85,6 +85,7 @@
     import axios from '../http/Http.js'
     import ExportPayloadList from './ExportPayloadList.vue'
     import ExportActions from './ExportActions.vue'
+    import {json2jsDate} from '../filters/Date.js'
 
     export default {
         components: {
@@ -99,6 +100,7 @@
                 sectionlist: [],
                 appropriationlist: [],
                 currentSection: null,
+                currentPreviewMode: 'newer',
                 columns: [
                     {
                         key: 'case_cpr',
@@ -130,10 +132,16 @@
                     },
                     {
                         key: 'main_activity_startdate',
+                        display_func: function(d) {
+                            return json2jsDate(d.main_activity_startdate)
+                        },
                         title: 'Startdato'
                     },
                     {
                         key: 'main_activity_enddate',
+                        display_func: function(d) {
+                            return json2jsDate(d.main_activity_enddate)
+                        },
                         title: 'Slutdato'
                     }
                 ]
@@ -164,13 +172,30 @@
             }
         },
         methods: {
+            displayDate: function(date) {
+                return json2jsDate(date)
+            },
+            buildFilterString: function(preview_mode, section_id) {
+                let filter = `section:"${section_id}"`
+                if (preview_mode === 'newer') {
+                    filter += `, fromDstStartDate:"${this.latest_dst_export_date}"`
+                }
+                return filter
+            },
             filterByCutoff: function(event) {
-                console.log('filter stuff by cutoff date', event.target.value)
+                this.currentPreviewMode = event.target.value
+                this.fetchAppropriations(this.buildFilterString(event.target.value, this.currentSection))
+                .then(res => {
+                    this.appropriationlist = this.sanitizeAppropriationData(res)
+                })
+                .catch(err => {
+                    console.error(err)
+                })
             },
             filterBySection: function(section_id) {
                 if (section_id) {
                     this.currentSection = section_id
-                    this.fetchAppropriations(section_id)
+                    this.fetchAppropriations(this.buildFilterString(this.currentPreviewMode, section_id))
                     .then(res => {
                         this.appropriationlist = this.sanitizeAppropriationData(res)
                     })
@@ -221,10 +246,10 @@
                     }   
                 })
             },
-            fetchAppropriations: function(section_id) {
+            fetchAppropriations: function(filters) {
                 return axios.post('/graphql/', { query: `
                     {
-                        appropriations(section:"${section_id}") {
+                        appropriations(${filters}) {
                             edges {
                                 node {
                                     pk,
