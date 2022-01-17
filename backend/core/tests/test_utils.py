@@ -1313,18 +1313,16 @@ class DSTUtilities(TestCase, BasicTestMixin):
             "..",
             "data",
             "xml_schemas",
+            "dst_preventative_measures",
             "DST_UdsatteBoernOgUngeLeveranceL201U1Struktur.xsd",
         )
-
-        with open(schema_path) as f:
-            xmlschema_doc = etree.parse(f)
-        xml_schema = etree.XMLSchema(xmlschema_doc)
+        xml_schema = etree.XMLSchema(file=schema_path)
 
         # Generating a dst payload with no cut-off date
         # should result in a initial_load with a status of "Ny"
         # and the default test form id.
         doc = generate_dst_payload_preventive_measures()
-        self.assertTrue(xml_schema.validate(doc))
+        xml_schema.assertValid(doc)
         self.assertEqual(
             doc.xpath(
                 "x:DeliveryMetadataNewStructure/" "e:Envelope/" "e:FormID",
@@ -1387,15 +1385,13 @@ class DSTUtilities(TestCase, BasicTestMixin):
             "..",
             "data",
             "xml_schemas",
+            "dst_preventative_measures",
             "DST_UdsatteBoernOgUngeLeveranceL201U1Struktur.xsd",
         )
-
-        with open(schema_path) as f:
-            xmlschema_doc = etree.parse(f)
-        xml_schema = etree.XMLSchema(xmlschema_doc)
+        xml_schema = etree.XMLSchema(file=schema_path)
 
         doc = generate_dst_payload_preventive_measures()
-        self.assertTrue(xml_schema.validate(doc))
+        xml_schema.assertValid(doc)
 
         # One time activities with no start/end use payment_date instead.
         self.assertEqual(
@@ -1491,16 +1487,13 @@ class DSTUtilities(TestCase, BasicTestMixin):
             "..",
             "data",
             "xml_schemas",
+            "dst_preventative_measures",
             "DST_UdsatteBoernOgUngeLeveranceL201U1Struktur.xsd",
         )
-
-        with open(schema_path) as f:
-            xmlschema_doc = etree.parse(f)
-        xml_schema = etree.XMLSchema(xmlschema_doc)
-
+        xml_schema = etree.XMLSchema(file=schema_path)
         # XML should be valid with just one entry.
-        doc = generate_dst_payload_preventive_measures()
-        self.assertTrue(xml_schema.validate(doc))
+        doc = generate_dst_payload_preventive_measures().getroottree()
+        xml_schema.assertValid(doc)
         self.assertEqual(
             len(
                 doc.xpath(
@@ -1552,18 +1545,16 @@ class DSTUtilities(TestCase, BasicTestMixin):
             "..",
             "data",
             "xml_schemas",
+            "dst_handicap",
             "DST_BoernMedHandicapLeveranceL231Struktur.xsd",
         )
-
-        with open(schema_path) as f:
-            xmlschema_doc = etree.parse(f)
-        xml_schema = etree.XMLSchema(xmlschema_doc)
+        xml_schema = etree.XMLSchema(file=schema_path)
 
         # Generating a dst payload with no cut-off date
         # should result in a initial_load with a status of "Ny"
         # and the default test form id.
         doc = generate_dst_payload_handicap()
-        self.assertTrue(xml_schema.validate(doc))
+        xml_schema.assertValid(doc)
 
         self.assertEqual(
             doc.xpath(
@@ -1584,11 +1575,11 @@ class DSTUtilities(TestCase, BasicTestMixin):
                     "e": "http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/",
                 },
             )[0].text,
-            "T201",
+            "T231",
         )
 
         doc = generate_dst_payload_handicap(test=False)
-        self.assertTrue(xml_schema.validate(doc))
+        xml_schema.assertValid(doc)
 
         # Non Test should have correct form id.
         self.assertEqual(
@@ -1599,7 +1590,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
                     "e": "http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/",
                 },
             )[0].text,
-            "L201",
+            "L231",
         )
 
     def test_generate_dst_payload_handicap_one_time_special_case(self):
@@ -1640,15 +1631,13 @@ class DSTUtilities(TestCase, BasicTestMixin):
             "..",
             "data",
             "xml_schemas",
+            "dst_handicap",
             "DST_BoernMedHandicapLeveranceL231Struktur.xsd",
         )
-
-        with open(schema_path) as f:
-            xmlschema_doc = etree.parse(f)
-        xml_schema = etree.XMLSchema(xmlschema_doc)
+        xml_schema = etree.XMLSchema(file=schema_path)
 
         doc = generate_dst_payload_handicap()
-        self.assertTrue(xml_schema.validate(doc))
+        xml_schema.assertValid(doc)
 
         # One time activities with no start/end use payment_date instead.
         self.assertEqual(
@@ -1744,19 +1733,17 @@ class DSTUtilities(TestCase, BasicTestMixin):
             "..",
             "data",
             "xml_schemas",
+            "dst_handicap",
             "DST_BoernMedHandicapLeveranceL231Struktur.xsd",
         )
-
-        with open(schema_path) as f:
-            xmlschema_doc = etree.parse(f)
-        xml_schema = etree.XMLSchema(xmlschema_doc)
+        xml_schema = etree.XMLSchema(file=schema_path)
 
         # Generating a dst payload from a cut-off date of 2021-01-02
         # For an appropriation containing both main activities before and after
         # should result in a status of "Ændring".
         doc = generate_dst_payload_handicap(from_date=date(2021, 1, 2))
 
-        self.assertTrue(xml_schema.validate(doc))
+        xml_schema.assertValid(doc)
 
         self.assertEqual(
             doc.xpath(
@@ -1840,19 +1827,17 @@ class DSTUtilities(TestCase, BasicTestMixin):
             "..",
             "data",
             "xml_schemas",
+            "dst_handicap",
             "DST_BoernMedHandicapLeveranceL231Struktur.xsd",
         )
-
-        with open(schema_path) as f:
-            xmlschema_doc = etree.parse(f)
-        xml_schema = etree.XMLSchema(xmlschema_doc)
+        xml_schema = etree.XMLSchema(file=schema_path)
 
         # Generating a dst payload from a cut-off date of 2021-01-01
         # For an appropriation containing only main activities after
         # should result in a status of "Ny".
         doc = generate_dst_payload_handicap(from_date=date(2021, 1, 1))
 
-        self.assertTrue(xml_schema.validate(doc))
+        xml_schema.assertValid(doc)
 
         self.assertEqual(
             doc.xpath(
@@ -1917,19 +1902,17 @@ class DSTUtilities(TestCase, BasicTestMixin):
             "..",
             "data",
             "xml_schemas",
+            "dst_handicap",
             "DST_BoernMedHandicapLeveranceL231Struktur.xsd",
         )
-
-        with open(schema_path) as f:
-            xmlschema_doc = etree.parse(f)
-        xml_schema = etree.XMLSchema(xmlschema_doc)
+        xml_schema = etree.XMLSchema(file=schema_path)
 
         # Generating a dst payload from a cut-off date of 2021-02-01
         # with a case with a changed acting municipality should result
         # in a status of "Ændret".
         doc = generate_dst_payload_handicap(from_date=date(2021, 2, 1))
 
-        self.assertTrue(xml_schema.validate(doc))
+        xml_schema.assertValid(doc)
 
         self.assertEqual(
             doc.xpath(
@@ -1988,12 +1971,10 @@ class DSTUtilities(TestCase, BasicTestMixin):
             "..",
             "data",
             "xml_schemas",
+            "dst_handicap",
             "DST_BoernMedHandicapLeveranceL231Struktur.xsd",
         )
-
-        with open(schema_path) as f:
-            xmlschema_doc = etree.parse(f)
-        xml_schema = etree.XMLSchema(xmlschema_doc)
+        xml_schema = etree.XMLSchema(file=schema_path)
 
         # Generating a dst payload from a cut-off date of 2021-02-01
         # with an unchanged activity from 2021-01-01 should result in no
@@ -2106,17 +2087,21 @@ class DSTUtilities(TestCase, BasicTestMixin):
             "..",
             "data",
             "xml_schemas",
+            "dst_preventative_measures",
             "DST_UdsatteBoernOgUngeLeveranceL201U1Struktur.xsd",
         )
-
-        with open(schema_path) as f:
-            xmlschema_doc = etree.parse(f)
-        xml_schema = etree.XMLSchema(xmlschema_doc)
+        xml_schema = etree.XMLSchema(file=schema_path)
 
         # Generating a dst payload with no cut-off date
         # should result in a initial_load.
-        doc = generate_dst_payload_preventive_measures()
-        self.assertTrue(xml_schema.validate(doc))
+        doc = etree.fromstring(
+            etree.tostring(
+                generate_dst_payload_preventive_measures(),
+                xml_declaration=True,
+                encoding="UTF-8",
+            )
+        )
+        xml_schema.assertValid(doc)
 
         # All three appropriations should be consolidated to one entry.
         ns = {"x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/"}
@@ -2274,17 +2259,15 @@ class DSTUtilities(TestCase, BasicTestMixin):
             "..",
             "data",
             "xml_schemas",
+            "dst_handicap",
             "DST_BoernMedHandicapLeveranceL231Struktur.xsd",
         )
-
-        with open(schema_path) as f:
-            xmlschema_doc = etree.parse(f)
-        xml_schema = etree.XMLSchema(xmlschema_doc)
+        xml_schema = etree.XMLSchema(file=schema_path)
 
         # Generating a dst payload with no cut-off date
         # should result in a initial_load.
         doc = generate_dst_payload_handicap()
-        self.assertTrue(xml_schema.validate(doc))
+        xml_schema.assertValid(doc)
 
         # All three appropriations should be consolidated to one entry.
         ns = {"x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/"}

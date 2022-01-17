@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/" xmlns:dst="http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/" targetNamespace="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/" schemaLocation="DST_Envelope.xsd"/>
+	<xs:include schemaLocation="DST_CommunicatorStructureCollection.xsd"/>
+	<xs:include schemaLocation="DST_ContactStructureCollection.xsd"/>
+	<xs:include schemaLocation="DST_DBoksContactNewStructure.xsd"/>
+	
+<xs:simpleType name="FormVersionType">
+<xs:restriction base="xs:string">
+<xs:minLength value="0" />
+<xs:maxLength value="30" />
+</xs:restriction>
+</xs:simpleType>
+
+<xs:element name="DeliveryMetadataNewStructure" type="DeliveryMetadataNewStructureType"/>
+	<xs:complexType name="DeliveryMetadataNewStructureType">
+		<xs:sequence>
+			<xs:element ref="dst:Envelope"/>
+			<xs:element ref="CommunicatorStructureCollection" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="ContactStructureCollection" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="DBoksContactNewStructure"  minOccurs="0"/>
+                        <xs:element name="FormVersion" type="FormVersionType" minOccurs="0" />			
+
+
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

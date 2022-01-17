@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/" targetNamespace="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="DST_CommunicationDescription.xsd"/>
+	<xs:include schemaLocation="DST_SystemStructure.xsd"/>
+	<xs:element name="CommunicatorStructure" type="CommunicatorStructureType"/>
+	<xs:complexType name="CommunicatorStructureType">
+		<xs:sequence>
+			<xs:element ref="CommunicationDescription"/>
+			<xs:element name="CommunicationDateTime" type="xs:dateTime"/>
+			<xs:element ref="SystemStructure" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

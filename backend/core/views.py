@@ -328,7 +328,11 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
             sections = Section.objects.filter(dst_preventative_measures=True)
 
         doc = etree.tostring(
-            generate_dst_payload_preventive_measures(from_date, sections, test)
+            generate_dst_payload_preventive_measures(
+                from_date, sections, test
+            ),
+            xml_declaration=True,
+            encoding="utf-8",
         )
         prefix = "T" if test else "P"
         payload_type = "T201" if test else "L201"
@@ -370,7 +374,9 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
             sections = Section.objects.filter(dst_handicap=True)
 
         doc = etree.tostring(
-            generate_dst_payload_handicap(from_date, sections, test)
+            generate_dst_payload_handicap(from_date, sections, test),
+            xml_declaration=True,
+            encoding="utf-8",
         )
         prefix = "T" if test else "P"
         payload_type = "T231" if test else "L231"

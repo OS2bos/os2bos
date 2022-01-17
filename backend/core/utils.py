@@ -16,6 +16,7 @@ import re
 import csv
 
 from lxml.builder import ElementMaker
+from lxml import etree
 
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
@@ -1180,7 +1181,12 @@ generate_cases_report_list_versions = {"0": generate_cases_report_list_v0}
 write_prism_file_versions = {"0": write_prism_file_v0}
 
 
-def generate_dst_payload_metadata_element(test=True):
+# DST xml namespaces
+dst_default_namespace = "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/"
+dst_envelope_namespace = "http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/"
+
+
+def generate_dst_payload_metadata_element(form_id):
     """Generate the metadata element for a DST payload."""
     now = timezone.now()
 
@@ -1188,30 +1194,20 @@ def generate_dst_payload_metadata_element(test=True):
     municipality_code = config.DST_MUNICIPALITY_CODE
     municipality_cvr = config.DST_MUNICIPALITY_CVR_NUMBER
     municipality_p_number = config.DST_MUNICIPALITY_P_NUMBER
-    latest_passed_month = (now - relativedelta(months=1)).month
-
-    if test:
-        form_id = "T201"
-    else:
-        form_id = "L201"
+    last_month = now - relativedelta(months=1)
 
     now = timezone.now()
 
-    E = ElementMaker(
-        namespace="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
-    )
-    envelope_E = ElementMaker(
-        namespace="http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/"
-    )
+    E = ElementMaker(namespace=dst_default_namespace)
+    envelope_E = ElementMaker(namespace=dst_envelope_namespace)
 
     doc = E.DeliveryMetadataNewStructure(
         envelope_E.Envelope(
             envelope_E.Source("CEMOS"),
             envelope_E.SurveyID("D280600"),
-            # L201 for prod, T201 for test.
             envelope_E.FormID(form_id),
             # Latest passed month.
-            envelope_E.Period(str(latest_passed_month)),
+            envelope_E.Period(last_month.strftime("%YM%m")),
             envelope_E.Entity(
                 envelope_E.EntityIDType("Kommune"),
                 envelope_E.EntityID(municipality_code),
@@ -1264,9 +1260,7 @@ def generate_dst_payload_preventive_measures_element(
     end_date,
 ):
     """Generate a XML payload element for DST for "Preventitive Measures"."""
-    E = ElementMaker(
-        namespace="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
-    )
+    E = ElementMaker(namespace=dst_default_namespace)
 
     appropriation_structure = E.ForanstaltningStruktur(
         E.UdsatBarnCPRidentifikator(cpr_number),
@@ -1302,7 +1296,12 @@ def generate_dst_payload_preventive_measures(
     appropriations = appropriations.appropriations_for_dst_payload(from_date)
 
     E = ElementMaker(
-        namespace="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
+        namespace=dst_default_namespace,
+        nsmap={
+            None: dst_default_namespace,
+            "xsi": "http://www.w3.org/2001/XMLSchema-instance",
+            "dst": dst_envelope_namespace,
+        },
     )
 
     appropriations_root = E.ForanstaltningStrukturSamling()
@@ -1391,8 +1390,23 @@ def generate_dst_payload_preventive_measures(
 
         appropriations_root.append(appropriation_structure)
 
-    doc = E.UdsatteBoernOgUngeLeveranceL201U1Struktur()
-    doc.append(generate_dst_payload_metadata_element(test))
+    attr_qname = etree.QName(
+        "http://www.w3.org/2001/XMLSchema-instance", "schemaLocation"
+    )
+    doc = E.UdsatteBoernOgUngeLeveranceL201U1Struktur(
+        {
+            attr_qname: (
+                "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/"
+                "DST_UdsatteBoernOgUngeLeveranceL201U1Struktur.xsd"
+            )
+        }
+    )
+
+    if test:
+        form_id = "T201"
+    else:
+        form_id = "L201"
+    doc.append(generate_dst_payload_metadata_element(form_id))
     doc.append(appropriations_root)
 
     return doc
@@ -1408,9 +1422,7 @@ def generate_dst_payload_handicap_element(
     case_worker,
 ):
     """Generate a XML payload element for DST for "Handicap"."""
-    E = ElementMaker(
-        namespace="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
-    )
+    E = ElementMaker(namespace=dst_default_namespace)
 
     appropriation_structure = E.BoernMedHandicapSagStruktur(
         E.INDSATSFORLOEB_ID(identifier),
@@ -1445,7 +1457,12 @@ def generate_dst_payload_handicap(from_date=None, sections=None, test=True):
     appropriations = appropriations.appropriations_for_dst_payload(from_date)
 
     E = ElementMaker(
-        namespace="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/",
+        namespace=dst_default_namespace,
+        nsmap={
+            None: dst_default_namespace,
+            "xsi": "http://www.w3.org/2001/XMLSchema-instance",
+            "dst": dst_envelope_namespace,
+        },
     )
 
     appropriations_root = E.BoernMedHandicapSagStrukturSamling()
@@ -1528,8 +1545,22 @@ def generate_dst_payload_handicap(from_date=None, sections=None, test=True):
 
         appropriations_root.append(appropriation_structure)
 
-    doc = E.BoernMedHandicapLeveranceL231Struktur()
-    doc.append(generate_dst_payload_metadata_element(test))
+    attr_qname = etree.QName(
+        "http://www.w3.org/2001/XMLSchema-instance", "schemaLocation"
+    )
+    doc = E.BoernMedHandicapLeveranceL231Struktur(
+        {
+            attr_qname: (
+                "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/"
+                "DST_BoernMedHandicapLeveranceL231Struktur.xsd"
+            )
+        }
+    )
+    if test:
+        form_id = "T231"
+    else:
+        form_id = "L231"
+    doc.append(generate_dst_payload_metadata_element(form_id))
     doc.append(appropriations_root)
 
     return doc
