@@ -109,7 +109,7 @@ export default {
     .dst-export-actions {
         min-width: 19rem;
         padding: 1rem 2rem;
-        margin-top: 2rem;
+        margin-bottom: 2rem;
     }
     .dst-export-actions fieldset {
         margin-bottom: .5rem;
