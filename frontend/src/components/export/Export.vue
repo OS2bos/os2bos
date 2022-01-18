@@ -1,4 +1,4 @@
-<!-- Copyright (C) 2019 Magenta ApS, http://magenta.dk.
+<!-- Copyright (C) 2022 Magenta ApS, http://magenta.dk.
    - Contact: info@magenta.dk.
    -
    - This Source Code Form is subject to the terms of the Mozilla Public
@@ -23,7 +23,7 @@
                             <label for="preview-mode">Visning</label>
                             <select id="preview-mode" class="listpicker" @change="filterByCutoff" v-model="currentPreviewMode">
                                 <option value="all">Alle ændringer</option>
-                                <option value="newer">Ændringer siden seneste eksport {{ displayDate(latest_dst_export_date) }}</option>
+                                <option :disabled="!latest_dst_export_date" value="newer">Ændringer siden seneste eksport {{ displayLatestDate(latest_dst_export_date) }}</option>
                                 <option disabled value="older">Ændringer før seneste eksport</option>
                             </select>
                         </div>
@@ -40,17 +40,6 @@
                         </div>
                     </fieldset>
                 </form>
-                    
-                <!-- TODO (Maybe): 47446 Activities that are comprised of several "partial"
-                        activities (e.g. adjustments etc) should be rendered as
-                        accordions in the data-grid below, as is the case elsewhere
-                        in the system -->
-                        
-                <!-- TODO: 47442 If it's decided that this view should support the display
-                        of nodes that have changed since the specified date *as well
-                        as* nodes that HAVEN'T changed since that date, we need some
-                        styling to visually distinguish the two in the data-grid
-                        below -->
                 <data-grid
                     ref="data-grid"
                     :data-list="appropriationlist"
@@ -58,8 +47,7 @@
                     :selectable="false">
 
                     <p slot="datagrid-header">
-                        <span v-html="currentSectionDisplay"></span>
-                        <br>
+                        <span v-html="currentSectionDisplay"></span><br>
                         <span v-html="numberOfCPRsDisplay"></span>
                     </p>
 
@@ -67,14 +55,12 @@
             </section>
 
             <section class="dst-export-xml">
-                <export-payload-list />
                 <export-actions />
+                <export-payload-list />
             </section>
 
         </div>
             
-        <!-- TODO: 47444/47445 Insert components/buttons to trigger simulated and real export
-                   right about here -->
     </article>
 
 </template>
@@ -100,7 +86,7 @@
                 sectionlist: [],
                 appropriationlist: [],
                 currentSection: null,
-                currentPreviewMode: 'newer',
+                currentPreviewMode: this.latest_dst_export_date ? 'newer' : 'all',
                 columns: [
                     {
                         key: 'case_cpr',
@@ -120,7 +106,6 @@
                         },
                         class: 'datagrid-action nowrap'
                     },
-                    // TODO: 47435 Add a column for the DST code
                     {
                         key: 'main_activity_name',
                         title: 'Hovedydelse',
@@ -143,6 +128,13 @@
                             return json2jsDate(d.main_activity_enddate)
                         },
                         title: 'Slutdato'
+                    },
+                    {
+                        key: 'dst_report_type',
+                        title: 'Ny/Ændret',
+                        display_func: function(d) {
+                            return `<span class="datagrid-${ d.dst_report_type }">${ d.dst_report_type ? d.dst_report_type : 'Uændret' }</span>`
+                        }
                     }
                 ]
             }
@@ -172,8 +164,12 @@
             }
         },
         methods: {
-            displayDate: function(date) {
-                return json2jsDate(date)
+            displayLatestDate: function(date) {
+                if (date && date !== '1970-01-01') {
+                    return json2jsDate(date)
+                } else {
+                    return ''
+                }
             },
             buildFilterString: function(preview_mode, section_id) {
                 let filter = `section:"${section_id}"`
@@ -254,6 +250,7 @@
                                 node {
                                     pk,
                                     sbsysId,
+                                    dstReportType,
                                     case {
                                         cprNumber
                                     },
@@ -293,7 +290,8 @@
                         main_activity_pk: activity_meta.pk,
                         main_activity_name: activity_meta.name,
                         main_activity_startdate: activity_meta.startDate,
-                        main_activity_enddate: activity_meta.endDate
+                        main_activity_enddate: activity_meta.endDate,
+                        dst_report_type: d.dstReportType
                     }
                 })
                 return appropriationdata
@@ -322,39 +320,6 @@
                     endDate: sorted_by_end[0].node.endDate,
                 }
             }
-            
-                // Since we can't have bi-directional pagination in GraphQL
-                // (it's in the spec, albeit in other words), we need to manually
-                // work out whether we have a previous page to "go back to"
-                // (pageInfo.hasPreviousPage will always be false whenever
-                // we're using the `first` argument, even if a previous
-                // page exists). Therefore, we maintain a "stack" of cursors
-                // to which we push a cursor when paginating forwards, and
-                // pop a cursor when paginating backwards. We know that if the
-                // stack is empty, we must be on page 1. If that's the case,
-                // don't render a "go back" button. If we have more than 0 cursors,
-                // do render such a button. When paginating, always use the cursor
-                // at the top of the stack, but if we're paginating backwards,
-                // pop the last item (don't use it) before picking the topmost
-                // cursor.
-                
-                // Links that describe the issue outlined above:
-                // https://gitlab.com/gitlab-org/gitlab-foss/-/issues/62787
-                // https://engineering.dubsmash.com/bi-directional-pagination-using-graphql-relay-b523c919c96
-                
-                // TODO: Note that the implementation of the logic described
-                // above is still incomplete, since we store a cursor already
-                // at page load, and it "takes an extra click" to change direction
-                
-                
-                // TODO: 47437 Use the date as some sort of filter argument in the
-                // `appropriations` field below. Awaiting the name of said filter
-                // in the backend
-                
-                // TODO: 47435 Add a field for the DST code at sections.edges.node
-                // level (next to "paragraph")
-                
-
         },
         created: function() {
 
@@ -389,6 +354,24 @@
         border-right: 1px solid var(--grey1);
         padding-right: 2rem;
         margin-right: 2rem;
+    }
+
+    .datagrid-Ny::before,
+    .datagrid-Ændring::before {
+        content: '';
+        margin-right: .5rem;
+        border-radius: 50%;
+        width: 1rem;
+        height: 1rem;
+        overflow: hidden;
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .datagrid-Ny::before { 
+        background-color: var(--success);
+    }
+    .datagrid-Ændring::before {
+        background-color: var(--warning);
     }
     
 </style>
