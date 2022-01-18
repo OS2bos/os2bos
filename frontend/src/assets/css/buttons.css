@@ -13,7 +13,10 @@
 button,
 input[type="submit"],
 input[type="button"],
-input[type="reset"] {
+input[type="reset"],
+a.btn,
+a.btn:link,
+a.btn:visited {
     font: inherit;
     background-color: var(--grey0);
     border: solid .125rem var(--primary);
@@ -41,10 +44,12 @@ button:hover,
 input[type="button"]:hover,
 input[type="reset"]:hover,
 input[type="submit"]:hover,
+a.btn:hover,
 button:focus,
 input[type="submit"]:focus,
 input[type="button"]:focus,
-input[type="reset"]:focus {
+input[type="reset"]:focus,
+a.btn:focus {
     box-shadow: var(--shadow-dark);
     background-color: hsl(var(--color1), 80%, 40%);
     border-color: hsl(var(--color1), 80%, 40%);
@@ -55,7 +60,8 @@ input[type="reset"]:focus {
 button:active,
 input[type="submit"]:active,
 input[type="button"]:active,
-input[type="reset"]:active {
+input[type="reset"]:active,
+a.btn:active {
     background-color: hsl(var(--color1), 80%, 30%);
     border-color: hsl(var(--color1), 80%, 30%);
 }

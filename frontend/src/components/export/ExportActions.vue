@@ -44,19 +44,21 @@
             </label>
             <input id="export-date" type="date" v-model="export_date">
         </fieldset>
-        <fieldset style="margin-top: 1.5rem;">
-            <a v-if="export_test" :href="export_url" target="_blank">
+        <fieldset>
+            <a v-if="export_test" :href="`/api${export_url}`" target="_blank" class="btn dst-export-test-link">
                 <i class="material-icons">file_download</i>
                 Hent testudtræk
             </a>
-            <button v-if="!export_test" type="submit">Eksporter</button>
+            <button v-else type="submit" class="dst-export-button">
+                <i class="material-icons">file_download</i>
+                Eksportér
+            </button>
         </fieldset>
     </form>
     
 </template>
 
 <script>
-import axios from '../http/Http.js'
 import Warning from '../warnings/Warning.vue'
 
 export default {
@@ -73,34 +75,26 @@ export default {
     computed: {
         export_url: function() {
             let target_str = 'appropriations/generate_dst_preventative_measures_file/'
+            let test_str = 'test=true'
             const date_str = this.export_date ? `from_date=${this.export_date}` : 'from_date=1970-01-01'
             if (this.export_target === 'TARGET2') {
                 target_str = 'appropriations/generate_dst_handicap_file/'
             }
-            if (!this.export_test) {     
-                return `/${target_str}?test=false&${date_str}`
-            } else {
-                return `/api/${target_str}?test=true&${date_str}`
+            if (!this.export_test) {
+                test_str = 'test=false'
             }
-            
+            return `/${target_str}?${test_str}&${date_str}`
         }
     },
     methods: {
-        exportData: function(ev) {
+        exportData: function(event) {
             if (confirm('Er du sikker på, at du vil eksportere data?')) {
-                axios.get(this.export_url)
-                .then(res => {
+                window.open(`/api${this.export_url}`, '_blank')
+                setTimeout(() => {
                     this.$store.dispatch('fetchDSTexportedObjects')
-                    alert('Eksport er gennemført')
-                })
-                .catch(err => {
-                    console.error(err)
-                })
+                }, 500)
             }
         }
-    },
-    created: function() {
-        
     }
 }
 </script>
@@ -117,5 +111,16 @@ export default {
     .dst-export-actions .warning-icon {
         font-size: 1rem;
         margin-right: .5rem;
+    }
+
+    .dst-export-test-link,
+    .dst-export-button {
+        display: flex !important;
+        flex-flow: row nowrap;
+        align-items: center;
+        margin-top: 1rem;
+    }
+    .dst-export-test-link {
+        width: 10rem !important;
     }
 </style>
