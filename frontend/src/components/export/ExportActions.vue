@@ -12,14 +12,14 @@
         <h2>Eksporter data</h2>
         <fieldset>
 
-            <warning v-if="!export_test" content="Dette udtræk vil blive leveret til DST" />
+            <warning v-if="!export_test" content="Dette udtræk vil blive registreret som en eksport til DST" />
 
             <input 
                 type="checkbox" 
                 name="export-test" 
                 v-model="export_test" 
                 id="export-test-checkbox">
-            <label for="export-test-checkbox">Testudtræk (sendes ikke til DST)</label>
+            <label for="export-test-checkbox">Testudtræk (registreres ikke)</label>
         </fieldset>
         <fieldset style="margin: 0;">
             <input 
@@ -27,14 +27,14 @@
                 value="TARGET1" 
                 v-model="export_target" 
                 id="export-target-radio-1">
-            <label for="export-target-radio-1">Familieområdet</label>
+            <label for="export-target-radio-1">Forebyggende foranstaltninger</label>
 
             <input 
                 type="radio" 
                 value="TARGET2"
                 v-model="export_target" 
                 id="export-target-radio-2">
-            <label for="export-target-radio-2">Handicapområdet</label>
+            <label for="export-target-radio-2">Handicapkompenserende indsatser</label>
         </fieldset>
         <fieldset>
             <label for="export-date">
@@ -87,7 +87,7 @@ export default {
     },
     methods: {
         exportData: function(ev) {
-            if (confirm('Er du sikker på, at du vil eksportere data til DST?')) {
+            if (confirm('Er du sikker på, at du vil eksportere data?')) {
                 axios.get(this.export_url)
                 .then(res => {
                     this.$store.dispatch('fetchDSTexportedObjects')
