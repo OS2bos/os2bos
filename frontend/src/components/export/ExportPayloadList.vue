@@ -58,9 +58,9 @@ export default {
         },
         displayTargetLabel: function(str) {
             if (str === 'HANDICAP') {
-                return 'Handicapområdet'
+                return 'Handicapkompenserende indsatser'
             } else {
-                return 'Familieområdet'
+                return 'Forebyggende foranstaltninger'
             }
         }
     },

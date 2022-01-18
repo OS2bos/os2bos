@@ -1225,10 +1225,10 @@ class Section(Classification):
     dst_handicap = models.BooleanField(
         blank=True,
         default=True,
-        verbose_name=_("DST 'Handicap'"),
+        verbose_name=_("DST 'Handicapkompenserende indsatser'"),
         help_text=_(
             "Hvorvidt denne paragraf skal bruges"
-            " til DST udtræk for 'Handicap'."
+            " til DST udtræk for 'Handicapkompenserende indsatser'."
         ),
     )
 
