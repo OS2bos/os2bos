@@ -12,12 +12,14 @@
         <h2>DST eksporter</h2>
         <template v-if="dst_export_objects.length > 0">
             <ul class="list">
-                <li v-for="obj in dst_export_objects" :key="obj.id">
+                <li v-for="obj in dst_export_objects" :key="obj.id" class="dst-export-list-item">
                     <a class="dst-export-list-item-link" :href="`/api/admin/core/dstpayload/${ obj.id }/`" target="_blank">
-                        <span>{{ displayTargetLabel(obj.dst_type) }}</span>
-                        <span>{{ displayDate(obj.date) }}</span>
+                        <i class="material-icons">description</i>
+                        <span>
+                            {{ displayTargetLabel(obj.dst_type) }}<br>
+                            {{ displayCutoffDates(obj.from_date, obj.to_date) }}
+                        </span>
                     </a>
-                    {{ displayCutoffDate(obj.from_date) }}
                 </li>
             </ul>
         </template>
@@ -49,12 +51,13 @@ export default {
         displayDate: function(date) {
             return json2js(date)
         },
-        displayCutoffDate: function(date) {
-            if (date && date !== '1970-01-01') {
-                return `Poster ændret siden ${json2jsDate(date)}`
-            } else {
-                return 'Alle poster'
+        displayCutoffDates: function(from_date, to_date) {
+            console.log(typeof(from_date))
+            let from_date_str = json2jsDate(from_date)
+            if (from_date === '1970-01-01') {
+                from_date_str = 'Alle op'
             }
+            return `${from_date_str} til ${json2jsDate(to_date)}`
         },
         displayTargetLabel: function(str) {
             if (str === 'HANDICAP') {
@@ -71,9 +74,26 @@ export default {
 </script>
 
 <style>
+    li.dst-export-list-item {
+        padding: 0;
+    }
     .dst-export-list-item-link {
+        border-bottom: none !important;
         display: flex;
         flex-flow: row nowrap;
-        justify-content: space-between;
+        gap: .75rem;
+        align-items: center;
+        padding: .5rem 1rem .75rem;
+    }
+    .dst-export-list-item-link:hover,
+    .dst-export-list-item-link:active {
+        background-color: var(--grey1);
+    }
+    .dst-export-list-item-link:focus {
+        background-color: var(--grey1);
+    }
+
+    .dst-export-list-item-link .material-icons {
+        font-size: 2.5rem;
     }
 </style>

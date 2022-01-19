@@ -18,7 +18,8 @@
         
             <section class="dst-export-items">
                 <form @submit.prevent>
-                    <fieldset class="filter-fields">
+                    <fieldset>
+                        <!-- TODO remove or change this:
                         <div class="filter-field">
                             <label for="preview-mode">Visning</label>
                             <select id="preview-mode" class="listpicker" @change="filterByCutoff" v-model="currentPreviewMode">
@@ -27,16 +28,29 @@
                                 <option disabled value="older">Ændringer før seneste eksport</option>
                             </select>
                         </div>
-                        <div class="filter-field">
-                            <label for="field-section">Bevillinger efter §</label>
-                            <list-picker
-                                class="resize"
-                                :dom-id="'field-section'"
-                                :list="sectionlist"
-                                @selection="filterBySection"
-                                display-key="paragraph"
-                                display-key2="text"
-                            />
+                        -->
+                        
+                        <label for="field-section">Bevillinger efter §</label>
+                        <list-picker
+                            class="resize"
+                            :dom-id="'field-section'"
+                            :list="sectionlist"
+                            @selection="filterBySection"
+                            display-key="paragraph"
+                            display-key2="text"
+                        />
+                    </fieldset>
+                    <fieldset style="display: flex; flex-flow: row nowrap; gap: .5rem;">
+                        <div>
+                            <label for="from-date">
+                                Fra dato:
+                            </label>
+                            <input id="from-date" type="date" v-model="from_date" :max="today" @change="filterByCutoff"><br>
+                            <span class="dim" style="font-size: smaller;">(Udelad for at vælge alle)</span>
+                        </div>
+                        <div>
+                            <label for="to-date">Til dato:</label>
+                            <input id="to-date" type="date" v-model="to_date" :max="today" required @change="filterByCutoff">
                         </div>
                     </fieldset>
                 </form>
@@ -71,7 +85,7 @@
     import axios from '../http/Http.js'
     import ExportPayloadList from './ExportPayloadList.vue'
     import ExportActions from './ExportActions.vue'
-    import {json2jsDate} from '../filters/Date.js'
+    import {json2jsDate, epoch2DateStr} from '../filters/Date.js'
 
     export default {
         components: {
@@ -82,11 +96,13 @@
         },
         data: function () {
             return {
-                now: Date.now(),
                 sectionlist: [],
                 appropriationlist: [],
                 currentSection: null,
                 currentPreviewMode: this.latest_dst_export_date ? 'newer' : 'all',
+                from_date: null,
+                to_date: epoch2DateStr(new Date()),
+                today: epoch2DateStr(new Date()),
                 columns: [
                     {
                         key: 'case_cpr',
@@ -171,16 +187,15 @@
                     return ''
                 }
             },
-            buildFilterString: function(preview_mode, section_id) {
-                let filter = `section:"${section_id}"`
-                if (preview_mode === 'newer') {
-                    filter += `, fromDstStartDate:"${this.latest_dst_export_date}"`
-                }
+            buildFilterString: function(section_id, to_date, from_date) {
+                const from = from_date ? from_date : 'None'
+                const filter = `section:"${section_id}", dstDate:"[\\"${from}\\",\\"${to_date}\\"]"`
+                console.log('got filter', filter)
                 return filter
             },
             filterByCutoff: function(event) {
                 this.currentPreviewMode = event.target.value
-                this.fetchAppropriations(this.buildFilterString(event.target.value, this.currentSection))
+                this.fetchAppropriations(this.buildFilterString(this.currentSection, this.to_date, this.from_date))
                 .then(res => {
                     this.appropriationlist = this.sanitizeAppropriationData(res)
                 })
@@ -191,7 +206,7 @@
             filterBySection: function(section_id) {
                 if (section_id) {
                     this.currentSection = section_id
-                    this.fetchAppropriations(this.buildFilterString(this.currentPreviewMode, section_id))
+                    this.fetchAppropriations(this.buildFilterString(this.currentSection, this.to_date, this.from_date))
                     .then(res => {
                         this.appropriationlist = this.sanitizeAppropriationData(res)
                     })
@@ -322,7 +337,7 @@
             }
         },
         created: function() {
-
+            
             // Fetch a list of sections for the filter dropdown
             this.fetchSections([], false)
             .then(res => {
