@@ -2094,13 +2094,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
 
         # Generating a dst payload with no cut-off date
         # should result in a initial_load.
-        doc = etree.fromstring(
-            etree.tostring(
-                generate_dst_payload_preventive_measures(),
-                xml_declaration=True,
-                encoding="UTF-8",
-            )
-        )
+        doc = generate_dst_payload_preventive_measures()
         xml_schema.assertValid(doc)
 
         # All three appropriations should be consolidated to one entry.
@@ -2167,6 +2161,91 @@ class DSTUtilities(TestCase, BasicTestMixin):
             ),
             0,
         )
+
+    def test_generate_dst_payload_preventative_consolidation_no_valid_related(
+        self,
+    ):
+        now = timezone.now().date()
+        start_date = now
+        end_date = now + timedelta(days=5)
+        case = create_case(self.case_worker, self.municipality, self.district)
+        create_related_person(
+            case, relation_type="søster", cpr_number="1234567890"
+        )
+        section = create_section(dst_code="123")
+        first_appropriation = create_appropriation(
+            sbsys_id="27.12.06-G01-197-19-gl", case=case, section=section
+        )
+        first_activity = create_activity(
+            case,
+            first_appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=first_activity,
+        )
+        section.main_activities.add(first_activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=first_activity.details, section=section
+        )
+
+        second_appropriation = create_appropriation(
+            sbsys_id="27.12.06-G01-197-19", case=case, section=section
+        )
+        second_activity = create_activity(
+            case,
+            second_appropriation,
+            start_date=start_date - timedelta(days=10),
+            end_date=end_date + timedelta(days=5),
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=second_activity,
+        )
+        section.main_activities.add(second_activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=second_activity.details, section=section
+        )
+
+        schema_path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "data",
+            "xml_schemas",
+            "dst_preventative_measures",
+            "DST_UdsatteBoernOgUngeLeveranceL201U1Struktur.xsd",
+        )
+        xml_schema = etree.XMLSchema(file=schema_path)
+        # Generating a dst payload with no cut-off date
+        # should result in a initial_load.
+        doc = generate_dst_payload_preventive_measures()
+        # The doc is not valid due to child elements (approprations) missing.
+        self.assertFalse(xml_schema.validate(doc))
+
+        # Due to a missing valid related person "mor" or "far"
+        # no child elements (appropriations) should exist.
+        ns = {"x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/"}
+        structure_doc = doc.xpath(
+            "x:ForanstaltningStrukturSamling/" "x:ForanstaltningStruktur",
+            namespaces=ns,
+        )
+        self.assertEqual(len(structure_doc), 0)
 
     def test_generate_dst_payload_handicap_initial_load_consolidation(
         self,

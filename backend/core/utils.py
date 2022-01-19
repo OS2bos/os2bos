@@ -1320,6 +1320,12 @@ def generate_dst_payload_preventive_measures(
         father_or_mother = case.related_persons.filter(
             Q(relation_type="mor") | Q(relation_type="far")
         ).first()
+        if not father_or_mother:
+            dst_logger.info(
+                f"no far or mor related person found"
+                f" for appropriations with ids: {obj['ids']}"
+            )
+            continue
         identifier = obj["sbsys_common"]
         start_date = min(
             [appr.granted_from_date for appr in duplicate_appropriations]
