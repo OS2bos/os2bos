@@ -1277,7 +1277,7 @@ def generate_dst_payload_preventive_measures_element(
 
 
 def generate_dst_payload_preventive_measures(
-    from_date=None, sections=None, test=True
+    from_date=None, to_date=None, sections=None, test=True
 ):
     """
     Generate a XML payload for DST for "Preventive Measures".
@@ -1293,7 +1293,9 @@ def generate_dst_payload_preventive_measures(
     if sections is not None:
         appropriations = appropriations.filter(section__in=sections)
 
-    appropriations = appropriations.appropriations_for_dst_payload(from_date)
+    appropriations = appropriations.appropriations_for_dst_payload(
+        from_date, to_date
+    )
 
     E = ElementMaker(
         namespace=dst_default_namespace,
@@ -1438,7 +1440,9 @@ def generate_dst_payload_handicap_element(
     return appropriation_structure
 
 
-def generate_dst_payload_handicap(from_date=None, sections=None, test=True):
+def generate_dst_payload_handicap(
+    from_date=None, to_date=None, sections=None, test=True
+):
     """
     Generate an XML payload for DST for "Handicap".
 
@@ -1454,7 +1458,9 @@ def generate_dst_payload_handicap(from_date=None, sections=None, test=True):
     if sections is not None:
         appropriations = appropriations.filter(section__in=sections)
 
-    appropriations = appropriations.appropriations_for_dst_payload(from_date)
+    appropriations = appropriations.appropriations_for_dst_payload(
+        from_date, to_date
+    )
 
     E = ElementMaker(
         namespace=dst_default_namespace,

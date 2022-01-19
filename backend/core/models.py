@@ -2392,7 +2392,10 @@ class DSTPayload(models.Model):
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     content = models.TextField(verbose_name=_("indhold"))
     from_date = models.DateField(
-        null=True, verbose_name=_("fra dato (skæringsdato)")
+        null=True, blank=True, verbose_name=_("fra dato (skæringsdato)")
+    )
+    to_date = models.DateField(
+        null=True, blank=True, verbose_name=_("til dato (skæringsdato)")
     )
     date = models.DateTimeField(
         verbose_name=_("genereringsdato"), default=timezone.now

@@ -291,7 +291,7 @@ class TestAppropriationSchema(AuthenticatedTestCase, BasicTestMixin):
             111,
         )
 
-    def test_appropriations_from_dst_startdate_initial(self):
+    def test_appropriations_from_dst_date_initial(self):
         now = timezone.now().date()
         start_date = now
         end_date = now + timedelta(days=5)
@@ -336,7 +336,7 @@ class TestAppropriationSchema(AuthenticatedTestCase, BasicTestMixin):
         json = {
             "query": """
             query {
-                appropriations(fromDstStartDate:"1970-01-01") {
+                appropriations(dstDate:"[\\"None\\",\\"None\\"]") {
                     edges {
                         node {
                             id,
@@ -360,7 +360,7 @@ class TestAppropriationSchema(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(node["dstReportType"], "Ny")
 
     @freeze_time("2021-01-01")
-    def test_appropriations_from_dst_startdate(self):
+    def test_appropriations_dst_date_delta_with_from(self):
         now = timezone.now().date()
         start_date = now
         end_date = now + timedelta(days=5)
@@ -429,7 +429,7 @@ class TestAppropriationSchema(AuthenticatedTestCase, BasicTestMixin):
         json = {
             "query": """
             query {
-                appropriations(fromDstStartDate:"2021-01-02") {
+                appropriations(dstDate:"[\\"2021-01-02\\",\\"None\\"]") {
                     edges {
                         node {
                             id,
@@ -450,6 +450,155 @@ class TestAppropriationSchema(AuthenticatedTestCase, BasicTestMixin):
             b64encode(f"Appropriation:{appropriation.pk}".encode()).decode(),
         )
         self.assertEqual(node["dstReportType"], "Ændring")
+
+    @freeze_time("2021-01-01")
+    def test_appropriations_dst_date_initial_with_from_and_to(self):
+        now = timezone.now().date()
+        start_date = now
+        end_date = now + timedelta(days=5)
+
+        reverse_url = reverse("graphql-api")
+        self.client.login(username=self.username, password=self.password)
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section(dst_code="123")
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        # Create a main activity at 2021-01-01 and grant it.
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_DRAFT,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=activity,
+        )
+        section.main_activities.add(activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=activity.details, section=section
+        )
+        approval_level = create_approval_level()
+
+        activities = Activity.objects.filter(pk=activity.pk)
+        appropriation.grant(
+            activities, approval_level.id, "note", self.case_worker
+        )
+
+        # Then we create an activity on 2021-01-04 (outside of the range)
+        # and grant it
+        out_of_range_appropriation = create_appropriation(
+            sbsys_id="YYY-ZZZ", case=case, section=section
+        )
+        with freeze_time("2021-01-04"):
+            activity = create_activity(
+                case,
+                out_of_range_appropriation,
+                start_date=start_date + timedelta(days=2),
+                end_date=end_date,
+                activity_type=MAIN_ACTIVITY,
+                status=STATUS_EXPECTED,
+            )
+            create_payment_schedule(
+                payment_frequency=PaymentSchedule.DAILY,
+                payment_type=PaymentSchedule.RUNNING_PAYMENT,
+                recipient_type=PaymentSchedule.PERSON,
+                payment_method=CASH,
+                payment_amount=Decimal(777),
+                activity=activity,
+            )
+            activities = Activity.objects.filter(pk=activity.pk)
+            appropriation.grant(
+                activities, approval_level.id, "note", self.case_worker
+            )
+
+        json = {
+            "query": """
+            query {
+                appropriations(dstDate:"[\\"None\\",\\"2021-01-03\\"]") {
+                    edges {
+                        node {
+                            id,
+                            sbsysId,
+                            dstReportType
+                        }
+                    }
+                }
+            }
+            """
+        }
+        response = self.client.get(reverse_url, json)
+
+        # Query should only contain the first appropriation
+        # and not the out-of-range one
+        self.assertEqual(response.status_code, 200)
+        edges = response.json()["data"]["appropriations"]["edges"]
+        self.assertEqual(len(edges), 1)
+        self.assertEqual(
+            edges[0]["node"]["id"],
+            b64encode(f"Appropriation:{appropriation.pk}".encode()).decode(),
+        )
+
+    def test_appropriations_dst_date_not_a_list(self):
+        now = timezone.now().date()
+        start_date = now
+        end_date = now + timedelta(days=5)
+
+        reverse_url = reverse("graphql-api")
+        self.client.login(username=self.username, password=self.password)
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section(dst_code="123")
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        # Create a granted main activity.
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=activity,
+        )
+
+        json = {
+            "query": """
+            query {
+                appropriations(dstDate:"\\"None\\"") {
+                    edges {
+                        node {
+                            id,
+                            sbsysId,
+                            dstReportType
+                        }
+                    }
+                }
+            }
+            """
+        }
+        response = self.client.get(reverse_url, json)
+        self.assertEqual(
+            response.json()["errors"][0]["message"],
+            '[\'{"dst_date": [{"message": "DateRangeField skal v\\\\u00e6re en'
+            ' liste indeholdende datoer eller \\\\"None\\\\"",'
+            ' "code": ""}]}\']',
+        )
 
 
 class TestPaymentScheduleSchema(AuthenticatedTestCase):

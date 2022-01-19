@@ -318,6 +318,7 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
     def generate_dst_preventative_measures_file(self, request):
         """Generate a Preventative Measures payload for DST."""
         from_date = request.query_params.get("from_date", None)
+        to_date = request.query_params.get("to_date", None)
         test = request.query_params.get("test", "true")
         test = True if test == "true" else False
 
@@ -329,7 +330,7 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
 
         doc = etree.tostring(
             generate_dst_payload_preventive_measures(
-                from_date, sections, test
+                from_date, to_date, sections, test
             ),
             xml_declaration=True,
             encoding="utf-8",
@@ -364,6 +365,7 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
     def generate_dst_handicap_file(self, request):
         """Generate a Handicap payload for DST."""
         from_date = request.query_params.get("from_date", None)
+        to_date = request.query_params.get("to_date", None)
         test = request.query_params.get("test", "true")
         test = True if test == "true" else False
 
@@ -374,7 +376,7 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
             sections = Section.objects.filter(dst_handicap=True)
 
         doc = etree.tostring(
-            generate_dst_payload_handicap(from_date, sections, test),
+            generate_dst_payload_handicap(from_date, to_date, sections, test),
             xml_declaration=True,
             encoding="utf-8",
         )
