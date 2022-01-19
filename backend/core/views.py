@@ -258,12 +258,14 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
 
     - sections
     - from_date
+    - to_date
     - test
 
     **generate_dst_handicap_file** for generating a DST handicap payload.
 
     - sections
     - from_date
+    - to_date
     - test
     """
 

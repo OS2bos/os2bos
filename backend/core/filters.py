@@ -135,7 +135,10 @@ class AppropriationFilter(filters.FilterSet):
     )
 
     dst_date = CustomDateFromToRangeFilter(
-        method="filter_dst_date", label=gettext("DST dato fra/til")
+        method="filter_dst_date",
+        label=gettext(
+            'DST dato fra/til (f.eks. "[\\"2021-01-02\\",\\"None\\"]")'
+        ),
     )
 
     def filter_dst_date(self, queryset, name, value):
