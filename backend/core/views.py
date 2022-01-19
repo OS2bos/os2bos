@@ -355,6 +355,7 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
                 name=filename,
                 content=doc.decode("utf-8"),
                 from_date=from_date,
+                to_date=to_date,
                 dst_type=PREVENTATIVE_MEASURES,
             )
 
@@ -400,6 +401,7 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
                 name=filename,
                 content=doc.decode("utf-8"),
                 from_date=from_date,
+                to_date=to_date,
                 dst_type=HANDICAP,
             )
 
