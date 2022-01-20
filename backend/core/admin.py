@@ -447,6 +447,18 @@ class CustomUserAdmin(BaseUserAdmin):
         ("Organisation", {"fields": ("team",)}),
     ) + BaseUserAdmin.fieldsets
 
+    list_display = (
+        "username",
+        "email",
+        "first_name",
+        "last_name",
+        "team",
+        "is_staff",
+        "is_active",
+    )
+
+    list_filter = ("team", "is_staff", "is_superuser", "is_active")
+
     def has_view_permission(self, request, obj=None):
         """Override has_view_permission for ModelAdmin."""
         user = request.user
