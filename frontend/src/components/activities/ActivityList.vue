@@ -87,7 +87,7 @@
 <script>
 
     import { cost2da } from '../filters/Numbers.js'
-    import { json2jsEpoch } from '../filters/Date.js'
+    import { json2jsEpoch, epoch2DateStr } from '../filters/Date.js'
     import ApprovalDiag from './Approval.vue'
     import PermissionLogic from '../mixins/PermissionLogic.js'
     import ActList from './activitylist/ActList.vue'
@@ -337,7 +337,7 @@
                             }
                         }
                     })
-                    this.$store.commit('setActivityList', acts)
+                    this.$store.commit('setActivityList', this.checkActivityAge(acts))
                     const reducer = function(acc,val) {
                         const new_acc = {
                             node: {
@@ -363,6 +363,17 @@
                             total_expected_previous_year: new_appropriation.node.totalExpectedPreviousYear
                         }
                     }
+                })
+            },
+            checkActivityAge: function(acts) {
+                let now = epoch2DateStr(new Date())
+                return acts.map(function(act) {
+                    if (act.start_date < now && act.end_date <= now) {
+                        act.is_old = true
+                    } else {
+                        act.is_old = false
+                    }
+                    return act
                 })
             }
         },
