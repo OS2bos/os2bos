@@ -255,6 +255,18 @@ class AppropriationQuerySet(models.QuerySet):
         has "changed" or not which is based on:
         - changed acting municipality .
         - appropriation_date for activities
+
+        appropriation contains only granted main activities appropriated
+        before 'from_date'
+        -> exclude (as they have been included in a previous payload)
+
+        appropriation contains only granted main activities appropriated
+        after 'from_date'
+        -> status NEW
+
+        appropriation contains granted main activities appropriated both
+        before and after 'from_date'
+        -> status CHANGED
         """
         from core.models import (
             MAIN_ACTIVITY,
@@ -288,7 +300,7 @@ class AppropriationQuerySet(models.QuerySet):
             main_activities_q = Q(activities__activity_type=MAIN_ACTIVITY)
             main_activities_appropriated_after_from_date_q = Q(
                 activities__activity_type=MAIN_ACTIVITY,
-                activities__appropriation_date__gt=from_date,
+                activities__appropriation_date__gte=from_date,
             )
 
             main_activities_appropriated_before_from_date_q = Q(
