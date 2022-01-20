@@ -17,55 +17,14 @@
         <div class="dst-export-content">
         
             <section class="dst-export-items">
-                <form @submit.prevent>
-                    <fieldset>
-                        <!-- TODO remove or change this:
-                        <div class="filter-field">
-                            <label for="preview-mode">Visning</label>
-                            <select id="preview-mode" class="listpicker" @change="filterByCutoff" v-model="currentPreviewMode">
-                                <option value="all">Alle ændringer</option>
-                                <option :disabled="!latest_dst_export_date" value="newer">Ændringer siden seneste eksport {{ displayLatestDate(latest_dst_export_date) }}</option>
-                                <option disabled value="older">Ændringer før seneste eksport</option>
-                            </select>
-                        </div>
-                        -->
-                        
-                        <label for="field-section">Bevillinger efter §</label>
-                        <list-picker
-                            class="resize"
-                            :dom-id="'field-section'"
-                            :list="sectionlist"
-                            @selection="filterBySection"
-                            display-key="paragraph"
-                            display-key2="text"
-                        />
-                    </fieldset>
-                    <fieldset style="display: flex; flex-flow: row nowrap; gap: .5rem;">
-                        <div>
-                            <label for="from-date">
-                                Fra dato:
-                            </label>
-                            <input id="from-date" type="date" v-model="from_date" :max="today" @change="filterByCutoff"><br>
-                            <span class="dim" style="font-size: smaller;">(Udelad for at vælge alle)</span>
-                        </div>
-                        <div>
-                            <label for="to-date">Til dato:</label>
-                            <input id="to-date" type="date" v-model="to_date" :max="today" required @change="filterByCutoff">
-                        </div>
-                    </fieldset>
-                </form>
-                <data-grid
-                    ref="data-grid"
-                    :data-list="appropriationlist"
-                    :columns="columns"
-                    :selectable="false">
+                <export-filters :sections="sectionlist" @change="updateAppropriations" />
 
-                    <p slot="datagrid-header">
-                        <span v-html="currentSectionDisplay"></span><br>
-                        <span v-html="numberOfCPRsDisplay"></span>
-                    </p>
+                <p style="margin: 1rem 0 .5rem;">
+                    <span v-html="currentSectionDisplay"></span><br>
+                    <span v-html="numberOfCPRsDisplay"></span>
+                </p>
 
-                </data-grid>
+                <export-list :appropriations="appropriationlist" />
             </section>
 
             <section class="dst-export-xml">
@@ -80,85 +39,28 @@
 </template>
 
 <script>
-    import ListPicker from '../forms/ListPicker.vue'
-    import DataGrid from '../datagrid/DataGrid.vue'
     import axios from '../http/Http.js'
+    import ExportFilters from './ExportListFilters.vue'
+    import ExportList from './ExportList.vue'
     import ExportPayloadList from './ExportPayloadList.vue'
     import ExportActions from './ExportActions.vue'
-    import {json2jsDate, epoch2DateStr} from '../filters/Date.js'
+    import {epoch2DateStr} from '../filters/Date.js'
 
     export default {
         components: {
-            ListPicker,
-            DataGrid,
             ExportPayloadList,
-            ExportActions
+            ExportActions,
+            ExportList,
+            ExportFilters
         },
         data: function () {
             return {
                 sectionlist: [],
                 appropriationlist: [],
-                currentSection: null,
-                currentPreviewMode: this.latest_dst_export_date ? 'newer' : 'all',
-                from_date: null,
-                to_date: epoch2DateStr(new Date()),
-                today: epoch2DateStr(new Date()),
-                columns: [
-                    {
-                        key: 'case_cpr',
-                        title: 'CPR'
-                    },
-                    {
-                        key: 'sbsysId',
-                        title: 'Bevilling',
-                        display_func: function(d) {
-                            let to = `#/appropriation/${ d.pk }/`
-                            return `
-                                <a href="${ to }">
-                                    <i class="material-icons">folder_open</i>
-                                    ${ d.sbsysId }
-                                </a>
-                            `
-                        },
-                        class: 'datagrid-action nowrap'
-                    },
-                    {
-                        key: 'main_activity_name',
-                        title: 'Hovedydelse',
-                        display_func: function(d) {
-                            let to = `#/activity/${ d.main_activity_pk }/`
-                            return `<a href="${ to }"><i class="material-icons">style</i> ${ d.main_activity_name }</a>`
-                        },
-                        class: 'datagrid-action nowrap'
-                    },
-                    {
-                        key: 'main_activity_startdate',
-                        display_func: function(d) {
-                            return json2jsDate(d.main_activity_startdate)
-                        },
-                        title: 'Startdato'
-                    },
-                    {
-                        key: 'main_activity_enddate',
-                        display_func: function(d) {
-                            return json2jsDate(d.main_activity_enddate)
-                        },
-                        title: 'Slutdato'
-                    },
-                    {
-                        key: 'dst_report_type',
-                        title: 'Ny/Ændret',
-                        display_func: function(d) {
-                            return `<span class="datagrid-${ d.dst_report_type }">${ d.dst_report_type ? d.dst_report_type : 'Uændret' }</span>`
-                        }
-                    }
-                ]
+                currentSection: null
             }
         },
         computed: {
-            latest_dst_export_date: function() {
-                return this.$store.getters.getLatestDSTexportDate
-            },
             currentSectionDisplay: function() {
                 const section = this.sectionlist.filter(s => {
                     return this.currentSection === s.id
@@ -180,22 +82,12 @@
             }
         },
         methods: {
-            displayLatestDate: function(date) {
-                if (date && date !== '1970-01-01') {
-                    return json2jsDate(date)
-                } else {
-                    return ''
-                }
-            },
-            buildFilterString: function(section_id, to_date, from_date) {
-                const from = from_date ? from_date : 'None'
-                const filter = `section:"${section_id}", dstDate:"[\\"${from}\\",\\"${to_date}\\"]"`
-                console.log('got filter', filter)
-                return filter
-            },
-            filterByCutoff: function(event) {
-                this.currentPreviewMode = event.target.value
-                this.fetchAppropriations(this.buildFilterString(this.currentSection, this.to_date, this.from_date))
+            updateAppropriations: function(payload) {
+                if (!payload.section) {
+                    return false
+                } 
+                this.currentSection = payload.section
+                this.fetchAppropriations(this.buildFilterString(payload.section, payload.to_date, payload.from_date))
                 .then(res => {
                     this.appropriationlist = this.sanitizeAppropriationData(res)
                 })
@@ -203,17 +95,10 @@
                     console.error(err)
                 })
             },
-            filterBySection: function(section_id) {
-                if (section_id) {
-                    this.currentSection = section_id
-                    this.fetchAppropriations(this.buildFilterString(this.currentSection, this.to_date, this.from_date))
-                    .then(res => {
-                        this.appropriationlist = this.sanitizeAppropriationData(res)
-                    })
-                    .catch(err => {
-                        console.error(err)
-                    })
-                }
+            buildFilterString: function(section_id, to_date, from_date) {
+                const from = from_date ? from_date : 'None'
+                const filter = `section:"${section_id}", dstDate:"[\\"${from}\\",\\"${to_date}\\"]"` // Remember the double escape characters `\\` to make django/GraphQL request work
+                return filter
             },
             fetchSections: function(sections, pageInfo) {
                 const filterstr = pageInfo && pageInfo.hasNextPage ? `(after: "${pageInfo.endCursor}")` : ''
@@ -353,13 +238,6 @@
         padding: 0 2rem 2rem;
         max-width: 100%;
     }
-    .dst-export .filter-fields {
-        display: flex;
-        flex-flow: row nowrap;
-    }
-    .dst-export .filter-field {
-        margin-right: 1rem;
-    }
     .dst-export-content {
         display: flex;
         flex-flow: row;
@@ -370,23 +248,4 @@
         padding-right: 2rem;
         margin-right: 2rem;
     }
-
-    .datagrid-Ny::before,
-    .datagrid-Ændring::before {
-        content: '';
-        margin-right: .5rem;
-        border-radius: 50%;
-        width: 1rem;
-        height: 1rem;
-        overflow: hidden;
-        display: inline-block;
-        vertical-align: middle;
-    }
-    .datagrid-Ny::before { 
-        background-color: var(--success);
-    }
-    .datagrid-Ændring::before {
-        background-color: var(--warning);
-    }
-    
 </style>

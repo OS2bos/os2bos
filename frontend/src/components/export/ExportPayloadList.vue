@@ -1,4 +1,4 @@
-<!-- Copyright (C) 2019 Magenta ApS, http://magenta.dk.
+<!-- Copyright (C) 2022 Magenta ApS, http://magenta.dk.
    - Contact: info@magenta.dk.
    -
    - This Source Code Form is subject to the terms of the Mozilla Public
@@ -34,17 +34,9 @@
 import {json2js, json2jsDate} from '../filters/Date.js'
 
 export default {
-    data: function () {
-        return {
-            wait_time: 5*60*1000// 5 mins in millisecs
-        }
-    },
     computed: {
         dst_export_objects: function() {
             return this.$store.getters.getDSTexportObjects
-        },
-        latest_dst_export_date: function() {
-            return this.$store.getters.getLatestDSTexportDate
         }
     },
     methods: {
@@ -52,9 +44,8 @@ export default {
             return json2js(date)
         },
         displayCutoffDates: function(from_date, to_date) {
-            console.log(typeof(from_date))
             let from_date_str = json2jsDate(from_date)
-            if (from_date === '1970-01-01') {
+            if (!from_date || from_date === '1970-01-01') {
                 from_date_str = 'Alle op'
             }
             return `${from_date_str} til ${json2jsDate(to_date)}`
@@ -92,7 +83,6 @@ export default {
     .dst-export-list-item-link:focus {
         background-color: var(--grey1);
     }
-
     .dst-export-list-item-link .material-icons {
         font-size: 2.5rem;
     }

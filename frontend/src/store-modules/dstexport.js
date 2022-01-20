@@ -1,4 +1,4 @@
-/* Copyright (C) 2019 Magenta ApS, http://magenta.dk.
+/* Copyright (C) 2022 Magenta ApS, http://magenta.dk.
  * Contact: info@magenta.dk.
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -10,26 +10,42 @@ import axios from '../components/http/Http.js'
 
 function getLatestExport(exports) {
     exports.sort(function(a,b) {
-        if (a.from_date < b.from_date && a.from_date !== null) {
-            return true
-        } else {
-            return false
+        if (a.to_date === null) {
+            return 1
         }
+        if (a.to_date > b.to_date) {
+            return -1
+        }
+        if (a.to_date < b.to_date) {
+            return 1
+        }
+        if (a.to_date === b.to_date) {
+            if (a.from_date === null) {
+                return 1
+            }
+            if (a.from_date > b.from_date) {
+                return -1
+            }
+            if (a.from_date < b.from_date) {
+                return 1
+            }
+        }
+        return 0
     })
     return exports[0]
 }
 
 const state = {
     dst_export_objs: [],
-    latest_dst_export_date: null
+    latest_dst_export: null
 }
 
 const getters = {
     getDSTexportObjects (state) {
         return state.dst_export_objs
     },
-    getLatestDSTexportDate (state) {
-        return state.latest_dst_export_date
+    getLatestDSTexport (state) {
+        return state.latest_dst_export
     }
 }
 
@@ -37,8 +53,8 @@ const mutations = {
     setDSTexportObjects (state, objs) {
         state.dst_export_objs = objs
     },
-    setLatestDSTexportDate (state, date) {
-        state.latest_dst_export_date = date
+    setLatestDSTexport (state, obj) {
+        state.latest_dst_export = obj
     }
 }
 
@@ -48,7 +64,7 @@ const actions = {
         .then(res => {
             if (res.data.length > 0) {
                 commit('setDSTexportObjects', res.data)
-                commit('setLatestDSTexportDate', getLatestExport(res.data).from_date)
+                commit('setLatestDSTexport', getLatestExport(res.data))
             }
         })
         .catch(err => console.error(err))
