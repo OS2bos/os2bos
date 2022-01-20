@@ -1,4 +1,4 @@
-<!-- Copyright (C) 2019 Magenta ApS, http://magenta.dk.
+<!-- Copyright (C) 2022 Magenta ApS, http://magenta.dk.
    - Contact: info@magenta.dk.
    -
    - This Source Code Form is subject to the terms of the Mozilla Public
@@ -87,15 +87,20 @@ export default {
                 target_str = 'appropriations/generate_dst_handicap_file/'
             }
 
-            let date_str = `to_date=${this.export_to_date}&from_date=`
-            date_str += this.export_from_date ? this.export_from_date : '1970-01-01' // '1970-01-01' will be interpreted as 'from the beginning'
+            let date_str = ''
+            if (this.export_to_date) {
+                date_str += `&to_date=${this.export_to_date}`
+            }
+            if (this.export_from_date) {
+                date_str += `&from_date=${this.export_from_date}`
+            }
             
             let test_str = 'test=true'
             if (!this.export_test) {
                 test_str = 'test=false'
             }
 
-            return `/${target_str}?${test_str}&${date_str}`
+            return `/${target_str}?${test_str}${date_str}`
         }
     },
     methods: {
