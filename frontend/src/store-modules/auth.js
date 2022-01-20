@@ -42,7 +42,7 @@ const actions = {
 
         // First check if we can access API at all.
         axios.defaults.headers.common['Authentication'] = `Token ${ authdata.token }`
-        axios.get('/users/')
+        axios.get('/users/?is_active=true')
         .then(res => {
 
             // Why not use the users data now that we have it
