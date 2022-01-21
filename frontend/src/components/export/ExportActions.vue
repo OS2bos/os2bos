@@ -41,7 +41,7 @@
                 <label for="export-from-date">
                     Fra dato:
                 </label>
-                <input id="export-from-date" type="date" v-model="export_from_date" :max="today"><br>
+                <input id="export-from-date" type="date" v-model="export_from_date" :max="export_to_date"><br>
                 <span class="dim" style="font-size: smaller;">(Udelad for at vælge alle)</span>
             </div>
             <div>

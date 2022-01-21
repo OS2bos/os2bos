@@ -172,14 +172,20 @@ async function createCase(t, case_data) {
         effort_step: 'Trin 3',
         scaling_step: '5',
         target_group: 'Familieafdelingen',
-        district: 'Baltorp'
+        district: 'Baltorp',
+        cpr: '0000000000'
     }
     */
     
     await t
         .click(Selector('button').withText('+ Tilknyt hovedsag'))
         .typeText('#field-sbsys-id', case_data.name)
-        .typeText('#field-cpr', '000000-0000')
+    
+    if (case_data.cpr) {
+        await t.typeText('#field-cpr', case_data.cpr)
+    } else {
+        await t.typeText('#field-cpr', '000000-0000')
+    }
 
     await useSelectBox(t, '#selectTargetGroup', case_data.target_group)
     if (case_data.district) {
