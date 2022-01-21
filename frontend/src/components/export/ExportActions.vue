@@ -27,14 +27,28 @@
                 value="TARGET1" 
                 v-model="export_target" 
                 id="export-target-radio-1">
-            <label for="export-target-radio-1">Forebyggende foranstaltninger</label>
+            <label for="export-target-radio-1">
+                <span v-if="export_target === 'TARGET1'" class="label label-forebyggende">
+                    Forebyggende foranstaltninger
+                </span>
+                <template v-else>
+                    Forebyggende foranstaltninger
+                </template>
+            </label>
 
             <input
                 type="radio" 
                 value="TARGET2"
                 v-model="export_target" 
                 id="export-target-radio-2">
-            <label for="export-target-radio-2">Handicapkompenserende indsatser</label>
+            <label for="export-target-radio-2">
+                <span v-if="export_target === 'TARGET2'" class="label label-handicap">
+                    Handicapkompenserende indsatser
+                </span>
+                <template v-else>
+                    Handicapkompenserende indsatser
+                </template>
+            </label>
         </fieldset>
         <fieldset style="display: flex; flex-flow: row nowrap; gap: .5rem;">
             <div>
@@ -128,6 +142,9 @@ export default {
     .dst-export-actions .warning-icon {
         font-size: 1rem;
         margin-right: .5rem;
+    }
+    .dst-export-actions label {
+        opacity: 1;
     }
 
     .dst-export-test-link,

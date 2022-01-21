@@ -20,6 +20,7 @@
                 <export-filters :sections="sectionlist" @change="updateAppropriations" />
 
                 <p style="margin: 1rem 0 .5rem;">
+                    <span v-html="measureClassDisplay" style="float: right;"></span>
                     <span v-html="currentSectionDisplay"></span><br>
                     <span v-html="numberOfCPRsDisplay"></span>
                 </p>
@@ -44,7 +45,6 @@
     import ExportList from './ExportList.vue'
     import ExportPayloadList from './ExportPayloadList.vue'
     import ExportActions from './ExportActions.vue'
-    import {epoch2DateStr} from '../filters/Date.js'
 
     export default {
         components: {
@@ -57,18 +57,24 @@
             return {
                 sectionlist: [],
                 appropriationlist: [],
-                currentSection: null
+                currentSectionId: null
             }
         },
         computed: {
+            currentSection: function() {
+                if (this.currentSectionId && this.sectionlist.length > 0) {
+                    return this.sectionlist.find(s => {
+                        return this.currentSectionId === s.id
+                    })
+                } else {
+                    return false
+                }
+            },
             currentSectionDisplay: function() {
-                const section = this.sectionlist.filter(s => {
-                    return this.currentSection === s.id
-                })
-                if (section.length < 1) {
+                if (!this.currentSection) {
                     return 'Fandt ingen ydelser for denne paragraf'
                 } else {
-                    return `Viser <strong>${this.appropriationlist.length}</strong> poster for §${section[0].paragraph} ${section[0].text} (DST-kode: ${section[0].dstCode})`
+                    return `Viser <strong>${this.appropriationlist.length}</strong> poster for §${this.currentSection.paragraph} ${this.currentSection.text} (DST-kode: ${this.currentSection.dstCode})`
                 }
             },
             numberOfCPRsDisplay: function() {
@@ -79,6 +85,15 @@
                     return e.case_cpr
                 })
                 return `Fordelt på <strong>${ [...new Set(cprs)].length }</strong> CPR-numre`
+            },
+            measureClassDisplay: function() {
+                if (this.currentSection) {
+                    if (this.currentSection.dstHandicap) {
+                        return '<span class="label label-handicap">Handicapkompenserende indsats</span>'
+                    } else {
+                        return '<span class="label label-forebyggende">Forebyggende foranstaltning</span>'
+                    }
+                }
             }
         },
         methods: {
@@ -86,7 +101,7 @@
                 if (!payload.section) {
                     return false
                 } 
-                this.currentSection = payload.section
+                this.currentSectionId = payload.section
                 this.fetchAppropriations(this.buildFilterString(payload.section, payload.to_date, payload.from_date))
                 .then(res => {
                     this.appropriationlist = this.sanitizeAppropriationData(res)
@@ -247,5 +262,13 @@
         border-right: 1px solid var(--grey1);
         padding-right: 2rem;
         margin-right: 2rem;
+    }
+    .label-handicap {
+        color: var(--grey10);
+        background-color: var(--warning);
+    }
+    .label-forebyggende {
+        color: var(--grey0);
+        background-color: var(--primary);
     }
 </style>
