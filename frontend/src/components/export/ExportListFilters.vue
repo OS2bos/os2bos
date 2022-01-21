@@ -25,7 +25,7 @@
                 <label for="from-date">
                     Fra dato:
                 </label>
-                <input id="from-date" type="date" v-model="from_date" :max="today" @change="filterByCutoff"><br>
+                <input id="from-date" type="date" v-model="from_date" :max="to_date" @change="filterByCutoff"><br>
                 <span class="dim" style="font-size: smaller;">(Udelad for at vælge alle)</span>
             </div>
             <div>
@@ -35,7 +35,8 @@
             <p style="padding-top: 2rem;">&hellip;eller&hellip;</p>
             <div>
                 <label for="preview-mode">Hurtigt datovalg</label>
-                <select id="preview-mode" class="listpicker" @change="quickSetDateFilter">
+                <select id="preview-mode" class="listpicker" @change="quickSetDateFilter" v-model="quickset">
+                    <option value="custom">---</option>
                     <option value="all">Alle ændringer</option>
                     <option :disabled="!latest_dst_export" value="newer">
                         Ændringer siden seneste eksport
@@ -66,6 +67,8 @@
                 from_date: null,
                 to_date: epoch2DateStr(new Date()),
                 today: epoch2DateStr(new Date()),
+                quickset: 'custom',
+                currentSection: null
             }
         },
         computed: {
@@ -81,8 +84,8 @@
                     return ''
                 }
             },
-            filterByCutoff: function(event) {
-                this.currentPreviewMode = event.target.value
+            filterByCutoff: function() {
+                this.quickset = 'custom'
                 this.emitChange()
             },
             filterBySection: function(section_id) {
@@ -100,8 +103,13 @@
             },
             quickSetDateFilter: function(event) {
                 switch(event.target.value) {
+                    case 'all':
+                        this.to_date = this.today
+                        this.from_date = null
+                        break;
                     case 'older':
-                        this.to_date = this.latest_dst_export.to_date
+                        const day_before_last = epoch2DateStr(new Date().setDate(new Date(this.latest_dst_export.to_date).getDate() - 1 ))
+                        this.to_date = day_before_last
                         this.from_date = null
                         break;
                     case 'newer':
@@ -109,9 +117,7 @@
                         this.from_date = this.latest_dst_export.to_date
                         break;
                     default:
-                        // 'all'
-                        this.to_date = this.today
-                        this.from_date = null
+                        // 'custom'
                 }
                 this.emitChange()
             }
