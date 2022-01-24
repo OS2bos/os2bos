@@ -1276,6 +1276,25 @@ def generate_dst_payload_preventive_measures_element(
     return appropriation_structure
 
 
+def extract_dst_date_tuple_for_appropriation(appropriation):
+    """Extract a (start_date, end_date) tuple for DST for an appropriation."""
+    main_activity = appropriation.main_activity
+
+    if (
+        main_activity.payment_plan.payment_type
+        == models.PaymentSchedule.ONE_TIME_PAYMENT
+        and not main_activity.start_date
+        and not main_activity.end_date
+    ):
+        start_date = main_activity.payment_plan.payment_date
+        end_date = main_activity.payment_plan.payment_date
+    else:
+        start_date = appropriation.granted_from_date
+        end_date = appropriation.granted_to_date
+
+    return (start_date, end_date)
+
+
 def generate_dst_payload_preventive_measures(
     from_date=None, to_date=None, sections=None, test=True
 ):
@@ -1327,9 +1346,21 @@ def generate_dst_payload_preventive_measures(
             )
             continue
         identifier = obj["sbsys_common"]
-        start_date = min(
-            [appr.granted_from_date for appr in duplicate_appropriations]
-        )
+        date_tuples = [
+            extract_dst_date_tuple_for_appropriation(appr)
+            for appr in duplicate_appropriations
+        ]
+        # extract from_dates from list of date tuples.
+        granted_from_dates = list(zip(*date_tuples))[0]
+        start_date = min(granted_from_dates)
+
+        # extract to_dates from list of date tuples.
+        granted_to_dates = list(zip(*date_tuples))[1]
+        if None in granted_to_dates:
+            end_date = None
+        else:
+            end_date = max(granted_to_dates)
+
         granted_to_dates = [
             appr.granted_to_date for appr in duplicate_appropriations
         ]
@@ -1370,19 +1401,9 @@ def generate_dst_payload_preventive_measures(
                 f" for appropriation: {appropriation.id}"
             )
             continue
-        main_activity = appropriation.main_activity
-
-        if (
-            main_activity.payment_plan.payment_type
-            == models.PaymentSchedule.ONE_TIME_PAYMENT
-            and not main_activity.start_date
-            and not main_activity.end_date
-        ):
-            start_date = main_activity.payment_plan.payment_date
-            end_date = main_activity.payment_plan.payment_date
-        else:
-            start_date = appropriation.granted_from_date
-            end_date = appropriation.granted_to_date
+        start_date, end_date = extract_dst_date_tuple_for_appropriation(
+            appropriation
+        )
 
         identifier = appropriation.sbsys_id
         appropriation_structure = (
@@ -1496,13 +1517,16 @@ def generate_dst_payload_handicap(
         case = first_appropriation.case
         case_worker = case.case_worker
         identifier = obj["sbsys_common"]
-        start_date = min(
-            [appr.granted_from_date for appr in duplicate_appropriations]
-        )
-
-        granted_to_dates = [
-            appr.granted_to_date for appr in duplicate_appropriations
+        date_tuples = [
+            extract_dst_date_tuple_for_appropriation(appr)
+            for appr in duplicate_appropriations
         ]
+        # extract from_dates from list of date tuples.
+        granted_from_dates = list(zip(*date_tuples))[0]
+        start_date = min(granted_from_dates)
+
+        # extract to_dates from list of date tuples.
+        granted_to_dates = list(zip(*date_tuples))[1]
         if None in granted_to_dates:
             end_date = None
         else:
@@ -1530,19 +1554,9 @@ def generate_dst_payload_handicap(
     )
     for appropriation in appropriations:
         case = appropriation.case
-        main_activity = appropriation.main_activity
-
-        if (
-            main_activity.payment_plan.payment_type
-            == models.PaymentSchedule.ONE_TIME_PAYMENT
-            and not main_activity.start_date
-            and not main_activity.end_date
-        ):
-            start_date = main_activity.payment_plan.payment_date
-            end_date = main_activity.payment_plan.payment_date
-        else:
-            start_date = appropriation.granted_from_date
-            end_date = appropriation.granted_to_date
+        start_date, end_date = extract_dst_date_tuple_for_appropriation(
+            appropriation
+        )
 
         identifier = appropriation.sbsys_id
         appropriation_structure = generate_dst_payload_handicap_element(

@@ -392,7 +392,7 @@ class AppropriationQuerySet(models.QuerySet):
             )
             .exclude(sbsys_common=None)
             .values("sbsys_common")
-            .annotate(ids=ArrayAgg("id"))
+            .annotate(ids=ArrayAgg("id", distinct=True))
             .annotate(id_count=Func("ids", Value(1), function="array_length"))
             .filter(id_count__gt=1)
         )

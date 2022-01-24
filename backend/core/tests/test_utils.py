@@ -2408,3 +2408,126 @@ class DSTUtilities(TestCase, BasicTestMixin):
         self.assertEqual(
             len(structure_doc[0].xpath("x:INDSATS_SLUTDATO", namespaces=ns)), 0
         )
+
+    def test_generate_dst_payload_handicap_consolidation_one_time_payment(
+        self,
+    ):
+        now = timezone.now().date()
+        start_date = now
+        end_date = None
+        case = create_case(self.case_worker, self.municipality, self.district)
+        create_related_person(
+            case, relation_type="far", cpr_number="1234567890"
+        )
+        section = create_section(dst_code="123")
+        first_appropriation = create_appropriation(
+            sbsys_id="27.12.06-G01-197-19-gl", case=case, section=section
+        )
+        first_activity = create_activity(
+            case,
+            first_appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=first_activity,
+        )
+        section.main_activities.add(first_activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=first_activity.details, section=section
+        )
+
+        second_appropriation = create_appropriation(
+            sbsys_id="27.12.06-G01-197-19", case=case, section=section
+        )
+        second_activity = create_activity(
+            case,
+            second_appropriation,
+            start_date=None,
+            end_date=None,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        second_payment_plan = create_payment_schedule(
+            payment_frequency=None,
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            payment_date=start_date - timedelta(days=5),
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=second_activity,
+        )
+        section.main_activities.add(second_activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=second_activity.details, section=section
+        )
+
+        schema_path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "data",
+            "xml_schemas",
+            "dst_handicap",
+            "DST_BoernMedHandicapLeveranceL231Struktur.xsd",
+        )
+        xml_schema = etree.XMLSchema(file=schema_path)
+
+        # Generating a dst payload with no cut-off date
+        # should result in a initial_load.
+        doc = generate_dst_payload_handicap()
+        xml_schema.assertValid(doc)
+
+        # The two appropriations should be consolidated to one entry.
+        ns = {"x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/"}
+        structure_doc = doc.xpath(
+            "x:BoernMedHandicapSagStrukturSamling/"
+            "x:BoernMedHandicapSagStruktur",
+            namespaces=ns,
+        )
+        self.assertEqual(len(structure_doc), 1)
+        # Assert elements are properly consolidated.
+        self.assertEqual(
+            structure_doc[0].xpath("x:CPR", namespaces=ns)[0].text,
+            "0205891234",
+        )
+        self.assertEqual(
+            structure_doc[0]
+            .xpath("x:INDSATSFORLOEB_ID", namespaces=ns)[0]
+            .text,
+            "27.12.06-G01-197-19",
+        )
+        self.assertEqual(
+            structure_doc[0].xpath("x:INDSATS_KODE", namespaces=ns)[0].text,
+            "123",
+        )
+        # start_date should use the earliest date, ie. the payment_date
+        # from the one-time-payment second activity.
+        self.assertEqual(
+            structure_doc[0]
+            .xpath("x:INDSATS_STARTDATO", namespaces=ns)[0]
+            .text,
+            str(second_payment_plan.payment_date),
+        )
+        # end_date should use the unbounded end_date from the first activity.
+        self.assertEqual(
+            len(structure_doc[0].xpath("x:INDSATS_SLUTDATO", namespaces=ns)), 0
+        )
+        self.assertEqual(
+            structure_doc[0].xpath("x:SAGSBEHANDLER", namespaces=ns)[0].text,
+            "Orla Frøsnapper",
+        )
+        self.assertEqual(
+            structure_doc[0]
+            .xpath("x:INDBERETNINGSTYPE", namespaces=ns)[0]
+            .text,
+            "Ny",
+        )
