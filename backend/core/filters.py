@@ -10,32 +10,86 @@
 Filters allow us to do basic search for objects on allowed field without
 adding the complexity of an entire search engine nor of custom queries.
 """
+import json
 
 from django.utils import timezone
-from datetime import date
+from datetime import date, datetime, time
 from dateutil.relativedelta import relativedelta, MO, SU
 
+from django.forms import DateField, Field, ValidationError
 from django.utils.translation import gettext
 
-import rest_framework_filters as filters
+import django_filters as filters
+from django_filters.utils import handle_timezone
 
 from core.models import (
     Case,
-    PaymentSchedule,
-    Activity,
     Payment,
     Section,
     Appropriation,
-    User,
 )
 
 
-class UserForCaseFilter(filters.FilterSet):
-    """Filter cases on case worker team."""
+class DateRangeField(Field):
+    """Custom DateRangeField for use in DateFromToRangeFilter."""
 
-    class Meta:
-        model = User
-        fields = {"team": ["exact"]}
+    none_value = "None"
+
+    def compress(self, data_list):
+        """Override compress to convert dates."""
+        if data_list:
+            start_date, stop_date = data_list
+            if start_date:
+                start_date = handle_timezone(
+                    datetime.combine(start_date, time.min)
+                )
+            if stop_date:
+                stop_date = handle_timezone(
+                    datetime.combine(stop_date, time.max)
+                )
+            return slice(start_date, stop_date)
+        return None
+
+    def clean(self, value):
+        """Override clean to enforce "None" or dates."""
+        if value:
+            clean_data = []
+            values = json.loads(value)
+            if isinstance(values, (list, tuple)):
+                for field_value in values:
+                    if field_value == self.none_value:
+                        clean_data.append(None)
+                    else:
+                        clean_data.append(DateField().clean(field_value))
+            else:
+                raise ValidationError(
+                    gettext(
+                        "DateRangeField skal være en liste"
+                        ' indeholdende datoer eller "None"'
+                    )
+                )
+            return self.compress(clean_data)
+        else:
+            return self.compress([])
+
+
+class CustomDateFromToRangeFilter(filters.RangeFilter):
+    r"""
+    Custom DateFromToRangeFilter.
+
+    Works with our GraphQL API
+    (and DRF) and takes a json list of date strings.
+
+    Sadly graphene-django does not support filters.DateFromToRangeFilter.
+    https://github.com/graphql-python/graphene-django/issues/92
+
+    Example in GraphQL:
+    dstDate:"[\"2016-12-01\",\"2016-12-31\"]"
+    or
+    dstDate:"[\"None\",\"2016-12-31\"]"
+    """
+
+    field_class = DateRangeField
 
 
 class CaseFilter(filters.FilterSet):
@@ -44,11 +98,9 @@ class CaseFilter(filters.FilterSet):
     expired = filters.BooleanFilter(
         method="filter_expired", label=gettext("Udgået")
     )
-    case_worker = filters.RelatedFilter(
-        UserForCaseFilter,
-        field_name="case_worker",
-        label=gettext("Sagsbehandler"),
-        queryset=User.objects.all(),
+
+    case_worker__team = filters.NumberFilter(
+        label=gettext("Team for Sagsbehandler")
     )
 
     class Meta:
@@ -63,27 +115,6 @@ class CaseFilter(filters.FilterSet):
             return queryset.ongoing()
 
 
-class CaseForPaymentFilter(filters.FilterSet):
-    """Filter cases on CPR number."""
-
-    class Meta:
-        model = Case
-        fields = {"cpr_number": ["exact"]}
-
-
-class CaseForAppropriationFilter(filters.FilterSet):
-    """Filter cases on CPR number, team and case_worker."""
-
-    class Meta:
-        model = Case
-        fields = {
-            "cpr_number": ["exact"],
-            "case_worker": ["exact"],
-            "sbsys_id": ["exact"],
-            "case_worker__team": ["exact"],
-        }
-
-
 class AppropriationFilter(filters.FilterSet):
     """Filter appropriation."""
 
@@ -91,65 +122,51 @@ class AppropriationFilter(filters.FilterSet):
         label=gettext("Aktivitetsdetalje for hovedaktivitet")
     )
 
-    case = filters.RelatedFilter(
-        CaseForAppropriationFilter,
-        field_name="case",
-        label=Case._meta.verbose_name.title(),
-        queryset=Case.objects.all(),
+    case__cpr_number = filters.CharFilter(label=gettext("CPR nummer for Sag"))
+
+    case__case_worker = filters.NumberFilter(
+        label=gettext("Sagsbehandler for Sag")
     )
 
-    from_dst_start_date = filters.DateFilter(
-        method="filter_from_dst_start_date",
-        label=gettext("Fra DST start dato"),
+    case__sbsys_id = filters.CharFilter(label=gettext("SBSYS ID for Sag"))
+
+    case__case_worker__team = filters.NumberFilter(
+        label=gettext("Team for Sagsbehandler for Sag")
     )
 
-    def filter_from_dst_start_date(self, queryset, name, value):
-        """Filter on DST start_date (appropriations for delta load)."""
-        # Datefilter demands a date, so we interpret '1970-01-01' as None.
-        if value == date(1970, 1, 1):
-            return queryset.appropriations_for_dst_payload(from_date=None)
-        return queryset.appropriations_for_dst_payload(value)
+    dst_date = CustomDateFromToRangeFilter(
+        method="filter_dst_date",
+        label=gettext(
+            'DST dato fra/til (f.eks. "[\\"2021-01-02\\",\\"None\\"]")'
+        ),
+    )
+
+    def filter_dst_date(self, queryset, name, value):
+        """Filter on DST date ("from_date" and "to_date")."""
+        return queryset.appropriations_for_dst_payload(value.start, value.stop)
 
     class Meta:
         model = Appropriation
         fields = "__all__"
 
 
-class PaymentScheduleFilter(filters.FilterSet):
-    """Filter payment plans on ID."""
-
-    class Meta:
-        model = PaymentSchedule
-        fields = {"payment_id": ["exact"]}
-
-
-class ActivityFilter(filters.FilterSet):
-    """Filter activities on status."""
-
-    class Meta:
-        model = Activity
-        fields = {"status": ["exact"]}
-
-
 class PaymentFilter(filters.FilterSet):
     """Filter payments on payment plan, activity, case, dates, etc."""
 
-    payment_schedule = filters.RelatedFilter(
-        PaymentScheduleFilter,
-        field_name="payment_schedule",
-        queryset=PaymentSchedule.objects.all(),
+    payment_schedule__payment_id = filters.NumberFilter(
+        label=gettext("Betalings-id for Betalingsplan")
     )
-    case = filters.RelatedFilter(
-        CaseForPaymentFilter,
-        field_name="payment_schedule__activity__appropriation__case",
-        label=Case._meta.verbose_name.title(),
-        queryset=Case.objects.all(),
+
+    case__cpr_number = filters.CharFilter(
+        label=gettext("CPR-nummer for Sag"),
+        field_name=(
+            "payment_schedule__activity__appropriation__case__cpr_number"
+        ),
     )
-    activity = filters.RelatedFilter(
-        ActivityFilter,
-        field_name="payment_schedule__activity",
-        label=Activity._meta.verbose_name.title(),
-        queryset=Activity.objects.all(),
+
+    activity__status = filters.CharFilter(
+        label=gettext("Status for aktivitet"),
+        field_name="payment_schedule__activity__status",
     )
 
     paid_date__gte = filters.DateFilter(

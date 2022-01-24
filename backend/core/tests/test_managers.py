@@ -9,6 +9,8 @@
 from datetime import date, timedelta
 from decimal import Decimal
 
+from freezegun import freeze_time
+
 from django.test import TestCase
 from django.utils import timezone
 
@@ -19,6 +21,7 @@ from core.tests.testing_utils import (
     create_appropriation,
     create_payment_schedule,
     create_activity,
+    create_municipality,
 )
 from core.models import (
     Payment,
@@ -508,6 +511,50 @@ class CaseQuerySetTestCase(TestCase, BasicTestMixin):
         ongoing_cases = Case.objects.all().ongoing()
         self.assertEqual(expired_cases.count(), 1)
         self.assertEqual(ongoing_cases.count(), 0)
+
+    @freeze_time("2022-01-01")
+    def test_filter_changed_cases_for_dst_payload_from_date(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        alternate_municipality = create_municipality("Hillerød")
+
+        with freeze_time("2022-02-01"):
+            case.acting_municipality = alternate_municipality
+            case.save()
+
+        # only from_date is given so change should be included.
+        cases = Case.objects.filter_changed_cases_for_dst_payload(
+            from_date=date(2022, 1, 1)
+        )
+
+        self.assertTrue(case in cases)
+
+    @freeze_time("2022-01-01")
+    def test_filter_changed_cases_for_dst_payload_from_date_to_date(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        alternate_municipality = create_municipality("Hillerød")
+
+        with freeze_time("2022-02-01"):
+            case.acting_municipality = alternate_municipality
+            case.save()
+
+        # to_date is before change so case should not be included.
+        cases = Case.objects.filter_changed_cases_for_dst_payload(
+            from_date=date(2022, 1, 1), to_date=date(2022, 1, 31)
+        )
+
+        self.assertFalse(case in cases)
+
+    @freeze_time("2022-02-01")
+    def test_filter_changed_cases_for_dst_payload_no_to_date(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+
+        # from_date and to_date is before case creation
+        # so case should not be included.
+        cases = Case.objects.filter_changed_cases_for_dst_payload(
+            from_date=date(2022, 1, 1), to_date=date(2022, 1, 31)
+        )
+
+        self.assertFalse(case in cases)
 
 
 class ActivityQuerySetTestCase(TestCase, BasicTestMixin):

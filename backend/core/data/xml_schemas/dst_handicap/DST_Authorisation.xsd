@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:dst="http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/" version="1.0">
+<include schemaLocation="DST_AutID.xsd" />
+<include schemaLocation="DST_AutSubID.xsd" />
+<include schemaLocation="DST_Privilige.xsd" />
+<element name="Authorisation" type="dst:AuthorisationType"><annotation><documentation /></annotation></element>
+<complexType name="AuthorisationType"><sequence><element minOccurs="0" ref="dst:AutID" /><element minOccurs="0" ref="dst:AutSubID" /><element minOccurs="0" ref="dst:Privilige" /></sequence></complexType></schema> 

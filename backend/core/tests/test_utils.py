@@ -1313,18 +1313,16 @@ class DSTUtilities(TestCase, BasicTestMixin):
             "..",
             "data",
             "xml_schemas",
+            "dst_preventative_measures",
             "DST_UdsatteBoernOgUngeLeveranceL201U1Struktur.xsd",
         )
-
-        with open(schema_path) as f:
-            xmlschema_doc = etree.parse(f)
-        xml_schema = etree.XMLSchema(xmlschema_doc)
+        xml_schema = etree.XMLSchema(file=schema_path)
 
         # Generating a dst payload with no cut-off date
         # should result in a initial_load with a status of "Ny"
         # and the default test form id.
         doc = generate_dst_payload_preventive_measures()
-        self.assertTrue(xml_schema.validate(doc))
+        xml_schema.assertValid(doc)
         self.assertEqual(
             doc.xpath(
                 "x:DeliveryMetadataNewStructure/" "e:Envelope/" "e:FormID",
@@ -1387,15 +1385,13 @@ class DSTUtilities(TestCase, BasicTestMixin):
             "..",
             "data",
             "xml_schemas",
+            "dst_preventative_measures",
             "DST_UdsatteBoernOgUngeLeveranceL201U1Struktur.xsd",
         )
-
-        with open(schema_path) as f:
-            xmlschema_doc = etree.parse(f)
-        xml_schema = etree.XMLSchema(xmlschema_doc)
+        xml_schema = etree.XMLSchema(file=schema_path)
 
         doc = generate_dst_payload_preventive_measures()
-        self.assertTrue(xml_schema.validate(doc))
+        xml_schema.assertValid(doc)
 
         # One time activities with no start/end use payment_date instead.
         self.assertEqual(
@@ -1419,6 +1415,96 @@ class DSTUtilities(TestCase, BasicTestMixin):
                 },
             )[0].text,
             str(payment_date),
+        )
+
+    def test_generate_dst_payload_preventative_no_valid_related_person(self):
+        now = timezone.now().date()
+        start_date = now
+        # Create a valid appropriation with a valid related person.
+        case = create_case(self.case_worker, self.municipality, self.district)
+        create_related_person(case, relation_type="far")
+        section = create_section(dst_code="123")
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        granted_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=None,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=granted_activity,
+        )
+        section.main_activities.add(granted_activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=granted_activity.details, section=section
+        )
+
+        # Create a valid appropriation with an invalid related person.
+        case = create_case(
+            self.case_worker,
+            self.municipality,
+            self.district,
+            sbsys_id="27.24.00-G01-99-22",
+        )
+        create_related_person(case, relation_type="ikkegyldig")
+        appropriation = create_appropriation(
+            sbsys_id="YYY-XXX", case=case, section=section
+        )
+        granted_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            end_date=None,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=granted_activity,
+        )
+        section.main_activities.add(granted_activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=granted_activity.details, section=section
+        )
+
+        schema_path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "data",
+            "xml_schemas",
+            "dst_preventative_measures",
+            "DST_UdsatteBoernOgUngeLeveranceL201U1Struktur.xsd",
+        )
+        xml_schema = etree.XMLSchema(file=schema_path)
+        # XML should be valid with just one entry.
+        doc = generate_dst_payload_preventive_measures().getroottree()
+        xml_schema.assertValid(doc)
+        self.assertEqual(
+            len(
+                doc.xpath(
+                    "x:ForanstaltningStrukturSamling/"
+                    "x:ForanstaltningStruktur",
+                    namespaces={
+                        "x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/"
+                    },
+                )
+            ),
+            1,
         )
 
     def test_generate_dst_payload_handicap_initial_load_valid(self):
@@ -1459,18 +1545,16 @@ class DSTUtilities(TestCase, BasicTestMixin):
             "..",
             "data",
             "xml_schemas",
+            "dst_handicap",
             "DST_BoernMedHandicapLeveranceL231Struktur.xsd",
         )
-
-        with open(schema_path) as f:
-            xmlschema_doc = etree.parse(f)
-        xml_schema = etree.XMLSchema(xmlschema_doc)
+        xml_schema = etree.XMLSchema(file=schema_path)
 
         # Generating a dst payload with no cut-off date
         # should result in a initial_load with a status of "Ny"
         # and the default test form id.
         doc = generate_dst_payload_handicap()
-        self.assertTrue(xml_schema.validate(doc))
+        xml_schema.assertValid(doc)
 
         self.assertEqual(
             doc.xpath(
@@ -1491,11 +1575,11 @@ class DSTUtilities(TestCase, BasicTestMixin):
                     "e": "http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/",
                 },
             )[0].text,
-            "T201",
+            "T231",
         )
 
         doc = generate_dst_payload_handicap(test=False)
-        self.assertTrue(xml_schema.validate(doc))
+        xml_schema.assertValid(doc)
 
         # Non Test should have correct form id.
         self.assertEqual(
@@ -1506,7 +1590,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
                     "e": "http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/",
                 },
             )[0].text,
-            "L201",
+            "L231",
         )
 
     def test_generate_dst_payload_handicap_one_time_special_case(self):
@@ -1547,15 +1631,13 @@ class DSTUtilities(TestCase, BasicTestMixin):
             "..",
             "data",
             "xml_schemas",
+            "dst_handicap",
             "DST_BoernMedHandicapLeveranceL231Struktur.xsd",
         )
-
-        with open(schema_path) as f:
-            xmlschema_doc = etree.parse(f)
-        xml_schema = etree.XMLSchema(xmlschema_doc)
+        xml_schema = etree.XMLSchema(file=schema_path)
 
         doc = generate_dst_payload_handicap()
-        self.assertTrue(xml_schema.validate(doc))
+        xml_schema.assertValid(doc)
 
         # One time activities with no start/end use payment_date instead.
         self.assertEqual(
@@ -1651,19 +1733,17 @@ class DSTUtilities(TestCase, BasicTestMixin):
             "..",
             "data",
             "xml_schemas",
+            "dst_handicap",
             "DST_BoernMedHandicapLeveranceL231Struktur.xsd",
         )
-
-        with open(schema_path) as f:
-            xmlschema_doc = etree.parse(f)
-        xml_schema = etree.XMLSchema(xmlschema_doc)
+        xml_schema = etree.XMLSchema(file=schema_path)
 
         # Generating a dst payload from a cut-off date of 2021-01-02
         # For an appropriation containing both main activities before and after
         # should result in a status of "Ændring".
         doc = generate_dst_payload_handicap(from_date=date(2021, 1, 2))
 
-        self.assertTrue(xml_schema.validate(doc))
+        xml_schema.assertValid(doc)
 
         self.assertEqual(
             doc.xpath(
@@ -1747,19 +1827,17 @@ class DSTUtilities(TestCase, BasicTestMixin):
             "..",
             "data",
             "xml_schemas",
+            "dst_handicap",
             "DST_BoernMedHandicapLeveranceL231Struktur.xsd",
         )
-
-        with open(schema_path) as f:
-            xmlschema_doc = etree.parse(f)
-        xml_schema = etree.XMLSchema(xmlschema_doc)
+        xml_schema = etree.XMLSchema(file=schema_path)
 
         # Generating a dst payload from a cut-off date of 2021-01-01
         # For an appropriation containing only main activities after
         # should result in a status of "Ny".
         doc = generate_dst_payload_handicap(from_date=date(2021, 1, 1))
 
-        self.assertTrue(xml_schema.validate(doc))
+        xml_schema.assertValid(doc)
 
         self.assertEqual(
             doc.xpath(
@@ -1824,19 +1902,17 @@ class DSTUtilities(TestCase, BasicTestMixin):
             "..",
             "data",
             "xml_schemas",
+            "dst_handicap",
             "DST_BoernMedHandicapLeveranceL231Struktur.xsd",
         )
-
-        with open(schema_path) as f:
-            xmlschema_doc = etree.parse(f)
-        xml_schema = etree.XMLSchema(xmlschema_doc)
+        xml_schema = etree.XMLSchema(file=schema_path)
 
         # Generating a dst payload from a cut-off date of 2021-02-01
         # with a case with a changed acting municipality should result
         # in a status of "Ændret".
         doc = generate_dst_payload_handicap(from_date=date(2021, 2, 1))
 
-        self.assertTrue(xml_schema.validate(doc))
+        xml_schema.assertValid(doc)
 
         self.assertEqual(
             doc.xpath(
@@ -1895,12 +1971,10 @@ class DSTUtilities(TestCase, BasicTestMixin):
             "..",
             "data",
             "xml_schemas",
+            "dst_handicap",
             "DST_BoernMedHandicapLeveranceL231Struktur.xsd",
         )
-
-        with open(schema_path) as f:
-            xmlschema_doc = etree.parse(f)
-        xml_schema = etree.XMLSchema(xmlschema_doc)
+        xml_schema = etree.XMLSchema(file=schema_path)
 
         # Generating a dst payload from a cut-off date of 2021-02-01
         # with an unchanged activity from 2021-01-01 should result in no
@@ -2013,17 +2087,15 @@ class DSTUtilities(TestCase, BasicTestMixin):
             "..",
             "data",
             "xml_schemas",
+            "dst_preventative_measures",
             "DST_UdsatteBoernOgUngeLeveranceL201U1Struktur.xsd",
         )
-
-        with open(schema_path) as f:
-            xmlschema_doc = etree.parse(f)
-        xml_schema = etree.XMLSchema(xmlschema_doc)
+        xml_schema = etree.XMLSchema(file=schema_path)
 
         # Generating a dst payload with no cut-off date
         # should result in a initial_load.
         doc = generate_dst_payload_preventive_measures()
-        self.assertTrue(xml_schema.validate(doc))
+        xml_schema.assertValid(doc)
 
         # All three appropriations should be consolidated to one entry.
         ns = {"x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/"}
@@ -2069,6 +2141,111 @@ class DSTUtilities(TestCase, BasicTestMixin):
             .text,
             str(third_activity.end_date),
         )
+
+        # No end_date for one activity should result in no end_date element.
+        third_activity.end_date = None
+        third_activity.save()
+        doc = generate_dst_payload_preventive_measures()
+        self.assertTrue(xml_schema.validate(doc))
+
+        structure_doc = doc.xpath(
+            "x:ForanstaltningStrukturSamling/" "x:ForanstaltningStruktur",
+            namespaces=ns,
+        )
+
+        self.assertEqual(
+            len(
+                structure_doc[0].xpath(
+                    "x:ForanstaltningSlutDato", namespaces=ns
+                )
+            ),
+            0,
+        )
+
+    def test_generate_dst_payload_preventative_consolidation_no_valid_related(
+        self,
+    ):
+        now = timezone.now().date()
+        start_date = now
+        end_date = now + timedelta(days=5)
+        case = create_case(self.case_worker, self.municipality, self.district)
+        create_related_person(
+            case, relation_type="søster", cpr_number="1234567890"
+        )
+        section = create_section(dst_code="123")
+        first_appropriation = create_appropriation(
+            sbsys_id="27.12.06-G01-197-19-gl", case=case, section=section
+        )
+        first_activity = create_activity(
+            case,
+            first_appropriation,
+            start_date=start_date,
+            end_date=end_date,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=first_activity,
+        )
+        section.main_activities.add(first_activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=first_activity.details, section=section
+        )
+
+        second_appropriation = create_appropriation(
+            sbsys_id="27.12.06-G01-197-19", case=case, section=section
+        )
+        second_activity = create_activity(
+            case,
+            second_appropriation,
+            start_date=start_date - timedelta(days=10),
+            end_date=end_date + timedelta(days=5),
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=second_activity,
+        )
+        section.main_activities.add(second_activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=second_activity.details, section=section
+        )
+
+        schema_path = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "data",
+            "xml_schemas",
+            "dst_preventative_measures",
+            "DST_UdsatteBoernOgUngeLeveranceL201U1Struktur.xsd",
+        )
+        xml_schema = etree.XMLSchema(file=schema_path)
+        # Generating a dst payload with no cut-off date
+        # should result in a initial_load.
+        doc = generate_dst_payload_preventive_measures()
+        # The doc is not valid due to child elements (approprations) missing.
+        self.assertFalse(xml_schema.validate(doc))
+
+        # Due to a missing valid related person "mor" or "far"
+        # no child elements (appropriations) should exist.
+        ns = {"x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/"}
+        structure_doc = doc.xpath(
+            "x:ForanstaltningStrukturSamling/" "x:ForanstaltningStruktur",
+            namespaces=ns,
+        )
+        self.assertEqual(len(structure_doc), 0)
 
     def test_generate_dst_payload_handicap_initial_load_consolidation(
         self,
@@ -2161,17 +2338,15 @@ class DSTUtilities(TestCase, BasicTestMixin):
             "..",
             "data",
             "xml_schemas",
+            "dst_handicap",
             "DST_BoernMedHandicapLeveranceL231Struktur.xsd",
         )
-
-        with open(schema_path) as f:
-            xmlschema_doc = etree.parse(f)
-        xml_schema = etree.XMLSchema(xmlschema_doc)
+        xml_schema = etree.XMLSchema(file=schema_path)
 
         # Generating a dst payload with no cut-off date
         # should result in a initial_load.
         doc = generate_dst_payload_handicap()
-        self.assertTrue(xml_schema.validate(doc))
+        xml_schema.assertValid(doc)
 
         # All three appropriations should be consolidated to one entry.
         ns = {"x": "http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/"}
@@ -2217,4 +2392,19 @@ class DSTUtilities(TestCase, BasicTestMixin):
             .xpath("x:INDBERETNINGSTYPE", namespaces=ns)[0]
             .text,
             "Ny",
+        )
+
+        # No end_date for one activity should result in no end_date element.
+        third_activity.end_date = None
+        third_activity.save()
+        doc = generate_dst_payload_handicap()
+        self.assertTrue(xml_schema.validate(doc))
+
+        structure_doc = doc.xpath(
+            "x:BoernMedHandicapSagStrukturSamling/"
+            "x:BoernMedHandicapSagStruktur",
+            namespaces=ns,
+        )
+        self.assertEqual(
+            len(structure_doc[0].xpath("x:INDSATS_SLUTDATO", namespaces=ns)), 0
         )

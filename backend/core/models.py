@@ -1213,22 +1213,22 @@ class Section(Classification):
         ),
         blank=True,
     )
-    default_for_dst_preventative_measures = models.BooleanField(
+    dst_preventative_measures = models.BooleanField(
         blank=True,
         default=True,
-        verbose_name=_("standard for DST 'Forebyggende Foranstaltninger'"),
+        verbose_name=_("DST 'Forebyggende Foranstaltninger'"),
         help_text=_(
-            "Hvorvidt denne paragraf skal bruges som standard"
+            "Hvorvidt denne paragraf skal bruges"
             " til DST udtræk for 'Forebyggende Foranstaltninger'."
         ),
     )
-    default_for_dst_handicap = models.BooleanField(
+    dst_handicap = models.BooleanField(
         blank=True,
         default=True,
-        verbose_name=_("standard for DST 'Handicap'"),
+        verbose_name=_("DST 'Handicapkompenserende indsatser'"),
         help_text=_(
-            "Hvorvidt denne paragraf skal bruges som standard"
-            " til DST udtræk for 'Handicap'."
+            "Hvorvidt denne paragraf skal bruges"
+            " til DST udtræk for 'Handicapkompenserende indsatser'."
         ),
     )
 
@@ -2392,7 +2392,10 @@ class DSTPayload(models.Model):
     name = models.CharField(max_length=128, verbose_name=_("navn"))
     content = models.TextField(verbose_name=_("indhold"))
     from_date = models.DateField(
-        null=True, verbose_name=_("fra dato (skæringsdato)")
+        null=True, blank=True, verbose_name=_("fra dato (skæringsdato)")
+    )
+    to_date = models.DateField(
+        null=True, blank=True, verbose_name=_("til dato (skæringsdato)")
     )
     date = models.DateTimeField(
         verbose_name=_("genereringsdato"), default=timezone.now

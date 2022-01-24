@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+xmlns="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/" 
+targetNamespace="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/" 
+elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="DST_SystemName.xsd"/>
+	<xs:include schemaLocation="DST_SystemVersion.xsd"/>
+	<xs:element name="SystemStructure" type="SystemStructureType"/>
+	<xs:complexType name="SystemStructureType">
+		<xs:sequence>
+			<xs:element ref="SystemName"/>
+			<xs:element ref="SystemVersion"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

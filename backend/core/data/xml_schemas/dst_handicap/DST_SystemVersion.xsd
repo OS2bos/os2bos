@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+xmlns="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/" 
+targetNamespace="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/" 
+elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="SystemVersion" type="SystemVersionType"/>
+	<xs:simpleType name="SystemVersionType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="20"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

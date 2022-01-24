@@ -1,3 +1,13 @@
+Version 3.7.0, 2022-01-10
+-------------------------
+
+New in this version:
+
+Features
+^^^^^^^^
+
+* Add XML export capabilities to Danmarks Statistik.
+
 Version 3.6.4, 2022-01-10
 -------------------------
 

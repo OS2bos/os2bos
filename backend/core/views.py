@@ -253,17 +253,19 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
     - approval_note
     - activity_pks
 
-    **generate_dst_preventative_measures_payload** for generating a DST
+    **generate_dst_preventative_measures_file** for generating a DST
     preventative measures payload.
 
     - sections
-    - from_start_date
+    - from_date
+    - to_date
     - test
 
-    **generate_dst_handicap_payload** for generating a DST handicap payload.
+    **generate_dst_handicap_file** for generating a DST handicap payload.
 
     - sections
-    - from_start_date
+    - from_date
+    - to_date
     - test
     """
 
@@ -318,6 +320,7 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
     def generate_dst_preventative_measures_file(self, request):
         """Generate a Preventative Measures payload for DST."""
         from_date = request.query_params.get("from_date", None)
+        to_date = request.query_params.get("to_date", None)
         test = request.query_params.get("test", "true")
         test = True if test == "true" else False
 
@@ -325,18 +328,23 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
             sections_pks = request.query_params.getlist("sections")
             sections = Section.objects.filter(pk__in=sections_pks)
         else:
-            sections = Section.objects.filter(default_for_dst_handicap=True)
+            sections = Section.objects.filter(dst_preventative_measures=True)
 
         doc = etree.tostring(
-            generate_dst_payload_preventive_measures(from_date, sections, test)
+            generate_dst_payload_preventive_measures(
+                from_date, to_date, sections, test
+            ),
+            xml_declaration=True,
+            encoding="utf-8",
         )
+        prefix = "T" if test else "P"
         payload_type = "T201" if test else "L201"
         municipality_code = config.DST_MUNICIPALITY_CODE
         now = timezone.now()
         period = now.strftime("%YM%m")
         generation_timestamp = now.strftime("%Y%m%dT%H%M%S")
         filename = (
-            f"P_{municipality_code}_"
+            f"{prefix}_{municipality_code}_"
             f"{payload_type}_"
             f"P{period}_"
             f"V01_D{generation_timestamp}.xml"
@@ -347,6 +355,7 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
                 name=filename,
                 content=doc.decode("utf-8"),
                 from_date=from_date,
+                to_date=to_date,
                 dst_type=PREVENTATIVE_MEASURES,
             )
 
@@ -359,6 +368,7 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
     def generate_dst_handicap_file(self, request):
         """Generate a Handicap payload for DST."""
         from_date = request.query_params.get("from_date", None)
+        to_date = request.query_params.get("to_date", None)
         test = request.query_params.get("test", "true")
         test = True if test == "true" else False
 
@@ -366,18 +376,21 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
             sections_pks = request.query_params.getlist("sections")
             sections = Section.objects.filter(pk__in=sections_pks)
         else:
-            sections = Section.objects.filter(default_for_dst_handicap=True)
+            sections = Section.objects.filter(dst_handicap=True)
 
         doc = etree.tostring(
-            generate_dst_payload_handicap(from_date, sections, test)
+            generate_dst_payload_handicap(from_date, to_date, sections, test),
+            xml_declaration=True,
+            encoding="utf-8",
         )
+        prefix = "T" if test else "P"
         payload_type = "T231" if test else "L231"
         municipality_code = config.DST_MUNICIPALITY_CODE
         now = timezone.now()
         period = now.strftime("%YM%m")
         generation_timestamp = now.strftime("%Y%m%dT%H%M%S")
         filename = (
-            f"P_{municipality_code}_"
+            f"{prefix}_{municipality_code}_"
             f"{payload_type}_"
             f"P{period}_"
             f"V01_D{generation_timestamp}.xml"
@@ -388,6 +401,7 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
                 name=filename,
                 content=doc.decode("utf-8"),
                 from_date=from_date,
+                to_date=to_date,
                 dst_type=HANDICAP,
             )
 

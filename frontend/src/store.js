@@ -20,6 +20,7 @@ import appropriation from './store-modules/appropriation.js'
 import cases from './store-modules/case.js'
 import error from './store-modules/error.js'
 import actliststore from './components/activities/activitylist/act-list-store.js'
+import dstexport from './store-modules/dstexport.js'
 
 Vue.use(Vuex)
 
@@ -36,6 +37,7 @@ export default new Vuex.Store({
         appropriation,
         cases,
         error,
-        actliststore
+        actliststore,
+        dstexport
     }
 })

@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+xmlns="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/" 
+targetNamespace="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/" 
+elementFormDefault="qualified" attributeFormDefault="unqualified">
+	
+	<xs:simpleType name="CVRnumberIdentifierType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]{8}"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="ProductionUnitIdentifierType">
+		<xs:restriction base="xs:string">
+			<xs:length value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+                <xs:element name="DBoksContactNewStructure" type="DBoksContactNewStructureType"/>
+	<xs:complexType name="DBoksContactNewStructureType">
+		<xs:sequence>
+			<xs:element name="CVRnumberIdentifier" type="CVRnumberIdentifierType"  minOccurs="0"/>
+                                                <xs:element name="ProductionUnitIdentifier" type="ProductionUnitIdentifierType"  minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

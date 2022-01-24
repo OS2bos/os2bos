@@ -81,6 +81,11 @@ const router = new Router({
             component: () => import(/* webpackChunkName: "payments" */ './components/payments/Payments.vue')
         },
         {
+            path: '/export/',
+            name: 'export',
+            component: () => import(/* webpackChunkName: "export" */ './components/export/Export.vue')
+        },
+        {
             // 404 page. This route must declared last
             path: '*',
             name: 'page404',

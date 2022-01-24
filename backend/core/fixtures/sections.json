@@ -8,8 +8,8 @@
             "text": "R\u00e5dgivning, kommunal",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -23,8 +23,8 @@
             "text": "Merudgifter til voksne",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -38,8 +38,8 @@
             "text": "Behandling af stofmisbrugere over 18 \u00e5r",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -53,8 +53,8 @@
             "text": "Behandling af stofmisbrugere under 18 \u00e5r",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -68,8 +68,8 @@
             "text": "Behandling af anonyme stofmisbrugere",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -83,8 +83,8 @@
             "text": "Specialbehandling",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -98,8 +98,8 @@
             "text": "Beskyttet besk\u00e6ftigelse",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -113,8 +113,8 @@
             "text": "Beskyttet besk\u00e6ftigelse",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -128,8 +128,8 @@
             "text": "Aktivitets- og samv\u00e6rstilbud",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -143,8 +143,8 @@
             "text": "Afl\u00f8nning under besk\u00e6ftigelse/st\u00f8tte til",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -158,8 +158,8 @@
             "text": "Midlertidige botilbud",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -173,8 +173,8 @@
             "text": "Midlertidige botilbud",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -188,8 +188,8 @@
             "text": "Midlertidige botilbud",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -203,8 +203,8 @@
             "text": "Midlertidige tilbud ",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -218,8 +218,8 @@
             "text": "L\u00e6ngerevarende botilbud",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -233,8 +233,8 @@
             "text": "Botilbud, kriseramte kvinder",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -257,8 +257,8 @@
             "text": "Botilbud - Kriseramte kvinder,anonymt el",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -272,8 +272,8 @@
             "text": "Botilbud - Kriseramte kvinder, familier\u00e5",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -287,8 +287,8 @@
             "text": "Botilbud - Kriseramte kvinder, psykologb",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -302,8 +302,8 @@
             "text": "Midlertidige botilbud til personer med s",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -317,8 +317,8 @@
             "text": "\u00d8konomisk st\u00f8tte til hj\u00e6lpemidler",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -331,9 +331,9 @@
             "paragraph": "SEL-11-2",
             "text": "Familier\u00e5dgivning - forebyggende",
             "law_text_name": "Serviceloven",
-            "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_code": "000",
+            "dst_preventative_measures": true,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -352,8 +352,8 @@
             "text": "Hj\u00e6lpemidler og forbrugsgoder",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -366,9 +366,9 @@
             "paragraph": "SEL-11-3",
             "text": "Konsulentbistand mv. til b\u00f8rn, unge og familier med hensyn til b\u00f8rn og unges forhold",
             "law_text_name": "Serviceloven",
-            "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_code": "000",
+            "dst_preventative_measures": true,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -386,9 +386,9 @@
             "paragraph": "SEL-11-3.1",
             "text": "Konsulentbistand, herunder familieretted",
             "law_text_name": "Serviceloven",
-            "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_code": "405",
+            "dst_preventative_measures": true,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -406,9 +406,9 @@
             "paragraph": "SEL-11-3.2",
             "text": "Netv\u00e6rks-/samtalegrupper - forebyggende",
             "law_text_name": "Serviceloven",
-            "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_code": "401",
+            "dst_preventative_measures": true,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -427,8 +427,8 @@
             "text": "R\u00e5dgivning om familieplanl\u00e6gning - foreb",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -446,9 +446,9 @@
             "paragraph": "SEL-11-3.4",
             "text": "Andre forebyggende indsatser",
             "law_text_name": "Serviceloven",
-            "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_code": "403",
+            "dst_preventative_measures": true,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -467,8 +467,8 @@
             "text": "St\u00f8tte til bil",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -482,8 +482,8 @@
             "text": "Udgifter til pr\u00e6vention",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -501,9 +501,9 @@
             "paragraph": "SEL-11-4.1",
             "text": "\u00d8konomisk st\u00f8tte til udgifter ifm. konsu",
             "law_text_name": "Serviceloven",
-            "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_code": "407",
+            "dst_preventative_measures": true,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -522,8 +522,8 @@
             "text": "Konsulentbistand",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -541,9 +541,9 @@
             "paragraph": "SEL-11-4.2",
             "text": "\u00d8konomisk st\u00f8tte pr\u00e6vention",
             "law_text_name": "Serviceloven",
-            "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_code": "452",
+            "dst_preventative_measures": true,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -562,8 +562,8 @@
             "text": "\u00d8konomisk st\u00f8tte til boligindretning",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -576,9 +576,9 @@
             "paragraph": "SEL-11-6",
             "text": "\u00d8konomisk st\u00f8tte til fritidstilbud - for",
             "law_text_name": "Serviceloven",
-            "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_code": "404",
+            "dst_preventative_measures": true,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -597,8 +597,8 @@
             "text": "Boligskift",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -612,8 +612,8 @@
             "text": "St\u00f8tte til individuel befordring",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -626,9 +626,9 @@
             "paragraph": "SEL-11-7",
             "text": "R\u00e5dgivning, unders\u00f8gelse og behandling;vedr\u00f8rer b\u00f8rn og unge",
             "law_text_name": "Serviceloven",
-            "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_code": "409",
+            "dst_preventative_measures": true,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -647,8 +647,8 @@
             "text": "Pasning af n\u00e6rtst\u00e5ende med handikap elle",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -662,8 +662,8 @@
             "text": "S\u00e6rlig familievejlederordning",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -682,8 +682,8 @@
             "text": "Pasning af d\u00f8ende i hjemmet",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -697,8 +697,8 @@
             "text": "R\u00e5dgivning, kommunal",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -712,8 +712,8 @@
             "text": "Medicin",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -727,8 +727,8 @@
             "text": "Personer over 18, gratis r\u00e5dgiv. i henho",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -742,8 +742,8 @@
             "text": "Personer over 18, gratis og m\u00e5lrettet r\u00e5",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -757,8 +757,8 @@
             "text": "Handleplan b\u00f8rn og unge",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -772,8 +772,8 @@
             "text": "Handleplan voksne",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -787,8 +787,8 @@
             "text": "Underretning fra anden kommune",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -802,8 +802,8 @@
             "text": "Underretning - offentlig myndighed",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -817,8 +817,8 @@
             "text": "Underretning - privat",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -832,8 +832,8 @@
             "text": "Kvittering for modtaget underretning",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -847,8 +847,8 @@
             "text": "Tilbagemelding til underretter",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -862,8 +862,8 @@
             "text": "Egenbetaling vedr. anb. af b\u00f8rn og unge",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -877,8 +877,8 @@
             "text": "Egenbetaling vedr. efterv\u00e6rn",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -892,8 +892,8 @@
             "text": "Opholdsbetaling, boformer efter \u00a7\u00a7 107-1",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -907,8 +907,8 @@
             "text": "D\u00e6kke udgifter til transport til m\u00f8de i",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -922,8 +922,8 @@
             "text": "Plejehjem",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -937,8 +937,8 @@
             "text": "S\u00e6rlige dagtilbud til b\u00f8rn og unge med betydelig og varig funktionsneds\u00e6ttelse",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -952,8 +952,8 @@
             "text": "S\u00e6rlige dagtilbud",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -966,9 +966,9 @@
             "paragraph": "SEL-32-a",
             "text": "Hjemmetr\u00e6ning",
             "law_text_name": "Serviceloven",
-            "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_code": "002",
+            "dst_preventative_measures": false,
+            "dst_handicap": true,
             "allowed_for_target_groups": [
                 2
             ],
@@ -990,8 +990,8 @@
             "text": "For\u00e6ldrenes tr\u00e6ning af barn/unge i hjemm",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1005,8 +1005,8 @@
             "text": "Tr\u00e6ningsmetode med inddragelse af releva",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1020,8 +1020,8 @@
             "text": "L\u00f8bene tilsyn med tr\u00e6ningsmetoden",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1035,8 +1035,8 @@
             "text": "Hj\u00e6lp til afd\u00e6k. af tabt arbejdsfortjene",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1050,8 +1050,8 @@
             "text": "Tr\u00e6ningsredskaber, kurser, hj\u00e6lpere m.v.",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1064,9 +1064,9 @@
             "paragraph": "SEL-36",
             "text": "S\u00e6rlige klubtilbud",
             "law_text_name": "Serviceloven",
-            "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_code": "003",
+            "dst_preventative_measures": false,
+            "dst_handicap": true,
             "allowed_for_target_groups": [
                 2
             ],
@@ -1088,8 +1088,8 @@
             "text": "Merudgifter til b\u00f8rn",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 2
             ],
@@ -1111,8 +1111,8 @@
             "text": "Tabt arbejdsfortjeneste ved fors\u00f8rgelse",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 2
             ],
@@ -1130,8 +1130,8 @@
             "text": "S\u00e6rlig supplerende ydelse ved tabt arbejdsfortjeneste",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 2
             ],
@@ -1148,9 +1148,9 @@
             "paragraph": "SEL-44-jfr. \u00a784",
             "text": "Aflastning, b\u00f8rn og unge jf. SEL \u00a784.1",
             "law_text_name": "Serviceloven",
-            "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_code": "004",
+            "dst_preventative_measures": false,
+            "dst_handicap": true,
             "allowed_for_target_groups": [
                 2
             ],
@@ -1171,9 +1171,9 @@
             "paragraph": "SEL-45",
             "text": "Ledsageordning 12-18 \u00e5r",
             "law_text_name": "Serviceloven",
-            "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_code": "007",
+            "dst_preventative_measures": false,
+            "dst_handicap": true,
             "allowed_for_target_groups": [
                 2
             ],
@@ -1195,8 +1195,8 @@
             "text": "B\u00f8rnefaglig unders\u00f8gelse - frivillig eller ude samtykke",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1219,8 +1219,8 @@
             "text": "Betaling for brug af B\u00f8rnehus i forbindelse med overgrebssager ",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1243,8 +1243,8 @@
             "text": "Unders\u00f8gelse uden samtykke p\u00e5 institution, sygehus mv.",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1267,8 +1267,8 @@
             "text": "Unders\u00f8gelse, B\u00f8rnehus - Tvang",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1282,8 +1282,8 @@
             "text": "Foranstaltninger efter stk. 3 sidel\u00f8bend",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1297,8 +1297,8 @@
             "text": "Ophold i dagtilbud, fritidshjem, ungdoms",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1317,8 +1317,8 @@
             "text": "Praktisk, p\u00e6dagogisk eller anden st\u00f8tte i hjemmet",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1337,8 +1337,8 @@
             "text": "Familiebehandling eller lignende",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1357,8 +1357,8 @@
             "text": "D\u00f8gnophold for hele familien",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1377,8 +1377,8 @@
             "text": "Aflastningsordning",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1401,8 +1401,8 @@
             "text": "Kontaktperson til barnet/den unge/familien",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1425,8 +1425,8 @@
             "text": "Anbringelse udenfor hjemmet",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1447,8 +1447,8 @@
             "text": "Praktiktilbud samt udbetaling af godtg\u00f8relse",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1467,8 +1467,8 @@
             "text": "Anden hj\u00e6lp",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1486,9 +1486,9 @@
             "paragraph": "SEL-52-a.1.1",
             "text": "\u00d8konomisk st\u00f8tte i forbindelse med \u00a752 s",
             "law_text_name": "Serviceloven",
-            "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_code": "445",
+            "dst_preventative_measures": true,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1510,9 +1510,9 @@
             "paragraph": "SEL-52-a.1.2",
             "text": "Udgifter til at undg\u00e5 anbringelse og fremskynde hjemgivelse",
             "law_text_name": "Serviceloven",
-            "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_code": "445",
+            "dst_preventative_measures": true,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1534,9 +1534,9 @@
             "paragraph": "SEL-52-a.1.3",
             "text": "Stabil kontakt mellem for\u00e6ldre og b\u00f8rn under anbringelsen",
             "law_text_name": "Serviceloven",
-            "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_code": "451",
+            "dst_preventative_measures": true,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1558,9 +1558,9 @@
             "paragraph": "SEL-54-1",
             "text": "St\u00f8tteperson til for\u00e6ldremyndighedsindeh",
             "law_text_name": "Serviceloven",
-            "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_code": "000",
+            "dst_preventative_measures": true,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1581,8 +1581,8 @@
             "text": "Anden st\u00f8tte til for\u00e6ldremyndighedsindeh",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1602,9 +1602,9 @@
             "paragraph": "SEL-54-a",
             "text": "Tilknytning af koordinator",
             "law_text_name": "Serviceloven",
-            "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_code": "245",
+            "dst_preventative_measures": true,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1627,8 +1627,8 @@
             "text": "Aflastning under anbringelse",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1642,8 +1642,8 @@
             "text": "Meddelelse om for\u00e6ldrep\u00e5l\u00e6g",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1657,8 +1657,8 @@
             "text": "For\u00e6ldrep\u00e5l\u00e6g, ulovligt skolefrav\u00e6r",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1672,8 +1672,8 @@
             "text": "For\u00e6ldrep\u00e5l\u00e6g, beg\u00e5et kriminalitet",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1687,8 +1687,8 @@
             "text": "For\u00e6ldrep\u00e5l\u00e6g, adf\u00e6rdsproblemer",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1702,8 +1702,8 @@
             "text": "For\u00e6ldrep\u00e5l\u00e6g, samarbejde n\u00e6gtes",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1717,8 +1717,8 @@
             "text": "For\u00e6ldrep\u00e5l\u00e6g efter \u00a752.3.1 m.v.",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1732,8 +1732,8 @@
             "text": "Meddelelse om ungep\u00e5l\u00e6g",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1747,8 +1747,8 @@
             "text": "Netv\u00e6rkssamr\u00e5d - mistanke om alvorlig kr",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1762,8 +1762,8 @@
             "text": "Netv\u00e6rkssamr\u00e5d - handleplan",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1777,8 +1777,8 @@
             "text": "Udslusning og opf\u00f8lgende st\u00f8tte",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1792,8 +1792,8 @@
             "text": "Screening",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1807,8 +1807,8 @@
             "text": "Anbringelse uden samtykke fra for\u00e6ldrene",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1829,8 +1829,8 @@
             "text": "Behandling og unders\u00f8gelse uden samtykke fra for\u00e6ldrene",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1844,8 +1844,8 @@
             "text": "Oph\u00f8r af foranstaltning og videref\u00f8relse af foranstaltning",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1859,8 +1859,8 @@
             "text": "Foranstaltning ud over det 18. \u00e5r",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1874,8 +1874,8 @@
             "text": "Netv\u00e6rksperson under anbringelse",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1889,8 +1889,8 @@
             "text": "Samv\u00e6r og kontakt",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1904,8 +1904,8 @@
             "text": "Regulering af samv\u00e6r og kontakt",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1919,8 +1919,8 @@
             "text": "Overv\u00e5get samv\u00e6r og afbrydelse af samv\u00e6r",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1934,8 +1934,8 @@
             "text": "For\u00e6ldres transport til barnets opholdsk",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1949,8 +1949,8 @@
             "text": "Advokatbistand",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1964,8 +1964,8 @@
             "text": "M\u00e5lgruppeafklaring",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -1978,9 +1978,9 @@
             "paragraph": "SEL-76-2",
             "text": "Efterv\u00e6rn / kontaktperson 18-22 \u00e5rige",
             "law_text_name": "Serviceloven",
-            "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_code": "290",
+            "dst_preventative_measures": true,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -1998,9 +1998,9 @@
             "paragraph": "SEL-76-3",
             "text": "Unge anbragt op til det 18. \u00e5r, der fortsat har behov for st\u00f8tte",
             "law_text_name": "Serviceloven",
-            "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_code": "275",
+            "dst_preventative_measures": true,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -2013,9 +2013,9 @@
             "paragraph": "SEL-76-3.1",
             "text": "D\u00f8gnophold 18-22 \u00e5rige",
             "law_text_name": "Serviceloven",
-            "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_code": "000",
+            "dst_preventative_measures": true,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -2036,8 +2036,8 @@
             "text": "Fast kontaktperson 18-22 \u00e5rige",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -2056,8 +2056,8 @@
             "text": "Udslusningsophold 18-22 \u00e5rige",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -2078,8 +2078,8 @@
             "text": "Unge anbragt op til det 18. \u00e5r, der fortsat har behov for st\u00f8tte",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -2098,8 +2098,8 @@
             "text": "Genetablering af efterv\u00e6rn 18-22 \u00e5rige",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -2112,9 +2112,9 @@
             "paragraph": "SEL-76-5",
             "text": "Fast kontaktperson 18-22 \u00e5rige for tidligere tvangsanbragte",
             "law_text_name": "Serviceloven",
-            "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_code": "271",
+            "dst_preventative_measures": true,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -2132,9 +2132,9 @@
             "paragraph": "SEL-76-6",
             "text": "Kontaktperson 18-\u00e5rige - for tidligere anbragte",
             "law_text_name": "Serviceloven",
-            "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_code": "272",
+            "dst_preventative_measures": true,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -2152,9 +2152,9 @@
             "paragraph": "SEL-76-8",
             "text": "Tilbagevenden til anbringelsessted",
             "law_text_name": "Serviceloven",
-            "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_code": "273",
+            "dst_preventative_measures": true,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -2174,9 +2174,9 @@
             "paragraph": "SEL-76-a",
             "text": "Opretholdelse af anbringelse i plejefamilie ud over det 18. \u00e5r for unge",
             "law_text_name": "Serviceloven",
-            "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_code": "000",
+            "dst_preventative_measures": true,
+            "dst_handicap": false,
             "allowed_for_target_groups": [
                 1,
                 2
@@ -2197,8 +2197,8 @@
             "text": "Privat d\u00f8gnpleje",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -2212,8 +2212,8 @@
             "text": "Generelle tilbud",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -2227,8 +2227,8 @@
             "text": "Udgifter til husly",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -2242,8 +2242,8 @@
             "text": "Personlig hj\u00e6lp og pleje til voksne ifm.",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -2257,8 +2257,8 @@
             "text": "Midlertidigt rehabiliteringsforl\u00f8b til p",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -2272,8 +2272,8 @@
             "text": "Afl\u00f8sning/aflastning",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -2287,8 +2287,8 @@
             "text": "Hjemmevejleder og optr\u00e6ning",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -2301,9 +2301,9 @@
             "paragraph": "SEL-86",
             "text": "Genoptr\u00e6ning (vedligeholdelsestr\u00e6ning)",
             "law_text_name": "Serviceloven",
-            "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_code": "000",
+            "dst_preventative_measures": false,
+            "dst_handicap": true,
             "allowed_for_target_groups": [
                 2
             ],
@@ -2321,8 +2321,8 @@
             "text": "Somatiske d\u00f8gntilbud",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -2336,8 +2336,8 @@
             "text": "Tilbud om personlig hj\u00e6lp og pleje - fri",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -2351,8 +2351,8 @@
             "text": "Privat hjemmehj\u00e6lp efter \u00a783 og \u00a784",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -2366,8 +2366,8 @@
             "text": "\u00d8ko tilb til hj\u00e6lp ifm \u00a7\u00a7 83, 84",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -2381,8 +2381,8 @@
             "text": "\u00d8ko tilsk til 20 t.el. mere ifm \u00a7\u00a7 83, 8",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -2396,8 +2396,8 @@
             "text": "\u00d8ko tilsk til n\u00e6rst\u00e5ende ifm \u00a7\u00a7 83, 84",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -2411,8 +2411,8 @@
             "text": "Privat overv\u00e5gning og ledsagelse",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -2426,8 +2426,8 @@
             "text": "Tilskud til bpa",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -2441,8 +2441,8 @@
             "text": "Tilskud til bpa udenfor personkredsen i",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -2456,8 +2456,8 @@
             "text": "Oph. Kom. udbetaler tilskud efter \u00a7\u00a7 95",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -2471,8 +2471,8 @@
             "text": "Ledsageordning, voksne",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -2486,8 +2486,8 @@
             "text": "Kontaktperson til d\u00f8vblinde",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }
@@ -2501,8 +2501,8 @@
             "text": "St\u00f8tte-/kontaktperson til sindslidende",
             "law_text_name": "Serviceloven",
             "dst_code": "",
-            "default_for_dst_preventative_measures": true,
-            "default_for_dst_handicap": true,
+            "dst_preventative_measures": false,
+            "dst_handicap": false,
             "allowed_for_target_groups": [],
             "allowed_for_steps": []
         }

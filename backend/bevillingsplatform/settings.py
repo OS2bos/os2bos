@@ -93,6 +93,10 @@ INITIALIZE_DATABASE = settings.getboolean(
     "INITIALIZE_DATABASE", fallback=False
 )
 
+version_file_path = os.path.join(BASE_DIR, "..", "..", "VERSION")
+with open(version_file_path) as v_file:
+    VERSION = v_file.read()
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -105,7 +109,6 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_extensions",
     "django_filters",
-    "rest_framework_filters",
     "simple_history",
     "constance",
     "constance.backends.database",
@@ -255,7 +258,7 @@ VIRK_URL = settings.get(
 
 REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": (
-        "rest_framework_filters.backends.RestFrameworkFilterBackend",
+        "django_filters.rest_framework.DjangoFilterBackend",
     ),
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
@@ -398,6 +401,15 @@ LOGGING = {
                 fallback=os.path.join(LOG_DIR, "virk.log"),
             ),
         },
+        "dst": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "formatter": "verbose",
+            "filename": settings.get(
+                "DST_LOG_FILE",
+                fallback=os.path.join(LOG_DIR, "dst.log"),
+            ),
+        },
         # handler for the django-mailer package.
         "mailer": {
             "level": "INFO",
@@ -472,6 +484,11 @@ LOGGING = {
         },
         "bevillingsplatform.virk": {
             "handlers": ["virk"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        "bevillingsplatform.dst": {
+            "handlers": ["dst"],
             "level": "INFO",
             "propagate": True,
         },

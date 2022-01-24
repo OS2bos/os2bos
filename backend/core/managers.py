@@ -248,13 +248,25 @@ class AppropriationQuerySet(models.QuerySet):
             )
         )
 
-    def appropriations_for_dst_payload(self, from_date=None):
+    def appropriations_for_dst_payload(self, from_date=None, to_date=None):
         """Filter appropriations for a Danmarks Statistik payload.
 
         We annotate a report_type based on whether an Appropriation
         has "changed" or not which is based on:
         - changed acting municipality .
         - appropriation_date for activities
+
+        appropriation contains only granted main activities appropriated
+        before 'from_date'
+        -> exclude (as they have been included in a previous payload)
+
+        appropriation contains only granted main activities appropriated
+        after 'from_date'
+        -> status NEW
+
+        appropriation contains granted main activities appropriated both
+        before and after 'from_date'
+        -> status CHANGED
         """
         from core.models import (
             MAIN_ACTIVITY,
@@ -266,6 +278,12 @@ class AppropriationQuerySet(models.QuerySet):
             activities__status=STATUS_GRANTED,
             activities__activity_type=MAIN_ACTIVITY,
         )
+        # If to_date is set we cut off appropriations
+        # with activities with a newer appropriation_date.
+        if to_date:
+            queryset = queryset.filter(
+                activities__appropriation_date__lte=to_date
+            )
 
         report_types = {
             "NEW": "Ny",
@@ -276,14 +294,15 @@ class AppropriationQuerySet(models.QuerySet):
         if from_date:
             cases = CaseModel.objects.filter(appropriations__in=queryset)
             changed_cases = cases.filter_changed_cases_for_dst_payload(
-                from_date
+                from_date, to_date
             )
 
             main_activities_q = Q(activities__activity_type=MAIN_ACTIVITY)
             main_activities_appropriated_after_from_date_q = Q(
                 activities__activity_type=MAIN_ACTIVITY,
-                activities__appropriation_date__gt=from_date,
+                activities__appropriation_date__gte=from_date,
             )
+
             main_activities_appropriated_before_from_date_q = Q(
                 activities__activity_type=MAIN_ACTIVITY,
                 activities__appropriation_date__lte=from_date,
@@ -428,22 +447,32 @@ class CaseQuerySet(models.QuerySet):
 
         return cases
 
-    def filter_changed_cases_for_dst_payload(self, from_date):
+    def filter_changed_cases_for_dst_payload(self, from_date, to_date=None):
         """Filter changed cases for a DST payload."""
         changed_case_ids = []
 
         for case in self:
             try:
-                historical_case = case.history.as_of(from_date)
+                from_case = case.history.as_of(from_date)
             except case.DoesNotExist:
-                historical_case = case.history.earliest()
+                from_case = case.history.earliest()
+
+            if to_date:
+                try:
+                    to_case = case.history.as_of(to_date)
+                except case.DoesNotExist:
+                    to_case = case
+            else:
+                to_case = case
 
             # If acting municipality has changed we include it as changed.
             if (
-                hasattr(historical_case, "acting_municipality")
-                and historical_case.acting_municipality
-                and not historical_case.acting_municipality
-                == case.acting_municipality
+                hasattr(from_case, "acting_municipality")
+                and from_case.acting_municipality
+                and hasattr(to_case, "acting_municipality")
+                and to_case.acting_municipality
+                and not from_case.acting_municipality
+                == to_case.acting_municipality
             ):
                 changed_case_ids.append(case.id)
 
