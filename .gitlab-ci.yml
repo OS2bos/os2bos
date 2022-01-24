@@ -49,7 +49,7 @@ variables:
 .lint-default: &lint-default
   stage: lint
   needs: []
-  image: python:3.7
+  image: python:3.10
   tags:
     - docker
 
@@ -88,7 +88,7 @@ Lint Dockerfiles:
 Build docs:
   stage: build
   needs: []
-  image: python:3.7
+  image: python:3.10
   tags:
     - docker
   before_script:
