@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:dst="http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/" version="1.0">
+<element name="EntityID" nillable="true" type="dst:EntityIDType"><annotation><documentation /></annotation></element>
+<simpleType name="EntityIDType"><restriction base="string"><maxLength value="20" /></restriction></simpleType></schema> 

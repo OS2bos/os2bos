@@ -9,7 +9,7 @@
 <template>
 
     <select :id="domId" class="listpicker" @change="emitChange" v-model="selection" :required="required">
-        <option :value="null">---</option>
+        <option :value="null" :disabled="disableNullOption">---</option>
         <option 
             v-for="l in sortList" 
             :value="l.id" 
@@ -34,6 +34,7 @@
                 type: Number,
                 default: null
             },
+            disableNullOption: Boolean,
             displayKey: {
                 type: String,
                 default: 'name'

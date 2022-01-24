@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:dst="http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/" targetNamespace="http://rep.oio.dk/dst.dk/xml/schemas/2002/06/28/" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+	<include schemaLocation="DST_EntityIDType.xsd"/>
+	<include schemaLocation="DST_EntityID.xsd"/>
+	<include schemaLocation="DST_EntityPath.xsd"/>
+	<include schemaLocation="DST_Authorisation.xsd"/>
+	<element name="Entity" type="dst:EntityType">
+		<annotation>
+			<documentation/>
+		</annotation>
+	</element>
+	<complexType name="EntityType">
+		<sequence>
+			<element ref="dst:EntityIDType" />
+			<element ref="dst:EntityID" />
+			<element ref="dst:EntityPath" minOccurs="0"/>
+			<element ref="dst:Authorisation" minOccurs="0"/>
+		</sequence>
+	</complexType>
+</schema>

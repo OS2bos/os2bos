@@ -21,6 +21,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 import configparser
 import logging
+from collections import OrderedDict
 
 from django.utils.translation import gettext_lazy as _
 
@@ -92,6 +93,10 @@ INITIALIZE_DATABASE = settings.getboolean(
     "INITIALIZE_DATABASE", fallback=False
 )
 
+version_file_path = os.path.join(BASE_DIR, "..", "..", "VERSION")
+with open(version_file_path) as v_file:
+    VERSION = v_file.read()
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -104,7 +109,6 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_extensions",
     "django_filters",
-    "rest_framework_filters",
     "simple_history",
     "constance",
     "constance.backends.database",
@@ -254,7 +258,7 @@ VIRK_URL = settings.get(
 
 REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": (
-        "rest_framework_filters.backends.RestFrameworkFilterBackend",
+        "django_filters.rest_framework.DjangoFilterBackend",
     ),
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
@@ -397,6 +401,15 @@ LOGGING = {
                 fallback=os.path.join(LOG_DIR, "virk.log"),
             ),
         },
+        "dst": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "formatter": "verbose",
+            "filename": settings.get(
+                "DST_LOG_FILE",
+                fallback=os.path.join(LOG_DIR, "dst.log"),
+            ),
+        },
         # handler for the django-mailer package.
         "mailer": {
             "level": "INFO",
@@ -474,6 +487,11 @@ LOGGING = {
             "level": "INFO",
             "propagate": True,
         },
+        "bevillingsplatform.dst": {
+            "handlers": ["dst"],
+            "level": "INFO",
+            "propagate": True,
+        },
         # logger for the django-mailer package.
         "mailer": {
             "handlers": ["mailer"],
@@ -545,9 +563,60 @@ CONSTANCE_CONFIG = {
         _("Maskin-nummer til PRISME"),
         int,
     ),
+    # DST settings
+    "DST_MUNICIPALITY_CODE": (
+        settings.get("DST_MUNICIPALITY_CODE", fallback="151"),
+        _("Kommune kode"),
+    ),
+    "DST_MUNICIPALITY_CVR_NUMBER": (
+        settings.get("DST_MUNICIPALITY_CVR_NUMBER", fallback="58271713"),
+        _("Kommune CVR"),
+    ),
+    "DST_MUNICIPALITY_P_NUMBER": (
+        settings.get("DST_MUNICIPALITY_P_NUMBER", fallback="1003259972"),
+        _("Kommune P-nummer"),
+    ),
+    "DST_PROFESSIONAL_CONTACT": (
+        settings.get("DST_PROFESSIONAL_CONTACT", fallback="ANE9@balk.dk"),
+        _("Faglig Ansvarlig kontakt (Identifier, email)"),
+    ),
+    "DST_TECHNICAL_CONTACT": (
+        settings.get("DST_TECHNICAL_CONTACT", fallback="jeb@balk.dk"),
+        _("Teknisk Ansvarlig (Identifier, email)"),
+    ),
+    "DST_RECEIPT_CONTACT": (
+        settings.get(
+            "DST_RECEIPT_CONTACT", fallback="c-bur-ressourceteam@balk.dk"
+        ),
+        _("Kvitteringsmodtager (Identifier, email)"),
+    ),
 }
 CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
-
+CONSTANCE_CONFIG_FIELDSETS = OrderedDict(
+    {
+        "Generelle indstillinger": (
+            "SBSYS_EMAIL",
+            "TO_EMAIL_FOR_PAYMENTS",
+            "DEFAULT_FROM_EMAIL",
+            "DEFAULT_TEAM_NAME",
+        ),
+        "Økonomi & Konto indstillinger": (
+            "ACCOUNT_NUMBER_DEPARTMENT",
+            "ACCOUNT_NUMBER_KIND",
+            "ACCOUNT_NUMBER_UNKNOWN",
+            "PRISM_ORG_UNIT",
+            "PRISM_MACHINE_NO",
+        ),
+        "Danmarks Statistik levering indstillinger": (
+            "DST_MUNICIPALITY_CODE",
+            "DST_MUNICIPALITY_CVR_NUMBER",
+            "DST_MUNICIPALITY_P_NUMBER",
+            "DST_PROFESSIONAL_CONTACT",
+            "DST_TECHNICAL_CONTACT",
+            "DST_RECEIPT_CONTACT",
+        ),
+    }
+)
 
 SBSYS_APPROPRIATION_TEMPLATE = "core/html/appropriation_letter.html"
 SBSYS_XML_TEMPLATE = "core/xml/os2forms.xml"

@@ -12,6 +12,8 @@ from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
+from django.http import HttpResponse
+from django.utils import timezone
 
 from rest_framework import viewsets
 from rest_framework.views import APIView
@@ -26,7 +28,11 @@ from rest_framework.decorators import (
 )
 from rest_framework.request import Request
 
+from lxml import etree
+
 from graphene_django.views import GraphQLView
+
+from constance import config
 
 from core.models import (
     Case,
@@ -51,9 +57,12 @@ from core.models import (
     InternalPaymentRecipient,
     Effort,
     ActivityCategory,
+    DSTPayload,
     STATUS_DELETED,
     STATUS_DRAFT,
     STATUS_GRANTED,
+    PREVENTATIVE_MEASURES,
+    HANDICAP,
 )
 
 from core.serializers import (
@@ -84,6 +93,7 @@ from core.serializers import (
     InternalPaymentRecipientSerializer,
     EffortSerializer,
     ActivityCategorySerializer,
+    DSTPayloadSerializer,
 )
 from core.filters import (
     CaseFilter,
@@ -91,7 +101,13 @@ from core.filters import (
     PaymentFilter,
     AllowedForStepsFilter,
 )
-from core.utils import get_person_info, get_company_info_from_search_term
+
+from core.utils import (
+    get_person_info,
+    get_company_info_from_search_term,
+    generate_dst_payload_preventive_measures,
+    generate_dst_payload_handicap,
+)
 
 from core.mixins import (
     AuditMixin,
@@ -225,10 +241,32 @@ class CaseViewSet(AuditModelViewSetMixin, AuditViewSet):
 
 
 class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
-    """Expose appropriations in REST API.
+    """
+    ## Expose appropriations in REST API.
 
-    Note the custom action ``grant`` for approving an appropriation and
+    ### Actions
+
+    **grant** for approving an appropriation and
     all its activities.
+
+    - approval_level
+    - approval_note
+    - activity_pks
+
+    **generate_dst_preventative_measures_file** for generating a DST
+    preventative measures payload.
+
+    - sections
+    - from_date
+    - to_date
+    - test
+
+    **generate_dst_handicap_file** for generating a DST handicap payload.
+
+    - sections
+    - from_date
+    - to_date
+    - test
     """
 
     serializer_action_classes = {
@@ -276,6 +314,100 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
             response = Response(
                 {"errors": [str(e)]}, status.HTTP_400_BAD_REQUEST
             )
+        return response
+
+    @action(detail=False, methods=["get"])
+    def generate_dst_preventative_measures_file(self, request):
+        """Generate a Preventative Measures payload for DST."""
+        from_date = request.query_params.get("from_date", None)
+        to_date = request.query_params.get("to_date", None)
+        test = request.query_params.get("test", "true")
+        test = True if test == "true" else False
+
+        if "sections" in request.query_params:
+            sections_pks = request.query_params.getlist("sections")
+            sections = Section.objects.filter(pk__in=sections_pks)
+        else:
+            sections = Section.objects.filter(dst_preventative_measures=True)
+
+        doc = etree.tostring(
+            generate_dst_payload_preventive_measures(
+                from_date, to_date, sections, test
+            ),
+            xml_declaration=True,
+            encoding="utf-8",
+        )
+        prefix = "T" if test else "P"
+        payload_type = "T201" if test else "L201"
+        municipality_code = config.DST_MUNICIPALITY_CODE
+        now = timezone.now()
+        period = now.strftime("%YM%m")
+        generation_timestamp = now.strftime("%Y%m%dT%H%M%S")
+        filename = (
+            f"{prefix}_{municipality_code}_"
+            f"{payload_type}_"
+            f"P{period}_"
+            f"V01_D{generation_timestamp}.xml"
+        )
+        # If payload is not a test we save it for later use.
+        if not test:
+            DSTPayload.objects.create(
+                name=filename,
+                content=doc.decode("utf-8"),
+                from_date=from_date,
+                to_date=to_date,
+                dst_type=PREVENTATIVE_MEASURES,
+            )
+
+        response = HttpResponse(doc, content_type="text/xml")
+        response["Content-Disposition"] = f"attachment; filename={filename}"
+
+        return response
+
+    @action(detail=False, methods=["get"])
+    def generate_dst_handicap_file(self, request):
+        """Generate a Handicap payload for DST."""
+        from_date = request.query_params.get("from_date", None)
+        to_date = request.query_params.get("to_date", None)
+        test = request.query_params.get("test", "true")
+        test = True if test == "true" else False
+
+        if "sections" in request.query_params:
+            sections_pks = request.query_params.getlist("sections")
+            sections = Section.objects.filter(pk__in=sections_pks)
+        else:
+            sections = Section.objects.filter(dst_handicap=True)
+
+        doc = etree.tostring(
+            generate_dst_payload_handicap(from_date, to_date, sections, test),
+            xml_declaration=True,
+            encoding="utf-8",
+        )
+        prefix = "T" if test else "P"
+        payload_type = "T231" if test else "L231"
+        municipality_code = config.DST_MUNICIPALITY_CODE
+        now = timezone.now()
+        period = now.strftime("%YM%m")
+        generation_timestamp = now.strftime("%Y%m%dT%H%M%S")
+        filename = (
+            f"{prefix}_{municipality_code}_"
+            f"{payload_type}_"
+            f"P{period}_"
+            f"V01_D{generation_timestamp}.xml"
+        )
+        # If payload is not a test we save it for later use.
+        if not test:
+            DSTPayload.objects.create(
+                name=filename,
+                content=doc.decode("utf-8"),
+                from_date=from_date,
+                to_date=to_date,
+                dst_type=HANDICAP,
+            )
+
+        response = HttpResponse(doc, content_type="text/xml")
+        response["Content-Disposition"] = f"attachment; filename={filename}"
+
         return response
 
 
@@ -573,6 +705,13 @@ class ActivityCategoryViewSet(ClassificationViewSetMixin, ReadOnlyViewset):
 
     queryset = ActivityCategory.objects.all()
     serializer_class = ActivityCategorySerializer
+
+
+class DSTPayloadViewSet(ReadOnlyViewset):
+    """Expose DST payloads in REST API."""
+
+    queryset = DSTPayload.objects.all()
+    serializer_class = DSTPayloadSerializer
 
 
 class FrontendSettingsView(APIView):

@@ -73,6 +73,14 @@ status_choices = (
     (STATUS_GRANTED, _("bevilget")),
 )
 
+# DSTPayload types
+PREVENTATIVE_MEASURES = "PREVENTATIVE_MEASURES"
+HANDICAP = "HANDICAP"
+dst_payload_types = (
+    (PREVENTATIVE_MEASURES, _("forebyggende foranstaltninger")),
+    (HANDICAP, _("handicap")),
+)
+
 
 class Classification(models.Model):
     """Abstract base class for Classifications."""
@@ -1110,13 +1118,12 @@ class Case(AuditModelMixin, models.Model):
     note = models.TextField(verbose_name=_("note"), blank=True)
 
     # We only need to store historical records of effort_step, scaling_step,
-    # case_worker, assessment_comment, team, thus we can exclude everything
-    # else.
+    # case_worker, assessment_comment, team, acting_municipality -
+    # thus we can exclude everything else.
     history = HistoricalRecords(
         excluded_fields=[
             "target_group",
             "residence_municipality",
-            "acting_municipality",
             "paying_municipality",
             "district",
             "name",
@@ -1198,6 +1205,33 @@ class Section(Classification):
         max_length=128, verbose_name=_("lov tekst navn")
     )
 
+    dst_code = models.CharField(
+        max_length=128,
+        verbose_name=_("DST værdikode"),
+        help_text=_(
+            "Værdikode til brug ved levering af data til Danmarks Statistik."
+        ),
+        blank=True,
+    )
+    dst_preventative_measures = models.BooleanField(
+        blank=True,
+        default=True,
+        verbose_name=_("DST 'Forebyggende Foranstaltninger'"),
+        help_text=_(
+            "Hvorvidt denne paragraf skal bruges"
+            " til DST udtræk for 'Forebyggende Foranstaltninger'."
+        ),
+    )
+    dst_handicap = models.BooleanField(
+        blank=True,
+        default=True,
+        verbose_name=_("DST 'Handicapkompenserende indsatser'"),
+        help_text=_(
+            "Hvorvidt denne paragraf skal bruges"
+            " til DST udtræk for 'Handicapkompenserende indsatser'."
+        ),
+    )
+
     def __str__(self):
         return f"{self.paragraph}"
 
@@ -1261,7 +1295,7 @@ class Appropriation(AuditModelMixin, models.Model):
     @property
     def granted_to_date(self):
         """Retrieve the end date of the main activity, if granted."""
-        # The appropriation start date is the start date of the first
+        # The appropriation end date is the end date of the last
         # main activity.
         f = self.activities.filter(
             activity_type=MAIN_ACTIVITY,
@@ -2349,4 +2383,31 @@ class PaymentDateExclusion(models.Model):
     class Meta:
         verbose_name = _("betalingsdato undtagelse")
         verbose_name_plural = _("betalingsdato undtagelser")
+        ordering = ("-date",)
+
+
+class DSTPayload(models.Model):
+    """Model for a DST payload."""
+
+    name = models.CharField(max_length=128, verbose_name=_("navn"))
+    content = models.TextField(verbose_name=_("indhold"))
+    from_date = models.DateField(
+        null=True, blank=True, verbose_name=_("fra dato (skæringsdato)")
+    )
+    to_date = models.DateField(
+        null=True, blank=True, verbose_name=_("til dato (skæringsdato)")
+    )
+    date = models.DateTimeField(
+        verbose_name=_("genereringsdato"), default=timezone.now
+    )
+    dst_type = models.CharField(
+        max_length=128, choices=dst_payload_types, verbose_name=_("type")
+    )
+
+    def __str__(self):
+        return f"{self.date} - {self.name} - {self.dst_type}"
+
+    class Meta:
+        verbose_name = _("DST udtræk")
+        verbose_name_plural = _("DST udtræk")
         ordering = ("-date",)

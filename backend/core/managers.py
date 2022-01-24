@@ -15,6 +15,7 @@ from django.db.models import (
     Sum,
     CharField,
     DecimalField,
+    Func,
     Value,
     Q,
     F,
@@ -30,6 +31,7 @@ from django.db.models.functions import (
     ExtractYear,
     LPad,
 )
+from django.contrib.postgres.aggregates import ArrayAgg
 
 
 class PaymentQuerySet(models.QuerySet):
@@ -246,6 +248,155 @@ class AppropriationQuerySet(models.QuerySet):
             )
         )
 
+    def appropriations_for_dst_payload(self, from_date=None, to_date=None):
+        """Filter appropriations for a Danmarks Statistik payload.
+
+        We annotate a report_type based on whether an Appropriation
+        has "changed" or not which is based on:
+        - changed acting municipality .
+        - appropriation_date for activities
+
+        appropriation contains only granted main activities appropriated
+        before 'from_date'
+        -> exclude (as they have been included in a previous payload)
+
+        appropriation contains only granted main activities appropriated
+        after 'from_date'
+        -> status NEW
+
+        appropriation contains granted main activities appropriated both
+        before and after 'from_date'
+        -> status CHANGED
+        """
+        from core.models import (
+            MAIN_ACTIVITY,
+            STATUS_GRANTED,
+            Case as CaseModel,
+        )
+
+        queryset = self.filter(
+            activities__status=STATUS_GRANTED,
+            activities__activity_type=MAIN_ACTIVITY,
+        )
+        # If to_date is set we cut off appropriations
+        # with activities with a newer appropriation_date.
+        if to_date:
+            queryset = queryset.filter(
+                activities__appropriation_date__lte=to_date
+            )
+
+        report_types = {
+            "NEW": "Ny",
+            "CHANGED": "Ændring",
+            "CANCELLED": "Annullering",
+        }
+
+        if from_date:
+            cases = CaseModel.objects.filter(appropriations__in=queryset)
+            changed_cases = cases.filter_changed_cases_for_dst_payload(
+                from_date, to_date
+            )
+
+            main_activities_q = Q(activities__activity_type=MAIN_ACTIVITY)
+            main_activities_appropriated_after_from_date_q = Q(
+                activities__activity_type=MAIN_ACTIVITY,
+                activities__appropriation_date__gte=from_date,
+            )
+
+            main_activities_appropriated_before_from_date_q = Q(
+                activities__activity_type=MAIN_ACTIVITY,
+                activities__appropriation_date__lte=from_date,
+            )
+
+            queryset = queryset.annotate(
+                main_acts_count=Count("activities", filter=main_activities_q),
+                main_acts_appropriated_after_from_date_count=Count(
+                    "activities",
+                    filter=main_activities_appropriated_after_from_date_q,
+                ),
+                main_acts_appropriated_before_from_date_count=Count(
+                    "activities",
+                    filter=main_activities_appropriated_before_from_date_q,
+                ),
+                dst_report_type=Case(
+                    When(
+                        case__in=changed_cases,
+                        then=Value(report_types["CHANGED"]),
+                    ),
+                    When(
+                        main_acts_count=F(
+                            "main_acts_appropriated_before_from_date_count"
+                        ),
+                        then=Value(""),
+                    ),
+                    When(
+                        main_acts_count=F(
+                            "main_acts_appropriated_after_from_date_count"
+                        ),
+                        then=Value(report_types["NEW"]),
+                    ),
+                    When(
+                        main_acts_count__gt=F(
+                            "main_acts_appropriated_after_from_date_count"
+                        ),
+                        then=Value(report_types["CHANGED"]),
+                    ),
+                    default=Value(""),
+                    output_field=CharField(),
+                ),
+            ).exclude(dst_report_type="")
+        else:
+            queryset = queryset.annotate(
+                dst_report_type=Value(
+                    report_types["NEW"], output_field=CharField()
+                )
+            )
+
+        return queryset.distinct()
+
+    def get_duplicate_sbsys_id_appropriations_for_dst(self):
+        """
+        Get Appropriations duplicated on a 'common sbsys_id'.
+
+        Examples:
+        '27.24.36-G01-7-20-Far' -> '27.24.36-G01-7-20'
+        '27.24.36-G01-7-20-Mor' -> '27.24.36-G01-7-20'
+        '27.24.36-G01-7-20' -> '27.24.36-G01-7-20'
+
+        The output will look like this:
+        [
+            {
+                'sbsys_common': None,
+                'ids': [1535, 1534, 1533],
+                'id_count': 3
+            }
+            {
+                'sbsys_common': '27.36.08-G01-7-20',
+                'ids': [1597, 1700],
+                'id_count': 2
+            },
+            {
+                'sbsys_common': '27.36.08-G01-7-15',
+                'ids': [642, 1195, 1120],
+                'id_count': 3
+            }
+        ]
+        """
+        return (
+            self.annotate(
+                sbsys_common=Func(
+                    F("sbsys_id"),
+                    Value("(\\d{2}\\.\\d{2}\\.\\d{2}-\\D\\d{2}-\\d+-\\d+)?.*"),
+                    function="substring",
+                )
+            )
+            .exclude(sbsys_common=None)
+            .values("sbsys_common")
+            .annotate(ids=ArrayAgg("id"))
+            .annotate(id_count=Func("ids", Value(1), function="array_length"))
+            .filter(id_count__gt=1)
+        )
+
 
 class CaseQuerySet(models.QuerySet):
     """Distinguish between expired and ongoing cases."""
@@ -295,3 +446,34 @@ class CaseQuerySet(models.QuerySet):
         ).distinct()
 
         return cases
+
+    def filter_changed_cases_for_dst_payload(self, from_date, to_date=None):
+        """Filter changed cases for a DST payload."""
+        changed_case_ids = []
+
+        for case in self:
+            try:
+                from_case = case.history.as_of(from_date)
+            except case.DoesNotExist:
+                from_case = case.history.earliest()
+
+            if to_date:
+                try:
+                    to_case = case.history.as_of(to_date)
+                except case.DoesNotExist:
+                    to_case = case
+            else:
+                to_case = case
+
+            # If acting municipality has changed we include it as changed.
+            if (
+                hasattr(from_case, "acting_municipality")
+                and from_case.acting_municipality
+                and hasattr(to_case, "acting_municipality")
+                and to_case.acting_municipality
+                and not from_case.acting_municipality
+                == to_case.acting_municipality
+            ):
+                changed_case_ids.append(case.id)
+
+        return self.filter(id__in=changed_case_ids)

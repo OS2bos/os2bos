@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/" xmlns:xkom="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/" targetNamespace="http://rep.oio.dk/dst.dk/xml/schemas/2010/04/16/" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/" schemaLocation="XKOM_EmailAddressIdentifier.xsd"/>
+	<xs:include schemaLocation="DST_ContactTypeName.xsd"/>
+	<xs:include schemaLocation="DST_ContactIdentifier.xsd"/>
+	<xs:element name="ContactStructure" type="ContactStructureType"/>
+	<xs:complexType name="ContactStructureType">
+		<xs:sequence>
+			<xs:element ref="ContactTypeName"/>
+			<xs:element ref="ContactIdentifier"/>
+			<xs:element name="ContactEmailAddress" type="xkom:EmailAddressIdentifierType"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

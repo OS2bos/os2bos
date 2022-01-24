@@ -31,7 +31,7 @@ from core.models import (
     ServiceProvider as ServiceProviderModel,
     STATUS_DELETED,
 )
-from core.filters import PaymentFilter
+from core.filters import PaymentFilter, AppropriationFilter
 
 UserModel = get_user_model()
 
@@ -91,13 +91,14 @@ class Appropriation(OptimizedDjangoObjectType):
     """Appropriation as a graphene type."""
 
     pk = graphene.Int(source="pk")
+    dst_report_type = graphene.String(source="dst_report_type")
 
     class Meta:
         model = AppropriationModel
         interfaces = (Node,)
         connection_class = ExtendedConnection
         fields = "__all__"
-        filter_fields = "__all__"
+        filterset_class = AppropriationFilter
 
 
 class Payment(OptimizedDjangoObjectType):
