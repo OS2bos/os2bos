@@ -1,3 +1,14 @@
+Version 3.7.1, 2022-01-24
+-------------------------
+
+Hotfix release
+
+Bug fixes
+^^^^^^^^^
+
+* Use distinct for finding DST duplicate appropriations.
+* Extract and use DST start/end date logic for duplicate appropriations.
+
 Version 3.7.0, 2022-01-10
 -------------------------
 
