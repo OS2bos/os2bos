@@ -73,7 +73,7 @@ const testdata = {
     }
 }
 
-fixture('Export DST XML') // declare the fixture
+fixture.skip('Export DST XML') // declare the fixture
     .page(baseurl)  // specify the start page
     .afterEach(() => checkConsole())
 
