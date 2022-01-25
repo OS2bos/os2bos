@@ -22,14 +22,17 @@ from core.tests.testing_utils import (
     create_payment_schedule,
     create_activity,
     create_municipality,
+    create_section,
 )
 from core.models import (
     Payment,
     PaymentSchedule,
     Case,
+    SectionInfo,
     MAIN_ACTIVITY,
     SUPPL_ACTIVITY,
     STATUS_GRANTED,
+    CASH,
     Activity,
     Appropriation,
 )
@@ -694,3 +697,218 @@ class AppropriationQuerySetTestCase(TestCase, BasicTestMixin):
         )
 
         self.assertIn(appropriation, Appropriation.objects.expired())
+
+    def test_appropriations_for_dst_payload_initial(self):
+        now = timezone.now().date()
+        start_date = now
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section(dst_code="123")
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        granted_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            appropriation_date=start_date,
+            end_date=None,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=granted_activity,
+        )
+        section.main_activities.add(granted_activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=granted_activity.details, section=section
+        )
+        # start_date is within date span.
+        dst_appropriations = (
+            Appropriation.objects.appropriations_for_dst_payload(
+                from_date=None, to_date=start_date
+            )
+        )
+
+        self.assertTrue(appropriation in dst_appropriations)
+
+    def test_appropriations_for_dst_payload_initial_exclude_dates(self):
+        now = timezone.now().date()
+        start_date = now
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section(dst_code="123")
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        granted_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            appropriation_date=start_date,
+            end_date=None,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=granted_activity,
+        )
+        section.main_activities.add(granted_activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=granted_activity.details, section=section
+        )
+        # appropriation_date and start_date is not within date span.
+        dst_appropriations = (
+            Appropriation.objects.appropriations_for_dst_payload(
+                from_date=None, to_date=start_date - timedelta(days=1)
+            )
+        )
+
+        self.assertFalse(appropriation in dst_appropriations)
+
+    def test_appropriations_for_dst_payload_initial_exclude_start_date(self):
+        now = timezone.now().date()
+        start_date = now
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section(dst_code="123")
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        granted_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date,
+            appropriation_date=start_date - timedelta(days=1),
+            end_date=None,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=granted_activity,
+        )
+        section.main_activities.add(granted_activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=granted_activity.details, section=section
+        )
+        # start_date is in the future of from_date->to_date.
+        dst_appropriations = (
+            Appropriation.objects.appropriations_for_dst_payload(
+                from_date=None, to_date=start_date - timedelta(days=1)
+            )
+        )
+
+        self.assertFalse(appropriation in dst_appropriations)
+
+    def test_appropriations_for_dst_payload_initial_exclude_payment_date(self):
+        now = timezone.now().date()
+        start_date = now
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section(dst_code="123")
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        granted_activity = create_activity(
+            case,
+            appropriation,
+            start_date=None,
+            appropriation_date=start_date - timedelta(days=1),
+            end_date=None,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=None,
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            payment_date=start_date,
+            activity=granted_activity,
+        )
+        section.main_activities.add(granted_activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=granted_activity.details, section=section
+        )
+
+        granted_suppl_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date - timedelta(days=1),
+            appropriation_date=start_date - timedelta(days=1),
+            end_date=None,
+            activity_type=SUPPL_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=granted_suppl_activity,
+        )
+
+        # payment_date is in the future of from_date->to_date.
+        dst_appropriations = (
+            Appropriation.objects.appropriations_for_dst_payload(
+                from_date=None, to_date=start_date - timedelta(days=1)
+            )
+        )
+
+        self.assertFalse(appropriation in dst_appropriations)
+
+    def test_appropriations_for_dst_payload_initial_exclude_appr_date(self):
+        now = timezone.now().date()
+        start_date = now
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section(dst_code="123")
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        granted_activity = create_activity(
+            case,
+            appropriation,
+            start_date=start_date + timedelta(days=1),
+            appropriation_date=start_date - timedelta(days=1),
+            end_date=None,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=granted_activity,
+        )
+        section.main_activities.add(granted_activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=granted_activity.details, section=section
+        )
+        # appropriation_date is outside from_date->to_date.
+        dst_appropriations = (
+            Appropriation.objects.appropriations_for_dst_payload(
+                from_date=None, to_date=start_date
+            )
+        )
+
+        self.assertFalse(appropriation in dst_appropriations)

@@ -1334,7 +1334,14 @@ def generate_dst_payload_preventive_measures(
     )
     for obj in duplicate_appropriation_objects:
         duplicate_appropriations = appropriations.filter(id__in=obj["ids"])
-        first_appropriation = duplicate_appropriations.first()
+        sorted_appr_start_date_tuples = sorted(
+            [
+                (appr, extract_dst_date_tuple_for_appropriation(appr)[0])
+                for appr in duplicate_appropriations
+            ],
+            key=lambda appr_start_tuple: appr_start_tuple[1],
+        )
+        first_appropriation = sorted_appr_start_date_tuples[0][0]
         case = duplicate_appropriations.first().case
         father_or_mother = case.related_persons.filter(
             Q(relation_type="mor") | Q(relation_type="far")
@@ -1513,7 +1520,14 @@ def generate_dst_payload_handicap(
             in [appr.dst_report_type for appr in duplicate_appropriations]
             else "Ny"
         )
-        first_appropriation = duplicate_appropriations.first()
+        sorted_appr_start_date_tuples = sorted(
+            [
+                (appr, extract_dst_date_tuple_for_appropriation(appr)[0])
+                for appr in duplicate_appropriations
+            ],
+            key=lambda appr_start_tuple: appr_start_tuple[1],
+        )
+        first_appropriation = sorted_appr_start_date_tuples[0][0]
         case = first_appropriation.case
         case_worker = case.case_worker
         identifier = obj["sbsys_common"]

@@ -291,6 +291,7 @@ class AppropriationQuerySet(models.QuerySet):
             "CANCELLED": "Annullering",
         }
 
+        # Delta load.
         if from_date:
             cases = CaseModel.objects.filter(appropriations__in=queryset)
             changed_cases = cases.filter_changed_cases_for_dst_payload(
@@ -346,11 +347,20 @@ class AppropriationQuerySet(models.QuerySet):
                 ),
             ).exclude(dst_report_type="")
         else:
+            # Full/initial load (no from_date).
             queryset = queryset.annotate(
                 dst_report_type=Value(
                     report_types["NEW"], output_field=CharField()
                 )
             )
+            # Full/initial load (no from_date) with a to_date.
+            if to_date:
+                queryset = queryset.filter(
+                    Q(activities__start_date__lte=to_date)
+                    | Q(activities__payment_plan__payment_date__lte=to_date),
+                    activities__status=STATUS_GRANTED,
+                    activities__activity_type=MAIN_ACTIVITY,
+                )
 
         return queryset.distinct()
 
