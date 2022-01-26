@@ -1293,6 +1293,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             end_date=None,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
+            appropriation_date=start_date,
         )
         create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
@@ -1363,6 +1364,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             end_date=None,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
+            appropriation_date=now,
         )
         create_payment_schedule(
             payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
@@ -1434,6 +1436,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             end_date=None,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
+            appropriation_date=start_date,
         )
         create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
@@ -1467,6 +1470,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             end_date=None,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
+            appropriation_date=start_date,
         )
         create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
@@ -1523,6 +1527,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             end_date=None,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
+            appropriation_date=start_date,
         )
         create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
@@ -1609,6 +1614,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             end_date=None,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
+            appropriation_date=now,
         )
         create_payment_schedule(
             payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
@@ -1741,7 +1747,9 @@ class DSTUtilities(TestCase, BasicTestMixin):
         # Generating a dst payload from a cut-off date of 2021-01-02
         # For an appropriation containing both main activities before and after
         # should result in a status of "Ændring".
-        doc = generate_dst_payload_handicap(from_date=date(2021, 1, 2))
+        doc = generate_dst_payload_handicap(
+            from_date=date(2021, 1, 2), to_date=date(2021, 1, 3)
+        )
 
         xml_schema.assertValid(doc)
 
@@ -1976,10 +1984,13 @@ class DSTUtilities(TestCase, BasicTestMixin):
         )
         xml_schema = etree.XMLSchema(file=schema_path)
 
-        # Generating a dst payload from a cut-off date of 2021-02-01
-        # with an unchanged activity from 2021-01-01 should result in no
-        # load.
-        doc = generate_dst_payload_handicap(from_date=date(2021, 2, 1))
+        # Generating a dst payload from a cut-off date of
+        # 2021-02-01->2021-03-01 with an unchanged activity
+        # from 2021-01-01 should result in no load.
+        doc = generate_dst_payload_handicap(
+            from_date=date(2021, 2, 1), to_date=date(2021, 3, 1)
+        )
+
         # The doc is not valid due to child elements (approprations) missing.
         self.assertFalse(xml_schema.validate(doc))
 
@@ -2017,6 +2028,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             end_date=end_date,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
+            appropriation_date=start_date,
         )
         create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
@@ -2042,6 +2054,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             end_date=end_date + timedelta(days=5),
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
+            appropriation_date=start_date - timedelta(days=10),
         )
         create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
@@ -2067,6 +2080,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             end_date=end_date + timedelta(days=10),
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
+            appropriation_date=start_date - timedelta(days=5),
         )
         create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
@@ -2187,6 +2201,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             end_date=end_date,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
+            appropriation_date=start_date,
         )
         create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
@@ -2212,6 +2227,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             end_date=end_date + timedelta(days=5),
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
+            appropriation_date=start_date - timedelta(days=10),
         )
         create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
@@ -2237,6 +2253,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             end_date=end_date + timedelta(days=10),
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
+            appropriation_date=start_date - timedelta(days=5),
         )
         create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
@@ -2354,6 +2371,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             end_date=end_date,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
+            appropriation_date=now,
         )
         create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
@@ -2379,6 +2397,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             end_date=end_date + timedelta(days=5),
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
+            appropriation_date=now,
         )
         create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
@@ -2439,6 +2458,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             end_date=end_date,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
+            appropriation_date=start_date,
         )
         create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
@@ -2464,6 +2484,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             end_date=end_date + timedelta(days=5),
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
+            appropriation_date=start_date,
         )
         create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
@@ -2489,6 +2510,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             end_date=end_date + timedelta(days=10),
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
+            appropriation_date=start_date,
         )
         create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
@@ -2601,6 +2623,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             end_date=end_date,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
+            appropriation_date=start_date,
         )
         create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
@@ -2626,6 +2649,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             end_date=None,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
+            appropriation_date=start_date,
         )
         second_payment_plan = create_payment_schedule(
             payment_frequency=None,
@@ -2725,6 +2749,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             end_date=end_date,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
+            appropriation_date=start_date,
         )
         create_payment_schedule(
             payment_frequency=PaymentSchedule.DAILY,
@@ -2750,6 +2775,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             end_date=None,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
+            appropriation_date=start_date,
         )
         second_payment_plan = create_payment_schedule(
             payment_frequency=None,

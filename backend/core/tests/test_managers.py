@@ -912,3 +912,90 @@ class AppropriationQuerySetTestCase(TestCase, BasicTestMixin):
         )
 
         self.assertFalse(appropriation in dst_appropriations)
+
+    @freeze_time("2022-01-01")
+    def test_appropriations_for_dst_payload_delta_include_future_start(self):
+        now = timezone.now().date()
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section(dst_code="123")
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        # Create an activity appropriated now but with a future start_date.
+        granted_activity = create_activity(
+            case,
+            appropriation,
+            start_date=date(2022, 2, 1),
+            appropriation_date=now,
+            end_date=None,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=granted_activity,
+        )
+        section.main_activities.add(granted_activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=granted_activity.details, section=section
+        )
+        # appropriation with earlier appropriated activities but
+        # with a start_date in the period should be included and marked new.
+        dst_appropriations = (
+            Appropriation.objects.appropriations_for_dst_payload(
+                from_date=date(2022, 2, 1), to_date=date(2022, 3, 1)
+            )
+        )
+
+        self.assertEqual(dst_appropriations.count(), 1)
+        self.assertTrue(appropriation in dst_appropriations)
+        self.assertEqual(dst_appropriations.first().dst_report_type, "Ny")
+
+    @freeze_time("2022-01-01")
+    def test_appropriations_for_dst_payload_delta_include_future_onetime(self):
+        now = timezone.now().date()
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section(dst_code="123")
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        # Create an activity appropriated now but with a future start_date.
+        granted_activity = create_activity(
+            case,
+            appropriation,
+            start_date=None,
+            end_date=None,
+            appropriation_date=now,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_GRANTED,
+        )
+        create_payment_schedule(
+            payment_frequency=None,
+            payment_type=PaymentSchedule.ONE_TIME_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_date=date(2022, 2, 1),
+            payment_amount=Decimal(666),
+            activity=granted_activity,
+        )
+        section.main_activities.add(granted_activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=granted_activity.details, section=section
+        )
+        # appropriation with earlier appropriated activities but
+        # with a payment_date in the period should be included and marked new.
+        dst_appropriations = (
+            Appropriation.objects.appropriations_for_dst_payload(
+                from_date=date(2022, 2, 1), to_date=date(2022, 3, 1)
+            )
+        )
+
+        self.assertEqual(dst_appropriations.count(), 1)
+        self.assertTrue(appropriation in dst_appropriations)
+        self.assertEqual(dst_appropriations.first().dst_report_type, "Ny")
