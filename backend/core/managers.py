@@ -250,26 +250,7 @@ class AppropriationQuerySet(models.QuerySet):
         )
 
     def appropriations_for_dst_payload(self, from_date=None, to_date=None):
-        """Filter appropriations for a Danmarks Statistik payload.
-
-        We annotate a report_type based on whether an Appropriation
-        has "changed" or not which is based on:
-        - changed acting municipality.
-        - appropriation_date for activities (and main activity start_date)
-
-        appropriation contains only granted main activities appropriated
-        before 'from_date'
-        -> exclude (as they have been included in a previous payload,
-        except if they have a start_date in the from_date->to_date period
-
-        appropriation contains only granted main activities appropriated
-        after 'from_date'
-        -> status NEW
-
-        appropriation contains granted main activities appropriated both
-        before and after 'from_date'
-        -> status CHANGED
-        """
+        """Filter appropriations for a Danmarks Statistik payload."""
         from core.models import (
             MAIN_ACTIVITY,
             STATUS_GRANTED,
@@ -352,10 +333,17 @@ class AppropriationQuerySet(models.QuerySet):
                         main_acts_before_from_date, output_field=IntegerField()
                     ),
                     dst_report_type=Case(
+                        # If an appropriation has a case with a changed
+                        # acting municipality we mark it "changed".
                         When(
                             case__in=changed_cases,
                             then=Value(report_types["CHANGED"]),
                         ),
+                        # If an appropriation has main activities appropriated
+                        # after the from date, and appropriated
+                        # main activities before the from_date
+                        # (thus the total number of main activities is higher)
+                        # we consider it "changed".
                         When(
                             Q(main_acts_after_from_date_count__gt=0)
                             & Q(
@@ -365,6 +353,9 @@ class AppropriationQuerySet(models.QuerySet):
                             ),
                             then=Value(report_types["CHANGED"]),
                         ),
+                        # If appropriation has a total number of main
+                        # activities equal to the number of main activities
+                        # appropriated after the from_date we consider it "new"
                         When(
                             Q(
                                 main_acts_count=F(
@@ -373,6 +364,12 @@ class AppropriationQuerySet(models.QuerySet):
                             ),
                             then=Value(report_types["NEW"]),
                         ),
+                        # If an appropriation has a total number of main
+                        # activities equal to the number of main activities
+                        # appropriated before the from_date BUT the main
+                        # activity has a start_date or payment_date in the
+                        # from_date->to_date range AND the main activity does
+                        # not modify another we consider it "new"
                         When(
                             Q(
                                 main_acts_count=F(
@@ -400,9 +397,50 @@ class AppropriationQuerySet(models.QuerySet):
                                 )
                             )
                             & Q(activities__status=STATUS_GRANTED)
-                            & Q(activities__activity_type=MAIN_ACTIVITY),
+                            & Q(activities__activity_type=MAIN_ACTIVITY)
+                            & Q(activities__modifies__isnull=True),
                             then=Value(report_types["NEW"]),
                         ),
+                        # If an appropriation has a total number of main
+                        # activities equal to the number of main activities
+                        # appropriated before the from_date BUT the main
+                        # activity has a start_date or payment_date in the
+                        # from_date->to_date range AND the main activity
+                        # modifies another, we consider it "changed"
+                        When(
+                            Q(
+                                main_acts_count=F(
+                                    "main_acts_before_from_date_count"
+                                )
+                            )
+                            & Q(
+                                (
+                                    Q(activities__start_date__gte=from_date)
+                                    & Q(activities__start_date__lte=to_date)
+                                )
+                                | (
+                                    Q(
+                                        **{
+                                            "activities__payment_plan"
+                                            "__payment_date__gte": from_date
+                                        }
+                                    )
+                                    & Q(
+                                        **{
+                                            "activities__payment_plan"
+                                            "__payment_date__lte": to_date
+                                        }
+                                    )
+                                )
+                            )
+                            & Q(activities__status=STATUS_GRANTED)
+                            & Q(activities__activity_type=MAIN_ACTIVITY)
+                            & Q(activities__modifies__isnull=False),
+                            then=Value(report_types["CHANGED"]),
+                        ),
+                        # Lastly if an appropriation only has main activities
+                        # appropriated in the past, that are not covered by
+                        # previous cases, we do not include them.
                         When(
                             main_acts_count=F(
                                 "main_acts_before_from_date_count"

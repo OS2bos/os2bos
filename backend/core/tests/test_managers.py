@@ -23,6 +23,7 @@ from core.tests.testing_utils import (
     create_activity,
     create_municipality,
     create_section,
+    create_approval_level,
 )
 from core.models import (
     Payment,
@@ -32,6 +33,8 @@ from core.models import (
     MAIN_ACTIVITY,
     SUPPL_ACTIVITY,
     STATUS_GRANTED,
+    STATUS_EXPECTED,
+    STATUS_DRAFT,
     CASH,
     Activity,
     Appropriation,
@@ -926,8 +929,8 @@ class AppropriationQuerySetTestCase(TestCase, BasicTestMixin):
             case,
             appropriation,
             start_date=date(2022, 2, 1),
-            appropriation_date=now,
             end_date=None,
+            appropriation_date=now,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_GRANTED,
         )
@@ -999,3 +1002,89 @@ class AppropriationQuerySetTestCase(TestCase, BasicTestMixin):
         self.assertEqual(dst_appropriations.count(), 1)
         self.assertTrue(appropriation in dst_appropriations)
         self.assertEqual(dst_appropriations.first().dst_report_type, "Ny")
+
+    @freeze_time("2022-01-01")
+    def test_appropriations_for_dst_payload_delta_include_future_changed(self):
+        now = timezone.now().date()
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section(dst_code="123")
+        appropriation = create_appropriation(
+            sbsys_id="XXX-YYY", case=case, section=section
+        )
+        # Create an activity appropriated now but with a future start_date.
+        activity = create_activity(
+            case,
+            appropriation,
+            start_date=date(2022, 2, 1),
+            end_date=date(2022, 2, 5),
+            appropriation_date=now,
+            activity_type=MAIN_ACTIVITY,
+            status=STATUS_DRAFT,
+        )
+        create_payment_schedule(
+            payment_frequency=PaymentSchedule.DAILY,
+            payment_type=PaymentSchedule.RUNNING_PAYMENT,
+            recipient_type=PaymentSchedule.PERSON,
+            payment_method=CASH,
+            payment_amount=Decimal(666),
+            activity=activity,
+        )
+        section.main_activities.add(activity.details)
+
+        SectionInfo.objects.get(
+            activity_details=activity.details, section=section
+        )
+        approval_level = create_approval_level()
+
+        activities = Activity.objects.filter(pk=activity.pk)
+        appropriation.grant(
+            activities, approval_level.id, "note", self.case_worker
+        )
+
+        # appropriation with earlier appropriated activities but
+        # with a start_date in the period should be included and marked new.
+        dst_appropriations = (
+            Appropriation.objects.appropriations_for_dst_payload(
+                from_date=date(2022, 2, 1), to_date=date(2022, 3, 1)
+            )
+        )
+        self.assertEqual(dst_appropriations.count(), 1)
+        self.assertTrue(appropriation in dst_appropriations)
+        self.assertEqual(dst_appropriations.first().dst_report_type, "Ny")
+
+        # Revive the activity by creating a modified.
+        # Next we create a modification to the main activity
+        # at 2022-01-03 and grant it.
+        with freeze_time("2022-03-01"):
+            modifies_activity = create_activity(
+                case,
+                appropriation,
+                start_date=date(2022, 4, 1),
+                end_date=date(2022, 4, 5),
+                activity_type=MAIN_ACTIVITY,
+                status=STATUS_EXPECTED,
+                modifies=activity,
+            )
+            create_payment_schedule(
+                payment_frequency=PaymentSchedule.DAILY,
+                payment_type=PaymentSchedule.RUNNING_PAYMENT,
+                recipient_type=PaymentSchedule.PERSON,
+                payment_method=CASH,
+                payment_amount=Decimal(777),
+                activity=modifies_activity,
+            )
+            activities = Activity.objects.filter(pk=modifies_activity.pk)
+            appropriation.grant(
+                activities, approval_level.id, "note", self.case_worker
+            )
+        # appropriation with earlier appropriated activities
+        # and which modifies an activity, but with a start_date
+        # in the period should be included and marked changed.
+        dst_appropriations = (
+            Appropriation.objects.appropriations_for_dst_payload(
+                from_date=date(2022, 4, 1), to_date=date(2022, 5, 1)
+            )
+        )
+        self.assertEqual(dst_appropriations.count(), 1)
+        self.assertTrue(appropriation in dst_appropriations)
+        self.assertEqual(dst_appropriations.first().dst_report_type, "Ændring")
