@@ -42,7 +42,6 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinxcontrib_django",
     "sphinxcontrib.openapi",
-    "sphinx_js",
     "myst_parser",
 ]
 
@@ -75,7 +74,3 @@ source_suffix = {
     '.rst': 'restructuredtext',
     '.md': 'markdown',
 }
-
-js_source_path = os.path.join(frontend_sources, "src")
-jsdoc_config_path = os.path.join(frontend_sources, "..", "jsdoc.json")
-
