@@ -1319,10 +1319,9 @@ class DSTUtilities(TestCase, BasicTestMixin):
         )
         xml_schema = etree.XMLSchema(file=schema_path)
 
-        # Generating a dst payload with no cut-off date
-        # should result in a initial_load with a status of "Ny"
-        # and the default test form id.
-        doc = generate_dst_payload_preventive_measures()
+        # Generating a default initial_load dst payload with no cut-off dates
+        # should result in a load with the default test form id.
+        doc = generate_dst_payload_preventive_measures(initial_load=True)
         xml_schema.assertValid(doc)
         self.assertEqual(
             doc.xpath(
@@ -1555,10 +1554,10 @@ class DSTUtilities(TestCase, BasicTestMixin):
         )
         xml_schema = etree.XMLSchema(file=schema_path)
 
-        # Generating a dst payload with no cut-off date
-        # should result in a initial_load with a status of "Ny"
+        # Generating a dst payload with no cut-off dates
+        # and full_load=True in a initial_load with a status of "Ny"
         # and the default test form id.
-        doc = generate_dst_payload_handicap()
+        doc = generate_dst_payload_handicap(full_load=True)
         xml_schema.assertValid(doc)
 
         self.assertEqual(
@@ -1583,7 +1582,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             "T231",
         )
 
-        doc = generate_dst_payload_handicap(test=False)
+        doc = generate_dst_payload_handicap(test=False, full_load=True)
         xml_schema.assertValid(doc)
 
         # Non Test should have correct form id.
@@ -1642,7 +1641,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
         )
         xml_schema = etree.XMLSchema(file=schema_path)
 
-        doc = generate_dst_payload_handicap()
+        doc = generate_dst_payload_handicap(initial_load=True)
         xml_schema.assertValid(doc)
 
         # One time activities with no start/end use payment_date instead.
@@ -2108,7 +2107,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
 
         # Generating a dst payload with no cut-off date
         # should result in a initial_load.
-        doc = generate_dst_payload_preventive_measures()
+        doc = generate_dst_payload_preventive_measures(initial_load=True)
         xml_schema.assertValid(doc)
 
         # All three appropriations should be consolidated to one entry.

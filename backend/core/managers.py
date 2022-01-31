@@ -249,7 +249,9 @@ class AppropriationQuerySet(models.QuerySet):
             )
         )
 
-    def appropriations_for_dst_payload(self, from_date=None, to_date=None):
+    def appropriations_for_dst_payload(
+        self, from_date=None, to_date=None, full_load=False
+    ):
         """Filter appropriations for a Danmarks Statistik payload."""
         from core.models import (
             MAIN_ACTIVITY,
@@ -261,13 +263,14 @@ class AppropriationQuerySet(models.QuerySet):
         if not to_date:
             to_date = timezone.now().date()
 
+        # We start by cutting off appropriations
+        # appropriated outside the from_date->to_date range.
         queryset = self.filter(
             activities__status=STATUS_GRANTED,
             activities__activity_type=MAIN_ACTIVITY,
+            activities__appropriation_date__lte=to_date,
+            activities__appropriation_date__gte=from_date,
         )
-        # We start by cutting off appropriations
-        # with activities with a newer appropriation_date.
-        queryset = queryset.filter(activities__appropriation_date__lte=to_date)
 
         report_types = {
             "NEW": "Ny",
@@ -275,8 +278,17 @@ class AppropriationQuerySet(models.QuerySet):
             "CANCELLED": "Annullering",
         }
 
-        # Delta load (from_date).
-        if from_date:
+        if full_load:
+            # Full/initial load where all appropriations are marked "NEW".
+            queryset = queryset.annotate(
+                dst_report_type=Value(
+                    report_types["NEW"], output_field=CharField()
+                )
+            ).distinct()
+
+        # Delta load where appropriations are marked "NEW" and "CHANGED"
+        # based on different criteria.
+        else:
             cases = CaseModel.objects.filter(appropriations__in=queryset)
             changed_cases = cases.filter_changed_cases_for_dst_payload(
                 from_date, to_date
@@ -320,8 +332,8 @@ class AppropriationQuerySet(models.QuerySet):
                 .values("c")
             )
 
-            # annotate fields we need to determine dst_report_type.
             queryset = (
+                # annotate fields we need to determine dst_report_type.
                 queryset.annotate(
                     main_acts_count=Subquery(
                         main_acts, output_field=IntegerField()
@@ -340,9 +352,9 @@ class AppropriationQuerySet(models.QuerySet):
                             then=Value(report_types["CHANGED"]),
                         ),
                         # If an appropriation has main activities appropriated
-                        # after the from date, and appropriated
-                        # main activities before the from_date
-                        # (thus the total number of main activities is higher)
+                        # after the from date, and the total number of
+                        # main activities is higher (and thus has
+                        # appropriated main activities before the from_date)
                         # we consider it "changed".
                         When(
                             Q(main_acts_after_from_date_count__gt=0)
@@ -364,83 +376,8 @@ class AppropriationQuerySet(models.QuerySet):
                             ),
                             then=Value(report_types["NEW"]),
                         ),
-                        # If an appropriation has a total number of main
-                        # activities equal to the number of main activities
-                        # appropriated before the from_date BUT the main
-                        # activity has a start_date or payment_date in the
-                        # from_date->to_date range AND the main activity does
-                        # not modify another we consider it "new"
-                        When(
-                            Q(
-                                main_acts_count=F(
-                                    "main_acts_before_from_date_count"
-                                )
-                            )
-                            & Q(
-                                (
-                                    Q(activities__start_date__gte=from_date)
-                                    & Q(activities__start_date__lte=to_date)
-                                )
-                                | (
-                                    Q(
-                                        **{
-                                            "activities__payment_plan"
-                                            "__payment_date__gte": from_date
-                                        }
-                                    )
-                                    & Q(
-                                        **{
-                                            "activities__payment_plan"
-                                            "__payment_date__lte": to_date
-                                        }
-                                    )
-                                )
-                            )
-                            & Q(activities__status=STATUS_GRANTED)
-                            & Q(activities__activity_type=MAIN_ACTIVITY)
-                            & Q(activities__modifies__isnull=True),
-                            then=Value(report_types["NEW"]),
-                        ),
-                        # If an appropriation has a total number of main
-                        # activities equal to the number of main activities
-                        # appropriated before the from_date BUT the main
-                        # activity has a start_date or payment_date in the
-                        # from_date->to_date range AND the main activity
-                        # modifies another, we consider it "changed"
-                        When(
-                            Q(
-                                main_acts_count=F(
-                                    "main_acts_before_from_date_count"
-                                )
-                            )
-                            & Q(
-                                (
-                                    Q(activities__start_date__gte=from_date)
-                                    & Q(activities__start_date__lte=to_date)
-                                )
-                                | (
-                                    Q(
-                                        **{
-                                            "activities__payment_plan"
-                                            "__payment_date__gte": from_date
-                                        }
-                                    )
-                                    & Q(
-                                        **{
-                                            "activities__payment_plan"
-                                            "__payment_date__lte": to_date
-                                        }
-                                    )
-                                )
-                            )
-                            & Q(activities__status=STATUS_GRANTED)
-                            & Q(activities__activity_type=MAIN_ACTIVITY)
-                            & Q(activities__modifies__isnull=False),
-                            then=Value(report_types["CHANGED"]),
-                        ),
                         # Lastly if an appropriation only has main activities
-                        # appropriated in the past, that are not covered by
-                        # previous cases, we do not include them.
+                        # appropriated in the past we do not include them.
                         When(
                             main_acts_count=F(
                                 "main_acts_before_from_date_count"
@@ -452,22 +389,6 @@ class AppropriationQuerySet(models.QuerySet):
                     ),
                 )
                 .exclude(dst_report_type="")
-                .distinct()
-            )
-        else:
-            # Full/initial load (no from_date).
-            queryset = (
-                queryset.annotate(
-                    dst_report_type=Value(
-                        report_types["NEW"], output_field=CharField()
-                    )
-                )
-                .filter(
-                    Q(activities__start_date__lte=to_date)
-                    | Q(activities__payment_plan__payment_date__lte=to_date),
-                    activities__status=STATUS_GRANTED,
-                    activities__activity_type=MAIN_ACTIVITY,
-                )
                 .distinct()
             )
 

@@ -1296,7 +1296,7 @@ def extract_dst_date_tuple_for_appropriation(appropriation):
 
 
 def generate_dst_payload_preventive_measures(
-    from_date=None, to_date=None, sections=None, test=True
+    from_date=None, to_date=None, sections=None, test=True, initial_load=False
 ):
     """
     Generate a XML payload for DST for "Preventive Measures".
@@ -1475,7 +1475,7 @@ def generate_dst_payload_handicap_element(
 
 
 def generate_dst_payload_handicap(
-    from_date=None, to_date=None, sections=None, test=True
+    from_date=None, to_date=None, sections=None, test=True, initial_load=True
 ):
     """
     Generate an XML payload for DST for "Handicap".
@@ -1493,7 +1493,7 @@ def generate_dst_payload_handicap(
         appropriations = appropriations.filter(section__in=sections)
 
     appropriations = appropriations.appropriations_for_dst_payload(
-        from_date, to_date
+        from_date, to_date, full_load
     )
 
     E = ElementMaker(
