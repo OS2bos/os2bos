@@ -190,7 +190,7 @@ FrontendTest:
     paths:
       - $CI_PROJECT_DIR/artifacts
     reports:
-      testcafe: $CI_PROJECT_DIR/testcafe.xml
+      junit: $CI_PROJECT_DIR/testcafe.xml
 
 
 # Release stage
