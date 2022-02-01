@@ -8,7 +8,7 @@
 
 <template>
 
-    <section class="appropriation" v-if="appr">
+    <section class="appropriation" v-if="appr" :id="`appropriation-${ appr.id }`">
         <header class="appropriation-header">
             <h1 style="display: inline-block;">
                 <i class="material-icons">folder_open</i>

@@ -124,6 +124,9 @@ test('Create case and appropriation', async t => {
 
     await createAppropriation(t, testdata.appr1)
 
+    const gettingPKvalue = await Selector('.appropriation').getAttribute('id')
+    testdata.appr1.pk = gettingPKvalue.substring(14)
+
     await axe(t)
 
     await t.expect(Selector('.crumb-2 span').innerText).contains(testdata.appr1.name)
@@ -135,9 +138,7 @@ test('Create case and appropriation', async t => {
 test('Edit appropriation paragraph', async t => {
 
     await t
-        .navigateTo(`${baseurl}/#/appropriations/`)
-        .typeText('#field-sbsysid', testdata.appr1.name, {replace: true})
-        .click(`.datagrid-action[title="${testdata.appr1.name}"] a`)
+        .navigateTo(`${baseurl}/#/appropriation/${testdata.appr1.pk}/`)
         .click('.appr-edit-btn')
         
     // Should be able to change paragraph while the appropriation is still in draft mode
@@ -192,9 +193,7 @@ test('Approve appropriation', async t => {
 test('Edit appropriation paragraph after approval', async t => {
 
     await t
-        .navigateTo(`${baseurl}/#/appropriations/`)
-        .typeText('#field-sbsysid', testdata.appr1.name, {replace: true})
-        .click(`td.datagrid-action[title="${testdata.appr1.name}"] a`)
+        .navigateTo(`${baseurl}/#/appropriation/${testdata.appr1.pk}/`)
         .click('.appr-edit-btn')
         // Should not be able to change paragraph since the appropriation has been approved
         .expect(Selector('#field-lawref').hasAttribute('disabled')).ok()
