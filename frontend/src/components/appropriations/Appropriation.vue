@@ -235,6 +235,7 @@
                                         activityType,
                                         startDate,
                                         endDate,
+                                        status,
                                         details {
                                             pk
                                         },
@@ -269,7 +270,8 @@
                                 modifies: e.node.modifies ? e.node.modifies.pk : null
                             }
                         })],
-                        num_ongoing_activities: a.activities.edges.length
+                        num_ongoing_activities: a.activities.edges.length,
+                        granted: this.getGrantedActStatus(a.activities.edges)
                     }
                     const new_case = {
                         name: a.case.name,
@@ -292,7 +294,14 @@
                     console.error('Error fetching Appropriation data', err)
                     this.$store.commit('setAppropriation', null)
                 })
+            },
+            getGrantedActStatus: function(activities) {
+                const granted_act = activities.find(function(edge) {
+                    return edge.node.status === 'GRANTED'
+                })
+                return granted_act ? true : false
             }
+            
         },
         beforeRouteUpdate: function(to, from, next) {
             this.update(to.params.apprId)
