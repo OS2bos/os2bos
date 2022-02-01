@@ -5,7 +5,7 @@ import { login } from '../utils/logins.js'
 import { createActivity, editActivity, createAppropriation, createCase } from '../utils/crud.js'
 import { axe } from '../utils/axe.js'
 import baseurl from '../utils/url.js'
-import { makeDateStr } from '../utils/utils.js'
+import { makeDateStr, useSelectBox } from '../utils/utils.js'
 import checkConsole from '../utils/console.js'
 
 let today = new Date(),
@@ -30,7 +30,7 @@ const testdata = {
     appr1: {
         id: 1,
         name: `xx.xx.xx-${ rand }-${ rand2 }-bevil${ rand }`,
-        section: 'SEL-109 Botilbud, kriseramte kvinder'
+        section: 'SEL-52-3.9 Anden hjælp'
     },
     appr2: {
         id: 2,
@@ -124,9 +124,29 @@ test('Create case and appropriation', async t => {
 
     await createAppropriation(t, testdata.appr1)
 
+    const gettingPKvalue = await Selector('.appropriation').getAttribute('id')
+    testdata.appr1.pk = gettingPKvalue.substring(14)
+
     await axe(t)
 
     await t.expect(Selector('.crumb-2 span').innerText).contains(testdata.appr1.name)
+})
+
+
+// Issue describing rule to test
+// https://redmine.magenta-aps.dk/issues/48204
+test('Edit appropriation paragraph', async t => {
+
+    await t
+        .navigateTo(`${baseurl}/#/appropriation/${testdata.appr1.pk}/`)
+        .click('.appr-edit-btn')
+        
+    // Should be able to change paragraph while the appropriation is still in draft mode
+    await useSelectBox(t, '#field-lawref', 'SEL-109 Botilbud, kriseramte kvinder')
+
+    await t
+        .click('.form-actions input[type="submit"]')
+        .expect(Selector('dd').withText('SEL-109 Botilbud, kriseramte kvinder').exists).ok()
 })
 
 test('Create activities', async t => {
@@ -166,6 +186,17 @@ test('Approve appropriation', async t => {
         .expect(Selector('.mini-label .label-GRANTED').exists).ok()
     
     await axe(t)
+})
+
+// Issue describing rule to test
+// https://redmine.magenta-aps.dk/issues/48204
+test('Edit appropriation paragraph after approval', async t => {
+
+    await t
+        .navigateTo(`${baseurl}/#/appropriation/${testdata.appr1.pk}/`)
+        .click('.appr-edit-btn')
+        // Should not be able to change paragraph since the appropriation has been approved
+        .expect(Selector('#field-lawref').hasAttribute('disabled')).ok()
 })
 
 test('Add adjustment activities', async t => {

@@ -29,6 +29,8 @@ from core.models import (
     RatePerDate as RatePerDateModel,
     Municipality as MunicipalityModel,
     ServiceProvider as ServiceProviderModel,
+    EffortStep as EffortStepModel,
+    TargetGroup as TargetGroupModel,
     STATUS_DELETED,
 )
 from core.filters import PaymentFilter, AppropriationFilter
@@ -95,6 +97,9 @@ class Appropriation(OptimizedDjangoObjectType):
 
     pk = graphene.Int(source="pk")
     dst_report_type = graphene.String(source="dst_report_type")
+    granted_from_date = graphene.String()
+    granted_to_date = graphene.String()
+    status = graphene.String()
 
     class Meta:
         model = AppropriationModel
@@ -302,6 +307,32 @@ class Municipality(OptimizedDjangoObjectType):
         filter_fields = "__all__"
 
 
+class TargetGroup(OptimizedDjangoObjectType):
+    """TargetGroup as a graphene type."""
+
+    pk = graphene.Int(source="pk")
+
+    class Meta:
+        model = TargetGroupModel
+        interfaces = (Node,)
+        connection_class = ExtendedConnection
+        fields = "__all__"
+        filter_fields = "__all__"
+
+
+class EffortStep(OptimizedDjangoObjectType):
+    """EffortStep as a graphene type."""
+
+    pk = graphene.Int(source="pk")
+
+    class Meta:
+        model = EffortStepModel
+        interfaces = (Node,)
+        connection_class = ExtendedConnection
+        fields = "__all__"
+        filter_fields = "__all__"
+
+
 class ServiceProvider(OptimizedDjangoObjectType):
     """ServiceProvider as a graphene type."""
 
@@ -353,6 +384,12 @@ class Query(graphene.ObjectType):
 
     municipality = Node.Field(Municipality)
     municipalities = DjangoFilterConnectionField(Municipality)
+
+    effort_step = Node.Field(EffortStep)
+    effort_steps = DjangoFilterConnectionField(EffortStep)
+
+    target_group = Node.Field(TargetGroup)
+    target_groups = DjangoFilterConnectionField(TargetGroup)
 
     user = Node.Field(User)
     users = DjangoFilterConnectionField(User)
