@@ -17,13 +17,13 @@
             <error />
             <fieldset>
                 <label class="required" for="field-sbsysid">Foranstaltningssag (SBSYS-sag)</label>
-                <input id="field-sbsysid" type="text" v-model="appr.sbsys_id" @input="checkKLE(appr.sbsys_id)" required :disabled="appr.granted">
+                <input id="field-sbsysid" type="text" v-model="appr.sbsys_id" @input="checkKLE(appr.sbsys_id)" required :disabled="appr.granted_from_date">
                 <p class="danger" v-if="sbsysCheck">Sagsnummeret svarer ikke til en af de paragraffer, der kan vælges.</p>
                 <error err-key="sbsys_id" />
 
                 <label class="required" for="field-lawref">Bevilling efter §</label>
                 <p v-if="sections && sections.length === 1"><strong>{{ sections[0].paragraph }} {{ sections[0].text }}</strong></p>
-                <select v-else id="field-lawref" class="listpicker" v-model="appr.section" required :disabled="appr.granted">
+                <select v-else id="field-lawref" class="listpicker" v-model="appr.section" required :disabled="appr.granted_from_date">
                     <option 
                         v-for="s in sections"
                         :value="s.id" 

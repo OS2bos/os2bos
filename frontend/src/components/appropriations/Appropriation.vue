@@ -201,6 +201,7 @@
                             pk,
                             sbsysId,
                             note,
+                            grantedFromDate,
                             case {
                                 pk,
                                 sbsysId,
@@ -235,7 +236,6 @@
                                         activityType,
                                         startDate,
                                         endDate,
-                                        status,
                                         details {
                                             pk
                                         },
@@ -271,7 +271,7 @@
                             }
                         })],
                         num_ongoing_activities: a.activities.edges.length,
-                        granted: this.getGrantedActStatus(a.activities.edges)
+                        granted_from_date: a.grantedFromDate
                     }
                     const new_case = {
                         name: a.case.name,
