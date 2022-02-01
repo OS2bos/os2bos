@@ -174,7 +174,7 @@ test('Approve appropriation', async t => {
     await t
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
-        .click('#check-all')
+        .click(Selector('label').withAttribute("for", "check-all"))
         .click(Selector('button').withText('Godkend valgte'))
     
     await axe(t)
@@ -273,7 +273,7 @@ test('Approve appropriation with one main activity option', async t => {
     await t
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr2.name))
-        .click('#check-all')
+        .click(Selector('label').withAttribute("for", "check-all"))
         .click(Selector('button').withText('Godkend valgte'))
     
     await axe(t)

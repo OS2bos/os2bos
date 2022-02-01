@@ -221,9 +221,8 @@ async function createAppropriation(t, appr_data) {
 }
 
 async function approveActivities(t) {
-    
     await t
-        .click('#check-all')
+        .click(Selector('label').withAttribute("for", "check-all"))
         .click(Selector('button').withText('Godkend valgte'))
         .click(Selector('label').withAttribute('for','radio-btn-1'))
         .click('button[type="submit"]')
