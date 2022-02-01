@@ -14,8 +14,8 @@
                 <i class="material-icons">folder_open</i>
                 Bevillingsskrivelse
             </h1>
-            <button v-if="user_can_edit === true" @click="show_edit = !show_edit" class="appr-edit-btn">Redigér</button>
-            <button v-if="appr.num_ongoing_activities === 0" class="appr-delete-btn" @click="preDeleteCheck()">Slet</button>
+            <button v-if="user_can_edit === true && !show_edit" @click="show_edit = !show_edit" class="appr-edit-btn">Redigér</button>
+            <button v-if="appr.num_ongoing_activities === 0 && !show_edit" class="appr-delete-btn" @click="preDeleteCheck()">Slet</button>
         </header>
 
         <appropriation-edit :appr-obj="appr" v-if="show_edit" @close="update()" />
@@ -217,6 +217,12 @@
                                 },
                                 residenceMunicipality {
                                     name
+                                },
+                                targetGroup {
+                                    pk
+                                },
+                                effortStep {
+                                    pk
                                 }
                             },
                             section {
@@ -273,7 +279,9 @@
                         case_worker: a.case.caseWorker.pk,
                         residence_municipality: a.case.residenceMunicipality.name,
                         paying_municipality: a.case.payingMunicipality.name,
-                        acting_municipality: a.case.actingMunicipality.name
+                        acting_municipality: a.case.actingMunicipality.name,
+                        target_group: a.case.targetGroup.pk,
+                        effort_step: a.case.effortStep.pk
                     }
                     this.$store.dispatch("fetchMainActivities", new_appr.activities)
                     this.$store.commit('setAppropriation', new_appr)
