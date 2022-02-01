@@ -294,12 +294,6 @@
                     console.error('Error fetching Appropriation data', err)
                     this.$store.commit('setAppropriation', null)
                 })
-            },
-            getGrantedActStatus: function(activities) {
-                const granted_act = activities.find(function(edge) {
-                    return edge.node.status === 'GRANTED'
-                })
-                return granted_act ? true : false
             }
             
         },
