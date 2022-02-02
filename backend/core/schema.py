@@ -92,6 +92,9 @@ class Appropriation(OptimizedDjangoObjectType):
 
     pk = graphene.Int(source="pk")
     dst_report_type = graphene.String(source="dst_report_type")
+    status = graphene.String(source="status")
+    granted_from_date = graphene.String(source="granted_from_date")
+    granted_to_date = graphene.String(source="granted_to_date")
 
     class Meta:
         model = AppropriationModel

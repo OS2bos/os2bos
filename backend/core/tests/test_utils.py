@@ -1555,9 +1555,9 @@ class DSTUtilities(TestCase, BasicTestMixin):
         xml_schema = etree.XMLSchema(file=schema_path)
 
         # Generating a dst payload with no cut-off dates
-        # and full_load=True in a initial_load with a status of "Ny"
+        # and initial_load=True in a initial_load with a status of "Ny"
         # and the default test form id.
-        doc = generate_dst_payload_handicap(full_load=True)
+        doc = generate_dst_payload_handicap(initial_load=True)
         xml_schema.assertValid(doc)
 
         self.assertEqual(
@@ -1582,7 +1582,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             "T231",
         )
 
-        doc = generate_dst_payload_handicap(test=False, full_load=True)
+        doc = generate_dst_payload_handicap(test=False, initial_load=True)
         xml_schema.assertValid(doc)
 
         # Non Test should have correct form id.
@@ -1917,7 +1917,9 @@ class DSTUtilities(TestCase, BasicTestMixin):
         # Generating a dst payload from a cut-off date of 2021-02-01
         # with a case with a changed acting municipality should result
         # in a status of "Ændret".
-        doc = generate_dst_payload_handicap(from_date=date(2021, 2, 1))
+        doc = generate_dst_payload_handicap(
+            from_date=date(2021, 2, 1), to_date=date(2021, 3, 1)
+        )
 
         xml_schema.assertValid(doc)
 

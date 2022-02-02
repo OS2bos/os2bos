@@ -250,7 +250,7 @@ class AppropriationQuerySet(models.QuerySet):
         )
 
     def appropriations_for_dst_payload(
-        self, from_date=None, to_date=None, full_load=False
+        self, from_date=None, to_date=None, initial_load=False
     ):
         """Filter appropriations for a Danmarks Statistik payload."""
         from core.models import (
@@ -259,18 +259,22 @@ class AppropriationQuerySet(models.QuerySet):
             Case as CaseModel,
             Activity,
         )
-
+        if not from_date:
+            from_date = datetime.date(year=1970, month=1, day=1)
         if not to_date:
             to_date = timezone.now().date()
 
         # We start by cutting off appropriations
         # appropriated outside the from_date->to_date range.
-        queryset = self.filter(
-            activities__status=STATUS_GRANTED,
-            activities__activity_type=MAIN_ACTIVITY,
-            activities__appropriation_date__lte=to_date,
-            activities__appropriation_date__gte=from_date,
-        )
+        filters = {
+            "activities__status": STATUS_GRANTED,
+            "activities__activity_type": MAIN_ACTIVITY,
+        }
+        if from_date:
+            filters["activities__appropriation_date__gte"] = from_date
+        if to_date:
+            filters["activities__appropriation_date__lte"] = to_date
+        queryset = self.filter(**filters)
 
         report_types = {
             "NEW": "Ny",
@@ -278,7 +282,7 @@ class AppropriationQuerySet(models.QuerySet):
             "CANCELLED": "Annullering",
         }
 
-        if full_load:
+        if initial_load:
             # Full/initial load where all appropriations are marked "NEW".
             queryset = queryset.annotate(
                 dst_report_type=Value(
@@ -492,9 +496,12 @@ class CaseQuerySet(models.QuerySet):
         changed_case_ids = []
 
         for case in self:
-            try:
-                from_case = case.history.as_of(from_date)
-            except case.DoesNotExist:
+            if from_date:
+                try:
+                    from_case = case.history.as_of(from_date)
+                except case.DoesNotExist:
+                    from_case = case.history.earliest()
+            else:
                 from_case = case.history.earliest()
 
             if to_date:
