@@ -1,7 +1,7 @@
 // Testing with Testcafe : https://devexpress.github.io/testcafe/documentation/getting-started/
 
 import { Selector } from 'testcafe'
-import { login } from '../utils/logins.js'
+import { familieraadgiver, regelmotor } from '../utils/logins.js'
 import baseurl from '../utils/url.js'
 import { randNum, createDate, useSelectBox } from '../utils/utils.js'
 import { createCase, createAppropriation, createActivity, approveActivities } from '../utils/crud.js'
@@ -85,7 +85,7 @@ fixture('Check payment editing rules')
 
 test('Create data and check that normal user can create new payments', async t => {
 
-    await login(t, 'familieraadgiver', 'sagsbehandler') 
+    await t.useRole(familieraadgiver)
 
     await createCase(t, testdata.case1)
     await createAppropriation(t, testdata.appr1)
@@ -117,7 +117,7 @@ test('Create data and check that normal user can create new payments', async t =
 
 test('Check that improved user can create new payments', async t => {
 
-    await login(t, 'regelmotor', 'regelmotor')
+    await t.useRole(regelmotor)
 
     await useSelectBox(t, '#field-case-worker', 'familieraadgiver')
 
@@ -166,7 +166,7 @@ test('Check that improved user can create new payments', async t => {
 
 test('Check that normal user cannot create new payments after grant', async t => {
 
-    await login(t, 'familieraadgiver', 'sagsbehandler')
+    await t.useRole(familieraadgiver)
 
     await t
         .click(Selector('a').withText(testdata.case1.name))
@@ -215,7 +215,7 @@ test('Check that normal user cannot create new payments after grant', async t =>
 
 test('Check that normal user can register payment under certain circumstances', async t => {
 
-    await login(t, 'familieraadgiver', 'sagsbehandler') 
+    await t.useRole(familieraadgiver)
 
     await t
         .click(Selector('a').withText(testdata.case1.name))
@@ -254,7 +254,7 @@ test('Check that normal user can register payment under certain circumstances', 
 
 test('Check that improved user can register payment at all times', async t => {
 
-    await login(t, 'regelmotor', 'regelmotor')
+    await t.useRole(regelmotor)
 
     await useSelectBox(t, '#field-case-worker', 'familieraadgiver')
 

@@ -1,7 +1,7 @@
 // Testing with Testcafe : https://devexpress.github.io/testcafe/documentation/getting-started/
 
 import { Selector } from 'testcafe'
-import { login } from '../utils/logins.js'
+import { familieleder } from '../utils/logins.js'
 import { createActivity, editActivity, createAppropriation, createCase } from '../utils/crud.js'
 import { axe } from '../utils/axe.js'
 import baseurl from '../utils/url.js'
@@ -110,7 +110,7 @@ const testdata = {
 fixture('Login and create some data') // declare the fixture
     .page(baseurl)  // specify the start page
     .beforeEach(async t => { 
-        await login(t)
+        await t.useRole(familieleder)
     })
     .afterEach(() => checkConsole())
 
