@@ -262,6 +262,7 @@
                 let data = {
                     query: `{
                         appropriation(id: "${ id }") {
+                            grantedFromDate,
                             activities {
                                 edges {
                                     node {
@@ -302,10 +303,14 @@
                 }
                 axios.post('/graphql/', data)
                 .then(res => {
-                    if (!res.data.data.appropriation) {
+                    const data = res.data.data.appropriation
+                    if (!data) {
                         return false
                     }
-                    const edges = res.data.data.appropriation.activities.edges 
+                    if (data.grantedFromDate) {
+                        this.$store.commit('setAppropriationProperty', {prop: 'granted_from_date', val: data.grantedFromDate})
+                    }
+                    const edges = data.activities.edges 
                     const acts = edges.map(a => {
                         return {
                             id: a.node.pk,

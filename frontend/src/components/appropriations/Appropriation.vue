@@ -18,7 +18,7 @@
             <button v-if="appr.num_ongoing_activities === 0 && !show_edit" class="appr-delete-btn" @click="preDeleteCheck()">Slet</button>
         </header>
 
-        <appropriation-edit :appr-obj="appr" v-if="show_edit" @close="update()" />
+        <appropriation-edit :appr-obj="appr" v-if="show_edit" @close="update" />
 
         <!-- Delete activity modal -->
         <div v-if="showModal">
