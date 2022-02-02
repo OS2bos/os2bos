@@ -1,7 +1,7 @@
 // Testing with Testcafe : https://devexpress.github.io/testcafe/documentation/getting-started/
 
 import { Selector } from 'testcafe'
-import { login } from '../utils/logins.js'
+import { familieleder } from '../utils/logins.js'
 import baseurl from '../utils/url.js'
 import { leadZero, randNum, createDate } from '../utils/utils.js'
 import { createCase, createAppropriation, createActivity, approveActivities, editActivity } from '../utils/crud.js'
@@ -65,7 +65,7 @@ const today = new Date(),
 fixture('Check rules')
     .page(baseurl)
     .beforeEach(async t => { 
-        await login(t) 
+        await t.useRole(familieleder)
     })
     .afterEach(() => checkConsole())
 

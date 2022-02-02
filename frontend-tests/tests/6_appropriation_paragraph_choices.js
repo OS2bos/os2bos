@@ -1,7 +1,7 @@
 // Testing with Testcafe : https://devexpress.github.io/testcafe/documentation/getting-started/
 
 import { Selector } from 'testcafe'
-import { login } from '../utils/logins.js'
+import { admin, familieleder } from '../utils/logins.js'
 import { createCase } from '../utils/crud.js'
 import baseurl from '../utils/url.js'
 import checkConsole from '../utils/console.js'
@@ -31,7 +31,7 @@ fixture('Check appropriation paragraph choices') // declare the fixture
 
 test('Add new target group in Django admin', async t => {
 
-    await login(t, 'admin', 'admin')
+    await t.useRole(admin)
 
     await t
         .navigateTo('/api/admin/core/targetgroup/add/')
@@ -42,7 +42,7 @@ test('Add new target group in Django admin', async t => {
 
 test('Appropriation with 0 available paragraphs should display all paragraphs as default', async t => {
 
-    await login(t, 'familieleder', 'sagsbehandler')
+    await t.useRole(familieleder)
     
     await createCase(t, testdata.case1)
 
@@ -55,7 +55,7 @@ test('Appropriation with 0 available paragraphs should display all paragraphs as
 
 test('Add target group to paragraph in Django admin', async t => {
 
-    await login(t, 'admin', 'admin')
+    await t.useRole(admin)
 
     await t
         .navigateTo('/api/admin/core/section/1249/change/')
@@ -65,7 +65,7 @@ test('Add target group to paragraph in Django admin', async t => {
 
 test('Appropriation with 1 available paragraph should display no selectbox', async t => {
 
-    await login(t, 'familieleder', 'sagsbehandler')
+    await t.useRole(familieleder)
 
     await t
         .click(Selector('a').withText(testdata.case1.name))
@@ -75,7 +75,7 @@ test('Appropriation with 1 available paragraph should display no selectbox', asy
 
 test('Appropriation with some available paragraphs should display only those paragraphs', async t => {
 
-    await login(t, 'familieleder', 'sagsbehandler')
+    await t.useRole(familieleder)
     
     await createCase(t, testdata.case2)
 
