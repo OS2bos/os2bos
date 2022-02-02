@@ -30,7 +30,6 @@ const testdata = {
         section: 'SEL-109 Botilbud, kriseramte kvinder'
     },
     act1: {
-        note: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
         payment_type: 'RUNNING_PAYMENT',
         start_date: str1mth,
         end_date: str10mth,

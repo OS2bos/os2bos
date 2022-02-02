@@ -184,7 +184,7 @@ FrontendTest:
     - cd frontend-tests
     - npm install
   script:
-    - ./node_modules/.bin/testcafe chrome:headless tests/*.js --baseurl http://bev:5000 --cache --screenshot $CI_PROJECT_DIR/artifacts --video $CI_PROJECT_DIR/artifacts --assertion-timeout 15000 --selector-timeout 15000  --reporter xunit:$CI_PROJECT_DIR/testcafe.xml
+    - ./node_modules/.bin/testcafe chrome:headless tests/*.js --baseurl http://bev:5000 --cache --screenshot $CI_PROJECT_DIR/artifacts --video $CI_PROJECT_DIR/artifacts --assertion-timeout 10000 --selector-timeout 10000  --reporter xunit:$CI_PROJECT_DIR/testcafe.xml
   artifacts:
     when: always
     paths:
