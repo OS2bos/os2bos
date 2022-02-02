@@ -48,7 +48,7 @@ async function activityFormInput(t, act_data) {
         await useSelectBox(t, '#fieldSelectAct', act_data.details__name)
     }
     if (act_data.note) {
-        await t.typeText('#note', act_data.note, {replace: true})
+        await t.typeText(Selector('#note'), act_data.note, {replace: true})
     }
 
     switch(act_data.payment_type) {

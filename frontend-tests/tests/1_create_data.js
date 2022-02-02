@@ -67,7 +67,6 @@ const testdata = {
     },
     act3: {
         details__name: 'Tolk',
-        note: 'En anden lille note',
         payment_type: 'ONE_TIME_PAYMENT',
         payment_date: str5mth,
         payment_cost_type: 'FIXED',
@@ -100,7 +99,6 @@ const testdata = {
         end_date: str5mth,
         payment_type: 'RUNNING_PAYMENT',
         payment_frequency: 'BIWEEKLY',
-        note: 'Denne ydelse vil blive slettet',
         payment_cost_type: 'FIXED',
         payment_amount: '999.95',
         recipient_type: 'COMPANY'
