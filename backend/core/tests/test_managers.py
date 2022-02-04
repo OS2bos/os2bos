@@ -23,7 +23,6 @@ from core.tests.testing_utils import (
     create_activity,
     create_municipality,
     create_section,
-    create_approval_level,
 )
 from core.models import (
     Payment,
@@ -33,8 +32,6 @@ from core.models import (
     MAIN_ACTIVITY,
     SUPPL_ACTIVITY,
     STATUS_GRANTED,
-    STATUS_EXPECTED,
-    STATUS_DRAFT,
     CASH,
     Activity,
     Appropriation,

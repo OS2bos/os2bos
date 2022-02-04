@@ -252,29 +252,21 @@ class AppropriationQuerySet(models.QuerySet):
     def appropriations_for_dst_payload(
         self, from_date=None, to_date=None, initial_load=False
     ):
-        """Filter appropriations for a Danmarks Statistik payload."""
+        """Filter appropriations for a Danmarks Statistik payload.
+
+        This involves filtering and annotating an appropriate dst_report_type.
+        """
         from core.models import (
             MAIN_ACTIVITY,
             STATUS_GRANTED,
             Case as CaseModel,
             Activity,
         )
+
         if not from_date:
             from_date = datetime.date(year=1970, month=1, day=1)
         if not to_date:
             to_date = timezone.now().date()
-
-        # We start by cutting off appropriations
-        # appropriated outside the from_date->to_date range.
-        filters = {
-            "activities__status": STATUS_GRANTED,
-            "activities__activity_type": MAIN_ACTIVITY,
-        }
-        if from_date:
-            filters["activities__appropriation_date__gte"] = from_date
-        if to_date:
-            filters["activities__appropriation_date__lte"] = to_date
-        queryset = self.filter(**filters)
 
         report_types = {
             "NEW": "Ny",
@@ -282,13 +274,27 @@ class AppropriationQuerySet(models.QuerySet):
             "CANCELLED": "Annullering",
         }
 
+        queryset = self
+
         if initial_load:
             # Full/initial load where all appropriations are marked "NEW".
-            queryset = queryset.annotate(
-                dst_report_type=Value(
-                    report_types["NEW"], output_field=CharField()
+
+            # Cut off appropriations appropriated outside the
+            # from_date->to_date range.
+            queryset = (
+                queryset.filter(
+                    activities__status=STATUS_GRANTED,
+                    activities__activity_type=MAIN_ACTIVITY,
+                    activities__appropriation_date__gte=from_date,
+                    activities__appropriation_date__lte=to_date,
                 )
-            ).distinct()
+                .annotate(
+                    dst_report_type=Value(
+                        report_types["NEW"], output_field=CharField()
+                    )
+                )
+                .distinct()
+            )
 
         # Delta load where appropriations are marked "NEW" and "CHANGED"
         # based on different criteria.
@@ -296,6 +302,17 @@ class AppropriationQuerySet(models.QuerySet):
             cases = CaseModel.objects.filter(appropriations__in=queryset)
             changed_cases = cases.filter_changed_cases_for_dst_payload(
                 from_date, to_date
+            )
+            # Cut off appropriations appropriated outside the
+            # from_date->to_date range.
+            queryset = queryset.filter(
+                Q(
+                    Q(activities__appropriation_date__gte=from_date)
+                    & Q(activities__appropriation_date__lte=to_date)
+                )
+                | Q(case__in=changed_cases),
+                activities__status=STATUS_GRANTED,
+                activities__activity_type=MAIN_ACTIVITY,
             )
             # Use subqueries as multiple annotations will yield wrong results:
             # https://docs.djangoproject.com/en/2.2/topics/db/aggregation/#combining-multiple-aggregations
@@ -496,12 +513,9 @@ class CaseQuerySet(models.QuerySet):
         changed_case_ids = []
 
         for case in self:
-            if from_date:
-                try:
-                    from_case = case.history.as_of(from_date)
-                except case.DoesNotExist:
-                    from_case = case.history.earliest()
-            else:
+            try:
+                from_case = case.history.as_of(from_date)
+            except case.DoesNotExist:
                 from_case = case.history.earliest()
 
             if to_date:

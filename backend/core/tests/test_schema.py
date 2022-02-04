@@ -291,6 +291,7 @@ class TestAppropriationSchema(AuthenticatedTestCase, BasicTestMixin):
             111,
         )
 
+    @freeze_time("2021-01-01")
     def test_appropriations_from_dst_date_initial(self):
         now = timezone.now().date()
         start_date = now
@@ -336,7 +337,7 @@ class TestAppropriationSchema(AuthenticatedTestCase, BasicTestMixin):
         json = {
             "query": """
             query {
-                appropriations(dstDate:"[\\"None\\",\\"None\\"]") {
+                appropriations(fromDate:"1970-01-01", toDate:"2021-01-01") {
                     edges {
                         node {
                             id,
@@ -378,6 +379,7 @@ class TestAppropriationSchema(AuthenticatedTestCase, BasicTestMixin):
             appropriation,
             start_date=start_date,
             end_date=end_date,
+            appropriation_date=now,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_DRAFT,
         )
@@ -404,11 +406,13 @@ class TestAppropriationSchema(AuthenticatedTestCase, BasicTestMixin):
         # Next we create a modification to the main activity
         # at 2021-01-03 and grant it.
         with freeze_time("2021-01-03"):
+            now = timezone.now().date()
             modifies_activity = create_activity(
                 case,
                 appropriation,
                 start_date=start_date + timedelta(days=2),
                 end_date=end_date,
+                appropriation_date=now,
                 activity_type=MAIN_ACTIVITY,
                 status=STATUS_EXPECTED,
                 modifies=activity,
@@ -429,7 +433,7 @@ class TestAppropriationSchema(AuthenticatedTestCase, BasicTestMixin):
         json = {
             "query": """
             query {
-                appropriations(dstDate:"[\\"2021-01-02\\",\\"None\\"]") {
+                appropriations(fromDate:"2021-01-02", toDate:"2021-01-03") {
                     edges {
                         node {
                             id,
@@ -523,7 +527,7 @@ class TestAppropriationSchema(AuthenticatedTestCase, BasicTestMixin):
         json = {
             "query": """
             query {
-                appropriations(dstDate:"[\\"None\\",\\"2021-01-03\\"]") {
+                appropriations(toDate:"2021-01-03") {
                     edges {
                         node {
                             id,
@@ -545,59 +549,6 @@ class TestAppropriationSchema(AuthenticatedTestCase, BasicTestMixin):
         self.assertEqual(
             edges[0]["node"]["id"],
             b64encode(f"Appropriation:{appropriation.pk}".encode()).decode(),
-        )
-
-    def test_appropriations_dst_date_not_a_list(self):
-        now = timezone.now().date()
-        start_date = now
-        end_date = now + timedelta(days=5)
-
-        reverse_url = reverse("graphql-api")
-        self.client.login(username=self.username, password=self.password)
-        case = create_case(self.case_worker, self.municipality, self.district)
-        section = create_section(dst_code="123")
-        appropriation = create_appropriation(
-            sbsys_id="XXX-YYY", case=case, section=section
-        )
-        # Create a granted main activity.
-        activity = create_activity(
-            case,
-            appropriation,
-            start_date=start_date,
-            end_date=end_date,
-            activity_type=MAIN_ACTIVITY,
-            status=STATUS_GRANTED,
-        )
-        create_payment_schedule(
-            payment_frequency=PaymentSchedule.DAILY,
-            payment_type=PaymentSchedule.RUNNING_PAYMENT,
-            recipient_type=PaymentSchedule.PERSON,
-            payment_method=CASH,
-            payment_amount=Decimal(666),
-            activity=activity,
-        )
-
-        json = {
-            "query": """
-            query {
-                appropriations(dstDate:"\\"None\\"") {
-                    edges {
-                        node {
-                            id,
-                            sbsysId,
-                            dstReportType
-                        }
-                    }
-                }
-            }
-            """
-        }
-        response = self.client.get(reverse_url, json)
-        self.assertEqual(
-            response.json()["errors"][0]["message"],
-            '[\'{"dst_date": [{"message": "DateRangeField skal v\\\\u00e6re en'
-            ' liste indeholdende datoer eller \\\\"None\\\\"",'
-            ' "code": ""}]}\']',
         )
 
 

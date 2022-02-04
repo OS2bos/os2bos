@@ -1875,6 +1875,7 @@ class DSTUtilities(TestCase, BasicTestMixin):
             appropriation,
             start_date=start_date,
             end_date=end_date,
+            appropriation_date=now,
             activity_type=MAIN_ACTIVITY,
             status=STATUS_DRAFT,
         )
