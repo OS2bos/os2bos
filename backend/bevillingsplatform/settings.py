@@ -117,6 +117,7 @@ INSTALLED_APPS = [
     "graphene_django",
     "mailer",
     "watchman",
+    "django_stomp",
 ]
 
 MIDDLEWARE = [
@@ -693,3 +694,37 @@ WATCHMAN_CHECKS = (
 
 # Prometheus logging.
 PUSHGATEWAY_HOST = settings.get("PUSHGATEWAY_HOST", fallback="")
+
+# Stomp/ActiveMQ integration.
+STOMP_SERVER_HOST = settings.get(
+    "STOMP_SERVER_HOST", fallback="sbsip-w-01.bk-sbsys.dk"
+)
+STOMP_SERVER_PORT = settings.get("STOMP_SERVER_PORT", fallback=61616)
+STOMP_SERVER_USER = "magenta-os2bos"
+STOMP_SERVER_PASSWORD = settings.get(
+    "STOMP_SERVER_PASSWORD", fallback=""
+)
+STOMP_USE_SSL = settings.get("STOMP_USE_SSL", fallback=True)
+STOMP_SUBSCRIPTION_ID = settings.get("STOMP_SUBSCRIPTION_ID", fallback=1)
+STOMP_OUTGOING_HEARTBEAT = settings.get(
+    "STOMP_OUTGOING_HEARTBEAT", fallback=10000
+)
+STOMP_CORRELATION_ID_REQUIRED = settings.get(
+    "STOMP_CORRELATION_ID_REQUIRED", False
+)
+
+# SBSYS Login Information
+SBSYS_API_URL = settings.get(
+    "SBSYS_API_URL", fallback="https://sbsyswebapi.bk-sbsys.dk/api"
+)
+SBSYS_TOKEN_URL = settings.get(
+    "SBSYS_TOKEN_URL",
+    fallback="https://sbsip-w-01.bk-sbsys.dk:8543"
+    + "/auth/realms/sbsip/protocol/openid-connect/token",
+)
+SBSYS_GRANT_TYPE = settings.get(
+    "SBSYS_GRANT_TYPE", fallback="client_credentials"
+)
+SBSYS_CLIENT_ID = settings.get("SBSYS_CLIENT_ID", fallback="os2bos")
+SBSYS_CLIENT_SECRET = settings.get("SBSYS_CLIENT_SECRET", fallback="")
+SBSYS_VERIFY_TLS = settings.get("SBSYS_VERIFY_TLS", False)
