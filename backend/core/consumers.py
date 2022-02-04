@@ -10,17 +10,20 @@ import logging
 
 logger = logging.getlogger(__name__)
 
-from django_stomp.services.consumer import Payload
+# from django_stomp.services.consumer import Payload
 
 
 def receive_sbsys_event(payload):
     logger.info("Event received from SBSYS queue!")
+    logger.info(str(payload))
 
     sbsys_data = payload.body
+    logger.info(str(sbsys_data))
 
     try:
 
         case_id = sbsys_data.get("SagId")
+        print(case_id)
 
         # Do stuff
 
