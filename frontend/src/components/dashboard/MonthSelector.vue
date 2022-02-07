@@ -1,6 +1,6 @@
 <template>
     <div>
-        <label for="field-month-selector">Måned</label>
+        <label for="field-month-selector" class="sr-only">Måned</label>
         <select id="field-month-selector" :value="value" @change="changeMonth">
             <option value="1">Januar</option>
             <option value="2">Februar</option>

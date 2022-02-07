@@ -9,8 +9,8 @@
     <article class="expenses-pr-activity">
         <h2>Udgifter fordelt på ydelse</h2>
         <fieldset>
-            <year-selector @change="updateYear" />
             <month-selector @change="updateMonth" />
+            <year-selector @change="updateYear" />
         </fieldset>
         <div style="width: 20rem; height: auto;">
             <canvas :id="chart_id"></canvas>

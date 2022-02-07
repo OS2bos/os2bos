@@ -1,6 +1,6 @@
 <template>
     <div>
-        <label for="field-year-selector">År</label>
+        <label for="field-year-selector" class="sr-only">År</label>
         <select id="field-year-selector" :value="value" @change="changeYear">
             <option :value="current_year">{{ current_year }}</option>
             <option v-for="year in years" :value="year" :key="year">{{ year }}</option>
