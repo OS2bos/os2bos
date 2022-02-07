@@ -1608,4 +1608,15 @@ def generate_dst_payload_handicap(
 
 def import_case_from_sbsys(sbsys_json):
     """Import data received from SBSYS API"""
-    print(sbsys_json)
+    sbsys_id = sbsys_json["Nummer"]
+    cpr_number = sbsys_json["PrimaryPart"]["CPRnummer"]
+    name = sbsys_json["PrimaryPart"]["Navn"]
+    print(name, cpr_number, sbsys_id)
+    # case_worker - how do we correlate this?
+    # district - can we calculate school district from address?
+    # paying_municipality - can we get this from SBSYS?
+    # acting_municipality - as above (how is this handled in Ballerup?)
+    # residence_municipality - extract from person's address?
+    # target_group  - is this even present in SBSYS?
+    # effort_step - maybe not present in SBSYS.
+    # scaling_step - maybe not present in SBSYS.
