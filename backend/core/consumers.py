@@ -17,8 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 def receive_sbsys_event(payload):
-    print("Event received from SBSYS queue!")
-
+    """Receive notification from SBSYS event queue."""
     sbsys_data = payload.body
     print(str(sbsys_data))
 

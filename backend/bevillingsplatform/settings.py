@@ -701,9 +701,7 @@ STOMP_SERVER_HOST = settings.get(
 )
 STOMP_SERVER_PORT = settings.get("STOMP_SERVER_PORT", fallback=61616)
 STOMP_SERVER_USER = "magenta-os2bos"
-STOMP_SERVER_PASSWORD = settings.get(
-    "STOMP_SERVER_PASSWORD", fallback=""
-)
+STOMP_SERVER_PASSWORD = settings.get("STOMP_SERVER_PASSWORD", fallback="")
 STOMP_USE_SSL = settings.get("STOMP_USE_SSL", fallback=True)
 STOMP_SUBSCRIPTION_ID = settings.get("STOMP_SUBSCRIPTION_ID", fallback=1)
 STOMP_OUTGOING_HEARTBEAT = settings.get(
