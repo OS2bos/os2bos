@@ -13,9 +13,7 @@
             <month-selector @change="updateMonth" />
             <year-selector @change="updateYear" />
         </fieldset>
-        <div style="width: 20rem; height: auto;">
-            <canvas :id="chart_id"></canvas>
-        </div>
+        <canvas :id="chart_id"></canvas>
     </article>
 </template>
 
@@ -133,14 +131,15 @@ export default {
 
 <style>
     .expenses-pr-section {
-        display: inline-block;
+        display: block;
+        text-align: center;
         padding: 2rem 1rem;
         background-color: var(--grey1);
-        width: auto;
+        width: 18rem;
+        margin: 0;
     }
     .expenses-pr-section h2 {
-        padding: .5rem 0;
-        text-align: center;
+        padding: .25rem 0 1rem;
     }
     .expenses-pr-section fieldset {
         display: flex;

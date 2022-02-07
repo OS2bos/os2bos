@@ -7,38 +7,45 @@
 
 
 <template>
-    <article>
+    <section class="dashboard">
         <h1>Økonomisk overblik</h1>
         <div class="dashboard-grid">
             <expenses-pr-year />
-            <expenses-pr-activity />
             <expenses-pr-section />
+            <expenses-pr-activity />
+            <expenses-trend />
         </div>
-    </article>
+    </section>
 </template>
 
 <script>
 import ExpensesPrActivity from './ExpensesPrActivity.vue'
 import ExpensesPrSection from './ExpensesPrSection.vue'
 import ExpensesPrYear from './ExpensesPrYear.vue'
+import ExpensesTrend from './ExpensesTrend.vue'
 
 export default {
     components: {
         ExpensesPrActivity,
         ExpensesPrSection,
-        ExpensesPrYear
+        ExpensesPrYear,
+        ExpensesTrend
     }
 }
 </script>
 
 <style>
-    .dashboard-grid {
-        display: grid;
-        gap: 1rem;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr 1fr;
+    .dashboard {
+        width: 67.5rem;
+        margin: 0 auto;
     }
-    .dashboard-grid *:first-child {
-        grid-area: 1 / 1 / 2 / 3;
+    .dashboard-grid {
+        display: flex;
+        gap: 1rem;
+        flex-flow: row wrap;
+        justify-content: flex-start;
+    }
+    .dashboard-grid > * {
+        flex: 1 0 auto;
     }
 </style>

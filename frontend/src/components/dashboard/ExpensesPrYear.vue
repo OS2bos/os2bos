@@ -8,12 +8,13 @@
 
 <template>
     <article class="expenses-pr-year">
-        <fieldset>
-            <year-selector @change="updateYear" />
-        </fieldset>
-        <div style="width: 40rem; height: auto;">
-            <canvas :id="chart_id"></canvas>
-        </div>
+        <header>
+            <h2>Bevilligede ydelser</h2>
+            <fieldset>
+                <year-selector @change="updateYear" />
+            </fieldset>
+        </header>
+        <canvas :id="chart_id"></canvas>
     </article>
 </template>
 
@@ -21,8 +22,12 @@
 import YearSelector from './YearSelector.vue'
 import ajax from '../http/Http.js'
 import Chart from 'chart.js/auto'
+import expensesMixin from './expensesMixin.js'
 
 export default {
+    mixins: [
+        expensesMixin
+    ],
     components: {
         YearSelector
     },
@@ -66,15 +71,12 @@ export default {
             })          
         },
         calcMonthlyPayments: function(payment_list) {
-            const date_key = payment_list[0].node.date ? 'date' : 'paidDate' 
-            const amount_key = payment_list[0].node.amount ? 'amount' : 'paidAmount' 
-            
             let monthly_payments = [0,0,0,0,0,0,0,0,0,0,0,0]
 
             payment_list.forEach(payment => {
-                const month_index = Number(payment.node[date_key].substring(5,7)) - 1
+                const month_index = Number(payment.node.date.substring(5,7)) - 1
                 const sum = new Number(monthly_payments[month_index])
-                monthly_payments[month_index] = sum + Number(payment.node[amount_key])
+                monthly_payments[month_index] = sum + Number(payment.node.amount)
             })
             return monthly_payments
         },
@@ -83,10 +85,10 @@ export default {
                 labels: ['jan', 'feb', 'mar', 'apr', 'maj', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'],
                 datasets: [
                     {
-                        label: 'Bevilligede ydelser',
+                        label: `Bevilligede ydelser ${this.year}`,
                         data: paymentdata,
-                        backgroundColor: 'hsl(222, 83%, 31%)',
-                        borderWidth: 1
+                        backgroundColor: 'hsl(40, 83%, 62%)',
+                        borderWidth: 0
                     }
                 ]
             }
@@ -105,5 +107,21 @@ export default {
         display: block;
         padding: 2rem 2rem 0;
         background-color: var(--grey1);
+        margin: 0;
+        max-width: auto;
+        width: 35rem;
+    }
+    .expenses-pr-year header {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    .expenses-pr-year fieldset {
+        margin: 0;
+    }
+    .expenses-pr-year h2 {
+        padding: .25rem 0 0;
     }
 </style>
