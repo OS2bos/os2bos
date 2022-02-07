@@ -19,12 +19,9 @@ logger = logging.getLogger(__name__)
 def receive_sbsys_event(payload):
     """Receive notification from SBSYS event queue."""
     sbsys_data = payload.body
-    print(str(sbsys_data))
 
     try:
-
         case_id = sbsys_data["SagId"]
-        print(case_id)
 
         # Do stuff
 
@@ -34,6 +31,9 @@ def receive_sbsys_event(payload):
             import urllib3
 
             urllib3.disable_warnings()
+        else:
+            # This should always happen in production.
+            pass
         # Get SBSYS API token.
         sbsys_token_url = settings.SBSYS_TOKEN_URL
         verify_tls = settings.SBSYS_VERIFY_TLS
@@ -57,7 +57,7 @@ def receive_sbsys_event(payload):
         case_json = r.json()
         print(str(case_json))
         # Now extract info and import to BOS
-        if sbsys_data["ForloebtypeId"] == 1:
+        if sbsys_data["ForloebtypeId"] == 1:  # pragma: no cover
             # Create new case, possibly an Appropriation - etc.
             pass
         # All went well!
