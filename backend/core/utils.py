@@ -1604,3 +1604,8 @@ def generate_dst_payload_handicap(
     doc.append(appropriations_root)
 
     return doc
+
+
+def import_case_from_sbsys(sbsys_json):
+    """Import data received from SBSYS API"""
+    print(sbsys_json)

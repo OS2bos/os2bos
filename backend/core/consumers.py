@@ -11,6 +11,8 @@ import requests
 
 from django.conf import settings
 
+from core.utils import import_case_from_sbsys
+
 logger = logging.getLogger(__name__)
 
 # from django_stomp.services.consumer import Payload
@@ -55,11 +57,11 @@ def receive_sbsys_event(payload):
             verify=verify_tls,
         )
         case_json = r.json()
-        print(str(case_json))
         # Now extract info and import to BOS
-        if sbsys_data["ForloebtypeId"] == 1:  # pragma: no cover
+        if sbsys_data["ForloebtypeId"] == 1:
             # Create new case, possibly an Appropriation - etc.
-            pass
+            import_case_from_sbsys(case_json)
+
         # All went well!
         payload.ack()
 
