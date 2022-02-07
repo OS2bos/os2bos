@@ -30,7 +30,7 @@
             </div>
             <div>
                 <label for="to-date">Til dato:</label>
-                <input id="to-date" type="date" v-model="to_date" :max="today" required @change="filterByCutoff">
+                <input id="to-date" type="date" v-model="to_date" :min="from_date" required @change="filterByCutoff">
             </div>
             <p style="padding-top: 2rem;">&hellip;eller&hellip;</p>
             <div>
