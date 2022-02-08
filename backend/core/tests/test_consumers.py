@@ -21,6 +21,19 @@ class MockResponse:
         return self.json_data
 
 
+class MockPayload:
+    def ack(self):
+        pass
+
+    def nack(self):
+        pass
+
+    body = {
+        "SagId": 1831,
+        "ForloebtypeId": 1,
+    }
+
+
 example_sbsys_data = {
     "SagsTyper": [{"Id": 3, "Navn": "BUSag"}],
     "SagsTitel": "Børn og ungesag v127.9.12 - Åge Test Berggren",
@@ -161,46 +174,38 @@ def mocked_requests_get(*args, **kwargs):
 
 class ReceiveSBSYSEventTestCase(TestCase):
     @override_settings(SBSYS_VERIFY_TLS=True)
-    @mock.patch("django_stomp.services.consumer.Payload")
+    @mock.patch(
+        "django_stomp.services.consumer.Payload", new_callable=MockPayload
+    )
     @mock.patch("requests.post", side_effect=mocked_requests_post)
     @mock.patch("requests.get", side_effect=mocked_requests_get)
     def test_receive_sbsys_event(
         self, requests_get_mock, requests_post_mock, payload_mock
     ):
-        payload_mock.body = {
-            "SagId": 1831,
-            "ForloebtypeId": 1,
-        }
-        payload_mock.ack = lambda self: None
         # No tests - this function doesn't return anything.
         # S'all good if it doesn't throw an exception.
         receive_sbsys_event(payload_mock)
 
     @override_settings(SBSYS_VERIFY_TLS=False)
-    @mock.patch("django_stomp.services.consumer.Payload")
+    @mock.patch(
+        "django_stomp.services.consumer.Payload", new_callable=MockPayload
+    )
     @mock.patch("requests.post", side_effect=mocked_requests_post)
     @mock.patch("requests.get", side_effect=mocked_requests_get)
     def test_receive_sbsys_event_no_tls(
         self, requests_get_mock, requests_post_mock, payload_mock
     ):
-        payload_mock.body = {
-            "SagId": 1831,
-            "ForloebtypeId": 1,
-        }
-        payload_mock.ack = lambda self: None
         # No tests - this function doesn't return anything.
         # S'all good if it doesn't throw an exception.
         receive_sbsys_event(payload_mock)
 
-    @mock.patch("django_stomp.services.consumer.Payload")
+    @mock.patch(
+        "django_stomp.services.consumer.Payload", new_callable=MockPayload
+    )
     @mock.patch("requests.post", side_effect=Exception)
     def test_receive_sbsys_event_auth_failed(
         self, requests_post_mock, payload_mock
     ):
-        payload_mock.body = {
-            "SagId": 1831,
-        }
-        payload_mock.nack = lambda self: None
         try:
             receive_sbsys_event(payload_mock)
         except Exception:
