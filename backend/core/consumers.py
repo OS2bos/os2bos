@@ -11,7 +11,7 @@ import requests
 
 from django.conf import settings
 
-from core.utils import import_case_from_sbsys
+from core.utils import import_sbsys_case
 
 logger = logging.getLogger(__name__)
 
@@ -60,7 +60,7 @@ def receive_sbsys_event(payload):
         # Now extract info and import to BOS
         if sbsys_data["ForloebtypeId"] == 1:
             # Create new case, possibly an Appropriation - etc.
-            import_case_from_sbsys(case_json)
+            import_sbsys_case(case_json)
 
         # All went well!
         payload.ack()
