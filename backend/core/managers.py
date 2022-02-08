@@ -334,7 +334,7 @@ class AppropriationQuerySet(models.QuerySet):
                 .filter(
                     activity_type=MAIN_ACTIVITY,
                     status=STATUS_GRANTED,
-                    appropriation_date__lte=from_date,
+                    appropriation_date__lt=from_date,
                 )
                 .values("appropriation")
                 .annotate(c=Count("appropriation"))
@@ -346,7 +346,7 @@ class AppropriationQuerySet(models.QuerySet):
                 .filter(
                     activity_type=MAIN_ACTIVITY,
                     status=STATUS_GRANTED,
-                    appropriation_date__gt=from_date,
+                    appropriation_date__gte=from_date,
                 )
                 .values("appropriation")
                 .annotate(c=Count("appropriation"))
