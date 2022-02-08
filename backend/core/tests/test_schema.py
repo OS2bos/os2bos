@@ -291,6 +291,61 @@ class TestAppropriationSchema(AuthenticatedTestCase, BasicTestMixin):
             111,
         )
 
+    def test_appropriations_filter_section(self):
+        reverse_url = reverse("graphql-api")
+        self.client.login(username=self.username, password=self.password)
+
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section()
+        base64_section_id = b64encode(
+            f"Section:{section.pk}".encode()
+        ).decode()
+        appropriation = create_appropriation(case, section=section)
+        json = {
+            "query": """
+            query {
+                appropriations(section:\""""
+            + base64_section_id
+            + """\") {
+                    edges {
+                        node {
+                            id,
+                            sbsysId
+                        }
+                    }
+                }
+            }
+            """
+        }
+        response = self.client.get(reverse_url, json)
+
+        self.assertEqual(response.status_code, 200)
+        node = response.json()["data"]["appropriations"]["edges"][0]["node"]
+        self.assertEqual(
+            node["id"],
+            b64encode(f"Appropriation:{appropriation.pk}".encode()).decode(),
+        )
+        # Now try with a non-existing section id.
+        json = {
+            "query": """
+            query {
+                appropriations(section:"QXBwcm9wcmlhdGlvbjo5OQo=") {
+                    edges {
+                        node {
+                            id,
+                            sbsysId
+                        }
+                    }
+                }
+            }
+            """
+        }
+        response = self.client.get(reverse_url, json)
+
+        self.assertEqual(response.status_code, 200)
+        edges = response.json()["data"]["appropriations"]["edges"]
+        self.assertEqual(len(edges), 0)
+
     @freeze_time("2021-01-01")
     def test_appropriations_from_dst_date_initial(self):
         now = timezone.now().date()

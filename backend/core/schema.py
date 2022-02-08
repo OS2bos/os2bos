@@ -324,7 +324,7 @@ class Query(graphene.ObjectType):
         to_date = kwargs.pop("to_date", None)
         initial_load = kwargs.pop("initial_load", False)
 
-        qs = AppropriationModel.objects.filter(**kwargs)
+        qs = AppropriationModel.objects.all()
         if from_date or to_date or initial_load:
             qs = qs.appropriations_for_dst_payload(
                 from_date, to_date, initial_load
