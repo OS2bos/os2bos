@@ -1,3 +1,15 @@
+Version 3.7.1, 2022-01-24
+-------------------------
+
+Hotfix release
+
+Bug fixes
+^^^^^^^^^
+* Use appropriation_date for determining dst_report_type for Appropriations.
+* Use fromDate and toDate for DST in the Appropriations API.
+* Various fixes for the way we find DST duplicate/consolidated Appropriations.
+* Extract and use DST start/end date logic for duplicate/consolidated Appropriations.
+
 Version 3.7.0, 2022-01-10
 -------------------------
 

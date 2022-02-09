@@ -111,8 +111,8 @@
                 })
             },
             buildFilterString: function(section_id, to_date, from_date) {
-                const from = from_date ? from_date : 'None'
-                const filter = `section:"${section_id}", dstDate:"[\\"${from}\\",\\"${to_date}\\"]"` // Remember the double escape characters `\\` to make django/GraphQL request work
+                const from = from_date ? ` fromDate:"${from_date}",` : ''
+                const filter = `section:"${section_id}",${from} toDate:"${to_date}"`
                 return filter
             },
             fetchSections: function(sections, pageInfo) {

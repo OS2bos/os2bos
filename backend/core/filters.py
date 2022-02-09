@@ -10,17 +10,13 @@
 Filters allow us to do basic search for objects on allowed field without
 adding the complexity of an entire search engine nor of custom queries.
 """
-import json
-
 from django.utils import timezone
-from datetime import date, datetime, time
+from datetime import date
 from dateutil.relativedelta import relativedelta, MO, SU
 
-from django.forms import DateField, Field, ValidationError
 from django.utils.translation import gettext
 
 import django_filters as filters
-from django_filters.utils import handle_timezone
 
 from core.models import (
     Case,
@@ -28,68 +24,6 @@ from core.models import (
     Section,
     Appropriation,
 )
-
-
-class DateRangeField(Field):
-    """Custom DateRangeField for use in DateFromToRangeFilter."""
-
-    none_value = "None"
-
-    def compress(self, data_list):
-        """Override compress to convert dates."""
-        if data_list:
-            start_date, stop_date = data_list
-            if start_date:
-                start_date = handle_timezone(
-                    datetime.combine(start_date, time.min)
-                )
-            if stop_date:
-                stop_date = handle_timezone(
-                    datetime.combine(stop_date, time.max)
-                )
-            return slice(start_date, stop_date)
-        return None
-
-    def clean(self, value):
-        """Override clean to enforce "None" or dates."""
-        if value:
-            clean_data = []
-            values = json.loads(value)
-            if isinstance(values, (list, tuple)):
-                for field_value in values:
-                    if field_value == self.none_value:
-                        clean_data.append(None)
-                    else:
-                        clean_data.append(DateField().clean(field_value))
-            else:
-                raise ValidationError(
-                    gettext(
-                        "DateRangeField skal være en liste"
-                        ' indeholdende datoer eller "None"'
-                    )
-                )
-            return self.compress(clean_data)
-        else:
-            return self.compress([])
-
-
-class CustomDateFromToRangeFilter(filters.RangeFilter):
-    r"""
-    Custom DateFromToRangeFilter.
-
-    Works with our GraphQL API
-    (and DRF) and takes a json list of date strings.
-
-    Sadly graphene-django does not support filters.DateFromToRangeFilter.
-    https://github.com/graphql-python/graphene-django/issues/92
-
-    Example in GraphQL:
-    dstDate:"[\"2016-12-01\",\"2016-12-31\"]"
-    or
-    dstDate:"[\"None\",\"2016-12-31\"]"
-    """
-
-    field_class = DateRangeField
 
 
 class CaseFilter(filters.FilterSet):
@@ -133,17 +67,6 @@ class AppropriationFilter(filters.FilterSet):
     case__case_worker__team = filters.NumberFilter(
         label=gettext("Team for Sagsbehandler for Sag")
     )
-
-    dst_date = CustomDateFromToRangeFilter(
-        method="filter_dst_date",
-        label=gettext(
-            'DST dato fra/til (f.eks. "[\\"2021-01-02\\",\\"None\\"]")'
-        ),
-    )
-
-    def filter_dst_date(self, queryset, name, value):
-        """Filter on DST date ("from_date" and "to_date")."""
-        return queryset.appropriations_for_dst_payload(value.start, value.stop)
 
     class Meta:
         model = Appropriation

@@ -92,6 +92,9 @@ class Appropriation(OptimizedDjangoObjectType):
 
     pk = graphene.Int(source="pk")
     dst_report_type = graphene.String(source="dst_report_type")
+    status = graphene.String(source="status")
+    granted_from_date = graphene.String(source="granted_from_date")
+    granted_to_date = graphene.String(source="granted_to_date")
 
     class Meta:
         model = AppropriationModel
@@ -315,6 +318,19 @@ class ServiceProvider(OptimizedDjangoObjectType):
 class Query(graphene.ObjectType):
     """Query define our queryable fields."""
 
+    def resolve_appropriations(self, info, **kwargs):
+        """Filter appropriations for DST if those params are given."""
+        from_date = kwargs.pop("from_date", None)
+        to_date = kwargs.pop("to_date", None)
+        initial_load = kwargs.pop("initial_load", False)
+
+        qs = AppropriationModel.objects.all()
+        if from_date or to_date or initial_load:
+            qs = qs.appropriations_for_dst_payload(
+                from_date, to_date, initial_load
+            )
+        return qs
+
     case = Node.Field(Case)
     cases = DjangoFilterConnectionField(Case)
 
@@ -325,7 +341,12 @@ class Query(graphene.ObjectType):
     activity_details = DjangoFilterConnectionField(ActivityDetails)
 
     appropriation = Node.Field(Appropriation)
-    appropriations = DjangoFilterConnectionField(Appropriation)
+    appropriations = DjangoFilterConnectionField(
+        Appropriation,
+        from_date=graphene.Date(),
+        to_date=graphene.Date(),
+        initial_load=graphene.Boolean(),
+    )
 
     payment_schedule = Node.Field(PaymentSchedule)
     payment_schedules = DjangoFilterConnectionField(PaymentSchedule)

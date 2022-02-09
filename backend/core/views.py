@@ -323,6 +323,7 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
         to_date = request.query_params.get("to_date", None)
         test = request.query_params.get("test", "true")
         test = True if test == "true" else False
+        initial_load = request.query_params.get("initial_load", False)
 
         if "sections" in request.query_params:
             sections_pks = request.query_params.getlist("sections")
@@ -332,7 +333,7 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
 
         doc = etree.tostring(
             generate_dst_payload_preventive_measures(
-                from_date, to_date, sections, test
+                from_date, to_date, sections, test, initial_load
             ),
             xml_declaration=True,
             encoding="utf-8",
@@ -371,6 +372,7 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
         to_date = request.query_params.get("to_date", None)
         test = request.query_params.get("test", "true")
         test = True if test == "true" else False
+        initial_load = request.query_params.get("initial_load", False)
 
         if "sections" in request.query_params:
             sections_pks = request.query_params.getlist("sections")
@@ -379,7 +381,9 @@ class AppropriationViewSet(AuditModelViewSetMixin, AuditViewSet):
             sections = Section.objects.filter(dst_handicap=True)
 
         doc = etree.tostring(
-            generate_dst_payload_handicap(from_date, to_date, sections, test),
+            generate_dst_payload_handicap(
+                from_date, to_date, sections, test, initial_load
+            ),
             xml_declaration=True,
             encoding="utf-8",
         )
