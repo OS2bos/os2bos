@@ -8,17 +8,17 @@
 
 <template>
 
-    <section class="appropriation" v-if="appr">
+    <section class="appropriation" v-if="appr" :id="`appropriation-${ appr.id }`">
         <header class="appropriation-header">
             <h1 style="display: inline-block;">
                 <i class="material-icons">folder_open</i>
                 Bevillingsskrivelse
             </h1>
-            <button v-if="user_can_edit === true" @click="show_edit = !show_edit" class="appr-edit-btn">Redigér</button>
-            <button v-if="appr.num_ongoing_activities === 0" class="appr-delete-btn" @click="preDeleteCheck()">Slet</button>
+            <button v-if="user_can_edit === true && !show_edit" @click="show_edit = !show_edit" class="appr-edit-btn">Redigér</button>
+            <button v-if="appr.num_ongoing_activities === 0 && !show_edit" class="appr-delete-btn" @click="preDeleteCheck()">Slet</button>
         </header>
 
-        <appropriation-edit :appr-obj="appr" v-if="show_edit" @close="update()" />
+        <appropriation-edit :appr-obj="appr" v-if="show_edit" @close="update" />
 
         <!-- Delete activity modal -->
         <div v-if="showModal">
@@ -201,6 +201,7 @@
                             pk,
                             sbsysId,
                             note,
+                            grantedFromDate,
                             case {
                                 pk,
                                 sbsysId,
@@ -217,6 +218,12 @@
                                 },
                                 residenceMunicipality {
                                     name
+                                },
+                                targetGroup {
+                                    pk
+                                },
+                                effortStep {
+                                    pk
                                 }
                             },
                             section {
@@ -263,7 +270,8 @@
                                 modifies: e.node.modifies ? e.node.modifies.pk : null
                             }
                         })],
-                        num_ongoing_activities: a.activities.edges.length
+                        num_ongoing_activities: a.activities.edges.length,
+                        granted_from_date: a.grantedFromDate
                     }
                     const new_case = {
                         name: a.case.name,
@@ -273,7 +281,9 @@
                         case_worker: a.case.caseWorker.pk,
                         residence_municipality: a.case.residenceMunicipality.name,
                         paying_municipality: a.case.payingMunicipality.name,
-                        acting_municipality: a.case.actingMunicipality.name
+                        acting_municipality: a.case.actingMunicipality.name,
+                        target_group: a.case.targetGroup.pk,
+                        effort_step: a.case.effortStep.pk
                     }
                     this.$store.dispatch("fetchMainActivities", new_appr.activities)
                     this.$store.commit('setAppropriation', new_appr)
@@ -285,6 +295,7 @@
                     this.$store.commit('setAppropriation', null)
                 })
             }
+            
         },
         beforeRouteUpdate: function(to, from, next) {
             this.update(to.params.apprId)

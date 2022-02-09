@@ -1,7 +1,7 @@
 // Testing with Testcafe : https://devexpress.github.io/testcafe/documentation/getting-started/
 
 import { Selector } from 'testcafe'
-import { login } from '../utils/logins.js'
+import { familieleder } from '../utils/logins.js'
 import { createActivity, createAppropriation, createCase, createPayment, approveActivities } from '../utils/crud.js'
 import baseurl from '../utils/url.js'
 import { makeDateStr, leadZero } from '../utils/utils.js'
@@ -72,7 +72,7 @@ const testdata = {
 fixture('Activities with individual payment plan') // declare the fixture
     .page(baseurl)  // specify the start page
     .beforeEach(async t => { 
-        await login(t)
+        await t.useRole(familieleder)
     })
     .afterEach(() => checkConsole())
 

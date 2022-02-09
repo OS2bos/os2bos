@@ -1,7 +1,7 @@
 // Testing with Testcafe : https://devexpress.github.io/testcafe/documentation/getting-started/
 
 import { Selector } from 'testcafe'
-import { login } from '../utils/logins.js'
+import { admin, familieleder } from '../utils/logins.js'
 import baseurl from '../utils/url.js'
 import { makeDateStr } from '../utils/utils.js'
 import { createActivity, createAppropriation, createCase } from '../utils/crud.js'
@@ -30,7 +30,6 @@ const testdata = {
         section: 'SEL-109 Botilbud, kriseramte kvinder'
     },
     act1: {
-        note: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
         payment_type: 'RUNNING_PAYMENT',
         start_date: str1mth,
         end_date: str10mth,
@@ -49,7 +48,7 @@ fixture('Adding approval levels') // declare the fixture
 
 test('Add new approval level in Django admin', async t => {
 
-    await login(t, 'admin', 'admin')
+    await t.useRole(admin)
 
     await t
         .click(Selector('a').withAttribute('href', '/api/admin/'))
@@ -62,7 +61,7 @@ test('Add new approval level in Django admin', async t => {
 
 test('Check existence of approval level', async t => {
 
-    await login(t, 'familieleder', 'sagsbehandler')
+    await t.useRole(familieleder)
 
     await createCase(t, testdata.case1)
     await createAppropriation(t, testdata.appr1)

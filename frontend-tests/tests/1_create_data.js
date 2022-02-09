@@ -1,11 +1,11 @@
 // Testing with Testcafe : https://devexpress.github.io/testcafe/documentation/getting-started/
 
 import { Selector } from 'testcafe'
-import { login } from '../utils/logins.js'
+import { familieleder } from '../utils/logins.js'
 import { createActivity, editActivity, createAppropriation, createCase } from '../utils/crud.js'
 import { axe } from '../utils/axe.js'
 import baseurl from '../utils/url.js'
-import { makeDateStr } from '../utils/utils.js'
+import { makeDateStr, useSelectBox } from '../utils/utils.js'
 import checkConsole from '../utils/console.js'
 
 let today = new Date(),
@@ -30,7 +30,7 @@ const testdata = {
     appr1: {
         id: 1,
         name: `xx.xx.xx-${ rand }-${ rand2 }-bevil${ rand }`,
-        section: 'SEL-109 Botilbud, kriseramte kvinder'
+        section: 'SEL-52-3.9 Anden hjælp'
     },
     appr2: {
         id: 2,
@@ -67,7 +67,6 @@ const testdata = {
     },
     act3: {
         details__name: 'Tolk',
-        note: 'En anden lille note',
         payment_type: 'ONE_TIME_PAYMENT',
         payment_date: str5mth,
         payment_cost_type: 'FIXED',
@@ -100,7 +99,6 @@ const testdata = {
         end_date: str5mth,
         payment_type: 'RUNNING_PAYMENT',
         payment_frequency: 'BIWEEKLY',
-        note: 'Denne ydelse vil blive slettet',
         payment_cost_type: 'FIXED',
         payment_amount: '999.95',
         recipient_type: 'COMPANY'
@@ -110,7 +108,7 @@ const testdata = {
 fixture('Login and create some data') // declare the fixture
     .page(baseurl)  // specify the start page
     .beforeEach(async t => { 
-        await login(t)
+        await t.useRole(familieleder)
     })
     .afterEach(() => checkConsole())
 
@@ -124,9 +122,29 @@ test('Create case and appropriation', async t => {
 
     await createAppropriation(t, testdata.appr1)
 
+    const gettingPKvalue = await Selector('.appropriation').getAttribute('id')
+    testdata.appr1.pk = gettingPKvalue.substring(14)
+
     await axe(t)
 
     await t.expect(Selector('.crumb-2 span').innerText).contains(testdata.appr1.name)
+})
+
+
+// Issue describing rule to test
+// https://redmine.magenta-aps.dk/issues/48204
+test('Edit appropriation paragraph', async t => {
+
+    await t
+        .navigateTo(`${baseurl}/#/appropriation/${testdata.appr1.pk}/`)
+        .click('.appr-edit-btn')
+        
+    // Should be able to change paragraph while the appropriation is still in draft mode
+    await useSelectBox(t, '#field-lawref', 'SEL-109 Botilbud, kriseramte kvinder')
+
+    await t
+        .click('.form-actions input[type="submit"]')
+        .expect(Selector('dd').withText('SEL-109 Botilbud, kriseramte kvinder').exists).ok()
 })
 
 test('Create activities', async t => {
@@ -154,7 +172,7 @@ test('Approve appropriation', async t => {
     await t
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr1.name))
-        .click('#check-all')
+        .click(Selector('label').withAttribute("for", "check-all"))
         .click(Selector('button').withText('Godkend valgte'))
     
     await axe(t)
@@ -166,6 +184,17 @@ test('Approve appropriation', async t => {
         .expect(Selector('.mini-label .label-GRANTED').exists).ok()
     
     await axe(t)
+})
+
+// Issue describing rule to test
+// https://redmine.magenta-aps.dk/issues/48204
+test('Edit appropriation paragraph after approval', async t => {
+
+    await t
+        .navigateTo(`${baseurl}/#/appropriation/${testdata.appr1.pk}/`)
+        .click('.appr-edit-btn')
+        // Should not be able to change paragraph since the appropriation has been approved
+        .expect(Selector('#field-lawref').hasAttribute('disabled')).ok()
 })
 
 test('Add adjustment activities', async t => {
@@ -242,7 +271,7 @@ test('Approve appropriation with one main activity option', async t => {
     await t
         .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('a').withText(testdata.appr2.name))
-        .click('#check-all')
+        .click(Selector('label').withAttribute("for", "check-all"))
         .click(Selector('button').withText('Godkend valgte'))
     
     await axe(t)

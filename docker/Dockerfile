@@ -33,7 +33,7 @@ CMD ["npm", "run", "serve"]
 #
 # We also don't use -slim as some python packages are not wheels and needs
 # compiling with the tools from the non -slim image.
-FROM python:3.7 AS dist
+FROM python:3.10 AS dist
 
 ARG SUPERCRONIC_VERSION=v0.1.9
 ARG SUPERCRONIC_SHA1SUM=5ddf8ea26b56d4a7ff6faecdd8966610d5cb9d85

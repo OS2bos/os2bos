@@ -1,10 +1,10 @@
 // Testing with Testcafe : https://devexpress.github.io/testcafe/documentation/getting-started/
 
 import { Selector, ClientFunction } from 'testcafe'
-import { login } from '../utils/logins.js'
+import { familieraadgiver, admin } from '../utils/logins.js'
 import baseurl from '../utils/url.js'
 import { randNum, useSelectBox, makeDateStr } from '../utils/utils.js'
-import { createCase, createAppropriation, createActivity } from '../utils/crud.js'
+import { createCase, createAppropriation } from '../utils/crud.js'
 import checkConsole from '../utils/console.js'
 
 const today = new Date(),
@@ -63,7 +63,7 @@ fixture('Check search filter defaults')
 test.page(baseurl)
 ('Create data for one user', async t => {
 
-    await login(t, 'admin', 'admin') 
+    await t.useRole(admin)
 
     await createCase(t, testdata.case1)
     await createAppropriation(t, testdata.appr1)
@@ -72,7 +72,7 @@ test.page(baseurl)
 test.page(baseurl)
 ('Create data for another user', async t => {
 
-    await login(t, 'familieraadgiver', 'sagsbehandler') 
+    await t.useRole(familieraadgiver)
 
     await createCase(t, testdata.case2)
     await createAppropriation(t, testdata.appr2)
@@ -88,7 +88,7 @@ test.page(baseurl)
 test.page(`${ baseurl }/#/cases`)
 ('Test default filtering, filter change, and reset on cases list', async t => {
 
-    await login(t, 'admin', 'admin')
+    await t.useRole(admin)
 
     // Set current user as default case worker when no params present
     await t
@@ -140,7 +140,7 @@ test.page(`${ baseurl }/#/cases`)
 test.page(`${ baseurl }/#/appropriations`)
 ('Test default filtering, filter change, and reset on appropriation list', async t => {
 
-    await login(t, 'admin', 'admin') 
+    await t.useRole(admin)
 
     // Set current user as default case worker when no params present
     await t
@@ -189,7 +189,7 @@ test.page(`${ baseurl }/#/appropriations`)
 test.page(`${ baseurl }/#/cases?case_worker__team=3&case_worker=3`)
 ('When navigating cases with URL params, set filters and lists accordingly', async t => {
 
-    await login(t, 'admin', 'admin') 
+    await t.useRole(admin)
 
     await t
         .expect(getLocation()).contains('case_worker=3')
@@ -203,7 +203,7 @@ test.page(`${ baseurl }/#/cases?case_worker__team=3&case_worker=3`)
 test.page(`${ baseurl }/#/appropriations?case__case_worker__team=3&case__case_worker=3`)
 ('When navigating appropriations with URL params, set filters and lists accordingly', async t => {
 
-    await login(t, 'admin', 'admin') 
+    await t.useRole(admin)
 
     await t
         .expect(getLocation()).contains('case__case_worker=3')
@@ -217,7 +217,7 @@ test.page(`${ baseurl }/#/appropriations?case__case_worker__team=3&case__case_wo
 test.page(`${ baseurl }/#/cases?case_worker__team=2`)
 ('Do not set default case worker when navigating cases with URL params', async t => {
 
-    await login(t, 'admin', 'admin') 
+    await t.useRole(admin)
 
     await t
         .expect(getLocation()).contains('case_worker__team=2')
@@ -231,7 +231,7 @@ test.page(`${ baseurl }/#/cases?case_worker__team=2`)
 test.page(`${ baseurl }/#/appropriations?case__case_worker__team=2`)
 ('Do not set default case worker when navigating appropriations with URL params', async t => {
 
-    await login(t, 'admin', 'admin') 
+    await t.useRole(admin)
 
     await t
         .expect(getLocation()).contains('case__case_worker__team=2')
@@ -245,7 +245,7 @@ test.page(`${ baseurl }/#/appropriations?case__case_worker__team=2`)
 test.page(`${ baseurl }/#/appropriations`)
 ('Test appropriation search filter', async t => {
 
-    await login(t, 'familieraadgiver', 'sagsbehandler')
+    await t.useRole(familieraadgiver)
 
     await t
         .expect(Selector('.datagrid tr').count).gt(2)

@@ -1,7 +1,7 @@
 // Testing with Testcafe : https://devexpress.github.io/testcafe/documentation/getting-started/
 
 import { Selector } from 'testcafe'
-import { login } from '../utils/logins.js'
+import { familieleder } from '../utils/logins.js'
 import { makeDateStr } from '../utils/utils.js'
 import { createActivity, createCase, createAppropriation, approveActivities } from '../utils/crud.js'
 import baseurl from '../utils/url.js'
@@ -30,7 +30,6 @@ const testdata = {
         section: 'SEL-109 Botilbud, kriseramte kvinder'
     },
     act1: {
-        note: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
         payment_type: 'RUNNING_PAYMENT',
         start_date: str1mth,
         end_date: str10mth,
@@ -58,7 +57,7 @@ const testdata = {
 fixture('Test editing rates and prices') // declare the fixture
     .page(baseurl)  // specify the start page
     .beforeEach(async t => { 
-        await login(t)
+        await t.useRole(familieleder)
     })
     .afterEach(() => checkConsole())
 

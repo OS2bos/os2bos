@@ -48,7 +48,7 @@ async function activityFormInput(t, act_data) {
         await useSelectBox(t, '#fieldSelectAct', act_data.details__name)
     }
     if (act_data.note) {
-        await t.typeText('#note', act_data.note, {replace: true})
+        await t.typeText(Selector('#note'), act_data.note, {replace: true})
     }
 
     switch(act_data.payment_type) {
@@ -221,9 +221,8 @@ async function createAppropriation(t, appr_data) {
 }
 
 async function approveActivities(t) {
-    
     await t
-        .click('#check-all')
+        .click(Selector('label').withAttribute("for", "check-all"))
         .click(Selector('button').withText('Godkend valgte'))
         .click(Selector('label').withAttribute('for','radio-btn-1'))
         .click('button[type="submit"]')
