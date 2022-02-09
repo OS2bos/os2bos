@@ -66,7 +66,6 @@ def receive_sbsys_event(payload):
         payload.ack()
 
     except Exception:
-        logger.exception("Handling of SBSYS event failed.")
         # Something went wrong.
         payload.nack()
-        raise
+        logger.exception("Handling of SBSYS event failed.")
