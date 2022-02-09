@@ -15,6 +15,7 @@ from django.db.models import (
     Sum,
     CharField,
     DecimalField,
+    IntegerField,
     Func,
     Value,
     Q,
@@ -248,42 +249,24 @@ class AppropriationQuerySet(models.QuerySet):
             )
         )
 
-    def appropriations_for_dst_payload(self, from_date=None, to_date=None):
+    def appropriations_for_dst_payload(
+        self, from_date=None, to_date=None, initial_load=False
+    ):
         """Filter appropriations for a Danmarks Statistik payload.
 
-        We annotate a report_type based on whether an Appropriation
-        has "changed" or not which is based on:
-        - changed acting municipality .
-        - appropriation_date for activities
-
-        appropriation contains only granted main activities appropriated
-        before 'from_date'
-        -> exclude (as they have been included in a previous payload)
-
-        appropriation contains only granted main activities appropriated
-        after 'from_date'
-        -> status NEW
-
-        appropriation contains granted main activities appropriated both
-        before and after 'from_date'
-        -> status CHANGED
+        This involves filtering and annotating an appropriate dst_report_type.
         """
         from core.models import (
             MAIN_ACTIVITY,
             STATUS_GRANTED,
             Case as CaseModel,
+            Activity,
         )
 
-        queryset = self.filter(
-            activities__status=STATUS_GRANTED,
-            activities__activity_type=MAIN_ACTIVITY,
-        )
-        # If to_date is set we cut off appropriations
-        # with activities with a newer appropriation_date.
-        if to_date:
-            queryset = queryset.filter(
-                activities__appropriation_date__lte=to_date
-            )
+        if not from_date:
+            from_date = datetime.date(year=1970, month=1, day=1)
+        if not to_date:
+            to_date = timezone.now().date()
 
         report_types = {
             "NEW": "Ny",
@@ -291,68 +274,146 @@ class AppropriationQuerySet(models.QuerySet):
             "CANCELLED": "Annullering",
         }
 
-        if from_date:
+        queryset = self
+
+        if initial_load:
+            # Full/initial load where all appropriations are marked "NEW".
+
+            # Cut off appropriations appropriated outside the
+            # from_date->to_date range.
+            queryset = (
+                queryset.filter(
+                    activities__status=STATUS_GRANTED,
+                    activities__activity_type=MAIN_ACTIVITY,
+                    activities__appropriation_date__gte=from_date,
+                    activities__appropriation_date__lte=to_date,
+                )
+                .annotate(
+                    dst_report_type=Value(
+                        report_types["NEW"], output_field=CharField()
+                    )
+                )
+                .distinct()
+            )
+
+        # Delta load where appropriations are marked "NEW" and "CHANGED"
+        # based on different criteria.
+        else:
             cases = CaseModel.objects.filter(appropriations__in=queryset)
             changed_cases = cases.filter_changed_cases_for_dst_payload(
                 from_date, to_date
             )
-
-            main_activities_q = Q(activities__activity_type=MAIN_ACTIVITY)
-            main_activities_appropriated_after_from_date_q = Q(
-                activities__activity_type=MAIN_ACTIVITY,
-                activities__appropriation_date__gte=from_date,
-            )
-
-            main_activities_appropriated_before_from_date_q = Q(
-                activities__activity_type=MAIN_ACTIVITY,
-                activities__appropriation_date__lte=from_date,
-            )
-
-            queryset = queryset.annotate(
-                main_acts_count=Count("activities", filter=main_activities_q),
-                main_acts_appropriated_after_from_date_count=Count(
-                    "activities",
-                    filter=main_activities_appropriated_after_from_date_q,
-                ),
-                main_acts_appropriated_before_from_date_count=Count(
-                    "activities",
-                    filter=main_activities_appropriated_before_from_date_q,
-                ),
-                dst_report_type=Case(
-                    When(
-                        case__in=changed_cases,
-                        then=Value(report_types["CHANGED"]),
-                    ),
-                    When(
-                        main_acts_count=F(
-                            "main_acts_appropriated_before_from_date_count"
-                        ),
-                        then=Value(""),
-                    ),
-                    When(
-                        main_acts_count=F(
-                            "main_acts_appropriated_after_from_date_count"
-                        ),
-                        then=Value(report_types["NEW"]),
-                    ),
-                    When(
-                        main_acts_count__gt=F(
-                            "main_acts_appropriated_after_from_date_count"
-                        ),
-                        then=Value(report_types["CHANGED"]),
-                    ),
-                    default=Value(""),
-                    output_field=CharField(),
-                ),
-            ).exclude(dst_report_type="")
-        else:
-            queryset = queryset.annotate(
-                dst_report_type=Value(
-                    report_types["NEW"], output_field=CharField()
+            # Cut off appropriations appropriated outside the
+            # from_date->to_date range.
+            queryset = queryset.filter(
+                Q(
+                    Q(activities__appropriation_date__gte=from_date)
+                    & Q(activities__appropriation_date__lte=to_date)
                 )
+                | Q(case__in=changed_cases),
+                activities__status=STATUS_GRANTED,
+                activities__activity_type=MAIN_ACTIVITY,
+            )
+            # Use subqueries as multiple annotations will yield wrong results:
+            # https://docs.djangoproject.com/en/2.2/topics/db/aggregation/#combining-multiple-aggregations
+            # https://code.djangoproject.com/ticket/10060
+            main_acts = (
+                Activity.objects.filter(appropriation=OuterRef("id"))
+                .order_by()
+                .filter(
+                    activity_type=MAIN_ACTIVITY,
+                    status=STATUS_GRANTED,
+                )
+                .values("appropriation")
+                .annotate(c=Count("appropriation"))
+                .values("c")
+            )
+            main_acts_before_from_date = (
+                Activity.objects.filter(appropriation=OuterRef("id"))
+                .order_by()
+                .filter(
+                    activity_type=MAIN_ACTIVITY,
+                    status=STATUS_GRANTED,
+                    appropriation_date__lt=from_date,
+                )
+                .values("appropriation")
+                .annotate(c=Count("appropriation"))
+                .values("c")
+            )
+            main_acts_after_from_date = (
+                Activity.objects.filter(appropriation=OuterRef("id"))
+                .order_by()
+                .filter(
+                    activity_type=MAIN_ACTIVITY,
+                    status=STATUS_GRANTED,
+                    appropriation_date__gte=from_date,
+                )
+                .values("appropriation")
+                .annotate(c=Count("appropriation"))
+                .values("c")
             )
 
-        return queryset.distinct()
+            queryset = (
+                # annotate fields we need to determine dst_report_type.
+                queryset.annotate(
+                    main_acts_count=Subquery(
+                        main_acts, output_field=IntegerField()
+                    ),
+                    main_acts_after_from_date_count=Subquery(
+                        main_acts_after_from_date, output_field=IntegerField()
+                    ),
+                    main_acts_before_from_date_count=Subquery(
+                        main_acts_before_from_date, output_field=IntegerField()
+                    ),
+                    dst_report_type=Case(
+                        # If an appropriation has a case with a changed
+                        # acting municipality we mark it "changed".
+                        When(
+                            case__in=changed_cases,
+                            then=Value(report_types["CHANGED"]),
+                        ),
+                        # If an appropriation has main activities appropriated
+                        # after the from date, and the total number of
+                        # main activities is higher (and thus has
+                        # appropriated main activities before the from_date)
+                        # we consider it "changed".
+                        When(
+                            Q(main_acts_after_from_date_count__gt=0)
+                            & Q(
+                                main_acts_count__gt=F(
+                                    "main_acts_after_from_date_count"
+                                )
+                            ),
+                            then=Value(report_types["CHANGED"]),
+                        ),
+                        # If appropriation has a total number of main
+                        # activities equal to the number of main activities
+                        # appropriated after the from_date we consider it "new"
+                        When(
+                            Q(
+                                main_acts_count=F(
+                                    "main_acts_after_from_date_count"
+                                )
+                            ),
+                            then=Value(report_types["NEW"]),
+                        ),
+                        # Lastly if an appropriation only has main activities
+                        # appropriated in the past we do not include them.
+                        When(
+                            main_acts_count=F(
+                                "main_acts_before_from_date_count"
+                            ),
+                            then=Value(""),
+                        ),
+                        default=Value(""),
+                        output_field=CharField(),
+                    ),
+                )
+                .exclude(dst_report_type="")
+                .distinct()
+            )
+
+        return queryset
 
     def get_duplicate_sbsys_id_appropriations_for_dst(self):
         """
@@ -392,7 +453,7 @@ class AppropriationQuerySet(models.QuerySet):
             )
             .exclude(sbsys_common=None)
             .values("sbsys_common")
-            .annotate(ids=ArrayAgg("id"))
+            .annotate(ids=ArrayAgg("id", distinct=True))
             .annotate(id_count=Func("ids", Value(1), function="array_length"))
             .filter(id_count__gt=1)
         )

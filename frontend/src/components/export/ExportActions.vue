@@ -60,7 +60,7 @@
             </div>
             <div>
                 <label for="export-to-date">Til dato:</label>
-                <input id="export-to-date" type="date" v-model="export_to_date" :max="today" required>
+                <input id="export-to-date" type="date" v-model="export_to_date" :min="export_from_date" required>
             </div>
         </fieldset>
         <fieldset>
