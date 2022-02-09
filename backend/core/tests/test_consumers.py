@@ -22,16 +22,17 @@ class MockResponse:
 
 
 class MockPayload:
+    def __init__(self, case_id=1, process_type=1):
+        self.body["SagId"] = case_id
+        self.body["ForloebtypeId"] = process_type
+
+    body = {}
+
     def ack(self):
         pass
 
     def nack(self):
         pass
-
-    body = {
-        "SagId": 1831,
-        "ForloebtypeId": 1,
-    }
 
 
 example_sbsys_data = {
@@ -174,39 +175,43 @@ def mocked_requests_get(*args, **kwargs):
 
 class ReceiveSBSYSEventTestCase(TestCase):
     @override_settings(SBSYS_VERIFY_TLS=True)
-    @mock.patch(
-        "django_stomp.services.consumer.Payload", new_callable=MockPayload
-    )
     @mock.patch("requests.post", side_effect=mocked_requests_post)
     @mock.patch("requests.get", side_effect=mocked_requests_get)
-    def test_receive_sbsys_event(
-        self, requests_get_mock, requests_post_mock, payload_mock
-    ):
-        # No tests - this function doesn't return anything.
-        # S'all good if it doesn't throw an exception.
+    def test_receive_sbsys_event(self, requests_get_mock, requests_post_mock):
+        payload_mock = MockPayload()
         receive_sbsys_event(payload_mock)
 
     @override_settings(SBSYS_VERIFY_TLS=False)
-    @mock.patch(
-        "django_stomp.services.consumer.Payload", new_callable=MockPayload
-    )
     @mock.patch("requests.post", side_effect=mocked_requests_post)
     @mock.patch("requests.get", side_effect=mocked_requests_get)
     def test_receive_sbsys_event_no_tls(
-        self, requests_get_mock, requests_post_mock, payload_mock
+        self, requests_get_mock, requests_post_mock
     ):
-        # No tests - this function doesn't return anything.
-        # S'all good if it doesn't throw an exception.
+        payload_mock = MockPayload()
         receive_sbsys_event(payload_mock)
 
-    @mock.patch(
-        "django_stomp.services.consumer.Payload", new_callable=MockPayload
-    )
-    @mock.patch("requests.post", side_effect=Exception)
-    def test_receive_sbsys_event_auth_failed(
-        self, requests_post_mock, payload_mock
+    @mock.patch("requests.post", side_effect=mocked_requests_post)
+    @mock.patch("requests.get", side_effect=mocked_requests_get)
+    def test_receive_sbsys_event_not_creating(
+        self, requests_get_mock, requests_post_mock
     ):
+        payload_mock = MockPayload(process_type=2)
+        receive_sbsys_event(payload_mock)
+
+    @mock.patch("requests.post", side_effect=Exception)
+    def test_receive_sbsys_event_auth_failed(self, requests_post_mock):
         try:
+            payload_mock = MockPayload()
             receive_sbsys_event(payload_mock)
+            self.assertFalse(True)
         except Exception:
             pass
+
+    @mock.patch("requests.post", side_effect=mocked_requests_post)
+    @mock.patch("requests.get", side_effect=mocked_requests_get)
+    def test_receive_sbsys_event_create_appropriation(
+        self, requests_get_mock, requests_post_mock
+    ):
+        payload_mock = MockPayload()
+        example_sbsys_data["Nummer"] = "27.24.00"
+        receive_sbsys_event(payload_mock)

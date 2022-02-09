@@ -1617,13 +1617,13 @@ def import_sbsys_case(sbsys_json):
     cpr_number = sbsys_json["PrimaryPart"]["CPRnummer"]
     print(cpr_number, sbsys_id)
 
-    if is_appropriation(sbsys_json):
+    if is_appropriation(sbsys_id):
         # Import appropriation.
         new_appropriation = models.Appropriation()
         new_appropriation.sbsys_id = sbsys_id
         # TODO: How do we do this???
         # new_appropriation.case = None
-        new_appropriation.save()
+        # new_appropriation.save()
     else:
         name = sbsys_json["PrimaryPart"]["Navn"]
         print(name)

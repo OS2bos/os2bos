@@ -69,3 +69,4 @@ def receive_sbsys_event(payload):
         logger.info("Handling of SBSYS event failed.")
         # Something went wrong.
         payload.nack()
+        raise
