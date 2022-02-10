@@ -211,15 +211,23 @@ def get_company_info_from_cvr(cvr_number):
         return None
 
 
-def send_activity_email(subject, template, activity):
-    """Send an email concerning an updated activity."""
-    html_message = render_to_string(template, {"activity": activity})
+def send_email_notification(subject, template, instance, recipient):
+    """Send an email concerning an updated we should notify about."""
+    class_name_as_key = type(instance).__name__.lower()
+    html_message = render_to_string(template, {class_name_as_key: instance})
     send_mail(
         subject,
         strip_tags(html_message),
         config.DEFAULT_FROM_EMAIL,
-        [config.TO_EMAIL_FOR_PAYMENTS],
+        [recipient],
         html_message=html_message,
+    )
+
+
+def send_activity_email(subject, template, activity):
+    """Send an email specifically for an activity."""
+    send_email_notification(
+        subject, template, activity, config.TO_EMAIL_FOR_PAYMENTS
     )
 
 
@@ -253,6 +261,13 @@ def send_activity_deleted_email(activity):
     subject = _("Aktivitet slettet - %s") % cpr_number
     template = "emails/activity_deleted.html"
     send_activity_email(subject, template, activity)
+
+
+def send_appropriation_imported_email(appropriation):
+    """Send an email because an appropriation was imported from SBSYS."""
+    subject = _(f"Ny bevilling {appropriation.sbsys_id} importeret fra SBSSYS")
+    template = "emails/appropriation_imported.html"
+    send_email_notification(subject, template, appropriation)
 
 
 def send_appropriation(appropriation, included_activities=None):
