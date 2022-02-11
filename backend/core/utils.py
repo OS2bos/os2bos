@@ -267,7 +267,8 @@ def send_appropriation_imported_email(appropriation):
     """Send an email because an appropriation was imported from SBSYS."""
     subject = _(f"Ny bevilling {appropriation.sbsys_id} importeret fra SBSSYS")
     template = "emails/appropriation_imported.html"
-    send_email_notification(subject, template, appropriation)
+    recipient = appropriation.case.case_worker.email
+    send_email_notification(subject, template, appropriation, recipient)
 
 
 def send_appropriation(appropriation, included_activities=None):
@@ -1639,6 +1640,7 @@ def import_sbsys_case(sbsys_json):
         # TODO: How do we do this???
         # new_appropriation.case = None
         # new_appropriation.save()
+        # send_appropriation_imported_email(new_appropriation)
     else:
         name = sbsys_json["PrimaryPart"]["Navn"]
         print(name)

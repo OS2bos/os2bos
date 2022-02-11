@@ -30,6 +30,7 @@ logger = logging.getLogger(__name__)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+
 config = configparser.ConfigParser()
 config["settings"] = {}
 
@@ -78,6 +79,9 @@ SECRET_KEY = settings.get("SECRET_KEY")
 DEBUG = settings.getboolean("DEBUG", fallback=False)
 
 ALLOWED_HOSTS = settings.get("ALLOWED_HOSTS", fallback="").split(",")
+
+# Public host for generating links in emails.
+PUBLIC_HOST = settings.get("PUBLIC_HOST", fallback="")
 
 USE_X_FORWARDED_HOST = settings.getboolean(
     "USE_X_FORWARDED_HOST", fallback=True
@@ -634,8 +638,8 @@ SAML2_AUTH = {
         "STAFF_STATUS": False,
         "SUPERUSER_STATUS": False,
     },
-    "ASSERTION_URL": settings.get("SAML_PUBLIC_HOST"),
-    "ENTITY_ID": settings.get("SAML_PUBLIC_HOST"),
+    "ASSERTION_URL": PUBLIC_HOST,
+    "ENTITY_ID": PUBLIC_HOST,
     "ATTRIBUTES_MAP": {
         "email": "email",
         "username": "username",
@@ -647,7 +651,7 @@ SAML2_AUTH = {
         "BEFORE_LOGIN": "core.utils.saml_before_login",
     },
     "USE_JWT": True,
-    "FRONTEND_URL": settings.get("SAML_PUBLIC_HOST") + "#",
+    "FRONTEND_URL": PUBLIC_HOST + "#",
     "CERT_FILE": settings.get("CERT_FILE", fallback=""),
     "KEY_FILE": settings.get("KEY_FILE", fallback=""),
     "AUTHN_REQUESTS_SIGNED": settings.getboolean(
@@ -708,7 +712,7 @@ STOMP_OUTGOING_HEARTBEAT = settings.get(
     "STOMP_OUTGOING_HEARTBEAT", fallback=10000
 )
 STOMP_CORRELATION_ID_REQUIRED = settings.get(
-    "STOMP_CORRELATION_ID_REQUIRED", False
+    "STOMP_CORRELATION_ID_REQUIRED", fallback=False
 )
 
 # SBSYS Login Information
@@ -725,4 +729,4 @@ SBSYS_GRANT_TYPE = settings.get(
 )
 SBSYS_CLIENT_ID = settings.get("SBSYS_CLIENT_ID", fallback="os2bos")
 SBSYS_CLIENT_SECRET = settings.get("SBSYS_CLIENT_SECRET", fallback="")
-SBSYS_VERIFY_TLS = settings.get("SBSYS_VERIFY_TLS", False)
+SBSYS_VERIFY_TLS = settings.get("SBSYS_VERIFY_TLS", fallback=False)
