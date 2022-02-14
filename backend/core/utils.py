@@ -214,7 +214,11 @@ def get_company_info_from_cvr(cvr_number):
 def send_email_notification(subject, template, instance, recipient):
     """Send an email concerning an updated we should notify about."""
     class_name_as_key = type(instance).__name__.lower()
-    html_message = render_to_string(template, {class_name_as_key: instance})
+    context = {
+        class_name_as_key: instance,
+        "public_host": settings.PUBLIC_HOST,
+    }
+    html_message = render_to_string(template, context)
     send_mail(
         subject,
         strip_tags(html_message),
