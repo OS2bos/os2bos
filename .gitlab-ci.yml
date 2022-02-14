@@ -169,7 +169,9 @@ FrontendTest:
     SIMPLESAMLPHP_BASEURLPATH: http://idp:8080/simplesaml
     SIMPLESAMLPHP_SP_ENTITY_ID: http://bev:5000
     SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE: http://bev:5000/api/saml2_auth/acs/
-  image: magentalabs/frontend-test:v0.2 #includes npm, chrome, firefox and ffmpeg
+  image:
+    name: testcafe/testcafe:latest
+    entrypoint: ["/bin/sh", "-c"]
   tags:
     - docker
     - high-mem
@@ -181,10 +183,11 @@ FrontendTest:
     - name: magentalabs/os2bos-idp-test:2.0.1
       alias: idp
   before_script:
+    - npm --version
     - cd frontend-tests
     - npm install
   script:
-    - ./node_modules/.bin/testcafe chrome:headless tests/*.js --baseurl http://bev:5000 --cache --screenshots $CI_PROJECT_DIR/artifacts --video $CI_PROJECT_DIR/artifacts --video-options pathPattern='${DATE}_${TIME}/${FIXTURE} - ${TEST}.mp4' --assertion-timeout 10000 --selector-timeout 10000  --reporter xunit:$CI_PROJECT_DIR/testcafe.xml
+    - /opt/testcafe/docker/testcafe-docker.sh chromium:headless tests/*.js --baseurl http://bev:5000 --cache --cs node_modules/axe-core/axe.min.js --screenshots $CI_PROJECT_DIR/artifacts --video $CI_PROJECT_DIR/artifacts --video-options pathPattern='${DATE}_${TIME}/${FIXTURE} - ${TEST}.mp4' --assertion-timeout 10000 --selector-timeout 10000 --pageRequestTimeout 10000 --reporter spec,xunit:$CI_PROJECT_DIR/testcafe.xml
   artifacts:
     when: always
     paths:

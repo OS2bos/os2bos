@@ -43,25 +43,32 @@ const testdata = {
 }
 
 fixture('Adding approval levels') // declare the fixture
-    .page(baseurl)  // specify the start page
     .afterEach(() => checkConsole())
 
-test('Add new approval level in Django admin', async t => {
+test
+    .page(`${baseurl}/api/admin/core/approvallevel/add/`)
+    ('Add new approval level in Django admin', async t => {
 
-    await t.useRole(admin)
+    if (Selector('.logintext').exists) {
+        await t
+            .typeText('#username', 'admin')
+            .typeText('#password', 'admin')
+            .click(Selector('button').withExactText('Login'))
+    }
 
     await t
-        .click(Selector('a').withAttribute('href', '/api/admin/'))
-        .click(Selector('a').withAttribute('href', '/api/admin/core/approvallevel/add/'))
         .typeText('#id_name', appro_lvl_name)
         .click(Selector('input').withAttribute('name', '_save'))
         .expect(Selector('a').withText(appro_lvl_name).exists).ok()
 
 })
 
-test('Check existence of approval level', async t => {
-
-    await t.useRole(familieleder)
+test
+    .before(async t => {
+        await t.useRole(familieleder)
+    })
+    .page(baseurl)
+    ('Check existence of approval level', async t => {
 
     await createCase(t, testdata.case1)
     await createAppropriation(t, testdata.appr1)
