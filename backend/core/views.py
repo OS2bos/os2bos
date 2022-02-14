@@ -118,10 +118,12 @@ from core.mixins import (
 from core.authentication import CsrfExemptSessionAuthentication
 
 from core.permissions import (
-    IsUserAllowed,
+    IsUserAllowedREST,
+    IsUserAllowedGraphQL,
     NewPaymentPermission,
     DeletePaymentPermission,
     EditPaymentPermission,
+    GraphQLAuthMiddleware,
 )
 
 
@@ -140,13 +142,13 @@ class AuditViewSet(AuditMixin, viewsets.ModelViewSet):
     """
 
     authentication_classes = (CsrfExemptSessionAuthentication,)
-    permission_classes = (IsUserAllowed,)
+    permission_classes = (IsUserAllowedREST,)
 
 
 class ReadOnlyViewset(viewsets.ReadOnlyModelViewSet):
     """Superclass for use model classes that are read only through REST."""
 
-    permission_classes = (IsUserAllowed,)
+    permission_classes = (IsUserAllowedREST,)
 
 
 class AuthenticatedGraphQLView(GraphQLView):
@@ -167,8 +169,10 @@ class AuthenticatedGraphQLView(GraphQLView):
     @classmethod
     def as_view(cls, *args, **kwargs):
         """Add the relevant DRF-view logic to the view."""
-        view = super(AuthenticatedGraphQLView, cls).as_view(*args, **kwargs)
-        view = permission_classes((IsUserAllowed,))(view)
+        view = super(AuthenticatedGraphQLView, cls).as_view(
+            middleware=[GraphQLAuthMiddleware()], *args, **kwargs
+        )
+        view = permission_classes((IsUserAllowedGraphQL,))(view)
         view = authentication_classes((CsrfExemptSessionAuthentication,))(view)
         view = api_view(["GET", "POST"])(view)
         return view

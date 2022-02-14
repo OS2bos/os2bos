@@ -13,6 +13,7 @@ import graphene
 from graphene import Node, Connection
 from graphene_django_optimizer import OptimizedDjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
+from graphene_django.rest_framework.mutation import SerializerMutation
 
 from core.models import (
     Activity as ActivityModel,
@@ -34,6 +35,7 @@ from core.models import (
     STATUS_DELETED,
 )
 from core.filters import PaymentFilter, AppropriationFilter
+from core.serializers import CaseSerializer
 
 UserModel = get_user_model()
 
@@ -346,6 +348,20 @@ class ServiceProvider(OptimizedDjangoObjectType):
         filter_fields = "__all__"
 
 
+class CaseMutation(SerializerMutation):
+    """Mutation for the Case Model."""
+
+    class Meta:
+        serializer_class = CaseSerializer
+        convert_choices_to_enum = False
+
+
+class Mutation(graphene.ObjectType):
+    """Mutation define our mutable fields."""
+
+    create_case = CaseMutation.Field()
+
+
 class Query(graphene.ObjectType):
     """Query define our queryable fields."""
 
@@ -413,4 +429,4 @@ class Query(graphene.ObjectType):
     users = DjangoFilterConnectionField(User)
 
 
-schema = graphene.Schema(query=Query)
+schema = graphene.Schema(query=Query, mutation=Mutation)
