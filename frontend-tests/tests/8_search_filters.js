@@ -60,19 +60,23 @@ fixture('Check search filter defaults')
     https://redmine.magenta-aps.dk/issues/43490
 */
 
-test.page(baseurl)
-('Create data for one user', async t => {
-
+test
+.before(async t => {
     await t.useRole(admin)
+})
+.page(baseurl)
+('Create data for one user', async t => {
 
     await createCase(t, testdata.case1)
     await createAppropriation(t, testdata.appr1)
 })
 
-test.page(baseurl)
-('Create data for another user', async t => {
-
+test
+.before(async t => {
     await t.useRole(familieraadgiver)
+})
+.page(baseurl)
+('Create data for another user', async t => {
 
     await createCase(t, testdata.case2)
     await createAppropriation(t, testdata.appr2)
@@ -85,10 +89,12 @@ test.page(baseurl)
 // default case worker filter should default to current user
 // When setting case worker filter, 
 // both URL param, results, and filter setting should update
-test.page(`${ baseurl }/#/cases`)
-('Test default filtering, filter change, and reset on cases list', async t => {
-
+test
+.before(async t => {
     await t.useRole(admin)
+})
+.page(`${ baseurl }/#/cases`)
+('Test default filtering, filter change, and reset on cases list', async t => {
 
     // Set current user as default case worker when no params present
     await t
@@ -137,10 +143,12 @@ test.page(`${ baseurl }/#/cases`)
 // default case worker filter should default to current user
 // When setting case worker filter, 
 // both URL param, results, and filter setting should update
-test.page(`${ baseurl }/#/appropriations`)
-('Test default filtering, filter change, and reset on appropriation list', async t => {
-
+test
+.before(async t => {
     await t.useRole(admin)
+})
+.page(`${ baseurl }/#/appropriations`)
+('Test default filtering, filter change, and reset on appropriation list', async t => {
 
     // Set current user as default case worker when no params present
     await t
@@ -186,10 +194,12 @@ test.page(`${ baseurl }/#/appropriations`)
 
 // When loading cases page with query params, 
 // filters should be applied based on params
-test.page(`${ baseurl }/#/cases?case_worker__team=3&case_worker=3`)
-('When navigating cases with URL params, set filters and lists accordingly', async t => {
-
+test
+.before(async t => {
     await t.useRole(admin)
+})
+.page(`${ baseurl }/#/cases?case_worker__team=3&case_worker=3`)
+('When navigating cases with URL params, set filters and lists accordingly', async t => {
 
     await t
         .expect(getLocation()).contains('case_worker=3')
@@ -200,10 +210,12 @@ test.page(`${ baseurl }/#/cases?case_worker__team=3&case_worker=3`)
 
 // When loading appropriation page with query params,
 // filters should be applied based on params
-test.page(`${ baseurl }/#/appropriations?case__case_worker__team=3&case__case_worker=3`)
-('When navigating appropriations with URL params, set filters and lists accordingly', async t => {
-
+test
+.before(async t => {
     await t.useRole(admin)
+})
+.page(`${ baseurl }/#/appropriations?case__case_worker__team=3&case__case_worker=3`)
+('When navigating appropriations with URL params, set filters and lists accordingly', async t => {
 
     await t
         .expect(getLocation()).contains('case__case_worker=3')
@@ -214,10 +226,12 @@ test.page(`${ baseurl }/#/appropriations?case__case_worker__team=3&case__case_wo
 
 // When loading cases page with query params and no case worker, 
 // filters should be applied based on params only
-test.page(`${ baseurl }/#/cases?case_worker__team=2`)
-('Do not set default case worker when navigating cases with URL params', async t => {
-
+test
+.before(async t => {
     await t.useRole(admin)
+})
+.page(`${ baseurl }/#/cases?case_worker__team=2`)
+('Do not set default case worker when navigating cases with URL params', async t => {
 
     await t
         .expect(getLocation()).contains('case_worker__team=2')
@@ -228,10 +242,12 @@ test.page(`${ baseurl }/#/cases?case_worker__team=2`)
 
 // When loading appropriations page with query params and no case worker, 
 // filters should be applied based on params only
-test.page(`${ baseurl }/#/appropriations?case__case_worker__team=2`)
-('Do not set default case worker when navigating appropriations with URL params', async t => {
-
+test
+.before(async t => {
     await t.useRole(admin)
+})
+.page(`${ baseurl }/#/appropriations?case__case_worker__team=2`)
+('Do not set default case worker when navigating appropriations with URL params', async t => {
 
     await t
         .expect(getLocation()).contains('case__case_worker__team=2')
@@ -242,10 +258,12 @@ test.page(`${ baseurl }/#/appropriations?case__case_worker__team=2`)
 
 // https://redmine.magenta-aps.dk/issues/43490
 // Appropriation search filter "Foranstaltningssag" should search for an appropriation's SBSYS_ID
-test.page(`${ baseurl }/#/appropriations`)
-('Test appropriation search filter', async t => {
-
+test
+.before(async t => {
     await t.useRole(familieraadgiver)
+})
+.page(`${ baseurl }/#/appropriations`)
+('Test appropriation search filter', async t => {
 
     await t
         .expect(Selector('.datagrid tr').count).gt(2)

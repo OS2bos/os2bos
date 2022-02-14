@@ -83,9 +83,10 @@ fixture('Check payment editing rules')
             *indtil* relateret ydelse er bevilget
 */
 
-test('Create data and check that normal user can create new payments', async t => {
-
-    await t.useRole(familieraadgiver)
+test
+    .before(async t => {
+        await t.useRole(familieraadgiver)
+    })('Create data and check that normal user can create new payments', async t => {
 
     await createCase(t, testdata.case1)
     await createAppropriation(t, testdata.appr1)
@@ -115,9 +116,10 @@ test('Create data and check that normal user can create new payments', async t =
         .expect(Selector('.payment-create-btn').exists).notOk()
 })
 
-test('Check that improved user can create new payments', async t => {
-
-    await t.useRole(regelmotor)
+test
+    .before(async t => {
+        await t.useRole(regelmotor)
+    })('Check that improved user can create new payments', async t => {
 
     await useSelectBox(t, '#field-case-worker', 'familieraadgiver')
 
@@ -164,9 +166,10 @@ test('Check that improved user can create new payments', async t => {
         .expect(Selector('.payment-create-btn').exists).notOk()
 })
 
-test('Check that normal user cannot create new payments after grant', async t => {
-
-    await t.useRole(familieraadgiver)
+test
+    .before(async t => {
+        await t.useRole(familieraadgiver)
+    })('Check that normal user cannot create new payments after grant', async t => {
 
     await t
         .click(Selector('a').withText(testdata.case1.name))
@@ -213,9 +216,10 @@ test('Check that normal user cannot create new payments after grant', async t =>
                 og *hvis* dags dato er op til 2 betalingsdage før planlagt betalingsdato (betalingsdato vil blive overskrevet)
 */
 
-test('Check that normal user can register payment under certain circumstances', async t => {
-
-    await t.useRole(familieraadgiver)
+test
+    .before(async t => {
+        await t.useRole(familieraadgiver)
+    })('Check that normal user can register payment under certain circumstances', async t => {
 
     await t
         .click(Selector('a').withText(testdata.case1.name))
@@ -252,9 +256,10 @@ test('Check that normal user can register payment under certain circumstances', 
         .expect(Selector('span.date-paid').exists).ok()
 })
 
-test('Check that improved user can register payment at all times', async t => {
-
-    await t.useRole(regelmotor)
+test
+    .before(async t => {
+        await t.useRole(regelmotor)
+    })('Check that improved user can register payment at all times', async t => {
 
     await useSelectBox(t, '#field-case-worker', 'familieraadgiver')
 

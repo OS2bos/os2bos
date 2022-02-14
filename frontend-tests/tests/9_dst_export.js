@@ -77,9 +77,10 @@ fixture.skip('Export DST XML') // declare the fixture
     .page(baseurl)  // specify the start page
     .afterEach(() => checkConsole())
 
-test('Create data and check in export list', async t => {
-
+test
+.before(async t => {
     await t.useRole(familieleder)
+})('Create data and check in export list', async t => {
 
     await createCase(t, testdata.case1)
     await createAppropriation(t, testdata.appr1)
