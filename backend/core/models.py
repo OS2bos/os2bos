@@ -1460,7 +1460,7 @@ class Appropriation(AuditModelMixin, models.Model):
                         # If we're not already granting a modification
                         # of this activity, we need to re-grant it.
                         if not (
-                            hasattr(a, "modified_by")
+                            getattr(a, "modified_by", None)
                             and not a.modified_by.status == STATUS_DELETED
                             and a.modified_by in activities
                         ):  # pragma: no cover
@@ -1910,7 +1910,7 @@ class Activity(AuditModelMixin, models.Model):
         if self.status == STATUS_GRANTED:
             # Re-granting - nothing more to do.
             pass
-        elif not hasattr(self, "modifies") or not self.modifies:
+        elif not getattr(self, "modifies", None):
             # Simple case: Just set status.
             self.status = STATUS_GRANTED
         elif self.validate_expected():  # pragma: no cover
@@ -1923,8 +1923,7 @@ class Activity(AuditModelMixin, models.Model):
                 self.modifies.end_date = self.end_date
             else:
                 while (
-                    hasattr(self, "modifies")
-                    and self.modifies
+                    getattr(self, "modifies", None)
                     and self.start_date <= self.modifies.start_date
                 ):
                     old_activity = self.modifies
@@ -1939,21 +1938,17 @@ class Activity(AuditModelMixin, models.Model):
                     # "Merge" by ending current activity the day before the new
                     # start_date if end_date overlaps with the new start_date
                     # or it has no end_date.
-                if (
-                    hasattr(self, "modifies")
-                    and self.modifies
-                    and (
-                        not self.modifies.end_date
-                        or (
-                            self.modifies.end_date
-                            and self.modifies.end_date >= self.start_date
-                        )
+                if getattr(self, "modifies", None) and (
+                    not self.modifies.end_date
+                    or (
+                        self.modifies.end_date
+                        and self.modifies.end_date >= self.start_date
                     )
                 ):
                     self.modifies.end_date = self.start_date - timedelta(
                         days=1
                     )
-            if hasattr(self, "modifies") and self.modifies:
+            if getattr(self, "modifies", None):
                 # First, handle individual payments if any.
                 if payment_type == PaymentSchedule.INDIVIDUAL_PAYMENT:
                     for p in self.modifies.payment_plan.payments.all():
@@ -1974,7 +1969,7 @@ class Activity(AuditModelMixin, models.Model):
     def validate_expected(self):
         """Validate this is a correct expected activity."""
         today = date.today()
-        if not hasattr(self, "modifies") or not self.modifies:
+        if not getattr(self, "modifies", None):
             raise forms.ValidationError(
                 _("den forventede justering har ingen ydelse at justere")
             )
@@ -2121,7 +2116,7 @@ class Activity(AuditModelMixin, models.Model):
 
         if (
             self.status == STATUS_GRANTED
-            and hasattr(self, "modified_by")
+            and getattr(self, "modified_by", None)
             and not self.modified_by.status == STATUS_DELETED
         ):
             # one time payments are always overruled entirely.
