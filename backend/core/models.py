@@ -2268,7 +2268,7 @@ class Activity(AuditModelMixin, models.Model):
 
     def modifies_exists(self):
         """
-        Check the activity this activity modifies exists.
+        Check the activity which this activity modifies exists.
 
         Django is quirky in the sense that hasattr(self, 'modifies') can
         return True even when modifies is None so we need to check for
@@ -2280,7 +2280,7 @@ class Activity(AuditModelMixin, models.Model):
 
     def modified_by_exists(self):
         """
-        Check the activity this activity is modified by exists.
+        Check the activity which this activity is modified by exists.
 
         Django is quirky in the sense that hasattr(self, 'modified_by') can
         return True even when modified_by is None so we need to check for
