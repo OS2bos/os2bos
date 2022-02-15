@@ -2276,7 +2276,7 @@ class Activity(AuditModelMixin, models.Model):
 
         We encapsulate the logic here and use it everywhere to enforce it.
         """
-        return getattr(self, "modifies", None)
+        return getattr(self, "modifies", None) is not None
 
     def modified_by_exists(self):
         """
@@ -2288,7 +2288,7 @@ class Activity(AuditModelMixin, models.Model):
 
         We encapsulate the logic here and use it everywhere to enforce it.
         """
-        return getattr(self, "modified_by", None)
+        return getattr(self, "modified_by", None) is not None
 
     def save(self, *args, **kwargs):
         """
