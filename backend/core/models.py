@@ -1460,7 +1460,7 @@ class Appropriation(AuditModelMixin, models.Model):
                         # If we're not already granting a modification
                         # of this activity, we need to re-grant it.
                         if not (
-                            getattr(a, "modified_by", None)
+                            a.modified_by_exists()
                             and not a.modified_by.status == STATUS_DELETED
                             and a.modified_by in activities
                         ):  # pragma: no cover
@@ -1910,7 +1910,7 @@ class Activity(AuditModelMixin, models.Model):
         if self.status == STATUS_GRANTED:
             # Re-granting - nothing more to do.
             pass
-        elif not getattr(self, "modifies", None):
+        elif not self.modifies_exists():
             # Simple case: Just set status.
             self.status = STATUS_GRANTED
         elif self.validate_expected():  # pragma: no cover
@@ -1923,7 +1923,7 @@ class Activity(AuditModelMixin, models.Model):
                 self.modifies.end_date = self.end_date
             else:
                 while (
-                    getattr(self, "modifies", None)
+                    self.modifies_exists()
                     and self.start_date <= self.modifies.start_date
                 ):
                     old_activity = self.modifies
@@ -1938,7 +1938,7 @@ class Activity(AuditModelMixin, models.Model):
                     # "Merge" by ending current activity the day before the new
                     # start_date if end_date overlaps with the new start_date
                     # or it has no end_date.
-                if getattr(self, "modifies", None) and (
+                if self.modifies_exists() and (
                     not self.modifies.end_date
                     or (
                         self.modifies.end_date
@@ -1948,7 +1948,7 @@ class Activity(AuditModelMixin, models.Model):
                     self.modifies.end_date = self.start_date - timedelta(
                         days=1
                     )
-            if getattr(self, "modifies", None):
+            if self.modifies_exists():
                 # First, handle individual payments if any.
                 if payment_type == PaymentSchedule.INDIVIDUAL_PAYMENT:
                     for p in self.modifies.payment_plan.payments.all():
@@ -1969,7 +1969,7 @@ class Activity(AuditModelMixin, models.Model):
     def validate_expected(self):
         """Validate this is a correct expected activity."""
         today = date.today()
-        if not getattr(self, "modifies", None):
+        if not self.modifies_exists():
             raise forms.ValidationError(
                 _("den forventede justering har ingen ydelse at justere")
             )
@@ -2116,7 +2116,7 @@ class Activity(AuditModelMixin, models.Model):
 
         if (
             self.status == STATUS_GRANTED
-            and getattr(self, "modified_by", None)
+            and self.modified_by_exists()
             and not self.modified_by.status == STATUS_DELETED
         ):
             # one time payments are always overruled entirely.
@@ -2265,6 +2265,30 @@ class Activity(AuditModelMixin, models.Model):
         """,
             {"id": self.id, "status_deleted": STATUS_DELETED},
         )
+
+    def modifies_exists(self):
+        """
+        Check the activity this activity modifies exists.
+
+        Django is quirky in the sense that hasattr(self, 'modifies') can
+        return True even when modifies is None so we need to check for
+        both the attribute and None.
+
+        We encapsulate the logic here and use it everywhere to enforce it.
+        """
+        return getattr(self, "modifies", None)
+
+    def modified_by_exists(self):
+        """
+        Check the activity this activity is modified by exists.
+
+        Django is quirky in the sense that hasattr(self, 'modified_by') can
+        return True even when modified_by is None so we need to check for
+        both the attribute and None.
+
+        We encapsulate the logic here and use it everywhere to enforce it.
+        """
+        return getattr(self, "modified_by", None)
 
     def save(self, *args, **kwargs):
         """
