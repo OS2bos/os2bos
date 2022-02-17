@@ -12,4 +12,6 @@ class Migration(migrations.Migration):
         ("core", "0106_auto_20220217_0820"),
     ]
 
-    operations = [migrations.RunPython(remove_soft_deleted_activities)]
+    operations = [
+        migrations.RunPython(remove_soft_deleted_activities, elidable=True)
+    ]
