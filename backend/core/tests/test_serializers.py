@@ -42,9 +42,33 @@ from core.serializers import (
     ActivitySerializer,
     CaseSerializer,
     PaymentScheduleSerializer,
+    AppropriationSerializer,
     PaymentSerializer,
     TargetGroupSerializer,
 )
+
+
+class AppropriationSerializerTestCase(TestCase, BasicTestMixin):
+    @classmethod
+    def setUpTestData(cls):
+        cls.basic_setup()
+
+    def test_get_activities(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        appropriation = create_appropriation(case=case)
+
+        activity = create_activity(case=case, appropriation=appropriation)
+        create_payment_schedule(
+            payment_amount=Decimal("500.0"),
+            payment_frequency=PaymentSchedule.WEEKLY,
+            activity=activity,
+        )
+        serializer = AppropriationSerializer(instance=appropriation)
+        data = serializer.data
+
+        # assert activity is included.
+        self.assertEqual(len(data["activities"]), 1)
+        self.assertEqual(data["activities"][0]["id"], activity.id)
 
 
 class ActivitySerializerTestCase(TestCase, BasicTestMixin):
