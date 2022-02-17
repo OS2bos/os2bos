@@ -1919,9 +1919,8 @@ class Activity(AuditModelMixin, models.Model):
                     self.modifies_exists()
                     and self.start_date <= self.modifies.start_date
                 ):
-                    # Save with new modifies to not trigger CASCADE deletion.
-                    self.modifies = self.modifies.modifies
                     old_activity = self.modifies
+                    self.modifies = self.modifies.modifies
                     old_activity.delete()
                     self.save()
                     # "Merge" by ending current activity the day before the new
