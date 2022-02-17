@@ -26,7 +26,6 @@ from core.models import (
     STATUS_EXPECTED,
     STATUS_DRAFT,
     STATUS_GRANTED,
-    STATUS_DELETED,
     PaymentSchedule,
     Rate,
 )
@@ -43,34 +42,9 @@ from core.serializers import (
     ActivitySerializer,
     CaseSerializer,
     PaymentScheduleSerializer,
-    AppropriationSerializer,
     PaymentSerializer,
     TargetGroupSerializer,
 )
-
-
-class AppropriationSerializerTestCase(TestCase, BasicTestMixin):
-    @classmethod
-    def setUpTestData(cls):
-        cls.basic_setup()
-
-    def test_get_activities_excludes_deleted(self):
-        case = create_case(self.case_worker, self.municipality, self.district)
-        appropriation = create_appropriation(case=case)
-
-        activity = create_activity(case=case, appropriation=appropriation)
-        create_payment_schedule(
-            payment_amount=Decimal("500.0"),
-            payment_frequency=PaymentSchedule.WEEKLY,
-            activity=activity,
-        )
-        activity.status = STATUS_DELETED
-        activity.save()
-        serializer = AppropriationSerializer(instance=appropriation)
-        data = serializer.data
-
-        # assert deleted activity is not included.
-        self.assertEqual(len(data["activities"]), 0)
 
 
 class ActivitySerializerTestCase(TestCase, BasicTestMixin):

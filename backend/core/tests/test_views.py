@@ -31,7 +31,6 @@ from core.models import (
     STATUS_GRANTED,
     STATUS_DRAFT,
     STATUS_EXPECTED,
-    STATUS_DELETED,
     INTERNAL,
 )
 
@@ -1865,45 +1864,6 @@ class TestActivityViewSet(AuthenticatedTestCase, BasicTestMixin):
         # Check it's still there.
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-
-    def test_delete_removes_modifies(self):
-        now = timezone.now().date()
-        case = create_case(self.case_worker, self.municipality, self.district)
-        appropriation = create_appropriation(case=case)
-        modified = create_activity(
-            case=case,
-            appropriation=appropriation,
-            start_date=now - timedelta(days=6),
-            end_date=now + timedelta(days=6),
-            activity_type=SUPPL_ACTIVITY,
-            status=STATUS_GRANTED,
-        )
-        activity = create_activity(
-            case=case,
-            appropriation=appropriation,
-            start_date=now - timedelta(days=6),
-            end_date=now + timedelta(days=6),
-            activity_type=SUPPL_ACTIVITY,
-            status=STATUS_EXPECTED,
-            modifies=modified,
-        )
-        create_payment_schedule(activity=activity)
-
-        self.client.login(username=self.username, password=self.password)
-        url = reverse("activity-detail", kwargs={"pk": activity.pk})
-        # Check it's there.
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-        # Delete.
-        response = self.client.delete(url)
-        self.assertEqual(response.status_code, 204)
-        # Check it's gone from API.
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 404)
-        # Check modifies is unset.
-        activity.refresh_from_db()
-        self.assertEqual(activity.status, STATUS_DELETED)
-        self.assertIsNone(activity.modifies)
 
     def test_post_with_existing_service_provider(self):
         case = create_case(self.case_worker, self.municipality, self.district)

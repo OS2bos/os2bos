@@ -32,7 +32,6 @@ from core.models import (
     ServiceProvider as ServiceProviderModel,
     EffortStep as EffortStepModel,
     TargetGroup as TargetGroupModel,
-    STATUS_DELETED,
 )
 from core.filters import PaymentFilter, AppropriationFilter
 from core.serializers import CaseSerializer
@@ -233,11 +232,6 @@ class Activity(OptimizedDjangoObjectType):
 
     total_granted_next_year = graphene.Float()
     total_expected_next_year = graphene.Float()
-
-    @classmethod
-    def get_queryset(cls, queryset, info):
-        """Only return non-deleted activities."""
-        return queryset.exclude(status=STATUS_DELETED)
 
     def resolve_total_granted_this_year(self, info):
         """Retrieve total granted amount for this year."""
