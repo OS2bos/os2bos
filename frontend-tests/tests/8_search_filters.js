@@ -3,49 +3,12 @@
 import { Selector, ClientFunction } from 'testcafe'
 import { familieraadgiver, admin } from '../utils/logins.js'
 import baseurl from '../utils/url.js'
-import { randNum, useSelectBox, makeDateStr } from '../utils/utils.js'
-import { createCase, createAppropriation } from '../utils/crud.js'
+import { useSelectBox } from '../utils/utils.js'
 import checkConsole from '../utils/console.js'
+import { case81, case82, appr81, appr82 } from '../testdata.js'
 
-const today = new Date(),
-      str1mth = makeDateStr(today, 1)
+const getLocation = ClientFunction(() => document.location.href)
 
-const getLocation = ClientFunction(() => document.location.href),
-      testdata = {
-            case1: {
-                name: `filtertest-${ randNum() }.${ randNum() }.${ randNum() }`,
-                effort_step: '2',
-                scaling_step: '4',
-                target_group: 'Handicapafdelingen'
-            },
-            case2: {
-                name: `filtertest-${ randNum() }.${ randNum() }.${ randNum() }`,
-                effort_step: '3',
-                scaling_step: '5',
-                target_group: 'Handicapafdelingen'
-            },
-            appr1: {
-                name: `${ randNum() }.${ randNum() }.${ randNum() }-${ randNum() }-bevilling`,
-                section: 'SEL-41 Merudgifter til børn'
-            },
-            appr2: {
-                name: `${ randNum() }.${ randNum() }.${ randNum() }-${ randNum() }-bevilling`,
-                section: 'SEL-76-2 Efterværn / kontaktperson 18-22 årige'
-            },
-            appr3: {
-                name: `${ randNum() }.${ randNum() }.${ randNum() }-${ randNum() }-bevilling`,
-                section: 'SEL-76-2 Efterværn / kontaktperson 18-22 årige'
-            },
-            act1: {
-                note: 'Note for testing payment search filters',
-                payment_type: 'ONE_TIME_PAYMENT',
-                payment_date: str1mth,
-                payment_cost_type: 'FIXED',
-                payment_amount: '0.75',
-                recipient_type: 'COMPANY'
-            }
-            
-        }
 
 fixture('Check search filter defaults')
     .afterEach(() => checkConsole())
@@ -59,31 +22,6 @@ fixture('Check search filter defaults')
     https://redmine.magenta-aps.dk/issues/40341
     https://redmine.magenta-aps.dk/issues/43490
 */
-
-test
-.before(async t => {
-    await t.useRole(admin)
-})
-.page(baseurl)
-('Create data for one user', async t => {
-
-    await createCase(t, testdata.case1)
-    await createAppropriation(t, testdata.appr1)
-})
-
-test
-.before(async t => {
-    await t.useRole(familieraadgiver)
-})
-.page(baseurl)
-('Create data for another user', async t => {
-
-    await createCase(t, testdata.case2)
-    await createAppropriation(t, testdata.appr2)
-    await t.click(Selector('a').withText(testdata.case2.name))
-    await createAppropriation(t, testdata.appr3)
-        
-})
 
 // When loading cases page with no query params, 
 // default case worker filter should default to current user
@@ -100,8 +38,8 @@ test
     await t
         .expect(getLocation()).contains('case_worker=2')
         .expect(Selector('select#field-case-worker option').withText('IT Guy (admin)').selected).ok()
-        .expect(Selector('a').withText(testdata.case1.name).exists).ok()
-        .expect(Selector('a').withText(testdata.case2.name).exists).notOk()
+        .expect(Selector('a').withText(case81.sbsys_id).exists).ok()
+        .expect(Selector('a').withText(case82.sbsys_id).exists).notOk()
 
     // Update page, when another case worker is selected
     await useSelectBox(t, '#field-case-worker', 'Familie Raadgiver (familieraadgiver)')
@@ -109,8 +47,8 @@ test
     await t
         .expect(getLocation()).contains('case_worker=3')
         .expect(Selector('select#field-case-worker option').withText('Familie Raadgiver (familieraadgiver)').selected).ok()
-        .expect(Selector('a').withText(testdata.case2.name).exists).ok()
-        .expect(Selector('a').withText(testdata.case1.name).exists).notOk()
+        .expect(Selector('a').withText(case82.sbsys_id).exists).ok()
+        .expect(Selector('a').withText(case81.sbsys_id).exists).notOk()
 
     // List nothing when no filter is selected
     await useSelectBox(t, '#field-case-worker', '---')
@@ -126,16 +64,16 @@ test
         .expect(getLocation()).notContains('case_worker=')
         .expect(getLocation()).contains('case_worker__team=3')
         .expect(Selector('select#field-case-worker option').withText('---').selected).ok()
-        .expect(Selector('a').withText(testdata.case1.name).exists).notOk()
-        .expect(Selector('a').withText(testdata.case2.name).exists).ok()
+        .expect(Selector('a').withText(case81.sbsys_id).exists).notOk()
+        .expect(Selector('a').withText(case82.sbsys_id).exists).ok()
 
     // Update page, when filters are reset
     await t
         .click('button.filter-reset')
         .expect(getLocation()).contains('case_worker=2')
         .expect(Selector('select#field-case-worker option').withText('IT Guy (admin)').selected).ok()
-        .expect(Selector('a').withText(testdata.case1.name).exists).ok()
-        .expect(Selector('a').withText(testdata.case2.name).exists).notOk()
+        .expect(Selector('a').withText(case81.sbsys_id).exists).ok()
+        .expect(Selector('a').withText(case82.sbsys_id).exists).notOk()
 
 })
 
@@ -154,8 +92,8 @@ test
     await t
         .expect(getLocation()).contains('case__case_worker=2')
         .expect(Selector('select#field-case-worker option').withText('IT Guy (admin)').selected).ok()
-        .expect(Selector('a').withText(testdata.appr1.name).exists).ok()
-        .expect(Selector('a').withText(testdata.appr2.name).exists).notOk()
+        .expect(Selector('a').withText(appr81.sbsys_id).exists).ok()
+        .expect(Selector('a').withText(appr82.sbsys_id).exists).notOk()
     
     // Update page, when another case worker is selected
     await useSelectBox(t, '#field-case-worker', 'Familie Raadgiver (familieraadgiver)')
@@ -163,8 +101,8 @@ test
     await t
         .expect(getLocation()).contains('case__case_worker=3')
         .expect(Selector('select#field-case-worker option').withText('Familie Raadgiver (familieraadgiver)').selected).ok()
-        .expect(Selector('a').withText(testdata.appr2.name).exists).ok()
-        .expect(Selector('a').withText(testdata.appr1.name).exists).notOk()
+        .expect(Selector('a').withText(appr82.sbsys_id).exists).ok()
+        .expect(Selector('a').withText(appr81.sbsys_id).exists).notOk()
 
     // List nothing when no filter is selected
     await useSelectBox(t, '#field-case-worker', '---')
@@ -180,16 +118,16 @@ test
         .expect(getLocation()).notContains('case__case_worker=')
         .expect(getLocation()).contains('case__case_worker__team=3')
         .expect(Selector('select#field-case-worker option').withText('---').selected).ok()
-        .expect(Selector('a').withText(testdata.appr1.name).exists).notOk()
-        .expect(Selector('a').withText(testdata.appr2.name).exists).ok()
+        .expect(Selector('a').withText(appr81.sbsys_id).exists).notOk()
+        .expect(Selector('a').withText(appr82.sbsys_id).exists).ok()
     
     // Update page, when filters are reset
     await t
         .click('button.filter-reset')
         .expect(getLocation()).contains('case__case_worker=2')
         .expect(Selector('select#field-case-worker option').withText('IT Guy (admin)').selected).ok()
-        .expect(Selector('a').withText(testdata.appr1.name).exists).ok()
-        .expect(Selector('a').withText(testdata.appr2.name).exists).notOk()
+        .expect(Selector('a').withText(appr81.sbsys_id).exists).ok()
+        .expect(Selector('a').withText(appr82.sbsys_id).exists).notOk()
 })
 
 // When loading cases page with query params, 
@@ -204,8 +142,8 @@ test
     await t
         .expect(getLocation()).contains('case_worker=3')
         .expect(Selector('select#field-case-worker option').withText('Familie Raadgiver (familieraadgiver)').selected).ok()
-        .expect(Selector('a').withText(testdata.case2.name).exists).ok()
-        .expect(Selector('a').withText(testdata.case1.name).exists).notOk()
+        .expect(Selector('a').withText(case82.sbsys_id).exists).ok()
+        .expect(Selector('a').withText(case81.sbsys_id).exists).notOk()
 })
 
 // When loading appropriation page with query params,
@@ -220,8 +158,8 @@ test
     await t
         .expect(getLocation()).contains('case__case_worker=3')
         .expect(Selector('select#field-case-worker option').withText('Familie Raadgiver (familieraadgiver)').selected).ok()
-        .expect(Selector('a').withText(testdata.appr2.name).exists).ok()
-        .expect(Selector('a').withText(testdata.appr1.name).exists).notOk()
+        .expect(Selector('a').withText(appr82.sbsys_id).exists).ok()
+        .expect(Selector('a').withText(appr81.sbsys_id).exists).notOk()
 })
 
 // When loading cases page with query params and no case worker, 
@@ -267,7 +205,7 @@ test
 
     await t
         .expect(Selector('.datagrid tr').count).gt(2)
-        .typeText('#field-sbsysid', testdata.appr2.name, {replace: true})
-        .expect(Selector('.datagrid td a').withText(testdata.appr2.name).exists).ok()
+        .typeText('#field-sbsysid', appr82.sbsys_id, {replace: true})
+        .expect(Selector('.datagrid td a').withText(appr82.sbsys_id).exists).ok()
         .expect(Selector('.datagrid tr').count).eql(2)
 })

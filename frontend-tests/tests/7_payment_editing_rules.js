@@ -3,63 +3,11 @@
 import { Selector } from 'testcafe'
 import { familieraadgiver, regelmotor } from '../utils/logins.js'
 import baseurl from '../utils/url.js'
-import { randNum, createDate, useSelectBox } from '../utils/utils.js'
-import { createCase, createAppropriation, createActivity, approveActivities } from '../utils/crud.js'
+import { createDate } from '../utils/utils.js'
+import { approveActivities } from '../utils/crud.js'
 import checkConsole from '../utils/console.js'
-
-const testdata = {
-    case1: {
-        name: `${ randNum() }.${ randNum() }.${ randNum() }-sag`,
-        effort_step: '5',
-        scaling_step: '7',
-        target_group: 'Handicapafdelingen'
-    },
-    appr1: {
-        name: `${ randNum() }.${ randNum() }.${ randNum() }-${ randNum() }-bevilling`,
-        section: 'SEL-52-3.5 Aflastningsordning'
-    },
-    act1: {
-        details__name: 'Netværksplejefamilier',
-        payment_type: 'INDIVIDUAL_PAYMENT',
-        start_date: createDate(2),
-        end_date: createDate(32),
-        recipient_type: 'COMPANY'
-    },
-    act2: {
-        details__name: 'Aktiviteter',
-        payment_type: 'RUNNING_PAYMENT',
-        start_date: createDate(6),
-        end_date: createDate(12),
-        payment_frequency: 'DAILY',
-        payment_cost_type: 'FIXED',
-        payment_amount: '120,95',
-        recipient_type: 'PERSON',
-        recipient_id: '1111112222',
-        payment_method: 'SD'
-    },
-    act3: {
-        details__name: 'Kost og logi',
-        payment_type: 'ONE_TIME_PAYMENT',
-        payment_date: createDate(10),
-        payment_cost_type: 'GLOBAL_RATE',
-        payment_units: '5.20',
-        recipient_type: 'PERSON',
-        recipient_id: '2222221111',
-        payment_method: 'CASH'
-    },
-    act4: {
-        details__name: 'Kørsel i egen bil',
-        payment_type: 'RUNNING_PAYMENT',
-        start_date: createDate(18),
-        payment_frequency: 'BIWEEKLY',
-        payment_cost_type: 'PER_UNIT',
-        price_amount: '100',
-        price_start_date: createDate(1),
-        payment_units: '3',
-        recipient_type: 'INTERNAL',
-        recipient_id: '123'
-    }
-}
+import { navToActivity } from '../utils/navigation.js'
+import { appr7, act71, act72, act73, act74 } from '../testdata.js'
 
 fixture('Check payment editing rules')
     .page(baseurl)
@@ -86,18 +34,12 @@ fixture('Check payment editing rules')
 test
     .before(async t => {
         await t.useRole(familieraadgiver)
-    })('Create data and check that normal user can create new payments', async t => {
+    })('Check that normal user can create new payments', async t => {
 
-    await createCase(t, testdata.case1)
-    await createAppropriation(t, testdata.appr1)
-    await createActivity(t, testdata.act1)
-    await createActivity(t, testdata.act2)
-    await createActivity(t, testdata.act3)
-    await createActivity(t, testdata.act4)
+    await navToActivity(t, act71.id)
 
     await t
         // Check that this user can create new payments on an activity that has individual payment plan
-        .click(Selector('a').withText(testdata.act1.details__name.substr(0,6)))
         .click('.payment-create-btn')
         .typeText('#field-payment-planned-amount', '145,95')
         .typeText('#field-payment-planned-date', createDate(4))
@@ -111,9 +53,10 @@ test
         .expect(Selector('.msg').withText('Betaling opdateret').exists).ok()
         // Check that this user can't create new payments on an activity that hasn't individual payment plan
         .click('button.modal-cancel-btn')
-        .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector('a').withText(testdata.act2.details__name))
-        .expect(Selector('.payment-create-btn').exists).notOk()
+    
+    await navToActivity(t, act72.id)
+        
+    await t.expect(Selector('.payment-create-btn').exists).notOk()
 })
 
 test
@@ -121,12 +64,9 @@ test
         await t.useRole(regelmotor)
     })('Check that improved user can create new payments', async t => {
 
-    await useSelectBox(t, '#field-case-worker', 'familieraadgiver')
+    await navToActivity(t, act71.id)
 
     await t
-        .click(Selector('a').withText(testdata.case1.name))
-        .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector('a').withText(testdata.act1.details__name.substr(0,6)))
         
         // Check that this user can create new payments on an activity that has individual payment plan
         .click('.payment-create-btn')
@@ -144,8 +84,10 @@ test
         
         // Check that this user can't create new payments on an activity that hasn't individual payment plan
         .click('button.modal-cancel-btn')
-        .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector('a').withText(testdata.act2.details__name.substr(0,6)))
+    
+    await navToActivity(t, act72.id)
+
+    await t
         .expect(Selector('.payment-create-btn').exists).notOk()
 
         // Check that this user cannot edit payments
@@ -154,16 +96,17 @@ test
         .click('.modal-cancel-btn')
 
         // Check that this user can't create new payments on any activity when activities have been granted
-        .click(Selector('a').withText(testdata.appr1.name))
+        .click(Selector('a').withText(appr7.sbsys_id))
         
     await approveActivities(t)
 
-    await t
-        .click(Selector('a').withText(testdata.act1.details__name))
-        .expect(Selector('.payment-create-btn').exists).notOk()
-        .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector('a').withText(testdata.act2.details__name))
-        .expect(Selector('.payment-create-btn').exists).notOk()
+    await navToActivity(t, act71.id)
+
+    await t.expect(Selector('.payment-create-btn').exists).notOk()
+    
+    await navToActivity(t, act72.id)
+
+    await t.expect(Selector('.payment-create-btn').exists).notOk()
 })
 
 test
@@ -171,10 +114,9 @@ test
         await t.useRole(familieraadgiver)
     })('Check that normal user cannot create new payments after grant', async t => {
 
+        await navToActivity(t, act71.id)
+
     await t
-        .click(Selector('a').withText(testdata.case1.name))
-        .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector('a').withText(testdata.act1.details__name.substr(0,6)))
         .expect(Selector('.payment-create-btn').exists).notOk()
         
         // Check that this user cannot edit payments anymore
@@ -182,8 +124,9 @@ test
         .expect(Selector('dt').withText('Beløb, planlagt').exists).ok()
         .click('button.modal-cancel-btn')
 
-        .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector('a').withText(testdata.act2.details__name))
+    await navToActivity(t, act72.id)    
+
+    await t
         .expect(Selector('.payment-create-btn').exists).notOk()
         
         // Check that this user cannot edit payments
@@ -221,30 +164,32 @@ test
         await t.useRole(familieraadgiver)
     })('Check that normal user can register payment under certain circumstances', async t => {
 
+    await navToActivity(t, act71.id)
+
     await t
-        .click(Selector('a').withText(testdata.case1.name))
-        .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector('a').withText(testdata.act1.details__name.substr(0,6)))
         .expect(Selector('td input.field-amount').exists).ok()
         .expect(Selector('td input[type="date"]').exists).ok()
 
-        .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector('a').withText(testdata.act2.details__name))
+    await navToActivity(t, act72.id)
+
+    await t
         .expect(Selector('td input.field-amount').exists).notOk()
         .expect(Selector('td input[type="date"]').exists).notOk()
 
-        .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector('a').withText(testdata.act3.details__name))
+    await navToActivity(t, act73.id)
+
+    await t
         .expect(Selector('td input.field-amount').exists).notOk()
         .expect(Selector('td input[type="date"]').exists).notOk()
+    
+    await navToActivity(t, act74.id)
 
-        .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector('a').withText(testdata.act4.details__name))
+    await t
         // Select act4 start_date year for list of payments.
         .click(Selector('#field-year-picker'))
         .click(Selector('#field-year-picker')
             .find('option')
-            .withText(testdata.act4.start_date.substring(0,4))
+            .withText(act74.start_date.substring(0,4))
         )
 
         .expect(Selector('td input.field-amount').exists).ok()
@@ -261,33 +206,32 @@ test
         await t.useRole(regelmotor)
     })('Check that improved user can register payment at all times', async t => {
 
-    await useSelectBox(t, '#field-case-worker', 'familieraadgiver')
+    await navToActivity(t, act71.id)
 
     await t
-        .click(Selector('a').withText(testdata.case1.name))
-        .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector('a').withText(testdata.act1.details__name.substr(0,6)))
         .expect(Selector('td input.field-amount').exists).ok()
         .expect(Selector('td input[type="date"]').exists).ok()
 
-        .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector('a').withText(testdata.act2.details__name))
+    await navToActivity(t, act72.id)
+
+    await t
         .expect(Selector('td input.field-amount').exists).ok()
         .expect(Selector('td input[type="date"]').exists).ok()
 
-        .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector('a').withText(testdata.act3.details__name))
+    await navToActivity(t, act73.id)
+
+    await t
         .expect(Selector('td input.field-amount').exists).ok()
         .expect(Selector('td input[type="date"]').exists).ok()
 
-        .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector('a').withText(testdata.act4.details__name))
-
+    await navToActivity(t, act74.id)
+    
+    await t
         // Select act4 start_date year for list of payments.
         .click(Selector('#field-year-picker'))
         .click(Selector('#field-year-picker')
             .find('option')
-            .withText(testdata.act4.start_date.substring(0,4))
+            .withText(act74.start_date.substring(0,4))
         )
 
         .expect(Selector('td input.field-amount').exists).ok()
@@ -299,12 +243,16 @@ test
         .expect(Selector('span.date-paid').exists).notOk()
 
         // Check that we get a warning if trying to set paid date in the near future
-        .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector('a').withText(testdata.act2.details__name))
+
+    await navToActivity(t, act72.id)
+    
+    await t
         .typeText(Selector('td input[type="date"]').nth(0), createDate(1), {replace: true})
         .expect(Selector('.popover').exists).ok()
-        .click(Selector('a').withText(testdata.appr1.name))
-        .click(Selector('a').withText(testdata.act3.details__name))
+    
+    await navToActivity(t, act73.id)
+
+    await t
         .typeText(Selector('td input[type="date"]').nth(0), createDate(1), {replace: true})
         .expect(Selector('.popover').exists).ok()
 })

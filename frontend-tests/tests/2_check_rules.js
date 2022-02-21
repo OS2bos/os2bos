@@ -3,34 +3,14 @@
 import { Selector } from 'testcafe'
 import { familieleder } from '../utils/logins.js'
 import baseurl from '../utils/url.js'
-import { leadZero, randNum, createDate } from '../utils/utils.js'
-import { createCase, createAppropriation, createActivity, approveActivities, editActivity } from '../utils/crud.js'
+import { leadZero, createDate } from '../utils/utils.js'
+import { createActivity, approveActivities, editActivity } from '../utils/crud.js'
 import checkConsole from '../utils/console.js'
+import { appr21, appr22 } from '../testdata.js'
 
 const today = new Date(),
     anotherday = new Date(new Date().setDate(today.getDate() + 7)),
     testdata = {
-        case1: {
-            name: `${ randNum() }.${ randNum() }.${ randNum() }-regel-test`,
-            effort_step: '4',
-            scaling_step: '4',
-            target_group: 'Handicapafdelingen'
-        },
-        case2: {
-            name: `${ randNum() }.${ randNum() }.${ randNum() }-regel-test`,
-            effort_step: '2',
-            scaling_step: '8',
-            target_group: 'Familieafdelingen',
-            district: 'Baltorp'
-        },
-        appr1: {
-            name: `${ randNum() }.${ randNum() }.${ randNum() }-regel-test-bevilling`,
-            section: 'SEL-109 Botilbud, kriseramte kvinder'
-        },
-        appr2: {
-            name: `${ randNum() }.${ randNum() }.${ randNum() }-regel-test-bevilling`,
-            section: 'SEL-109 Botilbud, kriseramte kvinder'
-        },
         act1: {
             day_of_month: '4', 
             start_today: `${ today.getFullYear() }-${ leadZero(today.getMonth() + 1) }-${ leadZero(today.getDate()) }`,
@@ -63,19 +43,16 @@ const today = new Date(),
     }
 
 fixture('Check rules')
-    .page(baseurl)
     .beforeEach(async t => { 
         await t.useRole(familieleder)
     })
+    .page(baseurl)
     .afterEach(() => checkConsole())
 
 test('Start date rule check for activities with "CASH" payment', async t => {
-
-    await createCase(t, testdata.case1)
-
-    await createAppropriation(t, testdata.appr1)
-
+        
     await t
+        .navigateTo(`${ baseurl }/#/appropriation/${ appr21.id }/`)
         .click(Selector('.activities-create-btn'))
         .click('#fieldSelectAct')
         .click(Selector('#fieldSelectAct option').nth(1))
@@ -95,8 +72,8 @@ test('Start date rule check for activities with "CASH" payment', async t => {
 
 test('Check that an activity may only have one modifier', async t => {
 
-    await createCase(t, testdata.case2)
-    await createAppropriation(t, testdata.appr2)
+    await t.navigateTo(`${ baseurl }/#/appropriation/${ appr22.id }/`)
+
     await createActivity(t, testdata.act2)
     await approveActivities(t)
     
@@ -118,9 +95,7 @@ test('Check that an activity may only have one modifier', async t => {
 */
 test('Check editing of activity type', async t => {
 
-    await t
-        .click(Selector('a').withText(testdata.case1.name))
-        .click(Selector('a').withText(testdata.appr1.name))
+    await t.navigateTo(`${ baseurl }/#/appropriation/${ appr21.id }/`)
 
     await createActivity(t, testdata.act4)
 

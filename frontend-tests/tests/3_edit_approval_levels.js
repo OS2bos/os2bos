@@ -1,34 +1,20 @@
 // Testing with Testcafe : https://devexpress.github.io/testcafe/documentation/getting-started/
 
 import { Selector } from 'testcafe'
-import { admin, familieleder } from '../utils/logins.js'
+import { familieleder } from '../utils/logins.js'
 import baseurl from '../utils/url.js'
 import { makeDateStr } from '../utils/utils.js'
-import { createActivity, createAppropriation, createCase } from '../utils/crud.js'
+import { createActivity } from '../utils/crud.js'
 import checkConsole from '../utils/console.js'
+import { appr3 } from '../testdata.js'
 
 let today = new Date(),
-    rand = Math.floor(Math.random() * 1000 ),
-    rand2 = Math.floor(Math.random() * 1000 ),
     appro_lvl_name = 'etaten'
 
 let str1mth = makeDateStr(today, 1),
     str10mth = makeDateStr(today, 10)
     
 const testdata = {
-    case1: {
-        id: 1,
-        name: `xx.xx.xx-${ rand }-${ rand2 }`,
-        effort_step: '3',
-        scaling_step: '6',
-        target_group: 'Familieafdelingen',
-        district: 'Baltorp'
-    },
-    appr1: {
-        id: 1,
-        name: `xx.xx.xx-${ rand }-${ rand2 }-bevil${ rand }`,
-        section: 'SEL-109 Botilbud, kriseramte kvinder'
-    },
     act1: {
         payment_type: 'RUNNING_PAYMENT',
         start_date: str1mth,
@@ -70,8 +56,8 @@ test
     .page(baseurl)
     ('Check existence of approval level', async t => {
 
-    await createCase(t, testdata.case1)
-    await createAppropriation(t, testdata.appr1)
+    await t.navigateTo(`${ baseurl }/#/appropriation/${ appr3.id }/`)
+
     await createActivity(t, testdata.act1)
 
     await t

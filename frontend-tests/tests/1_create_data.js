@@ -106,10 +106,10 @@ const testdata = {
 }
 
 fixture('Login and create some data') // declare the fixture
-    .page(baseurl)  // specify the start page
     .beforeEach(async t => { 
         await t.useRole(familieleder)
     })
+    .page(baseurl)  // specify the start page
     .afterEach(() => checkConsole())
 
 test('Create case and appropriation', async t => {
