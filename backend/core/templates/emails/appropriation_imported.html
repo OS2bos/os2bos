@@ -8,10 +8,16 @@
 
 {% extends "emails/base.html" %}
 {% block content %}
-<h1>Ny bevilling</h1>
 
-Du er blevet tildelt denne nye bevilling, som er oprettet i SBSYS:
+<h1>Ny foranstaltningssag oprettet</h1>
 
-<a href="{{ public_host }}/#/appropriation/{{appropriation.id}}/">{{ appropriation.sbsys_id }}</a>
+<p>Der er blevet oprettet en foranstaltningssag i SBSYS, som er tildelt til dig:</p>
+<p><strong>{{ appropriation.sbsys_id }}</strong></p>
+
+<p>
+   <a href="{{ public_host }}/#/appropriation/{{appropriation.id}}/">
+      Klik her for at åbne bevillingsskrivelsen i BOS
+   </a>
+</p>
 
 {% endblock %}
