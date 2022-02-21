@@ -11,12 +11,14 @@
 
 <h1>Ny foranstaltningssag oprettet</h1>
 
-<p>Der er blevet oprettet en foranstaltningssag i SBSYS, som er tildelt til dig:</p>
-<p><strong>{{ appropriation.sbsys_id }}</strong></p>
-
+<p>
+   Der er blevet oprettet en foranstaltningssag i SBSYS:<br>
+   <strong>{{ appropriation.sbsys_id }}</strong>
+</p>
+<p>Der er blevet oprettet en tilsvarende bevillingsskrivelse i BOS, som er tildelt til dig.</p>
 <p>
    <a href="{{ public_host }}/#/appropriation/{{appropriation.id}}/">
-      Klik her for at åbne bevillingsskrivelsen i BOS
+      Klik her for at åbne bevillingsskrivelse {{ appropriation.sbsys_id }} i BOS
    </a>
 </p>
 
