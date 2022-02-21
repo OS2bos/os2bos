@@ -1,10 +1,12 @@
 // Testing with Testcafe : https://devexpress.github.io/testcafe/documentation/getting-started/
 
 import { Selector } from 'testcafe'
-import { admin, familieleder } from '../utils/logins.js'
+import { familieleder } from '../utils/logins.js'
 import { createCase } from '../utils/crud.js'
 import baseurl from '../utils/url.js'
 import checkConsole from '../utils/console.js'
+import { navToCase } from '../utils/navigation.js'
+import { case6 } from '../testdata.js'
 
 let rand = Math.floor(Math.random() * 1000 ),
     rand2 = Math.floor(Math.random() * 1000 )
@@ -15,13 +17,6 @@ const target_group_name = `testmålgruppe-${ rand }`,
             id: 1,
             name: `x${ rand }.y${ rand2 }.yy`,
             target_group: target_group_name
-        },
-        case2: {
-            id: 1,
-            name: `x${ rand }.z${ rand2 }.${ rand2 }`,
-            effort_step: '3',
-            scaling_step: '5',
-            target_group: 'Handicapafdelingen'
         }
     }
 
@@ -85,8 +80,9 @@ test
     .page(baseurl)
     ('Appropriation with 1 available paragraph should display no selectbox', async t => {
 
+    await navToCase(t, testdata.case1.name)
+
     await t
-        .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('.appropriation-create-btn'))
         .expect(Selector('#field-lawref').exists).notOk()
 })
@@ -98,7 +94,7 @@ test
     .page(baseurl)
     ('Appropriation with some available paragraphs should display only those paragraphs', async t => {
     
-    await createCase(t, testdata.case2)
+    await navToCase(t, case6.sbsys_id)
 
     await t
         .click(Selector('.appropriation-create-btn'))
