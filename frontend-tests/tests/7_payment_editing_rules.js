@@ -114,7 +114,7 @@ test
         await t.useRole(familieraadgiver)
     })('Check that normal user cannot create new payments after grant', async t => {
 
-        await navToActivity(t, act71.id)
+    await navToActivity(t, act71.id)
 
     await t
         .expect(Selector('.payment-create-btn').exists).notOk()
