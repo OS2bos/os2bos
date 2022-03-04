@@ -16,7 +16,9 @@ django-constance[database]==2.8.0
 drf-writable-nested==0.6.3
 git+https://github.com/magenta-aps/django-saml2-auth@2.2.6#egg=django-saml2-auth
 pysaml2==6.4.1
-django-mailer==2.1
+# Use latest development commit of django-mailer while we wait for
+# https://github.com/pinax/django-mailer/pull/155 to be included in a release
+git+https://github.com/pinax/django-mailer@41db3e2
 holidays==0.11.1
 django-watchman==1.2.0
 django-currentuser==0.5.3
