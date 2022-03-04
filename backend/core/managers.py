@@ -75,16 +75,22 @@ class PaymentQuerySet(models.QuerySet):
     def strict_amount_sum(self):
         """Sum over Payments amount."""
         return (
-            self.aggregate(amount_sum=Coalesce(Sum("amount"), 0))["amount_sum"]
+            self.aggregate(
+                amount_sum=Coalesce(
+                    Sum("amount"), 0, output_field=DecimalField()
+                )
+            )["amount_sum"]
             or 0
         )
 
     def amount_sum(self):
         """Sum over Payments with paid_amount overruling amount."""
         return (
-            self.aggregate(amount_sum=Coalesce(Sum(self.amount_case), 0))[
-                "amount_sum"
-            ]
+            self.aggregate(
+                amount_sum=Coalesce(
+                    Sum(self.amount_case), 0, output_field=DecimalField()
+                )
+            )["amount_sum"]
             or 0
         )
 
@@ -454,7 +460,14 @@ class AppropriationQuerySet(models.QuerySet):
             .exclude(sbsys_common=None)
             .values("sbsys_common")
             .annotate(ids=ArrayAgg("id", distinct=True))
-            .annotate(id_count=Func("ids", Value(1), function="array_length"))
+            .annotate(
+                id_count=Func(
+                    "ids",
+                    Value(1),
+                    function="array_length",
+                    output_field=IntegerField(),
+                )
+            )
             .filter(id_count__gt=1)
         )
 

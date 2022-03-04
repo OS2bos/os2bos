@@ -72,7 +72,7 @@ class ClassificationInline(admin.TabularInline):
         user = request.user
         return user.is_authenticated and user.is_workflow_engine_or_admin()
 
-    def has_add_permission(self, request):
+    def has_add_permission(self, request, obj=None):
         """Override has_add_permission for InlineModelAdmin."""
         user = request.user
         return user.is_authenticated and user.is_workflow_engine_or_admin()
