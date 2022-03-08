@@ -47,7 +47,6 @@ from core.models import (
     Effort,
     ActivityCategory,
     DSTPayload,
-    STATUS_DELETED,
     STATUS_DRAFT,
     STATUS_EXPECTED,
     STATUS_GRANTED,
@@ -799,7 +798,6 @@ class BaseAppropriationSerializer(serializers.ModelSerializer):
         """Get number of ongoing activities."""
         return (
             appropriation.activities.filter(modified_by__isnull=True)
-            .exclude(status=STATUS_DELETED)
             .ongoing()
             .count()
         )
@@ -832,7 +830,7 @@ class AppropriationSerializer(BaseAppropriationSerializer):
 
     def get_activities(self, appropriation):
         """Get activities on appropriation."""
-        activities = appropriation.activities.exclude(status=STATUS_DELETED)
+        activities = appropriation.activities.all()
         serializer = ActivitySerializer(
             instance=activities, many=True, read_only=True
         )
