@@ -1626,34 +1626,52 @@ def generate_dst_payload_handicap(
     return doc
 
 
-def is_appropriation(sbsys_id):
-    """Determine whether this SBSYS case is an Appropriation."""
-    return sbsys_id[:8] == "27.24.00"
+def import_sbsys_appropriation(appropriation_json, case_json):
+    """Import an Appropriation from data received from SBSYS API."""
+    appropriation_sbsys_id = appropriation_json["Nummer"]
+    case_sbsys_id = case_json["Nummer"]
+    cpr_number = appropriation_json["PrimaryPart"]["CPRnummer"]
+    print(cpr_number, appropriation_sbsys_id)
+
+    # Import Appropriation.
+    new_appropriation = models.Appropriation()
+    new_appropriation.sbsys_id = appropriation_sbsys_id
+
+    # Attach to Case.
+    if not models.Case.objects.filter(sbsys_id=case_sbsys_id):
+        import_sbsys_case(case_json)
+    # If this did not raise an exception, the case is imported.
+    new_appropriation.case = models.Case.objects.get(sbsys_id=case_sbsys_id)
+    new_appropriation.save()
+    # TODO: Maybe parse the title to get the Section
+    send_appropriation_imported_email(new_appropriation)
+    # Done, woohoo!
 
 
-def import_sbsys_case(sbsys_json):
-    """Import data received from SBSYS API."""
-    sbsys_id = sbsys_json["Nummer"]
-    cpr_number = sbsys_json["PrimaryPart"]["CPRnummer"]
-    print(cpr_number, sbsys_id)
+def import_sbsys_case(case_json):
+    """Import a Case from SBSYS data."""
+    new_case = models.Case()
+    new_case.sbsys_id = case_json["Nummer"]
+    new_case.cpr_number = case_json["PrimaryPart"]["CPRnummer"]
+    new_case.name = case_json["PrimaryPart"]["Navn"]
+    social_worker_id = case_json["Behandler"]["LogonId"]
 
-    if is_appropriation(sbsys_id):
-        # Import appropriation.
-        new_appropriation = models.Appropriation()
-        new_appropriation.sbsys_id = sbsys_id
-        # TODO: How do we do this???
-        # new_appropriation.case = None
-        # new_appropriation.save()
-        # send_appropriation_imported_email(new_appropriation)
+    if models.User.objects.filter(username=social_worker_id).exists():
+        new_case.case_worker = models.User.objects.get(
+            username=social_worker_id
+        )
     else:
-        name = sbsys_json["PrimaryPart"]["Navn"]
-        print(name)
-        # Import Case.
-        # case_worker - how do we correlate this?
-        # district - can we calculate school district from address?
-        # paying_municipality - can we get this from SBSYS?
-        # acting_municipality - as above (how is this handled in Ballerup?)
-        # residence_municipality - extract from person's address?
-        # target_group  - is this even present in SBSYS?
-        # effort_step - maybe not present in SBSYS.
-        # scaling_step - maybe not present in SBSYS.
+        raise RuntimeError(
+            f"Social worker/user {social_worker_id}"
+            " not found - unable to import Case"
+        )
+    # TODO: School district?
+
+    # Municipalities
+    ballerup = models.Municipality.get(name="Ballerup")
+    new_case.paying_municipality = ballerup
+    new_case.acting_municipality = ballerup
+    new_case.residence_municipality = ballerup
+
+    # OK, this is it!
+    new_case.save()
