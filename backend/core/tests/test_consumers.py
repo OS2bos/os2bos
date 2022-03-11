@@ -11,6 +11,8 @@ from django.test import TestCase, override_settings
 
 from core.consumers import receive_sbsys_event
 
+from core.tests.testing_utils import create_user, create_municipality
+
 
 class MockResponse:
     def __init__(self, json_data, status_code):
@@ -164,9 +166,116 @@ example_sbsys_data = {
     },
 }
 
+example_search_result = {
+    "TotalNumberOfResults": 1,
+    "Results": [
+        {
+            "SagsTyper": [{"Id": 1, "Navn": "EmneSag"}],
+            "SagsTitel": "BU Familiesag Distrikt Ballerup Rådhus Test af"
+            + " person der ikke fremkommer ved søg ekstern 270919-6920",
+            "Personer": [
+                {
+                    "Initialer": "TT",
+                    "Titel": "",
+                    "Uddannelse": "",
+                    "Stilling": "",
+                    "Ansaettelsessted": "",
+                    "Koen": "Mand",
+                    "CprNummer": "111111-1111",
+                    "Adresse": {
+                        "Id": 2887092,
+                        "Adresse1": "Hold - an vej 7",
+                        "Adresse2": "",
+                        "Adresse3": "",
+                        "PostNummer": 2750,
+                        "PostDistrikt": "Ballerup",
+                        "Bynavn": "",
+                        "ErBeskyttet": False,
+                    },
+                    "CivilstandId": 4,
+                    "AegtefaelleCPR": "      -",
+                    "MorCPR": "      -",
+                    "FarCPR": "      -",
+                    "TilmeldtDigitalPost": False,
+                    "Uuid": "62d8ad86-f505-46d4-86ea-8db4015827ca",
+                    "Id": 300313,
+                    "Navn": "Test Testesen",
+                }
+            ],
+            "Firmaer": [],
+            "PrimaryPart": {
+                "PartId": 300313,
+                "PartType": "Person",
+                "CPRnummer": "111111-1111",
+                "Navn": "Test Testesen",
+            },
+            "Id": 433160,
+            "SagIdentity": "87d22a93-1086-4613-89bd-4c82919b690f",
+            "Opstaaet": "2019-10-28T10:07:28.557+01:00",
+            "Nummer": "27.24.00-G01-5-19",
+            "Fagomraade": {
+                "Uuid": "e9feb386-37fd-441e-86b8-2178fbdd9799",
+                "Id": 1,
+                "Navn": "Standard",
+            },
+            "BevaringId": 20,
+            "SenesteStatusAendringKommentar": "Sagsstatus ændret til Opstået",
+            "SenesteStatusAendring": "2019-10-28T10:07:28.497+01:00",
+            "Oprettet": "2019-10-28T10:07:28.557+01:00",
+            "SenestAendret": "2019-10-28T10:08:43.05+01:00",
+            "ErBeskyttet": True,
+            "ErBesluttet": False,
+            "BeslutningHarDeadline": False,
+            "SagsNummerId": 432755,
+            "Ansaettelsessted": {
+                "Uuid": "8f53824d-5a03-4910-b5f2-6550d5b34f4e",
+                "Id": 171,
+                "Navn": "Digitaliseringssekretariatet",
+            },
+            "Behandler": {
+                "LogonId": "XXX",
+                "Uuid": "425f5666-0a85-49a1-a73f-4a9f007d7951",
+                "Id": 2771,
+                "Navn": "XXX",
+            },
+            "SagsStatus": {
+                "Id": 9,
+                "Navn": "Opstået",
+                "Orden": 1,
+                "SagsTilstand": "Aktiv",
+                "RequireComments": False,
+                "SagsStatusKommentar": "Sagsstatus ændret til Opstået",
+            },
+            "ArkivAfklaringStatusId": 1,
+            "OprettetAf": {
+                "LogonId": "XXX",
+                "Uuid": "425f5666-0a85-49a1-a73f-4a9f007d7951",
+                "Id": 2771,
+                "Navn": "XXX",
+            },
+            "SenestAendretAf": {
+                "LogonId": "XXX",
+                "Uuid": "425f5666-0a85-49a1-a73f-4a9f007d7951",
+                "Id": 2771,
+                "Navn": "XXX",
+            },
+            "SecuritySetId": 1959268,
+            "SagSkabelon": {
+                "Uuid": "6ba9b7d9-9ef0-4957-9a4c-50d357711169",
+                "Id": 872,
+                "Navn": "C-BUR  BU Familiesag Distrikt"
+                + " [navn på distrikt] - [Barnets navn]",
+            },
+        }
+    ],
+}
+
 
 def mocked_requests_post(*args, **kwargs):
-    return MockResponse({"access_token": "12345678"}, 200)
+    if "PrimaerPerson" in kwargs["data"]:
+        return MockResponse(example_search_result, 200)
+    else:
+        return MockResponse({"access_token": "12345678"}, 200)
 
 
 def mocked_requests_get(*args, **kwargs):
@@ -179,6 +288,18 @@ class ReceiveSBSYSEventTestCase(TestCase):
     @mock.patch("requests.get", side_effect=mocked_requests_get)
     def test_receive_sbsys_event(self, requests_get_mock, requests_post_mock):
         payload_mock = MockPayload()
+        create_user(username="XXX")
+        create_municipality("Ballerup")
+        receive_sbsys_event(payload_mock)
+
+    @override_settings(SBSYS_VERIFY_TLS=True)
+    @mock.patch("requests.post", side_effect=mocked_requests_post)
+    @mock.patch("requests.get", side_effect=mocked_requests_get)
+    def test_receive_sbsys_event_no_user(
+        self, requests_get_mock, requests_post_mock
+    ):
+        payload_mock = MockPayload()
+        create_municipality("Ballerup")
         receive_sbsys_event(payload_mock)
 
     @override_settings(SBSYS_VERIFY_TLS=False)
@@ -188,6 +309,8 @@ class ReceiveSBSYSEventTestCase(TestCase):
         self, requests_get_mock, requests_post_mock
     ):
         payload_mock = MockPayload()
+        create_municipality("Ballerup")
+        create_user(username="XXX")
         receive_sbsys_event(payload_mock)
 
     @mock.patch("requests.post", side_effect=mocked_requests_post)
@@ -195,6 +318,8 @@ class ReceiveSBSYSEventTestCase(TestCase):
     def test_receive_sbsys_event_not_creating(
         self, requests_get_mock, requests_post_mock
     ):
+        create_municipality("Ballerup")
+        create_user(username="XXX")
         payload_mock = MockPayload(process_type=2)
         receive_sbsys_event(payload_mock)
 
@@ -202,6 +327,8 @@ class ReceiveSBSYSEventTestCase(TestCase):
     def test_receive_sbsys_event_auth_failed(self, requests_post_mock):
         try:
             payload_mock = MockPayload()
+            create_municipality("Ballerup")
+            create_user(username="XXX")
             receive_sbsys_event(payload_mock)
             self.assertFalse(True)
         except Exception:
@@ -213,5 +340,20 @@ class ReceiveSBSYSEventTestCase(TestCase):
         self, requests_get_mock, requests_post_mock
     ):
         payload_mock = MockPayload()
+        create_municipality("Ballerup")
+        create_user(username="XXX")
         example_sbsys_data["Nummer"] = "27.24.00"
         receive_sbsys_event(payload_mock)
+
+    @override_settings(SBSYS_VERIFY_TLS=True)
+    @mock.patch("requests.post", side_effect=mocked_requests_post)
+    @mock.patch("requests.get", side_effect=mocked_requests_get)
+    def test_receive_sbsys_event_no_main_case(
+        self, requests_get_mock, requests_post_mock
+    ):
+        payload_mock = MockPayload()
+        create_municipality("Ballerup")
+        create_user(username="XXX")
+        example_search_result["TotalNumberOfResults"] = 0
+        receive_sbsys_event(payload_mock)
+        example_search_result["TotalNumberOfResults"] = 1

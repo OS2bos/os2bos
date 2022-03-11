@@ -22,6 +22,7 @@ from lxml import etree
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
 
+from django.contrib.auth import get_user_model
 from django.template.loader import get_template
 from django.core.mail import EmailMessage
 
@@ -1729,11 +1730,11 @@ def import_sbsys_case(case_json):
     new_case.name = case_json["PrimaryPart"]["Navn"]
     social_worker_id = case_json["Behandler"]["LogonId"]
 
-    if models.User.objects.filter(username=social_worker_id).exists():
-        new_case.case_worker = models.User.objects.get(
-            username=social_worker_id
-        )
+    User = get_user_model()
+    if User.objects.filter(username=social_worker_id).exists():
+        new_case.case_worker = User.objects.get(username=social_worker_id)
     else:
+        # pragma: no cover
         raise RuntimeError(
             f"Social worker/user {social_worker_id}"
             " not found - unable to import Case"
