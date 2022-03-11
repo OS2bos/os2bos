@@ -729,4 +729,4 @@ SBSYS_GRANT_TYPE = settings.get(
 )
 SBSYS_CLIENT_ID = settings.get("SBSYS_CLIENT_ID", fallback="os2bos")
 SBSYS_CLIENT_SECRET = settings.get("SBSYS_CLIENT_SECRET", fallback="")
-SBSYS_VERIFY_TLS = settings.get("SBSYS_VERIFY_TLS", fallback=False)
+SBSYS_VERIFY_TLS = settings.getboolean("SBSYS_VERIFY_TLS", fallback=True)

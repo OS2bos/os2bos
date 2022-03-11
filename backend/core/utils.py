@@ -14,6 +14,7 @@ import datetime
 import itertools
 import re
 import csv
+import json
 
 from lxml.builder import ElementMaker
 from lxml import etree
@@ -1626,12 +1627,82 @@ def generate_dst_payload_handicap(
     return doc
 
 
+def get_sbsys_token():
+    """Get an API token for communicating with SBSYS."""
+    sbsys_token_url = settings.SBSYS_TOKEN_URL
+    token_payload = {
+        "client_id": settings.SBSYS_CLIENT_ID,
+        "client_secret": settings.SBSYS_CLIENT_SECRET,
+        "grant_type": settings.SBSYS_GRANT_TYPE,
+    }
+    r = requests.post(
+        sbsys_token_url, data=token_payload, verify=settings.SBSYS_VERIFY_TLS
+    )
+    token = r.json()["access_token"]
+
+    return token
+
+
+def fetch_sbsys_appropriation_data(case_id):
+    """Fetch the data needed to import this case."""
+    # Disable warnings about unsafe SSL if we need to use it.
+    # Not recommended in production.
+    if settings.SBSYS_VERIFY_TLS is False:
+        import urllib3
+
+        urllib3.disable_warnings()
+    else:
+        # This should always happen in production.
+        pass
+
+    token = get_sbsys_token()
+    verify_tls = settings.SBSYS_VERIFY_TLS
+    access_headers = {"Authorization": f"bearer {token}"}
+
+    # Now get case info from SBSYS.
+    r = requests.get(
+        f"{settings.SBSYS_API_URL}/sag/{case_id}",
+        headers=access_headers,
+        verify=verify_tls,
+    )
+    appropriation_json = r.json()
+    # In order to import the appropriation, we also need to get the
+    # corresponding Hovedsag from SBSYS - at the very least, we need its
+    # number to look it up in BOS.
+    #
+    # The Case mush have KLE Number 27.24.00 and facet G01, i.e. its
+    # number must start with "27.24.00-G01".
+    cpr_number = appropriation_json["PrimaryPart"]["CPRnummer"]
+    search_query = {
+        "PrimaerPerson": {"CprNummer": cpr_number},
+        "NummerInterval": {
+            "From": "27.24.00-G01",
+            "To": "27.24.00-G02",
+        },
+        "SagsStatusId": 9,
+    }
+    params = {"InkluderParterIResultat": True}
+    # Add content type - important for server to parse correctly.
+    access_headers["Content-Type"] = "application/json"
+    r = requests.post(
+        f"{settings.SBSYS_API_URL}/sag/search",
+        data=json.dumps(search_query),
+        params=params,
+        headers=access_headers,
+        verify=verify_tls,
+    )
+    search_data = r.json()
+    if search_data["TotalNumberOfResults"] == 0:
+        raise RuntimeError("No Hovedsag found, can't import appropriation")
+    case_json = search_data["Results"][0]
+
+    return (appropriation_json, case_json)
+
+
 def import_sbsys_appropriation(appropriation_json, case_json):
     """Import an Appropriation from data received from SBSYS API."""
     appropriation_sbsys_id = appropriation_json["Nummer"]
     case_sbsys_id = case_json["Nummer"]
-    cpr_number = appropriation_json["PrimaryPart"]["CPRnummer"]
-    print(cpr_number, appropriation_sbsys_id)
 
     # Import Appropriation.
     new_appropriation = models.Appropriation()
@@ -1652,7 +1723,9 @@ def import_sbsys_case(case_json):
     """Import a Case from SBSYS data."""
     new_case = models.Case()
     new_case.sbsys_id = case_json["Nummer"]
-    new_case.cpr_number = case_json["PrimaryPart"]["CPRnummer"]
+    new_case.cpr_number = case_json["PrimaryPart"]["CPRnummer"].replace(
+        "-", ""
+    )
     new_case.name = case_json["PrimaryPart"]["Navn"]
     social_worker_id = case_json["Behandler"]["LogonId"]
 
@@ -1668,7 +1741,7 @@ def import_sbsys_case(case_json):
     # TODO: School district?
 
     # Municipalities
-    ballerup = models.Municipality.get(name="Ballerup")
+    ballerup = models.Municipality.objects.get(name="Ballerup")
     new_case.paying_municipality = ballerup
     new_case.acting_municipality = ballerup
     new_case.residence_municipality = ballerup
