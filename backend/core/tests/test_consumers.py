@@ -291,6 +291,8 @@ class ReceiveSBSYSEventTestCase(TestCase):
         create_user(username="XXX")
         create_municipality("Ballerup")
         receive_sbsys_event(payload_mock)
+        # Cover the case where Case already exists.
+        receive_sbsys_event(payload_mock)
 
     @override_settings(SBSYS_VERIFY_TLS=True)
     @mock.patch("requests.post", side_effect=mocked_requests_post)

@@ -1710,14 +1710,12 @@ def import_sbsys_appropriation(appropriation_json, case_json):
     new_appropriation.sbsys_id = appropriation_sbsys_id
 
     # Attach to Case.
-    if not models.Case.objects.filter(sbsys_id=case_sbsys_id):
+    if not models.Case.objects.filter(sbsys_id=case_sbsys_id).exists():
         import_sbsys_case(case_json)
     # If this did not raise an exception, the case is imported.
     new_appropriation.case = models.Case.objects.get(sbsys_id=case_sbsys_id)
     new_appropriation.save()
-    # TODO: Maybe parse the title to get the Section
     send_appropriation_imported_email(new_appropriation)
-    # Done, woohoo!
 
 
 def import_sbsys_case(case_json):
@@ -1734,12 +1732,10 @@ def import_sbsys_case(case_json):
     if User.objects.filter(username=social_worker_id).exists():
         new_case.case_worker = User.objects.get(username=social_worker_id)
     else:
-        # pragma: no cover
         raise RuntimeError(
             f"Social worker/user {social_worker_id}"
             " not found - unable to import Case"
         )
-    # TODO: School district?
 
     # Municipalities
     ballerup = models.Municipality.objects.get(name="Ballerup")
