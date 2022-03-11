@@ -111,7 +111,7 @@ INSTALLED_APPS = [
     "django_filters",
     "simple_history",
     "constance",
-    "constance.backends.database",
+    "core.apps.ModifiedConstanceDatabaseConfig",
     "core.apps.CoreConfig",
     "django_saml2_auth",
     "graphene_django",
