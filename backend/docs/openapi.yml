@@ -57,7 +57,7 @@ paths:
       - name: case_worker
         required: false
         in: query
-        description: Sagsbehandler
+        description: case_worker
         schema:
           type: string
       - name: district
@@ -135,6 +135,12 @@ paths:
         required: false
         in: query
         description: "Udg\xE5et"
+        schema:
+          type: string
+      - name: case_worker__team
+        required: false
+        in: query
+        description: Team for Sagsbehandler
         schema:
           type: string
       responses:
@@ -234,7 +240,7 @@ paths:
       - name: case_worker
         required: false
         in: query
-        description: Sagsbehandler
+        description: case_worker
         schema:
           type: string
       - name: district
@@ -312,6 +318,12 @@ paths:
         required: false
         in: query
         description: "Udg\xE5et"
+        schema:
+          type: string
+      - name: case_worker__team
+        required: false
+        in: query
+        description: Team for Sagsbehandler
         schema:
           type: string
       responses:
@@ -381,7 +393,7 @@ paths:
       - name: case_worker
         required: false
         in: query
-        description: Sagsbehandler
+        description: case_worker
         schema:
           type: string
       - name: district
@@ -459,6 +471,12 @@ paths:
         required: false
         in: query
         description: "Udg\xE5et"
+        schema:
+          type: string
+      - name: case_worker__team
+        required: false
+        in: query
+        description: Team for Sagsbehandler
         schema:
           type: string
       requestBody:
@@ -539,7 +557,7 @@ paths:
       - name: case_worker
         required: false
         in: query
-        description: Sagsbehandler
+        description: case_worker
         schema:
           type: string
       - name: district
@@ -617,6 +635,12 @@ paths:
         required: false
         in: query
         description: "Udg\xE5et"
+        schema:
+          type: string
+      - name: case_worker__team
+        required: false
+        in: query
+        description: Team for Sagsbehandler
         schema:
           type: string
       requestBody:
@@ -697,7 +721,7 @@ paths:
       - name: case_worker
         required: false
         in: query
-        description: Sagsbehandler
+        description: case_worker
         schema:
           type: string
       - name: district
@@ -777,6 +801,12 @@ paths:
         description: "Udg\xE5et"
         schema:
           type: string
+      - name: case_worker__team
+        required: false
+        in: query
+        description: Team for Sagsbehandler
+        schema:
+          type: string
       responses:
         '204':
           description: ''
@@ -805,12 +835,48 @@ paths:
   /api/appropriations/:
     get:
       operationId: listListAppropriations
-      description: 'Expose appropriations in REST API.
+      description: '## Expose appropriations in REST API.
 
 
-        Note the custom action ``grant`` for approving an appropriation and
+        ### Actions
 
-        all its activities.'
+
+        **grant** for approving an appropriation and
+
+        all its activities.
+
+
+        - approval_level
+
+        - approval_note
+
+        - activity_pks
+
+
+        **generate_dst_preventative_measures_file** for generating a DST
+
+        preventative measures payload.
+
+
+        - sections
+
+        - from_date
+
+        - to_date
+
+        - test
+
+
+        **generate_dst_handicap_file** for generating a DST handicap payload.
+
+
+        - sections
+
+        - from_date
+
+        - to_date
+
+        - test'
       parameters:
       - name: created
         required: false
@@ -851,7 +917,7 @@ paths:
       - name: case
         required: false
         in: query
-        description: Sag
+        description: case
         schema:
           type: string
       - name: note
@@ -864,6 +930,30 @@ paths:
         required: false
         in: query
         description: Aktivitetsdetalje for hovedaktivitet
+        schema:
+          type: string
+      - name: case__cpr_number
+        required: false
+        in: query
+        description: CPR nummer for Sag
+        schema:
+          type: string
+      - name: case__case_worker
+        required: false
+        in: query
+        description: Sagsbehandler for Sag
+        schema:
+          type: string
+      - name: case__sbsys_id
+        required: false
+        in: query
+        description: SBSYS ID for Sag
+        schema:
+          type: string
+      - name: case__case_worker__team
+        required: false
+        in: query
+        description: Team for Sagsbehandler for Sag
         schema:
           type: string
       responses:
@@ -879,12 +969,48 @@ paths:
       - api
     post:
       operationId: createAppropriation
-      description: 'Expose appropriations in REST API.
+      description: '## Expose appropriations in REST API.
 
 
-        Note the custom action ``grant`` for approving an appropriation and
+        ### Actions
 
-        all its activities.'
+
+        **grant** for approving an appropriation and
+
+        all its activities.
+
+
+        - approval_level
+
+        - approval_note
+
+        - activity_pks
+
+
+        **generate_dst_preventative_measures_file** for generating a DST
+
+        preventative measures payload.
+
+
+        - sections
+
+        - from_date
+
+        - to_date
+
+        - test
+
+
+        **generate_dst_handicap_file** for generating a DST handicap payload.
+
+
+        - sections
+
+        - from_date
+
+        - to_date
+
+        - test'
       parameters: []
       requestBody:
         content:
@@ -906,15 +1032,79 @@ paths:
           description: ''
       tags:
       - api
+  /api/appropriations/generate_dst_handicap_file/:
+    get:
+      operationId: generateDstHandicapFileAppropriation
+      description: Generate a Handicap payload for DST.
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appropriation'
+          description: ''
+      tags:
+      - api
+  /api/appropriations/generate_dst_preventative_measures_file/:
+    get:
+      operationId: generateDstPreventativeMeasuresFileAppropriation
+      description: Generate a Preventative Measures payload for DST.
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appropriation'
+          description: ''
+      tags:
+      - api
   /api/appropriations/{id}/:
     get:
       operationId: retrieveAppropriation
-      description: 'Expose appropriations in REST API.
+      description: '## Expose appropriations in REST API.
 
 
-        Note the custom action ``grant`` for approving an appropriation and
+        ### Actions
 
-        all its activities.'
+
+        **grant** for approving an appropriation and
+
+        all its activities.
+
+
+        - approval_level
+
+        - approval_note
+
+        - activity_pks
+
+
+        **generate_dst_preventative_measures_file** for generating a DST
+
+        preventative measures payload.
+
+
+        - sections
+
+        - from_date
+
+        - to_date
+
+        - test
+
+
+        **generate_dst_handicap_file** for generating a DST handicap payload.
+
+
+        - sections
+
+        - from_date
+
+        - to_date
+
+        - test'
       parameters:
       - name: id
         in: path
@@ -961,7 +1151,7 @@ paths:
       - name: case
         required: false
         in: query
-        description: Sag
+        description: case
         schema:
           type: string
       - name: note
@@ -974,6 +1164,30 @@ paths:
         required: false
         in: query
         description: Aktivitetsdetalje for hovedaktivitet
+        schema:
+          type: string
+      - name: case__cpr_number
+        required: false
+        in: query
+        description: CPR nummer for Sag
+        schema:
+          type: string
+      - name: case__case_worker
+        required: false
+        in: query
+        description: Sagsbehandler for Sag
+        schema:
+          type: string
+      - name: case__sbsys_id
+        required: false
+        in: query
+        description: SBSYS ID for Sag
+        schema:
+          type: string
+      - name: case__case_worker__team
+        required: false
+        in: query
+        description: Team for Sagsbehandler for Sag
         schema:
           type: string
       responses:
@@ -987,12 +1201,48 @@ paths:
       - api
     put:
       operationId: updateAppropriation
-      description: 'Expose appropriations in REST API.
+      description: '## Expose appropriations in REST API.
 
 
-        Note the custom action ``grant`` for approving an appropriation and
+        ### Actions
 
-        all its activities.'
+
+        **grant** for approving an appropriation and
+
+        all its activities.
+
+
+        - approval_level
+
+        - approval_note
+
+        - activity_pks
+
+
+        **generate_dst_preventative_measures_file** for generating a DST
+
+        preventative measures payload.
+
+
+        - sections
+
+        - from_date
+
+        - to_date
+
+        - test
+
+
+        **generate_dst_handicap_file** for generating a DST handicap payload.
+
+
+        - sections
+
+        - from_date
+
+        - to_date
+
+        - test'
       parameters:
       - name: id
         in: path
@@ -1039,7 +1289,7 @@ paths:
       - name: case
         required: false
         in: query
-        description: Sag
+        description: case
         schema:
           type: string
       - name: note
@@ -1052,6 +1302,30 @@ paths:
         required: false
         in: query
         description: Aktivitetsdetalje for hovedaktivitet
+        schema:
+          type: string
+      - name: case__cpr_number
+        required: false
+        in: query
+        description: CPR nummer for Sag
+        schema:
+          type: string
+      - name: case__case_worker
+        required: false
+        in: query
+        description: Sagsbehandler for Sag
+        schema:
+          type: string
+      - name: case__sbsys_id
+        required: false
+        in: query
+        description: SBSYS ID for Sag
+        schema:
+          type: string
+      - name: case__case_worker__team
+        required: false
+        in: query
+        description: Team for Sagsbehandler for Sag
         schema:
           type: string
       requestBody:
@@ -1076,12 +1350,48 @@ paths:
       - api
     patch:
       operationId: partialUpdateAppropriation
-      description: 'Expose appropriations in REST API.
+      description: '## Expose appropriations in REST API.
 
 
-        Note the custom action ``grant`` for approving an appropriation and
+        ### Actions
 
-        all its activities.'
+
+        **grant** for approving an appropriation and
+
+        all its activities.
+
+
+        - approval_level
+
+        - approval_note
+
+        - activity_pks
+
+
+        **generate_dst_preventative_measures_file** for generating a DST
+
+        preventative measures payload.
+
+
+        - sections
+
+        - from_date
+
+        - to_date
+
+        - test
+
+
+        **generate_dst_handicap_file** for generating a DST handicap payload.
+
+
+        - sections
+
+        - from_date
+
+        - to_date
+
+        - test'
       parameters:
       - name: id
         in: path
@@ -1128,7 +1438,7 @@ paths:
       - name: case
         required: false
         in: query
-        description: Sag
+        description: case
         schema:
           type: string
       - name: note
@@ -1141,6 +1451,30 @@ paths:
         required: false
         in: query
         description: Aktivitetsdetalje for hovedaktivitet
+        schema:
+          type: string
+      - name: case__cpr_number
+        required: false
+        in: query
+        description: CPR nummer for Sag
+        schema:
+          type: string
+      - name: case__case_worker
+        required: false
+        in: query
+        description: Sagsbehandler for Sag
+        schema:
+          type: string
+      - name: case__sbsys_id
+        required: false
+        in: query
+        description: SBSYS ID for Sag
+        schema:
+          type: string
+      - name: case__case_worker__team
+        required: false
+        in: query
+        description: Team for Sagsbehandler for Sag
         schema:
           type: string
       requestBody:
@@ -1165,12 +1499,48 @@ paths:
       - api
     delete:
       operationId: destroyAppropriation
-      description: 'Expose appropriations in REST API.
+      description: '## Expose appropriations in REST API.
 
 
-        Note the custom action ``grant`` for approving an appropriation and
+        ### Actions
 
-        all its activities.'
+
+        **grant** for approving an appropriation and
+
+        all its activities.
+
+
+        - approval_level
+
+        - approval_note
+
+        - activity_pks
+
+
+        **generate_dst_preventative_measures_file** for generating a DST
+
+        preventative measures payload.
+
+
+        - sections
+
+        - from_date
+
+        - to_date
+
+        - test
+
+
+        **generate_dst_handicap_file** for generating a DST handicap payload.
+
+
+        - sections
+
+        - from_date
+
+        - to_date
+
+        - test'
       parameters:
       - name: id
         in: path
@@ -1217,7 +1587,7 @@ paths:
       - name: case
         required: false
         in: query
-        description: Sag
+        description: case
         schema:
           type: string
       - name: note
@@ -1232,6 +1602,30 @@ paths:
         description: Aktivitetsdetalje for hovedaktivitet
         schema:
           type: string
+      - name: case__cpr_number
+        required: false
+        in: query
+        description: CPR nummer for Sag
+        schema:
+          type: string
+      - name: case__case_worker
+        required: false
+        in: query
+        description: Sagsbehandler for Sag
+        schema:
+          type: string
+      - name: case__sbsys_id
+        required: false
+        in: query
+        description: SBSYS ID for Sag
+        schema:
+          type: string
+      - name: case__case_worker__team
+        required: false
+        in: query
+        description: Team for Sagsbehandler for Sag
+        schema:
+          type: string
       responses:
         '204':
           description: ''
@@ -1239,7 +1633,7 @@ paths:
       - api
   /api/activities/:
     get:
-      operationId: listActivitys
+      operationId: listListActivitys
       description: Expose activities in REST API.
       parameters:
       - name: created
@@ -1358,7 +1752,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Activity'
+                  $ref: '#/components/schemas/ListActivity'
           description: ''
       tags:
       - api
@@ -2464,16 +2858,22 @@ paths:
         description: payment_schedule
         schema:
           type: string
-      - name: case
+      - name: payment_schedule__payment_id
         required: false
         in: query
-        description: Sag
+        description: Betalings-id for Betalingsplan
         schema:
           type: string
-      - name: activity
+      - name: case__cpr_number
         required: false
         in: query
-        description: Aktivitet
+        description: CPR-nummer for Sag
+        schema:
+          type: string
+      - name: activity__status
+        required: false
+        in: query
+        description: Status for aktivitet
         schema:
           type: string
       - name: paid_date__gte
@@ -2533,6 +2933,36 @@ paths:
           - current
           - next
       - name: paid_date_or_date_year
+        required: false
+        in: query
+        description: "Betalingsdato eller Dato for \xE5r"
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
+      - name: date_week
+        required: false
+        in: query
+        description: Betalingsdato eller Dato for uge
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
+      - name: date_month
+        required: false
+        in: query
+        description: "Betalingsdato eller Dato for m\xE5ned"
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
+      - name: date_year
         required: false
         in: query
         description: "Betalingsdato eller Dato for \xE5r"
@@ -2697,16 +3127,22 @@ paths:
         description: payment_schedule
         schema:
           type: string
-      - name: case
+      - name: payment_schedule__payment_id
         required: false
         in: query
-        description: Sag
+        description: Betalings-id for Betalingsplan
         schema:
           type: string
-      - name: activity
+      - name: case__cpr_number
         required: false
         in: query
-        description: Aktivitet
+        description: CPR-nummer for Sag
+        schema:
+          type: string
+      - name: activity__status
+        required: false
+        in: query
+        description: Status for aktivitet
         schema:
           type: string
       - name: paid_date__gte
@@ -2766,6 +3202,36 @@ paths:
           - current
           - next
       - name: paid_date_or_date_year
+        required: false
+        in: query
+        description: "Betalingsdato eller Dato for \xE5r"
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
+      - name: date_week
+        required: false
+        in: query
+        description: Betalingsdato eller Dato for uge
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
+      - name: date_month
+        required: false
+        in: query
+        description: "Betalingsdato eller Dato for m\xE5ned"
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
+      - name: date_year
         required: false
         in: query
         description: "Betalingsdato eller Dato for \xE5r"
@@ -2884,16 +3350,22 @@ paths:
         description: payment_schedule
         schema:
           type: string
-      - name: case
+      - name: payment_schedule__payment_id
         required: false
         in: query
-        description: Sag
+        description: Betalings-id for Betalingsplan
         schema:
           type: string
-      - name: activity
+      - name: case__cpr_number
         required: false
         in: query
-        description: Aktivitet
+        description: CPR-nummer for Sag
+        schema:
+          type: string
+      - name: activity__status
+        required: false
+        in: query
+        description: Status for aktivitet
         schema:
           type: string
       - name: paid_date__gte
@@ -2953,6 +3425,36 @@ paths:
           - current
           - next
       - name: paid_date_or_date_year
+        required: false
+        in: query
+        description: "Betalingsdato eller Dato for \xE5r"
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
+      - name: date_week
+        required: false
+        in: query
+        description: Betalingsdato eller Dato for uge
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
+      - name: date_month
+        required: false
+        in: query
+        description: "Betalingsdato eller Dato for m\xE5ned"
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
+      - name: date_year
         required: false
         in: query
         description: "Betalingsdato eller Dato for \xE5r"
@@ -3082,16 +3584,22 @@ paths:
         description: payment_schedule
         schema:
           type: string
-      - name: case
+      - name: payment_schedule__payment_id
         required: false
         in: query
-        description: Sag
+        description: Betalings-id for Betalingsplan
         schema:
           type: string
-      - name: activity
+      - name: case__cpr_number
         required: false
         in: query
-        description: Aktivitet
+        description: CPR-nummer for Sag
+        schema:
+          type: string
+      - name: activity__status
+        required: false
+        in: query
+        description: Status for aktivitet
         schema:
           type: string
       - name: paid_date__gte
@@ -3151,6 +3659,36 @@ paths:
           - current
           - next
       - name: paid_date_or_date_year
+        required: false
+        in: query
+        description: "Betalingsdato eller Dato for \xE5r"
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
+      - name: date_week
+        required: false
+        in: query
+        description: Betalingsdato eller Dato for uge
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
+      - name: date_month
+        required: false
+        in: query
+        description: "Betalingsdato eller Dato for m\xE5ned"
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
+      - name: date_year
         required: false
         in: query
         description: "Betalingsdato eller Dato for \xE5r"
@@ -3280,16 +3818,22 @@ paths:
         description: payment_schedule
         schema:
           type: string
-      - name: case
+      - name: payment_schedule__payment_id
         required: false
         in: query
-        description: Sag
+        description: Betalings-id for Betalingsplan
         schema:
           type: string
-      - name: activity
+      - name: case__cpr_number
         required: false
         in: query
-        description: Aktivitet
+        description: CPR-nummer for Sag
+        schema:
+          type: string
+      - name: activity__status
+        required: false
+        in: query
+        description: Status for aktivitet
         schema:
           type: string
       - name: paid_date__gte
@@ -3358,8 +3902,58 @@ paths:
           - previous
           - current
           - next
+      - name: date_week
+        required: false
+        in: query
+        description: Betalingsdato eller Dato for uge
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
+      - name: date_month
+        required: false
+        in: query
+        description: "Betalingsdato eller Dato for m\xE5ned"
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
+      - name: date_year
+        required: false
+        in: query
+        description: "Betalingsdato eller Dato for \xE5r"
+        schema:
+          type: string
+          enum:
+          - previous
+          - current
+          - next
       responses:
         '204':
+          description: ''
+      tags:
+      - api
+  /api/payments/{id}/history/:
+    get:
+      operationId: historyPayment
+      description: Fetch history of Payment.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this betaling.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
           description: ''
       tags:
       - api
@@ -4015,6 +4609,24 @@ paths:
         description: law_text_name
         schema:
           type: string
+      - name: dst_code
+        required: false
+        in: query
+        description: dst_code
+        schema:
+          type: string
+      - name: dst_preventative_measures
+        required: false
+        in: query
+        description: dst_preventative_measures
+        schema:
+          type: string
+      - name: dst_handicap
+        required: false
+        in: query
+        description: dst_handicap
+        schema:
+          type: string
       responses:
         '200':
           content:
@@ -4073,6 +4685,24 @@ paths:
         description: law_text_name
         schema:
           type: string
+      - name: dst_code
+        required: false
+        in: query
+        description: dst_code
+        schema:
+          type: string
+      - name: dst_preventative_measures
+        required: false
+        in: query
+        description: dst_preventative_measures
+        schema:
+          type: string
+      - name: dst_handicap
+        required: false
+        in: query
+        description: dst_handicap
+        schema:
+          type: string
       responses:
         '200':
           content:
@@ -4087,6 +4717,12 @@ paths:
       operationId: listSectionInfos
       description: Expose section infos in REST API.
       parameters:
+      - name: active
+        required: false
+        in: query
+        description: active
+        schema:
+          type: string
       - name: activity_details
         required: false
         in: query
@@ -4149,6 +4785,12 @@ paths:
         in: path
         required: true
         description: A unique integer value identifying this paragraf-info.
+        schema:
+          type: string
+      - name: active
+        required: false
+        in: query
+        description: active
         schema:
           type: string
       - name: activity_details
@@ -4381,6 +5023,48 @@ paths:
         description: name
         schema:
           type: string
+      - name: business_code
+        required: false
+        in: query
+        description: business_code
+        schema:
+          type: string
+      - name: business_code_text
+        required: false
+        in: query
+        description: business_code_text
+        schema:
+          type: string
+      - name: street
+        required: false
+        in: query
+        description: street
+        schema:
+          type: string
+      - name: street_number
+        required: false
+        in: query
+        description: street_number
+        schema:
+          type: string
+      - name: zip_code
+        required: false
+        in: query
+        description: zip_code
+        schema:
+          type: string
+      - name: post_district
+        required: false
+        in: query
+        description: post_district
+        schema:
+          type: string
+      - name: status
+        required: false
+        in: query
+        description: status
+        schema:
+          type: string
       - name: vat_factor
         required: false
         in: query
@@ -4395,6 +5079,50 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ServiceProvider'
+          description: ''
+      tags:
+      - api
+    post:
+      operationId: createServiceProvider
+      description: Expose service providers in REST API.
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceProvider'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ServiceProvider'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ServiceProvider'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceProvider'
+          description: ''
+      tags:
+      - api
+  /api/service_providers/fetch_serviceproviders_from_virk/:
+    get:
+      operationId: fetchServiceprovidersFromVirkServiceProvider
+      description: 'Fetch serviceproviders using a generic search term from Virk.
+
+
+        Returns the data as serialized ServiceProvider data.
+
+
+        GET params: search_term'
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceProvider'
           description: ''
       tags:
       - api
@@ -4427,6 +5155,48 @@ paths:
         description: name
         schema:
           type: string
+      - name: business_code
+        required: false
+        in: query
+        description: business_code
+        schema:
+          type: string
+      - name: business_code_text
+        required: false
+        in: query
+        description: business_code_text
+        schema:
+          type: string
+      - name: street
+        required: false
+        in: query
+        description: street
+        schema:
+          type: string
+      - name: street_number
+        required: false
+        in: query
+        description: street_number
+        schema:
+          type: string
+      - name: zip_code
+        required: false
+        in: query
+        description: zip_code
+        schema:
+          type: string
+      - name: post_district
+        required: false
+        in: query
+        description: post_district
+        schema:
+          type: string
+      - name: status
+        required: false
+        in: query
+        description: status
+        schema:
+          type: string
       - name: vat_factor
         required: false
         in: query
@@ -4439,6 +5209,279 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceProvider'
+          description: ''
+      tags:
+      - api
+    put:
+      operationId: updateServiceProvider
+      description: Expose service providers in REST API.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: "A unique integer value identifying this leverand\xF8r."
+        schema:
+          type: string
+      - name: active
+        required: false
+        in: query
+        description: active
+        schema:
+          type: string
+      - name: cvr_number
+        required: false
+        in: query
+        description: cvr_number
+        schema:
+          type: string
+      - name: name
+        required: false
+        in: query
+        description: name
+        schema:
+          type: string
+      - name: business_code
+        required: false
+        in: query
+        description: business_code
+        schema:
+          type: string
+      - name: business_code_text
+        required: false
+        in: query
+        description: business_code_text
+        schema:
+          type: string
+      - name: street
+        required: false
+        in: query
+        description: street
+        schema:
+          type: string
+      - name: street_number
+        required: false
+        in: query
+        description: street_number
+        schema:
+          type: string
+      - name: zip_code
+        required: false
+        in: query
+        description: zip_code
+        schema:
+          type: string
+      - name: post_district
+        required: false
+        in: query
+        description: post_district
+        schema:
+          type: string
+      - name: status
+        required: false
+        in: query
+        description: status
+        schema:
+          type: string
+      - name: vat_factor
+        required: false
+        in: query
+        description: vat_factor
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceProvider'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ServiceProvider'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ServiceProvider'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceProvider'
+          description: ''
+      tags:
+      - api
+    patch:
+      operationId: partialUpdateServiceProvider
+      description: Expose service providers in REST API.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: "A unique integer value identifying this leverand\xF8r."
+        schema:
+          type: string
+      - name: active
+        required: false
+        in: query
+        description: active
+        schema:
+          type: string
+      - name: cvr_number
+        required: false
+        in: query
+        description: cvr_number
+        schema:
+          type: string
+      - name: name
+        required: false
+        in: query
+        description: name
+        schema:
+          type: string
+      - name: business_code
+        required: false
+        in: query
+        description: business_code
+        schema:
+          type: string
+      - name: business_code_text
+        required: false
+        in: query
+        description: business_code_text
+        schema:
+          type: string
+      - name: street
+        required: false
+        in: query
+        description: street
+        schema:
+          type: string
+      - name: street_number
+        required: false
+        in: query
+        description: street_number
+        schema:
+          type: string
+      - name: zip_code
+        required: false
+        in: query
+        description: zip_code
+        schema:
+          type: string
+      - name: post_district
+        required: false
+        in: query
+        description: post_district
+        schema:
+          type: string
+      - name: status
+        required: false
+        in: query
+        description: status
+        schema:
+          type: string
+      - name: vat_factor
+        required: false
+        in: query
+        description: vat_factor
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceProvider'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ServiceProvider'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ServiceProvider'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceProvider'
+          description: ''
+      tags:
+      - api
+    delete:
+      operationId: destroyServiceProvider
+      description: Expose service providers in REST API.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: "A unique integer value identifying this leverand\xF8r."
+        schema:
+          type: string
+      - name: active
+        required: false
+        in: query
+        description: active
+        schema:
+          type: string
+      - name: cvr_number
+        required: false
+        in: query
+        description: cvr_number
+        schema:
+          type: string
+      - name: name
+        required: false
+        in: query
+        description: name
+        schema:
+          type: string
+      - name: business_code
+        required: false
+        in: query
+        description: business_code
+        schema:
+          type: string
+      - name: business_code_text
+        required: false
+        in: query
+        description: business_code_text
+        schema:
+          type: string
+      - name: street
+        required: false
+        in: query
+        description: street
+        schema:
+          type: string
+      - name: street_number
+        required: false
+        in: query
+        description: street_number
+        schema:
+          type: string
+      - name: zip_code
+        required: false
+        in: query
+        description: zip_code
+        schema:
+          type: string
+      - name: post_district
+        required: false
+        in: query
+        description: post_district
+        schema:
+          type: string
+      - name: status
+        required: false
+        in: query
+        description: status
+        schema:
+          type: string
+      - name: vat_factor
+        required: false
+        in: query
+        description: vat_factor
+        schema:
+          type: string
+      responses:
+        '204':
           description: ''
       tags:
       - api
@@ -4506,7 +5549,97 @@ paths:
     get:
       operationId: listUsers
       description: Expose users in REST API.
-      parameters: []
+      parameters:
+      - name: password
+        required: false
+        in: query
+        description: password
+        schema:
+          type: string
+      - name: last_login
+        required: false
+        in: query
+        description: last_login
+        schema:
+          type: string
+      - name: is_superuser
+        required: false
+        in: query
+        description: is_superuser
+        schema:
+          type: string
+      - name: groups
+        required: false
+        in: query
+        description: groups
+        schema:
+          type: string
+      - name: user_permissions
+        required: false
+        in: query
+        description: user_permissions
+        schema:
+          type: string
+      - name: username
+        required: false
+        in: query
+        description: username
+        schema:
+          type: string
+      - name: first_name
+        required: false
+        in: query
+        description: first_name
+        schema:
+          type: string
+      - name: last_name
+        required: false
+        in: query
+        description: last_name
+        schema:
+          type: string
+      - name: email
+        required: false
+        in: query
+        description: email
+        schema:
+          type: string
+      - name: is_staff
+        required: false
+        in: query
+        description: is_staff
+        schema:
+          type: string
+      - name: is_active
+        required: false
+        in: query
+        description: is_active
+        schema:
+          type: string
+      - name: date_joined
+        required: false
+        in: query
+        description: date_joined
+        schema:
+          type: string
+      - name: team
+        required: false
+        in: query
+        description: team
+        schema:
+          type: string
+      - name: profile
+        required: false
+        in: query
+        description: profile
+        schema:
+          type: string
+          enum:
+          - readonly
+          - edit
+          - grant
+          - workflow_engine
+          - admin
       responses:
         '200':
           content:
@@ -4529,6 +5662,96 @@ paths:
         description: A unique integer value identifying this bruger.
         schema:
           type: string
+      - name: password
+        required: false
+        in: query
+        description: password
+        schema:
+          type: string
+      - name: last_login
+        required: false
+        in: query
+        description: last_login
+        schema:
+          type: string
+      - name: is_superuser
+        required: false
+        in: query
+        description: is_superuser
+        schema:
+          type: string
+      - name: groups
+        required: false
+        in: query
+        description: groups
+        schema:
+          type: string
+      - name: user_permissions
+        required: false
+        in: query
+        description: user_permissions
+        schema:
+          type: string
+      - name: username
+        required: false
+        in: query
+        description: username
+        schema:
+          type: string
+      - name: first_name
+        required: false
+        in: query
+        description: first_name
+        schema:
+          type: string
+      - name: last_name
+        required: false
+        in: query
+        description: last_name
+        schema:
+          type: string
+      - name: email
+        required: false
+        in: query
+        description: email
+        schema:
+          type: string
+      - name: is_staff
+        required: false
+        in: query
+        description: is_staff
+        schema:
+          type: string
+      - name: is_active
+        required: false
+        in: query
+        description: is_active
+        schema:
+          type: string
+      - name: date_joined
+        required: false
+        in: query
+        description: date_joined
+        schema:
+          type: string
+      - name: team
+        required: false
+        in: query
+        description: team
+        schema:
+          type: string
+      - name: profile
+        required: false
+        in: query
+        description: profile
+        schema:
+          type: string
+          enum:
+          - readonly
+          - edit
+          - grant
+          - workflow_engine
+          - admin
       responses:
         '200':
           content:
@@ -4766,10 +5989,87 @@ paths:
           description: ''
       tags:
       - api
-  /api/editing_past_payments_allowed/:
+  /api/dst_payloads/:
     get:
-      operationId: listIsEditingPastPaymentsAlloweds
-      description: Return the Django setting allowing changes to the past.
+      operationId: listDSTPayloads
+      description: Expose DST payloads in REST API.
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DSTPayload'
+          description: ''
+      tags:
+      - api
+  /api/dst_payloads/{id}/:
+    get:
+      operationId: retrieveDSTPayload
+      description: Expose DST payloads in REST API.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: "A unique integer value identifying this DST udtr\xE6k."
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DSTPayload'
+          description: ''
+      tags:
+      - api
+  /api/graphql/:
+    get:
+      operationId: listAuthenticatedGraphQLs
+      description: 'GraphQLView with our Django Rest Framework authentication on top.
+
+
+        As found on: https://github.com/graphql-python/graphene/issues/249'
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {}
+          description: ''
+      tags:
+      - api
+    post:
+      operationId: createAuthenticatedGraphQL
+      description: 'GraphQLView with our Django Rest Framework authentication on top.
+
+
+        As found on: https://github.com/graphql-python/graphene/issues/249'
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: {}
+          application/x-www-form-urlencoded:
+            schema: {}
+          multipart/form-data:
+            schema: {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema: {}
+          description: ''
+      tags:
+      - api
+  /api/frontend-settings/:
+    get:
+      operationId: listFrontendSettings
+      description: Expose the relevant settings.
       parameters: []
       responses:
         '200':
@@ -5086,261 +6386,27 @@ components:
             id:
               type: integer
               readOnly: true
-            monthly_payment_plan:
-              type: string
-              readOnly: true
-            total_cost:
-              type: string
-              readOnly: true
-            total_cost_this_year:
-              type: string
-              readOnly: true
-            total_cost_full_year:
-              type: string
-              readOnly: true
             total_granted_this_year:
               type: string
               readOnly: true
             total_expected_this_year:
               type: string
               readOnly: true
-            payment_plan:
-              type: object
-              properties:
-                id:
-                  type: integer
-                  readOnly: true
-                payments:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                        readOnly: true
-                      account_string:
-                        type: string
-                        readOnly: true
-                      account_alias:
-                        type: string
-                        readOnly: true
-                      payment_schedule__payment_id:
-                        type: string
-                        readOnly: true
-                      case__cpr_number:
-                        type: string
-                        readOnly: true
-                      case__name:
-                        type: string
-                        readOnly: true
-                      activity__id:
-                        type: string
-                        readOnly: true
-                      activity__status:
-                        type: string
-                        readOnly: true
-                      activity__details__id:
-                        type: string
-                        readOnly: true
-                      payment_schedule__fictive:
-                        type: string
-                        readOnly: true
-                      is_payable_manually:
-                        type: string
-                        readOnly: true
-                        default: false
-                      date:
-                        type: string
-                        format: date
-                      recipient_type:
-                        enum:
-                        - INTERNAL
-                        - PERSON
-                        - COMPANY
-                        type: string
-                      recipient_id:
-                        type: string
-                        maxLength: 128
-                      recipient_name:
-                        type: string
-                        maxLength: 128
-                      payment_method:
-                        enum:
-                        - CASH
-                        - SD
-                        - INVOICE
-                        - INTERNAL
-                        type: string
-                      amount:
-                        type: string
-                        format: decimal
-                        multipleOf: 0.01
-                        maximum: 1000000000000
-                        minimum: -1000000000000
-                      paid_amount:
-                        type: string
-                        format: decimal
-                        multipleOf: 0.01
-                        maximum: 1000000000000
-                        minimum: -1000000000000
-                        nullable: true
-                      paid:
-                        type: boolean
-                      paid_date:
-                        type: string
-                        format: date
-                        nullable: true
-                      note:
-                        type: string
-                      payment_schedule:
-                        type: integer
-                    required:
-                    - date
-                    - recipient_type
-                    - recipient_id
-                    - recipient_name
-                    - payment_method
-                    - amount
-                    - payment_schedule
-                  readOnly: true
-                price_per_unit:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                      readOnly: true
-                    rates_per_date:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          rate:
-                            type: string
-                            format: decimal
-                            multipleOf: 0.01
-                            maximum: 1000000000000
-                            minimum: -1000000000000
-                          start_date:
-                            type: string
-                            format: date
-                            nullable: true
-                          end_date:
-                            type: string
-                            format: date
-                            nullable: true
-                          changed_date:
-                            type: string
-                            format: date-time
-                            readOnly: true
-                          changed_by:
-                            type: integer
-                            nullable: true
-                        required:
-                        - rate
-                      readOnly: true
-                    current_amount:
-                      type: string
-                      readOnly: true
-                    amount:
-                      type: string
-                      format: decimal
-                      multipleOf: 0.01
-                      maximum: 100000000
-                      minimum: -100000000
-                      writeOnly: true
-                    start_date:
-                      type: string
-                      format: date
-                      writeOnly: true
-                    end_date:
-                      type: string
-                      format: date
-                      writeOnly: true
-                  required:
-                  - amount
-                  nullable: true
-                recipient_type:
-                  enum:
-                  - INTERNAL
-                  - PERSON
-                  - COMPANY
-                  type: string
-                recipient_id:
-                  type: string
-                  maxLength: 128
-                recipient_name:
-                  type: string
-                  maxLength: 128
-                payment_method:
-                  enum:
-                  - CASH
-                  - SD
-                  - INVOICE
-                  - INTERNAL
-                  type: string
-                payment_frequency:
-                  enum:
-                  - DAILY
-                  - WEEKLY
-                  - BIWEEKLY
-                  - MONTHLY
-                  type: string
-                  nullable: true
-                payment_date:
-                  type: string
-                  format: date
-                  nullable: true
-                  description: "dette felt er obligatorisk for og ang\xE5r kun engangsbetalinger"
-                payment_day_of_month:
-                  type: integer
-                  maximum: 31
-                  minimum: 1
-                  nullable: true
-                  description: "dette felt er obligatorisk for og ang\xE5r kun m\xE5\
-                    nedlige betalinger"
-                payment_type:
-                  enum:
-                  - ONE_TIME_PAYMENT
-                  - RUNNING_PAYMENT
-                  - INDIVIDUAL_PAYMENT
-                  type: string
-                payment_units:
-                  type: string
-                  format: decimal
-                  multipleOf: 0.01
-                  maximum: 1000000000000
-                  minimum: 0.00
-                  nullable: true
-                payment_amount:
-                  type: string
-                  format: decimal
-                  multipleOf: 0.01
-                  maximum: 1000000000000
-                  minimum: -1000000000000
-                  nullable: true
-                fictive:
-                  type: boolean
-                payment_id:
-                  type: integer
-                  readOnly: true
-                payment_cost_type:
-                  enum:
-                  - FIXED
-                  - PER_UNIT
-                  - GLOBAL_RATE
-                  type: string
-                  nullable: true
-                payment_method_details:
-                  type: integer
-                  nullable: true
-                payment_rate:
-                  type: string
-                  nullable: true
-              required:
-              - recipient_type
-              - recipient_name
-              - payment_method
-              - payment_type
+            total_granted_previous_year:
+              type: string
+              readOnly: true
+            total_expected_previous_year:
+              type: string
+              readOnly: true
+            total_granted_next_year:
+              type: string
+              readOnly: true
+            total_expected_next_year:
+              type: string
+              readOnly: true
+            total_cost_full_year:
+              type: string
+              readOnly: true
             details__name:
               type: string
               readOnly: true
@@ -5415,19 +6481,19 @@ components:
         total_granted_this_year:
           type: string
           readOnly: true
-        total_granted_full_year:
-          type: string
-          readOnly: true
         total_expected_this_year:
           type: string
           readOnly: true
-        total_expected_full_year:
+        total_granted_previous_year:
           type: string
           readOnly: true
-        total_cost_expected:
+        total_expected_previous_year:
           type: string
           readOnly: true
-        total_cost_granted:
+        total_granted_next_year:
+          type: string
+          readOnly: true
+        total_expected_next_year:
           type: string
           readOnly: true
         created:
@@ -5457,23 +6523,11 @@ components:
       required:
       - sbsys_id
       - case
-    Activity:
+    ListActivity:
       type: object
       properties:
         id:
           type: integer
-          readOnly: true
-        monthly_payment_plan:
-          type: string
-          readOnly: true
-        total_cost:
-          type: string
-          readOnly: true
-        total_cost_this_year:
-          type: string
-          readOnly: true
-        total_cost_full_year:
-          type: string
           readOnly: true
         total_granted_this_year:
           type: string
@@ -5481,104 +6535,29 @@ components:
         total_expected_this_year:
           type: string
           readOnly: true
+        total_granted_previous_year:
+          type: string
+          readOnly: true
+        total_expected_previous_year:
+          type: string
+          readOnly: true
+        total_granted_next_year:
+          type: string
+          readOnly: true
+        total_expected_next_year:
+          type: string
+          readOnly: true
+        total_cost_full_year:
+          type: string
+          readOnly: true
+        details__name:
+          type: string
+          readOnly: true
         payment_plan:
           type: object
           properties:
             id:
               type: integer
-              readOnly: true
-            payments:
-              type: array
-              items:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    readOnly: true
-                  account_string:
-                    type: string
-                    readOnly: true
-                  account_alias:
-                    type: string
-                    readOnly: true
-                  payment_schedule__payment_id:
-                    type: string
-                    readOnly: true
-                  case__cpr_number:
-                    type: string
-                    readOnly: true
-                  case__name:
-                    type: string
-                    readOnly: true
-                  activity__id:
-                    type: string
-                    readOnly: true
-                  activity__status:
-                    type: string
-                    readOnly: true
-                  activity__details__id:
-                    type: string
-                    readOnly: true
-                  payment_schedule__fictive:
-                    type: string
-                    readOnly: true
-                  is_payable_manually:
-                    type: string
-                    readOnly: true
-                    default: false
-                  date:
-                    type: string
-                    format: date
-                  recipient_type:
-                    enum:
-                    - INTERNAL
-                    - PERSON
-                    - COMPANY
-                    type: string
-                  recipient_id:
-                    type: string
-                    maxLength: 128
-                  recipient_name:
-                    type: string
-                    maxLength: 128
-                  payment_method:
-                    enum:
-                    - CASH
-                    - SD
-                    - INVOICE
-                    - INTERNAL
-                    type: string
-                  amount:
-                    type: string
-                    format: decimal
-                    multipleOf: 0.01
-                    maximum: 1000000000000
-                    minimum: -1000000000000
-                  paid_amount:
-                    type: string
-                    format: decimal
-                    multipleOf: 0.01
-                    maximum: 1000000000000
-                    minimum: -1000000000000
-                    nullable: true
-                  paid:
-                    type: boolean
-                  paid_date:
-                    type: string
-                    format: date
-                    nullable: true
-                  note:
-                    type: string
-                  payment_schedule:
-                    type: integer
-                required:
-                - date
-                - recipient_type
-                - recipient_id
-                - recipient_name
-                - payment_method
-                - amount
-                - payment_schedule
               readOnly: true
             price_per_unit:
               type: object
@@ -5715,12 +6694,8 @@ components:
               nullable: true
           required:
           - recipient_type
-          - recipient_name
           - payment_method
           - payment_type
-        details__name:
-          type: string
-          readOnly: true
         created:
           type: string
           format: date-time
@@ -5785,12 +6760,445 @@ components:
       - activity_type
       - details
       - appropriation
+    Activity:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        total_granted_this_year:
+          type: string
+          readOnly: true
+        total_expected_this_year:
+          type: string
+          readOnly: true
+        total_granted_previous_year:
+          type: string
+          readOnly: true
+        total_expected_previous_year:
+          type: string
+          readOnly: true
+        total_granted_next_year:
+          type: string
+          readOnly: true
+        total_expected_next_year:
+          type: string
+          readOnly: true
+        total_cost_full_year:
+          type: string
+          readOnly: true
+        details__name:
+          type: string
+          readOnly: true
+        monthly_payment_plan:
+          type: string
+          readOnly: true
+        payment_plan:
+          type: object
+          properties:
+            id:
+              type: integer
+              readOnly: true
+            price_per_unit:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  readOnly: true
+                rates_per_date:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      rate:
+                        type: string
+                        format: decimal
+                        multipleOf: 0.01
+                        maximum: 1000000000000
+                        minimum: -1000000000000
+                      start_date:
+                        type: string
+                        format: date
+                        nullable: true
+                      end_date:
+                        type: string
+                        format: date
+                        nullable: true
+                      changed_date:
+                        type: string
+                        format: date-time
+                        readOnly: true
+                      changed_by:
+                        type: integer
+                        nullable: true
+                    required:
+                    - rate
+                  readOnly: true
+                current_amount:
+                  type: string
+                  readOnly: true
+                amount:
+                  type: string
+                  format: decimal
+                  multipleOf: 0.01
+                  maximum: 100000000
+                  minimum: -100000000
+                  writeOnly: true
+                start_date:
+                  type: string
+                  format: date
+                  writeOnly: true
+                end_date:
+                  type: string
+                  format: date
+                  writeOnly: true
+              required:
+              - amount
+              nullable: true
+            payments:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  account_string:
+                    type: string
+                    readOnly: true
+                  account_alias:
+                    type: string
+                    readOnly: true
+                  payment_schedule__payment_id:
+                    type: string
+                    readOnly: true
+                  case__cpr_number:
+                    type: string
+                    readOnly: true
+                  case__name:
+                    type: string
+                    readOnly: true
+                  activity__id:
+                    type: string
+                    readOnly: true
+                  activity__status:
+                    type: string
+                    readOnly: true
+                  activity__details__id:
+                    type: string
+                    readOnly: true
+                  activity__note:
+                    type: string
+                    readOnly: true
+                  payment_schedule__fictive:
+                    type: string
+                    readOnly: true
+                  is_payable_manually:
+                    type: string
+                    readOnly: true
+                    default: false
+                  date:
+                    type: string
+                    format: date
+                  recipient_type:
+                    enum:
+                    - INTERNAL
+                    - PERSON
+                    - COMPANY
+                    type: string
+                  recipient_id:
+                    type: string
+                    maxLength: 128
+                  recipient_name:
+                    type: string
+                    maxLength: 128
+                  payment_method:
+                    enum:
+                    - CASH
+                    - SD
+                    - INVOICE
+                    - INTERNAL
+                    type: string
+                  amount:
+                    type: string
+                    format: decimal
+                    multipleOf: 0.01
+                    maximum: 1000000000000
+                    minimum: -1000000000000
+                  paid_amount:
+                    type: string
+                    format: decimal
+                    multipleOf: 0.01
+                    maximum: 1000000000000
+                    minimum: -1000000000000
+                    nullable: true
+                  paid:
+                    type: boolean
+                  paid_date:
+                    type: string
+                    format: date
+                    nullable: true
+                  note:
+                    type: string
+                  payment_schedule:
+                    type: integer
+                required:
+                - date
+                - recipient_type
+                - recipient_id
+                - recipient_name
+                - payment_method
+                - amount
+                - payment_schedule
+              readOnly: true
+            recipient_type:
+              enum:
+              - INTERNAL
+              - PERSON
+              - COMPANY
+              type: string
+            recipient_id:
+              type: string
+              maxLength: 128
+            recipient_name:
+              type: string
+              maxLength: 128
+            payment_method:
+              enum:
+              - CASH
+              - SD
+              - INVOICE
+              - INTERNAL
+              type: string
+            payment_frequency:
+              enum:
+              - DAILY
+              - WEEKLY
+              - BIWEEKLY
+              - MONTHLY
+              type: string
+              nullable: true
+            payment_date:
+              type: string
+              format: date
+              nullable: true
+              description: "dette felt er obligatorisk for og ang\xE5r kun engangsbetalinger"
+            payment_day_of_month:
+              type: integer
+              maximum: 31
+              minimum: 1
+              nullable: true
+              description: "dette felt er obligatorisk for og ang\xE5r kun m\xE5nedlige\
+                \ betalinger"
+            payment_type:
+              enum:
+              - ONE_TIME_PAYMENT
+              - RUNNING_PAYMENT
+              - INDIVIDUAL_PAYMENT
+              type: string
+            payment_units:
+              type: string
+              format: decimal
+              multipleOf: 0.01
+              maximum: 1000000000000
+              minimum: 0.00
+              nullable: true
+            payment_amount:
+              type: string
+              format: decimal
+              multipleOf: 0.01
+              maximum: 1000000000000
+              minimum: -1000000000000
+              nullable: true
+            fictive:
+              type: boolean
+            payment_id:
+              type: integer
+              readOnly: true
+            payment_cost_type:
+              enum:
+              - FIXED
+              - PER_UNIT
+              - GLOBAL_RATE
+              type: string
+              nullable: true
+            payment_method_details:
+              type: integer
+              nullable: true
+            payment_rate:
+              type: string
+              nullable: true
+          required:
+          - recipient_type
+          - payment_method
+          - payment_type
+        service_provider:
+          type: object
+          properties:
+            id:
+              type: integer
+              readOnly: true
+            active:
+              type: boolean
+            cvr_number:
+              type: string
+              maxLength: 8
+            name:
+              type: string
+              maxLength: 128
+            business_code:
+              type: string
+              maxLength: 128
+            business_code_text:
+              type: string
+              maxLength: 128
+            street:
+              type: string
+              maxLength: 128
+            street_number:
+              type: string
+              maxLength: 128
+            zip_code:
+              type: string
+              maxLength: 128
+            post_district:
+              type: string
+              maxLength: 128
+            status:
+              type: string
+              maxLength: 128
+            vat_factor:
+              type: string
+              format: decimal
+              multipleOf: 0.01
+              maximum: 1000
+              minimum: 0.01
+          required:
+          - name
+          nullable: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+        user_created:
+          type: string
+          maxLength: 128
+        user_modified:
+          type: string
+          maxLength: 128
+        status:
+          enum:
+          - DRAFT
+          - EXPECTED
+          - GRANTED
+          type: string
+        approval_note:
+          type: string
+        appropriation_date:
+          type: string
+          format: date
+          nullable: true
+        start_date:
+          type: string
+          format: date
+          nullable: true
+        end_date:
+          type: string
+          format: date
+          nullable: true
+        activity_type:
+          enum:
+          - MAIN_ACTIVITY
+          - SUPPL_ACTIVITY
+          type: string
+        note:
+          type: string
+          nullable: true
+          maxLength: 1000
+        details:
+          type: integer
+        approval_level:
+          type: integer
+          nullable: true
+        approval_user:
+          type: integer
+          nullable: true
+        modifies:
+          type: integer
+          nullable: true
+        appropriation:
+          type: integer
+      required:
+      - status
+      - activity_type
+      - details
+      - appropriation
     PaymentSchedule:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
+        price_per_unit:
+          type: object
+          properties:
+            id:
+              type: integer
+              readOnly: true
+            rates_per_date:
+              type: array
+              items:
+                type: object
+                properties:
+                  rate:
+                    type: string
+                    format: decimal
+                    multipleOf: 0.01
+                    maximum: 1000000000000
+                    minimum: -1000000000000
+                  start_date:
+                    type: string
+                    format: date
+                    nullable: true
+                  end_date:
+                    type: string
+                    format: date
+                    nullable: true
+                  changed_date:
+                    type: string
+                    format: date-time
+                    readOnly: true
+                  changed_by:
+                    type: integer
+                    nullable: true
+                required:
+                - rate
+              readOnly: true
+            current_amount:
+              type: string
+              readOnly: true
+            amount:
+              type: string
+              format: decimal
+              multipleOf: 0.01
+              maximum: 100000000
+              minimum: -100000000
+              writeOnly: true
+            start_date:
+              type: string
+              format: date
+              writeOnly: true
+            end_date:
+              type: string
+              format: date
+              writeOnly: true
+          required:
+          - amount
+          nullable: true
         payments:
           type: array
           items:
@@ -5821,6 +7229,9 @@ components:
                 type: string
                 readOnly: true
               activity__details__id:
+                type: string
+                readOnly: true
+              activity__note:
                 type: string
                 readOnly: true
               payment_schedule__fictive:
@@ -5884,62 +7295,6 @@ components:
             - amount
             - payment_schedule
           readOnly: true
-        price_per_unit:
-          type: object
-          properties:
-            id:
-              type: integer
-              readOnly: true
-            rates_per_date:
-              type: array
-              items:
-                type: object
-                properties:
-                  rate:
-                    type: string
-                    format: decimal
-                    multipleOf: 0.01
-                    maximum: 1000000000000
-                    minimum: -1000000000000
-                  start_date:
-                    type: string
-                    format: date
-                    nullable: true
-                  end_date:
-                    type: string
-                    format: date
-                    nullable: true
-                  changed_date:
-                    type: string
-                    format: date-time
-                    readOnly: true
-                  changed_by:
-                    type: integer
-                    nullable: true
-                required:
-                - rate
-              readOnly: true
-            current_amount:
-              type: string
-              readOnly: true
-            amount:
-              type: string
-              format: decimal
-              multipleOf: 0.01
-              maximum: 100000000
-              minimum: -100000000
-              writeOnly: true
-            start_date:
-              type: string
-              format: date
-              writeOnly: true
-            end_date:
-              type: string
-              format: date
-              writeOnly: true
-          required:
-          - amount
-          nullable: true
         recipient_type:
           enum:
           - INTERNAL
@@ -6019,7 +7374,6 @@ components:
           nullable: true
       required:
       - recipient_type
-      - recipient_name
       - payment_method
       - payment_type
     Rate:
@@ -6130,6 +7484,8 @@ components:
         id:
           type: integer
           readOnly: true
+        active:
+          type: boolean
         tax_card:
           enum:
           - MAIN_CARD
@@ -6165,6 +7521,9 @@ components:
           type: string
           readOnly: true
         activity__details__id:
+          type: string
+          readOnly: true
+        activity__note:
           type: string
           readOnly: true
         payment_schedule__fictive:
@@ -6299,6 +7658,8 @@ components:
         id:
           type: integer
           readOnly: true
+        active:
+          type: boolean
         name:
           type: string
           maxLength: 128
@@ -6323,6 +7684,18 @@ components:
         law_text_name:
           type: string
           maxLength: 128
+        dst_code:
+          type: string
+          description: "V\xE6rdikode til brug ved levering af data til Danmarks Statistik."
+          maxLength: 128
+        dst_preventative_measures:
+          type: boolean
+          description: "Hvorvidt denne paragraf skal bruges til DST udtr\xE6k for\
+            \ 'Forebyggende Foranstaltninger'."
+        dst_handicap:
+          type: boolean
+          description: "Hvorvidt denne paragraf skal bruges til DST udtr\xE6k for\
+            \ 'Handicapkompenserende indsatser'."
         allowed_for_target_groups:
           type: array
           items:
@@ -6341,6 +7714,8 @@ components:
         id:
           type: integer
           readOnly: true
+        active:
+          type: boolean
         kle_number:
           type: string
           maxLength: 128
@@ -6427,6 +7802,27 @@ components:
         name:
           type: string
           maxLength: 128
+        business_code:
+          type: string
+          maxLength: 128
+        business_code_text:
+          type: string
+          maxLength: 128
+        street:
+          type: string
+          maxLength: 128
+        street_number:
+          type: string
+          maxLength: 128
+        zip_code:
+          type: string
+          maxLength: 128
+        post_district:
+          type: string
+          maxLength: 128
+        status:
+          type: string
+          maxLength: 128
         vat_factor:
           type: string
           format: decimal
@@ -6458,11 +7854,11 @@ components:
           type: string
           description: "P\xE5kr\xE6vet. H\xF8jst 150 tegn. Kun bogstaver og cifre\
             \ samt @/./+/-/_"
-          pattern: ^[\w.@+-]+$
+          pattern: ^[\w.@+-]+\z
           maxLength: 150
         first_name:
           type: string
-          maxLength: 30
+          maxLength: 150
         last_name:
           type: string
           maxLength: 150
@@ -6524,6 +7920,8 @@ components:
         id:
           type: integer
           readOnly: true
+        active:
+          type: boolean
         name:
           type: string
           maxLength: 128
@@ -6549,6 +7947,37 @@ components:
             type: integer
       required:
       - name
+    DSTPayload:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 128
+        content:
+          type: string
+        from_date:
+          type: string
+          format: date
+          nullable: true
+        to_date:
+          type: string
+          format: date
+          nullable: true
+        date:
+          type: string
+          format: date-time
+        dst_type:
+          enum:
+          - PREVENTATIVE_MEASURES
+          - HANDICAP
+          type: string
+      required:
+      - name
+      - content
+      - dst_type
     TokenObtainPair:
       type: object
       properties:
