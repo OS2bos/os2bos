@@ -9,7 +9,7 @@ def remove_soft_deleted_activities(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("core", "0107_auto_20220217_0820"),
+        ("core", "0106_auto_20220110_1945"),
     ]
 
     operations = [
