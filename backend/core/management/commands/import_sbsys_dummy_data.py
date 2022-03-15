@@ -16,6 +16,9 @@ from core.utils import import_sbsys_appropriation
 
 logger = logging.getLogger("bevillingsplatform.sbsys_dummy_import")
 
+# This does not need to be available in production, so no test.
+# pragma: no cover
+
 
 class Command(BaseCommand):
     help = "Imports dummy data currently used for testing."
