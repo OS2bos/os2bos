@@ -6,11 +6,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-import os
-import sys
 import logging
-
-from datetime import datetime
 
 from django.core.management.base import BaseCommand
 
