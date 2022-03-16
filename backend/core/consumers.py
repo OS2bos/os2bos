@@ -16,7 +16,6 @@ from core.utils import (
 logger = logging.getLogger(__name__)
 
 
-
 def receive_sbsys_event(payload):
     """Receive notification from SBSYS event queue."""
     sbsys_data = payload.body
