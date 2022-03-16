@@ -271,7 +271,7 @@ def send_activity_deleted_email(activity):
 
 def send_appropriation_imported_email(appropriation):
     """Send an email because an appropriation was imported from SBSYS."""
-    subject = _(f"Ny bevilling {appropriation.sbsys_id} importeret fra SBSSYS")
+    subject = _(f"Ny bevilling {appropriation.sbsys_id} importeret fra SBSYS")
     template = "emails/appropriation_imported.html"
     recipient = appropriation.case.case_worker.email
     send_email_notification(subject, template, appropriation, recipient)
