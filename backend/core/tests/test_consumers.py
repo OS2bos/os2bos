@@ -272,7 +272,7 @@ example_search_result = {
 
 
 def mocked_requests_post(*args, **kwargs):
-    if "PrimaerPerson" in kwargs["data"]:
+    if "json" in kwargs:
         return MockResponse(example_search_result, 200)
     else:
         return MockResponse({"access_token": "12345678"}, 200)
