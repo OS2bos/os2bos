@@ -1713,24 +1713,20 @@ def import_sbsys_appropriation(appropriation_json, case_json):
     # If this did not raise an exception, the case is imported.
     case = models.Case.objects.get(sbsys_id=case_sbsys_id)
     new_appropriation = models.Appropriation.objects.create(
-        sbsys_id=appropriation_sbsys_id,
-        case=case
+        sbsys_id=appropriation_sbsys_id, case=case
     )
     send_appropriation_imported_email(new_appropriation)
 
 
 def import_sbsys_case(case_json):
     """Import a Case from SBSYS data."""
-    new_case = models.Case()
-    new_case.sbsys_id = case_json["Nummer"]
-    new_case.cpr_number = case_json["PrimaryPart"]["CPRnummer"].replace(
-        "-", ""
-    )
-    new_case.name = case_json["PrimaryPart"]["Navn"]
+    sbsys_id = case_json["Nummer"]
+    cpr_number = case_json["PrimaryPart"]["CPRnummer"].replace("-", "")
+    name = case_json["PrimaryPart"]["Navn"]
     social_worker_id = case_json["Behandler"]["LogonId"]
 
     if User.objects.filter(username=social_worker_id).exists():
-        new_case.case_worker = User.objects.get(username=social_worker_id)
+        case_worker = User.objects.get(username=social_worker_id)
     else:
         raise RuntimeError(
             f"Social worker/user {social_worker_id}"
@@ -1739,9 +1735,12 @@ def import_sbsys_case(case_json):
 
     # Municipalities
     ballerup = models.Municipality.objects.get(name="Ballerup")
-    new_case.paying_municipality = ballerup
-    new_case.acting_municipality = ballerup
-    new_case.residence_municipality = ballerup
-
-    # OK, this is it!
-    new_case.save()
+    models.Case.objects.create(
+        sbsys_id=sbsys_id,
+        cpr_number=cpr_number,
+        name=name,
+        case_worker=case_worker,
+        paying_municipality=ballerup,
+        acting_municipality=ballerup,
+        residence_municipality=ballerup,
+    )
