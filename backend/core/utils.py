@@ -1706,15 +1706,14 @@ def import_sbsys_appropriation(appropriation_json, case_json):
     case_sbsys_id = case_json["Nummer"]
 
     # Import Appropriation.
-    new_appropriation = models.Appropriation()
-    new_appropriation.sbsys_id = appropriation_sbsys_id
-
-    # Attach to Case.
     if not models.Case.objects.filter(sbsys_id=case_sbsys_id).exists():
         import_sbsys_case(case_json)
     # If this did not raise an exception, the case is imported.
-    new_appropriation.case = models.Case.objects.get(sbsys_id=case_sbsys_id)
-    new_appropriation.save()
+    case = models.Case.objects.get(sbsys_id=case_sbsys_id)
+    new_appropriation = models.Appropriation.objects.create(
+        sbsys_id=appropriation_sbsys_id,
+        case=case
+    )
     send_appropriation_imported_email(new_appropriation)
 
 
