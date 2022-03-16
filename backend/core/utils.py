@@ -1672,7 +1672,7 @@ def fetch_sbsys_appropriation_data(case_id):
     # corresponding Hovedsag from SBSYS - at the very least, we need its
     # number to look it up in BOS.
     #
-    # The Case mush have KLE Number 27.24.00 and facet G01, i.e. its
+    # The Case must have KLE Number 27.24.00 and facet G01, i.e. its
     # number must start with "27.24.00-G01".
     cpr_number = appropriation_json["PrimaryPart"]["CPRnummer"]
     search_query = {
