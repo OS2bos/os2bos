@@ -15,7 +15,6 @@ from core.utils import (
 
 logger = logging.getLogger(__name__)
 
-# from django_stomp.services.consumer import Payload
 
 
 def receive_sbsys_event(payload):
