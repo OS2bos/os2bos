@@ -21,7 +21,6 @@ from lxml import etree
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
 
-from django.contrib.auth import get_user_model
 from django.template.loader import get_template
 from django.core.mail import EmailMessage
 
@@ -53,8 +52,6 @@ from core import models
 from core.data.extra_payment_date_exclusion_tuples import (
     extra_payment_date_exclusion_tuples,
 )
-
-User = get_user_model()
 
 serviceplatformen_logger = logging.getLogger(
     "bevillingsplatform.serviceplatformen"
@@ -388,7 +385,7 @@ def saml_before_login(user_data):  # noqa: D401
     """Hook called after userdata is received from IdP, before login."""
     user_changed = False
     username = user_data["username"][0]
-    user = User.objects.get(username=username)
+    user = models.User.objects.get(username=username)
     if "team" in user_data:
         # SAML data comes as lists with one element.
         team_name = user_data["team"][0]
@@ -400,11 +397,11 @@ def saml_before_login(user_data):  # noqa: D401
             user.team = team
             user_changed = True
     if "bos_profile" in user_data:
-        profile = User.max_profile(user_data["bos_profile"])
+        profile = models.User.max_profile(user_data["bos_profile"])
         if profile != user.profile:
             user.profile = profile
-            is_admin = profile == User.ADMIN
-            is_workflow_engine = profile == User.WORKFLOW_ENGINE
+            is_admin = profile == models.User.ADMIN
+            is_workflow_engine = profile == models.User.WORKFLOW_ENGINE
             # Admin status is controlled by these flags.
             user.is_staff = is_admin or is_workflow_engine
             user.is_superuser = is_admin
@@ -416,7 +413,7 @@ def saml_before_login(user_data):  # noqa: D401
 def saml_create_user(user_data):  # noqa: D401
     """Hook called after user is created in DB, before login."""
     username = user_data["username"][0]
-    user = User.objects.get(username=username)
+    user = models.User.objects.get(username=username)
     if "team" in user_data:
         # SAML data comes as lists with one element.
         team_name = user_data["team"][0]
@@ -430,10 +427,10 @@ def saml_create_user(user_data):  # noqa: D401
     user.team = team
 
     if "bos_profile" in user_data:
-        profile = User.max_profile(user_data["bos_profile"])
+        profile = models.User.max_profile(user_data["bos_profile"])
         user.profile = profile
-        is_admin = profile == User.ADMIN
-        is_workflow_engine = profile == User.WORKFLOW_ENGINE
+        is_admin = profile == models.User.ADMIN
+        is_workflow_engine = profile == models.User.WORKFLOW_ENGINE
         # Admin status is controlled by these flags.
         user.is_staff = is_admin or is_workflow_engine
         user.is_superuser = is_admin
@@ -1724,8 +1721,8 @@ def import_sbsys_case(case_json):
     name = case_json["PrimaryPart"]["Navn"]
     social_worker_id = case_json["Behandler"]["LogonId"]
 
-    if User.objects.filter(username=social_worker_id).exists():
-        case_worker = User.objects.get(username=social_worker_id)
+    if models.User.objects.filter(username=social_worker_id).exists():
+        case_worker = models.User.objects.get(username=social_worker_id)
     else:
         raise RuntimeError(
             f"Social worker/user {social_worker_id}"
