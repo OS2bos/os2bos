@@ -1700,6 +1700,7 @@ def fetch_sbsys_appropriation_data(case_id):
     return (appropriation_json, case_json)
 
 
+@transaction.atomic
 def import_sbsys_appropriation(appropriation_json, case_json):
     """Import an Appropriation from data received from SBSYS API."""
     appropriation_sbsys_id = appropriation_json["Nummer"]
