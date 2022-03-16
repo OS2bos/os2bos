@@ -53,7 +53,6 @@ from core.data.extra_payment_date_exclusion_tuples import (
     extra_payment_date_exclusion_tuples,
 )
 
-
 serviceplatformen_logger = logging.getLogger(
     "bevillingsplatform.serviceplatformen"
 )
@@ -211,15 +210,27 @@ def get_company_info_from_cvr(cvr_number):
         return None
 
 
-def send_activity_email(subject, template, activity):
-    """Send an email concerning an updated activity."""
-    html_message = render_to_string(template, {"activity": activity})
+def send_email_notification(subject, template, instance, recipient):
+    """Send email concerning an updated model instance."""
+    class_name_as_key = type(instance).__name__.lower()
+    context = {
+        class_name_as_key: instance,
+        "public_host": settings.PUBLIC_HOST,
+    }
+    html_message = render_to_string(template, context)
     send_mail(
         subject,
         strip_tags(html_message),
         config.DEFAULT_FROM_EMAIL,
-        [config.TO_EMAIL_FOR_PAYMENTS],
+        [recipient],
         html_message=html_message,
+    )
+
+
+def send_activity_email(subject, template, activity):
+    """Send an email specifically for an activity."""
+    send_email_notification(
+        subject, template, activity, config.TO_EMAIL_FOR_PAYMENTS
     )
 
 
@@ -253,6 +264,14 @@ def send_activity_deleted_email(activity):
     subject = _("Aktivitet slettet - %s") % cpr_number
     template = "emails/activity_deleted.html"
     send_activity_email(subject, template, activity)
+
+
+def send_appropriation_imported_email(appropriation):
+    """Send an email because an appropriation was imported from SBSYS."""
+    subject = _(f"Ny bevilling {appropriation.sbsys_id} importeret fra SBSYS")
+    template = "emails/appropriation_imported.html"
+    recipient = appropriation.case.case_worker.email
+    send_email_notification(subject, template, appropriation, recipient)
 
 
 def send_appropriation(appropriation, included_activities=None):
@@ -1604,3 +1623,120 @@ def generate_dst_payload_handicap(
     doc.append(appropriations_root)
 
     return doc
+
+
+def get_sbsys_token():
+    """Get an API token for communicating with SBSYS."""
+    sbsys_token_url = settings.SBSYS_TOKEN_URL
+    token_payload = {
+        "client_id": settings.SBSYS_CLIENT_ID,
+        "client_secret": settings.SBSYS_CLIENT_SECRET,
+        "grant_type": settings.SBSYS_GRANT_TYPE,
+    }
+    r = requests.post(
+        sbsys_token_url, data=token_payload, verify=settings.SBSYS_VERIFY_TLS
+    )
+    token = r.json()["access_token"]
+
+    return token
+
+
+def fetch_sbsys_appropriation_data(case_id):
+    """Fetch the data needed to import this case."""
+    # Disable warnings about unsafe SSL if we need to use it.
+    # Not recommended in production.
+    if settings.SBSYS_VERIFY_TLS is False:
+        import urllib3
+
+        urllib3.disable_warnings()
+    else:
+        # This should always happen in production.
+        pass
+
+    token = get_sbsys_token()
+    verify_tls = settings.SBSYS_VERIFY_TLS
+    access_headers = {"Authorization": f"bearer {token}"}
+
+    # Now get case info from SBSYS.
+    r = requests.get(
+        f"{settings.SBSYS_API_URL}/sag/{case_id}",
+        headers=access_headers,
+        verify=verify_tls,
+    )
+    appropriation_json = r.json()
+    # In order to import the appropriation, we also need to get the
+    # corresponding Hovedsag from SBSYS - at the very least, we need its
+    # number to look it up in BOS.
+    #
+    # The Case must have KLE Number 27.24.00 and facet G01, i.e. its
+    # number must start with "27.24.00-G01".
+    cpr_number = appropriation_json["PrimaryPart"]["CPRnummer"]
+    search_query = {
+        "PrimaerPerson": {"CprNummer": cpr_number},
+        "NummerInterval": {
+            "From": "27.24.00-G01",
+            "To": "27.24.00-G02",
+        },
+        "SagsStatusId": 9,
+    }
+    params = {"InkluderParterIResultat": True}
+    # Add content type - important for server to parse correctly.
+    access_headers["Content-Type"] = "application/json"
+    r = requests.post(
+        f"{settings.SBSYS_API_URL}/sag/search",
+        json=search_query,
+        params=params,
+        headers=access_headers,
+        verify=verify_tls,
+    )
+    search_data = r.json()
+    if search_data["TotalNumberOfResults"] == 0:
+        raise RuntimeError("No Hovedsag found, can't import appropriation")
+    case_json = search_data["Results"][0]
+
+    return (appropriation_json, case_json)
+
+
+@transaction.atomic
+def import_sbsys_appropriation(appropriation_json, case_json):
+    """Import an Appropriation from data received from SBSYS API."""
+    appropriation_sbsys_id = appropriation_json["Nummer"]
+    case_sbsys_id = case_json["Nummer"]
+
+    # Import Appropriation.
+    if not models.Case.objects.filter(sbsys_id=case_sbsys_id).exists():
+        import_sbsys_case(case_json)
+    # If this did not raise an exception, the case is imported.
+    case = models.Case.objects.get(sbsys_id=case_sbsys_id)
+    new_appropriation = models.Appropriation.objects.create(
+        sbsys_id=appropriation_sbsys_id, case=case
+    )
+    send_appropriation_imported_email(new_appropriation)
+
+
+def import_sbsys_case(case_json):
+    """Import a Case from SBSYS data."""
+    sbsys_id = case_json["Nummer"]
+    cpr_number = case_json["PrimaryPart"]["CPRnummer"].replace("-", "")
+    name = case_json["PrimaryPart"]["Navn"]
+    social_worker_id = case_json["Behandler"]["LogonId"]
+
+    if models.User.objects.filter(username=social_worker_id).exists():
+        case_worker = models.User.objects.get(username=social_worker_id)
+    else:
+        raise RuntimeError(
+            f"Social worker/user {social_worker_id}"
+            " not found - unable to import Case"
+        )
+
+    # Municipalities
+    ballerup = models.Municipality.objects.get(name="Ballerup")
+    models.Case.objects.create(
+        sbsys_id=sbsys_id,
+        cpr_number=cpr_number,
+        name=name,
+        case_worker=case_worker,
+        paying_municipality=ballerup,
+        acting_municipality=ballerup,
+        residence_municipality=ballerup,
+    )
