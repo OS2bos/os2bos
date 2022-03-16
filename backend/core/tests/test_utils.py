@@ -467,12 +467,7 @@ class SendAppropriationTestCase(TestCase, BasicTestMixin):
             render_call_args["context"]["sbsys_template_id"], "900"
         )
 
-    @mock.patch("core.utils.HTML")
-    @mock.patch("core.utils.EmailMessage")
-    @mock.patch("core.utils.get_template")
-    def test_send_appropriation_imported_email(
-        self, get_template_mock, html_mock, message_mock
-    ):
+    def test_send_appropriation_imported_email(self):
         case = create_case(self.case_worker, self.municipality, self.district)
         section = create_section()
 
