@@ -215,7 +215,7 @@ def get_company_info_from_cvr(cvr_number):
 
 
 def send_email_notification(subject, template, instance, recipient):
-    """Send an email concerning an updated we should notify about."""
+    """Send an email concerning an updated model instance we should notify about."""
     class_name_as_key = type(instance).__name__.lower()
     context = {
         class_name_as_key: instance,
