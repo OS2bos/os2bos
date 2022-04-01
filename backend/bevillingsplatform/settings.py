@@ -684,6 +684,10 @@ ALLOW_SERVICE_PROVIDERS_FROM_VIRK = settings.getboolean(
     "ALLOW_SERVICE_PROVIDERS_FROM_VIRK", fallback=True
 )
 
+ALLOW_CHARTS = settings.getboolean(
+    "ALLOW_CHARTS", fallback=False
+)
+
 GRAPHENE = {
     "SCHEMA": "core.schema.schema",
     "RELAY_CONNECTION_MAX_LIMIT": 250,
