@@ -2368,6 +2368,7 @@ class TestFrontendSettingsView(AuthenticatedTestCase, BasicTestMixin):
         response = self.client.get(url)
 
         expected_response = {
+            "ALLOW_CHARTS": False,
             "ALLOW_EDIT_OF_PAST_PAYMENTS": True,
             "ALLOW_SERVICE_PROVIDERS_FROM_VIRK": True,
         }
