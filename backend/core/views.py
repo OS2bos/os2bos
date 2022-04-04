@@ -731,8 +731,6 @@ class FrontendSettingsView(APIView):
             "ALLOW_SERVICE_PROVIDERS_FROM_VIRK": (
                 settings.ALLOW_SERVICE_PROVIDERS_FROM_VIRK
             ),
-            "ALLOW_CHARTS": (
-                settings.ALLOW_CHARTS
-            ),
+            "ALLOW_CHARTS": (settings.ALLOW_CHARTS),
         }
         return Response(settings_dict)
