@@ -684,6 +684,8 @@ ALLOW_SERVICE_PROVIDERS_FROM_VIRK = settings.getboolean(
     "ALLOW_SERVICE_PROVIDERS_FROM_VIRK", fallback=True
 )
 
+# Determine whether to load the charts view in frontend GUI 
+# at `/#/dashboard`
 ALLOW_CHARTS = settings.getboolean(
     "ALLOW_CHARTS", fallback=False
 )

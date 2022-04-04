@@ -12,86 +12,93 @@ import store from './store.js'
 
 Vue.use(Router)
 
+const routes = [
+    {
+        path: '/',
+        redirect: '/cases/'
+    },
+    {
+        path: '/cases/',
+        name: 'cases',
+        component: () => import(/* webpackPreload: true */ './components/cases/Cases.vue')
+    },
+    {
+        path: '/case/:caseId',
+        name: 'case',
+        component: () => import(/* webpackChunkName: "case" */ './components/cases/Case.vue')
+    },
+    {
+        path: '/case-create/',
+        name: 'case-create',
+        component: () => import(/* webpackChunkName: "caseedit" */ './components/cases/CaseEdit.vue')
+    },
+    {
+        path: '/case/:casid/familyoverview-create/',
+        name: 'familyoverview-create',
+        component: () => import(/* webpackChunkName: "familyoverview" */ './components/familyoverview/FamilyOverviewEdit.vue')
+    },
+    {
+        path: '/case/:casid/familyoverview-edit/:famid',
+        name: 'familyoverview-edit',
+        component: () => import(/* webpackChunkName: "familyoverview" */ './components/familyoverview/FamilyOverviewEdit.vue')
+    },
+    {
+        path: '/assessment/:id',
+        path: '/case/:id/assessment',
+        name: 'assessment',
+        component: () => import(/* webpackChunkName: "assessment" */ './components/assessments/Assessment.vue')
+        
+    },
+    {
+        path: '/appropriation/:apprId',
+        name: 'appropriation',
+        component: () => import(/* webpackChunkName: "appropriation" */ './components/appropriations/Appropriation.vue')
+    },
+    {
+        path: '/case/:caseid/appropriation-create/',
+        name: 'appropriation-create',
+        component: () => import(/* webpackChunkName: "appropriationedit" */ './components/appropriations/AppropriationEdit.vue')
+    },
+    {
+        path: '/activity/create',
+        name: 'activitycreate',
+        component: () => import(/* webpackChunkName: "activitycreate" */ './components/activities/ActivityCreate.vue')  
+    },
+    {
+        path: '/activity/:actId',
+        name: 'activity',
+        component: () => import(/* webpackChunkName: "activity" */ './components/activities/Activity.vue')
+    },
+    {
+        path: '/appropriations/',
+        name: 'appropriations',
+        component: () => import(/* webpackChunkName: "appropriations" */ './components/appropriations/Appropriations.vue')
+    },
+    {
+        path: '/payments/',
+        name: 'payments',
+        component: () => import(/* webpackChunkName: "payments" */ './components/payments/Payments.vue')
+    },
+    {
+        path: '/export/',
+        name: 'export',
+        component: () => import(/* webpackChunkName: "export" */ './components/export/Export.vue')
+    },
+    {
+        path: '/dash/',
+        name: 'dashboard',
+        component: () => import(/* webpackChunkName: "dashboard" */ './components/dashboard/Dashboard.vue')
+    },
+    {
+        // 404 page. This route must declared last
+        path: '*',
+        name: 'page404',
+        component: () => import(/* webpackChunkName: "page404" */ './components/http/Page404.vue')
+    }
+]
+
 const router = new Router({
-    routes: [
-        {
-            path: '/',
-            redirect: '/cases/'
-        },
-        {
-            path: '/cases/',
-            name: 'cases',
-            component: () => import(/* webpackPreload: true */ './components/cases/Cases.vue')
-        },
-        {
-            path: '/case/:caseId',
-            name: 'case',
-            component: () => import(/* webpackChunkName: "case" */ './components/cases/Case.vue')
-        },
-        {
-            path: '/case-create/',
-            name: 'case-create',
-            component: () => import(/* webpackChunkName: "caseedit" */ './components/cases/CaseEdit.vue')
-        },
-        {
-            path: '/case/:casid/familyoverview-create/',
-            name: 'familyoverview-create',
-            component: () => import(/* webpackChunkName: "familyoverview" */ './components/familyoverview/FamilyOverviewEdit.vue')
-        },
-        {
-            path: '/case/:casid/familyoverview-edit/:famid',
-            name: 'familyoverview-edit',
-            component: () => import(/* webpackChunkName: "familyoverview" */ './components/familyoverview/FamilyOverviewEdit.vue')
-        },
-        {
-            path: '/assessment/:id',
-            path: '/case/:id/assessment',
-            name: 'assessment',
-            component: () => import(/* webpackChunkName: "assessment" */ './components/assessments/Assessment.vue')
-            
-        },
-        {
-            path: '/appropriation/:apprId',
-            name: 'appropriation',
-            component: () => import(/* webpackChunkName: "appropriation" */ './components/appropriations/Appropriation.vue')
-        },
-        {
-            path: '/case/:caseid/appropriation-create/',
-            name: 'appropriation-create',
-            component: () => import(/* webpackChunkName: "appropriationedit" */ './components/appropriations/AppropriationEdit.vue')
-        },
-        {
-            path: '/activity/create',
-            name: 'activitycreate',
-            component: () => import(/* webpackChunkName: "activitycreate" */ './components/activities/ActivityCreate.vue')  
-        },
-        {
-            path: '/activity/:actId',
-            name: 'activity',
-            component: () => import(/* webpackChunkName: "activity" */ './components/activities/Activity.vue')
-        },
-        {
-            path: '/appropriations/',
-            name: 'appropriations',
-            component: () => import(/* webpackChunkName: "appropriations" */ './components/appropriations/Appropriations.vue')
-        },
-        {
-            path: '/payments/',
-            name: 'payments',
-            component: () => import(/* webpackChunkName: "payments" */ './components/payments/Payments.vue')
-        },
-        {
-            path: '/export/',
-            name: 'export',
-            component: () => import(/* webpackChunkName: "export" */ './components/export/Export.vue')
-        },
-        {
-            // 404 page. This route must declared last
-            path: '*',
-            name: 'page404',
-            component: () => import(/* webpackChunkName: "page404" */ './components/http/Page404.vue')
-        }
-    ]
+    routes: routes
 })
 
 router.beforeEach((to, from, next) => {
