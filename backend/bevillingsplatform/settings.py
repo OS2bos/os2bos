@@ -685,10 +685,8 @@ ALLOW_SERVICE_PROVIDERS_FROM_VIRK = settings.getboolean(
 )
 
 # Determine whether to load the charts view in frontend GUI 
-# at `/#/dashboard`
-ALLOW_CHARTS = settings.getboolean(
-    "ALLOW_CHARTS", fallback=False
-)
+# at `/#/dash`
+ALLOW_CHARTS = settings.getboolean("ALLOW_CHARTS", fallback=False)
 
 GRAPHENE = {
     "SCHEMA": "core.schema.schema",
