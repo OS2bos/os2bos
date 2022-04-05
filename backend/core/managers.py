@@ -268,6 +268,7 @@ class AppropriationQuerySet(models.QuerySet):
             Case as CaseModel,
             Activity,
         )
+
         if not from_date:
             from_date = datetime.date(year=1970, month=1, day=1)
         if not to_date:
