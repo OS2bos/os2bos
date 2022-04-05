@@ -8,7 +8,7 @@
     <div v-if="is_open" class="extended-nav-list">
       <a v-if="user.profile === 'workflow_engine'" href="/api/admin/">Klassifikationer</a>
       <a v-if="user.profile === 'admin'" href="/api/admin/">Administration</a>
-      <router-link v-if="config.ALLOW_CHARTS" to="/dash/">Økonomisk overblik</router-link>
+      <router-link v-if="config.ALLOW_CHARTS" to="/charts/">Økonomisk overblik</router-link>
       <router-link v-if="user.profile === 'admin'" to="/export/">DST export</router-link>
     </div>
   </section>

@@ -85,9 +85,9 @@ const routes = [
         component: () => import(/* webpackChunkName: "export" */ './components/export/Export.vue')
     },
     {
-        path: '/dash/',
-        name: 'dashboard',
-        component: () => import(/* webpackChunkName: "dashboard" */ './components/dashboard/Dashboard.vue')
+        path: '/charts/',
+        name: 'charts',
+        component: () => import(/* webpackChunkName: "charts" */ './components/charts/Dashboard.vue')
     },
     {
         // 404 page. This route must declared last
