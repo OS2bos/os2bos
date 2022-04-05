@@ -1,3 +1,17 @@
+Version 3.8.0, 2022-03-08
+-------------------------
+
+New in this version:
+
+Features
+^^^^^^^^
+
+* Allow readonly users readonly access to GraphQL API.
+* Remove soft-deleted functionality for activities.
+* Enforce only one adjustment/modifies per activity on the database level.
+* Update Python to 3.10, Django to 3.2 and update dependencies in general
+* Overhaul and speed-up frontend E2E tests in the CI pipeline.
+
 Version 3.7.1, 2022-01-24
 -------------------------
 
