@@ -367,6 +367,7 @@ Deploy tag to staging:
   extends:
     - .rules:semver-all
     - .saltbert
+  needs: ["Update staging salt config"]
   when: manual
   variables:
     SALTBERT_ORCHESTRATION: cbur.ballerup.staging
@@ -392,7 +393,7 @@ Deploy tag to production:
   extends:
     - .rules:semver-core
     - .saltbert
-  needs: ["Release master"]
+  needs: ["Update production salt config"]
   when: manual
   variables:
     SALTBERT_ORCHESTRATION: cbur.ballerup.production
