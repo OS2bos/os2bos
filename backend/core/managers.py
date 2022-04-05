@@ -526,12 +526,9 @@ class CaseQuerySet(models.QuerySet):
         changed_case_ids = []
 
         for case in self:
-            if from_date:
-                try:
-                    from_case = case.history.as_of(from_date)
-                except case.DoesNotExist:
-                    from_case = case.history.earliest()
-            else:
+            try:
+                from_case = case.history.as_of(from_date)
+            except case.DoesNotExist:
                 from_case = case.history.earliest()
 
             if to_date:
