@@ -1,0 +1,25 @@
+<!-- Copyright (C) 2022 Magenta ApS, http://magenta.dk.
+   - Contact: info@magenta.dk.
+   -
+   - This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at https://mozilla.org/MPL/2.0/. -->
+
+
+{% extends "emails/base.html" %}
+{% block content %}
+
+<h1>Ny foranstaltningssag oprettet</h1>
+
+<p>
+   Der er blevet oprettet en foranstaltningssag i SBSYS:<br>
+   <strong>{{ appropriation.sbsys_id }}</strong>
+</p>
+<p>Der er blevet oprettet en tilsvarende bevillingsskrivelse i BOS, som er tildelt til dig.</p>
+<p>
+   <a href="{{ public_host }}/#/appropriation/{{appropriation.id}}/">
+      Klik her for at åbne bevillingsskrivelse {{ appropriation.sbsys_id }} i BOS
+   </a>
+</p>
+
+{% endblock %}

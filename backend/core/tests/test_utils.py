@@ -50,6 +50,7 @@ from core.utils import (
     get_company_info_from_search_term,
     generate_dst_payload_preventive_measures,
     generate_dst_payload_handicap,
+    send_appropriation_imported_email,
 )
 from core.tests.testing_utils import (
     BasicTestMixin,
@@ -465,6 +466,16 @@ class SendAppropriationTestCase(TestCase, BasicTestMixin):
         self.assertEqual(
             render_call_args["context"]["sbsys_template_id"], "900"
         )
+
+    def test_send_appropriation_imported_email(self):
+        case = create_case(self.case_worker, self.municipality, self.district)
+        section = create_section()
+
+        appropriation = create_appropriation(
+            sbsys_id="27.69.20-Ø36-23-20", case=case, section=section
+        )
+
+        send_appropriation_imported_email(appropriation)
 
 
 class SamlLoginTestcase(TestCase, BasicTestMixin):
