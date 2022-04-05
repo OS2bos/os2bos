@@ -83,6 +83,9 @@ const mutations = {
     setAppropriation (state, appropriation) {
         state.appropriation = appropriation
     },
+    setAppropriationProperty (state, {prop,val}) {
+        Vue.set(state.appropriation, prop, val)
+    },
     setMainActivities (state, payload) {
         state.appr_main_activities = payload
     },

@@ -65,7 +65,6 @@ type_choices = (
 STATUS_DRAFT = "DRAFT"
 STATUS_EXPECTED = "EXPECTED"
 STATUS_GRANTED = "GRANTED"
-STATUS_DELETED = "DELETED"
 
 status_choices = (
     (STATUS_DRAFT, _("kladde")),
@@ -1148,7 +1147,7 @@ class Case(AuditModelMixin, models.Model):
         today = timezone.now().date()
         all_main_activities = Activity.objects.filter(
             activity_type=MAIN_ACTIVITY, appropriation__case=self
-        ).exclude(status=STATUS_DELETED)
+        )
         # If no activities exists, we will not consider it expired.
         if not all_main_activities.exists():
             return False
@@ -1432,14 +1431,10 @@ class Appropriation(AuditModelMixin, models.Model):
             if main_activity.end_date:
                 # The end date must not be later than any supplementary
                 # activity's start date.
-                if (
-                    self.activities.filter(
-                        start_date__gt=main_activity.end_date,
-                        activity_type=SUPPL_ACTIVITY,
-                    )
-                    .exclude(status=STATUS_DELETED)
-                    .exists()
-                ):  # pragma: no cover
+                if self.activities.filter(
+                    start_date__gt=main_activity.end_date,
+                    activity_type=SUPPL_ACTIVITY,
+                ).exists():  # pragma: no cover
                     raise RuntimeError(
                         _(
                             "Denne bevilling har følgeydelser, der starter "
@@ -1459,12 +1454,9 @@ class Appropriation(AuditModelMixin, models.Model):
                     if a.status == STATUS_GRANTED:
                         # If we're not already granting a modification
                         # of this activity, we need to re-grant it.
-                        modified_by = a.modified_by.exclude(
-                            status=STATUS_DELETED
-                        )
                         if not (
-                            modified_by
-                            and any(obj in activities for obj in modified_by)
+                            a.modified_by_exists()
+                            and a.modified_by in activities
                         ):  # pragma: no cover
                             to_be_granted.append(a)
         else:
@@ -1775,8 +1767,7 @@ class Activity(AuditModelMixin, models.Model):
             models.UniqueConstraint(
                 fields=["appropriation"],
                 condition=Q(activity_type=MAIN_ACTIVITY)
-                & Q(modifies__isnull=True)
-                & ~Q(status=STATUS_DELETED),
+                & Q(modifies__isnull=True),
                 name="unique_main_activity",
             ),
         ]
@@ -1830,7 +1821,7 @@ class Activity(AuditModelMixin, models.Model):
 
     # An expected change modifies another activity and can eventually
     # take its place.
-    modifies = models.ForeignKey(
+    modifies = models.OneToOneField(
         "self",
         null=True,
         blank=True,
@@ -1912,7 +1903,7 @@ class Activity(AuditModelMixin, models.Model):
         if self.status == STATUS_GRANTED:
             # Re-granting - nothing more to do.
             pass
-        elif not self.modifies:
+        elif not self.modifies_exists():
             # Simple case: Just set status.
             self.status = STATUS_GRANTED
         elif self.validate_expected():  # pragma: no cover
@@ -1925,22 +1916,17 @@ class Activity(AuditModelMixin, models.Model):
                 self.modifies.end_date = self.end_date
             else:
                 while (
-                    self.modifies is not None
+                    self.modifies_exists()
                     and self.start_date <= self.modifies.start_date
                 ):
                     old_activity = self.modifies
-                    # Set STATUS_DELETED to circumvent
-                    # unique_main_activity constraint.
-                    old_activity.status = STATUS_DELETED
-                    old_activity.save()
-                    # Save with new modifies to not trigger CASCADE deletion.
                     self.modifies = self.modifies.modifies
-                    self.save()
                     old_activity.delete()
+                    self.save()
                     # "Merge" by ending current activity the day before the new
                     # start_date if end_date overlaps with the new start_date
                     # or it has no end_date.
-                if self.modifies and (
+                if self.modifies_exists() and (
                     not self.modifies.end_date
                     or (
                         self.modifies.end_date
@@ -1950,7 +1936,7 @@ class Activity(AuditModelMixin, models.Model):
                     self.modifies.end_date = self.start_date - timedelta(
                         days=1
                     )
-            if self.modifies:
+            if self.modifies_exists():
                 # First, handle individual payments if any.
                 if payment_type == PaymentSchedule.INDIVIDUAL_PAYMENT:
                     for p in self.modifies.payment_plan.payments.all():
@@ -1971,8 +1957,7 @@ class Activity(AuditModelMixin, models.Model):
     def validate_expected(self):
         """Validate this is a correct expected activity."""
         today = date.today()
-
-        if not self.modifies:
+        if not self.modifies_exists():
             raise forms.ValidationError(
                 _("den forventede justering har ingen ydelse at justere")
             )
@@ -2117,10 +2102,7 @@ class Activity(AuditModelMixin, models.Model):
         if not hasattr(self, "payment_plan") or not self.payment_plan:
             return Payment.objects.none()
 
-        if (
-            self.status == STATUS_GRANTED
-            and self.modified_by.exclude(status=STATUS_DELETED).exists()
-        ):
+        if self.status == STATUS_GRANTED and self.modified_by_exists():
             # one time payments are always overruled entirely.
             if (
                 self.payment_plan.payment_type
@@ -2263,10 +2245,34 @@ class Activity(AuditModelMixin, models.Model):
             JOIN T
             ON (core_activity.modifies_id = T.id)
             )
-            SELECT id FROM T WHERE id!=%(id)s and status!=%(status_deleted)s;
+            SELECT id FROM T WHERE id!=%(id)s;
         """,
-            {"id": self.id, "status_deleted": STATUS_DELETED},
+            {"id": self.id},
         )
+
+    def modifies_exists(self):
+        """
+        Check the activity which this activity modifies exists.
+
+        Django is quirky in the sense that hasattr(self, 'modifies') can
+        return True even when modifies is None so we need to check for
+        both the attribute and None.
+
+        We encapsulate the logic here and use it everywhere to enforce it.
+        """
+        return getattr(self, "modifies", None) is not None
+
+    def modified_by_exists(self):
+        """
+        Check the activity which this activity is modified by exists.
+
+        Django is quirky in the sense that hasattr(self, 'modified_by') can
+        return True even when modified_by is None so we need to check for
+        both the attribute and None.
+
+        We encapsulate the logic here and use it everywhere to enforce it.
+        """
+        return getattr(self, "modified_by", None) is not None
 
     def save(self, *args, **kwargs):
         """

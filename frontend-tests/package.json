@@ -3,17 +3,17 @@
   "version": "4.0.5",
   "description": "A suite of tests for the bevillingsplatform frontend. Tests are isolated from the frontend src. This way they can be run independently of the development server and corresponding docker container.",
   "scripts": {
-    "test": "./node_modules/.bin/testcafe chrome tests/*.js --assertion-timeout 15000 --selector-timeout 15000 --baseurl http://localhost:8080",
-    "headlesstest": "./node_modules/.bin/testcafe chrome:headless tests/*.js --assertion-timeout 15000 --selector-timeout 15000 --baseurl http://localhost:8080"
+    "test": "./node_modules/.bin/testcafe chrome tests/*.js --assertion-timeout 10000 --selector-timeout 10000 --pageRequestTimeout 10000 --cs node_modules/axe-core/axe.min.js --baseurl http://localhost:8080",
+    "headlesstest": "./node_modules/.bin/testcafe chrome:headless tests/*.js --assertion-timeout 10000 --selector-timeout 10000 --pageRequestTimeout 10000 --cache --cs node_modules/axe-core/axe.min.js --baseurl http://localhost:8080"
   },
   "keywords": [],
   "author": "",
   "license": "MPL-2.0",
   "devDependencies": {
-    "axe-core": "^3.0.0",
-    "axe-testcafe": "^3.0.0",
-    "resemblejs": "^4.0.0",
-    "testcafe": "^1.16.0"
+    "axe-core": "^4.4.0",
+    "@testcafe-community/axe": "^3.5.0",
+    "testcafe": "^1.18.0",
+    "@ffmpeg-installer/ffmpeg": "^1.1.0"
   },
   "repository": "https://git.magenta.dk/bevillingsplatform/bevillingsplatform.git"
 }

@@ -72,7 +72,7 @@ class ClassificationInline(admin.TabularInline):
         user = request.user
         return user.is_authenticated and user.is_workflow_engine_or_admin()
 
-    def has_add_permission(self, request):
+    def has_add_permission(self, request, obj=None):
         """Override has_add_permission for InlineModelAdmin."""
         user = request.user
         return user.is_authenticated and user.is_workflow_engine_or_admin()
@@ -446,6 +446,18 @@ class CustomUserAdmin(BaseUserAdmin):
     fieldsets = (
         ("Organisation", {"fields": ("team",)}),
     ) + BaseUserAdmin.fieldsets
+
+    list_display = (
+        "username",
+        "email",
+        "first_name",
+        "last_name",
+        "team",
+        "is_staff",
+        "is_active",
+    )
+
+    list_filter = ("team", "is_staff", "is_superuser", "is_active")
 
     def has_view_permission(self, request, obj=None):
         """Override has_view_permission for ModelAdmin."""

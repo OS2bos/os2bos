@@ -1,7 +1,7 @@
 // Testing with Testcafe : https://devexpress.github.io/testcafe/documentation/getting-started/
 
 import { Selector } from 'testcafe'
-import { login } from '../utils/logins.js'
+import { familieleder } from '../utils/logins.js'
 import { createActivity, createAppropriation, createCase, approveActivities } from '../utils/crud.js'
 import { axe } from '../utils/axe.js'
 import baseurl from '../utils/url.js'
@@ -77,9 +77,10 @@ fixture.skip('Export DST XML') // declare the fixture
     .page(baseurl)  // specify the start page
     .afterEach(() => checkConsole())
 
-test('Create data and check in export list', async t => {
-
-    await login(t, 'familieleder', 'sagsbehandler')
+test
+.before(async t => {
+    await t.useRole(familieleder)
+})('Create data and check in export list', async t => {
 
     await createCase(t, testdata.case1)
     await createAppropriation(t, testdata.appr1)

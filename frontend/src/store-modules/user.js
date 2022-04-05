@@ -48,7 +48,7 @@ const mutations = {
 
 const actions = {
     fetchUsers: function({commit}) {
-        return axios.get('/users/')
+        return axios.get('/users/?is_active=true')
         .then(res => {
             let users = res.data
             users.map(user => {

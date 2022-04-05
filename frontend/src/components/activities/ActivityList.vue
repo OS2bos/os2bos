@@ -87,7 +87,7 @@
 <script>
 
     import { cost2da } from '../filters/Numbers.js'
-    import { json2jsEpoch } from '../filters/Date.js'
+    import { json2jsEpoch, epoch2DateStr } from '../filters/Date.js'
     import ApprovalDiag from './Approval.vue'
     import PermissionLogic from '../mixins/PermissionLogic.js'
     import ActList from './activitylist/ActList.vue'
@@ -262,6 +262,7 @@
                 let data = {
                     query: `{
                         appropriation(id: "${ id }") {
+                            grantedFromDate,
                             activities {
                                 edges {
                                     node {
@@ -302,10 +303,14 @@
                 }
                 axios.post('/graphql/', data)
                 .then(res => {
-                    if (!res.data.data.appropriation) {
+                    const data = res.data.data.appropriation
+                    if (!data) {
                         return false
                     }
-                    const edges = res.data.data.appropriation.activities.edges 
+                    if (data.grantedFromDate) {
+                        this.$store.commit('setAppropriationProperty', {prop: 'granted_from_date', val: data.grantedFromDate})
+                    }
+                    const edges = data.activities.edges 
                     const acts = edges.map(a => {
                         return {
                             id: a.node.pk,
@@ -337,7 +342,7 @@
                             }
                         }
                     })
-                    this.$store.commit('setActivityList', acts)
+                    this.$store.commit('setActivityList', this.checkActivityAge(acts))
                     const reducer = function(acc,val) {
                         const new_acc = {
                             node: {
@@ -363,6 +368,17 @@
                             total_expected_previous_year: new_appropriation.node.totalExpectedPreviousYear
                         }
                     }
+                })
+            },
+            checkActivityAge: function(acts) {
+                let now = epoch2DateStr(new Date())
+                return acts.map(function(act) {
+                    if (act.start_date < now && act.end_date <= now) {
+                        act.is_old = true
+                    } else {
+                        act.is_old = false
+                    }
+                    return act
                 })
             }
         },

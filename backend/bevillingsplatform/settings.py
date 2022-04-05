@@ -111,7 +111,7 @@ INSTALLED_APPS = [
     "django_filters",
     "simple_history",
     "constance",
-    "constance.backends.database",
+    "core.apps.ModifiedConstanceDatabaseConfig",
     "core.apps.CoreConfig",
     "django_saml2_auth",
     "graphene_django",
@@ -171,6 +171,8 @@ DATABASES = {
         "PORT": settings.getint("DATABASE_PORT", fallback=5432),
     }
 }
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 # Password validation

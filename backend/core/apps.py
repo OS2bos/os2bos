@@ -17,3 +17,15 @@ class CoreConfig(AppConfig):
     def ready(self):
         """Defer import of signals until ready."""
         import core.signals  # noqa
+
+
+class ModifiedConstanceDatabaseConfig(AppConfig):
+    """Modified django-constance AppConfig.
+
+    While we wait for django-constance to provide their
+    own apps.py specifying default_auto_field:
+    https://github.com/jazzband/django-constance/pull/449
+    """
+
+    name = "constance.backends.database"
+    default_auto_field = "django.db.models.AutoField"

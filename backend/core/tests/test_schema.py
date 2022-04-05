@@ -6,11 +6,13 @@ from freezegun import freeze_time
 
 from django.urls import reverse
 from django.utils import timezone
+from django.contrib.auth import get_user_model
 
 from core.models import (
     Activity,
     PaymentSchedule,
     SectionInfo,
+    Case,
     MAIN_ACTIVITY,
     SUPPL_ACTIVITY,
     STATUS_DRAFT,
@@ -35,6 +37,8 @@ from core.tests.testing_utils import (
     create_rate_per_date,
     create_approval_level,
 )
+
+User = get_user_model()
 
 
 class TestExtendedConnection(AuthenticatedTestCase, BasicTestMixin):
@@ -62,7 +66,7 @@ class TestExtendedConnection(AuthenticatedTestCase, BasicTestMixin):
                 }
             }"""
         }
-        response = self.client.get(reverse_url, json)
+        response = self.client.post(reverse_url, json)
         self.assertEqual(response.status_code, 200)
         cases = response.json()["data"]["cases"]
 
@@ -93,7 +97,7 @@ class TestCaseSchema(AuthenticatedTestCase, BasicTestMixin):
                 }
             }"""
         }
-        response = self.client.get(reverse_url, json)
+        response = self.client.post(reverse_url, json)
 
         self.assertEqual(response.status_code, 200)
         node = response.json()["data"]["cases"]["edges"][0]["node"]
@@ -102,6 +106,136 @@ class TestCaseSchema(AuthenticatedTestCase, BasicTestMixin):
             node["id"], b64encode(f"Case:{case.pk}".encode()).decode()
         )
         self.assertEqual(node["name"], case.name)
+
+    def test_case_mutation_success(self):
+        reverse_url = reverse("graphql-api")
+        self.client.login(username=self.username, password=self.password)
+        self.assertEqual(Case.objects.count(), 0)
+
+        json = {
+            "query": f"""
+            mutation {{
+                createCase(
+                    input: {{
+                        sbsysId:"12345",
+                        cprNumber:"0306891234",
+                        name:"test",
+                        caseWorker:"{self.case_worker.id}",
+                        payingMunicipality:"{self.municipality.id}",
+                        actingMunicipality:"{self.municipality.id}",
+                        residenceMunicipality:"{self.municipality.id}"
+                    }}
+                )
+            {{
+            errors {{
+                field,
+                messages
+            }}
+            scalingStep,
+            id,
+            name,
+            caseWorker,
+            sbsysId,
+          }}
+        }}
+        """
+        }
+        response = self.client.post(reverse_url, json)
+
+        self.assertEqual(response.status_code, 200)
+
+        json_response = response.json()["data"]["createCase"]
+        self.assertIsNone(json_response["errors"])
+        self.assertEqual(json_response["sbsysId"], "12345")
+
+        self.assertEqual(Case.objects.count(), 1)
+
+    def test_case_mutation_disallowed_for_readonly(self):
+        reverse_url = reverse("graphql-api")
+        username = "readonly"
+        password = "readonly"
+        User.objects.create_user(
+            username,
+            f"{username}@company.com",
+            password,
+            profile="readonly",
+        )
+
+        self.client.login(username=username, password=password)
+        self.assertEqual(Case.objects.count(), 0)
+
+        json = {
+            "query": f"""
+            mutation {{
+                createCase(
+                    input: {{
+                        sbsysId:"12345",
+                        cprNumber:"0306891234",
+                        name:"test",
+                        caseWorker:"{self.case_worker.id}",
+                        payingMunicipality:"{self.municipality.id}",
+                        actingMunicipality:"{self.municipality.id}",
+                        residenceMunicipality:"{self.municipality.id}"
+                    }}
+                )
+            {{
+            errors {{
+                field,
+                messages
+            }}
+            scalingStep,
+            id,
+            name,
+            caseWorker,
+            sbsysId,
+          }}
+        }}
+        """
+        }
+        response = self.client.post(reverse_url, json)
+
+        self.assertEqual(response.status_code, 200)
+        json_response = response.json()["data"]["createCase"]
+        self.assertIsNone(json_response)
+
+        self.assertEqual(Case.objects.count(), 0)
+
+    def test_case_mutation_disallowed_for_anonymous_user(self):
+        reverse_url = reverse("graphql-api")
+        self.assertEqual(Case.objects.count(), 0)
+
+        json = {
+            "query": f"""
+            mutation {{
+                createCase(
+                    input: {{
+                        sbsysId:"12345",
+                        cprNumber:"0306891234",
+                        name:"test",
+                        caseWorker:"{self.case_worker.id}",
+                        payingMunicipality:"{self.municipality.id}",
+                        actingMunicipality:"{self.municipality.id}",
+                        residenceMunicipality:"{self.municipality.id}"
+                    }}
+                )
+            {{
+            errors {{
+                field,
+                messages
+            }}
+            scalingStep,
+            id,
+            name,
+            caseWorker,
+            sbsysId,
+          }}
+        }}
+        """
+        }
+        response = self.client.post(reverse_url, json)
+
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(Case.objects.count(), 0)
 
 
 class TestActivitySchema(AuthenticatedTestCase, BasicTestMixin):
@@ -146,7 +280,7 @@ class TestActivitySchema(AuthenticatedTestCase, BasicTestMixin):
                 }
             """
         }
-        response = self.client.get(reverse_url, json)
+        response = self.client.post(reverse_url, json)
 
         self.assertEqual(response.status_code, 200)
 
@@ -184,7 +318,7 @@ class TestActivityDetailsSchema(AuthenticatedTestCase):
             }
             """
         }
-        response = self.client.get(reverse_url, json)
+        response = self.client.post(reverse_url, json)
 
         self.assertEqual(response.status_code, 200)
         node = response.json()["data"]["activityDetails"]["edges"][0]["node"]
@@ -222,7 +356,7 @@ class TestAppropriationSchema(AuthenticatedTestCase, BasicTestMixin):
             }
             """
         }
-        response = self.client.get(reverse_url, json)
+        response = self.client.post(reverse_url, json)
 
         self.assertEqual(response.status_code, 200)
         node = response.json()["data"]["appropriations"]["edges"][0]["node"]
@@ -317,7 +451,7 @@ class TestAppropriationSchema(AuthenticatedTestCase, BasicTestMixin):
             }
             """
         }
-        response = self.client.get(reverse_url, json)
+        response = self.client.post(reverse_url, json)
 
         self.assertEqual(response.status_code, 200)
         node = response.json()["data"]["appropriations"]["edges"][0]["node"]
@@ -340,7 +474,7 @@ class TestAppropriationSchema(AuthenticatedTestCase, BasicTestMixin):
             }
             """
         }
-        response = self.client.get(reverse_url, json)
+        response = self.client.post(reverse_url, json)
 
         self.assertEqual(response.status_code, 200)
         edges = response.json()["data"]["appropriations"]["edges"]
@@ -404,7 +538,7 @@ class TestAppropriationSchema(AuthenticatedTestCase, BasicTestMixin):
             }
             """
         }
-        response = self.client.get(reverse_url, json)
+        response = self.client.post(reverse_url, json)
 
         self.assertEqual(response.status_code, 200)
 
@@ -500,7 +634,7 @@ class TestAppropriationSchema(AuthenticatedTestCase, BasicTestMixin):
             }
             """
         }
-        response = self.client.get(reverse_url, json)
+        response = self.client.post(reverse_url, json)
 
         self.assertEqual(response.status_code, 200)
         node = response.json()["data"]["appropriations"]["edges"][0]["node"]
@@ -594,7 +728,7 @@ class TestAppropriationSchema(AuthenticatedTestCase, BasicTestMixin):
             }
             """
         }
-        response = self.client.get(reverse_url, json)
+        response = self.client.post(reverse_url, json)
 
         # Query should only contain the first appropriation
         # and not the out-of-range one
@@ -631,7 +765,7 @@ class TestPaymentScheduleSchema(AuthenticatedTestCase):
             }
             """
         }
-        response = self.client.get(reverse_url, json)
+        response = self.client.post(reverse_url, json)
 
         self.assertEqual(response.status_code, 200)
         node = response.json()["data"]["paymentSchedules"]["edges"][0]["node"]
@@ -672,7 +806,7 @@ class TestPaymentSchema(AuthenticatedTestCase):
             }
             """
         }
-        response = self.client.get(reverse_url, json)
+        response = self.client.post(reverse_url, json)
 
         self.assertEqual(response.status_code, 200)
         node = response.json()["data"]["payments"]["edges"][0]["node"]
@@ -705,7 +839,7 @@ class TestRateSchema(AuthenticatedTestCase):
             }
             """
         }
-        response = self.client.get(reverse_url, json)
+        response = self.client.post(reverse_url, json)
 
         self.assertEqual(response.status_code, 200)
         node = response.json()["data"]["rates"]["edges"][0]["node"]
@@ -740,7 +874,7 @@ class TestPriceSchema(AuthenticatedTestCase):
             }
             """
         }
-        response = self.client.get(reverse_url, json)
+        response = self.client.post(reverse_url, json)
         self.assertEqual(response.status_code, 200)
         node = response.json()["data"]["prices"]["edges"][0]["node"]
         self.assertEqual(
@@ -777,7 +911,7 @@ class TestSectionSchema(AuthenticatedTestCase):
             }
             """
         }
-        response = self.client.get(reverse_url, json)
+        response = self.client.post(reverse_url, json)
         self.assertEqual(response.status_code, 200)
         node = response.json()["data"]["sections"]["edges"][0]["node"]
         self.assertEqual(
@@ -819,7 +953,7 @@ class TestRatePerDateSchema(AuthenticatedTestCase):
             }
             """
         }
-        response = self.client.get(reverse_url, json)
+        response = self.client.post(reverse_url, json)
         self.assertEqual(response.status_code, 200)
         node = response.json()["data"]["ratePerDates"]["edges"][0]["node"]
         self.assertEqual(
@@ -851,7 +985,7 @@ class TestServiceProviderSchema(AuthenticatedTestCase):
             }
             """
         }
-        response = self.client.get(reverse_url, json)
+        response = self.client.post(reverse_url, json)
 
         self.assertEqual(response.status_code, 200)
         node = response.json()["data"]["serviceProviders"]["edges"][0]["node"]
@@ -884,7 +1018,7 @@ class TestMunicipalitySchema(AuthenticatedTestCase):
                 }
             """
         }
-        response = self.client.get(reverse_url, json)
+        response = self.client.post(reverse_url, json)
 
         self.assertEqual(response.status_code, 200)
 

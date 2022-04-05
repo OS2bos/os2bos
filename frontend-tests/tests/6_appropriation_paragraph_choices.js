@@ -1,10 +1,12 @@
 // Testing with Testcafe : https://devexpress.github.io/testcafe/documentation/getting-started/
 
 import { Selector } from 'testcafe'
-import { login } from '../utils/logins.js'
+import { familieleder } from '../utils/logins.js'
 import { createCase } from '../utils/crud.js'
 import baseurl from '../utils/url.js'
 import checkConsole from '../utils/console.js'
+import { navToCase } from '../utils/navigation.js'
+import { case6 } from '../testdata.js'
 
 let rand = Math.floor(Math.random() * 1000 ),
     rand2 = Math.floor(Math.random() * 1000 )
@@ -15,23 +17,22 @@ const target_group_name = `testmålgruppe-${ rand }`,
             id: 1,
             name: `x${ rand }.y${ rand2 }.yy`,
             target_group: target_group_name
-        },
-        case2: {
-            id: 1,
-            name: `x${ rand }.z${ rand2 }.${ rand2 }`,
-            effort_step: '3',
-            scaling_step: '5',
-            target_group: 'Handicapafdelingen'
         }
     }
 
 fixture('Check appropriation paragraph choices') // declare the fixture
-    .page(baseurl)  // specify the start page
     .afterEach(() => checkConsole())
 
-test('Add new target group in Django admin', async t => {
+test
+    .page(`${baseurl}/api/admin/core/targetgroup/add/`)
+    ('Add new target group in Django admin', async t => {
 
-    await login(t, 'admin', 'admin')
+    if (Selector('.logintext').exists) {
+        await t
+            .typeText('#username', 'admin')
+            .typeText('#password', 'admin')
+            .click(Selector('button').withExactText('Login'))
+    }
 
     await t
         .navigateTo('/api/admin/core/targetgroup/add/')
@@ -40,9 +41,12 @@ test('Add new target group in Django admin', async t => {
         .expect(Selector('a').withText(target_group_name).exists).ok()
 })
 
-test('Appropriation with 0 available paragraphs should display all paragraphs as default', async t => {
-
-    await login(t, 'familieleder', 'sagsbehandler')
+test
+    .before(async t => {
+        await t.useRole(familieleder)
+    })
+    .page(baseurl)
+    ('Appropriation with 0 available paragraphs should display all paragraphs as default', async t => {
     
     await createCase(t, testdata.case1)
 
@@ -53,31 +57,44 @@ test('Appropriation with 0 available paragraphs should display all paragraphs as
         .expect(Selector('#field-lawref option').nth(145).exists).ok()
 })
 
-test('Add target group to paragraph in Django admin', async t => {
+test
+    .page(`${baseurl}/api/admin/core/section/1249/change/`)
+    ('Add target group to paragraph in Django admin', async t => {
 
-    await login(t, 'admin', 'admin')
+    if (Selector('.logintext').exists) {
+        await t
+            .typeText('#username', 'admin')
+            .typeText('#password', 'admin')
+            .click(Selector('button').withExactText('Login'))
+    }
 
     await t
-        .navigateTo('/api/admin/core/section/1249/change/')
         .click('#id_allowed_for_target_groups_add_all_link')
         .click(Selector('input').withAttribute('name', '_save'))
 })
 
-test('Appropriation with 1 available paragraph should display no selectbox', async t => {
+test
+    .before(async t => {
+        await t.useRole(familieleder)
+    })
+    .page(baseurl)
+    ('Appropriation with 1 available paragraph should display no selectbox', async t => {
 
-    await login(t, 'familieleder', 'sagsbehandler')
+    await navToCase(t, testdata.case1.name)
 
     await t
-        .click(Selector('a').withText(testdata.case1.name))
         .click(Selector('.appropriation-create-btn'))
         .expect(Selector('#field-lawref').exists).notOk()
 })
 
-test('Appropriation with some available paragraphs should display only those paragraphs', async t => {
-
-    await login(t, 'familieleder', 'sagsbehandler')
+test
+    .before(async t => {
+        await t.useRole(familieleder)
+    })
+    .page(baseurl)
+    ('Appropriation with some available paragraphs should display only those paragraphs', async t => {
     
-    await createCase(t, testdata.case2)
+    await navToCase(t, case6.sbsys_id)
 
     await t
         .click(Selector('.appropriation-create-btn'))

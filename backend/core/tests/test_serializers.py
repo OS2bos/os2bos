@@ -26,7 +26,6 @@ from core.models import (
     STATUS_EXPECTED,
     STATUS_DRAFT,
     STATUS_GRANTED,
-    STATUS_DELETED,
     PaymentSchedule,
     Rate,
 )
@@ -54,7 +53,7 @@ class AppropriationSerializerTestCase(TestCase, BasicTestMixin):
     def setUpTestData(cls):
         cls.basic_setup()
 
-    def test_get_activities_excludes_deleted(self):
+    def test_get_activities(self):
         case = create_case(self.case_worker, self.municipality, self.district)
         appropriation = create_appropriation(case=case)
 
@@ -64,13 +63,12 @@ class AppropriationSerializerTestCase(TestCase, BasicTestMixin):
             payment_frequency=PaymentSchedule.WEEKLY,
             activity=activity,
         )
-        activity.status = STATUS_DELETED
-        activity.save()
         serializer = AppropriationSerializer(instance=appropriation)
         data = serializer.data
 
-        # assert deleted activity is not included.
-        self.assertEqual(len(data["activities"]), 0)
+        # assert activity is included.
+        self.assertEqual(len(data["activities"]), 1)
+        self.assertEqual(data["activities"][0]["id"], activity.id)
 
 
 class ActivitySerializerTestCase(TestCase, BasicTestMixin):

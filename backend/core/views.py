@@ -58,8 +58,6 @@ from core.models import (
     Effort,
     ActivityCategory,
     DSTPayload,
-    STATUS_DELETED,
-    STATUS_DRAFT,
     STATUS_GRANTED,
     PREVENTATIVE_MEASURES,
     HANDICAP,
@@ -118,10 +116,12 @@ from core.mixins import (
 from core.authentication import CsrfExemptSessionAuthentication
 
 from core.permissions import (
-    IsUserAllowed,
+    IsUserAllowedREST,
+    IsUserAllowedGraphQL,
     NewPaymentPermission,
     DeletePaymentPermission,
     EditPaymentPermission,
+    GraphQLAuthMiddleware,
 )
 
 
@@ -140,13 +140,13 @@ class AuditViewSet(AuditMixin, viewsets.ModelViewSet):
     """
 
     authentication_classes = (CsrfExemptSessionAuthentication,)
-    permission_classes = (IsUserAllowed,)
+    permission_classes = (IsUserAllowedREST,)
 
 
 class ReadOnlyViewset(viewsets.ReadOnlyModelViewSet):
     """Superclass for use model classes that are read only through REST."""
 
-    permission_classes = (IsUserAllowed,)
+    permission_classes = (IsUserAllowedREST,)
 
 
 class AuthenticatedGraphQLView(GraphQLView):
@@ -167,8 +167,10 @@ class AuthenticatedGraphQLView(GraphQLView):
     @classmethod
     def as_view(cls, *args, **kwargs):
         """Add the relevant DRF-view logic to the view."""
-        view = super(AuthenticatedGraphQLView, cls).as_view(*args, **kwargs)
-        view = permission_classes((IsUserAllowed,))(view)
+        view = super(AuthenticatedGraphQLView, cls).as_view(
+            middleware=[GraphQLAuthMiddleware()], *args, **kwargs
+        )
+        view = permission_classes((IsUserAllowedGraphQL,))(view)
         view = authentication_classes((CsrfExemptSessionAuthentication,))(view)
         view = api_view(["GET", "POST"])(view)
         return view
@@ -433,7 +435,7 @@ class ActivityViewSet(AuditModelViewSetMixin, AuditViewSet):
 
     def get_queryset(self):
         """Avoid Django's default lazy loading to improve performance."""
-        queryset = Activity.objects.exclude(status=STATUS_DELETED)
+        queryset = Activity.objects.all()
         queryset = self.get_serializer_class().setup_eager_loading(queryset)
         return queryset
 
@@ -445,14 +447,10 @@ class ActivityViewSet(AuditModelViewSetMixin, AuditViewSet):
         """
         activity = self.get_object()
         try:
-            if activity.status == STATUS_DRAFT:
-                activity.delete()
-            elif activity.status == STATUS_GRANTED:
+            if activity.status == STATUS_GRANTED:
                 raise RuntimeError(_("Du kan ikke slette en bevilget ydelse."))
-
             else:
-                activity.status = STATUS_DELETED
-                activity.save()
+                activity.delete()
             # Success!
             response = Response("OK", status.HTTP_204_NO_CONTENT)
         except Exception as e:
@@ -625,6 +623,7 @@ class UserViewSet(ReadOnlyViewset):
 
     queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
+    filterset_fields = "__all__"
 
 
 class ServiceProviderViewSet(

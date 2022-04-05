@@ -1,15 +1,14 @@
 // Testing with Testcafe : https://devexpress.github.io/testcafe/documentation/getting-started/
 
 import { Selector } from 'testcafe'
-import { login } from '../utils/logins.js'
+import { familieleder } from '../utils/logins.js'
 import { makeDateStr } from '../utils/utils.js'
-import { createActivity, createCase, createAppropriation, approveActivities } from '../utils/crud.js'
+import { createActivity, approveActivities } from '../utils/crud.js'
 import baseurl from '../utils/url.js'
 import checkConsole from '../utils/console.js'
+import { appr4 } from '../testdata.js'
 
-let today = new Date(),
-    rand = Math.floor(Math.random() * 500 ),
-    rand2 = Math.floor(Math.random() * 500 )
+let today = new Date()
 
 let str1mth = makeDateStr(today, 1),
     str2mth = makeDateStr(today, 2),
@@ -17,20 +16,7 @@ let str1mth = makeDateStr(today, 1),
     str10mth = makeDateStr(today, 10)
     
 const testdata = {
-    case1: {
-        id: 1,
-        name: `${ rand2 }.${ rand }.xx`,
-        effort_step: '3',
-        scaling_step: '4',
-        target_group: 'Handicapafdelingen'
-    },
-    appr1: {
-        id: 1,
-        name: `${ rand2 }.${ rand }.xx-${ rand2 }-bevil${ rand }`,
-        section: 'SEL-109 Botilbud, kriseramte kvinder'
-    },
     act1: {
-        note: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
         payment_type: 'RUNNING_PAYMENT',
         start_date: str1mth,
         end_date: str10mth,
@@ -56,29 +42,28 @@ const testdata = {
 }
 
 fixture('Test editing rates and prices') // declare the fixture
-    .page(baseurl)  // specify the start page
     .beforeEach(async t => { 
-        await login(t)
+        await t.useRole(familieleder)
     })
+    .page(baseurl)  // specify the start page
     .afterEach(() => checkConsole())
 
-test('Create case, appropriation, and activity with global rate', async t => {
-    await createCase(t, testdata.case1)
-    await createAppropriation(t, testdata.appr1)
+test('Create activity with global rate', async t => {
+
+    await t.navigateTo(`${ baseurl }/#/appropriation/${ appr4.id }/`)
+
     await createActivity(t, testdata.act1)
     
-    await t.expect(Selector('.act-list-row a').withText(testdata.act1.details__name.substr(0,4)).exists).ok()
+    await t.expect(Selector('.act-list-row a').withText(testdata.act1.details__name.substring(0,4)).exists).ok()
 })
 
 test('Create activity with per unit pricing', async t => {
-    await t
-        .click(Selector('a.header-link'))
-        .click(Selector('a').withText(testdata.case1.name))
-        .click(Selector('a').withText(testdata.appr1.name))
+    
+    await t.navigateTo(`${ baseurl }/#/appropriation/${ appr4.id }/`)
 
     await createActivity(t, testdata.act2)
 
-    const act_link_text = testdata.act2.details__name.substr(0,3)
+    const act_link_text = testdata.act2.details__name.substring(0,3)
     
     await t
         .expect(Selector('.act-list-row a').withText(act_link_text).exists).ok()

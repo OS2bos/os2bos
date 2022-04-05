@@ -13,6 +13,7 @@ import graphene
 from graphene import Node, Connection
 from graphene_django_optimizer import OptimizedDjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
+from graphene_django.rest_framework.mutation import SerializerMutation
 
 from core.models import (
     Activity as ActivityModel,
@@ -29,9 +30,11 @@ from core.models import (
     RatePerDate as RatePerDateModel,
     Municipality as MunicipalityModel,
     ServiceProvider as ServiceProviderModel,
-    STATUS_DELETED,
+    EffortStep as EffortStepModel,
+    TargetGroup as TargetGroupModel,
 )
 from core.filters import PaymentFilter, AppropriationFilter
+from core.serializers import CaseSerializer
 
 UserModel = get_user_model()
 
@@ -61,7 +64,10 @@ class User(OptimizedDjangoObjectType):
 
     class Meta:
         model = UserModel
+        interfaces = (Node,)
+        connection_class = ExtendedConnection
         fields = "__all__"
+        filter_fields = "__all__"
 
 
 class ApprovalLevel(OptimizedDjangoObjectType):
@@ -92,9 +98,9 @@ class Appropriation(OptimizedDjangoObjectType):
 
     pk = graphene.Int(source="pk")
     dst_report_type = graphene.String(source="dst_report_type")
-    status = graphene.String(source="status")
-    granted_from_date = graphene.String(source="granted_from_date")
-    granted_to_date = graphene.String(source="granted_to_date")
+    granted_from_date = graphene.String()
+    granted_to_date = graphene.String()
+    status = graphene.String()
 
     class Meta:
         model = AppropriationModel
@@ -227,11 +233,6 @@ class Activity(OptimizedDjangoObjectType):
     total_granted_next_year = graphene.Float()
     total_expected_next_year = graphene.Float()
 
-    @classmethod
-    def get_queryset(cls, queryset, info):
-        """Only return non-deleted activities."""
-        return queryset.exclude(status=STATUS_DELETED)
-
     def resolve_total_granted_this_year(self, info):
         """Retrieve total granted amount for this year."""
         year = timezone.now().year
@@ -302,6 +303,32 @@ class Municipality(OptimizedDjangoObjectType):
         filter_fields = "__all__"
 
 
+class TargetGroup(OptimizedDjangoObjectType):
+    """TargetGroup as a graphene type."""
+
+    pk = graphene.Int(source="pk")
+
+    class Meta:
+        model = TargetGroupModel
+        interfaces = (Node,)
+        connection_class = ExtendedConnection
+        fields = "__all__"
+        filter_fields = "__all__"
+
+
+class EffortStep(OptimizedDjangoObjectType):
+    """EffortStep as a graphene type."""
+
+    pk = graphene.Int(source="pk")
+
+    class Meta:
+        model = EffortStepModel
+        interfaces = (Node,)
+        connection_class = ExtendedConnection
+        fields = "__all__"
+        filter_fields = "__all__"
+
+
 class ServiceProvider(OptimizedDjangoObjectType):
     """ServiceProvider as a graphene type."""
 
@@ -313,6 +340,20 @@ class ServiceProvider(OptimizedDjangoObjectType):
         connection_class = ExtendedConnection
         fields = "__all__"
         filter_fields = "__all__"
+
+
+class CaseMutation(SerializerMutation):
+    """Mutation for the Case Model."""
+
+    class Meta:
+        serializer_class = CaseSerializer
+        convert_choices_to_enum = False
+
+
+class Mutation(graphene.ObjectType):
+    """Mutation define our mutable fields."""
+
+    create_case = CaseMutation.Field()
 
 
 class Query(graphene.ObjectType):
@@ -372,5 +413,14 @@ class Query(graphene.ObjectType):
     municipality = Node.Field(Municipality)
     municipalities = DjangoFilterConnectionField(Municipality)
 
+    effort_step = Node.Field(EffortStep)
+    effort_steps = DjangoFilterConnectionField(EffortStep)
 
-schema = graphene.Schema(query=Query)
+    target_group = Node.Field(TargetGroup)
+    target_groups = DjangoFilterConnectionField(TargetGroup)
+
+    user = Node.Field(User)
+    users = DjangoFilterConnectionField(User)
+
+
+schema = graphene.Schema(query=Query, mutation=Mutation)
