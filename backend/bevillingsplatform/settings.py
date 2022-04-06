@@ -685,7 +685,7 @@ ALLOW_SERVICE_PROVIDERS_FROM_VIRK = settings.getboolean(
 )
 
 # Determine whether to load the charts view in frontend GUI
-# at `/#/dash`
+# at `/#/charts`
 ALLOW_CHARTS = settings.getboolean("ALLOW_CHARTS", fallback=False)
 
 GRAPHENE = {
