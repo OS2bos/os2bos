@@ -9,7 +9,6 @@
 import axios from '../components/http/Http.js'
 import notify from '../components/notifications/Notify.js'
 
-
 const state = {
     config: null
 }
@@ -27,7 +26,7 @@ const mutations = {
 }
 
 const actions = {
-    fetchConfig: function({commit, dispatch, rootState}) {
+    fetchConfig: function({commit}) {
 
         axios.get('/frontend-settings/')
         .then(conf => {

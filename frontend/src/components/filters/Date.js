@@ -97,5 +97,6 @@ export {
     epoch2DateStr,
     inEighteenYears,
     tenYearsAgo,
-    isCurrent
+    isCurrent,
+    leadZero
 }

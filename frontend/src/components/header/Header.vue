@@ -19,8 +19,7 @@
                     <router-link to="/cases/">Sager</router-link>
                     <router-link to="/appropriations/">Bevillinger</router-link>
                     <router-link to="/payments/">Betalinger</router-link>
-                    <a v-if="user.profile === 'workflow_engine'" href="/api/admin/">Klassifikationer</a>
-                    <a v-if="user.profile === 'admin'" href="/api/admin/">Administration</a>
+                    <extended-nav />
                 </nav>
                 <user-actions />
             </div>
@@ -34,12 +33,14 @@
 
     import Breadcrumb from './Breadcrumb.vue'
     import UserActions from '../auth/UserActions.vue'
+    import ExtendedNav from './ExtendedNav.vue'
     
     export default {
 
         components: {
             Breadcrumb,
-            UserActions
+            UserActions,
+            ExtendedNav
         },
         computed: {
             auth: function() {
@@ -98,6 +99,9 @@
 
     .globalheader .globalnav {
         margin: 0 2rem;
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
     }
 
     .globalheader .globalnav > a,
