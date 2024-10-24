@@ -1,3 +1,6 @@
+# Project is discontinued and will no longer be maintained.
+
+
 ======
 OS2BOS
 ======
